@@ -5,46 +5,41 @@ content_outline:
 - section: Вступ та орієнтація
   words: 300
   points:
-  - 'Структура фінального тесту: supportive tone to reduce stress, emphasis on celebration
-    of progress («Ви готові!», «Чудова робота!»)'
-  - 'Очікування щодо мови (English Scaffolding): clarify that instructions and grammar
-    refreshers will use English, but the test texts will be in Ukrainian'
-  - 'Як оцінюється кожна частина: alignment with communicative goals and encouragement
-    from the Patient Supportive Tutor'
-  - 'Поради для успішного складання: focus on calm confidence and practical strategies
-    for A1 reading and listening tasks'
+  - 'Організація іспиту (English scaffolding): explain that instructions use English
+    to reduce stress, but the test texts will be in Ukrainian.'
+  - 'Supportive framing: use phrases like ''Ви готові!'' and ''Чудова робота!'' to
+    celebrate A1 completion.'
+  - 'Structure breakdown: what to expect in the morphological review, reading, and
+    oral parts.'
 - section: Морфологічний та синтаксичний огляд
   words: 650
   points:
-  - Review of core noun cases (Nominative, Accusative, Locative, Vocative) with clear
-    summary tables and English explanations
-  - 'Correction of Case Confusion: drill Accusative vs. Locative with prepositions
-    в/на (motion vs. location: «Я йду в магазин» vs. «Я в магазині»)'
-  - 'Grammar drill on Gender Agreement: resolving the learner error of mismatching
-    adjectives/pronouns («Моя велика машина»)'
-  - 'Conjugation mastery: clarifying the distinction between Class I (-ати) and Class
-    II (-ити) verbs in the present tense'
-  - 'Syntactic structures: review of SVO word order, general questions, and special
-    questions using «де», «звідки», «куди», «що», «хто»'
+  - Summary tables and clear English explanations of core noun cases (Nominative,
+    Accusative, Locative, Vocative) per State Standard §4.2.3.
+  - 'Contrast drill: Motion (Accusative ''Я йду в магазин'') vs Location (Locative
+    ''Я в магазині'') using prepositions в/на.'
+  - 'Gender agreement check: fixing common errors like ''Моя велика машина''.'
+  - 'Verb conjugation refresher: Class I (-ати) vs. Class II (-ити) in the present
+    tense.'
+  - 'Syntactic structures (§4.3.1): SVO word order, general questions, and special
+    questions using де, звідки, куди, що, хто.'
 - section: 'Культурна подорож: Київ та Львів'
   words: 650
   points:
-  - Thematic narrative «Подорож Україною» integrating transport, food, and home contexts
-    into the assessment
-  - 'Kyiv section: short comprehensive text featuring chestnut trees (каштани), the
-    Dnipro river, and its historical status'
-  - 'Lviv section: short comprehensive text exploring coffee traditions (кава), book
-    culture, and historic architecture'
-  - 'Functional application: using numbers, time, and basic communication phrases
-    within the context of these travel texts'
+  - Thematic narrative 'Подорож Україною' focusing on transport, food, and home contexts.
+  - 'Kyiv section: reading text featuring chestnut trees (каштани), the Dnipro river,
+    and the city''s historical background.'
+  - 'Lviv section: reading text highlighting coffee culture (кава), book history,
+    and architecture.'
+  - 'Functional practice: integrating numbers, telling time, and basic communication
+    phrases within the travel texts.'
 - section: Фінальне оцінювання та перехід до A2
   words: 400
   points:
-  - 'Listening and Reading Comprehension: verifying understanding of basic complex
-    sentences (using «і», «а», «але»)'
-  - 'Practical scenarios and role-play: oral assessment tasks focused on real-world
-    situations (buying tickets, ordering coffee, introductions)'
-  - 'Readiness for Level A2: setting the foundation for the upcoming Genitive and
-    Dative cases while celebrating A1 mastery'
-  - 'Final encouraging summary: reinforcing the progress made through the 44 modules
-    and looking forward to A2-01'
+  - Reading and listening comprehension checks verifying understanding of basic complex
+    sentences (і, а, але, бо).
+  - Oral assessment role-play scenarios focused on real-world situations (buying tickets,
+    ordering coffee, introductions).
+  - 'Preview of A2: briefly setting the foundation for the upcoming Genitive and Dative
+    cases.'
+  - Final encouraging summary celebrating the completion of all 44 A1 modules.

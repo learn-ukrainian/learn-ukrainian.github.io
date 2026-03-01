@@ -1,434 +1,187 @@
 <!-- SCOPE
-Covers: Ukrainian euphony rules (милозвучність), specifically the alternations of у/в, і/й, and з/із/зі.
+Covers: Euphony rules for у/в, і/й, з/із/зі and basic phonetic flow.
 Not covered:
-  - Advanced poetic euphony exceptions → advanced-phonetics
-Related: a1-62, a1-64
+  - Complex assimilation of consonants → phonetic-assimilation
+Related: a1-62
 -->
 
 # Euphony and Polish
 
 > **Чому це важливо?**
 >
-> Ukrainian is famously melodic and smooth to speak. Це правило дуже важливе! Ця система робить мову красивою. This musicality is not an accident. It is the result of strict, logical rules. These rules prevent awkward sound crashes. Mastering these euphony rules will instantly make your pronunciation sound more natural and authentic. You will speak like a native speaker. Це дуже корисно. Ukrainian people love when you speak with good euphony.
+> Уявіть річку. — Imagine a river. Багато каміння зупиняє воду. — Many stones stop the water. Українська мова дуже мелодійна. — The Ukrainian language is very melodic. Ми маємо спеціальні правила. — We have special rules. Ми прибираємо складні звуки. — We remove complex sounds. Це чергування звуків. — This is sound alternation. Наше мовлення стає швидким. — Our speech becomes fast. Воно плавне та гарне. — It is smooth and beautiful.
 
 ## У/В чергування
 
-Welcome to the mechanics of Ukrainian pronunciation. You have likely noticed that the language possesses a flowing, rhythmic quality. Ця система називається **евфо́нія** або **милозву́чність**. Звуки добре поєднуються. Мова звучить як пісня.
+Українська мова має цікавий інструмент. — The Ukrainian language has an interesting tool. Це чергування. — This is alternation. Ми чергуємо слова «у» та «в». — We alternate the words «у» and «в». Вони означають місце. — They mean location. Ми повинні розрізняти звуки. — We must distinguish sounds. Є голосні звуки. — There are vowel sounds. Є приголосні звуки. — There are consonant sounds.
 
-Українська мова уникає важких звуків. It fundamentally rejects heavy clusters of consonants crashing together. The language also rejects vowels bumping into one another. To solve this problem, Ukrainian utilizes a system called **чергува́ння** (alternation). We alternate the forms of small words. Це правило дуже логічне.
+Голосний звук має вільний потік повітря. — A vowel sound has a free flow of air. Це звуки а, о, у, е, і. — These are the sounds a, o, u, e, i. Приголосний звук має перешкоду. — A consonant sound has an obstacle. Це звуки б, м, п, к, д. — These are the sounds b, m, p, k, d. Наша мета — уникати однакових звуків. — Our goal is to avoid the same sounds. Ми не любимо зіткнення. — We do not like collisions.
 
-Before we dive into the specific rules, it is important to define two foundational phonetic terms in English. 
+### У після приголосних
 
-A **голосни́й** (vowel) is an open sound. You can sing it continuously. Українська мова має голосні літери: а, о, е, и. Також і, у. Вони дуже легкі для вимови. Вони відкривають рот. They make the airflow free. 
+Слово закінчується на приголосний звук. — A word ends in a consonant sound. Тоді ми використовуємо слово «у». — Then we use the word «у». Також ми ставимо «у» на початку речення. — Also we put «у» at the beginning of a sentence. Ми ставимо «у» після паузи. — We put «у» after a pause. Це правило допомагає. — This rule helps. Ми уникаємо скупчень приголосних. — We avoid consonant clusters. Їх важко вимовити. — They are hard to pronounce. Голосний звук діє як місток. — A vowel sound acts as a bridge.
 
-A **при́голосний** (consonant) is a blocked sound. Your mouth, tongue, or teeth block the airflow. Українська мова має приголосні літери: б, в, г, д. Вони створюють бар'єр. They close the airflow.
+**Приклади:**
+* **Брат у школі.** — Brother is at school.
+  Слово «брат» має приголосний «т». — The word «brother» has the consonant «t». Тому ми беремо голосний «у». — Therefore we take the vowel «у». Це гарний місток. — This is a good bridge.
+* **Він був у Києві.** — He was in Kyiv.
+  Слово «був» має приголосний «в». — The word «was» has the consonant «v». Наступне слово починається з голосного «у». — The next word starts with the vowel «у». Ми зберігаємо ритм. — We keep the rhythm.
+* **У мене є книга.** — I have a book.
+  Це початок речення. — This is the beginning of a sentence. Після паузи ми починаємо з голосного. — After a pause we start with a vowel. Це дуже легко. — This is very easy.
 
-Recognizing whether a word ends in a vowel or a consonant is the most important skill for this lesson. Це дуже легко! Ви швидко зрозумієте це правило. 
+### В після голосних
 
-### Форма «У»
+Попереднє слово має голосний звук у кінці. — The previous word has a vowel sound at the end. Тоді ми використовуємо слово «в». — Then we use the word «в». Ми не ставимо ще один голосний «у». — We do not put another vowel «у». Інакше буде фонетична пауза. — Otherwise there will be a phonetic pause. Ця пауза ламає ритм. — This pause breaks the rhythm. Приголосний «в» допомагає. — The consonant «в» helps. Голос плавно переходить. — The voice smoothly transitions. Немає зупинок дихання. — There are no breathing stops.
 
-The word **у** means "in" or "at". Because «у» is a vowel, its primary job is to act as a soft cushion. Це дуже м'який звук. Він допомагає говорити.
+Наприклад: **Вона в школі** — She is at school. Слово «вона» має голосний «а» в кінці. — The word «she» has the vowel «a» at the end. Прийменник «в» продовжує рух звуку. — The preposition «в» continues the movement of sound.
+Інший приклад: **Я живу в Києві** — I live in Kyiv. Слово «живу» має звук «у». — The word «live» has the sound «u». Ми беремо приголосний. — We take a consonant. Ми уникаємо зіткнення голосних. — We avoid a collision of vowels.
+Щоденна фраза: **Мати вдома** — Mother is at home. Мелодія залишається безперервною. — The melody remains continuous. Це просте правило. — This is a simple rule.
 
-It is necessary to use the form «у» when the preceding word ends in a consonant. The following word also begins with a consonant. The vowel «у» steps right into the middle. It prevents a massive consonant crash. Also, it is correct to use «у» at the absolute beginning of a sentence. This happens after a long pause. Це дуже зручно.
+**Таблиця рішень** — Decision Table
 
-Подивімося на ці приклади. Вони дуже прості. Ми використовуємо прості слова.
+| Попередня буква — Previous letter | Позиція — Position | Вибір — Choice | Приклад — Example |
+|-----------------------------------|--------------------|----------------|-------------------|
+| Приголосний — Consonant | Середина — Middle | **У** | Він у місті — He is in the city |
+| Голосний — Vowel | Середина — Middle | **В** | Вона в місті — She is in the city |
+| Пауза — Pause | Початок — Start | **У** | У мене є син — I have a son |
 
-«Мій син грає у теніс.»
-> My son plays tennis.
-
-«У мене є новий телефон.»
-> I have a new phone.
-
-«Наш дім у центрі.»
-> Our house is in the center.
-
-«Мій брат іде у школу.»
-> My brother goes to school.
-
-«Він працює у банку.»
-> He works in the bank.
-
-«Студент читає у класі.»
-> The student reads in the class.
-
-«У магазині є хліб.»
-> There is bread in the shop.
-
-«Я працюю у школі.»
-> I work in the school.
-
-«Мій батько живе у місті.»
-> My father lives in the city.
-
-«У парку дуже гарно.»
-> It is very beautiful in the park.
-
-Слово закінчується на приголосний звук. Тоді ми кажемо «у». When you say «наш дім», your mouth completely stops the airflow. It stops on the final consonant «м». By placing the vowel «у» in between, the phrase «дім у центрі» flows easily. Це дуже зручно. Ви не робите паузу.
-
-### Форма «В»
-
-The consonant **в** is the exact equivalent of "in" or "at". However, because it is a consonant, its phonetic job is entirely different. Це сильний звук. Він працює як міст.
-
-It is important to use the form «в» when the preceding word ends in a vowel. The next word also begins with a consonant. Insert the consonant «в» to connect the two words smoothly. It acts as a structural bridge. Це дуже гарно звучить.
-
-Ось нові приклади. Прочитайте їх уважно. Ви побачите логіку.
-
-«Вона іде в Київ.»
-> She goes to Kyiv.
-
-«Я зараз в Україні.»
-> I am currently in Ukraine.
-
-«Моя мати працює в магазині.»
-> My mother works in the shop.
-
-«Ми йдемо в кіно.»
-> We go to the cinema.
-
-«Вона живе в Англії.»
-> She lives in England.
-
-«Вони йдуть в аптеку.»
-> They go to the pharmacy.
-
-«Машина їде в гараж.»
-> The car goes to the garage.
-
-«Він відпочиває в кімнаті.»
-> He rests in the room.
-
-«Сім'я зараз в театрі.»
-> The family is now in the theater.
-
-«Собака спить в коридорі.»
-> The dog sleeps in the corridor.
-
-Слово «іде» закінчується на «е». Look closely at the first sentence. The word «іде» ends with the clear vowel «е». By correctly using «в», the phrase flows out of your mouth in one continuous stream. Це дуже легко сказати. Ви відчуваєте цю мелодію.
-
-> [!tip] Практична порада
-> The fundamental philosophy of Ukrainian euphony is simple. Seek balance. Consonants attract vowels. Vowels attract consonants. Це баланс звуків. Це як музика.
-
-Ось таблиця. Вона дуже корисна. Ви можете використовувати її завжди.
-
-| Попередній звук (Previous Sound) | Форма | Наступний звук (Next Sound) | Приклад (Example) |
-|---|---|---|---|
-| Приголосний (Consonant) | **у** | Приголосний | Він грав **у** теніс. |
-| Пауза (Pause / Start) | **у** | Приголосний | **У** мене є брат. |
-| Голосний (Vowel) | **в** | Приголосний | Вона іде **в** парк. |
+> [!culture] Мелодія мови
+> Українська мова дуже мелодійна. — The Ukrainian language is very melodic. Існує популярна легенда про це. — There is a popular legend about this. Париж мав лінгвістичний конкурс. — Paris had a linguistic contest. Українська мова перемогла. — The Ukrainian language won. Це показує любов до мови. — This shows love for the language. Українці цінують потік звуків. — Ukrainians value the flow of sounds.
 
 ## І/Й чергування
 
-Now apply this exact same logic of balance to conjunctions. The words **і** (and) and **й** (and) share the exact same meaning. Вони однакові. Це дуже важливо пам'ятати.
+Сполучник "and" має дві форми. — The conjunction "and" has two forms. Це слова «і» та «й». — These are the words «і» and «й». Ми з'єднуємо слова. — We connect words. Це працює за нашим принципом. — This works by our principle. Мета залишається незмінною. — The goal remains unchanged. Ми підтримуємо вокальний ритм. — We support vocal rhythm.
 
-### Форма «І»
+### І після приголосних
 
-The letter **і** is a clear, bright vowel. Just like with our previous rule, deploy this vowel form after a consonant. You also use it at the absolute beginning of a phrase. Це дуже просте правило. 
+Ми використовуємо «і» після приголосного. — We use «і» after a consonant. Цей голосний звук діє як буфер. — This vowel sound acts as a buffer. Це буфер між жорсткими звуками. — This is a buffer between harsh sounds. Також ми ставимо «і» на початку. — Also we put «і» at the beginning. Ми ставимо «і» після паузи. — We put «і» after a pause. Це зменшує напруження. — This reduces tension.
 
-Слово закінчується на приголосний. Ми кажемо «і».
+> **Брат і батько.** — Brother and father.
+> Слово «брат» має приголосний «т». — The word «brother» has the consonant «t». Голосний «і» створює необхідний простір. — The vowel «і» creates the necessary space.
+>
+> **Він і вона.** — He and she.
+> Слово «він» має приголосний звук. — The word «he» has a consonant sound. Ми вибираємо форму «і». — We choose the form «і». Звучання стає кращим. — The sounding becomes better.
 
-«Мій брат і сестра тут.»
-> My brother and sister are here.
+### Й після голосних
 
-«Студент і викладач говорять.»
-> The student and the teacher are speaking.
+Перше слово закінчується на голосний. — The first word ends in a vowel. Тоді ми вибираємо слово «й». — Then we choose the word y. Літера «й» позначає напівголосний звук. — The letter y denotes a semi-vowel sound. Вона схожа на англійський звук "y". — It is similar to the English sound "y". Цей звук ідеально ковзає. — This sound glides perfectly. Фонетичної зупинки немає. — There is no phonetic stop. Українське мовлення стає швидким. — Ukrainian speech becomes fast.
 
-«Олег і Максим читають книгу.»
-> Oleh and Maksym are reading a book.
+**Міні-діалог:**
+— Хто там? — Who is there?
+— Це Олена й Андрій. — It is Olena and Andriy.
+— А де сестра й мати? — And where are the sister and mother?
+— Вони вдома. — They are at home.
 
-«Мій батько і брат удома.»
-> My father and brother are at home.
+Слово «Олена» має голосний звук. — The word «Olena» has a vowel sound. Воно м'яко з'єднується. — It softly connects. Слово «сестра» робить те саме. — The word «sister» does the same.
 
-«Телефон і комп'ютер лежать там.»
-> The phone and computer lie there.
-
-«Стіл і стілець стоять тут.»
-> The table and the chair stand here.
-
-«Парк і музей дуже гарні.»
-> The park and the museum are very beautiful.
-
-«Чоловік і жінка працюють.»
-> The man and the woman are working.
-
-«Хлопчик і дівчинка грають.»
-> The boy and the girl are playing.
-
-«Зошит і ручка лежать.»
-> The notebook and the pen lie.
-
-In the first example, the word «брат» ends with the hard consonant «т». The vowel «і» acts as the perfect cushion. Воно робить мову красивою. Ви можете говорити швидко і легко.
-
-> [!warning] Обережно!
-> A common error is overusing «і» everywhere. Saying «мати і батько» instead of the correct euphonic form interrupts the rhythm. Це звучить неприродно. Ви повинні уникати цього.
-
-### Форма «Й»
-
-The letter **й** is a semi-consonant. It is necessary to use the form «й» exclusively after a vowel. Це коротке слово. Воно з'єднує слова дуже швидко.
-
-Слово закінчується на голосний. Ми кажемо «й».
-
-«Моя мати й батько вдома.»
-> My mother and father are at home.
-
-«Олена й Марія зараз працюють.»
-> Olena and Mariia are working now.
-
-«Вона й він читають.»
-> She and he are reading.
-
-«Собака й кіт сплять.»
-> The dog and cat are sleeping.
-
-«Машина й автобус їдуть.»
-> The car and the bus are going.
-
-«Книга й журнал тут.»
-> The book and the magazine are here.
-
-«Мама й син гуляють.»
-> The mom and the son are walking.
-
-«Дівчина й хлопець читають.»
-> The girl and the boy are reading.
-
-«Бабуся й дідусь сидять.»
-> The grandma and the grandpa are sitting.
-
-«Дочка й син ідуть.»
-> The daughter and the son are going.
-
-The continuous glide is the core engine of Ukrainian euphony. Це створює музику мови. Ваша вимова буде ідеальною.
-
-Sometimes, you may want an alternative. Ukrainian possesses another word for "and". Це слово **та**. It carries the exact same meaning and naturally avoids most phonetic crashes. Це дуже хороший варіант.
-
-«Брат та сестра.»
-> Brother and sister.
-
-«Мати та батько.»
-> Mother and father.
-
-«Студент та викладач.»
-> The student and the teacher.
-
-«Олена та Марія.»
-> Olena and Mariia.
-
-Слово «та» дуже зручне. Ви можете використовувати його завжди. Це робить вашу мову багатшою.
+> [!warning] Типова помилка
+> Багато студентів використовують «і» скрізь. — Many students use «і» everywhere. Англійська мова має одне слово "and". — The English language has one word "and". Але використання «і» після голосних погане. — But using «і» after vowels is bad. Мовлення стає уривчастим. — Speech becomes choppy. Додавайте «й» автоматично. — Add «й» automatically. Робіть це після а, о, у, е, і. — Do this after a, o, u, e, i.
 
 ## З/Із/Зі чергування
 
-The preposition meaning "from" or "with" presents a slightly more complex phonetic challenge. To resolve this, Ukrainian utilizes a sophisticated three-way alternation. We have three forms: **з**, **із**, and **зі**. Це дуже цікаве правило. Воно допомагає говорити плавно.
+Прийменник "from" має три форми. — The preposition "from" has three forms. Це форми «з», «із» та «зі». — These are the forms «з», «із», and «зі». Ми маємо складні комбінації звуків. — We have complex combinations of sounds. Форма залежить від наступного слова. — The form depends on the next word. Ми дивимося на перші літери. — We look at the first letters.
 
-### Форма «З»
+### З перед голосними та легкими приголосними
 
-The single letter **з** is the default form. You will use «з» before words starting with vowels. Ви також можете використовувати його перед одним приголосним.
+Найпростіша форма — це «з». — The simplest form is «з». Наступне слово починається з голосного звуку. — The next word starts with a vowel sound. Тоді ми використовуємо цю форму. — Then we use this form. Ми ставимо її перед одним приголосним. — We put it before one consonant. Звук «з» є легким. — The sound «z» is light. Він легко приєднується. — It easily attaches.
 
-«Це мій друг з України.»
-> This is my friend from Ukraine.
+| Фраза — Phrase | Чому «З»? — Why «Z»? |
+|----------------|----------------------|
+| **Він з Києва** — He is from Kyiv | «Київ» має один приголосний. — «Kyiv» has one consonant. |
+| **Лист з Лондона** — A letter from London | «Лондон» має легкий звук. — «London» has a light sound. |
+| **Вона з Одеси** — She is from Odesa | «Одеса» має голосний звук. — «Odesa» has a vowel sound. |
 
-«Вона приїхала з Англії вчора.»
-> She arrived from England yesterday.
+### Із перед складними скупченнями
 
-«Він п'є каву з молоком.»
-> He drinks coffee with milk.
+Слово починається з двох приголосних підряд. — A word starts with two consonants in a row. Форма «з» створює стіну приголосних. — The form «з» creates a wall of consonants. Цю стіну важко вимовити. — This wall is hard to pronounce. Мова надає буферну форму «із». — The language provides the buffer form «із». Голосний звук дає час. — A vowel sound gives time. Ми можемо дихати. — We can breathe.
 
-«Я йду з парку.»
-> I am going from the park.
+1. **Я приїхав із Львова.** — I arrived from Lviv. Слово «Львів» має складне скупчення «льв». — The word «Lviv» has a complex cluster «l'v».
+2. **Він іде із Праги.** — He walks from Prague. Слово «Прага» має два приголосні. — The word «Prague» has two consonants. Буферний голосний робить фразу мелодійною. — The buffer vowel makes the phrase melodic.
+3. **Лист із Франції.** — A letter from France. Назва країни починається з «фр». — The country name begins with «fr». Форма «із» уникає зіткнення звуків. — The form «із» avoids a collision of sounds.
 
-«Це лист з Америки.»
-> This is a letter from America.
+### Зі перед свистячими звуками
 
-«Він повернувся з роботи.»
-> He returned from work.
+Одна специфічна група звуків створює проблеми. — One specific group of sounds creates problems. Це свистячі та шиплячі звуки. — These are sibilant and hissing sounds. Це літери з, с, ш, щ. — These are the letters z, s, sh, shch. Ми приєднуємо «з» до слова. — We attach «з» to a word. Звуки стають незрозумілим шумом. — The sounds become incomprehensible noise. Ми додаємо голосний у кінці. — We add a vowel at the end. Ми утворюємо форму «зі». — We form the shape «зі».
 
-«Вони прийшли з магазину.»
-> They came from the shop.
+Ви кажете: **Я йду зі школи** — I walk from school. Форма «зі» тримає дистанцію. — The form «зі» keeps a distance. Ви кажете: **Вона йде зі стадіону** — She walks from the stadium. Голосний робить звук «с» чітким. — A vowel makes the sound «s» clear. **Брат іде зі спальні** — Brother walks from the bedroom. Це дуже гарно звучить. — This sounds very beautiful.
 
-«Я працюю з братом.»
-> I work with my brother.
-
-«Вона п'є чай з цукром.»
-> She drinks tea with sugar.
-
-«Це подарунок з Італії.»
-> This is a gift from Italy.
-
-Saying «з України» is effortless. There is absolutely no need to introduce an extra vowel. Звук «з» працює ідеально.
-
-### Форма «Із»
-
-The form **із** strategically adds a vowel to the beginning of the preposition. Use «із» specifically before heavy consonant clusters. Це дуже важливо для дихання.
-
-Слово має багато приголосних звуків на початку. Тоді ми кажемо «із». Це робить паузу.
-
-«Вона приїхала із міста.»
-> She arrived from the city.
-
-«Він іде із стадіону.»
-> He walks from the stadium.
-
-«Студент із Словаччини.»
-> The student is from Slovakia.
-
-«Вона йде із магазину.»
-> She goes from the shop.
-
-«Це друг із Франції.»
-> This is a friend from France.
-
-«Вони ідуть із театру.»
-> They go from the theater.
-
-«Я прийшов із спортзалу.»
-> I came from the gym.
-
-«Це новина із столиці.»
-> This is news from the capital.
-
-Це дуже допомагає вимовляти слова. You avoid heavy consonant blocks. 
-
-### Форма «Зі»
-
-The form **зі** places the vowel at the end of the preposition. This form operates under a very strict rule. Use «зі» before words that commence with sibilant consonants. These are hissing sounds: звук з, звук с, звук ш, звук щ. Це дуже особливе правило.
-
-Слово починається на ці звуки. Тоді ми кажемо «зі».
-
-«Вона зараз іде зі школи.»
-> She is walking from school now.
-
-«Я беру це зі столу.»
-> I take this from the table.
-
-«Ми йдемо зі станції.»
-> We go from the station.
-
-«Вона бере книгу зі шафи.»
-> She takes a book from the cabinet.
-
-«Він іде зі сцени.»
-> He goes from the stage.
-
-«Він упав зі сходів.»
-> He fell from the stairs.
-
-«Це подарунок зі Швейцарії.»
-> This is a gift from Switzerland.
-
-«Вони йдуть зі стадіону.»
-> They go from the stadium.
-
-> [!myth-buster] Мнемонічне правило
-> Visualize these letters as a family of hissing sounds. You cannot place another «з» directly next to them. Це дуже погано звучить. The sounds blend together into an uncomfortable hiss. Therefore, use "зі" to separate them cleanly.
-
-> [!warning] Важливе правило
-> These euphony rules apply strictly to the independent preposition «з». They do NOT apply to fixed verb prefixes. 
+> [!tip] Прийменник чи префікс?
+> Ці правила діють для окремого слова. — These rules act for a separate word. Це слово «з», «із», «зі». — This is the word «з», «із», «зі». Українська мова також має дієслова. — The Ukrainian language also has verbs. Вони мають частину «з-». — They have the part «з-». Наприклад, слово «зробити» — for example, the word "to do". Ця частина є фіксованою. — This part is fixed. Вона не змінюється. — It does not change. Чергуються лише самостійні слова. — Only independent words alternate.
 
 ## Інші правила евфонії
 
-The guiding principle of euphony extends far beyond prepositions and conjunctions. Це правило впливає на багато слів. Українська мова дуже логічна.
+Правила милозвучності є дуже важливими. — The rules of euphony are very important. Це фундаментальна частина структури мови. — This is a fundamental part of the language structure. Деякі великі слова також мають дві форми. — Some big words also have two forms. Вони зберігають правильний ритм. — They preserve the correct rhythm. Інші слова виглядають подібно. — Other words look similar. Але вони мають інші граматичні правила. — But they have other grammatical rules.
 
-### Евфонічні пари
+### Пари удень та вдень
 
-Ukrainian features several adverbs that exist as euphonic pairs. They logically follow the exact same U/V logic. Це дуже цікавий факт про українську мову. 
+Чудовий приклад дії евфонії — це час. — A wonderful example of euphony action is time. Це слова «удень» та «вдень». — These are the words «удень» and «вдень». Вони означають денний час. — They mean the daytime. Ці слова працюють за нашою логікою. — These words work by our logic. Це як слова «у» та «в». — This is like the words «у» and «в». Вибір залежить від попереднього звуку. — The choice depends on the previous sound. Потік повітря диктує форму. — The flow of air dictates the form.
 
-The word for "in the daytime" has two forms: **уде́нь** or **вдень**.
-The word for "in the evening" has two forms: **уве́чері** or **вве́чері**.
-This depends completely on the preceding word.
+* **Він працює вдень.** — He works in the daytime. Слово «працює» має голосний звук. — The word «works» has a vowel sound. Тому ми використовуємо форму «вдень». — Therefore we use the form «вдень».
+* **Брат спить удень.** — Brother sleeps in the daytime. Слово «спить» має приголосний. — The word «sleeps» has a consonant. Ми уникаємо жорсткості. — We avoid harshness. Ми вибираємо форму «удень». — We choose the form «удень».
+* **Я гуляю ввечері, а ти — увечері.** — I walk in the evening, and you — in the evening. Слово «ввечері» також має пару. — The word «ввечері» also has a pair. Це слово «увечері». — This is the word «увечері». Правило є ідентичним. — The rule is identical.
 
-Попереднє слово закінчується на приголосний звук. Тоді ми вибираємо форму на голосний звук. Це створює гармонію.
+### Вказівні слова ці та цей
 
-Наприклад, подивіться на це речення: «Син працював удень». Слово «працював» закінчується на приголосний. Тому ми кажемо «удень». Це створює м'який звук. Ще один приклад: «Мій друг гуляв увечері».
+Ви вивчаєте лексику. — You study vocabulary. Ви помічаєте фонетичні пари. — You notice phonetic pairs. Наприклад, слова «ці» та «цей». — For example, the words «ці» and «цей». Слово «ці» вказує на багато предметів. — The word «ці» points to many objects. Слово «цей» вказує на один предмет. — The word «цей» points to one object. Вони нібито мають чергування. — They seemingly have alternation. Проте, ці слова не чергуються. — However, these words do not alternate. Вони змінюють форму через граматику. — They change form due to grammar.
 
-Попереднє слово закінчується на голосний звук. Тоді ми вибираємо форму на приголосний звук. Це створює міст між словами.
+* **Ці книги дуже цікаві.** — These books are very interesting. Слово «ці» використовується для багатьох предметів. — The word «ці» is used for many objects. Попереднє слово не впливає. — The previous word does not affect.
+* **Я хочу цей телефон.** — I want this phone. Слово «цей» вказує на один предмет. — The word «цей» points to one object. Це суто граматичне правило. — This is a purely grammatical rule.
 
-Наприклад, подивіться на це речення: «Ми працюємо вдень». Слово «працюємо» закінчується на голосний. Тому ми кажемо «вдень». Це звучить дуже швидко і красиво. Ще один приклад: «Вона читає ввечері».
-
-Ці пари показують глибоку інтеграцію евфонії у словник. It is not merely about tiny connecting particles; it dictates the shape of the vocabulary itself.
-
-### Вказівні займенники
-
-It is also good to cultivate a deeper awareness of sound patterns in other word categories. Consider the demonstrative pronouns. The word **цей** means "this". The word **ці** means "these". Вони також працюють у цій системі.
-
-«Цей текст дуже цікавий.»
-> This text is very interesting.
-
-«Ці нові книги лежать там.»
-> These new books lie there.
-
-«Цей студент добре вчиться.»
-> This student studies well.
-
-«Ці слова дуже важливі.»
-> These words are very important.
-
-The language is constantly balancing sharp consonants with clear vowels. Це справжня музика. Всі слова працюють разом. Recognizing these phonetic architectures helps you comprehend the broader melodic ecosystem of Ukrainian. Every single component is meticulously designed to be spoken aloud efficiently.
+> [!myth-buster] Регіональні відмінності
+> Деякі студенти мають страх. — Some students have fear. Вони роблять фонетичні помилки. — They make phonetic mistakes. Вони думають про нерозуміння. — They think about misunderstanding. Це великий міф. — This is a big myth. Носії мови іноді спрощують ці правила. — Native speakers sometimes simplify these rules. Вас завжди зрозуміють. — You will always be understood. Але послідовність робить мовлення гарним. — But consistency makes speech beautiful.
 
 ## Практика
 
-Theoretical knowledge is only the initial step. Let us walk through a practical application. Ми зробимо це разом. Це допоможе закріпити знання.
+Теорія має мати практичне застосування. — Theory must have practical application. Розуміння правил — це перший крок. — Understanding rules is the first step. Справжня мета є іншою. — The true goal is different. Ваш мовний апарат має вибирати звуки. — Your speech apparatus must choose sounds. Він має робити це автоматично. — It must do this automatically. Я маю для вас серію вправ. — I have a series of exercises for you. Вони допоможуть закріпити нові навички. — They will help solidify new skills.
 
-### Аналіз
+### Аналіз тексту
 
-Прочитайте цей діалог. Read this short dialogue carefully. Pay focused attention to the connecting words.
+Прочитайте цей короткий текст. — Read this short text. Це діалог між двома друзями. — This is a dialogue between two friends. Зверніть увагу на виділені слова. — Pay attention to the highlighted words. Ми розберемо форму кожного слова. — We will break down the form of each word. Ви побачите причину. — You will see the reason. Цей аналіз навчить вас думати. — This analysis will teach you to think.
 
-— Привіт! Ти їдеш у Київ?
-— Ні, я їду в місто. Моя мати й батько теж тут.
-— А мій брат і сестра зараз тут.
-— Вони приїхали зі школи?
-— Так, вони повернулися з університету.
-— Добре, до зустрічі!
-— Бувай!
+**Діалог:**
+— Привіт, Антоне. — Hello, Anton. Я зараз **у** школі. — I am at school now.
+— Привіт, Олено. — Hello, Olena. А я **у** Львові. — And I am in Lviv. Брат **і** я тут. — Brother and I are here.
+— Чудово. — Great. Сестра **й** мати теж там? — Are sister and mother also there?
+— Ні. — No. Вони йдуть **зі** школи. — They walk from school. Вони **в** Києві. — They are in Kyiv.
 
-Аналізуємо це разом. Ми дивимося на кожне слово.
+**Аналітичний розбір:**
+* **Я зараз у школі**: Слово «зараз» має приголосний. — The word «зараз» has a consonant. Ми вибираємо приголосний «у». — We choose the consonant «у». Ми зберігаємо потік. — We preserve the flow.
+* **Я у Львові**: Слово «я» має голосний. — The word «я» has a vowel. Але «Львів» має складне скупчення. — But «Lviv» has a complex cluster. Форма «у» працює як буфер. — The form «у» works as a buffer.
+* **Брат і я**: Слово «брат» має приголосний «т». — The word «brother» has the consonant «t». Голосний «і» є містком. — The vowel «і» is a bridge.
+* **Сестра й мати**: Слово «сестра» має голосний «а». — The word «sister» has the vowel «a». Буква «й» уникає зіткнення. — The letter y avoids collision.
+* **Йдуть зі школи**: Слово «школи» починається зі свистячого звуку. — The word «school» starts with a sibilant sound. Воно вимагає форми «зі». — It demands the form «зі».
 
-1. **у Київ**: The sentence begins after a pause. The preceding word "їдеш" terminates in a consonant "ш". Use the vowel "у". Це дуже логічно.
-2. **в місто**: The preceding word "їду" terminates in a vowel "у". Use the consonant "в". Звук дуже м'який.
-3. **мати й батько**: The word "мати" ends in the vowel "и". Use the semi-consonant "й". 
-4. **брат і сестра**: The word "брат" ends in the sharp consonant "т". Use the vowel "і".
-5. **зі школи**: The word "школи" commences with the sibilant "ш". Use "зі". Це правило для шиплячих звуків.
+### Виправлення помилок
 
-Цей аналіз показує, як українці думають підсвідомо. Це займає мілісекунди.
+Тут є три речення. — Here are three sentences. Студенти часто роблять ці помилки. — Students often make these mistakes. Прочитайте їх. — Read them. Відчуйте жорстке звучання. — Feel the harsh sounding. Потім подивіться на правильні варіанти. — Then look at the correct versions. Прочитайте мої пояснення. — Read my explanations. Це гарне тренування. — This is good training.
 
-### Виправте помилку
+1. **Неправильно** — Incorrect: В мене є брат і сестра.
+**Аналіз:** Речення починається з жорсткого «В». — The sentence begins with a harsh «V». Його важко вимовити без звуку. — It is hard to pronounce without a sound. Комбінація «брат і» створює кластер. — The combination «brat i» creates a cluster.
+**Правильно** — Correct: У мене є брат та сестра.
 
-Identify the specific euphony error and correct it. Це ваше завдання. Спробуйте зробити це самостійно.
+2. **Неправильно** — Incorrect: Мати й Олена приїхали із стадіону.
+**Аналіз:** Між словами стоїть звук «і». — The sound «і» stands between words. Це злиття трьох голосних. — This is a merger of three vowels. Це букви и-і-о. — These are the letters y-i-o. Конструкцію «з стадіону» складно вимовити. — The construction «z stadionu» is hard to pronounce.
+**Правильно** — Correct: Мати й Олена приїхали зі стадіону.
 
-**Неправильно (Incorrect):** Він ішов в кіно.
-**Аналіз (Analysis):** The preceding word "ішов" ends in a consonant. The single consonant "в" becomes unpronounceable. Це звучить важко.
-**Правильно (Correct):** Він ішов у кіно.
+3. **Неправильно** — Incorrect: Він працює ввечері й удень.
+**Аналіз:** Сполучник зливається з голосними словами. — The conjunction merges with vowel words. Мова уникає таких вокальних провалів. — The language avoids such vocal dips.
+**Правильно** — Correct: Він працює ввечері й вдень.
 
-**Неправильно (Incorrect):** Вона приїхала із школи.
-**Аналіз (Analysis):** The word "школи" starts with the sibilant "ш". The form "із" crashes directly into it. Це дуже важко вимовити.
-**Правильно (Correct):** Вона приїхала зі школи.
+### Читання вголос
 
-**Неправильно (Incorrect):** Собака і кіт сплять вдома.
-**Аналіз (Analysis):** The word "Собака" ends in a vowel. Utilizing "і" immediately afterward forces an uncomfortable vowel clash. Це неправильний баланс.
-**Правильно (Correct):** Собака й кіт сплять вдома.
+Ось остання порада для вас. — Here is the final advice for you. Читайте всі тексти вголос. — Read all texts aloud. Розуміння правил на папері мало. — Understanding rules on paper is small. Ваші м'язи мають відчути різницю. — Your muscles must feel the difference. Прочитайте неправильні речення швидко. — Read the incorrect sentences fast. Ваш язик буде спотикатися. — Your tongue will trip.
 
-**Неправильно (Incorrect):** Мій брат в центрі.
-**Аналіз (Analysis):** The word "брат" ends in a consonant. The consonant creates a heavy cluster.
-**Правильно (Correct):** Мій брат у центрі.
-
-> [!note] Рекомендація
-> Read these sentences aloud repeatedly. Do not merely look at them silently on the page. Read the incorrect version first, and consciously feel how your mouth struggles. Then read the correct version, and feel the airflow. Euphony is a physical sensation. Ви повинні відчувати це.
+Тепер прочитайте правильні варіанти. — Now read the correct versions. Речення плавно перетікає. — The sentence flows smoothly. Голосні містки дозволяють говорити рівно. — Vowel bridges allow speaking evenly. Зробіть це звичкою. — Make this a habit. Ваша вимова спрямує вас правильно. — Your pronunciation will guide you correctly.
 
 ---
 
 # Підсумок
 
-In this module, we explored the foundational concept of **милозву́чність** (euphony). Це дуже важливо. Це органічний механізм української мови.
-
-Ми вивчили такі форми: у, в, і, й, та, з, із, зі.
-
-1. **У/В**: We use the vowel «у» after consonants or pauses. We use the consonant «в» after vowels. Це базове правило балансу.
-2. **І/Й**: We deploy the strong vowel «і» after consonants. We utilize the semi-consonant «й» after vowels.
-3. **З/Із/Зі**: We use «з» as the default baseline. We shift to «із» before heavy consonant clusters. We strictly use «зі» before sibilant sounds.
-
-Consciously applying these straightforward rules will instantly elevate your pronunciation. 
+У цьому уроці ми дослідили милозвучність. — In this lesson we explored euphony. Ми вивчили чергування звуків. — We learned the alternation of sounds. Це слова «у/в», «і/й» та «з/із/зі». — These are the words «у/в», «і/й», and «з/із/зі». Правила захищають мову. — The rules protect the language. Ми уникаємо скупчень приголосних. — We avoid consonant clusters. Ви навчилися аналізувати текст. — You learned to analyze text. Головна мета — плавний потік повітря. — The main goal is a smooth flow of air. Ваше мовлення має звучати гарно. — Your speech should sound beautiful. Ось слова: Це мати. Брат та сестра. Він у школі. Вона вдома. Вони з міста. Брат і батько. Вона й він.
 
 **Перевірте себе:**
-1. What is the fundamental difference between a vowel and a consonant?
-2. Which form of the preposition "in" do we utilize after a vowel: «у» or «в»?
-3. Why do native speakers say «мати й батько» instead of «мати і батько»? 
-4. Which preposition form must we select before words that commence with a hissing sound?
-5. How does euphony make the language physically comfortable to speak?
+1. Який прийменник ви берете спочатку: «у» чи «в»?
+2. Чому сполучник «і» після голосного є помилкою?
+3. Коли ми використовуємо довгу форму «зі»?
+4. Чим відрізняється фонетичне чергування від граматичної зміни?
+5. Чому ми читаємо тексти вголос?

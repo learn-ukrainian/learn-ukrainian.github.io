@@ -1,32 +1,34 @@
 # Дослідження: Body & Health
 
 ## State Standard Reference
-§3.10: "Здоров’я: частини тіла; самопочуття; хворобливі стани (болить, хворий, травма, висока температура); аптека."
-§4.2.1.4: "Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
-§4.3.2: "Складні (складнопідрядні) речення з підрядною частиною причини (сполучники тому що, бо): Віктор не може говорити, тому що він хворий. Ми не гуляємо, бо холодно."
-Alignment: This module directly fulfills the thematic vocabulary requirements of §3.10, introduces the dative personal pronouns required for expressing states of health (§4.2.1.4), and provides functional practice for causal complex sentences (§4.3.2).
+§4.2.1.4: "Займенник. Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
+§4.3.2: "Складне речення... складні (складнопідрядні) речення з підрядною частиною причини (сполучники тому що, бо): Віктор не може говорити, тому що він хворий. Ми не гуляємо, бо холодно."
+Alignment: This module precisely aligns with the A1 thematic catalog for "Здоров'я" and introduces fundamental linguistic competence structures: Dative pronouns for expressing states (мені погано) and complex causal sentences (тому що/бо).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
 | голова | High (Top 100) | болить голова, головний біль |
-| рука / нога | High | права/ліва рука, мити руки |
-| болить | High | у мене болить, що у вас болить? |
-| температура | Medium-High | міряти температуру, висока температура |
+| рука | High | права/ліва рука, мити руки |
+| нога | High | права/ліва нога |
+| живіт | Medium | болить живіт |
+| лікар | High | сімейний лікар, іти до лікаря |
+| ліки | High | пити ліки, ліки від... |
 
 ## Cultural Hooks
-1. "У здоровому тілі — здоровий дух" - Common proverb universally utilized in Ukrainian physical education (фізкультура) and school contexts.
-2. "Траволікування" (phytotherapy) - The widespread cultural reliance on herbal remedies (чай з малиною або калиною) as a primary response to cold symptoms before turning to pharmaceutical solutions.
+1. Проказка «У здоровому тілі — здоровий дух»: A widely recognized proverb emphasizing the balance between physical well-being and mental/spiritual health, often used in educational contexts.
+2. Траволікування (Phytotherapy): The robust Ukrainian tradition of treating initial cold symptoms with natural remedies, such as drinking hot tea with raspberry (чай з малиною), viburnum (калина), or honey, before seeking formal medical care.
 
 ## Common Learner Errors
-1. "У мене болять голова" → "У мене болить голова" — English speakers often fail to recognize that the body part acts as the grammatical subject dictating the singular/plural verb form.
-2. "Я погано" → "Мені погано" — Direct translation error of "I am bad/sick"; learners must be taught to use the Dative impersonal construction.
-3. "Я йду в лікар" → "Я йду до лікаря" or "Я йду в лікарню" — Conflating the profession (animate) with the building (inanimate).
+1. "У мене болять голова" → "У мене болить голова" — Learners mistakenly treat themselves ("I") as the subject, rather than the singular body part that governs the verb agreement.
+2. "Я погано" → "Мені погано" — A direct translation error from English ("I am unwell"); Ukrainian requires the Dative case with impersonal adverbs to describe physical states.
+3. "Я йду в лікар" → "Я йду до лікаря" or "Я йду в лікарню" — Confusion between the animate professional (лікар) requiring "до + Genitive" and the inanimate location (лікарня) requiring "в + Accusative".
 
 ## Cross-References
 - Builds on: a1-30 (Prepositions: Direction & Origin)
 - Prepares for: a1-49 (My Family), a1-62 (Emergencies)
 
 ## Notes for Content Writing
-- Decolonized framing: When teaching the impersonal state (Мені погано), treat it as a fundamental feature of the Ukrainian syntactic system where the experiencer is the recipient (Dative) of the condition. Avoid using Russian "Мне плохо" as a baseline for comparison. 
-- Maintain A1 immersion policy (10-50% target): Ensure all new grammar explanations, especially the case agreement and causal sentence structures, are heavily scaffolded in English before providing Ukrainian examples.
+- Decolonized framing: Present "У мене болить" as an elegant, intrinsic feature of Ukrainian syntax. Do not compare it to Russian equivalents or frame it as a derivation.
+- Vocabulary rigor: Strictly avoid Russianisms such as "кушати" (use їсти) or "получати" (use отримувати) in all examples and activities.
+- A1 Level Immersion: Ensure all new vocabulary and abstract grammatical explanations (like Dative impersonal states) are accompanied by concise English scaffolding.

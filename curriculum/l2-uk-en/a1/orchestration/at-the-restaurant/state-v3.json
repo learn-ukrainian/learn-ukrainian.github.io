@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T17:36:52Z",
+      "ts": "2026-03-01T00:16:31Z",
       "task_id": "v3-at-the-restaurant-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T17:42:38Z"
+      "ts": "2026-03-01T00:18:58Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T17:42:38Z",
+      "ts": "2026-03-01T00:18:58Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T17:47:09Z",
+      "ts": "2026-03-01T00:21:59Z",
       "attempts": 2
     }
   }

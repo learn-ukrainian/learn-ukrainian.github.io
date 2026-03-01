@@ -1,293 +1,229 @@
 <!-- SCOPE
-Covers: Writing simple postcards, filling out standard forms, writing a brief self-introduction, and formatting a Ukrainian envelope.
+Covers: Writing simple postcards, filling out basic forms, introducing oneself in writing, addressing envelopes.
 Not covered:
-  - Writing formal business letters → later B1 modules
-Related: a1-58, a1-60
+  - Formal business letters → (B1 level)
+Related: a1-58 (Phone Basics), a1-60 (At the Market)
 -->
 
 # Writing Skills
 
 > **Чому це важливо?**
 >
-> Writing a short message is a wonderful way to connect with friends and handle everyday tasks in Ukraine. In this lesson, you will learn how to write a simple but natural Ukrainian postcard, correctly fill out a standard personal form, and understand the modern European address format used in Ukraine.
+> Писати українською — це корисно. Ви можете заповнити анкету. Ви можете надіслати листівку.
+>
+> Writing a postcard is a practical and delightful way to use your new language skills. Even as a beginner, you can share your travel experiences with friends. Knowing how to fill out forms and address envelopes also gives you independence when traveling in Ukraine.
 
 ## Поштова листівка
 
-### Структура листівки
-Писати ці листівки дуже приємно. Це чудовий спосіб поділитися своїми емоціями. Українська поштова листівка має чітку та просту структуру. Спочатку ми завжди пишемо привітання. Потім ми розповідаємо про погоду. Також ми коротко пишемо про наші загальні враження. Наприкінці ми обов'язково прощаємося. Не забудьте поставити ваш особистий підпис.
+### Структура поштової листівки
+Поштова листі́вка має чітку структуру. Вона складається з трьох частин. Спочатку ми пишемо привітання. Потім ми додаємо основний текст. Наприкінці ми залишаємо підпис. Це дуже просто.
 
-Writing such postcards is very pleasant. It is a wonderful way to share your emotions. A Ukrainian postcard has a clear and simple structure. First, we always write a greeting. Then we talk about the weather. We also briefly write about our general impressions. At the end, we necessarily say goodbye. Do not forget to put your personal signature.
+Структура поштової листівки дуже проста. Це ідеальна вправа для початківців. Ви не повинні знати складні слова. Ви маєте вивчити три частини. Спочатку ви пишете привітання. Потім ви пишете прості речення про місто. Ви можете написати про погоду. Наприкінці ви залишаєте підпис. Це дуже гарний формат. Цей формат робить ваше повідомлення зрозумілим і ввічливим.
 
-> [!tip] Справжня пошта
-> Sending a physical **листі́вка** (postcard) is still very popular in Ukraine. You can buy beautiful cards in bookstores, cafes, or at the main post office, and it is a great way to practice your handwriting.
+### Граматичний фокус: «Привіт з...»
+Ми починаємо текст зі слова «Привіт». Далі ми використовуємо прийменник «з». Після нього потрібен родовий відмінок. Назви міст змінюють закінчення.
 
-### Привітання з міста
-Початок вашої листівки — це привітання. Ми дуже часто використовуємо слово «привіт». Після нього ми обов'язково пишемо прийменник «з». Далі йде назва вашого міста. Назва міста завжди стоїть у родовому відмінку. Це надзвичайно популярна конструкція. Вона одразу показує ваше місцезнаходження. Ви також можете додати знак оклику для емоційності.
+Стандартне привітання на поштовій листівці має спеціальну граматику. Ви зазвичай пишете «Привіт з» та назву міста. Цей прийменник завжди вимагає родового відмінка. Для більшості міст ми додаємо закінчення "-а". Для жіночих міст ми використовуємо закінчення "-и". Розгляньмо, як змінюються назви українських міст. Це дуже просте правило.
 
-The beginning of your postcard is the greeting. We very often use the word «привіт» (hi). After it, we strictly write the preposition «з» (from). Next comes the name of your city. The name of the city is always in the Genitive case. This is an extremely popular construction. It immediately shows your location. You can also add an exclamation mark for emotion.
+* **Київ** → Привіт з Ки́єва! (Greetings from Kyiv!)
+* **Одеса** → Привіт з Оде́си! (Greetings from Odesa!)
+* **Львів** → Привіт зі Льво́ва! (Greetings from Lviv!) — *Notice we use «зі» instead of «з» before two consonants to make it easier to pronounce.*
 
-**Приклади привітань:**
-* Привіт з Ки́єва! (Greetings from Kyiv!)
-* Привіт зі Льво́ва! (Greetings from Lviv!)
-* Привіт з Оде́си! (Greetings from Odesa!)
+### Приклад листівки
+Розгляньмо реальний приклад. Уявіть: ви зараз у Львові. Ви пишете повідомлення своїй подрузі. Прочитайте цей текст уважно.
 
-> [!warning] Правило милозвучності
-> Notice that for Lviv, we use **зі** instead of **з**: «Привіт зі Львова!» This is the Ukrainian rule of euphony in action. We avoid grouping too many consonants together to make the speech flow smoothly and sound melodic.
+To see how all these structural elements come together, let us look at a real-world example. Imagine that you are currently spending your summer vacation in the beautiful city of Lviv. You want to write a short, cheerful message to your friend back home. Here is a fully translated model postcard to demonstrate the ideal flow and tone. Notice how the short, independent sentences work together perfectly to create a vivid picture of your trip without requiring any complex grammar rules or long conjunctions.
 
-### Опис погоди та вражень
-Основна частина тексту зазвичай дуже коротка. Ви пишете лише три або чотири прості речення. Ми часто пишемо про актуальну погоду. Також ми описуємо гарні місця навколо нас. Використовуйте дуже прості слова. Наприклад, ви можете описати ваші враження. Ваші друзі будуть дуже раді це читати. Вони зможуть відчути унікальну атмосферу вашої подорожі.
+> Привіт зі Львова!
+> Тут дуже гарно.
+> Погода чудова, світить сонце.
+> Я п'ю каву і бачу стару площу.
+> Бувай,
+> Анна.
+> 
+> *(Greetings from Lviv! It is very beautiful here. The weather is wonderful, the sun is shining. I am drinking coffee and I see the old square. Bye, Anna.)*
 
-The main part of the text is usually very short. You write only three or four simple sentences. We often write about the current weather. We also describe beautiful places around us. Use very simple words. For example, you can describe your impressions. Your friends will be very glad to read this. They will be able to feel the unique atmosphere of your trip.
-
-* Тут ду́же га́рно й тепло. (It is very beautiful and warm here.)
-* Пого́да чудо́ва сьогодні. (The weather is wonderful today.)
-* Я ба́чу старе місто. (I see the old city.)
-* Ми багато гуляємо кожен день. (We walk a lot every day.)
-
-### Прощання та підпис
-Закінчення листівки також є важливим елементом. Ми використовуємо дуже прості слова для дружнього прощання. Найчастіше ми пишемо коротке слово «бувай». Ми пишемо одразу кільком людям. Тоді ми пишемо форму «бувайте». Після цього ми ставимо наше ім'я. Це й є ваш підпис. Іноді люди також додають сьогоднішню дату.
-
-The end of the postcard is also an important element. We use very simple words for a friendly goodbye. Most often we write the short word «бувай» (bye). We write to several people at once. Then we write the form «бувайте». After that, we put our name. This is your signature. Sometimes people also add today's date.
-
-* Бувай! (Bye! — informal, singular)
-* Бувайте! (Bye! — informal, plural)
-* До зустрічі! (See you soon!)
-* Твій друг, Марк. (Your friend, Mark.)
-
-### Модель листівки
-Ось гарний приклад простої та правильної листівки. Прочитайте цей короткий текст. Зверніть увагу на його структуру. Це абсолютно ідеальний формат для початківців. Ви можете сміливо використовувати ці стандартні фрази у своєму житті.
-
-Here is a good example of a simple and correct postcard. Read this short text. Pay attention to its structure. This is an absolutely perfect format for beginners. You can safely use these standard phrases in your life.
-
-**Текст листівки:**
-«Привіт з Києва!
-Тут дуже гарно й тепло. Погода чудова сьогодні. Я бачу велику річку. Ми багато гуляємо кожен день. Мені тут дуже подобається.
-Бувай!
-Анна»
-
-**Переклад:**
-«Greetings from Kyiv!
-It is very beautiful and warm here. The weather is wonderful today. I see a big river. We walk a lot every day. I like it here very much.
-Bye!
-Anna»
+> [!tip] Поштова марка
+> Before you can send your postcard, you need to buy a postage stamp. In Ukrainian, a stamp is called a «пошто́ва ма́рка». You can buy them at any post office. Simply ask: «Дайте, будь ласка, марку».
 
 ## Анкета
 
-### Офіційні документи
-Кожна доросла людина часто заповнює різні офіційні форми. У новому готелі ви обов'язково заповнюєте документ. У банку ви також постійно пишете свою інформацію. Українською мовою такий паперовий документ називається **анке́та**. Заповнити анкету іноземною мовою буває складно. Але прості слова там завжди однакові. Ми детально вивчимо ці важливі слова. Ви зможете легко заповнити будь-яку просту форму.
+### Основна лексика
+Анке́та — це важливий документ. Ви часто заповнюєте анкети. Це потрібно в готелі або банку. Там є стандартні поля. Ви повинні знати ці слова.
 
-Every adult person often fills out various official forms. In a new hotel, you strictly fill out a document. In a bank, you also constantly write your information. In Ukrainian, such a paper document is called an «анкета» (questionnaire or form). Filling out a form in a foreign language can be difficult. But the simple words there are always the same. We will study these important words in detail. You will be able to easily fill out any simple form.
+Анкети є важливою частиною життя. Ви часто заповнюєте анкети в готелі або в банку. Українською цей документ називається «анкета». Знання стандартних слів збереже ваш час. Ви зможете уникнути проблем. Розгляньмо основні поля. Ви побачите їх у кожній анкеті. Це дуже корисна лексика для туристів.
 
-> [!fact] Офіційний стиль
-> Forms use a formal, written register. You will see specific vocabulary that you might not hear in everyday conversational speech. Knowing these written terms is absolutely essential for traveling or living in Ukraine.
+* **Прі́звище** — Surname / Last name
+* **Ім'я́** — First name
+* **Країна** — Country
+* **Да́та наро́дження** — Date of birth
 
-### Ваше ім'я та прізвище
-Перші поля будь-якої анкети завжди питають про ваше ім'я. Українська офіційна система має три частини. Спочатку ви завжди пишете своє **прі́звище**. Потім ви пишете ваше **ім'я́**. Третя частина — це ваш **патро́нім**. В Україні це дуже давня і важлива традиція. Іноземці зазвичай можуть не мати патроніма. Тоді це поле просто залишається порожнім.
+Українці пишуть дати інакше. Спочатку ми пишемо день. Потім ми вказуємо місяць. Наприкінці ми пишемо рік.
 
-The first fields of any form always ask about your name. The Ukrainian official system has three component parts. First, you always write your «прізвище» (surname). Then you write your «ім'я» (first name). The third part is your «патронім» (patronymic). In Ukraine, this is a very old and important tradition. Foreigners usually might not have a patronymic. Then this field simply remains empty.
+Ukrainians write dates differently. First we write the day. Then we indicate the month. At the end we write the year. The standard Ukrainian date format uses dots to separate the day, month, and year. For example, the fifteenth of March, nineteen ninety, is written as **15.03.1990**.
 
-* **Прізвище:** Шевченко
-* **Ім'я:** Тарас
-* **Патронім:** Григорович
+### Стать та ідентичність
+Поле «Стать» вказує на вашу стать. Тут ми використовуємо спеціальні слова. Офіційні форми мають свої правила. Ви маєте бути уважними.
 
-> [!culture] Традиція патроніма
-> The **патронім** (patronymic) is formed from the father's first name. For men, it usually ends in *-ович* (Іванович), and for women in *-івна* (Іванівна). It is a deeply rooted tradition used in official contexts and polite address.
+Поле «Стать» в українських анкетах має особливу структуру. Англійською ви пишете іменники "male" або "female". Але українські офіційні документи мають власні правила. Ви маєте писати «чоловіча» або «жіноча». Не пишіть слова "чоловік" або "жінка". Ви описуєте стать. Тому потрібні спеціальні слова.
 
-### Дата народження
-Наступне дуже важливе поле — це ваша дата народження. Українці пишуть цю дату інакше, ніж, наприклад, американці. Ми завжди починаємо запис з дня. Потім ми пишемо поточний місяць. Останнім ми завжди пишете рік. Правильний формат виглядає саме так: день, місяць, рік. Ми використовуємо звичайні крапки між цими цифрами. Це класичний стандартний європейський формат.
+> [!warning] Правильні слова для статі
+> Always use the adjective forms **чоловіча** or **жіноча** on official documents. Do not write «чоловік» (man) or «жінка» (woman).
 
-The next very important field is your **да́та наро́дження** (date of birth). Ukrainians write this date differently than, for example, Americans. We always start the record with the day. Then we write the current month. Last, we always write the year. The correct format looks exactly like this: day, month, year. We use ordinary periods between these numbers. This is the classic standard European format.
+«Країна» — це місце, звідки ви приїхали. Ви пишете свою країну. Це стандартне поле в анкеті.
 
-**Приклади формату:**
-* 15.03.1990 (п'ятнадцяте березня тисяча дев'ятсот дев'яностий рік)
-* 24.08.1991 (День Незалежності)
-* 01.01.2000 (перше січня дві тисячі першого року)
+Your country is a core part of your profile. It shows where you are from. A standard Ukrainian registration form always asks for your country («країна»). You write the name of your country in the nominative case. For example, you write США (USA), Канада (Canada), or Британія (Britain). 
 
-### Стать та контакти
-Кожна анкета також часто питає про вашу стать. Слово **стать** означає ваш гендер. Тут є одне дуже важливе правило. В офіційних анкетах ми завжди використовуємо спеціальні слова. Ми ніколи не пишемо слова «чоловік» або «жінка». Ми маємо писати форму «чоловіча» або «жіноча». Також треба написати домашню адресу, телефон та електронну пошту. Ці технічні слова дуже схожі на англійські аналоги.
+> [!culture] Офіційні форми
+> Ukrainians use standard forms for registration. The format is very strict. You must write clearly and correctly. Official documents are an important part of administrative life.
 
-Every form also often asks about your gender. The word «стать» means your gender or sex. There is one very important rule here. In official forms, we always use special words. We never write the words for "man" or "woman". We must write the form "male" or "female". Also you need to write a home address, phone, and email. These technical words are very similar to their English counterparts.
+### Контактні дані
+Ви також залишаєте контактні дані. Телефо́н — це ваш номер. Електро́нна по́шта — це ваша адреса в інтернеті. Там є спеціальні символи. Символ «@» називається «равлик».
 
-* **Стать:** чоловіча (male) / жіноча (female)
-* **Адре́са:** домашня адреса (home address)
-* **Телефо́н:** номер телефону (phone number)
-* **Електронна пошта:** електронна адреса (email address)
+You also leave contact details. The phone is your number. Electronic mail is your address on the internet. There are special symbols there. The "@" symbol is called a "snail". Ваші контакти дуже важливі. Вас завжди запитають про «телефон» та «електронну пошту». Ви повинні знати спеціальні символи. Українці називають символ @ «равлик» або «собачка». Крапка — це просто «крапка».
 
-> [!warning] Чоловіча чи чоловік?
-> A very common learner error is writing «чоловік» (man) or «жінка» (woman) in the gender field. Official forms expect the adjectival form describing the gender category itself: **чоловіча стать** (male gender) or **жіноча стать** (female gender).
+### Візуальний гід
+Подивімося на типову анкету. Так виглядає реєстрація в готелі. Уважно прочитайте кожне поле. Дивіться на переклад.
 
-### Зразок анкети
-Подивіться на цю детальну таблицю. Це абсолютно типова українська анкета. Зліва написані офіційні українські слова. Справа ви бачите їхній точний переклад. Вивчіть ці важливі слова дуже добре.
+To help you visualize how this vocabulary appears in the real world, we have provided a simulated form. Let us look at a typical hotel registration document. Read each field carefully and compare the Ukrainian labels with their English translations. Notice how the layout groups personal identity information at the top, followed by contact details. Familiarizing yourself with this visual layout will make real forms feel much less intimidating when you travel.
 
-Look at this detailed table. This is an absolutely typical Ukrainian form. On the left are written the official Ukrainian words. On the right, you see their exact translation. Learn these important words very well.
-
-| Українська анкета | English Translation |
-| :--- | :--- |
-| **Прізвище:** | Surname: |
-| **Ім'я:** | First name: |
-| **Патронім:** | Patronymic: |
-| **Дата народження:** | Date of birth (DD.MM.YYYY): |
-| **Стать (чоловіча / жіноча):** | Gender (male / female): |
-| **Адреса:** | Address: |
-| **Телефон:** | Phone: |
-| **Електронна пошта:** | Email: |
+| Українська (Ukrainian) | Англійська (English) | Ваш запис |
+|------------------------|----------------------|-------------------------|
+| Прі́звище                | Surname              |                         |
+| Ім'я́                     | First name           |                         |
+| Країна                  | Country              |                         |
+| Да́та наро́дження         | Date of birth        | DD.MM.YYYY              |
+| Стать                  | Gender               | чоловіча / жіноча       |
+| Адре́са                  | Address              |                         |
+| Телефо́н                 | Phone number         |                         |
+| Електро́нна по́шта        | Email address        |                         |
 
 ## Про себе
 
-### Як написати про себе
-Досить часто ми пишемо коротко про себе. Це може бути нова соціальна мережа. Це також може бути електронний лист новому другу. Ми вже знаємо багато різних слів. Тепер ми правильно поєднаємо ці слова в єдиний текст. Гарний короткий текст завжди має логічну структуру. Спочатку ми пишемо ім'я та свій вік. Потім ми пишемо про свою роботу та улюблені хобі.
+### Шаблони речень
+Розповідь про себе — це базова навичка. Ми об'єднаємо знайомі фрази. Ви можете написати короткий текст. Це дуже просто.
 
-Quite often we write briefly about ourselves. This could be a new social network. This could also be an email to a new friend. We already know many different words. Now we will correctly combine these words into a single text. A good short text always has a logical structure. First, we write our name and our age. Then we write about our work and favorite hobbies.
+Telling about yourself is a basic skill. We will combine familiar phrases. You can write a short text. This is very simple. Introducing yourself in writing requires you to string together separate, isolated facts into a smooth, cohesive paragraph. You already know how to state your name, your age, your origin, and your profession in isolation. Now, we will use structured sentence templates to build a unified thirty-to-fifty-word self-introduction. This type of text is incredibly versatile. It is perfect for setting up a social media profile, writing a cover letter, or sending an introductory email to a new language partner.
 
-### Вік та використання давального відмінка
-Ми пишемо про свій вік. Тут є одне спеціальне правило. Ми ніколи не кажемо «я маю роки». Ми обов'язково використовуємо давальний відмінок. Ми пишемо слово «мені». Це буквально означає «для мене». Після цього ми ставимо потрібну цифру. Потім ми пишемо слово «років». Це дуже важлива граматична конструкція для кожного.
-
-We write about our age. There is one special rule here. We never say "I have years". We strictly use the Dative case. We write the word «мені» (to me). This literally means "for me". After this, we put the necessary number. Then we write the word «років» (years). This is a very important grammatical construction for everyone.
-
-**Приклади:**
-* Мені двадцять років. (I am twenty years old. / *Lit: To me is twenty years.*)
-* Мені тридцять п'ять років. (I am thirty-five years old.)
-* Моєму брату сорок років. (My brother is forty years old.)
-
-> [!warning] Типова помилка
-> Never translate your age literally from English. Saying "Я 20 років" (I am 20 years) is incorrect and sounds very unnatural. Always use the Dative construction: **Мені 20 років** (To me is 20 years).
-
-### Головні фрази для тексту
-Ваш короткий текст буде дійсно гарним. Для цього потрібні правильні фрази. Ми часто починаємо розповідь з нашого імені. Використовуйте стандартну фразу «мене звати». Далі напишіть, звідки ви приїхали. Використовуйте прийменник «з» та родовий відмінок назви країни. Потім напишіть про вашу професію або щоденне навчання. Наприкінці напишіть про ваш вільний час та улюблені справи.
-
-Your short text will be really good. For this, you need the right phrases. We often start the story with our name. Use the standard phrase «мене звати» (my name is). Next, write where you came from. Use the preposition «з» (from) and the Genitive case of the country name. Then write about your profession or daily studies. At the end, write about your free time and favorite activities.
-
-* **Мене звати...** (My name is...)
+* **Ме́не зва́ти...** (My name is...)
+* **Моя́ профе́сія — ...** (My profession is...)
 * **Я з...** (I am from...)
-* **Я працюю...** / **Я навчаюся...** (I work... / I study...)
-* **Моє хобі...** (My hobby is...)
+* **Я працю́ю...** (I work as a...)
+* **Я вчу́ся...** (I study...)
+* **Моє́ хо́бі...** (My hobby is...)
 
-### Короткі профілі
-Ось три короткі життєві профілі. Вони чудово показують, як поєднати всі ці речення. Прочитайте їх дуже уважно. Ви побачите різні граматичні варіанти тексту. Кожен такий текст простий, але водночас дуже інформативний. Ви можете сміливо використати їх як готову модель для себе.
+### Граматичне нагадування: професія
+Професія не вимагає артиклів. Ми не використовуємо артиклі в українській мові. Це дуже важливо пам'ятати. Ми пишемо просто назву.
 
-Here are three short life profiles. They excellently show how to combine all these sentences. Read them very carefully. You will see different grammatical variants of the text. Each such text is simple, but at the same time very informative. You can safely use them as a ready-made model for yourself.
+When writing about your profession in a profile, English speakers often make a direct translation error. In English, you use articles like "a" or "an". In Ukrainian, there are no articles. Therefore, you simply state the pronoun «Я» (I) followed by the profession, or use the word «професія». You do not use the verb "to be" or any articles when stating your profession in Ukrainian. 
 
-**Профіль 1: Студент**
-«Привіт! Мене звати Макс. Мені двадцять один рік. Я з Канади. Я навчаюся в університеті. Моє хобі — фотографія.»
-*(Hi! My name is Max. I am twenty-one years old. I am from Canada. I study at the university. My hobby is photography.)*
+### Поєднання речень
+Ви написали короткі речення. Тепер ми поєднаємо їх. Ми використовуємо сполучники. Текст стає красивим і природним.
 
-**Профіль 2: Спеціаліст**
-«Вітаю. Мене звати Олена. Мені тридцять два роки. Я з України, але зараз живу в Польщі. Я працюю в банку. Я люблю читати книги.»
-*(Greetings. My name is Olena. I am thirty-two years old. I am from Ukraine, but now I live in Poland. I work in a bank. I love reading books.)*
+You wrote short sentences. Now we will connect them. We use conjunctions. The text becomes beautiful and natural. When writing a paragraph, a simple list of short sentences can feel robotic. To make your writing flow naturally, you should connect related ideas using simple conjunctions. You can use «і» (and) or «й» (and) to add information, or «але» (but) to show a contrast. This small change makes your self-introduction sound much more fluent and natural to a native speaker reading your profile.
 
-**Профіль 3: Турист**
-«Доброго дня! Мене звати Том. Мені сорок років. Я з Британії. Я не працюю, зараз я турист. Я дуже люблю спорт і сучасну музику.»
-*(Good afternoon! My name is Tom. I am forty years old. I am from Britain. I do not work, right now I am a tourist. I really love sports and modern music.)*
+### Профілі персонажів
+Ми підготували три різних профілі. Прочитайте ці тексти уважно. Вони показують реальне використання. Зверніть увагу на структуру.
+
+Ми підготували три різних профілі. Прочитайте ці тексти уважно. Вони показують реальне використання. Зверніть увагу на структуру. Ці приклади показують, як працюють шаблони на практиці. Кожна людина використовує однакову граматику. Але слова різні. Люди різні. Читання таких текстів дуже корисне. Ви зможете впевнено написати про себе. 
+
+**Профіль 1: Студентка**
+> Ме́не зва́ти А́нна. Моя́ профе́сія — студе́нт. Я зі США, але зараз живу в Києві. Я вчу́ся в університе́ті. Моє́ хо́бі — му́зика й танці.
+> *(My name is Anna. My profession is a student. I am from the USA, but now I live in Kyiv. I study at the university. My hobby is music and dancing.)*
+
+**Профіль 2: Програміст**
+> Ме́не зва́ти Марк. Моя́ профе́сія — програмі́ст. Я з Кана́ди. Я програмі́ст. Моє́ хо́бі — спорт і фотографія.
+> *(My name is Mark. My profession is a programmer. I am from Canada. I work as a programmer. My hobby is sports and photography.)*
+
+**Профіль 3: Лікар**
+> Ме́не зва́ти Олена. Моя професія — лікар. Я з Британії. Я лікар у лікарні. Моє хобі — читання цікавих книг.
+> *(My name is Olena. My profession is a doctor. I am from Britain. I work as a doctor in a hospital. My hobby is reading interesting books.)*
 
 ## Конверт та адреса
 
-### Формат української адреси
-Як правильно підписати звичайний паперовий **конве́рт**? Сучасна українська поштова адреса має європейський стандарт. Ми завжди пишемо інформацію від малого до великого. Спочатку ми обов'язково пишемо ім'я людини. Потім ми пишемо назву вулиці та номер будинку. Далі йде назва потрібного міста. В самому кінці ми завжди пишемо **пошто́вий і́ндекс**. Це дуже логічний і максимально зручний формат.
+### Формат адреси
+Написання адре́си має свої правила. Україна використовує європейський стандарт. Це дуже логічний формат. Ми пишемо від конкретного до загального.
 
-How to sign an ordinary paper «конверт» (envelope) correctly? A modern Ukrainian postal address has a European standard. We always write information from specific to general. First, we strictly write the person's name. Then we write the street name and building number. Next comes the name of the necessary city. At the very end, we always write the «поштовий індекс» (postal code). This is a very logical and maximally convenient format.
+Writing an address has its rules. Ukraine uses the European standard. This is a very logical format. We write from specific to general. Addressing an envelope correctly is a critical skill that ensures your letter or postcard actually reaches its intended destination. Modern Ukraine uses the standard European address format for all mail. You must write the recipient's name first, followed by the street, the building number, the apartment number, the city, and finally the postal code («і́ндекс»). 
 
-> [!decolonization] Європейський стандарт
-> Modern Ukrainian address formatting firmly aligns with the European specific-to-general model (Name → Street → City → Postcode). This was a conscious and important shift away from the older Soviet general-to-specific system, integrating Ukraine directly into European postal standards.
+> [!history-bite] Сучасний стандарт
+> The current format (Name → Street → City → Postcode) is a deliberate shift away from the old Soviet "general-to-specific" model, which confusingly started with the country and ended with the person's specific name. This modern system aligns Ukrainian postal standards seamlessly with the rest of Europe.
 
-### Скорочення на конверті
-На стандартному конверті дуже мало вільного місця. Тому ми завжди використовуємо спеціальні абревіатури. Вони дуже короткі, але абсолютно всім зрозумілі. Ми пишемо «вулиця» як «вул.». А «будинок» ми пишемо як «буд.». Також «квартира» має скорочення «кв.». Ви завжди побачите ці маленькі літери на українських поштових відправленнях. Це офіційний стандарт для всієї країни. Його потрібно запам'ятати.
+### Кому і від кого
+На конве́рті є дві секції. Відправник пише свої дані. Там є ім'я одержувача. Ми використовуємо різні відмінки.
 
-There is very little free space on a standard envelope. Therefore, we always use special abbreviations. They are very short, but absolutely understandable to everyone. We write «вулиця» (street) as «вул.». And we write «будинок» (building) as «буд.». Also, «квартира» (apartment) has the abbreviation «кв.». You will always see these small letters on Ukrainian postal items. This is the official standard for the whole country. You need to remember it.
+There are two sections on the envelope. The sender writes their data. The recipient must also be indicated. We use different cases. Most standard postal envelopes feature two main designated sections indicating the sender and the recipient. These sections are governed by very specific grammatical cases. The section designated "To whom" is marked as «Кому́» and technically requires the recipient's name to be written in the Dative case. The section designated "From whom" is marked as «Від ко́го» and requires the sender's name to be written in the Genitive case. For now, as an A1 learner writing international mail, you can safely write names in their basic dictionary form, but you will often see these complex case endings on domestic mail within Ukraine.
 
-**Основні абревіатури:**
+### Абревіатури
+Адре́си використовують скорочення. Це економить місце на папері. Ви повинні знати ці слова. Це дуже корисно.
+
+Addresses use abbreviations. This saves space on the paper. You need to know these words. This is very useful. To save precious space on official forms and small envelopes, postal services rely heavily on standard abbreviations. You will rarely see the full, long words for "street", "building", or "apartment" written out completely. Instead, you must learn to recognize the standard short forms. Memorizing these three essential abbreviations will make reading any Ukrainian address completely straightforward. They are universally used across the country.
+
 * **вул.** = ву́лиця (street)
 * **буд.** = буди́нок (building)
 * **кв.** = кварти́ра (apartment)
 * **м.** = мі́сто (city)
 
-### Відправник та одержувач
-На кожному конверті обов'язково є дві дуже важливі частини. Це детальна інформація про відправника та одержувача. Ми використовуємо різні граматичні відмінки для цих двох частин. Для поля «Кому» ми завжди використовуємо давальний відмінок. Ця людина отримає ваш лист. Для поля «Від кого» ми використовуємо родовий відмінок. Ця людина фізично пише та надсилає цей лист.
+> [!fact] Абревіатури вулиць
+> The abbreviation «вул.» (street) is the most common, but you might also see «просп.» for «проспе́кт» (avenue) or «пров.» for «прову́лок» (lane) in larger cities like Kyiv or Kharkiv.
 
-On every envelope, there are strictly two very important parts. This is detailed information about the sender and the recipient. We use different grammatical cases for these two parts. For the "To whom" field, we always use the Dative case. This person will receive your letter. For the "From whom" field, we use the Genitive case. This person physically writes and sends this letter.
+### Відправлення листа
+Ви готові відправити лист. Ви маєте купити конве́рт. Ви кладете листівку всередину. Потім ви йдете на пошту. 
 
-**Граматика конверта:**
-* Поле «Кому» — давальний відмінок.
-* Поле «Від кого» — родовий відмінок.
+Ви готові відправити лист. Ви берете конве́рт. Ви кладете листівку всередину. Потім ви йдете на пошту. Коли ваш текст готовий, ви шукаєте матеріали. Ви купуєте конверт. Ви кладете листівку в конверт. Ви купуєте марку. Потім ви кидаєте лист у поштову скриньку. Це дуже просто і швидко.
 
-**Grammar of the envelope:**
-* The «Кому» field — Dative case.
-* The «Від кого» field — Genitive case.
-
-### Макет українського конверта
-Подивіться уважно на цей приклад конверта. Лівий верхній кут — це завжди інформація про вас. Правий нижній кут — це точна адреса вашого друга. Зверніть увагу на правильний порядок слів і цифр. Не забудьте наклеїти марку! Слово **ма́рка** означає маленьку поштову наклейку. Без неї ваш лист ніколи не полетить.
-
-Look carefully at this envelope example. The top left corner is always information about you. The bottom right corner is the exact address of your friend. Pay attention to the correct order of words and numbers. Do not forget to stick a stamp! The word «марка» means a small postage stamp. Without it, your letter will never fly.
-
-**Від кого:** від Івана Петренка
-**Звідки:** вул. Хрещатик, буд. 5, кв. 12
-м. Київ
+**Приклад адреси на конверті:**
+Кому: Олена Іваненко
+вул. Хрещатик, буд. 5, кв. 12
+м. Київ, Україна
 01001
-
-**Кому:** Олені Коваленко
-**Куди:** вул. Франка, буд. 10, кв. 4
-м. Львів
-79005
 
 ## Практика
 
-### Важливість тренування
-Теорія — це дуже добре, але практика набагато важливіша. Писати нові тексти іноземною мовою завжди складно спочатку. Тому ми почнемо з дуже простих і зрозумілих завдань. У цьому практичному розділі ви знайдете кілька ситуацій. Ці ситуації є абсолютно реальні. Використовуйте всі нові слова. Ваша головна мета — написати інформацію повністю без помилок.
+### Заповнення анкети
+Тепер час для практики. Уявіть: ви в Києві. Ви реєструєтесь у новому готелі. Ви повинні заповнити анкету.
 
-Theory is very good, but practice is much more important. Writing new texts in a foreign language is always difficult at first. Therefore, we will start with very simple and understandable tasks. In this practical section, you will find several situations. These situations are absolutely real. Use all new words. Your main goal is to write the information completely without mistakes.
+Now is the time for practice. Imagine that you are in Kyiv. You are registering at a new hotel. You need to fill out a form. Let us put your new form-filling vocabulary skills to the test. Below is a set of raw personal data for a fictional traveler from Canada named Mark. He is checking into a hotel in Kyiv. Your task is to mentally map each piece of his personal information to the correct Ukrainian field label found on a standard hotel registration document. This controlled practice helps cement the vocabulary in your memory before you have to use it in a real-life, high-pressure situation at a busy reception desk. Read his data carefully and match it to the fields.
 
-### Ментальне тренування: анкета
-Давайте уявимо одну ситуацію. Ви сьогодні приїхали в український готель. Адміністратор дає паперову анкету. Треба дуже швидко зрозуміти кожне поле. Прочитайте ці короткі дані про людину. Ваше завдання — подумки розмістити їх у правильні поля анкети. Де ви напишете цифри? Де ви напишете стать?
+**Data to map:** Mark Smith, male, born 12.05.1985, phone 555-1234.
 
-Let's imagine one situation. You arrived at a Ukrainian hotel today. The receptionist gives you a paper form. You need to very quickly understand each field. Read this short data about a person. Your task is to mentally place them in the correct fields of the form. Where will you write the numbers? Where will you write the gender?
+* **Прізвище:** Smith
+* **Ім'я:** Mark
+* **Дата народження:** 12.05.1985
+* **Стать:** чоловіча *(Remember to use the adjective!)*
+* **Телефон:** 555-1234
 
-**Дані для анкети:**
-* John
-* Smith
-* 12.05.1985
-* чоловіча
-* john.smith@email.com
+### Написання листівки
+Напишіть свою першу листі́вку. Використовуйте знайомі слова. Будьте креативними та впевненими. Уявіть: ви біля моря.
 
-**Як ви маєте подумати (How you should think):**
-1. «Прізвище» will be Smith.
-2. «Ім'я» will be John.
-3. «Патронім» will be empty.
-4. «Дата народження» will be 12.05.1985.
-5. «Стать» will be чоловіча.
-6. «Електронна пошта» will be john.smith@email.com.
+Write your first postcard. Use familiar words. Be creative and confident. Imagine you are by the sea. Now, you will write your very first postcard in Ukrainian. Use the familiar words and structures you learned today. Be creative but remain confident in the grammar. Here is your writing prompt: Imagine you are visiting the beautiful coastal city of Odesa. You want to send a postcard to a friend. Using the structural template from the first section, write four simple sentences. Mention where you are, compliment the weather, and say one thing you can see. We have provided a model answer below so you can verify your work.
 
-### Ваша перша листівка
-Тепер ми напишемо справжню поштову листівку. Ви зараз відпочиваєте в Одесі. Це неймовірно гарне місто біля моря. Ви дуже хочете відправити листівку вашій родині. Напишіть чотири прості речення українською мовою. Використовуйте ту структуру, яку ми щойно вивчили. Не забувайте про правильний прийменник та родовий відмінок. Подивіться на модельну відповідь трохи нижче.
-
-Now we will write a real postcard. You are currently resting in Odesa. It is an incredibly beautiful city near the sea. You really want to send a postcard to your family. Write four simple sentences in Ukrainian. Use that structure that we just learned. Do not forget about the correct preposition and the Genitive case. Look at the model answer a bit below.
-
-**Завдання:** Напишіть коротку листівку з Одеси (4 речення).
-*(Task: Write a short postcard from Odesa - 4 sentences).*
-
-> [!note] Модельна відповідь
-> Привіт з Одеси!
-> Тут дуже гарно й тепло. Я бачу велике море. Погода чудова сьогодні.
-> Бувайте!
-> Ваш син.
+**Модель відповіді:**
+Привіт з Одеси!
+Тут дуже тепло.
+Погода чудова.
+Я бачу море й пляж.
+Бувай,
+Сара.
 
 ### Розкажіть про себе
-Наше останнє завдання — це розповідь про себе. Ви вже читали три короткі профілі різних людей. Тепер настала ваша черга написати такий текст. Напишіть рівно п'ять речень. Напишіть ваше ім'я, вік, країну, професію та хобі. Завжди пам'ятайте про правило віку та давальний відмінок. Запишіть цей текст у свій зошит. Ви зможете використовувати його дуже часто.
+Останнє завдання найважливіше. Напишіть коротку розповідь. Це ваш особистий текст. Практикуйте це завдання.
 
-Our last task is a story about yourself. You have already read three short profiles of different people. Now it is your turn to write such a text. Write exactly five sentences. Write your name, age, country, profession, and hobby. Always remember the age rule and the Dative case. Write this text down in your notebook. You will be able to use it very often.
+The last task is the most important. Write a short story. This is your personal text. Practice this task. Your final task is arguably the most important exercise in this entire lesson. You will synthesize everything you have learned today about introducing yourself in writing. Take a blank piece of paper and a pen. Write a cohesive forty-word paragraph detailing exactly who you are, where you are from, what you do for a living, and what your favorite hobbies are. This short text will effectively become your personal calling card in Ukrainian. You can use it to introduce yourself on language exchange apps, in forums, or in emails to a new teacher. Practice writing it several times until the structure feels completely natural and automatic to you. Do not be afraid to make mistakes; the goal is clear communication, not absolute perfection.
 
 ---
 
 # Підсумок
 
-Сьогодні ми вивчили дуже багато корисної практичної інформації. Ви тепер добре знаєте, як написати поштову листівку своїм друзям. Ви вивчили правильну структуру короткого повідомлення. Ми детально розглянули, як правильно заповнити офіційну анкету. Ви вивчили назви головних полів: прізвище, ім'я, стать, дата народження. Також ми розібрали сучасний європейський формат української адреси на конверті. Ви навчилися писати короткий текст про себе. Ви успішно використовуєте правильні граматичні конструкції. Давальний відмінок для віку дуже важливий. Це надзвичайно важливі навички для реального життя в Україні.
+Сьогодні ви виконали велику роботу. Ви навчилися писати тексти. Тепер ви можете заповнювати анкети. Це дуже корисні навички.
 
-Today we learned a lot of useful practical information. You now know well how to write a postcard to your friends. You learned the correct structure of a short message. We examined in detail how to correctly fill out an official form. You learned the names of the basic fields: surname, first name, gender, date of birth. We also analyzed the modern European format of a Ukrainian address on an envelope. You learned to write a short text about yourself. You successfully use correct grammatical constructions. The Dative case for age is very important. These are extremely important skills for real life in Ukraine.
+Today you did a great job. You learned to write texts. Now you can fill out forms. These are very useful skills. You have made significant progress in your written Ukrainian today. Writing requires precision, but it also gives you time to think and apply grammar rules correctly. You now possess the practical skills to handle hotel registrations, address mail, and write friendly postcards from your travels. Keep practicing these small texts, as they build the necessary foundation for more complex writing in the future.
 
 **Перевірте себе:**
-1. Як правильно сказати "Greetings from Kyiv" українською мовою і який це відмінок?
-2. У якому форматі українці пишуть дату народження в анкетах (місяць чи день спочатку)?
-3. Яке слово ми використовуємо в анкеті для "male gender": «чоловік» чи «чоловіча»?
-4. Як правильно сказати "I am 25 years old": «Я 25 років» чи «Мені 25 років»?
-5. Які скорочені абревіатури ми завжди використовуємо для слів "вулиця", "будинок" та "квартира"?
-6. Який граматичний відмінок ми використовуємо після слова «Кому» на поштовому конверті?
+1. Як правильно написати "Greetings from Kyiv" на початку листівки?
+2. Як правильно писати про свою професію?
+3. Що означає абревіатура «вул.» на конверті?
+4. Які слова ви повинні використовувати для поля «Стать» в анкеті?
+5. Який стандартний формат української адреси: від загального до конкретного, чи навпаки?
 
 ---

@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3952/2000 (raw: 4084) | pedagogy: 8 violations | immersion: 19.0% LOW (target 35-55% (M56))
+    lesson: 3772/2000 (raw: 3978) | pedagogy: 12 violations | immersion: 33.5% LOW (target 35-55% (M56))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 10 violations (significant)
-     → 8 grammar-level violations (fundamental)
-     → Immersion 16% off target
+     → 14 violations (severe - consider revision)
+     → 12 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/buying-tickets-audit.md

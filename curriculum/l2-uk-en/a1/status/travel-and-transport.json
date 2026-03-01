@@ -2,15 +2,15 @@
   "module": "travel-and-transport",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T18:35:10.162672Z",
+  "last_audit": "2026-03-01T01:15:23.654484Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T18:34:47.359885Z",
-    "meta": "2026-02-28T18:25:31.937458Z",
+    "md": "2026-03-01T01:14:59.431866Z",
+    "meta": "2026-03-01T01:07:36.180470Z",
     "activities": "2026-02-28T18:30:00.597097Z",
     "vocabulary": "2026-02-28T18:30:00.461856Z",
     "plan": "2026-02-28T02:58:15.895142Z",
-    "research": "2026-02-28T18:25:31.925493Z"
+    "research": "2026-03-01T01:07:36.171106Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2037/2000 (raw: 2220)"
+      "message": "3790/2000 (raw: 3942)"
     },
     "activities": {
       "status": "deferred",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
     },
     "review": {
       "status": "deferred",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 2,
     "fail_count": 0,
     "deferred_count": 3
   }

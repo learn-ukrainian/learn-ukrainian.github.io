@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3173/2000 (raw: 3315) | pedagogy: 7 violations | immersion: 11.5% LOW (target 35-55% (M63))
+    lesson: 3795/2000 (raw: 4057) | pedagogy: 82 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -28,10 +28,10 @@
        → FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
 
 
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
-     → 10 violations (significant)
-     → 7 grammar-level violations (fundamental)
-     → Immersion 23% off target (major rebalancing needed)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 87 violations (severe - consider revision)
+     → 38 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/euphony-and-polish-audit.md

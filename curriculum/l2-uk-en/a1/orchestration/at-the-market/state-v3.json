@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T19:06:01Z",
+      "ts": "2026-03-01T01:14:42Z",
       "task_id": "v3-at-the-market-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T19:09:23Z"
+      "ts": "2026-03-01T01:18:17Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T19:09:23Z",
+      "ts": "2026-03-01T01:18:17Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T19:12:34Z",
+      "ts": "2026-03-01T01:21:56Z",
       "attempts": 2
     }
   }

@@ -2,15 +2,15 @@
   "module": "phone-basics",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T19:49:08.927531Z",
+  "last_audit": "2026-03-01T02:06:25.489663Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T19:48:52.788366Z",
-    "meta": "2026-02-28T19:41:36.665523Z",
+    "md": "2026-03-01T02:06:10.419763Z",
+    "meta": "2026-03-01T01:59:02.994812Z",
     "activities": "2026-02-23T01:25:19.461320Z",
     "vocabulary": "2026-02-26T10:56:38.075353Z",
     "plan": "2026-02-28T03:02:37.278426Z",
-    "research": "2026-02-28T19:41:36.658534Z"
+    "research": "2026-03-01T01:59:02.986486Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3081/2000 (raw: 3264)"
+      "message": "3395/2000 (raw: 3593)"
     },
     "activities": {
       "status": "deferred",

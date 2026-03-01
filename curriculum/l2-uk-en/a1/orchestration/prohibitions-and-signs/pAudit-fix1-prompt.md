@@ -18,26 +18,27 @@
   Module:  prohibitions-and-signs
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
+  2 Outline Compliance Errors
   failing gates:
-    lesson: 4944/2000 (raw: 5213) | pedagogy: 24 violations | immersion: 30.5% LOW (target 35-55% (M55))
+    lesson: 5111/2000 (raw: 5433) | pedagogy: 98 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
-
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 27 violations (severe - consider revision)
-     → 23 grammar-level violations (fundamental)
+     → 100 violations (severe - consider revision)
+     → 32 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/prohibitions-and-signs-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/prohibitions-and-signs.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
+
+  Critical Failures:
+    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/prohibitions-and-signs-audit.log for details)
         ```

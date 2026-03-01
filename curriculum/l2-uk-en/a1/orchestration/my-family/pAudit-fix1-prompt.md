@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3659/2000 (raw: 3922) | pedagogy: 3 violations | immersion: 13.7% LOW (target 35-55% (M49))
+    lesson: 3589/2000 (raw: 3836) | pedagogy: 1 violations | immersion: 9.4% LOW (target 35-55% (M49))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 65/100)
-     → Revision recommended (severity 65/100)
-     → 3 violations (minor)
-     → 3 grammar-level violations (fundamental)
-     → Immersion 21% off target (major rebalancing needed)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 45/100)
+     → Revision recommended (severity 45/100)
+     → 2 violations (minor)
+     → Immersion 26% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-family-audit.md

@@ -5,23 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T16:34:34Z",
+      "ts": "2026-02-28T23:40:29Z",
       "task_id": "v3-my-family-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T16:39:12Z"
+      "ts": "2026-02-28T23:43:00Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T16:39:13Z",
+      "ts": "2026-02-28T23:43:00Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T16:59:20Z",
-      "attempts": 3
+      "ts": "2026-02-28T23:47:14Z",
+      "attempts": 2
     }
   }
 }

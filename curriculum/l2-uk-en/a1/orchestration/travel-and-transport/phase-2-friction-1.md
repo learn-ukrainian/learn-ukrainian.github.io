@@ -1,5 +1,5 @@
 **Phase**: Phase 2: Content
-**Step**: Content Generation
+**Step**: Expanding content depth
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

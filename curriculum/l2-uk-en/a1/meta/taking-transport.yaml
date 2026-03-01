@@ -5,46 +5,47 @@ content_outline:
 - section: Вступ
   words: 400
   points:
-  - Introduce the 'Marshrutka Veteran' persona with an English scaffolding paragraph
-    welcoming the learner to the topic of urban transport (громадський транспорт).
-  - 'Contrast the basic verbs of motion: іти (on foot) vs їхати (by vehicle), providing
-    3 parallel example sentences.'
-  - 'Explicitly address and correct the common English-transfer error: ''Я йду на
-    метро'' -> ''Я їду на метро''.'
-  - 'Introduce the modern Ukrainian context: the blend of traditional transport networks
-    with the Kyiv Digital (Київ Цифровий) ecosystem.'
+  - Use English scaffolding (40-50% immersion) to introduce the 'Marshrutka Veteran'
+    persona and the topic of urban transport (громадський транспорт).
+  - 'Create an H3 section comparing basic motion verbs: ''іти'' (on foot) vs ''їхати''
+    (by vehicle), featuring a 3-row comparative table with English explanations.'
+  - 'Provide a dedicated callout block addressing the common English-transfer error:
+    explicitly correct ''Я йду на метро'' to ''Я їду на метро'' with a rule explanation.'
+  - 'Write an introductory paragraph highlighting Ukraine''s modern transit blend:
+    traditional routes vs. the ''Київ Цифровий'' (Kyiv Digital) system.'
 - section: Презентація
   words: 600
   points:
-  - 'Categorize transport vocabulary into ground (зупинка: автобус, тролейбус, трамвай,
-    маршрутка) and underground (станція: метро), with examples for each.'
-  - Present the cultural hook about Arsenalna station (the world's deepest) and the
-    culture of reading/listening to music on long escalators.
-  - 'Grammar H3: Explain Accusative (Destination/Куди) vs. Locative (Location/Де)
-    with a 4-row comparative table (e.g., їду в метро vs я в метро).'
-  - 'Grammar H3: Explain case selection for transit, establishing Locative (їхати
-    на автобусі) as the primary pattern while introducing Instrumental (їхати автобусом)
-    to correct the ''їду автобус'' omission error.'
+  - Create an H3 'Наземний і підземний транспорт' to categorize vehicles, explicitly
+    distinguishing 'зупинка' (bus/tram) vs 'станція' (metro).
+  - Include a 'Cultural Hook' callout about Arsenalna station (105.5m deep), explaining
+    the local culture of reading on the long escalator ride.
+  - Create an H3 'Куди чи Де?' explaining Accusative (Destination) vs. Locative (Location)
+    using a 4-row comparative table (e.g., 'їду в метро' vs 'я в метро'). English
+    scaffolding required.
+  - 'Create an H3 ''Як ми їдемо?'' explaining case selection for transit: establish
+    Locative (''їхати на автобусі'') and introduce Instrumental (''їхати автобусом'')
+    to correct the ''їду автобус'' omission mistake.'
 - section: Практика
   words: 600
   points:
-  - 'Dialogue H3: Paying for fare. Provide a mini-dialogue contrasting traditional
-    cash payment (Передайте за проїзд) with modern digital validation (валідатор,
-    прикласти картку).'
-  - 'Phrasebook H3: Navigating crowds. Teach essential phrases like ''Ви виходите?''
-    (Are you getting off?) and ''Обережно, двері зачиняються''.'
-  - 'Scenario: Provide a structured Q&A frame for asking directions (Як доїхати до...?)
-    and navigating transfers (станція пересадки).'
-  - Include a short 5-6 sentence reading paragraph about a commute to work, requiring
-    the learner to observe the 'Де' vs 'Куди' distinctions in context.
+  - 'Write an H3 ''Діалог: Оплата проїзду'' featuring a 6-line exchange that contrasts
+    traditional cash (''Передайте за проїзд'') with digital payment (''прикласти картку
+    до валідатора'').'
+  - Create an H3 'Корисні фрази' detailing essential crowd navigation phrases ('Ви
+    виходите?', 'Обережно, двері зачиняються'), adding IPA for their first occurrences.
+  - Provide a structured Q&A frame under an H3 'Як доїхати?' with 4 examples of asking
+    for directions and navigating transfers ('станція пересадки').
+  - Include a 5-6 sentence reading practice paragraph about a daily commute in Kyiv,
+    forcing the learner to observe 'Де', 'Куди', and motion verbs in a natural context.
 - section: Підсумок
   words: 400
   points:
-  - Provide a summary table consolidating the іти vs їхати rules and the key prepositions
-    for transport.
-  - Review the top 5 survival phrases from the lesson (e.g., Зупиніть на зупинці,
-    Ви виходите?).
-  - Include a short concluding message from the persona encouraging the learner to
-    feel confident traveling in a Ukrainian city.
-  - Provide a bridging sentence preparing the learner for the upcoming Phone Basics
-    and Emergencies modules by emphasizing location awareness.
+  - Provide a final H3 'Головне' containing a summary table that consolidates 'іти'
+    vs 'їхати' rules and the key prepositions for location/destination.
+  - List the top 5 survival phrases from the lesson in a bulleted review format for
+    easy memorization.
+  - Include a short bilingual concluding message from the persona encouraging the
+    learner.
+  - Write a bridging sentence preparing the learner for a1-58 (Phone Basics) and a1-62
+    (Emergencies) by emphasizing the importance of knowing one's location.

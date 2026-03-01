@@ -17,29 +17,31 @@
   VERDICT: FAIL
   Module:  the-cyrillic-code-i
 ────────────────────────────────────────────────────────────
-  missing orchestration artifacts:
-    no Phase 2 artifacts (section files or prompt)
+  audit script returned non-zero exit code
+  failing gates:
+    lesson: 3369/2000 (raw: 3562) | pedagogy: 2 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Lint         ✅ Clean Format
-  Pedagogy     ✅ Level-appropriate
-  Content_heavy ⏳ Deferred (content-only audit)
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ✅ Content aligned with research
-  Immersion    🇺🇦 6.3% (target 5-15% (M01))
+       → FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
+    [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'the letter...'.
+       → FIX: Vary sentence structure.
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)
+     → 4 violations (moderate)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-i-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-cyrillic-code-i.json
 
-  ✅ AUDIT PASSED.
+  ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  ✅ AUDIT PASSED
+  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-i-audit.log for details)
         ```
+
 
         ## Files to Fix
 

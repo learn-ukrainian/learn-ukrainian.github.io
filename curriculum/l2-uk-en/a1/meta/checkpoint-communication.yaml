@@ -6,28 +6,28 @@ content_outline:
   words: 300
   points:
   - Introduce the A1.5 checkpoint consolidating modals, imperatives, and everyday
-    scenarios.
-  - 'Explicitly state English scaffolding guidelines: English used ONLY for complex
-    task instructions and grammar concept reviews; scenario dialogues must be 100%
-    Ukrainian.'
+    scenarios. Set an encouraging, supportive tone as the 'Patient Supportive Tutor'.
+  - 'Explicitly state English scaffolding guidelines: English MUST be used for complex
+    task instructions and grammar concept explanations; scenario dialogues must be
+    100% Ukrainian.'
   - Provide a warm-up self-assessment checklist (3-4 questions) verifying the learner's
     confidence with ability, necessity, and polite commands.
 - section: 'Навичка 1: Модальні дієслова'
   words: 500
   points:
-  - Define and contrast 'могти' (circumstantial ability) and 'вміти' (learned skill)
-    with 4 paired examples without referencing Russian.
+  - Define and contrast 'могти' (circumstantial ability) and 'вміти' (learned skill).
+    Give 4 paired examples. Frame independently (do not use Russian as a baseline).
   - Explain the three-way negative contrast (не можу, не вмію, не можна) using clear
-    everyday scenarios.
-  - 'Detail obligation modals: ''треба/потрібно'' (impersonal, Dative required) vs
-    ''повинен'' (personal duty) vs ''хотіти'', using a table to show the intensity
+    everyday scenarios, providing English scaffolding for the abstract concepts.
+  - 'Detail obligation modals: ''треба/потрібно'' (requires Dative, impersonal) vs
+    ''повинен'' (personal duty) vs ''хотіти''. Use a simple table to show the intensity
     scale.'
   - Include an H3 mini-dialogue (6-8 lines) between friends discussing weekend plans,
     demonstrating at least 4 modals natively.
 - section: 'Навичка 2: Накази та прохання'
   words: 400
   points:
-  - 'Present a 3-column table of imperative forms (Ти and Ви) for the 8 core verbs:
+  - 'Present a 3-column table of imperative forms (Ти and Ви) for the 8 core A1 verbs:
     читай, пиши, скажи, дай, іди, слухай, дивись, стій.'
   - Explain how to form polite requests natively using 'будь ласка' and 'прошу вас'
     + infinitive. Provide 3 examples of escalating politeness.
@@ -37,7 +37,7 @@ content_outline:
   words: 400
   points:
   - Review family, appearance, and age vocabulary through a cohesive descriptive paragraph
-    about a friend.
+    about a friend (100% Ukrainian with English translations provided).
   - Revisit hobbies ('грати в/на') and invitation patterns ('Ходімо!', 'Давай зустрінемось!')
     with 3 contextual examples.
   - Integrate travel and transport expressions (Instrumental case for transport means,
@@ -48,5 +48,6 @@ content_outline:
   - 'Present a realistic H3 scenario: Planning a weekend trip with a friend.'
   - Provide a model response (dialogue of ~80 words) that natively integrates modals,
     imperatives, travel vocabulary, and invitations.
-  - Include a step-by-step prompt for the learner to write their own plan, enforcing
-    the use of 'хочеш', 'треба', at least two imperatives, and transport vocabulary.
+  - Include a step-by-step prompt for the learner to write their own plan, explicitly
+    enforcing the use of 'хочеш', 'треба', at least two imperatives, and transport
+    vocabulary.

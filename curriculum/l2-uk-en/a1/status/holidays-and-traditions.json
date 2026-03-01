@@ -2,15 +2,15 @@
   "module": "holidays-and-traditions",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T18:08:16.768335Z",
+  "last_audit": "2026-03-01T00:55:16.960128Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T18:07:52.154528Z",
-    "meta": "2026-02-28T18:00:51.410021Z",
+    "md": "2026-03-01T00:54:51.668525Z",
+    "meta": "2026-03-01T00:48:46.746592Z",
     "activities": "2026-02-22T08:03:30.926786Z",
     "vocabulary": "2026-02-26T10:56:38.074390Z",
     "plan": "2026-02-28T03:02:37.231618Z",
-    "research": "2026-02-28T18:00:51.398265Z"
+    "research": "2026-03-01T00:48:46.737084Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3009/2000 (raw: 3334)"
+      "message": "3351/2000 (raw: 3623)"
     },
     "activities": {
       "status": "deferred",

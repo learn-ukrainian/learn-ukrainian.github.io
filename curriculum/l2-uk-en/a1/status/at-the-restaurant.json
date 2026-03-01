@@ -2,15 +2,15 @@
   "module": "at-the-restaurant",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T18:47:09.605037Z",
+  "last_audit": "2026-03-01T01:21:59.777288Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T18:46:47.275238Z",
-    "meta": "2026-02-28T18:36:52.441696Z",
+    "md": "2026-03-01T01:21:34.817693Z",
+    "meta": "2026-03-01T01:16:31.131531Z",
     "activities": "2026-02-20T23:27:47.014370Z",
     "vocabulary": "2026-02-26T10:56:38.069387Z",
     "plan": "2026-02-28T03:02:13.896607Z",
-    "research": "2026-02-28T18:36:52.432998Z"
+    "research": "2026-03-01T01:16:31.122018Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5554/2000 (raw: 5948)"
+      "message": "2737/2000 (raw: 3055)"
     },
     "activities": {
       "status": "deferred",

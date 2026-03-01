@@ -1,5 +1,5 @@
 **Phase**: Phase 2: Content
-**Step**: Pre-submission verification
+**Step**: Writing lesson prose
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

@@ -3,70 +3,71 @@
 # Дослідження: Prohibitions and Signs
 
 ## State Standard Reference
-§3.3: "Місто: організація міського простору (вулиця, парк, площа, проспект)"
-§3.4, §3.5: "Побут і Діяльність: години і хвилини – телеграфний стиль; робочий день; вихідний день; обідня перерва"
-Alignment: This module fulfills the State Standard's thematic requirement for urban navigation (Місто) and daily schedules (Діяльність), bridging them with survival vocabulary for public signs.
+§4.3.1: "стверджувальні й заперечні речення: ... Чекайте на нас! Не чекайте на нас!"
+§3: Thematic area "місто" (city) and "подорожі" (travel).
+Alignment: This module bridges the negative imperative covered in §4.3.1 (Не чекайте) with the infinitive prohibitions commonly used on public signs (Не курити, Не входити) as a critical register distinction for navigating a Ukrainian city (§3).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| вхід / вихід | Very High (Public spaces) | запасний вихід, вхід заборонено |
-| відчинено / зачинено | High (Commerce) | магазин зачинено, двері відчинено |
-| обережно | High (Safety) | обережно, мокра підлога |
-| увага | High (Notices) | увага, акція |
+| увага | High / Public signs | Увага! Зверніть увагу! |
+| обережно | High / Warning signs | Обережно, мокра підлога! |
+| вхід / вихід | Very High / Navigation | Вхід заборонено, Запасний вихід |
+| зачинено / відчинено | Very High / Business | Магазин зачинено, Відчинено 24/7 |
+| перерва | Medium / Schedules | Перерва на обід, Перерва з 13:00 до 14:00 |
 
 ## Cultural Hooks
-1. The iconic Kyiv Metro sign "Не притулятися" (Do not lean) is a perfect real-world example of the infinitive prohibition, familiar to anyone who has visited Ukraine.
-2. The strict distinction between "відчинено" (for doors/shops) and "відкрито" (for discoveries/events) highlights the precision of the Ukrainian language compared to Russian, which blurs them.
+1. In the Kyiv Metro, the iconic sign «Не притулятися» (Do not lean) on train doors is a classic, universally recognized example of an infinitive prohibition.
+2. In Ukraine, traditional business hours often feature a «перерва» (break, usually for lunch) from 13:00 to 14:00. This is less common in the West but critical survival knowledge for navigating Ukrainian institutions and shops.
 
 ## Common Learner Errors
-1. Using imperative instead of infinitive for signs: *Не входьте!* instead of *Не входити!* — The imperative sounds like a personal command, while the infinitive is the standard for impersonal public rules.
-2. Using Russian-influenced vocabulary: *відкрито/закрито* for shops instead of the correct Ukrainian *відчинено/зачинено*.
+1. Translating "Open/Closed" directly using past passive participles (Відкритий/Закритий) for shops instead of the correct adverbs/predicatives (Відчинено/Зачинено).
+2. Using the imperative instead of the infinitive for general written rules (e.g., writing «Не кури!» on a public sign instead of «Не курити»).
+3. Translating the "from... to..." time schedule with incorrect prepositions/cases (e.g., saying "від 9 до 18" instead of the standard "з 9:00 до 18:00").
 
 ## Cross-References
-- Builds on: a1-54 (Checkpoint Communication)
+- Builds on: a1-54 (Checkpoint Communication), a1-52 (Travel and Transport)
 - Prepares for: a1-56 (Buying Tickets)
 
 ## Notes for Content Writing
-- English scaffolding is required for explaining the grammatical difference between impersonal infinitive signs and personal imperative commands.
-- Frame the distinction between *відчинено* and *відкрито* positively, showcasing Ukrainian's rich vocabulary for opening/closing different types of objects, rather than just "unlike Russian."
+- **Decolonized framing**: Emphasize the use of «відчинено/зачинено» for doors and shops. Explicitly note that using «відкрито/закрито» in this context is often a result of Russian linguistic interference (Surzhyk). Ukrainian has precise, distinct vocabulary for opening/closing physical barriers vs. discovering something.
+- Highlight the register difference: personal spoken commands use the imperative («Не чіпай!»), while impersonal public rules use the infinitive («Не торкатися!»).
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
   - section: "Заборони"
-    words: 500
+    words: 450
     points:
-      - "Module intro: navigating Ukrainian cities requires reading signs. Explicitly list that English scaffolding will be used to explain grammar concepts."
-      - "Explain the grammar of public signs: they use the infinitive (Не курити, Не входити), not the imperative, for impersonal rules. Each concept gets its own H3."
-      - "Contrast with the personal imperative command (Не кури!). Clearly define the register difference using practical examples."
-      - "Present core survival signs: Вхід, Вихід, Вхід заборонено. Provide IPA for the first occurrence of each new word."
+      - "Module intro (English scaffolding): explain that reading signs is essential for navigating Ukrainian cities."
+      - "Create an H3 to define infinitive prohibitions on public signs (Не курити!, Не входити!, Не торкатися!). Explain the impersonal register."
+      - "Create an H3 comparing sign language vs. personal commands (Не торкатися! vs Не чіпай!). Explain when to use which."
+      - "Introduce essential navigation signs: Вхід (Entrance), Вихід (Exit), Вхід заборонено. Provide IPA for the first occurrence of each word."
   - section: "Попередження"
     words: 400
     points:
-      - "Introduce exclamatory warnings: Увага!, Обережно!, Небезпечно! Explain they function as standalone safety signals."
-      - "Break down compound danger signs: Мокра підлога, Висока напруга. Explain the noun-adjective agreement in these phrases."
-      - "Include a cultural hook: Feature the iconic Ukrainian metro sign 'Не притулятися' (Do not lean) as a real-world application of the infinitive prohibition."
+      - "Create an H3 for exclamatory warnings: Увага! (Attention!), Обережно! (Careful!), Небезпечно! (Dangerous!). Explain how short-form words function as standalone safety alerts."
+      - "Create an H3 for compound noun phrase warnings: Мокра підлога (Wet floor), Висока напруга (High voltage). Explain the noun-adjective agreement."
+      - "Cultural hook: Feature the iconic Kyiv Metro sign «Не притулятися» (Do not lean) as a real-world example of an infinitive prohibition."
   - section: "Розклади та оголошення"
-    words: 400
+    words: 450
     points:
-      - "Teach key vocabulary for reading operating hours: години роботи, вихідний, перерва."
-      - "Introduce the time format 'з 9:00 до 18:00' as a fixed practical chunk, noting it uses the genitive case for 'from... to...'."
-      - "Present basic transport notices: відправлення, прибуття, номер маршруту."
-      - "Present shopping and street notices: Оголошення, Акція, Знижка."
+      - "Create an H3 for reading business schedules: години роботи (operating hours), вихідний (day off), перерва (break). Note the cultural importance of the lunch break."
+      - "Create an H3 for time formats: teach 'з 9:00 до 18:00' as a fixed practical chunk, noting the genitive case usage for 'from... to...'."
+      - "Create an H3 for notices: Оголошення (Announcement), Акція (Promotion), Знижка (Discount). Connect to transport vocab: відправлення, прибуття."
   - section: "На вулиці"
     words: 400
     points:
-      - "Introduce street navigation terms and their standard abbreviations: вулиця (вул.), площа (пл.), провулок (пров.)."
-      - "Present traffic and crossing vocabulary: Пішохідний перехід, Перехід, Зупинка."
-      - "Highlight precise Ukrainian vocabulary: explain that doors and shops use 'відчинено / зачинено', explicitly contrasting this with the incorrect 'відкрито / закрито' to avoid colonial linguistic interference and Surzhyk."
+      - "Create an H3 for street navigation terms and their standard abbreviations: вулиця (вул.), площа (пл.), провулок (пров.)."
+      - "Create an H3 for traffic and crossing vocabulary: Пішохідний перехід, Перехід, Зупинка, Стоп."
+      - "Create an H3 highlighting decolonized precise vocabulary: explain the strict use of «відчинено / зачинено» for shops/doors, explicitly contrasting with «відкрито / закрито» (Surzhyk/Russian interference)."
   - section: "Практика"
     words: 300
     points:
-      - "Create interactive sign-reading drills using realistic Ukrainian contexts and vocabulary learned in the module."
-      - "Design a schedule comprehension practice: present a store's 'години роботи' and have the learner identify the 'перерва' and 'вихідний'."
-      - "Provide a brief summary of key differences between infinitives on signs versus spoken commands."
+      - "Interactive sign-reading drill: present 4 realistic Ukrainian signs and have the learner identify meaning and grammatical form (infinitive vs imperative)."
+      - "Schedule comprehension drill: present a store's «години роботи» and have the learner identify the «перерва» and «вихідний»."
+      - "Summary recap: brief English table comparing infinitive on signs versus spoken commands."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

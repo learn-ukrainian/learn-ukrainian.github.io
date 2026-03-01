@@ -1,27 +1,22 @@
 {
   "track": "a1",
   "slug": "the-cyrillic-code-i",
-  "mode": "v3",
+  "mode": "v4",
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T12:27:02Z",
-      "task_id": "v3-the-cyrillic-code-i-pA",
-      "mode": "full"
+      "ts": "2026-03-01T10:11:03Z",
+      "note": "adopted-existing-meta"
+    },
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-01T10:11:03Z"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T12:30:53Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-28T12:30:53Z",
-      "note": "adopted-existing"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-28T12:34:12Z",
-      "attempts": 2
+      "ts": "2026-03-01T10:11:03Z",
+      "note": "adopted-existing-content",
+      "words": 4050
     }
   }
 }

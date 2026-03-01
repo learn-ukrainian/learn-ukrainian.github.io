@@ -3,39 +3,39 @@
 # Дослідження: A1 Final Exam
 
 ## State Standard Reference
-§4.2.3 (Cases): "4.2.3.1. Називний відмінок... 4.2.3.2. Знахідний відмінок... 4.2.3.3. Місцевий відмінок... 4.2.3.4. Кличний відмінок"
-§4.2.4.1 (Verbs): "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш...), працювати..."
-§4.3.1 - §4.3.2 (Syntax): "розповідне речення... питальне речення зі спеціальними словами де, звідки, куди, що, хто... складні (складносурядні) речення зі сполучниками і (й), але"
-Alignment: This module acts as the definitive comprehensive assessment for all required A1 morphological and syntactic competencies specified in the 2024 State Standard.
+§4.2.3.1-4.2.3.4: "Називний відмінок... Знахідний відмінок... Місцевий відмінок... Кличний відмінок."
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі... утворення форм минулого часу..."
+§4.3.1: "Просте речення: розповідне, питальне, спонукальне..."
+§4.3.2: "Складне речення: складносурядні речення зі сполучниками і (й), але... складнопідрядні з підрядною частиною причини (тому що, бо)."
+Alignment: Serves as a comprehensive review of all A1 morpho-syntactic and thematic goals (cases, conjugations, simple/complex sentences, themes: city, travel, food) before advancing to A2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| знати | Rank 6 (Most Used Verbs) | знати мову, я знаю |
-| говорити | Rank 16 (Most Used Verbs) | говорити українською, говорити правду |
-| слухати | Rank 21 (Most Used Verbs) | слухати вчителя, слухати музику |
-| розуміти | High educational freq | добре розуміти, розуміти текст |
-| читати | High freq (Core A1 verb) | читати текст, читати книжку |
-| кава | High freq (Food/Culture) | пити каву, львівська кава |
-| каштан | Mid freq (Cultural hook) | київські каштани |
+| знати | Rank 6 / Most Used Verbs | знати мову, знати відповідь, я знаю |
+| говорити | Rank 16 / Most Used Verbs | говорити українською, говорити правду |
+| розуміти | High frequency | добре розуміти, розуміти текст |
+| читати | High frequency | читати книжку, читати українською |
+| каштан | Thematic cultural noun | київські каштани, цвітуть каштани |
+| кава | Thematic cultural noun | пити каву, львівська кава |
 
 ## Cultural Hooks
-1. Kyiv (Heart of Ukraine): Founded in the 5th century, the Dnipro River and chestnut trees (каштани) are its iconic symbols, representing both ancient history and spring beauty.
-2. Lviv (Cultural Capital): Famous for its deep-rooted coffee culture (кава) dating back to the late 18th century, and its historical significance in book printing and European architecture.
+1. **Kyiv's Chestnut Trees (Каштани)**: The horse chestnut tree became the official botanical symbol of Kyiv in the 20th century. "Київські каштани" (Kyiv chestnuts) are a famous cultural trope, especially in spring.
+2. **Lviv Coffee Culture**: Lviv has a deep historical connection to coffee, heavily influenced by Yuriy Kulchytsky, a Ukrainian born near Lviv who opened one of Vienna's first coffee houses in 1683, cementing a coffee tradition in western Ukraine.
 
 ## Common Learner Errors
-1. Accusative vs. Locative confusion for destinations: "Я йду в магазині" (Incorrect - Locative used for motion) → "Я йду в магазин" (Correct - Accusative used for direction/motion).
-2. Adjective Gender mismatch: "Мій велика машина" (Incorrect) → "Моя велика машина" (Correct - feminine agreement across all modifiers).
-3. Class I vs Class II conjugation errors: "Він робє" (Incorrect analogy to -ати verbs) → "Він робить" (Correct - Class II -ити stem).
+1. **Accusative vs. Locative confusion**: Using the Locative case for motion instead of Accusative. Error: «Я йду в магазині» → Correct: «Я йду в магазин» (Motion + Accusative).
+2. **Adjective-Noun gender mismatch**: Defaulting to masculine adjectives for feminine nouns. Error: «Мій велика машина» → Correct: «Моя велика машина».
+3. **Conjugation class mixing**: Confusing endings of Class I (-ати) and Class II (-ити) verbs in the present tense.
 
 ## Cross-References
-- Builds on: a1-43 (Combined Practice)
-- Prepares for: a2-01 (A2 Introduction - Genitive and Dative cases)
+- Builds on: a1-01 through a1-43
+- Prepares for: a2-01 (A2 Introduction)
 
 ## Notes for Content Writing
-- Frame Ukrainian grammar independently as a beautiful, logical system. Do not compare it to Russian cases or syntax.
-- Ensure the "Patient Supportive Tutor" persona is prominent, reducing test anxiety and celebrating the completion of A1.
-- English scaffolding is still required for the grammar review sections (Immersion ~40-50%), but reading texts should be entirely in A1-level Ukrainian.
+- **Persona Alignment**: The Patient Supportive Tutor must establish a "Safe Harbor." Reframe the "exam" as a celebration of mastery («Ви готові!», «Чудова робота!»).
+- **Decolonized Framing**: Emphasize the distinctiveness and beauty of Ukrainian cases and verb patterns without any reference to Russian.
+- **English Scaffolding**: Use English to explain the exam structure to lower anxiety, but ensure the reading texts (Kyiv, Lviv) and examples are fully in Ukrainian.
 
 ===RESEARCH_END===
 
@@ -44,32 +44,31 @@ content_outline:
   - section: "Вступ та орієнтація"
     words: 300
     points:
-      - "Структура фінального тесту: supportive tone to reduce stress, emphasis on celebration of progress («Ви готові!», «Чудова робота!»)"
-      - "Очікування щодо мови (English Scaffolding): clarify that instructions and grammar refreshers will use English, but the test texts will be in Ukrainian"
-      - "Як оцінюється кожна частина: alignment with communicative goals and encouragement from the Patient Supportive Tutor"
-      - "Поради для успішного складання: focus on calm confidence and practical strategies for A1 reading and listening tasks"
+      - "Організація іспиту (English scaffolding): explain that instructions use English to reduce stress, but the test texts will be in Ukrainian."
+      - "Supportive framing: use phrases like 'Ви готові!' and 'Чудова робота!' to celebrate A1 completion."
+      - "Structure breakdown: what to expect in the morphological review, reading, and oral parts."
   - section: "Морфологічний та синтаксичний огляд"
     words: 650
     points:
-      - "Review of core noun cases (Nominative, Accusative, Locative, Vocative) with clear summary tables and English explanations"
-      - "Correction of Case Confusion: drill Accusative vs. Locative with prepositions в/на (motion vs. location: «Я йду в магазин» vs. «Я в магазині»)"
-      - "Grammar drill on Gender Agreement: resolving the learner error of mismatching adjectives/pronouns («Моя велика машина»)"
-      - "Conjugation mastery: clarifying the distinction between Class I (-ати) and Class II (-ити) verbs in the present tense"
-      - "Syntactic structures: review of SVO word order, general questions, and special questions using «де», «звідки», «куди», «що», «хто»"
+      - "Summary tables and clear English explanations of core noun cases (Nominative, Accusative, Locative, Vocative) per State Standard §4.2.3."
+      - "Contrast drill: Motion (Accusative 'Я йду в магазин') vs Location (Locative 'Я в магазині') using prepositions в/на."
+      - "Gender agreement check: fixing common errors like 'Моя велика машина'."
+      - "Verb conjugation refresher: Class I (-ати) vs. Class II (-ити) in the present tense."
+      - "Syntactic structures (§4.3.1): SVO word order, general questions, and special questions using де, звідки, куди, що, хто."
   - section: "Культурна подорож: Київ та Львів"
     words: 650
     points:
-      - "Thematic narrative «Подорож Україною» integrating transport, food, and home contexts into the assessment"
-      - "Kyiv section: short comprehensive text featuring chestnut trees (каштани), the Dnipro river, and its historical status"
-      - "Lviv section: short comprehensive text exploring coffee traditions (кава), book culture, and historic architecture"
-      - "Functional application: using numbers, time, and basic communication phrases within the context of these travel texts"
+      - "Thematic narrative 'Подорож Україною' focusing on transport, food, and home contexts."
+      - "Kyiv section: reading text featuring chestnut trees (каштани), the Dnipro river, and the city's historical background."
+      - "Lviv section: reading text highlighting coffee culture (кава), book history, and architecture."
+      - "Functional practice: integrating numbers, telling time, and basic communication phrases within the travel texts."
   - section: "Фінальне оцінювання та перехід до A2"
     words: 400
     points:
-      - "Listening and Reading Comprehension: verifying understanding of basic complex sentences (using «і», «а», «але»)"
-      - "Practical scenarios and role-play: oral assessment tasks focused on real-world situations (buying tickets, ordering coffee, introductions)"
-      - "Readiness for Level A2: setting the foundation for the upcoming Genitive and Dative cases while celebrating A1 mastery"
-      - "Final encouraging summary: reinforcing the progress made through the 44 modules and looking forward to A2-01"
+      - "Reading and listening comprehension checks verifying understanding of basic complex sentences (і, а, але, бо)."
+      - "Oral assessment role-play scenarios focused on real-world situations (buying tickets, ordering coffee, introductions)."
+      - "Preview of A2: briefly setting the foundation for the upcoming Genitive and Dative cases."
+      - "Final encouraging summary celebrating the completion of all 44 A1 modules."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

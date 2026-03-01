@@ -19,20 +19,20 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 5047/2000 (raw: 5334) | engagement: 0/3 | immersion: 1.1% LOW (target 5-15% (M01))
+    lesson: 3661/2000 (raw: 3855) | engagement: 0/3 | pedagogy: 5 violations | immersion: 2.8% LOW (target 5-15% (M01))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Lint         ✅ Clean Format
-  Pedagogy     ✅ Level-appropriate
-  Content_heavy ⏳ Deferred (content-only audit)
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ✅ Content aligned with research
-  Immersion    ❌ 1.1% LOW (target 5-15% (M01))
+    [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'you will...'.
+       → FIX: Vary sentence structure.
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 35/100)
+     → 6 violations (moderate)
+     → 4 grammar-level violations (fundamental)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-i-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-cyrillic-code-i.json

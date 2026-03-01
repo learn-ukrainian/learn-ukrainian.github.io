@@ -5,42 +5,43 @@ content_outline:
 - section: Вступ та культурний контекст
   words: 450
   points:
-  - Introduce the module context using explicit English scaffolding suitable for A1
-    (25-35% immersion). Present State Standard §3.9 vocabulary for restaurants.
-  - 'Explain the traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch),
-    «Друге» (main dishes/meat/fish with «гарнір»), and «Третє» (drinks/dessert).'
-  - Highlight the cultural distinction between a formal «ресторан» and a casual «кафе».
-  - 'Detail tipping etiquette («чайові»): 10% is standard, and while card payments
-    are ubiquitous in modern Ukraine, cash tips remain popular.'
+  - 'Establish the setting with English scaffolding (targeting ~35% immersion for
+    this A1 stage). Introduce §3.9 core vocabulary: ресторан, кафе, офіціант, меню.'
+  - 'Explain the traditional Ukrainian three-course structure with clear H3 headers:
+    «Перше» (soups like borshch), «Друге» (meat/fish + гарнір), and «Третє» (drinks/dessert).'
+  - 'Detail cultural tipping norms: the 10% standard, the modern ubiquity of QR-code
+    payments (e.g., Expirenza), and the usefulness of the phrase «Решти не треба»
+    (Keep the change).'
 - section: 'Презентація: Мова замовлення'
   words: 650
   points:
-  - 'Present Grammar §4.2.4.1: Future Tense of «бути» (буду, будеш, буде). Establish
-    «Я буду...» as the most natural phrasing for ordering.'
-  - 'Integrate Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct
-    objects. Provide 5+ clear example sentences demonstrating the shift from Nominative
-    to Accusative.'
-  - Address and explicitly drill the common learner error of using the Nominative
-    instead of Accusative (e.g., emphasize «Я буду каву» ✅ over «Я буду кава» ❌).
-  - Differentiate the verbs «бронювати» (for tables/reservations) and «замовити» (for
-    dishes), showing accurate usage in context.
+  - Present §4.2.4.1 Future Tense of «бути». Create a clear table showing «Я буду,
+    ти будеш...» and establish «Я буду...» as the standard, natural way to order.
+  - Integrate §4.2.3.2.1 Accusative Case. Explain in English that the ordered item
+    is the direct object. Provide 5+ varied examples showing the -а → -у shift (кава
+    → каву, піца → піцу).
+  - Include a specific 'Learner Error' callout box explicitly drilling «Я буду каву»
+    (✅) and warning against the Nominative mismatch.
+  - 'Differentiate verbs with examples: «замовити столик» (to book a table) vs. «замовити
+    страву» (to order a dish).'
 - section: 'Практика: Типові ситуації'
   words: 500
   points:
-  - Provide 2 mini-dialogues showcasing typical interactions with the «офіціант» (asking
-    for a menu, placing an order).
-  - Explicitly teach and reinforce the word «рахунок» (bill) in phrases like «рахунок,
-    будь ласка», correcting the common Russian interference («счёт» ❌).
-  - 'Introduce modern dietary phrases: «без м''яса» (vegetarian) and «без глютену»
-    (gluten-free), reflecting contemporary Ukrainian dining culture.'
-  - Include an engagement box highlighting how to politely ask questions about the
-    menu (e.g., «З чого це?», «Це гостре?»).
+  - Provide 2 short, highly practical mini-dialogues (Waitstaff and Customer) with
+    English translations. Focus on requesting the menu and ordering.
+  - Explicitly teach «рахунок, будь ласка». Include a 'Language Note' to combat Russian
+    interference, enforcing «рахунок» over «счёт».
+  - 'Introduce modern dietary phrases with their own H3: «без м''яса» (vegetarian)
+    and «без глютену» (gluten-free), noting their high utility in modern Ukrainian
+    cities.'
+  - 'Include an engagement callout: How to ask polite questions about the menu, e.g.,
+    «З чого це?» or «Це гостре?».'
 - section: Підсумок та етикет
   words: 400
   points:
-  - 'Introduce the cultural hook of the universal Ukrainian toast: «Будьмо!» and the
-    response «Гей!», explaining its social significance.'
-  - 'Summarize polite closures and dining etiquette: «смачного» (bon appetit), «дякую»,
-    and the polite intonation of «будь ласка».'
-  - Provide a brief recap table of the «Я буду... + Accusative» structure as the core
-    grammatical takeaway.
+  - Highlight the cultural toast «Будьмо!» (Let us be!) and its response «Гей!». Briefly
+    explain its empowering Cossack origins.
+  - 'Summarize essential polite dining closures: «смачного» (enjoy your meal) and
+    «дякую».'
+  - Provide a final, consolidated recap table of the «Я буду... + [Accusative]» grammatical
+    formula as the main takeaway of the lesson.

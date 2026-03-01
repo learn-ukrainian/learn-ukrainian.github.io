@@ -18,26 +18,29 @@
   Module:  emergencies
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
+  4 Outline Compliance Errors
+  Structure: Missing '## Summary'
   failing gates:
-    lesson: 3750/2000 (raw: 4057) | pedagogy: 8 violations | immersion: 19.4% LOW (target 35-55% (M62))
+    meta: Missing '## Summary'
+    lesson: 2138/2000 (raw: 2283) | pedagogy: 3 violations | immersion: 11.2% LOW (target 35-55% (M62))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 8 violations (significant)
-     → 8 grammar-level violations (fundamental)
-     → Immersion 16% off target
+     → 3 grammar-level violations (fundamental)
+     → Immersion 24% off target (major rebalancing needed)
+     → Structure issue: Missing '## Summary'
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/emergencies-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/emergencies.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
+
+  Critical Failures:
+    • 4 Outline Compliance Errors
+    • Structure: Missing '## Summary'
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/emergencies-audit.log for details)
         ```

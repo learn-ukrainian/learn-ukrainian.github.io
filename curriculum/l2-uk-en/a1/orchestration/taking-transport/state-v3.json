@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T18:33:02Z",
+      "ts": "2026-03-01T00:48:32Z",
       "task_id": "v3-taking-transport-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T18:34:50Z"
+      "ts": "2026-03-01T00:51:16Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T18:34:50Z",
+      "ts": "2026-03-01T00:51:16Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T18:39:34Z",
+      "ts": "2026-03-01T00:57:39Z",
       "attempts": 2
     }
   }

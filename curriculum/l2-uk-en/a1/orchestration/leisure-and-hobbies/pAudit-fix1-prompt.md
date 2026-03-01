@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3725/2000 (raw: 3909) | engagement: 0/3 | pedagogy: 3 violations | immersion: 23.2% LOW (target 35-55% (M51))
+    lesson: 3461/2000 (raw: 4058) | pedagogy: 1 violations | immersion: 20.1% LOW (target 35-55% (M51))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-    [GLOSSARY_LIST_IN_PROSE] Glossary-style list (3 items) in narrative prose starting: '**стадіо́н** — a stadium. This is a masculine noun.' — vocab tables belong in vocabulary YAML
-       → FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+    [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (3 occurrences): (Indeclinable words), (Let us meet up), (Chess in the park) — breaks immersion target
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 35/100)
-     → 5 violations (moderate)
-     → Immersion 12% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 2 violations (minor)
+     → Immersion 15% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/leisure-and-hobbies-audit.md

@@ -2,15 +2,15 @@
   "module": "at-the-store",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T20:38:07.750034Z",
+  "last_audit": "2026-03-01T02:29:11.669949Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T20:37:57.825136Z",
-    "meta": "2026-02-28T20:13:43.374073Z",
+    "md": "2026-03-01T02:28:46.803798Z",
+    "meta": "2026-03-01T02:23:01.746083Z",
     "activities": "2026-02-22T09:38:09.093720Z",
     "vocabulary": "2026-02-26T10:56:38.069669Z",
     "plan": "2026-02-28T03:02:13.899820Z",
-    "research": "2026-02-28T20:13:43.366876Z"
+    "research": "2026-03-01T02:23:01.738055Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3052/2000 (raw: 3230)"
+      "message": "3681/2000 (raw: 3893)"
     },
     "activities": {
       "status": "deferred",

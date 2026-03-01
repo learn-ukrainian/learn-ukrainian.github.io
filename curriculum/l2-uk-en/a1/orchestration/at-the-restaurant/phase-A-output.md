@@ -3,39 +3,36 @@
 # Дослідження: At the Restaurant
 
 ## State Standard Reference
-§3.9: "Ресторан, кафе: страви; напої; посуд і столові прибори."
-§4.2.4.1: "дієвідмінювання дієслова бути в майбутньому часі: буду, будеш, буде, будемо, будете, будуть"
-§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії)"
-Alignment: This module precisely aligns with the State Standard by combining the thematic setting of dining (§3.9) with the structural grammar of the future tense of "бути" (§4.2.4.1) and the accusative case for direct objects (§4.2.3.2.1) to create authentic, foundational ordering patterns.
+- **§3.9 (Ресторан, кафе)**: "страви; напої; посуд і столові прибори." (Topics for A1 level restaurant interactions).
+- **§4.2.3.2.1 (Знахідний відмінок)**: "Без прийменника (об’єкт дії): Віра читає цікаву книжку." (Crucial for ordering "Я буду каву").
+- **§4.2.4.1 (Дійсний спосіб)**: "дієвідмінювання дієслова бути в майбутньому часі: буду, будеш, буде, будемо, будете, будуть;" (Used for "Я буду...").
+
+Alignment: The module perfectly aligns with the standard by combining the thematic vocabulary of §3.9 with the core grammatical structures required at A1 (Future tense of «бути» §4.2.4.1 + Accusative direct object §4.2.3.2.1).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| замовити | High | замовити страву, замовити столик |
-| рахунок | High | попросити рахунок, оплатити рахунок |
-| страва | High | перша страва, національна страва |
-| офіціант | Medium | покликати офіціанта, дати меню |
-| бути | Core | Я буду... (ordering structure) |
-| перше | High (dining) | суп на перше |
-| друге | High (dining) | на друге з гарніром |
-| столик | High | столик на двох, вільний столик |
+| замовити | High (A1 Core) | замовити столик (book a table), замовити страву (order a dish) |
+| рахунок | High (A1 Core) | попросити рахунок, оплатити рахунок, рахунок, будь ласка |
+| страва | High (A1 Core) | перша страва (soup), друга страва (main), національна страва |
+| офіціант | Med (Contextual) | покликати офіціанта, запитати офіціанта |
+| меню | High (A1 Core) | подивитися меню, дати меню |
 
 ## Cultural Hooks
-1. **Dining Registers**: In Ukraine, there is a distinct cultural boundary between a «ресторан» (often formal, celebratory, evening-focused, sometimes with live music) and a «кафе» (casual, daily, coffee and quick meals).
-2. **The Universal Toast**: «Будьмо!» (literally "Let us be!") is the most common and versatile Ukrainian toast, often met with a collective, rhythmic response of «Гей!».
-3. **Tipping Culture**: A standard «чайові» is 10%. While Ukraine has highly advanced scan-to-pay and card payment systems, leaving cash tips is still frequently appreciated by service staff.
+1. **Tipping & Payment ("Решти не треба")**: The standard tip is 10%. While QR-code digital tipping (like 'Expirenza' by monobank) has revolutionized Ukrainian dining, cash is still highly appreciated. A key phrase when handing over cash that includes the tip is «Решти не треба» (Keep the change).
+2. **The Cossack Toast ("Будьмо!")**: More than just "cheers," «Будьмо» literally translates to "Let us be!" It is a first-person plural imperative of «бути» with deep roots in Zaporozhian Cossack culture, serving as an affirmation of life and resilience. It is traditionally met with the enthusiastic response «Гей!».
 
 ## Common Learner Errors
-1. **Case Mismatch when Ordering**: Learners often default to the Nominative case when pointing at a menu item (e.g., «Я буду кава» ❌) instead of using the mandatory Accusative case for the direct object («Я буду каву» ✅).
-2. **Russian Interference for "Bill"**: Learners with prior Slavic exposure frequently use the Russianism «счёт» ❌ instead of the authentic Ukrainian «рахунок» ✅.
+1. **Nominative instead of Accusative** → «Я буду кава» ❌ vs. «Я буду каву» ✅ — Beginners often treat the ordered item as a standalone noun rather than the direct object of the implied action.
+2. **Russian interference for "bill"** → «счёт» ❌ vs. «рахунок» ✅ — The Russian word is frequently mistakenly used by learners exposed to mixed-language environments or older materials.
 
 ## Cross-References
-- Builds on: a1-35 (At the Café Practical)
-- Prepares for: a1-60 (At the Market), a1-61 (At the Store)
+- Builds on: a1-35 (At the Café Practical) - foundational cafe vocabulary.
+- Prepares for: a1-60 (At the Market), a1-61 (At the Store) - extending Accusative case usage to transactional environments.
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Frame the Ukrainian service industry as modern and dynamic. Emphasize authentic Ukrainian terms («рахунок», «замовити») and avoid any implicit framing that Ukrainian is a variation of Russian. Explain rules natively.
-- **Immersion Target**: As an A1 module in phase 5, aim for 25-35% immersion. Use English to clearly scaffold the grammatical relationship between "бути" and the Accusative case, but immerse the student in Ukrainian for all mini-dialogues and example phrases.
+- **Decolonized Framing**: Emphasize Ukrainian modern dining culture (fast adoption of digital menus/QR codes) rather than framing Eastern European dining as "traditional or outdated." When correcting «счёт» to «рахунок», position it as using the authentic, correct Ukrainian terminology rather than just "not Russian."
+- Ensure English scaffolding is clear, as this module is at ~35% immersion. Provide IPA only for the first occurrence of new words.
 
 ===RESEARCH_END===
 
@@ -44,30 +41,29 @@ content_outline:
   - section: "Вступ та культурний контекст"
     words: 450
     points:
-      - "Introduce the module context using explicit English scaffolding suitable for A1 (25-35% immersion). Present State Standard §3.9 vocabulary for restaurants."
-      - "Explain the traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch), «Друге» (main dishes/meat/fish with «гарнір»), and «Третє» (drinks/dessert)."
-      - "Highlight the cultural distinction between a formal «ресторан» and a casual «кафе»."
-      - "Detail tipping etiquette («чайові»): 10% is standard, and while card payments are ubiquitous in modern Ukraine, cash tips remain popular."
+      - "Establish the setting with English scaffolding (targeting ~35% immersion for this A1 stage). Introduce §3.9 core vocabulary: ресторан, кафе, офіціант, меню."
+      - "Explain the traditional Ukrainian three-course structure with clear H3 headers: «Перше» (soups like borshch), «Друге» (meat/fish + гарнір), and «Третє» (drinks/dessert)."
+      - "Detail cultural tipping norms: the 10% standard, the modern ubiquity of QR-code payments (e.g., Expirenza), and the usefulness of the phrase «Решти не треба» (Keep the change)."
   - section: "Презентація: Мова замовлення"
     words: 650
     points:
-      - "Present Grammar §4.2.4.1: Future Tense of «бути» (буду, будеш, буде). Establish «Я буду...» as the most natural phrasing for ordering."
-      - "Integrate Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct objects. Provide 5+ clear example sentences demonstrating the shift from Nominative to Accusative."
-      - "Address and explicitly drill the common learner error of using the Nominative instead of Accusative (e.g., emphasize «Я буду каву» ✅ over «Я буду кава» ❌)."
-      - "Differentiate the verbs «бронювати» (for tables/reservations) and «замовити» (for dishes), showing accurate usage in context."
+      - "Present §4.2.4.1 Future Tense of «бути». Create a clear table showing «Я буду, ти будеш...» and establish «Я буду...» as the standard, natural way to order."
+      - "Integrate §4.2.3.2.1 Accusative Case. Explain in English that the ordered item is the direct object. Provide 5+ varied examples showing the -а → -у shift (кава → каву, піца → піцу)."
+      - "Include a specific 'Learner Error' callout box explicitly drilling «Я буду каву» (✅) and warning against the Nominative mismatch."
+      - "Differentiate verbs with examples: «замовити столик» (to book a table) vs. «замовити страву» (to order a dish)."
   - section: "Практика: Типові ситуації"
     words: 500
     points:
-      - "Provide 2 mini-dialogues showcasing typical interactions with the «офіціант» (asking for a menu, placing an order)."
-      - "Explicitly teach and reinforce the word «рахунок» (bill) in phrases like «рахунок, будь ласка», correcting the common Russian interference («счёт» ❌)."
-      - "Introduce modern dietary phrases: «без м'яса» (vegetarian) and «без глютену» (gluten-free), reflecting contemporary Ukrainian dining culture."
-      - "Include an engagement box highlighting how to politely ask questions about the menu (e.g., «З чого це?», «Це гостре?»)."
+      - "Provide 2 short, highly practical mini-dialogues (Waitstaff and Customer) with English translations. Focus on requesting the menu and ordering."
+      - "Explicitly teach «рахунок, будь ласка». Include a 'Language Note' to combat Russian interference, enforcing «рахунок» over «счёт»."
+      - "Introduce modern dietary phrases with their own H3: «без м'яса» (vegetarian) and «без глютену» (gluten-free), noting their high utility in modern Ukrainian cities."
+      - "Include an engagement callout: How to ask polite questions about the menu, e.g., «З чого це?» or «Це гостре?»."
   - section: "Підсумок та етикет"
     words: 400
     points:
-      - "Introduce the cultural hook of the universal Ukrainian toast: «Будьмо!» and the response «Гей!», explaining its social significance."
-      - "Summarize polite closures and dining etiquette: «смачного» (bon appetit), «дякую», and the polite intonation of «будь ласка»."
-      - "Provide a brief recap table of the «Я буду... + Accusative» structure as the core grammatical takeaway."
+      - "Highlight the cultural toast «Будьмо!» (Let us be!) and its response «Гей!». Briefly explain its empowering Cossack origins."
+      - "Summarize essential polite dining closures: «смачного» (enjoy your meal) and «дякую»."
+      - "Provide a final, consolidated recap table of the «Я буду... + [Accusative]» grammatical formula as the main takeaway of the lesson."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

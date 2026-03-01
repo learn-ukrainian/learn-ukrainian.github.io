@@ -1,5 +1,5 @@
 <!-- SCOPE
-Covers: Making and receiving phone calls, messaging, phone etiquette, and delivery scenarios.
+Covers: Making phone calls, answering politely, formal vs informal address on the phone, handling couriers, leaving messages, wrong numbers, and phone-related vocabulary.
 Not covered:
   - Emergency calls → a1-62
 Related: a1-18, a1-57
@@ -7,292 +7,255 @@ Related: a1-18, a1-57
 
 # Phone Basics
 
-> [!note] Чому це важливо?
-> Phone calls can be stressful when you are learning a new language. You cannot see the other person, so you must rely entirely on words and tone. Mastering authentic Ukrainian telephone formulas will help you answer calls from couriers, clinics, and friends with confidence, respect, and natural fluency.
+> **Чому це важливо?**
+>
+> In our modern, highly digital world, making a phone call or writing a quick text message is an essential daily skill. Whether you need to answer a call from a delivery courier, talk to a clinic receptionist, or just text a friend, using the right Ukrainian phrases ensures you sound polite, natural, and confident. Understanding the cultural nuances of phone etiquette — like when to use formal versus informal speech — will make your communication smooth and effective from the very first word.
 
 ## Вступ та етикет
 
-### Привітання по телефону
-Ваш телефон дзвонить. Ви маєте відповісти. Українська мова має два дуже важливі слова. Перше слово — це «Алло!». Друге слово — це «Слухаю!». Кожне слово має свою ситуацію.
+### Introduction to Phone Greetings
+Коли дзвонить телефон, важливо знати правильну відповідь. В Україні існують свої унікальні культурні правила комунікації. Ми маємо різні слова для друзів і офіційних розмов. Правильне вітання — це перший крок до приємної бесіди.
 
-In English, the word "Hello" is an almost universal tool for picking up the phone. Ukrainian telephone etiquette, however, uses different words depending on the context and who is calling. Understanding the boundary between «Алло!» and «Слухаю!» is your first major step to sounding like a natural speaker. 
+When the phone rings, it is important to know the correct answer. In Ukraine, there are specific cultural rules for communication. We have different words for friends and formal conversations. A correct greeting is the first step to a pleasant chat.
 
-**«Алло!»**
-Це звичайне слово для щоденного спілкування. Дзвонить близький друг або мама. Ми говоримо це слово. Це простий або неформальний стиль. Є поганий зв'язок. Ми не чуємо людину. Ми кажемо «Алло!».
+Одне з найпопулярніших вітань у світі — слово «алло́». В Україні ми також дуже часто використовуємо це слово. Воно абсолютно нейтральне і дуже просте. Ваш хороший друг дзвонить. Ви можете сміливо сказати «алло». Але українська мова має свою власну традицію відповідей. Це гарне слово «слу́хаю».
 
-The word **«алло́»** is the standard way to answer the phone when someone you know well is calling. It is also the specific word you use to check the audio connection if the line goes quiet, serving the same function as "Are you there?" in English. 
+One of the most popular greetings in the world is the word "hello" (алло́). In Ukraine, we also use this word very often. It is absolutely neutral and very simple. Your good friend calls. You can confidently say «алло». But the Ukrainian language has its own tradition of answering. That is the beautiful word "I am listening" (слу́хаю).
 
-**«Слухаю!»**
-Це дуже ввічлива і професійна форма. Дзвонить невідомий номер. Ми кажемо «Слухаю!». Або ми кажемо «Слухаю вас!». Це слово показує готовність до розмови.
+Слово «слухаю» означає високий рівень поваги. Це справжній професійний стандарт в Україні. Ви дзвоните в офіс або банк. Ви обов'язково почуєте це вітання. Воно показує готовність людини допомогти. Це надзвичайно ввічлива форма. Ви також можете сказати довшу фразу. Скажіть «слухаю вас» для ще більшої поваги.
 
-The phrase **«слу́хаю»** (I am listening) or **«слу́хаю вас»** (I am listening to you) is the distinctly Ukrainian professional standard. It is highly polite. You will consistently hear this greeting from receptionists, medical clinic staff, and customer service workers. It actively signals a readiness to assist the caller.
+The word «слухаю» signifies a high level of respect. It is a true professional standard in Ukraine. You call an office or a bank. You will definitely hear this greeting. It shows the person's readiness to help. It is an extremely polite form. You can also say a longer phrase. Say "I am listening to you" (слухаю вас) for even greater respect.
 
-*Приклади:*
-— Алло! Привіт, Олено! Як справи? (Hello! Hi, Olena! How are things?)
-— Добрий день. Клініка «Здоров'я». Слухаю вас. (Good afternoon. "Health" Clinic. I am listening to you.)
-— Алло! Алло! Ви мене чуєте? (Hello! Hello! Do you hear me?)
+> [!tip]
+> **Professional Settings**
+> In a professional setting, saying «Слухаю вас!» when you pick up the phone is much better than a generic «Алло!». It sets a tone of attentive customer service and reflects authentic Ukrainian business culture.
 
-*Коли це використовувати:*
-When you see an unknown number flashing on your screen, answer with «Слухаю!». When you clearly see your friend's name, simply answer with «Алло!».
+| Українською | English Context | Коли використовувати |
+|-------------|-----------------|----------------------|
+| Алло! | Hello! | З друзями, родиною, або невідомий телефон. |
+| Слухаю! | I'm listening! | В офісі, на роботі, або офіційний дзвінок. |
+| Слухаю вас! | I am listening to you! | Найбільш ввічлива форма для партнерів. |
 
-### Офіційний та неформальний стиль
-Українська мова чітко розділяє форми «Ви» і «ти». По телефону ми часто говоримо з незнайомими людьми. Ми використовуємо форму «Ви» для кур'єрів. Це показує дистанцію та повагу.
+### The Formal vs. Informal Address
+По телефону ми майже ніколи не знаємо співрозмовника. Тому дуже важливо правильно вибрати форму звертання. Українською ми маємо дві різні форми. Це офіційна «Ви» та неофіційна «ти». Ваш вибір завжди залежить від ситуації.
 
-The distinction between formal address (**«Ви»**) and informal address (**«ти»**) remains critical on the phone. Because you often speak to strangers — like delivery drivers or hotel receptionists — you must default to the formal «Ви» to maintain social respect.
+Over the phone, we almost never know the interlocutor. Therefore, it is very important to correctly choose the form of address. In Ukrainian, we have two different forms. This is the formal «Ви» and the informal «ти». Your choice always depends on the situation.
 
-Нові студенти роблять одну помилку. Вони швидко починають говорити «ти». Це звучить не дуже гарно. Ми говоримо «ти» тільки друзям. Ми кажемо «Ви» всім іншим людям.
+Часта помилка іноземних студентів — раннє використання форми «ти». Кур'єр або водій дзвонить. Завжди використовуйте тільки форму «Ви». Голос людини звучить молодо. Але форма «Ви» є обов'язковою. Це яскраво показує вашу високу культуру.
 
-A common learner error is switching to the informal «ти» too early, especially during fast, transactional calls like receiving a package. Even if the entire call lasts only ten seconds, modern Ukrainian society expects polite, formal address for all service and public workers. 
+A frequent mistake foreign students make is the early use of the «ти» form. A courier or a driver calls. Always use only the «Ви» form. The person's voice sounds young. But the «Ви» form is mandatory. This clearly shows your high culture.
 
-*Як це працює:*
-Always use the plural/formal verb endings (which usually end in -те) when speaking to an unknown caller. Keep the tone respectful and professional.
+Ми використовуємо форму «ти» тільки для близьких друзів. Ви кажете «ти». Людина незнайома. Це звучить не дуже ввічливо. Найкращий варіант — завжди починати розмову з поважної форми «Ви».
 
-*Приклади:*
-— Скажіть, будь ласка, де ви зараз? (Tell me, please, where are you now?)
-— Скажи, будь ласка, де ти зараз? (Tell me, please, where are you now?)
+We use the «ти» form only for close friends. You say «ти». The person is unfamiliar. This sounds not very polite. The best option is to always start the conversation with the respectful «Ви» form.
 
-*Коли це використовувати:*
-Assume every new phone interaction is formal. Only transition to «ти» if you have explicitly agreed to speak informally or if you are calling a close personal friend.
+> [!warning]
+> **Don't Rush to «Ти»**
+> Never use the informal «ти» with service workers, couriers, or receptionists over the phone. Defaulting to «Ви» prevents awkward social missteps and demonstrates your understanding of Ukrainian social boundaries.
 
-> [!tip] Порада
-> **Завжди починайте з «Ви»**
->
-> If a courier calls you to deliver your food, they will politely use «Ви». You should mirror this respect and also use «Ви» when replying to them. Professional politeness is a highly valued component of Ukrainian daily interactions.
+### Pronunciation Workshop: The Sound «дз»
+Тепер ми маємо поговорити про вимову. Найважливіше дієслово для нашої теми — слово «дзвони́ти». Також ми маємо популярне слово «дзвіно́к». Обидва ці слова починаються на цікавий звук «дз». Це один цілий звук.
 
-### Вимова: один звук «дз»
-Слово **«телефон»** — це дуже просте слово. Але дієслово **«дзвонити»** має один складний звук. Це звук «дз». Це один звук. Це не два різні звуки.
+Now we must talk about pronunciation. The most important verb for our topic is the word "to call" (дзвони́ти). We also have the popular word "a bell/call" (дзвіно́к). Both of these words start with the interesting sound «дз». This is one complete sound.
 
-To comfortably use phone vocabulary, you must master the pronunciation of the core verb **«дзвони́ти»** (to call) and the noun **«дзвіно́к»** (a call or a bell). Many language learners struggle specifically with the letters «дз». 
+Студенти дуже часто роблять одну типову помилку. Вони спочатку кажуть звук «д». Потім вони роблять велику паузу. Потім кажуть звук «з». Це неправильно. Звук «дз» треба вимовляти разом, дуже швидко. Цей звук цікавий. Його робить маленька бджола літом.
 
-Студенти часто читають це слово неправильно. Вони кажуть звук /д/ і потім звук /з/. Це фонетична помилка. Ми маємо вимовляти це як один швидкий звук.
+Students very often make one typical mistake. They first say the sound /d/. Then they make a big pause. Then they say the sound /z/. This is incorrect. The sound «дз» needs to be pronounced together, very quickly. This sound is interesting. A small bee makes it in the summer. It is an affricate, like the end of the English word "a**ds**".
 
-A frequent pronunciation error is reading «дз» as two separate sounds (/d/ followed clearly by /z/), or sometimes just skipping the /d/ entirely and saying only /z/. In Ukrainian phonetics, «дз» forms a single affricate sound. It is incredibly similar to the quick "ds" sound found at the end of the English words "woods" or "kids".
+Спробуйте сказати це слово швидко. Не робіть жодної паузи між буквами. Це зробить вашу українську вимову набагато кращою.
 
-*Як це працює:*
-Press your tongue behind your upper teeth exactly as if you are going to say a hard /d/, but release it quickly into a buzzing /z/ sound in one single, fluid motion.
+Try to say this word quickly. Do not make any pause between the letters. This will make your Ukrainian pronunciation much better.
 
-*Приклади:*
-— Я маю **дзвонити** в офіс сьогодні. (I have to call the office today.)
-— Це був дуже важливий **дзвінок**. (That was a very important call.)
-— Я хочу **зателефонувати** в офіс. (I want to phone the office.)
+> [!myth-buster]
+> **Two Letters, One Sound**
+> A common misconception is that all letters in Ukrainian are always pronounced completely separately. However, the letter combination **дз** represents a single, unified phonetic sound. Do not split them when speaking!
 
-*Коли це використовувати:*
-Whenever you encounter «дз» in a text, remember to blend it completely. If you find «дзвонити» too physically hard to pronounce in fast speech, you can substitute it with the slightly more formal synonym **«телефонувати»** (to phone), which is much easier for English speakers to articulate.
-
----
+Ось кілька простих прикладів для щоденної практики:
+- Я хочу подзвонити зараз. (I want to call now.)
+- Це дуже важливий дзвінок. (This is a very important call.)
+- Мій новий телефон дзвонить часто. (My new phone rings often.)
 
 ## Презентація: Основні структури
 
-### Як назвати себе
-Ви робите дзвінок. Ви маєте назвати своє ім'я. Українці роблять це дуже просто і коротко. Ми кажемо слово «Це» і наше ім'я. Або ми кажемо ім'я і дієслово «слухає».
+### Identifying Yourself on the Phone
+Ви відповідаєте на дзвінок. Ви часто називаєте своє ім'я. Як це зробити правильно українською? Багато людей просто перекладають англійську фразу буквально. Вони кажуть «Я є Олена». Але українці майже ніколи так не говорять. Це звучить дуже неприродно.
 
-When you make a call and need to identify yourself, the grammatical structure is remarkably simple. However, English speakers frequently translate their native phrases literally into Ukrainian, which leads to highly unnatural sentences.
+You answer a call. You often state your name. How do you do this correctly in Ukrainian? Many people simply translate the English phrase literally. They say "I am Olena" (Я є Олена). But Ukrainians almost never speak like this. It sounds very unnatural.
 
-Англійською мовою люди кажуть "It is me". Але українською мовою ми не говоримо «Я є Олена». Це калька з іншої мови. Ми використовуємо слово «Це» або спеціальну форму дієслова.
+Ми часто пропускаємо дієслово «бути» у теперішньому часі. Найкращий варіант — сказати «Це Олена». Це найпростіша і найпопулярніша форма. Ви також можете впевнено сказати «Олена слухає». Це дуже професійний спосіб ідентифікації.
 
-The most prominent English-influenced error is saying «Я є Марк» (I am Mark) to introduce yourself on the phone. This sounds entirely foreign to a native ear. In modern Ukrainian speech etiquette, you use the demonstrative pronoun **«Це»** (This is) or you state your name followed by the third-person verb **«слухає»** (listens). 
+We often skip the verb "to be" in the present tense. The best option is to say "This is Olena" (Це Олена). This is the simplest and most popular form. You can also confidently say "Olena is listening" (Олена слухає). This is a very professional method of identification.
 
-*Формування:*
-1. **Це + [Ім'я]** = Це Марк. (This is Mark.)
-2. **[Ім'я] + слухає** = Марк слухає. (Mark speaking / literally: Mark listens.)
+Ви працюєте в офісі компанії. Ви берете телефон і кажете: «Офіс, Марія слухає». Це створює прекрасне перше враження.
 
-*Приклади:*
-— Алло! Привіт! **Це Олена.** Я дзвоню з роботи. (Hello! Hi! This is Olena. I am calling from work.)
-— Добрий день. Хто це дзвонить? — **Олена слухає.** (Good afternoon. Who is calling? — Olena speaking.)
+You work in a company office. You pick up the phone and say: "Office, Mariia is listening" (Офіс, Марія слухає). This creates a wonderful first impression.
 
-*Коли це використовувати:*
-Use the simple «Це [Ім'я]» structure when you initiate the call to a friend or colleague. Use the slightly more formal «[Ім'я] слухає» when you answer the phone, especially in an office setting where you represent a business.
+| Неправильно | Правильно | Контекст |
+|-------------|-----------|----------|
+| Я є Іван. | Це Іван. | Неофіційна розмова. |
+| Я є Анна. | Анна слухає. | Офіційна бесіда. |
 
-> [!warning] Типова помилка
-> Never say «Я є Джон» on the phone. Always say «Це Джон». The Ukrainian language almost never uses the verb «бути» (to be) for self-identification in the present tense. 
+### Asking for Contact
+Іноді потрібно попросити іншу людину підійти до телефону. Для цього ми маємо спеціальні ввічливі фрази. Найкраща фраза — «Скажіть, будь ласка». Після цієї гарної фрази ви можете запитати все.
 
-### Як запитати людину
-Ми дзвонимо в офіс. Ми шукаємо людину. Ми маємо ввічливо запитати про неї. Для цього існують спеціальні стандартні фрази.
+Sometimes you need to ask another person to come to the phone. For this, we have special polite phrases. The best phrase is "Tell me, please" (Скажіть, будь ласка). After this nice phrase, you can ask everything.
 
-When you call a business, a hotel reception, or a clinic, you often need to ask to be transferred to a specific person. Establishing polite, formal contact is a core language skill formally described in the Ukrainian State Standard.
+Ще одна дуже корисна структура — це питання. Наприклад, ви питаєте: «Олена є?». Це прямий спосіб отримати швидкий контакт. Ви просто називаєте ім'я людини.
 
-Ми використовуємо дієслово «поговорити» і прийменник «з». Ми обов'язково кажемо «Скажіть, будь ласка». Ця коротка фраза показує вашу повагу.
+Another very useful structure is a question. For example, you ask: "Is Olena there?" (Олена є?). This is a direct way to get quick contact. You simply state the person's name.
 
-To ask for someone politely, we construct the phrase **«Чи можу я поговорити з...?»** (Can I speak with...?). Another highly frequent and culturally standard phrase is **«Скажіть, будь ласка»** (Tell me, please). This acts as a polite buffer that softens any direct request you make over the phone.
+Давайте уважно подивимося на цей типовий телефонний діалог:
 
-*Як це працює:*
-Start your formal request with «Скажіть, будь ласка» or use the modal question phrase «Чи можу я...» (Can I...). Note that after the preposition «з» (with), the person's name will change its ending (instrumental case), but for this level, focus primarily on memorizing the fixed phrase block.
+Let's look carefully at this typical phone dialogue:
 
-*Міні-діалог:*
-— Офіс компанії. **Слухаю вас.** (Company office. I am listening to you.)
-— Добрий день. **Скажіть, будь ласка,** пан директор у кабінеті? (Good afternoon. Tell me, please, is the director in the office?)
-— Ні, він зараз **зайнятий**. (No, he is busy right now.)
-— **Чи можу я поговорити з** Оленою? (Can I speak with Olena?)
-— Так, одну **хвилинку**. (Yes, one moment.)
+- Алло, слухаю вас. (Hello, I'm listening to you.)
+- Добрий день. Скажіть, будь ласка, Олена є? (Good afternoon. Tell me, please, is Olena there?)
+- Так, звичайно. Одну хвилинку. (Yes, of course. One moment.)
+- Дуже дякую. (Thank you very much.)
 
-*Коли це використовувати:*
-Rely on these specific phrases whenever you need general information or need to be transferred to another department. They are perfectly calibrated for formal, professional contexts.
+### Managing the Conversation
+Часто під час телефонного дзвінка виникають несподівані паузи. Людина довго шукає важливу інформацію. Або вона кличе когось іншого. У таких ситуаціях ми використовуємо наказовий спосіб дієслів. Це спеціальна граматична форма для прохання.
 
-### Управління розмовою: ввічливі накази
-Іноді ми просимо людину почекати. Або ми просимо повторити речення ще раз. Для цього ми використовуємо наказовий спосіб дієслів.
+Often during a phone call, unexpected pauses occur. A person is looking for important information for a long time. Or they are calling someone else. In such situations, we use the imperative mood of verbs. This is a special grammatical form for a request.
 
-During a phone call, you might need the other person to hold the line while you check something, or repeat what they just said because the connection is poor. To manage these situations, you need polite imperative (command) verbs.
+Найважливіші слова для управління розмовою — «зачекайте» та «повторіть». Ці слова завжди звучать ввічливо. Ми обов'язково додаємо чарівну фразу «будь ласка». Телефонна лінія дуже погана. Ви можете попросити: «Повторіть, будь ласка». Ви хочете додатковий час. Просто скажіть: «Зачекайте, будь ласка».
 
-Ми завжди додаємо фразу «будь ласка». Без цієї золотої фрази ваші слова звучать грубо. Українці завжди кажуть «Зачекайте, будь ласка».
+The most important words for managing the conversation are "wait" (зачекайте) and "repeat" (повторіть). These words always sound polite. We obligatorily add the magic phrase "please" (будь ласка). The phone line is very bad. You can ask: "Repeat, please" (Повторіть, будь ласка). You need extra time. Simply say: "Wait, please" (Зачекайте, будь ласка).
 
-An imperative is the command form of a verb. Because phone calls with strangers absolutely require politeness, you must use the formal plural command form (which typically ends in **-те**) and ALWAYS pair it with the phrase **«будь ласка»** (please). Without «будь ласка», you risk sounding like you are giving aggressive military orders.
+Ми використовуємо форму на «-те» (зачекайте, повторіть). Це поважна форма «Ви». Ніколи не кажіть слово «зачекай» незнайомим людям.
 
-*Основні слова:*
-- **Зачекайте** (Wait - formal)
-- **Повторіть** (Repeat - formal)
-- **Передзвоніть** (Call back - formal)
+We use the form ending in "-те" (зачекайте, повторіть). This is the respectful "You" («Ви») form. Never say the word "wait" (зачекай - informal) to unfamiliar people.
 
-*Приклади:*
-— **Зачекайте**, будь ласка, одну **хвилинку**. Я шукаю документ. (Wait, please, one moment. I am looking for the document.)
-— Поганий зв'язок. **Повторіть**, будь ласка, ваш номер. (Bad connection. Repeat, please, your number.)
-— Я зараз дуже **зайнятий**. **Передзвоніть** пізніше, будь ласка. (I am very busy now. Call back later, please.)
+> [!culture]
+> **The Softener «Хвилинку»**
+> Ukrainians frequently use diminutives to soften commands. Instead of just saying "Wait" (Зачекайте), you will very often hear "Wait a moment" (Зачекайте хвили́нку). The word «хвилинка» is a softer, cuter version of «хвилина» (minute). This makes the polite request sound much warmer and friendlier.
 
-*Коли це використовувати:*
-Think of these imperatives as your survival tools for managing the speed and flow of a conversation. If someone speaks too fast for you to understand, firmly but politely intervene by saying: «Повторіть, будь ласка».
+### Modern Closings
+Як правильно закінчити розмову по телефону? Всі добре знають класичну фразу «До побачення». Вона дуже гарна, але дуже офіційна. Для найкращих друзів ми маємо слово «Бувай». Але сучасна українська мова має цікавий стандарт. Це чудова фраза «До зв'язку!».
 
-### Сучасні прощання: «До зв'язку!»
-Як ми правильно закінчуємо розмову по телефону? Раніше люди завжди казали класичне «До побачення». Але сьогодні існує нова популярна фраза. Це коротка фраза «До зв'язку!».
+How do you properly end a conversation on the phone? Everyone knows the classic phrase "Goodbye" (До побачення) well. It is very good, but very formal. For best friends, we have the word "Bye" (Бувай). But the modern Ukrainian language has an interesting standard. This is the wonderful phrase "Talk soon!" (До зв'язку!).
 
-How do you naturally end a phone call? While standard textbooks will always teach you «До побачення» (Goodbye) for formal situations and «Бувай» (Bye) for informal ones, modern Ukrainian has developed a perfect, ubiquitous alternative specifically for telecommunications.
+Фраза «До зв'язку!» стала надзвичайно популярною. Вона ідеально підходить для закінчення ділових розмов. Також використовуйте її в робочих месенджерах. Вона означає наш швидкий новий контакт.
 
-Слово «зв'язок» означає контакт або лінію. Фраза «До зв'язку!» означає нашу наступну розмову. Це звучить природно, сучасно і дружньо. 
+The phrase "Talk soon!" (До зв'язку!) has become extremely popular. It is perfectly suited for ending business conversations. Also use it in work messengers. It means our quick new contact.
 
-The phrase **«До зв'я́зку!»** literally translates to "Until the connection!" but pragmatically means "Talk soon!" or "Keep in touch!". It has rapidly become the absolute standard sign-off for both voice calls and text messages in modern Ukraine. It perfectly bridges the formality gap — it is polite enough to use with colleagues but relaxed enough for peers.
+Ви вільно використовуєте цю фразу. Вона підходить для колег і хороших друзів. Це завжди звучить сучасно, легко й абсолютно природно.
 
-*Як це працює:*
-You can use this phrase entirely on its own at the very end of a call, or you can add it right after thanking the person for their time.
+You freely use this phrase. It is suitable for colleagues and good friends. It always sounds modern, easy, and absolutely natural.
 
-*Приклади:*
-— Дякую за допомогу. **До зв'язку!** (Thank you for your help. Talk soon!)
-— Добре, я **передзвоню** завтра вранці. **До зв'язку!** (Okay, I will call back tomorrow morning. Talk soon!)
-
-*Коли це використовувати:*
-Use «До зв'язку!» to seamlessly end phone calls, voice messages, or even long text chats. It is a highly authentic marker of modern Ukrainian speech.
-
-> [!culture] Культурний контекст
-> **Постійний зв'язок**
->
-> In a highly digital society like Ukraine, «До зв'язку!» conceptually reflects how communication is continuous. When you use it, you aren't saying goodbye forever; you are merely pausing the digital connection until the next message or call. 
-
----
+Ось кілька прикладів для закінчення телефонної розмови:
+- Дякую за дзвінок. До зв'язку! (Thank you for the call. Talk soon!)
+- Добре, я все зрозумів. До зв'язку! (Okay, I understood everything. Speak to you later!)
+- Я обов'язково напишу завтра. До зв'язку! (I will definitely write tomorrow. Catch you later!)
 
 ## Практика: Життєві ситуації
 
-### Ситуація 1: Помилка номером
-Ви дзвоните іншій людині. Хтось дзвонить помилково. Це буває часто. Ми маємо знати коротку фразу для цієї ситуації.
+### Scenario 1: The Wrong Number
+Що робити? Ви випадково набрали неправильний номер. Це буває дуже часто. У такій ситуації це проста фраза. Це дуже фіксована формула: «Вибачте, неправильний номер».
 
-What do you do when you accidentally dial the wrong number, or a stranger calls you by mistake? This is a common, slightly awkward daily situation. You need a fixed formulaic chunk of language to handle it quickly, politely, and without panic.
+What to do? You accidentally dialed the wrong number. This happens very often. In such a situation, you need a simple phrase. It is a very fixed formula: "Excuse me, wrong number" (Вибачте, неправильний номер).
 
-Дієслово **«помилитися»** означає зробити помилку. Ми кажемо фразу: «Вибачте, я помилився номером». Це фіксована стандартна фраза. Ви не повинні аналізувати її граматику. 
+Ця базова фраза працює завжди. Вона ввічлива, коротка і миттєво зрозуміла. Після цієї гарної фрази ви можете спокійно закінчити розмову.
 
-The verb «помили́тися» means "to make a mistake". We use the set phrase **«помили́тися но́мером»** (to be mistaken by the number). You should learn this entire sentence as a single, unbreakable chunk without worrying about the underlying grammatical cases right now. 
+This basic phrase always works. It is polite, short, and instantly clear. After this nice phrase, you can calmly end the conversation.
 
-*Як це працює:*
-If you personally make the mistake, say «я помилився номером» (if you are male) or «я помилилася номером» (if you are female). If the other caller made the mistake, you simply tell them «ви помилилися номером».
+**Міні-діалог**
+- Алло. (Hello.)
+- Добрий день. Це клініка? (Good afternoon. Is this the clinic?)
+- Ні, це приватний телефон. (No, this is a private phone.)
+- Ой, вибачте, будь ласка. Неправильний номер. До побачення. (Oh, excuse me, please. Wrong number. Goodbye.)
+- На все добре. (All the best.)
 
-*Приклади:*
-— Алло! Це стоматологічна клініка? (Hello! Is this the dental clinic?)
-— Ні, **ви помилилися номером**. Це приватна квартира. (No, you have the wrong number. This is a private apartment.)
-— Ой, **вибачте, я помилився номером**. До побачення. (Oh, sorry, I have the wrong number. Goodbye.)
+### Scenario 2: The Courier Call
+В Україні швидка доставка їжі дуже популярна. Кур'єри постійно дзвонять кожного дня. Це практична життєва ситуація. Ввічливий кур'єр питає по телефону вашу локацію. Ви швидко даєте короткі та чіткі інструкції.
 
-*Коли це використовувати:*
-Deploy this phrase instantly when you realize there is a fundamental misunderstanding about who is calling whom. It is a polite way to end the confusion and the conversation smoothly.
+In Ukraine, the fast delivery of food is very popular. Couriers constantly call every day. This is a practical life situation. A polite courier asks your location over the phone. You quickly give short and clear instructions.
 
-### Ситуація 2: Дзвінок від кур'єра
-Швидкі доставки дуже популярні. Кур'єри та водії дзвонять клієнтам щодня. Це може бути піца, суші або посилка. Ця специфічна розмова завжди дуже коротка.
+Ви зараз не вдома. Ви можете впевнено сказати: «Я буду через п'ять хвилин». Кур'єр має трохи почекати вас біля будинку. Ви не можете зустрітися особисто. Ви знову використовуєте наказовий спосіб. Ви просто кажете: «Залиште біля дверей, будь ласка». Це надзвичайно зручна фраза.
 
-Interacting with public services and delivery is a key practical skill described in the State Standard. In modern Ukraine, delivery services are an integral part of daily life. Couriers will almost always call your mobile phone when they arrive at your location.
+You are not home right now. You can confidently say: "I will be there in five minutes" (Я буду через п'ять хвилин). The courier has to wait for you a little near the building. You cannot meet personally. You use the imperative mood again. You simply say: "Leave it by the door, please" (Залиште біля дверей, будь ласка). This is an extremely convenient phrase.
 
-Кур'єр каже про прибуття. Він стоїть біля будинку. Ви маєте сказати час. Або ви просите залишити речі біля дверей.
+**Міні-діалог**
+- Алло, слухаю. (Hello, I'm listening.)
+- Добрий день. Це кур'єр. Я біля вашого будинку. Ви вдома? (Good afternoon. This is the courier. I am near your building. Are you home?)
+- Так, я вдома. Зачекайте хвилинку, будь ласка. Я зараз вийду. (Yes, I am home. Wait a moment, please. I will come out now.)
+- Добре, я чекаю біля дверей. (Okay, I am waiting by the doors.)
 
-The courier usually states rapidly that they are near the building. You need to know exactly how to reply to say you will come down shortly, or give precise instructions on where to leave the package. Always remember to use the formal «Ви» during these exchanges.
+> [!fact]
+> **Digital Convenience**
+> Ukraine is a highly digitized society with excellent digital infrastructure. Many local courier apps let you leave a comment like "Залиште біля дверей" (Leave by the door) directly in the application, so you might not even need to pick up the phone! 
 
-*Корисні фрази для цієї ситуації:*
-- **Я буду через 5 хвилин.** (I will be there in 5 minutes.)
-- **Залиште біля дверей, будь ласка.** (Leave it by the door, please.)
-- **Я зараз вийду.** (I am coming out right now.)
+### Scenario 3: Digital Messaging
+Сьогодні люди значно менше говорять по телефону. Ми набагато частіше пишемо короткі тексти. У нас є спеціальні корисні слова. Ми постійно використовуємо слово «повідомлення». Воно означає короткий текст у месенджері або просте смс.
 
-*Міні-діалог:*
-— Алло, добрий день. Це кур'єр. Ваша доставка тут. (Hello, good afternoon. This is the courier. Your delivery is here.)
-— Добрий день. **Зачекайте, будь ласка**. **Я буду через 5 хвилин**. (Good afternoon. Wait, please. I will be there in 5 minutes.)
-— Добре, чекаю біля входу. (Okay, waiting by the entrance.)
+Today people talk significantly less on the phone. We much more often write short texts. We have special useful words. We constantly use the word "message" (повідомле́ння). It means a short text in a messenger or a simple SMS.
 
-*Коли це використовувати:*
-Practice these highly practical phrases. Delivery calls are fast and functional. Having a phrase like «Я буду через 5 хвилин» ready in your mind will make your daily life in Ukraine much less stressful.
+Дві важливі щоденні фрази — «написати повідомлення» та «залишити повідомлення». Ваш хороший друг довго не відповідає. Ви можете просто написати повідомлення. Ви дзвоните в офіс компанії. Лінія зараз зайнята. Ви можете попросити залишити повідомлення для офісу.
 
-> [!fact] Нова Пошта
-> Ukraine boasts an incredibly efficient and widely used postal system called «Нова Пошта» (New Post). Receiving a text message or a brief phone call from a Nova Poshta courier is a universal shared experience in Ukrainian society. 
+Two important daily phrases are "to write a message" (написати повідомлення) and "to leave a message" (залишити повідомлення). Your good friend does not answer for a long time. You can simply write a message. You call a company office. The line is currently busy. You can ask to leave a message for the office.
 
-### Ситуація 3: Повідомлення
-Ми не завжди хочемо дзвонити людям. Ми просто пишемо тексти. Месенджери дуже популярні в Україні. Ми використовуємо слово **«повідомлення»**.
+Ще одне дуже важливе слово — «зайнятий». Ви дзвоните. Людина вже говорить. Ми кажемо таку фразу: «Лінія зайнята». Ви зараз багато працюєте. Ви не можете говорити саме зараз. Ви кажете: «Вибачте, я дуже зайнятий». «Я обов'язково передзвоню пізніше». Дієслово «передзвонити» означає подзвонити ще раз.
 
-We don't always want to call. Very often, we prefer to write. Messengers like Telegram and Viber are the primary ways Ukrainians communicate for both work and personal matters. You must know the vocabulary for digital messaging.
+Another very important word is "busy" (зайня́тий). You call. The person is already talking. We say this phrase: "The line is busy" (Лінія зайнята). You are working a lot right now. You cannot talk right now. You say: "Excuse me, I am very busy." "I will definitely call back later." (Вибачте, я дуже зайнятий. Я обов'язково передзвоню пізніше). The verb "to call back" (передзвони́ти) means to call again.
 
-Слово «повідомлення» — це текст. Ми можемо «написати повідомлення» другу. Ми можемо «залишити повідомлення» після дзвінка. Це дуже важливі словосполучення.
-
-The word **«повідо́млення»** means "message". The most frequent collocations (words that naturally group together) are **«написа́ти повідо́млення»** (to write a message) and **«залиши́ти повідо́млення»** (to leave a message). 
-
-*Як це працює:*
-If someone does not answer their phone, the next logical step in Ukrainian etiquette is to leave a text message. We use the verb «передати» (to pass on) if we want an administrator or secretary to physically pass a message to someone else.
-
-*Приклади:*
-— Його **лінія зайнята**. Я краще хочу **написати повідомлення**. (His line is busy. I prefer to write a message.)
-— Директора зараз немає. Що **передати**? (The director is not here right now. What should I pass on?)
-— **Чи можу я залишити повідомлення** для Андрія? (Can I leave a message for Andriy?)
-
-*Коли це використовувати:*
-Use these digital collocations when you want to switch smoothly from a voice call to a text format, or when dealing with receptionists who can take a message for someone who is unavailable.
-
----
+Корисні фрази:
+- Я зовсім не можу говорити, напиши повідомлення. (I absolutely cannot talk, write a message.)
+- Залиште своє повідомлення тут, будь ласка. (Leave your message here, please.)
+- Вибачте, я дуже зайнятий. Я передзвоню за одну хвилину. (Excuse me, I am very busy. I will call back in one minute.)
+- Чому телефонна лінія зайнята так довго? (Why is the phone line busy for so long?)
 
 ## Продукція та підсумок
 
-### Порівняння: Офіційний та неформальний стиль
-Давайте ще раз подивимося на всі нові фрази. Ми маємо бачити різницю. Офіційний стиль ми використовуємо для роботи та сервісів. Неформальний стиль ми використовуємо для друзів.
+### Dialogue Simulation
+Тепер давайте дуже уважно порівняємо дві різні ситуації. Уявіть ваші дзвінки у дві абсолютно різні локації. Перший дзвінок — це офіційний діловий дзвінок у готель. Другий дзвінок — це неофіційна весела розмова. Зверніть увагу на велику різницю слів.
 
-Let's look at all the phrases together in one place to see the clear, structural difference between formal and informal phone etiquette in Ukrainian.
+Now let's very carefully compare two different situations. Imagine your calls to two absolutely different locations. The first call is a formal business call to a hotel. The second call is an informal fun conversation. Pay attention to the big difference in words.
 
-| Ситуація (Situation) | Офіційний стиль (Formal / «Ви») | Неформальний стиль (Informal / «ти») |
-| :--- | :--- | :--- |
-| **Відповідати на дзвінок** | Слухаю! / Слухаю вас! | Алло! |
-| **Просити почекати** | Зачекайте, будь ласка. | Почекай. / Хвилинку. |
-| **Запитувати інформацію** | Скажіть, будь ласка... | Скажи... |
-| **Закінчувати розмову** | До побачення. / До зв'язку! | Бувай! / До зв'язку! |
+**Ситуація 1**
+- Готель «Київ», добрий день, слухаю вас! (Hotel "Kyiv", good afternoon, I'm listening to you!)
+- Добрий день. Скажіть, будь ласка, у вас є вільні кімнати? (Good afternoon. Tell me, please, do you have free rooms?)
+- Зачекайте хвилинку, будь ласка, я швидко перевірю. Так, є одна кімната. (Wait a moment, please, I will quickly check. Yes, there is one room.)
+- Дуже дякую за інформацію. Я обов'язково передзвоню пізніше. (Thank you very much for the information. I will definitely call back later.)
+- Добре, ми чекаємо на ваш дзвінок. До побачення. (Okay, we are waiting for your call. Goodbye.)
 
-### Симуляція діалогів
-Тепер давайте прочитаємо два діалоги. Перший текст — це офіційний дзвінок у компанію. Другий текст — це швидкий дзвінок близькому другу. Зверніть увагу на тон.
+**Ситуація 2**
+- Алло, привіт, Максиме! (Hello, hi, Maksym!)
+- О, привіт! Що ти робиш? Ти не зайнятий? (Oh, hi! What are you doing? Are you not busy?)
+- Трохи зайнятий на роботі. Я передзвоню за п'ять хвилин, добре? (A little busy at work. I will call back in five minutes, okay?)
+- Добре, без проблем. Я чекаю. До зв'язку! (Okay, no problem. I am waiting. Talk soon!)
 
-Now let's read two complete dialogue simulations to see these grammatical structures working in action. Pay close attention to how the tone and vocabulary shift between the two scenarios.
+> [!observe]
+> **Analyze the Difference**
+> Notice how the professional hotel receptionist uses «Слухаю вас» and «Зачекайте» (the formal imperative form), while the best friend naturally uses «Алло» and asks «Ти не зайнятий?» (the informal form). Mastering these two distinct registers is the absolute key to sounding natural and respectful in Ukrainian society.
 
-**Діалог 1: Дзвінок в офіс**
-— Добрий день. Офіс компанії. **Слухаю вас**.
-— Добрий день. **Це Марк**. **Чи можу я поговорити з** паном директором?
-— Вибачте, його **лінія зайнята**. Він зараз працює. Що **передати**?
-— **Чи можу я залишити повідомлення**? **Передзвоніть**, будь ласка, о другій годині. Мій **номер телефону** 050-123-45-67.
-— Добре. Я обов'язково передам. **До зв'язку**!
+### Review of High-Frequency Collocations
+Ви хочете говорити українською швидко. Ви повинні знати сталі комбінації. Ми використовуємо ці популярні фрази кожного дня. Запам'ятайте їх як один неподільний блок.
 
-**Діалог 2: Дзвінок другу**
-— **Алло**!
-— Привіт, Олено! **Це Марк**. Як ти сьогодні?
-— Привіт, Марку! Я зараз у супермаркеті. Я дуже **зайнята**. Я **передзвоню** за п'ять хвилин.
-— Добре, без проблем. Я чекаю. **До зв'язку**!
+You want to speak Ukrainian quickly. You must know fixed combinations. We use these popular phrases every day. Remember them as one indivisible block.
 
-### Корисні словосполучення для повторення
-Запам'ятайте ці важливі фрази. Вони звучать дуже природно:
-- **робити дзвінок** (to make a call)
-- **мій номер телефону** (my phone number)
-- **лінія зараз зайнята** (the line is currently busy)
-- **відповідати на дзвінок** (to answer the call)
+- **Номер телефону** — Який твій новий номер телефону? (What is your new phone number?) Можна ваш номер телефону? (May I have your phone number?)
+- **Дзвонити часто** — Я маю гарне правило дзвонити часто. (I have a good rule to call often.) Ти часто дзвониш? (Do you often call?)
+- **Лінія зайнята** — Лінія постійно зайнята. (The line is constantly busy.) Лінія зайнята, я напишу довгий текст. (The line is busy, I will write a long text.)
+- **Відповідати на дзвінок** — Директор не відповідає на дзвінок. (The director is not answering the call.) Я завжди швидко відповідаю на дзвінок. (I always answer the call quickly.)
+- **Телефонувати в офіс** — Я хочу терміново телефонувати в офіс. (I want to urgently phone the office.) Дієслово «телефонувати» звучить трохи офіційно. (The verb "to phone" [телефонувати] sounds a little formal.)
+- **Написати повідомлення** — Краще просто написати повідомлення. (It is better to simply write a message.) Я люблю писати великі повідомлення. (I like to write big messages.)
 
 ---
 
 # Підсумок
 
-Ми вивчили телефонний етикет. Ми знаємо нові фрази. Ви знаєте різницю між простим словом «Алло!» та професійним словом «Слухаю!». Ми знаємо гарний початок розмови. Це фраза «Це Марк». Ми маємо дзвінок від кур'єра. Ми використовуємо форму «Ви». Ми кажемо «Зачекайте, будь ласка». Ми гарно закінчуємо розмову. Ми використовуємо фразу «До зв'язку!». Ви готові відповідати на дзвінки. Ви можете писати повідомлення.
+Сьогодні ми вивчили багато важливих нових фраз. Тепер ви знаєте правила. Ви можете ввічливо вітатися по телефону. Ви розумієте різницю. Офіційні розмови мають форму «Ви» та фразу «Слухаю вас». Неофіційні розмови мають форму «ти» та слово «Алло».
+
+Today we learned many important new phrases. Now you know the rules. You can politely greet on the phone. You understand the difference. Formal conversations have the «Ви» form and the phrase "I am listening to you" (Слухаю вас). Informal conversations have the «ти» form and the word "Hello" (Алло).
+
+Ви можете легко спілкуватися. Кур'єр чекає біля вашого будинку. Ви можете попросити його залишити посилку біля дверей. Ви вмієте залишити корисне текстове повідомлення. Лінія буває зайнята. Найголовніше — ніколи не забувайте використовувати фразу «До зв'язку!». Це дійсно зробить вашу мову сучасною.
+
+You can easily communicate. A courier is waiting near your building. You can ask him to leave the package by the door. You know how to leave a useful text message. The line is sometimes busy. The most important thing — never forget to use the phrase "Talk soon!" (До зв'язку!). This will really make your speech modern.
 
 **Перевірте себе:**
-1. Дзвонить клініка. Яке слово ви скажете першим: «Алло!» чи «Слухаю!»?
-2. Як правильно представити себе по телефону: «Я є Девід» чи «Це Девід»?
-3. Ви дзвоните у компанію. Яку форму дієслова ви використаєте: «Почекай» чи «Зачекайте, будь ласка»?
-4. Яка фраза найкраще підходить для закінчення розмови?
-5. Ви набрали неправильний номер телефону. Що ви говорите?
+1. Як дуже ввічливо відповісти на офіційний телефонний дзвінок українською мовою?
+2. Яку конкретну форму потрібно використовувати? Кур'єр дзвонить.
+3. Як правильно сказати: «Я є Іван» чи «Це Іван»?
+4. Що буквально означає сучасна щоденна фраза «До зв'язку!»?
+5. Яку коротку фразу потрібно швидко сказати? Ви набрали не той номер.
+6. Які два слова утворюють правильний наказовий спосіб? Ви чемно просите людину почекати.

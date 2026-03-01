@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3108/2000 (raw: 3433) | engagement: 0/3 | pedagogy: 29 violations
+    lesson: 3378/2000 (raw: 3650) | pedagogy: 10 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -30,8 +30,8 @@
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 32 violations (severe - consider revision)
-     → 19 grammar-level violations (fundamental)
+     → 11 violations (severe - consider revision)
+     → 10 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/holidays-and-traditions-audit.md

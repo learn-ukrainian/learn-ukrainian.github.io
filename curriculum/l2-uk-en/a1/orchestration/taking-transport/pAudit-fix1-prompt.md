@@ -18,27 +18,26 @@
   Module:  taking-transport
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  3 Outline Compliance Errors
   failing gates:
-    lesson: 2588/2000 (raw: 2850) | engagement: 0/3 | pedagogy: 13 violations | immersion: 22.2% LOW (target 35-55% (M57))
+    lesson: 4243/2000 (raw: 4688) | pedagogy: 39 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
-     → 17 violations (severe - consider revision)
-     → 8 grammar-level violations (fundamental)
-     → Immersion 13% off target
+       → FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 41 violations (severe - consider revision)
+     → 21 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/taking-transport-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/taking-transport.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 3 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/taking-transport-audit.log for details)
         ```

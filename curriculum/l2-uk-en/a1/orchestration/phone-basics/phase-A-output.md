@@ -3,37 +3,37 @@
 # Дослідження: Phone Basics
 
 ## State Standard Reference
-§2 Каталог А: "привернути чиюсь увагу, установити контакт: Вибачте. Можна запитати? Скажіть, будь ласка;"
-§4.2.4.2 Наказовий спосіб: "Форми 2-ї особи однини і множини наказового способу" (e.g., зачекайте, повторіть)
-§3.3 Каталог Б: "громадські заклади (..., пошта)"
-Alignment: The module directly addresses the A1 communicative intentions for establishing contact, using polite 2nd-person imperatives for phone management, and engaging with public/delivery services.
+§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте)... сказати (скажи, скажіть)... зачекати (зачекай, зачекайте)."
+§2 (Каталог А): "привернути чиюсь увагу, установити контакт: Вибачте. Можна запитати? Скажіть, будь ласка;"
+Alignment: This module directly addresses the State Standard requirements for 2nd person imperative forms (§4.2.4.2) used in requests, and standard communicative intentions for making contact over the phone (§2).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| телефон | Very High / Daily life | номер телефону, мобільний телефон |
-| дзвонити | Very High / Spoken | дзвонити другові, дзвонити мамі |
-| повідомлення | High / Digital | написати повідомлення, залишити повідомлення |
-| зайнятий | Medium / State | лінія зайнята, я зараз зайнятий |
-| слухаю | High / Professional | Слухаю вас, Олена слухає |
+| телефон | Very High / Core Lexicon | номер телефону, мій телефон |
+| дзвонити | High / Spoken Corpus | дзвонити другу, дзвонити мамі |
+| номер | High / General | номер телефону, помилитися номером |
+| повідомлення | High / Digital Comm. | написати повідомлення, залишити повідомлення |
+| зайнятий | Medium / Spoken | лінія зайнята, я зайнятий |
+| передзвонити | Medium / Conversational | передзвоню за хвилину, передзвоніть пізніше |
 
 ## Cultural Hooks
-1. **The "Слухаю" greeting**: Unlike the universal English "Hello", Ukrainians frequently use "Слухаю" (I'm listening) or "Слухаю вас" in professional or semi-formal contexts (e.g., receptionists, clinics, or when receiving a call from an unknown number) as a polite signal of readiness to engage.
-2. **Couriers and "Ви"**: In modern Ukraine, interaction with delivery services (Nova Poshta, food delivery) is a daily occurrence. The standard interaction is highly polite, almost exclusively using "Ви" and polite imperatives, despite the brief and transactional nature of the call.
+1. While "Алло!" is universally understood, the distinctly Ukrainian response "Слухаю!" (I'm listening) reflects a highly polite, attentive, and professional cultural standard for answering calls in Ukraine.
+2. Reflecting Ukraine's highly digitized society (widespread use of Telegram, Viber, and Diia), modern sign-offs like "До зв'язку!" (Talk soon) and phrases like "написати повідомлення" are essential markers of authentic, contemporary communication.
 
 ## Common Learner Errors
-1. **"Я є [Ім'я]" instead of "Це [Ім'я]"** → English speakers translate "It is me" or "I am..." literally. The natural Ukrainian phone identification is "Це Олена" or "Олена слухає".
-2. **Pronouncing "дз" as two sounds** → Learners often pronounce /d/ + /z/ in "дзвонити". It must be a single affricate sound, similar to 'ds' in 'woods'.
-3. **Overusing informal greetings** → Defaulting to "Привіт" or "ти" with service workers/couriers instead of the expected polite register.
+1. "Я є Олена" (Literal English translation of "I am Olena") → Correct form: "Це Олена" or "Олена слухає" — Ukrainian speech etiquette naturally drops the "to be" verb for phone identification.
+2. Pronouncing "дзвонити" as two separate sounds /d/ + /z/ → Correct form: The affricate "дз" is a single, unified sound in Ukrainian phonetics.
+3. Using the informal "ти" too early with service workers (couriers, receptionists) instead of defaulting to the polite "Ви".
 
 ## Cross-References
 - Builds on: a1-18 (Questions and Negation), a1-57 (Taking Transport)
 - Prepares for: a1-62 (Emergencies), a1-43 (Combined Practice)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Emphasize that Ukrainian phone etiquette has its own distinct rhythm and authentic markers (like the widespread use of "Слухаю" and "До зв'язку"). Focus purely on the Ukrainian language system without drawing comparisons to Russian habits.
-- **English Scaffolding**: Since this is an A1 level module, ensure the introduction provides clear English scaffolding to explain the situational boundary between "Алло" and "Слухаю".
-- Ensure vocabulary and examples remain strictly within the Ukrainian standard (e.g., avoid colloquial Russianisms like "получати" or "понятно").
+- Decolonized framing: Emphasize "Слухаю!" and "До зв'язку!" as authentic, modern Ukrainian standards, proudly distinguishing them from generic or Russian-influenced defaults. Focus positively on the unique phonetics of Ukrainian affricates.
+- Scaffolding: As an A1.6 module, use clear English scaffolding in the introductory section to explain cultural nuances before transitioning into practice dialogues.
+- Typography and purity: Strictly use Ukrainian angular quotes «...» and actively ensure no Russianisms (e.g., "получати") appear in vocabulary hints or examples.
 
 ===RESEARCH_END===
 
@@ -42,8 +42,8 @@ content_outline:
   - section: "Вступ та етикет"
     words: 450
     points:
-      - "Use English scaffolding (A1 level) to explain the cultural nuance of phone greetings: the universal «Алло!» versus the distinctly Ukrainian polite/professional «Слухаю!»."
-      - "Define formal vs. informal address rules on the phone. Clearly explain the necessity of defaulting to «Ви» for strangers (couriers, receptionists) and «ти» for friends."
+      - "Use English scaffolding (A1 level) to explain the cultural nuance of phone greetings: compare the universal «Алло!» with the distinctly Ukrainian polite/professional «Слухаю!»."
+      - "Define formal vs. informal address rules on the phone. Clearly explain the necessity of defaulting to «Ви» for strangers (couriers, receptionists) and «ти» for friends to prevent common social errors."
       - "Include a phonetics tip (H3) on pronouncing the single affricate sound «дз» in «дзвонити» and «дзвінок», explicitly correcting the learner error of splitting it into /d/ + /z/."
   - section: "Презентація: Основні структури"
     words: 650
@@ -57,13 +57,13 @@ content_outline:
     points:
       - "Present Scenario 1: The wrong number. Teach «Вибачте, я помилився номером» as a fixed formulaic chunk with a short practice dialogue."
       - "Present Scenario 2: The courier delivery (State Standard Catalog B). Practice practical phrases like «Я буду через 5 хвилин» and «Залиште біля дверей»."
-      - "Present Scenario 3: Digital messaging. Focus on high-frequency collocations «написати повідомлення» and «залишити повідомлення»."
+      - "Present Scenario 3: Digital messaging. Focus on high-frequency collocations «написати повідомлення» and «залишити повідомлення» reflecting modern digital habits."
   - section: "Продукція та підсумок"
     words: 350
     points:
       - "Provide a summary table comparing Formal vs. Informal phone phrases side-by-side."
       - "Create a dialogue simulation containing two parts: a formal call to an office using «Слухаю вас» and «Ви», and an informal call to a friend using «Алло»."
-      - "Include a recap list of high-frequency collocations (e.g., «дзвонити мамі», «лінія зайнята», «номер телефону»)."
+      - "Include a recap list of high-frequency collocations (e.g., «дзвонити мамі», «лінія зайнята», «номер телефону») for quick review."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 5640/2000 (raw: 6040) | pedagogy: 24 violations
+    lesson: 2724/2000 (raw: 3053) | pedagogy: 2 violations | immersion: 11.7% LOW (target 35-55% (M53))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Vary sentence structure.
+       → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 26 violations (severe - consider revision)
-     → 19 grammar-level violations (fundamental)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 45/100)
+     → Revision recommended (severity 45/100)
+     → 3 violations (minor)
+     → Immersion 23% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-restaurant-audit.md

@@ -5,42 +5,44 @@ content_outline:
 - section: Вступ
   words: 400
   points:
-  - 'Establish English scaffolding (immersion ~40%): Introduce the core goal of asking
-    for help («Допоможіть!») fulfilling State Standard §1.3.2.'
-  - 'Explain Ukraine''s modern emergency system: the transition to the European 112
-    number as a sign of digital progress, alongside 101 (пожежники), 102 (поліція),
-    and 103 (швидка допомога).'
-  - Provide a simple breakdown in Ukrainian of when to call which specific service
-    using basic A1 vocabulary and short sentences.
+  - 'Establish English scaffolding explicitly: introduce the critical goal of asking
+    for help («Допоможіть!») to fulfill State Standard §1.3.2, noting the heavy reliance
+    on English to ensure complete comprehension of safety concepts.'
+  - 'Explain Ukraine''s transition to the European 112 emergency number as a symbol
+    of digital progress and European integration, while noting the specific legacy
+    numbers: 101 (пожежники), 102 (поліція), and 103 (швидка допомога).'
+  - Provide a clear breakdown of which service to call for specific situations, using
+    short Ukrainian sentences (max 8-10 words) with English translations.
 - section: Презентація
   words: 650
   points:
-  - 'Grammar H3: Introduce the Vocative Case (кличний відмінок) using English theory
-    scaffolding. Emphasize it as an elegant feature for direct address. Provide a
-    table for emergency roles: Лікарю!, Поліціє!, Рятувальники!.'
-  - 'Vocabulary H3: Build a structured table for core emergency terms (швидка допомога,
-    небезпека, аварія, лікарня, документи) with IPA on the first occurrence.'
-  - 'Lexical Note H3: Explicitly contrast standard «викликати» (to summon) with «дзвонити»
-    (to ring). Flag the Russism «визивати» as an incorrect translation, promoting
-    authentic Ukrainian.'
-  - 'Phrase H3: Provide simple Ukrainian sentence templates (max 8-10 words) for describing
+  - 'H3: Introduce the Vocative Case (кличний відмінок) using English theory scaffolding.
+    Emphasize it as an elegant feature for direct address. Provide a table for emergency
+    roles: Лікарю!, Поліціє!, Рятувальники!.'
+  - 'H3: Build a structured table for core emergency terms (швидка допомога, небезпека,
+    аварія, лікарня, документи) with IPA on the first occurrence.'
+  - 'H3: Explicitly contrast standard «викликати» (to summon) with «дзвонити» (to
+    ring). Flag the Russism «визивати» as an incorrect translation, promoting authentic
+    Ukrainian.'
+  - 'H3: Provide simple Ukrainian sentence templates (max 8-10 words) for describing
     problems and locations («Я біля метро», «Сталася аварія»).'
 - section: Практика
   words: 600
   points:
-  - 'Scenario 1 H3: Present a short, structured mini-dialogue demonstrating a call
-    to a 112 dispatcher about a car accident (ДТП) and asking for witnesses.'
-  - 'Scenario 2 H3: Present a second dialogue with a police officer regarding lost
-    documents, focusing on target phrases: «пред''явити документи», «подати заяву».'
-  - 'Grammar Drill H3: Provide an English-scaffolded explanation and examples of polite
-    imperative requests (State Standard §4.2.4.2) using «Скажіть, будь ласка» and
-    «Дайте, будь ласка».'
+  - 'H3: Present a short, structured mini-dialogue demonstrating a call to a 112 dispatcher
+    about a car accident (ДТП) and asking for witnesses, entirely in Ukrainian with
+    parallel English translation.'
+  - 'H3: Present a second dialogue with a police officer regarding lost documents,
+    focusing on target phrases: «пред''явити документи», «подати заяву».'
+  - 'H3: Provide an English-scaffolded explanation and examples of polite imperative
+    requests (State Standard §4.2.4.2) using «Скажіть, будь ласка» and «Дайте, будь
+    ласка».'
 - section: Виробництво та підсумок
   words: 350
   points:
-  - 'Role-play H3: Provide an interactive prompt for a simulated embassy or police
-    station dialogue about restoring lost documents.'
-  - 'Cultural Insight H3: Feature a [!cultural] box highlighting Ukraine''s «Дія»
-    app and its role in digital resilience and emergency support.'
-  - 'Summary H3: Conclude with a rapid-response matching drill mapping common dispatcher
-    questions to simple, functional Ukrainian caller responses.'
+  - 'H3: Provide an interactive prompt for a simulated embassy or police station role-play
+    dialogue about restoring lost documents.'
+  - 'H3: Feature a [!cultural] box highlighting Ukraine''s «Дія» app and its role
+    in digital resilience and emergency support.'
+  - 'H3: Conclude with a rapid-response matching drill mapping common dispatcher questions
+    to simple, functional Ukrainian caller responses.'

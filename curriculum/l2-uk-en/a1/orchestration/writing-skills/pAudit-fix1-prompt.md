@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3720/2000 (raw: 3928) | pedagogy: 20 violations
+    lesson: 3063/2000 (raw: 3252) | pedagogy: 15 violations | immersion: 24.1% LOW (target 35-55% (M59))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -28,10 +28,10 @@
        → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 23 violations (severe - consider revision)
-     → 18 grammar-level violations (fundamental)
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
+     → 17 violations (severe - consider revision)
+     → 15 grammar-level violations (fundamental)
+     → Immersion 11% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/writing-skills-audit.md

@@ -1,7 +1,7 @@
 # Audit Report: M54 — checkpoint-communication.md
 **Level:** A1 | **Module:** M54 | **Phase:** A1.5 | **Pedagogy:** TTT | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 19:02:03
+**Generated:** 2026-03-01 01:30:48
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -17,19 +17,19 @@
 **Transliteration:** Allowed
 
 ## Gates
-- **Words:** ✅ 5415/2000 (raw: 5688)
+- **Words:** ✅ 3478/2000 (raw: 3777)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
 - **Priority:** ⏳ Deferred (content-only audit)
-- **Engagement:** ✅ 4/2
+- **Engagement:** ✅ 5/2
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 36.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 16.4% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -38,10 +38,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Checkpoint: Communication** | ➖ | 67 | Excluded Type |
-| **Огляд** | ✅ | 698 | Included in Core |
-| **Навичка 1: Модальні дієслова** | ✅ | 1198 | Included in Core |
-| **Навичка 2: Накази та прохання** | ✅ | 890 | Included in Core |
-| **Навичка 3: Повсякдення** | ✅ | 1163 | Included in Core |
-| **Інтеграційне завдання** | ✅ | 1173 | Included in Core |
-| **Підсумок** | ✅ | 226 | Included in Core |
+| **Checkpoint: Communication** | ➖ | 76 | Excluded Type |
+| **Огляд** | ✅ | 461 | Included in Core |
+| **Навичка 1: Модальні дієслова** | ✅ | 984 | Included in Core |
+| **Навичка 2: Накази та прохання** | ✅ | 601 | Included in Core |
+| **Навичка 3: Повсякдення** | ✅ | 610 | Included in Core |
+| **Інтеграційне завдання** | ✅ | 510 | Included in Core |
+| **Підсумок** | ✅ | 236 | Included in Core |

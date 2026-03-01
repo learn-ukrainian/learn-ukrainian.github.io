@@ -1,6 +1,6 @@
 **Phase**: Phase 2: Content
-**Step**: Content generation
+**Step**: Writing lesson prose
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Adjusted conjunctions (і/й, у/в) to strictly follow euphony rules. Ensured "чоловіча стать" error was explicitly framed as a `[!warning]` callout.
+**Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A

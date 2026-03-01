@@ -5,10 +5,10 @@ levels:
     type: core
     modules:
       # Phase A1.1: Script & First Contact (1-14)
-      - the-cyrillic-code-i          # 1  Letters А-Ж (8)
-      - the-cyrillic-code-ii         # 2  Letters З-Н (7)
-      - the-cyrillic-code-iii        # 3  Letters О-Х (7) + Дж/Дз
-      - the-cyrillic-code-iv         # 4  Letters Ц-Я (11) + ь + '
+      - the-cyrillic-code-i          # 1  А М Л У Н С (6 letters)
+      - the-cyrillic-code-ii         # 2  К И Р Б В Д І + О (8 letters)
+      - the-cyrillic-code-iii        # 3  П Т Г Ґ Е З Ж Ш Х (9 letters)
+      - the-cyrillic-code-iv         # 4  Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + '
       - syllables-and-transfer       # 5  Syllable structure, word transfer
       - stress-and-intonation        # 6  Наголос, intonation patterns
       - the-gender-code              # 7  Masculine/feminine/neuter

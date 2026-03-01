@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T18:20:41Z",
+      "ts": "2026-03-01T00:40:39Z",
       "task_id": "v3-buying-tickets-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T18:23:26Z"
+      "ts": "2026-03-01T00:44:04Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T18:23:26Z",
+      "ts": "2026-03-01T00:44:04Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T18:31:23Z",
+      "ts": "2026-03-01T00:47:00Z",
       "attempts": 2
     }
   }

@@ -1,7 +1,7 @@
 # Audit Report: M09 — this-is-i-am.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 16:45:36
+**Generated:** 2026-03-01 01:37:47
 
 ## Configuration
 **Type:** A1-grammar
@@ -9,7 +9,7 @@
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** fill-in
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%

@@ -20,17 +20,16 @@
   audit script returned non-zero exit code
   Checkpoint Format Errors
   failing gates:
-    meta: Valid Structure | Lint: 2 Format Errors
-    lesson: 5481/2000 (raw: 5745) | engagement: 0/2 | pedagogy: 25 violations
+    lesson: 3517/2000 (raw: 3807) | pedagogy: 4 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 72/100)
-     → Revision recommended (severity 72/100)
-     → 27 violations (severe - consider revision)
-     → 20 grammar-level violations (fundamental)
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)
+     → 4 violations (moderate)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/checkpoint-communication-audit.md

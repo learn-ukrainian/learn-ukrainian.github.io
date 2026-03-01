@@ -19,19 +19,20 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2459/2000 (raw: 2614) | pedagogy: 4 violations | immersion: 12.2% LOW (target 35-55% (M61))
+    meta: Valid Structure | Lint: 1 Format Errors
+    lesson: 3735/2000 (raw: 3947) | pedagogy: 20 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 75/100)
-     → 4 violations (moderate)
-     → 3 grammar-level violations (fundamental)
-     → Immersion 23% off target (major rebalancing needed)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 72/100)
+     → Revision recommended (severity 72/100)
+     → 24 violations (severe - consider revision)
+     → 19 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-store-audit.md

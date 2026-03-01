@@ -1,212 +1,398 @@
 <!-- SCOPE
-Covers: Vocabulary for transportation, stations, asking for directions, and basic verbs of motion (іти vs. їхати).
+Covers: Vocabulary for urban and intercity transport, navigating stations, asking for and giving directions, declaring destinations and travel duration.
 Not covered:
-  - Advanced verbs of motion with prefixes (приїхати, відійти)
-Related: a1/places-in-the-city, a1/time-and-numbers
+  - Advanced cases for prepositions → a1-27, a1-28
+Related: a1-51, a1-53, a1-56
 -->
 
-# Подорожі та транспорт
+# Travel and Transport
 
 > **Чому це важливо?**
 >
-> Traveling is one of the most exciting reasons to learn a new language. Whether you are navigating the Kyiv metro, buying a train ticket to Lviv, or simply asking for directions to the nearest café, this module gives you the essential tools. Ми вивчимо слова для транспорту, вокзалів та напрямків.
+> Це дуже важлива тема. Ви зможете говорити про транспорт. Ви будете орієнтуватися у місті. Ви зможете планувати подорожі. Ви також навчитеся купувати квитки. Урок дає вам корисні слова. Ви будете вільно мандрувати.
 
 ## Транспорт
 
-### Наземний міський транспорт
-У місті є різні варіанти транспорту.
-Найпопулярніший транспорт — це **авто́бус** (bus). Ви також часто бачите **троле́йбус** (trolleybus). Багато міст, як Львів і Київ, мають історичний **трамва́й** (tram). Для особистих поїздок люди використовують **автомобі́ль** (car) або **таксí** (taxi). Слово «таксі» не змінює закінчення.
-*   **Я чекаю на авто́бус.** (I am waiting for the bus.)
-*   **Цей трамва́й їде в центр?** (Does this tram go to the center?)
+### Вступ та Словник
+У цьому розділі ми вивчимо нові слова. Ви дізнаєтеся назви міського транспорту. Це дуже важливо для мандрівок Україною. Транспорт у містах працює добре. Ви можете обрати найкращий варіант. Київ має багато видів транспорту. Львів також має гарний транспорт. Давайте почнемо нашу подорож. У таблиці є нові слова. Там також є наголоси. Вони допомагають правильно говорити. Уважно читайте всі слова.
 
-### Підземний транспорт
-У великих містах, як Київ, Харків та Дніпро, найшвидший транспорт — це **метро́** (metro/subway). Як і «таксі», слово «метро» не змінює форму. Київське метро має одну з найглибших станцій у світі — Арсенальну.
-*   **Де найближча станція метро́?** (Where is the nearest metro station?)
-*   **Ми їдемо на метро́.** (We are going by metro.)
+**Vocabulary Table: City Transport**
 
-> [!fact] Цікавий факт
-> The Kyiv Metro station «Арсенальна» (Arsenalna) is located 105.5 meters underground, making it one of the deepest metro stations in the world! Going down the escalator can take up to five minutes.
+| Ukrainian | IPA | English |
+|-----------|-----|---------|
+| авто́бус | [ɑwˈtɔbus] | bus |
+| троле́йбус | [troˈlɛjbus] | trolleybus |
+| маршру́тка | [mɑrˈʃrutkɑ] | minibus |
+| трамва́й | [trɑmˈwɑj] | tram |
+| метро́ | [meˈtrɔ] | metro |
 
-### Повітряний та водний транспорт
-Для далеких подорожей ви можете обрати **літа́к** (airplane). На річці Дніпро є **корабе́ль** (ship). На морі ви побачите **чо́вен** (boat).
-*   **Мій літа́к летить завтра.** (My airplane flies tomorrow.)
-*   **Це великий корабе́ль.** (This is a big ship.)
+These foundational words form the absolute basis of your practical travel vocabulary. They are highly frequent in everyday, casual conversations. You will undoubtedly hear them constantly when local residents discuss their morning commute, unexpected delays on the road, or their plans for the evening.
 
-### Як сказати "by [vehicle]"
-In English, we say "by bus" or "by car". In Ukrainian, we use the preposition **на** (on) plus the vehicle in the Locative case. For most masculine inanimate nouns, the Locative ending is **-і** або **-у**. However, words like "метро" and "таксі" stay the same.
-*   на авто́бусі (by bus)
-*   на трамва́ї (by tram - note the 'ї' because 'й' changes)
-*   на автомобі́лі (by car)
-*   на метро́ (by metro - unchanged)
-*   на літаку́ (by airplane)
+### Міський транспорт
+Міський транспорт має різні види. Автобуси та тролейбуси дуже популярні. Трамваї їздять старими вулицями. Вони дуже красиві. Найбільш відомий транспорт — це маршрутка.
 
-> [!tip] Корисна порада
-> When talking about getting on a vehicle, Ukrainians often use the verb **сіда́ти** (to sit down / to get on). The phrase «Сідати в автобус» means "to get on the bus".
+**Маршру́тка** — це маленький автобус. Вона їде дуже швидко. Вона має свій маршрут. Це дуже зручний транспорт. Маршрутки їздять скрізь. Вони часто їдуть туди, куди великий автобус не може. Ви платите за проїзд водію. Ви платите гроші прямо в дорозі.
+
+Ось кілька прикладів. Читайте ці речення вголос.
+
+**Ukrainian:** Це мій старий автобус.
+**English:** This is my old bus.
+
+**Ukrainian:** Де найближча зупинка тролейбуса?
+**English:** Where is the nearest trolleybus stop?
+
+**Ukrainian:** Ця жовта маршрутка їде дуже швидко.
+**English:** This yellow minibus drives very fast.
+
+**Ukrainian:** Наш історичний трамвай їде досить повільно.
+**English:** Our historical tram drives quite slowly.
+
+> [!warning] Grammatical Exceptions
+> Two very important transport words in the Ukrainian language simply do not change their grammatical endings. The imported words **метро́** (metro) and **таксі́** (taxi) are strictly classified as indeclinable neuter nouns. This means their physical spelling and pronunciation stay exactly the same, no matter their grammatical role in the sentence.
+
+Let us carefully look at how this rigid linguistic rule works in actual practice. Even when the grammar usually requires a noun to change its ending to mathematically show its location or to become the object of an action, these specific loanwords stay perfectly still.
+
+**Ukrainian:** Я дуже люблю київське метро.
+**English:** I really like the Kyiv metro.
+
+**Ukrainian:** Моє рідне місто не має метро.
+**English:** My hometown does not have a metro.
+
+**Ukrainian:** Ми зараз чекаємо на жовте таксі.
+**English:** We are currently waiting for a yellow taxi.
+
+**Ukrainian:** Це приватне таксі занадто дороге для нас.
+**English:** This private taxi is too expensive for us.
+
+### Міжміський транспорт
+Для довгих поїздок ми беремо інший транспорт. Ви можете їхати в інше місто. Ви також можете їхати в іншу країну. Головний транспорт для цього — це потяг та літак.
+
+Слово для довгого маршруту — **по́тяг**. Слово для польоту — **літа́к**. Подивімося на приклади.
+
+**Ukrainian:** Цей сучасний потяг швидко їде до Києва.
+**English:** This modern train quickly goes to Kyiv.
+
+**Ukrainian:** Цей великий літак летить дуже високо.
+**English:** This big airplane flies very high.
+
+> [!fact] Укрзалізниця
+> Подорожі потягом дуже популярні. Вони популярні в Україні. Компанія «Укрзалізниця» є надійною. Багато людей люблять нічні потяги. Вони не люблять автомобілі чи літаки. Потяг — це цікавий досвід.
+
+Traveling cross-country by train in Ukraine is not merely about moving your physical body from one location to another. It is an enduring, fascinating social opportunity. It is a wonderful chance to drink hot, sweet tea served in special traditional glasses with metal holders, chat openly with strangers who become temporary friends, and calmly watch the vast, beautiful landscapes pass by your window.
 
 ## Вокзал та аеропорт
 
-### Залізничний вокзал
-The train station is a central hub of travel in Ukraine. The word for train station is **вокза́л**. Sometimes it is specified as **залізни́чний вокза́л** (railway station).
-Ви на вокзалі. Ви перевіряєте **розкла́д** (schedule). Ви шукаєте свій **по́їзд** (train) або **по́тяг** (train). Потім ви йдете у **ка́су** (ticket office) і купуєте **квито́к** (ticket). Ви йдете на **перо́н** (platform) і шукаєте свою **ко́лію** (track).
-*   **Де залізни́чний вокза́л?** (Where is the train station?)
-*   **Дайте один квито́к до Києва, будь ласка.** (Give me one ticket to Kyiv, please.)
-*   **Який це перо́н?** (Which platform is this?)
+### Транспортні вузли
+Перед поїздкою вам потрібно знати транспортні вузли. Вокзал — це велика будівля. Тут починаються всі подорожі. Українські міста мають три головні типи вокзалів.
 
-### Аеропорт
-Air travel has its own specific vocabulary. The word is **аеропо́рт**. Inside the airport, you will find the **терміна́л** (terminal). Your specific journey is your **рейс** (flight/trip). You will need to drop off your **бага́ж** (luggage) and go through **па́спортний контро́ль** (passport control). Don't forget your **па́спорт** (passport)!
-*   **Ми їдемо в аеропо́рт.** (We are traveling to the airport.)
-*   **Мій рейс о другій годині.** (My flight is at two o'clock.)
-*   **Де мій бага́ж?** (Where is my luggage?)
+The **залізни́чний вокза́л** is the formal, full term for the train station. The **автовокза́л** is the dedicated bus station specifically used for long-distance, intercity routes. The **аеропо́рт** is the airport, usually located far outside the noisy city center.
 
-> [!culture] Культурний контекст
-> Train travel is deeply ingrained in Ukrainian culture. Overnight trains, known as «нічні поїзди», are a very common and comfortable way to travel between major cities like Kyiv, Lviv, and Odesa. Sharing food and stories with fellow passengers in a «купе» (compartment) is a classic Ukrainian travel experience.
+> [!tip] Слово «Вокзал»
+> Слово **вокза́л** зазвичай означає залізничний вокзал. Потяг дуже важливий для України. Це слово має стандартне значення. Люди часто використовують це слово. Воно означає саме залізничний вокзал.
 
-### Купівля квитка: корисні фрази
-Ось проста розмова біля каси. Потрібно сказати напрямок та кількість квитків.
-*   **Мені потрібен квито́к.** (I need a ticket.)
-*   **Скільки коштує квито́к?** (How much does a ticket cost?)
-*   **Два квитки́, будь ласка.** (Two tickets, please.)
-Notice that "квиток" changes to "квитки" for the plural when ordering two.
+Here is exactly how you might talk about these impressive, crowded locations.
+
+**Ukrainian:** Це головний залізничний вокзал нашого міста.
+**English:** This is the main train station of our city.
+
+**Ukrainian:** Наш новий міжміський автобус їде на автовокзал.
+**English:** Our new intercity bus goes to the bus station.
+
+**Ukrainian:** Цей міжнародний аеропорт зараз дуже великий.
+**English:** This international airport is very big right now.
+
+### Усередині вокзалу
+Усередині вокзалу вам треба знайти важливі місця. Це допомагає організувати поїздку. Три головні місця — це каса, зал очікування та платформа.
+
+Перше важливе місце — це **ка́са**, де ви купуєте свій квиток. Після цього ви можете піти у **зал очі́кування**. Це зручне місце для відпочинку, де пасажири чекають на потяг. Коли час прийшов, ви йдете на **платфо́рму**. Саме там ви сідаєте у свій вагон.
+
+Let us study these crucial location words in simple, highly practical sentences.
+
+**Ukrainian:** Головна каса працює щодня без жодної перерви.
+**English:** The main ticket office works every day without any break.
+
+**Ukrainian:** Теплий зал очікування знаходиться там, направо.
+**English:** The warm waiting hall is located there, to the right.
+
+**Ukrainian:** Де зараз знаходиться друга платформа?
+**English:** Where is the second platform located right now?
+
+**Ukrainian:** Наш довгий потяг прибуває на першу платформу.
+**English:** Our long train arrives at the first platform.
+
+Ці слова дуже корисні. Вони допомагають швидко орієнтуватися. Ви зможете легко знайти шлях. Це важливо на вокзалі.
+
+### Корисні фрази та квитки
+To successfully manage an entire journey from the absolute start to the very finish, you need to firmly know a few essential functional phrases. These phrases operate as fixed, solid chunks of language that you can easily memorize and use immediately without pausing to analyze the deep grammar.
+
+If you are completely, hopelessly lost in the winding city streets, you deeply need to ask a friendly stranger for the location of the central hub.
+
+**Ukrainian:** Перепрошую, скажіть, будь ласка, де вокзал?
+**English:** Excuse me, tell me, please, where is the station?
+
+If you desperately need to verify the origin point of your transport at the busy information desk, loudly use this exact phrase.
+
+**Ukrainian:** Звідки точно відправляється цей потяг?
+**English:** Where exactly does this train depart from?
+
+To clearly ask about the official schedule and fiercely ensure you are not late, you will strongly need to ask about the current time.
+
+**Ukrainian:** О котрій годині ми відправляємося?
+**English:** At what time do we depart?
+
+Before you can legally and safely travel, you absolutely must secure a valid ticket. The standard Ukrainian word for a paper or digital ticket is **квито́к**. To physically perform the action of buying a ticket is **купи́ти квито́к**. You also need to clearly and loudly specify to the tired cashier if your planned journey is only one way, or if you definitely plan to return home.
+
+A single, simple one-way ticket is confidently called **в оди́н бік**. A comprehensive round trip ticket, meaning you go there and safely come back, is effectively called **туди́ й наза́д**. Let us combine these incredibly useful linguistic pieces into full, very polite requests.
+
+**Ukrainian:** Добрий день, я дуже хочу купити квиток.
+**English:** Good afternoon, I really want to buy a ticket.
+
+**Ukrainian:** Дайте один дитячий квиток туди й назад, будь ласка.
+**English:** Give one children's round trip ticket, please.
+
+**Ukrainian:** Один дорослий квиток в один бік, будь ласка.
+**English:** One adult one-way ticket, please.
+
+Memorizing these exact, tested phrases will make your vital daily interactions at the stressful ticket window much smoother and infinitely less stressful.
 
 ## Напрямки
 
-### Запитувати дорогу
-Завжди ввічливо казати «excuse me». Українською ми кажемо **Ви́бачте**. Потім ви питаєте: **Де знахо́диться...?** (Where is located...?) або просто **Де...?** (Where is...?).
-Для питання про дорогу використовуйте: **Як дійти́ до...?** (How to walk to...?) або **Як дої́хати до...?** (How to ride/drive to...?). Українська мова розділяє рух пішки та рух транспортом.
-*   **Ви́бачте, де знахо́диться готель?** (Excuse me, where is the hotel located?)
-*   **Скажіть, будь ласка, де банк?** (Tell me, please, where is the bank?)
-*   **Як дійти́ до музею?** (How to walk to the museum?)
+### Вказівники
+Ви повинні знати слова для орієнтування у місті. Ці прості слова допомагають знайти дорогу. Без них карти не працюють. Давайте вивчимо слова напрямків. Вони потрібні вам щодня.
 
-### Вказувати дорогу: корисні слова
-Хтось відповідає на ваше запитання. Потрібно розуміти слова напрямку. Ось найважливіші слова:
-*   **пря́мо** (straight)
-*   **ліво́руч** / **налі́во** (to the left)
-*   **право́руч** / **напра́во** (to the right)
-*   **наза́д** (back, backwards)
-*   **тут** (here)
-*   **там** (there)
-*   **бли́зько** (near, close)
-*   **дале́ко** (far)
+To say left, use **налі́во**. The spatial word for right is **напра́во**. When moving straight ahead, say **пря́мо**. To move back or backwards, you use **наза́д**.
 
-Let's see them in context:
-*   **Ідіть пря́мо, а потім ліво́руч.** (Go straight, and then to the left.)
-*   **Аптека там, право́руч.** (The pharmacy is there, to the right.)
-*   **Це дуже дале́ко.** (This is very far.)
+Sometimes, happily offering simple directions is simply not enough for highly complicated, chaotic urban layouts. You might intensely need to specify precisely which street turn a confused person must eventually take. For this highly specific task, we heavily rely on ordinal numbers. The descriptive phrase for the first turn is **пе́рший поворо́т**. The descriptive phrase for the second turn is **дру́гий поворо́т**.
 
-> [!warning] Обережно
-> Do not confuse **право́руч** (to the right) with **пра́вильно** (correct/right). If you ask if this is the way to the station, and they say «Правильно», they mean "Correct", not "Turn right".
+Let us meticulously review these core navigational terms in realistic, helpful contexts.
 
-### Орієнтири в місті
-Потрібно знати міські орієнтири. Ось важливі слова: **ву́лиця** (street), **пло́ща** (square), **перехре́стя** (intersection) та **зупи́нка** (transport stop).
-*   **Це головна́ ву́лиця.** (This is the main street.)
-*   **Зупи́нка авто́буса дуже бли́зько.** (The bus stop is very close.)
-*   **Ідіть через пло́щу.** (Go across the square.)
+**Ukrainian:** Наш новий комфортний готель там, наліво.
+**English:** Our new comfortable hotel is there, to the left.
+
+**Ukrainian:** Завжди дуже уважно дивіться направо.
+**English:** Always look very carefully to the right.
+
+**Ukrainian:** Це ваш перший поворот до старого центру.
+**English:** This is your first turn to the old center.
+
+**Ukrainian:** Наступна довга, широка вулиця — це другий поворот.
+**English:** The next long, wide street is the second turn.
+
+### Наказовий спосіб
+When actively and confidently giving directions to another lost person, native Ukrainians intuitively and constantly use a highly specific grammatical verb form. This unique, powerful form is formally called the imperative mood. It serves excellently to effectively express a direct command, a clear instruction, or a firm, polite request.
+
+At this solid beginner level, we will deliberately and exclusively focus on the polite plural form. This is the exact grammatical equivalent of addressing someone formally with the respectful pronoun «ви» (you, formal or plural). Fully mastering this ensures you always sound mature, respectful, and perfectly polite when giving necessary instructions to strange adults on the busy street.
+
+The formal imperative command for the physical action "turn" is **поверні́ть**. The formal imperative command for the physical action "go" or "walk" is **іді́ть**.
+
+Let us boldly combine these powerful, action-oriented verbs directly with our brand-new direction vocabulary.
+
+**Ukrainian:** Будь ласка, обережно поверніть наліво.
+**English:** Please, carefully turn left.
+
+**Ukrainian:** Дуже повільно поверніть направо тут.
+**English:** Very slowly turn right here.
+
+**Ukrainian:** Ідіть прямо і ніколи не зупиняйтеся.
+**English:** Go straight and never stop.
+
+**Ukrainian:** Ні, швидко ідіть назад до вокзалу.
+**English:** No, quickly go back to the station.
+
+> [!note] Ввічливі команди
+> Англійські прямі дієслова звучать грубо. Українські форми є цілком нормальними. Вони ідеально ввічливі при наданні інструкцій. Вам не потрібно пом'якшувати їх. Це стандартна практика.
+
+### Як запитати дорогу
+Even with an excellent, highly detailed map and a naturally good sense of direction, you will inevitably eventually need to ask a friendly, local resident for direct help. It is absolutely, undeniably crucial to deeply know the universally accepted, highly polite formulas for correctly asking directions in public.
+
+The most common, entirely natural way to politely ask how to physically reach a specific destination is the useful phrase **Як діста́тися до...?**. This rigid structure literally translates word-for-word to "How to get to...?".
+
+Notice the incredibly small but vital prepositional word **до**. Immediately after this specific word, the destination noun must fundamentally change its grammatical ending because it is operating heavily in the Genitive case. For now, do not constantly worry about the deep mathematical rules; simply and safely memorize the entire phrase as a single, functional, protective unit.
+
+**Ukrainian:** Вибачте, як швидко дістатися до метро?
+**English:** Excuse me, how to quickly get to the metro?
+
+**Ukrainian:** Як безпечно дістатися до історичного центру?
+**English:** How to safely get to the historical center?
+
+**Ukrainian:** Скажіть, як дістатися до головного вокзалу?
+**English:** Tell me, how to get to the main station?
+
+Another excellent, highly polite, and gentle option is to directly ask someone to simply tell you where a place is geographically located. You can confidently and safely use the phrase **Скажі́ть, будь ла́ска, де...?**. This translates directly to "Tell me, please, where is...?".
+
+**Ukrainian:** Скажіть, будь ласка, де зараз знаходиться банк?
+**English:** Tell me, please, where is the bank located now?
+
+**Ukrainian:** Скажіть, будь ласка, де найближча зупинка автобуса?
+**English:** Tell me, please, where is the nearest bus stop?
+
+These specific, highly polite phrases represent your ultimate, unbreakable safety net in any Ukrainian city.
 
 ## Подорожі
 
-### Дієслова руху: іти чи їхати?
-Англійське дієслово "to go" означає різні рухи. Ви йдете в магазин. Ви летите в Париж. Ви їдете на роботу. Українська мова має різні дієслова. Слово залежить від способу руху.
-1.  **Іти́** (to go on foot, to walk)
-2.  **Ї́хати** (to go by vehicle, to ride, to drive)
+### Куди ми їдемо?
+When enthusiastically and vividly describing a planned journey to your friends, the absolute first detail you happily provide to your listener is usually the final destination. To successfully state exactly where you are actively going, the Ukrainian language firmly uses the vital preposition **до** immediately followed by the proper name of the target city in the Genitive case.
 
-Ви йдете в найближче кафе пішки? Використовуйте "іти". Ви сідаєте в автобус, поїзд або автомобіль до іншого міста? Використовуйте "їхати".
-*   **Я іду́ в парк.** (I am going/walking to the park.)
-*   **Вона іде́ в магазин.** (She is going/walking to the store.)
-*   **Ми ї́демо в Київ.** (We are going/traveling to Kyiv.)
-*   **Вони ї́дуть на роботу.** (They are going/riding to work.)
+For masculine city names that naturally end in a hard consonant, you typically add a soft «-а» or «-у» to the very end of the word. For example, the massive capital city Київ magically becomes Києва. The stunning western hub Львів transforms cleanly into Львова. This subtle, beautiful grammatical shift perfectly illustrates physical, intentional movement toward a target location.
 
-Here is the present tense conjugation for these two vital verbs:
+Let us carefully look at some clear, distinct examples of confidently expressing a travel destination.
 
-| Pronoun | Іти́ | Ї́хати |
-| :--- | :--- | :--- |
-| Я | іду́ | ї́ду |
-| Ти | іде́ш | ї́деш |
-| Він / Вона / Воно | іде́ | ї́де |
-| Ми | ідемо́ | ї́демо |
-| Ви | ідете́ | ї́дете |
-| Вони | іду́ть | ї́дуть |
+**Ukrainian:** Завтра рано вранці я їду до Києва.
+**English:** Tomorrow early in the morning I am going to Kyiv.
 
-### Вказуємо мету подорожі
-When you say where you are going, you use the prepositions **в/у** (in/to) or **на** (on/to), followed by the Accusative case. For A1, the rule of thumb is: use "в/у" for cities, countries, and enclosed spaces (buildings). Use "на" for open spaces, events, and a few specific locations (like work, station). For inanimate masculine and neuter nouns, the Accusative form is the same as the dictionary form. For feminine nouns ending in -а, the ending changes to -у.
-*   **Я іду в рестора́н.** (I am going to the restaurant. - masculine, no change)
-*   **Ми їдемо в Украї́ну.** (We are traveling to Ukraine. - feminine 'а' changes to 'у')
-*   **Він іде на робо́ту.** (He is going to work. - feminine 'а' changes to 'у')
-*   **Вони їдуть на вокза́л.** (They are going to the station. - masculine, no change)
+**Ukrainian:** Кожного літа ми часто їдемо до Львова.
+**English:** Every summer we often go to Lviv.
 
-> [!myth-buster] Розвінчуємо міфи
-> You might hear people say «на Україну». This is grammatically incorrect and is a relic of colonial, imperial framing that treated Ukraine as a territory rather than a sovereign state. The correct and only acceptable form is **в Україну** (to Ukraine) and **в Україні** (in Ukraine), just like you say «в Італію» or «в Канаду».
+**Ukrainian:** Вона зараз радісно їде до сонячної Одеси.
+**English:** She is currently joyfully going to sunny Odesa.
 
-### Пакування речей
-Перед подорожжю треба зібрати речі! Ви кладете свої речі у **валі́зу** (suitcase) або **рюкза́к** (backpack). Дієслово "to take" — це **бра́ти**.
-*   **Це моя нова валі́за.** (This is my new suitcase.)
-*   **Я беру́ рюкза́к.** (I am taking a backpack.)
-*   **Що ти бере́ш у подорож?** (What are you taking on the trip?)
+> [!warning] Дієслова руху
+> Є велика різниця між ходінням та їздою. Слово **іти́** означає тільки ходьбу. Слово **ї́хати** означає їзду на транспорті. Не використовуйте «іти» для автобуса чи потяга! Це дуже важливо пам'ятати.
+
+Let us clearly compare these two crucial, distinct verbs.
+
+**Ukrainian:** Я повільно іду пішки до великого парку.
+**English:** I am slowly walking on foot to the big park.
+
+**Ukrainian:** Я швидко їду машиною до великого парку.
+**English:** I am quickly driving by car to the big park.
+
+### Чим ми їдемо?
+Native English speakers very often stubbornly try to translate the incredibly common phrase "on the bus" directly word-for-word, fruitlessly and incorrectly trying to use a spatial preposition. However, Ukrainian fundamentally possesses a much more elegant, brilliantly streamlined grammatical solution for smoothly expressing the exact means of transport.
+
+Instead of heavily deploying a clunky preposition, Ukrainian naturally relies on the bare Instrumental case. The vehicle noun itself fundamentally changes its suffix ending to mathematically show that it is the pure instrument or method of travel. For standard masculine nouns like автобус or потяг, you simply attach the smooth ending «-ом».
+
+This provides an incredibly efficient, highly satisfying single-word way to explain exactly how you are rapidly traveling across the land.
+
+**Ukrainian:** Я зазвичай їду новим, швидким потягом.
+**English:** I usually travel by a new, fast train.
+
+**Ukrainian:** Ми зараз зручно їдемо міським автобусом.
+**English:** We are currently traveling comfortably by city bus.
+
+**Ukrainian:** Вони завтра летять великим, надійним літаком.
+**English:** They are flying tomorrow by a large, reliable airplane.
+
+For feminine transport nouns, such as the famous, ubiquitous маршрутка, the special grammatical ending smoothly becomes «-ою».
+
+**Ukrainian:** Вона щодня їде на роботу цією маршруткою.
+**English:** She travels to work every day by this minibus.
+
+Remember our extremely strict previous rule: the imported, foreign word **метро́** never, ever changes its physical shape. Therefore, we are absolutely forced to use a preposition here to make sense: **на метро́**.
+
+**Ukrainian:** Я щоранку швидко їду на роботу на метро.
+**English:** I quickly travel to work every morning by metro.
+
+### Тривалість подорожі
+The absolute final, highly practical piece of information for organizing any long journey is the expected, precise duration. To politely and clearly ask about the total, exhaustive length of a trip, you efficiently use the standard, fixed phrase **Скі́льки ча́су ї́хати?**. This essentially and clearly means "How long is the ride?" or literally translated, "How much time to travel?".
+
+To correctly and accurately answer this vital question, you must carefully combine the travel verb with a specific, chosen number and the essential noun for hour, **годи́на**. Depending strictly on the mathematical number you choose, the core word for hour correctly changes its grammatical form.
+
+Let us thoroughly practice asking and accurately answering about travel time.
+
+**Ukrainian:** Скажіть, скільки точного часу туди їхати?
+**English:** Tell me, how much exact time is the ride there?
+
+**Ukrainian:** Я їду туди рівно одну коротку годину.
+**English:** I travel there exactly one short hour.
+
+**Ukrainian:** Ми повільно їдемо майже три довгі години.
+**English:** We travel slowly for almost three long hours.
+
+**Ukrainian:** Вони їдуть нічним потягом цілих п'ять годин.
+**English:** They travel by night train for a whole five hours.
+
+Ця граматика дуже важлива. Вона поєднує числа та планування подорожей. Ви знаєте час поїздки. Це допомагає планувати день. Це також допомагає купувати квитки.
 
 ## Практика
 
-### Сценарій 1: Купівля квитка на вокзалі
-Imagine you are at the central railway station. You need to buy a ticket to Odesa. You approach the «каса» (ticket office). Read the dialogue and notice how polite words and numbers are used.
+### Діалог 1: На вулиці
+Let us very carefully examine exactly how all this distinct, rich vocabulary and surprisingly complex grammar actually comes elegantly together in a totally realistic, highly stressful everyday scenario. In this deeply instructive first dialogue, a confused, entirely lost tourist is wandering the city and politely, desperately asks a passing local resident for precise, clear directions to the nearest functional metro station. Pay special, close attention to the highly polite introductory phrases and the formal, strong imperative verbs creatively used to firmly give instructions. Read the Ukrainian lines aloud to perfectly master the intonation.
 
-**Касир:** Добрий день. (Good afternoon.)
-**Мандрівник:** Добрий день. Мені потрібен квиток до Одеси на завтра. (Good afternoon. I need a ticket to Odesa for tomorrow.)
-**Касир:** На який час? Є поїзд о дев'ятій ранку і о восьмій вечора. (For what time? There is a train at nine in the morning and at eight in the evening.)
-**Мандрівник:** На вечір, будь ласка. Скільки він коштує? (For the evening, please. How much does it cost?)
-**Касир:** П'ятсот гривень. Ваш паспорт, будь ласка. (Five hundred hryvnias. Your passport, please.)
-**Мандрівник:** Ось, будь ласка. (Here you go, please.)
-**Касир:** Дякую. Ваш квиток і решта. Щасливої дороги! (Thank you. Your ticket and change. Have a good trip!)
-**Мандрівник:** Дякую, до побачення. (Thank you, goodbye.)
+**Ukrainian:** Перепрошую. Скажіть, будь ласка, де точно знаходиться метро?
+**English:** Excuse me. Tell me, please, where exactly is the metro located?
 
-Цей діалог використовує важливу фразу «Мені потрібен...». It also shows the standard polite closing «Щасливої дороги!» which literally means "Happy road!" and is the equivalent of "Have a good trip!".
+**Ukrainian:** Добрий день. Метро зовсім недалеко. Ідіть прямо цією довгою вулицею.
+**English:** Good afternoon. The metro is quite not far. Go straight along this long street.
 
-### Сценарій 2: Запитуємо дорогу на вулиці
-Now you are in Odesa, and you want to find the famous Opera House (Оперний театр). You stop a passerby.
+**Ukrainian:** Прямо? Що робити потім?
+**English:** Straight? What to do then?
 
-**Турист:** Вибачте, ви не підкажете, де знаходиться Оперний театр? (Excuse me, could you tell me where the Opera House is located?)
-**Перехожий:** Так, звичайно. Це не дуже далеко. Ви йдете прямо по цій вулиці. (Yes, of course. It is not very far. You walk straight along this street.)
-**Турист:** Прямо? А потім? (Straight? And then?)
-**Перехожий:** Потім на перехресті поверніть праворуч. Театр буде там, ліворуч. (Then at the intersection turn right. The theater will be there, on the left.)
-**Турист:** Дуже дякую за допомогу! (Thank you very much for your help!)
-**Перехожий:** Прошу. Гарного дня! (You're welcome. Have a good day!)
+**Ukrainian:** Так, усе правильно. Ідіть прямо, а потім буде другий поворот наліво.
+**English:** Yes, everything is correct. Go straight, and then there will be the second turn to the left.
 
-Notice the use of «йти прямо» (to walk straight). Because you are walking on the street, the verb "йти" is used. The passerby uses imperative forms like «поверніть» (turn), which we will study in more detail later, but for now, recognize them as direction commands.
+**Ukrainian:** Другий поворот наліво. Я все добре зрозумів.
+**English:** Second turn to the left. I understood everything well.
 
-> [!observe] Зверніть увагу
-> Ukrainians are generally very helpful when you ask for directions. If you start with «Вибачте» and try to speak a little Ukrainian, people will often go out of their way to make sure you find your destination, sometimes even walking part of the way with you!
+**Ukrainian:** Саме так. Там ви одразу побачите дуже велику станцію.
+**English:** Exactly. There you will immediately see a very big station.
 
-### Сценарій 3: В таксі
-Finally, you have heavy luggage and decide to take a taxi to your hotel.
+**Ukrainian:** Дуже щиро дякую вам за вашу допомогу!
+**English:** Thank you very sincerely for your help!
 
-**Водій:** Добрий вечір. Куди їдемо? (Good evening. Where are we going/riding?)
-**Пасажир:** Добрий вечір. Мені потрібно в готель «Україна», в центр. (Good evening. I need to go to the hotel "Ukraine", to the center.)
-**Водій:** Добре. (Good/Okay.)
-*(After arriving)*
-**Пасажир:** Скільки це коштує? (How much does it cost?)
-**Водій:** Двісті п'ятдесят гривень. (Two hundred fifty hryvnias.)
-**Пасажир:** Ось триста. Решти не треба. (Here is three hundred. Keep the change / No change needed.)
-**Водій:** Дякую. На все добре! (Thank you. All the best!)
+**Ukrainian:** Прошу. Бажаю вам винятково гарного дня!
+**English:** You are welcome. I wish you an exceptionally good day!
 
-Here, the driver uses the verb «їдемо» (we are riding) because you are in a vehicle. The phrase «Решти не треба» is very useful if you want to leave a tip.
+This highly detailed, expertly crafted dialogue flawlessly and vividly demonstrates a typical, highly respectful, and successful exchange on the loud, chaotic streets of a massive Ukrainian city. The baseline grammar intrinsically involved is quite remarkably simple, but it is incredibly, undeniably effective for immediately solving urgent, highly practical spatial problems during your complex travels.
 
-By practicing these dialogues, you train your ear to catch the rhythm of the language and prepare yourself for real-world interactions. Read them aloud multiple times until the phrases feel natural to say.
+### Діалог 2: Наша подорож
+In this second, deeply immersive scenario, two incredibly excited, close friends are enthusiastically, loudly discussing their highly anticipated upcoming vacation trip. This significantly longer, more complex dialogue skillfully and naturally integrates the absolute core concepts of travel destination, mathematically expected duration, and the carefully chosen means of transport. Notice exactly, with intense scrutiny, how the bare, prepositionless Instrumental case is actively used seamlessly and entirely naturally to boldly explain exactly how they will happily travel together.
+
+**Ukrainian:** Привіт, Марку! Куди саме ми їдемо завтра рано вранці?
+**English:** Hi, Mark! Where exactly are we going tomorrow early in the morning?
+
+**Ukrainian:** Привіт, Олено! Ми нарешті, після довгого чекання, їдемо до Львова.
+**English:** Hi, Olena! We are finally, after a long wait, going to Lviv.
+
+**Ukrainian:** Це просто неймовірно чудово! Чим ми їдемо туди? Повільним автобусом?
+**English:** This is just incredibly great! How are we traveling there? By a slow bus?
+
+**Ukrainian:** Ні, ми їдемо сучасним, дуже швидким потягом. Це набагато зручніше.
+**English:** No, we are traveling by a modern, very fast train. It is much more comfortable.
+
+**Ukrainian:** Я абсолютно і повністю згоден. Скільки часу туди їхати?
+**English:** I absolutely and completely agree. How long is the ride there?
+
+**Ukrainian:** Ми їдемо туди приблизно шість або сім годин.
+**English:** We travel there approximately six or seven hours.
+
+**Ukrainian:** Зрозуміло. О котрій рівно годині відправляється наш нічний потяг?
+**English:** Understood. At what exact time does our night train depart?
+
+**Ukrainian:** Він точно відправляється о восьмій ранку. Будь ласка, благаю, не запізнюйся!
+**English:** It exactly departs at eight in the morning. Please, I beg, do not be late!
+
+**Ukrainian:** Зовсім не хвилюйся. Я вже маю електронний квиток. До зустрічі на вокзалі!
+**English:** Do not worry at all. I already have an electronic ticket. See you at the station!
+
+Цей діалог показує планування подорожі. Друзі радісно обговорюють плани. Подорож потягом — це класика в Україні. Зверніть увагу на фразу «до Львова». Вона показує напрямок. Слово «потягом» показує вид транспорту. Це дуже точна граматика.
+
+### Перевірка
+Now it is truly, absolutely time to rigorously and honestly check your deep reading comprehension. Read the following evaluation questions very, very carefully. They are intentionally written entirely in the Ukrainian language without any supportive English translation to falsely comfort you. Try your absolute best to answer them directly, fully based on the two dialogues you just carefully read, absolutely without lazily looking back at the provided English translations located directly above.
+
+1. Куди саме іде турист у першому довгому діалозі на вулиці?
+2. Який конкретно швидкий транспорт використовують радісні друзі у другому діалозі?
+3. Скільки довгих годин цим близьким друзям треба їхати сучасним потягом до Львова?
+4. Що дуже ввічливо просить турист показати у першому діалозі?
+5. Чому мудрі друзі спільно вирішили їхати зручним потягом, а не великим, повільним автобусом?
+
+Відповіді на ці питання показують ваш рівень. Ви розумієте головні концепції уроку. Тепер ви готові до подорожей. Ви можете орієнтуватися у місті. Ви можете планувати маршрути. Ви добре знаєте мову.
 
 ---
 
 # Підсумок
 
-Congratulations! You have completed a massive and very important module. You are now equipped with the vocabulary and grammar to navigate through Ukraine.
+У цьому уроці ви вивчили важливі слова. Тепер ви знаєте види міського транспорту. Ви знаєте слова: автобус, трамвай та маршрутка. Ви також знаєте назви вузлів. Залізничний вокзал — це дуже важливе місце. Автовокзал та аеропорт також дуже важливі. Ви можете купувати квитки. Ви можете питати дорогу. Ви знаєте, як сказати "наліво", "направо", "прямо" та "назад". Ви вмієте використовувати дієслова "іти" та "їхати". Ви розумієте ці два слова. Ви можете сказати, куди ви їдете. Ви використовуєте прийменник "до". Ви також можете сказати, чим ви їдете. Це дуже корисні знання. Ви готові до подорожі. Ви можете впевнено мандрувати містом. Ви можете мандрувати Україною. Подорожувати — це цікаво та весело.
 
-Let's review the most critical points we covered:
-1.  **Transport Vocabulary:** You learned the names for ground, underground, air, and water transport (автобус, метро, літак).
-2.  **Station and Airport:** You know how to identify the ticket office (каса), the platform (перон), and the terminal (термінал), as well as how to ask for a ticket (квиток).
-3.  **Directions:** You can ask where something is (Де знаходиться...?) and understand directions like straight (прямо), left (ліворуч), and right (праворуч).
-4.  **Verbs of Motion:** You learned the fundamental difference between **іти** (to go on foot) and **їхати** (to go by vehicle).
-5.  **Destinations:** You know to use **в** або **на** followed by the Accusative case to state your destination.
-
-This foundation will make your future travels much smoother and allow you to interact more deeply with the places you visit.
+Граматика цього уроку є дуже практичною. Ви знаєте формальні форми: ідіть, поверніть. Вони допомагають давати інструкції на вулиці. Ви також знаєте форми для транспорту. Ви можете сказати: потягом, автобусом, літаком. Вам не потрібні зайві слова. Ви знаєте, як вказати напрямок. Ви також вмієте ставити питання. Ви можете спитати про час. Ви можете спитати про час поїздки. Це допомагає планувати день. Ви добре попрацювали. Ви вивчили багато нових слів. Тепер ви можете вільно говорити про транспорт. Ви маєте міцну базу. Ці навички є дуже важливими. Бажаю вам успіхів!
 
 **Перевірте себе:**
-1.  Як сказати українською "I am waiting for the bus"?
-2.  Яке дієслово означає "I am flying to Kyiv" — *іти* чи *їхати*?
-3.  Що означає слово «ліворуч»?
-4.  Як ввічливо запитати "Where is the pharmacy?"
-5.  If someone tells you «Ідіть прямо, а потім праворуч», what should you do?
+1. Як правильно сказати англійською мовою довге словосполучення «залізничний вокзал» і чому воно таке важливе?
+2. Який саме складний відмінок ми обов'язково використовуємо для слова «потяг» у фразі «Я їду потягом»?
+3. Як правильно та ввічливо сказати: «поверніть наліво» чи «ідіть наліво» для різкої зміни напрямку на вулиці?
+4. Що конкретно і точно означає корисна, стандартна фраза «квиток туди й назад» у гучній касі?
+5. Чому ми ніколи, за жодних обставин не змінюємо кінцеве закінчення у запозиченому слові «метро»?
+
+These verified, deeply internalized linguistic skills permanently form the solid, completely unbreakable foundation of your physical mobility in any Ukrainian-speaking environment. You are fundamentally, completely ready for the open road.
+
+---

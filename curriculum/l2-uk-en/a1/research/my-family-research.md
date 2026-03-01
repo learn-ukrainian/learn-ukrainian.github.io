@@ -1,33 +1,35 @@
 # Дослідження: My Family
 
 ## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм присвійних займенників: мій, моя, моє... форм множини: мої..."
-§4.2.3.4: "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані, скажіть, будь ласка... Дівчино..."
-Alignment: This module introduces possessive pronoun agreement for family members (§4.2.2) and the fundamental Vocative forms for addressing parents/grandparents (§4.2.3.4).
+§3.1 (Тематичний каталог): "сім’я і члени сім’ї, родичі"
+§4.2.2 (Морфологія): "утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє"
+§4.2.3.4 (Синтаксис): "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані... Дівчино..."
+Alignment: This module directly addresses the A1 thematic requirement for family, introduces noun gender agreement for possessives, and teaches the foundational usage of the Vocative case for addressing family members.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| мама | Extremely high | моя мама, рідна мама |
-| тато | Extremely high | мій тато, рідний тато |
+| мама | Very High (Core) | рідна мама, моя мама, мамо! |
+| тато | Very High (Core) | мій тато, тату! |
+| брат | High | старший брат, молодший брат |
+| сестра | High | старша сестра, рідна сестра |
 | сім'я | High | велика сім'я, моя сім'я |
-| родина | High | вся родина |
-| чоловік| High | мій чоловік (husband vs man) |
-| дружина| High | моя дружина |
+| родина | High | вся родина, збиратися родиною |
 
 ## Cultural Hooks
-1. **Сім'я vs. Родина**: The distinction between nuclear family (сім'я) and the broader extended family/bloodline/lineage (родина) is fundamental to Ukrainian culture, reflecting strong communal bonds.
-2. **Multigenerational Living & Grandparents**: Grandparents (дідусь та бабуся) historically and currently play a very active role in raising children in Ukraine. Multigenerational households are common and valued.
+1. **Сім'я vs Родина**: In Ukrainian culture, «сім'я» typically refers to the nuclear family living together under one roof, while «родина» encompasses the broader extended lineage, clan, or entire extended family, highlighting the deep importance of community and ancestry.
+2. **Role of Grandparents**: Grandparents (дідусі та бабусі) play an exceptionally active role in raising grandchildren in Ukraine. It is common for them to share the household or live very close by, providing daily childcare.
 
 ## Common Learner Errors
-1. **"Мій сестра" / "Мій мама"** → **"Моя сестра" / "Моя мама"** — English speakers often fail to agree the possessive pronoun "my" with the gender of the noun.
-2. **"Я маю брата"** → **"У мене є брат"** — While grammatically possible, "я маю" is often a direct calque from English "I have". "У мене є" is the natural, idiomatic way to express having family members at the A1 level.
+1. **Gender Agreement (мій сестра)** → **моя сестра** — English speakers often default to the masculine "мій" for all nouns since English lacks grammatical gender for possessives. Explicitly show the matching feminine ending (-я → моя).
+2. **Possession Calque (Я маю брата)** → **У мене є брат** — Learners directly translate "I have". While grammatically possible, «У мене є» is the natural, idiomatic way to express possession and family relationships at the A1 level.
 
 ## Cross-References
 - Builds on: a1-20 (Mine and Yours), a1-48 (Body and Health)
 - Prepares for: a1-50 (Holidays and Traditions), a1-34 (Checkpoint Core Grammar)
 
 ## Notes for Content Writing
-- **Decolonized framing**: When introducing the Vocative case (кличний відмінок), present it as a beautiful, distinct feature of the Ukrainian language that builds emotional connection, rather than comparing it to languages that have lost it (like Russian).
-- Ensure 10-50% immersion (heavy English scaffolding for A1 grammar concepts like possessive agreement and the Vocative case).
-- Do not use the word "жінка" when specifically meaning "wife" (use "дружина" as the neutral standard) to teach precise vocabulary.
+- Keep Ukrainian sentences short (max 8-10 words) due to A1 constraints.
+- Provide IPA strictly for the *first* occurrence of a new vocabulary word. Do not transcribe full sentences.
+- Ensure English scaffolding is clear, supportive, and patient for all grammatical concepts (Vocative, Possessive constructions).
+- Frame the Vocative case positively as a unique, vibrant, and beautiful feature of Ukrainian (do not compare it to Russian or present it as an obstacle).

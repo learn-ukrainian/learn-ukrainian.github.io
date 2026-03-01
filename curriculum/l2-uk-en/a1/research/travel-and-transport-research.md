@@ -1,30 +1,32 @@
 # Дослідження: Travel and Transport
 
 ## State Standard Reference
-§3.7 (Подорожі): "вокзал, автовокзал, аеропорт (летовище); перетин кордону; основні дії на позначення руху (іти, їхати – у базових фразах); туристичні принади" (lines 537-542).
-§4.2.2.5.1 (Орудний відмінок): "знаряддя і засіб дії" (lines 1308-1309).
-Alignment: The module perfectly aligns with A1 thematic requirements for travel and directions. While the Instrumental case for means of transport (їхати потягом) is formally introduced in A2 (§4.2.2.5), it is taught here as a lexicalized chunk essential for basic communication, matching the State Standard's requirement for "basic phrases denoting movement."
+§3: "Тематика спілкування: подорожі, місто" (lines 479-556)
+§4.2.4.2: "Наказовий спосіб — 2-га особа" (lines 721-725)
+Alignment: The module addresses the communicative themes of travel and city navigation. It teaches 2nd-person plural imperatives for giving directions (поверніть, ідіть), which complies exactly with the A1 verb form limits.
+*Note on standard discrepancy*: The module plan introduces "до + Genitive" for destinations and "Instrumental without prepositions" for transport means (автобусом). According to the provided `state-standard-2024-mapping.yaml`, the Genitive and Instrumental cases formally belong to the A2 level. In this A1 module, these must be treated as fixed lexical chunks ("chunks of language") for high-frequency travel communication rather than broad grammatical paradigms.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| маршрутка | Very High (Urban/Regional) | їхати маршруткою, чекати маршрутку |
-| потяг | High (Intercity) | їхати потягом, квиток на потяг |
-| метро | High (Kyiv, Kharkiv, Dnipro) | станція метро, їхати в метро (indeclinable) |
-| вокзал | High | залізничний вокзал, їхати на вокзал |
+| автобус | High (daily life) | їхати автобусом, чекати на автобус |
+| метро | High (urban) | станція метро, їхати в метро |
+| потяг | High (intercity) | квиток на потяг, їхати потягом |
+| квиток | Medium (travel) | купити квиток, квиток туди й назад |
 
 ## Cultural Hooks
-1. **The "Marshrutka" Culture**: Marshrutkas (minibuses) are the backbone of local transit in Ukraine. A unique cultural experience is passing cash through the hands of other passengers to the driver while the vehicle is moving.
-2. **Train Dominance**: For long-distance travel, Ukrzaliznytsia (Ukrainian Railways) is the undisputed king. Over 80% of domestic travelers prefer trains, which are renowned for their punctuality even during wartime.
+1. **Укрзалізниця (Ukrainian Railways):** Train travel is the cultural and logistical backbone of intercity transport in Ukraine. It is highly reliable, culturally significant, and deeply integrated into the Ukrainian experience.
+2. **Маршрутка Culture:** Minibuses (маршрутки) are a ubiquitous part of the Ukrainian urban transit ecosystem. They are uniquely characteristic of daily commutes in cities and suburbs.
 
 ## Common Learner Errors
-1. **"На потязі" vs "Потягом"** → Ukrainian elegantly uses the Instrumental case without a preposition to indicate means of transport (потягом, автобусом). English speakers often incorrectly translate "on the train" directly using the Locative (на потязі).
-2. **Іти vs Їхати** → Learners frequently say "я йду до Києва" (I am walking to Kyiv) instead of "я їду до Києва" (I am traveling by vehicle). This distinction must be explicitly taught.
+1. **Using prepositions for vehicles:** English speakers often translate "on the bus" as "на автобусі", but Ukrainian elegantly uses the bare Instrumental case for the means of transport (їхати автобусом).
+2. **Declining indeclinable nouns:** Learners might attempt to decline foreign loanwords like "метро" or "таксі". They need to be clearly marked as indeclinable neuter nouns (їхати в метро, а не в метрі).
 
 ## Cross-References
-- Builds on: a1-51 (Leisure and Hobbies), basic prepositions (a1-27, a1-28)
+- Builds on: a1-51 (Leisure and Hobbies)
 - Prepares for: a1-53 (At the Restaurant), a1-56 (Buying Tickets)
 
 ## Notes for Content Writing
-- English scaffolding is mandatory (A1 module, 10-50% immersion). All new grammar concepts, especially the Instrumental for transport and the Genitive for destination (`до`), must be explained clearly in English first.
-- Emphasize the decolonized framing: present the Ukrainian Instrumental usage (потягом) as an elegant, efficient feature of the language, not as an exception or complication.
+- Frame the bare Instrumental case for transport positively: highlight it as an elegant, efficient feature of the Ukrainian language (using one word instead of needing a prepositional phrase).
+- Ensure English scaffolding is heavily utilized for grammatical explanations, adhering to the A1 10-50% immersion policy.
+- Strictly differentiate the verbs of motion: emphasize the difference between riding/driving (їхати) and walking (іти).

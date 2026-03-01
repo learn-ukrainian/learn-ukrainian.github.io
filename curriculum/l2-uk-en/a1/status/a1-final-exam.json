@@ -2,15 +2,15 @@
   "module": "a1-final-exam",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T21:17:20.727075Z",
+  "last_audit": "2026-03-01T02:59:26.976365Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T21:17:00.301005Z",
-    "meta": "2026-02-28T21:04:32.226145Z",
+    "md": "2026-03-01T02:59:10.363382Z",
+    "meta": "2026-03-01T02:51:44.310732Z",
     "activities": "2026-02-22T09:13:58.737740Z",
     "vocabulary": "2026-02-26T10:56:38.067181Z",
     "plan": "2026-02-28T03:02:13.877969Z",
-    "research": "2026-02-28T21:04:32.218435Z"
+    "research": "2026-03-01T02:51:44.303922Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4898/2000 (raw: 5121)"
+      "message": "3379/2000 (raw: 3660)"
     },
     "activities": {
       "status": "deferred",

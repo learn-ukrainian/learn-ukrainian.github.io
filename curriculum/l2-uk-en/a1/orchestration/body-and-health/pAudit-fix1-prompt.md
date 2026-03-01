@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 4734/2000 (raw: 4987) | pedagogy: 33 violations
+    lesson: 3895/2000 (raw: 4239) | pedagogy: 38 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -30,8 +30,8 @@
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 36 violations (severe - consider revision)
-     → 31 grammar-level violations (fundamental)
+     → 42 violations (severe - consider revision)
+     → 32 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/body-and-health-audit.md

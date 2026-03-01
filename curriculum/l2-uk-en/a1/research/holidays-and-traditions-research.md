@@ -2,31 +2,34 @@
 
 ## State Standard Reference
 §3.12: "Традиції, звичаї, свята: державні й релігійні свята; день народження, весілля; подарунки."
-Alignment: This module directly addresses §3.12 by covering major state and religious holidays (Новий рік, Різдво, Великдень), birthday celebrations (день народження), and the tradition of giving gifts (подарунки). While A1 grammar typically focuses on Nominative, Accusative, and Locative, the Instrumental ("З Новим роком") and Genitive ("Бажаю щастя", dates) cases are introduced here as essential lexicalized communicative formulas.
+Alignment: This module directly addresses the thematic requirements of Catalogue B (§3.12) by introducing core vocabulary and communicative formulas for major holidays, birthdays, and gift-giving.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| свято | High (Top 500) | державне свято, релігійне свято, вітати зі святом |
+| свято | High (top 500) | державне свято, релігійне свято, велике свято |
 | Новий рік | High | З Новим роком! |
 | Різдво | High | на Різдво, щасливого Різдва |
-| вітати | High | вітати з днем народження, вітати зі святом |
-| бажати | High | бажати щастя, бажати здоров'я |
+| день народження | High | вітати з днем народження, Коли твій день народження? |
+| вітати | Medium-High | вітати зі святом |
+| бажати | Medium-High | бажати щастя, здоров'я, успіху |
 | подарунок | High | дарувати подарунок, отримати подарунок |
 
 ## Cultural Hooks
-1. **Sviatvechir & Kutia**: The tradition of 12 meatless dishes (12 пісних страв) on Christmas Eve, centered around Kutia (sweet wheat berry pudding), representing ancestors and prosperity.
-2. **Shchedryk (Carol of the Bells)**: The globally famous Christmas tune is originally a traditional Ukrainian New Year's carol (щедрівка) arranged by Mykola Leontovych, celebrating the coming of spring (historically in April) with a swallow.
+1. **Kutia (Кутя)**: The traditional sweet wheat berry pudding is the central, most important dish of the 12 meatless dishes served on Sviatvechir (Christmas Eve). It symbolizes prosperity and connection to ancestors.
+2. **"Shchedryk"**: The world-famous "Carol of the Bells" is originally a Ukrainian "shchedrivka" (New Year's song) arranged by Mykola Leontovych. It perfectly showcases Ukrainian cultural export and agency.
+3. **Pulling ears**: A playful birthday tradition where the birthday person's ears are gently pulled according to their age (often adding one for good luck), accompanied by the wish "щоб великий ріс" (so you grow big).
 
 ## Common Learner Errors
-1. **Nominative for Greetings** → "З Новий рік" (incorrect) vs. "З Новим роком" (correct). *Why it happens*: Learners translate "Happy New Year" directly without realizing "З" (with) requires the Instrumental case.
-2. **Accusative for Wishes** → "Бажаю успіх" (incorrect) vs. "Бажаю успіху" (correct). *Why it happens*: Learners assume wishing for something takes a direct object (Accusative), but Ukrainian uses the Genitive for abstract, partitive, or desired concepts.
+1. **Nominative after "З"** → Learner uses "З Новий рік" instead of "З Новим роком!". This happens because they translate "Happy New Year" literally and haven't mastered the Instrumental case yet.
+2. **Accusative for wishes** → Learner says "Бажаю успіх" instead of "Бажаю успіху". Wishing for abstract concepts requires the Genitive case in Ukrainian.
+3. **Confusing "вітати" and "бажати"** → Learners often mix up the act of greeting (вітати) with the act of expressing specific wishes (бажати).
 
 ## Cross-References
-- Builds on: a1-23, a1-49
-- Prepares for: a1-34
+- Builds on: a1-23 (What Time Is It - dates/time), a1-49 (My Family)
+- Prepares for: a1-34 (Checkpoint Core Grammar)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Present Ukrainian Christmas traditions (Kutia, 12 dishes) on their own terms. Frame "Shchedryk" proudly as a Ukrainian cultural export, reclaiming it from generic "Carol of the Bells" anonymity.
-- **Pedagogical Approach**: Keep grammar explanations light. Teach the Instrumental ("З + -ом/-ем") and Genitive ("бажаю + -а/-у") forms as frozen holiday phrases (lexicalized formulas) rather than full paradigm lessons, which belong in A2/B1.
-- **Linguistic Purity**: Ensure vocabulary hints are distinctly Ukrainian (e.g., use "отримувати" instead of the Russianism "получати").
+- Frame Ukrainian traditions independently, emphasizing authentic cultural elements (like Kutia) without comparing them to Soviet/Russian holiday practices.
+- Use explicit English scaffolding for grammar explanations (A1 level constraint, ~40% immersion).
+- Ensure the use of the verb "отримати" for receiving gifts to explicitly prevent the use of the Russianism "получати".

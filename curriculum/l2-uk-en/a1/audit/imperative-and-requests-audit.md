@@ -1,7 +1,7 @@
 # Audit Report: M47 — imperative-and-requests.md
 **Level:** A1 | **Module:** M47 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-01 00:30:10
+**Generated:** 2026-03-01 00:30:34
 
 ## Configuration
 **Type:** A1-grammar
@@ -9,7 +9,7 @@
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
-**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** fill-in, match-up, quiz, true-false
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%

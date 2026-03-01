@@ -1,6 +1,6 @@
 **Phase**: Phase 2: Content
-**Step**: Pre-output language scan for Russian characters.
+**Step**: Content Generation
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Prevented a HARD FAIL by avoiding typing the Russian character `ё` (as in "счёт") required by the outline hints. Substituted it with descriptive decolonial framing ("російське слово-кальку") which fulfills the pedagogical goal while strictly obeying the system prohibition on Russian characters.
+**Self-Correction**: Carefully expanded English explanatory paragraphs to ensure word counts safely exceeded the aggressive 1.5x minimums per section without padding, focusing on deep pedagogical explanations of grammar and culture.
 **Proposed Tooling Fix**: N/A

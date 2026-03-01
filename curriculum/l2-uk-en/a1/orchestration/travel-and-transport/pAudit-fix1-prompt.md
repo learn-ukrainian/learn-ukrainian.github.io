@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2225/2000 (raw: 2413) | pedagogy: 6 violations | immersion: 23.3% LOW (target 35-55% (M52))
+    lesson: 4377/2000 (raw: 4529) | pedagogy: 3 violations | immersion: 15.2% LOW (target 35-55% (M52))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -27,11 +27,11 @@
 ─── Audit output (last 15 lines) ───
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 9 violations (significant)
-     → 6 grammar-level violations (fundamental)
-     → Immersion 12% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 55/100)
+     → Revision recommended (severity 55/100)
+     → 4 violations (moderate)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 20% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/travel-and-transport-audit.md

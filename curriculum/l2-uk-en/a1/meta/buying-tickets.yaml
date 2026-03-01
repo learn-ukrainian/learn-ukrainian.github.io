@@ -5,40 +5,45 @@ content_outline:
 - section: Вступ та підготовка
   words: 450
   points:
-  - 'Introduce main transport types using simple definitions: `поїзд`, `автобус`,
-    `маршрутка`. Provide English scaffolding for clear understanding.'
-  - Explain the critical difference between `вокзал` (major train hub), `автовокзал`
-    (major bus hub), and `автостанція` (local stop).
-  - Introduce the construction `до` + City (Genitive) as a fixed lexical chunk for
-    destinations (`до Києва`, `до Львова`, `до Одеси`).
-  - Include a mini-dialogue asking about transport options to a specific city.
+  - 'Введення англійського скафолдингу для пояснення теми. Визначення основних видів
+    транспорту для подорожей: `поїзд`, `автобус`, `маршрутка` (кожному присвятити
+    окремий H3).'
+  - 'Чітке розрізнення локацій з англійськими дефініціями: `вокзал` (головний залізничний
+    вузол), `автовокзал` (головний автобусний вузол) та `автостанція` (місцева зупинка).'
+  - 'Представлення конструкції `до` + місто як готової лексичної формули (lexical
+    chunk): `до Києва`, `до Львова`, `до Одеси`. Пояснення без заглиблення у загальні
+    правила відмінків.'
+  - 'Міні-діалог: просте запитання про вибір транспорту до певного міста.'
 - section: Каса та замовлення
   words: 650
   points:
-  - 'Present the core transaction phrase for the ticket office: `Один квиток до...,
-    будь ласка`.'
-  - Explicitly warn against the common gender agreement error (`одна квиток` vs correct
-    `один квиток`).
-  - 'Explain ticket options: `туди й назад` (round trip) versus `в один бік` (one
+  - 'Вивчення ключової транзакційної фрази: `Один квиток до [місто], будь ласка`.
+    Покроковий розбір.'
+  - 'Фокус на уникненні типової помилки: пояснення англійською, що слово `квиток`
+    чоловічого роду, тому узгоджується лише як `один квиток` (ніколи не `одна`).'
+  - 'Словник для вибору поїздки: `туди й назад` (round trip) проти `в один бік` (one
     way).'
-  - Contrast traditional `квиткова каса` with modern `електронний квиток`, noting
-    the high digitalization of Укрзалізниця.
-  - 'Introduce carriage classes: `Купе` (compartment) vs `Плацкарт` (open plan), framing
-    ''плацкарт'' as an authentic social experience.'
+  - 'Сучасний контекст: порівняння традиційної `квиткової каси` та сучасного стандарту
+    — `електронного квитка` (QR-код у додатку).'
+  - 'Типи вагонів: `Купе` (приватність) та `Плацкарт` (відкритість). Культурна врізка
+    про «плацкарт» як унікальний соціальний простір для спілкування.'
 - section: Поїздка та комфорт
   words: 550
   points:
-  - 'Teach platform navigation questions: `На якій платформі?` and `В якому вагоні?`.'
-  - Review numbers (from prerequisite module) to specify carriage and seat numbers.
-  - 'Explain seat types: `нижнє місце` (lower) vs `верхнє місце` (upper).'
-  - 'Introduce schedule inquiries: `О котрій відправлення?` and `Коли прибуття?`.'
-  - Share the cultural hook of drinking tea from a `підстаканник` served by the `провідник`.
+  - 'Навігація на вокзалі: базові питання `На якій платформі?` та `В якому вагоні?`.'
+  - Повторення числівників (із попередніх модулів) для номерів колій, вагонів та місць.
+  - 'Опис типів місць у вагоні: `нижнє місце` (lower berth) та `верхнє місце` (upper
+    berth).'
+  - 'Запитання щодо розкладу: `О котрій відправлення?` та `Коли прибуття?`.'
+  - 'Культурний фокус (Cultural Hook): знайомство з роллю `провідника` та культовою
+    традицією пити чай із `підстаканника` у поїзді.'
 - section: Практика та підсумок
   words: 350
   points:
-  - 'Provide a comprehensive simulation dialogue: buying a ticket to the Carpathians,
-    finding the train, and speaking with the conductor.'
-  - Include a controlled practice check to reinforce `до` instead of `в` for cities.
-  - Recap key vocabulary (ticket, station, train, conductor) in a quick reference
-    format.
-  - 'Conclude the module with the traditional travel wish: `Щасливої дороги!`.'
+  - 'Комплексний діалог-симуляція: купівля квитка до Карпат, пошук своєї платформи,
+    вагону та коротка взаємодія з провідником.'
+  - 'Коротка вправа для самоперевірки (self-check): закріплення використання прийменника
+    `до` замість помилкового `в` для міст.'
+  - 'Візуальний підсумок ключової лексики: квиток, вокзал, поїзд, провідник, місце.'
+  - 'Завершення модуля традиційним українським побажанням для подорожуючих: `Щасливої
+    дороги!`.'

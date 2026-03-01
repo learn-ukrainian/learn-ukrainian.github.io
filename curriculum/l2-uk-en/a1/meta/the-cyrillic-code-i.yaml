@@ -1,51 +1,92 @@
 slug: the-cyrillic-code-i
 title: The Cyrillic Code I
 word_target: 2000
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: Anna Ohoiko — Ukrainian Lessons
+  letters:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
 content_outline:
 - section: Вступ
+  words: 300
+  points:
+  - 'State the A1 immersion protocol explicitly: English will be used to scaffold
+    grammar and provide a safe harbor, while Ukrainian will be used for all target
+    content.'
+  - 'Introduce the Ukrainian alphabet: 33 letters, highly phonetic system where each
+    letter reliably maps to one sound.'
+  - 'Integrate the cultural hook: Briefly explain the origins of the Cyrillic script
+    in the First Bulgarian Empire, highlighting its independent Eastern European roots.'
+  - 'Introduce Anna Ohoiko (Ukrainian Lessons) as the pronunciation guide. Explain
+    the learning loop: watch video → repeat aloud → practice reading. Embed the overview
+    video link.'
+- section: Голосні — А, У
   words: 400
   points:
-  - 'Immersion Note: A1 target immersion is 10-50%. Explicitly list English scaffolding
-    requirements for introducing the concept of the Cyrillic alphabet.'
-  - 'Provide the cultural hook: Cyrillic was named after St. Cyril but developed by
-    his students in the First Bulgarian Empire.'
-  - Introduce the learning strategy of 'True Friends' vs 'False Friends' to reduce
-    learner anxiety immediately.
-  - Demonstrate familiar sounds via international cognates like 'таксі', 'піца', 'метро'
-    to show the alphabet is partially cracked already.
-- section: Презентація
-  words: 600
+  - 'Define vowels (голосні) using English scaffolding: ''voice only'' sounds with
+    no airflow obstruction. State that Ukrainian has 10 vowels, and this module introduces
+    the first 2.'
+  - 'Create an H3 for ''Літера А''. Include the Anna Ohoiko video link. Provide examples:
+    ананас, Африка, автобус. Explain it sounds like ''a'' in ''father''.'
+  - 'Create an H3 for ''Літера У''. Include the video link. Provide examples: Україна,
+    університет, урок. Explain it sounds like ''oo'' in ''moon''.'
+  - 'Highlight the State Standard §4.1.4 core rule: Explicitly teach that Ukrainian
+    vowels are perfectly stable and never reduce to a schwa, maintaining clarity whether
+    stressed or unstressed.'
+- section: Приголосні — М, Л, Н, С
+  words: 500
   points:
-  - 'True Friends (А, Е, І, О, К, М, Т): Give this category its own H3. Define each
-    letter with 2+ Ukrainian examples and English translations.'
-  - 'False Friends (В, Н, Р, С): Give this its own H3. Explicitly explain the ''P''
-    Trap, ''H'' Trap, ''B'' Trap, and ''C'' Trap using clear visual mnemonics.'
-  - 'New Letters (Б, Д, З, Л, П, Ф): Give this its own H3. Provide visual aids (e.g.,
-    ''Д'' looks like a little house, ''Л'' has two walking legs).'
-  - 'The Exclusion Rule: Explicitly state that Russian-only characters like ''ё'',
-    ''ы'', ''э'' do not exist in Ukrainian to establish linguistic boundaries.'
-- section: Практика
-  words: 400
+  - 'Define consonants (приголосні) using English scaffolding: sounds made with some
+    obstruction of airflow. Note that Ukrainian has 22, introducing 4 here.'
+  - Create an H3 for 'Справжні друзі (True Friends) — М та Л'. Teach 'М' (морква,
+    мама, місто) and 'Л' (літак, література, луна), explaining they look and sound
+    like their English counterparts.
+  - 'Create an H3 for ''Оманливі друзі (False Friends) — Н та С''. Explicitly teach
+    the visual traps: ''Н'' is /n/ (ножиці, ніс, нам) and ''С'' is /s/ (сумка, сон,
+    сам).'
+  - Provide a brief English sidebar reinforcing the active need to unlearn English
+    pronunciation habits for 'Н' and 'С'.
+- section: Перші склади
+  words: 350
   points:
-  - Create a decoding drill section for reading high-frequency urban words ('банк',
-    'метро', 'кафе').
-  - Include a collocation practice block introducing essential phrases like 'національний
-    банк' and 'станція метро' for context.
-  - Provide functional mini-dialogues using 'так, будь ласка' and 'так, звісно' to
-    demonstrate immediate communicative utility.
-- section: Культурний контекст
-  words: 400
+  - Define a syllable (склад) simply as a vowel or a combination of a consonant and
+    a vowel.
+  - Create an H3 for 'Відкриті склади (Open Syllables)'. Provide a clear reading drill
+    for МА, МУ, НА, НУ, ЛА, ЛУ, СА, СУ.
+  - Create an H3 for 'Закриті склади (Closed Syllables)'. Provide a clear reading
+    drill for АМ, УМ, АН, УН, АС, УС, АЛ, УЛ.
+  - 'Guide the learner step-by-step to combine these syllables into their very first
+    readable Ukrainian words: мама, сума, мул, луна, нам.'
+- section: Практика читання
+  words: 300
   points:
-  - Give an H3 to 'The I Identity', explaining how the dotted 'І' serves as a visual
-    symbol of Ukrainian identity and European connection.
-  - 'Briefly tell the Story of Ґ: the repressed letter (removed in 1933 by Soviet
-    authorities, restored in 1990) as a compelling hook for linguistic resilience.'
-  - 'Incorporate State Standard §4.1.1 words: practice recognizing letters in national
-    terms like ''Київ'', ''Україна'', and ''українець''.'
-- section: Підсумок та продукція
+  - 'Employ a progressive decoding strategy: syllables → single words → short phrases.'
+  - 'Provide a dedicated word practice list using ONLY the 6 known letters: мама,
+    сума, нас, сам, мул, луна, мус, нам. Include first-occurrence IPA for these words.'
+  - 'Introduce the first reading phrases: ''Мама нам'', ''Нас сам'', ''Сума мала''.
+    Provide English translations to build immediate confidence.'
+  - Include a self-check prompt asking the learner to read 'мама', 'сума', and 'луна'
+    aloud without looking at the English hints.
+- section: Підсумок
   words: 200
   points:
-  - Include a pronunciation production drill contrasting the 'Purring Cat' rolled
-    /r/ (Р) with the English /p/.
-  - Provide a final decoding self-check using the phrase 'це факт' (it's a fact) to
-    test both 'Ф' and 'Т' letter recognition.
+  - 'Recap the progress: the learner can now recognize and pronounce 6 out of 33 letters
+    (2 голосні + 4 приголосні).'
+  - 'Reiterate the core phonetic rule: Ukrainian vowels stay pure and do not reduce.'
+  - Provide the link to Anna Ohoiko's full YouTube playlist for independent phonetic
+    practice.
+  - Set up the transition to the next module (The Cyrillic Code II), noting it will
+    introduce 7 new letters.
+activity_hints:
+- type: match-up
+  focus: Match letter to key word (А↔ананас, М↔морква, etc.)
+  items: 6
+- type: group-sort
+  focus: Sort syllables into open (МА, НУ) vs closed (АМ, УН)
+  items: 12

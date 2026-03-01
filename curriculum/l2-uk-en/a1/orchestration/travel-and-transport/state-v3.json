@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T17:25:31Z",
+      "ts": "2026-03-01T00:07:36Z",
       "task_id": "v3-travel-and-transport-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T17:27:52Z"
+      "ts": "2026-03-01T00:10:41Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T17:30:00Z",
-      "task_id": "v3-travel-and-transport-pC"
+      "ts": "2026-03-01T00:10:41Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T17:35:10Z",
+      "ts": "2026-03-01T00:15:23Z",
       "attempts": 2
     }
   }

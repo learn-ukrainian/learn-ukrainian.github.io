@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T17:49:03Z",
+      "ts": "2026-03-01T00:22:53Z",
       "task_id": "v3-checkpoint-communication-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T17:55:15Z"
+      "ts": "2026-03-01T00:26:44Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T17:58:02Z",
-      "task_id": "v3-checkpoint-communication-pC"
+      "ts": "2026-03-01T00:26:44Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T18:02:03Z",
+      "ts": "2026-03-01T00:30:48Z",
       "attempts": 2
     }
   }

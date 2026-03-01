@@ -2,15 +2,15 @@
   "module": "emergencies",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T20:49:30.181761Z",
+  "last_audit": "2026-03-01T02:37:29.419445Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T20:48:56.844768Z",
-    "meta": "2026-02-28T20:39:22.823342Z",
+    "md": "2026-03-01T02:37:14.391346Z",
+    "meta": "2026-03-01T02:30:24.995432Z",
     "activities": "2026-02-26T12:56:43.873165Z",
     "vocabulary": "2026-02-26T10:56:38.073950Z",
     "plan": "2026-02-28T03:02:37.211293Z",
-    "research": "2026-02-28T20:39:22.815566Z"
+    "research": "2026-03-01T02:30:24.989656Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2966/2000 (raw: 3273)"
+      "message": "2834/2000 (raw: 2974)"
     },
     "activities": {
       "status": "deferred",

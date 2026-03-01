@@ -1,7 +1,7 @@
 <!-- SCOPE
-Covers: Modals (могти, вміти, треба, повинен), imperatives (ти/ви), everyday life vocabulary, travel and transport expressions.
+Covers: A1.5 Checkpoint - modals (могти, вміти, треба, хотіти, повинен), imperatives (8 core verbs), everyday life, travel.
 Not covered:
-  - Complex future tense planning → a1-60
+  - Complex future tense or perfective aspect nuances.
 Related: a1-53, a1-55
 -->
 
@@ -9,414 +9,323 @@ Related: a1-53, a1-55
 
 > **Чому це важливо?**
 >
-> Це ваш місток до справжнього спілкування. Ви не просто завчаєте нові слова. Ви будуєте фрази для життя. Цей етап готує вас до подорожей. Ви зможете говорити з людьми. (This is your bridge to real communication. You are not just memorizing new words, you are building phrases for real life. This stage prepares you for independent travel and confident conversations with locals.)
+> Communication is the ultimate goal of learning any language. Knowing individual words or grammar rules is only the foundation. True fluency begins when you can combine those elements to navigate real-life situations. This checkpoint is designed to test your ability to express your needs, make polite requests, and interact naturally with the world around you. We are stepping away from isolated grammar exercises to focus on practical, communicative survival skills.
 
 ## Огляд
 
-Вітаємо вас на фінальному етапі цього блоку. (We welcome you to the final stage of this block.)
-Цей модуль є ключовою точкою вашого навчання. (This module is a key point of your learning.)
-Ми називаємо це контрольним пунктом. (We call this a checkpoint.)
-Тут ми перевіряємо всі ваші навички. (Here we check all your skills.)
-Ви вже пройшли довгий і цікавий шлях. (You have already walked a long and interesting path.)
-Ви знаєте багато нових слів. (You know many new words.)
-Тепер час з'єднати їх у речення. (Now it is time to connect them into sentences.)
+Віта́ю вас на цьо́му важли́вому ета́пі! Ви вже зна́єте бага́то слів. Ви вмі́єте будува́ти прості́ ре́чення. Тепе́р ми практику́ємо ці зна́ння. Ви гото́ві до пра́ктики.
 
-This module is a crucial milestone in your Ukrainian language journey. We are pausing to consolidate everything you have absorbed in the A1.5 phase. You will practice using modal verbs to express your physical abilities and your daily necessities. You will learn to form polite commands and everyday requests. Finally, you will apply all these grammatical tools to realistic scenarios like planning a weekend trip.
+Welcome to this important stage! You already know many words. You know how to build simple sentences. Now we practice this knowledge. You are ready for practice.
 
-Тут є дуже важливе правило для вас. (Here is a very important rule for you.)
-Усі діалоги будуть лише українською мовою. (All dialogues will be only in the Ukrainian language.)
-Це допоможе відчути мову краще. (This will help you feel the language better.)
-Ми використовуємо англійську мову мінімально. (We use the English language minimally.)
-Вона потрібна лише для складних пояснень. (It is needed only for complex explanations.)
-Граматичні правила завжди мають переклад. (Grammar rules always have a translation.)
+This module serves as a critical checkpoint in your learning journey. We are pausing to consolidate the most essential communication tools you have acquired so far. Our primary focus will be on modal verbs. These are the powerful verbs that allow you to express what you can do, what you must do, and what you want to do. We will also extensively review the imperative mood, which is how you give commands or make polite requests. Finally, we will integrate all of this with the vocabulary you use to describe your daily life, your hobbies, and your travel plans.
 
-In this checkpoint, we strictly enforce our language immersion boundaries. English is used exclusively for complex task instructions and for reviewing abstract grammatical concepts. However, the scenario dialogues must remain one hundred percent Ukrainian. This immersion strategy is designed to build your confidence. It prepares you for real-world interactions where you cannot rely on constant translation to save you.
+As your tutor, I want to emphasize that making mistakes is completely normal here. The goal is not perfection, but effective communication. If you can make yourself understood, you are succeeding. Learning a language is a process of trial and error. Every mistake is a stepping stone to fluency. 
 
-### Перевірка готовності
-Спочатку оцініть свої знання. (Before starting work, evaluate your knowledge.)
-Це проста і швидка самоперевірка. (This is a simple and quick self-check.)
-Будьте максимально чесними із собою. (Be maximally honest with yourself.)
-Це не іспит, це просто орієнтир. (This is not an exam, this is just a guide.)
-Ваші відповіді покажуть ваш рівень. (Your answers will show your level.)
+To make this review as effective as possible, we follow a strict structural approach. We use English for all the complex task instructions and deep grammar explanations. This ensures you grasp the mechanics without any ambiguity or confusion. However, when we look at scenario dialogues, practice texts, and real-world examples, we switch to one hundred percent Ukrainian. This immersion trains your brain to process the language natively and prepares you for actual conversations with native speakers.
 
-Before diving into the checkpoint exercises, take a moment to honestly assess your current confidence level. Ask yourself these four specific questions. If you can answer "yes" to most of them without hesitation, you are perfectly ready for the tasks. If you hesitate or feel confused, you should pay extra attention to the corresponding grammar sections.
+Let's begin with a comprehensive self-assessment. Read the following questions carefully and answer them honestly. This will help you identify your current strengths and areas that need more attention.
 
-**Контрольні запитання:**
-1. Чи можу я легко пояснити різницю між словами «могти» та «вміти»? (Can I easily explain the difference between the verbs "to be able" and "to know how"?)
-2. Чи знаю я, як правильно перекласти фразу «I need» українською? (Do I know how to correctly translate the phrase "I need" into Ukrainian?)
-3. Чи можу я ввічливо попросити незнайому людину сісти? (Can I politely ask an unfamiliar person to sit down?)
-4. Чи вмію я розповідати про свої плани на наступні вихідні? (Do I know how to talk about my plans for the next weekend?)
+**Самоперевірка (Self-Assessment):**
+1. Can you confidently explain the difference between having a learned skill and having the physical opportunity to do something right now?
+2. Do you know how to use the Dative case to express impersonal necessity without using a standard verb?
+3. Can you politely ask a stranger on a bus to pass your ticket without sounding rude or aggressive?
+4. Are you able to invite a friend to meet you at a specific place and time using natural phrasing?
+5. Do you remember how to use the Instrumental case to describe your means of transportation?
+6. Can you give basic directions to a taxi driver using imperative verbs?
 
-> [!tip]
-> **Порада для успіху:**
-> Читайте всі українські речення та діалоги вголос. Ваші м'язи повинні запам'ятати ці нові звуки. Не поспішайте під час виконання інтеграційних завдань. (Read all Ukrainian sentences and dialogues out loud. Your muscles must remember these new sounds. Do not rush while completing the integration tasks.)
-
-Що саме означає цей контрольний пункт? (What exactly does this checkpoint mean?)
-Це ваша безпечна зона для тренування. (This is your safe zone for training.)
-Ви можете робити помилки без страху. (You can make mistakes without fear.)
-Ми зупиняємося. Ми закріплюємо граматичну базу. (We pause to consolidate the grammatical base.)
-Кожна навичка є надзвичайно важливою. (Every skill is extremely important.)
-Вони працюють разом як одна система. (They work together as one system.)
-
-A checkpoint is not a stressful exam to make you nervous. Instead, think of it as a comfortable rest stop on your mountain hiking trail. You have collected a heavy backpack full of vocabulary and grammatical structures over the last few lessons. Now, we are unpacking that bag and organizing the contents. You will see how different pieces connect seamlessly to form natural, flowing conversations.
+If you answered "yes" to all of these, you have a very strong foundation. If you felt unsure about any of them, that is perfectly fine. This module is specifically built to address those gaps and turn your passive knowledge into active, confident communication skills.
 
 ## Навичка 1: Модальні дієслова
 
-### Модель: Здібності: «Могти» проти «Вміти»
-Дієслово **могти́** означає вашу фізичну можливість. (The verb "mohty" means your physical ability.)
-Це завжди залежить від зовнішніх обставин. (This always depends on external circumstances.)
-Ви маєте час або маєте сили. (You have time or you have strength.)
-Дієслово **вмі́ти** означає вашу набуту навичку. (The verb "vmity" means your acquired skill.)
-Ви довго вчилися це робити. (You learned to do this for a long time.)
-Ви маєте знання в голові. (You have knowledge in your head.)
+Modal verbs are the driving force of practical conversation. They do not describe an action directly; instead, they modify another verb to show your attitude, ability, or obligation toward that action. Mastering them changes you from a passive observer into an active participant. Let us review them in detail.
 
-In English, we comfortably use the word "can" for both knowing how to do something and having the physical opportunity to do it today. The Ukrainian language strictly separates these two concepts. We use «вміти» for skills you have learned, studied, or acquired through long practice. We use «могти» when external circumstances, free time, or current physical conditions allow you to perform an action right now. 
+### Модель: Фізична можливість: Могти
+The verb **могти́** (can, to be able to) expresses a circumstantial ability or a physical possibility. You use it when nothing external is stopping you from performing the action at this exact moment. It implies you have the time, the permission, or the physical capacity to do something.
 
-_Контрастні приклади:_
-1. Я **вмію** дуже швидко читати. (I know how to read very fast. — _Skill_)
-2. Я не **можу** читати зараз, тут темно. (I cannot read right now, it is dark here. — _Circumstance_)
-3. Вона **вміє** грати на гітарі. (She knows how to play the guitar. — _Skill_)
-4. Вона **може** заграти для нас завтра. (She can play for us tomorrow. — _Circumstance_)
+Here is how it conjugates in the present tense:
+*   Я мо́жу
+*   Ти мо́жеш
+*   Він/Вона/Воно мо́же
+*   Ми мо́жемо
+*   Ви мо́жете
+*   Вони мо́жуть
 
-Завжди звертайте увагу на загальний контекст. (Always pay attention to the general context.)
-Ваша навичка залишається назавжди. (Your skill stays with you forever.)
-Але життєві обставини постійно і швидко змінюються. (But life circumstances constantly and quickly change.)
-Тому ми маємо два абсолютно різні слова. (Therefore we have two absolutely different words.)
+Let us look at some practical examples in context.
 
-Choosing the correct verb makes your everyday speech sound incredibly natural to native speakers. If you ask a friend to help you with a difficult translation, you first want to know if they possess the actual language skill. But equally important, you need to know if they have the free time to do it today.
+*   Я мо́жу прийти́ сього́дні. (I can come today.)
+*   Ти мо́жеш мені́ допомогти́? (Can you help me?)
+*   Ми мо́жемо працюва́ти ра́зом. (We can work together.)
+*   Він не мо́же говори́ти за́раз. (He cannot talk right now.)
 
-### Практика: Три види заперечення
-Ми маємо три способи відмовити. (In the Ukrainian language, there are three ways to refuse.)
-Кожен спосіб має свій особливий відтінок. (Each way has its own special nuance.)
-Це фрази «не можу», «не вмію» та «не можна». (These are the phrases "ne mozhu", "ne vmiiu", and "ne mozhna".)
-Ви повинні розуміти цю важливу різницю. (You must understand the difference between them.)
-Це допоможе уникати неприємних непорозумінь. (This will help avoid unpleasant misunderstandings.)
+In all these examples, the subject is physically capable of the action, and the current circumstances allow it. The focus is entirely on the opportunity.
 
-Understanding how to politely say "no" or express a specific inability requires the exact same distinction we just learned, plus one important new concept. **Не мо́жу** means you simply lack the physical possibility, health, or time. **Не вмі́ю** means you never learned how to do this specific action. **Не мо́жна** is a general prohibition or a strict rule — it means "it is not allowed" or "one must not do it."
+### Практика: Набута навичка: Вміти
+The verb **вмі́ти** (to know how) also translates to "can" in English, which causes endless confusion for learners. However, in Ukrainian, it strictly refers to a learned skill. You use it for actions that required practice, studying, or training to acquire. 
 
-_Ситуації з реального життя:_
-- Чому ти не граєш на піаніно? Я **не вмію**. (Why aren't you playing the piano? I don't know how.)
-- Ти підеш у кіно сьогодні? Я **не можу**, я зараз працюю. (Will you go to the movies with us today? I cannot, I am working right now.)
-- Чому ти тут не куриш? Тут **не можна** палити. (Why aren't you smoking here? It is not allowed to smoke here.)
+Here is its conjugation:
+*   Я вмі́ю
+*   Ти вмі́єш
+*   Він/Вона/Воно вмі́є
+*   Ми вмі́ємо
+*   Ви вмі́єте
+*   Вони вмі́ють
 
-Слово «не можна» не змінюється за особами. (The word "ne mozhna" does not change by persons.)
-Воно стосується всіх людей без винятку. (It applies to all people without exception.)
-Це надзвичайно корисне та важливе слово. (This is an extremely useful and important word.)
-Ви часто бачите його на вуличних знаках. (You often see it on street signs.)
+Let us contrast it with our previous examples.
 
-> [!context]
-> **Важливий нюанс:**
-> Слово «не можна» також використовується для серйозних медичних порад. Наприклад, лікар каже пацієнту: «Не можна їсти цукор». Ця дія є дуже шкідливою для вашого здоров'я. (The word "ne mozhna" is also used for serious medical advice. For example, a doctor tells a patient: "You must not eat sugar". This means that this action is very harmful to your health.)
+*   Я вмі́ю чита́ти українською. (I know how to read in Ukrainian.)
+*   Вона́ вмі́є до́бре готува́ти. (She knows how to cook well.)
+*   Мій брат вмі́є гра́ти в те́ніс. (My brother knows how to play tennis.)
+*   Ти вмі́єш пла́вати? (Do you know how to swim?)
 
-### Самоперевірка: Вираження обов'язку
-Ми маємо різні рівні життєвої необхідності. (We have different levels of life necessity.)
-Слово **тре́ба** означає вашу загальну потребу. (The word "treba" means your general need.)
-Воно завжди вимагає давального відмінка. (It always requires the Dative case.)
-Слово **пови́нен** означає ваш сильний обов'язок. (The word "povynen" means your strong duty.)
-Слово **хоті́ти** — це просто ваше особисте бажання. (The word "khotity" is simply your personal desire.)
+> [!tip] **The "Know How" Test**
+> Before you translate the English word "can", ask yourself: "Does this mean 'know how to'?" If you can say "I know how to swim", you must use **вмі́ти**. If you mean "I am available to swim right now", you use **могти́**.
 
-Ukrainian has a highly precise scale for expressing how necessary or obligatory an action is. «Треба» (or its synonym потрібно) is the most common word for everyday needs and mild obligations. It is an impersonal construction, so the person who needs something must go into the Dative case (Мені треба). «Повинен» implies a much stronger moral, legal, or contractual obligation. «Хотіти» is used solely when you are driven by internal personal wishes rather than external pressure.
+### Самоперевірка: Три типи заперечення
+When expressing that something is impossible, Ukrainian uses a highly specific three-way system. We contrast **не мо́жу**, **не вмі́ю**, and **не мо́жна**. Mixing these up changes the entire meaning of your sentence.
 
-| Рівень (Level) | Слово (Word) | Граматична конструкція (Grammatical Construction) | Приклад (Example) |
-|----------------|--------------|---------------------------------------------------|-------------------|
-| Бажання (Desire) | **хотіти** | Хто (Називний) + хочу | Я хочу спати. (I want to sleep.) |
-| Потреба (Need) | **треба** | Кому (Давальний) + треба | Мені треба йти. (I need to go.) |
-| Обов'язок (Duty) | **повинен** | Хто (Називний) + повинен | Я повинен працювати. (I must work.) |
+**Не вмі́ю** indicates a complete lack of skill or training.
+*   Я не вмі́ю води́ти маши́ну. (I do not know how to drive a car.)
+*   Він не вмі́є пла́вати. (He does not know how to swim.)
 
-Зверніть увагу на зміну форми слова. (Pay attention to the change of the word form.)
-Слово «повинен» змінюється за родами. (The word "povynen" changes by gender.)
-Ми кажемо: він повинен, вона повинна, вони повинні. (We say: he must, she must, they must.)
-Слово «треба» залишається незмінним. (The word "treba" remains unchanged.)
-Воно ніколи не має роду або числа. (It never has gender or number.)
+**Не мо́жу** indicates a lack of opportunity or physical capacity right now, despite possibly having the skill.
+*   Я не мо́жу вести́ маши́ну за́раз. (I cannot drive the car right now. Perhaps I am too tired.)
+*   Я не мо́жу пла́вати сього́дні. (I cannot swim today. Perhaps I have a cold.)
 
-> [!warning]
-> **Типова помилка:**
-> Англомовні студенти дуже часто кажуть «Я треба». Це абсолютно неправильно. Завжди використовуйте давальний відмінок для цієї конструкції: «Мені треба», «Йому треба», «Їй треба». (English-speaking students very often say "Ya treba". This is absolutely incorrect. Always use the Dative case for this construction: "Meni treba", "Yomu treba", "Nam treba".)
+**Не мо́жна** is an impersonal construction. It means that the action is forbidden by rules, law, or social norms. It is strictly not allowed.
+*   Тут не мо́жна паркува́тися. (It is not allowed to park here.)
+*   Там не мо́жна ходи́ти. (It is not allowed to walk there.)
+*   У музе́ї не мо́жна фотографува́ти. (It is not allowed to take photos in the museum.)
 
-### Діалог: Плани на вихідні
-Подивімося, як ці слова працюють разом. (Let's see how these words work together.)
-Два друга говорять про свої плани. (Two friends are talking about their plans.)
-Вони планують коротку спільну подорож. (They are planning a short joint journey.)
-Вони використовують різні модальні дієслова природно. (They use different modal verbs naturally.)
+### Безособова необхідність: Треба
+To express that something is necessary, we most commonly use the impersonal word **тре́ба** (it is necessary) or its synonym **потрі́бно**. Because it is impersonal, there is no grammatical subject. You simply use it followed by an infinitive verb.
 
-Read the following conversation carefully to see how native speakers seamlessly mix different types of ability and obligation in a single discussion. Notice how changing circumstances, learned skills, and strict daily needs dictate the exact choice of the modal verb.
+*   Тре́ба йти. (It is necessary to go.)
+*   Тре́ба спа́ти. (It is necessary to sleep.)
+*   Тре́ба купи́ти квитки́. (It is necessary to buy tickets.)
+*   Тре́ба працюва́ти. (It is necessary to work.)
 
-— Привіт! Ти **хочеш** поїхати в гори на вихідні?
-— Привіт. Я **хочу**, але не **можу**. Мені **треба** працювати в суботу.
-— А в неділю? Ти **можеш** приєднатися до нас?
-— У неділю **можу**. А ви **вмієте** ставити намет?
-— Так, ми **вміємо**. Але ми **маємо** купити їжу.
-— Добре. Я **повинен** закінчити роботу рано, тому я куплю продукти.
-— Чудово! До неділі.
+This is the standard, everyday way to express a basic need or requirement.
 
-(— Hi! Do you want to go to the mountains for the weekend?
-— Hi. I want to, but I cannot. I need to work on Saturday.
-— And on Sunday? Can you join us?
-— On Sunday I can. Do you know how to pitch a tent?
-— Yes, we know how. But we need to buy food.
-— Good. I must finish work early, so I will buy groceries.
-— Great! Until Sunday.)
+### Особистий обов'язок: Повинен
+When the obligation is much stronger, representing a personal duty, a moral obligation, or a strict requirement, we use the adjective **пови́нен** (must, obliged). Because it is an adjective, it must agree in gender and number with the subject doing the action.
 
-Цей діалог показує реальне життя. (This dialogue shows real life.)
-Один друг має сильний робочий обов'язок. (One friend has a strong work duty.)
-Інший друг має корисну навичку. (The other friend has a useful skill.)
-Разом вони знаходять правильне рішення. (Together they find the right solution.)
-Вони використовують граматику як інструмент. (They use grammar as a tool.)
+*   Я пови́нен працюва́ти. (I must work. - Masculine speaker)
+*   Я пови́нна йти. (I must go. - Feminine speaker)
+*   Воно́ пови́нно бу́ти тут. (It must be here. - Neuter subject)
+*   Ми пови́нні чита́ти. (We must read. - Plural subject)
+
+> [!warning] **Nominative vs Dative**
+> A very common learner mistake is using the Nominative case with **тре́ба**. Never say "Я треба". It must always be "Мені́ треба". However, with **пови́нен**, you must use the Nominative case for the subject: "Я пови́нен".
+
+### Вираження бажання: Хотіти
+To express desire, we use the standard verb **хоті́ти** (to want). It pairs directly with an infinitive verb or a noun in the Accusative case.
+
+*   Я хо́чу ї́сти. (I want to eat.)
+*   Він хо́че пої́хати в по́дорож. (He wants to go on a journey.)
+*   Ми хо́чемо пи́ти ка́ву. (We want to drink coffee.)
+
+Here is a quick reference table to visualize the intensity scale of obligation and desire.
+
+| Word | Meaning | Grammatical Structure | Example |
+| :--- | :--- | :--- | :--- |
+| хоті́ти | want | Subject (Nom) + хотіти | Я хо́чу спати. (I want to sleep.) |
+| тре́ба | need | Person (Dat) + треба | Мені́ тре́ба спати. (I need to sleep.) |
+| пови́нен | must / duty | Subject (Nom) + повинен | Я пови́нен спати. (I must sleep.) |
+
+### Діалог: Планування вихідних
+Let's see how these modals interact natively in a real conversation. Read this dialogue where two friends discuss their weekend plans. Pay attention to how the context dictates the choice of the modal verb.
+
+— Приві́т! Що ти ро́биш у субо́ту?
+— Приві́т! Я пови́нен працюва́ти вра́нці. А що?
+— Я хо́чу запроси́ти тебе́ в кіно́.
+— Дя́кую! Я мо́жу зустрі́тися вве́чері.
+— Чудо́во. Тобі́ тре́ба купи́ти квитки́?
+— Ні, я не мо́жу купи́ти квитки́ за́раз. Я на робо́ті.
+— До́бре, я мо́жу купи́ти.
+— Дя́кую! До зустрі́чі!
+
+— Hello! What are you doing on Saturday?
+— Hello! I must work in the morning. And what?
+— I want to invite you to the cinema.
+— Thank you! I can meet in the evening.
+— Excellent. Do you need to buy tickets?
+— No, I cannot buy tickets now. I am at work.
+— Okay, I can buy them.
+— Thank you! See you later!
 
 ## Навичка 2: Накази та прохання
 
-### Модель: Форми наказового способу
-Наказовий спосіб допомагає давати чіткі інструкції. (The imperative mood helps us give clear instructions.)
-Ми використовуємо його кожного дня. (We use it every day.)
-Він має дві основні форми для людей. (It has two main forms for people.)
-Це форма для «ти» та форма для «ви». (This is the form for "ty" and the form for "vy".)
-Форма для «ви» є значно безпечнішою. (The form for "vy" is significantly safer.)
+Telling people what to do, asking for favors, or giving directions requires the imperative mood. In everyday communication, navigating between direct commands and polite requests is essential for social harmony and effective interaction.
 
-The imperative mood is your primary grammatical tool for giving direct instructions, making everyday requests, or offering firm advice. In Ukrainian, commands are formed differently depending on whether you are addressing someone informally (using ти) or formally/in a group (using ви). The formal version is simply the informal base version with the specific suffix **-те** added to the very end.
+### Модель: Наказовий спосіб: Ти та Ви
+In Ukrainian, commands take different forms depending on who you are talking to. We focus on the informal singular form (**Ти**) for friends, family members, and children. We use the formal or plural form (**Ви**) for strangers, groups of people, or professional situations. Using the correct form shows respect and cultural awareness.
 
-| Дієслово (Verb) | Форма «Ти» (Informal Command) | Форма «Ви» (Formal/Plural Command) |
-|-----------------|-------------------------------|------------------------------------|
-| читати (to read) | **чита́й** | **читайте** |
-| писати (to write) | **пиши́** | **пишіть** |
-| сказати (to say) | **скажи́** | **скажіть** |
-| дати (to give) | **дай** | **дайте** |
-| іти (to go) | **іди́** | **ідіть** |
-| слухати (to listen)| **слу́хай** | **слухайте** |
-| дивитися (to look)| **диви́сь** | **дивіться** |
-| стояти (to stand) | **стій** | **стійте** |
+For most regular verbs, forming the formal command is as simple as taking the informal command and adding the suffix **-те**.
 
-Зверніть особливу увагу на правильну вимову. (Pay special attention to correct pronunciation.)
-М'який знак суттєво впливає на звук. (The soft sign significantly affects the sound.)
-Деякі дієслова закінчуються на голосний звук. (Some verbs end in a vowel sound.)
-Інші дієслова закінчуються на твердий приголосний. (Other verbs end in a hard consonant.)
-Тому закінчення можуть трохи відрізнятися. (Therefore the endings can slightly differ.)
+Here is a mandatory reference table for the eight core verbs you must know at this level. You should memorize these pairs perfectly.
 
-The formation pattern heavily depends on the grammatical stem of the verb. If the imperative stem ends in a vowel, we usually just add a short **-й** (читай). If it ends in a consonant, we often add the vowel **-и** (пиши). When making the formal plural version, the soft sign **-ь** might mysteriously appear right before **-те** to keep the previous consonant soft, exactly as seen in the words «дивіться» or «пишіть».
+| Infinitive (English) | Command (Ти) | Command (Ви) |
+| :--- | :--- | :--- |
+| чита́ти (to read) | чита́й | чита́йте |
+| писа́ти (to write) | пиши́ | пиші́ть |
+| сказа́ти (to say) | скажи́ | скажі́ть |
+| да́ти (to give) | дай | да́йте |
+| іти́ (to go) | іди́ | іді́ть |
+| слу́хати (to listen) | слу́хай | слу́хайте |
+| диви́тися (to look) | диви́сь | диві́ться |
+| стоя́ти (to stand) | стій | сті́йте |
 
-### Практика: Мистецтво ввічливості
-Сама граматична форма наказу може звучати надто грубо. (The grammatical command form itself can sound too rude.)
-Тому ми завжди додаємо спеціальні слова ввічливості. (Therefore we always add special words of politeness.)
-Слово **будь ла́ска** є найважливішим інструментом. (The word "bud laska" is the most important tool.)
-Його можна вільно ставити будь-де в реченні. (It can be freely placed anywhere in the sentence.)
-Це робить вашу мову приємною для інших. (This makes your speech pleasant for others.)
+You must practice these until they are automatic. You will hear and use them constantly. A teacher tells a class: "Чита́йте текст." A mother tells a child: "Іди́ сюди́."
 
-While the grammatical imperative effectively gives a command, strict social norms require softening it so you do not accidentally sound like an angry military general. The absolute magic phrase in Ukrainian is «будь ласка» (please). You can place it at the beginning, right in the middle, or at the end of your request. For even greater politeness, especially in highly formal professional situations, native speakers frequently use phrases like «Прошу вас» (I politely ask you) followed directly by an infinitive verb.
+### Практика: Ввічливі прохання: Базовий рівень
+A direct command, even when grammatically correct, can sound harsh or demanding. Ukrainian culture places a high value on politeness, especially in service sectors like restaurants, shops, and public transport. The most fundamental way to soften any command is to include the magical phrase **будь ласка** (please).
 
-_Рівні ввічливості:_
-1. Пряме прохання: **Дай** мені свій квиток. (Direct request: Give me your ticket.)
-2. Ввічливе прохання: **Дай**, **будь ласка**, свій квиток. (Polite request: Please give me your ticket.)
-3. Формальне прохання: **Прошу вас дати** мені ваш квиток. (Formal request: I politely ask you to give me your ticket.)
-4. Дуже формальне: Чи не могли б ви **дати** мені квиток? (Very formal: Could you possibly give me the ticket?)
+*   Чита́йте текст, будь ласка. (Read the text, please.)
+*   Да́йте, будь ласка, ка́ву. (Give me a coffee, please.)
+*   Скажі́ть, будь ласка, де метро́? (Tell me, please, where the subway is?)
+*   Слу́хай мене́, будь ласка. (Listen to me, please.)
 
-> [!culture]
-> **Культурний контекст:**
-> В Україні вважається дуже важливим поступатися місцем у транспорті. В автобусі ви часто почуєте: «Сідайте, будь ласка!». Це класична ознака поваги до літніх людей або жінок. Ця проста фраза є абсолютно ключовою для комфортного життя у великому місті. (In Ukraine, it is considered very important to give up your seat in transport. In a bus, you will often hear: "Please sit down!". This is a classic sign of respect for elderly people or women. This simple phrase is absolutely key for comfortable living in a big city.)
+Notice that **будь ласка** can easily sit in the middle of the sentence, often immediately after the imperative verb. This sounds highly natural to a native speaker.
 
-### Самоперевірка: Заперечні накази
-Іноді ми повинні зупинити небезпечну дію. (Sometimes we desperately need to stop a dangerous action.)
-Ми просто додаємо коротку частку «не». (We simply add the short particle "ne".)
-Вона завжди стоїть першою. (It always stands right before the verb.)
-Це дуже просте, але критично важливе правило. (This is a very simple, but critically important rule.)
-Воно рятує людей від багатьох проблем. (It saves people from many problems.)
+### Самоперевірка: Ввічливі прохання: Високий рівень
+When you need to be exceptionally polite, perhaps in a formal email, when speaking to an elder, or when asking a significant favor, we avoid the imperative mood entirely. Instead, we use the phrase **прошу́ вас** (I ask you) followed by the infinitive of the verb.
 
-Forming a negative command is incredibly straightforward in Ukrainian. You just take the regular imperative form and place the short negative particle «не» directly in front of it. This specific structure is used for giving warnings, enforcing rules, or strongly advising someone against making a foolish mistake. Notice carefully how the tone instantly changes from positive encouragement to firm restriction.
+*   Прошу́ вас слу́хати ува́жно. (I ask you to listen carefully.)
+*   Прошу́ вас да́ти цей докуме́нт. (I ask you to give this document.)
+*   Прошу́ вас писа́ти тут. (I ask you to write here.)
 
-_Порівняння форм:_
-- **Читай** цей новий текст! (Read this new text!)
-- **Не читай** цей текст, він занадто нудний. (Do not read this text, it is too boring.)
-- **Дивіться** сюди, будь ласка. (Look here, please.)
-- **Не дивіться** туди, там дуже брудно. (Do not look there, it is very dirty.)
-- **Ідіть** прямо по вулиці. (Go straight along the street.)
-- **Не ідіть** туди, там зовсім немає дороги. (Do not go there, there is no road at all.)
+For maximum politeness, usually reserved for strangers in formal settings, we use a conditional question: **Чи не могли́ б ви...?** (Could you not...?).
 
-Завжди зважайте на вашу інтонацію. (Always consider your intonation.)
-Ваш голос має йти вниз у кінці. (Your voice must go down at the end.)
-Це робить заперечний наказ дуже чітким. (This makes the negative command very clear.)
-Але ніколи не забувайте про звичайну ввічливість. (But never forget about ordinary politeness.)
+*   Чи не могли́ б ви сказа́ти паро́ль? (Could you tell me the password?)
+*   Чи не могли́ б ви допомогти́ мені́? (Could you help me?)
 
-Negative commands are frequently heard in busy public spaces, museums, or from worried parents speaking to their small children. Remember that creatively combining a strict negative command with a soft «будь ласка» instantly transforms the harsh restriction, making it a perfectly polite request rather than an angry, aggressive order.
+> [!culture] **Public Transport Etiquette**
+> Navigating public transport in Ukraine requires polite commands. When a bus or tram is crowded, you pass your money to the driver through the other passengers. You hand the fare to the person next to you and say: «Переда́йте, будь ласка!» (Pass it on, please!). It is a core survival skill and a perfect example of community cooperation.
+
+### Негативні накази
+To instruct someone not to do something, you simply place the negative particle **не** directly before the imperative verb. The form of the verb itself does not change at all.
+
+*   Пиши́ тут. (Write here.)
+*   Не пиши́ тут. (Do not write here.)
+
+*   Диві́ться на до́шку. (Look at the board.)
+*   Не диві́ться туди́. (Do not look there.)
+
+Let's imagine a scenario on a crowded train where you need to manage space and give instructions.
+
+*   Сіда́йте, будь ласка. (Sit down, please. - Offering a seat)
+*   Сті́йте тут. (Stand here. - Making room for someone)
+*   Не сті́йте бі́ля двере́й, будь ласка. (Do not stand near the doors, please.)
+
+Using these positive and negative commands confidently shows that you are actively engaging with the world around you, not just passively observing it.
 
 ## Навичка 3: Повсякдення
 
+Grammar is only useful when applied to real life. In this section, we review how to combine our structures to talk about family, hobbies, and navigating the city. This is where your vocabulary and grammar merge into true fluency.
+
 ### Модель: Опис людей та родини
-Ми всі дуже часто говоримо про наших близьких. (We all very often talk about our loved ones.)
-Для цього ми маємо знати слова про родину. (For this we need basic words about family.)
-Ми також детально описуємо їхній зовнішній вигляд. (We also describe their physical appearance in detail.)
-Подивімося на хороший приклад такої розповіді. (Let's look at a good example of such a story.)
-Цей текст містить багато знайомих слів. (This text contains many familiar words.)
+Describing people involves a sophisticated mix of grammatical cases. We use the Nominative case with adjectives to describe physical appearance. We use the Dative case with the word "ро́ків" (years) to state someone's age accurately. We also use possessive pronouns to talk about family connections.
 
-Being able to smoothly describe the important people in your everyday life is a fundamental social skill. You need to confidently combine family vocabulary (like brother, sister, parents), basic physical descriptions (tall, short, dark hair), and precise age expressions. Remember that when officially stating someone's age in Ukrainian, the person's pronoun must be in the Dative case (Йому тридцять років).
+Let's read a cohesive description of a friend to see how this works in practice.
 
-_Прочитайте текст про близького друга:_
-Мій найкращий друг — це студент Антон. (My best friend is a student Anton.)
-Йому зараз рівно двадцять п'ять років. (He is exactly twenty-five years old now.)
-Він має високий зріст і дуже темне волосся. (He has a tall height and very dark hair.)
-Його родина є справді дуже великою. (His family is truly very big.)
-Він має двох старших братів та молодшу сестру. (He has two older brothers and a younger sister.)
-Антон — це дуже весела і добра людина. (Anton is a very cheerful and kind person.)
+Це мій друг. Його́ зва́ти Оле́г. Йому́ два́дцять ві́сім ро́ків. Він ду́же висо́кий і струнки́й. У ньо́го те́мне воло́сся й си́ні о́чі. Оле́г ма́є вели́ку роди́ну. Його́ ба́тько — лі́кар, а ма́ти — вчи́телька. Він ду́же лю́бить свою́ роди́ну.
 
-Цей короткий текст містить неймовірно багато інформації. (This short text contains an incredibly large amount of information.)
-Ми правильно використали давальний відмінок для віку. (We correctly used the Dative case for age.)
-Ми використали присвійні займенники для опису родини. (We used possessive pronouns to describe the family.)
-Спробуйте написати такий самий текст про свого друга. (Try to write the exact same text about your friend.)
-Це буде чудова і корисна практика. (This will be wonderful and useful practice.)
+This is my friend. His name is Oleh. He is twenty-eight years old. He is very tall and slim. He has dark hair and blue eyes. Oleh has a large family. His father is a doctor, and his mother is a teacher. He loves his family very much.
 
-`[!fact]`
-**Цікавий мовний факт:**
-Ми регулярно використовуємо дієслово «мати» для опису зовнішності: «Він має темне волосся». Але для віку граматична конструкція зовсім інша — ми завжди кажемо «Йому двадцять років», що буквально перекладається як «To him is twenty years». (In the Ukrainian language, we regularly use the verb "to have" to describe appearance: "He has dark hair". But for age, the grammatical construction is completely different — we always say "To him is twenty years", which literally translates as "To him is twenty years".)
+This paragraph seamlessly integrates age expressions, physical descriptions, and family vocabulary into a natural narrative flow.
 
 ### Практика: Хобі та запрошення
-Як саме ви зазвичай проводите свій вільний час? (How exactly do you usually spend your free time?)
-Майже у кожного є своє улюблене **хо́бі**. (Almost everyone has their own favorite hobby.)
-Ми дуже любимо грати в різні спортивні ігри. (We really like to play different sports games.)
-Ми також часто любимо **запро́шувати** наших нових друзів. (We also often like to invite our new friends.)
-Спільний час об'єднує різних людей. (Shared time unites different people.)
+When discussing leisure activities, we frequently use the verb **гра́ти** (to play). Its usage changes depending on the specific activity. For sports or competitive games, we use **гра́ти в** followed by the Accusative case. For musical instruments, we use **гра́ти на** followed by the Prepositional case.
 
-Talking about leisure effectively requires the highly versatile verb «грати» (to play). Remember the absolutely crucial distinction: we use «грати в» plus the Accusative case for active sports and games, but we use «грати на» plus the Locative case for playing musical instruments. Once you successfully discover shared interests, you urgently need to know how to invite someone out. 
+*   Я люблю́ гра́ти в футбо́л. (I love to play football.)
+*   Ми вмі́ємо гра́ти в те́ніс. (We know how to play tennis.)
+*   Він вмі́є гра́ти на гіта́рі. (He knows how to play the guitar.)
+*   Моя́ се́стра гра́є на піані́но. (My sister plays the piano.)
 
-_Контекстні життєві приклади:_
-1. Спорт: Мій старший брат любить **грати в** теніс. **Ходімо** на міський **стадіо́н** завтра! (Sports: My older brother likes to play tennis. Let's go to the city stadium tomorrow!)
-2. Музика: Вона просто чудово **грає на** гітарі. **Давай зустрінемось** на вечірньому концерті. (Music: She plays the guitar simply wonderfully. Let's meet at the evening concert.)
-3. Відпочинок: Я **хочу запросити тебе** в нове кіно. Я вже маю два дорогі квитки. (Leisure: I want to invite you to the new cinema. I already have two expensive tickets.)
+To invite someone to share these hobbies with you, you need specific phrases. The most common informal invitations are **Ході́мо!** (Let's go!) and **Дава́й зустрі́немось!** (Let's meet!).
 
-Зверніть свою увагу на ці популярні фрази запрошення. (Pay your attention to these popular invitation phrases.)
-Фраза «Ходімо» означає активну спільну дію. (The phrase "Let's go" means active joint action.)
-Фраза «Давай зустрінемось» чітко пропонує місце або час. (The phrase "Let's meet" clearly proposes a place or time.)
-Використання цих фраз робить вашу мову дуже природною. (Using these phrases makes your speech very natural.)
-Місцеві жителі оцінять ваші зусилля. (Local residents will appreciate your efforts.)
+*   Ході́мо на стадіо́н сього́дні! (Let's go to the stadium today!)
+*   Дава́й зустрі́немось у па́рку. (Let's meet in the park.)
+*   Я хо́чу запроси́ти тебе́ в кафе́. (I want to invite you to a cafe.)
 
-When you proudly say «Я хочу запросити тебе» (I want to invite you), it sounds slightly formal but exceptionally polite, absolutely perfect for a romantic first date or inviting a senior colleague. For close friends, the highly energetic «Ходімо!» (Let's go!) or «Давай!» (Let's!) is always the most natural and friendly choice.
+> [!fact] **The Versatility of Давай**
+> The word **дава́й** originates from the imperative form of "to give". However, in modern colloquial Ukrainian, it functions almost exactly like the English "let's". It is an indispensable tool for suggesting activities to friends and initiating action.
 
-`[!tip]`
-**Культура гостей:**
-Фраза «Ходімо до нас» часто означає справжнє запрошення додому. В Україні існує міцна традиція: гості завжди приносять щось невелике із собою. Смачний торт або свіже печиво будуть ідеальним вибором. (When someone sincerely says "Let's go to our place", it often means a real invitation to be a guest at home. In Ukraine, there is a strong tradition: if you visit someone, always bring something small with you. A delicious cake, fresh cookies, or chocolate sweets will be an absolutely ideal choice.)
+### Самоперевірка: Транспорт та орієнтування
+Traveling through a city requires specific grammatical tools. When stating how you are traveling (the means of transport), Ukrainian uses the Instrumental case directly, without any prepositions. You are literally traveling "by means of" the vehicle.
 
-### Самоперевірка: Подорожі та транспорт
-Ми часто і багато подорожуємо великим містом. (We often and a lot travel around the big city.)
-Для цього ми постійно використовуємо різний транспорт. (For this we constantly need different transport.)
-Ми обов'язково маємо знати правильні напрямки. (We absolutely must know the correct directions.)
-Це дуже важлива навичка для кожного активного туриста. (This is a very important skill for every active tourist.)
-Без цього ви можете легко заблукати. (Without this you can easily get lost.)
+*   Ми ї́демо авто́бусом. (We are going by bus.)
+*   Вона́ ї́де по́їздом. (She is going by train.)
+*   Вони́ ї́дуть метро́. (They are going by subway. - Note: foreign words like "метро" do not change endings.)
 
-When discussing an upcoming **по́дорож** (journey), you must carefully navigate both the means of transportation and basic city directions. To say *how* exactly you travel, Ukrainian uses the Instrumental case entirely without a preposition. To give clear directions, you use specific adverbs like **налі́во** (left), **напра́во** (right), and **пря́мо** (straight ahead).
+You also need to combine commands with directional adverbs to navigate the streets successfully.
 
-_Історія про коротку міську подорож:_
-Моя довга подорож починається рано вранці. (My long journey begins early in the morning.)
-Спочатку мені треба швидко їхати **авто́бусом**. (First, I need to go quickly by bus.)
-Цей автобус їде **прямо**, а потім повертає **наліво**. (This bus goes straight, and then turns left.)
-Потім я повільно йду пішки через старий парк. (Then I slowly walk on foot through the old park.)
-Я ввічливо запитую дорогу: «Скажіть, будь ласка, де станція?». (I politely ask the way: "Tell me, please, where is the station?")
-Люди привітно відповідають мені: «Ідіть **направо**, вона прямо там». (People friendly answer me: "Go right, it is right there.")
+*   Іді́ть пря́мо. (Go straight.)
+*   Поверні́ть налі́во. (Turn left.)
+*   Поверні́ть напра́во. (Turn right.)
 
-Тут ми ясно бачимо багато корисних нових слів. (Here we clearly see many useful new words.)
-Слово «автобусом» стоїть в правильному орудному відмінку. (The word "avtobusom" stands in the correct Instrumental case.)
-Ми використовуємо орудний відмінок без прийменника. (We use the instrumental case without a preposition.)
-Це дуже важлива риса української граматики. (This is a very important feature of Ukrainian grammar.)
-Запам'ятайте це правило назавжди. (Remember this rule forever.)
+Let's read a short travel narrative that puts these transportation elements into a clear context.
 
-Mastering these essential directional adverbs and the Instrumental case for public vehicles means you will successfully navigate any Ukrainian city, and you will perfectly understand exactly how your friends are getting to the agreed meetup spot.
+Сього́дні ми ї́демо в центр мі́ста. Ми ї́демо авто́бусом. Мені́ тре́ба купи́ти квито́к. Моя́ подру́га ка́же: «Диви́сь, ось наш авто́бус! Ході́мо шви́дше!» Ми сіда́ємо. Я пита́ю водія́: «Скажі́ть, будь ласка, де ву́лиця Шевче́нка?» Він відповіда́є: «Іді́ть пря́мо, по́тім поверні́ть налі́во».
+
+Today we are going to the city center. We are going by bus. I need to buy a ticket. My friend says: «Look, here is our bus! Let's go faster!» We sit down. I ask the driver: «Tell me, please, where is Shevchenko street?» He answers: «Go straight, then turn left».
 
 ## Інтеграційне завдання
 
-### Сценарій: Планування подорожі
-Уявіть собі цілком реальну життєву ситуацію. (Imagine a completely real life situation.)
-Ви дуже хочете поїхати в коротку цікаву подорож. (You really want to go on a short interesting journey.)
-Ви повинні домовитися з вашим найкращим другом. (You desperately need to agree with your best friend.)
-Ви повинні детально обговорити всі важливі дрібниці. (You must discuss all important details in detail.)
-Планування — це завжди спільна робота. (Planning is always a joint work.)
+We have reviewed the theory and isolated practices. Now, you must integrate everything into a cohesive, realistic task. True language proficiency means you can combine vocabulary and grammar smoothly to achieve a specific real-world goal.
 
-This comprehensive integration task directly tests your ability to bring all the A1.5 components together successfully. You are no longer just practicing boring, isolated grammar rules. You are actively managing a complete, realistic social interaction: making an attractive proposal, honestly discussing abilities and constraints, negotiating transportation options, and giving polite, clear instructions.
+### Ситуація: Планування поїздки
+Imagine you are organizing a weekend trip to another city with your best friend. You need to coordinate your desires, discuss your obligations, choose transportation, and give instructions. This scenario perfectly demands the use of modals, imperatives, travel vocabulary, and invitations simultaneously.
 
-Ваша головна мета — скласти надійний план. (Your main goal is to make a reliable plan.)
-Ви маєте активно використати всі нові слова. (You have to actively use all new words.)
-Це фінальна перевірка вашої практичної готовності. (This is the final check of your practical readiness.)
-Давайте уважно подивимося на готовий зразок. (Let's look carefully at the ready example.)
-Він допоможе зрозуміти ваше завдання. (It will help you understand your task.)
+Read the following model dialogue. Notice how naturally the different grammar concepts flow together without feeling forced.
 
-In this detailed scenario, two good friends are figuring out how exactly to spend their upcoming free weekend. Pay very close attention to how they naturally use modal verbs to express necessity and desire, imperatives to direct action, and the Instrumental case for their chosen mode of transport. 
+— Приві́т! Ти хо́чеш пої́хати в по́дорож на вихідні́?
+— Приві́т! Так, я ду́же хо́чу. Куди́ ми ї́демо?
+— Дава́й пої́демо до Льво́ва!
+— Чудо́ва іде́я. Але́ мені́ тре́ба купи́ти квитки́.
+— Я мо́жу купи́ти квитки́ сього́дні. Ми ї́демо по́їздом чи авто́бусом?
+— Дава́й по́їздом. Я пови́нен бу́ти вдо́ма в неді́лю вве́чері.
+— До́бре. Слу́хай, іди́ на сайт і подиви́сь розкла́д.
+— До́бре, дивлю́сь. А ти напиши́ мені́ по́тім.
 
-> [!model-answer]
-> **Зразок розгорнутого діалогу (Model Extended Dialogue):**
-> — Привіт, Олено! Ти хочеш поїхати в подорож на вихідні?
-> — Привіт, Марку! Так, я дуже хочу. Але мені треба повернутися в неділю ввечері. Я повинен працювати в понеділок рано вранці.
-> — Без проблем. Ми можемо поїхати в ліс або в гори. Ти вмієш ставити великий намет?
-> — Так, я чудово вмію. Як ми туди поїдемо завтра?
-> — Давай поїдемо ранковим автобусом. Слухай, подивись актуальний розклад в інтернеті, будь ласка.
-> — Добре, я зараз подивлюся. Ми маємо обов'язково купити квитки сьогодні.
-> — Чудово. Купи два квитки, будь ласка, а я швидко куплю їжу.
-> — Домовилися! Ходімо в великий магазин разом зараз.
+— Hello! Do you want to go on a journey for the weekend?
+— Hello! Yes, I really want to. Where are we going?
+— Let's go to Lviv!
+— Great idea. But I need to buy tickets.
+— I can buy the tickets today. Are we going by train or by bus?
+— Let's do by train. I must be at home on Sunday evening.
+— Good. Listen, go to the website and look at the schedule.
+— Okay, I am looking. And you write to me later.
 
-(— Hi, Olena! Do you want to go on a trip for the weekend?
-— Hi, Mark! Yes, I really want to. But I need to return on Sunday evening. I must work on Monday early in the morning.
-— No problem. We can go to the forest or to the mountains. Do you know how to pitch a big tent?
-— Yes, I know how perfectly. How will we go there tomorrow?
-— Let's travel by the morning bus. Listen, look up the current schedule on the internet, please.
-— Good, I will look right now. We absolutely need to buy tickets today.
-— Great. Buy two tickets, please, and I will quickly buy food.
-— Agreed! Let's go to the big store together right now.)
-
-Цей живий діалог звучить надзвичайно природно. (This live dialogue sounds extremely natural.)
-Тут є абсолютно всі ключові елементи нашої теми. (Here are absolutely all key elements of our topic.)
-Тепер ваша черга створити свій власний план. (Now it is your turn to create your own plan.)
-Використовуйте цей текст як надійну базу. (Use this text as a reliable base.)
-Ви можете змінювати місця та транспорт. (You can change places and transport.)
-
-Notice carefully how the dialogue effectively covers all bases. «Ти хочеш» warmly starts the invitation. «Мені треба» and «я повинен» firmly set the personal boundaries. «Ми можемо» and «ти вмієш» practically check options and physical skills. «Автобусом» efficiently handles transport. Finally, polite imperatives like «подивись» and «купи» strictly organize the actual preparation. 
+This text demonstrates mastery of A1.5 skills. It uses **хо́чеш** for desire, **тре́ба** for necessity, **мо́жу** for ability, and **пови́нен** for duty. It employs invitations like **Дава́й пої́демо** and direct imperatives like **Слу́хай**, **іди́**, **подиви́сь**, and **напиши́**.
 
 ### Ваше завдання
-Зараз ви будете самостійно писати свій діалог. (Now you will independently write your dialogue.)
-Ви повинні суворо дотримуватися всіх інструкцій. (You need to strictly follow all instructions.)
-Використовуйте свій новий словник дуже активно. (Use your new vocabulary very actively.)
-Ніколи не бійтеся робити дрібні граматичні помилки. (Never be afraid to make minor grammatical mistakes.)
-Помилки — це нормальна частина процесу навчання. (Mistakes are a normal part of the learning process.)
+Now it is time for your active production. You must write your own dialogue planning a trip with a friend. Grab a notebook and follow these exact steps. Do not skip any requirements.
 
-Now it is definitely time to write your own original conversation. Imagine you are planning a fun day trip to a nearby historic city or a beautiful nature park with a close friend. Write a realistic dialogue of at least eight to ten full lines. You must clearly demonstrate that you can confidently control the grammar from this important checkpoint. 
+**Крок 1 (Step 1):** Start the conversation with an invitation. Ask your friend if they want to go on a trip. You MUST use the modal verb **хо́чеш**.
+**Крок 2 (Step 2):** Discuss the method of transportation. Ask or state how you will travel. You MUST use a transport noun in the Instrumental case, such as **авто́бусом** or **по́їздом**.
+**Крок 3 (Step 3):** Express a necessity related to the preparation. Tell your friend something that needs to be done. You MUST use the impersonal word **тре́ба**.
+**Крок 4 (Step 4):** Give direct instructions. Tell your friend to do something to help with the planning. You MUST use at least two imperative verbs from our core list, such as **чита́й**, **скажи́**, **диви́сь**, or **пиши́**.
 
-**Ваш текст обов'язково повинен містити (Your text absolutely must contain):**
-1. Пряме запитання про бажання, використовуючи слово **«хочеш»**. (A direct question about desire, using the word "khochesh".)
-2. Чітке вираження необхідності за допомогою слова **«треба»**. (A clear expression of necessity using the word "treba".)
-3. Щонайменше два різні наказові дієслова, наприклад **«дивись»**, **«читай»**, або **«скажи»**. (At least two different imperative verbs, for example "look", "read", or "tell".)
-4. Точну назву транспортного засобу в орудному відмінку (наприклад, **автобусом**, поїздом). (The exact name of a vehicle in the Instrumental case, for example, by bus, by train.)
-5. Дружню фразу для запрошення, таку як **«Ходімо»** або **«Давай зустрінемось»**. (A friendly phrase for an invitation, such as "Let's go" or "Let's meet".)
+Write the dialogue entirely in Ukrainian. Do not mix English into the sentences. Focus on clear, functional communication using the structures you have practiced extensively in this module.
 
-`[!reflection]`
-**Глибоко подумайте:**
-Чи легко було використовувати ці дієслова в наказовому способі? Ви відчуваєте сильну невпевненість, дивіться знову навичку два. Практика завжди робить нас досконалими. (Think deeply: Was it easy for you to use these verbs in the imperative mood? If you suddenly feel strong uncertainty, return to the table with skill two. Practice always makes us perfect.)
-
-Як найправильніше виконувати це велике завдання? (How to most correctly complete this big task?)
-Почніть з дуже простого і теплого привітання. (Start with a very simple and warm greeting.)
-Запропонуйте цікаву ідею для спільної поїздки. (Suggest an interesting idea for a joint trip.)
-Обговоріть усю логістику та точний час. (Discuss all logistics and exact time.)
-Справедливо розподіліть обов'язки між собою. (Fairly distribute responsibilities between yourselves.)
-Завершіть розмову на дуже позитивній ноті. (End the conversation on a very positive note.)
-
-Before you actually start writing, mentally sketch a basic outline in your head. Who exactly are you talking to? Where exactly do you want to go? What is the main logistical problem you need to solve together — buying expensive tickets, finding the right way, or packing heavy bags? Building a simple narrative makes the language flow much more easily.
-
-Після написання уважно прочитайте текст вголос. (After writing, carefully read the text out loud.)
-Чи звучить він як справжня реальна розмова? (Does it sound like a true real conversation?)
-Перевірте абсолютно всі закінчення у словах. (Check absolutely all endings in the words.)
-Особливо ретельно перевірте ваш давальний відмінок. (Especially carefully check your Dative case.)
-Слово «треба» є дуже підступним для студентів. (The word "treba" is very tricky for students.)
-
-Remember the core golden rule of editing your work: English speakers almost always incorrectly try to put the subject of "треба" in the Nominative case. Scan your rough draft specifically for this common error. Make absolutely sure it always says **мені треба**, **тобі треба**, or **їй треба**.
+> [!warning] **Avoid Common Mistakes**
+> Do not forget that **треба** requires the Dative case! Never write "Я треба". Always write "Мені треба", "Тобі треба", or "Йому треба". This is the most common error at this level.
 
 ---
 
 # Підсумок
 
-Ми нарешті закінчили наш детальний огляд комунікації. (We finally finished our detailed overview of communication.)
-Ви щойно зробили дуже великий крок уперед. (You just made a very big step forward.)
-Тепер ви маєте справді міцну мовну базу. (Now you have a truly solid language base.)
-Ця база сильно допоможе у реальному житті. (This base will strongly help you in real life.)
-Ми пишаємося вашим неймовірним щоденним прогресом. (We are proud of your incredible daily progress.)
+Congratulations on reaching the end of this comprehensive checkpoint! You have successfully reviewed a massive amount of highly practical material. You are no longer just learning words; you are learning how to function independently in a Ukrainian-speaking environment.
 
-Massive congratulations! You have highly successfully reviewed the core communicative skills of the entire A1.5 phase. You now officially possess the linguistic tools to navigate a busy city, plan an exciting trip, negotiate complex abilities and strict obligations, and give clear, polite instructions to others. These are not just dry academic grammar points; they are essential survival skills for speaking Ukrainian confidently in the real world. You are fully prepared to advance to the next level of real-world interactions.
+You can now confidently distinguish between having the physical opportunity to do something (**могти**) and possessing the learned skill to do it (**вміти**). You know how to express necessity and duty using **треба** and **повинен**, and you can state your desires clearly with **хотіти**. You have also mastered the imperative forms of eight crucial verbs, allowing you to give commands. Crucially, you know how to make these commands polite using **будь ласка** and **прошу вас**, which is vital for respectful daily communication. Finally, you have practiced integrating all these grammar points with vocabulary for family, hobbies, and travel. You are now well-equipped to handle real-world conversational scenarios.
 
-**Перевірте себе наприкінці:**
-1. Чи можете ви легко пояснити концептуальну різницю між реченнями «Я не можу плавати» та «Я не вмію плавати»?
-2. Як абсолютно правильно сказати українською мовою: «Я треба йти» чи «Мені треба йти»?
-3. Як зробити дуже грубий наказ «Читай!» значно більш ввічливим і формальним для незнайомця?
-4. Який граматичний відмінок ми використовуємо для слова «автобусом»?
-5. Яку фразу ви оберете для запрошення вашого старого друга на смачну каву?
+**Перевірте себе:**
+1. How do you say "I know how to read" versus "I can read right now" in Ukrainian?
+2. What grammatical case must you use with the word **треба** to specify who needs something?
+3. How do you form the polite or plural command for the verb **писати**?
+4. Translate this polite request into Ukrainian: "Give me the ticket, please."
+5. What grammatical case do you use to say you are traveling "by bus" (автобус)?
+6. Which modal word changes its ending based on gender (masculine, feminine, neuter, plural)?
 
 ---

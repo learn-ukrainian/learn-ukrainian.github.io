@@ -9,7 +9,17 @@
       "timestamp": "2026-02-28T23:28:03Z",
       "words": 3998,
       "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T23:30:34Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T23:30:34Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-28T23:28:03Z"
+  "last_updated": "2026-02-28T23:30:34Z"
 }
