@@ -7,7 +7,7 @@
 ## Project Overview
 
 **Learn Ukrainian** — language content factory for Ukrainian language learning curricula.
-- **Target**: Ukrainian for English speakers (l2-uk-en)
+- **Tracks**: `l2-uk-en` (Ukrainian for English speakers, A1→C2 + seminars), `l2-uk-direct` (L1-agnostic, A1→B2)
 - **Philosophy**: Theory-First, Content-Driven, Decolonized
 - **Structure**: 6 Levels (A1–C2) aligned with Ukrainian State Standard 2024
 
@@ -42,8 +42,9 @@ Rules: **WAIT for user instructions.** Do NOT auto-start work, check inbox, or p
 
 **DO NOT use this section to decide what to work on. Wait for user instructions.**
 
-- **A1 (01-44)**: 🚧 IN PROGRESS — Research + review pipeline running (Claude-orchestrated)
-- **All other levels/tracks**: Managed by Claude. Do not start unless asked.
+- **A1 (64 modules)**: Content exists for 63/64. Upgrading to v4 pipeline.
+- **A2-C2**: Plans exist. Rebuilding from scratch via v4 pipeline. See [#717](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/717).
+- **All levels/tracks**: Managed by Claude. Do not start unless asked.
 
 ---
 
@@ -51,22 +52,25 @@ Rules: **WAIT for user instructions.** Do NOT auto-start work, check inbox, or p
 
 ## Canonical Pipeline Phases
 
-| Phase | Name | Agent | Legacy Name (pre-Feb 2026) |
-|-------|------|-------|----------------------------|
-| **A** | Research + Meta | Gemini | Phase 0 / 0.5 / 1 |
-| **B** | Content prose | Gemini | Phase 2 |
-| **C** | Activities + Vocab | Gemini | Phase 3 |
-| **audit** | Automated audit + fix | Script | — |
-| **D** | Adversarial review | Claude | Phase 4 / 5 |
-| **F** | Final QA gate | Selectable | Phase 7 |
+| v4 Phase | Name | Agent | v3 Letter |
+|----------|------|-------|-----------|
+| **research** | Research + Meta | Gemini | A |
+| **discover** | Video/blog discovery | Gemini Flash | — (new in v4) |
+| **content** | Content prose | Gemini | B |
+| **activities** | Activities + Vocab | Claude | C |
+| **validate** | Audit + proofread + fix loop | Script + Gemini | audit |
+| **review** | Adversarial review | Claude | D |
+| **mdx** | MDX generation | Script | E |
 
-> **Always use letter names (A/B/C/D/F).** Numeric names are deprecated.
+> **Pipeline command**: `.venv/bin/python scripts/build_module.py {level} {seq} [--review] [--restart-from {phase}] [--force-phase {phase}]`
+> Discover is non-blocking — skip with `--skip-discover`.
 
 ## Content Standards
 
 *   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (HIST/BIO/ISTORIO/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
 *   **Activity Density**: A1-B1: ~8-10 activities/12 items; Seminar tracks: 3-9 activities/1+ items for deep analysis.
-*   **Activities Test LANGUAGE, Not Content**: Can the learner answer without reading the Ukrainian text? If YES → it tests content recall, not language. REWRITE. No "У якому році..." / "Хто був..." / "Скільки..." quiz questions. Use "Згідно з текстом..." / "У тексті автор характеризує..." instead.
+*   **Activities Test LANGUAGE, Not Content (Rule 10a)**: Can the learner answer without reading the Ukrainian text? If YES → it tests content recall, not language. REWRITE. No "У якому році..." / "Хто був..." / "Скільки..." quiz questions. Use "Згідно з текстом..." / "У тексті автор характеризує..." instead.
+*   **ZNO Activities Exempt (Rule 10b)**: ZNO-format activities (`zno_row_select`, `zno_sentence_select`, `zno_error_find`, `zno_fill_ending`) test language mechanics directly and are exempt from Rule 10a.
 *   **Audit Compliance**: Pass `audit_module.py` and `pipeline.py` gates.
 *   **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
 
@@ -88,7 +92,7 @@ yq '.levels.hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
 ## Cross-Agent Review Architecture
 
 - **Gemini builds** (A/B/C) → **Claude reviews** (Phase D). An LLM must NEVER review its own work.
-- Do NOT manually request reviews from Claude outside the v3 pipeline — Phase D handles this automatically.
+- Do NOT manually request reviews from Claude outside the v4 pipeline — the review phase handles this automatically.
 - Your review scores do NOT determine pass/fail. Automated audit gates are the real quality check.
 
 ## Anti-Gaming Enforcement (Automated Detection Active)
@@ -152,7 +156,7 @@ Check if phrasing echoes Russian dezinformatsiia framing (Volhynia, Holodomor, O
 - **Theory-First**: Grammar/history explanations before practice
 - **Anti-Hallucination**: Never fabricate facts. All claims grounded in verified academic reality.
 - **Decolonization**: Debunk Russian/Soviet myths; highlight Ukrainian agency
-- **Linguistic Depth**: IPA, Ukrainian quotes, proverbs (B1+), cultural context
+- **Linguistic Depth**: Ukrainian quotes, proverbs (B1+), cultural context (NO IPA — use `pronunciation_audio` instead)
 - **Typography**: ALWAYS use Ukrainian angular quotes `«...»`
 - **Transliteration Ban (C1+)**: Latin transliteration STRICTLY PROHIBITED in ISTORIO/BIO
 - **Semantic Nuance (C1+)**: Use modal hedging: «можливо», «ймовірно», «з одного боку», «водночас»
@@ -172,7 +176,7 @@ Your self-check ensures content is audit-ready before Phase D, reducing review i
 
 1. **Audit Gate**: Run `scripts/audit_module.sh {path}`. Fix errors until it passes.
 2. **Self-Analysis** (informational — does NOT replace Phase D):
-   - Richness ≥ 95%, Naturalness 10/10, Immersion 95-100% (B2+)
+   - Richness ≥ 95%, Naturalness 10/10, Immersion ≥ 90% (B2+)
    - Activity count and types meet requirements
 3. **Content Sanity**: engagement callouts present? Word count real? Headers match outline?
 
@@ -314,16 +318,24 @@ run_shell_command("rg 'somepattern' .")
 | B1+ Grammar | TTT (Test-Teach-Test) | Guided discovery from context |
 | B1+ Vocab/History | Narrative Arcs | Vocabulary in compelling stories |
 
-## Vocabulary Targets (Verified Dec 2025)
+## Module Counts (2026-03-01)
 
-| Level | Modules | Module Target | Cumulative | Note |
-|-------|---------|---------------|------------|------|
-| **A1** | 34 | ~25 words | ~850 | Deduplicated |
-| **A2** | 57 | ~25 words | ~1,800 | Cumulative |
-| **B1** | 86 | ~30-40 words | ~3,300 | Narrative-driven |
-| **B2** | 145 | ~24 words | ~6,780 | Specialized |
-| **C1** | 182 | ~24 words | ~10,300 | Academic/Literary |
-| **C2** | 100 | ~25 words | ~12,280 | Native mastery |
+| Level | Modules | Word Target | Track Type |
+|-------|---------|-------------|------------|
+| **A1** | 64 | 2000 | Core |
+| **A2** | 76 | 3000 | Core |
+| **B1** | 100 | 4000 | Core |
+| **B2** | 85 | 4000 | Core |
+| **C1** | 106 | 4000 | Core |
+| **C2** | 91 | 5000 | Core |
+| **HIST** | 140 | 5000 | Seminar |
+| **BIO** | 175 | 5000 | Seminar |
+| **ISTORIO** | 136 | 5000 | Seminar |
+| **LIT** | 221 | 5000 | Seminar |
+| **OES** | 100 | 5000 | Seminar |
+| **RUTH** | 112 | 5000 | Seminar |
+
+> Always verify targets against `scripts/audit/config.py` — it is the single source of truth.
 
 ## Tool Usage
 

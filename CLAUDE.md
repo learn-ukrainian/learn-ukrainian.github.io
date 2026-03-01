@@ -2,7 +2,7 @@
 
 > **NON-NEGOTIABLE RULES** auto-loaded via `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
-> **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | View: `/module-status {level} {num}` | Update: `.venv/bin/python scripts/audit_module.py {path}`
+> **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
 > **Cross-session Memory** (MCP `memory` server): `mcp__memory__search_nodes`, `mcp__memory__create_entities`, `mcp__memory__add_observations` | Storage: `tasks/memory.json` | NOT the same as `mcp__message-broker__*` (that's for Gemini comms)
 
@@ -124,6 +124,25 @@ Bare list at root (NOT `activities:` wrapper). Full schema: [`vocabulary-activit
 - **Commands & scripts**: [`docs/SCRIPTS.md`](docs/SCRIPTS.md)
 - **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
+- **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
+- **Build pipeline**: `.venv/bin/python scripts/build_module.py {level} {seq} [--review] [--restart-from {phase}] [--force-phase {phase}]`
+
+---
+
+## RAG Tools (MCP)
+
+Ukrainian language verification and textbook content search:
+- `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (415K lemmas)
+- `mcp__rag__search_text` — textbook content search (1.2K+ chunks)
+- `mcp__rag__search_images` — textbook image search (10K+ images)
+- `mcp__rag__search_literary` — primary literary sources (chronicles, poetry, legal texts)
+
+---
+
+## Tracks
+
+- **l2-uk-en**: Ukrainian for English speakers (A1→C2 + seminars). Main track.
+- **l2-uk-direct**: L1-agnostic Ukrainian (A1→B2). Separate schemas, no English. See `docs/l2-uk-direct/`.
 
 ---
 
