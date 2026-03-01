@@ -114,9 +114,9 @@ activity_hints:
   focus: Complete sentences with correct aspect
   items: 10+
 connects_to:
-- a2-13 (The Completed Past)
-- a2-14 (Future Plans and Promises)
-- a2-15 (Aspect Morphology)
+- a2-15 (The Completed Past)
+- a2-16 (Future Plans and Promises)
+- a2-17 (Aspect Morphology)
 prerequisites:
 - a2-11 (Checkpoint - Cases)
 - A1 verb conjugation

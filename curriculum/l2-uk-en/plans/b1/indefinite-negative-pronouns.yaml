@@ -98,10 +98,10 @@ activity_hints:
   focus: Match pronoun to context description
   items: 12
 connects_to:
-- b1-94 (Phonetics & Assimilation)
-- b1-95 (B1 Final Exam)
+- 'b1-06 (Фонетика: асиміляція)'
+- b1-100 (Фінальний іспит B1)
 prerequisites:
-- b1-91 (Feedback, Negotiation & Complaints)
+- b1-99 (Зворотний зв'язок, переговори, скарги)
 persona:
   voice: Senior Language & Culture Specialist
   role: Logic Puzzle Host

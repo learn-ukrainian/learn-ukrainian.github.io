@@ -96,7 +96,7 @@ connects_to:
 - hist-135 (Каховська ГЕС)
 - hist-139 (Злочини і стійкість)
 prerequisites:
-- hist-133 (Війна 2022: початок)
+- 'hist-133 (Війна 2022: початок)'
 persona:
   voice: Senior Professor of History
   role: Steelworks Defender

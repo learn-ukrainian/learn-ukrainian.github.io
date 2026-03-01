@@ -111,12 +111,12 @@ activity_hints:
   focus: Irregular comparative forms
   items: 10+
 connects_to:
-- a2-19 (The Best, The Worst)
-- a2-20 (Preferences and Choices)
-- a2-24 (Smart Shopping)
+- a2-23 (The Best, The Worst)
+- a2-24 (Preferences and Choices)
+- a2-29 (Smart Shopping)
 prerequisites:
 - A1 adjective agreement
-- a2-17 (Possessive sviy)
+- a2-19 (Possessive Sviy)
 - Basic sentence structure
 persona:
   voice: Encouraging Cultural Guide

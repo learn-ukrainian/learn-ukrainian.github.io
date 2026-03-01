@@ -109,9 +109,9 @@ activity_hints:
   focus: Identify correct possessive
   items: 10+
 connects_to:
-- a2-18 (Bigger Better Stronger)
-- a2-20 (Preferences and Choices)
-- a2-25 (Checkpoint)
+- a2-22 (Bigger, Better, Stronger)
+- a2-24 (Preferences and Choices)
+- a2-40 (Checkpoint)
 prerequisites:
 - A1 possessive pronouns
 - a2-01 (Dative pronouns)

@@ -96,10 +96,10 @@ activity_hints:
 - type: essay-response
   focus: Як трагедії XX століття вплинули на сучасну українську ідентичність?
 connects_to:
-- hist-111 (Післявоєнна відбудова)
+- hist-109 (Повоєнна відбудова)
 - hist-115 (Шістдесятники)
 prerequisites:
-- hist-108 (Sürgünlik)
+- 'hist-111 (Sürgünlik: Депортації кримських татар та інших народів)'
 - hist-109 (Депортації)
 persona:
   voice: Senior Professor of History

@@ -89,10 +89,10 @@ activity_hints:
   focus: Schedule and reschedule
   items: 10
 connects_to:
-- a2-64 (Scheduling Interviews)
+- a2-67 (Scheduling Interviews)
 - a2-59 (Medical Care)
 prerequisites:
-- a2-62 (Rental Accommodation)
+- a2-65 (Rental Accommodation)
 persona:
   voice: Encouraging Cultural Guide
   role: Administrative Assistant

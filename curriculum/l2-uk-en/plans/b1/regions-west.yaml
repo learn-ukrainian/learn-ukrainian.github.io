@@ -81,9 +81,9 @@ activity_hints:
   focus: Compare regional cultures
   items: 10
 connects_to:
-- b1-73 (Regions East)
+- 'b1-81 (Українські регіони: Схід)'
 prerequisites:
-- b1-71 (Emotional Intelligence)
+- b1-79 (Емоційний інтелект та міжособистісні навички)
 persona:
   voice: Senior Language & Culture Specialist
   role: Lviv Coffee Connoisseur

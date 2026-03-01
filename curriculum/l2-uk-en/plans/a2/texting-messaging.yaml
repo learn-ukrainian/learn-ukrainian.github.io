@@ -86,9 +86,9 @@ activity_hints:
   focus: Match abbreviations to meanings
   items: 15
 connects_to:
-- a2-69 (Online Services)
+- a2-72 (Online Services)
 prerequisites:
-- a2-67 (Social Media Ukrainian)
+- a2-70 (Social Media Ukrainian)
 persona:
   voice: Encouraging Cultural Guide
   role: Digital Native

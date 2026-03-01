@@ -95,9 +95,9 @@ activity_hints:
   focus: Business scenarios
   items: 10
 connects_to:
-- b1-67 (Travel Geography)
+- b1-78 (Подорожі та географія)
 prerequisites:
-- b1-65 (Relationships)
+- b1-76 (Стосунки та зв'язки)
 persona:
   voice: Senior Language & Culture Specialist
   role: Kyiv Entrepreneur

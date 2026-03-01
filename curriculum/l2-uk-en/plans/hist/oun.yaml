@@ -101,7 +101,7 @@ connects_to:
 - hist-104 (Карпатська Україна)
 - hist-107 (УПА)
 prerequisites:
-- hist-102 (Голодомор: пам'ять)
+- 'hist-102 (Голодомор: пам''ять)'
 persona:
   voice: Senior Professor of History
   role: Political Analyst

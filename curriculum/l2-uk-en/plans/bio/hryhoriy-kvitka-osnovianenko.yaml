@@ -115,7 +115,7 @@ connects_to:
 - bio-47 (Marko Vovchok - female prose pioneer)
 - lit-06 through lit-10 (Literary analysis of Kvitka's works)
 prerequisites:
-- bio-46 (Ivan Kotliarevskyi - predecessor)
+- 'bio-36 (Іван Котляревський: Батько нової літератури)'
 - Understanding of sentimentalism and early realism
 persona:
   voice: Senior Biographer

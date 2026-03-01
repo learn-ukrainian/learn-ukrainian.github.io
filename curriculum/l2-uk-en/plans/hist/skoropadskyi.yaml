@@ -96,7 +96,7 @@ activity_hints:
   focus: Чи був Гетьманат Скоропадського українською державою?
 connects_to:
 - hist-93 (ЗУНР)
-- hist-94 (Директорія)
+- hist-93 (Директорія УНР)
 prerequisites:
 - hist-91 (Центральна Рада)
 persona:

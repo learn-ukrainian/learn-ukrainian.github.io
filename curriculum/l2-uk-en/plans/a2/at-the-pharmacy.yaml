@@ -92,9 +92,9 @@ activity_hints:
   focus: Complete medicine instructions
   items: 15
 connects_to:
-- a2-61 (Hotel Accommodation)
+- a2-64 (Hotel Accommodation)
 prerequisites:
-- a2-34 (Health and Body)
+- a2-39 (Health and Body)
 persona:
   voice: Encouraging Cultural Guide
   role: Experienced Pharmacist

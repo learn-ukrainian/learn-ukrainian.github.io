@@ -94,10 +94,10 @@ activity_hints:
   focus: Negotiate rental terms
   items: 10
 connects_to:
-- a2-63 (Scheduling Appointments)
-- a2-46 (Home and Furniture)
+- a2-66 (Scheduling Appointments)
+- a2-51 (Home and Furniture)
 prerequisites:
-- a2-61 (Hotel Accommodation)
+- a2-64 (Hotel Accommodation)
 persona:
   voice: Encouraging Cultural Guide
   role: Landlord

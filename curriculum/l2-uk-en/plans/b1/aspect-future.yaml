@@ -107,8 +107,8 @@ connects_to:
 - b1-10 (Aspect in negation)
 - b1-11 (Aspect in imperatives)
 prerequisites:
-- b1-06 (Aspect complete system)
-- b1-07 (Aspect past - single vs repeated)
+- 'b1-08 (Вид дієслова: повна система)'
+- 'b1-09 (Вид у минулому: одного разу vs щодня)'
 - b1-08 (Aspect past - result vs process)
 persona:
   voice: Senior Language & Culture Specialist

@@ -86,7 +86,7 @@ activity_hints:
   focus: Write using varied passives
   items: 10
 connects_to:
-- b1-48 (Diminutives Master Class)
+- 'b1-52 (Демінутиви: майстер-клас)'
 prerequisites:
 - b1-46 (Past Passive Participles 2)
 persona:

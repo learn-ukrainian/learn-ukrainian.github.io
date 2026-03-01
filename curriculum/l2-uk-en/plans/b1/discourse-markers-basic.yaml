@@ -102,9 +102,9 @@ activity_hints:
   focus: Write cohesive paragraphs
   items: 10
 connects_to:
-- b1-57 (Discourse Markers Advanced)
+- 'b1-68 (Дискурсивні маркери II: складна організація)'
 prerequisites:
-- b1-55 (Agreement Disagreement)
+- b1-66 (Згода і незгода)
 persona:
   voice: Senior Language & Culture Specialist
   role: Public Speaking Coach

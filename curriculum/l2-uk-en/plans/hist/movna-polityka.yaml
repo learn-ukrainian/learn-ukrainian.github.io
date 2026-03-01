@@ -94,7 +94,7 @@ connects_to:
 - hist-126 (Томос)
 - hist-133 (Війна 2022)
 prerequisites:
-- hist-124 (Революція Гідності)
+- 'hist-126 (Революція Гідності: Євромайдан)'
 persona:
   voice: Senior Professor of History
   role: Sociolinguist

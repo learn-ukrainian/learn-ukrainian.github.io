@@ -132,8 +132,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-35 (Literary Translation II — Prose)
-- 'c2-36 (Creative Writing: Poetry)'
+- c2-32 (Літературний переклад II — проза)
+- c2-33 (Творче письмо — поезія)
 - c2-86 (C2.4 Translation Practice I)
 persona:
   voice: Senior Specialist

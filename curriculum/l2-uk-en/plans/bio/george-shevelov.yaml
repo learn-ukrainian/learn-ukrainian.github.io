@@ -97,7 +97,7 @@ connects_to:
 - bio-115 (Serhii Plokhy - contemporary diaspora scholar)
 - bio-100 (Ahatanhel Krymsky - pre-war linguist)
 prerequisites:
-- bio-104 (Oleksander Potebnya - predecessor)
+- 'bio-43 (Олександр Потебня: Філософ мови)'
 - bio-98 (Ivan Ohienko - contemporary defender)
 - Understanding of Ukrainian language history
 persona:

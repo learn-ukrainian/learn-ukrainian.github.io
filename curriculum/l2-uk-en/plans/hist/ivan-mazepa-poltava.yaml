@@ -95,9 +95,9 @@ activity_hints:
 - type: essay-response
   focus: Чому Мазепа програв?
 connects_to:
-- hist-67 (Пилип Орлик: Перша Конституція)
+- 'hist-67 (Пилип Орлик: Перша Конституція)'
 prerequisites:
-- hist-63 (Іван Мазепа I: Державник)
+- 'hist-63 (Іван Мазепа I: Державник)'
 persona:
   voice: Senior Professor of History
   role: Hetman's Adjutant

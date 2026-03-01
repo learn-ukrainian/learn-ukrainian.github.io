@@ -93,9 +93,9 @@ activity_hints:
   focus: Write about changes
   items: 10
 connects_to:
-- b1-54 (Expressing Opinions)
+- b1-65 (Вираження думок та поглядів)
 prerequisites:
-- b1-52 (Abstract Concepts Ideas)
+- 'b1-63 (Абстрактні концепції: ідеї та думки)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Business Consultant

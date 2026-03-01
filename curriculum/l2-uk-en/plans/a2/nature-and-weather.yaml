@@ -89,10 +89,10 @@ activity_hints:
   focus: Describe weather and landscapes
   items: 8
 connects_to:
-- a2-48 (Emotions and Personality)
+- a2-53 (Emotions and Personality)
 prerequisites:
 - a1-29 (Weather and Nature)
-- a2-46 (Home and Furniture)
+- a2-51 (Home and Furniture)
 persona:
   voice: Encouraging Cultural Guide
   role: Carpathian Forester

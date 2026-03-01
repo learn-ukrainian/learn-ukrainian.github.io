@@ -87,9 +87,9 @@ activity_hints:
   focus: Improve text organization
   items: 15
 connects_to:
-- b1-58 (Describing Changes)
+- b1-69 (Опис змін)
 prerequisites:
-- b1-56 (Discourse Markers Basic)
+- 'b1-67 (Дискурсивні маркери: базові конектори)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Keynote Speaker

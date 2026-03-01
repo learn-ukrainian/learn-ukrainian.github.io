@@ -80,7 +80,7 @@ activity_hints:
 connects_to:
 - a1-61 (At the Store)
 prerequisites:
-- a1-18 (Food and Shopping)
+- a1-39 (Food and Drink)
 - a1-53 (At the Restaurant)
 persona:
   voice: Patient Supportive Tutor

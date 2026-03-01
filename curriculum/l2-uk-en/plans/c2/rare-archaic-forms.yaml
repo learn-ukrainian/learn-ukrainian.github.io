@@ -134,9 +134,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-78 (Regional Varieties)
-- c2-79 (Sociolinguistic Mastery)
-- c2-81 (Native-Like Fluency)
+- c2-67 (Регіональні різновиди)
+- c2-68 (Соціолінгвістична майстерність)
+- c2-72 (Володіння на рівні носія)
 persona:
   voice: Senior Specialist
   role: Paleographer

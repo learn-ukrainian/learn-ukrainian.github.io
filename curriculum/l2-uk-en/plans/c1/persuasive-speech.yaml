@@ -6,85 +6,69 @@ version: '2.0'
 title: Переконлива промова
 subtitle: 'Persuasive Speech: Argumentation & Rhetoric'
 content_outline:
-- section: 'Вступ: Мистецтво переконання та традиції (Introduction: Art of Persuasion
-    & Traditions)'
+- section: 'Вступ: Мистецтво переконання та традиції (Introduction: Art of Persuasion & Traditions)'
   words: 600
   points:
-  - 'Alignment with State Standard §4.4.6: mastering the composition of persuasive
-    texts and rhetorical elements for C1 level.'
-  - 'The three pillars of classical rhetoric: Логос (logic/facts), Пафос (emotion/values),
-    and Етос (credibility/character).'
-  - 'Cultural hook: The rhetorical tradition of Cossack Rada (Козацькі ради) and the
-    oral mastery of koshovyi otamans like Ivan Sirko in direct democracy.'
-  - 'Modern context: Analyzing Volodymyr Zelenskyy''s addresses as a case study in
-    adapting ethos and pathos for international audiences during wartime.'
+  - 'Alignment with State Standard §4.4.6: mastering the composition of persuasive texts and rhetorical elements for C1 level.'
+  - 'The three pillars of classical rhetoric: Логос (logic/facts), Пафос (emotion/values), and Етос (credibility/character).'
+  - 'Cultural hook: The rhetorical tradition of Cossack Rada (Козацькі ради) and the oral mastery of koshovyi otamans like
+    Ivan Sirko in direct democracy.'
+  - 'Modern context: Analyzing Volodymyr Zelenskyy''s addresses as a case study in adapting ethos and pathos for international
+    audiences during wartime.'
 - section: Логіка та структура аргументації (Logos & Argumentation Structure)
   words: 900
   points:
-  - 'Deductive vs inductive reasoning: Exploring the Ukrainian academic preference
-    for deductive models (starting with a general thesis) over inductive styles.'
-  - 'Structural connectors per Standard §4.4.4: Mastering ''по-перше'', ''з одного
-    боку... з іншого боку'', ''отже'', and ''як наслідок'' for logical cohesion.'
-  - 'The Thesis → Antithesis → Synthesis model: Building a structured argument that
-    addresses opposing views with a synthesis.'
-  - 'Linguistic accuracy: Fixing the common learner error of using ''доказувати''
-    (to prove facts/guilt) instead of the correct ''доводити'' (to argue a point or
-    thesis).'
-  - 'Register correction: Replacing colloquial English-style ''Я думаю, що...'' with
-    formal markers like ''На мою думку'', ''Вважаю за доцільне'', or ''Переконаний,
-    що''.'
+  - 'Deductive vs inductive reasoning: Exploring the Ukrainian academic preference for deductive models (starting with a general
+    thesis) over inductive styles.'
+  - 'Structural connectors per Standard §4.4.4: Mastering ''по-перше'', ''з одного боку... з іншого боку'', ''отже'', and
+    ''як наслідок'' for logical cohesion.'
+  - 'The Thesis → Antithesis → Synthesis model: Building a structured argument that addresses opposing views with a synthesis.'
+  - 'Linguistic accuracy: Fixing the common learner error of using ''доказувати'' (to prove facts/guilt) instead of the correct
+    ''доводити'' (to argue a point or thesis).'
+  - 'Register correction: Replacing colloquial English-style ''Я думаю, що...'' with formal markers like ''На мою думку'',
+    ''Вважаю за доцільне'', or ''Переконаний, що''.'
 - section: 'Етос і пафос: Стилістичні фігури (Ethos & Pathos: Stylistic Figures)'
   words: 900
   points:
-  - 'Stylistic syntax: Using ''анафора'' (repetition at start) and ''епіфора'' (repetition
-    at end) to build emotional resonance and rhythm.'
-  - 'Gradation (Градація): Constructing ascending sequences of intensity to lead the
-    audience to a emotional climax (ascending gradation).'
-  - 'Antithesis (Антитеза) as a tool for sharp contrast: Analyzing polarities in Ukrainian
-    publicistic and political texts.'
-  - 'Rhetorical questions (Риторичні запитання) per Standard §4.4.4: Engaging the
-    listener''s conscience and framing the narrative.'
-  - 'Cultural hook: Publicistic speeches of the 1960s (Шістдесятники), specifically
-    Ivan Dziuba''s logic-driven arguments for national identity.'
+  - 'Stylistic syntax: Using ''анафора'' (repetition at start) and ''епіфора'' (repetition at end) to build emotional resonance
+    and rhythm.'
+  - 'Gradation (Градація): Constructing ascending sequences of intensity to lead the audience to a emotional climax (ascending
+    gradation).'
+  - 'Antithesis (Антитеза) as a tool for sharp contrast: Analyzing polarities in Ukrainian publicistic and political texts.'
+  - 'Rhetorical questions (Риторичні запитання) per Standard §4.4.4: Engaging the listener''s conscience and framing the narrative.'
+  - 'Cultural hook: Publicistic speeches of the 1960s (Шістдесятники), specifically Ivan Dziuba''s logic-driven arguments
+    for national identity.'
 - section: Ритмомелодика та синтаксис (Rhythm & Syntax)
   words: 600
   points:
-  - 'The Tricolon (rule of three): Utilizing three parallel elements for maximum impact,
-    common in slogans and persuasive speeches.'
-  - 'Parcellation (Парцеляція): Breaking sentences for dramatic effect to emphasize
-    finality and resolve (''Ми переможемо. Разом.'').'
-  - 'Rhythmic contrast: Balancing long, complex analytical structures with short,
-    punchy sentences to highlight key takeaways.'
+  - 'The Tricolon (rule of three): Utilizing three parallel elements for maximum impact, common in slogans and persuasive
+    speeches.'
+  - 'Parcellation (Парцеляція): Breaking sentences for dramatic effect to emphasize finality and resolve (''Ми переможемо.
+    Разом.'').'
+  - 'Rhythmic contrast: Balancing long, complex analytical structures with short, punchy sentences to highlight key takeaways.'
 - section: Практичний аналіз та продукування (Practical Analysis & Production)
   words: 800
   points:
-  - 'Deep-dive analysis: Deconstructing a famous Ukrainian speech (e.g., historical
-    manifestos or modern UN addresses) to identify pillars of persuasion.'
-  - 'Simulation: Writing a 3-minute persuasive speech on a given topic, focusing on
-    deductive structure and rhetorical figures.'
-  - 'Peer review and self-audit: Evaluating the effectiveness of ''етос'' and ''пафос''
-    usage using a predefined checklist.'
+  - 'Deep-dive analysis: Deconstructing a famous Ukrainian speech (e.g., historical manifestos or modern UN addresses) to
+    identify pillars of persuasion.'
+  - 'Simulation: Writing a 3-minute persuasive speech on a given topic, focusing on deductive structure and rhetorical figures.'
+  - 'Peer review and self-audit: Evaluating the effectiveness of ''етос'' and ''пафос'' usage using a predefined checklist.'
 - section: Підсумок (Summary)
   words: 200
   points:
-  - 'Semantic nuance: Distinguishing between ''переконування'' (the process of arguing)
-    and ''переконання'' (the resulting belief or conviction).'
+  - 'Semantic nuance: Distinguishing between ''переконування'' (the process of arguing) and ''переконання'' (the resulting
+    belief or conviction).'
   - Final checklist of rhetorical devices and connectors for effective persuasion.
 vocabulary_hints:
   required:
-  - промова (speech) — виголосити палку промову, інавгураційна промова, вітальна промова;
-    High frequency in publicistic style
-  - аргумент (argument) — вагомий аргумент, неспростовний аргумент, наводити аргументи;
-    High frequency in academic/formal register
-  - переконання (persuasion/conviction) — сила переконання, глибоке переконання, мистецтво
-    переконання; distinguish from 'переконування'
-  - теза (thesis) — висунути тезу, підтвердити тезу, захищати тезу; key terminology
-    for logic
+  - промова (speech) — виголосити палку промову, інавгураційна промова, вітальна промова; High frequency in publicistic style
+  - аргумент (argument) — вагомий аргумент, неспростовний аргумент, наводити аргументи; High frequency in academic/formal
+    register
+  - переконання (persuasion/conviction) — сила переконання, глибоке переконання, мистецтво переконання; distinguish from 'переконування'
+  - теза (thesis) — висунути тезу, підтвердити тезу, захищати тезу; key terminology for logic
   - антитеза (antithesis) — будуватися на антитезі, яскрава антитеза; stylistic term
-  - доводити (to prove/argue) — доводити думку, доводити тезу; avoid incorrect 'доказувати'
-    for arguments
-  - на мою думку (in my opinion) — formal connector for introducing a standpoint;
-    replaces colloquial calques
+  - доводити (to prove/argue) — доводити думку, доводити тезу; avoid incorrect 'доказувати' for arguments
+  - на мою думку (in my opinion) — formal connector for introducing a standpoint; replaces colloquial calques
   recommended:
   - вважаю за доцільне (I deem it appropriate) — formal register for proposing actions
   - переконаний, що (I am convinced that) — strong persuasive opener
@@ -108,9 +92,9 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- c1-107 (Asyndetic Semantics)
+- 'c1-44 (Безсполучникове речення: логіка тире і двокрапки)'
 connects_to:
-- c1-109 (C1 Final Checkpoint)
+- c1-106 (Підсумковий контроль C1)
 objectives:
 - Learner can structure a persuasive argument using thesis-antithesis-synthesis
 - Learner can use anaphora, epiphora, gradation, and antithesis effectively

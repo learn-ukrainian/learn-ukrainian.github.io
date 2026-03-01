@@ -80,7 +80,7 @@ activity_hints:
 connects_to:
 - b1-29 (Purpose Clauses щоб + infinitive)
 prerequisites:
-- b1-27 (Relative Clauses де/куди/звідки)
+- 'b1-29 (Підрядні означальні: який)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Storyteller

@@ -107,8 +107,8 @@ activity_hints:
   items: 10+
 connects_to:
 - a2-08 (Logical Prepositions)
-- a2-09 (All Cases Practice)
-- a2-65 (Giving Directions)
+- a2-11 (All Cases Practice)
+- a2-68 (Giving Directions)
 prerequisites:
 - A1 basic prepositions (в, на)
 - a2-04 (Instrumental endings)

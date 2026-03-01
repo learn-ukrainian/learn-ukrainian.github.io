@@ -95,7 +95,7 @@ activity_hints:
   focus: Fix common pronunciation-influenced spelling errors
   items: 10
 connects_to:
-- b1-07 (Phonetics: Alternation & Simplification)
+- 'b1-07 (Phonetics: Alternation & Simplification)'
 prerequisites:
 - b1-05 (Ready for Immersion)
 persona:

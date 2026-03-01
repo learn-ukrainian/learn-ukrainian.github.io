@@ -123,9 +123,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-33 (Translation Theory)
-- c2-40 (Literary Prizes & Canon)
-- c2-45 (C2.2 Checkpoint)
+- c2-30 (Теорія перекладу)
+- c2-38 (Літературні премії та канон)
+- c2-43 (Контрольна точка C2.2 — Літературна майстерність)
 persona:
   voice: Senior Specialist
   role: Cultural Essayist

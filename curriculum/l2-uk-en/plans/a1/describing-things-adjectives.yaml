@@ -86,7 +86,7 @@ activity_hints:
   items: 8
 connects_to:
 - a1-12 (Colors and Clothing)
-- a1-28 (Description - Adverbs)
+- 'a1-42 (Description: Adverbs)'
 prerequisites:
 - a1-07 (The Gender Code)
 - a1-38 (My Daily Routine)

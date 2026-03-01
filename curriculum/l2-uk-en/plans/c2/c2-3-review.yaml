@@ -122,9 +122,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-75 (C2.3 Checkpoint)
-- c2-76 (Complete Grammar Review)
-- 'c2-89 (Capstone: Topic Selection)'
+- c2-64 (Контрольна точка C2.3 — Оцінювання професійної спеціалізації)
+- c2-65 (Повний огляд граматики)
+- c2-80 (Дипломний проєкт — Вибір теми)
 persona:
   voice: Senior Specialist
   role: Thesis Advisor

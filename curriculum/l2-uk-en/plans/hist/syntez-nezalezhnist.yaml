@@ -85,7 +85,7 @@ activity_hints:
 - type: essay-response
   focus: Чому Україна пережила дві революції за 10 років?
 connects_to:
-- hist-127 (Революція Гідності)
+- 'hist-126 (Революція Гідності: Євромайдан)'
 - hist-128 (Анексія Криму)
 prerequisites:
 - hist-124 (Томос)

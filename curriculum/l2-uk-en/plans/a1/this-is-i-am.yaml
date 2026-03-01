@@ -82,7 +82,7 @@ activity_hints:
   focus: Meeting someone new
   items: 4
 connects_to:
-- a1-05 (My World - Objects)
+- 'a1-10 (My World: Objects)'
 - a1-20 (Mine and Yours)
 prerequisites:
 - a1-07 (The Gender Code)

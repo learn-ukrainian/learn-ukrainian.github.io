@@ -87,10 +87,10 @@ activity_hints:
   focus: Describe your hobbies
   items: 8
 connects_to:
-- a2-52 (Education and Learning)
-- a2-54 (Sports and Fitness)
+- a2-57 (Education and Learning)
+- a2-59 (Sports and Fitness)
 prerequisites:
-- a2-50 (Technology and Media)
+- a2-55 (Technology and Media)
 persona:
   voice: Encouraging Cultural Guide
   role: Event Organizer

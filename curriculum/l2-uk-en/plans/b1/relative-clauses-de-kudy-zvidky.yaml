@@ -80,9 +80,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-28 (Relative Clauses коли/що)
+- 'b1-29 (Підрядні означальні: який)'
 prerequisites:
-- b1-26 (Relative Clauses який)
+- 'b1-29 (Підрядні означальні: який)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Geographer

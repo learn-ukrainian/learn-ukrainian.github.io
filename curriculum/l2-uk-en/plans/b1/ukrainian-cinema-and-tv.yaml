@@ -92,9 +92,9 @@ activity_hints:
   focus: Recommend Ukrainian films
   items: 10
 connects_to:
-- b1-78 (Technology and Startups)
+- b1-86 (Технології та стартапи)
 prerequisites:
-- b1-76 (Ukrainian Music Today)
+- b1-84 (Українська музика сьогодні)
 persona:
   voice: Senior Language & Culture Specialist
   role: Film Critic

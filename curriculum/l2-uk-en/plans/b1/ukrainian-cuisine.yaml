@@ -79,9 +79,9 @@ activity_hints:
   focus: Share food preferences
   items: 10
 connects_to:
-- b1-86 (Ukrainian Holidays and Festivals)
+- b1-94 (Українські свята та фестивалі)
 prerequisites:
-- b1-84 (Winter Sports)
+- b1-92 (Зимові види спорту)
 persona:
   voice: Senior Language & Culture Specialist
   role: Ukrainian Chef

@@ -80,9 +80,9 @@ activity_hints:
   focus: Grammar rules review
   items: 15
 connects_to:
-- a2-58 (Practical Warm-up)
+- a2-62 (Practical Warm-up)
 prerequisites:
-- a2-56 (Checkpoint Full Grammar)
+- a2-60 (Checkpoint — Full Grammar)
 persona:
   voice: Encouraging Cultural Guide
   role: Camp Counselor

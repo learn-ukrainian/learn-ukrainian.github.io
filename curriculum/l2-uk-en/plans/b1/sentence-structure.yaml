@@ -106,8 +106,8 @@ activity_hints:
   items: 8+
 connects_to:
 - b1-05 (Metalanguage checkpoint)
-- b1-26 (Relative clauses)
-- b1-35 (Concessive clauses)
+- 'b1-30 (Підрядні означальні: де, куди, звідки)'
+- 'b1-38 (Допустові речення: хоча, незважаючи на)'
 prerequisites:
 - b1-01 (Basic grammar terminology)
 - b1-02 (Verb terminology)

@@ -109,8 +109,8 @@ connects_to:
 - b1-09 (Aspect in future)
 - b1-14 (Aspect integration practice)
 prerequisites:
-- b1-06 (Aspect complete system)
-- b1-07 (Aspect past - single vs repeated)
+- 'b1-08 (Вид дієслова: повна система)'
+- 'b1-09 (Вид у минулому: одного разу vs щодня)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Crime Scene Investigator

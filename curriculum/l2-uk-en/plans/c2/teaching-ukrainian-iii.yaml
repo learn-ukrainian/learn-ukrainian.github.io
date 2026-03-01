@@ -125,8 +125,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-85 (Translation Theory II)
-- c2-89 (Capstone Topic Selection)
+- c2-76 (Теорія перекладу II — Поглиблений курс)
+- c2-80 (Дипломний проєкт — Вибір теми)
 persona:
   voice: Senior Specialist
   role: Curriculum Architect

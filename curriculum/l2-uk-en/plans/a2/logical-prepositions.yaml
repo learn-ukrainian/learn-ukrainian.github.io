@@ -105,8 +105,8 @@ activity_hints:
   focus: Case selection with prepositions
   items: 12+
 connects_to:
-- a2-09 (All Cases Practice)
-- a2-10 (Post Office & Bank)
+- a2-11 (All Cases Practice)
+- a2-12 (At the Post Office and Bank)
 - a2-11 (Checkpoint - Cases)
 prerequisites:
 - a2-07 (Spatial prepositions)

@@ -115,8 +115,8 @@ connects_to:
 - b1-23 (Motion patterns in other verbs)
 - b1-25 (Checkpoint - motion verbs)
 prerequisites:
-- b1-16 (Motion verbs full system)
-- b1-17 (Motion - coming & going)
+- 'b1-18 (Дієслова руху: повна система)'
+- 'b1-19 (Рух: Прибуття та вихід)'
 - b1-18 (Motion - passing & crossing)
 - b1-19 (Motion - starting & returning)
 - b1-20 (Motion - approaching & departing)

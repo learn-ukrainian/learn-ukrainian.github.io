@@ -128,8 +128,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-15 (Individual voice II — refinement)
-- 'c2-36 (Creative writing: poetry)'
-- 'c2-37 (Creative writing: prose)'
+- c2-33 (Творче письмо — поезія)
+- c2-34 (Творче письмо — проза)
 persona:
   voice: Senior Specialist
   role: Opinion Columnist

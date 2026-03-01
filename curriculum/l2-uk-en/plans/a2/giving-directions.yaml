@@ -90,9 +90,9 @@ activity_hints:
   focus: Give directions to places
   items: 10
 connects_to:
-- a2-66 (Asking for Directions)
+- a2-69 (Asking for Directions)
 prerequisites:
-- a2-64 (Scheduling Interviews)
+- a2-67 (Scheduling Interviews)
 persona:
   voice: Encouraging Cultural Guide
   role: Kyiv Metro Navigator

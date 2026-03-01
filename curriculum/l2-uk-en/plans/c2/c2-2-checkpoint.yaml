@@ -123,7 +123,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-46 (Professional Language Overview — C2.3 begins)
+- c2-44 (Огляд професійної мови)
 - c2-25 (C2.1 Final Checkpoint — for cross-reference)
 persona:
   voice: Senior Specialist

@@ -131,8 +131,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-96 (Final Review II — Vocabulary)
-- c2-97 (Final Review III — Skills)
+- c2-87 (Фінальне повторення II — Лексична консолідація)
+- c2-88 (Фінальне повторення III — Інтегровані навички)
 - c2-98 (Final Exam)
 persona:
   voice: Senior Specialist

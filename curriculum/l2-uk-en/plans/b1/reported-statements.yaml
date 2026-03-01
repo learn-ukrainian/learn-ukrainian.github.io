@@ -88,9 +88,9 @@ activity_hints:
   focus: Write reported paragraphs
   items: 10
 connects_to:
-- b1-40 (Reported Questions Commands)
+- b1-43 (Непрямі питання та накази)
 prerequisites:
-- b1-38 (Complex Sentence Integration)
+- b1-41 (Інтеграція складних речень)
 persona:
   voice: Senior Language & Culture Specialist
   role: Court Reporter

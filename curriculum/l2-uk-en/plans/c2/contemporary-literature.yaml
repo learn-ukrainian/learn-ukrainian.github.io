@@ -125,9 +125,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-39 (Digital Literature)
-- c2-40 (Literary Prizes & Canon)
-- c2-41 (Literary Community)
+- c2-37 (Цифрова література)
+- c2-38 (Літературні премії та канон)
+- c2-39 (Літературна спільнота)
 persona:
   voice: Senior Specialist
   role: Book Reviewer

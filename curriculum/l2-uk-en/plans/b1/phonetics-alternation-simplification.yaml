@@ -102,9 +102,9 @@ activity_hints:
   focus: Fix euphony errors at word boundaries
   items: 10
 connects_to:
-- b1-08 (Aspect: Complete System)
+- 'b1-08 (Aspect: Complete System)'
 prerequisites:
-- b1-06 (Phonetics: Assimilation)
+- 'b1-06 (Phonetics: Assimilation)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Voice Coach

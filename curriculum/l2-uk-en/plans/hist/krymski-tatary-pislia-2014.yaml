@@ -100,10 +100,10 @@ activity_hints:
 - type: essay-response
   focus: Як історія депортації 1944 року повторюється після 2014?
 connects_to:
-- hist-133 (Війна 2022: початок)
+- 'hist-133 (Війна 2022: початок)'
 - hist-139 (Злочини і стійкість)
 prerequisites:
-- hist-131 (Крим 2014: анексія)
+- 'hist-131 (Крим 2014: анексія)'
 persona:
   voice: Senior Professor of History
   role: Human Rights Lawyer

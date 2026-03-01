@@ -88,9 +88,9 @@ activity_hints:
   focus: Fix too aggressive/passive phrases
   items: 10
 connects_to:
-- b1-93 (Indefinite & Negative Pronouns)
+- b1-28 (Невизначені та заперечні займенники)
 prerequisites:
-- b1-90 (Presentations & Visuals)
+- b1-98 (Презентації та візуалізація)
 persona:
   voice: Senior Language & Culture Specialist
   role: Customer Support Lead

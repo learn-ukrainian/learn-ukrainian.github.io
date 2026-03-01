@@ -114,8 +114,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-45 (C2.2 Checkpoint — assessment)
-- c2-46 (Professional Language Overview — C2.3 start)
+- c2-43 (Контрольна точка C2.2 — Літературна майстерність)
+- c2-44 (Огляд професійної мови)
 persona:
   voice: Senior Specialist
   role: Senior Editor

@@ -118,7 +118,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-18 (Practice II — complex transformations)
-- c2-24 (Style blending)
+- c2-20 (Змішування стилів і гібридні регістри)
 - c2-57 (Professional discussions)
 persona:
   voice: Senior Specialist

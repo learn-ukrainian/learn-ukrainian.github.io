@@ -82,7 +82,7 @@ connects_to:
 - a1-18 (Questions and Negation)
 - a1-16 (The Living Verb II)
 prerequisites:
-- a1-05 (My World - Objects)
+- 'a1-10 (My World: Objects)'
 persona:
   voice: Patient Supportive Tutor
   role: Sports Commentator

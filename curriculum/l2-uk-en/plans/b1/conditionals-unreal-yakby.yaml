@@ -74,9 +74,9 @@ activity_hints:
   focus: Express hypotheticals
   items: 10
 connects_to:
-- b1-33 (Conditionals Mixed Complex)
+- 'b1-36 (Умовні речення: змішані та складні умови)'
 prerequisites:
-- b1-31 (Conditionals Real якщо)
+- 'b1-35 (Умовні речення: нереальна умова (якби))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Alternative History Author

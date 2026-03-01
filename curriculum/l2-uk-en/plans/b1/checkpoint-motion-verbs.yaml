@@ -108,10 +108,10 @@ activity_hints:
   focus: Verb transformation - Add/change prefixes to change meaning
   items: 10+
 connects_to:
-- b1-26 (Relative clauses - який review)
+- 'b1-29 (Підрядні означальні: який)'
 prerequisites:
-- b1-16 (Motion verbs full system)
-- b1-17 (Motion - coming & going)
+- 'b1-18 (Дієслова руху: повна система)'
+- 'b1-19 (Рух: Прибуття та вихід)'
 - b1-18 (Motion - passing & crossing)
 - b1-19 (Motion - starting & returning)
 - b1-20 (Motion - approaching & departing)

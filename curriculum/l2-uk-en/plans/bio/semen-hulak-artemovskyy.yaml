@@ -103,11 +103,11 @@ activity_hints:
   output: Cultural analysis
 connects_to:
 - bio-23 (Mykola Lysenko - later national music)
-- bio-26 (Mariya Zankovetska - theater)
-- bio-41 (Solomiya Krushelnytska - opera star)
+- 'bio-52 (Марія Заньковецька: Перша леді сцени)'
+- 'bio-74 (Соломія Крушельницька: Оперна діва)'
 prerequisites:
 - bio-17 (Maksym Berezovskyy - earlier opera)
-- bio-18 (Dmytro Bortnyanskyy - earlier music)
+- 'bio-35 (Дмитро Бортнянський: Придворний маестро)'
 persona:
   voice: Senior Biographer
   role: Baritone

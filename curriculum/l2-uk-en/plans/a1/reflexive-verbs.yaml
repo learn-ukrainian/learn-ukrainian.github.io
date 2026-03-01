@@ -86,7 +86,7 @@ activity_hints:
   focus: Daily routine conversations
   items: 6
 connects_to:
-- a1-10 (Checkpoint - First Contact)
+- 'a1-14 (Checkpoint: First Contact)'
 - a1-38 (My Daily Routine)
 prerequisites:
 - a1-16 (The Living Verb II)

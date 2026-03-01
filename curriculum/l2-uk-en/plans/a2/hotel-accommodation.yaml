@@ -78,10 +78,10 @@ activity_hints:
   focus: Hotel scenarios
   items: 15
 connects_to:
-- a2-62 (Rental Accommodation)
-- a2-46 (Home and Furniture)
+- a2-65 (Rental Accommodation)
+- a2-51 (Home and Furniture)
 prerequisites:
-- a2-60 (At the Pharmacy)
+- a2-63 (At the Pharmacy)
 persona:
   voice: Encouraging Cultural Guide
   role: Hotel Concierge

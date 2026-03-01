@@ -80,9 +80,9 @@ activity_hints:
   focus: Discuss Cossack heritage
   items: 10
 connects_to:
-- b1-76 (Ukrainian Music Today)
+- b1-84 (Українська музика сьогодні)
 prerequisites:
-- b1-74 (Regions South)
+- 'b1-82 (Українські регіони: Південь)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Cherkasy Historian

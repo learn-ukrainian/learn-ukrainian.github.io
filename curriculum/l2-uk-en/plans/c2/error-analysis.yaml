@@ -124,9 +124,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-81 (Native-Like Fluency)
-- c2-82 (Teaching Ukrainian I)
-- c2-95 (Final Review I)
+- c2-72 (Володіння на рівні носія)
+- c2-73 (Викладання української мови I — Педагогічні основи)
+- c2-86 (Фінальне повторення I — Граматична консолідація)
 persona:
   voice: Senior Specialist
   role: Senior Proofreader

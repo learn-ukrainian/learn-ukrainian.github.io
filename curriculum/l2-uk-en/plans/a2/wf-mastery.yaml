@@ -104,9 +104,9 @@ activity_hints:
   focus: Fix word formation errors
   items: 8
 connects_to:
-- a2-44 (Checkpoint Word Formation)
+- 'a2-49 (Checkpoint: Word Formation)'
 prerequisites:
-- a2-42 (Word Formation V)
+- 'a2-48 (Майстерня слів: Велика гра)'
 persona:
   voice: Encouraging Cultural Guide
   role: Scrabble Champion

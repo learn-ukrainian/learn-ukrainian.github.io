@@ -89,9 +89,9 @@ activity_hints:
   focus: Write temporal narratives
   items: 10
 connects_to:
-- b1-38 (Complex Sentence Integration)
+- b1-41 (Інтеграція складних речень)
 prerequisites:
-- b1-36 (Causal Result Clauses)
+- b1-39 (Причинові та наслідкові речення)
 persona:
   voice: Senior Language & Culture Specialist
   role: Biographer

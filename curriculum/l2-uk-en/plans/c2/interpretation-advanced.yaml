@@ -125,8 +125,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-89 (Capstone Topic Selection)
-- c2-94 (Capstone Defense — oral skills)
+- c2-80 (Дипломний проєкт — Вибір теми)
+- c2-85 (Дипломний проєкт — Захист)
 persona:
   voice: Senior Specialist
   role: Interpreter

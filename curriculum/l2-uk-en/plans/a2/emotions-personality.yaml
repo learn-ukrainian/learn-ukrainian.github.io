@@ -95,10 +95,10 @@ activity_hints:
   focus: Describe people you know
   items: 8
 connects_to:
-- a2-49 (Work and Professions)
+- a2-54 (Work and Professions)
 prerequisites:
 - a1-26 (Describing Things - Adjectives)
-- a2-47 (Nature and Weather)
+- a2-52 (Nature and Weather)
 persona:
   voice: Encouraging Cultural Guide
   role: Drama Teacher

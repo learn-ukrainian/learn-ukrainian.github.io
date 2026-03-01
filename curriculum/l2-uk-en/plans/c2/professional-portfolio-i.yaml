@@ -127,9 +127,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-72 (Professional Portfolio II — multi-format)
-- c2-73 (Professional Identity)
-- c2-75 (C2.3 Checkpoint)
+- c2-61 (Професійне портфоліо II — Багатоформатна презентація)
+- c2-62 (Професійна ідентичність — Особистий бренд українською)
+- c2-64 (Контрольна точка C2.3 — Оцінювання професійної спеціалізації)
 persona:
   voice: Senior Specialist
   role: Talent Scout

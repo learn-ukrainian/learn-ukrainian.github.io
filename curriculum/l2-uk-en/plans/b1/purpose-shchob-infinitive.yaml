@@ -87,7 +87,7 @@ activity_hints:
 connects_to:
 - b1-30 (Purpose Clauses щоб + past form)
 prerequisites:
-- b1-28 (Relative Clauses коли/що)
+- 'b1-29 (Підрядні означальні: який)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Project Lead

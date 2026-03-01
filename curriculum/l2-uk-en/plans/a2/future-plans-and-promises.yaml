@@ -109,12 +109,12 @@ activity_hints:
   focus: Future tense formation quiz
   items: 10+
 connects_to:
-- a2-15 (Aspect Morphology)
-- a2-16 (Aspect Mastery Pairs)
-- a2-22 (If I Were)
+- a2-17 (Aspect Morphology)
+- a2-18 (Aspect Mastery — Pairs)
+- a2-27 (If I Were)
 prerequisites:
-- a2-12 (Aspect introduction)
-- a2-13 (Perfective past)
+- a2-14 (Aspect Introduction)
+- a2-15 (The Completed Past)
 - A1 future tense basics
 persona:
   voice: Encouraging Cultural Guide

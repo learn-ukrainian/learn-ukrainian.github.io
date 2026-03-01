@@ -127,7 +127,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-95 (Final Review I)
+- c2-86 (Фінальне повторення I — Граматична консолідація)
 - c2-98 (Final Exam)
 persona:
   voice: Senior Specialist

@@ -78,8 +78,8 @@ activity_hints:
   focus: Shopping for clothes
   items: 6
 connects_to:
-- a1-28 (Description - Adverbs)
-- a1-30 (Checkpoint Consolidation)
+- 'a1-42 (Description: Adverbs)'
+- 'a1-54 (Checkpoint: Communication)'
 prerequisites:
 - a1-11 (Describing Things - Adjectives)
 persona:

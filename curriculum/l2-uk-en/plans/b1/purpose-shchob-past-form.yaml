@@ -85,7 +85,7 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-31 (Conditionals Real якщо)
+- 'b1-35 (Умовні речення: нереальна умова (якби))'
 prerequisites:
 - b1-29 (Purpose Clauses щоб + infinitive)
 persona:

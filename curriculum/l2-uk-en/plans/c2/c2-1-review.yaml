@@ -107,8 +107,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-20 (C2.1 Checkpoint — formal assessment)
-- c2-21 (Stylistic devices mastery begins C2.1b)
-- c2-26 (C2.2 Literary mastery)
+- c2-17 (Стилістичні засоби — Повне володіння)
+- c2-27 (Теорія літератури)
 persona:
   voice: Senior Specialist
   role: Manuscript Doctor

@@ -116,8 +116,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-43 (C2.2 Practice II — Creative portfolio)
-- c2-44 (C2.2 Review)
-- c2-45 (C2.2 Checkpoint)
+- c2-42 (Повторення C2.2 — Літературна майстерність)
+- c2-43 (Контрольна точка C2.2 — Літературна майстерність)
 persona:
   voice: Senior Specialist
   role: Literary Agent

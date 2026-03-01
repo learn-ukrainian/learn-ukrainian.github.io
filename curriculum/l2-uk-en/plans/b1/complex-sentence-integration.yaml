@@ -89,9 +89,9 @@ activity_hints:
   focus: Write complex paragraphs
   items: 10
 connects_to:
-- b1-39 (Reported Statements)
+- 'b1-42 (Непряма мова: твердження)'
 prerequisites:
-- b1-37 (Temporal Clauses)
+- b1-40 (Часові підрядні речення)
 persona:
   voice: Senior Language & Culture Specialist
   role: Novel Editor

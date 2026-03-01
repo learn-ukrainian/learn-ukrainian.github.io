@@ -120,7 +120,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-55 (C2.3 Midpoint Checkpoint)
+- c2-53 (Контрольна точка C2.3 — Середина фази)
 - c2-57 (Professional Discussions)
 - c2-58 (Cross-Domain Communication)
 persona:

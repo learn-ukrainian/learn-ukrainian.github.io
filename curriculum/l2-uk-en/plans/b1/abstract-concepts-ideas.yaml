@@ -95,9 +95,9 @@ activity_hints:
   focus: Discuss abstract topics
   items: 10
 connects_to:
-- b1-53 (Abstract Concepts Processes)
+- 'b1-64 (Абстрактні концепції: процеси та зміни)'
 prerequisites:
-- b1-51 (Checkpoint Advanced Grammar)
+- 'b1-55 (Контрольна точка: Просунута граматика)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Academic Researcher

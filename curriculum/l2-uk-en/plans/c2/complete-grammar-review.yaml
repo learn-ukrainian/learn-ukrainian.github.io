@@ -115,9 +115,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-77 (Rare/Archaic Forms)
-- c2-80 (Error Analysis)
-- c2-81 (Native-Like Fluency)
+- c2-66 (Рідкісні та архаїчні форми)
+- c2-71 (Аналіз помилок)
+- c2-72 (Володіння на рівні носія)
 persona:
   voice: Senior Specialist
   role: Grammar Expert

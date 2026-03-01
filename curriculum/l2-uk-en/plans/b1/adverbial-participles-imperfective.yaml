@@ -96,7 +96,7 @@ activity_hints:
   focus: Fix participle formation errors
   items: 10
 connects_to:
-- b1-43 (Adverbial Participles Perfective)
+- b1-51 (Дієприслівники доконаного виду)
 prerequisites:
 - b1-41 (Checkpoint Complex Sentences 2)
 persona:

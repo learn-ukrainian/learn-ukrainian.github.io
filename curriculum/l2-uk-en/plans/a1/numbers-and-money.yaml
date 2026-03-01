@@ -83,7 +83,7 @@ activity_hints:
   focus: Shopping transactions
   items: 6
 connects_to:
-- a1-18 (Food and Shopping)
+- a1-39 (Food and Drink)
 - a1-23 (What Time Is It)
 prerequisites:
 - a1-32 (The Genitive I)

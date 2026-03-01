@@ -111,12 +111,12 @@ activity_hints:
   focus: Suppletive pairs matching
   items: 8+
 connects_to:
-- a2-16 (Aspect Mastery Pairs)
-- a2-36 (Basic Motion Prefixes)
-- a2-38 (Action Verb Prefixes)
+- a2-18 (Aspect Mastery — Pairs)
+- a2-41 (Basic Motion Prefixes)
+- a2-43 (Action Verb Prefixes)
 prerequisites:
-- a2-12 (Aspect introduction)
-- a2-13 (Perfective past)
+- a2-14 (Aspect Introduction)
+- a2-15 (The Completed Past)
 - a2-14 (Perfective future)
 persona:
   voice: Encouraging Cultural Guide

@@ -96,9 +96,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-36 (Causal Result Clauses)
+- b1-39 (Причинові та наслідкові речення)
 prerequisites:
-- b1-34 (Checkpoint Complex Sentences 1)
+- 'b1-37 (Контрольна точка: складні речення (частина 1))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Debate Champion

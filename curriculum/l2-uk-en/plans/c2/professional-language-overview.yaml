@@ -133,7 +133,7 @@ activities:
 connects_to:
 - c2-47 (Terminology Acquisition I)
 - c2-51 (Professional Document Types)
-- c2-60 (Building Domain Expertise)
+- c2-58 (Побудова галузевої експертизи)
 persona:
   voice: Senior Specialist
   role: Career Strategist

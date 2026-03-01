@@ -99,9 +99,9 @@ activity_hints:
   focus: Чому міжнародне визнання Голодомору геноцидом важливе для України?
 connects_to:
 - hist-118 (Діаспора)
-- hist-108 (Синтез: Трагедії XX століття)
+- 'hist-108 (Синтез: Трагедії XX століття)'
 prerequisites:
-- hist-101 (Голодомор: Механізм)
+- 'hist-101 (Голодомор: Механізм)'
 persona:
   voice: Senior Professor of History
   role: Memorial Keeper

@@ -102,9 +102,9 @@ activity_hints:
   focus: Form equivalents
   items: 8
 connects_to:
-- a2-45 (Food and Cooking)
+- a2-50 (Food and Cooking)
 prerequisites:
-- a2-43 (WF Mastery)
+- 'a2-48 (Майстерня слів: Велика гра)'
 persona:
   voice: Encouraging Cultural Guide
   role: Linguistics Professor

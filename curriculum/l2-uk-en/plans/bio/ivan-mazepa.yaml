@@ -102,7 +102,7 @@ activity_hints:
   focus: Analyze Mazepa in Ukrainian vs. Russian historiography
   output: Comparative historiography
 connects_to:
-- bio-13 (Kost Hordiyenko - ally)
+- 'bio-29 (Кость Гордієнко: Запорозький кошовий)'
 - bio-14 (Pylyp Orlyk - successor)
 - bio-15 (Petro Kalnyshevskyy - end of autonomy)
 prerequisites:

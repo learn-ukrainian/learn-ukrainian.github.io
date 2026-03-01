@@ -95,9 +95,9 @@ activity_hints:
   focus: Discuss ecological topics
   items: 10
 connects_to:
-- b1-63 (Health Wellness)
+- b1-74 (Здоров'я та самопочуття)
 prerequisites:
-- b1-61 (Professional Communication)
+- b1-72 (Професійна комунікація)
 persona:
   voice: Senior Language & Culture Specialist
   role: Carpathian Ecologist

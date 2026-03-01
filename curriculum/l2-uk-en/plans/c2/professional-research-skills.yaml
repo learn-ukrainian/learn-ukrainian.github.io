@@ -114,7 +114,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-60 (Building Domain Expertise)
+- c2-58 (Побудова галузевої експертизи)
 - c2-71-72 (Professional Portfolio I-II)
 - c2-89-94 (Capstone Project)
 persona:

@@ -98,9 +98,9 @@ activity_hints:
   focus: Reorder presentation sentences
   items: 8
 connects_to:
-- b1-91 (Feedback & Negotiation)
+- b1-99 (Зворотний зв'язок, переговори, скарги)
 prerequisites:
-- b1-89 (Communication Channels)
+- b1-97 (Канали комунікації)
 persona:
   voice: Senior Language & Culture Specialist
   role: Creative Director

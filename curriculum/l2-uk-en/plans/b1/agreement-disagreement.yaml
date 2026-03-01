@@ -97,9 +97,9 @@ activity_hints:
   focus: Identify agreement/disagreement
   items: 15
 connects_to:
-- b1-56 (Discourse Markers Basic)
+- 'b1-67 (Дискурсивні маркери: базові конектори)'
 prerequisites:
-- b1-54 (Expressing Opinions)
+- b1-65 (Вираження думок та поглядів)
 persona:
   voice: Senior Language & Culture Specialist
   role: Diplomat

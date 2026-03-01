@@ -117,7 +117,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-98 (Final Exam)
-- c2-99 (C2 Certification Preparation)
+- c2-90 (Підготовка до сертифікації C2)
 persona:
   voice: Senior Specialist
   role: Accreditation Auditor

@@ -95,9 +95,9 @@ activity_hints:
 connects_to:
 - bio-56 (Олександр Архипенко)
 - bio-62 (Віра Холодна)
-- bio-64 (Борис Лятошинський)
+- 'bio-104 (Борис Лятошинський: Симфоніст)'
 prerequisites:
-- bio-41 (Соломія Крушельницька)
+- 'bio-74 (Соломія Крушельницька: Оперна діва)'
 persona:
   voice: Senior Biographer
   role: Ballet Master

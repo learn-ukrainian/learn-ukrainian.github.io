@@ -91,10 +91,10 @@ activity_hints:
   focus: Describe your work
   items: 8
 connects_to:
-- a2-50 (Technology and Media)
-- a2-64 (Scheduling Interviews)
+- a2-55 (Technology and Media)
+- a2-67 (Scheduling Interviews)
 prerequisites:
-- a2-48 (Emotions and Personality)
+- a2-53 (Emotions and Personality)
 persona:
   voice: Encouraging Cultural Guide
   role: Career Counselor

@@ -88,7 +88,7 @@ activity_hints:
 connects_to:
 - a2-59 (Medical Care)
 prerequisites:
-- a2-57 (Practical Intro)
+- a2-61 (Practical Intro)
 persona:
   voice: Encouraging Cultural Guide
   role: Morning Show Host

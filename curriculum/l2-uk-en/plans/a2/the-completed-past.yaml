@@ -100,11 +100,11 @@ activity_hints:
   focus: Complete the story with perfective verbs
   items: 10+
 connects_to:
-- a2-14 (Future Plans and Promises)
-- a2-15 (Aspect Morphology)
-- a2-26 (Telling Stories)
+- a2-16 (Future Plans and Promises)
+- a2-17 (Aspect Morphology)
+- a2-31 (Telling Stories)
 prerequisites:
-- a2-12 (Aspect introduction)
+- a2-14 (Aspect Introduction)
 - A1 past tense formation
 persona:
   voice: Encouraging Cultural Guide

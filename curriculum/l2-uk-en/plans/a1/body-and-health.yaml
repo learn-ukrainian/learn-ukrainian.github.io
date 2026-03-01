@@ -86,7 +86,7 @@ connects_to:
 - a1-49 (My Family)
 - a1-62 (Emergencies)
 prerequisites:
-- a1-30 (Prepositions: Direction & Origin)
+- 'a1-30 (Prepositions: Direction & Origin)'
 persona:
   voice: Patient Supportive Tutor
   role: Polyclinic Nurse

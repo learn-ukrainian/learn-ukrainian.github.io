@@ -105,7 +105,7 @@ activity_hints:
   focus: Single event → habitual movement
   items: 10+
 connects_to:
-- b1-17 (Motion - coming & going)
+- 'b1-19 (Рух: Прибуття та вихід)'
 - b1-25 (Motion verbs checkpoint)
 prerequisites:
 - b1-15 (Aspect mastery checkpoint)

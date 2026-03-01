@@ -86,8 +86,8 @@ activity_hints:
   focus: Describe how you do activities
   items: 8
 connects_to:
-- a1-29 (Weather and Seasons)
-- a1-30 (Checkpoint Consolidation)
+- a1-43 (Weather & Nature)
+- 'a1-54 (Checkpoint: Communication)'
 prerequisites:
 - a1-11 (Describing Things - Adjectives)
 - a1-12 (Colors and Clothing)

@@ -86,9 +86,9 @@ activity_hints:
   focus: Чому концепція Грушевського досі важлива для української ідентичності?
 connects_to:
 - hist-90 (Центральна Рада)
-- hist-99 (Розстріляне відродження)
+- 'hist-98 (Розстріляне відродження: Постаті)'
 prerequisites:
-- hist-86 (Синтез: Імперська доба)
+- 'hist-86 (Синтез: Імперська доба)'
 persona:
   voice: Senior Professor of History
   role: Academic Historian

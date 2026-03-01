@@ -108,9 +108,9 @@ activity_hints:
   focus: Food words
   items: 8
 connects_to:
-- a2-46 (Home and Furniture)
+- a2-51 (Home and Furniture)
 prerequisites:
-- a2-44 (Checkpoint Word Formation)
+- 'a2-49 (Checkpoint: Word Formation)'
 - a1-18 (Food and Shopping)
 persona:
   voice: Encouraging Cultural Guide

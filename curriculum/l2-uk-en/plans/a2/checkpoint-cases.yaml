@@ -108,8 +108,8 @@ activity_hints:
   focus: Service interaction dialogues
   items: 10+
 connects_to:
-- a2-12 (Aspect Introduction)
-- a2-25 (Checkpoint - Aspect & Comparison)
+- a2-14 (Aspect Introduction)
+- 'a2-30 (Checkpoint: Aspect, Comparison & Modality)'
 - a2-35 (Checkpoint - Complex Ideas)
 prerequisites:
 - a2-01 through a2-10 (all A2.1 modules)

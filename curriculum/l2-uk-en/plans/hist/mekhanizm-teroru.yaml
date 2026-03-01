@@ -110,9 +110,9 @@ activity_hints:
   focus: Чому знищення української інтелігенції — це геноцид?
 connects_to:
 - hist-101 (Голодомор)
-- hist-102 (Голодомор: пам'ять)
+- 'hist-102 (Голодомор: пам''ять)'
 prerequisites:
-- hist-99 (Розстріляне відродження I)
+- 'hist-98 (Розстріляне відродження: Постаті)'
 persona:
   voice: Senior Professor of History
   role: Investigative Archivist

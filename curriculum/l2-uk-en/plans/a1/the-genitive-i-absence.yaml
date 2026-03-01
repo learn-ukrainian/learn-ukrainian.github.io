@@ -74,7 +74,7 @@ activity_hints:
   items: 6
 connects_to:
 - a1-22 (Numbers and Money)
-- a1-18 (Food and Shopping)
+- a1-39 (Food and Drink)
 prerequisites:
 - a1-29 (Around the City)
 persona:

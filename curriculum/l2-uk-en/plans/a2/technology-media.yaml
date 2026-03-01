@@ -93,10 +93,10 @@ activity_hints:
   focus: Tech support conversation
   items: 8
 connects_to:
-- a2-51 (Hobbies and Leisure)
-- a2-67 (Social Media Ukrainian)
+- a2-56 (Hobbies and Leisure)
+- a2-70 (Social Media Ukrainian)
 prerequisites:
-- a2-49 (Work and Professions)
+- a2-54 (Work and Professions)
 persona:
   voice: Encouraging Cultural Guide
   role: Tech Blogger

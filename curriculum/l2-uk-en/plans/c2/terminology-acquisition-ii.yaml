@@ -114,8 +114,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-49 (Reading Professional Texts I)
-- c2-60 (Building Domain Expertise)
-- c2-71 (Professional Portfolio I)
+- c2-58 (Побудова галузевої експертизи)
+- c2-60 (Професійне портфоліо I — Демонстрація компетентності)
 persona:
   voice: Senior Specialist
   role: Terminologist

@@ -86,9 +86,9 @@ activity_hints:
   focus: Discuss sports preferences
   items: 10
 connects_to:
-- b1-80 (Active Lifestyle)
+- b1-88 (Активний відпочинок)
 prerequisites:
-- b1-78 (Technology and Startups)
+- b1-86 (Технології та стартапи)
 persona:
   voice: Senior Language & Culture Specialist
   role: Olympiad Commentator

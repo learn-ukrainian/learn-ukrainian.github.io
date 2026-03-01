@@ -105,8 +105,8 @@ activity_hints:
   items: 10+
 connects_to:
 - a2-11 (Checkpoint - Cases)
-- a2-53 (Shopping & Services)
-- a2-69 (Online Services)
+- a2-58 (Shopping and Services)
+- a2-72 (Online Services)
 prerequisites:
 - a2-01 through a2-09 (all case knowledge)
 - A1 numbers 1-100

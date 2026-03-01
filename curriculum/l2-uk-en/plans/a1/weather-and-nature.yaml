@@ -77,10 +77,10 @@ activity_hints:
   focus: Weather conversations
   items: 6
 connects_to:
-- a1-30 (Prepositions: Direction & Origin)
+- 'a1-30 (Prepositions: Direction & Origin)'
 - a1-50 (Holidays and Traditions)
 prerequisites:
-- a1-28 (Description - Adverbs)
+- 'a1-42 (Description: Adverbs)'
 persona:
   voice: Patient Supportive Tutor
   role: Carpathian Ranger

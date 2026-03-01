@@ -112,9 +112,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-24 (Style Blending)
+- c2-20 (Змішування стилів і гібридні регістри)
 - c2-30 (Intertextuality II - advanced)
-- c2-26 (Literary Theory)
+- c2-27 (Теорія літератури)
 persona:
   voice: Senior Specialist
   role: Cultural Historian

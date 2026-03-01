@@ -120,9 +120,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-76 (Complete Grammar Review — C2.4 start)
-- 'c2-89 (Capstone: Topic Selection)'
-- c2-100 (C2 Certification)
+- c2-65 (Повний огляд граматики)
+- c2-80 (Дипломний проєкт — Вибір теми)
+- c2-90 (Підготовка до сертифікації C2)
 persona:
   voice: Senior Specialist
   role: Board Commissioner

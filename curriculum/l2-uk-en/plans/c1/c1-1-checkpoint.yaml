@@ -86,7 +86,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c1-21 (CV/Resume Writing - C1.2 start)
-- c1-35 (Speaking Practice)
+- c1-39 (Мовний практикум)
 - c1-106 (Final C1 Checkpoint)
 persona:
   voice: Senior Specialist

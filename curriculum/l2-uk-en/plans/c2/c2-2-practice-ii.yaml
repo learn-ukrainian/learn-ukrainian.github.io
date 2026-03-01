@@ -118,9 +118,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-44 (C2.2 Review)
-- c2-45 (C2.2 Checkpoint)
-- c2-41 (Literary community)
+- c2-42 (Повторення C2.2 — Літературна майстерність)
+- c2-43 (Контрольна точка C2.2 — Літературна майстерність)
+- c2-39 (Літературна спільнота)
 persona:
   voice: Senior Specialist
   role: Anthologist

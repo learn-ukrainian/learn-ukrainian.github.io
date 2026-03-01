@@ -98,9 +98,9 @@ activity_hints:
   focus: Discuss Southern Ukrainian culture
   items: 10
 connects_to:
-- b1-75 (Regions Center)
+- 'b1-83 (Українські регіони: Центр)'
 prerequisites:
-- b1-73 (Regions East)
+- 'b1-81 (Українські регіони: Схід)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Odesa Tour Guide

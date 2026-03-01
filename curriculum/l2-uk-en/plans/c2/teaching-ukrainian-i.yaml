@@ -132,7 +132,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-83 (Teaching Ukrainian II — Lesson Planning)
+- c2-75 (Викладання української мови III — Розробка матеріалів)
 - c2-84 (Teaching Ukrainian III — Materials Development)
 persona:
   voice: Senior Specialist

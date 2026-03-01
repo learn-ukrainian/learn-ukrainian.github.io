@@ -84,10 +84,10 @@ activity_hints:
   focus: Job interview simulation
   items: 10
 connects_to:
-- a2-65 (Giving Directions)
+- a2-68 (Giving Directions)
 prerequisites:
-- a2-63 (Scheduling Appointments)
-- a2-49 (Work and Professions)
+- a2-66 (Scheduling Appointments)
+- a2-54 (Work and Professions)
 persona:
   voice: Encouraging Cultural Guide
   role: HR Recruiter

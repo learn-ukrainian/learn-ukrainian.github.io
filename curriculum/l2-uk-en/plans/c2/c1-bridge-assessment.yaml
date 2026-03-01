@@ -125,7 +125,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-02 (Euphonic system mastery)
-- c2-19 (C2.1 Review)
+- c2-25 (Повторення C2.1 — Консолідація стилістики)
 persona:
   voice: Senior Specialist
   role: Placement Officer

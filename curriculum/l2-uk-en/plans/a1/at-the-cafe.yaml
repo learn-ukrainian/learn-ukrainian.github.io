@@ -83,10 +83,10 @@ activity_hints:
   focus: Understand café dialogue
   items: 10
 connects_to:
-- a1-20 (Checkpoint Navigation)
+- 'a1-54 (Checkpoint: Communication)'
 - a1-53 (At the Restaurant)
 prerequisites:
-- a1-18 (Food and Shopping)
+- a1-39 (Food and Drink)
 persona:
   voice: Patient Supportive Tutor
   role: Chatty Barista

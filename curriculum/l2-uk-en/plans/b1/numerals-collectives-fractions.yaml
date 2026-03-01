@@ -90,7 +90,7 @@ activity_hints:
 connects_to:
 - b1-50 (Checkpoint Participles Numerals)
 prerequisites:
-- b1-48 (Diminutives Master Class)
+- 'b1-52 (Демінутиви: майстер-клас)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Accountant

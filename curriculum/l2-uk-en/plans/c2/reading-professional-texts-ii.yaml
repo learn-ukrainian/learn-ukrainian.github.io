@@ -124,7 +124,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-51 (Professional Document Types)
-- c2-59 (Professional Research Skills)
+- c2-57 (Професійні дослідницькі навички)
 - c2-32 (Writing Literary Essays — critical writing skills)
 persona:
   voice: Senior Specialist

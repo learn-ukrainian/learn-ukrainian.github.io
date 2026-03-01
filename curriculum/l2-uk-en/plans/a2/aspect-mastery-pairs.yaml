@@ -106,9 +106,9 @@ activity_hints:
   focus: Identify aspect pair relationship
   items: 10+
 connects_to:
-- a2-17 (Possessive Sviy)
-- a2-22 (If I Were)
-- a2-25 (Checkpoint - Aspect & Comparison)
+- a2-19 (Possessive Sviy)
+- a2-27 (If I Were)
+- 'a2-30 (Checkpoint: Aspect, Comparison & Modality)'
 prerequisites:
 - a2-12 through a2-15 (all aspect modules)
 persona:

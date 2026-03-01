@@ -99,9 +99,9 @@ activity_hints:
   focus: Write opinion paragraphs
   items: 10
 connects_to:
-- b1-55 (Agreement Disagreement)
+- b1-66 (Згода і незгода)
 prerequisites:
-- b1-53 (Abstract Concepts Processes)
+- 'b1-64 (Абстрактні концепції: процеси та зміни)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Talk Show Guest

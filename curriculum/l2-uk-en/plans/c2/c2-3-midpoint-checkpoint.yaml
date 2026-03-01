@@ -114,7 +114,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-56 (Professional Correspondence — continues C2.3)
+- c2-54 (Професійна кореспонденція)
 - c2-75 (C2.3 Complete Checkpoint — end of phase)
 persona:
   voice: Senior Specialist

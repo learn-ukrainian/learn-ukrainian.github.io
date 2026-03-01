@@ -87,9 +87,9 @@ activity_hints:
   focus: Discuss wellness topics
   items: 10
 connects_to:
-- b1-64 (Emotions Deep Dive)
+- 'b1-75 (Емоції: глибоке занурення)'
 prerequisites:
-- b1-62 (Environment Ecology)
+- b1-73 (Довкілля та екологія)
 persona:
   voice: Senior Language & Culture Specialist
   role: Family Doctor

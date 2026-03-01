@@ -91,10 +91,10 @@ activity_hints:
   focus: Match actions to icons
   items: 15
 connects_to:
-- a2-68 (Texting and Messaging)
+- a2-71 (Texting and Messaging)
 prerequisites:
-- a2-66 (Asking for Directions)
-- a2-50 (Technology and Media)
+- a2-69 (Asking for Directions)
+- a2-55 (Technology and Media)
 persona:
   voice: Encouraging Cultural Guide
   role: Community Manager

@@ -89,9 +89,9 @@ activity_hints:
   focus: Describe emotional experiences
   items: 10
 connects_to:
-- b1-65 (Relationships)
+- b1-76 (Стосунки та зв'язки)
 prerequisites:
-- b1-63 (Health Wellness)
+- b1-74 (Здоров'я та самопочуття)
 persona:
   voice: Senior Language & Culture Specialist
   role: Psychotherapist

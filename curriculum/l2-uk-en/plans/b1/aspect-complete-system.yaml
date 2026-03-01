@@ -94,7 +94,7 @@ activity_hints:
   focus: Change aspect and explain meaning difference
   items: 8+
 connects_to:
-- b1-07 (Aspect in past - single vs repeated)
+- 'b1-09 (Вид у минулому: одного разу vs щодня)'
 - b1-08 (Aspect in past - result vs process)
 - b1-15 (Aspect mastery checkpoint)
 prerequisites:

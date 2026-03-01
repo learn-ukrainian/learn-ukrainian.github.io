@@ -82,7 +82,7 @@ connects_to:
 - a1-37 (Tomorrow - Future Tense)
 - a1-38 (My Daily Routine)
 prerequisites:
-- a1-20 (Checkpoint Navigation)
+- 'a1-54 (Checkpoint: Communication)'
 persona:
   voice: Patient Supportive Tutor
   role: Museum Curator

@@ -121,9 +121,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-74 (C2.3 Review)
-- c2-75 (C2.3 Checkpoint)
-- 'c2-89 (Capstone: Topic Selection)'
+- c2-63 (Повторення C2.3 — Консолідація професійної спеціалізації)
+- c2-64 (Контрольна точка C2.3 — Оцінювання професійної спеціалізації)
+- c2-80 (Дипломний проєкт — Вибір теми)
 persona:
   voice: Senior Specialist
   role: Brand Architect

@@ -95,7 +95,7 @@ activity_hints:
 - type: essay-response
   focus: Як література кінця XIX століття сприяла національному пробудженню?
 connects_to:
-- hist-86 (Синтез: Імперська доба)
+- 'hist-86 (Синтез: Імперська доба)'
 - hist-87 (Грушевський)
 prerequisites:
 - hist-84 (Драгоманов)

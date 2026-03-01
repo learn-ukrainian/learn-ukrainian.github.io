@@ -95,7 +95,7 @@ activity_hints:
 - type: essay-response
   focus: Чому Мінські угоди не зупинили війну?
 connects_to:
-- hist-133 (Повномасштабне вторгнення)
+- hist-132 (Повномасштабне вторгнення)
 - hist-134 (Маріуполь)
 prerequisites:
 - hist-128 (Анексія Криму)

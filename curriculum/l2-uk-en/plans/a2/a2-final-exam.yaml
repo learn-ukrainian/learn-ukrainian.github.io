@@ -85,9 +85,9 @@ activity_hints:
 connects_to:
 - b1-01 (How to Talk About Grammar)
 prerequisites:
-- a2-70 (Introduction to Participles)
-- a2-69 (Online Services)
-- a2-56 (Checkpoint Full Grammar)
+- a2-75 (Introduction to Gerunds)
+- a2-72 (Online Services)
+- a2-60 (Checkpoint — Full Grammar)
 persona:
   voice: Encouraging Cultural Guide
   role: University Dean

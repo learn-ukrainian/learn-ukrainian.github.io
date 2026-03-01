@@ -115,9 +115,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-53 (Writing Professional Documents II — Proposals)
+- c2-51 (Написання професійних документів II — Пропозиції та презентації)
 - c2-54 (Professional Oral Communication)
-- c2-56 (Professional Correspondence)
+- c2-54 (Професійна кореспонденція)
 persona:
   voice: Senior Specialist
   role: Administrative Lead

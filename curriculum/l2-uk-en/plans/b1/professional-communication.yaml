@@ -112,9 +112,9 @@ activity_hints:
   focus: Write professional messages
   items: 10
 connects_to:
-- b1-62 (Environment Ecology)
+- b1-73 (Довкілля та екологія)
 prerequisites:
-- b1-60 (Society Politics)
+- b1-71 (Суспільство та політика)
 persona:
   voice: Senior Language & Culture Specialist
   role: Corporate HR Manager

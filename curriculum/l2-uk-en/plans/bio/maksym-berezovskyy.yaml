@@ -102,10 +102,10 @@ activity_hints:
   output: Decolonial interpretation
 connects_to:
 - bio-18 (Dmytro Bortnyanskyy - contemporary composer)
-- bio-19 (Semen Hulak-Artemovskyy - later opera)
+- 'bio-38 (Семен Гулак-Артемовський: Оперний співак)'
 - bio-23 (Mykola Lysenko - national music tradition)
 prerequisites:
-- bio-16 (Hryhoriy Skovoroda - same era)
+- 'bio-33 (Григорій Сковорода: Мандрівний філософ)'
 - Basic understanding of classical music
 persona:
   voice: Senior Biographer

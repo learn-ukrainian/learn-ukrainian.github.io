@@ -90,10 +90,10 @@ activity_hints:
   focus: Complete service requests
   items: 15
 connects_to:
-- a2-70 (Introduction to Participles)
-- a2-53 (Shopping and Services)
+- a2-75 (Introduction to Gerunds)
+- a2-58 (Shopping and Services)
 prerequisites:
-- a2-68 (Texting and Messaging)
+- a2-71 (Texting and Messaging)
 persona:
   voice: Encouraging Cultural Guide
   role: IT Support Specialist

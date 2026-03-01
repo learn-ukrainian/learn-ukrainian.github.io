@@ -126,8 +126,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-90 (Capstone Research)
-- c2-91 (Capstone Drafting)
+- c2-81 (Дипломний проєкт — Дослідження)
+- c2-82 (Дипломний проєкт — Написання чернетки)
 persona:
   voice: Senior Specialist
   role: Grant Applicant

@@ -134,8 +134,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-23 (Intertextuality includes biblical allusions)
-- c2-77 (Rare/archaic forms)
-- c2-30 (Intertextuality in C2.2)
+- c2-66 (Рідкісні та архаїчні форми)
+- c2-19 (Інтертекстуальність)
 persona:
   voice: Senior Specialist
   role: Theologian

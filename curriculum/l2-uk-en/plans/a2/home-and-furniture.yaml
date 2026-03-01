@@ -89,10 +89,10 @@ activity_hints:
   focus: Describe your home
   items: 8
 connects_to:
-- a2-47 (Nature and Weather)
-- a2-61 (Hotel Accommodation)
+- a2-52 (Nature and Weather)
+- a2-64 (Hotel Accommodation)
 prerequisites:
-- a2-45 (Food and Cooking)
+- a2-50 (Food and Cooking)
 persona:
   voice: Encouraging Cultural Guide
   role: Professional Mover

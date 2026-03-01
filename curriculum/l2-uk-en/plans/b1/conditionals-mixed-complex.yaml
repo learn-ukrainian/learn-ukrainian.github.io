@@ -82,9 +82,9 @@ activity_hints:
   focus: Discuss hypothetical scenarios
   items: 10
 connects_to:
-- b1-34 (Checkpoint Complex Sentences 1)
+- 'b1-37 (Контрольна точка: складні речення (частина 1))'
 prerequisites:
-- b1-32 (Conditionals Unreal якби)
+- 'b1-35 (Умовні речення: нереальна умова (якби))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Chess Grandmaster

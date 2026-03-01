@@ -132,9 +132,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-21 (Stylistic devices mastery)
-- 'c2-36 (Creative writing: poetry)'
-- 'c2-37 (Creative writing: prose)'
+- c2-17 (Стилістичні засоби — Повне володіння)
+- c2-33 (Творче письмо — поезія)
+- c2-34 (Творче письмо — проза)
 - 'c2-28 (Poetics: verse analysis)'
 persona:
   voice: Senior Specialist

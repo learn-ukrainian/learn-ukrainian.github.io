@@ -90,9 +90,9 @@ activity_hints:
   focus: Create complex sentences
   items: 15
 connects_to:
-- b1-35 (Concessive Clauses)
+- 'b1-38 (Допустові речення: хоча, незважаючи на)'
 prerequisites:
-- b1-33 (Conditionals Mixed Complex)
+- 'b1-36 (Умовні речення: змішані та складні умови)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Copy Editor

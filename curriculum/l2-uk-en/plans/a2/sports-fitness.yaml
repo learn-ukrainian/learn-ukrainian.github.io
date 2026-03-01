@@ -90,10 +90,10 @@ activity_hints:
   focus: Describe your fitness routine
   items: 8
 connects_to:
-- a2-56 (Checkpoint Full Grammar)
-- a2-51 (Hobbies and Leisure)
+- a2-60 (Checkpoint — Full Grammar)
+- a2-56 (Hobbies and Leisure)
 prerequisites:
-- a2-53 (Shopping and Services)
+- a2-58 (Shopping and Services)
 persona:
   voice: Encouraging Cultural Guide
   role: Olympic Trainer

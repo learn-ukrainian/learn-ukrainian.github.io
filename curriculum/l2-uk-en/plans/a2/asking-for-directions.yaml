@@ -89,9 +89,9 @@ activity_hints:
   focus: Describe your location
   items: 10
 connects_to:
-- a2-67 (Social Media Ukrainian)
+- a2-70 (Social Media Ukrainian)
 prerequisites:
-- a2-65 (Giving Directions)
+- a2-68 (Giving Directions)
 persona:
   voice: Encouraging Cultural Guide
   role: Lost Tourist in Odesa

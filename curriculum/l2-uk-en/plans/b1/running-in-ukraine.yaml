@@ -82,9 +82,9 @@ activity_hints:
   focus: Share running goals
   items: 10
 connects_to:
-- b1-82 (Mountains and Trail)
+- b1-90 (Гори та трейлраннінг)
 prerequisites:
-- b1-80 (Active Lifestyle)
+- b1-88 (Активний відпочинок)
 persona:
   voice: Senior Language & Culture Specialist
   role: Kyiv Marathon Organizer

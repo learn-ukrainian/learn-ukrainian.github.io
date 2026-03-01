@@ -99,9 +99,9 @@ activity_hints:
   focus: Test vocabulary from M52-71
   items: 40
 connects_to:
-- b1-72 (Regions West)
+- 'b1-80 (Українські регіони: Захід)'
 prerequisites:
-- b1-70 (Collocations Expressions)
+- b1-62 (Колокації та вирази)
 persona:
   voice: Senior Language & Culture Specialist
   role: Conflict Mediator
