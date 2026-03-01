@@ -1,110 +1,117 @@
-module: a1-01
+module: a1-001
 level: A1
 sequence: 1
 slug: the-cyrillic-code-i
-version: '2.0'
+version: '3.0'
 title: The Cyrillic Code I
-subtitle: Cracking the Ukrainian Alphabet
-content_outline:
-- section: Вступ (Introduction)
-  words: 400
-  points:
-  - 'The cultural origin of Cyrillic: Named after Saint Cyril (9th c.), though he
-    likely created Glagolitic; developed by his students like Clement of Ohrid in
-    the First Bulgarian Empire.'
-  - 'Strategy: ''True Friends'' vs ''False Friends'' — categorization of 19 letters
-    by visual/auditory similarity to Latin script to build immediate learner confidence.'
-  - 'Building on internationalisms: Leaning on familiar sounds in ''таксі'', ''піца'',
-    ''метро'' to demonstrate that the code is already partially cracked.'
-- section: Презентація (Presentation)
-  words: 600
-  points:
-  - 'True Friends (А, Е, І, О, К, М, Т): Letters that look AND sound like English
-    — aligned with State Standard §4.1.1 using examples like ''Україна'' and ''Олена''.'
-  - 'The Trap Letters (False Friends): Explicitly identifying the ''P'' Trap (Р looks
-    like P but sounds like a roaring engine /r/), the ''H'' Trap (Н looks like H but
-    sounds like a Hen /n/), the ''B'' Trap (В looks like B but sounds like a Vehicle
-    /v/), and the ''C'' Trap (С looks like C but sounds like a Snake /s/).'
-  - 'New Letters (Б, Д, З, Л, П, Ф): Unique Cyrillic shapes with visual aids — ''Д''
-    looks like a little house, ''Л'' has two legs for walking.'
-  - 'The Exclusion Rule: Explicitly clarifying that Russian-only characters like ''ё'',
-    ''ы'', ''э'' do NOT exist in Ukrainian to establish linguistic boundaries from
-    the start.'
-- section: Практика (Practice)
-  words: 400
-  points:
-  - 'Decoding drills with high-frequency urban vocabulary: Reading ''банк'', ''метро'',
-    ''кафе'' while navigating the ''P'' and ''H'' traps.'
-  - 'Collocation building: Practicing essential phrases like ''національний банк''
-    and ''станція метро'' to see letters in context.'
-  - 'Functional mini-dialogues: Using ''так, будь ласка'' (yes, please) and ''так,
-    звісно'' (yes, of course) for immediate communicative utility.'
-- section: Культурний контекст (Cultural Insight)
-  words: 400
-  points:
-  - 'The ''I'' Identity: How the dotted ''І'' serves as a visual symbol of Ukrainian
-    identity and its European connection, distinguishing it from neighbors who use
-    ''И''.'
-  - 'The Story of Ґ: Brief mention of the ''repressed letter'' (removed in 1933, restored
-    in 1990) as a hook for Ukrainian linguistic resilience.'
-  - 'Typography and State Pride: State Standard §4.1.1 focus on naming conventions
-    — recognizing the letters in ''Київ'', ''Україна'', and ''українець'' as a first
-    step in literacy.'
-- section: Підсумок та продукція (Summary & Production)
-  words: 200
-  points:
-  - 'The Purring Cat vs. Roaring Engine: Production drill focusing on the rolled /r/
-    (Р) vs English /p/ to ensure phonological accuracy.'
-  - 'Fact-checking the code: Using ''це факт'' (it''s a fact) as a production exercise
-    for ''Ф'' and ''Т'' letter-sound correspondence.'
-vocabulary_hints:
-  required:
-  - 'так (yes) — collocations: ''так, будь ласка'' (yes, please), ''так, звісно''
-    (yes, of course); high frequency (top 100)'
-  - 'банк (bank) — collocations: ''у банку'' (in the bank), ''національний банк'';
-    high frequency urban term'
-  - 'метро (metro) — collocations: ''станція метро'' (metro station), ''у метро'';
-    high frequency transport term'
-  - 'кафе (café) — collocations: ''у кафе'', ''ідемо в кафе''; daily frequency'
-  - 'кіт (cat) — collocations: ''мій кіт'', ''чорний кіт''; core family/pet vocabulary'
-  - 'мама (mom) — collocations: ''моя мама'', ''люблю маму''; core family term'
-  - 'тато (dad) — usage: basic family term; collocations: ''мій тато'''
-  - 'такт (tact) — usage: international cognate to demonstrate shared roots'
-  recommended:
-  - 'парк (park) — usage: clear internationalism for decoding practice'
-  - 'факт (fact) — collocations: ''це факт'' (it''s a fact), ''цікавий факт'''
-  - 'план (plan) — collocations: ''бізнес-план'', ''маю план'' (I have a plan)'
-  - 'бар (bar) — usage: clear internationalism for ''Б'', ''А'', ''Р'' identification'
-activity_hints:
-- type: match-up
-  focus: Match letters to sounds
-  items: 15
-- type: quiz
-  focus: Letter identification
-  items: 20
-- type: match-up
-  focus: Sort True Friends vs False Friends
-  items: 12
-- type: quiz
-  focus: Unscramble simple words
-  items: 10
+subtitle: А М Л У Н С — Your First 6 Letters
 focus: grammar
 pedagogy: PPP
-prerequisites: '[]'
+phase: A1.1 [First Contact]
+word_target: 2000
+objectives:
+- Learner can recognize and pronounce 6 Ukrainian letters (А, М, Л, У, Н, С)
+- Learner can classify letters as голосні (vowels) or приголосні (consonants)
+- Learner can combine letters into open and closed syllables
+- Learner can read simple words using the 6 known letters
+content_outline:
+- section: Вступ
+  words: 300
+  points:
+  - A1 immersion 10-50%. English scaffolding explains the system, Ukrainian carries the content.
+  - The Ukrainian alphabet has 33 letters. It is phonetic — each letter maps to one sound. This module covers the first 6
+    letters, chosen by frequency (how often they appear in Ukrainian text).
+  - Introduce Anna Ohoiko (Ukrainian Lessons) as the pronunciation guide. Embed overview video link.
+  - 'Brief cultural hook: the alphabet descends from the script created by students of Saints Cyril and Methodius in the First
+    Bulgarian Empire.'
+  - 'Learning method: for each letter, watch Anna''s video → repeat aloud → practice reading.'
+- section: Голосні — А, У
+  words: 400
+  points:
+  - 'Explain: Ukrainian has 10 vowels (голосні). This module introduces 2. Vowels are ''voice only'' — no obstruction.'
+  - 'А — ананас 🍍. Anna Ohoiko video link. Examples from video: Африка, Аргентіна, аеропорт. Additional examples: ананас,
+    акула, автобус.'
+  - 'У — Україна 🇺🇦. Anna Ohoiko video link. Examples from video: Уругвай, Узбекистан, університет. Additional: улюблений,
+    урок.'
+  - 'Teaching point: Ukrainian vowels are stable — they keep their clear sound in any position, stressed or unstressed.'
+  - 'English sidebar: А sounds like ''a'' in ''father'' (never reduced). У sounds like ''oo'' in ''moon''.'
+- section: Приголосні — М, Л, Н, С
+  words: 500
+  points:
+  - 'Explain: Ukrainian has 22 consonants (приголосні). This module introduces 4. Consonants use some obstruction of airflow.'
+  - 'М — морква 🥕. Video link. Examples: Мексика, Мінськ, мільйон. Additional: мама, молоко, місто.'
+  - 'Л — літак ✈️. Video link. Examples: Латвія, Ліма, література. Additional: лимон, луна, лампа.'
+  - 'Н — ножиці ✂️. Video link. Examples: Нова Зеландія, Нідерланди, ніс. Additional: ніч, нуль, нам.'
+  - 'С — сумка 👜. Video link. Examples: Сатурн, Сідней, секрет. Additional: сон, сіль, сам.'
+  - 'English sidebar: Н looks like English H but is /n/. С looks like English C but is always /s/.'
+- section: Перші склади — First Syllables
+  words: 350
+  points:
+  - Now combine the 6 letters into syllables (склади). Syllable = vowel or consonant+vowel.
+  - 'Open syllables: МА, МУ, НА, НУ, ЛА, ЛУ, СА, СУ.'
+  - 'Closed syllables: АМ, УМ, АН, УН, АС, УС, АЛ, УЛ.'
+  - 'Reading drill: read each syllable aloud, then combine into first words.'
+  - 'First words from known letters: мама, нас, сам, сума, мул, нам, луна.'
+- section: Практика читання — Reading Practice
+  words: 300
+  points:
+  - 'Progressive decoding: syllables → words → short phrases.'
+  - 'Word practice: мама, сума, нас, сам, мул, луна, мус, нам.'
+  - 'First phrases: Мама нам. Нас сам. Сума мала (preview — мала uses only known letters).'
+  - 'Self-check: can you read мама? сума? луна?'
+- section: Підсумок
+  words: 150
+  points:
+  - 'Progress: 6 of 33 letters learned (2 голосні + 4 приголосні).'
+  - You can now read syllables and simple words.
+  - 'Next module: The Cyrillic Code II adds 7 more letters (К, И, Р, Б, В, Д, І).'
+  - Link to Anna Ohoiko playlist for independent practice of all 33 letters.
+vocabulary_hints:
+  required:
+  - мама — first word readable from 6 letters; universal
+  - нас (us) — pronoun, readable from known letters
+  - сам (self/alone) — adjective, readable from known letters
+  - луна (echo) — noun, readable from known letters
+  - сума (bag/sum) — noun, readable from known letters
+  recommended:
+  - ананас (pineapple) — Anna's key word for А
+  - 'молоко (milk) — preview: uses М, Л; О comes in Code II'
+activity_hints:
+- type: watch-and-repeat
+  focus: Watch Anna's video for each of the 6 letters
+  items: 6
+- type: classify
+  focus: Sort А М Л У Н С into голосні vs приголосні
+  items: 6
+- type: image-to-letter
+  focus: See emoji (🍍🥕✈️🇺🇦✂️👜) — which letter does the word start with?
+  items: 6
+- type: match-up
+  focus: Match letter to key word (А↔ананас, М↔морква, etc.)
+  items: 6
+- type: group-sort
+  focus: Sort syllables into open (МА, НУ) vs closed (АМ, УН)
+  items: 12
 connects_to:
 - a1-02 (The Cyrillic Code II)
-objectives:
-- Learner can recognize True Friends (letters that look AND sound like English)
-- Learner can decode False Friends (letters that look familiar but sound different)
-- Learner can read 19 Cyrillic letters
-- Learner can pronounce basic international words in Ukrainian
-grammar:
-- Letter recognition
-- Sound-letter correspondence
-- Basic pronunciation rules
-register: розмовний
-phase: A1.1 [First Contact]
+prerequisites: '[]'
 persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
-word_target: 2000
+grammar:
+- Letter recognition (А, М, Л, У, Н, С)
+- Sound-letter correspondence
+- Vowel vs consonant classification
+- Syllable formation
+register: розмовний
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: Anna Ohoiko — Ukrainian Lessons
+  letters:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E

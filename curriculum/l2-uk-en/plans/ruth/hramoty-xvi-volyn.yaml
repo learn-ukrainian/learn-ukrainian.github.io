@@ -1,21 +1,33 @@
-sequence: 111
-module: ruth-111
+module: ruth-106
+level: RUTH
+sequence: 106
 slug: hramoty-xvi-volyn
-title_uk: "Волинські грамоти XVI століття"
-title_en: "Volhynian Charters of the 16th Century"
+version: '2.0'
+title: Волинські грамоти XVI століття
+subtitle: Volhynian Charters of the 16th Century
+focus: Regional Ukrainian legal documents — Volhynian administrative register showing local linguistic identity
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Regional Ukrainian legal documents — Volhynian administrative register showing local linguistic identity"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Volhynia in the 16th century: between the Grand Duchy of Lithuania and the Polish Crown. Regional identity expressed through legal language."
+  points:
+  - 'Volhynia in the 16th century: between the Grand Duchy of Lithuania and the Polish Crown. Regional identity expressed
+    through legal language.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading Volhynian charters. Comparison with Galician and Kyivan documents — regional variation in Ruthenian. Polish influences vs preserved Ukrainian forms. Land disputes, family law, trade agreements."
+  points:
+  - Reading Volhynian charters. Comparison with Galician and Kyivan documents — regional variation in Ruthenian. Polish influences
+    vs preserved Ukrainian forms. Land disputes, family law, trade agreements.
+  words: 1250
 - section: Практика
-  description: "Identifying Volhynian dialectal features. Legal terminology comparison across regions. Document authentication methods."
+  points:
+  - Identifying Volhynian dialectal features. Legal terminology comparison across regions. Document authentication methods.
+  words: 1250
 - section: Підсумок
-  description: "Regional charters as evidence of Ukrainian linguistic diversity within unity. Not one Ruthenian but many local variants — all recognizably Ukrainian."
+  points:
+  - Regional charters as evidence of Ukrainian linguistic diversity within unity. Not one Ruthenian but many local variants
+    — all recognizably Ukrainian.
+  words: 1250
 vocabulary_hints:
 - волинський
 - регіональний
@@ -23,12 +35,24 @@ vocabulary_hints:
 - земельний акт
 - судовий
 - воєвода
-activity_types:
-- transcription
-- paleography-analysis
-- grammar-identify
-- comparative-style
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: paleography-analysis
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: comparative-style
+  focus: ''
+  items: 1
 persona:
-  voice: "Regional Historian"
-  role: "Volhynian Archivist"
-source_url: "http://litopys.org.ua/djvu/gramoty_volyn_xvi.htm"
+  voice: Regional Historian
+  role: Volhynian Archivist
+source_url: http://litopys.org.ua/djvu/gramoty_volyn_xvi.htm
+prerequisites:
+- hramoty-xiv
+connects_to:
+- intermedii-xvii-xviii

@@ -1,27 +1,47 @@
-sequence: 6
 module: ruth-006
-module_number: 6
+level: RUTH
+sequence: 6
 slug: criminal-law-murder
-title_uk: 'Кримінальне право: Вбивство'
-title_en: 'Criminal Law I: Murder'
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: 'Кримінальне право: Вбивство'
+subtitle: 'Criminal Law I: Murder'
 focus: Головщина revisited
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Criminal Law I: Murder'
+  points:
+  - 'Introduction to Criminal Law I: Murder'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Grod Court Judge
+prerequisites:
+- land-law-basics
+connects_to:
+- courts-basic

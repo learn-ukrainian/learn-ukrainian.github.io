@@ -1,57 +1,17 @@
-module: bio-21
+module: bio-021
 level: BIO
 sequence: 21
 slug: bohdan-khmelnytskyy
 version: '2.0'
 title: 'Богдан Хмельницький: Гетьман-державотворець'
-content_outline:
-- section: Вступ — Творець козацької держави
-  points:
-  - Хмельницький як символ суб'єктності
-  - Унікальність поєднання воїна та дипломата
-  - Значення для українського державотворення
-- section: Життєпис
-  points:
-  - Походження та освіта
-  - Чигиринська трагедія
-  - Початок Великої війни 1648 р.
-  - Тріумфальні перемоги
-- section: Історичний контекст
-  points:
-  - Європа середини XVII ст.
-  - Геополітичний трикутник
-- section: Внесок
-  points:
-  - Будівництво державних інституцій
-  - Військова реформа
-- section: Останні роки
-  points:
-  - Переяславська рада 1654 р.
-  - Пошук нових союзників
-  - Смерть гетьмана
-- section: Спадщина
-  points:
-  - Образ "батька нації"
-  - Історичні оцінки
-- section: Підсумок
-  points:
-  - Уроки Хмельниччини
 focus: biography
 pedagogy: seminar
-prerequisites:
-- bio-10 (Данило Галицький)
-- hist hmelnychyna module
-connects_to:
-- bio-24 (Іван Виговський)
-- hist ruina-i module
+phase: BIO
+word_target: 5000
 objectives:
 - Аналізувати стратегію державотворення Хмельницького
 - Оцінити дипломатичні маневри між великими державами
 - Дослідити причини та наслідки Переяславської угоди
-grammar:
-- Архаїчна та офіційна лексика (універсали)
-- Аналітичні конструкції
-module_type: biography
 sources:
 - name: Богдан Хмельницький (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
@@ -61,8 +21,45 @@ sources:
   url: http://izbornyk.org.ua/
   type: primary
   notes: Тексти універсалів та листів
-immersion: 100% Ukrainian
-phase: BIO
+content_outline:
+- section: Вступ — Творець козацької держави
+  points:
+  - Хмельницький як символ суб'єктності
+  - Унікальність поєднання воїна та дипломата
+  - Значення для українського державотворення
+  words: 700
+- section: Життєпис
+  points:
+  - Походження та освіта
+  - Чигиринська трагедія
+  - Початок Великої війни 1648 р.
+  - Тріумфальні перемоги
+  words: 700
+- section: Історичний контекст
+  points:
+  - Європа середини XVII ст.
+  - Геополітичний трикутник
+  words: 700
+- section: Внесок
+  points:
+  - Будівництво державних інституцій
+  - Військова реформа
+  words: 700
+- section: Останні роки
+  points:
+  - Переяславська рада 1654 р.
+  - Пошук нових союзників
+  - Смерть гетьмана
+  words: 700
+- section: Спадщина
+  points:
+  - Образ "батька нації"
+  - Історичні оцінки
+  words: 700
+- section: Підсумок
+  points:
+  - Уроки Хмельниччини
+  words: 800
 vocabulary_hints:
   required:
   - гетьман (hetman)
@@ -74,7 +71,17 @@ activity_hints:
   source: Primary sources (adapted)
 - type: comparative-study
   focus: Хмельницький vs Кромвель
+connects_to:
+- bio-24 (Іван Виговський)
+- hist ruina-i module
+prerequisites:
+- bio-10 (Данило Галицький)
+- hist hmelnychyna module
 persona:
   voice: Senior Biographer
   role: Rebellion Leader
-word_target: 5000
+grammar:
+- Архаїчна та офіційна лексика (універсали)
+- Аналітичні конструкції
+module_type: biography
+immersion: 100% Ukrainian

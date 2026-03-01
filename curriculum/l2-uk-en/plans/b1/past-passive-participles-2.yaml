@@ -1,72 +1,72 @@
-module: b1-46
+module: b1-047
 level: B1
-sequence: 46
+sequence: 47
 slug: past-passive-participles-2
 version: '2.0'
 title: 'Пасивні дієприкметники: коротка форма'
 subtitle: Past Passive Participles II - Short Forms (-но/-то)
+focus: grammar
+pedagogy: TTT
+phase: B1.4a [Participles]
+word_target: 4000
+objectives:
+- Learner can form short passive participles using -но/-то
+- Learner can use impersonal passive constructions
+- Learner understands difference between full and short forms
+- Learner can choose appropriate form for context
 content_outline:
 - section: 'Вступ: Оголошення навколо нас (Introduction: Announcements Around Us)'
   words: 600
   points:
-  - 'Engagement hook using ubiquitous signs: «Вхід заборонено», «Зачинено», and «Обережно,
-    пофарбовано!» to demonstrate immediate practical utility of short forms'
-  - 'The concept of the impersonal passive: focusing on the action or result rather
-    than the agent to achieve bureaucratic objectivity and efficiency'
-  - 'Alignment with State Standard §4.2.3.1: Introducing the participle as a specific
-    non-finite form of the verb with resultative meaning'
-- section: 'Граматичний аналіз: Утворення та синтаксис (Grammar Analysis: Formation
-    and Syntax)'
+  - 'Engagement hook using ubiquitous signs: «Вхід заборонено», «Зачинено», and «Обережно, пофарбовано!» to demonstrate immediate
+    practical utility of short forms'
+  - 'The concept of the impersonal passive: focusing on the action or result rather than the agent to achieve bureaucratic
+    objectivity and efficiency'
+  - 'Alignment with State Standard §4.2.3.1: Introducing the participle as a specific non-finite form of the verb with resultative
+    meaning'
+- section: 'Граматичний аналіз: Утворення та синтаксис (Grammar Analysis: Formation and Syntax)'
   words: 1000
   points:
-  - Formation of -но/-то suffixes from perfective stems to denote completed result;
-    contrast with learner error of using imperfective stems like «писано» or «роблено»
-    as main predicates
-  - 'The Syntax Shift: Detailed explanation of why the object takes the Accusative
-    case («Книгу написано») rather than the Nominative, a critical distinction from
-    full passive forms'
-  - 'Visual comparison table for learners: Passive Personal («Двері зачинені» - Nom)
-    vs. Impersonal («Двері зачинено» - Acc) to prevent the common mismatch error *Книга
-    написано*'
-  - 'Addressing the ''Було'' redundancy: Correcting the learner tendency to insert
-    a auxiliary verb in the present tense (e.g., *Це було зроблено зараз* → «Це зроблено»)'
+  - Formation of -но/-то suffixes from perfective stems to denote completed result; contrast with learner error of using imperfective
+    stems like «писано» or «роблено» as main predicates
+  - 'The Syntax Shift: Detailed explanation of why the object takes the Accusative case («Книгу написано») rather than the
+    Nominative, a critical distinction from full passive forms'
+  - 'Visual comparison table for learners: Passive Personal («Двері зачинені» - Nom) vs. Impersonal («Двері зачинено» - Acc)
+    to prevent the common mismatch error *Книга написано*'
+  - 'Addressing the ''Було'' redundancy: Correcting the learner tendency to insert a auxiliary verb in the present tense (e.g.,
+    *Це було зроблено зараз* → «Це зроблено»)'
 - section: Культурний та історичний контекст (Cultural and Historical Context)
   words: 800
   points:
-  - 'Official-Business Style: Analyzing why Ukrainian bureaucracy prefers -но/-то
-    constructions to emphasize the fact of action and create an effect of inevitability
-    («Рішення прийнято»)'
-  - 'Historical Resonance: Exploration of state-building terminology and solemn phrasing
-    found in the Universals of the Central Rada («Акт проголошено», «Універсал підписано»)'
-  - 'Sociolinguistic nuance: How impersonal forms avoid assigning individual blame
-    or responsibility, favoring collective or institutional ''done-ness'''
+  - 'Official-Business Style: Analyzing why Ukrainian bureaucracy prefers -но/-то constructions to emphasize the fact of action
+    and create an effect of inevitability («Рішення прийнято»)'
+  - 'Historical Resonance: Exploration of state-building terminology and solemn phrasing found in the Universals of the Central
+    Rada («Акт проголошено», «Універсал підписано»)'
+  - 'Sociolinguistic nuance: How impersonal forms avoid assigning individual blame or responsibility, favoring collective
+    or institutional ''done-ness'''
 - section: 'Практика: Від теорії до автоматизму (Practice: From Theory to Automaticity)'
   words: 900
   points:
-  - 'Transformation drills: Converting Active sentences with subjects into Impersonal
-    Passive sentences, focusing on the correct Accusative object placement'
-  - 'Error correction laboratory: Identifying and fixing syntactic mismatches and
-    imperfective stem usage in professional and domestic contexts'
-  - 'Contextual choice: Exercises choosing between full forms (focus on state/description)
-    and short forms (focus on result/announcement)'
+  - 'Transformation drills: Converting Active sentences with subjects into Impersonal Passive sentences, focusing on the correct
+    Accusative object placement'
+  - 'Error correction laboratory: Identifying and fixing syntactic mismatches and imperfective stem usage in professional
+    and domestic contexts'
+  - 'Contextual choice: Exercises choosing between full forms (focus on state/description) and short forms (focus on result/announcement)'
 - section: Комунікативні вправи та підсумок (Communicative Exercises and Summary)
   words: 700
   points:
-  - 'Role-play: Managing a store opening or a public event using collocations like
-    «відкрито», «завершено», and «дозволено»'
-  - 'Production task: Drafting a set of official rules or an announcement for a local
-    gallery/office using high-frequency resultative verbs'
-  - 'Summary and bridge: Recapping the syntax of -но/-то as a foundational step for
-    the complex passive constructions introduced in module B1-47'
+  - 'Role-play: Managing a store opening or a public event using collocations like «відкрито», «завершено», and «дозволено»'
+  - 'Production task: Drafting a set of official rules or an announcement for a local gallery/office using high-frequency
+    resultative verbs'
+  - 'Summary and bridge: Recapping the syntax of -но/-то as a foundational step for the complex passive constructions introduced
+    in module B1-47'
 vocabulary_hints:
   required:
   - коротка форма (short form) — grammar terminology for -но/-то forms
   - безособовий (impersonal) — key category explaining the lack of a grammatical subject
   - написано (written - impersonal) — «як тут написано», «чорним по білому написано»
-  - зроблено (done - impersonal) — «роботу зроблено», «вибір зроблено»; very high
-    frequency
-  - заборонено (forbidden) — «вхід заборонено», «палити заборонено»; essential for
-    public signs
+  - зроблено (done - impersonal) — «роботу зроблено», «вибір зроблено»; very high frequency
+  - заборонено (forbidden) — «вхід заборонено», «палити заборонено»; essential for public signs
   - дозволено (permitted) — «тут дозволено паркуватися», «це не дозволено»
   - відчинено / зачинено (opened / closed) — ubiquitous for stores and pharmacies
   - завершено (completed) — «перерву завершено», «будівництво завершено»
@@ -90,24 +90,15 @@ activity_hints:
 - type: translate
   focus: English to Ukrainian passive
   items: 10
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-45 (Past Passive Participles 1)
 connects_to:
 - b1-47 (Passive Constructions)
-objectives:
-- Learner can form short passive participles using -но/-то
-- Learner can use impersonal passive constructions
-- Learner understands difference between full and short forms
-- Learner can choose appropriate form for context
+prerequisites:
+- b1-45 (Past Passive Participles 1)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Art Historian
 grammar:
 - Коротка форма пасивних дієприкметників (-но/-то)
 - Безособові пасивні конструкції
 - Повна vs коротка форма usage
 register: розмовний
-phase: B1.4a [Participles]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Art Historian
-word_target: 4000

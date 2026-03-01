@@ -1,46 +1,52 @@
-module: a1-24
+module: a1-024
 level: A1
 sequence: 24
 slug: checkpoint-sentences
 version: '2.0'
 title: 'Checkpoint: Sentences'
 subtitle: Can You Do the A1.2 Skills?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.2 [Verbs & Sentences]
+word_target: 2000
+objectives:
+- Demonstrate verb conjugation fluency for I and II conjugation
+- Form questions and negations correctly with appropriate word order
+- Express preferences using three constructions (подобається, люблю, хочу)
+- Use possessives and demonstratives with correct gender and number agreement
 content_outline:
 - section: Огляд (Overview)
   words: 300
   points:
-  - 'Структура контрольної точки TTT: консолідація навичок A1.2 — дієвідмінювання,
-    формування питань, вираження уподобань, присвійні та вказівні займенники.'
-  - 'Мета: виявлення прогалин перед переходом до знахідного відмінка (A1.3). Практичний
-    підхід до перевірки через реальні комунікативні завдання.'
+  - 'Структура контрольної точки TTT: консолідація навичок A1.2 — дієвідмінювання, формування питань, вираження уподобань,
+    присвійні та вказівні займенники.'
+  - 'Мета: виявлення прогалин перед переходом до знахідного відмінка (A1.3). Практичний підхід до перевірки через реальні
+    комунікативні завдання.'
 - section: 'Навичка 1: Дієслова (Skill 1: Verbs)'
   words: 500
   points:
-  - 'Теперішній час I та II дієвідміни: повторення парадигм (читаю/читаєш/читає vs
-    говорю/говориш/говорить). Зворотні дієслова (-ся/-сь).'
-  - 'Типові помилки: закінчення 3-ї особи множини (-уть/-ють vs -ать/-ять). Контрастні
-    вправи на найчастіші дієвідмінювальні помилки початківців.'
+  - 'Теперішній час I та II дієвідміни: повторення парадигм (читаю/читаєш/читає vs говорю/говориш/говорить). Зворотні дієслова
+    (-ся/-сь).'
+  - 'Типові помилки: закінчення 3-ї особи множини (-уть/-ють vs -ать/-ять). Контрастні вправи на найчастіші дієвідмінювальні
+    помилки початківців.'
 - section: 'Навичка 2: Питання та заперечення (Skill 2: Questions & Negation)'
   words: 400
   points:
-  - 'Питальні слова: Хто/Що/Де/Куди/Звідки. Чи-питання з інтонацією. Побудова
-    питальних речень із правильним порядком слів.'
-  - 'Заперечення з «не» та причинні конструкції: тому що/бо. Побудова складнопідрядних
-    речень причини.'
+  - 'Питальні слова: Хто/Що/Де/Куди/Звідки. Чи-питання з інтонацією. Побудова питальних речень із правильним порядком слів.'
+  - 'Заперечення з «не» та причинні конструкції: тому що/бо. Побудова складнопідрядних речень причини.'
 - section: 'Навичка 3: Уподобання та присвійні (Skill 3: Preferences & Possessives)'
   words: 400
   points:
-  - 'Три конструкції уподобань: Мені подобається (Dative), Я люблю (Acc), Я хочу
-    (+ inf/Acc). Контрастний вибір залежно від ситуації.'
-  - 'Присвійні займенники: мій/моя/моє/мої, твій/твоя. Вказівні займенники: цей/ця/це/ці,
-    той/та/те/ті. Узгодження за родом та числом.'
+  - 'Три конструкції уподобань: Мені подобається (Dative), Я люблю (Acc), Я хочу (+ inf/Acc). Контрастний вибір залежно від
+    ситуації.'
+  - 'Присвійні займенники: мій/моя/моє/мої, твій/твоя. Вказівні займенники: цей/ця/це/ці, той/та/те/ті. Узгодження за родом
+    та числом.'
 - section: Інтеграційне завдання (Integration Task)
   words: 400
   points:
-  - 'Комбінований діалог із використанням усіх навичок A1.2: дієвідмінювання, питання,
-    уподобання, присвійні та вказівні займенники в одному комунікативному сценарії.'
-  - 'Самооцінка готовності до переходу на A1.3 (Cases & Navigation): підбиття підсумків
-    засвоєних структур.'
+  - 'Комбінований діалог із використанням усіх навичок A1.2: дієвідмінювання, питання, уподобання, присвійні та вказівні займенники
+    в одному комунікативному сценарії.'
+  - 'Самооцінка готовності до переходу на A1.3 (Cases & Navigation): підбиття підсумків засвоєних структур.'
 vocabulary_hints:
   required:
   - читати (to read) — читати книгу, я читаю; I conjugation review
@@ -64,17 +70,13 @@ activity_hints:
 - type: quiz
   focus: A1.2 grammar and vocabulary comprehensive test
   items: 30
-focus: checkpoint
-pedagogy: TTT
-prerequisites:
-- a1-23 (What Time Is It)
 connects_to:
 - a1-25 (The Accusative I)
-objectives:
-- Demonstrate verb conjugation fluency for I and II conjugation
-- Form questions and negations correctly with appropriate word order
-- Express preferences using three constructions (подобається, люблю, хочу)
-- Use possessives and demonstratives with correct gender and number agreement
+prerequisites:
+- a1-23 (What Time Is It)
+persona:
+  voice: Patient Supportive Tutor
+  role: Language Examiner
 grammar:
 - Present tense conjugation (I and II)
 - Question words and Чи-questions
@@ -82,8 +84,3 @@ grammar:
 - Possessive pronouns
 - Demonstrative pronouns
 register: розмовний
-phase: A1.2 [Verbs & Sentences]
-persona:
-  voice: Patient Supportive Tutor
-  role: Language Examiner
-word_target: 2000

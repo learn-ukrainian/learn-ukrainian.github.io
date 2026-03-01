@@ -1,58 +1,90 @@
 module: istorio-018
-level: istorio
+level: ISTORIO
 sequence: 18
+slug: syntez-serednovichni-dzherela
 version: '1.0'
 title: 'Синтез: Методи роботи з літописами'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: методи роботи з літописами'
 - Evaluate the historical significance of що ми вивчили
+sources:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies overview
+- name: Критика джерел
+  url: https://uk.wikipedia.org/wiki/Критика_джерел
+  type: reference
+  notes: Source criticism methods
+- name: Шахматов О.О.
+  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
+  type: reference
+  notes: Chronicle studies pioneer
 content_outline:
 - section: Вступ — Що ми вивчили
-  subsections:
+  points:
   - Огляд середньовічних джерел
   - ПМЛ, Патерик, Слово, ГВЛ, грамоти
   - Різні типи, різні методи
   - Мета синтезу — систематизація
+  words: 700
 - section: Порівняння джерел
-  subsections:
+  points:
   - Літописи vs. агіографія vs. документи
   - Що кожен тип дає історику?
   - Сильні і слабкі сторони
   - Таблиця порівняння
+  words: 700
 - section: Методологічний інструментарій
-  subsections:
+  points:
   - Зовнішня критика — автентичність
   - Внутрішня критика — достовірність
   - Текстологія — відновлення оригіналу
   - Компаративний аналіз — порівняння джерел
   - Контекстуалізація — історичне тло
+  words: 700
 - section: Типові проблеми і рішення
-  subsections:
+  points:
   - Проблема — джерело упереджене
   - Проблема — джерело унікальне
   - Проблема — пізня копія
   - Проблема — суперечливі джерела
   - Як вирішувати кожну
+  words: 700
 - section: Практикум — комплексний аналіз
-  subsections:
+  points:
   - Вибрана подія (напр., Батиєва навала)
   - Що каже ПМЛ
   - Що каже ГВЛ
   - Що кажуть інші джерела
   - Реконструкція події
+  words: 700
 - section: Від Русі до козацтва
-  subsections:
+  points:
   - Що змінюється в джерелах XVI-XVII ст.?
   - Нові типи документів
   - Нові мови — польська, латина
   - Підготовка до наступної фази
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Чек-ліст для аналізу середньовічного джерела
   - Ключові навички
   - Готовність до козацьких джерел
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - методологія
@@ -69,36 +101,6 @@ vocabulary:
 - археографія
 - едиція
 - коментар
-activities:
-- type: essay-response
-  focus: Create source comparison table for modules 11-17
-- type: reading
-  focus: Apply full methodology to new source (provided)
-- type: essay-response
-  focus: Який метод найважливіший для роботи з середньовічними джерелами?
-sources:
-- name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
-  type: reference
-  notes: Source studies overview
-- name: Критика джерел
-  url: https://uk.wikipedia.org/wiki/Критика_джерел
-  type: reference
-  notes: Source criticism methods
-- name: Шахматов О.О.
-  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
-  type: reference
-  notes: Chronicle studies pioneer
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
 activity_hints:
 - type: reading
   focus: Первинні джерела
@@ -108,6 +110,17 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+activities:
+- type: essay-response
+  focus: Create source comparison table for modules 11-17
+- type: reading
+  focus: Apply full methodology to new source (provided)
+- type: essay-response
+  focus: Який метод найважливіший для роботи з середньовічними джерелами?
 persona:
   voice: Academic Historiographer
   role: Medieval Manuscript Curator
+prerequisites:
+- hramoty-ta-akty
+connects_to:
+- kozatski-litopysy-ohliad

@@ -1,88 +1,82 @@
-module: b1-53
+module: b1-064
 level: B1
-sequence: 53
+sequence: 64
 slug: abstract-concepts-processes
 version: '2.0'
 title: 'Абстрактні концепції: процеси та зміни'
 subtitle: 'Abstract Concepts: Processes and Changes'
+focus: vocabulary
+pedagogy: PPP
+phase: B1.5 [Vocabulary Expansion I]
+word_target: 4000
+objectives:
+- Learner can use 35 process and change vocabulary words in context
+- Learner can distinguish between similar process words
+- Learner can describe trends and changes using appropriate collocations
+- Learner can narrate developments over time
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - Establishing the 'Business Consultant' persona to analyze market and social trends,
-    introducing the temporal dimension of change (past, present, future vectors).
-  - 'Applying the ''Agency Rule'': focusing on how Ukrainians actively drive changes
-    (Ми змінили країну) rather than being passive observers, setting the motivational
-    tone for the module.'
+  - Establishing the 'Business Consultant' persona to analyze market and social trends, introducing the temporal dimension
+    of change (past, present, future vectors).
+  - 'Applying the ''Agency Rule'': focusing on how Ukrainians actively drive changes (Ми змінили країну) rather than being
+    passive observers, setting the motivational tone for the module.'
 - section: 'Основна лексика: Тренди та динаміка (Core Vocabulary: Trends and Dynamics)'
   words: 900
   points:
-  - 'Categorization of processes: positive trends (розвиток, прогрес, зростання) vs.
-    negative ones (занепад, спад, застій), using frequency data to highlight high-impact
-    business terms.'
-  - 'Cultural hook application: analyzing the 20% demographic decrease since 1990
-    contrasted with the record growth (88%) in civil society trust and belief in victory.'
-  - 'Systemic change vocabulary: focusing on ''перетворення'' (transformation) and
-    ''еволюція'' (evolution) through the lens of the historic shift in public opinion
-    toward EU/NATO integration since 2003.'
+  - 'Categorization of processes: positive trends (розвиток, прогрес, зростання) vs. negative ones (занепад, спад, застій),
+    using frequency data to highlight high-impact business terms.'
+  - 'Cultural hook application: analyzing the 20% demographic decrease since 1990 contrasted with the record growth (88%)
+    in civil society trust and belief in victory.'
+  - 'Systemic change vocabulary: focusing on ''перетворення'' (transformation) and ''еволюція'' (evolution) through the lens
+    of the historic shift in public opinion toward EU/NATO integration since 2003.'
 - section: Словотворення та граматичне вживання (Word Formation and Grammatical Usage)
   words: 800
   points:
-  - 'Morphology focus on State Standard §4.3.4: systematic formation of deverbal nouns
-    using -ння/-ення suffixes (читати→читання, покращувати→покращення) as a core B1+
-    tool.'
-  - 'Correction of common learner errors: distinguishing physical/biological ''ріст''
-    from abstract ''зростання'' (e.g., економічне зростання) to fix frequent calques.'
-  - 'Usage drills: identifying when to use ''зростати'' (prices, tension) vs ''рости''
-    (children, trees), and the critical pragmatic distinction between ''зміна'' (alteration)
-    and ''решта'' (monetary change).'
+  - 'Morphology focus on State Standard §4.3.4: systematic formation of deverbal nouns using -ння/-ення suffixes (читати→читання,
+    покращувати→покращення) as a core B1+ tool.'
+  - 'Correction of common learner errors: distinguishing physical/biological ''ріст'' from abstract ''зростання'' (e.g., економічне
+    зростання) to fix frequent calques.'
+  - 'Usage drills: identifying when to use ''зростати'' (prices, tension) vs ''рости'' (children, trees), and the critical
+    pragmatic distinction between ''зміна'' (alteration) and ''решта'' (monetary change).'
 - section: Аналітичне читання та аудіювання (Analytical Reading and Listening)
   words: 1000
   points:
-  - Economic review text practicing 'сталий розвиток' (sustainable development) and
-    'темпи зростання' (growth rates) in the context of Ukraine's economic transformation.
-  - Historical perspective on 'еволюція поглядів' (evolution of views), using the
-    2003-2023 geopolitical vector shift as a case study for abstract narration.
-  - 'Personal development blog excerpt: applying vocabulary like ''особистісне зростання''
-    and ''самовдосконалення'' to describe individual growth processes.'
+  - Economic review text practicing 'сталий розвиток' (sustainable development) and 'темпи зростання' (growth rates) in the
+    context of Ukraine's economic transformation.
+  - Historical perspective on 'еволюція поглядів' (evolution of views), using the 2003-2023 geopolitical vector shift as a
+    case study for abstract narration.
+  - 'Personal development blog excerpt: applying vocabulary like ''особистісне зростання'' and ''самовдосконалення'' to describe
+    individual growth processes.'
 - section: Комунікація та обговорення (Communication and Discussion)
   words: 600
   points:
-  - 'Formal business meeting simulation: analyzing market trends using professional
-    collocations like ''позитивна тенденція'' and ''зберігається динаміка''.'
-  - 'Informal news discussion: debating ''розвиток подій'' (development of events)
-    regarding social issues (§3.6) and natural processes (§3.14), adhering to register
-    considerations.'
+  - 'Formal business meeting simulation: analyzing market trends using professional collocations like ''позитивна тенденція''
+    and ''зберігається динаміка''.'
+  - 'Informal news discussion: debating ''розвиток подій'' (development of events) regarding social issues (§3.6) and natural
+    processes (§3.14), adhering to register considerations.'
 - section: Підсумок та закріплення (Summary and Consolidation)
   words: 300
   points:
-  - Recap of the 35+ process words and suffix tools, with practice recommendations
-    for narrating complex developments over time using correct verb-noun pairs.
-  - 'Final reflection activity: learners describe a significant personal or social
-    change using the ''Agency Rule'' and appropriate temporal markers.'
+  - Recap of the 35+ process words and suffix tools, with practice recommendations for narrating complex developments over
+    time using correct verb-noun pairs.
+  - 'Final reflection activity: learners describe a significant personal or social change using the ''Agency Rule'' and appropriate
+    temporal markers.'
 vocabulary_hints:
   required:
-  - зміна (change) — радикальна зміна, кліматичні зміни, внести зміни; high frequency
-    (Top 500)
-  - розвиток (development) — сталий розвиток, розвиток подій, всебічний розвиток;
-    high frequency (Top 500)
-  - зростання (growth) — економічне зростання, особистісне зростання, темпи зростання;
-    preferred abstract form, avoid 'ріст'
-  - перетворення (transformation) — процес перетворення, перетворення енергії; focuses
-    on qualitative shift
-  - занепад (decline) — період занепаду, занепад культури, економічний занепад; systemic
-    decline
-  - тенденція (tendency/trend) — позитивна тенденція, зберігається тенденція; essential
-    for business/news analysis
-  - еволюція (evolution) — еволюція поглядів, теорія еволюції; indicates slow, gradual
-    development
+  - зміна (change) — радикальна зміна, кліматичні зміни, внести зміни; high frequency (Top 500)
+  - розвиток (development) — сталий розвиток, розвиток подій, всебічний розвиток; high frequency (Top 500)
+  - зростання (growth) — економічне зростання, особистісне зростання, темпи зростання; preferred abstract form, avoid 'ріст'
+  - перетворення (transformation) — процес перетворення, перетворення енергії; focuses on qualitative shift
+  - занепад (decline) — період занепаду, занепад культури, економічний занепад; systemic decline
+  - тенденція (tendency/trend) — позитивна тенденція, зберігається тенденція; essential for business/news analysis
+  - еволюція (evolution) — еволюція поглядів, теорія еволюції; indicates slow, gradual development
   - покращення (improvement) — example of §4.3.4 deverbal noun formation from 'покращувати'
   recommended:
   - трансформація (transformation) — academic synonym for перетворення
-  - спад (decline/recession) — економічний спад; often used for recession or reduction
-    in volume
-  - закономірність (pattern/regularity) — used for describing logical or systemic
-    processes
+  - спад (decline/recession) — економічний спад; often used for recession or reduction in volume
+  - закономірність (pattern/regularity) — used for describing logical or systemic processes
   - темп (rate/pace) — темпи зростання, у швидкому темпі; describes the speed of change
   - погіршення (worsening) — antonym of покращення; process noun from погіршувати
 activity_hints:
@@ -98,24 +92,15 @@ activity_hints:
 - type: fill-in
   focus: Write about changes
   items: 10
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- b1-52 (Abstract Concepts Ideas)
 connects_to:
 - b1-54 (Expressing Opinions)
-objectives:
-- Learner can use 35 process and change vocabulary words in context
-- Learner can distinguish between similar process words
-- Learner can describe trends and changes using appropriate collocations
-- Learner can narrate developments over time
+prerequisites:
+- b1-52 (Abstract Concepts Ideas)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Business Consultant
 grammar:
 - Noun collocations with process vocabulary
 - Verb-noun pairs for change descriptions
 - Temporal markers with process words
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Business Consultant
-word_target: 4000

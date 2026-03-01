@@ -1,85 +1,80 @@
-module: a2-62
+module: a2-065
 level: A2
-sequence: 62
+sequence: 65
 slug: rental-accommodation
 version: '2.0'
 title: Rental Accommodation
 subtitle: Finding an Apartment
+focus: practical
+pedagogy: PPP
+phase: A2.6 [Practical]
+word_target: 3000
+objectives:
+- Learner can understand rental ads
+- Learner can ask about apartment details
+- Learner can discuss lease terms
+- Learner can talk about utilities and furniture
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - 'Overview of the Ukrainian rental market based on State Standard §3.2: emphasis
-    on ''винаймання квартири'' (renting) versus ''приватний будинок'' (private house).'
-  - 'Cultural hook: «Без посередників» (No middlemen) — explain why Ukrainians actively
-    avoid real estate agents to save 50-100% commission fees; introduce collocations
-    «комісія рієлтора», «послуги рієлтора».'
-  - 'Cultural hook: «Перший і останній місяць» — explain the standard practice of
-    paying the first month and a security deposit upfront in cash; distinction between
-    «застава» and «депозит».'
+  - 'Overview of the Ukrainian rental market based on State Standard §3.2: emphasis on ''винаймання квартири'' (renting) versus
+    ''приватний будинок'' (private house).'
+  - 'Cultural hook: «Без посередників» (No middlemen) — explain why Ukrainians actively avoid real estate agents to save 50-100%
+    commission fees; introduce collocations «комісія рієлтора», «послуги рієлтора».'
+  - 'Cultural hook: «Перший і останній місяць» — explain the standard practice of paying the first month and a security deposit
+    upfront in cash; distinction between «застава» and «депозит».'
 - section: Презентація лексики (Vocabulary Presentation)
   words: 500
   points:
-  - 'Core verbs: distinction between «здавати» (to rent out/give) and «знімати/орендувати»
-    (to rent/take). Learner error fix: correct ''Я хочу здати квартиру'' (wrong for
-    a tenant) to ''Я хочу зняти квартиру''.'
-  - 'Distinction between housing types: clearly distinguish «кімната» (room in shared
-    flat) from «однокімнатна квартира» (1-room apartment) to avoid English speakers''
-    confusion with ''studio''.'
-  - 'Frequency focus: introduce high-frequency words «оренда», «квартира», and «власник»
-    with collocations like «від власника», «я власник».'
+  - 'Core verbs: distinction between «здавати» (to rent out/give) and «знімати/орендувати» (to rent/take). Learner error fix:
+    correct ''Я хочу здати квартиру'' (wrong for a tenant) to ''Я хочу зняти квартиру''.'
+  - 'Distinction between housing types: clearly distinguish «кімната» (room in shared flat) from «однокімнатна квартира» (1-room
+    apartment) to avoid English speakers'' confusion with ''studio''.'
+  - 'Frequency focus: introduce high-frequency words «оренда», «квартира», and «власник» with collocations like «від власника»,
+    «я власник».'
 - section: 'Контекстне читання: Оголошення (Reading Context: Ads)'
   words: 500
   points:
-  - Analysis of rental advertisements using vocabulary like «здається», «довгострокова
-    оренда», «подобова оренда».
-  - 'Cultural hook: «Євроремонт» (modern standards like plastic windows/laminate)
-    vs «Радянський стан» (Soviet condition) — explain these as critical value markers
-    in Ukrainian ads.'
-  - 'Identifying features: «поверх» (floor), «площа» (area), and the register of abbreviations
-    used in ads.'
+  - Analysis of rental advertisements using vocabulary like «здається», «довгострокова оренда», «подобова оренда».
+  - 'Cultural hook: «Євроремонт» (modern standards like plastic windows/laminate) vs «Радянський стан» (Soviet condition)
+    — explain these as critical value markers in Ukrainian ads.'
+  - 'Identifying features: «поверх» (floor), «площа» (area), and the register of abbreviations used in ads.'
 - section: 'Діалог: Огляд квартири (Dialogue: Viewing the Apartment)'
   words: 600
   points:
-  - 'Asking about features: use collocations «квартира з меблями», «без меблів», «техніка».
-    Align with State Standard §3.2 requirements for furniture and interior items.'
-  - 'The #1 tenant question: drill the essential inquiry «А комунальні включені?»
-    or «Скільки за комунальні?».'
-  - 'Viewing etiquette and collocations: «огляд квартири», «дзвонити власникові»,
-    «коли можна подивитися?».'
+  - 'Asking about features: use collocations «квартира з меблями», «без меблів», «техніка». Align with State Standard §3.2
+    requirements for furniture and interior items.'
+  - 'The #1 tenant question: drill the essential inquiry «А комунальні включені?» or «Скільки за комунальні?».'
+  - 'Viewing etiquette and collocations: «огляд квартири», «дзвонити власникові», «коли можна подивитися?».'
 - section: Комунальні послуги та умови (Utilities and Conditions)
   words: 400
   points:
-  - 'Breakdown of «комунальні послуги»: газ, вода, електрика, опалення (heating).
-    Explain the ''X грн + комунальні'' pricing model common in Ukraine.'
-  - 'Learner error fix: drill the pattern ''плюс комунальні'' vs ''комунальні включені''
-    to prevent the assumption that rent covers everything.'
+  - 'Breakdown of «комунальні послуги»: газ, вода, електрика, опалення (heating). Explain the ''X грн + комунальні'' pricing
+    model common in Ukraine.'
+  - 'Learner error fix: drill the pattern ''плюс комунальні'' vs ''комунальні включені'' to prevent the assumption that rent
+    covers everything.'
   - 'Utility management: introduce «лічильники» (meters) and «платити за комунальні».'
 - section: Укладання договору (Signing the Agreement)
   words: 300
   points:
   - 'Legal vocabulary: «підписати договір оренди», «умови договору», «термін оренди».'
-  - 'Financial terms: «страховий депозит» (security deposit), «повернути депозит»,
-    and the synonym «застава».'
+  - 'Financial terms: «страховий депозит» (security deposit), «повернути депозит», and the synonym «застава».'
 - section: Практика та розповідь (Practice and Narrative)
   words: 300
   points:
-  - 'Grammar focus: Learner error fix — Case confusion with Location (Locative) vs
-    Motion (Accusative). Drill moving «в нову квартиру» (Acc) vs living «у новій квартирі»
-    (Loc).'
-  - 'Narrative production: a story about successfully finding an apartment «без посередників»
-    and moving in, reinforcing the Accusative case for destination.'
+  - 'Grammar focus: Learner error fix — Case confusion with Location (Locative) vs Motion (Accusative). Drill moving «в нову
+    квартиру» (Acc) vs living «у новій квартирі» (Loc).'
+  - 'Narrative production: a story about successfully finding an apartment «без посередників» and moving in, reinforcing the
+    Accusative case for destination.'
 vocabulary_hints:
   required:
   - оренда (rent) — довгострокова ~, подобова ~, вартість ~и, здати в ~у; High frequency
-  - 'зняти (to rent/take) — ~ квартиру, ~ житло, ~ кімнату, ~ без посередників; Note:
-    learner error to use ''здати'''
-  - квартира (apartment) — однокімнатна ~, ~ з євроремонтом, огляд ~и, жити у ~і;
-    High frequency
+  - 'зняти (to rent/take) — ~ квартиру, ~ житло, ~ кімнату, ~ без посередників; Note: learner error to use ''здати'''
+  - квартира (apartment) — однокімнатна ~, ~ з євроремонтом, огляд ~и, жити у ~і; High frequency
   - власник (owner) — від ~а, дзвонити ~у, я ~; Medium frequency
   - 'депозит (deposit) — страховий ~, повернути ~; Synonym: застава'
-  - 'комунальні (utilities) — платити за ~, ~ включені, плюс ~, ~ послуги; Critical
-    phrase: ''А комунальні?'''
+  - 'комунальні (utilities) — платити за ~, ~ включені, плюс ~, ~ послуги; Critical phrase: ''А комунальні?'''
   - договір (contract) — ~ оренди, підписати ~, умови ~у
   - меблі (furniture) — квартира з ~ями, без ~ів, нові ~; Standard §3.2
   recommended:
@@ -98,26 +93,17 @@ activity_hints:
 - type: reading
   focus: Negotiate rental terms
   items: 10
-focus: practical
-pedagogy: PPP
-prerequisites:
-- a2-61 (Hotel Accommodation)
 connects_to:
 - a2-63 (Scheduling Appointments)
 - a2-46 (Home and Furniture)
-objectives:
-- Learner can understand rental ads
-- Learner can ask about apartment details
-- Learner can discuss lease terms
-- Learner can talk about utilities and furniture
+prerequisites:
+- a2-61 (Hotel Accommodation)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Landlord
 grammar:
 - Rental vocabulary (оренда, власник, орендар)
 - Discussing utilities (комунальні послуги)
 - Contract and lease terms
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.6 [Practical]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Landlord
-word_target: 3000

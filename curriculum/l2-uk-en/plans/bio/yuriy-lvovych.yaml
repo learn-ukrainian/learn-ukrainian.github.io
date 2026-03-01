@@ -1,50 +1,78 @@
-module: bio-12
+module: bio-012
 level: BIO
 sequence: 12
 slug: yuriy-lvovych
 version: '2.0'
 title: 'Юрій I Львович: Останній Король Русі'
 subtitle: 'Yuriy I Lvovych: The Last King of Rus'''
+focus: biography
+pedagogy: seminar
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the significance of the royal title 'Rex Russiae'
+- Evaluate the establishment of the Galician Metropolitanate
+- Master vocabulary related to medieval kingship and church organization
+sources:
+- name: Юрій I Львович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
+  type: primary
+  notes: Biography, royal title, Galician Metropolitanate
+- name: Галицька митрополія
+  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
+  type: primary
+  notes: Ecclesiastical organization
+- name: Королівство Русі
+  url: https://uk.wikipedia.org/wiki/Королівство_Русі
+  type: reference
+  notes: Royal tradition context
 content_outline:
 - section: Вступ — Король Русі
   points:
   - Титул "Rex Russiae" на печатці
   - Претензії на спадщину Київської Русі
   - Останній з коронованих Романовичів
+  words: 700
 - section: Походження та молодість
   points:
   - Народження як син Лева Даниловича
   - Угорські родинні зв'язки через матір
   - Князювання в Белзі (1264-1301)
+  words: 700
 - section: Об'єднання королівства
   points:
   - Успадкування після смерті батька (1301)
   - Возз'єднання Галичини та Волині
   - Укріплення Львова як столиці
   - Запрошення німецьких поселенців
+  words: 700
 - section: Королівський титул
   points:
   - Прийняття титулу "Король Русі" (бл. 1303)
   - Печатка "Georgius Dei gratia Rex Russiae"
   - Протиставлення північно-східним князівствам
   - Легітимація державності
+  words: 700
 - section: Галицька митрополія
   points:
   - Переїзд Київського митрополита до Володимира-на-Клязьмі (1299)
   - Переговори з Константинополем
   - Заснування Галицької митрополії (1303)
   - Церковна незалежність від півночі
+  words: 700
 - section: Зовнішня політика та кінець правління
   points:
   - Відносини з Золотою Ордою
   - Данницька залежність при Тохті
   - Три шлюби та династичні зв'язки
   - Смерть та криза престолонаслідування
+  words: 700
 - section: Підсумок — Завершення королівської епохи
   points:
   - Сини Андрій та Лев II — останні Романовичі
   - Загибель династії (1323)
   - Спадщина королівської традиції
+  words: 800
 vocabulary_hints:
   required:
   - король (king)
@@ -74,40 +102,20 @@ activity_hints:
 - type: critical-analysis
   focus: Compare the royal traditions of Galicia-Volhynia and Moscow
   output: Comparative analysis
-focus: biography
-pedagogy: seminar
-prerequisites:
-- bio-lev-danylovych (Lev - father)
-- bio-danylo-halytskyi (Danylo - grandfather's coronation)
-- Understanding of medieval church organization
 connects_to:
 - bio-lev-danylovych (Lev Danylovych - father)
 - bio-danylo-halytskyi (Danylo - coronation precedent)
 - bio-kostiantyn-ostrozky-elder (Later Orthodox defense)
-objectives:
-- Analyze the significance of the royal title 'Rex Russiae'
-- Evaluate the establishment of the Galician Metropolitanate
-- Master vocabulary related to medieval kingship and church organization
+prerequisites:
+- bio-lev-danylovych (Lev - father)
+- bio-danylo-halytskyi (Danylo - grandfather's coronation)
+- Understanding of medieval church organization
+persona:
+  voice: Senior Biographer
+  role: Royal Seal Keeper
 grammar:
 - Royal and ecclesiastical register
 - Diplomatic vocabulary
 - Complex sentence structures
 module_type: biography
-sources:
-- name: Юрій I Львович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
-  type: primary
-  notes: Biography, royal title, Galician Metropolitanate
-- name: Галицька митрополія
-  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
-  type: primary
-  notes: Ecclesiastical organization
-- name: Королівство Русі
-  url: https://uk.wikipedia.org/wiki/Королівство_Русі
-  type: reference
-  notes: Royal tradition context
 immersion: 100% Ukrainian
-phase: BIO
-persona:
-  voice: Senior Biographer
-  role: Royal Seal Keeper

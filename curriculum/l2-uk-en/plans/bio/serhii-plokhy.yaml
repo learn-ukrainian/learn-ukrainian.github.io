@@ -1,45 +1,71 @@
-module: bio-151
+module: bio-154
 level: BIO
-sequence: 151
+sequence: 154
 slug: serhii-plokhy
 version: '2.0'
 title: 'Сергій Плохій: Історик, який пояснив Україну світові'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of сергій плохій: історик, який пояснив україну світові'
+- Evaluate the contributions of голос україни в гарварді
+- Trace the career and influence of значення для україни
+sources:
+- name: Сергій Плохій (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
+  type: primary
+  notes: Biography, academic career, books
+- name: Harvard Ukrainian Research Institute
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Institute he directs
+- name: Брама Європи
+  url: https://uk.wikipedia.org/wiki/Брама_Європи
+  type: reference
+  notes: His major work on Ukrainian history
 content_outline:
 - section: Вступ — Голос України в Гарварді
   points:
   - Плохій як найвпливовіший історик України у світі
   - Директор Гарвардського українського інституту
   - Бестселери, що змінюють світове розуміння України
+  words: 850
 - section: Молодість і радянська освіта
   points:
   - Народження в Горлівці (1957)
   - Навчання в Дніпропетровську
   - Дисертація з історії козацтва
   - Викладання в Київському університеті
+  words: 850
 - section: Еміграція та Гарвард
   points:
   - Переїзд до Канади (1996)
   - Альбертський університет
   - Запрошення до Гарварду (2007)
   - Директорство в HURI (2013)
+  words: 850
 - section: Наукові праці
   points:
   - '"Брама Європи" — історія України'
   - '"Остання імперія" — розпад СРСР'
   - '"Чорнобиль" — історія катастрофи'
   - '"Війна Путіна" — сучасність'
+  words: 850
 - section: Популяризатор історії
   points:
   - Книги для широкої аудиторії
   - Численні інтерв'ю та лекції
   - Переклади на десятки мов
   - Формування світової думки про Україну
+  words: 850
 - section: Значення для України
   points:
   - Деколонізація української історії
   - Спростування російських наративів
   - Підтримка України під час війни
   - Плохій як інтелектуальний амбасадор
+  words: 750
 vocabulary_hints:
   required:
   - історик (historian)
@@ -66,35 +92,16 @@ activity_hints:
 - type: essay-response
   focus: How does Plokhy challenge traditional narratives?
   output: Historiographical analysis
-focus: biography
-prerequisites:
-- bio-105 (Shevelov - earlier diaspora scholar)
-- Understanding of modern historiography
-- Current Ukraine context
 connects_to:
 - bio-105 (Shevelov - intellectual predecessor)
 - bio-100 (Krymsky - earlier historian)
 - Contemporary Ukrainian historians
-module_type: biography
-sources:
-- name: Сергій Плохій (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
-  type: primary
-  notes: Biography, academic career, books
-- name: Harvard Ukrainian Research Institute
-  url: https://huri.harvard.edu/
-  type: reference
-  notes: Institute he directs
-- name: Брама Європи
-  url: https://uk.wikipedia.org/wiki/Брама_Європи
-  type: reference
-  notes: His major work on Ukrainian history
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of сергій плохій: історик, який пояснив україну світові'
-- Evaluate the contributions of голос україни в гарварді
-- Trace the career and influence of значення для україни
+prerequisites:
+- bio-105 (Shevelov - earlier diaspora scholar)
+- Understanding of modern historiography
+- Current Ukraine context
 persona:
   voice: Senior Biographer
   role: Archival Detective
+module_type: biography
+immersion: 100% Ukrainian

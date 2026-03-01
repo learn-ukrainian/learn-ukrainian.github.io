@@ -1,21 +1,32 @@
-sequence: 105
-module: ruth-105
+module: ruth-100
+level: RUTH
+sequence: 100
 slug: fedorovych-bukvar
-title_uk: "Буквар Івана Федоровича (1574)"
-title_en: "Ivan Fedorovych's Primer (1574)"
+version: '2.0'
+title: Буквар Івана Федоровича (1574)
+subtitle: Ivan Fedorovych's Primer (1574)
+focus: First printed textbook in Ukrainian lands — Lviv printing tradition as cultural sovereignty
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "First printed textbook in Ukrainian lands — Lviv printing tradition as cultural sovereignty"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Historical context: printing arrives in Ukrainian lands. Fedorovych's journey from Moscow to Lviv. Why Lviv, not Moscow, became his home."
+  points:
+  - 'Historical context: printing arrives in Ukrainian lands. Fedorovych''s journey from Moscow to Lviv. Why Lviv, not Moscow,
+    became his home.'
+  words: 1250
 - section: Основний матеріал
-  description: "Analysis of the Bukvar's structure, alphabet presentation, prayer texts. What the choice of content reveals about educational priorities. The colophon as a literary declaration."
+  points:
+  - Analysis of the Bukvar's structure, alphabet presentation, prayer texts. What the choice of content reveals about educational
+    priorities. The colophon as a literary declaration.
+  words: 1250
 - section: Практика
-  description: "Comparative reading: Fedorovych's letter forms vs modern Ukrainian. Typography vocabulary. Printing as cultural technology."
+  points:
+  - 'Comparative reading: Fedorovych''s letter forms vs modern Ukrainian. Typography vocabulary. Printing as cultural technology.'
+  words: 1250
 - section: Підсумок
-  description: "Legacy: Lviv as a center of Ukrainian print culture. Connection to Ostrih Bible and brotherhood schools."
+  points:
+  - 'Legacy: Lviv as a center of Ukrainian print culture. Connection to Ostrih Bible and brotherhood schools.'
+  words: 1250
 vocabulary_hints:
 - друкарство
 - буквар
@@ -24,12 +35,24 @@ vocabulary_hints:
 - друкарня
 - набір
 - верстат
-activity_types:
-- transcription
-- etymology-trace
-- parallel-text
-- comparative-style
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: comparative-style
+  focus: ''
+  items: 1
 persona:
-  voice: "Cultural Historian"
-  role: "Early Print Scholar"
-source_url: "http://litopys.org.ua/fedorovych/bf.htm"
+  voice: Cultural Historian
+  role: Early Print Scholar
+source_url: http://litopys.org.ua/fedorovych/bf.htm
+prerequisites:
+- philosophical-lab
+connects_to:
+- zyzaniy-leksys

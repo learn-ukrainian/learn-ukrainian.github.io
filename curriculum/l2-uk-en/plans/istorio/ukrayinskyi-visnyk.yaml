@@ -1,56 +1,88 @@
 module: istorio-041
-level: istorio
+level: ISTORIO
 sequence: 41
+slug: ukrayinskyi-visnyk
 version: '1.0'
 title: «Український вісник» Чорновола
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - Analyze the causes and consequences of «український вісник» чорновола
 - Evaluate the historical significance of хроніка опору
+sources:
+- name: Український вісник (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)
+  type: reference
+  notes: Publication overview
+- name: В'ячеслав Чорновіл
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович
+  type: reference
+  notes: Editor biography
+- name: Архів Чорновола
+  url: https://khpg.org/
+  type: primary
+  notes: Kharkiv Human Rights Group archive
 content_outline:
 - section: Вступ — Хроніка опору
-  subsections:
+  points:
   - Що таке «Український вісник»?
   - Чорновіл — редактор
   - Мета видання
   - Значення для руху
+  words: 700
 - section: В'ячеслав Чорновіл
-  subsections:
+  points:
   - Біографія
   - Журналіст стає дисидентом
   - «Лихо з розуму» — перша праця
   - Арешти і заслання
+  words: 700
 - section: Історія видання
-  subsections:
+  points:
   - Перший номер — 1970
   - Шість номерів до арешту
   - Відновлення — 1987
   - Легалізація — Рух
+  words: 700
 - section: Структура і зміст
-  subsections:
+  points:
   - Хроніка репресій
   - Документи
   - Протести
   - Літературні твори
   - Статті про культуру
+  words: 700
 - section: Фрагмент — Хроніка репресій
-  subsections:
+  points:
   - Текст (з глосами)
   - Стиль — документальний
   - Факти без коментарів
   - Сила простого свідчення
+  words: 700
 - section: Значення для руху
-  subsections:
+  points:
   - Інформування — хто знає, може діяти
   - Зв'язок із Заходом
   - Моральна підтримка
   - Зразок для інших
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - «Вісник» як модель
   - Чорновіл — символ
   - Зв'язок із незалежністю
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - вісник
 - хроніка
@@ -67,6 +99,15 @@ vocabulary:
 - петиція
 - правозахисний
 - легалізація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: reading
   focus: Repression chronicle excerpt
@@ -78,38 +119,10 @@ activities:
   focus: How did the publication affect the movement?
 - type: essay-response
   focus: Яку роль відіграв 'Український вісник' у дисидентському русі?
-sources:
-- name: Український вісник (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)
-  type: reference
-  notes: Publication overview
-- name: В'ячеслав Чорновіл
-  url: https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович
-  type: reference
-  notes: Editor biography
-- name: Архів Чорновола
-  url: https://khpg.org/
-  type: primary
-  notes: Kharkiv Human Rights Group archive
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Underground Editor
+prerequisites:
+- lysty-stusa
+connects_to:
+- memorandum-uhh

@@ -1,27 +1,47 @@
-sequence: 65
-module: oes-065
-module_number: 53
+module: oes-063
+level: OES
+sequence: 63
 slug: inheritance-law
-title_uk: Спадкове право
-title_en: Inheritance Law
-phase: 3
-phase_id: legal-tradition
-phase_name: Legal Tradition
+version: '2.0'
+title: Спадкове право
+subtitle: Inheritance Law
 focus: Family terms + Dative Case
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Inheritance Law
+  points:
+  - Introduction to Inheritance Law
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Probate Clerk
+prerequisites:
+- property-boundaries
+connects_to:
+- women-in-law

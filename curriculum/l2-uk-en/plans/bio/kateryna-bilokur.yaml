@@ -1,45 +1,67 @@
-module: bio-110
+module: bio-113
 level: BIO
-sequence: 110
+sequence: 113
 slug: kateryna-bilokur
 version: '2.0'
 title: 'Катерина Білокур: Геній наївного мистецтва'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of катерина білокур: геній наївного мистецтва'
+- Evaluate the contributions of квіти, народжені геєм
+- Trace the career and influence of геній із села
+sources:
+- name: Катерина Білокур (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
+  type: primary
+  notes: Biography of the self-taught folk artist
+- name: Національний музей українського народного декоративного мистецтва
+  url: https://mundm.kiev.ua/
+  type: reference
+  notes: Major collection of Bilokur's works
 content_outline:
 - section: Вступ — Квіти, народжені геєм
   points:
   - Самоук з Полтавщини, що здивувала світ
   - Майстриня квіткового живопису
   - Життя між талантом і бідністю
+  words: 850
 - section: Юність без можливостей (1900-1920-ті)
   points:
   - Народження в селі Богданівка
   - Важке дитинство та відсутність освіти
   - Перші спроби малювати
   - Опір родини мистецьким прагненням
+  words: 850
 - section: Таємне мистецтво (1920-1940-ті)
   points:
   - Малювання вночі та в таємниці
   - Саморобні фарби та пензлі
   - Квіти як головна тема
   - Ізоляція від мистецького світу
+  words: 850
 - section: Відкриття таланту (1940-ві)
   points:
   - Лист до Олександра Довженка
   - Визнання в радянському мистецтві
   - Народна художниця України
   - Виставки в СРСР та за кордоном
+  words: 850
 - section: Пізній період (1950-1961)
   points:
   - Продовження творчості
   - Натюрморти світового рівня
   - Зустріч з Пабло Пікассо (легенда)
   - Смерть у бідності
+  words: 850
 - section: Спадщина — Геній із села
   points:
   - Визнання після смерті
   - Музей у Богданівці
   - Вплив на українське мистецтво
   - Білокур як символ народного генія
+  words: 750
 vocabulary_hints:
   required:
   - наївне мистецтво (naive art)
@@ -66,28 +88,13 @@ activity_hints:
 - type: essay-response
   focus: Як Білокур здолала перешкоди на шляху до мистецтва?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-65
 connects_to:
 - bio-69
 - bio-50
-module_type: biography
-sources:
-- name: Катерина Білокур (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
-  type: primary
-  notes: Biography of the self-taught folk artist
-- name: Національний музей українського народного декоративного мистецтва
-  url: https://mundm.kiev.ua/
-  type: reference
-  notes: Major collection of Bilokur's works
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of катерина білокур: геній наївного мистецтва'
-- Evaluate the contributions of квіти, народжені геєм
-- Trace the career and influence of геній із села
+prerequisites:
+- bio-65
 persona:
   voice: Senior Biographer
   role: Garden Painter
+module_type: biography
+immersion: 100% Ukrainian

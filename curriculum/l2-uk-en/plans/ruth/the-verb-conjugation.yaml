@@ -1,27 +1,47 @@
-sequence: 54
-module: ruth-054
-module_number: 44
+module: ruth-052
+level: RUTH
+sequence: 52
 slug: the-verb-conjugation
-title_uk: Дієслово
-title_en: The Verb
-phase: 2
-phase_id: sacred-word
-phase_name: Sacred Word
+version: '2.0'
+title: Дієслово
+subtitle: The Verb
 focus: Conjugation patterns — Aspects
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Verb
+  points:
+  - Introduction to The Verb
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Morphology Instructor
+prerequisites:
+- parts-of-speech
+connects_to:
+- syntax-agreement

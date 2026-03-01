@@ -1,27 +1,47 @@
-sequence: 84
-module: oes-084
-module_number: 84
+module: oes-081
+level: OES
+sequence: 81
 slug: slovo-escape
-title_uk: 'Слово: Втеча'
-title_en: 'Slovo: The Escape'
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: 'Слово: Втеча'
+subtitle: 'Slovo: The Escape'
 focus: Action verbs — Transformation motif
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Slovo: The Escape'
+  points:
+  - 'Introduction to Slovo: The Escape'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Guide of the Steppe
+prerequisites:
+- slovo-yaroslavna-lament
+connects_to:
+- slovo-return

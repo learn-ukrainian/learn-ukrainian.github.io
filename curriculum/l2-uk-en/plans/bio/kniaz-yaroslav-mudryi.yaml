@@ -1,83 +1,17 @@
-module: bio-4
+module: bio-004
 level: BIO
 sequence: 4
 slug: kniaz-yaroslav-mudryi
 version: '2.0'
 title: 'Князь Ярослав Мудрий: Законодавець'
-content_outline:
-- section: Вступ — Будівничий держави
-  points:
-  - Ярослав як законодавець і культуртрегер
-  - Порівняння з європейськими монархами
-  - Значення його правління для Русі
-- section: Життєпис
-  points:
-  - Основні етапи життя князя
-- section: Шлях до влади
-  points:
-  - Молодість у Ростові та Новгороді
-  - Конфлікт із батьком Володимиром
-  - Усобиця після смерті батька
-  - Боротьба зі Святополком Окаянним
-- section: Руська правда
-  points:
-  - Перший писаний збірник законів
-  - Структура та основні норми
-  - Віра (штраф за вбивство)
-  - Порівняння з європейським правом
-- section: Культурний розквіт
-  points:
-  - Будівництво Софійського собору
-  - Золоті ворота
-  - Заснування бібліотеки та скрипторію
-  - Переклади та освіта
-- section: 'Останні роки: Династична дипломатія'
-  points:
-  - Шлюби дітей з європейськими монархами
-  - Анна — королева Франції
-  - Міжнародний престиж Києва
-  - Русь як частина європейської спільноти
-- section: Внесок у розбудову держави
-  points:
-  - Формування правового поля
-  - Архітектурний канон Києва
-- section: Спадщина та канонізація
-  points:
-  - Завіт синам
-  - Смерть та поховання
-  - Образ у пізнішій культурі
-- section: Підсумок
-  points:
-  - Квінтесенція правління Ярослава Мудрого
-vocabulary_hints: null
-activity_hints:
-- type: reading
-  focus: Excerpts from Ruska Pravda
-  source: Original text (adapted)
-  items: 3 passages
-- type: essay-response
-  focus: Compare Yaroslav's lawgiving with Justinian or Charlemagne
-  output: Comparative analysis
-- type: critical-analysis
-  focus: Evaluate the title "Mudryi" (The Wise)
-  output: Argument with evidence
 focus: biography
 pedagogy: seminar
-prerequisites:
-- bio-03 (Volodymyr Velykyi - father)
-- Understanding of medieval European context
-connects_to:
-- bio-05 (Anna Yaroslavna - daughter)
-- bio-06 (Mykhailo Chernihivskyi - later period)
-- bio-14 (Pylyp Orlyk - later constitutional tradition)
+phase: BIO
+word_target: 5000
 objectives:
 - Analyze the impact of Ruska Pravda on medieval society.
 - Discuss the strategic importance of dynastic marriages.
 - Evaluate the cultural achievements of the "Golden Age".
-grammar:
-- Legal terminology (Ruska Pravda)
-- Diplomatic register
-module_type: biography
 sources:
 - name: Ярослав Мудрий (Wikipedia UA)
   url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
@@ -91,8 +25,86 @@ sources:
   url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
   type: reference
   notes: Architectural legacy
-immersion: 100% Ukrainian
-phase: BIO
+content_outline:
+- section: Вступ — Будівничий держави
+  points:
+  - Ярослав як законодавець і культуртрегер
+  - Порівняння з європейськими монархами
+  - Значення його правління для Русі
+  words: 550
+- section: Життєпис
+  points:
+  - Основні етапи життя князя
+  words: 550
+- section: Шлях до влади
+  points:
+  - Молодість у Ростові та Новгороді
+  - Конфлікт із батьком Володимиром
+  - Усобиця після смерті батька
+  - Боротьба зі Святополком Окаянним
+  words: 550
+- section: Руська правда
+  points:
+  - Перший писаний збірник законів
+  - Структура та основні норми
+  - Віра (штраф за вбивство)
+  - Порівняння з європейським правом
+  words: 550
+- section: Культурний розквіт
+  points:
+  - Будівництво Софійського собору
+  - Золоті ворота
+  - Заснування бібліотеки та скрипторію
+  - Переклади та освіта
+  words: 550
+- section: 'Останні роки: Династична дипломатія'
+  points:
+  - Шлюби дітей з європейськими монархами
+  - Анна — королева Франції
+  - Міжнародний престиж Києва
+  - Русь як частина європейської спільноти
+  words: 550
+- section: Внесок у розбудову держави
+  points:
+  - Формування правового поля
+  - Архітектурний канон Києва
+  words: 550
+- section: Спадщина та канонізація
+  points:
+  - Завіт синам
+  - Смерть та поховання
+  - Образ у пізнішій культурі
+  words: 550
+- section: Підсумок
+  points:
+  - Квінтесенція правління Ярослава Мудрого
+  words: 600
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: reading
+  focus: Excerpts from Ruska Pravda
+  source: Original text (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Compare Yaroslav's lawgiving with Justinian or Charlemagne
+  output: Comparative analysis
+- type: critical-analysis
+  focus: Evaluate the title "Mudryi" (The Wise)
+  output: Argument with evidence
+connects_to:
+- bio-05 (Anna Yaroslavna - daughter)
+- bio-06 (Mykhailo Chernihivskyi - later period)
+- bio-14 (Pylyp Orlyk - later constitutional tradition)
+prerequisites:
+- bio-03 (Volodymyr Velykyi - father)
+- Understanding of medieval European context
 persona:
   voice: Senior Biographer
   role: Lawgiver
+grammar:
+- Legal terminology (Ruska Pravda)
+- Diplomatic register
+module_type: biography
+immersion: 100% Ukrainian

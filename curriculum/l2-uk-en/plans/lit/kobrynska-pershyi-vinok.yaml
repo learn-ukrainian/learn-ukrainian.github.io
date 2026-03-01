@@ -1,1 +1,13 @@
+module: lit-219
+level: LIT
+sequence: 219
 slug: kobrynska-pershyi-vinok
+version: '2.0'
+word_target: 5000
+vocabulary_hints:
+  required: []
+  recommended: []
+prerequisites:
+- ruthenian-triad-rusalka-dnistrova
+connects_to:
+- vaplite-literary-avant-garde

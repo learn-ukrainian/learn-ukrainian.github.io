@@ -1,78 +1,79 @@
-module: b1-55
+module: b1-066
 level: B1
-sequence: 55
+sequence: 66
 slug: agreement-disagreement
 version: '2.0'
 title: Згода і незгода
 subtitle: Agreement & Disagreement — Vocabulary & Phrases
+focus: vocabulary
+pedagogy: PPP
+phase: B1.5 [Vocabulary Expansion I]
+word_target: 4000
+objectives:
+- Learner can express agreement at different levels of intensity
+- Learner can express polite disagreement in formal and informal contexts
+- Learner can participate in debates using appropriate vocabulary
+- Learner can manage conversational flow with agreement markers
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - 'State Standard §2.4.3.2 competency: mastering communicative intentions for expressing
-    agreement, refusal, and reacting to proposals at the B1 level.'
-  - 'Cultural hook: «Де два українці, там три гетьмани» — exploring the historical
-    roots (Era of Ruin) of Ukrainian individualism and its impact on the culture of
-    debate and disagreement.'
-  - 'The Diplomat''s perspective on ''soft'' disagreement: why a direct ''Ні'' can
-    be perceived as rudeness and how to use polite evasion in formal and informal
-    contexts.'
+  - 'State Standard §2.4.3.2 competency: mastering communicative intentions for expressing agreement, refusal, and reacting
+    to proposals at the B1 level.'
+  - 'Cultural hook: «Де два українці, там три гетьмани» — exploring the historical roots (Era of Ruin) of Ukrainian individualism
+    and its impact on the culture of debate and disagreement.'
+  - 'The Diplomat''s perspective on ''soft'' disagreement: why a direct ''Ні'' can be perceived as rudeness and how to use
+    polite evasion in formal and informal contexts.'
 - section: Словник та фразеологія (Vocabulary & Phraseology)
   words: 800
   points:
-  - 'Core nouns and verbs: *згода/незгода*, *погоджуватися/заперечувати*. Frequency-based
-    collocations: *дати згоду*, *мовчазна згода*, *виникли незгоди*.'
-  - 'Idiomatic expressions for consensus and conflict: *дійти згоди* (to reach an
-    agreement) and the ''bone of contention'' *яблуко незгоди*.'
-  - 'Intensifiers and discourse markers: *безперечно*, *безумовно*, *абсолютно*. Register
-    distinction for *заперечувати* as a formal term for denying facts or opposing
-    opinions.'
+  - 'Core nouns and verbs: *згода/незгода*, *погоджуватися/заперечувати*. Frequency-based collocations: *дати згоду*, *мовчазна
+    згода*, *виникли незгоди*.'
+  - 'Idiomatic expressions for consensus and conflict: *дійти згоди* (to reach an agreement) and the ''bone of contention''
+    *яблуко незгоди*.'
+  - 'Intensifiers and discourse markers: *безперечно*, *безумовно*, *абсолютно*. Register distinction for *заперечувати* as
+    a formal term for denying facts or opposing opinions.'
 - section: Граматика та типові помилки (Grammar & Common Errors)
   words: 800
   points:
-  - 'Learner error: correcting the English calque *«Я є згоден»* (from ''I am agree'')
-    to the correct forms *«Я згоден»* or *«Я погоджуюся»*.'
-  - 'Gender agreement with short-form adjectives: explicit drill on ♂ *я згоден* vs.
-    ♀ *я згодна* to prevent common speaker-gender mismatch errors.'
-  - 'Linguistic purity and precision: *«Правильно»* (correctly) vs. *«Вірно»* (loyally).
-    Drill to replace the ''loyalty'' calque in the context of logical or speech agreement.'
+  - 'Learner error: correcting the English calque *«Я є згоден»* (from ''I am agree'') to the correct forms *«Я згоден»* or
+    *«Я погоджуюся»*.'
+  - 'Gender agreement with short-form adjectives: explicit drill on ♂ *я згоден* vs. ♀ *я згодна* to prevent common speaker-gender
+    mismatch errors.'
+  - 'Linguistic purity and precision: *«Правильно»* (correctly) vs. *«Вірно»* (loyally). Drill to replace the ''loyalty''
+    calque in the context of logical or speech agreement.'
 - section: Стратегії ввічливої дискусії (Polite Discussion Strategies)
   words: 900
   points:
-  - 'B1 communicative nuance: transitioning from binary agreement/disagreement to
-    partial agreement using concessive structures like *хоча* and *але*.'
-  - 'Diplomatic patterns for ''Soft'' disagreement: *«Цікава думка, однак...»*, *«Можливо,
-    ви маєте рацію, проте...»*, *«Не можу не погодитися з вашим аргументом...»*.'
-  - 'Register and risk assessment: when to use categorical disagreement (*категорично
-    проти*) and how to navigate heated discussions without damaging social rapport.'
+  - 'B1 communicative nuance: transitioning from binary agreement/disagreement to partial agreement using concessive structures
+    like *хоча* and *але*.'
+  - 'Diplomatic patterns for ''Soft'' disagreement: *«Цікава думка, однак...»*, *«Можливо, ви маєте рацію, проте...»*, *«Не
+    можу не погодитися з вашим аргументом...»*.'
+  - 'Register and risk assessment: when to use categorical disagreement (*категорично проти*) and how to navigate heated discussions
+    without damaging social rapport.'
 - section: 'Практика: Дебати та месенджери (Practice: Debates & Messengers)'
   words: 700
   points:
-  - 'Formal scenario: A work meeting or ecology debate requiring precise terminology
-    like *спростовувати думку* or *визнавати правоту* in a professional setting.'
-  - 'Informal scenario: Digital etiquette in messenger chats, including short forms,
-    emojis, and modern markers like «+1» alongside *згоден/згодна*.'
-  - 'Real-life simulation: Friends navigating an emotional disagreement using markers
-    like *«Ти що!»* or *«Та ні!»* and reaching a compromise.'
+  - 'Formal scenario: A work meeting or ecology debate requiring precise terminology like *спростовувати думку* or *визнавати
+    правоту* in a professional setting.'
+  - 'Informal scenario: Digital etiquette in messenger chats, including short forms, emojis, and modern markers like «+1»
+    alongside *згоден/згодна*.'
+  - 'Real-life simulation: Friends navigating an emotional disagreement using markers like *«Ти що!»* or *«Та ні!»* and reaching
+    a compromise.'
 - section: Підсумок (Summary)
   words: 300
   points:
-  - 'Self-assessment checklist based on State Standard §2.4.3.2: expressing agreement,
-    accepting or declining proposals with appropriate register.'
-  - Final recap of the *правильно/вірно* distinction and the importance of gender
-    matching in short-form expressions.
+  - 'Self-assessment checklist based on State Standard §2.4.3.2: expressing agreement, accepting or declining proposals with
+    appropriate register.'
+  - Final recap of the *правильно/вірно* distinction and the importance of gender matching in short-form expressions.
 vocabulary_hints:
   required:
   - згода (agreement) — дати згоду, за згодою, мовчазна згода; high frequency noun
   - незгода (disagreement) — виникли незгоди, серйозні незгоди; high frequency noun
-  - згоден/згодна (agree - short adj) — ♂ згоден, ♀ згодна; MUST agree with speaker
-    gender
-  - погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися; high frequency
-    verb
-  - заперечувати (to object/deny) — категорично заперечувати, заперечувати факт; medium
-    frequency, formal/debate register
-  - правильно (correctly) — ви правильно сказали; use instead of 'вірно' in agreement
-    contexts
+  - згоден/згодна (agree - short adj) — ♂ згоден, ♀ згодна; MUST agree with speaker gender
+  - погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися; high frequency verb
+  - заперечувати (to object/deny) — категорично заперечувати, заперечувати факт; medium frequency, formal/debate register
+  - правильно (correctly) — ви правильно сказали; use instead of 'вірно' in agreement contexts
   - абсолютно (absolutely) — абсолютно згоден; strong agreement marker
   - частково (partially) — погоджуватися частково; key adverb for B1 nuance
   recommended:
@@ -95,24 +96,15 @@ activity_hints:
 - type: quiz
   focus: Identify agreement/disagreement
   items: 15
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- b1-54 (Expressing Opinions)
 connects_to:
 - b1-56 (Discourse Markers Basic)
-objectives:
-- Learner can express agreement at different levels of intensity
-- Learner can express polite disagreement in formal and informal contexts
-- Learner can participate in debates using appropriate vocabulary
-- Learner can manage conversational flow with agreement markers
+prerequisites:
+- b1-54 (Expressing Opinions)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Diplomat
 grammar:
 - Expression patterns for agreement and disagreement
 - Concessive structures (хоча, але)
 - Partial agreement constructions
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Diplomat
-word_target: 4000

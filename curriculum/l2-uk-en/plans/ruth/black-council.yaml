@@ -1,27 +1,47 @@
-sequence: 83
-module: ruth-083
-module_number: 83
+module: ruth-080
+level: RUTH
+sequence: 80
 slug: black-council
-title_uk: Чорна Рада
-title_en: The Black Council
-phase: 4
-phase_id: cossack-word
-phase_name: Cossack Word
+version: '2.0'
+title: Чорна Рада
+subtitle: The Black Council
 focus: Political intrigue vocabulary
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Black Council
+  points:
+  - Introduction to The Black Council
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Zaporozhian Koshovyi
+prerequisites:
+- cossack-hierarchy
+connects_to:
+- battle-descriptions

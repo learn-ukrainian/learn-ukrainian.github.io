@@ -1,21 +1,35 @@
-sequence: 103
-module: oes-103
+module: oes-099
+level: OES
+sequence: 99
 slug: davni-teksty-zbirka
-title_uk: "Збірка давніх текстів XI-XIII ст."
-title_en: "Anthology of Early Texts (11th-13th c.)"
+version: '2.0'
+title: Збірка давніх текстів XI-XIII ст.
+subtitle: Anthology of Early Texts (11th-13th c.)
+focus: Miscellaneous XI-XIII century texts — epistles, funeral orations, didactic prose — showing the breadth of early Ukrainian
+  writing
 phase: 4
-phase_id: high-poetry
-phase_name: "Висока поезія"
-focus: "Miscellaneous XI-XIII century texts — epistles, funeral orations, didactic prose — showing the breadth of early Ukrainian writing"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Beyond the 'big three' (PVL, Slovo, Ruska Pravda): what else was written in Kyivan Rus? The diversity of literary production — not just chronicles and law codes."
+  points:
+  - 'Beyond the ''big three'' (PVL, Slovo, Ruska Pravda): what else was written in Kyivan Rus? The diversity of literary production
+    — not just chronicles and law codes.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading lesser-known texts: funeral orations, didactic epistles, travel accounts, polemical letters. Each text shows a different facet of Old East Slavic literary culture. Texts from the izbornyk.org.ua XI-XIII collection."
+  points:
+  - 'Reading lesser-known texts: funeral orations, didactic epistles, travel accounts, polemical letters. Each text shows
+    a different facet of Old East Slavic literary culture. Texts from the izbornyk.org.ua XI-XIII collection.'
+  words: 1250
 - section: Практика
-  description: "Comparative analysis of register across text types. Legal vs literary vs epistolary vs homiletic language. Building a picture of the full linguistic ecosystem."
+  points:
+  - Comparative analysis of register across text types. Legal vs literary vs epistolary vs homiletic language. Building a
+    picture of the full linguistic ecosystem.
+  words: 1250
 - section: Підсумок
-  description: "Kyivan Rus had a rich, diverse literary culture — not just a few famous texts but an entire ecosystem of writing. This diversity is the foundation that Ukrainian inherited."
+  points:
+  - Kyivan Rus had a rich, diverse literary culture — not just a few famous texts but an entire ecosystem of writing. This
+    diversity is the foundation that Ukrainian inherited.
+  words: 1250
 vocabulary_hints:
 - збірка
 - антологія
@@ -23,12 +37,24 @@ vocabulary_hints:
 - повчання
 - послання
 - паломництво
-activity_types:
-- transcription
-- grammar-identify
-- register-identify
-- etymology-trace
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
 persona:
-  voice: "Philologist"
-  role: "Text Collector"
-source_url: "http://litopys.org.ua/oldukr2/oldukr2.htm"
+  voice: Philologist
+  role: Text Collector
+source_url: http://litopys.org.ua/oldukr2/oldukr2.htm
+prerequisites:
+- pateryk-literary-form
+connects_to:
+- oes-capstone

@@ -1,44 +1,71 @@
-module: bio-77
+module: bio-080
 level: BIO
-sequence: 77
+sequence: 80
 slug: symon-petliura
 version: '2.0'
 title: 'Симон Петлюра: Головний Отаман'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of симон петлюра: головний отаман'
+- Evaluate the contributions of людина, яка стала символом боротьби
+- Trace the career and influence of петлюра в історичній памяті
+sources:
+- name: Симон Петлюра (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
+  type: primary
+  notes: Основна біографічна інформація, хронологія подій
+- name: Енциклопедія історії України
+  url: http://www.history.org.ua/
+  type: reference
+  notes: Академічний контекст УНР та визвольних змагань
+- name: Архів УНР
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Документи періоду Директорії
 content_outline:
 - section: Вступ — Людина, яка стала символом боротьби
   points:
   - Паризьке вбивство 1926 року та його резонанс
   - Петлюра як найбільш суперечлива постать революції
   - Від журналіста до головнокомандувача армії
+  words: 700
 - section: Полтавське дитинство та формування світогляду
   points:
   - Народження в козацькій родині (1879)
   - Семінарське виховання та відрахування
   - Перші політичні переконання, вплив Драгоманова
+  words: 700
 - section: Журналіст і громадський діяч
   points:
   - Робота в українських виданнях (Рада, Слово)
   - Діяльність у Москві та Петербурзі
   - Культурно-просвітницька діяльність
+  words: 700
 - section: Революція та державотворення
   points:
   - Роль у Центральній Раді
   - Головний Отаман військ УНР
   - Війна на кілька фронтів (більшовики, денікінці, поляки)
+  words: 700
 - section: Еміграція та боротьба за правду
   points:
   - Життя в Польщі та Франції
   - Видавнича діяльність (журнал Тризуб)
   - Спроби консолідації еміграції
+  words: 700
 - section: Загибель та спадщина
   points:
   - Вбивство Шварцбардом і судовий процес
   - Радянська пропаганда та демонізація
   - Реабілітація в незалежній Україні
+  words: 700
 - section: Дискусія — Петлюра в історичній памяті
   points:
   - Суперечливі оцінки від різних сторін
   - Роль у формуванні української державності
+  words: 800
 vocabulary_hints:
   required:
   - отаман (ataman/commander)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чи був Петлюра ефективним лідером?
   output: Аргументований есей
-focus: biography
-prerequisites:
-- hist-ukrainian-revolution
 connects_to:
 - bio-35-mykhailo-hrushevskyi
 - bio-51-viacheslav-lypynskyi
 - bio-49-oleksandr-hrekiv
-module_type: biography
-sources:
-- name: Симон Петлюра (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
-  type: primary
-  notes: Основна біографічна інформація, хронологія подій
-- name: Енциклопедія історії України
-  url: http://www.history.org.ua/
-  type: reference
-  notes: Академічний контекст УНР та визвольних змагань
-- name: Архів УНР
-  url: https://archives.gov.ua/
-  type: reference
-  notes: Документи періоду Директорії
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of симон петлюра: головний отаман'
-- Evaluate the contributions of людина, яка стала символом боротьби
-- Trace the career and influence of петлюра в історичній памяті
+prerequisites:
+- hist-ukrainian-revolution
 persona:
   voice: Senior Biographer
   role: Supreme Commander
+module_type: biography
+immersion: 100% Ukrainian

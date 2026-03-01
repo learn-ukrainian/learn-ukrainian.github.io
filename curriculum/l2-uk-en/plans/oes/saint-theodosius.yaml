@@ -1,27 +1,47 @@
-sequence: 94
-module: oes-094
-module_number: 94
+module: oes-091
+level: OES
+sequence: 91
 slug: saint-theodosius
-title_uk: Святий Феодосій
-title_en: Saint Theodosius
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: Святий Феодосій
+subtitle: Saint Theodosius
 focus: Monastic community organization
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Saint Theodosius
+  points:
+  - Introduction to Saint Theodosius
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Monastery Builder
+prerequisites:
+- saint-anthony
+connects_to:
+- demonology

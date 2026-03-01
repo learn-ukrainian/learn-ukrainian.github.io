@@ -1,49 +1,80 @@
 module: istorio-119
-level: istorio
+level: ISTORIO
 sequence: 119
+slug: holokost-v-ukraini
 version: '1.0'
 title: 'Голокост в Україні: Співучасть і рятування'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
 - Evaluate the historical significance of найтемніша сторінка
+sources:
+- name: Голокост в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  type: reference
+  notes: Holocaust overview
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar
+- name: Праведники народів світу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  type: reference
+  notes: Righteous Among Nations
 content_outline:
 - section: Вступ — Найтемніша сторінка
-  subsections:
+  points:
   - Голокост в Україні — масштаб
   - 1,5 мільйона жертв
   - Співучасть І рятування
   - Структура модуля
+  words: 850
 - section: «Голокост від куль»
-  subsections:
+  points:
   - Айнзацгрупи
   - Бабин Яр — символ
   - Методи знищення
   - Чому в Україні — особливо
+  words: 850
 - section: Українська поліція
-  subsections:
+  points:
   - Допоміжна поліція — хто йшов
   - Роль у Голокості
   - Не виправдання — пояснення
   - Масштаб участі
+  words: 850
 - section: ОУН і євреї
-  subsections:
+  points:
   - Антисемітизм в ОУН
   - Погроми 1941
   - Еволюція позиції
   - Суперечливість
+  words: 850
 - section: Праведники
-  subsections:
+  points:
   - 2700+ українських праведників
   - Митрополит Шептицький
   - Ризик — смерть
   - Індивідуальний вибір
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - І злочинці, і рятівники
   - Не «українці» — окремі люди
   - Перехід до радянського антисемітизму
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Голокост
 - «Голокост від куль»
@@ -60,6 +91,15 @@ vocabulary:
 - «Яд Вашем»
 - Шептицький
 - колабораціонізм
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Holocaust in Ukraine — numbers and geography
@@ -71,38 +111,10 @@ activities:
   focus: OUN and Jews — complex relationship
 - type: essay-response
   focus: Як оцінювати українську роль у Голокості?
-sources:
-- name: Голокост в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
-  type: reference
-  notes: Holocaust overview
-- name: Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бабин_Яр
-  type: reference
-  notes: Babi Yar
-- name: Праведники народів світу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
-  type: reference
-  notes: Righteous Among Nations
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Holocaust Memory Keeper
+prerequisites:
+- yevrei-v-ukraini-do-1917
+connects_to:
+- radianski-antysemityzm

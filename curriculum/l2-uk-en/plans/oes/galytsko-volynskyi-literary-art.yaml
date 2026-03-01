@@ -1,21 +1,35 @@
-sequence: 101
-module: oes-101
+module: oes-097
+level: OES
+sequence: 97
 slug: galytsko-volynskyi-literary-art
-title_uk: "Галицько-Волинський літопис як літературний шедевр"
-title_en: "The Galician-Volhynian Chronicle as Literary Art"
+version: '2.0'
+title: Галицько-Волинський літопис як літературний шедевр
+subtitle: The Galician-Volhynian Chronicle as Literary Art
+focus: GVL's unique literary style — military poetics, nature imagery, 'О горе' laments, rhythmic prose
 phase: 4
-phase_id: high-poetry
-phase_name: "Висока поезія"
-focus: "GVL's unique literary style — military poetics, nature imagery, 'О горе' laments, rhythmic prose"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "The GVL as a distinct literary work from PVL. Different authorial voice, different aesthetic. Written in Galician-Volhynian lands, reflecting Western Ukrainian literary consciousness."
+  points:
+  - The GVL as a distinct literary work from PVL. Different authorial voice, different aesthetic. Written in Galician-Volhynian
+    lands, reflecting Western Ukrainian literary consciousness.
+  words: 1250
 - section: Основний матеріал
-  description: "Close reading: the famous 'О горе' passages, battle descriptions as poetic set pieces, nature imagery tied to emotional states. Comparison with PVL's chronicle style. The GVL's secular tone vs PVL's religious framing. Multiple authors, multiple styles."
+  points:
+  - 'Close reading: the famous ''О горе'' passages, battle descriptions as poetic set pieces, nature imagery tied to emotional
+    states. Comparison with PVL''s chronicle style. The GVL''s secular tone vs PVL''s religious framing. Multiple authors,
+    multiple styles.'
+  words: 1250
 - section: Практика
-  description: "Analyzing literary techniques in GVL: metaphor, rhythm, rhetorical figures. Identifying the shift from annalistic to narrative prose."
+  points:
+  - 'Analyzing literary techniques in GVL: metaphor, rhythm, rhetorical figures. Identifying the shift from annalistic to
+    narrative prose.'
+  words: 1250
 - section: Підсумок
-  description: "The GVL as evidence of Western Ukrainian literary sophistication. A chronicle that is also a work of art — connecting to the later Galician literary tradition."
+  points:
+  - The GVL as evidence of Western Ukrainian literary sophistication. A chronicle that is also a work of art — connecting
+    to the later Galician literary tradition.
+  words: 1250
 vocabulary_hints:
 - літопис
 - поетика
@@ -23,12 +37,24 @@ vocabulary_hints:
 - ламент
 - батальна сцена
 - образність
-activity_types:
-- transcription
-- grammar-identify
-- parallel-text
-- comparative-style
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: comparative-style
+  focus: ''
+  items: 1
 persona:
-  voice: "Literary Critic"
-  role: "Galician Chronicler"
-source_url: "http://litopys.org.ua/litop/lit22.htm"
+  voice: Literary Critic
+  role: Galician Chronicler
+source_url: http://litopys.org.ua/litop/lit22.htm
+prerequisites:
+- phonology-lab-yers
+connects_to:
+- pateryk-literary-form

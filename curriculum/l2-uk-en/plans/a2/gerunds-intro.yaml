@@ -1,123 +1,20 @@
-module: a2-75
+module: a2-075
 level: A2
 sequence: 75
 slug: gerunds-intro
 version: '2.0'
 title: Introduction to Gerunds
 subtitle: 'Дієприслівники: -ючи/-ачи та -вши/-ши'
-content_outline:
-- section: 'Вступ: Дві дії одночасно (Introduction: Two Actions at Once)'
-  words: 400
-  points:
-  - 'Natural recognition context: "Читаючи книгу, він пив каву" — two simultaneous
-    actions compressed into one elegant sentence; why gerunds make speech more sophisticated
-    and natural-sounding.'
-  - 'Recognition-first approach: learners will encounter gerunds in written Ukrainian
-    far more often than they will produce them; building passive recognition first,
-    then active production.'
-  - 'Two gerund families previewed: present gerunds (-ючи/-ачи) for simultaneous actions,
-    past gerunds (-вши/-ши) for completed prior actions — the key temporal distinction.'
-- section: 'Дієприслівники теперішнього часу (Present Gerunds: -ючи/-ачи)'
-  words: 700
-  points:
-  - 'Formation Rule 1 — Conjugation I verbs (-ати/-яти/-увати): replace the third-person
-    plural ending -ють with -ючи: читають→читаючи, працюють→працюючи, слухають→слухаючи.'
-  - 'Formation Rule 2 — Conjugation II verbs (-ити/-іти/-їти): replace -ать/-ять
-    with -ачи/-ячи: говорять→говорячи, сидять→сидячи, дивляться→дивлячись.'
-  - 'High-frequency gerunds to recognise immediately: читаючи (while reading), працюючи
-    (while working), слухаючи (while listening), дивлячись (while watching), думаючи
-    (while thinking), йдучи (while going).'
-  - 'Meaning: present gerund denotes an action simultaneous with the main verb; the
-    two actions overlap in time — "Слухаючи музику, вона малювала."'
-  - 'Punctuation rule: when the gerundial phrase comes before the main clause, it is
-    separated by a comma; when after, a comma is usually omitted.'
-- section: 'Дієприслівники минулого часу (Past Gerunds: -вши/-ши)'
-  words: 600
-  points:
-  - 'Formation from perfective verbs: drop infinitive ending and add -вши (after vowel
-    stem): прочитати→прочитавши, зробити→зробивши, написати→написавши.'
-  - 'Formation with -ши (after consonant stem): принести→принісши, вийти→вийшовши,
-    привезти→привізши.'
-  - 'Reflexive past gerunds add -сь: повернутися→повернувшись, познайомитися→познайомившись,
-    зупинитися→зупинившись.'
-  - 'Meaning: past gerund denotes an action completed BEFORE the main action — temporal
-    sequence, not simultaneity: "Прочитавши листа, вона заплакала" (Having read the
-    letter, she cried — first she read, then she cried).'
-  - 'Cultural and literary example: proverb "Скінчивши діло — гуляй сміло" (When
-    the work is done, play freely) — past gerund in folk wisdom.'
-- section: 'Золоте правило: Підмет має збігатися (Golden Rule: Subject Must Match)'
-  words: 500
-  points:
-  - 'The dangling gerund rule: the implied subject of the gerund clause MUST be the
-    same as the subject of the main clause — the most common learner error in gerund
-    use.'
-  - 'WRONG: "Читаючи книгу, телефон задзвонив" — the phone is not doing the reading;
-    this is a calque from English/Russian and is non-standard Ukrainian.'
-  - 'RIGHT: "Читаючи книгу, я почув телефон" — the same "я" is both reading and hearing;
-    gerund and main verb share the same subject.'
-  - 'Self-correction test: before using a gerund, ask "who is doing the gerund action?"
-    and "who is the subject of the main verb?" — they must match.'
-  - 'Dangling gerund fix strategies: rewrite as a subordinate clause with "коли" or
-    "поки", or restructure so subject is explicit.'
-- section: Помилки та заборони (Errors and Restrictions)
-  words: 400
-  points:
-  - 'BANNED in standard Ukrainian: active participial adjectives in -ючий/-ачий as
-    noun modifiers (*"працююча людина"*) — these are Russianisms and direct calques
-    from English "-ing" forms.'
-  - 'Correct Ukrainian alternative: use relative clause "людина, яка працює" instead
-    of *"працююча людина"*; "студент, який читає" instead of *"читаючий студент"*.'
-  - 'Why the ban exists: participial modifiers in -ючий were never native to Ukrainian
-    and entered through Russian administrative language; restoring the relative-clause
-    pattern is part of language decolonisation.'
-  - 'Gerunds from reflexive verbs: -чись/-шись — дивитися→дивлячись, повернутися→повернувшись;
-    the reflexive particle stays attached.'
-- section: Практика (Practice)
-  words: 400
-  points:
-  - 'Combination drill: given two simple sentences, combine them into one using the
-    correct gerund (present or past) — 15 examples covering Conj I and Conj II verbs.'
-  - 'Classification drill: read 12 sentences; identify each gerund as present (-ючи/-ачи)
-    or past (-вши/-ши) and explain the temporal relationship.'
-  - 'Error correction: 12 sentences with dangling gerunds or banned *-ючий* modifiers;
-    rewrite each correctly using relative clauses or restructured gerunds.'
-  - 'Reading comprehension: short paragraph from Ukrainian prose using 3–4 gerunds;
-    identify each and paraphrase the simultaneous or prior action.'
-activity_hints:
-- type: fill-in
-  focus: Form present or past gerund from given infinitive, 15 items
-  items: 15
-- type: fill-in
-  focus: Choose present (-ючи/-ачи) vs past (-вши/-ши) gerund to complete sentence, 12 items
-  items: 12
-- type: quiz
-  focus: Fix dangling gerunds — rewrite sentences with correct subject match, 12 items
-  items: 12
-- type: match-up
-  focus: Match gerund to its English meaning and temporal relationship, 15 items
-  items: 15
 focus: grammar
 pedagogy: PPP
-prerequisites:
-- a2-74 (Impersonal Passive Forms)
-- A2 verb conjugation (Conj I and Conj II)
-- A2 perfective/imperfective aspect
-connects_to:
-- a2-76 (A2 Final Exam)
+phase: A2.7
+word_target: 3000
 objectives:
 - Learner can form present gerunds (-ючи/-ачи) from imperfective verbs
 - Learner can form past gerunds (-вши/-ши) from perfective verbs
 - Learner can distinguish simultaneous (present gerund) from prior (past gerund) actions
 - Learner can apply the subject-matching rule to avoid dangling gerunds
-- Learner knows that *-ючий* participial adjectives are non-standard and can replace
-  them with relative clauses
-grammar:
-- present gerund formation (-ючи/-ачи)
-- past gerund formation (-вши/-ши)
-- subject matching rule (anti-dangling)
-- active participle ban (-ючий is non-standard)
-- gerunds from reflexive verbs (-чись/-шись)
-module_type: grammar
+- Learner knows that *-ючий* participial adjectives are non-standard and can replace them with relative clauses
 sources:
 - name: Ukrainian State Standard 2024 - Verbal Adverbs
   url: https://mon.gov.ua/
@@ -131,22 +28,114 @@ sources:
   url: https://kultura-movy.com.ua/
   type: reference
   notes: Why -ючий/-ачий modifiers are non-standard Ukrainian
-immersion: 65-75% Ukrainian
-phase: A2.7
+content_outline:
+- section: 'Вступ: Дві дії одночасно (Introduction: Two Actions at Once)'
+  words: 400
+  points:
+  - 'Natural recognition context: "Читаючи книгу, він пив каву" — two simultaneous actions compressed into one elegant sentence;
+    why gerunds make speech more sophisticated and natural-sounding.'
+  - 'Recognition-first approach: learners will encounter gerunds in written Ukrainian far more often than they will produce
+    them; building passive recognition first, then active production.'
+  - 'Two gerund families previewed: present gerunds (-ючи/-ачи) for simultaneous actions, past gerunds (-вши/-ши) for completed
+    prior actions — the key temporal distinction.'
+- section: 'Дієприслівники теперішнього часу (Present Gerunds: -ючи/-ачи)'
+  words: 700
+  points:
+  - 'Formation Rule 1 — Conjugation I verbs (-ати/-яти/-увати): replace the third-person plural ending -ють with -ючи: читають→читаючи,
+    працюють→працюючи, слухають→слухаючи.'
+  - 'Formation Rule 2 — Conjugation II verbs (-ити/-іти/-їти): replace -ать/-ять with -ачи/-ячи: говорять→говорячи, сидять→сидячи,
+    дивляться→дивлячись.'
+  - 'High-frequency gerunds to recognise immediately: читаючи (while reading), працюючи (while working), слухаючи (while listening),
+    дивлячись (while watching), думаючи (while thinking), йдучи (while going).'
+  - 'Meaning: present gerund denotes an action simultaneous with the main verb; the two actions overlap in time — "Слухаючи
+    музику, вона малювала."'
+  - 'Punctuation rule: when the gerundial phrase comes before the main clause, it is separated by a comma; when after, a comma
+    is usually omitted.'
+- section: 'Дієприслівники минулого часу (Past Gerunds: -вши/-ши)'
+  words: 600
+  points:
+  - 'Formation from perfective verbs: drop infinitive ending and add -вши (after vowel stem): прочитати→прочитавши, зробити→зробивши,
+    написати→написавши.'
+  - 'Formation with -ши (after consonant stem): принести→принісши, вийти→вийшовши, привезти→привізши.'
+  - 'Reflexive past gerunds add -сь: повернутися→повернувшись, познайомитися→познайомившись, зупинитися→зупинившись.'
+  - 'Meaning: past gerund denotes an action completed BEFORE the main action — temporal sequence, not simultaneity: "Прочитавши
+    листа, вона заплакала" (Having read the letter, she cried — first she read, then she cried).'
+  - 'Cultural and literary example: proverb "Скінчивши діло — гуляй сміло" (When the work is done, play freely) — past gerund
+    in folk wisdom.'
+- section: 'Золоте правило: Підмет має збігатися (Golden Rule: Subject Must Match)'
+  words: 500
+  points:
+  - 'The dangling gerund rule: the implied subject of the gerund clause MUST be the same as the subject of the main clause
+    — the most common learner error in gerund use.'
+  - 'WRONG: "Читаючи книгу, телефон задзвонив" — the phone is not doing the reading; this is a calque from English/Russian
+    and is non-standard Ukrainian.'
+  - 'RIGHT: "Читаючи книгу, я почув телефон" — the same "я" is both reading and hearing; gerund and main verb share the same
+    subject.'
+  - 'Self-correction test: before using a gerund, ask "who is doing the gerund action?" and "who is the subject of the main
+    verb?" — they must match.'
+  - 'Dangling gerund fix strategies: rewrite as a subordinate clause with "коли" or "поки", or restructure so subject is explicit.'
+- section: Помилки та заборони (Errors and Restrictions)
+  words: 400
+  points:
+  - 'BANNED in standard Ukrainian: active participial adjectives in -ючий/-ачий as noun modifiers (*"працююча людина"*) —
+    these are Russianisms and direct calques from English "-ing" forms.'
+  - 'Correct Ukrainian alternative: use relative clause "людина, яка працює" instead of *"працююча людина"*; "студент, який
+    читає" instead of *"читаючий студент"*.'
+  - 'Why the ban exists: participial modifiers in -ючий were never native to Ukrainian and entered through Russian administrative
+    language; restoring the relative-clause pattern is part of language decolonisation.'
+  - 'Gerunds from reflexive verbs: -чись/-шись — дивитися→дивлячись, повернутися→повернувшись; the reflexive particle stays
+    attached.'
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Combination drill: given two simple sentences, combine them into one using the correct gerund (present or past) — 15
+    examples covering Conj I and Conj II verbs.'
+  - 'Classification drill: read 12 sentences; identify each gerund as present (-ючи/-ачи) or past (-вши/-ши) and explain the
+    temporal relationship.'
+  - 'Error correction: 12 sentences with dangling gerunds or banned *-ючий* modifiers; rewrite each correctly using relative
+    clauses or restructured gerunds.'
+  - 'Reading comprehension: short paragraph from Ukrainian prose using 3–4 gerunds; identify each and paraphrase the simultaneous
+    or prior action.'
+vocabulary_hints:
+  required:
+  - читаючи (while reading) — High frequency; gerund of читати (Conj I, -ючи)
+  - працюючи (while working) — High frequency; gerund of працювати (Conj I, -ючи)
+  - слухаючи (while listening) — High frequency; gerund of слухати (Conj I, -ючи)
+  - прочитавши (having read) — High frequency; past gerund of прочитати
+  - зробивши (having done) — High frequency; past gerund of зробити
+  - повернувшись (having returned) — High frequency; past gerund of повернутися (reflexive)
+  recommended:
+  - дивлячись (while watching) — High frequency; gerund of дивитися (reflexive, -чись)
+  - сидячи (while sitting) — High frequency; gerund of сидіти (Conj II, -ачи)
+  - вийшовши (having gone out) — High frequency; past gerund of вийти (consonant stem)
+  - закінчивши (having finished) — High frequency; past gerund of закінчити
+activity_hints:
+- type: fill-in
+  focus: Form present or past gerund from given infinitive, 15 items
+  items: 15
+- type: fill-in
+  focus: Choose present (-ючи/-ачи) vs past (-вши/-ши) gerund to complete sentence, 12 items
+  items: 12
+- type: quiz
+  focus: Fix dangling gerunds — rewrite sentences with correct subject match, 12 items
+  items: 12
+- type: match-up
+  focus: Match gerund to its English meaning and temporal relationship, 15 items
+  items: 15
+connects_to:
+- a2-76 (A2 Final Exam)
+prerequisites:
+- a2-74 (Impersonal Passive Forms)
+- A2 verb conjugation (Conj I and Conj II)
+- A2 perfective/imperfective aspect
 persona:
   voice: Encouraging Cultural Guide
   role: Ukrainian Author
-vocabulary_hints:
-  required:
-  - 'читаючи (while reading) — High frequency; gerund of читати (Conj I, -ючи)'
-  - 'працюючи (while working) — High frequency; gerund of працювати (Conj I, -ючи)'
-  - 'слухаючи (while listening) — High frequency; gerund of слухати (Conj I, -ючи)'
-  - 'прочитавши (having read) — High frequency; past gerund of прочитати'
-  - 'зробивши (having done) — High frequency; past gerund of зробити'
-  - 'повернувшись (having returned) — High frequency; past gerund of повернутися (reflexive)'
-  recommended:
-  - 'дивлячись (while watching) — High frequency; gerund of дивитися (reflexive, -чись)'
-  - 'сидячи (while sitting) — High frequency; gerund of сидіти (Conj II, -ачи)'
-  - 'вийшовши (having gone out) — High frequency; past gerund of вийти (consonant stem)'
-  - 'закінчивши (having finished) — High frequency; past gerund of закінчити'
-word_target: 3000
+grammar:
+- present gerund formation (-ючи/-ачи)
+- past gerund formation (-вши/-ши)
+- subject matching rule (anti-dangling)
+- active participle ban (-ючий is non-standard)
+- gerunds from reflexive verbs (-чись/-шись)
+module_type: grammar
+immersion: 65-75% Ukrainian

@@ -1,27 +1,47 @@
-sequence: 55
-module: oes-055
-module_number: 45
+module: oes-053
+level: OES
+sequence: 53
 slug: body-injury-dual
-title_uk: Тіло та ушкодження
-title_en: The Body & Injury
-phase: 2
-phase_id: literary-tradition
-phase_name: Literary Tradition
+version: '2.0'
+title: Тіло та ушкодження
+subtitle: The Body & Injury
 focus: Dual Number — Eyes, ears, legs
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Body & Injury
+  points:
+  - Introduction to The Body & Injury
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Field Surgeon
+prerequisites:
+- weaponry-laws
+connects_to:
+- theft-property

@@ -1,27 +1,47 @@
-sequence: 45
-module: ruth-045
-module_number: 37
+module: ruth-044
+level: RUTH
+sequence: 44
 slug: ostrih-legacy
-title_uk: Спадщина Острога
-title_en: Ostrih Legacy
-phase: 2
-phase_id: sacred-word
-phase_name: Sacred Word
+version: '2.0'
+title: Спадщина Острога
+subtitle: Ostrih Legacy
 focus: Impact on Muscovite/Russian norms
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Ostrih Legacy
+  points:
+  - Introduction to Ostrih Legacy
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Ostroh Academician
+prerequisites:
+- printing-vocabulary
+connects_to:
+- smotrytsky-grammar-intro

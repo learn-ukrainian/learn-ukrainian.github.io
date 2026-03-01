@@ -1,27 +1,45 @@
-sequence: 104
-module: oes-104
-module_number: 104
+module: oes-100
+level: OES
+sequence: 100
 slug: oes-capstone
-title_uk: Капстоун OES
-title_en: OES Capstone
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: Капстоун OES
+subtitle: OES Capstone
 focus: Final exam — Reading an unknown text
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to OES Capstone
+  points:
+  - Introduction to OES Capstone
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Grand Historian
+prerequisites:
+- davni-teksty-zbirka

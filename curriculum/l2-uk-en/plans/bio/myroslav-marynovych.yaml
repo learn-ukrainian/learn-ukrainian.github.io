@@ -1,44 +1,70 @@
-module: bio-145
+module: bio-148
 level: BIO
-sequence: 145
+sequence: 148
 slug: myroslav-marynovych
 version: '2.0'
 title: 'Мирослав Маринович: Совість нації'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of мирослав маринович: совість нації'
+- Evaluate the contributions of голос совісті в часи мовчання
+- Trace the career and influence of спадщина та сучасність (2000-сьогодні)
+sources:
+- name: Мирослав Маринович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович
+  type: primary
+  notes: Біографія, дисидентська діяльність, роль в УГГ
+- name: Український католицький університет
+  url: https://ucu.edu.ua/about/leadership/marynovych/
+  type: reference
+  notes: Сучасна діяльність, роль в УКУ
+- name: Amnesty International
+  url: https://www.amnesty.org
+  type: reference
+  notes: Документація справ в'язнів сумління
 content_outline:
 - section: Вступ — Голос совісті в часи мовчання
   points:
   - Маринович як моральний авторитет сучасної України
   - Зв'язок дисидентського минулого з сьогоденням
   - Унікальна роль в діалозі віри та інтелекту
+  words: 850
 - section: Дитинство та формування (1949-1971)
   points:
   - Народження в Дрогобичі, родинне виховання
   - Навчання у Львівському університеті
   - Перші контакти з інакодумцями
+  words: 850
 - section: Українська Гельсінська група (1976-1977)
   points:
   - Створення УГГ та її засновники
   - Роль Мариновича як засновника та секретаря
   - Меморандуми та звернення до світової громадськості
   - Переслідування з боку КДБ
+  words: 850
 - section: Арешт і ув'язнення (1977-1987)
   points:
   - Судовий процес та вирок
   - Табори суворого режиму (Пермська область)
   - Заслання в Казахстані
   - Духовне зростання у в'язниці
+  words: 850
 - section: Духовний шлях та екуменізм (1987-2000)
   points:
   - Звільнення та повернення до України
   - Прихід до греко-католицької церкви
   - Екуменічна діяльність та міжконфесійний діалог
   - Публіцистика та громадська позиція
+  words: 850
 - section: Спадщина та сучасність (2000-сьогодні)
   points:
   - Роль віце-ректора УКУ
   - Формування нового покоління українських інтелектуалів
   - Моральний голос під час Революції гідності
   - Позиція щодо російсько-української війни
+  words: 750
 vocabulary_hints:
   required:
   - дисидент (dissident)
@@ -65,34 +91,15 @@ activity_hints:
 - type: essay-response
   focus: Чому моральний авторитет важливий у часи кризи?
   output: Аргументативне есе
-focus: biography
-prerequisites:
-- bio-76 (В'ячеслав Чорновіл)
-- bio-77 (Василь Стус)
 connects_to:
 - bio-71 (Левко Лук'яненко)
 - bio-72 (Алла Горська)
 - bio-95 (Олександра Матвійчук)
-module_type: biography
-sources:
-- name: Мирослав Маринович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович
-  type: primary
-  notes: Біографія, дисидентська діяльність, роль в УГГ
-- name: Український католицький університет
-  url: https://ucu.edu.ua/about/leadership/marynovych/
-  type: reference
-  notes: Сучасна діяльність, роль в УКУ
-- name: Amnesty International
-  url: https://www.amnesty.org
-  type: reference
-  notes: Документація справ в'язнів сумління
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of мирослав маринович: совість нації'
-- Evaluate the contributions of голос совісті в часи мовчання
-- Trace the career and influence of спадщина та сучасність (2000-сьогодні)
+prerequisites:
+- bio-76 (В'ячеслав Чорновіл)
+- bio-77 (Василь Стус)
 persona:
   voice: Senior Biographer
   role: Gulag Survivor
+module_type: biography
+immersion: 100% Ukrainian

@@ -1,27 +1,47 @@
-sequence: 19
 module: oes-019
-module_number: 19
+level: OES
+sequence: 19
 slug: syntax-simple-sentences
-title_uk: 'Синтаксис: Прості речення'
-title_en: 'Syntax: Simple Sentences'
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'Синтаксис: Прості речення'
+subtitle: 'Syntax: Simple Sentences'
 focus: Word order in vernacular vs Church Slavonic
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Syntax: Simple Sentences'
+  points:
+  - 'Introduction to Syntax: Simple Sentences'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Schoolmaster
+prerequisites:
+- names-identity
+connects_to:
+- adjectives-agreement

@@ -5,66 +5,82 @@ slug: petro-mohyla
 version: '2.0'
 title: 'Петро Могила: Реформатор церкви'
 subtitle: 'Petro Mohyla: The Church Reformer'
+focus: history
+pedagogy: CBI
+phase: HIST.4 [Lithuanian-Polish Era]
+word_target: 5000
+objectives:
+- Understand the significance of Petro Mohyla's educational reforms
+- Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
+- Discuss the 'Mohylian Era' in Ukrainian history
+- Use religious and educational terminology of the 17th century
+sources:
+- name: Історія України-Руси
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Petro Mohyla (Encyclopedia of Ukraine)
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
+  type: reference
 content_outline:
 - section: Вступ
   points:
-  - Crisis of Orthodoxy post-Union — 1596 Union aftermath, hierarchy unrecognized,
-    churches seized
+  - Crisis of Orthodoxy post-Union — 1596 Union aftermath, hierarchy unrecognized, churches seized
   - 'Need for new strategy — beyond survival: modernization and intellectual defense'
+  words: 550
 - section: Шлях до митри
   points:
   - Moldovan origins — son of hospodar Simeon Mohyla
   - Western education — Lviv Brotherhood School, Zamość Academy, possibly Paris (Sorbonne)
-  - 'Military service — 1620-1621 Cecora and Khotyn battles; [!history-bite]: Mohyla
-    was a soldier before becoming a monk, bringing military discipline to the church'
+  - 'Military service — 1620-1621 Cecora and Khotyn battles; [!history-bite]: Mohyla was a soldier before becoming a monk,
+    bringing military discipline to the church'
   - Tonsure at Lavra — 1627 elected archimandrite, start of publishing activity
+  words: 550
 - section: Заснування Академії
   points:
-  - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla
-    Collegium
-  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric)
-    to defeat the enemy with their own weapons
+  - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla Collegium
+  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric) to defeat the enemy with their own
+    weapons
   - Resistance from traditionalists — conservative Cossacks and clergy feared 'Latinization'
-  - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]:
-    Myth: Mohyla ''Catholicized'' education. Reality: He used Latin tools for Orthodox
-    defense.'
+  - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]: Myth: Mohyla ''Catholicized'' education.
+    Reality: He used Latin tools for Orthodox defense.'
+  words: 550
 - section: Реформатор церкви
   points:
-  - Legalization of hierarchy (1632/1633) — 'Articles of Pacification' from King Władysław
-    IV; consecration in Lviv
-  - 'Rebuilding St. Sophia and Desyatynna — 1633 restoration of Sophia (Octaviano
-    Mancini), 1635 excavations of Desyatynna; [!context]: Parallel with Counter-Reformation
-    — education + discipline + dogma'
-  - Liturgical reforms (Trebnyk) — 1646 'Euchologion', unification of rites, pastor's
-    manual
+  - Legalization of hierarchy (1632/1633) — 'Articles of Pacification' from King Władysław IV; consecration in Lviv
+  - 'Rebuilding St. Sophia and Desyatynna — 1633 restoration of Sophia (Octaviano Mancini), 1635 excavations of Desyatynna;
+    [!context]: Parallel with Counter-Reformation — education + discipline + dogma'
+  - Liturgical reforms (Trebnyk) — 1646 'Euchologion', unification of rites, pastor's manual
   - Discipline and education of clergy — strict requirements for priests to be educated
+  words: 550
 - section: Спадщина Могили
   points:
   - Kyiv as the 'New Jerusalem' — theological concept of Kyiv as a sacred center
-  - 'Baroque culture — [!culture]: ''Mohylian'' or ''Cossack'' Baroque style blending
-    European splendor with local tradition'
+  - 'Baroque culture — [!culture]: ''Mohylian'' or ''Cossack'' Baroque style blending European splendor with local tradition'
   - Lasting impact on Ukrainian identity — integration into European cultural space
+  words: 550
 - section: Читання
   points:
   - Primary sources assignment — excerpts from 'Trebnyk' Preface or 'Testament'
+  words: 550
 - section: Первинні джерела
   points:
   - Testament of Mohyla — moral and educational instructions
   - Inscription on Desyatynna — finding Rus' roots for legitimacy
-  - 'Linguistic analysis — [!quote]: ''Гарно й почесно бути свічкою... але свічка
-    має світити'' (Trebnyk, 1646) — metaphor of active service'
+  - 'Linguistic analysis — [!quote]: ''Гарно й почесно бути свічкою... але свічка має світити'' (Trebnyk, 1646) — metaphor
+    of active service'
+  words: 550
 - section: Деколонізаційний погляд
   points:
-  - 'Myth of Latinization — [!decolonization]: Imperial historiography portrayed pre-Moscow
-    Orthodoxy as ''corrupted''; reality: peak intellectual sovereignty'
+  - 'Myth of Latinization — [!decolonization]: Imperial historiography portrayed pre-Moscow Orthodoxy as ''corrupted''; reality:
+    peak intellectual sovereignty'
   - Intellectual sovereignty — Kyiv exported scholars to Moscow, not vice versa
-  - Summary of achievements — standardized dogma ('Confession of Faith', 1640), recognized
-    by all patriarchs
-  - Reflection on 'Western tools for Eastern faith' — agency in self-reform without
-    waiting for Moscow or Constantinople
+  - Summary of achievements — standardized dogma ('Confession of Faith', 1640), recognized by all patriarchs
+  - Reflection on 'Western tools for Eastern faith' — agency in self-reform without waiting for Moscow or Constantinople
+  words: 550
 - section: Потрібно більше практики?
   points:
   - Engagement — reflective questions on Mohyla's strategy
+  words: 600
 vocabulary_hints:
   required:
   - митрополит (Metropolitan) — титул глави церкви
@@ -87,26 +103,14 @@ activity_hints:
 - type: critical-analysis
   focus: 'Верифікація фактів: facts'
   items: 4
-focus: history
-pedagogy: CBI
-objectives:
-- Understand the significance of Petro Mohyla's educational reforms
-- Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
-- Discuss the 'Mohylian Era' in Ukrainian history
-- Use religious and educational terminology of the 17th century
+persona:
+  voice: Senior Professor of History
+  role: Academy Professor
 grammar:
 - Latinisms in Ukrainian language
 - Rhetorical style of Baroque
 - Passive voice in historical narrative
-sources:
-- name: Історія України-Руси
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: secondary
-- name: Petro Mohyla (Encyclopedia of Ukraine)
-  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
-  type: reference
-phase: HIST.4 [Lithuanian-Polish Era]
-persona:
-  voice: Senior Professor of History
-  role: Academy Professor
-word_target: 5000
+prerequisites:
+- pravoslavna-tserkva-17
+connects_to:
+- bratstva-i-osvita

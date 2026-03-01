@@ -1,57 +1,89 @@
 module: istorio-039
-level: istorio
+level: ISTORIO
 sequence: 39
+slug: samvydav-shcho-tse
 version: '1.0'
 title: 'Самвидав: Що це було?'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of самвидав: що це було?'
 - Evaluate the historical significance of підпільна література
+sources:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Overview
+- name: Український самвидав
+  url: https://uk.wikipedia.org/wiki/Український_самвидав
+  type: reference
+  notes: Ukrainian samizdat specifically
+- name: Архів самвидаву
+  url: https://diasporiana.org.ua/
+  type: primary
+  notes: Diaspora digital archive
 content_outline:
 - section: Вступ — Підпільна література
-  subsections:
+  points:
   - Що таке самвидав?
   - Чому виник — цензура
   - Форми — машинопис, копії
   - Значення для опору
+  words: 700
 - section: Історія самвидаву
-  subsections:
+  points:
   - Витоки — 1950-60-ті
   - «Відлига» — відносна свобода
   - Шістдесятники — нове покоління
   - Повернення репресій
+  words: 700
 - section: Як працював самвидав
-  subsections:
+  points:
   - Техніка — друкарська машинка
   - Копіювання — 5-7 копій
   - Розповсюдження — ланцюжки
   - Ризики — що загрожувало
   - Вивезення на Захід
+  words: 700
 - section: Типи текстів
-  subsections:
+  points:
   - Літературні твори
   - Хроніки репресій
   - Звернення і петиції
   - Переклади
   - Історичні дослідження
+  words: 700
 - section: Український самвидав — особливості
-  subsections:
+  points:
   - Національне питання — центральне
   - Мова як опір
   - «Український вісник» Чорновола
   - Зв'язок із загальносоюзним
+  words: 700
 - section: Фрагмент — Перший номер
-  subsections:
+  points:
   - Текст (з глосами)
   - Мета видання
   - Тон і стиль
   - Аудиторія
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Самвидав як феномен
   - Значення для історії
   - Підготовка до наступних модулів
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - самвидав
 - цензура
@@ -68,6 +100,15 @@ vocabulary:
 - шістдесятники
 - КГБ
 - обшук
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: reading
   focus: Sample samvydav text — introduction to a publication
@@ -79,38 +120,10 @@ activities:
   focus: Compare Ukrainian samvydav with Russian
 - type: essay-response
   focus: Чому самвидав був ефективним способом опору?
-sources:
-- name: Самвидав (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Самвидав
-  type: reference
-  notes: Overview
-- name: Український самвидав
-  url: https://uk.wikipedia.org/wiki/Український_самвидав
-  type: reference
-  notes: Ukrainian samizdat specifically
-- name: Архів самвидаву
-  url: https://diasporiana.org.ua/
-  type: primary
-  notes: Diaspora digital archive
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Underground Press Researcher
+prerequisites:
+- syntez-moderni-dzherela
+connects_to:
+- lysty-stusa

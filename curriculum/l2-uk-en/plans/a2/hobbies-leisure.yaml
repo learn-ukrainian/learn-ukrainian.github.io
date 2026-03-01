@@ -1,70 +1,66 @@
-module: a2-51
+module: a2-056
 level: A2
-sequence: 51
+sequence: 56
 slug: hobbies-leisure
 version: '2.0'
 title: Hobbies and Leisure
 subtitle: What We Do for Fun
+focus: vocabulary
+pedagogy: PPP
+phase: A2.5 [Vocabulary Expansion]
+word_target: 3000
+objectives:
+- Learner can talk about hobbies and interests
+- Learner can use 'грати' and 'займатися' correctly
+- Learner can describe weekend plans
+- Learner can ask others about their free time
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - 'Cultural Hook: Mushroom Picking («Тихе полювання») — explain the national tradition
-    of ''silent hunting'' in Ukrainian forests and its popularity among city dwellers.'
-  - 'Cultural Hook: Embroidery (Вишивання) — explore how embroidery is a vital cultural
-    act used to preserve regional patterns in ''vyshyvanka'' and ''rushnyky''.'
-  - 'State Standard §3.4 Alignment: Introduction to ways of spending free time and
-    standard terminology for leisure activities.'
+  - 'Cultural Hook: Mushroom Picking («Тихе полювання») — explain the national tradition of ''silent hunting'' in Ukrainian
+    forests and its popularity among city dwellers.'
+  - 'Cultural Hook: Embroidery (Вишивання) — explore how embroidery is a vital cultural act used to preserve regional patterns
+    in ''vyshyvanka'' and ''rushnyky''.'
+  - 'State Standard §3.4 Alignment: Introduction to ways of spending free time and standard terminology for leisure activities.'
 - section: 'Лексика: Світ хобі (Vocabulary: World of Hobbies)'
   words: 600
   points:
-  - 'High-frequency collocations for leisure: «вільний час», «мати вільний час», «проводити
-    дозвілля», «культурне дозвілля».'
-  - 'Categorizing hobbies: Indoor activities (читати, малювати, грати на гітарі) vs.
-    Outdoor activities (займатися спортом, подорожувати).'
-  - 'Vocabulary expansion: Cultural events like «концерт», «виставка», and «театр»
-    as part of leisure planning.'
+  - 'High-frequency collocations for leisure: «вільний час», «мати вільний час», «проводити дозвілля», «культурне дозвілля».'
+  - 'Categorizing hobbies: Indoor activities (читати, малювати, грати на гітарі) vs. Outdoor activities (займатися спортом,
+    подорожувати).'
+  - 'Vocabulary expansion: Cultural events like «концерт», «виставка», and «театр» as part of leisure planning.'
 - section: 'Граматика: Грати чи займатися? (Grammar: To Play or to Do?)'
   words: 900
   points:
-  - 'Learner error correction: The calque ''Я граю спорт'' vs. the correct ''Я займаюся
-    спортом'' — explain that ''грати'' is only for games with rules or instruments.'
-  - 'Grammar Rule: «грати у + Accusative» for games (футбол, шахи, теніс) vs. «грати
-    на + Locative» for musical instruments (гітара, піаніно).'
-  - 'Grammar Rule: «займатися + Instrumental» for general sports, hobbies, and activities
-    (спортом, йогою, танцями, фотографією) — drill endings.'
-  - 'Frequency expressions: Using «часто», «рідко», «іноді» to describe habits and
-    intensity of involvement in hobbies.'
+  - 'Learner error correction: The calque ''Я граю спорт'' vs. the correct ''Я займаюся спортом'' — explain that ''грати''
+    is only for games with rules or instruments.'
+  - 'Grammar Rule: «грати у + Accusative» for games (футбол, шахи, теніс) vs. «грати на + Locative» for musical instruments
+    (гітара, піаніно).'
+  - 'Grammar Rule: «займатися + Instrumental» for general sports, hobbies, and activities (спортом, йогою, танцями, фотографією)
+    — drill endings.'
+  - 'Frequency expressions: Using «часто», «рідко», «іноді» to describe habits and intensity of involvement in hobbies.'
 - section: Практика та діалоги (Practice and Dialogues)
   words: 800
   points:
-  - 'Dialogue: Asking ''Як ти проводиш вільний час?'' and answering using ''у вільний
-    час'' with frequency adverbs.'
-  - 'Case application drill: Mixing instruments and sports to force learners to choose
-    between ''грати у'', ''грати на'', and ''займатися''.'
-  - 'Describing weekend plans: Role-play planning a ''культурне дозвілля'' trip to
-    a forest or an exhibition.'
+  - 'Dialogue: Asking ''Як ти проводиш вільний час?'' and answering using ''у вільний час'' with frequency adverbs.'
+  - 'Case application drill: Mixing instruments and sports to force learners to choose between ''грати у'', ''грати на'',
+    and ''займатися''.'
+  - 'Describing weekend plans: Role-play planning a ''культурне дозвілля'' trip to a forest or an exhibition.'
 - section: Підсумок (Summary)
   words: 300
   points:
   - Summary of key collocations and the грати/займатися distinction.
-  - 'Self-reflection: Learners describe their own ''тихе полювання'' or other interests
-    using the correct grammatical structures.'
+  - 'Self-reflection: Learners describe their own ''тихе полювання'' or other interests using the correct grammatical structures.'
 vocabulary_hints:
   required:
   - 'хобі (hobby) — high frequency; collocations: «моє хобі», «цікаве хобі»'
-  - 'дозвілля (leisure) — med-high frequency; collocations: «проводити дозвілля»,
-    «культурне дозвілля»'
-  - 'вільний час (free time) — high frequency; phrase: «у вільний час», «мати вільний
-    час»'
-  - грати (to play) — high frequency; «грати у футбол» (games + Acc), «грати на гітарі»
-    (instruments + Loc)
-  - 'займатися (to do/practice) — high frequency; requires Instrumental: «займатися
-    спортом», «займатися йогою»'
-  - 'тихе полювання (mushroom picking) — cultural hook: literal ''silent hunting'',
-    the tradition of gathering mushrooms'
-  - 'вишивання (embroidery) — cultural hook: preservation of identity through patterns;
-    verb: «вишивати»'
+  - 'дозвілля (leisure) — med-high frequency; collocations: «проводити дозвілля», «культурне дозвілля»'
+  - 'вільний час (free time) — high frequency; phrase: «у вільний час», «мати вільний час»'
+  - грати (to play) — high frequency; «грати у футбол» (games + Acc), «грати на гітарі» (instruments + Loc)
+  - 'займатися (to do/practice) — high frequency; requires Instrumental: «займатися спортом», «займатися йогою»'
+  - 'тихе полювання (mushroom picking) — cultural hook: literal ''silent hunting'', the tradition of gathering mushrooms'
+  - 'вишивання (embroidery) — cultural hook: preservation of identity through patterns; verb: «вишивати»'
   - 'музика (music) — collocation: «слухати музику», «цікавитися музикою»'
   - 'спорт (sport) — usage note: «займатися спортом» (not «грати спорт»)'
   - читати (to read)
@@ -90,26 +86,17 @@ activity_hints:
 - type: quiz
   focus: Describe your hobbies
   items: 8
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- a2-50 (Technology and Media)
 connects_to:
 - a2-52 (Education and Learning)
 - a2-54 (Sports and Fitness)
-objectives:
-- Learner can talk about hobbies and interests
-- Learner can use 'грати' and 'займатися' correctly
-- Learner can describe weekend plans
-- Learner can ask others about their free time
+prerequisites:
+- a2-50 (Technology and Media)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Event Organizer
 grammar:
 - Verbs for hobbies (грати на, займатися)
 - Accusative vs instrumental (футбол vs тенісом)
 - Expressing frequency and interests
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.5 [Vocabulary Expansion]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Event Organizer
-word_target: 3000

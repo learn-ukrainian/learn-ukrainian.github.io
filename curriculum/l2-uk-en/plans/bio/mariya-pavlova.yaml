@@ -1,45 +1,71 @@
-module: bio-50
+module: bio-051
 level: BIO
-sequence: 50
+sequence: 51
 slug: mariya-pavlova
 version: '2.0'
 title: 'Марія Павлова: Видатний палеонтолог'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
+- Evaluate the contributions of жінка, що читала кістки
+- Trace the career and influence of останні роки та спадщина (1920-1938)
+sources:
+- name: Марія Павлова (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
+  type: primary
+  notes: Біографія, наукова діяльність, внесок у палеонтологію
+- name: Палеонтологія
+  url: https://uk.wikipedia.org/wiki/Палеонтологія
+  type: reference
+  notes: Наукова галузь та її методи
+- name: Жінки в науці XIX століття
+  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
+  type: reference
+  notes: Контекст жіночої участі у науці
 content_outline:
 - section: Вступ — Жінка, що читала кістки
   points:
   - Марія Павлова — перша жінка-палеонтолог світового рівня
   - Від київської гімназистки до професора Московського університету
   - Подолання бар'єрів у чоловічому світі науки
+  words: 850
 - section: Ранні роки та освіта (1854-1880)
   points:
   - Народження в Києві в родині службовця
   - Навчання в київській гімназії
   - Інтерес до природничих наук
   - Переїзд до Парижа для продовження освіти
+  words: 850
 - section: Наукова кар'єра в Парижі (1880-1886)
   points:
   - Навчання в Сорбонні та робота з Альбером Годрі
   - Шлюб з геологом Олексієм Павловим
   - Перші наукові публікації про викопних ссавців
   - Формування як самостійного науковця
+  words: 850
 - section: Московський період (1886-1920)
   points:
   - Переїзд до Москви з чоловіком
   - Робота в Московському університеті
   - Дослідження викопних коней та хоботних
   - Створення палеонтологічної колекції
+  words: 850
 - section: Наукові досягнення
   points:
   - Монографії про викопних ссавців Євразії
   - Теорія еволюції коней
   - Відкриття нових видів та родів
   - Міжнародне визнання та нагороди
+  words: 850
 - section: Останні роки та спадщина (1920-1938)
   points:
   - Продовження роботи в радянський період
   - Перша жінка — почесний член АН СРСР
   - Смерть у 1938 році
   - Вплив на розвиток палеонтології
+  words: 750
 vocabulary_hints:
   required:
   - палеонтологія (paleontology)
@@ -66,32 +92,13 @@ activity_hints:
 - type: essay-response
   focus: Які перешкоди долали жінки-науковці у XIX столітті?
   output: Historical analysis
-focus: biography
-prerequisites:
-- bio-26-mariya-zankovetska
 connects_to:
 - bio-99-volodymyr-vernadskyi
 - bio-33-sofiya-okunevska
-module_type: biography
-sources:
-- name: Марія Павлова (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
-  type: primary
-  notes: Біографія, наукова діяльність, внесок у палеонтологію
-- name: Палеонтологія
-  url: https://uk.wikipedia.org/wiki/Палеонтологія
-  type: reference
-  notes: Наукова галузь та її методи
-- name: Жінки в науці XIX століття
-  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
-  type: reference
-  notes: Контекст жіночої участі у науці
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
-- Evaluate the contributions of жінка, що читала кістки
-- Trace the career and influence of останні роки та спадщина (1920-1938)
+prerequisites:
+- bio-26-mariya-zankovetska
 persona:
   voice: Senior Biographer
   role: Fossil Hunter
+module_type: biography
+immersion: 100% Ukrainian

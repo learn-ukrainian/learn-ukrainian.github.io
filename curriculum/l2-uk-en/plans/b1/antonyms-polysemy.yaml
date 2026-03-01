@@ -1,117 +1,103 @@
-module: b1-60
+module: b1-060
 level: B1
 sequence: 60
 slug: antonyms-polysemy
 version: '2.0'
-title: 'Антоніми та багатозначність'
-subtitle: 'Antonyms and Polysemy in Ukrainian'
-
-word_target: 4000
-
-content_outline:
-  - section: 'Вступ: Мова як система відношень (Introduction: Language as a System of Relations)'
-    words: 500
-    points:
-      - 'State Standard §4.4.1: lexical semantics at B1'
-      - 'How words relate: synonymy (covered), antonymy (this module), homonymy (next module)'
-      - 'Preview: antonyms for precision, polysemy for richness'
-
-  - section: 'Антоніми: типи та утворення (Antonyms: Types and Formation)'
-    words: 800
-    points:
-      - 'Gradual antonyms: гарячий—теплий—прохолодний—холодний (scale)'
-      - 'Complementary antonyms: живий—мертвий, правда—брехня (no middle ground)'
-      - 'Converse antonyms: купувати—продавати, давати—брати (same action, different perspective)'
-      - 'Formed by prefix: за-/роз- (зачиняти—розчиняти), в-/ви- (входити—виходити)'
-      - "Contextual antonyms: «золоте серце» vs «кам'яне серце» (only antonyms in context)"
-
-  - section: 'Антоніми в тексті (Antonyms in Text)'
-    words: 600
-    points:
-      - 'Антитеза as literary device: «Руки в крові, а совість чиста» — Шевченко'
-      - 'Antonyms in proverbs: «Мовчи, доки тебе не питають, знай, доки тебе не забудуть»'
-      - 'Oxymoron: гарячий сніг, живий труп — stylistic effect'
-      - 'Practical usage: expressing contrast in argumentation (з одного боку... з іншого)'
-
-  - section: 'Багатозначність: одне слово — багато значень (Polysemy: One Word — Many Meanings)'
-    words: 800
-    points:
-      - 'Definition: one word with multiple related meanings (unlike homonyms — unrelated)'
-      - 'Classic example: «іти» — іти додому, час іде, дощ іде, фільм іде'
-      - '«Земля» — планета, ґрунт, батьківщина, рілля'
-      - '«Рука» — частина тіла, почерк (рука автора), сторона (права рука)'
-      - 'How to determine meaning: context is king'
-      - 'Dictionary representation: one entry with numbered meanings vs separate entries (homonyms)'
-
-  - section: 'Пряме та переносне значення (Direct and Figurative Meaning)'
-    words: 700
-    points:
-      - 'Пряме значення: золотий перстень (literal gold)'
-      - 'Переносне значення: золоті руки (figurative — skilled), золоте серце (kind)'
-      - 'Метафора: «дощ барабанить» (drum), «вітер виє» (howl)'
-      - 'Метонімія: «читати Шевченка» = read works of Shevchenko'
-      - 'Recognizing figurative language in daily Ukrainian: «мені тепло на душі»'
-
-  - section: 'Практика: Антоніми та контекст (Practice: Antonyms and Context)'
-    words: 600
-    points:
-      - 'Find antonym pairs in a text'
-      - 'Determine which meaning of a polysemous word is used in context'
-      - 'Create antonym chains (prefix-based)'
-      - 'Distinguish polysemy from homonymy (preview of next module)'
-
+title: Антоніми та багатозначність
+subtitle: Antonyms and Polysemy in Ukrainian
 focus: vocabulary
 pedagogy: PPP
-prerequisites:
-  - 'b1-59 (Synonymy: Speaking Verbs)'
-connects_to:
-  - 'b1-61 (Homonyms and Paronyms)'
-
+phase: B1.7 [Word Formation and Lexicology]
+word_target: 4000
 objectives:
-  - 'Learner can identify and classify antonym types (gradual, complementary, converse)'
-  - 'Learner can form antonyms using prefixes'
-  - 'Learner can distinguish multiple meanings of polysemous words in context'
-  - 'Learner can recognize direct vs figurative (переносне) meaning'
-
-grammar:
-  - 'Antonym types (gradual, complementary, converse, contextual)'
-  - 'Antonym formation by prefixation (за-/роз-, в-/ви-)'
-  - 'Polysemy (multiple related meanings)'
-  - 'Direct vs figurative meaning (пряме vs переносне значення)'
-
-register: нейтральний
-immersion: '75-100% Ukrainian'
-phase: 'B1.7 [Word Formation and Lexicology]'
-
+- Learner can identify and classify antonym types (gradual, complementary, converse)
+- Learner can form antonyms using prefixes
+- Learner can distinguish multiple meanings of polysemous words in context
+- Learner can recognize direct vs figurative (переносне) meaning
+content_outline:
+- section: 'Вступ: Мова як система відношень (Introduction: Language as a System of Relations)'
+  words: 500
+  points:
+  - 'State Standard §4.4.1: lexical semantics at B1'
+  - 'How words relate: synonymy (covered), antonymy (this module), homonymy (next module)'
+  - 'Preview: antonyms for precision, polysemy for richness'
+- section: 'Антоніми: типи та утворення (Antonyms: Types and Formation)'
+  words: 800
+  points:
+  - 'Gradual antonyms: гарячий—теплий—прохолодний—холодний (scale)'
+  - 'Complementary antonyms: живий—мертвий, правда—брехня (no middle ground)'
+  - 'Converse antonyms: купувати—продавати, давати—брати (same action, different perspective)'
+  - 'Formed by prefix: за-/роз- (зачиняти—розчиняти), в-/ви- (входити—виходити)'
+  - 'Contextual antonyms: «золоте серце» vs «кам''яне серце» (only antonyms in context)'
+- section: Антоніми в тексті (Antonyms in Text)
+  words: 600
+  points:
+  - 'Антитеза as literary device: «Руки в крові, а совість чиста» — Шевченко'
+  - 'Antonyms in proverbs: «Мовчи, доки тебе не питають, знай, доки тебе не забудуть»'
+  - 'Oxymoron: гарячий сніг, живий труп — stylistic effect'
+  - 'Practical usage: expressing contrast in argumentation (з одного боку... з іншого)'
+- section: 'Багатозначність: одне слово — багато значень (Polysemy: One Word — Many Meanings)'
+  words: 800
+  points:
+  - 'Definition: one word with multiple related meanings (unlike homonyms — unrelated)'
+  - 'Classic example: «іти» — іти додому, час іде, дощ іде, фільм іде'
+  - «Земля» — планета, ґрунт, батьківщина, рілля
+  - «Рука» — частина тіла, почерк (рука автора), сторона (права рука)
+  - 'How to determine meaning: context is king'
+  - 'Dictionary representation: one entry with numbered meanings vs separate entries (homonyms)'
+- section: Пряме та переносне значення (Direct and Figurative Meaning)
+  words: 700
+  points:
+  - 'Пряме значення: золотий перстень (literal gold)'
+  - 'Переносне значення: золоті руки (figurative — skilled), золоте серце (kind)'
+  - 'Метафора: «дощ барабанить» (drum), «вітер виє» (howl)'
+  - 'Метонімія: «читати Шевченка» = read works of Shevchenko'
+  - 'Recognizing figurative language in daily Ukrainian: «мені тепло на душі»'
+- section: 'Практика: Антоніми та контекст (Practice: Antonyms and Context)'
+  words: 600
+  points:
+  - Find antonym pairs in a text
+  - Determine which meaning of a polysemous word is used in context
+  - Create antonym chains (prefix-based)
+  - Distinguish polysemy from homonymy (preview of next module)
+vocabulary_hints:
+  required:
+  - антонім (antonym) — антонімічна пара, антоніми в тексті
+  - багатозначність (polysemy) — багатозначне слово; semantic term
+  - значення (meaning) — пряме значення, переносне значення
+  - переносний (figurative) — переносне значення, вживати в переносному сенсі
+  - прямий (direct/literal) — пряме значення слова
+  - контекст (context) — визначити значення з контексту
+  recommended:
+  - антитеза (antithesis) — стилістичний прийом; literary term
+  - метафора (metaphor) — поетична метафора; figurative language
+  - метонімія (metonymy) — читати Шевченка; part for whole
+  - оксиморон (oxymoron) — гарячий сніг; contradictory combination
+  - градація (gradation) — гарячий—теплий—прохолодний—холодний
+activity_hints:
+- type: match-up
+  focus: Match antonym pairs
+  items: 15
+- type: quiz
+  focus: Identify correct meaning of polysemous word in context
+  items: 15
+- type: fill-in
+  focus: Form antonyms using prefixes
+  items: 12
+- type: quiz
+  focus: Classify antonym type (gradual, complementary, converse)
+  items: 10
+connects_to:
+- b1-61 (Homonyms and Paronyms)
+prerequisites:
+- 'b1-59 (Synonymy: Speaking Verbs)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher
-
-vocabulary_hints:
-  required:
-    - 'антонім (antonym) — антонімічна пара, антоніми в тексті'
-    - 'багатозначність (polysemy) — багатозначне слово; semantic term'
-    - 'значення (meaning) — пряме значення, переносне значення'
-    - 'переносний (figurative) — переносне значення, вживати в переносному сенсі'
-    - 'прямий (direct/literal) — пряме значення слова'
-    - 'контекст (context) — визначити значення з контексту'
-  recommended:
-    - 'антитеза (antithesis) — стилістичний прийом; literary term'
-    - 'метафора (metaphor) — поетична метафора; figurative language'
-    - 'метонімія (metonymy) — читати Шевченка; part for whole'
-    - 'оксиморон (oxymoron) — гарячий сніг; contradictory combination'
-    - 'градація (gradation) — гарячий—теплий—прохолодний—холодний'
-
-activity_hints:
-  - type: match-up
-    focus: Match antonym pairs
-    items: 15
-  - type: quiz
-    focus: Identify correct meaning of polysemous word in context
-    items: 15
-  - type: fill-in
-    focus: Form antonyms using prefixes
-    items: 12
-  - type: quiz
-    focus: 'Classify antonym type (gradual, complementary, converse)'
-    items: 10
+grammar:
+- Antonym types (gradual, complementary, converse, contextual)
+- Antonym formation by prefixation (за-/роз-, в-/ви-)
+- Polysemy (multiple related meanings)
+- Direct vs figurative meaning (пряме vs переносне значення)
+register: нейтральний
+immersion: 75-100% Ukrainian

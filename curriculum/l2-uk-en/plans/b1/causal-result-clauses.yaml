@@ -1,62 +1,65 @@
-module: b1-36
+module: b1-039
 level: B1
-sequence: 36
+sequence: 39
 slug: causal-result-clauses
 version: '2.0'
 title: Причинові та наслідкові речення
 subtitle: Causal and Result Clauses
+focus: grammar
+pedagogy: TTT
+phase: B1.3b [Complex Sentences]
+word_target: 4000
+objectives:
+- Learner can express причина using various causal connectors
+- Learner can express наслідок using result connectors
+- Learner can transform causal statements into result statements
+- Learner can build cause-effect relationships
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Diagnostic quiz on causal/result clauses — focus on distinguishing 'бо' (casual)
-    vs 'оскільки' (formal)
-  - 'Common spelling errors: drill the rule that ''тому що'' is always two words,
-    never ''томущо'' or ''тому-що'''
-  - 'Punctuation alert: emphasize the mandatory comma before ''тому що'' when it connects
-    clauses in the middle of a sentence'
+  - Diagnostic quiz on causal/result clauses — focus on distinguishing 'бо' (casual) vs 'оскільки' (formal)
+  - 'Common spelling errors: drill the rule that ''тому що'' is always two words, never ''томущо'' or ''тому-що'''
+  - 'Punctuation alert: emphasize the mandatory comma before ''тому що'' when it connects clauses in the middle of a sentence'
 - section: Причинові речення (Causal Clauses)
   words: 1000
   points:
-  - 'State Standard §4.4.3 implementation: detailed usage of ''тому що'', ''бо'',
-    and ''через те що'' as mandated for B1 proficiency'
-  - 'Causal Connectors Registers: differentiate ''бо'' (High frequency, spoken, often
-    end of sentence) from ''тому що'' (High frequency, neutral/universal)'
-  - 'Formal logic with ''оскільки'': usage at the start of sentences in official contexts;
-    drill to replace the Russism ''тому як'' (calque from ''так как'')'
-  - 'The logic of ''через те що'': medium frequency neutral connector often used to
-    denote external circumstances or reasons beyond control'
+  - 'State Standard §4.4.3 implementation: detailed usage of ''тому що'', ''бо'', and ''через те що'' as mandated for B1 proficiency'
+  - 'Causal Connectors Registers: differentiate ''бо'' (High frequency, spoken, often end of sentence) from ''тому що'' (High
+    frequency, neutral/universal)'
+  - 'Formal logic with ''оскільки'': usage at the start of sentences in official contexts; drill to replace the Russism ''тому
+    як'' (calque from ''так как'')'
+  - 'The logic of ''через те що'': medium frequency neutral connector often used to denote external circumstances or reasons
+    beyond control'
 - section: Наслідкові речення (Result Clauses)
   words: 900
   points:
-  - 'Result Connectors: ''тому'' (High frequency connector), ''отже'' (Medium frequency
-    logical thus), and ''внаслідок'' (Low frequency formal/official)'
-  - 'Formal collocations: ''Внаслідок аварії...'', ''Внаслідок того, що...''; usage
-    in news and official reporting'
-  - 'Reversible logic: Use Mermaid diagrams to illustrate the Cause ↔ Result relationship
-    (A implies B, therefore B is because of A)'
-  - 'Advanced patterns: ''Завдяки тому що'' for positive causal relationships vs ''у
-    зв''язку з'' for neutral administrative links'
+  - 'Result Connectors: ''тому'' (High frequency connector), ''отже'' (Medium frequency logical thus), and ''внаслідок'' (Low
+    frequency formal/official)'
+  - 'Formal collocations: ''Внаслідок аварії...'', ''Внаслідок того, що...''; usage in news and official reporting'
+  - 'Reversible logic: Use Mermaid diagrams to illustrate the Cause ↔ Result relationship (A implies B, therefore B is because
+    of A)'
+  - 'Advanced patterns: ''Завдяки тому що'' for positive causal relationships vs ''у зв''язку з'' for neutral administrative
+    links'
 - section: Логіка та Регістри (Logic & Registers)
   words: 800
   points:
-  - 'Stylistic variations: why we avoid starting sentences with ''Тому що...'' and
-    prefer ''Оскільки...'' or ''Через те що...'' in professional writing'
-  - 'The ''Agrarian Ethos'' in logic: explaining the cultural hook ''Хто полю годить,
-    тому жито родить'' (He who tends the field, for him the rye grows)'
-  - 'Causal beliefs: ''Диму без вогню не буває'' (There is no smoke without fire)
-    as a reflection of the deep-seated Ukrainian belief in causality'
+  - 'Stylistic variations: why we avoid starting sentences with ''Тому що...'' and prefer ''Оскільки...'' or ''Через те що...''
+    in professional writing'
+  - 'The ''Agrarian Ethos'' in logic: explaining the cultural hook ''Хто полю годить, тому жито родить'' (He who tends the
+    field, for him the rye grows)'
+  - 'Causal beliefs: ''Диму без вогню не буває'' (There is no smoke without fire) as a reflection of the deep-seated Ukrainian
+    belief in causality'
 - section: Агентність та Практика (Agency & Practice)
   words: 800
   points:
-  - 'Historical Context of Agency: The shift from ''Доля'' (Fate) to personal responsibility
-    in 19th-20th century Ukrainian literature'
-  - 'Franko''s ''Lupayte syu skalu'': using causal structures to express the necessity
-    of action causing freedom (''Ми робимо це, бо...'')'
-  - 'Active voice vs passive forms: Emphasize personal responsibility (''We rebuilt
-    it because we needed it'') to reflect modern Ukrainian values of agency'
-  - 'Transforming statements: converting passive fatalistic reasons into active result-oriented
-    consequences'
+  - 'Historical Context of Agency: The shift from ''Доля'' (Fate) to personal responsibility in 19th-20th century Ukrainian
+    literature'
+  - 'Franko''s ''Lupayte syu skalu'': using causal structures to express the necessity of action causing freedom (''Ми робимо
+    це, бо...'')'
+  - 'Active voice vs passive forms: Emphasize personal responsibility (''We rebuilt it because we needed it'') to reflect
+    modern Ukrainian values of agency'
+  - 'Transforming statements: converting passive fatalistic reasons into active result-oriented consequences'
 vocabulary_hints:
   required:
   - тому що (because) — High frequency, neutral/universal; 'Це сталося тому, що...'
@@ -68,8 +71,7 @@ vocabulary_hints:
   - наслідок (consequence) — logical pair to 'причина'
   - внаслідок (as a result) — Low frequency, formal; 'Внаслідок аварії...'
   recommended:
-  - оскільки (since) — Medium frequency, formal; 'Оскільки ви не відповіли...'; prefer
-    over 'тому що' at start of sentence
+  - оскільки (since) — Medium frequency, formal; 'Оскільки ви не відповіли...'; prefer over 'тому що' at start of sentence
   - завдяки (thanks to) — positive cause/reason
   - у зв'язку з (in connection with) — formal/official administrative register
   - відтак (hence) — logical consequence in professional/journalistic style
@@ -87,24 +89,15 @@ activity_hints:
 - type: translate
   focus: English to Ukrainian
   items: 15
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-35 (Concessive Clauses)
 connects_to:
 - b1-37 (Temporal Clauses)
-objectives:
-- Learner can express причина using various causal connectors
-- Learner can express наслідок using result connectors
-- Learner can transform causal statements into result statements
-- Learner can build cause-effect relationships
+prerequisites:
+- b1-35 (Concessive Clauses)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Science Teacher
 grammar:
 - Causal clauses with тому що, бо, через те що
 - Result clauses with тому, отже, внаслідок
 - Cause-effect transformation
 register: розмовний
-phase: B1.3b [Complex Sentences]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Science Teacher
-word_target: 4000

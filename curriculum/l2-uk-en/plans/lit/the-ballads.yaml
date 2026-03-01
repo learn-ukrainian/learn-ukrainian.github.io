@@ -1,41 +1,72 @@
-sequence: 12
-module: lit-12
+module: lit-012
 level: LIT
+sequence: 12
 slug: the-ballads
 version: '2.0'
 title: 'Балади: Між Світами'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
+focus: literature
+pedagogy: literature
+phase: LIT.3 The Prophet (Taras Shevchenko)
+word_target: 5000
+objectives:
+- Analyze the genre of Romantic Ballad
+- Explore the "Metamorphosis" motif
+- Compare "Priichynna" and "Topolya"
+sources:
+- name: Причинна
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+  type: primary
+  notes: Балада для аналізу
+- name: Тополя
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+  type: primary
+  notes: Балада для аналізу
+- name: Утоплена
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+  type: primary
+  notes: Балада для аналізу
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Контекст ранньої поезії
 content_outline:
 - section: Вступ — Жанр романтичної балади
   points:
   - Що таке балада (європейський контекст)
   - Романтизм і фольклор
   - Шевченко і народна традиція
+  words: 850
 - section: '"Причинна" — божевілля і русалки'
   points:
   - Сюжет і символіка
   - Образ "причинної" (божевільної)
   - Зустріч із потойбічним світом
+  words: 850
 - section: '"Тополя" — метаморфоза'
   points:
   - Міф про перетворення
   - Дівчина-дерево як архетип
   - Тема самотності та очікування
+  words: 850
 - section: '"Утоплена" — темна казка'
   points:
   - Матір-відьма і помста води
   - Готичні елементи
   - Жіноча доля у баладах
+  words: 850
 - section: Народна демонологія
   points:
   - Русалки, відьми, мавки
   - Функція фантастичного
   - Зв'язок з європейським романтизмом
+  words: 850
 - section: Підсумок — Фатум і доля
   points:
   - Концепція долі у раннього Шевченка
   - Від балад до епосу
   - Містика як шлях до реальності
+  words: 750
 vocabulary_hints:
   required:
   - балада (ballad)
@@ -62,43 +93,18 @@ activity_hints:
 - type: essay-response
   focus: Концепція фатуму у раннього Шевченка
   output: Літературознавче есе
-focus: literature
-pedagogy: literature
-prerequisites:
-- lit-11 (Young Shevchenko)
-- Understanding of Romanticism
 connects_to:
 - lit-13 (Haidamaky — від балади до епосу)
 - lit-18 (Women in Kobzar — жіночі образи)
-objectives:
-- Analyze the genre of Romantic Ballad
-- Explore the "Metamorphosis" motif
-- Compare "Priichynna" and "Topolya"
+prerequisites:
+- lit-11 (Young Shevchenko)
+- Understanding of Romanticism
+persona:
+  voice: Senior Philologist & Critic
+  role: Ballad Singer
 grammar:
 - Romantic ballad style
 - Folk mythology lexicon
 - Gothic atmosphere vocabulary
 module_type: literature
-sources:
-- name: Причинна
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
-  type: primary
-  notes: Балада для аналізу
-- name: Тополя
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
-  type: primary
-  notes: Балада для аналізу
-- name: Утоплена
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
-  type: primary
-  notes: Балада для аналізу
-- name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
-  type: secondary
-  notes: Контекст ранньої поезії
 immersion: 100% Ukrainian
-phase: LIT.3 The Prophet (Taras Shevchenko)
-persona:
-  voice: Senior Philologist & Critic
-  role: Ballad Singer
-word_target: 5000

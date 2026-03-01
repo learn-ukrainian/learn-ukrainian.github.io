@@ -1,27 +1,47 @@
-sequence: 66
-module: ruth-066
-module_number: 54
+module: ruth-064
+level: RUTH
+sequence: 64
 slug: simple-tongue-vyshensky
-title_uk: Проста мова
-title_en: The Simple Tongue
-phase: 3
-phase_id: baroque-fight
-phase_name: Baroque Fight
+version: '2.0'
+title: Проста мова
+subtitle: The Simple Tongue
 focus: Why he mixed vernacular with CS
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Simple Tongue
+  points:
+  - Introduction to The Simple Tongue
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Defender of the Simple Tongue
+prerequisites:
+- social-critique
+connects_to:
+- epistle-to-ostrozky

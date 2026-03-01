@@ -1,44 +1,71 @@
-module: bio-148
+module: bio-151
 level: BIO
-sequence: 148
+sequence: 151
 slug: vasyl-shkliar
 version: '2.0'
 title: 'Василь Шкляр: Майстер історичного роману'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of василь шкляр: майстер історичного роману'
+- Evaluate the contributions of бестселер як національний феномен
+- Trace the career and influence of історична правда vs художня вигадка
+sources:
+- name: Василь Шкляр (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Клуб сімейного дозвілля
+  url: https://www.bookclub.ua/
+  type: reference
+  notes: Бібліографія та видання
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Рецензії та аналіз творчості
 content_outline:
 - section: Вступ — Бестселер як національний феномен
   points:
   - Чорний Ворон як культурне явище
   - Від журналіста до найпопулярнішого письменника
   - Історична проза як інструмент національної памяті
+  words: 700
 - section: Журналістські роки та формування
   points:
   - Народження в Черкаській області (1951)
   - Освіта та ранні кариєрні кроки
   - Робота в журналістиці
+  words: 700
 - section: Шлях до літератури
   points:
   - Перші прозові твори
   - Жанрові експерименти
   - Формування авторського стилю
+  words: 700
 - section: Чорний Ворон та історична память
   points:
   - Створення роману про повстанців
   - Тема боротьби з більшовиками
   - Рецепція та комерційний успіх
+  words: 700
 - section: Залишенець та продовження циклу
   points:
   - Розвиток теми антирадянського спротиву
   - Художні особливості прози
   - Роль у популяризації історії
+  words: 700
 - section: Вплив на українську культуру
   points:
   - Екранізації та адаптації
   - Громадська позиція автора
   - Місце в сучасній літературі
+  words: 700
 - section: Дискусія — Історична правда vs художня вигадка
   points:
   - Баланс між документальністю та белетристикою
   - Роль письменника у формуванні історичної памяті
+  words: 800
 vocabulary_hints:
   required:
   - бестселер (bestseller)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Як художня література формує історичну памятка?
   output: Аналітичний есей
-focus: biography
-prerequisites:
-- hist-civil-war
 connects_to:
 - bio-82-yuriy-vynnychuk
 - bio-85-mariya-matios
 - bio-90-serhiy-zhadan
-module_type: biography
-sources:
-- name: Василь Шкляр (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Видавництво Клуб сімейного дозвілля
-  url: https://www.bookclub.ua/
-  type: reference
-  notes: Бібліографія та видання
-- name: Літературна критика
-  url: https://litakcent.com/
-  type: reference
-  notes: Рецензії та аналіз творчості
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of василь шкляр: майстер історичного роману'
-- Evaluate the contributions of бестселер як національний феномен
-- Trace the career and influence of історична правда vs художня вигадка
+prerequisites:
+- hist-civil-war
 persona:
   voice: Senior Biographer
   role: Partisan Chronicler
+module_type: biography
+immersion: 100% Ukrainian

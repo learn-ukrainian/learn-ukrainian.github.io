@@ -4,6 +4,27 @@ sequence: 19
 slug: rus-ta-susidy
 version: '2.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
+focus: history
+pedagogy: CBI
+phase: HIST.1 [Kyivan Rus]
+word_target: 5000
+objectives:
+- Trace the history of Russo-Byzantine relations
+- Understand the role of dynastic marriages in Rus foreign policy
+- Analyze the relations with western and steppe neighbors
+sources:
+- name: Зовнішня політика Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
+  type: reference
+  notes: Overview of foreign relations
+- name: Русько-візантійські договори
+  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
+  type: reference
+  notes: Treaties with Byzantium
+- name: Повість минулих літ — дипломатичні місії
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts
 content_outline:
 - section: Вступ — Русь у міжнародному контексті
   points:
@@ -11,30 +32,35 @@ content_outline:
   - Торгівля, війна, дипломатія
   - Династичні зв'язки як інструмент політики
   - Русь очима сусідів
+  words: 850
 - section: Русь і Візантія
   points:
   - Від ворожнечі до союзу
   - Договори 907, 911, 944, 971 років
   - Хрещення та церковні зв'язки
   - Культурний вплив — мистецтво, право, освіта
+  words: 850
 - section: Русь і Польща
   points:
   - Сусіди та суперники
   - Конфлікт за Червенські гради
   - Болеслав Хоробрий у Києві (1018)
   - Від ворожнечі до династичних шлюбів
+  words: 850
 - section: Русь і Угорщина
   points:
   - Сусідство в Карпатах
   - Династичні зв'язки — Анастасія, дружина Андраша I
   - Боротьба за Галичину
   - Спільний ворог — кочівники
+  words: 850
 - section: Степові сусіди
   points:
   - Печеніги — постійна загроза
   - Торки та берендеї — «чорні клобуки«
   - Половці — вороги та союзники
   - Степовий кордон як виклик
+  words: 850
 - section: Скандинавія та Захід
   points:
   - Варязькі зв'язки
@@ -44,6 +70,7 @@ content_outline:
   - Русь як європейська держава
   - Мережа дипломатичних зв'язків
   - Перехід до синтезу Київської Русі
+  words: 750
 vocabulary_hints:
   required:
   - дипломатія (diplomacy)
@@ -69,37 +96,16 @@ activity_hints:
   source: Provide in module
 - type: essay-response
   focus: Чи була Русь частиною Європи?
-focus: history
-pedagogy: CBI
-prerequisites:
-- hist-17 (Princely feuds)
-- hist-11 (Volodymyr and Baptism — Byzantine connection)
 connects_to:
 - 'hist-20 (Synthesis: Kyivan Rus)'
 - hist-24 (Galicia-Volhynia — Hungarian influence)
-objectives:
-- Trace the history of Russo-Byzantine relations
-- Understand the role of dynastic marriages in Rus foreign policy
-- Analyze the relations with western and steppe neighbors
-grammar:
-- Past tense narrative
-- Diplomatic and international relations terminology
-sources:
-- name: Зовнішня політика Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
-  type: reference
-  notes: Overview of foreign relations
-- name: Русько-візантійські договори
-  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
-  type: reference
-  notes: Treaties with Byzantium
-- name: Повість минулих літ — дипломатичні місії
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
-phase: HIST.1 [Kyivan Rus]
-immersion: 100% Ukrainian
+prerequisites:
+- hist-17 (Princely feuds)
+- hist-11 (Volodymyr and Baptism — Byzantine connection)
 persona:
   voice: Senior Professor of History
   role: Diplomatic Envoy
-word_target: 5000
+grammar:
+- Past tense narrative
+- Diplomatic and international relations terminology
+immersion: 100% Ukrainian

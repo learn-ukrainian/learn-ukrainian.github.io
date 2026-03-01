@@ -1,27 +1,47 @@
-sequence: 17
 module: ruth-017
-module_number: 15
+level: RUTH
+sequence: 17
 slug: sovereignty-1588
-title_uk: Суверенітет (1588)
-title_en: Sovereignty
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: Суверенітет (1588)
+subtitle: Sovereignty
 focus: GDL independence rhetoric
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Sovereignty
+  points:
+  - Introduction to Sovereignty
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Crown Jurist
+prerequisites:
+- chancery-formulae-dating
+connects_to:
+- treason

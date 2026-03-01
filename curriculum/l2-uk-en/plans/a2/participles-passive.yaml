@@ -1,108 +1,89 @@
-module: a2-73
+module: a2-073
 level: A2
 sequence: 73
 slug: participles-passive
 version: '2.0'
 title: Passive Participles
 subtitle: Past Passive Participles as Adjectives (-ний/-тий)
-content_outline:
-- section: 'Вступ: Дієприкметники навколо нас (Introduction: Participles Around Us)'
-  words: 450
-  points:
-  - 'Alignment with State Standard 2024: Scaffolding B1 morphological concepts (§4.2.3.1)
-    through the lens of A2 adjectival declension (§4.2.1.2) for practical communication.'
-  - 'Passive encounter in daily life: explaining why learners find participles in
-    signs, labels, and instructions before they master the generative grammar.'
-  - 'Functional goal: prioritizing the recognition of high-frequency adjectival
-    participles (open, closed, busy) over complex grammatical transformation.'
-- section: 'Утворення дієприкметників (Participle Formation)'
-  words: 700
-  points:
-  - 'Formation patterns using -ний and -тий suffixes from perfective verb stems (зробити
-    → зроблений, відкрити → відкритий, написати → написаний).'
-  - 'Stem changes: consonant mutations before -ний (підготувати → підготовлений,
-    побудувати → побудований); recognizing patterns.'
-  - 'High-utility lexical set: essential daily words — зайнятий (busy/occupied),
-    зламаний (broken), забутий (forgotten), підготовлений (prepared).'
-- section: 'Узгодження як прикметник (Agreement Like Adjectives)'
-  words: 600
-  points:
-  - 'Agreement rules: treating participles as adjectives in gender, number, and case
-    (написаний лист-m, написана книга-f, написане слово-n, написані листи-pl).'
-  - 'Learner error prevention: focusing on Agreement Mismatch (двері відкритий →
-    двері відкриті, since двері is plural).'
-  - 'Case forms: declining participles in oblique cases — written exercises with Gen,
-    Dat, Inst forms (зламаного ліфта, зайнятому студенту).'
-- section: 'Дієприкметник у контексті (Participles in Context)'
-  words: 600
-  points:
-  - 'Attributive position: написаний лист (a written letter) — participle before or
-    after noun.'
-  - 'Predicative position: Лист написаний (The letter is written) — participle as
-    predicate with бути (Лист був написаний, Лист буде написаний).'
-  - 'Proverbs and fixed expressions: «Дарованому коню в зуби не заглядають» — how
-    participles decline in proverbs.'
-  - 'Contrast with active voice: «Лист написаний мамою» (passive) vs «Мама написала
-    лист» (active) — recognition, not active production of passive voice.'
-- section: 'Помилки та заборони (Errors and Restrictions)'
-  words: 350
-  points:
-  - 'The Active Participle Ban: in standard Ukrainian, -ючий/-ачий forms are NOT used
-    (*читаючий хлопець is a Russian/English calque); use relative clauses instead:
-    «хлопець, який читає».'
-  - 'Common errors: confusing adjectives and participles; knowing when a word is
-    "really" a participle vs a lexicalized adjective (відомий, знайомий).'
-- section: 'Практика (Practice)'
-  words: 300
-  points:
-  - 'Form participles from given verbs; complete sentences with correct agreement.'
-  - 'Reading comprehension: identify participles in a short text and determine their
-    function (attributive/predicative).'
-  - 'Transition to next module: recognize -но/-то forms on signs → impersonal-passive.'
 focus: grammar
 pedagogy: PPP
-prerequisites:
-- a2-72 (Online Services)
-connects_to:
-- a2-74 (Impersonal Passive Forms)
+phase: A2.7
+word_target: 3000
 objectives:
 - Learner can recognize and form past passive participles (-ний/-тий)
 - Learner can use participles with correct gender/number/case agreement
 - Learner can distinguish participles from regular adjectives
 - Learner knows the active participle ban in standard Ukrainian
-grammar:
-- past passive participles (-ний/-тий forms)
-- participle agreement (gender, number, case)
-- attributive vs predicative usage
-- active participle restriction
-module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Participles
   url: https://mon.gov.ua/
   type: reference
   notes: '§4.2.3.1: participles required at A2 level'
-immersion: 75-90% Ukrainian
-phase: A2.7
-persona:
-  voice: Encouraging Cultural Guide
-  role: Copy Editor
+content_outline:
+- section: 'Вступ: Дієприкметники навколо нас (Introduction: Participles Around Us)'
+  words: 450
+  points:
+  - 'Alignment with State Standard 2024: Scaffolding B1 morphological concepts (§4.2.3.1) through the lens of A2 adjectival
+    declension (§4.2.1.2) for practical communication.'
+  - 'Passive encounter in daily life: explaining why learners find participles in signs, labels, and instructions before they
+    master the generative grammar.'
+  - 'Functional goal: prioritizing the recognition of high-frequency adjectival participles (open, closed, busy) over complex
+    grammatical transformation.'
+- section: Утворення дієприкметників (Participle Formation)
+  words: 700
+  points:
+  - Formation patterns using -ний and -тий suffixes from perfective verb stems (зробити → зроблений, відкрити → відкритий,
+    написати → написаний).
+  - 'Stem changes: consonant mutations before -ний (підготувати → підготовлений, побудувати → побудований); recognizing patterns.'
+  - 'High-utility lexical set: essential daily words — зайнятий (busy/occupied), зламаний (broken), забутий (forgotten), підготовлений
+    (prepared).'
+- section: Узгодження як прикметник (Agreement Like Adjectives)
+  words: 600
+  points:
+  - 'Agreement rules: treating participles as adjectives in gender, number, and case (написаний лист-m, написана книга-f,
+    написане слово-n, написані листи-pl).'
+  - 'Learner error prevention: focusing on Agreement Mismatch (двері відкритий → двері відкриті, since двері is plural).'
+  - 'Case forms: declining participles in oblique cases — written exercises with Gen, Dat, Inst forms (зламаного ліфта, зайнятому
+    студенту).'
+- section: Дієприкметник у контексті (Participles in Context)
+  words: 600
+  points:
+  - 'Attributive position: написаний лист (a written letter) — participle before or after noun.'
+  - 'Predicative position: Лист написаний (The letter is written) — participle as predicate with бути (Лист був написаний,
+    Лист буде написаний).'
+  - 'Proverbs and fixed expressions: «Дарованому коню в зуби не заглядають» — how participles decline in proverbs.'
+  - 'Contrast with active voice: «Лист написаний мамою» (passive) vs «Мама написала лист» (active) — recognition, not active
+    production of passive voice.'
+- section: Помилки та заборони (Errors and Restrictions)
+  words: 350
+  points:
+  - 'The Active Participle Ban: in standard Ukrainian, -ючий/-ачий forms are NOT used (*читаючий хлопець is a Russian/English
+    calque); use relative clauses instead: «хлопець, який читає».'
+  - 'Common errors: confusing adjectives and participles; knowing when a word is "really" a participle vs a lexicalized adjective
+    (відомий, знайомий).'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - Form participles from given verbs; complete sentences with correct agreement.
+  - 'Reading comprehension: identify participles in a short text and determine their function (attributive/predicative).'
+  - 'Transition to next module: recognize -но/-то forms on signs → impersonal-passive.'
 vocabulary_hints:
   required:
-  - 'зроблений (made/done) — зроблена робота, зроблений вибір; from зробити'
-  - 'відкритий (open) — відкриті двері, відкритий урок; from відкрити'
-  - 'закритий (closed) — закритий магазин, закриті очі; from закрити'
-  - 'написаний (written) — написаний лист, написана книга; from написати'
-  - 'зайнятий (busy/occupied) — зайняте місце, він зайнятий; from зайняти'
-  - 'зламаний (broken) — зламаний ліфт, зламана рука; from зламати'
-  - 'забутий (forgotten) — забутий пароль, забуті речі; from забути'
-  - 'побудований (built) — побудований будинок, побудована школа; from побудувати'
+  - зроблений (made/done) — зроблена робота, зроблений вибір; from зробити
+  - відкритий (open) — відкриті двері, відкритий урок; from відкрити
+  - закритий (closed) — закритий магазин, закриті очі; from закрити
+  - написаний (written) — написаний лист, написана книга; from написати
+  - зайнятий (busy/occupied) — зайняте місце, він зайнятий; from зайняти
+  - зламаний (broken) — зламаний ліфт, зламана рука; from зламати
+  - забутий (forgotten) — забутий пароль, забуті речі; from забути
+  - побудований (built) — побудований будинок, побудована школа; from побудувати
   recommended:
-  - 'підготовлений (prepared) — підготовлений до іспиту; from підготувати'
-  - 'відомий (known/famous) — lexicalized participle; відома актриса'
-  - 'знайомий (familiar/acquaintance) — lexicalized participle; знайома людина'
-  - 'втрачений (lost) — втрачений час, втрачена можливість; from втратити'
-  - 'куплений (bought) — куплений квиток; from купити'
-  - 'отриманий (received) — отриманий лист; from отримати'
+  - підготовлений (prepared) — підготовлений до іспиту; from підготувати
+  - відомий (known/famous) — lexicalized participle; відома актриса
+  - знайомий (familiar/acquaintance) — lexicalized participle; знайома людина
+  - втрачений (lost) — втрачений час, втрачена можливість; from втратити
+  - куплений (bought) — куплений квиток; from купити
+  - отриманий (received) — отриманий лист; from отримати
 activity_hints:
 - type: fill-in
   focus: Form participles from verbs
@@ -116,4 +97,17 @@ activity_hints:
 - type: match-up
   focus: Verb to participle pairs
   items: 15
-word_target: 3000
+connects_to:
+- a2-74 (Impersonal Passive Forms)
+prerequisites:
+- a2-72 (Online Services)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Copy Editor
+grammar:
+- past passive participles (-ний/-тий forms)
+- participle agreement (gender, number, case)
+- attributive vs predicative usage
+- active participle restriction
+module_type: grammar
+immersion: 75-90% Ukrainian

@@ -1,31 +1,44 @@
-sequence: 123
-module: lit-123
+module: lit-121
 level: LIT
+sequence: 121
 slug: synthesis-3
 version: '2.0'
 title: 'Синтез: Горизонти епохи 3'
 subtitle: 'Intellectual Synthesis: Horizons of Era 3'
+focus: literature
+pedagogy: literature
+phase: LIT Synthesis
+word_target: 5000
+objectives:
+- Синтезувати знання про літературний процес вивченого періоду
+- Застосувати деколонізаційну оптику для аналізу взаємозв'язків між авторами
+- Оцінити тяглість української інтелектуальної традиції
 content_outline:
 - section: 'Діахронний аналіз: Зв''язок поколінь'
   points:
   - Еволюція ключових ідей та архетипів у вивченому періоді
   - Як пізніші автори ведуть діалог з попередниками
+  words: 1000
 - section: 'Деколонізаційна оптика: Сталева нитка'
   points:
   - Спільні стратегії інтелектуального опору в різних жанрах
   - Деконструкція імперського наративу як системний процес
+  words: 1000
 - section: Стилістичний калейдоскоп
   points:
   - Порівняльний аналіз авторських технік та мовних експериментів
   - Трансформація літературної мови від епохи до епохи
+  words: 1000
 - section: Філософія ідентичності
   points:
   - Конструювання образу українського суб'єкта
   - Література як простір формування національної етики
+  words: 1000
 - section: Спадщина та горизонти майбутнього
   points:
   - Вплив періоду на сучасний літературний процес
   - Значення канону для інтелектуальної безпеки
+  words: 1000
 vocabulary_hints:
   required:
   - діахронія
@@ -43,15 +56,11 @@ activity_hints:
   focus: Аналіз прихованих смислів та стратегій опору в текстах
 - type: essay-response
   focus: Синтезуюче есе про роль літератури у державотворенні
-focus: literature
-pedagogy: literature
-immersion: 100% Ukrainian
-phase: LIT Synthesis
-objectives:
-- Синтезувати знання про літературний процес вивченого періоду
-- Застосувати деколонізаційну оптику для аналізу взаємозв'язків між авторами
-- Оцінити тяглість української інтелектуальної традиції
 persona:
   voice: Senior Philologist & Critic
   role: Era Synthesizer
-word_target: 5000
+immersion: 100% Ukrainian
+prerequisites:
+- kosynka-short-fiction
+connects_to:
+- lukash-translation-as-resistance

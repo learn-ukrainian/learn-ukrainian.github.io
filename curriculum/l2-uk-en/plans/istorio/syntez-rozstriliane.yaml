@@ -1,58 +1,86 @@
 module: istorio-057
-level: istorio
+level: ISTORIO
 sequence: 57
+slug: syntez-rozstriliane
 version: '1.0'
 title: 'Синтез: Культурний геноцид'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: культурний геноцид'
 - Evaluate the historical significance of що ми дізналися
+sources:
+- name: Розстріляне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Overview
+- name: Культурний геноцид
+  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
+  type: reference
+  notes: Concept
 content_outline:
 - section: Вступ — Що ми дізналися
-  subsections:
+  points:
   - Огляд модулів 52-56
   - Від контексту до механізмів
   - Мета синтезу — інтеграція
   - Культурний геноцид як рамка
+  words: 700
 - section: Паттерн знищення
-  subsections:
+  points:
   - Дозвіл → Контроль → Знищення
   - Чому цей паттерн?
   - Порівняння з Голодомором
   - Синхронність подій
+  words: 700
 - section: Що втрачено
-  subsections:
+  points:
   - Літературна спадщина
   - Театральна школа
   - Наукова традиція
   - Альтернативний шлях розвитку
   - Що могло б бути
+  words: 700
 - section: Культурний геноцид — поняття
-  subsections:
+  points:
   - Визначення
   - Чи застосовне до України?
   - Конвенція ООН — що включає
   - Дебати про термін
   - Правові імплікації
+  words: 700
 - section: Пам'ять і відновлення
-  subsections:
+  points:
   - Як повертали забуте
   - Діаспора — збереження
   - Після 1991 — перевидання
   - Сучасна рецепція
   - Чи можна відновити втрачене?
+  words: 700
 - section: Уроки для сьогодні
-  subsections:
+  points:
   - Культура як мішень — 2022
   - Паралелі з минулим
   - Захист культури
   - Документування злочинів
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Розстріляне відродження — парадигма
   - Від знищення до відродження
   - Перехід до релігійної ідентичності
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - культурний геноцид
@@ -69,6 +97,15 @@ vocabulary:
 - деколонізація
 - канон
 - реабілітація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: essay-response
   focus: Integrate all Executed Renaissance modules into concept map
@@ -80,34 +117,10 @@ activities:
   focus: Parallels between 1930s and 2022 cultural destruction
 - type: essay-response
   focus: Чи можна назвати знищення Розстріляного відродження культурним геноцидом?
-sources:
-- name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Overview
-- name: Культурний геноцид
-  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
-  type: reference
-  notes: Concept
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Literary Necropolis Keeper
+prerequisites:
+- mekhanizm-znyshchennia
+connects_to:
+- khreshchennia-spadshchyna

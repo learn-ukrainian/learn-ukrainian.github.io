@@ -1,62 +1,63 @@
-module: a1-23
+module: a1-023
 level: A1
 sequence: 23
 slug: what-time-is-it
 version: '2.0'
 title: What Time Is It?
 subtitle: Telling Time, Days, and Months
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 2000
+objectives:
+- Learner can ask and tell the time
+- Learner can name all days of the week
+- Learner can name all months of the year
+- Learner can use time prepositions correctly
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - 'Cultural hook: Ukrzaliznytsia (90%+ punctuality) as the backbone of Ukrainian
-    resilience; learning to be «вчасно» (on time) as a core value.'
-  - 'Communicative competence (Standard §4.2.3.4): Using the Vocative case and polite
-    address forms: «Пане / пані, скажіть, будь ласка, котра година?».'
+  - 'Cultural hook: Ukrzaliznytsia (90%+ punctuality) as the backbone of Ukrainian resilience; learning to be «вчасно» (on
+    time) as a core value.'
+  - 'Communicative competence (Standard §4.2.3.4): Using the Vocative case and polite address forms: «Пане / пані, скажіть,
+    будь ласка, котра година?».'
 - section: Презентація часу (Time Presentation)
   words: 600
   points:
-  - 'Asking for time: Distinction between «Котра година?» (current time) and «О котрій?»
-    (scheduled time for events or train arrivals).'
-  - 'Hour identification: Using ordinal numbers in feminine gender (перша, друга).
-    Learner error correction: translate ''It is two o''clock'' as «Зараз друга година»,
-    not «два годин».'
-  - 'A1 simplicity (Standard §3.4): Prioritize ''telegraphic style'' (вісім тридцять)
-    for minutes before introducing complex fractions like «пів на» or «чверть».'
+  - 'Asking for time: Distinction between «Котра година?» (current time) and «О котрій?» (scheduled time for events or train
+    arrivals).'
+  - 'Hour identification: Using ordinal numbers in feminine gender (перша, друга). Learner error correction: translate ''It
+    is two o''clock'' as «Зараз друга година», not «два годин».'
+  - 'A1 simplicity (Standard §3.4): Prioritize ''telegraphic style'' (вісім тридцять) for minutes before introducing complex
+    fractions like «пів на» or «чверть».'
 - section: Дні та місяці (Days and Months)
   words: 600
   points:
-  - 'Days of the week: Grammar focus (§4.2.3.2.2) on «у/в» + Accusative case. Learner
-    error: mimicking ''in/at'' with Locative (*у понеділку) instead of correct «у
-    понеділок».'
-  - 'Months and Seasons: Locative case (§4.2.3.3) for months (у січні). Note on orthography:
-    unlike English, months and days are lowercase in Ukrainian.'
+  - 'Days of the week: Grammar focus (§4.2.3.2.2) on «у/в» + Accusative case. Learner error: mimicking ''in/at'' with Locative
+    (*у понеділку) instead of correct «у понеділок».'
+  - 'Months and Seasons: Locative case (§4.2.3.3) for months (у січні). Note on orthography: unlike English, months and days
+    are lowercase in Ukrainian.'
   - Associating months with weather and seasonal cycles in Ukraine to aid memorization.
 - section: Практика та розклад (Practice and Schedule)
   words: 400
   points:
-  - 'Register distinction: 24-hour format for official schedules (transport, digital)
-    vs. 12-hour format for colloquial speech («друга година дня» vs. «чотирнадцята
-    година»).'
-  - 'Prepositions for planning: Using «о» (at), «до» (until), and «після» (after)
-    to create a simple conductor''s shift schedule or a daily routine.'
+  - 'Register distinction: 24-hour format for official schedules (transport, digital) vs. 12-hour format for colloquial speech
+    («друга година дня» vs. «чотирнадцята година»).'
+  - 'Prepositions for planning: Using «о» (at), «до» (until), and «після» (after) to create a simple conductor''s shift schedule
+    or a daily routine.'
 vocabulary_hints:
   required:
-  - година (hour) — котра година?, о першій годині, ціла година; High frequency (Core
-    A1)
-  - хвилина (minute) — за п'ять хвилин, одна хвилина, 30 хвилин; High frequency (Core
-    A1)
+  - година (hour) — котра година?, о першій годині, ціла година; High frequency (Core A1)
+  - хвилина (minute) — за п'ять хвилин, одна хвилина, 30 хвилин; High frequency (Core A1)
   - день (day) — добрий день, робочий день, вихідний день; High frequency (Core A1)
-  - тиждень (week) — на цьому тижні, наступного тижня, дні тижня; High frequency (Core
-    A1)
-  - місяць (month) — у цьому місяці, минулого місяця, зимові місяці; High frequency
-    (Core A1)
+  - тиждень (week) — на цьому тижні, наступного тижня, дні тижня; High frequency (Core A1)
+  - місяць (month) — у цьому місяці, минулого місяця, зимові місяці; High frequency (Core A1)
   - рік (year) — новий рік, цього року, минулого року; High frequency (Core A1)
   - ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці
   - вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора
   recommended:
-  - вчасно (on time) — бути вчасно, прийти вчасно, поїзд прибув вчасно; Med frequency
-    (A1/A2)
+  - вчасно (on time) — бути вчасно, прийти вчасно, поїзд прибув вчасно; Med frequency (A1/A2)
   - понеділок (Monday) — у понеділок, важкий понеділок; usage with Accusative
   - січень (January) — у січні, перше січня; usage with Locative
   - зараз (now)
@@ -76,26 +77,17 @@ activity_hints:
 - type: fill-in
   focus: Schedule a meeting
   items: 6
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-22 (Numbers and Money)
-- a1-37 (Tomorrow - Future Tense)
 connects_to:
 - a1-24 (Can, Must, Want - Modals)
 - a1-38 (My Daily Routine)
-objectives:
-- Learner can ask and tell the time
-- Learner can name all days of the week
-- Learner can name all months of the year
-- Learner can use time prepositions correctly
+prerequisites:
+- a1-22 (Numbers and Money)
+- a1-37 (Tomorrow - Future Tense)
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrzaliznytsia Conductor
 grammar:
 - Clock time expressions (Котра година?)
 - Time prepositions (о, до, після)
 - Days and months in context
 register: розмовний
-phase: A1.2 [Verbs & Sentences]
-persona:
-  voice: Patient Supportive Tutor
-  role: Ukrzaliznytsia Conductor
-word_target: 2000

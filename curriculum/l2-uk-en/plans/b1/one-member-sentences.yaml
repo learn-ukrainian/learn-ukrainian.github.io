@@ -1,111 +1,99 @@
-module: b1-49
+module: b1-049
 level: B1
 sequence: 49
 slug: one-member-sentences
 version: '2.0'
-title: 'Односкладні речення'
-subtitle: 'One-Member Sentences in Ukrainian'
+title: Односкладні речення
+subtitle: One-Member Sentences in Ukrainian
 focus: grammar
 pedagogy: TTT
-phase: 'B1.6 [Participles and Advanced Grammar]'
-register: нейтральний
-immersion: 75-100% Ukrainian
-
-prerequisites:
-  - 'b1-48 (Passive Constructions)'
-
-connects_to:
-  - 'b1-50 (Adverbial Participles — Imperfective)'
-
+phase: B1.6 [Participles and Advanced Grammar]
+word_target: 4000
 objectives:
-  - Learner can identify all 4 types of one-member sentences
-  - Learner can construct означено-особові and неозначено-особові sentences
-  - Learner can use безособові constructions for states, weather, and modals
-  - Learner can recognize називні речення in headlines and literature
-
-grammar:
-  - Означено-особові речення (definite-personal)
-  - Неозначено-особові речення (indefinite-personal)
-  - Безособові речення (impersonal)
-  - Називні речення (nominal)
-
+- Learner can identify all 4 types of one-member sentences
+- Learner can construct означено-особові and неозначено-особові sentences
+- Learner can use безособові constructions for states, weather, and modals
+- Learner can recognize називні речення in headlines and literature
+content_outline:
+- section: 'Вступ: Навіщо речення без підмета? (Introduction: Why Sentences Without a Subject?)'
+  words: 500
+  points:
+  - 'State Standard §4.3.2: односкладні речення as required B1 grammar'
+  - 'Cultural hook: Ukrainian preference for impersonal expression vs English "I" centering'
+  - 'Overview: 4 types — означено-особові, неозначено-особові, безособові, називні'
+- section: Означено-особові речення (Definite-Personal Sentences)
+  words: 700
+  points:
+  - 'Definition: subject omitted but recoverable from verb ending (1st/2nd person)'
+  - 'Examples: "Іду додому" (= я іду), "Знаєш цю пісню?" (= ти знаєш)'
+  - 'Common in informal speech, imperatives: "Читай!", "Ходімо!"'
+  - 'Drill: convert two-member → one-member by dropping pronoun'
+- section: Неозначено-особові речення (Indefinite-Personal Sentences)
+  words: 700
+  points:
+  - 'Definition: 3rd person plural verb, agent unknown or irrelevant'
+  - 'Examples: "Кажуть, що..." (they say), "Тут не палять" (one doesn''t smoke here)'
+  - 'Usage: news style, general truths, avoiding naming the agent'
+  - 'Contrast with English passive: "It is said..." = "Кажуть..."'
+- section: Безособові речення (Impersonal Sentences)
+  words: 800
+  points:
+  - Most productive type in Ukrainian
+  - 'State/weather: "Холодно", "Темніє", "Мені сумно"'
+  - 'Modals: "Треба працювати", "Можна увійти?"'
+  - 'Predicate forms: -но/-то ("Написано"), infinitive ("Не курити!")'
+  - 'Learner error: adding "воно" (it is cold → *Воно холодно → Холодно)'
+- section: Називні речення (Nominal Sentences)
+  words: 600
+  points:
+  - 'Definition: noun/noun phrase in nominative, no verb'
+  - 'Usage: headlines ("Перемога!"), scene setting ("Ніч. Тиша. Місяць.")'
+  - Stage directions, poetry, emotional expression
+  - 'News headlines: "Нові санкції проти Росії", "Рекордний урожай"'
+- section: 'Практика: Від двоскладних до односкладних (Practice: From Two-Member to One-Member)'
+  words: 700
+  points:
+  - 'Transformation exercises: identify type, convert between formats'
+  - 'Reading comprehension: identify one-member sentences in authentic text'
+  - 'Register awareness: which types dominate in which registers'
+  - 'Writing: compose a weather report, news bulletin, informal message using one-member sentences'
+vocabulary_hints:
+  required:
+  - односкладний (one-member) — односкладне речення; grammatical term
+  - двоскладний (two-member) — двоскладне речення; contrast term
+  - підмет (subject) — немає підмета, підмет опущений
+  - присудок (predicate) — головний член речення
+  - безособовий (impersonal) — безособове речення, безособовий зворот
+  - називний (nominal/nominative) — називне речення, називний відмінок
+  recommended:
+  - означено-особовий (definite-personal) — grammatical classification
+  - неозначено-особовий (indefinite-personal) — grammatical classification
+  - заголовок (headline) — газетний заголовок; context for називні речення
+  - модальність (modality) — модальні слова; connection to безособові
+activity_hints:
+- type: quiz
+  focus: Identify one-member sentence type
+  items: 15
+- type: fill-in
+  focus: Transform two-member to one-member sentences
+  items: 15
+- type: error-correction
+  focus: Fix unnecessary subject insertion
+  items: 10
+- type: match-up
+  focus: Match sentence to its type classification
+  items: 12
+connects_to:
+- b1-50 (Adverbial Participles — Imperfective)
+prerequisites:
+- b1-48 (Passive Constructions)
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher
-
-content_outline:
-  - section: 'Вступ: Навіщо речення без підмета? (Introduction: Why Sentences Without a Subject?)'
-    words: 500
-    points:
-      - 'State Standard §4.3.2: односкладні речення as required B1 grammar'
-      - 'Cultural hook: Ukrainian preference for impersonal expression vs English "I" centering'
-      - 'Overview: 4 types — означено-особові, неозначено-особові, безособові, називні'
-
-  - section: 'Означено-особові речення (Definite-Personal Sentences)'
-    words: 700
-    points:
-      - 'Definition: subject omitted but recoverable from verb ending (1st/2nd person)'
-      - 'Examples: "Іду додому" (= я іду), "Знаєш цю пісню?" (= ти знаєш)'
-      - 'Common in informal speech, imperatives: "Читай!", "Ходімо!"'
-      - 'Drill: convert two-member → one-member by dropping pronoun'
-
-  - section: 'Неозначено-особові речення (Indefinite-Personal Sentences)'
-    words: 700
-    points:
-      - 'Definition: 3rd person plural verb, agent unknown or irrelevant'
-      - 'Examples: "Кажуть, що..." (they say), "Тут не палять" (one doesn''t smoke here)'
-      - 'Usage: news style, general truths, avoiding naming the agent'
-      - 'Contrast with English passive: "It is said..." = "Кажуть..."'
-
-  - section: 'Безособові речення (Impersonal Sentences)'
-    words: 800
-    points:
-      - 'Most productive type in Ukrainian'
-      - 'State/weather: "Холодно", "Темніє", "Мені сумно"'
-      - 'Modals: "Треба працювати", "Можна увійти?"'
-      - 'Predicate forms: -но/-то ("Написано"), infinitive ("Не курити!")'
-      - 'Learner error: adding "воно" (it is cold → *Воно холодно → Холодно)'
-
-  - section: 'Називні речення (Nominal Sentences)'
-    words: 600
-    points:
-      - 'Definition: noun/noun phrase in nominative, no verb'
-      - 'Usage: headlines ("Перемога!"), scene setting ("Ніч. Тиша. Місяць.")'
-      - 'Stage directions, poetry, emotional expression'
-      - 'News headlines: "Нові санкції проти Росії", "Рекордний урожай"'
-
-  - section: 'Практика: Від двоскладних до односкладних (Practice: From Two-Member to One-Member)'
-    words: 700
-    points:
-      - 'Transformation exercises: identify type, convert between formats'
-      - 'Reading comprehension: identify one-member sentences in authentic text'
-      - 'Register awareness: which types dominate in which registers'
-      - 'Writing: compose a weather report, news bulletin, informal message using one-member sentences'
-
-vocabulary_hints:
-  required:
-    - 'односкладний (one-member) — односкладне речення; grammatical term'
-    - 'двоскладний (two-member) — двоскладне речення; contrast term'
-    - 'підмет (subject) — немає підмета, підмет опущений'
-    - 'присудок (predicate) — головний член речення'
-    - 'безособовий (impersonal) — безособове речення, безособовий зворот'
-    - 'називний (nominal/nominative) — називне речення, називний відмінок'
-  recommended:
-    - 'означено-особовий (definite-personal) — grammatical classification'
-    - 'неозначено-особовий (indefinite-personal) — grammatical classification'
-    - 'заголовок (headline) — газетний заголовок; context for називні речення'
-    - 'модальність (modality) — модальні слова; connection to безособові'
-
-activity_hints:
-  - type: quiz
-    focus: Identify one-member sentence type
-    items: 15
-  - type: fill-in
-    focus: Transform two-member to one-member sentences
-    items: 15
-  - type: error-correction
-    focus: Fix unnecessary subject insertion
-    items: 10
-  - type: match-up
-    focus: Match sentence to its type classification
-    items: 12
+grammar:
+- Означено-особові речення (definite-personal)
+- Неозначено-особові речення (indefinite-personal)
+- Безособові речення (impersonal)
+- Називні речення (nominal)
+register: нейтральний
+immersion: 75-100% Ukrainian

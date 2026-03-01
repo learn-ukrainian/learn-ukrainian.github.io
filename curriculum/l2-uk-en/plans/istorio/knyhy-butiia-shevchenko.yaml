@@ -1,57 +1,89 @@
 module: istorio-029
-level: istorio
+level: ISTORIO
 sequence: 29
+slug: knyhy-butiia-shevchenko
 version: '1.0'
 title: 'Книги Буття: Шевченко та Кирило-Мефодіївці'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
 - Evaluate the historical significance of перша політична програма
+sources:
+- name: Кирило-Мефодіївське братство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: reference
+  notes: Brotherhood overview
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: reference
+  notes: Brotherhood manifesto
+- name: Текст "Книг буття"
+  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
+  type: primary
+  notes: Full text
 content_outline:
 - section: Вступ — Перша політична програма
-  subsections:
+  points:
   - 1846-1847 — контекст
   - Кирило-Мефодіївське братство
   - «Книги буття» — маніфест
   - Чому важливий документ
+  words: 700
 - section: Історичний контекст
-  subsections:
+  points:
   - Україна під Російською імперією
   - Пробудження націй — європейський контекст
   - Київський університет — інтелектуальне середовище
   - Романтичний націоналізм
+  words: 700
 - section: Братство і його члени
-  subsections:
+  points:
   - Костомаров — ідеолог
   - Шевченко — поет
   - Куліш — письменник
   - Інші члени
   - Як організувалися
+  words: 700
 - section: «Книги буття» — зміст
-  subsections:
+  points:
   - Структура — біблійна форма
   - Історія слов'ян
   - Україна як месія народів
   - Федерація — політичний ідеал
   - Скасування кріпацтва
+  words: 700
 - section: Фрагмент — Україна як месія
-  subsections:
+  points:
   - Текст (з глосами)
   - Месіанський наратив
   - Порівняння з польським месіанізмом
   - Романтична мова
+  words: 700
 - section: Доля братства
-  subsections:
+  points:
   - Донос і арешти
   - Покарання — Шевченко найсуворіше
   - Чому Шевченко?
   - Довготривалий вплив
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Перша політична програма
   - Від романтизму до політики
   - Зв'язок із пізнішими рухами
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - братство
 - маніфест
@@ -68,6 +100,15 @@ vocabulary:
 - утопія
 - змова
 - ідеологія
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: reading
   focus: «Ukraine as Messiah» passage with glosses
@@ -79,38 +120,10 @@ activities:
   focus: Why biblical form? Who was the audience?
 - type: essay-response
   focus: Чому Кирило-Мефодіївське братство важливе для українського руху?
-sources:
-- name: Кирило-Мефодіївське братство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
-  type: reference
-  notes: Brotherhood overview
-- name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
-  type: reference
-  notes: Brotherhood manifesto
-- name: Текст "Книг буття"
-  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
-  type: primary
-  notes: Full text
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Romantic Nationalism Scholar
+prerequisites:
+- syntez-kozatski-dzherela
+connects_to:
+- zapovit-ta-lysty-shevchenka

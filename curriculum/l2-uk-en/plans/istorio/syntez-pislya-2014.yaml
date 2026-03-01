@@ -1,49 +1,80 @@
 module: istorio-125
-level: istorio
+level: ISTORIO
 sequence: 125
+slug: syntez-pislya-2014
 version: '1.0'
 title: 'Синтез: Після 2014 і 2022'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: після 2014 і 2022'
 - Evaluate the historical significance of новий цикл
+sources:
+- name: Декомунізація в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  type: reference
+  notes: Decommunization
+- name: Мовна політика України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
+  type: reference
+  notes: Language policy
+- name: Культура України під час війни (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культура_України
+  type: reference
+  notes: Wartime culture
 content_outline:
 - section: Вступ — Новий цикл
-  subsections:
+  points:
   - Огляд модулів 122-124
   - 2014 — початок деколонізації
   - 2022 — прискорення
   - Мета синтезу
+  words: 850
 - section: Пост-2014 — Декомунізація
-  subsections:
+  points:
   - Закони 2015 року
   - Перейменування
   - Що це означало
   - Критика і підтримка
+  words: 850
 - section: Мовний зсув
-  subsections:
+  points:
   - Закон про мову 2019
   - Практика vs закон
   - Російськомовні українці
   - Добровільний перехід
+  words: 850
 - section: 2022 — Культурний вибух
-  subsections:
+  points:
   - Війна і культура
   - Нові митці
   - Міжнародний прорив
   - Культура як зброя
+  words: 850
 - section: Чи це останній цикл?
-  subsections:
+  points:
   - Структурні зміни
   - Що відрізняє від попередніх
   - Ризики — що може зупинити
   - Умови успіху
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - Цикл продовжується — чи завершується?
   - Українська культура — наступ
   - Перехід до агентності
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - декомунізація
@@ -60,6 +91,15 @@ vocabulary:
 - культурний спротив
 - воєнний час
 - національна консолідація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: essay-response
   focus: Map cultural cycles from Ems to 2022
@@ -71,38 +111,10 @@ activities:
   focus: How 2022 differs from previous cycles
 - type: essay-response
   focus: Чи 2022 — кінець циклу пригнічень?
-sources:
-- name: Декомунізація в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
-  type: reference
-  notes: Decommunization
-- name: Мовна політика України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
-  type: reference
-  notes: Language policy
-- name: Культура України під час війни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культура_України
-  type: reference
-  notes: Wartime culture
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Modern Conflict Researcher
+prerequisites:
+- pislya-stalina-shistdesiatnyky
+connects_to:
+- kulturna-rezystentsiia

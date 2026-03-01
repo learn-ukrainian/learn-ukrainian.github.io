@@ -1,69 +1,82 @@
-module: b1-12
+module: b1-014
 level: B1
-sequence: 12
+sequence: 14
 slug: aspect-pairs-essential-40
 version: '2.0'
 title: 'Видові пари: 40 найважливіших'
 subtitle: Essential Aspect Pairs - The 40 most common verb pairs
+focus: grammar
+pedagogy: TTT
+phase: B1.1 Aspect
+word_target: 4000
+objectives:
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
+sources:
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
 content_outline:
 - section: Вступ та діагностика (Introduction & Diagnostics)
   words: 600
   points:
-  - Diagnostic aspect pair recognition focusing on the 'Perfective Present' error
-    trap (e.g., using «Я зроблю це зараз» for immediate action) to establish a baseline
-    of current intuition.
-  - 'Intuition check for future tense forms: identifying the mistake in «Я буду прочитати»
-    (mixing compound future with perfective infinitive) vs. correct usage.'
-  - 'Initial contrast of past tense nuances: distinguishing between ''was doing''
-    (process) and ''did'' (result) using high-frequency verbs from the Top 10 list.'
+  - Diagnostic aspect pair recognition focusing on the 'Perfective Present' error trap (e.g., using «Я зроблю це зараз» for
+    immediate action) to establish a baseline of current intuition.
+  - 'Intuition check for future tense forms: identifying the mistake in «Я буду прочитати» (mixing compound future with perfective
+    infinitive) vs. correct usage.'
+  - 'Initial contrast of past tense nuances: distinguishing between ''was doing'' (process) and ''did'' (result) using high-frequency
+    verbs from the Top 10 list.'
 - section: Морфологія та типи творення (Morphology & Formation Types)
   words: 800
   points:
-  - Alignment with State Standard §4.2.3.1 (B1) regarding the formation and conjugation
-    of imperfective and perfective aspectual pairs in all tenses.
-  - 'Detailed breakdown of the three primary formation patterns: prefixation (писати/написати),
-    suffixation (відкривати/відкрити), and suppletive forms (говорити/сказати).'
-  - Explicit presentation of the 'Present = Imperfective ONLY' rule, clarifying that
-    perfective verbs cannot express the present tense and typically convey future
-    meaning.
+  - Alignment with State Standard §4.2.3.1 (B1) regarding the formation and conjugation of imperfective and perfective aspectual
+    pairs in all tenses.
+  - 'Detailed breakdown of the three primary formation patterns: prefixation (писати/написати), suffixation (відкривати/відкрити),
+    and suppletive forms (говорити/сказати).'
+  - Explicit presentation of the 'Present = Imperfective ONLY' rule, clarifying that perfective verbs cannot express the present
+    tense and typically convey future meaning.
 - section: Системний огляд 40 пар (Systematic Overview of 40 Pairs)
   words: 1000
   points:
-  - 'Prioritization of Top 10/20 verbs based on Frequency Dictionaries: робити/зробити,
-    говорити/сказати, брати/взяти, давати/дати, бачити/побачити.'
-  - Comprehensive list of high-frequency pairs for eating (їсти/з'їсти), drinking
-    (пити/випити), and learning (вчити/вивчити) with specific B1-level collocations.
-  - Introduction of visual symbols 🔄 (Process) and ✅ (Result) to guide selection in
-    exercises, alongside a 'Process vs. Result' timeline visual description.
+  - 'Prioritization of Top 10/20 verbs based on Frequency Dictionaries: робити/зробити, говорити/сказати, брати/взяти, давати/дати,
+    бачити/побачити.'
+  - Comprehensive list of high-frequency pairs for eating (їсти/з'їсти), drinking (пити/випити), and learning (вчити/вивчити)
+    with specific B1-level collocations.
+  - Introduction of visual symbols 🔄 (Process) and ✅ (Result) to guide selection in exercises, alongside a 'Process vs. Result'
+    timeline visual description.
 - section: Культурний та фразеологічний вимір (Cultural & Phraseological Dimension)
   words: 600
   points:
-  - 'Cultural hook (Result focus): Analysis of the proverb «Зробив діло – гуляй сміло»
-    as the quintessential expression of the Perfective aspect''s completion and freedom.'
-  - 'Cultural hook (Process focus): Analysis of «Вода камінь точить» to illustrate
-    the continuous, repetitive nature of the Imperfective aspect over time.'
-  - 'Folk wisdom for simultaneous action: Exploration of «Куй залізо, поки гаряче»
-    to highlight timing and aspectual selection in complex sentences.'
+  - 'Cultural hook (Result focus): Analysis of the proverb «Зробив діло – гуляй сміло» as the quintessential expression of
+    the Perfective aspect''s completion and freedom.'
+  - 'Cultural hook (Process focus): Analysis of «Вода камінь точить» to illustrate the continuous, repetitive nature of the
+    Imperfective aspect over time.'
+  - 'Folk wisdom for simultaneous action: Exploration of «Куй залізо, поки гаряче» to highlight timing and aspectual selection
+    in complex sentences.'
 - section: Корекція типових помилок (Correction of Common Errors)
   words: 600
   points:
-  - 'Addressing ''Future Tense Confusion'': Drills to eliminate the mixing of ''буду''
-    with perfective infinitives by contrasting Process Future vs. Result Future.'
-  - 'Past Tense Nuance Drill: Refining the choice between «Вчора я читав» (process
-    focus) and «Вчора я прочитав» (result focus) through situational context.'
-  - Remediation of the 'Perfective Present' trap through minimal pair drills emphasizing
-    that «Я роблю» is the only way to express current action.
+  - 'Addressing ''Future Tense Confusion'': Drills to eliminate the mixing of ''буду'' with perfective infinitives by contrasting
+    Process Future vs. Result Future.'
+  - 'Past Tense Nuance Drill: Refining the choice between «Вчора я читав» (process focus) and «Вчора я прочитав» (result focus)
+    through situational context.'
+  - Remediation of the 'Perfective Present' trap through minimal pair drills emphasizing that «Я роблю» is the only way to
+    express current action.
 - section: Підсумок та практичне застосування (Summary & Practical Application)
   words: 400
   points:
-  - 'Aspect pairs in natural conversation: Synthesizing the 40 essential pairs into
-    a narrative dialogue regarding a completed work day and future plans.'
-  - Final self-assessment checklist ensuring mastery of the Top 50 frequency verbs
-    and their corresponding formation patterns.
+  - 'Aspect pairs in natural conversation: Synthesizing the 40 essential pairs into a narrative dialogue regarding a completed
+    work day and future plans.'
+  - Final self-assessment checklist ensuring mastery of the Top 50 frequency verbs and their corresponding formation patterns.
 vocabulary_hints:
   required:
-  - робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10
-    verbs)
+  - робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10 verbs)
   - говорити/сказати (to speak/say) — говорити правду, сказати «ні» (Top 20 verbs)
   - брати/взяти (to take) — брати участь, взяти до уваги (Top 50 verbs)
   - давати/дати (to give) — давати слово, дати пораду (Top 50 verbs)
@@ -93,34 +106,17 @@ activity_hints:
 - type: quiz
   focus: Identify pair type and use correctly
   items: 15+
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-11 (Aspect in imperatives)
-- All aspect theory modules M06-11
 connects_to:
 - b1-13 (Work week - aspect in action)
 - b1-14 (Aspect integration practice)
-objectives:
-- Learner knows the 40 most essential aspect pairs
-- Learner can recognize and use both forms correctly
-- Learner understands common aspect formation patterns
+prerequisites:
+- b1-11 (Aspect in imperatives)
+- All aspect theory modules M06-11
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Drill Sergeant
 grammar:
 - 40 essential aspect pairs
 - Imperfective-perfective correspondence
 module_type: grammar
-sources:
-- name: Ukrainian Frequency Dictionaries
-  url: https://uk.wikipedia.org/wiki/Частотний_словник
-  type: reference
-  notes: Most frequent verbs in Ukrainian corpus
-- name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
-  type: reference
-  notes: Formation patterns for aspectual pairs
 immersion: 100% Ukrainian
-phase: B1.1 Aspect
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Drill Sergeant
-word_target: 4000

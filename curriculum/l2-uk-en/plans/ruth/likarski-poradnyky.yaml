@@ -1,21 +1,34 @@
-sequence: 116
-module: ruth-116
+module: ruth-111
+level: RUTH
+sequence: 111
 slug: likarski-poradnyky
-title_uk: "Лікарські та господарські порадники XVIII ст."
-title_en: "Medical and Household Manuals (18th c.)"
+version: '2.0'
+title: Лікарські та господарські порадники XVIII ст.
+subtitle: Medical and Household Manuals (18th c.)
+focus: Ukrainian in the domestic register — herbs, remedies, farming advice in the language people used at home
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Ukrainian in the domestic register — herbs, remedies, farming advice in the language people used at home"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Context: practical knowledge transmitted in Ukrainian, not Latin or Church Slavonic. These manuals prove Ukrainian was a fully functional language for science, medicine, and agriculture."
+  points:
+  - 'Context: practical knowledge transmitted in Ukrainian, not Latin or Church Slavonic. These manuals prove Ukrainian was
+    a fully functional language for science, medicine, and agriculture.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading medical recipes and household advice. Botanical vocabulary: herb names, preparation methods, dosages. Agricultural calendar. Folk medicine vocabulary that survives in modern Ukrainian."
+  points:
+  - 'Reading medical recipes and household advice. Botanical vocabulary: herb names, preparation methods, dosages. Agricultural
+    calendar. Folk medicine vocabulary that survives in modern Ukrainian.'
+  words: 1250
 - section: Практика
-  description: "Identifying botanical and medical terms. Tracing them to modern Ukrainian. Analyzing the imperative mood and instructional register."
+  points:
+  - Identifying botanical and medical terms. Tracing them to modern Ukrainian. Analyzing the imperative mood and instructional
+    register.
+  words: 1250
 - section: Підсумок
-  description: "These manuals demolish the myth that Ukrainian was only a 'peasant' or 'literary' language. It was a language of practical knowledge — science, medicine, domestic economy."
+  points:
+  - These manuals demolish the myth that Ukrainian was only a 'peasant' or 'literary' language. It was a language of practical
+    knowledge — science, medicine, domestic economy.
+  words: 1250
 vocabulary_hints:
 - порадник
 - лікарський
@@ -24,12 +37,24 @@ vocabulary_hints:
 - рецепт
 - ліки
 - настій
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
-- register-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
 persona:
-  voice: "Ethnobotanist"
-  role: "Folk Healer"
-source_url: "http://litopys.org.ua/porad/por.htm"
+  voice: Ethnobotanist
+  role: Folk Healer
+source_url: http://litopys.org.ua/porad/por.htm
+prerequisites:
+- pysovnyk-lystuvannia
+connects_to:
+- ruth-capstone

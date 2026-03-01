@@ -1,1 +1,13 @@
+module: lit-218
+level: LIT
+sequence: 218
 slug: ruthenian-triad-rusalka-dnistrova
+version: '2.0'
+word_target: 5000
+vocabulary_hints:
+  required: []
+  recommended: []
+prerequisites:
+- baroque-poetry-velychkovsky
+connects_to:
+- kobrynska-pershyi-vinok

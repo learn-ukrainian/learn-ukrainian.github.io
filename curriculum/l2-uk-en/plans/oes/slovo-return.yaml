@@ -1,27 +1,47 @@
-sequence: 85
-module: oes-085
-module_number: 85
+module: oes-082
+level: OES
+sequence: 82
 slug: slovo-return
-title_uk: 'Слово: Повернення'
-title_en: 'Slovo: The Return'
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: 'Слово: Повернення'
+subtitle: 'Slovo: The Return'
 focus: Joyous vocabulary — Doxology
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Slovo: The Return'
+  points:
+  - 'Introduction to Slovo: The Return'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: City Gatekeeper
+prerequisites:
+- slovo-escape
+connects_to:
+- slovo-poetic-syntax-lab

@@ -1,41 +1,69 @@
-sequence: 26
-module: lit-26
+module: lit-026
 level: LIT
+sequence: 26
 slug: nechuy-levytsky
 version: '2.0'
 title: 'Іван Нечуй-Левицький: Літописець Українського Села'
 subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
+focus: literature
+pedagogy: Seminar
+phase: LIT.5 Realism
+word_target: 5000
+objectives:
+- Зрозуміти роль Нечуя-Левицького у становленні українського реалізму
+- Проаналізувати біографічні фактори, що вплинули на творчість
+- Дослідити особливості "візуального" стилю письма
+- Оцінити внесок у зображення сільського життя
+sources:
+- name: Біографія Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Життя та творчість Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+  type: primary
+  notes: Розширена біографічна стаття
+- name: Нечуй-Левицький — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Загальний контекст
 content_outline:
 - section: Вступ — Від Куліша до Нечуя
   points:
   - Перехід від романтизму до реалізму
   - Чому Нечуй-Левицький важливий
   - Структура фінального етапу курсу
+  words: 850
 - section: Дитинство і середовище (1838-1859)
   points:
   - Село Стеблів і родина священика
   - Київська семінарія та духовна академія
   - Перші враження від сільського життя
+  words: 850
 - section: Учительські роки і перші твори
   points:
   - Робота вчителем (1865-1885)
   - '"Дві московки" — дебют (1868)'
   - Співпраця з Кулішем і львівською "Правдою"
+  words: 850
 - section: Золота доба творчості (1878-1884)
   points:
   - '"Микола Джеря" (1878) — епос кріпацтва'
   - '"Кайдашева сім''я" (1879) — сімейна сага'
   - '"Старосвітські батюшки та матушки" (1884)'
+  words: 850
 - section: Візуальний стиль Нечуя
   points:
   - Етнографічна точність
   - Мова як інструмент реалізму
   - Конфлікт з "галицькою" нормою
+  words: 850
 - section: Підсумок — Останні роки і спадщина
   points:
   - Київський період (1885-1918)
   - Злиденна смерть генія
   - Чому його читають досі
+  words: 750
 vocabulary_hints:
   required:
   - реалізм (realism)
@@ -62,39 +90,17 @@ activity_hints:
 - type: essay-response
   focus: Роль Нечуя у становленні реалізму
   output: Літературознавче есе
-focus: literature
-pedagogy: Seminar
-prerequisites:
-- lit-21 to lit-25 (Kulish phase)
 connects_to:
 - lit-27 (Кайдашева сім'я — персонажі)
 - lit-30 (Микола Джеря)
-objectives:
-- Зрозуміти роль Нечуя-Левицького у становленні українського реалізму
-- Проаналізувати біографічні фактори, що вплинули на творчість
-- Дослідити особливості "візуального" стилю письма
-- Оцінити внесок у зображення сільського життя
+prerequisites:
+- lit-21 to lit-25 (Kulish phase)
+persona:
+  voice: Senior Philologist & Critic
+  role: Landscape Painter
 grammar:
 - Realism as a method
 - Descriptive prose style
 - Ethnographic detail
 module_type: literature
-sources:
-- name: Біографія Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Життя та творчість Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
-  type: primary
-  notes: Розширена біографічна стаття
-- name: Нечуй-Левицький — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
-  type: reference
-  notes: Загальний контекст
 immersion: 100% Ukrainian
-phase: LIT.5 Realism
-persona:
-  voice: Senior Philologist & Critic
-  role: Landscape Painter
-word_target: 5000

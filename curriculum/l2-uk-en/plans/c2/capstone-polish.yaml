@@ -6,7 +6,8 @@ version: '2.0'
 title: Дипломний проєкт — Фінальне шліфування
 focus: practice
 pedagogy: TTT
-phase: 'C2.4 [Meta-Skills & Capstone]'
+phase: C2.4 [Meta-Skills & Capstone]
+word_target: 5000
 objectives:
 - TBD
 sources:
@@ -26,47 +27,52 @@ content_outline:
 - section: Вступ — Від редагування до шліфування (Introduction — From Editing to Polishing)
   words: 850
   points:
-  - 'Learner error: confusion of ''редагування'' (improving logic/flow) with ''коректура''
-    (fixing typos/grammar) — strategy for separating these stages to avoid circular
-    rework.'
-  - 'Psychology of completion: overcoming the ''perfectionism trap'' vs. the deadline;
-    establish a checklist for the final ''Senior Specialist'' sign-off.'
-- section: Мовна коректура та синтаксична чистота (Language Proofreading and Syntactic
-    Clarity)
+  - 'Learner error: confusion of ''редагування'' (improving logic/flow) with ''коректура'' (fixing typos/grammar) — strategy
+    for separating these stages to avoid circular rework.'
+  - 'Psychology of completion: overcoming the ''perfectionism trap'' vs. the deadline; establish a checklist for the final
+    ''Senior Specialist'' sign-off.'
+- section: Мовна коректура та синтаксична чистота (Language Proofreading and Syntactic Clarity)
   words: 1250
   points:
-  - 'Syntactic decolonization: identifying and replacing passive Anglicisms/Sovietisms
-    (''було проведено аналіз'') with active Ukrainian constructions (''автор дослідив'',
-    ''ми проаналізували'').'
-  - 'Advanced proofreading: verifying orthography (apostrophe, soft sign) in complex
-    professional terminology and ensuring correct case agreement in multi-level nested
-    lists.'
-  - 'Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів'
-- section: Технічний нормоконтроль та вимоги ДСТУ (Technical Normocontrol and DSTU
-    Requirements)
+  - 'Syntactic decolonization: identifying and replacing passive Anglicisms/Sovietisms (''було проведено аналіз'') with active
+    Ukrainian constructions (''автор дослідив'', ''ми проаналізували'').'
+  - 'Advanced proofreading: verifying orthography (apostrophe, soft sign) in complex professional terminology and ensuring
+    correct case agreement in multi-level nested lists.'
+  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+- section: Технічний нормоконтроль та вимоги ДСТУ (Technical Normocontrol and DSTU Requirements)
   words: 1250
   points:
-  - 'Cultural hook: ''Нормоконтроль'' — navigating the specific Ukrainian academic
-    stage where a dedicated officer verifies margins, fonts, and DSTU alignment.'
-  - 'Mastering DSTU 8302:2015: applying specific punctuation rules for the bibliography,
-    including the correct use of double slashes (//) and square brackets for citations.'
-  - 'Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів'
-- section: Вторинні тексти — Анотація та ключові слова (Secondary Texts — Abstract
-    and Keywords)
+  - 'Cultural hook: ''Нормоконтроль'' — navigating the specific Ukrainian academic stage where a dedicated officer verifies
+    margins, fonts, and DSTU alignment.'
+  - 'Mastering DSTU 8302:2015: applying specific punctuation rules for the bibliography, including the correct use of double
+    slashes (//) and square brackets for citations.'
+  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+- section: Вторинні тексти — Анотація та ключові слова (Secondary Texts — Abstract and Keywords)
   words: 850
   points:
-  - 'Applying §4.3.8: structuring the ''анотація'' (abstract) as a high-density summary
-    of research novelty, methodology, and key results in professional style.'
-  - 'Terminology alignment: ensuring precision in translating keywords between Ukrainian
-    and English abstracts to maintain semantic consistency.'
-- section: Академічна доброчесність та фінальна презентація (Academic Integrity and
-    Final Presentation)
+  - 'Applying §4.3.8: structuring the ''анотація'' (abstract) as a high-density summary of research novelty, methodology,
+    and key results in professional style.'
+  - 'Terminology alignment: ensuring precision in translating keywords between Ukrainian and English abstracts to maintain
+    semantic consistency.'
+- section: Академічна доброчесність та фінальна презентація (Academic Integrity and Final Presentation)
   words: 800
   points:
-  - 'Academic honesty: interpreting Unicheck/StrikePlagiarism reports and defining
-    the acceptable boundaries for self-citation (самоцитування).'
-  - 'Cultural hook: The ritual of the ''Палітурка'' — the hard-binding of the thesis
-    as a symbolic transition from a working draft to a defense-ready scholarly document.'
+  - 'Academic honesty: interpreting Unicheck/StrikePlagiarism reports and defining the acceptable boundaries for self-citation
+    (самоцитування).'
+  - 'Cultural hook: The ritual of the ''Палітурка'' — the hard-binding of the thesis as a symbolic transition from a working
+    draft to a defense-ready scholarly document.'
+vocabulary_hints:
+  required:
+  - шліфування (polishing) — фінальне шліфування тексту; шліфування стилю. High academic register.
+  - коректура (proofreading) — виправлення технічних помилок; відрізняти від змістовного редагування.
+  - анотація (abstract) — створення вторинного тексту (§4.3.8); вимагає лаконічності та термінологічної точності.
+  - нормоконтроль (normocontrol) — формальний етап перевірки відповідності стандартам; критичний для допуску до захисту.
+  - академічна доброчесність (academic integrity) — запобігання плагіату; дотримання етичних норм наукового дослідження.
+  recommended:
+  - палітурка (binding) — тверда палітурка; ритуальне завершення фізичного оформлення дипломної роботи.
+  - авторська агентність (author agency) — використання активних конструкцій (автор досліджує) замість пасивних (досліджено).
+  - ДСТУ 8302:2015 (State Standard) — чинний стандарт для бібліографічних посилань та оформлення списку літератури.
+  - самоцитування (self-citation) — використання фрагментів власних попередніх праць з обов'язковим посиланням.
 vocabulary:
   required:
   - шліфування (polishing)
@@ -86,6 +92,15 @@ vocabulary:
   - нумерація сторінок (page numbering)
   - інтерліньяж (line spacing)
   forbidden: '[]'
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
 activities:
   types_required:
   - match-up
@@ -98,36 +113,8 @@ activities:
 connects_to:
 - c2-94 (Capstone Defense)
 - c2-95 (Final Review I)
-vocabulary_hints:
-  required:
-  - шліфування (polishing) — фінальне шліфування тексту; шліфування стилю. High academic
-    register.
-  - коректура (proofreading) — виправлення технічних помилок; відрізняти від змістовного
-    редагування.
-  - анотація (abstract) — створення вторинного тексту (§4.3.8); вимагає лаконічності
-    та термінологічної точності.
-  - нормоконтроль (normocontrol) — формальний етап перевірки відповідності стандартам;
-    критичний для допуску до захисту.
-  - академічна доброчесність (academic integrity) — запобігання плагіату; дотримання
-    етичних норм наукового дослідження.
-  recommended:
-  - палітурка (binding) — тверда палітурка; ритуальне завершення фізичного оформлення
-    дипломної роботи.
-  - авторська агентність (author agency) — використання активних конструкцій (автор
-    досліджує) замість пасивних (досліджено).
-  - ДСТУ 8302:2015 (State Standard) — чинний стандарт для бібліографічних посилань
-    та оформлення списку літератури.
-  - самоцитування (self-citation) — використання фрагментів власних попередніх праць
-    з обов'язковим посиланням.
-activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
 persona:
   voice: Senior Specialist
   role: Editor-in-Chief
+prerequisites:
+- capstone-revision

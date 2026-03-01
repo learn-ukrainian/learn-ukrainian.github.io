@@ -1,27 +1,46 @@
-module: bio-120
+module: bio-123
 level: BIO
-sequence: 120
+sequence: 123
 slug: bohdan-ihor-antonych
 version: '2.0'
 title: 'Богдан-Ігор Антонич: Зелена Євангелія'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the life and legacy of Богдан-Ігор Антонич as a modernist poet
+- Evaluate the unique synthesis of pantheism and avant-garde in his poetry
+- Trace the influence of Lemko origins on literary identity
+sources:
+- name: Богдан-Ігор Антонич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
+  type: primary
+  notes: Comprehensive biography of the Lemko-born modernist poet
+- name: Антонич у бібліотеці
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
+  type: reference
+  notes: Bio and works in Ukrainian digital library
 content_outline:
 - section: Вступ — Поет космічного організму
   points:
   - Найоригінальніший поет міжвоєнного Львова
   - Унікальний синтез язичницького пантеїзму та модернізму
   - Культовий статус серед сучасних поетів
+  words: 850
 - section: Лемківщина та дитинство (1909-1928)
   points:
   - Народження в Новиці на Лемківщині
   - Сільське дитинство та природа як першовитоки
   - Гімназія у Сяноку
   - Перші вірші та формування таланту
+  words: 850
 - section: Львівський університет (1928-1933)
   points:
   - Навчання на філософському факультеті
   - Публікації та збірка «Привітання життя»
   - Полеміка щодо національної ідентичності
   - Лемківське коріння та українська свідомість
+  words: 850
 - section: Зелена поетика (1931-1937)
   points:
   - «Три перстені» та «Книга Лева»
@@ -29,18 +48,21 @@ content_outline:
   - «Зелена Євангелія» як вершина творчості
   - «Ротації» — космічний масштаб
   - Архітектоніка та музичність вірша
+  words: 850
 - section: Передчасна смерть та посмертна слава (1937)
   points:
   - Загадкова смерть у 28 років
   - Посмертні видання 1960-х років
   - Відкриття Антонича новим поколінням
   - Вплив на Стуса, Калинця, сучасних поетів
+  words: 850
 - section: Спадщина — Безсмертний лемко Львова
   points:
   - Антонич у контексті європейського авангарду
   - Культ Антонича у сучасній поезії та музиці
   - Деколонізація: повернення лемківського голосу
   - Фестивалі та вшанування
+  words: 750
 vocabulary_hints:
   required:
   - поет (poet)
@@ -67,29 +89,13 @@ activity_hints:
 - type: essay-response
   focus: У чому унікальність поетичного світу Антонича?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-095
 connects_to:
 - bio-100
 - bio-103
-module_type: biography
-sources:
-- name: Богдан-Ігор Антонич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
-  type: primary
-  notes: Comprehensive biography of the Lemko-born modernist poet
-- name: Антонич у бібліотеці
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
-  type: reference
-  notes: Bio and works in Ukrainian digital library
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- Analyze the life and legacy of Богдан-Ігор Антонич as a modernist poet
-- Evaluate the unique synthesis of pantheism and avant-garde in his poetry
-- Trace the influence of Lemko origins on literary identity
+prerequisites:
+- bio-095
 persona:
   voice: Senior Biographer
   role: Mystic Poet
-word_target: 5000
+module_type: biography
+immersion: 100% Ukrainian

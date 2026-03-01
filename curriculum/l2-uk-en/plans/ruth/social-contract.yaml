@@ -1,27 +1,47 @@
-sequence: 88
 module: ruth-088
-module_number: 88
+level: RUTH
+sequence: 88
 slug: social-contract
-title_uk: Суспільний договір
-title_en: Social Contract
-phase: 4
-phase_id: cossack-word
-phase_name: Cossack Word
+version: '2.0'
+title: Суспільний договір
+subtitle: Social Contract
 focus: Rights of widows, orphans, commoners
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Social Contract
+  points:
+  - Introduction to Social Contract
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Political Philosopher
+prerequisites:
+- separation-of-powers
+connects_to:
+- diplomatic-language

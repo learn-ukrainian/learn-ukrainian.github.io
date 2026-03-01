@@ -1,62 +1,61 @@
-module: a1-25
+module: a1-025
 level: A1
 sequence: 25
 slug: the-accusative-i-things
 version: '2.0'
 title: 'The Accusative I: Things'
 subtitle: Making Direct Objects Work
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Cases & Navigation]
+word_target: 2000
+objectives:
+- Learner can form accusative case for inanimate nouns
+- Learner can use accusative after verbs like бачити, брати, мати
+- Learner can distinguish between nominative and accusative forms
+- Learner understands when accusative is required
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - 'Warm-up: ''Що я бачу в кімнаті?'' (Nominative review) to anchor concrete objects
-    before introducing case change. Use high-frequency verbs from a1-06 (Verbs I)
-    like ''бачити'' to prime the direct object structure.'
-  - Conceptual introduction of the Accusative case (Знахідний відмінок) for inanimate
-    objects, aligning with State Standard §4.2.3.2.1 (e.g., 'Віра читає цікаву книжку').
-    Contrast Subject vs. Direct Object.
+  - 'Warm-up: ''Що я бачу в кімнаті?'' (Nominative review) to anchor concrete objects before introducing case change. Use
+    high-frequency verbs from a1-06 (Verbs I) like ''бачити'' to prime the direct object structure.'
+  - Conceptual introduction of the Accusative case (Знахідний відмінок) for inanimate objects, aligning with State Standard
+    §4.2.3.2.1 (e.g., 'Віра читає цікаву книжку'). Contrast Subject vs. Direct Object.
 - section: 'Презентація: Знахідний відмінок (Presentation: Accusative Case)'
   words: 600
   points:
-  - 'Feminine Singular transformation: -а → -у, -я → -ю (книга → книгу, кава → каву).
-    Emphasize that the change is mandatory to avoid the ''Conceptual Nominative''
-    error common at A1.'
-  - 'Masculine and Neuter ''Safe Harbor'': Explain that inanimate masculine and neuter
-    nouns do not change (стіл → стіл, вікно → вікно). Explicitly warn against ''Masculine
-    Inanimate Confusion'' (adding -a endings like ''бачу стола'').'
-  - 'High-frequency Action Verbs as triggers: Presentation of ''мати'' (мати рацію,
-    мати час), ''хотіти'' (хотіти їсти), ''брати'' (брати каву/участь), ''чути'',
-    ''бачити'', and ''купувати''.'
+  - 'Feminine Singular transformation: -а → -у, -я → -ю (книга → книгу, кава → каву). Emphasize that the change is mandatory
+    to avoid the ''Conceptual Nominative'' error common at A1.'
+  - 'Masculine and Neuter ''Safe Harbor'': Explain that inanimate masculine and neuter nouns do not change (стіл → стіл, вікно
+    → вікно). Explicitly warn against ''Masculine Inanimate Confusion'' (adding -a endings like ''бачу стола'').'
+  - 'High-frequency Action Verbs as triggers: Presentation of ''мати'' (мати рацію, мати час), ''хотіти'' (хотіти їсти), ''брати''
+    (брати каву/участь), ''чути'', ''бачити'', and ''купувати''.'
 - section: Практика та запобігання помилкам (Practice and Error Prevention)
   words: 600
   points:
-  - 'Transformation drills: Nominative to Accusative focusing on the contrast between
-    changing Feminine forms and stable Masculine/Neuter inanimate nouns.'
-  - 'Error Prevention: Targeted drills to correct ''Conceptual Nominative'' (e.g.,
-    changing ''Я читаю книга'' to ''Я читаю книгу'') and preventing over-application
-    of endings to masculine inanimate things.'
-  - 'High-frequency collocations practice using research-backed items: ''бачити проблему'',
-    ''чути голос'', ''брати трубку'', and ''мати можливість''.'
+  - 'Transformation drills: Nominative to Accusative focusing on the contrast between changing Feminine forms and stable Masculine/Neuter
+    inanimate nouns.'
+  - 'Error Prevention: Targeted drills to correct ''Conceptual Nominative'' (e.g., changing ''Я читаю книга'' to ''Я читаю
+    книгу'') and preventing over-application of endings to masculine inanimate things.'
+  - 'High-frequency collocations practice using research-backed items: ''бачити проблему'', ''чути голос'', ''брати трубку'',
+    and ''мати можливість''.'
 - section: Виробництво та культура (Production and Culture)
   words: 400
   points:
-  - 'Cultural Hook: The ''Пакет потрібен?'' checkout meme. Discussion of shopping
-    dynamics: the impersonal ''супермаркет'' vs. the social hub of the ''базар''.'
-  - 'Production: Creating a shopping list (''Я хочу купити...'') including staples
-    ''хліб'' and ''гречка''. Describe items in a Ukrainian store context using ''Я
-    бачу...'' and ''Я купую...''.'
+  - 'Cultural Hook: The ''Пакет потрібен?'' checkout meme. Discussion of shopping dynamics: the impersonal ''супермаркет''
+    vs. the social hub of the ''базар''.'
+  - 'Production: Creating a shopping list (''Я хочу купити...'') including staples ''хліб'' and ''гречка''. Describe items
+    in a Ukrainian store context using ''Я бачу...'' and ''Я купую...''.'
 vocabulary_hints:
   required:
   - бачити (to see) — бачити проблему, я бачу...; High frequency core verb
   - чути (to hear) — чути музику, чути голос; High frequency core verb
   - брати (to take) — брати участь, брати трубку, брати каву; High frequency
-  - мати (to have) — мати рацію, мати час, мати можливість; Very High frequency (Core
-    A1)
-  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...; Very High frequency (Core
-    A1)
+  - мати (to have) — мати рацію, мати час, мати можливість; Very High frequency (Core A1)
+  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...; Very High frequency (Core A1)
   - купувати (to buy) — купувати продукти, купувати одяг; High frequency
-  - книга (book) — читати цікаву книгу; High frequency; paradigm example for Feminine
-    Accusative
+  - книга (book) — читати цікаву книгу; High frequency; paradigm example for Feminine Accusative
   - кава (coffee) — пити каву, замовляти каву; Feminine -а to -у pattern
   - хліб (bread) — купувати хліб; Masculine inanimate (no change)
   - гречка (buckwheat) — хочу купити гречку; Cultural staple; Feminine pattern
@@ -76,25 +75,16 @@ activity_hints:
 - type: quiz
   focus: Identify correct case
   items: 15
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-10 (Checkpoint - First Contact)
 connects_to:
 - a1-12 (The Accusative II - People)
 - a1-18 (Food and Shopping)
-objectives:
-- Learner can form accusative case for inanimate nouns
-- Learner can use accusative after verbs like бачити, брати, мати
-- Learner can distinguish between nominative and accusative forms
-- Learner understands when accusative is required
+prerequisites:
+- a1-10 (Checkpoint - First Contact)
+persona:
+  voice: Patient Supportive Tutor
+  role: Logistics Expert
 grammar:
 - Accusative case (inanimate)
 - 'Feminine: -а → -у, -я → -ю'
 - 'Masculine/Neuter: no change'
 register: розмовний
-phase: A1.3 [Cases & Navigation]
-persona:
-  voice: Patient Supportive Tutor
-  role: Logistics Expert
-word_target: 2000

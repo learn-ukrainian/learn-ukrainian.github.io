@@ -1,44 +1,71 @@
-module: bio-103
+module: bio-106
 level: BIO
-sequence: 103
+sequence: 106
 slug: vasyl-vyshyvanyi
 version: '2.0'
 title: 'Василь Вишиваний: Князь-українець'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of василь вишиваний: князь-українець'
+- Evaluate the contributions of ерцгерцог, що обрав україну
+- Trace the career and influence of національний вибір проти крові
+sources:
+- name: Вільгельм Габсбург (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
+  type: primary
+  notes: Основна біографічна інформація
+- name: Тімоті Снайдер Червоний князь
+  url: https://bookclub.ua/
+  type: reference
+  notes: Біографічне дослідження
+- name: Архіви Січових Стрільців
+  url: https://archives.gov.ua/
+  type: reference
+  notes: Документи військової служби
 content_outline:
 - section: Вступ — Ерцгерцог, що обрав Україну
   points:
   - Унікальна доля Габсбурга, який став українцем
   - Від імперської знаті до полковника УСС
   - Чому Україна для нього стала долею
+  words: 700
 - section: Імперське дитинство
   points:
   - Народження в родині Габсбургів (1895)
   - Виховання в Австро-Угорщині
   - Перші контакти з українською культурою
+  words: 700
 - section: Становлення українського патріота
   points:
   - Служба в Галичині
   - Зустріч з Українськими Січовими Стрільцями
   - Прийняття імені Василь Вишиваний
+  words: 700
 - section: Військова кариєра та УНР
   points:
   - Командування підрозділами УСС
   - Роль у визвольних змаганнях
   - Спроби здобути український трон
+  words: 700
 - section: Еміграція та таємна діяльність
   points:
   - Життя в міжвоєнній Європі
   - Співпраця з українськими організаціями
   - Небезпечні політичні ігри
+  words: 700
 - section: Радянський полон та загибель
   points:
   - Арешт радянськими спецслужбами (1947)
   - Ув'язнення в Києві
   - Смерть у в'язниці (1948)
+  words: 700
 - section: Дискусія — Національний вибір проти крові
   points:
   - Чи можна обрати націю?
   - Спадщина Вишиваного для України
+  words: 800
 vocabulary_hints:
   required:
   - ерцгерцог (archduke)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чи можна обрати національну ідентичність?
   output: Філософський есей
-focus: biography
-prerequisites:
-- hist-wwi-ukraine
 connects_to:
 - bio-44-symon-petliura
 - bio-61-olena-stepaniv
 - bio-41-solomiya-krushelnytska
-module_type: biography
-sources:
-- name: Вільгельм Габсбург (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
-  type: primary
-  notes: Основна біографічна інформація
-- name: Тімоті Снайдер Червоний князь
-  url: https://bookclub.ua/
-  type: reference
-  notes: Біографічне дослідження
-- name: Архіви Січових Стрільців
-  url: https://archives.gov.ua/
-  type: reference
-  notes: Документи військової служби
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of василь вишиваний: князь-українець'
-- Evaluate the contributions of ерцгерцог, що обрав україну
-- Trace the career and influence of національний вибір проти крові
+prerequisites:
+- hist-wwi-ukraine
 persona:
   voice: Senior Biographer
   role: Royal Colonel
+module_type: biography
+immersion: 100% Ukrainian

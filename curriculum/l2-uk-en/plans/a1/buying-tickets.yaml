@@ -1,73 +1,68 @@
-sequence: 56
-module: a1-56
+module: a1-056
 level: A1
+sequence: 56
 slug: buying-tickets
 version: '2.0'
 title: Buying Tickets
 subtitle: Travel Arrangements
+focus: practical
+pedagogy: PPP
+phase: A1.6 [Real-World Skills]
+word_target: 2000
+objectives:
+- Learner can buy train and bus tickets
+- Learner can specify destination and class
+- Learner can understand ticket information
+- Learner can ask about schedules
 content_outline:
 - section: Вступ та підготовка (Warm-up & Preparation)
   words: 450
   points:
-  - 'Визначення видів транспорту для міжміських подорожей: `поїзд`, `автобус`, `маршрутка`.
-    Введення розрізнення між `вокзал` (major hub), `автовокзал` (large bus terminal)
-    та `автостанція/зупинка` (smaller local stops), що є критичним для навігації в
-    Україні.'
-  - 'Введення конструкції `до` + Genitive для позначення напрямку руху до міст. Згідно
-    з Державним стандартом А1, це подається як «лексикалізована граматика» (фіксовані
-    формули: `до Києва`, `до Львова`, `до Одеси`) без глибокого вивчення відмінків.'
+  - 'Визначення видів транспорту для міжміських подорожей: `поїзд`, `автобус`, `маршрутка`. Введення розрізнення між `вокзал`
+    (major hub), `автовокзал` (large bus terminal) та `автостанція/зупинка` (smaller local stops), що є критичним для навігації
+    в Україні.'
+  - 'Введення конструкції `до` + Genitive для позначення напрямку руху до міст. Згідно з Державним стандартом А1, це подається
+    як «лексикалізована граматика» (фіксовані формули: `до Києва`, `до Львова`, `до Одеси`) без глибокого вивчення відмінків.'
 - section: Каса та замовлення (Ticket Office & Ordering)
   words: 650
   points:
-  - 'Формулювання запиту на купівлю квитка з використанням комунікативної інтенції
-    «Дайте, будь ласка» або «Мені, будь ласка...». Акцент на типовій помилці: узгодженні
-    роду `одна квиток` (неправильно) замість `один квиток` (правильно, чоловічий рід).'
-  - 'Вибір типу поїздки: `Туди й назад` (round trip) або `В один бік` (one way). Вивчення
-    різниці між `квитковою касою` та `електронним квитком` (QR-код), що є стандартом
-    сучасної Укрзалізниці.'
-  - 'Вибір класу вагона та місця: `Купе` (privacy) проти `Плацкарт` (social). Культурний
-    гачок: «культура плацкарту» як відкритого соціального простору, де прийнято ділитися
-    їжею (курка, яйця) та спілкуватися.'
+  - 'Формулювання запиту на купівлю квитка з використанням комунікативної інтенції «Дайте, будь ласка» або «Мені, будь ласка...».
+    Акцент на типовій помилці: узгодженні роду `одна квиток` (неправильно) замість `один квиток` (правильно, чоловічий рід).'
+  - 'Вибір типу поїздки: `Туди й назад` (round trip) або `В один бік` (one way). Вивчення різниці між `квитковою касою` та
+    `електронним квитком` (QR-код), що є стандартом сучасної Укрзалізниці.'
+  - 'Вибір класу вагона та місця: `Купе` (privacy) проти `Плацкарт` (social). Культурний гачок: «культура плацкарту» як відкритого
+    соціального простору, де прийнято ділитися їжею (курка, яйця) та спілкуватися.'
 - section: Поїздка та комфорт (Train Life & Comfort)
   words: 550
   points:
-  - 'Орієнтація на вокзалі: `На якій платформі?` та `В якому вагоні?`. Використання
-    числівників (з модуля а1-17) для номерів колій та місць. Уточнення щодо `нижнього`
-    та `верхнього` місця (lower/upper berth).'
-  - 'Питання про розклад: `О котрій відправлення?` та `Коли прибуття?`. Культурний
-    символ: традиція пиття чаю в легендарних склянках із металевими `підстаканниками`,
-    які приносить `провідник` (conductor).'
+  - 'Орієнтація на вокзалі: `На якій платформі?` та `В якому вагоні?`. Використання числівників (з модуля а1-17) для номерів
+    колій та місць. Уточнення щодо `нижнього` та `верхнього` місця (lower/upper berth).'
+  - 'Питання про розклад: `О котрій відправлення?` та `Коли прибуття?`. Культурний символ: традиція пиття чаю в легендарних
+    склянках із металевими `підстаканниками`, які приносить `провідник` (conductor).'
 - section: Практика та підсумок (Practice & Summary)
   words: 350
   points:
-  - 'Діалог-симуляція: Купівля квитка до Львова в касі. Контроль за вживанням прийменника
-    `до` замість помилкового `в` для міст (напр. `їхати до Львова` замість `їхати
-    в Львів`).'
-  - 'Наратив про подорож у Карпати: інтеграція лексики вокзалу, вибору місця в купе
-    та взаємодії з провідником. Закріплення ввічливих форм запиту.'
+  - 'Діалог-симуляція: Купівля квитка до Львова в касі. Контроль за вживанням прийменника `до` замість помилкового `в` для
+    міст (напр. `їхати до Львова` замість `їхати в Львів`).'
+  - 'Наратив про подорож у Карпати: інтеграція лексики вокзалу, вибору місця в купе та взаємодії з провідником. Закріплення
+    ввічливих форм запиту.'
 vocabulary_hints:
   required:
-  - 'квиток (ticket) — collocations: купити квиток, один квиток (masculine agreement),
-    електронний квиток. High frequency (Top 500).'
-  - 'поїзд (train) — collocations: сісти на поїзд, розклад поїздів, швидкий поїзд.
-    High frequency.'
-  - 'вокзал (station) — collocations: залізничний вокзал, центральний вокзал, на вокзалі.
-    High frequency.'
-  - 'місце (seat/place) — context: нижнє/верхнє місце, вільне місце, ваше місце. Very
-    high frequency.'
-  - до (to/until) — preposition for direction with cities (до Львова, до Києва). Treated
-    as lexical chunk pattern for A1.
+  - 'квиток (ticket) — collocations: купити квиток, один квиток (masculine agreement), електронний квиток. High frequency
+    (Top 500).'
+  - 'поїзд (train) — collocations: сісти на поїзд, розклад поїздів, швидкий поїзд. High frequency.'
+  - 'вокзал (station) — collocations: залізничний вокзал, центральний вокзал, на вокзалі. High frequency.'
+  - 'місце (seat/place) — context: нижнє/верхнє місце, вільне місце, ваше місце. Very high frequency.'
+  - до (to/until) — preposition for direction with cities (до Львова, до Києва). Treated as lexical chunk pattern for A1.
   recommended:
   - 'каса (ticket office) — collocations: квиткова каса, де каса?'
   - 'розклад (schedule) — collocations: розклад поїздів, за розкладом.'
   - 'вагон (carriage) — usage: в якому вагоні?'
   - 'провідник (conductor) — cultural hook: train staff member who serves tea.'
-  - 'підстаканник (glass holder) — cultural hook: iconic silver-colored glass holder
-    for tea.'
+  - 'підстаканник (glass holder) — cultural hook: iconic silver-colored glass holder for tea.'
   - 'плацкарт (platzkart) — cultural context: open dormitory-style sleeping carriage.'
   - 'купе (compartment) — cultural context: 4-berth closed compartment.'
-  - автостанція (bus station) — contrast with `автовокзал` (major hub) for smaller
-    regional locations.
+  - автостанція (bus station) — contrast with `автовокзал` (major hub) for smaller regional locations.
   - туди й назад (round trip) — fixed phrase chunk for ticket requests.
 activity_hints:
 - type: fill-in
@@ -79,25 +74,16 @@ activity_hints:
 - type: fill-in
   focus: At the ticket office
   items: 5
-focus: practical
-pedagogy: PPP
+connects_to:
+- a1-57 (Taking Transport)
 prerequisites:
 - a1-22 (Numbers and Money)
 - a1-61 (At the Store)
-connects_to:
-- a1-57 (Taking Transport)
-objectives:
-- Learner can buy train and bus tickets
-- Learner can specify destination and class
-- Learner can understand ticket information
-- Learner can ask about schedules
+persona:
+  voice: Patient Supportive Tutor
+  role: Theater Box Office Manager
 grammar:
 - Direction with до + genitive
 - Time expressions for schedules
 - Numbers for platforms and seats
 register: розмовний
-phase: A1.6 [Real-World Skills]
-persona:
-  voice: Patient Supportive Tutor
-  role: Theater Box Office Manager
-word_target: 2000

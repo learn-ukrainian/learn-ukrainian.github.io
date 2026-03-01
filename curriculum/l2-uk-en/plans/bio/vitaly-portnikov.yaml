@@ -1,44 +1,71 @@
-module: bio-157
+module: bio-160
 level: BIO
-sequence: 157
+sequence: 160
 slug: vitaly-portnikov
 version: '2.0'
 title: 'Віталій Портников: Журналіст і аналітик'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of віталій портников: журналіст і аналітик'
+- Evaluate the contributions of голос української журналістики
+- Trace the career and influence of журналістика як місія
+sources:
+- name: Віталій Портников (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Espreso.TV
+  url: https://espreso.tv/
+  type: reference
+  notes: Публікації та виступи
+- name: Радіо Свобода
+  url: https://www.radiosvoboda.org/
+  type: reference
+  notes: Архів публікацій
 content_outline:
 - section: Вступ — Голос української журналістики
   points:
   - Портников як один із найвпливовіших аналітиків
   - Роль у формуванні суспільної думки
   - Постійність позиції протягом десятиліть
+  words: 700
 - section: Ранні роки та освіта
   points:
   - Народження в Києві (1967)
   - Освіта та формування поглядів
   - Початок журналістської кар'єри
+  words: 700
 - section: Журналістська діяльність
   points:
   - Робота в різних виданнях
   - Телевізійна публіцистика
   - Міжнародні проекти
+  words: 700
 - section: Аналітик пострадянського простору
   points:
   - Експертиза з питань Росії та СНД
   - Прогнози щодо російської агресії
   - Роль під час Майдану та війни
+  words: 700
 - section: Стиль та методологія
   points:
   - Особливості аналітичного підходу
   - Риторичні прийоми
   - Вплив на медіапростір
+  words: 700
 - section: Сучасна діяльність
   points:
   - Робота під час повномасштабної війни
   - Пояснення України світові
   - Роль публічного інтелектуала
+  words: 700
 - section: Дискусія — Журналістика як місія
   points:
   - Обов'язок журналіста в час війни
   - Баланс між аналітикою та активізмом
+  words: 800
 vocabulary_hints:
   required:
   - аналітик (analyst)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Яка роль аналітика в суспільстві?
   output: Рефлексивний есей
-focus: biography
-prerequisites:
-- hist-euromaidan
 connects_to:
 - bio-87-yaroslav-hrytsak
 - bio-91-oleg-sentsov
 - bio-90-serhiy-zhadan
-module_type: biography
-sources:
-- name: Віталій Портников (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Espreso.TV
-  url: https://espreso.tv/
-  type: reference
-  notes: Публікації та виступи
-- name: Радіо Свобода
-  url: https://www.radiosvoboda.org/
-  type: reference
-  notes: Архів публікацій
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of віталій портников: журналіст і аналітик'
-- Evaluate the contributions of голос української журналістики
-- Trace the career and influence of журналістика як місія
+prerequisites:
+- hist-euromaidan
 persona:
   voice: Senior Biographer
   role: Political Analyst
+module_type: biography
+immersion: 100% Ukrainian

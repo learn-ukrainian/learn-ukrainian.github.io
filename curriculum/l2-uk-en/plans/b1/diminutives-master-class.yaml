@@ -1,94 +1,90 @@
-module: b1-48
+module: b1-052
 level: B1
-sequence: 48
+sequence: 52
 slug: diminutives-master-class
 version: '2.0'
 title: 'Демінутиви: майстер-клас'
 subtitle: Diminutives - Forms, Usage, and Nuance
+focus: grammar
+pedagogy: TTT
+phase: B1.4b [Word Formation]
+word_target: 4000
+objectives:
+- Learner can form diminutives from nouns and adjectives
+- Learner understands different pragmatic functions of diminutives
+- 'Learner can distinguish nuances: tenderness, irony, politeness'
+- Learner can use diminutives appropriately in context
 content_outline:
-- section: 'Вступ: Світ українських демінутивів (Introduction: The World of Ukrainian
-    Diminutives)'
+- section: 'Вступ: Світ українських демінутивів (Introduction: The World of Ukrainian Diminutives)'
   words: 500
   points:
-  - Introduction to diminutives as a stylistic tool (§4.5.1) and their high frequency
-    in daily Ukrainian life compared to English pragmatics.
-  - The concept of 'cordocentrism' (heart-centeredness) — how the abundance of diminutive
-    forms reflects the emotional architecture of Ukrainian culture.
-  - 'The unique Ukrainian linguistic phenomenon: diminutive forms for verbs (спатоньки,
-    їстоньки) and adverbs (тихенько, швиденько) — distinguishing ''B1 mastery'' from
-    ''A2 basics''.'
+  - Introduction to diminutives as a stylistic tool (§4.5.1) and their high frequency in daily Ukrainian life compared to
+    English pragmatics.
+  - The concept of 'cordocentrism' (heart-centeredness) — how the abundance of diminutive forms reflects the emotional architecture
+    of Ukrainian culture.
+  - 'The unique Ukrainian linguistic phenomenon: diminutive forms for verbs (спатоньки, їстоньки) and adverbs (тихенько, швиденько)
+    — distinguishing ''B1 mastery'' from ''A2 basics''.'
 - section: 'Морфологія: Від іменників до дієслів (Morphology: From Nouns to Verbs)'
   words: 1000
   points:
-  - 'Morphological review: Productive noun suffixes (-ик, -ок, -ець) and B1 mastery
-    of complex emotive suffixes (-очок, -ечк-, -оньк-).'
-  - 'Adjective diminutives (-еньк-): Formation and function of forms like ''гарненький''
-    or ''біленький'' as tools for intensification and aesthetic nuance.'
-  - 'Mechanics of unique verbal (спатоньки) and adverbial (гарненько) diminutives:
-    when and where they are grammatically and socially permissible.'
-  - 'Correcting learner errors: Avoiding tautology (e.g., ''маленький килимок'' is
-    redundant) and choosing between the base form and the diminutive based on size
-    vs. emotion.'
+  - 'Morphological review: Productive noun suffixes (-ик, -ок, -ець) and B1 mastery of complex emotive suffixes (-очок, -ечк-,
+    -оньк-).'
+  - 'Adjective diminutives (-еньк-): Formation and function of forms like ''гарненький'' or ''біленький'' as tools for intensification
+    and aesthetic nuance.'
+  - 'Mechanics of unique verbal (спатоньки) and adverbial (гарненько) diminutives: when and where they are grammatically and
+    socially permissible.'
+  - 'Correcting learner errors: Avoiding tautology (e.g., ''маленький килимок'' is redundant) and choosing between the base
+    form and the diminutive based on size vs. emotion.'
 - section: Прагматика та соціальні регістри (Pragmatics and Social Registers)
   words: 1000
   points:
-  - 'The Professional Register: Decoding ''hospital register'' where staff use ''ручка'',
-    ''ніжка'', ''укольчик'' to soften communication and reduce patient anxiety.'
-  - 'Desemanticization challenges: Recognizing when a diminutive form loses its ''smallness''
-    and becomes a neutral noun (ручка = pen, ніжка = table leg).'
-  - 'Social pitfalls: Avoiding register mismatch in formal/official settings (e.g.,
-    ''документики'', ''підписочок'') which can be perceived as manipulative or unprofessional.'
-  - 'Pragmatic boundaries: Distinguishing between sincere politeness (ввічливість)
-    and ''over-sweetening'' language that can sound infantilizing or obsequious.'
+  - 'The Professional Register: Decoding ''hospital register'' where staff use ''ручка'', ''ніжка'', ''укольчик'' to soften
+    communication and reduce patient anxiety.'
+  - 'Desemanticization challenges: Recognizing when a diminutive form loses its ''smallness'' and becomes a neutral noun (ручка
+    = pen, ніжка = table leg).'
+  - 'Social pitfalls: Avoiding register mismatch in formal/official settings (e.g., ''документики'', ''підписочок'') which
+    can be perceived as manipulative or unprofessional.'
+  - 'Pragmatic boundaries: Distinguishing between sincere politeness (ввічливість) and ''over-sweetening'' language that can
+    sound infantilizing or obsequious.'
 - section: Культурний код та іронія (Cultural Code and Irony)
   words: 1000
   points:
-  - 'The Ironic Dimension: Diminutives as a primary tool for sarcasm in adult speech
-    (e.g., ''Ну ти й розумничок!'' to signal idiocy via intonation).'
-  - 'Urban Rapport: The role of diminutives in modern coffee culture (кавуся, чайок)
-    as a social lubricant in urban interactions.'
-  - 'Hierarchy of Endearment: Mapping family terms from neutral to extremely affectionate
-    (мати -> матуся -> матусенька) and the nuances of ''сонечко''.'
-  - 'National Aesthetic: How diminutives contribute to the ''tenderness'' (ніжність)
-    and lyricism of the Ukrainian language in folk and poetic contexts.'
+  - 'The Ironic Dimension: Diminutives as a primary tool for sarcasm in adult speech (e.g., ''Ну ти й розумничок!'' to signal
+    idiocy via intonation).'
+  - 'Urban Rapport: The role of diminutives in modern coffee culture (кавуся, чайок) as a social lubricant in urban interactions.'
+  - 'Hierarchy of Endearment: Mapping family terms from neutral to extremely affectionate (мати -> матуся -> матусенька) and
+    the nuances of ''сонечко''.'
+  - 'National Aesthetic: How diminutives contribute to the ''tenderness'' (ніжність) and lyricism of the Ukrainian language
+    in folk and poetic contexts.'
 - section: 'Підсумок: Мистецтво доречності (Summary: The Art of Appropriateness)'
   words: 500
   points:
-  - 'Synthesizing usage rules: The ''Who-Where-Why'' checklist for deploying diminutives
-    without causing social friction.'
-  - 'Identifying ''Service Industry Diminutives'': Recognizing when ''хлібчик'' or
-    ''рахуночок'' is used for marketing vs. genuine hospitality.'
-  - 'Final production goal: Integrating diminutives into B1 speech to sound more authentic
-    while maintaining professional boundaries where necessary.'
+  - 'Synthesizing usage rules: The ''Who-Where-Why'' checklist for deploying diminutives without causing social friction.'
+  - 'Identifying ''Service Industry Diminutives'': Recognizing when ''хлібчик'' or ''рахуночок'' is used for marketing vs.
+    genuine hospitality.'
+  - 'Final production goal: Integrating diminutives into B1 speech to sound more authentic while maintaining professional
+    boundaries where necessary.'
 vocabulary_hints:
   required:
-  - 'матуся / матусенька (mommy) — high frequency in family context; collocations:
-    рідна матуся, люба матуся'
-  - 'сонечко (sun/darling) — ubiquitous term of endearment; collocations: моє сонечко,
-    ясне сонечко'
-  - 'гарненько (nicely/well) — high frequency adverbial diminutive; collocations:
-    сядь гарненько, зроби гарненько'
-  - 'хлібчик (bread) — hospitality/food context; collocations: свіжий хлібчик, шматочок
-    хлібчика'
-  - ручка (hand/pen/handle) — polysemous; neutral as 'pen', emotive or medical as
-    'patient's hand'
+  - 'матуся / матусенька (mommy) — high frequency in family context; collocations: рідна матуся, люба матуся'
+  - 'сонечко (sun/darling) — ubiquitous term of endearment; collocations: моє сонечко, ясне сонечко'
+  - 'гарненько (nicely/well) — high frequency adverbial diminutive; collocations: сядь гарненько, зроби гарненько'
+  - 'хлібчик (bread) — hospitality/food context; collocations: свіжий хлібчик, шматочок хлібчика'
+  - ручка (hand/pen/handle) — polysemous; neutral as 'pen', emotive or medical as 'patient's hand'
   - 'кавуся (coffee) — urban/modern culture; collocations: попити кавусі, смачна кавуся'
   - демінутив (diminutive) — linguistic terminology
-  - зменшувально-пестливий (diminutive-affectionate) — official grammatical category
-    (§4.5.1)
+  - зменшувально-пестливий (diminutive-affectionate) — official grammatical category (§4.5.1)
   - ніжність (tenderness) — core emotional driver for diminutive usage
   - ввічливість (politeness) — primary pragmatic function
   - іронія (irony) — paradoxical pragmatic use for sarcasm
   - суфікс (suffix) — morphological builder
   - відтінок (nuance/shade) — stylistic or emotional distinction
   recommended:
-  - 'спатоньки / їстоньки (to sleep / to eat) — unique verbal diminutives; collocations:
-    хотіти спатоньки, пора їстоньки'
+  - 'спатоньки / їстоньки (to sleep / to eat) — unique verbal diminutives; collocations: хотіти спатоньки, пора їстоньки'
   - ніжка (leg/table leg) — medical context or desemanticized furniture part
   - пестливий (affectionate) — emotional quality of word formation
   - зневажливий (dismissive) — potential negative nuance in ironic contexts
-  - 'розумничок (clever clogs) — quintessential example of sarcastic usage: ''Ну ти
-    й розумничок!'''
+  - 'розумничок (clever clogs) — quintessential example of sarcastic usage: ''Ну ти й розумничок!'''
   - укольчик (injection/shot) — key example of 'hospital register' for reducing anxiety
 activity_hints:
 - type: fill-in
@@ -103,24 +99,15 @@ activity_hints:
 - type: fill-in
   focus: Match diminutive to situation
   items: 10
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-47 (Passive Constructions)
 connects_to:
 - b1-49 (Numerals Collectives Fractions)
-objectives:
-- Learner can form diminutives from nouns and adjectives
-- Learner understands different pragmatic functions of diminutives
-- 'Learner can distinguish nuances: tenderness, irony, politeness'
-- Learner can use diminutives appropriately in context
+prerequisites:
+- b1-47 (Passive Constructions)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kindergarten Teacher
 grammar:
 - 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
 - Прагматичні функції демінутивів
 - Регістрові та стилістичні відтінки
 register: розмовний
-phase: B1.4b [Word Formation]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Kindergarten Teacher
-word_target: 4000

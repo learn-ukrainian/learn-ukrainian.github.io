@@ -1,49 +1,76 @@
 module: istorio-113
-level: istorio
+level: ISTORIO
 sequence: 113
+slug: syntez-informatsiina-viina
 version: '1.0'
 title: 'Синтез: Хто виграє війну наративів?'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
 - Evaluate the historical significance of війна за правду
+sources:
+- name: Інформаційна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  type: reference
+  notes: Information warfare overview
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: Current war context
 content_outline:
 - section: Вступ — Війна за правду
-  subsections:
+  points:
   - Огляд модулів 108-112
   - Інформаційна війна — частина війни
   - 300 років vs 30 років
   - Мета синтезу
+  words: 850
 - section: Еволюція російської пропаганди
-  subsections:
+  points:
   - «Малоросія» — імперський період
   - Радянська — «дружба народів»
   - Путінська — «фашисти»
   - Спільне — заперечення України
+  words: 850
 - section: Поле бою
-  subsections:
+  points:
   - Росія — де виграє
   - Україна — де виграє
   - Захід — поле конкуренції
   - Глобальний Південь
+  words: 850
 - section: Уроки 2022
-  subsections:
+  points:
   - Чому «3 дні» провалились
   - Зеленський — ефект
   - Західна консолідація
   - Але — не перемога
+  words: 850
 - section: Майбутнє інформаційної війни
-  subsections:
+  points:
   - AI — нові загрози
   - Deepfakes
   - Як готуватися
   - Роль освіти
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - Війна наративів — довга
   - Правда — не автоматично перемагає
   - Перехід до польсько-українських відносин
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - інформаційна війна
@@ -60,6 +87,15 @@ vocabulary:
 - ехо-камера
 - поляризація
 - когнітивна війна
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: essay-response
   focus: Create information warfare evolution timeline
@@ -71,34 +107,10 @@ activities:
   focus: What 2022 taught about information warfare
 - type: essay-response
   focus: Чи може правда перемогти пропаганду?
-sources:
-- name: Інформаційна війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
-  type: reference
-  notes: Information warfare overview
-- name: Російсько-українська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
-  type: reference
-  notes: Current war context
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Media Archaeologist
+prerequisites:
+- ukrainski-kontrnararyvy
+connects_to:
+- polska-i-ukraina-symbioz

@@ -1,27 +1,47 @@
-sequence: 4
 module: oes-004
-module_number: 4
+level: OES
+sequence: 4
 slug: pleophony-sound-of-rus
-title_uk: 'Повноголосся: Звук Русі'
-title_en: 'Pleophony: The Sound of Rus'''
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'Повноголосся: Звук Русі'
+subtitle: 'Pleophony: The Sound of Rus'''
 focus: ToroT/TereT vs TraT/TreT patterns
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Pleophony: The Sound of Rus'''
+  points:
+  - 'Introduction to Pleophony: The Sound of Rus'''
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Dialectologist
+prerequisites:
+- orthography-yers
+connects_to:
+- yat-mystery

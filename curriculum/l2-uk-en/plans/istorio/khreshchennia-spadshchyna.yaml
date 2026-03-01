@@ -1,56 +1,88 @@
 module: istorio-058
-level: istorio
+level: ISTORIO
 sequence: 58
+slug: khreshchennia-spadshchyna
 version: '1.0'
 title: 'Спадщина Хрещення: Візантійська традиція'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
 - Evaluate the historical significance of релігія і нація
+sources:
+- name: Хрещення Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Baptism of Rus
+- name: Візантійський обряд
+  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
+  type: reference
+  notes: Byzantine rite
+- name: Православ'я в Україні
+  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
+  type: reference
+  notes: Orthodoxy overview
 content_outline:
 - section: Вступ — Релігія і нація
-  subsections:
+  points:
   - Чому релігійна ідентичність важлива
   - Хрещення 988 — початок
   - Візантійський вибір — наслідки
   - Структура фази
+  words: 700
 - section: Хрещення Русі — факти і міфи
-  subsections:
+  points:
   - Володимир і вибір віри — легенда
   - Політичні мотиви
   - Візантійський союз
   - Що насправді сталося
+  words: 700
 - section: Візантійська спадщина
-  subsections:
+  points:
   - Літургія церковнослов'янською
   - Архітектура — Софія Київська
   - Право — Номоканон
   - Література — перекладна
   - Мистецтво — ікони
+  words: 700
 - section: Церква і держава
-  subsections:
+  points:
   - Візантійська модель — симфонія
   - Митрополія Київська
   - Залежність від Константинополя
   - Князі і церква
+  words: 700
 - section: Дебати про спадщину
-  subsections:
+  points:
   - Чия спадщина — України, Росії, Білорусі?
   - Московська претензія
   - Українська позиція
   - Сучасні церковні конфлікти
+  words: 700
 - section: Спадщина для ідентичності
-  subsections:
+  points:
   - Православ'я як ідентичність
   - Але не тільки православ'я
   - Різноманітність — УГКЦ, протестанти
   - Секуляризація
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Хрещення — початок історії
   - Від Візантії до сьогодення
   - Підготовка до Берестейської унії
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Хрещення Русі
 - Візантія
@@ -67,6 +99,15 @@ vocabulary:
 - канонічний
 - автокефалія
 - обряд
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: PVL baptism narrative — separate fact from legend
@@ -78,38 +119,10 @@ activities:
   focus: How does 988 legacy affect 2022 church conflicts?
 - type: essay-response
   focus: Як візантійська традиція сформувала українську ідентичність?
-sources:
-- name: Хрещення Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
-  type: reference
-  notes: Baptism of Rus
-- name: Візантійський обряд
-  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
-  type: reference
-  notes: Byzantine rite
-- name: Православ'я в Україні
-  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
-  type: reference
-  notes: Orthodoxy overview
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Byzantinist
+prerequisites:
+- syntez-rozstriliane
+connects_to:
+- beresteyska-uniia-analiz

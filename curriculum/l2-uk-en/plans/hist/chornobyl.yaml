@@ -4,101 +4,77 @@ sequence: 117
 slug: chornobyl
 version: '2.0'
 title: 'Чорнобиль: Трагедія і Попередження'
-content_outline:
-- section: Вступ — Мирний атом?
-  points:
-  - Pripyat as a Soviet model city of the future — founded Feb 4, 1970, 'City of Roses',
-    average age 26, better supplies than Kyiv
-  - The narrative of the 'safe' peaceful atom — Academician Alexandrov's claim that
-    RBMK reactors were safe enough for Red Square; [!myth-buster] military origins
-    (plutonium production) and critical design flaws kept secret from staff
-  - Ukraine's role as the energy hub of the USSR — concentration of nuclear plants
-    (Chornobyl, Rivne, South Ukraine, Zaporizhzhia, Khmelnytskyi) as the empire's
-    'atomic workshop'
-- section: Аварія 1986 року
-  points:
-  - 'The night of April 26: The explosion and the first firefighters — 01:23 am, two
-    explosions destroyed 4th block during turbine rundown experiment; AZ-5 button
-    fatal flaw led to reactor runaway; Pravyk and Kibenko''s guard worked on the roof
-    without radiation protection'
-  - The 36-hour delay in evacuation and the radioactive cloud — evacuation began April
-    27 at 14:00; [!history-bite] 'Red Forest' pines died instantly turning red; silence
-    of Soviet media while Sweden (Forsmark NPP) detected radiation first
-  - 'The ''Liquidators'': heroism and sacrifice of mobilized reservists — term ''biorobots''
-    for those clearing graphite from the roof manually (90 seconds max exposure);
-    600,000 people involved'
-  - The construction of the Sarcophagus — 'Shelter' object built in 206 days (finished
-    Nov 1986) under extreme radiation conditions
-- section: Первинні джерела
-  points:
-  - 'Transcripts of emergency calls to the fire station — [!quote] chaos and confusion:
-    «— Алло! Це ВПЧ-2? ... 3-й, 4-й блок, горить дах!»'
-  - The official announcement of evacuation (short, dry) — bureaucratic phrasing «неблагоприятная
-    радиационная обстановка» (unfavorable radiation situation) vs. reality of deadly
-    danger; people urged to take ID and food for 3 days
-  - Excerpts from diaries of Pripyat residents — metallic taste in mouth ('iodine
-    taste'), strange glow above the station, silence of radio
-- section: Деколонізаційний погляд
-  points:
-  - 'Moscow''s criminal silence: The May 1st Parade in Kyiv under radiation — [!decolonization]
-    Gorbachev threatening Shcherbytsky («покладеш партквиток»); thousands of children
-    exposed for imperial ''picture'' of calmness'
-  - Colonial exploitation of Ukrainian territory for dangerous industries — center
-    viewing Ukraine as a resource base/energy hub without regard for ecological risks
-    to the local population
-  - Chornobyl as the catalyst for the Ukrainian independence movement (eco-nationalism)
-    — [!context] 'Green World' (Zelenyi Svit) movement; truth about Chornobyl became
-    the first legal form of anti-Soviet protest
-  - The Exclusion Zone as a nature reserve and tourist site — [!culture] nature reclaiming
-    the territory; tourism as a method of trauma processing and historical memory
-  - The spiritual trauma of the nation — silence, lies, and the total loss of trust
-    in the Soviet system
-  - Chornobyl in modern pop culture (HBO series, STALKER game) — global visualization
-    of the Ukrainian tragedy; from 'Zone' of death to cultural phenomenon
 focus: history
 pedagogy: CBI
-prerequisites: '[]'
+phase: HIST.11 [Post-War Soviet Ukraine]
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of чорнобиль: трагедія і попередження'
 - Evaluate the historical significance of мирний атом?
 - Trace the development of деколонізаційний погляд
-phase: HIST.11 [Post-War Soviet Ukraine]
-learning_outcomes: '[]'
+content_outline:
+- section: Вступ — Мирний атом?
+  points:
+  - Pripyat as a Soviet model city of the future — founded Feb 4, 1970, 'City of Roses', average age 26, better supplies than
+    Kyiv
+  - The narrative of the 'safe' peaceful atom — Academician Alexandrov's claim that RBMK reactors were safe enough for Red
+    Square; [!myth-buster] military origins (plutonium production) and critical design flaws kept secret from staff
+  - Ukraine's role as the energy hub of the USSR — concentration of nuclear plants (Chornobyl, Rivne, South Ukraine, Zaporizhzhia,
+    Khmelnytskyi) as the empire's 'atomic workshop'
+  words: 1250
+- section: Аварія 1986 року
+  points:
+  - 'The night of April 26: The explosion and the first firefighters — 01:23 am, two explosions destroyed 4th block during
+    turbine rundown experiment; AZ-5 button fatal flaw led to reactor runaway; Pravyk and Kibenko''s guard worked on the roof
+    without radiation protection'
+  - The 36-hour delay in evacuation and the radioactive cloud — evacuation began April 27 at 14:00; [!history-bite] 'Red Forest'
+    pines died instantly turning red; silence of Soviet media while Sweden (Forsmark NPP) detected radiation first
+  - 'The ''Liquidators'': heroism and sacrifice of mobilized reservists — term ''biorobots'' for those clearing graphite from
+    the roof manually (90 seconds max exposure); 600,000 people involved'
+  - The construction of the Sarcophagus — 'Shelter' object built in 206 days (finished Nov 1986) under extreme radiation conditions
+  words: 1250
+- section: Первинні джерела
+  points:
+  - 'Transcripts of emergency calls to the fire station — [!quote] chaos and confusion: «— Алло! Це ВПЧ-2? ... 3-й, 4-й блок,
+    горить дах!»'
+  - The official announcement of evacuation (short, dry) — bureaucratic phrasing «неблагоприятная радиационная обстановка»
+    (unfavorable radiation situation) vs. reality of deadly danger; people urged to take ID and food for 3 days
+  - Excerpts from diaries of Pripyat residents — metallic taste in mouth ('iodine taste'), strange glow above the station,
+    silence of radio
+  words: 1250
+- section: Деколонізаційний погляд
+  points:
+  - 'Moscow''s criminal silence: The May 1st Parade in Kyiv under radiation — [!decolonization] Gorbachev threatening Shcherbytsky
+    («покладеш партквиток»); thousands of children exposed for imperial ''picture'' of calmness'
+  - Colonial exploitation of Ukrainian territory for dangerous industries — center viewing Ukraine as a resource base/energy
+    hub without regard for ecological risks to the local population
+  - Chornobyl as the catalyst for the Ukrainian independence movement (eco-nationalism) — [!context] 'Green World' (Zelenyi
+    Svit) movement; truth about Chornobyl became the first legal form of anti-Soviet protest
+  - The Exclusion Zone as a nature reserve and tourist site — [!culture] nature reclaiming the territory; tourism as a method
+    of trauma processing and historical memory
+  - The spiritual trauma of the nation — silence, lies, and the total loss of trust in the Soviet system
+  - Chornobyl in modern pop culture (HBO series, STALKER game) — global visualization of the Ukrainian tragedy; from 'Zone'
+    of death to cultural phenomenon
+  words: 1250
 vocabulary_hints:
   required:
-  - історія (history) — новітня історія (modern history); переписувати історію (to
-    rewrite history)
-  - держава (state) — тоталітарна держава (totalitarian state); інтереси держави (state
-    interests)
-  - народ (people) — український народ (Ukrainian people); злочин проти народу (crime
-    against the people)
-  - влада (power/authorities) — радянська влада (Soviet authorities); злочинна недбалість
-    влади (criminal negligence of authorities)
-  - період (period) — радянський період (Soviet period); період напіврозпаду (half-life
-    period)
-  - подія (event) — трагічні події (tragic events); хронологія подій (chronology of
-    events)
-  - джерело (source) — першоджерело (primary source); джерело радіації (radiation
-    source)
-  - спадщина (heritage/legacy) — важка спадщина (heavy legacy); культурна спадщина
-    (cultural heritage)
+  - історія (history) — новітня історія (modern history); переписувати історію (to rewrite history)
+  - держава (state) — тоталітарна держава (totalitarian state); інтереси держави (state interests)
+  - народ (people) — український народ (Ukrainian people); злочин проти народу (crime against the people)
+  - влада (power/authorities) — радянська влада (Soviet authorities); злочинна недбалість влади (criminal negligence of authorities)
+  - період (period) — радянський період (Soviet period); період напіврозпаду (half-life period)
+  - подія (event) — трагічні події (tragic events); хронологія подій (chronology of events)
+  - джерело (source) — першоджерело (primary source); джерело радіації (radiation source)
+  - спадщина (heritage/legacy) — важка спадщина (heavy legacy); культурна спадщина (cultural heritage)
   recommended:
-  - аналіз (analysis) — критичний аналіз (critical analysis); аналіз причин (analysis
-    of causes)
-  - контекст (context) — історичний контекст (historical context); у контексті подій
-    (in the context of events)
-  - вплив (influence/impact) — вплив радіації (radiation impact); екологічний вплив
-    (ecological impact)
-  - наслідки (consequences) — ліквідація наслідків (liquidation of consequences);
-    довготривалі наслідки (long-term consequences)
-  - вибух (explosion) — ядерний вибух (nuclear explosion); причина вибуху (cause of
-    explosion)
-  - евакуація (evacuation) — термінова евакуація (urgent evacuation); зона евакуації
-    (evacuation zone)
-  - радіація (radiation) — рівень радіації (radiation level); радіаційний фон (radiation
-    background)
-  - зона (zone) — зона відчуження (exclusion zone); 30-кілометрова зона (30-kilometer
-    zone)
+  - аналіз (analysis) — критичний аналіз (critical analysis); аналіз причин (analysis of causes)
+  - контекст (context) — історичний контекст (historical context); у контексті подій (in the context of events)
+  - вплив (influence/impact) — вплив радіації (radiation impact); екологічний вплив (ecological impact)
+  - наслідки (consequences) — ліквідація наслідків (liquidation of consequences); довготривалі наслідки (long-term consequences)
+  - вибух (explosion) — ядерний вибух (nuclear explosion); причина вибуху (cause of explosion)
+  - евакуація (evacuation) — термінова евакуація (urgent evacuation); зона евакуації (evacuation zone)
+  - радіація (radiation) — рівень радіації (radiation level); радіаційний фон (radiation background)
+  - зона (zone) — зона відчуження (exclusion zone); 30-кілометрова зона (30-kilometer zone)
 activity_hints:
 - type: reading
   focus: Первинні джерела
@@ -111,7 +87,10 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+prerequisites: '[]'
 persona:
   voice: Senior Professor of History
   role: Plant Engineer
-word_target: 5000
+learning_outcomes: '[]'
+connects_to:
+- diaspora

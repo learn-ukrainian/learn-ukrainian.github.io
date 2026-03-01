@@ -1,103 +1,86 @@
-module: b2-41
+module: b2-041
 level: B2
 sequence: 41
 slug: aspect-nuances-imperative-infinitive
 version: '2.0'
 title: 'Відтінки виду II: наказовий спосіб та інфінітив'
 subtitle: Вид дієслова в командах та інфінітивних конструкціях
-content_outline:
-- section: 'Вступ: Культура спонукання та етикет (Introduction: The Culture of Prompting
-    & Etiquette)'
-  words: 600
-  points:
-  - 'The ''Polite Ukrainian Host'' concept: why Imperfective aspect (Сідайте, заходьте,
-    беріть) is essential for hospitality, contrasting with the distance created by
-    the Perfective.'
-  - 'Learner error ''The Rude Guest'': analyzing why ''Сядь!'' (Perf) sounds like
-    a military order or a command to a pet, whereas ''Сідай'' (Impf) sounds welcoming.'
-  - 'State Standard §4.3.1.3 integration: expressing requests and advice through softened
-    forms of the imperative mood.'
-- section: Граматика та морфологія наказу (Grammar & Morphology of Commands)
-  words: 1000
-  points:
-  - 'Morphological formation according to §4.1.3.2: regular patterns for ''хотіти'',
-    ''літати'', and ''робити'' across different persons (ходи, ходімо, ходіть).'
-  - 'The spectrum of ''наказ'' vs ''прохання'': using Perfective for categorical,
-    urgent, or single-result actions (Зроби це зараз!) vs Imperfective for processes
-    or recurring actions.'
-  - 'Military register nuances (Persona): the use of Perfective aspect in formal ''накази''
-    (orders) to ensure clarity of the required outcome.'
-- section: Заборони, застереження та забобони (Prohibitions, Warnings, & Superstitions)
-  words: 800
-  points:
-  - 'The ''Accident Warning'' rule: using Perfective aspect to warn against unintentional
-    results (''Не впади!'', ''Не забудь!'') vs Imperfective for general prohibitions
-    (''Не бігай!'').'
-  - 'Cultural ''Забобони'' (superstitions) as a linguistic anchor: teaching ''Не можна''
-    + Imperfective through taboos like ''Не можна передавати речі через поріг''.'
-  - Distinguishing 'Не' + Imperfective (Forbidden action) from 'Не' + Perfective (Warning
-    against a negative result/accidental completion).
-- section: 'Модальність інфінітива: Правила vs Можливість (Infinitive Modality: Rules
-    vs Possibility)'
-  words: 900
-  points:
-  - 'The Semantic Divide: ''Не можна'' + Imperfective (It is forbidden/against the
-    law/taboo) vs ''Не можна'' + Perfective (It is physically impossible/the result
-    cannot be achieved).'
-  - 'Case study: ''Не можна відчиняти вікно'' (Prohibited by the ''процес'') vs ''Не
-    можна відчинити вікно'' (It is stuck/physically impossible to complete the ''аналіз'').'
-  - Integrating academic vocabulary (метод, поняття, дослідження) into modal constructions
-    to discuss scientific constraints and methodologies.
-- section: 'Професійне застосування: Накази та інструкції (Professional Application:
-    Orders & Instructions)'
-  words: 700
-  points:
-  - 'Drafting formal instructions: selecting aspect based on the ''термін виконання''
-    (deadline) and nature of the ''процес'' (ongoing vs finite).'
-  - 'Synthesis of grammar: writing a ''наказ'' (order) for a military scenario or
-    a ''правила гри'' (game rules) using correct aspectual nuances for prohibitions
-    and invitations.'
-  - 'Review of ''Common Learner Errors'' in official-business style: avoiding inappropriate
-    imperatives in formal ''прохання'' (requests).'
 focus: grammar
 pedagogy: TTT
+phase: B2.5
+word_target: 4000
 objectives:
 - Learner can distinguish polite invitations from urgent commands by aspect
 - Learner can form prohibitions using the correct aspect
 - Learner can interpret не можна + infinitive based on aspect
 - Learner can choose appropriate aspect in imperative for different situations
-grammar:
-- Aspect in imperative mood
-- Imperfective vs perfective commands
-- Prohibition with imperfective
-- Aspect in infinitive constructions
-- не можна + aspect distinction
-phase: B2.5
+content_outline:
+- section: 'Вступ: Культура спонукання та етикет (Introduction: The Culture of Prompting & Etiquette)'
+  words: 600
+  points:
+  - 'The ''Polite Ukrainian Host'' concept: why Imperfective aspect (Сідайте, заходьте, беріть) is essential for hospitality,
+    contrasting with the distance created by the Perfective.'
+  - 'Learner error ''The Rude Guest'': analyzing why ''Сядь!'' (Perf) sounds like a military order or a command to a pet,
+    whereas ''Сідай'' (Impf) sounds welcoming.'
+  - 'State Standard §4.3.1.3 integration: expressing requests and advice through softened forms of the imperative mood.'
+- section: Граматика та морфологія наказу (Grammar & Morphology of Commands)
+  words: 1000
+  points:
+  - 'Morphological formation according to §4.1.3.2: regular patterns for ''хотіти'', ''літати'', and ''робити'' across different
+    persons (ходи, ходімо, ходіть).'
+  - 'The spectrum of ''наказ'' vs ''прохання'': using Perfective for categorical, urgent, or single-result actions (Зроби
+    це зараз!) vs Imperfective for processes or recurring actions.'
+  - 'Military register nuances (Persona): the use of Perfective aspect in formal ''накази'' (orders) to ensure clarity of
+    the required outcome.'
+- section: Заборони, застереження та забобони (Prohibitions, Warnings, & Superstitions)
+  words: 800
+  points:
+  - 'The ''Accident Warning'' rule: using Perfective aspect to warn against unintentional results (''Не впади!'', ''Не забудь!'')
+    vs Imperfective for general prohibitions (''Не бігай!'').'
+  - 'Cultural ''Забобони'' (superstitions) as a linguistic anchor: teaching ''Не можна'' + Imperfective through taboos like
+    ''Не можна передавати речі через поріг''.'
+  - Distinguishing 'Не' + Imperfective (Forbidden action) from 'Не' + Perfective (Warning against a negative result/accidental
+    completion).
+- section: 'Модальність інфінітива: Правила vs Можливість (Infinitive Modality: Rules vs Possibility)'
+  words: 900
+  points:
+  - 'The Semantic Divide: ''Не можна'' + Imperfective (It is forbidden/against the law/taboo) vs ''Не можна'' + Perfective
+    (It is physically impossible/the result cannot be achieved).'
+  - 'Case study: ''Не можна відчиняти вікно'' (Prohibited by the ''процес'') vs ''Не можна відчинити вікно'' (It is stuck/physically
+    impossible to complete the ''аналіз'').'
+  - Integrating academic vocabulary (метод, поняття, дослідження) into modal constructions to discuss scientific constraints
+    and methodologies.
+- section: 'Професійне застосування: Накази та інструкції (Professional Application: Orders & Instructions)'
+  words: 700
+  points:
+  - 'Drafting formal instructions: selecting aspect based on the ''термін виконання'' (deadline) and nature of the ''процес''
+    (ongoing vs finite).'
+  - 'Synthesis of grammar: writing a ''наказ'' (order) for a military scenario or a ''правила гри'' (game rules) using correct
+    aspectual nuances for prohibitions and invitations.'
+  - 'Review of ''Common Learner Errors'' in official-business style: avoiding inappropriate imperatives in formal ''прохання''
+    (requests).'
 vocabulary_hints:
   required:
-  - термін (term) — термін виконання (deadline), у визначений термін (within a specified
-    term), спливає термін (the term is expiring); High frequency in official/technical
-    contexts.
-  - поняття (concept) — ключове поняття (key concept), мати поняття (to have a clue),
-    підміняти поняття (to substitute concepts); Essential for B2 academic discussion.
-  - процес (process) — навчальний процес (learning process), творчий процес (creative
-    process), у процесі (in progress), контролювати процес (to control the process).
-  - метод (method) — ефективний метод (effective method), науковий метод (scientific
-    method), метод спроб і помилок (trial and error); Critical for describing research.
+  - термін (term) — термін виконання (deadline), у визначений термін (within a specified term), спливає термін (the term is
+    expiring); High frequency in official/technical contexts.
+  - поняття (concept) — ключове поняття (key concept), мати поняття (to have a clue), підміняти поняття (to substitute concepts);
+    Essential for B2 academic discussion.
+  - процес (process) — навчальний процес (learning process), творчий процес (creative process), у процесі (in progress), контролювати
+    процес (to control the process).
+  - метод (method) — ефективний метод (effective method), науковий метод (scientific method), метод спроб і помилок (trial
+    and error); Critical for describing research.
   recommended:
-  - аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct
-    an analysis), критичний аналіз (critical analysis).
-  - синтез (synthesis) — логічний синтез (logical synthesis), результати синтезу (results
-    of synthesis).
-  - дослідження (research) — наукове дослідження (scientific research), результати
-    дослідження (research results), проводити дослідження (to conduct research).
-  - наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow
-    an order), згідно з наказом (according to the order); High frequency in military/official
-    contexts.
-  - прохання (request) — велике прохання (big request), на прохання (at the request
-    of), звертатися з проханням (to address with a request).
-  - заборона (prohibition) — сувора заборона (strict prohibition), накласти заборону
-    (to impose a ban), порушити заборону (to violate a prohibition).
+  - аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct an analysis), критичний аналіз (critical
+    analysis).
+  - синтез (synthesis) — логічний синтез (logical synthesis), результати синтезу (results of synthesis).
+  - дослідження (research) — наукове дослідження (scientific research), результати дослідження (research results), проводити
+    дослідження (to conduct research).
+  - наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow an order), згідно з наказом (according
+    to the order); High frequency in military/official contexts.
+  - прохання (request) — велике прохання (big request), на прохання (at the request of), звертатися з проханням (to address
+    with a request).
+  - заборона (prohibition) — сувора заборона (strict prohibition), накласти заборону (to impose a ban), порушити заборону
+    (to violate a prohibition).
 activity_hints:
 - type: reading
   focus: Аналіз тексту
@@ -110,4 +93,13 @@ activity_hints:
 persona:
   voice: Professional Language Coach
   role: Military Instructor (Військовий інструктор)
-word_target: 4000
+grammar:
+- Aspect in imperative mood
+- Imperfective vs perfective commands
+- Prohibition with imperfective
+- Aspect in infinitive constructions
+- не можна + aspect distinction
+prerequisites:
+- aspect-nuances-secondary-imperfectivization
+connects_to:
+- pluperfect-tense

@@ -1,68 +1,69 @@
-module: a2-53
+module: a2-058
 level: A2
-sequence: 53
+sequence: 58
 slug: shopping-services
 version: '2.0'
 title: Shopping and Services
 subtitle: Buying and Paying
+focus: vocabulary
+pedagogy: PPP
+phase: A2.5 [Vocabulary Expansion]
+word_target: 3000
+objectives:
+- Learner can buy items in a shop
+- Learner can ask for price and pay
+- Learner can use service vocabulary (checkout, receipt)
+- Learner can describe payment methods
 content_outline:
 - section: Вступ (Introduction)
   words: 400
   points:
-  - 'Introduction to the shopping theme aligned with State Standard §3.9. Distinguish
-    between different store types: магазин (general shop), супермаркет (supermarket),
-    and ринок (traditional market).'
-  - 'Cultural landmark spotlight: Bessarabka Market (Бессарабський ринок) in Kyiv.
-    Explain its history (built 1912 by Lazar Brodsky) and its Art Nouveau architecture
-    as an urban monument.'
-  - Introduce the famous Kyiv idiom 'Expensive as in Bessarabka' (Дорого, як на Бессарабці)
-    to discuss price perception and the market's premium reputation.
+  - 'Introduction to the shopping theme aligned with State Standard §3.9. Distinguish between different store types: магазин
+    (general shop), супермаркет (supermarket), and ринок (traditional market).'
+  - 'Cultural landmark spotlight: Bessarabka Market (Бессарабський ринок) in Kyiv. Explain its history (built 1912 by Lazar
+    Brodsky) and its Art Nouveau architecture as an urban monument.'
+  - Introduce the famous Kyiv idiom 'Expensive as in Bessarabka' (Дорого, як на Бессарабці) to discuss price perception and
+    the market's premium reputation.
 - section: Лексика та культура (Vocabulary and Culture)
   words: 700
   points:
-  - 'Essential commodities from State Standard §3.9: groceries (овочі, фрукти, м’ясо,
-    хліб, молочні продукти) and hygiene products (мило, шампунь, зубна паста).'
-  - 'Traditional market etiquette: Explain why ''Чи є у вас свіже...?'' (Is there
-    at you fresh...?) is the standard polite opener, contrasted with the unnatural
-    direct translation ''Ти маєш...?'' (Do you have?).'
-  - 'Units of weight and volume (одиниці ваги й об’єму): kilo, liter, and pieces (штуки)
-    as required by the Standard for transactional competency.'
+  - 'Essential commodities from State Standard §3.9: groceries (овочі, фрукти, м’ясо, хліб, молочні продукти) and hygiene
+    products (мило, шампунь, зубна паста).'
+  - 'Traditional market etiquette: Explain why ''Чи є у вас свіже...?'' (Is there at you fresh...?) is the standard polite
+    opener, contrasted with the unnatural direct translation ''Ти маєш...?'' (Do you have?).'
+  - 'Units of weight and volume (одиниці ваги й об’єму): kilo, liter, and pieces (штуки) as required by the Standard for transactional
+    competency.'
 - section: Граматика (Grammar)
   words: 800
   points:
-  - 'Direction vs. Location: Correcting the common learner error of using the Locative
-    (''Я йду в магазині'') instead of the Accusative (''Я йду в магазин'') for motion
-    toward a shop.'
-  - 'The Instrumental case for payment methods: Explicit drill on ''платити карткою''
-    (pay with card) to fix the frequent error ''платити картою''. Contrast with ''платити
-    готівкою'' (pay with cash).'
-  - 'Verbal patterns for shopping: Conjugation and usage of купувати (to buy), продавати
-    (to sell), and платити (to pay) in the context of prices (Скільки коштує?).'
+  - 'Direction vs. Location: Correcting the common learner error of using the Locative (''Я йду в магазині'') instead of the
+    Accusative (''Я йду в магазин'') for motion toward a shop.'
+  - 'The Instrumental case for payment methods: Explicit drill on ''платити карткою'' (pay with card) to fix the frequent
+    error ''платити картою''. Contrast with ''платити готівкою'' (pay with cash).'
+  - 'Verbal patterns for shopping: Conjugation and usage of купувати (to buy), продавати (to sell), and платити (to pay) in
+    the context of prices (Скільки коштує?).'
 - section: Діалоги та практика (Dialogues and Practice)
   words: 700
   points:
-  - 'Simulated market dialogue: Practice asking about freshness, weight, and price
-    using natural immersion patterns. Roleplay as a Bessarabka vendor and an encouraging
-    guide.'
-  - 'Supermarket checkout flow: Dialogues involving asking for a bag (пакет), a receipt
-    (потрібен чек/фіскальний чек), and clarifying payment method (карткою чи готівкою?).'
-  - 'Correction drill for ''Do you have?'': Replace the learner''s direct translation
-    ''Ти маєш хліб?'' with the natural ''Чи є у вас хліб?'' in various shopping contexts.'
+  - 'Simulated market dialogue: Practice asking about freshness, weight, and price using natural immersion patterns. Roleplay
+    as a Bessarabka vendor and an encouraging guide.'
+  - 'Supermarket checkout flow: Dialogues involving asking for a bag (пакет), a receipt (потрібен чек/фіскальний чек), and
+    clarifying payment method (карткою чи готівкою?).'
+  - 'Correction drill for ''Do you have?'': Replace the learner''s direct translation ''Ти маєш хліб?'' with the natural ''Чи
+    є у вас хліб?'' in various shopping contexts.'
 - section: Послуги та підсумок (Services and Summary)
   words: 400
   points:
-  - 'Introduction to basic services per State Standard §3.11: перукарня (hairdresser),
-    хімчистка (dry cleaning), and ремонт (repair). Focus on simple service requests.'
-  - Final summary of high-frequency vocabulary and collocations. Review of the distinction
-    between buying (what - Accusative) and paying (how - Instrumental).
+  - 'Introduction to basic services per State Standard §3.11: перукарня (hairdresser), хімчистка (dry cleaning), and ремонт
+    (repair). Focus on simple service requests.'
+  - Final summary of high-frequency vocabulary and collocations. Review of the distinction between buying (what - Accusative)
+    and paying (how - Instrumental).
 vocabulary_hints:
   required:
-  - магазин (store) — йти в магазин, продуктовий магазин; High Frequency (Standard
-    §3.9)
+  - магазин (store) — йти в магазин, продуктовий магазин; High Frequency (Standard §3.9)
   - ціна (price) — висока ціна, яка ціна?, ціна за кілограм; High Frequency
   - купувати (to buy) — купувати продукти, купувати одяг; High Frequency
-  - платити (to pay) — платити карткою, платити готівкою; Instrumental case requirement;
-    High Frequency
+  - платити (to pay) — платити карткою, платити готівкою; Instrumental case requirement; High Frequency
   - гроші (money) — паперові гроші, мати гроші; High Frequency (Standard §3.9)
   - картка (card) — банківська картка, платити карткою; High Frequency
   - готівка (cash) — платити готівкою, мати готівку; Medium Frequency
@@ -90,26 +91,17 @@ activity_hints:
 - type: cloze
   focus: Buy items at a store
   items: 8
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- a2-52 (Education and Learning)
 connects_to:
 - a2-54 (Sports and Fitness)
 - a2-63 (At the Bank)
-objectives:
-- Learner can buy items in a shop
-- Learner can ask for price and pay
-- Learner can use service vocabulary (checkout, receipt)
-- Learner can describe payment methods
+prerequisites:
+- a2-52 (Education and Learning)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Bessarabka Market Vendor
 grammar:
 - Payment verbs (платити, купувати, продавати)
 - Accusative for prices and objects
 - Instrumental for means (карткою, готівкою)
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.5 [Vocabulary Expansion]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Bessarabka Market Vendor
-word_target: 3000

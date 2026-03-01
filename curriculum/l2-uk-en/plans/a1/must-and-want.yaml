@@ -1,58 +1,63 @@
-module: a1-46
+module: a1-046
 level: A1
 sequence: 46
 slug: must-and-want
 version: '2.0'
 title: Must and Want
 subtitle: Obligation and Desire
+focus: grammar
+pedagogy: PPP
+phase: A1.5 [Modals, Commands & Life]
+word_target: 2000
+objectives:
+- Use треба/потрібно for impersonal necessity
+- Use повинен with gender agreement
+- Conjugate хотіти and use with infinitive/Acc
+- Distinguish obligation intensity levels
 content_outline:
 - section: Треба / Потрібно (It is necessary)
   words: 500
   points:
-  - 'Impersonal necessity construction: Треба працювати (One must work). Мені треба
-    йти (I need to go). Dative + треба + infinitive as the core pattern.'
-  - 'Потрібно as a slightly more formal synonym: Потрібно зробити це сьогодні (This
-    needs to be done today). Interchangeable with треба in most A1 contexts.'
-  - 'Short adjective form потрібен/потрібна/потрібне/потрібні for "need a noun": Мені
-    потрібен лікар (I need a doctor). Мені потрібна допомога (I need help). Gender
-    agreement with the needed noun, not the speaker.'
+  - 'Impersonal necessity construction: Треба працювати (One must work). Мені треба йти (I need to go). Dative + треба + infinitive
+    as the core pattern.'
+  - 'Потрібно as a slightly more formal synonym: Потрібно зробити це сьогодні (This needs to be done today). Interchangeable
+    with треба in most A1 contexts.'
+  - 'Short adjective form потрібен/потрібна/потрібне/потрібні for "need a noun": Мені потрібен лікар (I need a doctor). Мені
+    потрібна допомога (I need help). Gender agreement with the needed noun, not the speaker.'
 - section: Повинен (Must/Should)
   words: 400
   points:
-  - 'Personal obligation: Я повинен / повинна працювати (I must work). Subject +
-    повинен + infinitive. Unlike треба, the subject is explicit and prominent.'
-  - 'Gender agreement paradigm: повинен (m), повинна (f), повинне (n), повинні (pl).
-    Drill: Він повинен, Вона повинна, Вони повинні. Agreement with the subject.'
-  - 'Semantic nuance: повинен implies personal duty or moral obligation, stronger
-    than треба. Я повинен допомогти (I must help — duty). Learner error: using повинен
-    for impersonal necessity where треба fits better.'
+  - 'Personal obligation: Я повинен / повинна працювати (I must work). Subject + повинен + infinitive. Unlike треба, the subject
+    is explicit and prominent.'
+  - 'Gender agreement paradigm: повинен (m), повинна (f), повинне (n), повинні (pl). Drill: Він повинен, Вона повинна, Вони
+    повинні. Agreement with the subject.'
+  - 'Semantic nuance: повинен implies personal duty or moral obligation, stronger than треба. Я повинен допомогти (I must
+    help — duty). Learner error: using повинен for impersonal necessity where треба fits better.'
 - section: Хотіти (To want)
   words: 400
   points:
-  - 'Full present tense conjugation: хочу, хочеш, хоче, хочемо, хочете, хочуть.
-    Irregular stem change хот- → хоч-. High-frequency verb (Top 100).'
-  - 'Two patterns: хочу + infinitive (Я хочу спати — I want to sleep) and хочу +
-    Accusative (Я хочу каву — I want coffee). Recognizing which pattern to use.'
-  - 'Polite variant: Я б хотів/хотіла... (I would like...). Conditional particle
-    б softens the request. Я б хотіла каву, будь ласка (I would like a coffee, please).'
+  - 'Full present tense conjugation: хочу, хочеш, хоче, хочемо, хочете, хочуть. Irregular stem change хот- → хоч-. High-frequency
+    verb (Top 100).'
+  - 'Two patterns: хочу + infinitive (Я хочу спати — I want to sleep) and хочу + Accusative (Я хочу каву — I want coffee).
+    Recognizing which pattern to use.'
+  - 'Polite variant: Я б хотів/хотіла... (I would like...). Conditional particle б softens the request. Я б хотіла каву, будь
+    ласка (I would like a coffee, please).'
 - section: Порівняння (Comparison)
   words: 400
   points:
-  - 'Three-way contrast: треба (impersonal necessity — it is needed) vs повинен (personal
-    duty — I must) vs хочу (personal desire — I want). Each fills a different communicative
-    niche.'
-  - 'Intensity scale: хочу (want, weakest) → треба (need, medium) → повинен (must,
-    strongest). Learner drill: ranking obligation strength in context.'
-  - 'Contextual examples: Я хочу відпочити (I want to rest — desire). Мені треба
-    відпочити (I need to rest — health). Я повинен працювати (I must work — duty).
-    Same speaker, different modal, different meaning.'
+  - 'Three-way contrast: треба (impersonal necessity — it is needed) vs повинен (personal duty — I must) vs хочу (personal
+    desire — I want). Each fills a different communicative niche.'
+  - 'Intensity scale: хочу (want, weakest) → треба (need, medium) → повинен (must, strongest). Learner drill: ranking obligation
+    strength in context.'
+  - 'Contextual examples: Я хочу відпочити (I want to rest — desire). Мені треба відпочити (I need to rest — health). Я повинен
+    працювати (I must work — duty). Same speaker, different modal, different meaning.'
 - section: Практика (Practice)
   words: 300
   points:
-  - 'Situation drills: Given a scenario (sick, at work, at café), choose the correct
-    modal construction. Building automaticity in modal choice.'
-  - 'Dialogue practice: Role-play using modals in everyday conversations — requesting
-    help, expressing wishes, discussing duties.'
+  - 'Situation drills: Given a scenario (sick, at work, at café), choose the correct modal construction. Building automaticity
+    in modal choice.'
+  - 'Dialogue practice: Role-play using modals in everyday conversations — requesting help, expressing wishes, discussing
+    duties.'
 vocabulary_hints:
   required:
   - треба (it is necessary) — Мені треба йти; impersonal necessity construction
@@ -81,24 +86,15 @@ activity_hints:
 - type: unjumble
   focus: Reorder words to form correct obligation sentences
   items: 6
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-45 (Can and Know How)
 connects_to:
 - a1-47 (Imperative and Requests)
-objectives:
-- Use треба/потрібно for impersonal necessity
-- Use повинен with gender agreement
-- Conjugate хотіти and use with infinitive/Acc
-- Distinguish obligation intensity levels
+prerequisites:
+- a1-45 (Can and Know How)
+persona:
+  voice: Patient Supportive Tutor
+  role: Life Coach
 grammar:
 - Треба/потрібно impersonal construction
 - Повинен agreement (m/f/n/pl)
 - Хотіти conjugation (irregular stem)
 register: розмовний
-phase: A1.5 [Modals, Commands & Life]
-persona:
-  voice: Patient Supportive Tutor
-  role: Life Coach
-word_target: 2000

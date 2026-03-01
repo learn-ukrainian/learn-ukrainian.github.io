@@ -1,1 +1,13 @@
+module: lit-220
+level: LIT
+sequence: 220
 slug: vaplite-literary-avant-garde
+version: '2.0'
+word_target: 5000
+vocabulary_hints:
+  required: []
+  recommended: []
+prerequisites:
+- kobrynska-pershyi-vinok
+connects_to:
+- kyiv-school-of-poetry

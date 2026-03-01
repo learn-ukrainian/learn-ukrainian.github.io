@@ -3,22 +3,19 @@ level: C2
 sequence: 70
 slug: corpus-linguistics
 version: '2.0'
-title: 'Корпусна лінгвістика та цифрові інструменти'
-subtitle: 'Corpus Linguistics and Digital Tools'
-phase: 'C2.4 [Meta-Skills & Capstone]'
+title: Корпусна лінгвістика та цифрові інструменти
+subtitle: Corpus Linguistics and Digital Tools
 focus: grammar
 pedagogy: TTT
-prerequisites:
-- c2-069 (Language Policy and Decolonization)
+phase: C2.4 [Meta-Skills & Capstone]
+word_target: 5000
 objectives:
-- Learner can navigate and query Ukrainian language corpora (ГРАК, Корпус текстів НАН)
-  to extract authentic usage data
-- Learner can apply corpus-based methods (concordancing, collocation analysis, frequency
-  profiling) to resolve grammatical and lexical doubts
-- Learner can critically compare textbook Ukrainian with corpus-attested natural usage
-  and identify discrepancies
-- Learner can use NLP tools for Ukrainian (морфологічний аналізатор, синтаксичний парсер)
-  to support advanced self-editing and language analysis
+- Learner can navigate and query Ukrainian language corpora (ГРАК, Корпус текстів НАН) to extract authentic usage data
+- Learner can apply corpus-based methods (concordancing, collocation analysis, frequency profiling) to resolve grammatical
+  and lexical doubts
+- Learner can critically compare textbook Ukrainian with corpus-attested natural usage and identify discrepancies
+- Learner can use NLP tools for Ukrainian (морфологічний аналізатор, синтаксичний парсер) to support advanced self-editing
+  and language analysis
 sources:
 - name: ГРАК — Генеральний регіонально анотований корпус української мови
   url: https://grak.org.ua/
@@ -36,104 +33,85 @@ content_outline:
 - section: 'Вступ: Що таке мовний корпус (Introduction: What Is a Linguistic Corpus)'
   words: 700
   points:
-  - 'Definition and purpose: what constitutes a linguistic corpus; the distinction
-    between a corpus and a text archive; why corpus data matters for achieving C2 mastery.'
-  - 'Types of corpora: annotated (морфологічно розмічений), parallel (паралельний),
-    historical (діахронний), and learner corpora (корпус учнівських текстів); how each
-    type serves different research and learning goals.'
-  - 'Corpus-based vs corpus-driven approaches: using corpora to verify hypotheses
-    (top-down) vs discovering patterns inductively from data (bottom-up).'
-- section: 'Українські мовні корпуси (Ukrainian Language Corpora)'
+  - 'Definition and purpose: what constitutes a linguistic corpus; the distinction between a corpus and a text archive; why
+    corpus data matters for achieving C2 mastery.'
+  - 'Types of corpora: annotated (морфологічно розмічений), parallel (паралельний), historical (діахронний), and learner corpora
+    (корпус учнівських текстів); how each type serves different research and learning goals.'
+  - 'Corpus-based vs corpus-driven approaches: using corpora to verify hypotheses (top-down) vs discovering patterns inductively
+    from data (bottom-up).'
+- section: Українські мовні корпуси (Ukrainian Language Corpora)
   words: 900
   points:
-  - 'ГРАК (Генеральний регіонально анотований корпус): structure, size, regional and
-    genre annotation; practical navigation of the search interface; interpreting results
-    and metadata.'
-  - 'Корпус текстів НАН України: academic and scientific text collections; how this
-    corpus complements ГРАК for specialized registers and terminology.'
-  - 'Historical and specialized corpora: diachronic corpora for tracking language
-    change; learner corpora for error analysis; the role of corpora in standardization
-    and dictionary compilation.'
-- section: 'Корпусні інструменти та методи (Corpus Tools and Methods)'
+  - 'ГРАК (Генеральний регіонально анотований корпус): structure, size, regional and genre annotation; practical navigation
+    of the search interface; interpreting results and metadata.'
+  - 'Корпус текстів НАН України: academic and scientific text collections; how this corpus complements ГРАК for specialized
+    registers and terminology.'
+  - 'Historical and specialized corpora: diachronic corpora for tracking language change; learner corpora for error analysis;
+    the role of corpora in standardization and dictionary compilation.'
+- section: Корпусні інструменти та методи (Corpus Tools and Methods)
   words: 900
   points:
-  - 'Concordancers and KWIC (Key Word In Context): how concordance lines reveal collocational
-    patterns, syntactic behavior, and semantic prosody of Ukrainian words.'
-  - 'Frequency lists and their applications: understanding frequency rankings; comparing
-    active vocabulary with corpus frequency data; implications for vocabulary prioritization
-    at C2 level.'
-  - 'Collocation analysis and statistical measures: MI score (mutual information),
-    t-score, and log-likelihood as tools for identifying strong vs weak collocations;
-    practical interpretation of collocation tables.'
-- section: 'Частотність і автентичність (Frequency and Authenticity)'
+  - 'Concordancers and KWIC (Key Word In Context): how concordance lines reveal collocational patterns, syntactic behavior,
+    and semantic prosody of Ukrainian words.'
+  - 'Frequency lists and their applications: understanding frequency rankings; comparing active vocabulary with corpus frequency
+    data; implications for vocabulary prioritization at C2 level.'
+  - 'Collocation analysis and statistical measures: MI score (mutual information), t-score, and log-likelihood as tools for
+    identifying strong vs weak collocations; practical interpretation of collocation tables.'
+- section: Частотність і автентичність (Frequency and Authenticity)
   words: 800
   points:
-  - 'Frequency dictionaries of Ukrainian: overview of existing resources; how corpus
-    frequency validates or challenges traditional vocabulary selection in textbooks.'
-  - 'Textbook Ukrainian vs corpus-attested usage: identifying gaps between pedagogical
-    language and natural language; examples of overrepresented and underrepresented
-    constructions in Ukrainian L2 materials.'
-  - 'Register variation through frequency: how word frequency profiles differ across
-    registers (academic, journalistic, literary, conversational) and what this reveals
-    about authentic register mastery.'
-- section: 'Обчислювальні підходи (Computational Approaches)'
+  - 'Frequency dictionaries of Ukrainian: overview of existing resources; how corpus frequency validates or challenges traditional
+    vocabulary selection in textbooks.'
+  - 'Textbook Ukrainian vs corpus-attested usage: identifying gaps between pedagogical language and natural language; examples
+    of overrepresented and underrepresented constructions in Ukrainian L2 materials.'
+  - 'Register variation through frequency: how word frequency profiles differ across registers (academic, journalistic, literary,
+    conversational) and what this reveals about authentic register mastery.'
+- section: Обчислювальні підходи (Computational Approaches)
   words: 800
   points:
-  - 'NLP tools for Ukrainian: морфологічний аналізатор (morphological analyzer), синтаксичний
-    парсер (syntactic parser); overview of pymorphy2-uk, Stanza Ukrainian model, and
-    LanguageTool-UA.'
-  - 'The Ukrainian language technology landscape: current state, key research groups
-    (ІМФ НАНУ, Грамматично), and challenges specific to Ukrainian NLP (rich morphology,
-    free word order, limited training data).'
-  - 'Machine translation evaluation: using corpus methods to assess MT output quality;
-    identifying systematic errors in Ukrainian machine translation and their linguistic
-    sources.'
-- section: 'Практичне застосування (Practical Applications)'
+  - 'NLP tools for Ukrainian: морфологічний аналізатор (morphological analyzer), синтаксичний парсер (syntactic parser); overview
+    of pymorphy2-uk, Stanza Ukrainian model, and LanguageTool-UA.'
+  - 'The Ukrainian language technology landscape: current state, key research groups (ІМФ НАНУ, Грамматично), and challenges
+    specific to Ukrainian NLP (rich morphology, free word order, limited training data).'
+  - 'Machine translation evaluation: using corpus methods to assess MT output quality; identifying systematic errors in Ukrainian
+    machine translation and their linguistic sources.'
+- section: Практичне застосування (Practical Applications)
   words: 600
   points:
-  - 'Self-editing with corpora: using corpus evidence to verify collocations, check
-    preposition governance, and resolve grammatical doubts (e.g., case selection after
-    specific verbs).'
-  - 'Academic writing improvement: using frequency and collocation data to move from
-    acceptable to natural Ukrainian in research papers, essays, and professional documents.'
-  - 'Resolving prescriptive disputes: cases where corpus data supports or challenges
-    normative recommendations; the role of empirical evidence in contemporary Ukrainian
-    language standardization.'
+  - 'Self-editing with corpora: using corpus evidence to verify collocations, check preposition governance, and resolve grammatical
+    doubts (e.g., case selection after specific verbs).'
+  - 'Academic writing improvement: using frequency and collocation data to move from acceptable to natural Ukrainian in research
+    papers, essays, and professional documents.'
+  - 'Resolving prescriptive disputes: cases where corpus data supports or challenges normative recommendations; the role of
+    empirical evidence in contemporary Ukrainian language standardization.'
 - section: 'Практикум: Корпусний запит (Workshop: Corpus Query Exercise)'
   words: 300
   points:
-  - 'Hands-on exercise: formulating and executing corpus queries to find authentic
-    examples for a chosen grammatical or lexical topic; interpreting concordance output
-    and frequency data.'
-  - 'Comparative task: contrasting corpus-attested patterns with learner intuitions
-    and textbook prescriptions; writing a brief analytical report on findings.'
+  - 'Hands-on exercise: formulating and executing corpus queries to find authentic examples for a chosen grammatical or lexical
+    topic; interpreting concordance output and frequency data.'
+  - 'Comparative task: contrasting corpus-attested patterns with learner intuitions and textbook prescriptions; writing a
+    brief analytical report on findings.'
 vocabulary_hints:
   required:
-  - корпус (corpus) — мовний корпус, анотований корпус, паралельний корпус; foundational
-    term for the entire module.
-  - конкорданс (concordance) — конкордансні рядки, аналіз конкордансу; primary tool
-    for corpus-based analysis.
-  - колокація (collocation) — сильна колокація, аналіз колокацій, колокаційна таблиця;
-    essential for understanding word combinations.
-  - частотність (frequency) — частотний словник, частотний профіль, лексична частотність;
-    core concept for corpus-based vocabulary work.
-  - морфологічний аналізатор (morphological analyzer) — автоматичний морфологічний
-    аналіз, розмічування тексту; NLP tool for Ukrainian.
-  - синтаксичний парсер (syntactic parser) — автоматичний синтаксичний розбір, дерево
-    залежностей; computational tool for sentence structure.
-  - розмітка (annotation) — морфологічна розмітка, синтаксична розмітка, ручна розмітка;
-    metadata layer that makes corpora searchable.
-  - діахронний (diachronic) — діахронний аналіз, діахронний корпус; essential for historical
-    language study.
+  - корпус (corpus) — мовний корпус, анотований корпус, паралельний корпус; foundational term for the entire module.
+  - конкорданс (concordance) — конкордансні рядки, аналіз конкордансу; primary tool for corpus-based analysis.
+  - колокація (collocation) — сильна колокація, аналіз колокацій, колокаційна таблиця; essential for understanding word combinations.
+  - частотність (frequency) — частотний словник, частотний профіль, лексична частотність; core concept for corpus-based vocabulary
+    work.
+  - морфологічний аналізатор (morphological analyzer) — автоматичний морфологічний аналіз, розмічування тексту; NLP tool for
+    Ukrainian.
+  - синтаксичний парсер (syntactic parser) — автоматичний синтаксичний розбір, дерево залежностей; computational tool for
+    sentence structure.
+  - розмітка (annotation) — морфологічна розмітка, синтаксична розмітка, ручна розмітка; metadata layer that makes corpora
+    searchable.
+  - діахронний (diachronic) — діахронний аналіз, діахронний корпус; essential for historical language study.
   recommended:
   - конкорданцер (concordancer) — інструмент для пошуку та відображення контекстних рядків.
-  - MI-показник (MI score / mutual information) — статистична міра сили колокації; значення
-    MI вище 3 вказує на сильну колокацію.
+  - MI-показник (MI score / mutual information) — статистична міра сили колокації; значення MI вище 3 вказує на сильну колокацію.
   - KWIC (Key Word In Context) — формат відображення пошукових результатів у корпусі.
-  - семантична просодія (semantic prosody) — позитивна/негативна семантична просодія;
-    прихована оцінність слова, що виявляється через корпусний аналіз.
-  - ревіталізація (revitalization) — корпусні дані як інструмент ревіталізації мовних
-    норм.
+  - семантична просодія (semantic prosody) — позитивна/негативна семантична просодія; прихована оцінність слова, що виявляється
+    через корпусний аналіз.
+  - ревіталізація (revitalization) — корпусні дані як інструмент ревіталізації мовних норм.
 activity_hints:
 - type: quiz
   focus: Визначення корпусних термінів та інтерпретація статистичних показників
@@ -146,10 +124,12 @@ activity_hints:
 - type: critical-analysis
   focus: Порівняння підручникової мови з корпусними даними
   items: 6
-persona:
-  voice: Senior Specialist
-  role: Digital Linguist
 connects_to:
 - c2-71 (Error Analysis — corpus methods applied to error identification)
 - c2-65 (Complete Grammar Review — corpus evidence for grammar mastery)
 - c2-69 (Language Policy and Decolonization — empirical data informing policy analysis)
+prerequisites:
+- c2-069 (Language Policy and Decolonization)
+persona:
+  voice: Senior Specialist
+  role: Digital Linguist

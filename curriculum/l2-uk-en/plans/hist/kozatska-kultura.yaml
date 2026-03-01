@@ -5,83 +5,96 @@ slug: kozatska-kultura
 version: '2.0'
 title: Козацька культура — кобзарі, думи та бароко
 subtitle: 'Cossack Culture: Kobzars, Dumas, and Baroque'
+focus: history
+pedagogy: CBI
+phase: HIST.5 [Rise of Cossacks]
+word_target: 5000
+objectives:
+- Learner can explain the role of kobzars in preserving national memory
+- Learner can analyze the genre of dumas as a unique Ukrainian epic
+- Learner can characterize Cossack Baroque and its geopolitical significance
+sources:
+- name: History of Ukrainian Culture
+  url: https://litopys.org.ua/istkult/istkult.htm
+  type: reference
+  notes: Comprehensive overview of the era
+- name: Cossack Baroque - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
+  type: reference
+  notes: Detailed description of the style
 content_outline:
 - section: Вступ та Контекст
   points:
-  - 'Cultural intersection: East and West — synthesis of Western European influences
-    and Byzantine-Rus traditions; not passive borrowing but active creation'
-  - The Golden Age of Hetmanate culture — [!context] Ukrainian Baroque was a dialogue
-    where tradition reimagined European forms; period of 1687 (Mazepa's election)
-    marked the peak
+  - 'Cultural intersection: East and West — synthesis of Western European influences and Byzantine-Rus traditions; not passive
+    borrowing but active creation'
+  - The Golden Age of Hetmanate culture — [!context] Ukrainian Baroque was a dialogue where tradition reimagined European
+    forms; period of 1687 (Mazepa's election) marked the peak
+  words: 550
 - section: 'Кобзарі та лірники: голос народу'
   points:
-  - The guild system (cekhy) and hierarchy — organized brotherhoods with statutes,
-    treasury, courts, and strict hierarchy (masters, apprentices)
-  - 'Lebiiska language: the secret code — [!history-bite] kobzars used a secret argot
-    (''lebiiska'') for safety and preserving guild secrets'
-  - Social and political functions of kobzars — not beggars but professional performers;
-    acted as 'live newspapers', moral authorities, and sometimes scouts
+  - The guild system (cekhy) and hierarchy — organized brotherhoods with statutes, treasury, courts, and strict hierarchy
+    (masters, apprentices)
+  - 'Lebiiska language: the secret code — [!history-bite] kobzars used a secret argot (''lebiiska'') for safety and preserving
+    guild secrets'
+  - Social and political functions of kobzars — not beggars but professional performers; acted as 'live newspapers', moral
+    authorities, and sometimes scouts
+  words: 550
 - section: 'Українські Думи: Духовний хребет нації'
   points:
-  - The uniqueness of the genre (recitative) — [!culture] dumas were chanted, not
-    sung, allowing for improvisation based on audience reaction (like jazz)
-  - Improvisation and emotional depth — focus on themes of captivity, escape, and
-    death (e.g., 'Дума про Марусю Богуславку')
-  - The role of dumas in shaping language — formed the national ethos and historical
-    consciousness of the illiterate population
+  - The uniqueness of the genre (recitative) — [!culture] dumas were chanted, not sung, allowing for improvisation based on
+    audience reaction (like jazz)
+  - Improvisation and emotional depth — focus on themes of captivity, escape, and death (e.g., 'Дума про Марусю Богуславку')
+  - The role of dumas in shaping language — formed the national ethos and historical consciousness of the illiterate population
+  words: 550
 - section: 'Козацьке бароко: Тріумф національного стилю'
   points:
-  - 'Differences from Western Baroque — [!decolonization] reverse influence vector:
-    Ukrainian masters brought Baroque to Muscovy (''Naryshkin Baroque'')'
-  - Symbolism and decorative richness — pear-shaped domes, 'torn' pediments, lush
-    stucco decor with plant motifs (grapes, sunflowers)
-  - Major architectural monuments — Troitska Church (Hustyn), Pokrovsky Cathedral
-    (Kharkiv), Vydubychi Monastery (Kyiv)
+  - 'Differences from Western Baroque — [!decolonization] reverse influence vector: Ukrainian masters brought Baroque to Muscovy
+    (''Naryshkin Baroque'')'
+  - Symbolism and decorative richness — pear-shaped domes, 'torn' pediments, lush stucco decor with plant motifs (grapes,
+    sunflowers)
+  - Major architectural monuments — Troitska Church (Hustyn), Pokrovsky Cathedral (Kharkiv), Vydubychi Monastery (Kyiv)
+  words: 550
 - section: 'Мистецтво: Феномен козацького бароко'
   points:
-  - Synthesis of Western and Byzantine traditions — combination of masonry architecture
-    of the princely era with Baroque splendor
-  - Architecture (Mazepa baroque) — term emphasizing the hetman's role; massive reconstruction
-    of ancient temples (Sophia, St. Michael's)
-  - Portraiture (Parsuna) — transition from iconography to secular portrait; flat
-    and static but with individual features (e.g., portraits of Khmelnytsky, Sulyma)
+  - Synthesis of Western and Byzantine traditions — combination of masonry architecture of the princely era with Baroque splendor
+  - Architecture (Mazepa baroque) — term emphasizing the hetman's role; massive reconstruction of ancient temples (Sophia,
+    St. Michael's)
+  - Portraiture (Parsuna) — transition from iconography to secular portrait; flat and static but with individual features
+    (e.g., portraits of Khmelnytsky, Sulyma)
+  words: 550
 - section: Меценатство як державна стратегія
   points:
-  - 'The role of Ivan Mazepa and other hetmans — [!myth-buster] Mazepa was not a ''greedy
-    traitor'' but spent millions on 40+ churches and schools; quote: «Все гине там,
-    де володар не є готовий... захищати свою владу»'
-  - Legitimizing the state through art — church construction legitimized the hetman
-    as defender of the faith; support extended to Athos, Jerusalem, Syria (1708 Arabic
-    Gospel)
+  - 'The role of Ivan Mazepa and other hetmans — [!myth-buster] Mazepa was not a ''greedy traitor'' but spent millions on
+    40+ churches and schools; quote: «Все гине там, де володар не є готовий... захищати свою владу»'
+  - Legitimizing the state through art — church construction legitimized the hetman as defender of the faith; support extended
+    to Athos, Jerusalem, Syria (1708 Arabic Gospel)
+  words: 550
 - section: 'Інтелектуальний центр: Києво-Могилянська академія'
   points:
-  - Petro Mohyla's reforms — [!quote] «Гарно й почесно бути свічкою... але свічка
-    має світити»; 1632 merger of Lavra and Brotherhood schools
-  - The seven liberal arts and Latin education — 12-year course, Latin as language
-    of science; focus on poetics, rhetoric, drama
-  - Impact on the entire Eastern European region — graduates (spudei) formed the elite
-    of the Hetmanate and Empire (Prokopovych, Yavorsky)
+  - Petro Mohyla's reforms — [!quote] «Гарно й почесно бути свічкою... але свічка має світити»; 1632 merger of Lavra and Brotherhood
+    schools
+  - The seven liberal arts and Latin education — 12-year course, Latin as language of science; focus on poetics, rhetoric,
+    drama
+  - Impact on the entire Eastern European region — graduates (spudei) formed the elite of the Hetmanate and Empire (Prokopovych,
+    Yavorsky)
+  words: 550
 - section: Первинні джерела та Читання
   points:
-  - Analysis of Dumas and Academy statutes — examine structure of dumas and student
-    requirements in statutes
+  - Analysis of Dumas and Academy statutes — examine structure of dumas and student requirements in statutes
+  words: 550
 - section: Деколонізаційний погляд
   points:
-  - Debunking the 'peasant culture' myth — Hetmanate had high elite culture integrated
-    into Europe; distinct from Russian isolationism before Peter I
-  - Imperial appropriation of Ukrainian achievements — Kyiv as a donor of culture
-    to Moscow (transfer of ideas, styles, personnel)
+  - Debunking the 'peasant culture' myth — Hetmanate had high elite culture integrated into Europe; distinct from Russian
+    isolationism before Peter I
+  - Imperial appropriation of Ukrainian achievements — Kyiv as a donor of culture to Moscow (transfer of ideas, styles, personnel)
+  words: 600
 vocabulary_hints:
   required:
-  - кобзар (kobzar/minstrel) — professional performer, member of a guild, keeper of
-    'lebiiska' secret language
+  - кобзар (kobzar/minstrel) — professional performer, member of a guild, keeper of 'lebiiska' secret language
   - бандура (bandura) — multi-stringed instrument used for accompanying dumas
-  - дума (duma/epic poem) — recitative heroic poem, distinct from songs; 'Дума про
-    Марусю Богуславку'
-  - козацьке бароко (Cossack Baroque) — unique synthesis of Western and Byzantine
-    styles; 'pear-shaped domes'
-  - меценатство (patronage) — Mazepa's state strategy of funding arts/church; 'build
-    the state'
+  - дума (duma/epic poem) — recitative heroic poem, distinct from songs; 'Дума про Марусю Богуславку'
+  - козацьке бароко (Cossack Baroque) — unique synthesis of Western and Byzantine styles; 'pear-shaped domes'
+  - меценатство (patronage) — Mazepa's state strategy of funding arts/church; 'build the state'
   - речитатив (recitative) — chanting style of duma performance, allows improvisation
   - лебійська мова (Lebiiska language) — secret argot of kobzars used for safety
   - спудей (spudei/student) — student of Kyiv-Mohyla Academy; future elite
@@ -103,27 +116,14 @@ activity_hints:
 - type: critical-analysis
   focus: 'Верифікація фактів: Facts about education and guilds'
   items: 4
-focus: history
-pedagogy: CBI
-objectives:
-- Learner can explain the role of kobzars in preserving national memory
-- Learner can analyze the genre of dumas as a unique Ukrainian epic
-- Learner can characterize Cossack Baroque and its geopolitical significance
-grammar:
-- 'Historical narrative: cultural synthesis'
-- Artistic and academic terminology
-sources:
-- name: History of Ukrainian Culture
-  url: https://litopys.org.ua/istkult/istkult.htm
-  type: reference
-  notes: Comprehensive overview of the era
-- name: Cossack Baroque - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
-  type: reference
-  notes: Detailed description of the style
-register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
 persona:
   voice: Senior Professor of History
   role: Wandering Kobzar
-word_target: 5000
+grammar:
+- 'Historical narrative: cultural synthesis'
+- Artistic and academic terminology
+register: публіцистичний
+prerequisites:
+- khotynska-viyna
+connects_to:
+- kozatske-viisko

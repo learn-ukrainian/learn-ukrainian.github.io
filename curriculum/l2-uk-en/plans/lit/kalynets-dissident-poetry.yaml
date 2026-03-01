@@ -1,3 +1,9 @@
+module: lit-216
+level: LIT
+sequence: 216
+slug: kalynets-dissident-poetry
+version: '2.0'
+word_target: 5000
 content_outline:
 - section: Вступ
   words: 1000
@@ -19,4 +25,10 @@ content_outline:
   points:
   - Confronting the Soviet silencing of the Ukrainian intelligentsia.
   - Kalynets as a voice of uncompromising decolonial truth.
-word_target: 5000
+vocabulary_hints:
+  required: []
+  recommended: []
+prerequisites:
+- skovoroda-baroque-philosophy
+connects_to:
+- baroque-poetry-velychkovsky

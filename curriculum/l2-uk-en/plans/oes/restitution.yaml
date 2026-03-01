@@ -1,27 +1,47 @@
-sequence: 58
-module: oes-058
-module_number: 58
+module: oes-056
+level: OES
+sequence: 56
 slug: restitution
-title_uk: Відшкодування
-title_en: Restitution
-phase: 3
-phase_id: legal-tradition
-phase_name: Legal Tradition
+version: '2.0'
+title: Відшкодування
+subtitle: Restitution
 focus: Verbs of obligation
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Restitution
+  points:
+  - Introduction to Restitution
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Judge's Clerk
+prerequisites:
+- cheliadin-slaves
+connects_to:
+- witnesses-oaths

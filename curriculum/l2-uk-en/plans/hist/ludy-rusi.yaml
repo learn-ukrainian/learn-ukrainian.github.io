@@ -4,58 +4,72 @@ sequence: 18
 slug: ludy-rusi
 version: '2.0'
 title: 'Люди Русі: Суспільство та побут'
+focus: history
+pedagogy: CBI
+phase: HIST.1 [Kyivan Rus]
+word_target: 5000
+objectives:
+- Identify the main social classes of Kyivan Rus
+- Understand the legal status of smerds, zakups, and kholops
+- Describe the everyday life in cities and villages
+sources:
+- name: Суспільство Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
+  type: reference
+  notes: Social structure overview
+- name: Побут населення Київської Русі
+  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
+  type: reference
+  notes: Everyday life
+- name: Руська Правда — соціальні норми
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Legal text on social classes
 content_outline:
 - section: Розминка
   points:
-  - Demographics of Kyiv vs London — Kyiv had 50,000–100,000 inhabitants while London/Paris
-    had 15,000–20,000; include [!history-bite]
-  - The concept of Estate (Stan) — rights and duties defined by birth and function,
-    not modern class structure
-  - 'Vocabulary: Vira, Izgoy, Votchyna — Vira (fine replacing blood feud), Izgoy (social
-    dropout like illiterate priest''s son), Votchyna (hereditary land)'
+  - Demographics of Kyiv vs London — Kyiv had 50,000–100,000 inhabitants while London/Paris had 15,000–20,000; include [!history-bite]
+  - The concept of Estate (Stan) — rights and duties defined by birth and function, not modern class structure
+  - 'Vocabulary: Vira, Izgoy, Votchyna — Vira (fine replacing blood feud), Izgoy (social dropout like illiterate priest''s
+    son), Votchyna (hereditary land)'
+  words: 1250
 - section: 'Читання: Суспільство та повсякдення Київської Русі'
   points:
-  - 'The Prince and Druzhina: The top of the pyramid — Prince as ''first among equals'',
-    not absolute monarch; Senior vs Junior Druzhina'
-  - Boyars as landed aristocracy (Votchyna system) — influenced politics via council;
-    Votchyna vs Pomistya distinction
-  - 'Clergy: Black (Monks) vs White (Priests) — Monks as intellectual elite/chroniclers;
-    White clergy lived in world, had families'
-  - 'Burghers: Merchants, Craftsmen, and Guilds — ''Guests'' (merchants), guild organizations
-    (streets, hundreds)'
-  - 'Economy: Trade Routes (Greeks, Salt, Zalozny) and Currency — evidence of developed
-    commercial relations (Zvenyhorod birch bark letter)'
-  - 'Peasantry: Smerds (free), Zakups (debtors), Ryadovychi — Smerds (personal freedom,
-    tribute), Zakups (working off debt, protected by Monomakh Statute), Ryadovychi
-    (contract workers)'
-  - 'Kholops: Slavery in Rus context — sources: captivity, debt, marriage; not classical
-    slavery (could become Tiun/manager)'
-  - 'Women in Rus: Property rights and education — high status vs Europe (Anna Yaroslavna
-    signature), property rights (dowry, inheritance)'
-  - 'Daily Life: Housing, Clothing, and Diet — Housing (log cabins in cities vs clay
-    ''mazanka'' in forest-steppe); Diet (rye bread, porridge, turnips, meat); Clothing
-    (linen shirts, boots as status symbol)'
-  - 'Entertainment: Skomorokhy, Chess, and Festivals — include [!culture] hook: chess
-    found even in craftsmen''s dwellings, not just nobility'
-  - 'Literacy and Education: Birch Bark Letters and Graffiti — include [!myth-buster]:
-    literacy not limited to monks; women and children wrote (Onfim, Zvenyhorod finds)'
+  - 'The Prince and Druzhina: The top of the pyramid — Prince as ''first among equals'', not absolute monarch; Senior vs Junior
+    Druzhina'
+  - Boyars as landed aristocracy (Votchyna system) — influenced politics via council; Votchyna vs Pomistya distinction
+  - 'Clergy: Black (Monks) vs White (Priests) — Monks as intellectual elite/chroniclers; White clergy lived in world, had
+    families'
+  - 'Burghers: Merchants, Craftsmen, and Guilds — ''Guests'' (merchants), guild organizations (streets, hundreds)'
+  - 'Economy: Trade Routes (Greeks, Salt, Zalozny) and Currency — evidence of developed commercial relations (Zvenyhorod birch
+    bark letter)'
+  - 'Peasantry: Smerds (free), Zakups (debtors), Ryadovychi — Smerds (personal freedom, tribute), Zakups (working off debt,
+    protected by Monomakh Statute), Ryadovychi (contract workers)'
+  - 'Kholops: Slavery in Rus context — sources: captivity, debt, marriage; not classical slavery (could become Tiun/manager)'
+  - 'Women in Rus: Property rights and education — high status vs Europe (Anna Yaroslavna signature), property rights (dowry,
+    inheritance)'
+  - 'Daily Life: Housing, Clothing, and Diet — Housing (log cabins in cities vs clay ''mazanka'' in forest-steppe); Diet (rye
+    bread, porridge, turnips, meat); Clothing (linen shirts, boots as status symbol)'
+  - 'Entertainment: Skomorokhy, Chess, and Festivals — include [!culture] hook: chess found even in craftsmen''s dwellings,
+    not just nobility'
+  - 'Literacy and Education: Birch Bark Letters and Graffiti — include [!myth-buster]: literacy not limited to monks; women
+    and children wrote (Onfim, Zvenyhorod finds)'
+  words: 1250
 - section: 'Первинні джерела: Голоси епохи'
   points:
-  - 'Ruska Pravda: The price of life and honor — include [!quote] showing fine stratification
-    (80 hryvnias for boyar vs 5 for smerd)'
-  - Collective responsibility (Verv) — rural community responsible for crimes on its
-    territory
-  - 'Birch Bark Letters: Ordinary voices — specific mention of Zvenyhorod finds and
-    everyday topics (debt, love)'
+  - 'Ruska Pravda: The price of life and honor — include [!quote] showing fine stratification (80 hryvnias for boyar vs 5
+    for smerd)'
+  - Collective responsibility (Verv) — rural community responsible for crimes on its territory
+  - 'Birch Bark Letters: Ordinary voices — specific mention of Zvenyhorod finds and everyday topics (debt, love)'
+  words: 1250
 - section: 'Деколонізаційний погляд: Руйнування імперських міфів'
   points:
-  - 'Regional differences in housing (Mazanka vs Izba) — include [!context]: autochthonous
-    whitewashed clay huts (mazanka) vs northern log cabins (izba)'
-  - Differences in clothing and traditions — distinct material culture confirming
-    lack of 'single ancient Rus people'
-  - 'Political culture: Contractual vs Despotic — include [!decolonization]: Rus had
-    strong horizontal structures (Viche) and contractual prince-elite relations, unlike
-    later Muscovite despotism'
+  - 'Regional differences in housing (Mazanka vs Izba) — include [!context]: autochthonous whitewashed clay huts (mazanka)
+    vs northern log cabins (izba)'
+  - Differences in clothing and traditions — distinct material culture confirming lack of 'single ancient Rus people'
+  - 'Political culture: Contractual vs Despotic — include [!decolonization]: Rus had strong horizontal structures (Viche)
+    and contractual prince-elite relations, unlike later Muscovite despotism'
+  words: 1250
 vocabulary_hints:
   required:
   - суспільство (society) — станове суспільство (estate-based society)
@@ -79,30 +93,6 @@ vocabulary_hints:
   - ізгой (izgoy) — випав із соціального стану (social outcast)
   - верв (verv) — сільська община (rural community)
   - тіун (tiun) — княжий управитель (prince's manager)
-focus: history
-pedagogy: CBI
-objectives:
-- Identify the main social classes of Kyivan Rus
-- Understand the legal status of smerds, zakups, and kholops
-- Describe the everyday life in cities and villages
-grammar:
-- Past tense narrative
-- Social and economic vocabulary
-sources:
-- name: Суспільство Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
-  type: reference
-  notes: Social structure overview
-- name: Побут населення Київської Русі
-  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
-  type: reference
-  notes: Everyday life
-- name: Руська Правда — соціальні норми
-  url: https://litopys.org.ua/oldukr2/oldukr51.htm
-  type: primary
-  notes: Legal text on social classes
-immersion: 100% Ukrainian
-phase: HIST.1 [Kyivan Rus]
 activity_hints:
 - type: reading
   focus: Первинні джерела
@@ -118,4 +108,11 @@ activity_hints:
 persona:
   voice: Senior Professor of History
   role: Kyivan Merchant
-word_target: 5000
+grammar:
+- Past tense narrative
+- Social and economic vocabulary
+immersion: 100% Ukrainian
+prerequisites:
+- kniazivski-usobiytsi
+connects_to:
+- rus-ta-susidy

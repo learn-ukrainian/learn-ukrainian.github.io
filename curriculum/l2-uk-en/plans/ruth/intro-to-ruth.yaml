@@ -1,46 +1,62 @@
-sequence: 1
 module: ruth-001
-module_number: 1
+level: RUTH
+sequence: 1
 slug: intro-to-ruth
-title_uk: Вступ до руської мови
-title_en: Intro to RUTH
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: Вступ до руської мови
+subtitle: Intro to RUTH
 focus: Transition from OES to Ruthenian — Diglossia
+phase: 1
+word_target: 5000
 content_outline:
 - section: Передмова
-  description: Hook and introduction to the course
+  points:
+  - Hook and introduction to the course
+  words: 500
 - section: 'Від давньоруської до руської: Великий перехід'
-  subsections:
+  points:
   - Що змінилося після XIII століття
   - Три регістри руської мови
   - Як ці регістри співіснували
+  words: 500
 - section: 'Первинний текст: Преамбула Литовського статуту (1529)'
-  subsections:
+  points:
   - Оригінальний текст
   - Транскрипція сучасною українською
   - Аналіз тексту
+  words: 500
 - section: 'Фонетичні зміни: Від давньоруської до руської'
-  subsections:
+  points:
   - Повноголосся залишається
   - Ікавізм набирає сили
   - Занепад єрів
+  words: 500
 - section: Морфологічні зміни
-  subsections:
+  points:
   - Спрощення системи відмін
   - Занепад двоїни
   - Розвиток майбутнього часу
+  words: 500
 - section: Польські запозичення
-  description: Polish loanwords in legal and administrative terminology
+  points:
+  - Polish loanwords in legal and administrative terminology
+  words: 500
 - section: Латинські запозичення
-  description: Latin loanwords via Polish
+  points:
+  - Latin loanwords via Polish
+  words: 500
 - section: 'Структура курсу: Чотири фази'
-  description: Overview of the four phases of RUTH track
+  points:
+  - Overview of the four phases of RUTH track
+  words: 500
 - section: Практичні вправи
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 500
 - section: Підсумок
-  description: Summary and connection to next module
+  points:
+  - Summary and connection to next module
+  words: 500
 vocabulary_hints:
 - диглосія
 - регістр
@@ -54,10 +70,18 @@ vocabulary_hints:
 - привілей
 - воєводство
 - головщина
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Ruthenian Philologist
+connects_to:
+- sovereign-state

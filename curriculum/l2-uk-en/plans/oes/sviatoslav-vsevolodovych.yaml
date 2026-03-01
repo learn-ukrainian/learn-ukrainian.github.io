@@ -1,27 +1,47 @@
-sequence: 45
-module: oes-045
-module_number: 37
+module: oes-044
+level: OES
+sequence: 44
 slug: sviatoslav-vsevolodovych
-title_uk: Святослав Всеволодович
-title_en: Sviatoslav Vsevolodovych
-phase: 2
-phase_id: literary-tradition
-phase_name: Literary Tradition
+version: '2.0'
+title: Святослав Всеволодович
+subtitle: Sviatoslav Vsevolodovych
 focus: '"Golden Word" context'
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Sviatoslav Vsevolodovych
+  points:
+  - Introduction to Sviatoslav Vsevolodovych
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Kyiv Grand Prince
+prerequisites:
+- ihor-campaign-chronicle
+connects_to:
+- roman-mstyslavych

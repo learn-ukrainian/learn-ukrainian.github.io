@@ -1,67 +1,77 @@
-module: b1-24
+module: b1-026
 level: B1
-sequence: 24
+sequence: 26
 slug: motion-practice-integration
 version: '2.0'
 title: 'Дієслова руху: практика та інтеграція'
 subtitle: 'Motion verbs: practice and integration'
+focus: grammar
+pedagogy: TTT
+phase: B1.2 Motion
+word_target: 4000
+objectives:
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
+sources:
+- name: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on preposition-verb combinations
+- name: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Comprehensive motion verb reference
+- name: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Preposition usage with motion verbs
 content_outline:
 - section: 'Вступ: Перевірка та мотивація (Introduction: Testing and Motivation)'
   words: 400
   points:
-  - 'Діагностичний тест: перевірка навичок використання префіксальних дієслів руху
-    та прийменників за §4.3.8 Державного стандарту.'
-  - 'Огляд цілей модуля: перехід від базового орієнтування до складних наративів про
-    подорожі (Theme §3.5 Подорожі).'
-- section: 'Пояснення: Матриця навігації та прийменників (Explanation: Navigation
-    and Preposition Matrix)'
+  - 'Діагностичний тест: перевірка навичок використання префіксальних дієслів руху та прийменників за §4.3.8 Державного стандарту.'
+  - 'Огляд цілей модуля: перехід від базового орієнтування до складних наративів про подорожі (Theme §3.5 Подорожі).'
+- section: 'Пояснення: Матриця навігації та прийменників (Explanation: Navigation and Preposition Matrix)'
   words: 1000
   points:
-  - Комплексний аналіз систем 'іти/прийти' та 'їхати/приїхати' у поєднанні з прийменниками
-    в, на, до, через (§4.2.2.4).
-  - 'Усунення типових помилок: контраст між Знахідним (куди?) та Місцевим (де?) відмінками
-    — моделі «йти в парк» vs «бути в парку».'
-  - 'Лексичні пастки: розрізнення локацій, що вимагають прийменника ''на'' (вокзал,
-    пошта, вулиця) проти стандартного ''в'' (парк, театр).'
-  - 'Подолання кальок з англійської: заміна помилкового ''брати автобус'' на нормативні
-    ''сісти на автобус'' або ''їхати автобусом''.'
+  - Комплексний аналіз систем 'іти/прийти' та 'їхати/приїхати' у поєднанні з прийменниками в, на, до, через (§4.2.2.4).
+  - 'Усунення типових помилок: контраст між Знахідним (куди?) та Місцевим (де?) відмінками — моделі «йти в парк» vs «бути
+    в парку».'
+  - 'Лексичні пастки: розрізнення локацій, що вимагають прийменника ''на'' (вокзал, пошта, вулиця) проти стандартного ''в''
+    (парк, театр).'
+  - 'Подолання кальок з англійської: заміна помилкового ''брати автобус'' на нормативні ''сісти на автобус'' або ''їхати автобусом''.'
 - section: 'Культурний контекст: Шляхи та ідіоми (Cultural Context: Ways and Idioms)'
   words: 800
   points:
-  - 'Історія та легенди: ''Чумацький Шлях'' як історичний маршрут соляних торговців
-    до Криму та небесний орієнтир для навігації.'
-  - 'Ідіоматика руху: освоєння метафор ''на роздоріжжі'' (життєвий вибір) та ''глухий
-    кут'' (безвихідна ситуація, тупик).'
-  - 'Мовленнєвий етикет: як ввічливо запитувати дорогу, використовуючи конструкції
-    з дієсловами ''дійти'', ''піднятися'', ''пройти''.'
+  - 'Історія та легенди: ''Чумацький Шлях'' як історичний маршрут соляних торговців до Криму та небесний орієнтир для навігації.'
+  - 'Ідіоматика руху: освоєння метафор ''на роздоріжжі'' (життєвий вибір) та ''глухий кут'' (безвихідна ситуація, тупик).'
+  - 'Мовленнєвий етикет: як ввічливо запитувати дорогу, використовуючи конструкції з дієсловами ''дійти'', ''піднятися'',
+    ''пройти''.'
 - section: 'Практика: Київська Одіссея (Practice: Kyiv Odyssey)'
   words: 1200
   points:
-  - 'Текстова симуляція: маршрут від Подолу до Верхнього міста через Андріївський
-    узвіз — акцент на дієслова ''піднятися'' та ''спуститися''.'
-  - 'Аналіз логістики: використання фунікулера як специфічного транспорту для подолання
-    вертикальної географії Києва.'
-  - 'Діалоговий тренажер: симуляція взаємодії ''таксист — пасажир'' з використанням
-    орієнтирів ''на розі'', ''на перехресті'', ''світлофор''.'
+  - 'Текстова симуляція: маршрут від Подолу до Верхнього міста через Андріївський узвіз — акцент на дієслова ''піднятися''
+    та ''спуститися''.'
+  - 'Аналіз логістики: використання фунікулера як специфічного транспорту для подолання вертикальної географії Києва.'
+  - 'Діалоговий тренажер: симуляція взаємодії ''таксист — пасажир'' з використанням орієнтирів ''на розі'', ''на перехресті'',
+    ''світлофор''.'
 - section: Підсумок та застосування (Summary and Application)
   words: 600
   points:
-  - 'Побудова власної траєкторії: опис складного маршруту з використанням маркерів
-    послідовності ''спочатку'', ''потім'', ''нарешті''.'
-  - 'Творче завдання: ''Моя Одіссея'' — написання розповіді про власну значущу поїздку
-    з інтеграцією вивчених префіксальних дієслів.'
+  - 'Побудова власної траєкторії: опис складного маршруту з використанням маркерів послідовності ''спочатку'', ''потім'',
+    ''нарешті''.'
+  - 'Творче завдання: ''Моя Одіссея'' — написання розповіді про власну значущу поїздку з інтеграцією вивчених префіксальних
+    дієслів.'
 vocabulary_hints:
   required:
-  - спочатку (at first) — спочатку... а потім; спочатку поверніть; High frequency
-    marker
+  - спочатку (at first) — спочатку... а потім; спочатку поверніть; High frequency marker
   - потім (then) — і потім; а потім; High frequency sequence marker
   - нарешті (finally) — ну нарешті; і нарешті ми прийшли; High frequency result marker
   - напрямок (direction) — у напрямку до; змінити напрямок; High frequency
   - маршрут (route) — прокласти маршрут; туристичний маршрут; Medium frequency
-  - повернути (to turn) — повернути праворуч/ліворуч; повернути за ріг; High frequency
-    action
-  - траєкторія (trajectory) — траєкторія руху; зміна траєкторії; Medium frequency
-    (scientific/tech)
+  - повернути (to turn) — повернути праворуч/ліворуч; повернути за ріг; High frequency action
+  - траєкторія (trajectory) — траєкторія руху; зміна траєкторії; Medium frequency (scientific/tech)
   - прямо (straight) — йдіть прямо; прямо і направо; High frequency direction
   recommended:
   - на розі (at the corner) — usage in city navigation
@@ -84,8 +94,8 @@ activity_hints:
 - type: quiz
   focus: Preposition + motion verb combinations
   items: 15+
-focus: grammar
-pedagogy: TTT
+connects_to:
+- b1-25 (Checkpoint - motion verbs)
 prerequisites:
 - b1-16 (Motion verbs full system)
 - b1-17 (Motion - coming & going)
@@ -95,33 +105,12 @@ prerequisites:
 - b1-21 (Motion - figurative uses)
 - b1-22 (Motion full prefix integration)
 - b1-23 (Motion patterns in other verbs)
-connects_to:
-- b1-25 (Checkpoint - motion verbs)
-objectives:
-- Master complex travel narratives
-- Correctly use prepositions with specific motion prefixes
-- Understand and use high-frequency motion idioms
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Travel Blogger
 grammar:
 - Integration of pure and prefixed motion verbs
 - Prepositions governing motion (в, на, до, через, повз)
 - Figurative idioms with motion verbs
 module_type: grammar
-sources:
-- name: Ukrainian State Standard 2024 - Motion and Prepositions
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official guidance on preposition-verb combinations
-- name: Ukrainian Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Comprehensive motion verb reference
-- name: Ukrainian Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
-  type: reference
-  notes: Preposition usage with motion verbs
 immersion: 100% Ukrainian
-phase: B1.2 Motion
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Travel Blogger
-word_target: 4000

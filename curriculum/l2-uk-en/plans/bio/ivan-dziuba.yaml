@@ -1,27 +1,46 @@
-module: bio-136
+module: bio-139
 level: BIO
-sequence: 136
+sequence: 139
 slug: ivan-dziuba
 version: '2.0'
 title: 'Іван Дзюба: Інтернаціоналізм чи русифікація?'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the life and legacy of Іван Дзюба as a dissident intellectual
+- Evaluate the argumentative strategy of Internationalism or Russification
+- Trace the moral arc from dissident to minister of culture
+sources:
+- name: Іван Дзюба (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
+  type: primary
+  notes: Comprehensive biography of the dissident intellectual
+- name: «Інтернаціоналізм чи русифікація?»
+  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
+  type: reference
+  notes: Analysis of the landmark text against Russification
 content_outline:
 - section: Вступ — Інтелектуальний бунтар
   points:
   - Автор найважливішого дисидентського тексту в УРСР
   - Від шістдесятника до міністра культури
   - Людина, що довела русифікацію мовою марксизму
+  words: 850
 - section: Донеччина та формування (1931-1957)
   points:
   - Народження у Миколаївці на Донеччині
   - Робітнича юність
   - Навчання у Донецькому та Київському університетах
   - Формування як літературного критика
+  words: 850
 - section: Шістдесятники (1957-1965)
   points:
   - Входження у літературну критику
   - Формування інтелектуального кола опору
   - Дружба зі Стусом, Чорноволом, Сверстюком
   - Виступ у Бабиному Яру 1966 року
+  words: 850
 - section: «Інтернаціоналізм чи русифікація?» (1965)
   points:
   - Написання трактату за три тижні
@@ -29,6 +48,7 @@ content_outline:
   - Поширення у самвидаві
   - Міжнародний резонанс
   - Арешт та переслідування
+  words: 850
 - section: Від в'язниці до міністерства (1973-2022)
   points:
   - Вимушене «покаяння» та моральна дилема
@@ -36,12 +56,14 @@ content_outline:
   - Міністр культури (1992-1994)
   - Академік та інтелектуальна спадщина
   - Останні роки
+  words: 850
 - section: Спадщина — Критик як зброя
   points:
   - Актуальність тексту сьогодні
   - Дзюба як зразок інтелектуальної мужності
   - Деколонізація інтелектуального простору
   - Вплив на сучасну мовну політику
+  words: 750
 vocabulary_hints:
   required:
   - інтернаціоналізм (internationalism)
@@ -68,28 +90,13 @@ activity_hints:
 - type: essay-response
   focus: Чому текст Дзюби залишається актуальним?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-149
 connects_to:
 - bio-151
 - bio-117
-module_type: biography
-sources:
-- name: Іван Дзюба (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
-  type: primary
-  notes: Comprehensive biography of the dissident intellectual
-- name: «Інтернаціоналізм чи русифікація?»
-  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
-  type: reference
-  notes: Analysis of the landmark text against Russification
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- Analyze the life and legacy of Іван Дзюба as a dissident intellectual
-- Evaluate the argumentative strategy of Internationalism or Russification
-- Trace the moral arc from dissident to minister of culture
+prerequisites:
+- bio-149
 persona:
   voice: Senior Biographer
   role: Literary Dissident
+module_type: biography
+immersion: 100% Ukrainian

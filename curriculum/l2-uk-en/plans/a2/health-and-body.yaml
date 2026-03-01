@@ -1,95 +1,14 @@
-module: a2-34
+module: a2-039
 level: A2
-sequence: 34
+sequence: 39
 slug: health-and-body
 version: '2.0'
 title: Health and Body
 subtitle: Body Parts, Symptoms, Doctor Visits & Folk Remedies
-content_outline:
-- section: 'Моє тіло (My Body)'
-  words: 450
-  points:
-  - 'Core body parts vocabulary: голова, рука, нога, живіт, спина, горло, зуб, серце,
-    око, вухо. Gender of each noun explicitly marked (голова-f, живіт-m, серце-n).'
-  - 'Irregular plurals as A2 grammar point: око→очі, вухо→вуха, рука→руки. Adjective
-    agreement drill: червоне горло, хворий зуб, ліва рука.'
-  - 'Internal organs briefly: серце (heart), шлунок (stomach), легені (lungs) — passive
-    recognition, not active production.'
-  - 'Cultural idiom: «Від щирого серця» (from the bottom of my heart) — anatomical
-    terms in everyday expressions.'
-- section: 'У мене болить... (It Hurts...)'
-  words: 550
-  points:
-  - 'Primary grammar: «У мене болить» + Nominative (singular) vs «У мене болять» +
-    Nominative (plural). Drill: болить зуб / болять зуби, болить око / болять очі.'
-  - 'Learner error prevention: block the English transfer «Я болю голову» — боліти
-    is intransitive; the body part is the grammatical subject.'
-  - 'Dative states (§4.2.2.3): «Мені погано/добре/нудно/холодно/жарко/запаморочилось».
-    Correct the common error «Я погано» → «Мені погано».'
-  - 'Distinction: боліти (specific pain, intransitive) vs хворіти на + Accusative
-    (to be sick with a disease: «хворіти на грип»). Never «я болю грип».'
-  - 'Register note: literary standard «У мене болить...» vs poetic/emotional «Мені
-    болить за Україну» — dative reserved for emotional pain.'
-- section: 'Симптоми та хвороби (Symptoms and Illnesses)'
-  words: 400
-  points:
-  - 'Symptom vocabulary: температура (висока/низька), кашель (сухий/вологий), нежить,
-    біль (гострий/тупий), слабкість, запаморочення.'
-  - 'Common illnesses: застуда, грип, алергія, ангіна. False friend alert: «ангіна»
-    = tonsillitis (NOT angina pectoris / heart attack = серцевий напад).'
-  - 'Reporting to doctor or friend: «У мене кашель / нежить / висока температура»,
-    «Мене нудить», «Я хворію на грип».'
-  - 'Measurement: «міряти температуру» (take temperature), «вимірювати тиск» (measure
-    blood pressure).'
-- section: 'У лікаря (At the Doctor)'
-  words: 700
-  points:
-  - 'Appointment booking: «записатися на прийом» via phone or online; the «сімейний
-    лікар» (family doctor) + «декларація» system explained briefly.'
-  - 'Institutional clarity: «поліклініка» (outpatient — where you go for checkups) vs
-    «лікарня» (hospital — inpatient). Fix the error «я йду в лікарню» for a routine
-    visit → «я йду в поліклініку» / «я йду до лікаря».'
-  - 'Cultural note: «бахіли» (blue plastic shoe covers) — mandatory in clinics. Entering
-    in street shoes is a social faux pas.'
-  - 'Doctor consultation: «Що вас турбує?», «Де болить?», «Як давно?» — formal Ви
-    register mandatory with medical staff.'
-  - 'Examination imperatives (§4.2.3.2): «Дихайте / Не дихайте», «Відкрийте рот»,
-    «Покажіть язик», «Роздягніться до пояса». Imperative Ви-forms.'
-  - 'Diagnosis and prescription: «поставити діагноз», «виписати рецепт», «приймати ліки
-    двічі на день», «до/після їжі».'
-  - 'Sick leave: «взяти лікарняний» / «бути на лікарняному» — bureaucratic necessity;
-    tests: «здати аналізи» (blood/urine tests).'
-  - 'Emergency: «Викличте швидку!» (Call an ambulance! — 103); distinguishing emergency
-    (швидка допомога) from house call (викликати лікаря додому).'
-- section: 'Народна мудрість і здоровий спосіб життя (Folk Wisdom and Healthy Living)'
-  words: 500
-  points:
-  - 'Cultural hook: «У здоровому тілі — здоровий дух» — health as a primary value
-    and smalltalk topic in Ukrainian culture.'
-  - 'Folk remedies (taught ONCE, thoroughly): чай з малиною (universal cold remedy —
-    every household has raspberry jam), калина (viburnum — cultural symbol with healing
-    properties), мед з молоком (honey with milk for sore throat), чай з ромашки/м''яти
-    (herbal teas). Textbook connection: Grade 1 Zaharijchuk — звіробій «лікує сто хвороб».'
-  - 'Загартовування (hardening/toughening): Grade 3 Savchenko — the boy who skis and
-    does not get sick while the witch catches cold. «Я загартований! Я на лижах бігаю».'
-  - 'Healthy lifestyle vocabulary: «робити зарядку» (morning exercise), «правильне
-    харчування» (proper nutrition), «здоровий сон» (healthy sleep). Advice construction:
-    «варто/треба» + infinitive: «Варто більше відпочивати».'
-  - 'Proverb: «Здоров''я — найбільше багатство» (Health is the greatest wealth).'
-- section: 'Практика: Від симптому до одужання (Practice: From Symptom to Recovery)'
-  words: 400
-  points:
-  - 'Full narrative: A learner feels the first symptoms (кашель, температура) → calls
-    the clinic (записатися на прийом) → puts on бахіли → doctor examines (Дихайте!
-    Покажіть!) → receives діагноз (застуда) → gets рецепт → buys ліки → recovers
-    with бабусина калина. Transition to next module: «Купіть ці ліки в аптеці» →
-    at-the-pharmacy.'
-  - 'Cultural parallel: Тетяна Майданович «Телефонна розмова» — the granddaughter
-    calling sick grandma, offering bees instead of injections. Humor as a teaching tool.'
-  - 'Role-play: Calling a friend to report being sick (informal register) vs calling
-    the clinic (formal register). Synthesis of all section constructions.'
 focus: vocabulary
 pedagogy: PPP
+phase: A2.3
+word_target: 3000
 objectives:
 - Learner can name major body parts and their plurals
 - Learner can use the боліти construction correctly (singular and plural)
@@ -98,26 +17,81 @@ objectives:
 - Learner can navigate a doctor consultation in formal register
 - Learner can understand diagnosis, prescriptions, and sick leave
 - Learner can discuss folk remedies and healthy lifestyle
-grammar:
-- body parts (gender, irregular plurals, adjective agreement)
-- impersonal pain construction (у мене болить/болять + Nom)
-- state expressions with Dative (Мені погано/добре/холодно)
-- хворіти на + Accusative vs боліти (intransitive)
-- medical imperatives in Ви-form (Дихайте!, Покажіть!)
-- advice structures (треба/варто + infinitive)
-module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Health and Hygiene
   url: https://mon.gov.ua/
   type: reference
-  notes: Standards for describing physical conditions, health communication at A2 (§3.12,
-    §4.2.2.3, §4.2.3.2)
-immersion: 60-75% Ukrainian
-phase: A2.3
-persona:
-  voice: Encouraging Cultural Guide
-  role: School Nurse
-register: розмовний
+  notes: Standards for describing physical conditions, health communication at A2 (§3.12, §4.2.2.3, §4.2.3.2)
+content_outline:
+- section: Моє тіло (My Body)
+  words: 450
+  points:
+  - 'Core body parts vocabulary: голова, рука, нога, живіт, спина, горло, зуб, серце, око, вухо. Gender of each noun explicitly
+    marked (голова-f, живіт-m, серце-n).'
+  - 'Irregular plurals as A2 grammar point: око→очі, вухо→вуха, рука→руки. Adjective agreement drill: червоне горло, хворий
+    зуб, ліва рука.'
+  - 'Internal organs briefly: серце (heart), шлунок (stomach), легені (lungs) — passive recognition, not active production.'
+  - 'Cultural idiom: «Від щирого серця» (from the bottom of my heart) — anatomical terms in everyday expressions.'
+- section: У мене болить... (It Hurts...)
+  words: 550
+  points:
+  - 'Primary grammar: «У мене болить» + Nominative (singular) vs «У мене болять» + Nominative (plural). Drill: болить зуб
+    / болять зуби, болить око / болять очі.'
+  - 'Learner error prevention: block the English transfer «Я болю голову» — боліти is intransitive; the body part is the grammatical
+    subject.'
+  - 'Dative states (§4.2.2.3): «Мені погано/добре/нудно/холодно/жарко/запаморочилось». Correct the common error «Я погано»
+    → «Мені погано».'
+  - 'Distinction: боліти (specific pain, intransitive) vs хворіти на + Accusative (to be sick with a disease: «хворіти на
+    грип»). Never «я болю грип».'
+  - 'Register note: literary standard «У мене болить...» vs poetic/emotional «Мені болить за Україну» — dative reserved for
+    emotional pain.'
+- section: Симптоми та хвороби (Symptoms and Illnesses)
+  words: 400
+  points:
+  - 'Symptom vocabulary: температура (висока/низька), кашель (сухий/вологий), нежить, біль (гострий/тупий), слабкість, запаморочення.'
+  - 'Common illnesses: застуда, грип, алергія, ангіна. False friend alert: «ангіна» = tonsillitis (NOT angina pectoris / heart
+    attack = серцевий напад).'
+  - 'Reporting to doctor or friend: «У мене кашель / нежить / висока температура», «Мене нудить», «Я хворію на грип».'
+  - 'Measurement: «міряти температуру» (take temperature), «вимірювати тиск» (measure blood pressure).'
+- section: У лікаря (At the Doctor)
+  words: 700
+  points:
+  - 'Appointment booking: «записатися на прийом» via phone or online; the «сімейний лікар» (family doctor) + «декларація»
+    system explained briefly.'
+  - 'Institutional clarity: «поліклініка» (outpatient — where you go for checkups) vs «лікарня» (hospital — inpatient). Fix
+    the error «я йду в лікарню» for a routine visit → «я йду в поліклініку» / «я йду до лікаря».'
+  - 'Cultural note: «бахіли» (blue plastic shoe covers) — mandatory in clinics. Entering in street shoes is a social faux
+    pas.'
+  - 'Doctor consultation: «Що вас турбує?», «Де болить?», «Як давно?» — formal Ви register mandatory with medical staff.'
+  - 'Examination imperatives (§4.2.3.2): «Дихайте / Не дихайте», «Відкрийте рот», «Покажіть язик», «Роздягніться до пояса».
+    Imperative Ви-forms.'
+  - 'Diagnosis and prescription: «поставити діагноз», «виписати рецепт», «приймати ліки двічі на день», «до/після їжі».'
+  - 'Sick leave: «взяти лікарняний» / «бути на лікарняному» — bureaucratic necessity; tests: «здати аналізи» (blood/urine
+    tests).'
+  - 'Emergency: «Викличте швидку!» (Call an ambulance! — 103); distinguishing emergency (швидка допомога) from house call
+    (викликати лікаря додому).'
+- section: Народна мудрість і здоровий спосіб життя (Folk Wisdom and Healthy Living)
+  words: 500
+  points:
+  - 'Cultural hook: «У здоровому тілі — здоровий дух» — health as a primary value and smalltalk topic in Ukrainian culture.'
+  - 'Folk remedies (taught ONCE, thoroughly): чай з малиною (universal cold remedy — every household has raspberry jam), калина
+    (viburnum — cultural symbol with healing properties), мед з молоком (honey with milk for sore throat), чай з ромашки/м''яти
+    (herbal teas). Textbook connection: Grade 1 Zaharijchuk — звіробій «лікує сто хвороб».'
+  - 'Загартовування (hardening/toughening): Grade 3 Savchenko — the boy who skis and does not get sick while the witch catches
+    cold. «Я загартований! Я на лижах бігаю».'
+  - 'Healthy lifestyle vocabulary: «робити зарядку» (morning exercise), «правильне харчування» (proper nutrition), «здоровий
+    сон» (healthy sleep). Advice construction: «варто/треба» + infinitive: «Варто більше відпочивати».'
+  - 'Proverb: «Здоров''я — найбільше багатство» (Health is the greatest wealth).'
+- section: 'Практика: Від симптому до одужання (Practice: From Symptom to Recovery)'
+  words: 400
+  points:
+  - 'Full narrative: A learner feels the first symptoms (кашель, температура) → calls the clinic (записатися на прийом) →
+    puts on бахіли → doctor examines (Дихайте! Покажіть!) → receives діагноз (застуда) → gets рецепт → buys ліки → recovers
+    with бабусина калина. Transition to next module: «Купіть ці ліки в аптеці» → at-the-pharmacy.'
+  - 'Cultural parallel: Тетяна Майданович «Телефонна розмова» — the granddaughter calling sick grandma, offering bees instead
+    of injections. Humor as a teaching tool.'
+  - 'Role-play: Calling a friend to report being sick (informal register) vs calling the clinic (formal register). Synthesis
+    of all section constructions.'
 vocabulary_hints:
   required:
   - 'голова (head) — f; collocations: болить голова, головний біль, крутиться голова'
@@ -128,33 +102,30 @@ vocabulary_hints:
   - 'спина (back) — f; collocations: болить спина, біль у спині'
   - 'зуб (tooth) — m; collocations: болить зуб, зубний біль'
   - 'серце (heart) — n; idiom: від щирого серця; medical: боліти в серці'
-  - 'боліти (to hurt) — impersonal: у мене болить + Nom (sg) / болять + Nom (pl);
-    intransitive — the body part is the subject'
-  - 'хворіти на (to be sick with) — хворіти на грип/застуду; never «я болю грип»'
+  - 'боліти (to hurt) — impersonal: у мене болить + Nom (sg) / болять + Nom (pl); intransitive — the body part is the subject'
+  - хворіти на (to be sick with) — хворіти на грип/застуду; never «я болю грип»
   - 'температура (fever/temperature) — collocations: висока температура, міряти температуру'
   - 'кашель (cough) — m; collocations: сильний кашель, сухий кашель'
-  - 'лікар (doctor) — collocations: сімейний лікар, записатися до лікаря, викликати
-    лікаря'
-  - 'поліклініка (outpatient clinic) — where you go for non-emergencies; ≠ лікарня
-    (hospital)'
+  - 'лікар (doctor) — collocations: сімейний лікар, записатися до лікаря, викликати лікаря'
+  - поліклініка (outpatient clinic) — where you go for non-emergencies; ≠ лікарня (hospital)
   - 'рецепт (prescription) — виписати рецепт; learner error: ≠ чек (receipt)'
-  - 'записатися на прийом (to make an appointment) — high frequency medical phrase'
+  - записатися на прийом (to make an appointment) — high frequency medical phrase
   recommended:
-  - 'око/очі (eye/eyes) — irregular plural; болять очі'
-  - 'вухо/вуха (ear/ears) — irregular plural; болить вухо'
-  - 'нежить (runny nose) — m; мати нежить, засоби від нежитю'
-  - 'застуда (cold) — f; лікувати застуду, застудитися'
-  - 'грип (flu) — m; хворіти на грип'
-  - 'діагноз (diagnosis) — поставити діагноз, підтвердити діагноз'
-  - 'лікарняний (sick leave certificate) — взяти лікарняний, бути на лікарняному'
-  - 'аналіз (test) — здати аналізи, аналіз крові'
-  - 'калина (viburnum) — чай з калиною; traditional folk remedy'
-  - 'малина (raspberry) — чай з малиною; universal cold remedy'
-  - 'швидка допомога (ambulance) — Викличте швидку! (103)'
-  - 'бахіли (shoe covers) — mandatory in clinics; cultural etiquette'
-  - 'здоровий (healthy) — здоровий спосіб життя, у здоровому тілі'
+  - око/очі (eye/eyes) — irregular plural; болять очі
+  - вухо/вуха (ear/ears) — irregular plural; болить вухо
+  - нежить (runny nose) — m; мати нежить, засоби від нежитю
+  - застуда (cold) — f; лікувати застуду, застудитися
+  - грип (flu) — m; хворіти на грип
+  - діагноз (diagnosis) — поставити діагноз, підтвердити діагноз
+  - лікарняний (sick leave certificate) — взяти лікарняний, бути на лікарняному
+  - аналіз (test) — здати аналізи, аналіз крові
+  - калина (viburnum) — чай з калиною; traditional folk remedy
+  - малина (raspberry) — чай з малиною; universal cold remedy
+  - швидка допомога (ambulance) — Викличте швидку! (103)
+  - бахіли (shoe covers) — mandatory in clinics; cultural etiquette
+  - здоровий (healthy) — здоровий спосіб життя, у здоровому тілі
   - 'варто (it is worth) — advice: варто відпочивати, варто піти до лікаря'
-  - 'алергія (allergy) — алергія на + Acc; алергічна реакція'
+  - алергія (allergy) — алергія на + Acc; алергічна реакція
   - 'ангіна (tonsillitis) — false friend: ≠ angina pectoris (серцевий напад)'
 activity_hints:
 - type: match-up
@@ -172,4 +143,20 @@ activity_hints:
 - type: fill-in
   focus: Medical vocabulary (рецепт, діагноз, прийом, аналізи)
   items: 10
-word_target: 3000
+persona:
+  voice: Encouraging Cultural Guide
+  role: School Nurse
+grammar:
+- body parts (gender, irregular plurals, adjective agreement)
+- impersonal pain construction (у мене болить/болять + Nom)
+- state expressions with Dative (Мені погано/добре/холодно)
+- хворіти на + Accusative vs боліти (intransitive)
+- medical imperatives in Ви-form (Дихайте!, Покажіть!)
+- advice structures (треба/варто + infinitive)
+register: розмовний
+module_type: vocabulary
+immersion: 60-75% Ukrainian
+prerequisites:
+- time-clauses
+connects_to:
+- checkpoint

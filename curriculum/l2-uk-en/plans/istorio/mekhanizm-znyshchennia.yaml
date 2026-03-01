@@ -1,60 +1,92 @@
 module: istorio-056
-level: istorio
+level: ISTORIO
 sequence: 56
+slug: mekhanizm-znyshchennia
 version: '1.0'
 title: 'Механізм знищення: 1930-1937'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of механізм знищення: 1930-1937'
 - Evaluate the historical significance of як знищували культуру
+sources:
+- name: Великий терор в Україні
+  url: https://uk.wikipedia.org/wiki/Великий_терор
+  type: reference
+  notes: Great Terror overview
+- name: Сталінські репресії
+  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
+  type: reference
+  notes: Ukrainian repressions
+- name: Список жертв Розстріляного відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Victims list
 content_outline:
 - section: Вступ — Як знищували культуру
-  subsections:
+  points:
   - Від дискусій до репресій
   - Механізм — як працював
   - Чому культура — ціль
   - Структура модуля
+  words: 700
 - section: Хронологія знищення
-  subsections:
+  points:
   - 1930-1933 — перша хвиля
   - Процес СВУ (1930)
   - 1934-1936 — затишшя?
   - 1937-1938 — Великий терор
   - Масштаби — скільки загинуло
+  words: 700
 - section: Етапи знищення особистості
-  subsections:
+  points:
   - Критика в пресі
   - Вимога самокритики
   - Виключення з організацій
   - Арешт
   - Табір або розстріл
   - Паттерн — як повторювався
+  words: 700
 - section: Звинувачення — словник терору
-  subsections:
+  points:
   - «Націоналізм» — що означало
   - «Формалізм» — проти митців
   - «Шпигунство» — абсурдні звинувачення
   - Троцькізм
   - Як звинувачення конструювалися
+  words: 700
 - section: Долі — приклади
-  subsections:
+  points:
   - Курбас — розстріл
   - Хвильовий — самогубство
   - Куліш — розстріл
   - Зеров — розстріл
   - Хто вижив і як
+  words: 700
 - section: Чому знищили
-  subsections:
+  points:
   - Національна культура = загроза
   - «Українізація» — помилка для виправлення
   - Паралель із Голодомором
   - Культурний геноцид?
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Механізм як система
   - Від індивідуальних трагедій до патерну
   - Підготовка до синтезу
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - механізм
 - знищення
@@ -71,6 +103,15 @@ vocabulary:
 - допит
 - вирок
 - реабілітація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Map the stages of persecution
@@ -82,38 +123,10 @@ activities:
   focus: Compare fates of 5 cultural figures
 - type: essay-response
   focus: Чи було знищення Розстріляного відродження культурним геноцидом?
-sources:
-- name: Великий терор в Україні
-  url: https://uk.wikipedia.org/wiki/Великий_терор
-  type: reference
-  notes: Great Terror overview
-- name: Сталінські репресії
-  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
-  type: reference
-  notes: Ukrainian repressions
-- name: Список жертв Розстріляного відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Victims list
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Totalitarianism Scholar
+prerequisites:
+- teatr-kurbasa
+connects_to:
+- syntez-rozstriliane

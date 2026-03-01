@@ -1,27 +1,47 @@
-sequence: 30
-module: oes-030
-module_number: 24
+module: oes-029
+level: OES
+sequence: 29
 slug: pvl-olga-revenge
-title_uk: 'ПВЛ: Помста Ольги'
-title_en: 'PVL: Olga''s Revenge'
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'ПВЛ: Помста Ольги'
+subtitle: 'PVL: Olga''s Revenge'
 focus: Mixed tenses — Planning (Imp) vs Execution (Aor)
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to PVL: Olga''s Revenge'
+  points:
+  - 'Introduction to PVL: Olga''s Revenge'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Drevlian Diplomat
+prerequisites:
+- pvl-death-of-igor
+connects_to:
+- pvl-sviatoslav

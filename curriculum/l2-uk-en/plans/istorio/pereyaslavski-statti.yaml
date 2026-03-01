@@ -1,56 +1,88 @@
 module: istorio-024
-level: istorio
+level: ISTORIO
 sequence: 24
+slug: pereyaslavski-statti
 version: '1.0'
 title: 'Переяславські статті: Текст і контекст'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of переяславські статті: текст і контекст'
 - Evaluate the historical significance of найконтроверсійніший документ
+sources:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: Overview
+- name: Березневі статті
+  url: https://uk.wikipedia.org/wiki/Березневі_статті
+  type: reference
+  notes: March Articles (actual agreement)
+- name: Текст статей
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Document text
 content_outline:
 - section: Вступ — Найконтроверсійніший документ
-  subsections:
+  points:
   - Переяслав 1654 — що відбулося?
   - Чому досі сперечаються
   - Рада vs. Статті — що підписали?
   - Мета модуля — прочитати оригінал
+  words: 700
 - section: Що насправді відбулося в січні 1654
-  subsections:
+  points:
   - Рада в Переяславі — церемонія
   - Присяга — хто кому?
   - Інцидент з присягою царя
   - Що вирішили, чого не вирішили
+  words: 700
 - section: Березневі статті — справжній договір
-  subsections:
+  points:
   - Переговори в Москві
   - 23 статті — зміст
   - Козацька автономія
   - Московські застереження
   - Що підписано, що відхилено
+  words: 700
 - section: Фрагмент — Ключові статті
-  subsections:
+  points:
   - Текст (з глосами)
   - Про реєстр — 60 000 козаків
   - Про права старшини
   - Про відносини з іншими державами
   - Московська редакція
+  words: 700
 - section: Інтерпретації
-  subsections:
+  points:
   - Українська інтерпретація — персональна унія
   - Російська інтерпретація — возз'єднання
   - Польська інтерпретація — зрада
   - Сучасний аналіз — що насправді?
+  words: 700
 - section: Чому це важливо досі
-  subsections:
+  points:
   - Переяслав у російській пропаганді
   - Деконструкція міфу
   - Історична пам'ять vs. документ
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Від легенди до тексту
   - Критичний підхід
   - Зв'язок із циклом кооптації
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Переяславська рада
 - Березневі статті
@@ -67,6 +99,15 @@ vocabulary:
 - кондиції
 - ратифікація
 - денонсація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: reading
   focus: Key articles text with glosses
@@ -78,38 +119,10 @@ activities:
   focus: Why do different copies differ?
 - type: essay-response
   focus: Чи був Переяслав 'возз'єднанням' чи 'союзом'?
-sources:
-- name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
-  type: reference
-  notes: Overview
-- name: Березневі статті
-  url: https://uk.wikipedia.org/wiki/Березневі_статті
-  type: reference
-  notes: March Articles (actual agreement)
-- name: Текст статей
-  url: https://litopys.org.ua/
-  type: primary
-  notes: Document text
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Treaty Text Analyst
+prerequisites:
+- universaly-khmelnytkoho
+connects_to:
+- konstytutsiia-orlyka

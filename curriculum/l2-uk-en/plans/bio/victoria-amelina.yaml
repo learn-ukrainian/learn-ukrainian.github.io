@@ -1,23 +1,35 @@
-sequence: 167
-module: bio-167
-level: C1.BIO
+module: bio-170
+level: BIO
+sequence: 170
 slug: victoria-amelina
 version: '2.0'
 title: Вікторія Амеліна
 subtitle: Вікторія Амеліна
+focus: history
+pedagogy: seminar
+phase: Executed Renaissance 2.0
+word_target: 5000
+objectives:
+- Дослідити життя та внесок Вікторія Амеліна у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
 content_outline:
 - section: Вступ та контекст
   points: []
+  words: 1000
 - section: Від романістки до дослідниці воєнних злочинів
   points: []
+  words: 1000
 - section: Концепція Нового Розстріляного Відродження
   points: []
+  words: 1000
 - section: Деколонізаційна перспектива
   points:
   - Зв'язок з Розстріляним Відродженням 1930-х
   - Українська суб'єктність та опір
+  words: 1000
 - section: Підсумок та спадщина
   points: []
+  words: 1000
 vocabulary_hints:
   required:
   - суб'єктність
@@ -30,13 +42,11 @@ activity_hints:
   focus: Аналіз життєвого шляху та вибору
 - type: essay-response
   focus: Критичне есе про ціну культури
-focus: history
-pedagogy: seminar
-immersion: 100% Ukrainian
-phase: Executed Renaissance 2.0
-objectives:
-- Дослідити життя та внесок Вікторія Амеліна у сучасну українську культуру
-- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
 persona:
   voice: Senior Biographer
   role: War Crimes Researcher
+immersion: 100% Ukrainian
+prerequisites:
+- kateryna-handziuk
+connects_to:
+- maksym-kryvtsov

@@ -1,75 +1,72 @@
-module: a2-65
+module: a2-068
 level: A2
-sequence: 65
+sequence: 68
 slug: giving-directions
 version: '2.0'
 title: Giving Directions
 subtitle: Navigating the City
+focus: practical
+pedagogy: PPP
+phase: A2.6 [Practical]
+word_target: 3000
+objectives:
+- Learner can ask for directions in a city
+- Learner can give simple directions to others
+- Learner can understand location descriptions
+- Learner can use landmarks for navigation
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - City layout basics — focusing on standard urban vocabulary (street, square, intersection)
-    as mandated by State Standard §3.5 for the A2 thematic catalogue.
-  - 'Cultural hook: Arsenalna Metro Station — meeting at the deepest station in the
-    world (105.5m), emphasizing the idiom «зустрінемось на Арсенальній» and describing
-    the 5-minute escalator ride as a navigation milestone.'
-  - 'Cultural hook: Lviv Rynok Square Fountains — navigating via the four mythological
-    fountains (Neptune, Diana, Amphitrite, Adonis) at the corners of the square («біля
-    Нептуна», «біля Діани»).'
+  - City layout basics — focusing on standard urban vocabulary (street, square, intersection) as mandated by State Standard
+    §3.5 for the A2 thematic catalogue.
+  - 'Cultural hook: Arsenalna Metro Station — meeting at the deepest station in the world (105.5m), emphasizing the idiom
+    «зустрінемось на Арсенальній» and describing the 5-minute escalator ride as a navigation milestone.'
+  - 'Cultural hook: Lviv Rynok Square Fountains — navigating via the four mythological fountains (Neptune, Diana, Amphitrite,
+    Adonis) at the corners of the square («біля Нептуна», «біля Діани»).'
 - section: Презентація (Presentation)
   words: 800
   points:
-  - Polite inquiries — teaching «Вибачте, як пройти до...?» with a focus on the high-frequency
-    verb «пройти» (to pass/go through) as the standard for navigation requests.
-  - Directional adverbs — presenting «прямо», «направо/праворуч», and «наліво/ліворуч»;
-    explicitly addressing the common learner error of using the adjective «лівий/правий»
-    instead of the adverb.
-  - Motion verb distinction — presenting the strict contrast between «іти» (on foot)
-    and «їхати» (by vehicle) as per Standard requirements, highlighting that English
-    'go' is split into two distinct concepts.
-  - Imperative grammar — introducing the imperative mood for instructions («ідіть»,
-    «поверніть», «пройдіть») as specified in Standard §4.4.1.3 for giving directions/advice.
+  - Polite inquiries — teaching «Вибачте, як пройти до...?» with a focus on the high-frequency verb «пройти» (to pass/go through)
+    as the standard for navigation requests.
+  - Directional adverbs — presenting «прямо», «направо/праворуч», and «наліво/ліворуч»; explicitly addressing the common learner
+    error of using the adjective «лівий/правий» instead of the adverb.
+  - Motion verb distinction — presenting the strict contrast between «іти» (on foot) and «їхати» (by vehicle) as per Standard
+    requirements, highlighting that English 'go' is split into two distinct concepts.
+  - Imperative grammar — introducing the imperative mood for instructions («ідіть», «поверніть», «пройдіть») as specified
+    in Standard §4.4.1.3 for giving directions/advice.
 - section: Практика (Practice)
   words: 700
   points:
-  - 'Error Correction Drill 1: Adjective vs. Adverb — practicing the distinction between
-    «лівий» and «наліво/ліворуч»; correcting the error «Ідіть лівий» to «Ідіть наліво».'
-  - 'Error Correction Drill 2: Motion Verbs — drilling the choice between foot vs.
-    vehicle travel; correcting «Я йду на метро» to «Я їду на метро» using 5 situational
-    prompts.'
-  - Step-by-step navigation — practicing sequences like «пройдіть два квартали», «поверніть
-    за ріг», and «перейдіть вулицю».
+  - 'Error Correction Drill 1: Adjective vs. Adverb — practicing the distinction between «лівий» and «наліво/ліворуч»; correcting
+    the error «Ідіть лівий» to «Ідіть наліво».'
+  - 'Error Correction Drill 2: Motion Verbs — drilling the choice between foot vs. vehicle travel; correcting «Я йду на метро»
+    to «Я їду на метро» using 5 situational prompts.'
+  - Step-by-step navigation — practicing sequences like «пройдіть два квартали», «поверніть за ріг», and «перейдіть вулицю».
 - section: Діалоги (Dialogues)
   words: 600
   points:
-  - Destination Case Control — modeling the usage of prepositions «в/на» + Accusative
-    for movement (Standard §4.2.2.4) vs. «біля/навпроти» + Genitive for static location.
-  - Prepositional Government — explicitly drilling the Genitive case after «до»; addressing
-    the learner error of using Nominative (e.g., «до парку» vs. wrong «до парк»).
-  - Iconic Route Dialogues — simulating a route from a metro station to a museum using
-    real landmarks (Arsenalna, Maidan) and sequencing markers (спочатку, потім, після
-    цього).
+  - Destination Case Control — modeling the usage of prepositions «в/на» + Accusative for movement (Standard §4.2.2.4) vs.
+    «біля/навпроти» + Genitive for static location.
+  - Prepositional Government — explicitly drilling the Genitive case after «до»; addressing the learner error of using Nominative
+    (e.g., «до парку» vs. wrong «до парк»).
+  - Iconic Route Dialogues — simulating a route from a metro station to a museum using real landmarks (Arsenalna, Maidan)
+    and sequencing markers (спочатку, потім, після цього).
 - section: Розповідь (Narrative)
   words: 400
   points:
-  - Navigation story — a narrative arc involving a character navigating from a train
-    station to a specific landmark in Lviv or Kyiv, integrating «через міст», «на
-    світлофорі», and «наступна зупинка».
-  - Summary — reinforcing the distinction between «куди?» (motion + Accusative) and
-    «де?» (static location + Locative/Genitive) to wrap up the module's grammar goals.
+  - Navigation story — a narrative arc involving a character navigating from a train station to a specific landmark in Lviv
+    or Kyiv, integrating «через міст», «на світлофорі», and «наступна зупинка».
+  - Summary — reinforcing the distinction between «куди?» (motion + Accusative) and «де?» (static location + Locative/Genitive)
+    to wrap up the module's grammar goals.
 vocabulary_hints:
   required:
-  - йти / їхати (to go on foot / by vehicle) — high frequency core; strictly separate
-    based on transport mode
-  - 'пройти (to go through/to get to) — collocation: «як пройти до...?»; high frequency
-    A2 verb'
+  - йти / їхати (to go on foot / by vehicle) — high frequency core; strictly separate based on transport mode
+  - 'пройти (to go through/to get to) — collocation: «як пройти до...?»; high frequency A2 verb'
   - напрямок (direction) — general term for navigation and movement
   - 'прямо (straight) — collocation: «йти прямо», «пройдіть прямо два квартали»'
-  - 'направо / праворуч (to the right) — frequency: high; use adverbs for movement
-    instructions'
-  - 'наліво / ліворуч (to the left) — frequency: high; distinguish from adjective
-    «лівий»'
+  - 'направо / праворуч (to the right) — frequency: high; use adverbs for movement instructions'
+  - 'наліво / ліворуч (to the left) — frequency: high; distinguish from adjective «лівий»'
   - 'повернути (to turn) — collocation: «повернути за ріг», «поверніть на світлофорі»'
   - 'вулиця (street) — collocations: «на вулиці», «через вулицю», «по вулиці»'
   - 'площа (square) — cultural context: Площа Ринок (Lviv), Майдан Незалежності (Kyiv)'
@@ -92,25 +89,16 @@ activity_hints:
 - type: quiz
   focus: Give directions to places
   items: 10
-focus: practical
-pedagogy: PPP
-prerequisites:
-- a2-64 (Scheduling Interviews)
 connects_to:
 - a2-66 (Asking for Directions)
-objectives:
-- Learner can ask for directions in a city
-- Learner can give simple directions to others
-- Learner can understand location descriptions
-- Learner can use landmarks for navigation
+prerequisites:
+- a2-64 (Scheduling Interviews)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Kyiv Metro Navigator
 grammar:
 - Asking for directions (як пройти?)
 - Giving instructions (йдіть прямо, поверніть)
 - Prepositions of place and movement
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.6 [Practical]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Kyiv Metro Navigator
-word_target: 3000

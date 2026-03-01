@@ -1,28 +1,50 @@
-sequence: 86
-module: oes-086
-module_number: 86
+module: oes-083
+level: OES
+sequence: 83
 slug: slovo-poetic-syntax-lab
-title_uk: 'Слово: Лабораторія синтаксису'
-title_en: 'Slovo: Poetic Syntax Lab'
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: 'Слово: Лабораторія синтаксису'
+subtitle: 'Slovo: Poetic Syntax Lab'
 focus: Inversion, chiasmus, parallelism
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Slovo: Poetic Syntax Lab'
+  points:
+  - 'Introduction to Slovo: Poetic Syntax Lab'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
-- grammar-lab
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: grammar-lab
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Bardic Apprentice
+prerequisites:
+- slovo-return
+connects_to:
+- slovo-hapax-legomena

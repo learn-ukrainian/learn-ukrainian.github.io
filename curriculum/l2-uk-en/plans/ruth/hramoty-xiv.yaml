@@ -1,21 +1,34 @@
-sequence: 110
-module: ruth-110
+module: ruth-105
+level: RUTH
+sequence: 105
 slug: hramoty-xiv
-title_uk: "Українські грамоти XIV століття"
-title_en: "Ukrainian Charters of the 14th Century"
+version: '2.0'
+title: Українські грамоти XIV століття
+subtitle: Ukrainian Charters of the 14th Century
+focus: Oldest surviving Ukrainian administrative documents — legal language predating the Lithuanian Statutes
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Oldest surviving Ukrainian administrative documents — legal language predating the Lithuanian Statutes"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Context: the 14th century as the transition from OES to Ruthenian. These charters are the earliest evidence of Ukrainian as a functional legal-administrative language distinct from Church Slavonic."
+  points:
+  - 'Context: the 14th century as the transition from OES to Ruthenian. These charters are the earliest evidence of Ukrainian
+    as a functional legal-administrative language distinct from Church Slavonic.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading actual 14th-century charters. Legal formulae, property transfers, oaths. Identifying Ukrainian vernacular elements breaking through the scribal conventions. Comparison with OES legal texts (Ruska Pravda)."
+  points:
+  - Reading actual 14th-century charters. Legal formulae, property transfers, oaths. Identifying Ukrainian vernacular elements
+    breaking through the scribal conventions. Comparison with OES legal texts (Ruska Pravda).
+  words: 1250
 - section: Практика
-  description: "Paleography basics: reading 14th-century handwriting. Legal vocabulary that survives in modern Ukrainian law. Document structure analysis."
+  points:
+  - 'Paleography basics: reading 14th-century handwriting. Legal vocabulary that survives in modern Ukrainian law. Document
+    structure analysis.'
+  words: 1250
 - section: Підсумок
-  description: "These charters prove Ukrainian existed as a written administrative language centuries before the 'official' start of modern Ukrainian literature (1798). Continuity, not invention."
+  points:
+  - These charters prove Ukrainian existed as a written administrative language centuries before the 'official' start of modern
+    Ukrainian literature (1798). Continuity, not invention.
+  words: 1250
 vocabulary_hints:
 - грамота
 - акт
@@ -24,12 +37,24 @@ vocabulary_hints:
 - присяга
 - маєтність
 - канцелярія
-activity_types:
-- transcription
-- paleography-analysis
-- grammar-identify
-- etymology-trace
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: paleography-analysis
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
 persona:
-  voice: "Legal Historian"
-  role: "Archivist"
-source_url: "http://litopys.org.ua/gramxiv/grb.htm"
+  voice: Legal Historian
+  role: Archivist
+source_url: http://litopys.org.ua/gramxiv/grb.htm
+prerequisites:
+- synonima-slaveno-roska
+connects_to:
+- hramoty-xvi-volyn

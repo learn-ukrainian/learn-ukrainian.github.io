@@ -1,23 +1,35 @@
-sequence: 169
-module: bio-169
-level: C1.BIO
+module: bio-172
+level: BIO
+sequence: 172
 slug: illia-chernilevskyi
 version: '2.0'
 title: Ілля Чернілевський
 subtitle: Ілля Чернілевський
+focus: history
+pedagogy: seminar
+phase: Executed Renaissance 2.0
+word_target: 5000
+objectives:
+- Дослідити життя та внесок Ілля Чернілевський у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
 content_outline:
 - section: Вступ та контекст
   points: []
+  words: 1000
 - section: Голос розстріляного покоління Z
   points: []
+  words: 1000
 - section: Музика та поезія спротиву
   points: []
+  words: 1000
 - section: Деколонізаційна перспектива
   points:
   - Зв'язок з Розстріляним Відродженням 1930-х
   - Українська суб'єктність та опір
+  words: 1000
 - section: Підсумок та спадщина
   points: []
+  words: 1000
 vocabulary_hints:
   required:
   - суб'єктність
@@ -30,13 +42,11 @@ activity_hints:
   focus: Аналіз життєвого шляху та вибору
 - type: essay-response
   focus: Критичне есе про ціну культури
-focus: history
-pedagogy: seminar
-immersion: 100% Ukrainian
-phase: Executed Renaissance 2.0
-objectives:
-- Дослідити життя та внесок Ілля Чернілевський у сучасну українську культуру
-- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
 persona:
   voice: Senior Biographer
   role: Warrior Poet
+immersion: 100% Ukrainian
+prerequisites:
+- maksym-kryvtsov
+connects_to:
+- andriy-pilshchykov

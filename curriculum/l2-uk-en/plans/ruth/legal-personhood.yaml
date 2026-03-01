@@ -1,27 +1,47 @@
-sequence: 4
 module: ruth-004
-module_number: 4
+level: RUTH
+sequence: 4
 slug: legal-personhood
-title_uk: Правова особа
-title_en: Legal Personhood
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: Правова особа
+subtitle: Legal Personhood
 focus: Особа, Чоловек — Who has rights?
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Legal Personhood
+  points:
+  - Introduction to Legal Personhood
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Burgher Representative
+prerequisites:
+- szlachta-nobility
+connects_to:
+- land-law-basics

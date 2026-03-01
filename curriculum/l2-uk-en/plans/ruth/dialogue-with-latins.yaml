@@ -1,27 +1,47 @@
-sequence: 64
-module: ruth-064
-module_number: 52
+module: ruth-062
+level: RUTH
+sequence: 62
 slug: dialogue-with-latins
-title_uk: Діалог з латинами
-title_en: Dialogue with Latins
-phase: 3
-phase_id: baroque-fight
-phase_name: Baroque Fight
+version: '2.0'
+title: Діалог з латинами
+subtitle: Dialogue with Latins
 focus: Arguments against Union of Brest
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Dialogue with Latins
+  points:
+  - Introduction to Dialogue with Latins
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Anti-Unionist
+prerequisites:
+- baroque-lists
+connects_to:
+- social-critique

@@ -1,44 +1,71 @@
-module: bio-143
+module: bio-146
 level: BIO
-sequence: 143
+sequence: 146
 slug: natalia-yakovenko
 version: '2.0'
 title: 'Наталя Яковенко: Матріарх критичної історії'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the impact of Наталя Яковенко on historiography
+- Evaluate the concept of шляхетська культура
+- Discuss the importance of джерелознавство
+sources:
+- name: Наталя Яковенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Яковенко_Наталя_Миколаївна
+  type: primary
+  notes: Біографія
+- name: Інтерв'ю з Наталею Яковенко
+  url: https://krytyka.com/
+  type: reference
+  notes: Особисті погляди
+- name: Кафедра історії НаУКМА
+  url: https://ukma.edu.ua/
+  type: reference
+  notes: Академічний контекст
 content_outline:
 - section: Вступ — Зміна парадигми
   points:
   - Революція в українській історіографії 1990-х
   - Відхід від народницького міфу до елітарної історії
   - Латина як ключ до розуміння ранньомодерної України
+  words: 700
 - section: Ранні роки та класична освіта
   points:
   - Навчання на класичній філології (латина, грецька)
   - Робота в архівах з давніми актами
   - Вплив джерелознавства на метод дослідження
+  words: 700
 - section: Повернення шляхти в історію
   points:
   - «Українська шляхта» — книга, що змінила все
   - Деконструкція образу «ворога-пана»
   - Шляхетська культура як основа української ідентичності
+  words: 700
 - section: Методологічний переворот
   points:
   - Антропологічний підхід до історії
   - «Паралельний світ» та «Дзеркала історії»
   - Історія як текст: аналіз ментальності
+  words: 700
 - section: Педагогічна діяльність
   points:
   - Кафедра історії НаУКМА
   - Виховання нової генерації істориків
   - Підручник «Нарис історії України» — стиль і зміст
+  words: 700
 - section: Спадщина та вплив
   points:
   - Створення «школи Яковенко»
   - Європейський контекст української історії (Річ Посполита)
   - Інтелектуальна безкомпромісність
+  words: 700
 - section: Дискусія — Еліта чи Народ?
   points:
   - Чи потрібна нам історія шляхти?
   - Як поєднати козацький міф з шляхетською реальністю
+  words: 800
 vocabulary_hints:
   required:
   - шляхта (nobility)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Роль еліти в творенні нації
   output: Аналітичний есей
-focus: biography
-prerequisites:
-- hist-commonwealth
 connects_to:
 - bio-148-yaroslav-hrytsak
 - bio-35-mykhailo-hrushevskyi
 - lit-essay-yakovenko-mirror-of-history
-module_type: biography
-sources:
-- name: Наталя Яковенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Яковенко_Наталя_Миколаївна
-  type: primary
-  notes: Біографія
-- name: Інтерв'ю з Наталею Яковенко
-  url: https://krytyka.com/
-  type: reference
-  notes: Особисті погляди
-- name: Кафедра історії НаУКМА
-  url: https://ukma.edu.ua/
-  type: reference
-  notes: Академічний контекст
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- Analyze the impact of Наталя Яковенко on historiography
-- Evaluate the concept of шляхетська культура
-- Discuss the importance of джерелознавство
+prerequisites:
+- hist-commonwealth
 persona:
   voice: Academic Historian
   role: Senior Lecturer
+module_type: biography
+immersion: 100% Ukrainian

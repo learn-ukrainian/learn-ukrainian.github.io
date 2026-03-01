@@ -1,55 +1,83 @@
 module: istorio-075
-level: istorio
+level: ISTORIO
 sequence: 75
+slug: syntez-zakhidni-rehiony
 version: '1.0'
 title: 'Синтез: Західні землі'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: західні землі'
 - Evaluate the historical significance of чому «більш українські»?
+sources:
+- name: Західна Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Західна_Україна
+  type: reference
+  notes: Regional overview
+- name: Галичина (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Галичина
+  type: reference
+  notes: Galicia summary
 content_outline:
 - section: Вступ — Чому «більш українські»?
-  subsections:
+  points:
   - Огляд модулів 70-74
   - Стереотип «справжніх українців»
   - Чи це правда?
   - Мета синтезу
+  words: 700
 - section: Порівняння регіонів
-  subsections:
+  points:
   - Галичина vs. Буковина vs. Закарпаття vs. Волинь
   - Різні імперії — різні долі
   - Спільне і відмінне
   - Таблиця порівняння
+  words: 700
 - section: Чому зберегли ідентичність
-  subsections:
+  points:
   - Австрія vs. Росія — ключ
   - Церква — греко-католицька
   - Освіта — можливості
   - Політичний досвід
+  words: 700
 - section: Західні землі в XX столітті
-  subsections:
+  points:
   - 1918 — ЗУНР
   - Міжвоєнний період — під Польщею, Румунією, Чехословаччиною
   - 1939-1945 — окупації
   - «Возз'єднання» 1939/1945
+  words: 700
 - section: Західна Україна в СРСР
-  subsections:
+  points:
   - Радянізація
   - Опір — УПА
   - Репресії
   - Збереження ідентичності
+  words: 700
 - section: Роль після 1991
-  subsections:
+  points:
   - «Український П'ємонт» — знову
   - Помаранчева революція
   - Революція Гідності
   - 2022 — чи ще актуальний поділ?
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Західні землі — інша історія
   - Але частина України
   - Перехід до східних регіонів
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - західні землі
@@ -66,34 +94,6 @@ vocabulary:
 - інтеграція
 - національна свідомість
 - диференціація
-activities:
-- type: essay-response
-  focus: Create western regions comparison diagram
-- type: critical-analysis
-  focus: Why did western lands preserve identity better?
-- type: critical-analysis
-  focus: Is the west-east divide still relevant?
-- type: essay-response
-  focus: Чому західні українці 'більш українські'? Чи це міф?
-sources:
-- name: Західна Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Західна_Україна
-  type: reference
-  notes: Regional overview
-- name: Галичина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
-  type: reference
-  notes: Galicia summary
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
 activity_hints:
 - type: reading
   focus: Первинні джерела
@@ -103,6 +103,19 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+activities:
+- type: essay-response
+  focus: Create western regions comparison diagram
+- type: critical-analysis
+  focus: Why did western lands preserve identity better?
+- type: critical-analysis
+  focus: Is the west-east divide still relevant?
+- type: essay-response
+  focus: Чому західні українці 'більш українські'? Чи це міф?
 persona:
   voice: Academic Historiographer
   role: Galician Studies Expert
+prerequisites:
+- volyn-pamiat-i-travma
+connects_to:
+- slobozhanshchyna-identychnist

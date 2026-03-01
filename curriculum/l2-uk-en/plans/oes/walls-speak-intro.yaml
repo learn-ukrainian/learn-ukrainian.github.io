@@ -1,32 +1,50 @@
-sequence: 1
 module: oes-001
-module_number: 1
+level: OES
+sequence: 1
 slug: walls-speak-intro
-title_uk: 'Софійські графіті: Стіни говорять'
-title_en: 'St. Sophia Graffiti: The Walls Speak'
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'Софійські графіті: Стіни говорять'
+subtitle: 'St. Sophia Graffiti: The Walls Speak'
 focus: Intro to epigraphy, graffiti as historical source
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to graffiti as linguistic archaeology
+  points:
+  - Introduction to graffiti as linguistic archaeology
+  words: 550
 - section: Текст
-  description: Primary source excerpts with glosses
+  points:
+  - Primary source excerpts with glosses
+  words: 550
 - section: Що таке епіграфіка?
-  description: Definition and types of epigraphic inscriptions
+  points:
+  - Definition and types of epigraphic inscriptions
+  words: 550
 - section: Мовний аналіз
-  description: 'Grammatical analysis: dative, perfect, vocative'
+  points:
+  - 'Grammatical analysis: dative, perfect, vocative'
+  words: 550
 - section: Історичний контекст
-  description: St. Sophia Cathedral, who wrote graffiti, dating methods
+  points:
+  - St. Sophia Cathedral, who wrote graffiti, dating methods
+  words: 550
 - section: 'Диглосія: два регістри однієї мови'
-  description: 'Diglossia model: literary vs vernacular'
+  points:
+  - 'Diglossia model: literary vs vernacular'
+  words: 550
 - section: Зв'язок із сучасною мовою
-  description: What survived in modern Ukrainian
+  points:
+  - What survived in modern Ukrainian
+  words: 550
 - section: 'Методологія: як читати давні тексти'
-  description: Step-by-step reading methodology
+  points:
+  - Step-by-step reading methodology
+  words: 550
 - section: Підсумок
-  description: Summary and vocabulary table
+  points:
+  - Summary and vocabulary table
+  words: 600
 vocabulary_hints:
 - графіті
 - тать
@@ -37,10 +55,18 @@ vocabulary_hints:
 - повноголосся
 - ять
 - єр/єрь
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Epigrapher
+connects_to:
+- alphabet-glagolitic-cyrillic

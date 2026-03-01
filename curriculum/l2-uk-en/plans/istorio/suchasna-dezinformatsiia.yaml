@@ -1,55 +1,87 @@
 module: istorio-110
-level: istorio
+level: ISTORIO
 sequence: 110
+slug: suchasna-dezinformatsiia
 version: '1.0'
 title: Сучасна російська дезінформація
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - Analyze the causes and consequences of сучасна російська дезінформація
 - Evaluate the historical significance of війна без зброї
+sources:
+- name: Російська дезінформація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  type: reference
+  notes: Disinformation overview
+- name: Russia Today (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Russia_Today
+  type: reference
+  notes: RT network
+- name: Тролі з Ольгіна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
+  type: reference
+  notes: Troll farms
 content_outline:
 - section: Вступ — Війна без зброї
-  subsections:
+  points:
   - Інформаційна війна — реальна війна
   - Від пропаганди до дезінформації
   - Цифрові інструменти
   - Структура модуля
+  words: 700
 - section: Інфраструктура
-  subsections:
+  points:
   - RT і Sputnik — глобальна мережа
   - Тролеферми — як працюють
   - Боти — масштаб операцій
   - Фінансування і координація
+  words: 700
 - section: Методологія
-  subsections:
+  points:
   - «Пожежний шланг брехні»
   - Багато версій — жодної правди
   - Емоції > факти
   - Теорії змови
+  words: 700
 - section: Наративи про Україну
-  subsections:
+  points:
   - «Нацисти при владі»
   - «Громадянська війна»
   - «Захист російськомовних»
   - MH17 — кейс-стаді
+  words: 700
 - section: Цільові аудиторії
-  subsections:
+  points:
   - Внутрішня — росіяни
   - Зовнішня — Захід
   - Українська — розкол
   - Різні наративи для різних аудиторій
+  words: 700
 - section: Після 24.02.2022
-  subsections:
+  points:
   - Посилення чи ослаблення?
   - Заборони RT у Європі
   - Адаптація методів
   - Нові платформи
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Дезінформація — зброя
   - Як розпізнавати
   - Перехід до західних медіа
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - дезінформація
 - тролеферма
@@ -66,6 +98,15 @@ vocabulary:
 - верифікація
 - алгоритм
 - ехо-камера
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Map Russian disinformation infrastructure
@@ -77,38 +118,10 @@ activities:
   focus: Identifying disinformation markers
 - type: essay-response
   focus: Чому 'пожежний шланг брехні' ефективний?
-sources:
-- name: Російська дезінформація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
-  type: reference
-  notes: Disinformation overview
-- name: Russia Today (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Russia_Today
-  type: reference
-  notes: RT network
-- name: Тролі з Ольгіна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
-  type: reference
-  notes: Troll farms
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Information Warfare Specialist
+prerequisites:
+- radianska-propaganda
+connects_to:
+- zakhidni-media

@@ -1,27 +1,47 @@
-sequence: 42
-module: oes-042
-module_number: 34
+module: oes-041
+level: OES
+sequence: 41
 slug: izyaslav-mstyslavych
-title_uk: Ізяслав Мстиславич
-title_en: Izyaslav Mstyslavych
-phase: 2
-phase_id: literary-tradition
-phase_name: Literary Tradition
+version: '2.0'
+title: Ізяслав Мстиславич
+subtitle: Izyaslav Mstyslavych
 focus: The "Honor" code of princes
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Izyaslav Mstyslavych
+  points:
+  - Introduction to Izyaslav Mstyslavych
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Princely Strategist
+prerequisites:
+- olgovychi-monomakhovychi
+connects_to:
+- sack-of-kyiv

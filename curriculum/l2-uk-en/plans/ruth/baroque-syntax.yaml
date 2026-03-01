@@ -1,27 +1,47 @@
-sequence: 71
-module: ruth-071
-module_number: 57
+module: ruth-069
+level: RUTH
+sequence: 69
 slug: baroque-syntax
-title_uk: Бароковий синтаксис
-title_en: Baroque Syntax
-phase: 3
-phase_id: baroque-fight
-phase_name: Baroque Fight
+version: '2.0'
+title: Бароковий синтаксис
+subtitle: Baroque Syntax
 focus: Complex, winding sentences
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Baroque Syntax
+  points:
+  - Introduction to Baroque Syntax
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Period Constructor
+prerequisites:
+- apostasy
+connects_to:
+- kyiv-mohyla-rhetoric

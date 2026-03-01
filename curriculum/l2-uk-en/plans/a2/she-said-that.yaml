@@ -1,85 +1,19 @@
-module: a2-28
+module: a2-033
 level: A2
-sequence: 28
+sequence: 33
 slug: she-said-that
 version: '2.0'
 title: She Said That...
 subtitle: Reported Speech Basics
-content_outline:
-- section: Вступ (Introduction)
-  words: 400
-  points:
-  - The social function of reporting and the «На лавці» (On the bench) culture — introduce
-    the culturally recognizable trope of grandmothers (бабусі) discussing neighbors
-    as a natural context for reporting information.
-  - Why Ukrainian tense logic is 'Fair' — explicitly frame the system as «Honest»
-    because we report exactly what we heard without changing the time (unlike English
-    backshifting).
-  - 'Cultural anchor: introduce the proverb «Слово не горобець — вилетить не впіймаєш»
-    (A word is not a sparrow—you can''t catch it once it has flown) to emphasize the
-    weight of spoken words and gossip.'
-- section: 'Презентація: Твердження та Дієслова (Presentation: Statements and Verbs)'
-  words: 800
-  points:
-  - 'The Three Pillars of Indirect Speech: Що (Statement), Чи (Question), Щоб (Command)
-    — align with State Standard §4.4.2 regarding complex sentences with these conjunctions.'
-  - 'Reporting Verbs Differentiation: Clearly distinguish between *казати* (focus
-    on message content, introduces *що*) and *говорити* (focus on the act of speaking)
-    using collocations like *казати правду* vs *говорити про...*.'
-  - The No-Backshift Rule (The Golden Rule) — identify the «Backshift» Trap where
-    learners incorrectly apply English past-to-past rules (e.g., saying 'He said he
-    *was* busy' instead of the correct Ukrainian 'Він сказав, що він *зайнятий*').
-  - Pronoun Shifting (I -> He/She) — address the 'Pronoun Persistence' error where
-    learners forget to shift perspective from «Я» to «Він/Вона» in the reported clause.
-- section: 'Презентація: Питання та Накази (Presentation: Questions and Commands)'
-  words: 800
-  points:
-  - Reporting Yes/No Questions with *чи* — target the 'If vs Whether' error where
-    learners use *якщо* (conditional) instead of the correct *чи* (whether).
-  - Word Order in Reported Questions — correct the 'Question Word Order' trap where
-    learners keep inversion or question intonation (e.g., 'Я не знаю, де є вокзал?'
-    instead of the declarative 'Я не знаю, де вокзал').
-  - Reporting Commands with *щоб* — explain the use of the past tense after *щоб*
-    as mandated by State Standard §4.4.2 for expressing the subject's intent or command.
-  - Usage of *питати* (to ask) and *відповідати* (to answer) — introduce collocations
-    such as *питати дозволу* (ask permission) and *відповідати на питання* (answer
-    a question).
-- section: 'Практика: Трансформація та Робота над Помилками (Practice: Transformation
-    and Error Correction)'
-  words: 600
-  points:
-  - Direct to Indirect Transformation Drills — focused exercises converting simple
-    statements and questions, specifically monitoring for 'Backshift' and 'Pronoun
-    Persistence' errors.
-  - Minimal Pair Drills for *якщо* vs *чи* — practice distinguishing between conditional
-    'if' and the 'whether' used in reported questions to solidify correct conjunction
-    usage.
-  - Correcting Word Order — exercises focused on stripping question inversion from
-    indirect questions to move toward natural declarative structures.
-- section: Продукція та Підсумок (Production and Summary)
-  words: 400
-  points:
-  - Conversational 'Chain' Game — introduce the Ukrainian children's game «Зіпсований
-    телефон» (Broken telephone) to demonstrate how reported speech can distort information
-    while practicing the grammar.
-  - 'Role-play: Gossip at the ''lavka'' or office news — using the ''Gossip Columnist''
-    persona to report various ''news'' items using the full range of *що*, *чи*, and
-    *щоб*.'
-  - Review of the 'Honest' tense system — summarize why retaining the original tense
-    is the core strength of Ukrainian reported speech.
 focus: grammar
 pedagogy: PPP
+phase: A2.2
+word_target: 3000
 objectives:
 - Learner can convert direct speech to indirect speech
 - Learner can report statements using 'що'
 - Learner can report questions using 'чи'
 - Learner can report commands using 'щоб'
-grammar:
-- indirect speech construction (що, щоб, чи)
-- pronoun changes
-- tense retention rule
-- reporting verbs (казати, говорити, питати)
-module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Indirect Speech
   url: https://mon.gov.ua/
@@ -89,26 +23,81 @@ sources:
   url: https://uk.wikipedia.org/wiki/Непряма_мова
   type: reference
   notes: Rules for tense retention and pronoun shifts
-immersion: 60-75% Ukrainian
-phase: A2.2
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - The social function of reporting and the «На лавці» (On the bench) culture — introduce the culturally recognizable trope
+    of grandmothers (бабусі) discussing neighbors as a natural context for reporting information.
+  - Why Ukrainian tense logic is 'Fair' — explicitly frame the system as «Honest» because we report exactly what we heard
+    without changing the time (unlike English backshifting).
+  - 'Cultural anchor: introduce the proverb «Слово не горобець — вилетить не впіймаєш» (A word is not a sparrow—you can''t
+    catch it once it has flown) to emphasize the weight of spoken words and gossip.'
+- section: 'Презентація: Твердження та Дієслова (Presentation: Statements and Verbs)'
+  words: 800
+  points:
+  - 'The Three Pillars of Indirect Speech: Що (Statement), Чи (Question), Щоб (Command) — align with State Standard §4.4.2
+    regarding complex sentences with these conjunctions.'
+  - 'Reporting Verbs Differentiation: Clearly distinguish between *казати* (focus on message content, introduces *що*) and
+    *говорити* (focus on the act of speaking) using collocations like *казати правду* vs *говорити про...*.'
+  - The No-Backshift Rule (The Golden Rule) — identify the «Backshift» Trap where learners incorrectly apply English past-to-past
+    rules (e.g., saying 'He said he *was* busy' instead of the correct Ukrainian 'Він сказав, що він *зайнятий*').
+  - Pronoun Shifting (I -> He/She) — address the 'Pronoun Persistence' error where learners forget to shift perspective from
+    «Я» to «Він/Вона» in the reported clause.
+- section: 'Презентація: Питання та Накази (Presentation: Questions and Commands)'
+  words: 800
+  points:
+  - Reporting Yes/No Questions with *чи* — target the 'If vs Whether' error where learners use *якщо* (conditional) instead
+    of the correct *чи* (whether).
+  - Word Order in Reported Questions — correct the 'Question Word Order' trap where learners keep inversion or question intonation
+    (e.g., 'Я не знаю, де є вокзал?' instead of the declarative 'Я не знаю, де вокзал').
+  - Reporting Commands with *щоб* — explain the use of the past tense after *щоб* as mandated by State Standard §4.4.2 for
+    expressing the subject's intent or command.
+  - Usage of *питати* (to ask) and *відповідати* (to answer) — introduce collocations such as *питати дозволу* (ask permission)
+    and *відповідати на питання* (answer a question).
+- section: 'Практика: Трансформація та Робота над Помилками (Practice: Transformation and Error Correction)'
+  words: 600
+  points:
+  - Direct to Indirect Transformation Drills — focused exercises converting simple statements and questions, specifically
+    monitoring for 'Backshift' and 'Pronoun Persistence' errors.
+  - Minimal Pair Drills for *якщо* vs *чи* — practice distinguishing between conditional 'if' and the 'whether' used in reported
+    questions to solidify correct conjunction usage.
+  - Correcting Word Order — exercises focused on stripping question inversion from indirect questions to move toward natural
+    declarative structures.
+- section: Продукція та Підсумок (Production and Summary)
+  words: 400
+  points:
+  - Conversational 'Chain' Game — introduce the Ukrainian children's game «Зіпсований телефон» (Broken telephone) to demonstrate
+    how reported speech can distort information while practicing the grammar.
+  - 'Role-play: Gossip at the ''lavka'' or office news — using the ''Gossip Columnist'' persona to report various ''news''
+    items using the full range of *що*, *чи*, and *щоб*.'
+  - Review of the 'Honest' tense system — summarize why retaining the original tense is the core strength of Ukrainian reported
+    speech.
+vocabulary_hints:
+  required:
+  - 'казати (to say/tell) — High frequency (Top 100); collocations: казати правду (tell the truth), він каже, що... (he says
+    that...), так би мовити (so to speak)'
+  - 'говорити (to speak/talk) — High frequency; collocations: говорити українською (speak Ukrainian), говорити про... (talk
+    about...), говорити з... (speak with...)'
+  - 'питати (to ask) — collocations: питати дозволу (ask permission), питати дорогу (ask for directions)'
+  - 'відповідати (to answer) — collocations: відповідати на питання (answer a question), відповідати за... (be responsible
+    for...)'
+  recommended:
+  - плітки (gossip) — noun; essential for «на лавці» (on the bench) cultural context
+  - зіпсований телефон (broken telephone) — Ukrainian name for the whisper game; used for practicing information transmission
+  - чи (whether/if) — conjunction; critical for reported questions, distinct from conditional 'якщо'
+  - щоб (in order to/that) — conjunction; used for reporting commands and requests
 persona:
   voice: Encouraging Cultural Guide
   role: Gossip Columnist
-vocabulary_hints:
-  required:
-  - 'казати (to say/tell) — High frequency (Top 100); collocations: казати правду
-    (tell the truth), він каже, що... (he says that...), так би мовити (so to speak)'
-  - 'говорити (to speak/talk) — High frequency; collocations: говорити українською
-    (speak Ukrainian), говорити про... (talk about...), говорити з... (speak with...)'
-  - 'питати (to ask) — collocations: питати дозволу (ask permission), питати дорогу
-    (ask for directions)'
-  - 'відповідати (to answer) — collocations: відповідати на питання (answer a question),
-    відповідати за... (be responsible for...)'
-  recommended:
-  - плітки (gossip) — noun; essential for «на лавці» (on the bench) cultural context
-  - зіпсований телефон (broken telephone) — Ukrainian name for the whisper game; used
-    for practicing information transmission
-  - чи (whether/if) — conjunction; critical for reported questions, distinct from
-    conditional 'якщо'
-  - щоб (in order to/that) — conjunction; used for reporting commands and requests
-word_target: 3000
+grammar:
+- indirect speech construction (що, щоб, чи)
+- pronoun changes
+- tense retention rule
+- reporting verbs (казати, говорити, питати)
+module_type: grammar
+immersion: 60-75% Ukrainian
+prerequisites:
+- because-and-although
+connects_to:
+- i-think-that

@@ -1,51 +1,56 @@
-module: a1-54
+module: a1-054
 level: A1
 sequence: 54
 slug: checkpoint-communication
 version: '2.0'
 title: 'Checkpoint: Communication'
 subtitle: Can You Handle Real Life?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.5 [Modals, Commands & Life]
+word_target: 2000
+objectives:
+- Demonstrate modal verb usage in context
+- Form correct imperatives and polite requests
+- Discuss family, leisure, and travel plans
+- Integrate A1.5 skills in practical scenarios
 content_outline:
 - section: Огляд (Overview)
   words: 300
   points:
-  - 'TTT checkpoint consolidating A1.5 skills: modals (могти/вміти/треба/хотіти),
-    imperatives (8 required verbs), family/appearance, leisure, travel.'
-  - 'Self-assessment strategy: identifying strengths and weaknesses before advancing
-    to A1.6 Real-World Skills phase.'
+  - 'TTT checkpoint consolidating A1.5 skills: modals (могти/вміти/треба/хотіти), imperatives (8 required verbs), family/appearance,
+    leisure, travel.'
+  - 'Self-assessment strategy: identifying strengths and weaknesses before advancing to A1.6 Real-World Skills phase.'
 - section: 'Навичка 1: Модальні дієслова (Skill 1: Modal Verbs)'
   words: 500
   points:
-  - 'Ability modals review: Могти (circumstantial can) vs вміти (learned skill).
-    Three-way negative contrast: не можу / не вмію / не можна.'
-  - 'Obligation modals review: Треба/потрібно (impersonal necessity) vs повинен (personal
-    duty) vs хотіти (desire). Intensity scale application in varied contexts.'
-  - 'Integrated modal choice: Given a scenario, select the correct modal from the
-    full set (могти/вміти/можна/треба/повинен/хотіти). Testing discrimination skill.'
+  - 'Ability modals review: Могти (circumstantial can) vs вміти (learned skill). Three-way negative contrast: не можу / не
+    вмію / не можна.'
+  - 'Obligation modals review: Треба/потрібно (impersonal necessity) vs повинен (personal duty) vs хотіти (desire). Intensity
+    scale application in varied contexts.'
+  - 'Integrated modal choice: Given a scenario, select the correct modal from the full set (могти/вміти/можна/треба/повинен/хотіти).
+    Testing discrimination skill.'
 - section: 'Навичка 2: Накази та прохання (Skill 2: Commands & Requests)'
   words: 400
   points:
-  - 'Imperative formation for 8 required verbs: читай(те), пиши(те), скажи(те), дай(те),
-    іди(те), слухай(те), дивись(те), стій(те). Ти-form and Ви-form recall.'
-  - 'Polite requests: будь ласка placement, прошу вас + infinitive, Чи не могли б
-    ви...? Politeness escalation. Positive and negative command contrast.'
+  - 'Imperative formation for 8 required verbs: читай(те), пиши(те), скажи(те), дай(те), іди(те), слухай(те), дивись(те),
+    стій(те). Ти-form and Ви-form recall.'
+  - 'Polite requests: будь ласка placement, прошу вас + infinitive, Чи не могли б ви...? Politeness escalation. Positive and
+    negative command contrast.'
 - section: 'Навичка 3: Повсякдення (Skill 3: Everyday Life)'
   words: 400
   points:
-  - 'Family and appearance vocabulary recall: family members, physical descriptions,
-    age expressions. Combining with possessive pronouns from earlier modules.'
-  - 'Hobbies, sports, and leisure: грати в/на, invitation patterns (Ходімо! Давай
-    зустрінемось!). Travel and transport: means of transport (Instrumental), directions,
-    journey descriptions.'
+  - 'Family and appearance vocabulary recall: family members, physical descriptions, age expressions. Combining with possessive
+    pronouns from earlier modules.'
+  - 'Hobbies, sports, and leisure: грати в/на, invitation patterns (Ходімо! Давай зустрінемось!). Travel and transport: means
+    of transport (Instrumental), directions, journey descriptions.'
 - section: Інтеграційне завдання (Integration Task)
   words: 400
   points:
-  - 'Scenario: Plan a weekend trip with a friend. Use modals (Хочеш поїхати? Треба
-    купити квитки. Я повинен повернутися до неділі.), imperatives (Подивись розклад!),
-    travel vocabulary, and invitation patterns.'
-  - 'Assessment focus: Can the learner combine A1.5 skills fluidly in a realistic
-    communicative scenario? Holistic evaluation of modal, imperative, and vocabulary
-    integration.'
+  - 'Scenario: Plan a weekend trip with a friend. Use modals (Хочеш поїхати? Треба купити квитки. Я повинен повернутися до
+    неділі.), imperatives (Подивись розклад!), travel vocabulary, and invitation patterns.'
+  - 'Assessment focus: Can the learner combine A1.5 skills fluidly in a realistic communicative scenario? Holistic evaluation
+    of modal, imperative, and vocabulary integration.'
 vocabulary_hints:
   required:
   - могти (can) — можу, можеш; circumstantial ability
@@ -67,25 +72,16 @@ activity_hints:
 - type: quiz
   focus: A1.5 comprehensive test covering modals, imperatives, vocabulary
   items: 30
-focus: checkpoint
-pedagogy: TTT
-prerequisites:
-- a1-53 (At the Restaurant)
 connects_to:
 - a1-55 (Prohibitions and Signs)
-objectives:
-- Demonstrate modal verb usage in context
-- Form correct imperatives and polite requests
-- Discuss family, leisure, and travel plans
-- Integrate A1.5 skills in practical scenarios
+prerequisites:
+- a1-53 (At the Restaurant)
+persona:
+  voice: Patient Supportive Tutor
+  role: Travel Planner
 grammar:
 - Modal verbs (могти/вміти/треба/повинен/хотіти)
 - Imperative mood (8 required verbs)
 - Travel expressions (Instrumental, directions)
 - Invitation patterns
 register: розмовний
-phase: A1.5 [Modals, Commands & Life]
-persona:
-  voice: Patient Supportive Tutor
-  role: Travel Planner
-word_target: 2000

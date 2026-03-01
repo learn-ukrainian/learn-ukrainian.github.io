@@ -1,78 +1,70 @@
-module: b1-75
+module: b1-083
 level: B1
-sequence: 75
+sequence: 83
 slug: regions-center
 version: '2.0'
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
+focus: culture
+pedagogy: CBI
+phase: B1.7 [Contemporary Ukraine]
+word_target: 4000
+objectives:
+- Learner can discuss Central Ukraine's regions and historical significance
+- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
+- Learner can use regional vocabulary to describe Central Ukrainian culture
+- Learner can explain the connection between Central Ukraine and Cossack heritage
 content_outline:
-- section: 'Вступ: Центр — Серце та Колиска України (Introduction: The Center as the
-    Heart and Cradle of Ukraine)'
+- section: 'Вступ: Центр — Серце та Колиска України (Introduction: The Center as the Heart and Cradle of Ukraine)'
   words: 400
   points:
-  - 'Central Ukraine as a historical and cultural concept: exploring the lands of
-    the former Hetmanate and their role in national formation.'
-  - 'Overview of the three pillars of identity: Kyiv (the capital), Poltava (the language),
-    and Cherkasy (the Cossack spirit).'
-- section: 'Полтавщина: Колиска літературної мови (Poltava Region: Cradle of the Literary
-    Language)'
+  - 'Central Ukraine as a historical and cultural concept: exploring the lands of the former Hetmanate and their role in national
+    formation.'
+  - 'Overview of the three pillars of identity: Kyiv (the capital), Poltava (the language), and Cherkasy (the Cossack spirit).'
+- section: 'Полтавщина: Колиска літературної мови (Poltava Region: Cradle of the Literary Language)'
   words: 1000
   points:
-  - 'Poltava as the ''spiritual capital'' and birthplace of modern Ukrainian: the
-    legacy of Ivan Kotlyarevsky and the vernacular impact of ''Eneida'' (State Standard
-    §3.15).'
-  - The role of the Poltava dialect as the foundational standard for the national
-    language; connecting the region's literary tradition to modern identity.
-- section: 'Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack
-    Heart and Hetman Glory)'
+  - 'Poltava as the ''spiritual capital'' and birthplace of modern Ukrainian: the legacy of Ivan Kotlyarevsky and the vernacular
+    impact of ''Eneida'' (State Standard §3.15).'
+  - The role of the Poltava dialect as the foundational standard for the national language; connecting the region's literary
+    tradition to modern identity.
+- section: 'Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack Heart and Hetman Glory)'
   words: 1100
   points:
-  - 'Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic
-    capital under Bohdan Khmelnytsky and the ''Hetmanate'' concept.'
-  - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining
-    the region as the 'Land of Bohdan and Taras' and its historical significance.
-- section: 'Київ: Від княжої столиці до європейського центру (Kyiv: From Princely
-    Capital to European Center)'
+  - 'Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic capital under Bohdan Khmelnytsky and
+    the ''Hetmanate'' concept.'
+  - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining the region as the 'Land of Bohdan and
+    Taras' and its historical significance.
+- section: 'Київ: Від княжої столиці до європейського центру (Kyiv: From Princely Capital to European Center)'
   words: 900
   points:
-  - 'Kyiv''s monuments and cultural heritage according to State Standard §3.13: the
-    continuity from Kyivan Rus through Saint Sophia and the Golden Gate.'
-  - 'Modern Kyiv: the symbol of resistance and democratic tradition (Maidan) and its
-    evolution into a leading European metropolis.'
-- section: 'Практика: Робота над типовими помилками (Practice: Working on Common Learner
-    Errors)'
+  - 'Kyiv''s monuments and cultural heritage according to State Standard §3.13: the continuity from Kyivan Rus through Saint
+    Sophia and the Golden Gate.'
+  - 'Modern Kyiv: the symbol of resistance and democratic tradition (Maidan) and its evolution into a leading European metropolis.'
+- section: 'Практика: Робота над типовими помилками (Practice: Working on Common Learner Errors)'
   words: 400
   points:
-  - 'Correcting Russianisms in toponyms: drill the pronunciation and spelling of ''Черкаси''
-    (not Черкасси) and the suffix ''-щина'' in ''Полтавщина'' (not Полтавщіна).'
-  - 'Mastering prepositional patterns: drill ''їхати до Черкас'' (Genitive) versus
-    ''бути в Черкасах'' (Locative) to prevent case-mismatch errors.'
-- section: 'Підсумок: Джерело української ідентичності (Summary: The Source of Ukrainian
-    Identity)'
+  - 'Correcting Russianisms in toponyms: drill the pronunciation and spelling of ''Черкаси'' (not Черкасси) and the suffix
+    ''-щина'' in ''Полтавщина'' (not Полтавщіна).'
+  - 'Mastering prepositional patterns: drill ''їхати до Черкас'' (Genitive) versus ''бути в Черкасах'' (Locative) to prevent
+    case-mismatch errors.'
+- section: 'Підсумок: Джерело української ідентичності (Summary: The Source of Ukrainian Identity)'
   words: 200
   points:
-  - Synthesis of how Central Ukraine connects the Cossack past with the linguistic
-    and political present of the nation.
+  - Synthesis of how Central Ukraine connects the Cossack past with the linguistic and political present of the nation.
 vocabulary_hints:
   required:
-  - Київ (Kyiv) — столиця України, місто тисячі років; висока частотність, символ
-    державності.
-  - Полтава (Poltava) — духовна столиця, літературна Полтавщина; центр лінгвістичної
-    традиції.
-  - Черкаси (Cherkasy) — козацький край; зверніть увагу на вживання прийменника 'до
-    Черкас'.
-  - козацтво (Cossacks) — доба козацтва, українське козацтво; фундаментальне історичне
-    поняття.
-  - спадщина (heritage) — культурна спадщина, історична спадщина; вживання у контексті
-    збереження пам'яток.
-  - гетьман (hetman) — гетьманська столиця, гетьманська булава; символ влади у козацькій
-    державі.
+  - Київ (Kyiv) — столиця України, місто тисячі років; висока частотність, символ державності.
+  - Полтава (Poltava) — духовна столиця, літературна Полтавщина; центр лінгвістичної традиції.
+  - Черкаси (Cherkasy) — козацький край; зверніть увагу на вживання прийменника 'до Черкас'.
+  - козацтво (Cossacks) — доба козацтва, українське козацтво; фундаментальне історичне поняття.
+  - спадщина (heritage) — культурна спадщина, історична спадщина; вживання у контексті збереження пам'яток.
+  - гетьман (hetman) — гетьманська столиця, гетьманська булава; символ влади у козацькій державі.
   - столиця (capital) — духовна столиця, європейська столиця; State Standard §3.13.
   recommended:
   - полтавщина (Poltava region) — суфікс -щина вказує на регіон; поширений топонім.
   - черкащина (Cherkasy region) — земля Богдана і Тараса, козацьке серце.
-  - літературний (literary) — літературна мова, літературна спадщина; пов'язано з
-    Іваном Котляревським.
+  - літературний (literary) — літературна мова, літературна спадщина; пов'язано з Іваном Котляревським.
   - Дніпро (Dnipro) — головна річка, символ єдності Центральної України.
 activity_hints:
 - type: reading
@@ -87,24 +79,15 @@ activity_hints:
 - type: quiz
   focus: Discuss Cossack heritage
   items: 10
-focus: culture
-pedagogy: CBI
-prerequisites:
-- b1-74 (Regions South)
 connects_to:
 - b1-76 (Ukrainian Music Today)
-objectives:
-- Learner can discuss Central Ukraine's regions and historical significance
-- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
-- Learner can use regional vocabulary to describe Central Ukrainian culture
-- Learner can explain the connection between Central Ukraine and Cossack heritage
+prerequisites:
+- b1-74 (Regions South)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Cherkasy Historian
 grammar:
 - Reading comprehension strategies
 - Cultural vocabulary in context
 - Historical vocabulary patterns
 register: розмовний
-phase: B1.7 [Contemporary Ukraine]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Cherkasy Historian
-word_target: 4000

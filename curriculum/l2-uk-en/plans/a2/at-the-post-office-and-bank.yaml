@@ -1,63 +1,71 @@
-module: a2-10
+module: a2-012
 level: A2
-sequence: 10
+sequence: 12
 slug: at-the-post-office-and-bank
 version: '2.0'
 title: At the Post Office and Bank
 subtitle: Services and Money
+focus: vocabulary
+pedagogy: PPP
+phase: A2.1
+word_target: 3000
+objectives:
+- Learner can send a letter or package
+- Learner can buy stamps and envelopes
+- Learner can exchange currency
+- Learner can withdraw money from an ATM
+sources:
+- name: Ukrainian State Standard 2024 - Services Theme
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Required service vocabulary for A2
+- name: Ukrposhta Official
+  url: https://www.ukrposhta.ua/
+  type: reference
+  notes: Authentic postal service terminology
 content_outline:
 - section: 'Вступ: Світ послуг в Україні (Introduction: The World of Services in Ukraine)'
   words: 500
   points:
-  - Introduction to the A2 thematic catalogue for services (State Standard §3.11),
-    establishing the context for post office and bank interactions.
-  - 'Cultural motivator: Overview of Ukraine''s leading digital banking ecosystem
-    (Monobank/Privat24) and the patriotic renaissance of Ukrposhta.'
-  - Linguistic focus on 'я б хотів/хотіла' (I would like) as the standard polite request
-    formula, distinguishing it from the more direct 'я хочу'.
-- section: 'Укрпошта: Листи та патріотичні марки (Ukrposhta: Letters and Patriotic
-    Stamps)'
+  - Introduction to the A2 thematic catalogue for services (State Standard §3.11), establishing the context for post office
+    and bank interactions.
+  - 'Cultural motivator: Overview of Ukraine''s leading digital banking ecosystem (Monobank/Privat24) and the patriotic renaissance
+    of Ukrposhta.'
+  - Linguistic focus on 'я б хотів/хотіла' (I would like) as the standard polite request formula, distinguishing it from the
+    more direct 'я хочу'.
+- section: 'Укрпошта: Листи та патріотичні марки (Ukrposhta: Letters and Patriotic Stamps)'
   words: 700
   points:
-  - 'Essential postal terminology: ''лист'' (letter), ''посилка'' (package), ''конверт''
-    (envelope), and ''адреса'' (address).'
-  - 'Cultural Hook: The ''Russian warship, go...!'' stamp phenomenon; how philately
-    became a symbol of Ukrainian resistance and national pride.'
-  - 'Grammar in context: Using the Accusative case for direct objects (відправити
-    листа, купити марку). Drill the specific feminine inanimate change (-а to -у)
-    to avoid the common error of leaving ''посилка'' or ''марка'' unchanged.'
-  - Postal codes (індекси) and using numerals 100-1000 to express addresses and service
-    prices in UAH.
-- section: Банківські операції та цифрова екосистема (Banking Operations and the Digital
-    Ecosystem)
+  - 'Essential postal terminology: ''лист'' (letter), ''посилка'' (package), ''конверт'' (envelope), and ''адреса'' (address).'
+  - 'Cultural Hook: The ''Russian warship, go...!'' stamp phenomenon; how philately became a symbol of Ukrainian resistance
+    and national pride.'
+  - 'Grammar in context: Using the Accusative case for direct objects (відправити листа, купити марку). Drill the specific
+    feminine inanimate change (-а to -у) to avoid the common error of leaving ''посилка'' or ''марка'' unchanged.'
+  - Postal codes (індекси) and using numerals 100-1000 to express addresses and service prices in UAH.
+- section: Банківські операції та цифрова екосистема (Banking Operations and the Digital Ecosystem)
   words: 700
   points:
-  - 'Key banking terms: ''рахунок'' (account), ''картка'' (card), ''валюта'' (currency),
-    and ''готівка'' (cash).'
-  - 'Critical Learner Error: Distinguishing Ukrainian ''рахунок'' (account/bill) from
-    the Russian ''счет'' (surzhyk); emphasizing that ''рахунок'' is used for both
-    banking and restaurants.'
-  - 'Modern banking verbs: ''відкрити рахунок'' (open an account), ''знімати готівку''
-    (withdraw cash), and ''переказати гроші'' (transfer money) via mobile apps.'
+  - 'Key banking terms: ''рахунок'' (account), ''картка'' (card), ''валюта'' (currency), and ''готівка'' (cash).'
+  - 'Critical Learner Error: Distinguishing Ukrainian ''рахунок'' (account/bill) from the Russian ''счет'' (surzhyk); emphasizing
+    that ''рахунок'' is used for both banking and restaurants.'
+  - 'Modern banking verbs: ''відкрити рахунок'' (open an account), ''знімати готівку'' (withdraw cash), and ''переказати гроші''
+    (transfer money) via mobile apps.'
   - The role of QR codes and instant transfers in daily Ukrainian life (Monobank context).
 - section: 'Граматичний практикум: Куди чи де? (Grammar Lab: Direction vs. Location)'
   words: 600
   points:
-  - 'Resolving the common motion-based case confusion: ''іду на пошту / в банк'' (Accusative
-    for direction) vs. ''я на пошті / у банку'' (Locative for location).'
-  - Mastering numbers 100-1000 in currency exchange scenarios; understanding 'курс
-    валют' (exchange rates) and 'обмін' (exchange).
-  - 'Drilling the Accusative Case for services: ''відправити бандероль'', ''отримати
-    переказ'', ''замовити картку''.'
+  - 'Resolving the common motion-based case confusion: ''іду на пошту / в банк'' (Accusative for direction) vs. ''я на пошті
+    / у банку'' (Locative for location).'
+  - Mastering numbers 100-1000 in currency exchange scenarios; understanding 'курс валют' (exchange rates) and 'обмін' (exchange).
+  - 'Drilling the Accusative Case for services: ''відправити бандероль'', ''отримати переказ'', ''замовити картку''.'
 - section: Діалоги та підсумок (Dialogues and Summary)
   words: 500
   points:
-  - 'Roleplay Dialogue 1: At the post office sending a registered letter and purchasing
-    limited-edition stamps using polite imperatives.'
-  - 'Roleplay Dialogue 2: At the bank/ATM exchanging currency and discussing digital
-    transfer options.'
-  - 'Functional summary: Review of key service formulas and the importance of using
-    ''рахунок'' correctly to maintain linguistic purity.'
+  - 'Roleplay Dialogue 1: At the post office sending a registered letter and purchasing limited-edition stamps using polite
+    imperatives.'
+  - 'Roleplay Dialogue 2: At the bank/ATM exchanging currency and discussing digital transfer options.'
+  - 'Functional summary: Review of key service formulas and the importance of using ''рахунок'' correctly to maintain linguistic
+    purity.'
 vocabulary_hints:
   required:
   - пошта (post office) — на пошті (Loc.), іти на пошту (Acc.); High frequency
@@ -65,16 +73,14 @@ vocabulary_hints:
   - лист (letter) — писати листа, відправити листа; Accusative object usage
   - посилка (package) — отримати посилку (Acc. -у ending), вага посилки; High frequency
   - бандероль (parcel) — відправити бандероль; Feminine noun ending in soft sign
-  - 'марка (stamp) — поштова марка, колекційна марка; Cultural hook: wartime resistance
-    symbols'
+  - 'марка (stamp) — поштова марка, колекційна марка; Cultural hook: wartime resistance symbols'
   - конверт (envelope) — покласти в конверт, купити конверт
   - адреса (address) — домашня адреса, писати адресу
   - індекс (postal code) — поштовий індекс; used with numerals 100-1000
   - відправляти (to send) — відправляти посилку/листа; Imperfective
   - отримувати (to receive) — отримувати гроші/пакунок; Imperfective
   - гроші (money) — знімати гроші, міняти гроші; Always plural
-  - 'рахунок (account) — відкрити рахунок, стан рахунку; Learner error: avoid Russian
-    ''счет'''
+  - 'рахунок (account) — відкрити рахунок, стан рахунку; Learner error: avoid Russian ''счет'''
   - картка (card) — банківська картка, безконтактна картка
   - готівка (cash) — платити готівкою, знімати готівку; Medium frequency
   recommended:
@@ -97,39 +103,21 @@ activity_hints:
 - type: fill-in
   focus: Number and price expressions
   items: 10+
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- a2-01 through a2-09 (all case knowledge)
-- A1 numbers 1-100
-- A1 basic transactions
 connects_to:
 - a2-11 (Checkpoint - Cases)
 - a2-53 (Shopping & Services)
 - a2-69 (Online Services)
-objectives:
-- Learner can send a letter or package
-- Learner can buy stamps and envelopes
-- Learner can exchange currency
-- Learner can withdraw money from an ATM
+prerequisites:
+- a2-01 through a2-09 (all case knowledge)
+- A1 numbers 1-100
+- A1 basic transactions
+persona:
+  voice: Encouraging Cultural Guide
+  role: Service Clerk
 grammar:
 - accusative for services (відправити листа)
 - numbers 100-1000
 - currency and exchange rates
 - polite requests (я хочу...)
 module_type: vocabulary
-sources:
-- name: Ukrainian State Standard 2024 - Services Theme
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Required service vocabulary for A2
-- name: Ukrposhta Official
-  url: https://www.ukrposhta.ua/
-  type: reference
-  notes: Authentic postal service terminology
 immersion: 50-60% Ukrainian
-phase: A2.1
-persona:
-  voice: Encouraging Cultural Guide
-  role: Service Clerk
-word_target: 3000

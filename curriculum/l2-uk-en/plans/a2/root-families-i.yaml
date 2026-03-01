@@ -1,77 +1,19 @@
-module: a2-41
+module: a2-046
 level: A2
-sequence: 41
+sequence: 46
 slug: root-families-i
 version: '2.0'
 title: Root Families I
 subtitle: The DNA of Vocabulary
-content_outline:
-- section: Вступ (Introduction)
-  words: 400
-  points:
-  - 'The ''Lego'' Metaphor: Introduce Ukrainian word formation as a modular system
-    where the root is the core block and the prefix is the connector. Align with State
-    Standard §4.3.2 regarding the mastering of productive roots: *пис-* (to write)
-    and *ход-* (to walk).'
-  - 'Historical DNA: Briefly introduce the ''Big 4'' roots (ход-, пис-, чит-, бач-)
-    as foundational elements for A2 vocabulary, explaining that understanding these
-    roots unlocks hundreds of high-frequency words without rote memorization.'
-- section: Родини ход- та пис- (The hod- and pys- Families)
-  words: 700
-  points:
-  - 'The ход- (Motion) Family: Explain the cognate relationship with Greek *hodos*
-    (way/path) as seen in ''exodus'' or ''method''. Teach the logic of directional
-    prefixes: *в-* (in) for *вхід*, *ви-* (out) for *вихід*, and *пере-* (across)
-    for *перехід*. Reference §4.2.3.1 for the conjugation of *ходити* (*ходжу*, *ходиш*).'
-  - 'The пис- (Writing) Family: Connect the root to the Proto-Slavic *pьsati* (to
-    paint/decorate), linking the verb *писати* to the cultural icon *писанка* (Easter
-    egg). Address the learner error where *записати* is restricted to writing; clarify
-    it also means ''to record'' audio/video. Explain *підпис* (signature) as placing
-    a mark ''under'' the text.'
-- section: Родини чит- та бач- (The chyt- and bach- Families)
-  words: 700
-  points:
-  - 'The чит- (Reading) Family: Explore the etymology from Proto-Slavic *čisti* (to
-    count/honor), suggesting that reading was historically seen as a form of reckoning
-    or honoring text. Introduce derivatives like *читач* (reader) and *прочитати*
-    (to read through), emphasizing the agentive suffix *-ач*.'
-  - 'The бач- (Vision) Family: Analyze perception through *бачення* (vision) and *передбачити*
-    (to foresee/predict). Highlight the cultural term *побачення* (date) as ''mutual
-    seeing''. Contrast *бачити* (passive ability/perception) with *дивитися* (active/intentional
-    watching) to prevent common A2 errors.'
-- section: Фонетика та префікси (Phonetics and Prefixes)
-  words: 600
-  points:
-  - 'The Kafka-Ptakh Euphony Rule: Teach the phonetic rule for the *с-* prefix (used
-    instead of *з-* before the consonants К, Ф, К, П, Т). Specifically correct the
-    common error *зходити* by drilling the correct form *сходити* (to go/climb/descend).'
-  - 'Logic of the ''Big 4'' Prefixes: Focus on the semantic impact of *в-, ви-, при-,
-    під-* across all families. Provide a ''Guessing Machine'' challenge where learners
-    combine these prefixes with the core roots to predict meanings (e.g., *при-* +
-    *хід* = arrival).'
-- section: Практичне застосування (Practical Application)
-  words: 600
-  points:
-  - 'Root Identification Challenge: Provide drills for identifying the core root within
-    complex or unfamiliar words (e.g., finding *пис* in *письменник*). Use ''Translate
-    by Logic'' exercises to guess derivatives like *опис* (description) or *вичитати*
-    (to scold/proofread) based on prefix meanings.'
-  - 'Library Contextual Dialogue: Create a scenario at a library or bookstore using
-    *читач*, *письменник*, and *опис*. Practice aspectual pairs *писати/написати*
-    per State Standard §4.3.2 and use *записати* correctly for both taking notes and
-    recording a book recommendation.'
 focus: grammar
 pedagogy: PPP
+phase: A2.4
+word_target: 3000
 objectives:
 - Learner can identify root families in complex words
 - Learner can guess meanings of derivatives using prefix-root logic
 - Learner can build new words from basic roots
 - Learner can recognize the 4 core professional roots
-grammar:
-- common roots (ход-, пис-, чит-, бач-)
-- prefix + root combinations
-- derivative formation
-module_type: word-formation
 sources:
 - name: Ukrainian Word Formation - Root Families
   url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
@@ -81,13 +23,65 @@ sources:
   url: https://goroh.pp.ua/
   type: reference
   notes: Historical context for hod-, pys-, chyt-, bach- roots
-immersion: 60-75% Ukrainian
-phase: A2.4
-persona:
-  voice: Encouraging Cultural Guide
-  role: Historical Linguist
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - 'The ''Lego'' Metaphor: Introduce Ukrainian word formation as a modular system where the root is the core block and the
+    prefix is the connector. Align with State Standard §4.3.2 regarding the mastering of productive roots: *пис-* (to write)
+    and *ход-* (to walk).'
+  - 'Historical DNA: Briefly introduce the ''Big 4'' roots (ход-, пис-, чит-, бач-) as foundational elements for A2 vocabulary,
+    explaining that understanding these roots unlocks hundreds of high-frequency words without rote memorization.'
+- section: Родини ход- та пис- (The hod- and pys- Families)
+  words: 700
+  points:
+  - 'The ход- (Motion) Family: Explain the cognate relationship with Greek *hodos* (way/path) as seen in ''exodus'' or ''method''.
+    Teach the logic of directional prefixes: *в-* (in) for *вхід*, *ви-* (out) for *вихід*, and *пере-* (across) for *перехід*.
+    Reference §4.2.3.1 for the conjugation of *ходити* (*ходжу*, *ходиш*).'
+  - 'The пис- (Writing) Family: Connect the root to the Proto-Slavic *pьsati* (to paint/decorate), linking the verb *писати*
+    to the cultural icon *писанка* (Easter egg). Address the learner error where *записати* is restricted to writing; clarify
+    it also means ''to record'' audio/video. Explain *підпис* (signature) as placing a mark ''under'' the text.'
+- section: Родини чит- та бач- (The chyt- and bach- Families)
+  words: 700
+  points:
+  - 'The чит- (Reading) Family: Explore the etymology from Proto-Slavic *čisti* (to count/honor), suggesting that reading
+    was historically seen as a form of reckoning or honoring text. Introduce derivatives like *читач* (reader) and *прочитати*
+    (to read through), emphasizing the agentive suffix *-ач*.'
+  - 'The бач- (Vision) Family: Analyze perception through *бачення* (vision) and *передбачити* (to foresee/predict). Highlight
+    the cultural term *побачення* (date) as ''mutual seeing''. Contrast *бачити* (passive ability/perception) with *дивитися*
+    (active/intentional watching) to prevent common A2 errors.'
+- section: Фонетика та префікси (Phonetics and Prefixes)
+  words: 600
+  points:
+  - 'The Kafka-Ptakh Euphony Rule: Teach the phonetic rule for the *с-* prefix (used instead of *з-* before the consonants
+    К, Ф, К, П, Т). Specifically correct the common error *зходити* by drilling the correct form *сходити* (to go/climb/descend).'
+  - 'Logic of the ''Big 4'' Prefixes: Focus on the semantic impact of *в-, ви-, при-, під-* across all families. Provide a
+    ''Guessing Machine'' challenge where learners combine these prefixes with the core roots to predict meanings (e.g., *при-*
+    + *хід* = arrival).'
+- section: Практичне застосування (Practical Application)
+  words: 600
+  points:
+  - 'Root Identification Challenge: Provide drills for identifying the core root within complex or unfamiliar words (e.g.,
+    finding *пис* in *письменник*). Use ''Translate by Logic'' exercises to guess derivatives like *опис* (description) or
+    *вичитати* (to scold/proofread) based on prefix meanings.'
+  - 'Library Contextual Dialogue: Create a scenario at a library or bookstore using *читач*, *письменник*, and *опис*. Practice
+    aspectual pairs *писати/написати* per State Standard §4.3.2 and use *записати* correctly for both taking notes and recording
+    a book recommendation.'
 vocabulary_hints:
   required:
   - '{word} ({translation}) — {collocations or usage notes from research}'
   recommended:
   - '{word} ({translation}) — {collocations or usage notes from research}'
+persona:
+  voice: Encouraging Cultural Guide
+  role: Historical Linguist
+grammar:
+- common roots (ход-, пис-, чит-, бач-)
+- prefix + root combinations
+- derivative formation
+module_type: word-formation
+immersion: 60-75% Ukrainian
+prerequisites:
+- adjective-suffixes-types
+connects_to:
+- root-families-ii

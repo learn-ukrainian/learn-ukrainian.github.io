@@ -1,27 +1,47 @@
-sequence: 62
-module: ruth-062
-module_number: 50
+module: ruth-060
+level: RUTH
+sequence: 60
 slug: attack-on-bishops
-title_uk: Напад на єпископів
-title_en: Attack on Bishops
-phase: 2
-phase_id: sacred-word
-phase_name: Sacred Word
+version: '2.0'
+title: Напад на єпископів
+subtitle: Attack on Bishops
 focus: Fierce invective — Wolves in shepherds' skins
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Attack on Bishops
+  points:
+  - Introduction to Attack on Bishops
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Polemical Firebrand
+prerequisites:
+- holy-mountain-athos
+connects_to:
+- baroque-lists

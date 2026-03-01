@@ -5,47 +5,53 @@ slug: ukrainski-zemli-u-vkl
 version: '2.0'
 title: Українські землі у ВКЛ
 subtitle: Регіональна автономія та магнатська влада
+focus: history
+pedagogy: CBI
+phase: B2.3b [Українська історія]
+word_target: 5000
+objectives:
+- Учень може пояснити специфіку автономії Волині та Київщини
+- Учень може аналізувати роль магнатів у збереженні державності
+- Учень може описувати соціальний устрій земель у ВКЛ
 content_outline:
 - section: Вступ
   points:
   - Особливий статус руських земель у ВКЛ
   - Баланс між інтеграцією та самобутністю
+  words: 600
 - section: Читання
   points:
   - Київське князівство — тінь минулої слави
   - Волинь — серце руської шляхти
   - Магнатські роди — нова еліта
+  words: 600
 - section: Первинні джерела
   points:
   - Острозька Біблія (1581)
   - Князь Василь-Костянтин Острозький як меценат
+  words: 600
 - section: Деколонізаційний погляд
   points:
   - Чи було ВКЛ "колонією" для русинів?
   - Участь у владі vs підпорядкування
+  words: 600
 - section: Критерії оцінювання
   points:
   - Інструкція для оцінювання
+  words: 600
 - section: Зразок відповіді
   points:
   - Приклад виконання завдання
+  words: 600
 - section: Підсумок — Напередодні Люблінської унії
   points:
   - 1569 рік як переломний момент
   - Наслідки переходу до Корони Польської
+  words: 600
 - section: Потрібно більше практики?
   points:
   - Додаткові ресурси
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може пояснити специфіку автономії Волині та Київщини
-- Учень може аналізувати роль магнатів у збереженні державності
-- Учень може описувати соціальний устрій земель у ВКЛ
-grammar:
-- Administrative terminology
-- Regional descriptions
-phase: B2.3b [Українська історія]
+  words: 800
 vocabulary_hints:
   required:
   - історія (history)
@@ -76,4 +82,10 @@ activity_hints:
 persona:
   voice: Senior Professor of History
   role: Land Surveyor
-word_target: 5000
+grammar:
+- Administrative terminology
+- Regional descriptions
+prerequisites:
+- velyke-kniazivstvo-lytovske
+connects_to:
+- liublinska-uniia

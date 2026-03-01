@@ -1,28 +1,50 @@
-module: bio-113
+module: bio-116
 level: BIO
-sequence: 113
+sequence: 116
 slug: heo-shkurupii
 version: '2.0'
 title: 'Гео Шкурупій: <!-- Title -->'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Дізнатися про життя та творчість Гео Шкурупій
+sources:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
 content_outline:
 - section: Вступ — Poet, Futurist
   points:
   - <!-- point -->
+  words: 850
 - section: Ранні роки та становлення
   points:
   - <!-- point -->
+  words: 850
 - section: Творчий шлях та основні здобутки
   points:
   - <!-- point -->
+  words: 850
 - section: Роль у Розстріляному відродженні
   points:
   - <!-- point -->
+  words: 850
 - section: Переслідування та трагічна доля
   points:
   - <!-- point -->
+  words: 850
 - section: Спадщина та значення
   points:
   - <!-- point -->
+  words: 750
 vocabulary_hints:
   required:
   - Розстріляне відродження
@@ -42,31 +64,18 @@ activity_hints:
   output: Аргументований есей
 - type: critical-analysis
   focus: Порівняння долі Куліша та Курбаса
-focus: biography
-prerequisites:
-- hist/rozstriliane-vidrodzennia
-- hist/mekhanizm-teroru
 connects_to:
 - bio/les-kurbas
 - bio/mykola-khvylovyi
+prerequisites:
+- hist/rozstriliane-vidrodzennia
+- hist/mekhanizm-teroru
+persona:
+  voice: Senior Biographer
+  role: Futurist Provocateur
 module_type: biography
-sources:
-- name: Микола Куліш (Енциклопедія історії України)
-  url: https://esu.com.ua/article-7980
-  type: primary
-  notes: Академічна біографія
-- name: Куліш М. П'єси
-  type: primary
-  notes: Збірка драматичних творів
-- name: Жулинський М. Микола Куліш
-  type: reference
-  notes: Монографія про творчість
 immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- Дізнатися про життя та творчість Гео Шкурупій
-notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th
-  century.
+notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th century.
 
   His plays combined modernist techniques with deep exploration of Ukrainian identity
 
@@ -79,6 +88,3 @@ notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20t
   the same day (November 3, 1937) in the Sandarmokh mass execution.
 
   '
-persona:
-  voice: Senior Biographer
-  role: Futurist Provocateur

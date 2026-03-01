@@ -1,41 +1,67 @@
-sequence: 24
-module: lit-24
+module: lit-024
 level: LIT
+sequence: 24
 slug: language-question-linguistics
 version: '2.0'
 title: Мовне питання
 subtitle: The Language Question
+focus: linguistics
+pedagogy: Analysis
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+word_target: 5000
+objectives:
+- Understand and apply мовне питання
+- Analyze and evaluate це політика?
+sources:
+- name: Кулішівка — стаття
+  url: https://uk.wikipedia.org/wiki/Кулішівка
+  type: primary
+  notes: Історія правопису
+- name: Історія українського правопису
+  url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
+  type: secondary
+  notes: Ширший контекст
+- name: Валуєвський циркуляр
+  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+  type: reference
+  notes: Політичний контекст
 content_outline:
 - section: Вступ — Чому правопис — це політика?
   points:
   - Мова як поле битви
   - Зв'язок орфографії та ідентичності
   - XIX століття — час "мовних війн"
+  words: 850
 - section: Кулішівка — система Куліша
   points:
   - Принципи фонетичного правопису
   - Як Кулішівка відрізняється від етимологічного
   - Практичне застосування
+  words: 850
 - section: «Війни алфавітів» XIX століття
   points:
   - Максимовичівка vs Кулішівка
   - Ярижка (російська транслітерація)
   - Позиція Австро-Угорщини
+  words: 850
 - section: Імперські заборони
   points:
   - Валуєвський циркуляр (1863)
   - Емський указ (1876)
   - Наслідки для української літератури
+  words: 850
 - section: Фонетика vs етимологія
   points:
   - 'Фонетичний принцип: «як чую, так пишу»'
   - 'Етимологічний принцип: історичне написання'
   - Сучасний український правопис
+  words: 850
 - section: Підсумок — Мова як нація
   points:
   - Внесок Куліша в мовознавство
   - Від XIX до XXI століття
   - Перехід до Кирило-Мефодіївського братства
+  words: 750
 vocabulary_hints:
   required:
   - правопис (orthography)
@@ -62,38 +88,18 @@ activity_hints:
 - type: essay-response
   focus: Чому імперія боялася українського правопису?
   output: Політико-лінгвістичне есе
-focus: linguistics
-pedagogy: Analysis
-prerequisites:
-- lit-21 (Panteleimon Kulish)
-- lit-10 (Language of Kvitka — for context)
 connects_to:
 - lit-25 (Cyrillo-Methodian Brotherhood — політичний контекст)
 - lit-29 (Language of Realism)
+prerequisites:
+- lit-21 (Panteleimon Kulish)
+- lit-10 (Language of Kvitka — for context)
+persona:
+  voice: Senior Philologist & Critic
+  role: Linguistic Defender
 grammar:
 - Phonetic Orthography
 - Etymological Orthography
 - Historical Terminology
 module_type: linguistics
-sources:
-- name: Кулішівка — стаття
-  url: https://uk.wikipedia.org/wiki/Кулішівка
-  type: primary
-  notes: Історія правопису
-- name: Історія українського правопису
-  url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
-  type: secondary
-  notes: Ширший контекст
-- name: Валуєвський циркуляр
-  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
-  type: reference
-  notes: Політичний контекст
 immersion: 100% Ukrainian
-phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
-objectives:
-- Understand and apply мовне питання
-- Analyze and evaluate це політика?
-persona:
-  voice: Senior Philologist & Critic
-  role: Linguistic Defender
-word_target: 5000

@@ -1,33 +1,58 @@
-sequence: 109
-module: ruth-109
+module: ruth-104
+level: RUTH
+sequence: 104
 slug: synonima-slaveno-roska
-title_uk: "Синонїма славеноросская"
-title_en: "The Slaveno-Ruthenian Synonyma"
+version: '2.0'
+title: Синонїма славеноросская
+subtitle: The Slaveno-Ruthenian Synonyma
+focus: Synonym dictionary mapping Church Slavonic to vernacular — documenting the living relationship between two registers
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Synonym dictionary mapping Church Slavonic to vernacular — documenting the living relationship between two registers"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "The genre of synonyma in Ukrainian literary tradition. Context: bilingual consciousness — educated Ukrainians navigating between CS and vernacular daily."
+  points:
+  - 'The genre of synonyma in Ukrainian literary tradition. Context: bilingual consciousness — educated Ukrainians navigating
+    between CS and vernacular daily.'
+  words: 1250
 - section: Основний матеріал
-  description: "Structure of the Synonyma: paired entries. Analysis of synonym relationships — not always simple equivalence. Semantic nuance, register marking, dialectal variation. Sample entries showing Ukrainian lexical richness."
+  points:
+  - 'Structure of the Synonyma: paired entries. Analysis of synonym relationships — not always simple equivalence. Semantic
+    nuance, register marking, dialectal variation. Sample entries showing Ukrainian lexical richness.'
+  words: 1250
 - section: Практика
-  description: "Working with synonym pairs. Identifying which Ukrainian words survived to modern language. Tracing semantic shifts from CS to modern meaning."
+  points:
+  - Working with synonym pairs. Identifying which Ukrainian words survived to modern language. Tracing semantic shifts from
+    CS to modern meaning.
+  words: 1250
 - section: Підсумок
-  description: "The Synonyma as evidence of active diglossia management. Ukrainian speakers were not passive recipients of CS — they actively mapped, translated, and chose."
+  points:
+  - The Synonyma as evidence of active diglossia management. Ukrainian speakers were not passive recipients of CS — they actively
+    mapped, translated, and chose.
+  words: 1250
 vocabulary_hints:
 - синонім
 - тлумачення
 - просторіччя
 - диглосія
 - реєстр мовний
-activity_types:
-- transcription
-- etymology-trace
-- parallel-text
-- register-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
 persona:
-  voice: "Philologist"
-  role: "Language Historian"
-source_url: "http://litopys.org.ua/zyzlex/zyz70.htm"
+  voice: Philologist
+  role: Language Historian
+source_url: http://litopys.org.ua/zyzlex/zyz70.htm
+prerequisites:
+- uzhevych-hramatyka
+connects_to:
+- hramoty-xiv

@@ -1,44 +1,71 @@
-module: bio-81
+module: bio-084
 level: BIO
-sequence: 81
+sequence: 84
 slug: viacheslav-lypynskyi
 version: '2.0'
 title: 'В''ячеслав Липинський: Консерватор-державник'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
+- Evaluate the contributions of український консерватизм як ідея
+- Trace the career and influence of консерватизм vs народництво
+sources:
+- name: В'ячеслав Липинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут В'ячеслава Липинського
+  url: https://lipynsky.org/
+  type: reference
+  notes: Наукова спадщина та дослідження
+- name: Твори Липинського
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Повні тексти праць
 content_outline:
 - section: Вступ — Український консерватизм як ідея
   points:
   - Липинський як найоригінальніший український мислитель XX ст.
   - Від польського шляхтича до українського ідеолога
   - Чому його ідеї актуальні сьогодні
+  words: 700
 - section: Шляхетське коріння
   points:
   - Народження в польській родині (1882)
   - Освіта в Києві та за кордоном
   - Шлях до української ідентичності
+  words: 700
 - section: Історик як державотворець
   points:
   - Дослідження козаччини
   - Переосмислення української історії
   - Роль шляхти в українському русі
+  words: 700
 - section: Гетьманат та політична діяльність
   points:
   - Посол Української Держави у Відні
   - Підтримка Скоропадського
   - Концепція класократії
+  words: 700
 - section: Листи до братів-хліборобів
   points:
   - Головний теоретичний твір
   - Ідея територіального патріотизму
   - Критика народництва та інтелігенції
+  words: 700
 - section: Еміграція та останні роки
   points:
   - Життя в Австрії та Чехословаччині
   - Важка хвороба (туберкульоз)
   - Смерть та інтелектуальна спадщина
+  words: 700
 - section: Дискусія — Консерватизм vs народництво
   points:
   - Два шляхи українського державотворення
   - Релевантність Липинського для XXI століття
+  words: 800
 vocabulary_hints:
   required:
   - консерватизм (conservatism)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чи актуальний консерватизм для України?
   output: Аргументований есей
-focus: biography
-prerequisites:
-- hist-ukrainian-revolution
 connects_to:
 - bio-44-symon-petliura
 - bio-52-dmytro-dontsov
 - bio-35-mykhailo-hrushevskyi
-module_type: biography
-sources:
-- name: В'ячеслав Липинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Інститут В'ячеслава Липинського
-  url: https://lipynsky.org/
-  type: reference
-  notes: Наукова спадщина та дослідження
-- name: Твори Липинського
-  url: https://diasporiana.org.ua/
-  type: reference
-  notes: Повні тексти праць
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
-- Evaluate the contributions of український консерватизм як ідея
-- Trace the career and influence of консерватизм vs народництво
+prerequisites:
+- hist-ukrainian-revolution
 persona:
   voice: Senior Biographer
   role: Monarchist Philosopher
+module_type: biography
+immersion: 100% Ukrainian

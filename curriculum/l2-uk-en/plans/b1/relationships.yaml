@@ -1,80 +1,77 @@
-module: b1-65
+module: b1-076
 level: B1
-sequence: 65
+sequence: 76
 slug: relationships
 version: '2.0'
 title: Стосунки та зв'язки
 subtitle: Relationships and Connections
+focus: vocabulary
+pedagogy: PPP
+phase: B1.6 [Vocabulary Expansion II]
+word_target: 4000
+objectives:
+- Learner can use 25 relationship vocabulary words in context
+- Learner can distinguish between стосунки/відносини/зв'язок
+- Learner can form natural collocations with relationship nouns
+- Learner can discuss Ukrainian cultural traditions related to relationships
 content_outline:
 - section: 'Вступ: Термінологія стосунків (Introduction: Relationship Terminology)'
   words: 600
   points:
-  - 'State Standard §3.1 alignment: introduction to social and family relationships
-    (родинні стосунки, взаємини з іншими людьми); distinguishing between personal
-    and formal interactions.'
-  - 'Deep dive into the hierarchy of relationship terms: «стосунки» (personal/emotional),
-    «відносини» (formal/official), «взаємини» (reciprocal/warm), and «ставлення» (one-way
-    attitude).'
-  - 'Register distinction: explain why using «відносини» for a romantic partner sounds
-    like a legal contract, whereas «стосунки» is the standard conversational choice.'
-- section: 'Читання та Культура: Інститут кумівства (Reading and Culture: The Institution
-    of Godparenthood)'
+  - 'State Standard §3.1 alignment: introduction to social and family relationships (родинні стосунки, взаємини з іншими людьми);
+    distinguishing between personal and formal interactions.'
+  - 'Deep dive into the hierarchy of relationship terms: «стосунки» (personal/emotional), «відносини» (formal/official), «взаємини»
+    (reciprocal/warm), and «ставлення» (one-way attitude).'
+  - 'Register distinction: explain why using «відносини» for a romantic partner sounds like a legal contract, whereas «стосунки»
+    is the standard conversational choice.'
+- section: 'Читання та Культура: Інститут кумівства (Reading and Culture: The Institution of Godparenthood)'
   words: 900
   points:
-  - 'Cultural hook: «куми» (godparents) as ''spiritual parents'' with a lifelong duty;
-    explain the depth of this bond which often parallels blood kinship.'
-  - Linguistic analysis of the proverb «Рідня до півдня, а куми — довіку» (Relatives
-    are until noon, but godparents are forever) to illustrate social priorities.
-  - 'Narrative text: a story about a family event where godparents play a central
-    role, highlighting the transition from acquaintance to spiritual kin.'
+  - 'Cultural hook: «куми» (godparents) as ''spiritual parents'' with a lifelong duty; explain the depth of this bond which
+    often parallels blood kinship.'
+  - Linguistic analysis of the proverb «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are forever)
+    to illustrate social priorities.
+  - 'Narrative text: a story about a family event where godparents play a central role, highlighting the transition from acquaintance
+    to spiritual kin.'
 - section: 'Мовна тонкість: Любити чи Кохати? (Linguistic Nuance: To Love or To Love?)'
   words: 800
   points:
-  - The strict semantic boundary between «любити» (family, friends, food, hobbies)
-    and «кохати» (exclusive romantic passion for a partner).
-  - 'Learner error clinic: correcting the overgeneralization of «кохати» (e.g., «Я
-    кохаю маму» or «Я кохаю борщ») with 5 natural substitution drills.'
-  - 'Narrative illustration: a comical misunderstanding caused by a foreigner using
-    the wrong ''love'' verb in a romantic versus a social setting.'
+  - The strict semantic boundary between «любити» (family, friends, food, hobbies) and «кохати» (exclusive romantic passion
+    for a partner).
+  - 'Learner error clinic: correcting the overgeneralization of «кохати» (e.g., «Я кохаю маму» or «Я кохаю борщ») with 5 natural
+    substitution drills.'
+  - 'Narrative illustration: a comical misunderstanding caused by a foreigner using the wrong ''love'' verb in a romantic
+    versus a social setting.'
 - section: Граматика та типові помилки (Grammar and Common Errors)
   words: 900
   points:
-  - 'Correction of Russian calque: replacing the incorrect «женився на ній» with the
-    Ukrainian «одружився з нею» (verb + preposition «з» + Instrumental case).'
-  - 'Drills for high-frequency B1+ collocations: «з’ясовувати стосунки» (to have it
-    out), «налагодити стосунки» (to fix relationships), and «розірвати стосунки» (to
-    break up).'
-  - 'Usage of «зв''язок» (connection): collocations like «родинний зв''язок», «бути
-    на зв''язку», and the modern term «зворотний зв''язок» (feedback).'
+  - 'Correction of Russian calque: replacing the incorrect «женився на ній» with the Ukrainian «одружився з нею» (verb + preposition
+    «з» + Instrumental case).'
+  - 'Drills for high-frequency B1+ collocations: «з’ясовувати стосунки» (to have it out), «налагодити стосунки» (to fix relationships),
+    and «розірвати стосунки» (to break up).'
+  - 'Usage of «зв''язок» (connection): collocations like «родинний зв''язок», «бути на зв''язку», and the modern term «зворотний
+    зв''язок» (feedback).'
 - section: 'Практика: Розмови про життя (Practice: Conversations About Life)'
   words: 800
   points:
-  - 'Dialogue practice: two friends discussing their «взаємини» (reciprocal warmth)
-    with parents versus their current «стосунки» with significant others.'
-  - 'Vocabulary expansion: using «спілкуватися» (to communicate), «приятелювати» (to
-    be on friendly terms), and «втратити зв''язок» (to lose touch) in a narrative
-    about relocating.'
-  - 'Interactive summary: discussing one''s «ставлення» (attitude) towards godparenthood
-    and family traditions using the covered terminology.'
+  - 'Dialogue practice: two friends discussing their «взаємини» (reciprocal warmth) with parents versus their current «стосунки»
+    with significant others.'
+  - 'Vocabulary expansion: using «спілкуватися» (to communicate), «приятелювати» (to be on friendly terms), and «втратити
+    зв''язок» (to lose touch) in a narrative about relocating.'
+  - 'Interactive summary: discussing one''s «ставлення» (attitude) towards godparenthood and family traditions using the covered
+    terminology.'
 vocabulary_hints:
   required:
-  - 'стосунки (relationships) — personal, emotional interactions; collocations: з’ясовувати
-    стосунки, налагодити стосунки'
-  - 'відносини (formal relations) — official, regulated interactions; collocations:
-    міжнародні відносини, дипломатичні відносини'
-  - взаємини (mutual relations) — deep, reciprocal connection (warmest term); e.g.,
-    взаємини батьків і дітей
-  - 'ставлення (attitude) — one-way feeling towards something/someone; collocations:
-    ставлення до роботи, упереджене ставлення'
-  - кохати (to love) — reserved exclusively for romantic passion; never for family
-    or food
+  - 'стосунки (relationships) — personal, emotional interactions; collocations: з’ясовувати стосунки, налагодити стосунки'
+  - 'відносини (formal relations) — official, regulated interactions; collocations: міжнародні відносини, дипломатичні відносини'
+  - взаємини (mutual relations) — deep, reciprocal connection (warmest term); e.g., взаємини батьків і дітей
+  - 'ставлення (attitude) — one-way feeling towards something/someone; collocations: ставлення до роботи, упереджене ставлення'
+  - кохати (to love) — reserved exclusively for romantic passion; never for family or food
   - любити (to love) — used for family, friends, food, hobbies, or country
   - куми (godparents) — spiritual parents, lifelong kin; culturally vital relationship
-  - одружитися з (to marry someone) — used with preposition 'з' and Instrumental case;
-    avoid Russian calque 'на ній'
+  - одружитися з (to marry someone) — used with preposition 'з' and Instrumental case; avoid Russian calque 'на ній'
   recommended:
-  - 'зв''язок (connection) — general term; collocations: родинний зв''язок, бути на
-    зв''язку, зворотний зв''язок'
+  - 'зв''язок (connection) — general term; collocations: родинний зв''язок, бути на зв''язку, зворотний зв''язок'
   - розірвати стосунки (to break up) — to formally sever a romantic or personal connection
   - приятелювати (to be friends) — to be on friendly terms (lighter than 'дружба')
   - спілкуватися (to communicate) — to maintain contact or social interaction
@@ -95,24 +92,15 @@ activity_hints:
 - type: quiz
   focus: Discuss relationship topics
   items: 10
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- b1-64 (Emotions Deep Dive)
 connects_to:
 - b1-66 (Business Basics)
-objectives:
-- Learner can use 25 relationship vocabulary words in context
-- Learner can distinguish between стосунки/відносини/зв'язок
-- Learner can form natural collocations with relationship nouns
-- Learner can discuss Ukrainian cultural traditions related to relationships
+prerequisites:
+- b1-64 (Emotions Deep Dive)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Family Psychologist
 grammar:
 - Noun collocations with relationship vocabulary
 - Verb patterns with emotional states
 - Preposition usage in relationship contexts
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Family Psychologist
-word_target: 4000

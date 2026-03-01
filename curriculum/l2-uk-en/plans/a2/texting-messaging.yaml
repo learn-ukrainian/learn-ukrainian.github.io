@@ -1,66 +1,66 @@
-module: a2-68
+module: a2-071
 level: A2
-sequence: 68
+sequence: 71
 slug: texting-messaging
 version: '2.0'
 title: Texting and Messaging
 subtitle: Chatting with Friends
+focus: practical
+pedagogy: PPP
+phase: A2.6 [Practical]
+word_target: 3000
+objectives:
+- Learner can send and receive text messages
+- Learner can use common abbreviations
+- Learner can understand informal chat language
+- Learner can arrange meetings via text
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - 'Digital etiquette in Ukraine: the ''Don''t Call'' rule (Краще напиши) and the
-    phenomenon of ''telefonophobia''—intrusive calls vs. the courtesy of texting first.'
-  - The dominance of Telegram in Ukrainian life (81% usage for communication); its
-    role as the de facto standard for personal messages, news consumption, and work.
+  - 'Digital etiquette in Ukraine: the ''Don''t Call'' rule (Краще напиши) and the phenomenon of ''telefonophobia''—intrusive
+    calls vs. the courtesy of texting first.'
+  - The dominance of Telegram in Ukrainian life (81% usage for communication); its role as the de facto standard for personal
+    messages, news consumption, and work.
 - section: Презентація (Presentation)
   words: 700
   points:
-  - 'Distinguishing digital verbs: ''писати'' (to write/text) vs. ''дзвонити'' (to
-    call)—emphasizing ''Напиши мені'' as the standard phrase for inviting messaging.'
-  - 'Core texting abbreviations: ''прив'' (hi), ''дяк'' (thanks), and ''норм'' (fine);
-    addressing the Russianism error ''спс'' and replacing it with the authentic ''дяк''
-    or ''дякую''.'
-  - Introducing 'бдлск' (будь ласка) as a high-frequency functional abbreviation for
-    polite requests in informal chats.
+  - 'Distinguishing digital verbs: ''писати'' (to write/text) vs. ''дзвонити'' (to call)—emphasizing ''Напиши мені'' as the
+    standard phrase for inviting messaging.'
+  - 'Core texting abbreviations: ''прив'' (hi), ''дяк'' (thanks), and ''норм'' (fine); addressing the Russianism error ''спс''
+    and replacing it with the authentic ''дяк'' or ''дякую''.'
+  - Introducing 'бдлск' (будь ласка) as a high-frequency functional abbreviation for polite requests in informal chats.
 - section: Практика (Practice)
   words: 600
   points:
-  - 'Drilling the Vocative case in digital communication: reinforcing that names require
-    the vocative even in informal chats (e.g., ''Привіт, Андрію''); correcting the
-    common error of dropping the vocative due to perceived informality.'
-  - 'Functional phrases for media sharing: ''надіслати фото'', ''скинути файл'', and
-    ''отримати повідомлення''—standard collocations aligned with State Standard §3.4.'
+  - 'Drilling the Vocative case in digital communication: reinforcing that names require the vocative even in informal chats
+    (e.g., ''Привіт, Андрію''); correcting the common error of dropping the vocative due to perceived informality.'
+  - 'Functional phrases for media sharing: ''надіслати фото'', ''скинути файл'', and ''отримати повідомлення''—standard collocations
+    aligned with State Standard §3.4.'
 - section: Діалоги (Dialogues)
   words: 600
   points:
-  - 'The polarizing culture of ''голосове'' (voice messages): vocabulary for sending/receiving
-    audio clips and navigating the social etiquette of voice-messaging.'
-  - 'Sticker culture in Ukraine: using meme-based packs featuring historical figures
-    like Shevchenko or heroes like Patron the Dog; the collocation ''кинути стікер''
-    for reactive messaging.'
+  - 'The polarizing culture of ''голосове'' (voice messages): vocabulary for sending/receiving audio clips and navigating
+    the social etiquette of voice-messaging.'
+  - 'Sticker culture in Ukraine: using meme-based packs featuring historical figures like Shevchenko or heroes like Patron
+    the Dog; the collocation ''кинути стікер'' for reactive messaging.'
 - section: Розповідь (Narrative)
   words: 400
   points:
-  - 'A narrative journey through a typical Telegram feed: checking a news channel,
-    responding to a friend using abbreviations, and forwarding (''пересилати'') an
-    interesting link.'
+  - 'A narrative journey through a typical Telegram feed: checking a news channel, responding to a friend using abbreviations,
+    and forwarding (''пересилати'') an interesting link.'
 - section: Підсумок (Summary)
   words: 200
   points:
-  - 'Summary of digital competencies: recap of abbreviations, vocative usage in chats,
-    and navigating the messaging landscape.'
-  - Self-check on 'писати' vs 'дзвонити' usage and distinguishing between close-friend
-    slang and general informal language.
+  - 'Summary of digital competencies: recap of abbreviations, vocative usage in chats, and navigating the messaging landscape.'
+  - Self-check on 'писати' vs 'дзвонити' usage and distinguishing between close-friend slang and general informal language.
 vocabulary_hints:
   required:
-  - повідомлення (message) — надіслати ~, отримати ~, голосове ~; high frequency standard
-    term
+  - повідомлення (message) — надіслати ~, отримати ~, голосове ~; high frequency standard term
   - надіслати (to send) — ~ фото, ~ файл, ~ смайлик; standard verb for digital actions
   - отримати (to receive) — standard pair with надіслати for messages and media
   - прив (hi) — standalone greeting for close friends; informal abbreviation
-  - дяк (thanks) — informal; explicitly use instead of Russian 'спс' to maintain Ukrainian
-    identity
+  - дяк (thanks) — informal; explicitly use instead of Russian 'спс' to maintain Ukrainian identity
   - чат (chat) — груповий ~, створити ~; essential for Telegram/Viber context
   - смайлик (emoji) — надіслати ~; common informal term for emoticons
   - голосове (voice message) — huge part of Ukrainian culture; often polarizing (love/hate)
@@ -68,8 +68,7 @@ vocabulary_hints:
   - норм (fine/okay) — high frequency reply to 'Як ти?' in chats
   - прикольно (cool) — common reaction to stories or funny messages
   - круто (awesome) — high-intensity positive reaction
-  - стікер (sticker) — набір стікерів, кинути ~; cultural phenomenon (Patron, Shevchenko
-    stickers)
+  - стікер (sticker) — набір стікерів, кинути ~; cultural phenomenon (Patron, Shevchenko stickers)
   - пересилати (to forward) — to forward a message to another chat or channel
   - 'видалити (to delete) — digital hygiene: delete for everyone vs just for me'
   - бдлск (please) — abbreviation of 'будь ласка'; common in informal typing
@@ -86,25 +85,16 @@ activity_hints:
 - type: match-up
   focus: Match abbreviations to meanings
   items: 15
-focus: practical
-pedagogy: PPP
-prerequisites:
-- a2-67 (Social Media Ukrainian)
 connects_to:
 - a2-69 (Online Services)
-objectives:
-- Learner can send and receive text messages
-- Learner can use common abbreviations
-- Learner can understand informal chat language
-- Learner can arrange meetings via text
+prerequisites:
+- a2-67 (Social Media Ukrainian)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Digital Native
 grammar:
 - Text abbreviations (прив, дяк, норм)
 - Informal syntax in chats
 - Polite vs informal messaging
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.6 [Practical]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Digital Native
-word_target: 3000

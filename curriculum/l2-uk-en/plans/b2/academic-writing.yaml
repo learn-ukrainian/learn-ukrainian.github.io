@@ -1,95 +1,70 @@
-module: b2-69
+module: b2-069
 level: B2
 sequence: 69
 slug: academic-writing
 version: '2.0'
 title: Академічне письмо
 subtitle: Academic Writing
-content_outline:
-- section: 'Вступ: Основи та історія академічного письма (Introduction: Fundamentals
-    and History of Academic Writing)'
-  words: 600
-  points:
-  - 'Historical context: The Kyiv-Mohyla Academy tradition (1615) emphasizing rhetoric
-    and philosophy vs. the Soviet-era legacy of ''dry'' scientific reporting.'
-  - Defining the principles of objectivity, accuracy, and logic as the core of the
-    Ukrainian academic register.
-  - 'Distinguishing academic texts from publicism: tone, evidence-based claims, and
-    target audience expectations.'
-- section: Академічна доброчесність та етика у 2026 році (Academic Integrity and Ethics
-    in 2026)
-  words: 800
-  points:
-  - 'Review of the Law ''On Academic Integrity'' (Feb 1, 2026): New requirements for
-    disclosing the use of AI tools in research and writing.'
-  - The concept of 'доброчесність' (integrity) as a fundamental moral value in Ukrainian
-    education, moving beyond simple rule-following.
-  - 'Types of academic misconduct: identifying plagiarism, self-plagiarism, and the
-    ethical implications of fabrication.'
-  - 'Learner error correction: eliminating the pleonasm ''своя власна думка'' in favor
-    of the correct ''власна думка'' when expressing a position.'
-- section: Структура есе та побудова тези (Essay Structure and Thesis Development)
-  words: 800
-  points:
-  - 'State Standard §1.3.1.1 alignment: Developing a complex thesis statement and
-    organizing the text with clear logical hierarchies.'
-  - 'The mechanics of the introduction: setting the problem context and formulating
-    a ''вагома теза'' (strong thesis).'
-  - 'Crafting logic between paragraphs: ensuring each sub-point supports the central
-    thesis without thematic drift.'
-  - 'Practical focus: Collocations for thesis work — ''сформулювати тезу'', ''обґрунтувати
-    тезу'', ''головна теза''.'
-- section: 'Аргументація: докази та контраргументація (Argumentation: Evidence and
-    Counter-argumentation)'
-  words: 1000
-  points:
-  - Developing 'за' (pro) and 'проти' (con) evidence for a balanced argumentative
-    text as per the 2024 State Standard.
-  - 'Types of academic evidence: logical reasoning, empirical data, and authoritative
-    citations (авторитетні джерела).'
-  - 'Strategic use of statistics and examples: ''наводити приклад'' (correct) vs.
-    the common learner error ''приводити приклад''.'
-  - 'Addressing counter-arguments: techniques for respectful refutation (''спростування'')
-    and acknowledging the complexity of a problem.'
-- section: Стилістика, цитування та покликання (Stylistics, Citations, and References)
-  words: 800
-  points:
-  - 'Language organization: using ''вставні слова'' for listing (по-перше, по-друге),
-    clarifying, and hedging (можливо, ймовірно).'
-  - Correcting the calque 'при написанні' with the natural 'під час написання' or
-    active constructions.
-  - 'Shift from passive to active voice: replacing stiff constructions like ''нами
-    було досліджено'' with ''ми дослідили'' to show researcher agency.'
-  - 'Terminology standardization: strictly using ''покликання'' (citation/reference)
-    for bibliography items rather than the generic ''посилання'' (link).'
-  - 'Academic integrity drills: paraphrasing vs. direct citation and formatting a
-    ''список використаних джерел'' correctly.'
 focus: skills
 pedagogy: TTT
+phase: B2.7
+word_target: 4000
 objectives:
 - Учень знає структуру академічного есе та правила цитування
 - Учень може будувати логічну аргументацію з використанням тез та доказів
 - Учень розуміє принципи академічної доброчесності
-grammar:
-- Структура аргументативного есе
-- Використання вставних слів для зв’язку думок (отже, по-перше, з іншого боку)
-phase: B2.7
+content_outline:
+- section: 'Вступ: Основи та історія академічного письма (Introduction: Fundamentals and History of Academic Writing)'
+  words: 600
+  points:
+  - 'Historical context: The Kyiv-Mohyla Academy tradition (1615) emphasizing rhetoric and philosophy vs. the Soviet-era legacy
+    of ''dry'' scientific reporting.'
+  - Defining the principles of objectivity, accuracy, and logic as the core of the Ukrainian academic register.
+  - 'Distinguishing academic texts from publicism: tone, evidence-based claims, and target audience expectations.'
+- section: Академічна доброчесність та етика у 2026 році (Academic Integrity and Ethics in 2026)
+  words: 800
+  points:
+  - 'Review of the Law ''On Academic Integrity'' (Feb 1, 2026): New requirements for disclosing the use of AI tools in research
+    and writing.'
+  - The concept of 'доброчесність' (integrity) as a fundamental moral value in Ukrainian education, moving beyond simple rule-following.
+  - 'Types of academic misconduct: identifying plagiarism, self-plagiarism, and the ethical implications of fabrication.'
+  - 'Learner error correction: eliminating the pleonasm ''своя власна думка'' in favor of the correct ''власна думка'' when
+    expressing a position.'
+- section: Структура есе та побудова тези (Essay Structure and Thesis Development)
+  words: 800
+  points:
+  - 'State Standard §1.3.1.1 alignment: Developing a complex thesis statement and organizing the text with clear logical hierarchies.'
+  - 'The mechanics of the introduction: setting the problem context and formulating a ''вагома теза'' (strong thesis).'
+  - 'Crafting logic between paragraphs: ensuring each sub-point supports the central thesis without thematic drift.'
+  - 'Practical focus: Collocations for thesis work — ''сформулювати тезу'', ''обґрунтувати тезу'', ''головна теза''.'
+- section: 'Аргументація: докази та контраргументація (Argumentation: Evidence and Counter-argumentation)'
+  words: 1000
+  points:
+  - Developing 'за' (pro) and 'проти' (con) evidence for a balanced argumentative text as per the 2024 State Standard.
+  - 'Types of academic evidence: logical reasoning, empirical data, and authoritative citations (авторитетні джерела).'
+  - 'Strategic use of statistics and examples: ''наводити приклад'' (correct) vs. the common learner error ''приводити приклад''.'
+  - 'Addressing counter-arguments: techniques for respectful refutation (''спростування'') and acknowledging the complexity
+    of a problem.'
+- section: Стилістика, цитування та покликання (Stylistics, Citations, and References)
+  words: 800
+  points:
+  - 'Language organization: using ''вставні слова'' for listing (по-перше, по-друге), clarifying, and hedging (можливо, ймовірно).'
+  - Correcting the calque 'при написанні' with the natural 'під час написання' or active constructions.
+  - 'Shift from passive to active voice: replacing stiff constructions like ''нами було досліджено'' with ''ми дослідили''
+    to show researcher agency.'
+  - 'Terminology standardization: strictly using ''покликання'' (citation/reference) for bibliography items rather than the
+    generic ''посилання'' (link).'
+  - 'Academic integrity drills: paraphrasing vs. direct citation and formatting a ''список використаних джерел'' correctly.'
 vocabulary_hints:
   required:
-  - теза (thesis) — сформулювати тезу, обґрунтувати тезу; High frequency academic
-    term
-  - аргумент (argument) — вагомий аргумент, спростувати аргумент, навести аргумент;
-    Core for persuasive writing
-  - доброчесність (integrity) — академічна доброчесність, порушення доброчесності;
-    Key legal and ethical term in 2026
-  - покликання (citation/reference) — оформити покликання, список покликань; Use specifically
-    for bibliography, not generic links
-  - плагіат (plagiarism) — виявити плагіат, уникнути плагіату; Includes the concept
-    of самоплагіат (self-plagiarism)
-  - аналіз (analysis) — глибокий аналіз, провести аналіз, порівняльний аналіз; High
-    frequency across all academic domains
-  - цитування (citation) — правила цитування, пряме цитування; Distinction between
-    direct and indirect quotes
+  - теза (thesis) — сформулювати тезу, обґрунтувати тезу; High frequency academic term
+  - аргумент (argument) — вагомий аргумент, спростувати аргумент, навести аргумент; Core for persuasive writing
+  - доброчесність (integrity) — академічна доброчесність, порушення доброчесності; Key legal and ethical term in 2026
+  - покликання (citation/reference) — оформити покликання, список покликань; Use specifically for bibliography, not generic
+    links
+  - плагіат (plagiarism) — виявити плагіат, уникнути плагіату; Includes the concept of самоплагіат (self-plagiarism)
+  - аналіз (analysis) — глибокий аналіз, провести аналіз, порівняльний аналіз; High frequency across all academic domains
+  - цитування (citation) — правила цитування, пряме цитування; Distinction between direct and indirect quotes
   recommended:
   - термін (term) — вживати термін, науковий термін
   - поняття (concept) — ключове поняття, визначити поняття
@@ -97,8 +72,7 @@ vocabulary_hints:
   - метод (method) — науковий метод, метод дослідження
   - синтез (synthesis) — результати синтезу, аналіз і синтез
   - дослідження (research) — ґрунтовне дослідження, об'єкт дослідження
-  - брати участь (to participate) — Correct form; avoid the common error 'приймати
-    участь'
+  - брати участь (to participate) — Correct form; avoid the common error 'приймати участь'
 activity_hints:
 - type: reading
   focus: Аналіз тексту
@@ -111,4 +85,10 @@ activity_hints:
 persona:
   voice: Professional Language Coach
   role: Thesis Advisor (Науковий керівник)
-word_target: 4000
+grammar:
+- Структура аргументативного есе
+- Використання вставних слів для зв’язку думок (отже, по-перше, з іншого боку)
+prerequisites:
+- professional-reports-advanced
+connects_to:
+- text-analysis

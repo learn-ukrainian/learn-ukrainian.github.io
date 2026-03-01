@@ -1,27 +1,47 @@
-sequence: 55
-module: ruth-055
-module_number: 45
+module: ruth-053
+level: RUTH
+sequence: 53
 slug: syntax-agreement
-title_uk: 'Синтаксис I: Узгодження'
-title_en: Syntax I
-phase: 2
-phase_id: sacred-word
-phase_name: Sacred Word
+version: '2.0'
+title: 'Синтаксис I: Узгодження'
+subtitle: Syntax I
 focus: Agreement and government rules
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Syntax I
+  points:
+  - Introduction to Syntax I
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Grammar Prefect
+prerequisites:
+- the-verb-conjugation
+connects_to:
+- syntax-complex

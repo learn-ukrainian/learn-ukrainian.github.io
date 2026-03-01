@@ -1,116 +1,103 @@
-module: b1-57
+module: b1-057
 level: B1
 sequence: 57
 slug: word-formation-modifiers
 version: '2.0'
-title: 'Словотвір прикметників та прислівників'
-subtitle: 'Adjective & Adverb Word Formation'
-word_target: 4000
-
-content_outline:
-  - section: 'Вступ: Від іменника до прикметника (Introduction: From Noun to Adjective)'
-    words: 500
-    points:
-      - 'State Standard §4.3.6-7: adjective and adverb formation'
-      - How productive word formation expands descriptive vocabulary exponentially
-      - 'Preview: suffixation as the primary mechanism for both adjectives and adverbs'
-
-  - section: 'Суфіксальний словотвір прикметників (Adjective Suffixation)'
-    words: 800
-    points:
-      - 'Relational adjectives: -н- (книжний), -ськ- (київський, козацький), -ів-/-їв- (батьківський)'
-      - 'Qualitative adjectives: -ист- (барвистий), -уват- (синюватий), -еньк- (маленький)'
-      - 'Material adjectives: -ян- (дерев''яний), -ов- (шовковий)'
-      - 'From verbs: -лив- (працьовитий), -н- (написаний — not just participle!)'
-      - 'Key alternations in formation: к→ч (козак→козацький), г→ж (Прага→празький)'
-
-  - section: 'Префіксальний словотвір прикметників (Adjective Prefixation)'
-    words: 700
-    points:
-      - 'Negation: не- (неможливий, незалежний) — most productive'
-      - 'Intensity: пре- (прекрасний), над- (надзвичайний), за- (завеликий)'
-      - 'Composition: prefix+suffix simultaneously: без-+(-н-) (безмежний), між-+(-н-) (міжнародний)'
-      - 'Cultural note: незалежний (independent) — from залежний, the most important не- word in modern Ukraine'
-
-  - section: 'Складні прикметники (Compound Adjectives)'
-    words: 600
-    points:
-      - 'Equal components: жовто-блакитний, сільськогосподарський'
-      - 'Subordinate: давньоруський, давньоукраїнський'
-      - 'Hyphenation rules: colors (жовто-гарячий), cardinal directions (південно-західний)'
-      - 'From numerals: стодесятий, двадцятирічний'
-
-  - section: 'Словотвір прислівників (Adverb Word Formation)'
-    words: 800
-    points:
-      - 'From adjectives: -о/-е (добре, гарно, швидко) — most productive pattern'
-      - 'From adjectives: -и (по-українськи, по-новому) — manner adverbs'
-      - 'From nouns: вранці (від ранок), взимку (від зима), угорі (від гора)'
-      - 'Prefix adverbs: на- (надворі, нагорі), по- (повсюди, помалу)'
-      - 'Compound adverbs: мимохідь, мимоволі, спохвату'
-      - 'Learner error: по-українськи vs *по українському'
-
-  - section: 'Практика: Словотвірний аналіз (Practice: Word Formation Analysis)'
-    words: 600
-    points:
-      - Decompose adjectives/adverbs into morphemes
-      - Form adjectives from nouns using correct suffix
-      - Form adverbs from adjectives
-      - 'Reading: spot word formation patterns in authentic text'
-      - 'Creative: describe a scene using maximum derived vocabulary'
-
+title: Словотвір прикметників та прислівників
+subtitle: Adjective & Adverb Word Formation
 focus: grammar
 pedagogy: PPP
-prerequisites:
-  - 'b1-56 (Word Formation: Nouns)'
-connects_to:
-  - 'b1-58 (Synonymy: Thinking Verbs)'
-
+phase: B1.7 [Word Formation and Lexicology]
+word_target: 4000
 objectives:
-  - Learner can form adjectives using productive Ukrainian suffixes
-  - Learner can use adjective prefixes for negation and intensity
-  - Learner can form adverbs from adjectives and nouns
-  - Learner can analyze word formation of unknown modifiers
-
-grammar:
-  - 'Adjective suffixation (-н-, -ськ-, -ів-, -ист-, -уват-, -еньк-)'
-  - 'Adjective prefixation (не-, пре-, над-, за-, без-)'
-  - 'Compound adjectives (складні прикметники)'
-  - 'Adverb formation (-о/-е, -и, prefix patterns)'
-
-register: нейтральний
-immersion: 75-100% Ukrainian
-phase: 'B1.7 [Word Formation and Lexicology]'
-
+- Learner can form adjectives using productive Ukrainian suffixes
+- Learner can use adjective prefixes for negation and intensity
+- Learner can form adverbs from adjectives and nouns
+- Learner can analyze word formation of unknown modifiers
+content_outline:
+- section: 'Вступ: Від іменника до прикметника (Introduction: From Noun to Adjective)'
+  words: 500
+  points:
+  - 'State Standard §4.3.6-7: adjective and adverb formation'
+  - How productive word formation expands descriptive vocabulary exponentially
+  - 'Preview: suffixation as the primary mechanism for both adjectives and adverbs'
+- section: Суфіксальний словотвір прикметників (Adjective Suffixation)
+  words: 800
+  points:
+  - 'Relational adjectives: -н- (книжний), -ськ- (київський, козацький), -ів-/-їв- (батьківський)'
+  - 'Qualitative adjectives: -ист- (барвистий), -уват- (синюватий), -еньк- (маленький)'
+  - 'Material adjectives: -ян- (дерев''яний), -ов- (шовковий)'
+  - 'From verbs: -лив- (працьовитий), -н- (написаний — not just participle!)'
+  - 'Key alternations in formation: к→ч (козак→козацький), г→ж (Прага→празький)'
+- section: Префіксальний словотвір прикметників (Adjective Prefixation)
+  words: 700
+  points:
+  - 'Negation: не- (неможливий, незалежний) — most productive'
+  - 'Intensity: пре- (прекрасний), над- (надзвичайний), за- (завеликий)'
+  - 'Composition: prefix+suffix simultaneously: без-+(-н-) (безмежний), між-+(-н-) (міжнародний)'
+  - 'Cultural note: незалежний (independent) — from залежний, the most important не- word in modern Ukraine'
+- section: Складні прикметники (Compound Adjectives)
+  words: 600
+  points:
+  - 'Equal components: жовто-блакитний, сільськогосподарський'
+  - 'Subordinate: давньоруський, давньоукраїнський'
+  - 'Hyphenation rules: colors (жовто-гарячий), cardinal directions (південно-західний)'
+  - 'From numerals: стодесятий, двадцятирічний'
+- section: Словотвір прислівників (Adverb Word Formation)
+  words: 800
+  points:
+  - 'From adjectives: -о/-е (добре, гарно, швидко) — most productive pattern'
+  - 'From adjectives: -и (по-українськи, по-новому) — manner adverbs'
+  - 'From nouns: вранці (від ранок), взимку (від зима), угорі (від гора)'
+  - 'Prefix adverbs: на- (надворі, нагорі), по- (повсюди, помалу)'
+  - 'Compound adverbs: мимохідь, мимоволі, спохвату'
+  - 'Learner error: по-українськи vs *по українському'
+- section: 'Практика: Словотвірний аналіз (Practice: Word Formation Analysis)'
+  words: 600
+  points:
+  - Decompose adjectives/adverbs into morphemes
+  - Form adjectives from nouns using correct suffix
+  - Form adverbs from adjectives
+  - 'Reading: spot word formation patterns in authentic text'
+  - 'Creative: describe a scene using maximum derived vocabulary'
+vocabulary_hints:
+  required:
+  - словотвір (word formation) — словотвір прикметників; core term
+  - прикметник (adjective) — якісний/відносний прикметник
+  - прислівник (adverb) — прислівник способу дії, часу, місця
+  - суфікс (suffix) — словотвірний суфікс прикметника
+  - якісний (qualitative) — якісний прикметник (describes quality)
+  - відносний (relational) — відносний прикметник (describes relation/material)
+  recommended:
+  - складний (compound) — складний прикметник; compound adjective
+  - ступінь (degree) — ступінь порівняння
+  - продуктивний (productive) — продуктивна модель словотвору
+  - чергування (alternation) — к→ч, г→ж in adjective formation
+  - дефіс (hyphen) — через дефіс; hyphenation rules
+activity_hints:
+- type: fill-in
+  focus: Form adjectives from nouns/verbs
+  items: 20
+- type: quiz
+  focus: Identify formation type of adjective
+  items: 12
+- type: fill-in
+  focus: Form adverbs from adjectives
+  items: 15
+- type: match-up
+  focus: Match suffix to meaning (relational, qualitative, material)
+  items: 12
+connects_to:
+- 'b1-58 (Synonymy: Thinking Verbs)'
+prerequisites:
+- 'b1-56 (Word Formation: Nouns)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher
-
-vocabulary_hints:
-  required:
-    - 'словотвір (word formation) — словотвір прикметників; core term'
-    - 'прикметник (adjective) — якісний/відносний прикметник'
-    - 'прислівник (adverb) — прислівник способу дії, часу, місця'
-    - 'суфікс (suffix) — словотвірний суфікс прикметника'
-    - 'якісний (qualitative) — якісний прикметник (describes quality)'
-    - 'відносний (relational) — відносний прикметник (describes relation/material)'
-  recommended:
-    - 'складний (compound) — складний прикметник; compound adjective'
-    - 'ступінь (degree) — ступінь порівняння'
-    - 'продуктивний (productive) — продуктивна модель словотвору'
-    - 'чергування (alternation) — к→ч, г→ж in adjective formation'
-    - 'дефіс (hyphen) — через дефіс; hyphenation rules'
-
-activity_hints:
-  - type: fill-in
-    focus: Form adjectives from nouns/verbs
-    items: 20
-  - type: quiz
-    focus: Identify formation type of adjective
-    items: 12
-  - type: fill-in
-    focus: Form adverbs from adjectives
-    items: 15
-  - type: match-up
-    focus: 'Match suffix to meaning (relational, qualitative, material)'
-    items: 12
+grammar:
+- Adjective suffixation (-н-, -ськ-, -ів-, -ист-, -уват-, -еньк-)
+- Adjective prefixation (не-, пре-, над-, за-, без-)
+- Compound adjectives (складні прикметники)
+- Adverb formation (-о/-е, -и, prefix patterns)
+register: нейтральний
+immersion: 75-100% Ukrainian

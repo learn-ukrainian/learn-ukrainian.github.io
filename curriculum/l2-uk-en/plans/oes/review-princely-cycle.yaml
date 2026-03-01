@@ -1,27 +1,47 @@
-sequence: 49
-module: oes-049
-module_number: 49
+module: oes-048
+level: OES
+sequence: 48
 slug: review-princely-cycle
-title_uk: 'Огляд: Княжий цикл'
-title_en: 'Review: The Princely Cycle'
-phase: 2
-phase_id: literary-tradition
-phase_name: Literary Tradition
+version: '2.0'
+title: 'Огляд: Княжий цикл'
+subtitle: 'Review: The Princely Cycle'
 focus: Consolidating dynastic terms
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Review: The Princely Cycle'
+  points:
+  - 'Introduction to Review: The Princely Cycle'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Court Minstrel
+prerequisites:
+- fall-of-kyiv
+connects_to:
+- law-intro

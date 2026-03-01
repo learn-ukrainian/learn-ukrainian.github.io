@@ -1,45 +1,67 @@
-module: bio-36
+module: bio-036
 level: BIO
 sequence: 36
 slug: ivan-kotliarevskyi
 version: '2.0'
 title: 'Іван Котляревський: Батько нової літератури'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of іван котляревський: батько нової літератури'
+- Evaluate the contributions of народження нової літератури
+- Trace the career and influence of батько нової літератури
+sources:
+- name: Іван Котляревський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
+  type: primary
+  notes: Biography of the founder of modern Ukrainian literature
+- name: Полтавський літературно-меморіальний музей
+  url: https://kotliarevskyi.poltava.ua/
+  type: reference
+  notes: Museum dedicated to Kotliarevsky's life and work
 content_outline:
 - section: Вступ — Народження нової літератури
   points:
   - Автор «Енеїди» — першого твору нової української літератури
   - Започаткування літературної мови на народній основі
   - Полтавець, що змінив історію української культури
+  words: 850
 - section: Юність та освіта (1769-1789)
   points:
   - Народження в Полтаві
   - Семінарія та початкова освіта
   - Служба в канцеляріях
   - Інтерес до народної творчості
+  words: 850
 - section: Військова служба (1789-1808)
   points:
   - Участь у російсько-турецькій війні
   - Служба в Сіверському полку
   - Початок роботи над «Енеїдою»
   - Перші публікації
+  words: 850
 - section: «Енеїда» — літературна революція (1798-1842)
   points:
   - Травестія Вергілія українською мовою
   - Козацький колорит та гумор
   - Частини поеми та їхнє видання
   - Значення для становлення літературної мови
+  words: 850
 - section: Драматургія та громадська діяльність (1808-1838)
   points:
   - «Наталка Полтавка» — перша українська опера
   - «Москаль-чарівник» — водевіль
   - Директор Полтавського театру
   - Меценатство та просвітництво
+  words: 850
 - section: Спадщина — Батько нової літератури
   points:
   - Смерть у Полтаві (1838)
   - Вплив на наступні покоління
   - Котляревський у сучасній Україні
   - Значення для національної ідентичності
+  words: 750
 vocabulary_hints:
   required:
   - травестія (travesty/burlesque)
@@ -66,28 +88,13 @@ activity_hints:
 - type: essay-response
   focus: Чому «Енеїду» вважають початком нової української літератури?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-45
 connects_to:
 - bio-20
 - bio-102
-module_type: biography
-sources:
-- name: Іван Котляревський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
-  type: primary
-  notes: Biography of the founder of modern Ukrainian literature
-- name: Полтавський літературно-меморіальний музей
-  url: https://kotliarevskyi.poltava.ua/
-  type: reference
-  notes: Museum dedicated to Kotliarevsky's life and work
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of іван котляревський: батько нової літератури'
-- Evaluate the contributions of народження нової літератури
-- Trace the career and influence of батько нової літератури
+prerequisites:
+- bio-45
 persona:
   voice: Senior Biographer
   role: Eneida Author
+module_type: biography
+immersion: 100% Ukrainian

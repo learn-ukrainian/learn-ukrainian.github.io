@@ -1,21 +1,34 @@
-sequence: 112
-module: ruth-112
+module: ruth-107
+level: RUTH
+sequence: 107
 slug: intermedii-xvii-xviii
-title_uk: "Українські інтермедії XVII-XVIII ст."
-title_en: "Ukrainian Interludes (17th-18th c.)"
+version: '2.0'
+title: Українські інтермедії XVII-XVIII ст.
+subtitle: Ukrainian Interludes (17th-18th c.)
+focus: Vernacular comedy between acts of high drama — the closest we get to hearing how Ukrainians actually spoke
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Vernacular comedy between acts of high drama — the closest we get to hearing how Ukrainians actually spoke"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "What are interludes? Comedy performed in VERNACULAR Ukrainian between acts of serious Latin or Church Slavonic drama at brotherhood schools. The audience needed relief — and that relief came in their own language."
+  points:
+  - What are interludes? Comedy performed in VERNACULAR Ukrainian between acts of serious Latin or Church Slavonic drama at
+    brotherhood schools. The audience needed relief — and that relief came in their own language.
+  words: 1250
 - section: Основний матеріал
-  description: "Reading actual interlude texts. Humor, social satire, stereotypes. The characters: merchant, peasant, Cossack, Jew, Pole — stock types revealing social reality. Colloquial Ukrainian: idioms, jokes, curses, proverbs."
+  points:
+  - 'Reading actual interlude texts. Humor, social satire, stereotypes. The characters: merchant, peasant, Cossack, Jew, Pole
+    — stock types revealing social reality. Colloquial Ukrainian: idioms, jokes, curses, proverbs.'
+  words: 1250
 - section: Практика
-  description: "Analyzing spoken register markers in written text. Identifying dialectal features, colloquialisms, and phraseology that survive in modern Ukrainian."
+  points:
+  - Analyzing spoken register markers in written text. Identifying dialectal features, colloquialisms, and phraseology that
+    survive in modern Ukrainian.
+  words: 1250
 - section: Підсумок
-  description: "Interludes as the voice of the people — unfiltered, uncensored, alive. These short comedies contain more authentic Ukrainian than volumes of church literature."
+  points:
+  - Interludes as the voice of the people — unfiltered, uncensored, alive. These short comedies contain more authentic Ukrainian
+    than volumes of church literature.
+  words: 1250
 vocabulary_hints:
 - інтермедія
 - комедія
@@ -24,12 +37,24 @@ vocabulary_hints:
 - жарт
 - сатира
 - побутовий
-activity_types:
-- transcription
-- register-identify
-- parallel-text
-- comparative-style
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: comparative-style
+  focus: ''
+  items: 1
 persona:
-  voice: "Theater Scholar"
-  role: "Brotherhood Student"
-source_url: "http://litopys.org.ua/ukrinter/int.htm"
+  voice: Theater Scholar
+  role: Brotherhood Student
+source_url: http://litopys.org.ua/ukrinter/int.htm
+prerequisites:
+- hramoty-xvi-volyn
+connects_to:
+- poeziia-baroko

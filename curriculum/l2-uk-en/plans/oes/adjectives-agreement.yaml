@@ -1,27 +1,47 @@
-sequence: 20
 module: oes-020
-module_number: 16
+level: OES
+sequence: 20
 slug: adjectives-agreement
-title_uk: Прикметники та узгодження
-title_en: Adjectives & Agreement
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: Прикметники та узгодження
+subtitle: Adjectives & Agreement
 focus: Куни лодійні — Agreement in case/gender
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Adjectives & Agreement
+  points:
+  - Introduction to Adjectives & Agreement
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Rhetorician
+prerequisites:
+- syntax-simple-sentences
+connects_to:
+- dual-number-intro

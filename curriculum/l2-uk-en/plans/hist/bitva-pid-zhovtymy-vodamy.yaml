@@ -5,88 +5,95 @@ slug: bitva-pid-zhovtymy-vodamy
 version: '2.0'
 title: Битва під Жовтими Водами
 subtitle: The Battle of Zhovti Vody
+focus: history
+pedagogy: CBI
+phase: HIST.6 [Khmelnytsky & Cossack State]
+word_target: 5000
+objectives:
+- Учень може описати стратегію Хмельницького у битві під Жовтими Водами
+- Учень може пояснити роль реєстрових козаків у перемозі
+- Учень може проаналізувати значення цієї битви для подальшого ходу повстання
+sources:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Detailed reconstruction of the battle
+- name: Military Art of Ukraine
+  url: https://history.org.ua
+  type: secondary
+  notes: Tactical analysis
 content_outline:
 - section: 'Вступ: Перший грім'
   points:
-  - The strategic situation in spring 1648 — 21 April 1648 departure; tension in the
-    steppe
-  - Potocki's plan to split forces — Mykola Potocki's fatal underestimation of 'Khmel';
-    sending son Stefan ahead while main forces lagged
+  - The strategic situation in spring 1648 — 21 April 1648 departure; tension in the steppe
+  - Potocki's plan to split forces — Mykola Potocki's fatal underestimation of 'Khmel'; sending son Stefan ahead while main
+    forces lagged
+  words: 550
 - section: 'Сили сторін: Давид проти Голіафа?'
   points:
-  - Structure of the Polish vanguard (Stefan Potocki) — 2500 registered Cossacks,
-    1500 soldiers; mix of elite hussars and dragoons
-  - Cossack-Tatar coalition forces — 4000 cavalry of Tugay Bey providing crucial mobility
-    and blockade capability
-  - Armament and morale comparison — Polish artillery advantage vs Cossack 'shanets'
-    (earthworks) tactics; [!myth-buster] professional armies colliding, not a 'mob
-    of peasants'
+  - Structure of the Polish vanguard (Stefan Potocki) — 2500 registered Cossacks, 1500 soldiers; mix of elite hussars and
+    dragoons
+  - Cossack-Tatar coalition forces — 4000 cavalry of Tugay Bey providing crucial mobility and blockade capability
+  - Armament and morale comparison — Polish artillery advantage vs Cossack 'shanets' (earthworks) tactics; [!myth-buster]
+    professional armies colliding, not a 'mob of peasants'
+  words: 550
 - section: 'Початок битви: Блокада табору'
   points:
-  - Establishing the camp at Zhovti Vody — 29 April 1648; Stefan Potocki digs in at
-    the tract
-  - First skirmishes and tactical stalemate — Failed first assault leads to positional
-    warfare (29 April - 2 May)
-  - The role of Tugay Bey's cavalry — Cutting off water and supply lines; psychological
-    pressure of 'The Horde is here'
+  - Establishing the camp at Zhovti Vody — 29 April 1648; Stefan Potocki digs in at the tract
+  - First skirmishes and tactical stalemate — Failed first assault leads to positional warfare (29 April - 2 May)
+  - The role of Tugay Bey's cavalry — Cutting off water and supply lines; psychological pressure of 'The Horde is here'
+  words: 550
 - section: 'Переломний момент: Бунт на Дніпрі'
   points:
-  - The register Cossacks' journey down the Dnieper — Flotilla movement intended to
-    reinforce Potocki turned into a trap
-  - The uprising at Kamianyi Zaton — 3-4 May; execution of loyalist colonels (Barabash,
-    Karaimovych) who refused to join
-  - Killing of Barabash and joining Khmelnytsky — [!history-bite] Destruction of Polish
-    symbols (kleinods) before swearing allegiance; doubling Khmelnytsky's forces
+  - The register Cossacks' journey down the Dnieper — Flotilla movement intended to reinforce Potocki turned into a trap
+  - The uprising at Kamianyi Zaton — 3-4 May; execution of loyalist colonels (Barabash, Karaimovych) who refused to join
+  - Killing of Barabash and joining Khmelnytsky — [!history-bite] Destruction of Polish symbols (kleinods) before swearing
+    allegiance; doubling Khmelnytsky's forces
+  words: 550
 - section: 'Розгром: Княжі Байраки'
   points:
-  - The failed attempt to break out — 14 May negotiations fail over surrender of artillery;
-    16 May night 'hollow camp' retreat attempt
-  - Total destruction of the Polish vanguard — [!context] Kniazhi Bairaky terrain
-    trap (ravines/forest) prevented hussar deployment; 16 May final rout
-  - Death of Stefan Potocki — Wounded in battle, captured by Tatars, died of gangrene
-    19 May; symbol of the fall of noble pride
+  - The failed attempt to break out — 14 May negotiations fail over surrender of artillery; 16 May night 'hollow camp' retreat
+    attempt
+  - Total destruction of the Polish vanguard — [!context] Kniazhi Bairaky terrain trap (ravines/forest) prevented hussar deployment;
+    16 May final rout
+  - Death of Stefan Potocki — Wounded in battle, captured by Tatars, died of gangrene 19 May; symbol of the fall of noble
+    pride
+  words: 550
 - section: 'Читання: Опис битви в літописі'
   points:
-  - Excerpt from the Eyewitness Chronicle — [!quote] «Хмельницький... не ожидаючи
-    на Запорожжє...» (analysis of archaic vs modern narrative)
+  - Excerpt from the Eyewitness Chronicle — [!quote] «Хмельницький... не ожидаючи на Запорожжє...» (analysis of archaic vs
+    modern narrative)
+  words: 550
 - section: 'Первинні джерела: Листи про поразку'
   points:
-  - 'Potocki''s last letter to his father — [!source] Reconstruction of emotional
-    state: from arrogance to despair; the ''father''s pride'' narrative'
+  - 'Potocki''s last letter to his father — [!source] Reconstruction of emotional state: from arrogance to despair; the ''father''s
+    pride'' narrative'
+  words: 550
 - section: Деколонізаційний погляд
   points:
-  - Debunking the myth of 'accidental victory' — [!decolonization] Khmelnytsky as
-    a calculated strategist, not a chaotic rebel leader
-  - Cossack military art vs. feudal arrogance — Synthesis of European infantry tactics
-    and Steppe maneuverability vs rigid Polish doctrine
+  - Debunking the myth of 'accidental victory' — [!decolonization] Khmelnytsky as a calculated strategist, not a chaotic rebel
+    leader
+  - Cossack military art vs. feudal arrogance — Synthesis of European infantry tactics and Steppe maneuverability vs rigid
+    Polish doctrine
+  words: 550
 - section: Європа у 1648 році
   points:
-  - Treaty of Westphalia and the end of the 30 Years' War — Redrawing the map of Europe;
-    synchronicity of events
-  - The Crisis of the 17th Century (Fronde, English Revolution) — Global context of
-    upheaval and state-building
-  - Ukraine entering the European stage — The 'Cossack Revolution' as a new geopolitical
-    player disrupting the balance of power
+  - Treaty of Westphalia and the end of the 30 Years' War — Redrawing the map of Europe; synchronicity of events
+  - The Crisis of the 17th Century (Fronde, English Revolution) — Global context of upheaval and state-building
+  - Ukraine entering the European stage — The 'Cossack Revolution' as a new geopolitical player disrupting the balance of
+    power
+  words: 600
 vocabulary_hints:
   required:
-  - 'авангард (війська, польський) — передова частина армії; collocations: розбити
-    авангард, вислати авангард'
-  - 'облога (табору, тривала) — оточення війська; collocations: взяти в облогу, прорвати
-    облогу'
-  - 'переправа (через Дніпро, важка) — подолання водної перешкоди; collocations: захопити
-    переправу'
-  - 'клейноди (військові, втопити) — символи влади (булава, прапор); context: знищення
-    клейнодів як акт непокори'
-  - 'реєстровці (козаки, перехід на бік) — козаки на службі короля; key concept: зміна
-    лояльності'
-  - 'зрада (полковників, національна) — порушення вірності; learner error: treason
-    vs betrayal nuance'
-  - 'капітуляція (умови, відмова) — припинення опору; collocations: підписати капітуляцію,
-    ганебна капітуляція'
-  - 'тріумф (військовий, несподіваний) — видатна перемога; collocations: святкувати
-    тріумф'
-  - байрак (урочище, княжий) — яр, порослий лісом; geographical term crucial for the
-    battle map
+  - 'авангард (війська, польський) — передова частина армії; collocations: розбити авангард, вислати авангард'
+  - 'облога (табору, тривала) — оточення війська; collocations: взяти в облогу, прорвати облогу'
+  - 'переправа (через Дніпро, важка) — подолання водної перешкоди; collocations: захопити переправу'
+  - 'клейноди (військові, втопити) — символи влади (булава, прапор); context: знищення клейнодів як акт непокори'
+  - 'реєстровці (козаки, перехід на бік) — козаки на службі короля; key concept: зміна лояльності'
+  - 'зрада (полковників, національна) — порушення вірності; learner error: treason vs betrayal nuance'
+  - 'капітуляція (умови, відмова) — припинення опору; collocations: підписати капітуляцію, ганебна капітуляція'
+  - 'тріумф (військовий, несподіваний) — видатна перемога; collocations: святкувати тріумф'
+  - байрак (урочище, княжий) — яр, порослий лісом; geographical term crucial for the battle map
   - 'шанець (земляний, окопатися) — польове укріплення; collocations: будувати шанці'
   recommended:
   - урочище (Жовті Води) — natural boundary/tract; specific to Ukrainian geography
@@ -104,27 +111,14 @@ activity_hints:
 - type: critical-analysis
   focus: 'Спростування міфів: Myths about the battle'
   items: 4
-focus: history
-pedagogy: CBI
-objectives:
-- Учень може описати стратегію Хмельницького у битві під Жовтими Водами
-- Учень може пояснити роль реєстрових козаків у перемозі
-- Учень може проаналізувати значення цієї битви для подальшого ходу повстання
-grammar:
-- 'Military narrative: descriptions of maneuvers'
-- Cause and effect in historical context
-sources:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Detailed reconstruction of the battle
-- name: Military Art of Ukraine
-  url: https://history.org.ua
-  type: secondary
-  notes: Tactical analysis
-register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
 persona:
   voice: Senior Professor of History
   role: Cossack Colonel
-word_target: 5000
+grammar:
+- 'Military narrative: descriptions of maneuvers'
+- Cause and effect in historical context
+register: публіцистичний
+prerequisites:
+- bohdan-khmelnytskyi
+connects_to:
+- zborivska-bila-tserkva

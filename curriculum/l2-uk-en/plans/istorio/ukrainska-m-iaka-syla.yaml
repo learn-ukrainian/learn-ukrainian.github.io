@@ -1,49 +1,80 @@
 module: istorio-132
-level: istorio
+level: ISTORIO
 sequence: 132
+slug: ukrainska-m-iaka-syla
 version: '1.0'
 title: 'Українська м''яка сила: Культурна дипломатія'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
 - Evaluate the historical significance of культура як зброя
+sources:
+- name: М'яка сила України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/М%27яка_сила
+  type: reference
+  notes: Soft power concept
+- name: Kalush Orchestra (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
+  type: reference
+  notes: Eurovision 2022
+- name: Культурна дипломатія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
+  type: reference
+  notes: Cultural diplomacy
 content_outline:
 - section: Вступ — Культура як зброя
-  subsections:
+  points:
   - М'яка сила — що це
   - Україна до 2022 — невидима
   - Після 2022 — прорив
   - Структура модуля
+  words: 850
 - section: Eurovision як фронт
-  subsections:
+  points:
   - Джамала 2016 — «1944»
   - Kalush Orchestra 2022 — «Stefania»
   - Політика через музику
   - Міжнародний резонанс
+  words: 850
 - section: Кінематограф
-  subsections:
+  points:
   - Сенцов — символ
   - «20 днів у Маріуполі»
   - Документалістика війни
   - Фестивалі — платформа
+  words: 850
 - section: Мистецтво і дизайн
-  subsections:
+  points:
   - Українські бренди
   - Вишиванка — глобальний символ
   - Музеї під обстрілами
   - Мистецтво спротиву
+  words: 850
 - section: Цифрова дипломатія
-  subsections:
+  points:
   - Соцмережі — миттєвий вплив
   - Мемо-культура
   - Зеленський — глобальна зірка
   - United24
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - М'яка сила — справжня сила
   - Україна — більше не невидима
   - Перехід до синтезу агентності
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - «м'яка сила»
 - культурна дипломатія
@@ -60,6 +91,15 @@ vocabulary:
 - Сенцов
 - United24
 - інфлюенсер
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Map Ukraine's soft power assets
@@ -71,38 +111,10 @@ activities:
   focus: Ukrainian cultural branding
 - type: essay-response
   focus: Як війна зробила Україну 'видимою'?
-sources:
-- name: М'яка сила України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/М%27яка_сила
-  type: reference
-  notes: Soft power concept
-- name: Kalush Orchestra (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
-  type: reference
-  notes: Eurovision 2022
-- name: Культурна дипломатія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
-  type: reference
-  notes: Cultural diplomacy
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Cultural Diplomat
+prerequisites:
+- chomu-2022-spratsiuvalo
+connects_to:
+- syntez-ahentsnist

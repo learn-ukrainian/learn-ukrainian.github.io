@@ -1,112 +1,118 @@
-module: a1-02
+module: a1-002
 level: A1
 sequence: 2
 slug: the-cyrillic-code-ii
-version: '2.0'
+version: '3.0'
 title: The Cyrillic Code II
-subtitle: The Final 14 Letters
-content_outline:
-- section: Вступ (Introduction)
-  words: 300
-  points:
-  - Quick review of the first 19 letters from a1-01 and a reading diagnostic to identify
-    retention gaps
-  - Introduction to the 'Identity Letters' concept — framing the final 14 letters
-    as the keys to Ukrainian distinctness and linguistic sovereignty
-- section: Унікальні приголосні (Unique Consonants)
-  words: 450
-  points:
-  - 'The ''Unique Seven'' (Г, Ґ, Ж, Ш, Щ, Ч, Ц): presentation of sounds with specific
-    focus on Г vs Ґ distinction as per State Standard §4.1.4'
-  - 'Learner error correction: addressing the tendency to use English hard ''g'' for
-    both Г and Ґ; Г is a voiced ''h'' (head), while Ґ is the rare hard ''g'' (go)'
-  - 'Cultural hook: The repressed letter Ґ — explaining its ban (1933-1990) as an
-    attempt to diminish Ukrainian identity and its role today as a shibboleth for
-    proper education'
-- section: Йотовані голосні та М’який знак (Iotated Vowels and Soft Sign)
-  words: 450
-  points:
-  - Presentation of Iotated Four (Є, Ї, Ю, Я) and their role in euphony (smoothing
-    consonant clumps)
-  - 'Cultural hook: The letter Ї as a symbol of resistance — referencing its use in
-    graffiti in occupied Mariupol (2022) to mark Ukrainian presence and distinctness
-    from Russian'
-  - 'Soft Sign (Ь) function as per State Standard §4.1.3: correcting the ''silent
-    letter'' misconception by explaining palatalization (pressing the tongue flat
-    against the roof of the mouth)'
-  - 'Drilling §4.1.3 standard examples: Львів, шість, and high-frequency word ''день'''
-- section: Голосні та напівголосні (Vowels and Semivowels)
-  words: 400
-  points:
-  - 'Hard I (И) vs Soft I (І) distinction: alignment with State Standard §4.1.4 through
-    minimal pairs like Рим – Рівне'
-  - 'Visual technique ''Smile vs Grin'': І is a wide smile (dots are eyes), while
-    И requires a relaxed jaw/grimace for a lower pitch and harder sound'
-  - Introduction to Short Y (Й) and its usage in high-frequency collocations
-- section: Практика та вимова (Practice and Pronunciation)
-  words: 400
-  points:
-  - 'Contrast drills focusing on common learner hearing errors: minimal pairs for
-    И-І (smile vs grin), Г-Ґ (voiced h vs hard g), and С-СЬ (hard vs soft)'
-  - 'Spelling and identity alignment (§4.1.1): practicing the correct Ukrainian spelling
-    of Kyiv, Kyivskyi, Ukraina, and ukrainets'
-  - Reading practice using high-frequency vocabulary (центр, чай, школа, гарний, жити,
-    день) with focus on proper word stress and phonetic accuracy
-vocabulary_hints:
-  required:
-  - 'центр (center) — Top 300 word; collocations: у центрі, центр міста, торговий
-    центр'
-  - 'чай (tea) — Top 500 word; collocations: пити чай, чорний чай, чашка чаю, чай
-    з лимоном'
-  - 'школа (school) — Top 200 word; collocations: у школі, нова школа, іти до школи'
-  - 'гарний (beautiful/good) — Top 300 word; collocations: гарний день, гарна дівчина,
-    дуже гарний'
-  - 'жити (to live) — Top 50 word; collocations: жити в Україні, жити добре, довго
-    жити'
-  - 'день (day) — Top 50 word; collocations: добрий день, кожен день, цілий день,
-    робочий день'
-  - 'Європа (Europe) — high cultural frequency; collocations: жити в Європі, Західна
-    Європа, поїхати до Європи'
-  - 'яблуко (apple) — medium frequency; collocations: смачне яблуко, червоне яблуко,
-    їсти яблуко; idiom: яблуко розбрату'
-  recommended:
-  - ще (still/more) — high frequency function word
-  - ґанок (porch) — demonstration of the repressed/restored letter Ґ
-  - їжа (food) — demonstration of the unique resistance symbol letter Ї
-  - юнак (young man) — iotated vowel demonstration
-  - ніч (night) — demonstrates soft consonant ending contrast to hard consonants
-  - сім'я (family) — common word showing iotated vowel after apostrophe
-activity_hints:
-- type: quiz
-  focus: Identify final 14 letters
-  items: 20
-- type: match-up
-  focus: Match unique sounds to letters
-  items: 20
-- type: match-up
-  focus: Distinguish И/І, Г/Ґ
-  items: 15
-- type: quiz
-  focus: Read words with new letters
-  items: 20
+subtitle: К И Р Б В Д І — Now You Can Read Words
 focus: grammar
 pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 2000
+objectives:
+- Learner can recognize and pronounce 7 new letters (К, И, Р, Б, В, Д, І) plus О
+- Learner can distinguish И (hard i) from І (soft i)
+- Learner can identify trap letters (Р looks like P, В looks like B)
+- Learner can read real Ukrainian words using 13 letters
+content_outline:
+- section: Вступ
+  words: 200
+  points:
+  - 'Quick review: read 3 words from Code I (мама, сума, луна) as warm-up.'
+  - This module adds 7 letters (5 приголосні + 2 голосні). After this module you know 13 letters and can read real Ukrainian
+    words.
+- section: Голосні — И, І, О
+  words: 400
+  points:
+  - И — риба 🐟. Video link. И is a uniquely Ukrainian vowel — no exact equivalent in English or most European languages. Listen
+    carefully to Anna's video.
+  - 'І — індик 🦃. Video link. І is the soft i — European-style, like English ''ee'' in ''see''. Cultural note: the dotted
+    І as a symbol of Ukrainian identity.'
+  - О — огірок 🥒. Video link. О sounds like 'o' in 'more'. Unlike Russian, unstressed О stays /o/ in Ukrainian (never reduces
+    to /a/).
+  - 'The И vs І distinction is critical. И has a lower, harder sound (jaw relaxed); І is higher and brighter (like a smile).
+    Minimal pair preview: they will appear everywhere.'
+- section: Приголосні — К, Р, Б, В, Д
+  words: 500
+  points:
+  - 'К — кіт 🐱. Video link. Additional: кіно, каша, кава, Київ.'
+  - 'Р — ракета 🚀. Video link. Р is the rolled/trilled r. Looks like Latin P but sounds completely different. This is THE
+    key trap letter — practice the tongue-tip trill. Additional: рука, ранок, рис.'
+  - 'Б — банан 🍌. Video link. Additional: брат, бабуся, більше.'
+  - 'В — вовк 🐺. Video link. Looks like Latin B but sounds like English ''v''. Another trap. Additional: вода, вулиця, вечір.'
+  - 'Д — дім 🏠. Video link. Д looks unfamiliar but sounds simple — like English ''d''. Additional: добре, друг, день.'
+  - 'English sidebar: Trap letters recap — Р looks like P (is /r/), В looks like B (is /v/). These two cause the most confusion
+    for English speakers.'
+- section: Перші слова — First Real Words
+  words: 450
+  points:
+  - With 13 letters you can now read real Ukrainian words, not just syllables.
+  - 'Word drills: банан, рука, вода, молоко, кіно, сила, дірка, міна, лиса, нива, слива.'
+  - 'Phrase practice: Банан і слива. Вода і молоко. Дім і вулиця.'
+  - 'Reading exercise: short paragraph using only the 13 known letters.'
+- section: Практика
+  words: 300
+  points:
+  - 'Minimal pair drills: И vs І in context — ми (we) vs мі- (in compounds).'
+  - 'Trap letter practice: Р vs П (next module), В vs Б — recognizing the sound, not the shape.'
+  - 'Self-check: can you read банан? молоко? Київ?'
+- section: Підсумок
+  words: 150
+  points:
+  - 'Progress: 13 of 33 letters learned (4 голосні + 9 приголосні).'
+  - You can now read real Ukrainian words and simple phrases.
+  - 'Next module: The Cyrillic Code III adds 9 more letters (П, Т, Г, Ґ, Е, З, Ж, Ш, Х) including voiced/voiceless pairs.'
+vocabulary_hints:
+  required:
+  - 'кіт (cat) — key word for К; collocations: мій кіт, рудий кіт'
+  - 'вода (water) — readable from known letters; collocations: пити воду, холодна вода'
+  - банан (banana) — internationalism, readable from known letters
+  - молоко (milk) — uses М, Л from Code I + О, К from Code II
+  - 'рука (hand/arm) — high frequency; collocations: ліва рука, права рука'
+  - 'кіно (cinema) — internationalism; collocations: іти в кіно'
+  - 'дім (house/home) — high frequency; collocations: мій дім, великий дім'
+  recommended:
+  - друг (friend) — high frequency; demonstrates Д and Р together
+  - брат (brother) — family vocabulary; demonstrates Б and Р
+  - слива (plum) — uses С, Л from Code I + В, І from Code II
+activity_hints:
+- type: watch-and-repeat
+  focus: Watch Anna's video for each of the 7 new letters + О
+  items: 8
+- type: classify
+  focus: Sort К И Р Б В Д І О into голосні vs приголосні
+  items: 8
+- type: image-to-letter
+  focus: See emoji (🐱🐟🚀🍌🐺🏠🦃🥒) — which letter?
+  items: 8
+- type: match-up
+  focus: Match letter to key word
+  items: 8
+- type: quiz
+  focus: Which letter makes this sound? (Р looks like P but sounds like...)
+  items: 10
+connects_to:
+- a1-03 (The Cyrillic Code III)
 prerequisites:
 - a1-01 (The Cyrillic Code I)
-connects_to:
-- a1-07 (The Gender Code)
-objectives:
-- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
-- Learner can identify iotated vowels (Є, Ї, Ю, Я)
-- Learner can understand the soft sign (Ь)
-- Learner can distinguish И (hard i) from І (soft i)
-grammar:
-- Unique Ukrainian consonants
-- Iotated vowels
-- Soft sign function
-register: розмовний
-phase: A1.1 [First Contact]
 persona:
   voice: Patient Supportive Tutor
-  role: Ancient Manuscript Restorer
-word_target: 2000
+  role: Typography Artist
+grammar:
+- Letter recognition (К, И, Р, Б, В, Д, І, О)
+- Sound-letter correspondence
+- И vs І distinction
+- Trap letter awareness (Р, В)
+register: розмовний
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: Anna Ohoiko — Ukrainian Lessons
+  letters:
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    О: https://www.youtube.com/watch?v=QT3c1TiZZgk

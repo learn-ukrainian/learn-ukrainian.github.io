@@ -1,55 +1,87 @@
 module: istorio-087
-level: istorio
+level: ISTORIO
 sequence: 87
+slug: yanukovych-tsykl
 version: '1.0'
 title: 'Янукович: Сучасна версія циклу'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of янукович: сучасна версія циклу'
 - Evaluate the historical significance of цикл у xxi столітті
+sources:
+- name: Віктор Янукович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
+  type: reference
+  notes: Biography
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 revolution
+- name: Харківські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  type: reference
+  notes: 2010 agreements
 content_outline:
 - section: Вступ — Цикл у XXI столітті
-  subsections:
+  points:
   - Янукович — не перший і не останній
   - Чому це кооптація
   - Сучасна версія старого паттерну
   - Структура модуля
+  words: 700
 - section: Фаза 1 — Підкуп (2010-2013)
-  subsections:
+  points:
   - 15 мільярдів від Путіна
   - Харківські угоди — флот
   - Знижка на газ
   - Що обіцяли натомість
+  words: 700
 - section: Фаза 2 — Залежність
-  subsections:
+  points:
   - Газова залежність
   - Кредитна залежність
   - Політичний тиск
   - Шлях до ЄС — закритий
+  words: 700
 - section: Фаза 3 — Вілнюс 2013
-  subsections:
+  points:
   - Угода про асоціацію — готова
   - Відмова — чому
   - Тиск Росії
   - Точка неповернення
+  words: 700
 - section: Фаза 4 — Крах
-  subsections:
+  points:
   - Майдан
   - Втеча
   - Анексія Криму
   - Війна на Донбасі
+  words: 700
 - section: Чому цикл зламався
-  subsections:
+  points:
   - Громадянське суспільство
   - Досвід 2004
   - Європейський вибір
   - Народ — не еліта
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Янукович — останній «гетьман»?
   - Цикл vs. революція
   - Перехід до синтезу
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Янукович
 - кооптація
@@ -66,6 +98,15 @@ vocabulary:
 - газовий шантаж
 - Вільнюський саміт
 - революція
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Map Yanukovych through co-optation cycle
@@ -77,38 +118,10 @@ activities:
   focus: Yanukovych vs. historical figures — same pattern
 - type: essay-response
   focus: Чим Янукович схожий на Хмельницького, Мазепу, Розумовського?
-sources:
-- name: Віктор Янукович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
-  type: reference
-  notes: Biography
-- name: Революція гідності (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_гідності
-  type: reference
-  notes: 2014 revolution
-- name: Харківські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харківські_угоди
-  type: reference
-  notes: 2010 agreements
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Kleptocracy Researcher
+prerequisites:
+- khrushchov-shelest-tsykl
+connects_to:
+- syntez-tsykl-zrady

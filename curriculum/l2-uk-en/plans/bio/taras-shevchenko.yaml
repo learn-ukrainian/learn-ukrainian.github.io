@@ -1,44 +1,71 @@
-module: bio-39
+module: bio-039
 level: BIO
 sequence: 39
 slug: taras-shevchenko
 version: '2.0'
 title: 'Тарас Шевченко: Національний Пророк'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of тарас шевченко: національний пророк'
+- Evaluate the contributions of більше ніж поет
+- Trace the career and influence of шевченко в деколонізаційному дискурсі
+sources:
+- name: Тарас Шевченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут літератури НАН України
+  url: https://shevchenko.inst.gov.ua/
+  type: reference
+  notes: Академічні дослідження творчості
+- name: Музей Тараса Шевченка
+  url: https://museumshevchenko.org.ua/
+  type: reference
+  notes: Архівні матеріали та експозиції
 content_outline:
 - section: Вступ — Більше ніж поет
   points:
   - Шевченко як духовний батько української нації
   - Від кріпака до національного символу
   - Актуальність його спадщини сьогодні
+  words: 700
 - section: Кріпацтво та ранні роки
   points:
   - Народження в Моринцях (1814)
   - Сирітське дитинство
   - Талант до малювання як порятунок
+  words: 700
 - section: Викуп та становлення митця
   points:
   - Роль Брюллова та Жуковського
   - Навчання в Академії мистецтв
   - Перші літературні спроби
+  words: 700
 - section: Кобзар та пробудження нації
   points:
   - Вихід першого Кобзаря (1840)
   - Революційний вплив на українську свідомість
   - Найважливіші твори раннього періоду
+  words: 700
 - section: Кирило-Мефодіївське братство та заслання
   points:
   - Участь у таємному товаристві
   - Арешт та вирок (1847)
   - Десять років солдатчини
+  words: 700
 - section: Останні роки та безсмертя
   points:
   - Повернення із заслання
   - Останні твори та Заповіт
   - Смерть і перепоховання
+  words: 700
 - section: Дискусія — Шевченко в деколонізаційному дискурсі
   points:
   - Імперська спадщина та її подолання
   - Шевченко як антиколоніальний голос
+  words: 800
 vocabulary_hints:
   required:
   - кріпак (serf)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чому Шевченко став національним символом?
   output: Аргументований есей
-focus: biography
-prerequisites:
-- hist-national-awakening
 connects_to:
 - bio-97-panteleimon-kulish
 - bio-28-ivan-franko
 - bio-40-lesya-ukrainka
-module_type: biography
-sources:
-- name: Тарас Шевченко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Інститут літератури НАН України
-  url: https://shevchenko.inst.gov.ua/
-  type: reference
-  notes: Академічні дослідження творчості
-- name: Музей Тараса Шевченка
-  url: https://museumshevchenko.org.ua/
-  type: reference
-  notes: Архівні матеріали та експозиції
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of тарас шевченко: національний пророк'
-- Evaluate the contributions of більше ніж поет
-- Trace the career and influence of шевченко в деколонізаційному дискурсі
+prerequisites:
+- hist-national-awakening
 persona:
   voice: Senior Biographer
   role: The Kobzar
+module_type: biography
+immersion: 100% Ukrainian

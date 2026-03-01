@@ -1,41 +1,68 @@
-sequence: 8
-module: lit-08
+module: lit-008
 level: LIT
+sequence: 8
 slug: konotop-witch
 version: '2.0'
 title: 'Конотопська Відьма: Сатира на Руїну'
 subtitle: 'LIT-008: Гумор як Дзеркало Деградації'
+focus: literature
+pedagogy: literature
+phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
+word_target: 5000
+objectives:
+- Analyze the satire in "Konotop Witch"
+- Contrast satire with sentimentalism
+- Evaluate the historical context of the Hetmanate's decline
+sources:
+- name: Конотопська відьма — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
+  type: primary
+  notes: Повість для детального аналізу
+- name: Аналіз "Конотопської відьми"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Козацька старшина XVIII ст.
+  url: https://uk.wikipedia.org/wiki/Козацька_старшина
+  type: reference
+  notes: Історичний контекст
 content_outline:
 - section: Вступ — Найтемніша і найсмішніша повість
   points:
   - Контраст з "Марусею"
   - Бурлескний реалізм
   - Сатира на адміністративний ідіотизм
+  words: 850
 - section: Сюжет — полювання на відьму
   points:
   - Сотник Забрьоха і його «похід»
   - Писар Пістряк — справжній керманич
   - 'Кульмінація: топлення жінок'
+  words: 850
 - section: Антигерої — галерея типів
   points:
   - Забрьоха — тупість і лінь
   - Пістряк — хитрість і корупція
   - '"Еліта" як антипод народу'
+  words: 850
 - section: Готика та народна демонологія
   points:
   - Елементи готичного роману
   - Відьма як літературний образ
   - Функція фантастичного (не налякати — висміяти)
+  words: 850
 - section: Мовна стилізація
   points:
   - Канцеляризми XVIII століття
   - '"Макаронічна" мова Пістряка'
   - Вульгаризми та лайка
+  words: 850
 - section: Підсумок — Енциклопедія шахрайства
   points:
   - Вплив на "Майстра і Маргариту"
   - Актуальність сатири сьогодні
   - Квітка між сміхом і сльозами
+  words: 750
 vocabulary_hints:
   required:
   - сатира (satire)
@@ -62,39 +89,18 @@ activity_hints:
 - type: essay-response
   focus: Чому Квітка використовує гумор для критики влади?
   output: Критичне есе
-focus: literature
-pedagogy: literature
-prerequisites:
-- lit-06 (Kvitka biography)
-- lit-02 to lit-04 (Eneida for burlesque comparison)
 connects_to:
 - lit-10 (Language of Kvitka — стилістичний аналіз)
 - lit-14 (Son — політична сатира Шевченка)
-objectives:
-- Analyze the satire in "Konotop Witch"
-- Contrast satire with sentimentalism
-- Evaluate the historical context of the Hetmanate's decline
+prerequisites:
+- lit-06 (Kvitka biography)
+- lit-02 to lit-04 (Eneida for burlesque comparison)
+persona:
+  voice: Senior Philologist & Critic
+  role: Satirical Witch-Hunter
 grammar:
 - Burlesque style elements
 - Use of surzhik/macaronic language for satire
 - Archaic bureaucratic vocabulary (Kantseliaryt)
 module_type: literature
-sources:
-- name: Конотопська відьма — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
-  type: primary
-  notes: Повість для детального аналізу
-- name: Аналіз "Конотопської відьми"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
-  type: secondary
-  notes: Літературознавчий аналіз
-- name: Козацька старшина XVIII ст.
-  url: https://uk.wikipedia.org/wiki/Козацька_старшина
-  type: reference
-  notes: Історичний контекст
 immersion: 100% Ukrainian
-phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
-persona:
-  voice: Senior Philologist & Critic
-  role: Satirical Witch-Hunter
-word_target: 5000

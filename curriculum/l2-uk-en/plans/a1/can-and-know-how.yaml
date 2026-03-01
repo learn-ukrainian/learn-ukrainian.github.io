@@ -1,56 +1,61 @@
-module: a1-45
+module: a1-045
 level: A1
 sequence: 45
 slug: can-and-know-how
 version: '2.0'
 title: Can and Know How
 subtitle: Ability and Permission
+focus: grammar
+pedagogy: PPP
+phase: A1.5 [Modals, Commands & Life]
+word_target: 2000
+objectives:
+- Conjugate могти and вміти in present tense
+- Distinguish circumstantial ability from learned skill
+- Use можна/не можна for permission and prohibition
+- Choose the correct modal in context
 content_outline:
 - section: Могти (Can/Be able to)
   words: 500
   points:
-  - 'Full conjugation: можу, можеш, може, можемо, можете, можуть. Irregular stem
-    change мог- → мож-. High-frequency verb (Top 50).'
-  - 'Physical and circumstantial ability: Я можу прийти завтра (I can come tomorrow).
-    Я не можу зараз (I cannot right now). Expressing temporary capacity.'
-  - 'Request pattern: Можу я...? (May I...?). Polite alternative to Можна. Можу
-    я запитати? Можу я подивитися?'
+  - 'Full conjugation: можу, можеш, може, можемо, можете, можуть. Irregular stem change мог- → мож-. High-frequency verb (Top
+    50).'
+  - 'Physical and circumstantial ability: Я можу прийти завтра (I can come tomorrow). Я не можу зараз (I cannot right now).
+    Expressing temporary capacity.'
+  - 'Request pattern: Можу я...? (May I...?). Polite alternative to Можна. Можу я запитати? Можу я подивитися?'
 - section: Вміти (Know how to)
   words: 400
   points:
-  - 'Conjugation: вмію, вмієш, вміє, вміємо, вмієте, вміють. Regular -іти verb
-    pattern with -ію ending in 1st person singular.'
-  - 'Learned skills: Я вмію плавати (I know how to swim). Я вмію готувати (I know
-    how to cook). Я вмію водити машину (I know how to drive).'
-  - 'Key contrast: можу (circumstantial — can right now) vs вмію (acquired skill
-    — learned how to). Я можу плавати (the pool is open) vs Я вмію плавати (I learned
-    to swim).'
+  - 'Conjugation: вмію, вмієш, вміє, вміємо, вмієте, вміють. Regular -іти verb pattern with -ію ending in 1st person singular.'
+  - 'Learned skills: Я вмію плавати (I know how to swim). Я вмію готувати (I know how to cook). Я вмію водити машину (I know
+    how to drive).'
+  - 'Key contrast: можу (circumstantial — can right now) vs вмію (acquired skill — learned how to). Я можу плавати (the pool
+    is open) vs Я вмію плавати (I learned to swim).'
 - section: Можна / Не можна (It is allowed / Not allowed)
   words: 400
   points:
-  - 'Impersonal permission construction: Тут можна фотографувати? (Is it allowed
-    to photograph here?). Тут не можна курити (Smoking is not allowed here).'
-  - 'Можна + infinitive for polite requests: Можна увійти? (May I enter?). Можна
-    подивитися? (May I look?). More formal than Можу я...?'
-  - 'Common signs and rules: Не можна паркуватися (No parking). Тут можна їсти
-    (Eating is allowed here). Reading prohibition signs as practical skill.'
+  - 'Impersonal permission construction: Тут можна фотографувати? (Is it allowed to photograph here?). Тут не можна курити
+    (Smoking is not allowed here).'
+  - 'Можна + infinitive for polite requests: Можна увійти? (May I enter?). Можна подивитися? (May I look?). More formal than
+    Можу я...?'
+  - 'Common signs and rules: Не можна паркуватися (No parking). Тут можна їсти (Eating is allowed here). Reading prohibition
+    signs as practical skill.'
 - section: Не можу vs Не вмію vs Не можна (Contrasting Negations)
   words: 350
   points:
-  - 'Three-way contrast: Не можу = I am unable (right now, circumstance). Не вмію
-    = I never learned (permanent gap). Не можна = It is not allowed (external rule).'
-  - 'Contextual examples: Я не можу прийти сьогодні (busy today). Я не вмію кататися
-    на ковзанах (never learned). Тут не можна голосно розмовляти (library rule).'
-  - 'Learner error prevention: Mixing можу and вмію is the most common mistake.
-    Drill: "Can you swim?" — if asking about skill → Ти вмієш? If asking about
-    now → Ти можеш?'
+  - 'Three-way contrast: Не можу = I am unable (right now, circumstance). Не вмію = I never learned (permanent gap). Не можна
+    = It is not allowed (external rule).'
+  - 'Contextual examples: Я не можу прийти сьогодні (busy today). Я не вмію кататися на ковзанах (never learned). Тут не можна
+    голосно розмовляти (library rule).'
+  - 'Learner error prevention: Mixing можу and вмію is the most common mistake. Drill: "Can you swim?" — if asking about skill
+    → Ти вмієш? If asking about now → Ти можеш?'
 - section: Практика (Practice)
   words: 350
   points:
-  - 'Situation-based modal choice drills: Given a scenario, select the correct modal
-    (могти/вміти/можна). Context determines the right verb.'
-  - 'Permission dialogues: Asking and granting/denying permission in school, museum,
-    restaurant, workplace contexts. Building communicative competence.'
+  - 'Situation-based modal choice drills: Given a scenario, select the correct modal (могти/вміти/можна). Context determines
+    the right verb.'
+  - 'Permission dialogues: Asking and granting/denying permission in school, museum, restaurant, workplace contexts. Building
+    communicative competence.'
 vocabulary_hints:
   required:
   - могти (can/be able to) — можу, можеш, може; circumstantial ability
@@ -79,24 +84,15 @@ activity_hints:
 - type: true-false
   focus: Evaluate modal usage correctness in sentences
   items: 8
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-44 (Checkpoint Daily Life)
 connects_to:
 - a1-46 (Must and Want)
-objectives:
-- Conjugate могти and вміти in present tense
-- Distinguish circumstantial ability from learned skill
-- Use можна/не можна for permission and prohibition
-- Choose the correct modal in context
+prerequisites:
+- a1-44 (Checkpoint Daily Life)
+persona:
+  voice: Patient Supportive Tutor
+  role: Swimming Instructor
 grammar:
 - Могти conjugation (irregular stem)
 - Вміти conjugation
 - Можна/не можна impersonal construction
 register: розмовний
-phase: A1.5 [Modals, Commands & Life]
-persona:
-  voice: Patient Supportive Tutor
-  role: Swimming Instructor
-word_target: 2000

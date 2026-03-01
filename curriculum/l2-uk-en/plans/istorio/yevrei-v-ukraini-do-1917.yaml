@@ -1,49 +1,80 @@
 module: istorio-118
-level: istorio
+level: ISTORIO
 sequence: 118
+slug: yevrei-v-ukraini-do-1917
 version: '1.0'
 title: Євреї в Україні до 1917
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - Analyze the causes and consequences of євреї в україні до 1917
 - Evaluate the historical significance of спільна земля
+sources:
+- name: Історія євреїв в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
+  type: reference
+  notes: Jewish history overview
+- name: Погроми в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
+  type: reference
+  notes: Pogroms
+- name: Штетл (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Штетл
+  type: reference
+  notes: Shtetl life
 content_outline:
 - section: Вступ — Спільна земля
-  subsections:
+  points:
   - Євреї в Україні — 1000 років
   - Найбільша єврейська громада світу
   - Співіснування і конфлікт
   - Структура модуля
+  words: 850
 - section: Середньовіччя і Козацька доба
-  subsections:
+  points:
   - Євреї в Речі Посполитій
   - Орендарі і посередники
   - Хмельниччина 1648
   - Гайдамаччина
+  words: 850
 - section: Штетл — життя
-  subsections:
+  points:
   - «Смуга осілості»
   - Культура ідиш
   - Професії — обмеження
   - Взаємодія з українцями
+  words: 850
 - section: Погроми XIX-початок XX ст.
-  subsections:
+  points:
   - 1881-1884
   - 1903-1906
   - Роль держави
   - Роль місцевого населення
+  words: 850
 - section: Громадянська війна 1917-1921
-  subsections:
+  points:
   - Масштаб погромів
   - Хто чинив — всі сторони
   - Петлюра — суперечлива фігура
   - Наслідки
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - Складна історія
   - Не тільки погроми
   - Перехід до Голокосту
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - єврей
 - штетл
@@ -60,6 +91,15 @@ vocabulary:
 - Гаскала
 - сіоністський рух
 - «Чорна сотня»
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: 1000 years of Jewish presence in Ukraine
@@ -71,38 +111,10 @@ activities:
   focus: Shtetl life and Ukrainian-Jewish interaction
 - type: essay-response
   focus: Чи український антисемітизм — 'особливий'?
-sources:
-- name: Історія євреїв в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
-  type: reference
-  notes: Jewish history overview
-- name: Погроми в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
-  type: reference
-  notes: Pogroms
-- name: Штетл (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Штетл
-  type: reference
-  notes: Shtetl life
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Judaica Scholar
+prerequisites:
+- syntez-polska-ukraina-2022
+connects_to:
+- holokost-v-ukraini

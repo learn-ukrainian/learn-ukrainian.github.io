@@ -6,7 +6,8 @@ version: '2.0'
 title: Сучасна українська література
 focus: literature
 pedagogy: TTT
-phase: 'C2.2 [Literature & Creative Writing]'
+phase: C2.2 [Literature & Creative Writing]
+word_target: 5000
 objectives:
 - TBD
 sources:
@@ -23,63 +24,66 @@ sources:
   type: reference
   notes: Prize-winning contemporary literature
 content_outline:
-- section: Вступ — Літературний ландшафт сьогодення (Introduction — Today's Literary
-    Landscape)
+- section: Вступ — Літературний ландшафт сьогодення (Introduction — Today's Literary Landscape)
   words: 700
   points:
-  - 'Періодизація сучасної літератури: від постмодернізму 90-х до ''нового реалізму''
-    та воєнної прози'
-  - Дискурс ідентичності в літературі незалежної України та відхід від радянського
-    канону
-  - 'Культурний контекст: як війна змінила роль письменника в суспільстві (інтелектуал
-    vs волонтер)'
+  - 'Періодизація сучасної літератури: від постмодернізму 90-х до ''нового реалізму'' та воєнної прози'
+  - Дискурс ідентичності в літературі незалежної України та відхід від радянського канону
+  - 'Культурний контекст: як війна змінила роль письменника в суспільстві (інтелектуал vs волонтер)'
 - section: Провідні автори та культурні ікони (Leading Authors and Cultural Icons)
   words: 1000
   points:
-  - 'Сергій Жадан як ''голос покоління'': поєднання літератури, музики та волонтерства;
-    феномен стадіонних читань'
-  - 'Патріархи та матріархи: Юрій Андрухович (від Бу-Ба-Бу до сьогодні) та Оксана
-    Забужко (філософська есеїстика та проза)'
-  - 'Андрій Курков: вибір мови, світове визнання та представлення України на міжнародній
-    арені'
+  - 'Сергій Жадан як ''голос покоління'': поєднання літератури, музики та волонтерства; феномен стадіонних читань'
+  - 'Патріархи та матріархи: Юрій Андрухович (від Бу-Ба-Бу до сьогодні) та Оксана Забужко (філософська есеїстика та проза)'
+  - 'Андрій Курков: вибір мови, світове визнання та представлення України на міжнародній арені'
   - Марія Матіос та психологізм історичної пам’яті в українській літературі
 - section: Жанрова панорама та нове покоління (Genre Panorama and the New Generation)
   words: 1000
   points:
   - 'Трансформація історичного роману: пошук відповідей на сучасні виклики через минуле'
-  - 'Популярні жанри: детектив, трилер та магічний реалізм; розвиток українського
-    фентезі'
+  - 'Популярні жанри: детектив, трилер та магічний реалізм; розвиток українського фентезі'
   - Автофікшн та документальна проза як відповідь на травматичний досвід війни
   - 'Нова хвиля: автори 2010-х та 2020-х років, тематичні тенденції та формальні експерименти'
 - section: Книжкова інфраструктура та індустрія (Book Infrastructure and Industry)
   words: 900
   points:
-  - 'Фестивальне життя: Книжковий Арсенал (Київ) як мультидисциплінарний захід vs
-    традиційний Форум видавців (Львів)'
-  - Провідні видавництва (Старого Лева, Фабула, Віват) та їхня роль у формуванні читацьких
-    смаків
+  - 'Фестивальне життя: Книжковий Арсенал (Київ) як мультидисциплінарний захід vs традиційний Форум видавців (Львів)'
+  - Провідні видавництва (Старого Лева, Фабула, Віват) та їхня роль у формуванні читацьких смаків
   - Літературні премії (Шевченківська, Книга року ВВС, Angelus) як орієнтири якості
-  - 'Цифрова трансформація: подкасти про книги, літературні блоги та роль соціальних
-    мереж у промоції'
+  - 'Цифрова трансформація: подкасти про книги, літературні блоги та роль соціальних мереж у промоції'
 - section: Майстерня книжкового оглядача (Book Reviewer's Workshop)
   words: 1000
   points:
-  - 'Роль книжкового оглядача: професійна термінологія (сюжетна арка, наратив, фокалізація,
-    інтертекстуальність)'
+  - 'Роль книжкового оглядача: професійна термінологія (сюжетна арка, наратив, фокалізація, інтертекстуальність)'
   - 'Методологія написання рецензії: від аналізу задуму до критичної оцінки виконання'
-  - 'Learner Error Focus: розрізнення понять ''сучасний'' (contemporary) та ''модерний''
-    (modernist/early 20th century)'
-  - 'Linguistic Correction: подолання інтерференції (вживання ''письменник'' замість
-    русизму ''писатель'')'
-  - 'Syntactic Drill: правильне керування дієслова ''цікавитися'' + орудний відмінок
-    (цікавитися сучасною літературою)'
+  - 'Learner Error Focus: розрізнення понять ''сучасний'' (contemporary) та ''модерний'' (modernist/early 20th century)'
+  - 'Linguistic Correction: подолання інтерференції (вживання ''письменник'' замість русизму ''писатель'')'
+  - 'Syntactic Drill: правильне керування дієслова ''цікавитися'' + орудний відмінок (цікавитися сучасною літературою)'
 - section: 'Підсумок: Створення вторинних текстів (Summary: Creating Secondary Texts)'
   words: 400
   points:
-  - 'Дотримання стандарту §4.3.8: створення рефератів та довідково-інформаційних повідомлень
-    про літературні новинки'
+  - 'Дотримання стандарту §4.3.8: створення рефератів та довідково-інформаційних повідомлень про літературні новинки'
   - 'Рекомендації для читання: формування власного літературного ''списку бажань'''
   - Власна позиція в літературному полі та вміння аргументувати вподобання
+vocabulary_hints:
+  required:
+  - сучасний (contemporary) — сучасна література, сучасний світ; high frequency in cultural analysis
+  - постмодернізм (postmodernism) — епоха постмодернізму, український постмодернізм; academic register
+  - тенденція (trend) — основні тенденції, позитивна тенденція; key for analytical writing
+  - покоління (generation) — молоде покоління, покоління незалежності; often used for literary grouping
+  - дебют (debut) — літературний дебют, успішний дебют; specific to new authors
+  - премія (prize/award) — лауреат премії, Шевченківська премія; indicator of prestige
+  - видавництво (publishing house) — провідне видавництво, Форум видавців; industry terminology
+  - ярмарок (fair/market) — книжковий ярмарок, Книжковий Арсенал; cultural infrastructure
+  - війна (war) — воєнна література, досвід війни; central context for current narratives
+  - ідентичність (identity) — національна ідентичність, пошук ідентичності; core sociocultural concept
+  recommended:
+  - автофікшн (autofiction) — blending autobiography and fiction; rising trend
+  - магічний реалізм (magical realism) — literary style associated with Latin American and Ukrainian prose
+  - слем (slam poetry) — performative poetry; register of youth subculture
+  - трилер (thriller) — popular genre classification
+  - бестселер (bestseller) — commercial success marker
+  - письменник (writer) — correct term to avoid interference with 'писатель'
 vocabulary:
   required:
   - сучасний (contemporary)
@@ -99,6 +103,15 @@ vocabulary:
   - трилер (thriller)
   - бестселер (bestseller)
   forbidden: '[]'
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
 activities:
   types_required:
   - essay-response
@@ -112,41 +125,8 @@ connects_to:
 - c2-39 (Digital Literature)
 - c2-40 (Literary Prizes & Canon)
 - c2-41 (Literary Community)
-vocabulary_hints:
-  required:
-  - сучасний (contemporary) — сучасна література, сучасний світ; high frequency in
-    cultural analysis
-  - постмодернізм (postmodernism) — епоха постмодернізму, український постмодернізм;
-    academic register
-  - тенденція (trend) — основні тенденції, позитивна тенденція; key for analytical
-    writing
-  - покоління (generation) — молоде покоління, покоління незалежності; often used
-    for literary grouping
-  - дебют (debut) — літературний дебют, успішний дебют; specific to new authors
-  - премія (prize/award) — лауреат премії, Шевченківська премія; indicator of prestige
-  - видавництво (publishing house) — провідне видавництво, Форум видавців; industry
-    terminology
-  - ярмарок (fair/market) — книжковий ярмарок, Книжковий Арсенал; cultural infrastructure
-  - війна (war) — воєнна література, досвід війни; central context for current narratives
-  - ідентичність (identity) — національна ідентичність, пошук ідентичності; core sociocultural
-    concept
-  recommended:
-  - автофікшн (autofiction) — blending autobiography and fiction; rising trend
-  - магічний реалізм (magical realism) — literary style associated with Latin American
-    and Ukrainian prose
-  - слем (slam poetry) — performative poetry; register of youth subculture
-  - трилер (thriller) — popular genre classification
-  - бестселер (bestseller) — commercial success marker
-  - письменник (writer) — correct term to avoid interference with 'писатель'
-activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
 persona:
   voice: Senior Specialist
   role: Book Reviewer
+prerequisites:
+- creative-writing-nonfiction

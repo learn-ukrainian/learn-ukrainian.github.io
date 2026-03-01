@@ -1,56 +1,88 @@
 module: istorio-066
-level: istorio
+level: ISTORIO
 sequence: 66
+slug: tretia-khvylia-dipivtsi
 version: '1.0'
 title: 'Третя хвиля: ДіПі (1945-1950)'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of третя хвиля: діпі (1945-1950)'
 - Evaluate the historical significance of хто такі діпі?
+sources:
+- name: Переміщені особи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переміщені_особи
+  type: reference
+  notes: DP overview
+- name: Табори ДіПі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Табори_переміщених_осіб
+  type: reference
+  notes: DP camps
+- name: Українські ДіПі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб
+  type: reference
+  notes: Ukrainian DPs specifically
 content_outline:
 - section: Вступ — Хто такі ДіПі?
-  subsections:
+  points:
   - Displaced Persons — визначення
   - Масштаби — мільйони людей
   - Хто серед українців
   - Структура модуля
+  words: 700
 - section: Як опинилися на Заході
-  subsections:
+  points:
   - Остарбайтери — примусові робітники
   - Біженці 1944 — хто тікав
   - Вояки — дивізія, УПА
   - Політична еміграція
+  words: 700
 - section: Табори ДіПі
-  subsections:
+  points:
   - Німеччина — основний регіон
   - Австрія — менша кількість
   - Організація життя
   - Культурне життя — школи, театри, преса
   - «Маленька Україна» в таборах
+  words: 700
 - section: Загроза репатріації
-  subsections:
+  points:
   - Ялтинські угоди — примусова репатріація
   - Операція «Кіл Хаул»
   - Як уникали видачі
   - Трагедії — хто не уник
+  words: 700
 - section: Еміграція до «третіх країн»
-  subsections:
+  points:
   - США — закон 1948
   - Канада — повоєнна імміграція
   - Австралія — нові громади
   - Південна Америка — продовження
+  words: 700
 - section: Спадщина третьої хвилі
-  subsections:
+  points:
   - Інтелектуальний потенціал
   - Інституції — УВАН, НТШ
   - Політична активність
   - Антирадянська діяльність
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - ДіПі — найосвіченіша хвиля
   - Збереження культури
   - Вплив на незалежність 1991
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - переміщена особа
 - ДіПі
@@ -67,6 +99,15 @@ vocabulary:
 - таборове життя
 - культурна еліта
 - антирадянський
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Daily life in DP camps — sources
@@ -78,38 +119,10 @@ activities:
   focus: Profiles of key DP-era figures
 - type: essay-response
   focus: Чому третю хвилю називають 'найосвіченішою'?
-sources:
-- name: Переміщені особи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переміщені_особи
-  type: reference
-  notes: DP overview
-- name: Табори ДіПі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Табори_переміщених_осіб
-  type: reference
-  notes: DP camps
-- name: Українські ДіПі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб
-  type: reference
-  notes: Ukrainian DPs specifically
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Displaced Persons Researcher
+prerequisites:
+- druha-khvylia-politychna
+connects_to:
+- diaspora-orhanizatsiyi

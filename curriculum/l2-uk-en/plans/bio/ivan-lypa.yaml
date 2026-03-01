@@ -1,45 +1,67 @@
-module: bio-61
+module: bio-063
 level: BIO
-sequence: 61
+sequence: 63
 slug: ivan-lypa
 version: '2.0'
 title: 'Іван Липа: Лікар і письменник'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of іван липа: лікар і письменник'
+- Evaluate the contributions of лікар душ українських
+- Trace the career and influence of пророк незалежності
+sources:
+- name: Іван Липа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
+  type: primary
+  notes: Biography of the doctor, writer, and patriot
+- name: Братство тарасівців
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  type: reference
+  notes: Information about the organization Lypa co-founded
 content_outline:
 - section: Вступ — Лікар душ українських
   points:
   - Лікар, письменник, громадський діяч
   - Засновник Братства тарасівців
   - Ідеолог української незалежності
+  words: 850
 - section: Юність та освіта (1865-1891)
   points:
   - Народження на Полтавщині
   - Медична освіта в Харкові
   - Перші літературні спроби
   - Формування національної свідомості
+  words: 850
 - section: Братство тарасівців (1891-1898)
   points:
   - Заснування таємної організації
   - Ідеологія українського націоналізму
   - Члени та діяльність
   - Розгром братства царською владою
+  words: 850
 - section: Лікарська практика та література (1890-ті–1920)
   points:
   - Робота лікарем в Одесі
   - Повісті та оповідання
   - Публіцистика
   - Поєднання медицини та літератури
+  words: 850
 - section: Революційні роки (1917-1923)
   points:
   - Участь у боротьбі за незалежність
   - Робота в УНР
   - Еміграція
   - Загибель у 1923 році
+  words: 850
 - section: Спадщина — Пророк незалежності
   points:
   - Вплив на український націоналізм
   - Син Юрій Липа — продовжувач справи
   - Сучасне вшанування
   - Липа як символ інтелігенції
+  words: 750
 vocabulary_hints:
   required:
   - лікар (doctor)
@@ -66,28 +88,13 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграло Братство тарасівців в історії України?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-33
 connects_to:
 - bio-42
 - bio-44
-module_type: biography
-sources:
-- name: Іван Липа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
-  type: primary
-  notes: Biography of the doctor, writer, and patriot
-- name: Братство тарасівців
-  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
-  type: reference
-  notes: Information about the organization Lypa co-founded
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of іван липа: лікар і письменник'
-- Evaluate the contributions of лікар душ українських
-- Trace the career and influence of пророк незалежності
+prerequisites:
+- bio-33
 persona:
   voice: Senior Biographer
   role: Field Doctor
+module_type: biography
+immersion: 100% Ukrainian

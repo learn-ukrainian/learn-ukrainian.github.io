@@ -1,21 +1,34 @@
-sequence: 107
-module: ruth-107
+module: ruth-102
+level: RUTH
+sequence: 102
 slug: berynda-leksykon
-title_uk: "Лексикон словенороський Памва Беринди (1627)"
-title_en: "Berynda's Slaveno-Ruthenian Lexicon (1627)"
+version: '2.0'
+title: Лексикон словенороський Памва Беринди (1627)
+subtitle: Berynda's Slaveno-Ruthenian Lexicon (1627)
+focus: The most comprehensive pre-modern Ukrainian dictionary — 7000+ entries mapping Church Slavonic to living Ukrainian
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "The most comprehensive pre-modern Ukrainian dictionary — 7000+ entries mapping Church Slavonic to living Ukrainian"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Pamvo Berynda: monk, scholar, printer at Kyiv-Pechersk Lavra. Context: why a 7000-entry dictionary was needed — the gap between liturgical and spoken language."
+  points:
+  - 'Pamvo Berynda: monk, scholar, printer at Kyiv-Pechersk Lavra. Context: why a 7000-entry dictionary was needed — the gap
+    between liturgical and spoken language.'
+  words: 1250
 - section: Основний матеріал
-  description: "Structure and methodology of the Lexicon. Sample entries showing multiple Ukrainian synonyms for single CS terms. Evidence of dialectal variation. Botanical, medical, everyday vocabulary."
+  points:
+  - Structure and methodology of the Lexicon. Sample entries showing multiple Ukrainian synonyms for single CS terms. Evidence
+    of dialectal variation. Botanical, medical, everyday vocabulary.
+  words: 1250
 - section: Практика
-  description: "Working with actual Lexicon entries. Tracing words from Berynda through to modern Ukrainian dictionaries. Identifying lost words and surviving ones."
+  points:
+  - Working with actual Lexicon entries. Tracing words from Berynda through to modern Ukrainian dictionaries. Identifying
+    lost words and surviving ones.
+  words: 1250
 - section: Підсумок
-  description: "Berynda's legacy: establishing Ukrainian lexicographic tradition. The Lexicon as a snapshot of living Ukrainian in the 1620s."
+  points:
+  - 'Berynda''s legacy: establishing Ukrainian lexicographic tradition. The Lexicon as a snapshot of living Ukrainian in the
+    1620s.'
+  words: 1250
 vocabulary_hints:
 - лексикон
 - словник
@@ -23,12 +36,24 @@ vocabulary_hints:
 - тлумачний
 - гасло
 - реєстрове слово
-activity_types:
-- transcription
-- etymology-trace
-- parallel-text
-- loanword-trace
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: loanword-trace
+  focus: ''
+  items: 1
 persona:
-  voice: "Lexicographer"
-  role: "Lavra Scholar"
-source_url: "http://litopys.org.ua/berlex/be.htm"
+  voice: Lexicographer
+  role: Lavra Scholar
+source_url: http://litopys.org.ua/berlex/be.htm
+prerequisites:
+- zyzaniy-leksys
+connects_to:
+- uzhevych-hramatyka

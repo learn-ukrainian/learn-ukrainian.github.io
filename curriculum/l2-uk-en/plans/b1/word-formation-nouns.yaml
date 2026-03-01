@@ -1,106 +1,102 @@
-module: b1-56
+module: b1-056
 level: B1
 sequence: 56
 slug: word-formation-nouns
 version: '2.0'
-title: 'Словотвір іменників'
+title: Словотвір іменників
 subtitle: 'Noun Word Formation: Suffixes, Prefixes, and Composition'
 focus: grammar
 pedagogy: PPP
-phase: 'B1.7 [Word Formation and Lexicology]'
-register: нейтральний
-immersion: 75-100% Ukrainian
-prerequisites:
-  - 'b1-55 (Checkpoint: Advanced Grammar)'
+phase: B1.7 [Word Formation and Lexicology]
+word_target: 4000
+objectives:
+- Learner can form nouns using productive Ukrainian suffixes
+- Learner can use common noun prefixes (без-, не-, під-, пере-)
+- Learner can form and understand compound nouns
+- Learner can build word formation chains from a root
+content_outline:
+- section: 'Вступ: Як народжуються нові слова (Introduction: How New Words Are Born)'
+  words: 500
+  points:
+  - 'State Standard §4.3.3: word formation as B1 requirement'
+  - 'Overview of word formation types: суфіксальний, префіксальний, префіксально-суфіксальний, основоскладання'
+  - 'Morpheme review: корінь (root), суфікс (suffix), префікс (prefix), закінчення (ending)'
+- section: Суфіксальний словотвір (Suffixation)
+  words: 900
+  points:
+  - 'Agent nouns: -ник (працівник), -ець (борець), -ач (читач), -тель (учитель)'
+  - 'Abstract nouns: -ість (радість), -ння (читання), -ство (мистецтво), -ота (доброта)'
+  - 'Place nouns: -ня (читальня, пекарня), -ище (летовище, стрільбище) — note: diminutive suffixes covered in dedicated module
+    b1-52 (diminutives-master-class)'
+  - 'Feminine counterparts: -ка (студентка), -иня (майстриня), -еса (поетеса)'
+  - 'Learner drill: verb stem + suffix → noun (читати→читання→читач→читальня)'
+- section: Префіксальний словотвір (Prefixation)
+  words: 700
+  points:
+  - 'Common noun prefixes: без- (безробіття), не- (нещастя), під- (підзаголовок), пере- (перебудова)'
+  - 'Negative: не- (невдача, нелюдь) vs без- (безнадія, безхатько)'
+  - 'Spatial/temporal: перед- (передмова), після- (післямова), над- (надзвичайність)'
+  - 'Learner error: confusing не- prefix with не particle'
+- section: Основоскладання (Compound Nouns)
+  words: 700
+  points:
+  - 'With connecting vowels: о/е (пароплав, землетрус, водоспад)'
+  - 'Without connecting vowels: кіносеанс, авіаквиток'
+  - 'Hyphenated compounds: генерал-лейтенант, прем''єр-міністр'
+  - 'Cultural compounds: хлібосольство (hospitality), землеробство (agriculture)'
+  - 'Modern compounds: кіберзахист, євроінтеграція'
+- section: Словотвірні ланцюжки (Word Formation Chains)
+  words: 700
+  points:
+  - 'Building word families: земля→земляний→землянин→заземлення→підземний'
+  - 'Productivity patterns: which suffixes attach to which stems'
+  - 'Word families from single roots: писати→письмо→письменник→письменність→записка'
+  - 'Practice: given a root, build the maximum chain'
+- section: 'Практика: Розпізнавання та творення (Practice: Recognition and Creation)'
+  words: 500
+  points:
+  - Decompose complex nouns into morphemes
+  - Create nouns from given verbs/adjectives using correct suffixes
+  - 'Reading comprehension: identify word formation patterns in text'
+  - Guess meaning of unknown nouns from known roots + suffixes
+vocabulary_hints:
+  required:
+  - словотвір (word formation) — словотвір іменників; core linguistic term §4.3.3
+  - суфікс (suffix) — словотвірний суфікс; morphological term
+  - префікс (prefix) — словотвірний префікс; morphological term
+  - корінь (root) — корінь слова, спільнокореневі слова
+  - основа (stem) — основа слова, твірна основа
+  - закінчення (ending) — нульове закінчення, відмінкове закінчення
+  recommended:
+  - основоскладання (compounding) — specialized term for compound formation
+  - ланцюжок (chain) — словотвірний ланцюжок
+  - продуктивний (productive) — продуктивний суфікс; linguistic productivity
+  - морфема (morpheme) — значуща частина слова
+  - гніздо (nest) — словотвірне гніздо; word family
+activity_hints:
+- type: fill-in
+  focus: Form nouns from verbs/adjectives using correct suffix
+  items: 20
+- type: match-up
+  focus: Match suffix to its meaning category (agent, abstract, diminutive)
+  items: 15
+- type: quiz
+  focus: Identify word formation type (suffix, prefix, compound)
+  items: 12
+- type: error-correction
+  focus: Fix incorrect suffix/prefix usage
+  items: 10
 connects_to:
-  - 'b1-57 (Word Formation: Modifiers)'
+- 'b1-57 (Word Formation: Modifiers)'
+prerequisites:
+- 'b1-55 (Checkpoint: Advanced Grammar)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher
-
-objectives:
-  - Learner can form nouns using productive Ukrainian suffixes
-  - Learner can use common noun prefixes (без-, не-, під-, пере-)
-  - Learner can form and understand compound nouns
-  - Learner can build word formation chains from a root
-
 grammar:
-  - 'Noun suffixation (-ник, -ець, -ість, -ння, -ство)'
-  - 'Noun prefixation (без-, не-, під-, пере-, перед-)'
-  - Compound nouns (основоскладання)
-  - Word formation chains (словотвірні ланцюжки)
-
-content_outline:
-  - section: 'Вступ: Як народжуються нові слова (Introduction: How New Words Are Born)'
-    words: 500
-    points:
-      - 'State Standard §4.3.3: word formation as B1 requirement'
-      - 'Overview of word formation types: суфіксальний, префіксальний, префіксально-суфіксальний, основоскладання'
-      - 'Morpheme review: корінь (root), суфікс (suffix), префікс (prefix), закінчення (ending)'
-  - section: Суфіксальний словотвір (Suffixation)
-    words: 900
-    points:
-      - 'Agent nouns: -ник (працівник), -ець (борець), -ач (читач), -тель (учитель)'
-      - 'Abstract nouns: -ість (радість), -ння (читання), -ство (мистецтво), -ота (доброта)'
-      - 'Place nouns: -ня (читальня, пекарня), -ище (летовище, стрільбище) — note: diminutive
-        suffixes covered in dedicated module b1-52 (diminutives-master-class)'
-      - 'Feminine counterparts: -ка (студентка), -иня (майстриня), -еса (поетеса)'
-      - 'Learner drill: verb stem + suffix → noun (читати→читання→читач→читальня)'
-  - section: Префіксальний словотвір (Prefixation)
-    words: 700
-    points:
-      - 'Common noun prefixes: без- (безробіття), не- (нещастя), під- (підзаголовок), пере- (перебудова)'
-      - 'Negative: не- (невдача, нелюдь) vs без- (безнадія, безхатько)'
-      - 'Spatial/temporal: перед- (передмова), після- (післямова), над- (надзвичайність)'
-      - 'Learner error: confusing не- prefix with не particle'
-  - section: Основоскладання (Compound Nouns)
-    words: 700
-    points:
-      - 'With connecting vowels: о/е (пароплав, землетрус, водоспад)'
-      - 'Without connecting vowels: кіносеанс, авіаквиток'
-      - 'Hyphenated compounds: генерал-лейтенант, прем''єр-міністр'
-      - 'Cultural compounds: хлібосольство (hospitality), землеробство (agriculture)'
-      - 'Modern compounds: кіберзахист, євроінтеграція'
-  - section: Словотвірні ланцюжки (Word Formation Chains)
-    words: 700
-    points:
-      - 'Building word families: земля→земляний→землянин→заземлення→підземний'
-      - 'Productivity patterns: which suffixes attach to which stems'
-      - 'Word families from single roots: писати→письмо→письменник→письменність→записка'
-      - 'Practice: given a root, build the maximum chain'
-  - section: 'Практика: Розпізнавання та творення (Practice: Recognition and Creation)'
-    words: 500
-    points:
-      - Decompose complex nouns into morphemes
-      - Create nouns from given verbs/adjectives using correct suffixes
-      - 'Reading comprehension: identify word formation patterns in text'
-      - Guess meaning of unknown nouns from known roots + suffixes
-
-vocabulary_hints:
-  required:
-    - 'словотвір (word formation) — словотвір іменників; core linguistic term §4.3.3'
-    - 'суфікс (suffix) — словотвірний суфікс; morphological term'
-    - 'префікс (prefix) — словотвірний префікс; morphological term'
-    - 'корінь (root) — корінь слова, спільнокореневі слова'
-    - 'основа (stem) — основа слова, твірна основа'
-    - 'закінчення (ending) — нульове закінчення, відмінкове закінчення'
-  recommended:
-    - 'основоскладання (compounding) — specialized term for compound formation'
-    - 'ланцюжок (chain) — словотвірний ланцюжок'
-    - 'продуктивний (productive) — продуктивний суфікс; linguistic productivity'
-    - 'морфема (morpheme) — значуща частина слова'
-    - 'гніздо (nest) — словотвірне гніздо; word family'
-
-activity_hints:
-  - type: fill-in
-    focus: Form nouns from verbs/adjectives using correct suffix
-    items: 20
-  - type: match-up
-    focus: 'Match suffix to its meaning category (agent, abstract, diminutive)'
-    items: 15
-  - type: quiz
-    focus: 'Identify word formation type (suffix, prefix, compound)'
-    items: 12
-  - type: error-correction
-    focus: Fix incorrect suffix/prefix usage
-    items: 10
+- Noun suffixation (-ник, -ець, -ість, -ння, -ство)
+- Noun prefixation (без-, не-, під-, пере-, перед-)
+- Compound nouns (основоскладання)
+- Word formation chains (словотвірні ланцюжки)
+register: нейтральний
+immersion: 75-100% Ukrainian

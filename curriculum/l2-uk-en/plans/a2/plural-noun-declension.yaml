@@ -1,84 +1,85 @@
-module: a2-09
+module: a2-009
 level: A2
 sequence: 9
 slug: plural-noun-declension
 version: '2.0'
 title: Plural Noun Declension
 subtitle: Noun Plural Forms Across All Seven Cases
+focus: grammar
+pedagogy: TTT
+phase: A2.1
+word_target: 3000
+objectives:
+- Learner can form Nominative plural for regular and common irregular nouns
+- Learner can produce Genitive plural with correct ending choice
+- Learner can apply Dative, Instrumental, and Locative plural endings accurately
+- Learner can choose between Nominative and Genitive plural in Accusative contexts
+sources:
+- name: Ukrainian State Standard 2024 - Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: A2 noun declension requirements including plural paradigms
+- name: Ukrainian Grammar Reference - Noun Declension
+  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників_в_українській_мові
+  type: reference
+  notes: Full plural declension tables for all genders
 content_outline:
 - section: 'Вступ: Множина — не тільки -и/-і (Introduction: Plural is More Than -и/-і)'
   words: 400
   points:
-  - 'Motivation through real need: квитки на потяг (train tickets), список книг (book
-    list), кількість людей (number of people) — plural case forms appear everywhere
-    in daily Ukrainian life.'
-  - 'Preview the challenge: Nominative plural is straightforward, but Genitive plural
-    (the hardest plural form) requires memorisation of multiple endings and stress
-    shifts.'
-  - 'Overview of the 7 plural cases: establish that Ukrainian changes noun endings
-    not only for singular but for every case in the plural — a key step up from A1.'
+  - 'Motivation through real need: квитки на потяг (train tickets), список книг (book list), кількість людей (number of people)
+    — plural case forms appear everywhere in daily Ukrainian life.'
+  - 'Preview the challenge: Nominative plural is straightforward, but Genitive plural (the hardest plural form) requires memorisation
+    of multiple endings and stress shifts.'
+  - 'Overview of the 7 plural cases: establish that Ukrainian changes noun endings not only for singular but for every case
+    in the plural — a key step up from A1.'
 - section: Називний множини (Nominative Plural)
   words: 400
   points:
-  - 'Core endings review: -и/-і for most nouns (книги, столи, міста); -а/-я for
-    neuter nouns ending in -о/-е (вікна, поля); -і for soft-stem nouns (краї,
-    гості).'
-  - 'Consonant alternation patterns: рука → руки (к→к before и), друг → друзі (г→з
-    before і), нога → ноги, рік → роки; table of common alternations.'
-  - 'Irregular plurals that must be memorised: око → очі, вухо → вуха, дитина → діти,
-    людина → люди, ім''я → імена, курча → курчата.'
+  - 'Core endings review: -и/-і for most nouns (книги, столи, міста); -а/-я for neuter nouns ending in -о/-е (вікна, поля);
+    -і for soft-stem nouns (краї, гості).'
+  - 'Consonant alternation patterns: рука → руки (к→к before и), друг → друзі (г→з before і), нога → ноги, рік → роки; table
+    of common alternations.'
+  - 'Irregular plurals that must be memorised: око → очі, вухо → вуха, дитина → діти, людина → люди, ім''я → імена, курча
+    → курчата.'
 - section: Родовий множини (Genitive Plural)
   words: 600
   points:
-  - 'Why Genitive plural matters: used after numbers 5+ (п''ять книг, десять днів),
-    after negation (немає грошей, немає людей), in partitive contexts (склянка
-    молока).'
-  - 'Masculine nouns: -ів/-їв as the default ending (студентів, автобусів, країв);
-    exceptions with zero ending (раз, разів; місяць → місяців).'
-  - 'Feminine nouns: zero ending for most (книг, жінок, вулиць); stress shift patterns
-    (рука → рук, нога → ніг, голова → голів).'
-  - 'Neuter nouns: zero ending (вікон, полів) or -ів (морів); neuters in -я → zero
-    (завдань, питань).'
-  - 'High-frequency irregular Genitive plural forms for immediate use: грошей, людей,
-    днів, очей, вух, дітей, імен, братів, сестер, друзів.'
-  - 'Common learner errors: using -ів for all nouns, forgetting stress shifts, confusing
-    zero ending with nominative singular.'
-- section: 'Давальний, Знахідний, Орудний, Місцевий множини (Dative, Accusative, Instrumental, Locative Plural)'
+  - 'Why Genitive plural matters: used after numbers 5+ (п''ять книг, десять днів), after negation (немає грошей, немає людей),
+    in partitive contexts (склянка молока).'
+  - 'Masculine nouns: -ів/-їв as the default ending (студентів, автобусів, країв); exceptions with zero ending (раз, разів;
+    місяць → місяців).'
+  - 'Feminine nouns: zero ending for most (книг, жінок, вулиць); stress shift patterns (рука → рук, нога → ніг, голова → голів).'
+  - 'Neuter nouns: zero ending (вікон, полів) or -ів (морів); neuters in -я → zero (завдань, питань).'
+  - 'High-frequency irregular Genitive plural forms for immediate use: грошей, людей, днів, очей, вух, дітей, імен, братів,
+    сестер, друзів.'
+  - 'Common learner errors: using -ів for all nouns, forgetting stress shifts, confusing zero ending with nominative singular.'
+- section: Давальний, Знахідний, Орудний, Місцевий множини (Dative, Accusative, Instrumental, Locative Plural)
   words: 600
   points:
-  - 'Dative plural: -ам/-ям for all genders (студентам, книгам, містам, полям);
-    highly regular — good news for learners.'
-  - 'Accusative plural: equals Nominative plural for inanimate nouns (читаю книги,
-    бачу міста); equals Genitive plural for animate nouns (бачу студентів, люблю
-    друзів).'
-  - 'Instrumental plural: -ами/-ями for all genders (студентами, книгами, містами,
-    полями); also highly regular.'
-  - 'Locative plural: -ах/-ях for all genders (у студентах, у книгах, у містах,
-    у полях); always requires a preposition.'
-  - 'Full paradigm table: noun ''студент'' (m), ''книга'' (f), ''місто'' (n) across
-    all 7 cases in plural side by side.'
-  - 'Animate vs inanimate distinction in Accusative plural: drill with люди/людей,
-    друзі/друзів, книги/книги.'
-- section: 'Кличний множини та зведена таблиця (Vocative Plural and Full Summary)'
+  - 'Dative plural: -ам/-ям for all genders (студентам, книгам, містам, полям); highly regular — good news for learners.'
+  - 'Accusative plural: equals Nominative plural for inanimate nouns (читаю книги, бачу міста); equals Genitive plural for
+    animate nouns (бачу студентів, люблю друзів).'
+  - 'Instrumental plural: -ами/-ями for all genders (студентами, книгами, містами, полями); also highly regular.'
+  - 'Locative plural: -ах/-ях for all genders (у студентах, у книгах, у містах, у полях); always requires a preposition.'
+  - 'Full paradigm table: noun ''студент'' (m), ''книга'' (f), ''місто'' (n) across all 7 cases in plural side by side.'
+  - 'Animate vs inanimate distinction in Accusative plural: drill with люди/людей, друзі/друзів, книги/книги.'
+- section: Кличний множини та зведена таблиця (Vocative Plural and Full Summary)
   words: 400
   points:
-  - 'Vocative plural: equals Nominative plural for all nouns — друзі! колеги! діти!
-    панове! (only пан → панове is irregular in form).'
-  - 'Full comparison table: singular vs plural paradigm for ''студент'', ''книга'',
-    ''місто'' — all 7 cases; colour-coded to highlight regular patterns.'
-  - 'Pattern recognition summary: which cases are fully regular in plural (Dat, Inst,
-    Loc) vs which require case-by-case learning (Nom, Gen).'
+  - 'Vocative plural: equals Nominative plural for all nouns — друзі! колеги! діти! панове! (only пан → панове is irregular
+    in form).'
+  - 'Full comparison table: singular vs plural paradigm for ''студент'', ''книга'', ''місто'' — all 7 cases; colour-coded
+    to highlight regular patterns.'
+  - 'Pattern recognition summary: which cases are fully regular in plural (Dat, Inst, Loc) vs which require case-by-case learning
+    (Nom, Gen).'
 - section: Практика (Practice)
   words: 600
   points:
-  - 'Shopping list context: fill in Genitive plural for quantities — п''ять (книга),
-    десять (квиток), три (день).'
-  - 'Travel scenario: complete sentences with Accusative and Locative plural — бачу
-    (місто pl), живу в (країна pl).'
-  - 'Family descriptions: use Nominative and Instrumental plural — мої (друг pl),
-    з (сестра pl).'
-  - 'Error correction drill: identify and fix 10 sentences with incorrect plural
-    case endings.'
+  - 'Shopping list context: fill in Genitive plural for quantities — п''ять (книга), десять (квиток), три (день).'
+  - 'Travel scenario: complete sentences with Accusative and Locative plural — бачу (місто pl), живу в (країна pl).'
+  - 'Family descriptions: use Nominative and Instrumental plural — мої (друг pl), з (сестра pl).'
+  - 'Error correction drill: identify and fix 10 sentences with incorrect plural case endings.'
 vocabulary_hints:
   required:
   - книга/книги/книг (book/books/of books) — paradigm noun for feminine zero-ending Gen pl
@@ -113,20 +114,16 @@ activity_hints:
 - type: quiz
   focus: Identify the correct plural form from four options (animate/inanimate Accusative)
   items: 12+
-focus: grammar
-pedagogy: TTT
+connects_to:
+- a2-10 (Plural Adjective Declension)
+- all-cases-practice
 prerequisites:
 - a2-08 (Logical Prepositions)
 - A1 singular case endings (Nom, Acc, Gen, Loc)
 - A1 Nominative plural basics
-connects_to:
-- a2-10 (Plural Adjective Declension)
-- all-cases-practice
-objectives:
-- Learner can form Nominative plural for regular and common irregular nouns
-- Learner can produce Genitive plural with correct ending choice
-- Learner can apply Dative, Instrumental, and Locative plural endings accurately
-- Learner can choose between Nominative and Genitive plural in Accusative contexts
+persona:
+  voice: Encouraging Cultural Guide
+  role: Practical Communicator
 grammar:
 - noun plural paradigms across all 7 cases
 - genitive plural formation (ів/їв, zero ending)
@@ -134,18 +131,4 @@ grammar:
 - irregular plural nouns
 - animate vs inanimate distinction in Accusative plural
 module_type: grammar
-sources:
-- name: Ukrainian State Standard 2024 - Morphology
-  url: https://mon.gov.ua/
-  type: reference
-  notes: A2 noun declension requirements including plural paradigms
-- name: Ukrainian Grammar Reference - Noun Declension
-  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників_в_українській_мові
-  type: reference
-  notes: Full plural declension tables for all genders
 immersion: 50-60% Ukrainian
-phase: A2.1
-persona:
-  voice: Encouraging Cultural Guide
-  role: Practical Communicator
-word_target: 3000

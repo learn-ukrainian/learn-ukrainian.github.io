@@ -1,21 +1,34 @@
-sequence: 113
-module: ruth-113
+module: ruth-108
+level: RUTH
+sequence: 108
 slug: poeziia-baroko
-title_uk: "Українська бароко поезія XVI-XVII ст."
-title_en: "Ukrainian Baroque Poetry (16th-17th c.)"
+version: '2.0'
+title: Українська бароко поезія XVI-XVII ст.
+subtitle: Ukrainian Baroque Poetry (16th-17th c.)
+focus: Syllabic verse, panegyrics, and laments — Ukrainian competing with Latin and Polish as a literary language
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Syllabic verse, panegyrics, and laments — Ukrainian competing with Latin and Polish as a literary language"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Context: baroque poetry as a European phenomenon. Ukrainian poets writing in Ukrainian, Latin, and Polish simultaneously — but CHOOSING Ukrainian for specific purposes."
+  points:
+  - 'Context: baroque poetry as a European phenomenon. Ukrainian poets writing in Ukrainian, Latin, and Polish simultaneously
+    — but CHOOSING Ukrainian for specific purposes.'
+  words: 1250
 - section: Основний матеріал
-  description: "Anthology analysis: syllabic verse forms, acrostics, panegyrics to hetmans and church leaders. Kasijan Sakovych, Lazarus Baranovych, and anonymous brotherhood poets. Poetic vocabulary and imagery."
+  points:
+  - 'Anthology analysis: syllabic verse forms, acrostics, panegyrics to hetmans and church leaders. Kasijan Sakovych, Lazarus
+    Baranovych, and anonymous brotherhood poets. Poetic vocabulary and imagery.'
+  words: 1250
 - section: Практика
-  description: "Scanning syllabic verse. Identifying Latin/Polish borrowings vs native Ukrainian in poetic register. Writing analysis of a selected poem."
+  points:
+  - Scanning syllabic verse. Identifying Latin/Polish borrowings vs native Ukrainian in poetic register. Writing analysis
+    of a selected poem.
+  words: 1250
 - section: Підсумок
-  description: "Baroque poetry proves Ukrainian was a full-status literary language in the 16th-17th centuries — capable of sophisticated verse forms alongside Europe's major languages."
+  points:
+  - Baroque poetry proves Ukrainian was a full-status literary language in the 16th-17th centuries — capable of sophisticated
+    verse forms alongside Europe's major languages.
+  words: 1250
 vocabulary_hints:
 - бароко
 - вірш
@@ -24,12 +37,24 @@ vocabulary_hints:
 - акровірш
 - епітафія
 - ода
-activity_types:
-- transcription
-- grammar-identify
-- comparative-style
-- register-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: comparative-style
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
 persona:
-  voice: "Poetry Scholar"
-  role: "Brotherhood Poet"
-source_url: "http://litopys.org.ua/ukrpoetry/anto.htm"
+  voice: Poetry Scholar
+  role: Brotherhood Poet
+source_url: http://litopys.org.ua/ukrpoetry/anto.htm
+prerequisites:
+- intermedii-xvii-xviii
+connects_to:
+- bajky-xvii-xviii

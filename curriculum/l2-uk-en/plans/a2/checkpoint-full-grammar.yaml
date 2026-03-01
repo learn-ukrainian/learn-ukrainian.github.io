@@ -1,82 +1,79 @@
-module: a2-56
+module: a2-060
 level: A2
-sequence: 56
+sequence: 60
 slug: checkpoint-full-grammar
 version: '2.0'
 title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
+focus: checkpoint
+pedagogy: TTT
+phase: A2.5 [Vocabulary Expansion]
+word_target: 3000
+objectives:
+- Learner can integrate A2 vocabulary in conversation
+- Learner can use all grammatical cases correctly
+- Learner can navigate common daily situations
+- Learner can demonstrate A2 proficiency
 content_outline:
 - section: Вступ та огляд (Introduction and Overview)
   words: 400
   points:
-  - Summative assessment for the A2 morphological curriculum (Standard §4.2.2), verifying
-    ability to form all 7 cases and use aspectual pairs.
-  - Self-assessment focus with emphasis on self-correction ('виправити помилку') and
-    'Euphony as Logic' to explain linguistic irregularities.
+  - Summative assessment for the A2 morphological curriculum (Standard §4.2.2), verifying ability to form all 7 cases and
+    use aspectual pairs.
+  - Self-assessment focus with emphasis on self-correction ('виправити помилку') and 'Euphony as Logic' to explain linguistic
+    irregularities.
 - section: 'Милозвучність: Секрет мелодійності (Euphony: The Secret of Melodiousness)'
   words: 500
   points:
-  - Scientific recognition of Ukrainian as a melodic language (similar to Italian)
-    and the concept of 'Милозвучність' (Euphony).
-  - Drilling the rules of u/v and i/y alternation as logical choices to avoid harsh
-    consonant clusters and maintain musical flow.
+  - Scientific recognition of Ukrainian as a melodic language (similar to Italian) and the concept of 'Милозвучність' (Euphony).
+  - Drilling the rules of u/v and i/y alternation as logical choices to avoid harsh consonant clusters and maintain musical
+    flow.
 - section: Система відмінків та Кличний (The Case System and the Vocative)
   words: 600
   points:
-  - Review of the 7-case system, highlighting the 'Soul' of the Vocative (Кличний)
-    as a sign of respect and personification of nature (lisi, zori).
-  - 'Addressing common error: Case Confusion (Genitive vs. Accusative) in negation/quantity
-    — ''Я не маю часу'' (Gen) vs ''Я маю час'' (Acc).'
+  - Review of the 7-case system, highlighting the 'Soul' of the Vocative (Кличний) as a sign of respect and personification
+    of nature (lisi, zori).
+  - 'Addressing common error: Case Confusion (Genitive vs. Accusative) in negation/quantity — ''Я не маю часу'' (Gen) vs ''Я
+    маю час'' (Acc).'
 - section: 'Дієслово: Вид та Рух (The Verb: Aspect and Motion)'
   words: 600
   points:
-  - 'Aspectual pairs review: ''вибирати'' (process) vs ''вибрати'' (result) and ''перевіряти''
-    (process) vs ''перевірити'' (result).'
-  - 'Correcting Aspect Mismatch: using Perfective for completed actions (''написав
-    лист'') vs Imperfective for background process (''писав лист'').'
-  - 'Motion Verb Transport: correcting the confusion between ''іти'' (walking) and
-    ''їхати'' (vehicle) — e.g., ''їду поїздом'', not ''йду''.'
+  - 'Aspectual pairs review: ''вибирати'' (process) vs ''вибрати'' (result) and ''перевіряти'' (process) vs ''перевірити''
+    (result).'
+  - 'Correcting Aspect Mismatch: using Perfective for completed actions (''написав лист'') vs Imperfective for background
+    process (''писав лист'').'
+  - 'Motion Verb Transport: correcting the confusion between ''іти'' (walking) and ''їхати'' (vehicle) — e.g., ''їду поїздом'',
+    not ''йду''.'
 - section: Сфери життя та Метамова (Spheres of Life and Metalanguage)
   words: 500
   points:
-  - Integration of Daily Life, Work, and Health vocabulary while introducing Ukrainian
-    meta-language terms like 'іменник' (noun) and 'дієслово' (verb).
-  - 'B1 Bridge strategy: preparing learners for deeper grammatical analysis by using
-    target language terminology for core concepts.'
+  - Integration of Daily Life, Work, and Health vocabulary while introducing Ukrainian meta-language terms like 'іменник'
+    (noun) and 'дієслово' (verb).
+  - 'B1 Bridge strategy: preparing learners for deeper grammatical analysis by using target language terminology for core
+    concepts.'
 - section: Підсумок та інтеграція (Summary and Integration)
   words: 400
   points:
-  - 'Comprehensive assessment: selecting correct case and aspect in complex sentences
-    (''речення'') to demonstrate A2 mastery.'
-  - Consolidation of A2 core (A2-01 to A2-55) and preparation for A2-57 and the transition
-    to the B1 level.
+  - 'Comprehensive assessment: selecting correct case and aspect in complex sentences (''речення'') to demonstrate A2 mastery.'
+  - Consolidation of A2 core (A2-01 to A2-55) and preparation for A2-57 and the transition to the B1 level.
 vocabulary_hints:
   required:
-  - помилка (mistake) — робити помилку, виправити помилку, груба помилка; high-frequency
-    meta-language for self-correction focus
-  - правило (rule) — запам'ятати правило, за правилом, виняток з правила; high-frequency
-    meta-language
-  - відмінок (case) — Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий,
-    Кличний; summative morphological focus
+  - помилка (mistake) — робити помилку, виправити помилку, груба помилка; high-frequency meta-language for self-correction
+    focus
+  - правило (rule) — запам'ятати правило, за правилом, виняток з правила; high-frequency meta-language
+  - відмінок (case) — Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий, Кличний; summative morphological focus
   - дієслово (verb) — meta-language introduction for B1 Bridge strategy
   - іменник (noun) — meta-language introduction for B1 Bridge strategy
   - речення (sentence) — focus on complex structures and integrative assessment
-  - правильно (correctly) — focus on self-correction and accuracy ('вибирати правильну
-    відповідь')
+  - правильно (correctly) — focus on self-correction and accuracy ('вибирати правильну відповідь')
   - повторення (review) — key concept for the A2 level summative checkpoint
   recommended:
-  - милозвучність (euphony) — melodic quality of Ukrainian driving u/v and i/y alternation
-    rules
-  - вибирати (to choose) — вибирати правильну відповідь, вибирати подарунок; high-frequency
-    A2 general vocabulary
-  - перевіряти (to check) — перевіряти себе, перевіряти вправу, перевіряти знання;
-    central to self-assessment
-  - вид (aspect) — distinction between доконаний (perfective/result) and недоконаний
-    (imperfective/process)
-  - кличний відмінок (vocative case) — personification of nature and sign of respect
-    in address
-  - граматика (grammar) — the framework of rules and exceptions ('виняток з правила')
-    mastered in A2
+  - милозвучність (euphony) — melodic quality of Ukrainian driving u/v and i/y alternation rules
+  - вибирати (to choose) — вибирати правильну відповідь, вибирати подарунок; high-frequency A2 general vocabulary
+  - перевіряти (to check) — перевіряти себе, перевіряти вправу, перевіряти знання; central to self-assessment
+  - вид (aspect) — distinction between доконаний (perfective/result) and недоконаний (imperfective/process)
+  - кличний відмінок (vocative case) — personification of nature and sign of respect in address
+  - граматика (grammar) — the framework of rules and exceptions ('виняток з правила') mastered in A2
 activity_hints:
 - type: quiz
   focus: A2 grammar comprehensive test
@@ -90,26 +87,17 @@ activity_hints:
 - type: quiz
   focus: Demonstrate A2 proficiency
   items: 10
-focus: checkpoint
-pedagogy: TTT
+connects_to:
+- a2-57 (Practical Intro)
 prerequisites:
 - a2-54 (Sports and Fitness)
 - a2-55 (Health & Wellness)
-connects_to:
-- a2-57 (Practical Intro)
-objectives:
-- Learner can integrate A2 vocabulary in conversation
-- Learner can use all grammatical cases correctly
-- Learner can navigate common daily situations
-- Learner can demonstrate A2 proficiency
+persona:
+  voice: Encouraging Cultural Guide
+  role: Literary Editor
 grammar:
 - A2 vocabulary review (all thematic areas)
 - Case system review (all 7 cases)
 - Verb aspect review (perfective/imperfective)
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.5 [Vocabulary Expansion]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Literary Editor
-word_target: 3000

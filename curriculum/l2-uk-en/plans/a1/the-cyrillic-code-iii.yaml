@@ -1,124 +1,121 @@
-module: a1-03
+module: a1-003
 level: A1
 sequence: 3
 slug: the-cyrillic-code-iii
-version: '2.0'
+version: '3.0'
 title: The Cyrillic Code III
-subtitle: Letters О to Х
-content_outline:
-- section: 'Вступ (Review & New Set)'
-  words: 300
-  points:
-  - 'Quick review of the 15 letters mastered in a1-01 and a1-02: a diagnostic mini-drill
-    to activate prior knowledge and identify any lingering confusion with False Friends
-    (Р, Н, В, С).'
-  - 'Introduction to the middle block of the alphabet (О, П, Р, С, Т, Ф, Х) plus two
-    uniquely Ukrainian digraphs (Дж, Дз) — framing this set as the ''bridge'' between
-    familiar and fully Ukrainian territory.'
-- section: 'Нові літери (New Letters О–Х)'
-  words: 600
-  points:
-  - 'О — the easy vowel: identical in shape and sound to English ''O''; heavy overlap
-    with internationalisms (опера, олімпіада). Stress-dependent reduction reminder:
-    unstressed О stays /o/ in Ukrainian (unlike Russian).'
-  - 'П — looks like a Greek Pi, sounds like English P. Critical contrast: П is the true
-    /p/ sound, NOT Cyrillic Р (which is /r/). Mnemonic: П has a flat top like a ''Platform''.'
-  - 'Р — the ''Roaring Engine'': THIS is the real trap letter. Looks exactly like Latin
-    P but produces a rolled /r/. Extended drilling with minimal pairs and tongue-tip
-    exercises. Anna Ohoiko pronunciation video reference.'
-  - 'С — the ''Snake'' sound: identical to English S in pronunciation. Already introduced
-    as a False Friend in a1-01 (looks like Latin C). Reinforcement through new vocabulary.'
-  - 'Т — a true friend: same shape, same sound as English T. Reliable anchor letter.
-    Practice in clusters: тр-, ст-, -кт.'
-  - 'Ф — the rare native letter: appears mostly in borrowings (факт, фото, футбол,
-    фонтан). Native Ukrainian words with Ф are extremely few — a cultural note on why.'
-  - 'Х — the ''loch'' sound: like German ''ch'' in ''ach'' or Scottish ''loch''. No
-    English equivalent — requires explicit articulatory instruction. Key word: хліб (bread),
-    the cultural staple.'
-- section: 'Дигріфи (Digraphs)'
-  words: 400
-  points:
-  - 'Дж as a single sound (not Д+Ж): the voiced postalveolar affricate /dʒ/ as in English
-    ''jungle''. Examples: джерело (spring/source), бджола (bee), джаз (jazz). Position
-    in word matters: always one sound at morpheme boundary.'
-  - 'Дз as a single sound (not Д+З): the voiced alveolar affricate /dz/ — no English
-    equivalent but close to ''dz'' in ''adze''. Examples: дзвінок (bell/call), дзеркало
-    (mirror). A uniquely Ukrainian feature absent from Russian.'
-  - 'Why digraphs matter: these two sounds are part of what makes Ukrainian phonology
-    distinct. They appear in high-frequency everyday vocabulary and must be recognized
-    as single phonemes, not consonant clusters.'
-- section: 'Практика читання (Reading Practice)'
-  words: 500
-  points:
-  - 'Decoding drills combining all 22 letters learned so far (15 from a1-01/02 + 7 new):
-    progressive difficulty from single syllables to full words.'
-  - 'Urban vocabulary focus: пошта (post office), ресторан (restaurant), транспорт
-    (transport), фото (photo) — internationalism-heavy to build confidence.'
-  - 'Food and daily vocabulary: хліб (bread), сорт (sort/variety), порт (port), стоп
-    (stop), факт (fact) — drilling consonant clusters with new letters.'
-  - 'Pronunciation video playlist reference: Anna Ohoiko alphabet series
-    (PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV) for individual letter drilling at home.'
-- section: 'Підсумок (Summary)'
-  words: 200
-  points:
-  - 'Production drill: learner reads aloud a paragraph using all 22 letters plus both
-    digraphs, with self-assessment checklist for the Р/П distinction.'
-  - 'Self-check: can you distinguish П from Р in writing AND pronunciation? Can you hear
-    Дж and Дз as single sounds? Progress tracker showing 22/33 letters mastered.'
-vocabulary_hints:
-  required:
-  - 'пошта (post office) — collocations: ''на пошті'' (at the post office), ''іти на
-    пошту''; high frequency urban term'
-  - 'ресторан (restaurant) — collocations: ''у ресторані'', ''піти в ресторан'';
-    internationalism for decoding practice'
-  - 'транспорт (transport) — collocations: ''громадський транспорт'' (public transport),
-    ''на транспорті''; high frequency urban term'
-  - 'фото (photo) — collocations: ''зробити фото'' (take a photo), ''моє фото'';
-    internationalism demonstrating Ф usage'
-  - 'хліб (bread) — collocations: ''білий хліб'', ''свіжий хліб'', ''купити хліб'';
-    core daily vocabulary, cultural staple'
-  - 'стоп (stop) — usage: international cognate; demonstrates С+Т+О+П letter combination'
-  - 'порт (port) — collocations: ''морський порт'' (sea port); internationalism for П
-    and Р contrast practice'
-  - 'факт (fact) — collocations: ''це факт'' (it''s a fact), ''цікавий факт'';
-    internationalism demonstrating Ф usage'
-  recommended:
-  - 'джерело (spring/source) — demonstrates Дж digraph in a native Ukrainian word'
-  - 'дзвінок (bell/call) — demonstrates Дз digraph; collocations: ''телефонний дзвінок'''
-  - 'фонтан (fountain) — internationalism for Ф practice; collocations: ''біля фонтану'''
-  - 'футбол (football) — internationalism for Ф practice; high cultural frequency'
-activity_hints:
-- type: watch-and-repeat
-  focus: Pronunciation of 7 new letters (О, П, Р, С, Т, Ф, Х)
-  items: 7
-- type: classify
-  focus: Sort letters into vowels vs consonants
-  items: 12
-- type: quiz
-  focus: Letter identification and sound matching
-  items: 20
-- type: match-up
-  focus: Letter-sound pairs including digraphs
-  items: 15
+subtitle: П Т Г Ґ Е З Ж Ш Х — Voiced and Voiceless Pairs
 focus: grammar
 pedagogy: PPP
-prerequisites:
-- a1-02 (The Cyrillic Code II)
+phase: A1.1 [First Contact]
+word_target: 2000
+objectives:
+- Learner can recognize and pronounce 9 new letters (П, Т, Г, Ґ, Е, З, Ж, Ш, Х)
+- Learner can distinguish voiced from voiceless consonant pairs
+- Learner understands the Г vs Ґ distinction (unique to Ukrainian)
+- Learner can read common words using all 22 known letters
+content_outline:
+- section: Вступ
+  words: 200
+  points:
+  - 'Quick review: read 3 words from Code I-II (банан, молоко, кіно) as warm-up.'
+  - This module adds 9 letters (8 приголосні + 1 голосний). After this module you know 22 letters — nearly all common Ukrainian
+    text becomes readable.
+  - 'Key concept: voiced/voiceless consonant pairs — Ukrainian consonants come in matched pairs where one vibrates the throat
+    (voiced) and the other doesn''t (voiceless).'
+- section: Голосний — Е
+  words: 200
+  points:
+  - Е — екран 📺. Video link. Sounds like 'e' in 'set'. Not like Russian Э. Not like English 'ee'.
+  - 'Now all 6 basic vowels are known: А, У (Code I) + И, І, О (Code II) + Е (this module). The 4 iotated vowels come in Code
+    IV.'
+- section: Приголосні — П, Т
+  words: 250
+  points:
+  - 'П — павук 🕷️. Video link. П is the real /p/ sound. Critical: П (sounds like p) vs Р (sounds like r, learned in Code II).
+    This distinction is essential.'
+  - Т — тигр 🐯. Video link. Т is a true friend — same shape, same sound as English T.
+  - 'Drill: П vs Р minimal pairs — палка (stick) vs ракета (rocket).'
+- section: Дзвінкі та глухі — Voiced and Voiceless Pairs
+  words: 500
+  points:
+  - 'Explain the concept: place your hand on your throat. Voiced (дзвінкий) = throat vibrates. Voiceless (глухий) = only air.'
+  - 'Г — гора ⛰️. Video link. Г is a soft throaty sound (voiced glottal fricative). NOT a hard ''g'' like English ''go''.
+    Cultural note: Г vs Ґ is uniquely Ukrainian.'
+  - 'Ґ — ґанок 🚪. Video link. Ґ IS the hard ''g'' sound. Extremely rare in Ukrainian — only ~400 native words. The repressed
+    letter: removed 1933, restored 1990.'
+  - З — зебра 🦓. Video link. Voiced partner of С (from Code I). З sounds like English 'z'.
+  - Ж — жук 🪲. Video link. Voiced sibilant. No English equivalent — like 'zh' in 'measure'. Lips rounded, tongue raised.
+  - Ш — шапка 🧢. Video link. Voiceless partner of Ж. Like English 'sh' in 'ship'. Hard articulation — tongue pulled back.
+  - Х — хліб 🍞. Video link. Voiceless partner of Г. Like German 'ch' in 'ach' or Scottish 'loch'. No English equivalent —
+    explicit articulatory instruction needed.
+  - 'Pair summary: Г↔Х (throat), Ж↔Ш (sibilant), З↔С (hissing), Б↔П, Д↔Т, В↔Ф (Code IV).'
+- section: Практика читання
+  words: 400
+  points:
+  - 'Words using all 22 letters: парк, хліб, зебра, жити, школа, газета, пошта, транспорт.'
+  - 'Voiced/voiceless pair drills: зуб (з-дзвінкий) vs суп (с-глухий), жар (ж-дзвінкий) vs шар (ш-глухий).'
+  - 'Reading exercise: short paragraph using all 22 known letters.'
+  - 'Urban vocabulary: банк, парк, транспорт — internationalism-heavy for confidence.'
+- section: Підсумок
+  words: 150
+  points:
+  - 'Progress: 22 of 33 letters learned (6 голосні + 16 приголосні). Nearly all common text is readable.'
+  - 'Key concept mastered: voiced/voiceless pairs.'
+  - 'Next module: The Cyrillic Code IV completes the alphabet with 11 remaining characters (Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф)
+    plus digraphs (ДЖ, ДЗ) and the apostrophe.'
+vocabulary_hints:
+  required:
+  - 'хліб (bread) — cultural staple; collocations: білий хліб, свіжий хліб'
+  - парк (park) — internationalism; demonstrates П
+  - школа (school) — top 200 word; demonstrates Ш
+  - газета (newspaper) — demonstrates Г and З
+  - 'пошта (post office) — demonstrates П and Ш; collocations: на пошті'
+  - жити (to live) — top 50 verb; demonstrates Ж
+  recommended:
+  - ґанок (porch) — demonstrates rare Ґ
+  - зуб (tooth) — demonstrates З; useful for pair drill with суп
+  - транспорт (transport) — internationalism; demonstrates Т and Р
+  - тигр (tiger) — key word for Т; internationalism
+activity_hints:
+- type: watch-and-repeat
+  focus: Watch Anna's video for each of the 9 new letters
+  items: 9
+- type: classify
+  focus: Sort new letters into голосні vs приголосні
+  items: 9
+- type: classify
+  focus: Sort consonants into дзвінкі (voiced) vs глухі (voiceless)
+  items: 12
+- type: image-to-letter
+  focus: See emoji — which letter? (🕷️🐯⛰️🚪📺🦓🪲🧢🍞)
+  items: 9
+- type: match-up
+  focus: Match voiced consonant to its voiceless partner
+  items: 6
 connects_to:
 - a1-04 (The Cyrillic Code IV)
-objectives:
-- Learner can recognize and pronounce letters О, П, Р, С, Т, Ф, Х
-- Learner can identify Дж and Дз digraphs as single sounds
-- Learner can distinguish П (/p/) from Р (/r/) in reading and speech
-- Learner can read simple words using all 22 learned letters
-grammar:
-- Letter recognition (О–Х)
-- Sound-letter correspondence
-- Digraph recognition (Дж, Дз)
-- Consonant cluster reading
-register: розмовний
-phase: A1.1 [First Contact]
+prerequisites:
+- a1-02 (The Cyrillic Code II)
 persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
-word_target: 2000
+grammar:
+- Letter recognition (П, Т, Г, Ґ, Е, З, Ж, Ш, Х)
+- Voiced vs voiceless consonant pairs
+- Г (voiced glottal) vs Ґ (hard g) distinction
+- П vs Р distinction reinforcement
+register: розмовний
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: Anna Ohoiko — Ukrainian Lessons
+  letters:
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc

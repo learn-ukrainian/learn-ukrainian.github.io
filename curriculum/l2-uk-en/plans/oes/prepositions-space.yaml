@@ -1,27 +1,47 @@
-sequence: 15
 module: oes-015
-module_number: 13
+level: OES
+sequence: 15
 slug: prepositions-space
-title_uk: Прийменники та простір
-title_en: Prepositions & Space
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: Прийменники та простір
+subtitle: Prepositions & Space
 focus: Въ, на, къ — Direction vs Location
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Prepositions & Space
+  points:
+  - Introduction to Prepositions & Space
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Pathfinder
+prerequisites:
+- numbers-currency
+connects_to:
+- legal-language-debt

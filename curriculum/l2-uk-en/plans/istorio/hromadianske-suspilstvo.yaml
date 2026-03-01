@@ -1,49 +1,76 @@
 module: istorio-127
-level: istorio
+level: ISTORIO
 sequence: 127
+slug: hromadianske-suspilstvo
 version: '1.0'
 title: 'Громадянське суспільство: Держава без держави'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
 - Evaluate the historical significance of самоорганізація
+sources:
+- name: Громадянське суспільство в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  type: reference
+  notes: Civil society overview
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Euromaidan self-organization
 content_outline:
 - section: Вступ — Самоорганізація
-  subsections:
+  points:
   - Громадянське суспільство — що це
   - Коли держава не працює
   - Україна — особливий випадок
   - Структура модуля
+  words: 850
 - section: Історичні корені
-  subsections:
+  points:
   - Козацьке самоврядування
   - «Просвіта» і кооперативи
   - Радянський період — знищення
   - Відродження після 1991
+  words: 850
 - section: Майдан як лабораторія
-  subsections:
+  points:
   - 2004 — Помаранчева революція
   - 2013-2014 — Євромайдан
   - Самоорганізація — як працювала
   - «Республіка Майдан»
+  words: 850
 - section: Волонтерський рух
-  subsections:
+  points:
   - 2014 — армія без держави
   - Волонтери — хто вони
   - Масштаб — мільйони
   - Паралельні структури
+  words: 850
 - section: Після 2022
-  subsections:
+  points:
   - Миттєва мобілізація
   - Територіальна оборона
   - Гуманітарна допомога
   - Держава + суспільство
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - Громадянське суспільство — сила
   - Коли держава слабка — суспільство сильне
   - Перехід до Гранітної революції
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - громадянське суспільство
 - самоорганізація
@@ -60,6 +87,15 @@ vocabulary:
 - горизонтальні зв'язки
 - низова ініціатива
 - «Республіка Майдан»
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Trace civil society from Cossacks to Maidan
@@ -71,34 +107,10 @@ activities:
   focus: Instant mobilization — why it worked
 - type: essay-response
   focus: Чому українське громадянське суспільство сильніше за державу?
-sources:
-- name: Громадянське суспільство в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
-  type: reference
-  notes: Civil society overview
-- name: Євромайдан (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євромайдан
-  type: reference
-  notes: Euromaidan self-organization
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Sociologist of Movements
+prerequisites:
+- kulturna-rezystentsiia
+connects_to:
+- hranitna-revoliutsiia

@@ -1,21 +1,33 @@
-sequence: 106
-module: ruth-106
+module: ruth-101
+level: RUTH
+sequence: 101
 slug: zyzaniy-leksys
-title_uk: "Лексис Лаврентія Зизанія (1596)"
-title_en: "Zyzaniy's Lexis (1596)"
+version: '2.0'
+title: Лексис Лаврентія Зизанія (1596)
+subtitle: Zyzaniy's Lexis (1596)
+focus: First printed Ukrainian dictionary — Church Slavonic to 'проста мова' translation as linguistic self-awareness
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "First printed Ukrainian dictionary — Church Slavonic to 'проста мова' translation as linguistic self-awareness"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "Lavrentiy Zyzaniy and the Vilnius brotherhood school. Context: why Ukrainians needed to TRANSLATE Church Slavonic — it was no longer understood."
+  points:
+  - 'Lavrentiy Zyzaniy and the Vilnius brotherhood school. Context: why Ukrainians needed to TRANSLATE Church Slavonic — it
+    was no longer understood.'
+  words: 1250
 - section: Основний матеріал
-  description: "Structure of the Lexis: 1061 entries. Analysis of translation strategies. What the vernacular equivalents reveal about spoken Ukrainian in 1596. Sample entries with modern parallels."
+  points:
+  - 'Structure of the Lexis: 1061 entries. Analysis of translation strategies. What the vernacular equivalents reveal about
+    spoken Ukrainian in 1596. Sample entries with modern parallels.'
+  words: 1250
 - section: Практика
-  description: "Comparative reading: Zyzaniy's Ukrainian vs modern Ukrainian. Semantic shifts over 400 years. Identifying still-living vocabulary."
+  points:
+  - 'Comparative reading: Zyzaniy''s Ukrainian vs modern Ukrainian. Semantic shifts over 400 years. Identifying still-living
+    vocabulary.'
+  words: 1250
 - section: Підсумок
-  description: "The Lexis as evidence of Ukrainian as a distinct language. Connection to Berynda's later expansion."
+  points:
+  - The Lexis as evidence of Ukrainian as a distinct language. Connection to Berynda's later expansion.
+  words: 1250
 vocabulary_hints:
 - лексикон
 - словник
@@ -23,12 +35,24 @@ vocabulary_hints:
 - просторіччя
 - книжна мова
 - синонім
-activity_types:
-- transcription
-- etymology-trace
-- parallel-text
-- loanword-trace
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: loanword-trace
+  focus: ''
+  items: 1
 persona:
-  voice: "Lexicographer"
-  role: "Brotherhood Teacher"
-source_url: "http://litopys.org.ua/zyzlex/zyz.htm"
+  voice: Lexicographer
+  role: Brotherhood Teacher
+source_url: http://litopys.org.ua/zyzlex/zyz.htm
+prerequisites:
+- fedorovych-bukvar
+connects_to:
+- berynda-leksykon

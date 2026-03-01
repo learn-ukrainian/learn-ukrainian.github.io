@@ -1,21 +1,34 @@
-sequence: 115
-module: ruth-115
+module: ruth-110
+level: RUTH
+sequence: 110
 slug: pysovnyk-lystuvannia
-title_uk: "Старовинний український письмовник"
-title_en: "The Old Ukrainian Letter-Writing Manual"
+version: '2.0'
+title: Старовинний український письмовник
+subtitle: The Old Ukrainian Letter-Writing Manual
+focus: Practical letter-writing manual — Ukrainian in the everyday register of personal correspondence
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Practical letter-writing manual — Ukrainian in the everyday register of personal correspondence"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "What is a 'письмовник'? A manual teaching people how to write letters. Context: who needed this? Literate Ukrainians navigating personal, business, and official correspondence."
+  points:
+  - 'What is a ''письмовник''? A manual teaching people how to write letters. Context: who needed this? Literate Ukrainians
+    navigating personal, business, and official correspondence.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading letter templates: greetings, requests, complaints, congratulations, condolences. Formulaic language vs personal expression. Social hierarchy encoded in address forms. What the manual reveals about everyday life."
+  points:
+  - 'Reading letter templates: greetings, requests, complaints, congratulations, condolences. Formulaic language vs personal
+    expression. Social hierarchy encoded in address forms. What the manual reveals about everyday life.'
+  words: 1250
 - section: Практика
-  description: "Analyzing epistolary formulae. Comparison with modern Ukrainian letter conventions. Identifying enduring vs obsolete address forms."
+  points:
+  - Analyzing epistolary formulae. Comparison with modern Ukrainian letter conventions. Identifying enduring vs obsolete address
+    forms.
+  words: 1250
 - section: Підсумок
-  description: "The письмовник as a window into daily Ukrainian life — not the grand narratives of chronicles, but the intimate world of personal communication."
+  points:
+  - The письмовник as a window into daily Ukrainian life — not the grand narratives of chronicles, but the intimate world
+    of personal communication.
+  words: 1250
 vocabulary_hints:
 - письмовник
 - листування
@@ -23,12 +36,24 @@ vocabulary_hints:
 - формула ввічливості
 - адресат
 - кореспонденція
-activity_types:
-- transcription
-- register-identify
-- parallel-text
-- historical-writing
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: historical-writing
+  focus: ''
+  items: 1
 persona:
-  voice: "Epistolary Scholar"
-  role: "Correspondence Teacher"
-source_url: "http://litopys.org.ua/rizne/hrinch.htm"
+  voice: Epistolary Scholar
+  role: Correspondence Teacher
+source_url: http://litopys.org.ua/rizne/hrinch.htm
+prerequisites:
+- bajky-xvii-xviii
+connects_to:
+- likarski-poradnyky

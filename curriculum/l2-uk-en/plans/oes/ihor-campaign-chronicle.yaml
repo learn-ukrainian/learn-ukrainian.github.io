@@ -1,27 +1,47 @@
-sequence: 44
-module: oes-044
-module_number: 36
+module: oes-043
+level: OES
+sequence: 43
 slug: ihor-campaign-chronicle
-title_uk: Похід Ігоря (літопис)
-title_en: Ihor's Campaign (Chronicle)
-phase: 2
-phase_id: literary-tradition
-phase_name: Literary Tradition
+version: '2.0'
+title: Похід Ігоря (літопис)
+subtitle: Ihor's Campaign (Chronicle)
 focus: Link to Slovo — Historical vs Poetic
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Ihor's Campaign (Chronicle)
+  points:
+  - Introduction to Ihor's Campaign (Chronicle)
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Eyewitness
+prerequisites:
+- sack-of-kyiv
+connects_to:
+- sviatoslav-vsevolodovych

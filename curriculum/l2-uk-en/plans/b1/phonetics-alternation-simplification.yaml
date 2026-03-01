@@ -1,100 +1,93 @@
-module: b1-07
+module: b1-007
 level: B1
 sequence: 7
 slug: phonetics-alternation-simplification
 version: '2.0'
 title: 'Фонетика: спрощення та чергування'
 subtitle: 'Phonetics: Cluster Simplification & Alternations'
+focus: grammar
+pedagogy: PPP
+phase: B1.1 [Meta-Language and Phonetics]
+word_target: 4000
+objectives:
+- Learner can identify and apply consonant cluster simplification rules
+- Learner can predict vowel alternations (o/i, e/i) from syllable structure
+- Learner can apply consonant alternations (g/zh/z, k/ch/ts, kh/sh/s)
+- Learner can use euphony rules (u/v, i/y, z/iz/zi) naturally
 content_outline:
 - section: 'Вступ: Звукові зміни на стику (Introduction: Sound Changes at Boundaries)'
   words: 500
   points:
-  - 'Align with State Standard §4.1.1: cluster simplification and alternation as structural
-    phonetic principles of Ukrainian — the complement to assimilation covered in the
-    previous module.'
-  - Connect to the previous module on assimilation — extending the euphony toolkit
-    from neighbouring-sound effects to syllable-structure-driven changes.
-  - 'Preview the two-part agenda: how simplification affects spelling (письмо vs вимова),
-    and how alternations drive morphology (case endings, word formation).'
+  - 'Align with State Standard §4.1.1: cluster simplification and alternation as structural phonetic principles of Ukrainian
+    — the complement to assimilation covered in the previous module.'
+  - Connect to the previous module on assimilation — extending the euphony toolkit from neighbouring-sound effects to syllable-structure-driven
+    changes.
+  - 'Preview the two-part agenda: how simplification affects spelling (письмо vs вимова), and how alternations drive morphology
+    (case endings, word formation).'
 - section: Спрощення в групах приголосних (Consonant Cluster Simplification)
   words: 800
   points:
-  - 'Detail the three core simplification patterns: стн → сн (честь → чесний), здн
-    → зн (їздити → пізно), стл → сл (щастя → щасливий) — provide clear before/after
-    equations so visual learners can map the transformation.'
-  - 'Mandatory simplification words: серце, сонце, проїзний, виїзний — drill these
-    high-frequency items with example sentences so students internalise the ''silent
-    letter'' conventions automatically.'
-  - 'Learner error spotlight — ''Cluster Literalism'': pronouncing the silent consonant
-    (reading чесний as [чесТний]) due to spelling transparency. Correct with minimal-pair
-    audio contrasts and a rule-of-thumb mnemonic.'
+  - 'Detail the three core simplification patterns: стн → сн (честь → чесний), здн → зн (їздити → пізно), стл → сл (щастя
+    → щасливий) — provide clear before/after equations so visual learners can map the transformation.'
+  - 'Mandatory simplification words: серце, сонце, проїзний, виїзний — drill these high-frequency items with example sentences
+    so students internalise the ''silent letter'' conventions automatically.'
+  - 'Learner error spotlight — ''Cluster Literalism'': pronouncing the silent consonant (reading чесний as [чесТний]) due
+    to spelling transparency. Correct with minimal-pair audio contrasts and a rule-of-thumb mnemonic.'
 - section: Чергування голосних (Vowel Alternations)
   words: 800
   points:
-  - 'Present the о/і alternation in closed vs open syllables: стіл — столи, ніч —
-    ночі, кіт — кота — frame the rule as ''о appears when the syllable stays open,
-    і appears when it closes''.'
-  - 'Present the е/і alternation: піч — печі, шість — шести — contrast with о/і to
-    prevent overgeneralisation.'
-  - Provide the historical basis briefly — vowel alternation preserves phonetic balance
-    across inflection, making case paradigms easier to pronounce at speed.
-  - 'Drilling pattern: given a nominative singular, predict the genitive or plural form
-    by applying the open/closed syllable test — turn this into an active pattern-recognition
-    habit.'
+  - 'Present the о/і alternation in closed vs open syllables: стіл — столи, ніч — ночі, кіт — кота — frame the rule as ''о
+    appears when the syllable stays open, і appears when it closes''.'
+  - 'Present the е/і alternation: піч — печі, шість — шести — contrast with о/і to prevent overgeneralisation.'
+  - Provide the historical basis briefly — vowel alternation preserves phonetic balance across inflection, making case paradigms
+    easier to pronounce at speed.
+  - 'Drilling pattern: given a nominative singular, predict the genitive or plural form by applying the open/closed syllable
+    test — turn this into an active pattern-recognition habit.'
 - section: Чергування приголосних (Consonant Alternations)
   words: 800
   points:
-  - 'г/ж/з alternation: нога → ніжка, друг → дружба, дорога → доріжка — show how
-    the same root consonant shifts depending on the following suffix, and why this is
-    not irregular but rule-governed.'
-  - 'к/ч/ц alternation: рука → ручка, козак → козацький, юнак → юначе (vocative) —
-    highlight the vocative as a live context where this alternation surfaces daily.'
-  - 'х/ш/с alternation: вухо → вушко, пастух → пастуше — fewer common words but important
-    for recognising diminutives and vocative forms.'
-  - 'Connect to morphology: these alternations drive case endings and diminutive suffixes,
-    making word formation predictable once the pattern is internalised. Frame them as
-    ''harmony tools'' inherited from Proto-Slavic.'
-- section: 'Милозвучність на стику слів (Euphony at Word Boundaries)'
+  - 'г/ж/з alternation: нога → ніжка, друг → дружба, дорога → доріжка — show how the same root consonant shifts depending
+    on the following suffix, and why this is not irregular but rule-governed.'
+  - 'к/ч/ц alternation: рука → ручка, козак → козацький, юнак → юначе (vocative) — highlight the vocative as a live context
+    where this alternation surfaces daily.'
+  - 'х/ш/с alternation: вухо → вушко, пастух → пастуше — fewer common words but important for recognising diminutives and
+    vocative forms.'
+  - 'Connect to morphology: these alternations drive case endings and diminutive suffixes, making word formation predictable
+    once the pattern is internalised. Frame them as ''harmony tools'' inherited from Proto-Slavic.'
+- section: Милозвучність на стику слів (Euphony at Word Boundaries)
   words: 600
   points:
-  - 'у/в alternation: у місті (after consonant or pause) vs в місті (after vowel) —
-    give a clear phonetic rule and abundant example sentences covering preposition, prefix,
-    and conjunction uses.'
-  - 'і/й alternation: і він vs й він — show that the same vowel-avoidance principle
-    drives the choice, with a practical chart of surrounding-sound contexts.'
-  - 'з/із/зі: з мамою (after vowel or single consonant), із серця (before a consonant
-    cluster), зі мною (before /мн/) — frame the three-way choice as a graduated response
-    to increasing consonant difficulty.'
-  - 'Practical rule: avoid consonant clusters at word boundaries — Ukrainian chooses
-    the allomorph that keeps the speech stream maximally open and flowing.'
+  - 'у/в alternation: у місті (after consonant or pause) vs в місті (after vowel) — give a clear phonetic rule and abundant
+    example sentences covering preposition, prefix, and conjunction uses.'
+  - 'і/й alternation: і він vs й він — show that the same vowel-avoidance principle drives the choice, with a practical chart
+    of surrounding-sound contexts.'
+  - 'з/із/зі: з мамою (after vowel or single consonant), із серця (before a consonant cluster), зі мною (before /мн/) — frame
+    the three-way choice as a graduated response to increasing consonant difficulty.'
+  - 'Practical rule: avoid consonant clusters at word boundaries — Ukrainian chooses the allomorph that keeps the speech stream
+    maximally open and flowing.'
 - section: 'Практика: Вимова і правопис (Practice: Pronunciation vs Spelling)'
   words: 500
   points:
-  - 'Dictation strategy — ''Write explicitly, pronounce smoothly'': learners write the
-    full spelling (чесний with silent т) while pronouncing [чесний] — mismatch awareness
-    is the core skill.'
-  - Скоромовки (tongue twisters) targeting cluster simplification — celebrate the ''music''
-    of Ukrainian speech while drilling automaticity in simplified clusters.
-  - 'Spelling drills with minimal pairs: чесний vs честь, щасливий vs щастя — force
-    learners to toggle between the root form and its derived simplification to consolidate
-    both spelling and pronunciation.'
+  - 'Dictation strategy — ''Write explicitly, pronounce smoothly'': learners write the full spelling (чесний with silent т)
+    while pronouncing [чесний] — mismatch awareness is the core skill.'
+  - Скоромовки (tongue twisters) targeting cluster simplification — celebrate the ''music'' of Ukrainian speech while drilling
+    automaticity in simplified clusters.
+  - 'Spelling drills with minimal pairs: чесний vs честь, щасливий vs щастя — force learners to toggle between the root form
+    and its derived simplification to consolidate both spelling and pronunciation.'
 vocabulary_hints:
   required:
-  - "спрощення (simplification) — спрощення приголосних, спрощення в групах; State
-    Standard term"
-  - "чергування (alternation) — чергування звуків, історичне чергування; specialized
-    linguistic term"
-  - "голосний (vowel) — чергування голосних, голосний звук; essential for phonetic
-    discussion"
-  - "приголосний (consonant) — група приголосних, чергування приголосних"
-  - "склад (syllable) — відкритий/закритий склад; drives alternation rules"
-  - "правопис (spelling) — правила правопису, правопис і вимова"
+  - спрощення (simplification) — спрощення приголосних, спрощення в групах; State Standard term
+  - чергування (alternation) — чергування звуків, історичне чергування; specialized linguistic term
+  - голосний (vowel) — чергування голосних, голосний звук; essential for phonetic discussion
+  - приголосний (consonant) — група приголосних, чергування приголосних
+  - склад (syllable) — відкритий/закритий склад; drives alternation rules
+  - правопис (spelling) — правила правопису, правопис і вимова
   recommended:
-  - "милозвучність (euphony) — принцип милозвучності; cultural concept"
-  - "скоромовка (tongue twister) — тренувати скоромовки"
-  - "наголос (stress/accent) — ставити наголос; affects alternation"
-  - "чергувати (to alternate) — голосні чергуються; verb form of чергування"
-  - "стик (boundary/junction) — на стику слів, на стику морфем"
+  - милозвучність (euphony) — принцип милозвучності; cultural concept
+  - скоромовка (tongue twister) — тренувати скоромовки
+  - наголос (stress/accent) — ставити наголос; affects alternation
+  - чергувати (to alternate) — голосні чергуються; verb form of чергування
+  - стик (boundary/junction) — на стику слів, на стику морфем
 activity_hints:
 - type: quiz
   focus: Predict vowel alternation from syllable type
@@ -108,17 +101,13 @@ activity_hints:
 - type: error-correction
   focus: Fix euphony errors at word boundaries
   items: 10
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- b1-06 (Phonetics: Assimilation)
 connects_to:
 - b1-08 (Aspect: Complete System)
-objectives:
-- Learner can identify and apply consonant cluster simplification rules
-- Learner can predict vowel alternations (o/i, e/i) from syllable structure
-- Learner can apply consonant alternations (g/zh/z, k/ch/ts, kh/sh/s)
-- Learner can use euphony rules (u/v, i/y, z/iz/zi) naturally
+prerequisites:
+- b1-06 (Phonetics: Assimilation)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Voice Coach
 grammar:
 - Consonant cluster simplification (стн→сн, здн→зн, стл→сл)
 - Vowel alternations (о/і, е/і in closed/open syllables)
@@ -126,8 +115,3 @@ grammar:
 - Euphony at word boundaries (у/в, і/й, з/із/зі)
 register: нейтральний
 immersion: 75-100% Ukrainian
-phase: B1.1 [Meta-Language and Phonetics]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Voice Coach
-word_target: 4000

@@ -1,45 +1,71 @@
-module: bio-126
+module: bio-129
 level: BIO
-sequence: 126
+sequence: 129
 slug: borys-paton
 version: '2.0'
 title: 'Борис Патон: Академік століття'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of борис патон: академік століття'
+- Evaluate the contributions of найдовше президентство в історії науки
+- Trace the career and influence of спадщина столітнього академіка
+sources:
+- name: Борис Патон (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович
+  type: primary
+  notes: Biography, scientific achievements, NAS presidency
+- name: Національна академія наук України
+  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
+  type: reference
+  notes: Institution he led for 58 years
+- name: Зварювання в космосі
+  url: https://uk.wikipedia.org/wiki/Зварювання_в_космосі
+  type: reference
+  notes: His pioneering space technology
 content_outline:
 - section: Вступ — Найдовше президентство в історії науки
   points:
   - Борис Патон — 58 років на чолі НАН України
   - Продовжувач справи батька
   - Зварювання в космосі та медицині
+  words: 850
 - section: Молодість і становлення
   points:
   - Народження в Києві (1918)
   - Вплив батька-інженера
   - Навчання в КПІ
   - Початок роботи в Інституті електрозварювання
+  words: 850
 - section: Наукові досягнення
   points:
   - Керівництво Інститутом (з 1953)
   - Зварювання у відкритому космосі (1969)
   - Електрошлакове зварювання
   - Зварювання живих тканин у хірургії
+  words: 850
 - section: Президент НАН України
   points:
   - Обрання президентом (1962)
   - Збереження науки за радянських часів
   - Трансформація після незалежності
   - Захист української науки
+  words: 850
 - section: Державний діяч
   points:
   - Депутат різних скликань
   - Радник президентів України
   - Міжнародне визнання
   - Нагороди та звання
+  words: 850
 - section: Спадщина столітнього академіка
   points:
   - Смерть 2020 року (101 рік)
   - Понад 400 патентів
   - Виховання поколінь науковців
   - Символ української науки
+  words: 750
 vocabulary_hints:
   required:
   - академік (academician)
@@ -66,35 +92,16 @@ activity_hints:
 - type: essay-response
   focus: How did Borys Paton preserve Ukrainian science through political changes?
   output: Science and politics analysis
-focus: biography
-prerequisites:
-- bio-112 (Yevhen Paton - his father)
-- Understanding of Soviet/Ukrainian science
-- Space race context
 connects_to:
 - bio-112 (Yevhen Paton - father)
 - bio-117 (Korolyov - space technology)
 - bio-114 (Amosov - medical innovations)
-module_type: biography
-sources:
-- name: Борис Патон (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович
-  type: primary
-  notes: Biography, scientific achievements, NAS presidency
-- name: Національна академія наук України
-  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
-  type: reference
-  notes: Institution he led for 58 years
-- name: Зварювання в космосі
-  url: https://uk.wikipedia.org/wiki/Зварювання_в_космосі
-  type: reference
-  notes: His pioneering space technology
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of борис патон: академік століття'
-- Evaluate the contributions of найдовше президентство в історії науки
-- Trace the career and influence of спадщина столітнього академіка
+prerequisites:
+- bio-112 (Yevhen Paton - his father)
+- Understanding of Soviet/Ukrainian science
+- Space race context
 persona:
   voice: Senior Biographer
   role: Institute President
+module_type: biography
+immersion: 100% Ukrainian

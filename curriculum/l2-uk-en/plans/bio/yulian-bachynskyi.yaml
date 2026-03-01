@@ -1,44 +1,71 @@
-module: bio-68
+module: bio-070
 level: BIO
-sequence: 68
+sequence: 70
 slug: yulian-bachynskyi
 version: '2.0'
 title: 'Юліан Бачинський: Теоретик незалежності'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of юліан бачинський: теоретик незалежності'
+- Evaluate the contributions of пророк незалежності
+- Trace the career and influence of ідеї, що випереджають час
+sources:
+- name: Юліан Бачинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Україна irredenta
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Головна праця
+- name: Історія української політичної думки
+  url: https://litopys.org.ua/
+  type: reference
+  notes: Контекст політичної думки
 content_outline:
 - section: Вступ — Пророк незалежності
   points:
   - Бачинський як перший, хто чітко сформулював ідею незалежності
   - Україна irredenta 1895 року
   - Чому його забули та чому варто пам'ятати
+  words: 700
 - section: Галицьке походження
   points:
   - Народження в Галичині (1870)
   - Освіта та формування поглядів
   - Вплив соціалістичних ідей
+  words: 700
 - section: Україна irredenta
   points:
   - Головна праця життя
   - Аргументи на користь незалежності
   - Рецепція та критика
+  words: 700
 - section: Соціалізм і національне питання
   points:
   - Синтез соціалістичних та національних ідей
   - Полеміка з марксистами
   - Унікальність його позиції
+  words: 700
 - section: Політична діяльність
   points:
   - Участь в українських організаціях
   - Журналістська робота
   - Роль у формуванні політичної свідомості
+  words: 700
 - section: Еміграція та останні роки
   points:
   - Життя за кордоном
   - Продовження публіцистичної діяльності
   - Смерть та забуття
+  words: 700
 - section: Дискусія — Ідеї, що випереджають час
   points:
   - Чому деякі ідеї реалізуються через століття
   - Бачинський та незалежність 1991 року
+  words: 800
 vocabulary_hints:
   required:
   - irredenta (irredenta - unredeemed territories)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чи можна передбачити майбутнє нації?
   output: Аргументований есей
-focus: biography
-prerequisites:
-- bio-22-mykhailo-drahomanov
 connects_to:
 - bio-42-mykola-mikhnovskyi
 - bio-51-viacheslav-lypynskyi
 - bio-52-dmytro-dontsov
-module_type: biography
-sources:
-- name: Юліан Бачинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
-  type: primary
-  notes: Основна біографічна інформація
-- name: Україна irredenta
-  url: https://diasporiana.org.ua/
-  type: reference
-  notes: Головна праця
-- name: Історія української політичної думки
-  url: https://litopys.org.ua/
-  type: reference
-  notes: Контекст політичної думки
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of юліан бачинський: теоретик незалежності'
-- Evaluate the contributions of пророк незалежності
-- Trace the career and influence of ідеї, що випереджають час
+prerequisites:
+- bio-22-mykhailo-drahomanov
 persona:
   voice: Senior Biographer
   role: Marxist Theorist
+module_type: biography
+immersion: 100% Ukrainian

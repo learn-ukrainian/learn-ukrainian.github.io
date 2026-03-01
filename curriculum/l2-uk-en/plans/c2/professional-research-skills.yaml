@@ -6,7 +6,8 @@ version: '2.0'
 title: Професійні дослідницькі навички
 focus: grammar
 pedagogy: TTT
-phase: 'C2.3 [Professional Language]'
+phase: C2.3 [Professional Language]
+word_target: 5000
 objectives:
 - TBD
 sources:
@@ -26,50 +27,51 @@ content_outline:
 - section: Вступ — Дослідницькі компетенції (Introduction — Research Competencies)
   words: 650
   points:
-  - Роль дослідження в професійній діяльності та вимоги Державного стандарту (§4.3.1.1)
-    щодо володіння науковим стилем.
-  - 'Колокаційна точність: виправлення типової кальки «робити дослідження» на нормативне
-    «проводити дослідження».'
-  - 'Культурний контекст: Національна бібліотека України імені В. І. Вернадського
-    (НБУВ) як центральний осередок наукової інформації.'
+  - Роль дослідження в професійній діяльності та вимоги Державного стандарту (§4.3.1.1) щодо володіння науковим стилем.
+  - 'Колокаційна точність: виправлення типової кальки «робити дослідження» на нормативне «проводити дослідження».'
+  - 'Культурний контекст: Національна бібліотека України імені В. І. Вернадського (НБУВ) як центральний осередок наукової
+    інформації.'
 - section: Пошук та оцінка джерел (Source Search and Evaluation)
   words: 1100
   points:
-  - Цифрові архіви та сучасні вимоги до публікацій у Scopus/Web of Science для українських
-    дослідників.
-  - 'Критерії достовірності: розрізнення «надійного/достовірного джерела» та лексичної
-    помилки «вірне джерело» (loyal source).'
-  - 'Первинні vs. вторинні тексти: робота з рефератами та повідомленнями згідно з
-    вимогами §4.3.8.'
-  - 'Розширена практика із систематизацією складних граматичних явищ та порівнянням нормативних варіантів за різними джерелами'
+  - Цифрові архіви та сучасні вимоги до публікацій у Scopus/Web of Science для українських дослідників.
+  - 'Критерії достовірності: розрізнення «надійного/достовірного джерела» та лексичної помилки «вірне джерело» (loyal source).'
+  - 'Первинні vs. вторинні тексти: робота з рефератами та повідомленнями згідно з вимогами §4.3.8.'
+  - Розширена практика із систематизацією складних граматичних явищ та порівнянням нормативних варіантів за різними джерелами
 - section: Методологія та методи збору даних (Methodology and Data Collection)
   words: 1100
   points:
-  - 'Методологічні засади: подолання труднощів у розрізненні «об''єкта» (явище) та
-    «предмета» (конкретний аспект) дослідження.'
-  - 'Робота з гіпотезами: вживання академічних кліше «висунути гіпотезу», «підтвердити»
-    або «спростувати» результати.'
-  - Огляд літератури (literature review) як інструмент критичного опрацювання наукового
-    дискурсу.
-  - 'Розширена практика із систематизацією складних граматичних явищ та порівнянням нормативних варіантів за різними джерелами'
+  - 'Методологічні засади: подолання труднощів у розрізненні «об''єкта» (явище) та «предмета» (конкретний аспект) дослідження.'
+  - 'Робота з гіпотезами: вживання академічних кліше «висунути гіпотезу», «підтвердити» або «спростувати» результати.'
+  - Огляд літератури (literature review) як інструмент критичного опрацювання наукового дискурсу.
+  - Розширена практика із систематизацією складних граматичних явищ та порівнянням нормативних варіантів за різними джерелами
 - section: Аналіз та синтез інформації (Analysis and Synthesis)
   words: 1100
   points:
-  - 'Систематизація даних: перехід від описовості до критичного аналізу та виявлення
-    закономірностей.'
-  - 'Формулювання результатів: використання конструкції «дійти висновку» як стилістично
-    виправданої альтернативи.'
-  - Синтез багатомовних джерел та інтеграція українського наукового контексту в міжнародний
-    простір.
+  - 'Систематизація даних: перехід від описовості до критичного аналізу та виявлення закономірностей.'
+  - 'Формулювання результатів: використання конструкції «дійти висновку» як стилістично виправданої альтернативи.'
+  - Синтез багатомовних джерел та інтеграція українського наукового контексту в міжнародний простір.
 - section: Презентація та академічна доброчесність (Presentation and Academic Integrity)
   words: 1050
   points:
-  - 'Культура цитування: обов''язкове дотримання стандарту ДСТУ 8302:2015 для оформлення
-    бібліографії в Україні.'
-  - 'Академічна доброчесність: рух за етичні стандарти в українській науці після 2014
-    року та боротьба з плагіатом.'
-  - 'Термінологічний нюанс: розрізнення «цитати» (текстовий фрагмент) та «цитування»
-    (процес або правила оформлення посилань).'
+  - 'Культура цитування: обов''язкове дотримання стандарту ДСТУ 8302:2015 для оформлення бібліографії в Україні.'
+  - 'Академічна доброчесність: рух за етичні стандарти в українській науці після 2014 року та боротьба з плагіатом.'
+  - 'Термінологічний нюанс: розрізнення «цитати» (текстовий фрагмент) та «цитування» (процес або правила оформлення посилань).'
+vocabulary_hints:
+  required:
+  - проводити дослідження (to conduct research) — High-frequency academic collocation; avoid the literal translation 'робити'.
+  - надійне джерело (reliable source) — Terminology for verification; avoid 'вірне' which implies loyalty.
+  - академічна доброчесність (academic integrity) — Key policy term in modern Ukrainian education and professional research.
+  - об'єкт дослідження (object of research) — The broad phenomenon or process under investigation.
+  - предмет дослідження (subject of research) — The specific aspect or property of the object being analyzed.
+  - висунути гіпотезу (to propose a hypothesis) — Standard academic collocation for the initial stage of research.
+  - цитування (citation) — The system or process of referencing; use 'правила цитування' (not 'правила цитати').
+  recommended:
+  - верифікація (verification) — Process of checking data for accuracy and authenticity.
+  - валідність (validity) — Degree to which a research method accurately measures what it is intended to measure.
+  - дійти висновку (to reach a conclusion) — Preferred academic phrase over the literal 'прийти до висновку'.
+  - першоджерело (primary source) — Original material that provides direct evidence or first-hand testimony.
+  - спростувати (to refute/disprove) — To prove a statement or hypothesis to be wrong or false.
 vocabulary:
   required:
   - дослідження (research)
@@ -89,6 +91,15 @@ vocabulary:
   - вибірка (sample)
   - кореляція (correlation)
   forbidden: '[]'
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
 activities:
   types_required:
   - quiz
@@ -103,41 +114,8 @@ connects_to:
 - c2-60 (Building Domain Expertise)
 - c2-71-72 (Professional Portfolio I-II)
 - c2-89-94 (Capstone Project)
-vocabulary_hints:
-  required:
-  - проводити дослідження (to conduct research) — High-frequency academic collocation;
-    avoid the literal translation 'робити'.
-  - надійне джерело (reliable source) — Terminology for verification; avoid 'вірне'
-    which implies loyalty.
-  - академічна доброчесність (academic integrity) — Key policy term in modern Ukrainian
-    education and professional research.
-  - об'єкт дослідження (object of research) — The broad phenomenon or process under
-    investigation.
-  - предмет дослідження (subject of research) — The specific aspect or property of
-    the object being analyzed.
-  - висунути гіпотезу (to propose a hypothesis) — Standard academic collocation for
-    the initial stage of research.
-  - цитування (citation) — The system or process of referencing; use 'правила цитування'
-    (not 'правила цитати').
-  recommended:
-  - верифікація (verification) — Process of checking data for accuracy and authenticity.
-  - валідність (validity) — Degree to which a research method accurately measures
-    what it is intended to measure.
-  - дійти висновку (to reach a conclusion) — Preferred academic phrase over the literal
-    'прийти до висновку'.
-  - першоджерело (primary source) — Original material that provides direct evidence
-    or first-hand testimony.
-  - спростувати (to refute/disprove) — To prove a statement or hypothesis to be wrong
-    or false.
-activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
 persona:
   voice: Senior Specialist
   role: Research Librarian
+prerequisites:
+- cross-domain-communication

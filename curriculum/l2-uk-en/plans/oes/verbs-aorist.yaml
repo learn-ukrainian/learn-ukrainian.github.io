@@ -1,27 +1,47 @@
-sequence: 11
 module: oes-011
-module_number: 9
+level: OES
+sequence: 11
 slug: verbs-aorist
-title_uk: 'Дієслова II: Аорист'
-title_en: 'Verbs II: The Aorist'
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'Дієслова II: Аорист'
+subtitle: 'Verbs II: The Aorist'
 focus: Simple past in quick notes
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Verbs II: The Aorist'
+  points:
+  - 'Introduction to Verbs II: The Aorist'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Chronicler of Moments
+prerequisites:
+- verbs-present-tense
+connects_to:
+- verbs-perfect

@@ -1,55 +1,87 @@
 module: istorio-077
-level: istorio
+level: ISTORIO
 sequence: 77
+slug: donbas-industrializatsiia
 version: '1.0'
 title: 'Донбас: Індустріалізація та ідентичність'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
 - Evaluate the historical significance of регіон, якого не було
+sources:
+- name: Донбас (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Донбас
+  type: reference
+  notes: Regional overview
+- name: Індустріалізація Донбасу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
+  type: reference
+  notes: Industrial history
+- name: Джон Юз (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джон_Юз
+  type: reference
+  notes: John Hughes founder
 content_outline:
 - section: Вступ — Регіон, якого не було
-  subsections:
+  points:
   - Донбас — штучне створення
   - До індустріалізації — степ
   - Промисловий регіон — з нуля
   - Структура модуля
+  words: 700
 - section: Створення промислового центру
-  subsections:
+  points:
   - Джон Юз — засновник Донецька
   - Вугілля і метал
   - Імпортована робоча сила
   - Росіяни, українці, греки, євреї
+  words: 700
 - section: «Робітнича» ідентичність
-  subsections:
+  points:
   - Клас, не нація
   - Радянська пропаганда
   - «Донбас — серце Росії»
   - Мовний зсув
+  words: 700
 - section: Українці Донбасу
-  subsections:
+  points:
   - Частка населення
   - Село vs. місто
   - Збереження ідентичності
   - Дисиденти з Донбасу — Стус
+  words: 700
 - section: Після 1991
-  subsections:
+  points:
   - Економічний колапс
   - Олігархи
   - Проросійські настрої — чому
   - Але й українські — теж
+  words: 700
 - section: 2014-2022
-  subsections:
+  points:
   - «Русская весна»
   - Війна на Донбасі
   - Окупація
   - Донбас — не тільки сепаратизм
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Донбас — створений регіон
   - Ідентичність — конкуренція наративів
   - Перехід до Криму
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Донбас
 - індустріалізація
@@ -66,6 +98,15 @@ vocabulary:
 - пролетаріат
 - регіоналізм
 - деіндустріалізація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: How Donbas was created — not ancient
@@ -77,38 +118,10 @@ activities:
   focus: 2014-2022 — why separatism, but also resistance
 - type: essay-response
   focus: Чи Донбас 'російський'? Деконструкція міфу
-sources:
-- name: Донбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Донбас
-  type: reference
-  notes: Regional overview
-- name: Індустріалізація Донбасу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
-  type: reference
-  notes: Industrial history
-- name: Джон Юз (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джон_Юз
-  type: reference
-  notes: John Hughes founder
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Labor Historian
+prerequisites:
+- slobozhanshchyna-identychnist
+connects_to:
+- krym-bahatosharovyi

@@ -1,59 +1,91 @@
 module: istorio-059
-level: istorio
+level: ISTORIO
 sequence: 59
+slug: beresteyska-uniia-analiz
 version: '1.0'
 title: 'Берестейська унія: Глибокий аналіз'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
 - Evaluate the historical significance of розкол, що визначив історію
+sources:
+- name: Берестейська унія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  type: reference
+  notes: Overview
+- name: Греко-католицька церква (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: UGCC history
+- name: Православна опозиція унії
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
+  type: reference
+  notes: Opposition
 content_outline:
 - section: Вступ — Розкол, що визначив історію
-  subsections:
+  points:
   - 1596 рік — що відбулося
   - Чому це важливо
   - Наслідки на століття
   - Структура модуля
+  words: 700
 - section: Контекст — чому унія стала можливою
-  subsections:
+  points:
   - Криза православної церкви
   - Занепад освіти
   - Тиск католицизму
   - Флорентійська унія — прецедент
   - Політичні мотиви єпископів
+  words: 700
 - section: Що підписали в Бересті
-  subsections:
+  points:
   - Умови унії
   - Збереження обряду
   - Підпорядкування Папі
   - Хто підписав, хто відмовився
   - Два собори — унійний і православний
+  words: 700
 - section: Хто підтримав, хто відкинув
-  subsections:
+  points:
   - Єпископи — за
   - Козаки — проти
   - Братства — проти
   - Шляхта — розділена
   - Магнати — переважно за
   - Класовий і регіональний розподіл
+  words: 700
 - section: Наслідки розколу
-  subsections:
+  points:
   - Конфлікт на століття
   - Козацькі війни — релігійний вимір
   - Православне відродження (Могила)
   - Два українські народи?
+  words: 700
 - section: Унія в історичній пам'яті
-  subsections:
+  points:
   - Православна інтерпретація — зрада
   - Греко-католицька інтерпретація — порятунок
   - Сучасний погляд — складність
   - Екуменічні спроби
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Унія як розлом
   - Два шляхи — захід і схід
   - Підготовка до православної ідентичності
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - унія
 - Берестейська унія
@@ -70,6 +102,15 @@ vocabulary:
 - примас
 - архієпископ
 - апостольський
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Map who supported/opposed union and why
@@ -81,38 +122,10 @@ activities:
   focus: Trace consequences to present day
 - type: essay-response
   focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
-sources:
-- name: Берестейська унія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія
-  type: reference
-  notes: Overview
-- name: Греко-католицька церква (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
-  type: reference
-  notes: UGCC history
-- name: Православна опозиція унії
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
-  type: reference
-  notes: Opposition
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Ecclesiastical Historian
+prerequisites:
+- khreshchennia-spadshchyna
+connects_to:
+- pravoslavna-identychnist

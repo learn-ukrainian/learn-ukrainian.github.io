@@ -1,45 +1,71 @@
-module: bio-42
+module: bio-042
 level: BIO
 sequence: 42
 slug: marko-vovchok
 version: '2.0'
 title: 'Марко Вовчок: Голос пригноблених'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of марко вовчок: голос пригноблених'
+- Evaluate the contributions of росіянка, що стала українською письменницею
+- Trace the career and influence of спадщина та значення
+sources:
+- name: Марко Вовчок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марко_Вовчок
+  type: primary
+  notes: Біографія, літературна діяльність, псевдонім
+- name: Народні оповідання
+  url: https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)
+  type: reference
+  notes: Головний твір та його значення
+- name: Український реалізм
+  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
+  type: reference
+  notes: Літературний контекст творчості
 content_outline:
 - section: Вступ — Росіянка, що стала українською письменницею
   points:
   - Марко Вовчок — псевдонім Марії Вілінської
   - Від російської дворянки до голосу українського селянства
   - Унікальний феномен культурної асиміляції
+  words: 850
 - section: Ранні роки та шлюб (1833-1851)
   points:
   - Народження в Орловській губернії в дворянській родині
   - Освіта в Харкові
   - Шлюб з українським етнографом Опанасом Марковичем
   - Переїзд в Україну та вивчення української мови
+  words: 850
 - section: «Народні оповідання» (1851-1860)
   points:
   - Збирання фольклору та етнографічних матеріалів
   - Публікація «Народних оповідань» (1857)
   - Тема кріпацтва та жіночої долі
   - Захоплення Шевченка та Тургенєва
+  words: 850
 - section: Європейський період (1860-1878)
   points:
   - Переїзд до Парижа після смерті чоловіка
   - Знайомство з європейськими письменниками
   - Переклади на французьку та німецьку
   - Другий шлюб та життя в еміграції
+  words: 850
 - section: Повернення та пізня творчість (1878-1907)
   points:
   - Повернення до Російської імперії
   - Переважно російськомовна творчість
   - Переклади Жюля Верна
   - Остання зустріч з Україною
+  words: 850
 - section: Спадщина та значення
   points:
   - Смерть у 1907 році в Нальчику
   - Місце в українському літературному каноні
   - Дискусії про ідентичність та належність
   - Вовчок як попередниця українського фемінізму
+  words: 750
 vocabulary_hints:
   required:
   - псевдонім (pseudonym)
@@ -66,32 +92,13 @@ activity_hints:
 - type: essay-response
   focus: Чи можна вважати Марко Вовчок українською письменницею?
   output: Critical analysis
-focus: biography
-prerequisites:
-- bio-20-taras-shevchenko
 connects_to:
 - bio-21-hanna-barvinok
 - bio-31-olha-kobylianska
-module_type: biography
-sources:
-- name: Марко Вовчок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марко_Вовчок
-  type: primary
-  notes: Біографія, літературна діяльність, псевдонім
-- name: Народні оповідання
-  url: https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)
-  type: reference
-  notes: Головний твір та його значення
-- name: Український реалізм
-  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
-  type: reference
-  notes: Літературний контекст творчості
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of марко вовчок: голос пригноблених'
-- Evaluate the contributions of росіянка, що стала українською письменницею
-- Trace the career and influence of спадщина та значення
+prerequisites:
+- bio-20-taras-shevchenko
 persona:
   voice: Senior Biographer
   role: Social Critic
+module_type: biography
+immersion: 100% Ukrainian

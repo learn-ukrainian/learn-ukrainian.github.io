@@ -1,85 +1,79 @@
-module: b1-67
+module: b1-078
 level: B1
-sequence: 67
+sequence: 78
 slug: travel-geography
 version: '2.0'
 title: Подорожі та географія
 subtitle: Travel & Geography
+focus: vocabulary
+pedagogy: PPP
+phase: B1.6 [Vocabulary Expansion II]
+word_target: 4000
+objectives:
+- Learner can use 30 travel and geography words in context
+- Learner can distinguish between подорож/мандрівка/поїздка
+- Learner can form natural collocations with travel vocabulary
+- Learner can discuss travel plans and experiences
 content_outline:
 - section: Вступ (Introduction)
   words: 600
   points:
-  - 'Ukrainian geography superlatives based on State Standard §3.14: Ukraine as the
-    largest country entirely in Europe (603,628 km²), Mount Hoverla (2061 m) as the
-    highest peak, and the Dnipro river''s division into Right and Left Banks.'
-  - 'Introduction to high-frequency travel collocations mandated by Standard §3.5:
-    «вирушити в подорож», «незабутня мандрівка», «далека подорож».'
-  - 'Setting the narrative arc: from practical planning (booking) to physical geography
-    (mountains/seas) to cultural sharing (natural wonders).'
+  - 'Ukrainian geography superlatives based on State Standard §3.14: Ukraine as the largest country entirely in Europe (603,628
+    km²), Mount Hoverla (2061 m) as the highest peak, and the Dnipro river''s division into Right and Left Banks.'
+  - 'Introduction to high-frequency travel collocations mandated by Standard §3.5: «вирушити в подорож», «незабутня мандрівка»,
+    «далека подорож».'
+  - 'Setting the narrative arc: from practical planning (booking) to physical geography (mountains/seas) to cultural sharing
+    (natural wonders).'
 - section: 'Лексичні нюанси: Поняття «подорож» (Lexical Nuances: The Concept of ''Travel'')'
   words: 800
   points:
-  - 'Differentiating trip types to avoid common learner errors: «поїздка» (short/specific
-    purpose, e.g., commute), «подорож» (general/long journey), and «мандрівка» (adventurous/literary
-    context).'
-  - 'Distinguishing vacation terminology: Adults taking «відпустка» (work leave) versus
-    students having «канікули» (academic break); drill context-specific usage.'
-  - 'Usage of register-specific terms: «регіон» (formal/news) vs «місцевість» (general
-    description) in alignment with Standard §3.13.'
+  - 'Differentiating trip types to avoid common learner errors: «поїздка» (short/specific purpose, e.g., commute), «подорож»
+    (general/long journey), and «мандрівка» (adventurous/literary context).'
+  - 'Distinguishing vacation terminology: Adults taking «відпустка» (work leave) versus students having «канікули» (academic
+    break); drill context-specific usage.'
+  - 'Usage of register-specific terms: «регіон» (formal/news) vs «місцевість» (general description) in alignment with Standard
+    §3.13.'
 - section: Географія та природні дива (Geography & Natural Wonders)
   words: 1000
   points:
-  - 'Cultural Hook: The Geometric Center of Europe near Dilove, Zakarpattia (historical
-    marker from 1887) as a focal point for geographical discussion.'
-  - 'The 7 Natural Wonders of Ukraine: Detailed exploration of Askania-Nova (virgin
-    steppe), Dniester Canyon, Lake Synevyr (''Sea Eye''), Lake Svityaz (deepest),
-    Podilski Tovtry, Granite-Steppe Lands of Buh, and Marble Cave.'
-  - 'Describing diverse landscapes (Standard §3.14): From the ''Sea Eye'' of the Carpathians
-    to the virgin steppes of the south, focusing on ''naturalness'' in landscape descriptions.'
-- section: 'Граматичний практикум: Прийменники та локації (Grammar Workshop: Prepositions
-    & Locations)'
+  - 'Cultural Hook: The Geometric Center of Europe near Dilove, Zakarpattia (historical marker from 1887) as a focal point
+    for geographical discussion.'
+  - 'The 7 Natural Wonders of Ukraine: Detailed exploration of Askania-Nova (virgin steppe), Dniester Canyon, Lake Synevyr
+    (''Sea Eye''), Lake Svityaz (deepest), Podilski Tovtry, Granite-Steppe Lands of Buh, and Marble Cave.'
+  - 'Describing diverse landscapes (Standard §3.14): From the ''Sea Eye'' of the Carpathians to the virgin steppes of the
+    south, focusing on ''naturalness'' in landscape descriptions.'
+- section: 'Граматичний практикум: Прийменники та локації (Grammar Workshop: Prepositions & Locations)'
   words: 800
   points:
-  - 'Correcting prepositional errors with geographical locations: Drill «у горах»
-    (Correct) vs «на горах» (Wrong); «на курорті» (Correct) vs «в курорті» (Wrong).'
-  - 'Practical application of booking vocabulary (Standard §3.13): Using «бронювати»
-    for hotels, tickets, and tables in a service-oriented dialogue context.'
-  - 'Forming natural collocations with water bodies: «їхати на море», «відпочивати
-    на морі» vs «купатися в озері».'
+  - 'Correcting prepositional errors with geographical locations: Drill «у горах» (Correct) vs «на горах» (Wrong); «на курорті»
+    (Correct) vs «в курорті» (Wrong).'
+  - 'Practical application of booking vocabulary (Standard §3.13): Using «бронювати» for hotels, tickets, and tables in a
+    service-oriented dialogue context.'
+  - 'Forming natural collocations with water bodies: «їхати на море», «відпочивати на морі» vs «купатися в озері».'
 - section: Подорожні плани та враження (Travel Plans & Impressions)
   words: 800
   points:
-  - 'Simulating travel planning dialogues: Integrating ''The Storyteller'' persona
-    to describe Synevyr legends and Carpathian traditions with 100% Ukrainian immersion.'
-  - 'Expressing impressions and sharing experiences: Differentiating ''unforgettable''
-    (незабутня) versus ''virtual'' (віртуальна) adventures.'
-  - 'Summary of State Standard §3.5 competencies: Verifying the ability to describe
-    transport, travel planning, and natural environments in a cohesive narrative.'
+  - 'Simulating travel planning dialogues: Integrating ''The Storyteller'' persona to describe Synevyr legends and Carpathian
+    traditions with 100% Ukrainian immersion.'
+  - 'Expressing impressions and sharing experiences: Differentiating ''unforgettable'' (незабутня) versus ''virtual'' (віртуальна)
+    adventures.'
+  - 'Summary of State Standard §3.5 competencies: Verifying the ability to describe transport, travel planning, and natural
+    environments in a cohesive narrative.'
 vocabulary_hints:
   required:
-  - подорож (journey) — High frequency; далека подорож, вирушити в подорож, морська
-    подорож, подорож мрії
-  - мандрівка (adventure/trip) — Medium frequency (literary/adventurous); піша мандрівка,
-    незабутня мандрівка, віртуальна мандрівка
-  - поїздка (trip/short journey) — Focused on specific/short-term goals; ділова поїздка,
-    поїздка на роботу
-  - географія (geography) — Academic context; вивчати географію, фізична географія,
-    географія України
-  - регіон (region) — High frequency in formal/news contexts; гірський регіон, південний
-    регіон, розвиток регіону
-  - 'гори (mountains) — Plural; Карпатські гори, піднятися в гори, відпочинок у горах
-    (Note: use ''у'' for location)'
-  - 'море (sea) — Чорне море, тепле море, їхати на море, відпочивати на морі (Note:
-    use ''на'' for location/direction)'
-  - аеропорт (airport) — Travel hub; міжнародний аеропорт, їхати в аеропорт, чекати
-    в аеропорту
-  - бронювати (to book) — Service context; бронювати готель, бронювати квитки, бронювати
-    столик
+  - подорож (journey) — High frequency; далека подорож, вирушити в подорож, морська подорож, подорож мрії
+  - мандрівка (adventure/trip) — Medium frequency (literary/adventurous); піша мандрівка, незабутня мандрівка, віртуальна
+    мандрівка
+  - поїздка (trip/short journey) — Focused on specific/short-term goals; ділова поїздка, поїздка на роботу
+  - географія (geography) — Academic context; вивчати географію, фізична географія, географія України
+  - регіон (region) — High frequency in formal/news contexts; гірський регіон, південний регіон, розвиток регіону
+  - 'гори (mountains) — Plural; Карпатські гори, піднятися в гори, відпочинок у горах (Note: use ''у'' for location)'
+  - 'море (sea) — Чорне море, тепле море, їхати на море, відпочивати на морі (Note: use ''на'' for location/direction)'
+  - аеропорт (airport) — Travel hub; міжнародний аеропорт, їхати в аеропорт, чекати в аеропорту
+  - бронювати (to book) — Service context; бронювати готель, бронювати квитки, бронювати столик
   recommended:
-  - курорт (resort) — морський курорт, гірськолижний курорт, лікувальний курорт; use
-    with preposition 'на'
-  - відпустка (vacation/leave) — Specific to work; щорічна відпустка, йти у відпустку,
-    бути у відпустці
+  - курорт (resort) — морський курорт, гірськолижний курорт, лікувальний курорт; use with preposition 'на'
+  - відпустка (vacation/leave) — Specific to work; щорічна відпустка, йти у відпустку, бути у відпустці
   - канікули (school break) — Plural only; зимові канікули, бути на канікулах
   - екскурсія (excursion) — цікава екскурсія, замовляти екскурсію
   - центр Європи (center of Europe) — Cultural/geographical landmark near Dilove
@@ -97,24 +91,15 @@ activity_hints:
 - type: quiz
   focus: Discuss travel experiences
   items: 10
-focus: vocabulary
-pedagogy: PPP
-prerequisites:
-- b1-66 (Business Basics)
 connects_to:
 - b1-68 (Synonymy Thinking Verbs)
-objectives:
-- Learner can use 30 travel and geography words in context
-- Learner can distinguish between подорож/мандрівка/поїздка
-- Learner can form natural collocations with travel vocabulary
-- Learner can discuss travel plans and experiences
+prerequisites:
+- b1-66 (Business Basics)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Travel Agency Owner
 grammar:
 - Travel vocabulary collocations
 - Geographical terminology
 - Direction and location expressions
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Travel Agency Owner
-word_target: 4000

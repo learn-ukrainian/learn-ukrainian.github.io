@@ -1,16 +1,32 @@
-module: bio-20
+module: bio-020
 level: BIO
 sequence: 20
 slug: petro-sahaidachny
 version: '2.0'
 title: 'Петро Сагайдачний: Гетьман-Державник'
 subtitle: 'Petro Sahaidachny: The Statesman Hetman'
+focus: biography
+pedagogy: CBI
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze Sahaidachny's reforms of the Cossack army
+- Evaluate the restoration of the Orthodox hierarchy (1620)
+- Discuss the Battle of Khotyn (1621)
+sources:
+- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  type: primary
+- name: Хотинська битва 1621
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  type: primary
 content_outline:
 - section: Вступ — Меч і Хрест
   points:
   - Найвидатніший гетьман до Хмельницького
   - Перетворення козацтва на регулярне військо
   - Союз меча (козаків) і хреста (церкви)
+  words: 1000
 - section: Життєпис
   points:
   - Походження (шляхтич з Самбора)
@@ -20,20 +36,24 @@ content_outline:
   - Відновлення православної ієрархії (1620)
   - Хотинська битва (1621) — порятунок Європи
   - Смерть від рани у Києві
+  words: 1000
 - section: Історичний контекст
   points:
   - Доба героїчних морських походів
   - Тридцятилітня війна в Європі
   - Занепад православ'я після унії
+  words: 1000
 - section: Внесок та Спадщина
   points:
   - Реформа війська (дисципліна, мушкети)
   - '"Військо Запорозьке" вступає до Київського братства'
   - Київ знову стає культурним центром (Могилянка)
+  words: 1000
 - section: Порівняльний аналіз
   points:
   - Сагайдачний vs. Наливайко (лояльність vs бунт)
   - Сагайдачний vs. Дорошенко (стратегічне бачення)
+  words: 1000
 vocabulary_hints:
   required:
   - чайка (chaika/boat)
@@ -51,24 +71,14 @@ activity_hints:
   focus: '"Verses on the Funeral of Sahaidachny" (1622)'
 - type: essay-response
   focus: Why Sahaidachny supported the Church?
-focus: biography
-pedagogy: CBI
-objectives:
-- Analyze Sahaidachny's reforms of the Cossack army
-- Evaluate the restoration of the Orthodox hierarchy (1620)
-- Discuss the Battle of Khotyn (1621)
-grammar:
-- Political vocabulary
-- Military strategy terms
-sources:
-- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
-  type: primary
-- name: Хотинська битва 1621
-  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
-  type: primary
-immersion: 100% Ukrainian
-phase: BIO
 persona:
   voice: Senior Biographer
   role: Naval Commander
+grammar:
+- Political vocabulary
+- Military strategy terms
+immersion: 100% Ukrainian
+prerequisites:
+- meletii-smotrytskyi
+connects_to:
+- bohdan-khmelnytskyy

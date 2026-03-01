@@ -1,44 +1,71 @@
-module: bio-125
+module: bio-128
 level: BIO
-sequence: 125
+sequence: 128
 slug: vasyl-kuk
 version: '2.0'
 title: 'Василь Кук: Останній командир'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the leadership of Василь Кук in the final years of UPA
+- Evaluate the KGB tactics used against the Ukrainian underground
+- Discuss the moral complexities of survival and resistance
+sources:
+- name: Аліна Понипаляк "Останній командир УПА"
+  url: https://nashformat.ua/
+  type: primary
+  notes: Основна біографія
+- name: Володимир В'ятрович "Генерал Кук"
+  url: https://vivat.com.ua/
+  type: primary
+  notes: Нове детальне дослідження
+- name: Архів СБУ
+  url: https://avr.org.ua/
+  type: reference
+  notes: Розсекречені документи
 content_outline:
 - section: Вступ — Символ незламності
   points:
   - Останній головнокомандувач УПА (1950-1954)
   - Людина, яка пережила Сталіна і СРСР
   - Значення постаті для сучасної України
+  words: 700
 - section: Молодість і ОУН
   points:
   - Навчання в Золочівській гімназії та Люблінському університеті
   - Вступ до ОУН, організаторська робота
   - Участь у проголошенні Акту 30 червня 1941 року
+  words: 700
 - section: Підпілля та УПА-Південь
   points:
   - Створення штабу УПА-Південь
   - Боротьба проти нацистів та більшовиків
   - Організація пропаганди та друкарень
+  words: 700
 - section: Останній бій (1950-1954)
   points:
   - Прийняття командування після загибелі Шухевича
   - Життя в бункерах, постійна небезпека
   - Арешт 1954 року: спецоперація КДБ
+  words: 700
 - section: Полон та "помилування"
   points:
   - 6 років слідства і допитів без вироку
   - '"Відкритий лист" 1960 року — аналіз документа'
   - Життя під наглядом КДБ у Києві ("об'єкт Борсук")
+  words: 700
 - section: Незалежність і реабілітація
   points:
   - Повернення до публічного життя після 1991 року
   - Співпраця з істориками, відкриття архівів
   - Смерть 2007 року, державний похорон
+  words: 700
 - section: Дискусія — Ціна компромісу
   points:
   - Чи був "лист покаяння" зрадою?
   - Стратегія виживання заради пам'яті
+  words: 800
 vocabulary_hints:
   required:
   - головнокомандувач (commander-in-chief)
@@ -65,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Моральні дилеми підпілля
   output: Есе-роздум
-focus: biography
-prerequisites:
-- hist-upa
 connects_to:
 - bio-145-roman-shukhevych
 - bio-135-vasyl-stus
 - bio-143-viacheslav-chornovil
-module_type: biography
-sources:
-- name: Аліна Понипаляк "Останній командир УПА"
-  url: https://nashformat.ua/
-  type: primary
-  notes: Основна біографія
-- name: Володимир В'ятрович "Генерал Кук"
-  url: https://vivat.com.ua/
-  type: primary
-  notes: Нове детальне дослідження
-- name: Архів СБУ
-  url: https://avr.org.ua/
-  type: reference
-  notes: Розсекречені документи
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- Analyze the leadership of Василь Кук in the final years of UPA
-- Evaluate the KGB tactics used against the Ukrainian underground
-- Discuss the moral complexities of survival and resistance
+prerequisites:
+- hist-upa
 persona:
   voice: Military Historian
   role: Archive Researcher
+module_type: biography
+immersion: 100% Ukrainian

@@ -1,45 +1,71 @@
-module: bio-83
+module: bio-086
 level: BIO
-sequence: 83
+sequence: 86
 slug: petro-bolbochan
 version: '2.0'
 title: 'Петро Болбочан: Полковник-герой'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of петро болбочан: полковник-герой'
+- Evaluate the contributions of герой криму
+- Trace the career and influence of страта та реабілітація
+sources:
+- name: Петро Болбочан (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
+  type: primary
+  notes: Біографія, Кримський похід, трагічна доля
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Дослідження Української революції
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Військова історія УНР
 content_outline:
 - section: Вступ — Герой Криму
   points:
   - Болбочан як один із найталановитіших полководців УНР
   - Легендарний Кримський похід 1918 року
   - Трагічна доля та несправедливий вирок
+  words: 850
 - section: Ранні роки та військова освіта (1883-1914)
   points:
   - Народження в Бессарабії
   - Навчання в Одеському юнкерському училищі
   - Служба в російській армії
   - Офіцерська кар'єра до Першої світової
+  words: 850
 - section: Перша світова війна (1914-1917)
   points:
   - Участь у бойових діях на фронті
   - Відзнаки та підвищення
   - Український рух в армії
   - Формування національних частин
+  words: 850
 - section: Кримський похід (1918)
   points:
   - Командування Запорозькою дивізією
   - Блискавичний похід на Крим
   - Визволення Криму від більшовиків
   - Стратегічний геній операції
+  words: 850
 - section: Конфлікт з владою та арешт (1918-1919)
   points:
   - Повернення з Криму та зміна уряду
   - Конфлікт з Директорією
   - Несправедливі звинувачення у зраді
   - Арешт та ув'язнення
+  words: 850
 - section: Страта та реабілітація
   points:
   - Військово-польовий суд
   - Розстріл у липні 1919 року
   - Реабілітація в незалежній Україні
   - Пам'ять про героя Кримського походу
+  words: 750
 vocabulary_hints:
   required:
   - полковник (colonel)
@@ -66,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чи була страта Болбочана справедливою?
   output: Історичне есе
-focus: biography
-prerequisites:
-- bio-44 (Симон Петлюра)
 connects_to:
 - bio-49 (Олександр Греків)
 - bio-51 (В'ячеслав Липинський)
 - bio-52 (Дмитро Донцов)
-module_type: biography
-sources:
-- name: Петро Болбочан (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
-  type: primary
-  notes: Біографія, Кримський похід, трагічна доля
-- name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
-  type: reference
-  notes: Дослідження Української революції
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: Військова історія УНР
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of петро болбочан: полковник-герой'
-- Evaluate the contributions of герой криму
-- Trace the career and influence of страта та реабілітація
+prerequisites:
+- bio-44 (Симон Петлюра)
 persona:
   voice: Senior Biographer
   role: Liberator of Crimea
+module_type: biography
+immersion: 100% Ukrainian

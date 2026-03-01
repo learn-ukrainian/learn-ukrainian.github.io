@@ -1,93 +1,92 @@
-module: b1-16
+module: b1-018
 level: B1
-sequence: 16
+sequence: 18
 slug: motion-verbs-full-system
 version: '2.0'
 title: 'Дієслова руху: повна система'
 subtitle: Motion Verbs - The Full System
+focus: grammar
+pedagogy: TTT
+phase: B1.2 Motion
+word_target: 4000
+objectives:
+- Learner knows all 14 motion verb pairs
+- Learner understands unidirectional vs multidirectional
+- Learner can choose correct motion verb for context
+sources:
+- name: Ukrainian State Standard 2024 - Motion Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official system of motion verb pairs
+- name: Ukrainian Motion Verbs (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Complete list of motion verb pairs
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - Introduction to the comprehensive motion verb system based on State Standard §4.2.3.1,
-    establishing the persona of a Logistics Director managing the 'circulatory system'
-    of Ukraine.
-  - 'The ''Vector vs Circle'' visual analogy: Unidirectional (Arrow →) representing
-    a specific goal/result vs. Multidirectional (Circle ↺) for habitual, repetitive,
-    or general movement.'
+  - Introduction to the comprehensive motion verb system based on State Standard §4.2.3.1, establishing the persona of a Logistics
+    Director managing the 'circulatory system' of Ukraine.
+  - 'The ''Vector vs Circle'' visual analogy: Unidirectional (Arrow →) representing a specific goal/result vs. Multidirectional
+    (Circle ↺) for habitual, repetitive, or general movement.'
 - section: Презентація 14 пар дієслів (Presentation of the 14 Pairs)
   words: 1100
   points:
-  - Systematic breakdown of the 14 core pairs required by the State Standard, with
-    focus on high-frequency pairs and their figurative extensions (e.g., 'лізти в
-    інтернеті' for surfing and 'лазити по деревах').
-  - 'Deep dive into physical effort and slang: ''тягти/тягати'' (physical dragging)
-    vs. gym slang ''тягати залізо'' (lifting weights) and temporal idioms like ''тягти
-    час'' (stalling).'
-  - 'Nuanced usage of lower-frequency verbs: ''повзти/повзати'' for fog (туман повзе),
-    baby crawling (дитина повзає), and the spread of rumors (чутки повзуть).'
-  - Poetic and specific wandering contexts for 'брести/бродити', including 'бродити
-    вулицями' (roaming streets) and the metaphorical 'думки бродять' (wandering thoughts).
+  - Systematic breakdown of the 14 core pairs required by the State Standard, with focus on high-frequency pairs and their
+    figurative extensions (e.g., 'лізти в інтернеті' for surfing and 'лазити по деревах').
+  - 'Deep dive into physical effort and slang: ''тягти/тягати'' (physical dragging) vs. gym slang ''тягати залізо'' (lifting
+    weights) and temporal idioms like ''тягти час'' (stalling).'
+  - 'Nuanced usage of lower-frequency verbs: ''повзти/повзати'' for fog (туман повзе), baby crawling (дитина повзає), and
+    the spread of rumors (чутки повзуть).'
+  - Poetic and specific wandering contexts for 'брести/бродити', including 'бродити вулицями' (roaming streets) and the metaphorical
+    'думки бродять' (wandering thoughts).
 - section: Аналіз типових помилок (Analysis of Common Errors)
   words: 800
   points:
-  - 'Correcting the ''Round Trip'' Trap: Distinguishing between the ongoing unidirectional
-    process and the completed past fact (using ''ходив'' for ''went and came back''
-    instead of the erroneous ''йшов'').'
-  - 'The ''Vehicle vs. Foot'' Stricture: Enforcing the separation of ''йти'' (legs)
-    from ''їхати'' (wheels) to eliminate interference from the English ''to go''.'
-  - 'Identifying ''Adverbial Blindness'': Drilling trigger words and phrases like
-    ''часто'' (often), ''завжди'' (always), and ''щодня'' (every day) that necessitate
-    the use of multidirectional verbs.'
+  - 'Correcting the ''Round Trip'' Trap: Distinguishing between the ongoing unidirectional process and the completed past
+    fact (using ''ходив'' for ''went and came back'' instead of the erroneous ''йшов'').'
+  - 'The ''Vehicle vs. Foot'' Stricture: Enforcing the separation of ''йти'' (legs) from ''їхати'' (wheels) to eliminate interference
+    from the English ''to go''.'
+  - 'Identifying ''Adverbial Blindness'': Drilling trigger words and phrases like ''часто'' (often), ''завжди'' (always),
+    and ''щодня'' (every day) that necessitate the use of multidirectional verbs.'
 - section: 'Культурний код: Логістика та Залізниця (Cultural Code: Logistics and Railways)'
   words: 900
   points:
-  - 'The Logistics of the ''Breadbasket'': Moving grain to the ports of Odesa and
-    the Danube using ''везти/возити'' and ''пливти'', highlighting the role of trucking
-    logistics (фури).'
-  - 'The ''Iron Diplomacy'' (Залізна дипломатія) of Ukrzaliznytsia: The cultural icon
-    of the railway system and the use of ''їздити'' in national resilience.'
-  - 'Nova Poshta as the national circulatory system: Exploring the verbs ''розносити''
-    and ''розвозити'' in the context of Ukraine''s hyper-efficient delivery culture.'
+  - 'The Logistics of the ''Breadbasket'': Moving grain to the ports of Odesa and the Danube using ''везти/возити'' and ''пливти'',
+    highlighting the role of trucking logistics (фури).'
+  - 'The ''Iron Diplomacy'' (Залізна дипломатія) of Ukrzaliznytsia: The cultural icon of the railway system and the use of
+    ''їздити'' in national resilience.'
+  - 'Nova Poshta as the national circulatory system: Exploring the verbs ''розносити'' and ''розвозити'' in the context of
+    Ukraine''s hyper-efficient delivery culture.'
 - section: Синтез та Практичне застосування (Synthesis and Practical Application)
   words: 700
   points:
-  - 'Reinforcing State Standard §4.2.2.4: Applying the Accusative case for directionality
-    (куди?) with prepositions ''в/у'', ''на'', and ''за'' in logistic scenarios.'
-  - 'Integration of proverbial wisdom: ''Під лежачий камінь вода не тече'' (Water
-    doesn''t flow under a lying stone) as a cultural motivation for action and movement
-    (рух).'
-  - Summary of the system as a foundation for prefixed motion verbs (State Standard
-    §4.3.8), connecting current grammar to future mobility.
+  - 'Reinforcing State Standard §4.2.2.4: Applying the Accusative case for directionality (куди?) with prepositions ''в/у'',
+    ''на'', and ''за'' in logistic scenarios.'
+  - 'Integration of proverbial wisdom: ''Під лежачий камінь вода не тече'' (Water doesn''t flow under a lying stone) as a
+    cultural motivation for action and movement (рух).'
+  - Summary of the system as a foundation for prefixed motion verbs (State Standard §4.3.8), connecting current grammar to
+    future mobility.
 vocabulary_hints:
   required:
-  - йти/ходити (to go on foot) — high frequency; strict distinction from vehicle transport;
-    'ходити' for completed round trips
-  - 'їхати/їздити (to go by vehicle) — high frequency; context: ''Залізна дипломатія''
-    (Iron Diplomacy) and trains'
+  - йти/ходити (to go on foot) — high frequency; strict distinction from vehicle transport; 'ходити' for completed round trips
+  - 'їхати/їздити (to go by vehicle) — high frequency; context: ''Залізна дипломатія'' (Iron Diplomacy) and trains'
   - 'бігти/бігати (to run) — collocations: бігти додому, бігати вранці (habitual exercise)'
   - 'летіти/літати (to fly) — collocations: час летить (time flies), літати літаком'
   - 'пливти/плавати (to swim/sail) — context: grain ships (судна) sailing to ports'
   - 'нести/носити (to carry/wear) — collocations: нести відповідальність, носити одяг'
   - 'вести/водити (to lead/drive) — collocations: водити машину, вести переговори'
-  - везти/возити (to transport/drive someone) — high frequency in logistics; 'фури
-    везуть зерно'
-  - 'односпрямований (unidirectional) — grammar term: movement in one direction (Arrow
-    →)'
-  - 'різноспрямований (multidirectional) — grammar term: repetitive or general movement
-    (Circle ↺)'
+  - везти/возити (to transport/drive someone) — high frequency in logistics; 'фури везуть зерно'
+  - 'односпрямований (unidirectional) — grammar term: movement in one direction (Arrow →)'
+  - 'різноспрямований (multidirectional) — grammar term: repetitive or general movement (Circle ↺)'
   recommended:
-  - 'лізти/лазити (to climb) — high frequency; collocations: лізти вгору, лазити в
-    інтернеті (surf the net)'
-  - 'повзти/повзати (to crawl) — usage: туман повзе (fog creeps), чутки повзуть (rumors
-    spread), дитина повзає'
-  - 'тягти/тягати (to pull/drag) — high frequency; collocations: тягти час (stall),
-    тягати залізо (gym slang: lift weights)'
-  - 'брести/бродити (to wander/wade) — collocations: думки бродять (wandering thoughts),
-    бродити вулицями'
+  - 'лізти/лазити (to climb) — high frequency; collocations: лізти вгору, лазити в інтернеті (surf the net)'
+  - 'повзти/повзати (to crawl) — usage: туман повзе (fog creeps), чутки повзуть (rumors spread), дитина повзає'
+  - 'тягти/тягати (to pull/drag) — high frequency; collocations: тягти час (stall), тягати залізо (gym slang: lift weights)'
+  - 'брести/бродити (to wander/wade) — collocations: думки бродять (wandering thoughts), бродити вулицями'
   - 'котити/качати (to roll) — usage: котити колесо, качати м''язи (build muscles)'
-  - 'гнати/ганяти (to drive fast/chase) — collocations: гнати машину, ганяти м''яча
-    (play football)'
+  - 'гнати/ганяти (to drive fast/chase) — collocations: гнати машину, ганяти м''яча (play football)'
   - брести/бродити (to wade/stroll) — poetic register; 'брести по коліно у воді'
 activity_hints:
 - type: match-up
@@ -105,34 +104,17 @@ activity_hints:
 - type: fill-in
   focus: Single event → habitual movement
   items: 10+
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-15 (Aspect mastery checkpoint)
-- A2 motion verbs basics
 connects_to:
 - b1-17 (Motion - coming & going)
 - b1-25 (Motion verbs checkpoint)
-objectives:
-- Learner knows all 14 motion verb pairs
-- Learner understands unidirectional vs multidirectional
-- Learner can choose correct motion verb for context
+prerequisites:
+- b1-15 (Aspect mastery checkpoint)
+- A2 motion verbs basics
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Logistics Director
 grammar:
 - 14 motion verb pairs
 - Unidirectional vs multidirectional distinction
 module_type: grammar
-sources:
-- name: Ukrainian State Standard 2024 - Motion Verbs
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Official system of motion verb pairs
-- name: Ukrainian Motion Verbs (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
-  type: reference
-  notes: Complete list of motion verb pairs
 immersion: 100% Ukrainian
-phase: B1.2 Motion
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Logistics Director
-word_target: 4000

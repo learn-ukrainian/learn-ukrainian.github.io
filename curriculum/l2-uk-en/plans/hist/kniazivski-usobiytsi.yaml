@@ -4,70 +4,83 @@ sequence: 17
 slug: kniazivski-usobiytsi
 version: '2.0'
 title: Княжі усобиці та роздроблення
+focus: history
+pedagogy: CBI
+phase: HIST.1 [Kyivan Rus]
+word_target: 5000
+objectives:
+- Understand the causes of Kyivan Rus fragmentation
+- Analyze the decisions of the Liubech Congress
+- Discuss the impact of Polovtsian threat on unity
+sources:
+- name: Роздроблення Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
+  type: reference
+  notes: Overview of fragmentation
+- name: Любецький з'їзд (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+  type: reference
+  notes: Congress that formalized division
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts
 content_outline:
 - section: Розминка
   points:
-  - Defining sovereignty vs suzerainty — Київський князь як сюзерен (перший серед
-    рівних), а не абсолютний монарх
-  - The map of 1054 vs 1132 — [!context] comparison of 'monolithic' 1054 map vs 'patchwork
-    puzzle' of 1132
+  - Defining sovereignty vs suzerainty — Київський князь як сюзерен (перший серед рівних), а не абсолютний монарх
+  - The map of 1054 vs 1132 — [!context] comparison of 'monolithic' 1054 map vs 'patchwork puzzle' of 1132
+  words: 550
 - section: 'Читання: Тріумвірат Ярославичів'
   points:
-  - The will of Yaroslav the Wise — attempt to create a system of checks and balances;
-    rota system breakdown
-  - Battle of Alta (1068) — [!history-bite] citizens expelled Izyaslav not for tyranny
-    but for failure to protect; first major defeat by Polovtsians
-  - Kyiv Uprising — Vseslav Polotsky released from prison ('поруба') and elected by
-    community; precedent of 'viche' power
+  - The will of Yaroslav the Wise — attempt to create a system of checks and balances; rota system breakdown
+  - Battle of Alta (1068) — [!history-bite] citizens expelled Izyaslav not for tyranny but for failure to protect; first major
+    defeat by Polovtsians
+  - Kyiv Uprising — Vseslav Polotsky released from prison ('поруба') and elected by community; precedent of 'viche' power
+  words: 550
 - section: Любецький з'їзд (1097)
   points:
-  - Every man holds his own fatherland — «Кожен хай держить отчину свою»; shift from
-    rota system to hereditary patrimony
-  - The blinding of Vasylko — [!myth-buster] 'Unity' oath immediately followed by
-    brutal realpolitik violation; shock to society
+  - Every man holds his own fatherland — «Кожен хай держить отчину свою»; shift from rota system to hereditary patrimony
+  - The blinding of Vasylko — [!myth-buster] 'Unity' oath immediately followed by brutal realpolitik violation; shock to society
   - Consequences of the Congress — legalization of political fragmentation (federalization)
+  words: 550
 - section: Володимир Мономах
   points:
-  - Crusades against Polovtsians — successful campaigns of 1103 and 1111; securing
-    the borders
-  - Monomakh's Reforms (Statute) — social compromise after 1113 uprising; limiting
-    interest rates ('різи') and protecting debtors ('закупи')
-  - Instruction (Povchannia) — [!quote] «Не проминіть ніколи людину, не привітавши
-    її...»; image of ideal Christian ruler-humanist
+  - Crusades against Polovtsians — successful campaigns of 1103 and 1111; securing the borders
+  - Monomakh's Reforms (Statute) — social compromise after 1113 uprising; limiting interest rates ('різи') and protecting
+    debtors ('закупи')
+  - Instruction (Povchannia) — [!quote] «Не проминіть ніколи людину, не привітавши її...»; image of ideal Christian ruler-humanist
+  words: 550
 - section: Соціальна структура та Економіка
   points:
-  - Economic causes of fragmentation — [!decolonization] growth of regional capitals
-    (Chernihiv, Halych) made them independent of Kyiv
-  - Boyars, Druzhina, Smerds — distinction between free peasants (smerds) and debt-dependent
-    (zakupy)
-  - Urban growth — Kyiv remains largest (50k pop), but regional centers rise; craft
-    and trade expansion
+  - Economic causes of fragmentation — [!decolonization] growth of regional capitals (Chernihiv, Halych) made them independent
+    of Kyiv
+  - Boyars, Druzhina, Smerds — distinction between free peasants (smerds) and debt-dependent (zakupy)
+  - Urban growth — Kyiv remains largest (50k pop), but regional centers rise; craft and trade expansion
+  words: 550
 - section: Культура та Церква
   points:
-  - Architecture (St. Michael's) — built by Sviatopolk II (1108-1113); 'shimmering
-    painting' mosaics
-  - Chronicle writing (Nestor) — Nestor the Chronicler as ideologue of Rus unity (PVL
-    1113)
-  - Church as unifying force — Kyiv Metropoly remained the only structure uniting
-    all lands
+  - Architecture (St. Michael's) — built by Sviatopolk II (1108-1113); 'shimmering painting' mosaics
+  - Chronicle writing (Nestor) — Nestor the Chronicler as ideologue of Rus unity (PVL 1113)
+  - Church as unifying force — Kyiv Metropoly remained the only structure uniting all lands
+  words: 550
 - section: Первинні джерела
   points:
-  - 'Extract from the Primary Chronicle on Liubech — include quote: «Пощо ми губимо
-    Руськую землю, самі проти себе зваду маючи?»'
-  - 'Extract from Monomakh''s Instruction — focus on moral guidelines: do not kill,
-    honor guests, do not be lazy'
+  - 'Extract from the Primary Chronicle on Liubech — include quote: «Пощо ми губимо Руськую землю, самі проти себе зваду маючи?»'
+  - 'Extract from Monomakh''s Instruction — focus on moral guidelines: do not kill, honor guests, do not be lazy'
+  words: 550
 - section: Деколонізаційний погляд
   points:
-  - Reframing Fragmentation as Decentralization — [!perspective] not 'collapse' but
-    evolution into confederation
-  - European parallels — comparison with Holy Roman Empire or France; standard feudal
-    stage
-  - Myth of 'Feudal Disunity' — debunking Soviet/Imperial myth of 'disaster' leading
-    to Moscow's rise; debunking 'Joint Cradle' myth
+  - Reframing Fragmentation as Decentralization — [!perspective] not 'collapse' but evolution into confederation
+  - European parallels — comparison with Holy Roman Empire or France; standard feudal stage
+  - Myth of 'Feudal Disunity' — debunking Soviet/Imperial myth of 'disaster' leading to Moscow's rise; debunking 'Joint Cradle'
+    myth
+  words: 550
 - section: Підсумок
   points:
-  - Legacy of the era — unity requires high political culture; internal contradictions
-    laid groundwork for vulnerability to Mongols
+  - Legacy of the era — unity requires high political culture; internal contradictions laid groundwork for vulnerability to
+    Mongols
+  words: 600
 vocabulary_hints:
   required:
   - усобиця (internecine war) — князівські усобиці, припинити усобиці
@@ -96,38 +109,17 @@ activity_hints:
   output: Two-column analysis
 - type: essay-response
   focus: Чи було роздроблення неминучим?
-focus: history
-pedagogy: CBI
-prerequisites:
-- hist-12 (Yaroslav the Wise)
-- hist-15 (Volodymyr Monomakh)
 connects_to:
 - hist-21 (Mongol invasion)
 - hist-23 (Danylo of Halych)
 - 'hist-20 (Synthesis: Kyivan Rus)'
-objectives:
-- Understand the causes of Kyivan Rus fragmentation
-- Analyze the decisions of the Liubech Congress
-- Discuss the impact of Polovtsian threat on unity
-grammar:
-- Past tense narrative
-- Political and military terminology
-sources:
-- name: Роздроблення Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
-  type: reference
-  notes: Overview of fragmentation
-- name: Любецький з'їзд (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
-  type: reference
-  notes: Congress that formalized division
-- name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
-  type: primary
-  notes: Chronicle accounts
-phase: HIST.1 [Kyivan Rus]
-immersion: 100% Ukrainian
+prerequisites:
+- hist-12 (Yaroslav the Wise)
+- hist-15 (Volodymyr Monomakh)
 persona:
   voice: Senior Professor of History
   role: Dynastic Chronicler
-word_target: 5000
+grammar:
+- Past tense narrative
+- Political and military terminology
+immersion: 100% Ukrainian

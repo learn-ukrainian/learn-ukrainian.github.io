@@ -5,34 +5,47 @@ slug: slobozhanshchyna
 version: '2.0'
 title: 'Слобожанщина: Заселення і розвиток'
 subtitle: Українська колонізація дикого степу
+focus: history
+pedagogy: CBI
+phase: HIST.4
+word_target: 5000
+objectives:
+- Learner understands the origins of Sloboda Ukraine
+- Learner can name the 5 main Sloboda regiments
+- Learner masters vocabulary related to settlement and social structure
 content_outline:
 - section: Вступ
   points:
   - Географія Слобідської України — «Дике поле» як межа між степом і Річчю Посполитою
   - Причини масової міграції українців на схід у XVII столітті
   - Значення Слобожанщини для сучасної української ідентичності
+  words: 850
 - section: Заселення Слобожанщини
   points:
   - Три хвилі переселення (1630-ті, 1654-1657, 1660-ті роки)
   - Роль козацько-селянських повстань та Хмельниччини у міграції
   - Слободи як форма поселення — пільги та свободи переселенців
   - Московська політика заохочення колонізації
+  words: 850
 - section: П'ять слобідських козацьких полків
   points:
   - Харківський, Сумський, Охтирський, Ізюмський, Острогозький полки
   - Полково-сотенний устрій — козацьке самоврядування
   - Заснування Харкова (1654) та інших міст
   - Економічна та військова функція полків
+  words: 850
 - section: Суспільство Слобожанщини
   points:
   - Соціальні категорії — козаки, посполиті, міщани
   - Особливості земельних відносин — відсутність кріпацтва до XVIII ст.
   - Культурне життя — освіта, церкви, традиції
+  words: 850
 - section: Первинні джерела
   points:
   - Універсал про заснування Харківського полку
   - Грамоти московських царів переселенцям
   - Лінгвістичний аналіз офіційного регістру XVII століття
+  words: 850
 - section: Деколонізаційний погляд
   points:
   - Міф про «споконвічно російську землю»
@@ -41,17 +54,7 @@ content_outline:
   - Сучасна пам'ять — Харків як українське місто
   - Значення слобідської спадщини для української державності
   - Зв'язок із сучасними подіями на Харківщині
-focus: history
-pedagogy: CBI
-objectives:
-- Learner understands the origins of Sloboda Ukraine
-- Learner can name the 5 main Sloboda regiments
-- Learner masters vocabulary related to settlement and social structure
-grammar:
-- Historical narrative register
-- Passive voice (було засновано)
-- Participial phrases
-phase: HIST.4
+  words: 750
 vocabulary_hints:
   required:
   - історія (history)
@@ -82,4 +85,11 @@ activity_hints:
 persona:
   voice: Senior Professor of History
   role: Settlement Ataman
-word_target: 4000
+grammar:
+- Historical narrative register
+- Passive voice (було засновано)
+- Participial phrases
+prerequisites:
+- bukovyna-zakarpattia
+connects_to:
+- liudy-ricchi-pospolytoi

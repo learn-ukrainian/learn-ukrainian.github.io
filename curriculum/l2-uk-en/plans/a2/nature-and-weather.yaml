@@ -1,58 +1,63 @@
-module: a2-47
+module: a2-052
 level: A2
-sequence: 47
+sequence: 52
 slug: nature-and-weather
 version: '2.0'
 title: Nature and Weather
 subtitle: The World Around Us
+focus: vocabulary
+pedagogy: PPP
+phase: A2.5 [Vocabulary Expansion]
+word_target: 3000
+objectives:
+- Learner can describe weather conditions in detail
+- Learner can talk about seasons and climate
+- Learner can describe landscapes
+- Learner can discuss nature and environment
 content_outline:
 - section: 'Вступ: Природа України (Introduction: Ukraine''s Nature)'
   words: 450
   points:
-  - 'Geographical overview of Ukraine as per Standard §3.13: contrasting the diverse
-    landscapes of the Carpathian mountains (Карпати) and the southern steppes (степи).'
-  - Introduction to the 'Carpathian Forester' persona and the transition from A1 basic
-    nouns to A2 detailed nature descriptions and personal states.
+  - 'Geographical overview of Ukraine as per Standard §3.13: contrasting the diverse landscapes of the Carpathian mountains
+    (Карпати) and the southern steppes (степи).'
+  - Introduction to the 'Carpathian Forester' persona and the transition from A1 basic nouns to A2 detailed nature descriptions
+    and personal states.
 - section: 'Лексика: Ландшафти та легенди (Vocabulary: Landscapes and Legends)'
   words: 900
   points:
-  - 'High-frequency nature vocabulary (гора, ліс, річка, озеро) enriched with A2 collocations:
-    ''густий ліс'', ''швидка річка'', and ''вершина гори'' (§3.13).'
-  - 'Cultural Hook: The legend of Lake Nesamovyte (Озеро Несамовите); teaching ''буря''
-    (storm) and ''град'' (hail) through the folk belief that disturbing the water
-    triggers dangerous mountain weather.'
-  - 'Flora and Fauna (§3.13): Introducing common plants and domestic animals (свійські
-    тварини) within the context of their natural Ukrainian habitats.'
+  - 'High-frequency nature vocabulary (гора, ліс, річка, озеро) enriched with A2 collocations: ''густий ліс'', ''швидка річка'',
+    and ''вершина гори'' (§3.13).'
+  - 'Cultural Hook: The legend of Lake Nesamovyte (Озеро Несамовите); teaching ''буря'' (storm) and ''град'' (hail) through
+    the folk belief that disturbing the water triggers dangerous mountain weather.'
+  - 'Flora and Fauna (§3.13): Introducing common plants and domestic animals (свійські тварини) within the context of their
+    natural Ukrainian habitats.'
 - section: 'Граматика: Погода та стани (Grammar: Weather and States)'
   words: 850
   points:
-  - 'Dative Case for States (§4.2.2.3): Mastering ''Мені холодно/тепло/жарко'' and
-    correcting the pervasive learner error ''Я холодний'' (I am a cold person/corpse).'
-  - 'Idiomatic Weather Verbs: Correcting the literal ''Це є дощ'' with the correct
-    verb phrases ''Йде дощ'', ''Падає сніг'', or the synthetic verb ''Дощить''.'
-  - 'Grammar Contrast: Explicitly distinguishing between Adjectives (Який день? Холодний)
-    for noun modification and Adverbs (Як надворі? Холодно) for impersonal weather
-    descriptions.'
-  - 'Visualizing Impersonal Constructions: Construction of a comparative table mapping
-    English personal subjects to Ukrainian Dative structures for weather and physical
-    feelings.'
+  - 'Dative Case for States (§4.2.2.3): Mastering ''Мені холодно/тепло/жарко'' and correcting the pervasive learner error
+    ''Я холодний'' (I am a cold person/corpse).'
+  - 'Idiomatic Weather Verbs: Correcting the literal ''Це є дощ'' with the correct verb phrases ''Йде дощ'', ''Падає сніг'',
+    or the synthetic verb ''Дощить''.'
+  - 'Grammar Contrast: Explicitly distinguishing between Adjectives (Який день? Холодний) for noun modification and Adverbs
+    (Як надворі? Холодно) for impersonal weather descriptions.'
+  - 'Visualizing Impersonal Constructions: Construction of a comparative table mapping English personal subjects to Ukrainian
+    Dative structures for weather and physical feelings.'
 - section: 'Практика: Прогноз та розмови (Practice: Forecast and Dialogues)'
   words: 500
   points:
-  - 'Mountain Survival Dialogue: Using weather vocabulary to discuss unpredictable
-    conditions through the idiom ''Сім погод надворі''.'
-  - 'Communicative Task: Describing a favorite landscape using expanded adjectives
-    and dative-state constructions to express comfort or discomfort (e.g., ''Біля
-    річки мені прохолодно'').'
-  - 'Weather Forecasting: Roleplay practicing ''прогноз погоди'' and ''сонячна погода''
-    in a realistic conversational or broadcast register.'
+  - 'Mountain Survival Dialogue: Using weather vocabulary to discuss unpredictable conditions through the idiom ''Сім погод
+    надворі''.'
+  - 'Communicative Task: Describing a favorite landscape using expanded adjectives and dative-state constructions to express
+    comfort or discomfort (e.g., ''Біля річки мені прохолодно'').'
+  - 'Weather Forecasting: Roleplay practicing ''прогноз погоди'' and ''сонячна погода'' in a realistic conversational or broadcast
+    register.'
 - section: Підсумок (Summary)
   words: 300
   points:
-  - Review of essential nature collocations and the functional shift from Nominative
-    labels to Dative case descriptions of states (§4.2.2.3).
-  - 'Self-Correction Check: Distinguishing between descriptive nature adjectives and
-    impersonal weather adverbs to avoid common A2 errors.'
+  - Review of essential nature collocations and the functional shift from Nominative labels to Dative case descriptions of
+    states (§4.2.2.3).
+  - 'Self-Correction Check: Distinguishing between descriptive nature adjectives and impersonal weather adverbs to avoid common
+    A2 errors.'
 vocabulary_hints:
   required:
   - погода (weather) — гарна/погана погода, прогноз погоди, сонячна погода (High frequency)
@@ -83,26 +88,17 @@ activity_hints:
 - type: quiz
   focus: Describe weather and landscapes
   items: 8
-focus: vocabulary
-pedagogy: PPP
+connects_to:
+- a2-48 (Emotions and Personality)
 prerequisites:
 - a1-29 (Weather and Nature)
 - a2-46 (Home and Furniture)
-connects_to:
-- a2-48 (Emotions and Personality)
-objectives:
-- Learner can describe weather conditions in detail
-- Learner can talk about seasons and climate
-- Learner can describe landscapes
-- Learner can discuss nature and environment
+persona:
+  voice: Encouraging Cultural Guide
+  role: Carpathian Forester
 grammar:
 - Weather expressions (холодно, тепло, вітряно)
 - Nature vocabulary
 - Seasons and describing landscapes
 register: розмовний
 immersion: 60-75% Ukrainian
-phase: A2.5 [Vocabulary Expansion]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Carpathian Forester
-word_target: 3000

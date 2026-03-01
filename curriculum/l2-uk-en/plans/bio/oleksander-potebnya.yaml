@@ -1,45 +1,75 @@
-module: bio-43
+module: bio-043
 level: BIO
 sequence: 43
 slug: oleksander-potebnya
 version: '2.0'
 title: 'Олександр Потебня: Філософ мови'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of олександр потебня: філософ мови'
+- Evaluate the contributions of український гумбольдт
+- Trace the career and influence of спадщина та визнання
+sources:
+- name: Олександр Потебня (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
+  type: primary
+  notes: Biography, linguistic theories, works
+- name: Інститут мовознавства ім. О. О. Потебні
+  url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
+  type: reference
+  notes: His legacy in modern linguistics
+- name: Харківська філологічна школа
+  url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
+  type: reference
+  notes: The school he founded
+- name: '"Думка і мова" (праця)'
+  url: https://uk.wikipedia.org/wiki/Думка_і_мова
+  type: reference
+  notes: His seminal work
 content_outline:
 - section: Вступ — Український Гумбольдт
   points:
   - Потебня як найвидатніший український мовознавець XIX ст.
   - Його місце у світовій лінгвістиці
   - Чому його називають "філософом мови"
+  words: 850
 - section: Походження та освіта
   points:
   - Народження на Полтавщині (1835)
   - Козацьке походження родини
   - Навчання в Харківському університеті
   - Вплив німецької філософії
+  words: 850
 - section: '"Думка і мова" (1862)'
   points:
   - Зв'язок між мовою і мисленням
   - Теорія внутрішньої форми слова
   - Розвиток ідей Вільгельма фон Гумбольдта
   - Вплив на семіотику та когнітивну лінгвістику
+  words: 850
 - section: Харківська філологічна школа
   points:
   - Заснування лінгвістичної школи
   - Учні та послідовники
   - Методологічні принципи
   - Вплив на українську та російську лінгвістику
+  words: 850
 - section: Дослідження української мови
   points:
   - '"З нотаток про російську граматику" (порівняння укр. і рос.)'
   - Фонетичні та граматичні дослідження
   - Захист права української мови на існування
   - Етнолінгвістичні праці
+  words: 850
 - section: Спадщина та визнання
   points:
   - Інститут мовознавства його імені
   - Вплив на Шевельова та сучасну лінгвістику
   - Актуальність його ідей сьогодні
   - Потебня як символ української науки
+  words: 750
 vocabulary_hints:
   required:
   - мовознавець (linguist)
@@ -66,39 +96,16 @@ activity_hints:
 - type: essay-response
   focus: How did Potebnya defend Ukrainian language rights?
   output: Analysis of his linguistic arguments
-focus: biography
-prerequisites:
-- bio-30 (Borys Hrinchenko - lexicographer)
-- bio-97 (Panteleimon Kulish - language reformer)
-- Understanding of basic linguistic concepts
 connects_to:
 - bio-105 (George Shevelov - his intellectual heir)
 - bio-100 (Ahatanhel Krymsky - contemporary linguist)
 - bio-98 (Ivan Ohienko - language defender)
-module_type: biography
-sources:
-- name: Олександр Потебня (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
-  type: primary
-  notes: Biography, linguistic theories, works
-- name: Інститут мовознавства ім. О. О. Потебні
-  url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
-  type: reference
-  notes: His legacy in modern linguistics
-- name: Харківська філологічна школа
-  url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
-  type: reference
-  notes: The school he founded
-- name: '"Думка і мова" (праця)'
-  url: https://uk.wikipedia.org/wiki/Думка_і_мова
-  type: reference
-  notes: His seminal work
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of олександр потебня: філософ мови'
-- Evaluate the contributions of український гумбольдт
-- Trace the career and influence of спадщина та визнання
+prerequisites:
+- bio-30 (Borys Hrinchenko - lexicographer)
+- bio-97 (Panteleimon Kulish - language reformer)
+- Understanding of basic linguistic concepts
 persona:
   voice: Senior Biographer
   role: Language Psychologist
+module_type: biography
+immersion: 100% Ukrainian

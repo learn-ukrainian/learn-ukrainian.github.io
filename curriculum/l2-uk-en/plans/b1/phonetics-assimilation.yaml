@@ -1,59 +1,58 @@
-module: b1-06
+module: b1-006
 level: B1
 sequence: 6
 slug: phonetics-assimilation
 version: '2.0'
 title: 'Фонетика: асиміляція'
 subtitle: 'Phonetics: Voicing & Softness Assimilation'
+focus: grammar
+pedagogy: PPP
+phase: B1.1 [Meta-Language and Phonetics]
+word_target: 4000
+objectives:
+- Learner can recognize and apply voicing assimilation rules
+- Learner can pronounce -ться correctly as [ц'ц'а]
+- Learner can apply softness assimilation in consonant groups
+- Learner can distinguish spelling from pronunciation in assimilation contexts
 content_outline:
 - section: 'Вступ: Принцип милозвучності (Introduction: The Principle of Euphony)'
   words: 600
   points:
-  - Align with State Standard §4.1.1 — introduction to assimilation as a core structural
-    design principle of Ukrainian phonetics.
-  - 'Discuss ''Милозвучність'' (Euphony) as a core cultural hook: explain how Ukrainian
-    maintains a ''singing'' rhythm (співоча мова) by balancing vowels and consonants,
-    differentiating it from the heavier clusters of West Slavic languages.'
-  - Frame phonetic rules not as 'restrictions' but as 'tools for harmony' that allow
-    the language to flow melodically, a source of national pride reflected in traditional
-    folk songs.
-  - Preview the assimilation focus of this module vs the next module (simplification
-    and alternation).
+  - Align with State Standard §4.1.1 — introduction to assimilation as a core structural design principle of Ukrainian phonetics.
+  - 'Discuss ''Милозвучність'' (Euphony) as a core cultural hook: explain how Ukrainian maintains a ''singing'' rhythm (співоча
+    мова) by balancing vowels and consonants, differentiating it from the heavier clusters of West Slavic languages.'
+  - Frame phonetic rules not as 'restrictions' but as 'tools for harmony' that allow the language to flow melodically, a source
+    of national pride reflected in traditional folk songs.
+  - Preview the assimilation focus of this module vs the next module (simplification and alternation).
 - section: Асиміляція за дзвінкістю та глухістю (Voicing and Devoicing Assimilation)
   words: 900
   points:
-  - 'Explain regressive assimilation: when a voiceless consonant is followed by a
-    voiced one, it becomes voiced (вокзал: [вогзал], боротьба: [бород''ба]) — provide
-    simple equations like т + б = [дб] for visual learners.'
-  - 'Address a critical learner error: Devoicing Final Consonants (Russian/German
-    interference) — emphasize that Ukrainian preserves final voiced sounds (хліб is
-    [хл''іб], not [хл''іп]; дід is [дід], not [діт]).'
-  - Discuss progressive assimilation and voicing pairs (з/с) before vowels vs consonants
-    (зберегти vs списати) to ensure proper articulation in connected speech.
-  - 'Extended drill: voiced/voiceless minimal pairs at word ends (плід/пліт, код/кот,
-    мороз/морос) for auditory discrimination.'
+  - 'Explain regressive assimilation: when a voiceless consonant is followed by a voiced one, it becomes voiced (вокзал: [вогзал],
+    боротьба: [бород''ба]) — provide simple equations like т + б = [дб] for visual learners.'
+  - 'Address a critical learner error: Devoicing Final Consonants (Russian/German interference) — emphasize that Ukrainian
+    preserves final voiced sounds (хліб is [хл''іб], not [хл''іп]; дід is [дід], not [діт]).'
+  - Discuss progressive assimilation and voicing pairs (з/с) before vowels vs consonants (зберегти vs списати) to ensure proper
+    articulation in connected speech.
+  - 'Extended drill: voiced/voiceless minimal pairs at word ends (плід/пліт, код/кот, мороз/морос) for auditory discrimination.'
 - section: Асиміляція за м'якістю (Softness Assimilation)
   words: 800
   points:
-  - 'Present softness assimilation: consonants softening before other soft consonants
-    ([с''в''іт], [з''н''ім]) — focus on high-frequency vocabulary to internalize the
-    ''softness flow''.'
-  - 'Systematic drilling of consonant pairs: soft+soft chains in common words (свіжість,
-    зніяковіти, снігопад) — how softness propagates leftward.'
-  - Contrast Ukrainian soft pronunciation with regional interferences to ensure a
-    'pure' native-like sound.
-- section: 'Вимова -ться (The -ться Pronunciation)'
+  - 'Present softness assimilation: consonants softening before other soft consonants ([с''в''іт], [з''н''ім]) — focus on
+    high-frequency vocabulary to internalize the ''softness flow''.'
+  - 'Systematic drilling of consonant pairs: soft+soft chains in common words (свіжість, зніяковіти, снігопад) — how softness
+    propagates leftward.'
+  - Contrast Ukrainian soft pronunciation with regional interferences to ensure a 'pure' native-like sound.
+- section: Вимова -ться (The -ться Pronunciation)
   words: 800
   points:
-  - 'This is the most common assimilation in daily Ukrainian. Dedicated section for
-    thorough drilling.'
-  - 'Explicitly drill the pronunciation of -ться as [ц''ц''а] — correct the common
-    error of pronouncing it as two separate sounds [т''-с''а] or hard [ца].'
-  - 'High-frequency reflexive verbs: сміється, навчається, називається, знаходиться,
-    здається — drill each with audio-first approach.'
-  - 'Spelling vs pronunciation: understand why we write -ться but pronounce [ц''ц''а] —
-    historical grammar explanation (ть + ся → assimilation).'
-- section: 'Асиміляція за місцем творення (Place Assimilation)'
+  - This is the most common assimilation in daily Ukrainian. Dedicated section for thorough drilling.
+  - Explicitly drill the pronunciation of -ться as [ц'ц'а] — correct the common error of pronouncing it as two separate sounds
+    [т'-с'а] or hard [ца].
+  - 'High-frequency reflexive verbs: сміється, навчається, називається, знаходиться, здається — drill each with audio-first
+    approach.'
+  - 'Spelling vs pronunciation: understand why we write -ться but pronounce [ц''ц''а] — historical grammar explanation (ть
+    + ся → assimilation).'
+- section: Асиміляція за місцем творення (Place Assimilation)
   words: 500
   points:
   - 'Assimilation of sibilants before ш/ж/ч: зшити → [шшити], безжалісний → [бежжалісний].'
@@ -62,36 +61,25 @@ content_outline:
 - section: Практика та запобігання помилкам (Practice and Error Prevention)
   words: 400
   points:
-  - Drill minimal pairs that differ only by assimilation/voicing at word ends to sharpen
-    auditory discrimination.
-  - 'Dictation practice: ''Write explicitly, pronounce smoothly'' — focus on words
-    where spelling and pronunciation mismatch (like -ться) to prevent phonetic-influenced
-    spelling errors.'
-  - 'Include ''Скоромовки'' (tongue twisters) targeting assimilation clusters to build
-    articulatory agility.'
+  - Drill minimal pairs that differ only by assimilation/voicing at word ends to sharpen auditory discrimination.
+  - 'Dictation practice: ''Write explicitly, pronounce smoothly'' — focus on words where spelling and pronunciation mismatch
+    (like -ться) to prevent phonetic-influenced spelling errors.'
+  - Include 'Скоромовки' (tongue twisters) targeting assimilation clusters to build articulatory agility.
 vocabulary_hints:
   required:
-  - вимова (pronunciation) — правильна вимова, чітка вимова, особливості вимови; High
-    core frequency
-  - звук (sound) — голосний звук, приголосний звук, твердий звук, м'який звук; High
-    core frequency
-  - приголосний (consonant) — твердий/м'який приголосний; Essential for grammatical
-    discussion
+  - вимова (pronunciation) — правильна вимова, чітка вимова, особливості вимови; High core frequency
+  - звук (sound) — голосний звук, приголосний звук, твердий звук, м'який звук; High core frequency
+  - приголосний (consonant) — твердий/м'який приголосний; Essential for grammatical discussion
   - голосний (vowel) — чергування голосних; Essential for grammatical discussion
-  - чергування (alternation) — чергування звуків, історичне чергування; Specialized
-    linguistic term for B1+
-  - спрощення (simplification) — спрощення приголосних, спрощення в групах; Specialized
-    term found in State Standard
-  - асиміляція (assimilation) — асиміляція за дзвінкістю, уподібнення звуків; Technical
-    term, use alongside 'уподібнення'
+  - чергування (alternation) — чергування звуків, історичне чергування; Specialized linguistic term for B1+
+  - спрощення (simplification) — спрощення приголосних, спрощення в групах; Specialized term found in State Standard
+  - асиміляція (assimilation) — асиміляція за дзвінкістю, уподібнення звуків; Technical term, use alongside 'уподібнення'
   recommended:
-  - милозвучність (euphony) — принцип милозвучності, краса і милозвучність; Key cultural
-    concept of Ukrainian identity
+  - милозвучність (euphony) — принцип милозвучності, краса і милозвучність; Key cultural concept of Ukrainian identity
   - дзвінкий (voiced) — дзвінкий приголосний; Technical phonetic marker
   - глухий (voiceless) — глухий приголосний; Technical phonetic marker
   - м'який (soft) — м'який приголосний; Contrast with 'твердий'
-  - скоромовка (tongue twister) — тренувати скоромовки; Practical tool for phonetic
-    mastery
+  - скоромовка (tongue twister) — тренувати скоромовки; Practical tool for phonetic mastery
   - наголос (stress/accent) — ставити наголос; Crucial for rhythm
 activity_hints:
 - type: quiz
@@ -106,26 +94,17 @@ activity_hints:
 - type: error-correction
   focus: Fix common pronunciation-influenced spelling errors
   items: 10
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- b1-05 (Ready for Immersion)
 connects_to:
 - b1-07 (Phonetics: Alternation & Simplification)
-objectives:
-- Learner can recognize and apply voicing assimilation rules
-- Learner can pronounce -ться correctly as [ц'ц'а]
-- Learner can apply softness assimilation in consonant groups
-- Learner can distinguish spelling from pronunciation in assimilation contexts
-grammar:
-- Voicing assimilation (progressive and regressive)
-- Softness assimilation (consonant groups)
-- '-ться pronunciation as [ц''ц''а]'
-- Place assimilation (sibilants before ш/ж/ч)
-register: нейтральний
-immersion: 75-100% Ukrainian
-phase: B1.1 [Meta-Language and Phonetics]
+prerequisites:
+- b1-05 (Ready for Immersion)
 persona:
   voice: Senior Language & Culture Specialist
   role: Voice Coach
-word_target: 4000
+grammar:
+- Voicing assimilation (progressive and regressive)
+- Softness assimilation (consonant groups)
+- -ться pronunciation as [ц'ц'а]
+- Place assimilation (sibilants before ш/ж/ч)
+register: нейтральний
+immersion: 75-100% Ukrainian

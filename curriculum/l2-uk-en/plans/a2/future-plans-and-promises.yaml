@@ -1,81 +1,86 @@
-module: a2-14
+module: a2-016
 level: A2
-sequence: 14
+sequence: 16
 slug: future-plans-and-promises
 version: '2.0'
 title: Future Plans and Promises
 subtitle: Simple Future vs. Compound Future
+focus: grammar
+pedagogy: PPP
+phase: A2.2
+word_target: 3000
+objectives:
+- Learner can form the compound future tense (imperfective)
+- Learner can form the simple future tense (perfective)
+- Learner can distinguish between future process and future result
+- Learner can make promises and describe plans
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Future tense formation and aspect usage
+- name: Ukrainian Verb Conjugation - Future
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Future tense paradigms
 content_outline:
 - section: Вступ (Introduction)
   words: 500
   points:
-  - 'Future tense overview aligned with State Standard §4.2.3.1: distinguishing between
-    the compound form for imperfective verbs (process) and the simple form for perfective
-    verbs (result).'
-  - 'Cultural hook: Introduction of the proverb «Обіцянка — цяцянка, а дурневі — радість»
-    (A promise is a toy...) to frame the importance and weight of future commitments
-    in Ukrainian culture.'
-  - 'The concept of «тримати слово» (keeping one''s word) as a motivator for mastering
-    aspectual precision: why choosing the right verb form is the key to being understood
-    as reliable.'
+  - 'Future tense overview aligned with State Standard §4.2.3.1: distinguishing between the compound form for imperfective
+    verbs (process) and the simple form for perfective verbs (result).'
+  - 'Cultural hook: Introduction of the proverb «Обіцянка — цяцянка, а дурневі — радість» (A promise is a toy...) to frame
+    the importance and weight of future commitments in Ukrainian culture.'
+  - 'The concept of «тримати слово» (keeping one''s word) as a motivator for mastering aspectual precision: why choosing the
+    right verb form is the key to being understood as reliable.'
 - section: 'Презентація: Доконаний вид (Presentation: Perfective Future)'
   words: 700
   points:
-  - 'Formation of the Simple Future: conjugating perfective verbs (скажу, закричу,
-    поборю) and explaining that the form itself signals future completion without
-    auxiliary verbs.'
-  - 'Addressing the ''Aspect Mismatch'' error: Detailed correction of the common mistake
-    «Я буду зробити» — explaining why the auxiliary «буду» can never be paired with
-    a perfective infinitive.'
-  - 'Semantic power of results: how the perfective future (e.g., «напишу», «прийду»)
-    functions as a firm promise or a guarantee of a finished action.'
+  - 'Formation of the Simple Future: conjugating perfective verbs (скажу, закричу, поборю) and explaining that the form itself
+    signals future completion without auxiliary verbs.'
+  - 'Addressing the ''Aspect Mismatch'' error: Detailed correction of the common mistake «Я буду зробити» — explaining why
+    the auxiliary «буду» can never be paired with a perfective infinitive.'
+  - 'Semantic power of results: how the perfective future (e.g., «напишу», «прийду») functions as a firm promise or a guarantee
+    of a finished action.'
 - section: 'Презентація: Недоконаний вид (Presentation: Imperfective Future)'
   words: 600
   points:
-  - 'Formation of the Compound Future: Mastery of the «буду + infinitive» structure
-    (буду боротися, буду читати) to emphasize duration and ongoing processes.'
-  - 'The ''Process vs. Result'' distinction: Contrasting marker words like «буду читати»
-    (spending time reading) versus «прочитаю» (finishing the book/result) to clarify
-    intent.'
-  - 'Pedagogical warning against the ''Overuse of Буду'': Encouraging learners to
-    move beyond the auxiliary shortcut and embrace perfective conjugations for specific
-    promises.'
+  - 'Formation of the Compound Future: Mastery of the «буду + infinitive» structure (буду боротися, буду читати) to emphasize
+    duration and ongoing processes.'
+  - 'The ''Process vs. Result'' distinction: Contrasting marker words like «буду читати» (spending time reading) versus «прочитаю»
+    (finishing the book/result) to clarify intent.'
+  - 'Pedagogical warning against the ''Overuse of Буду'': Encouraging learners to move beyond the auxiliary shortcut and embrace
+    perfective conjugations for specific promises.'
 - section: Практика та діалоги (Practice and Dialogues)
   words: 700
   points:
-  - 'Situational exchange: Planning a weekend versus making a solemn promise, using
-    high-frequency collocations like «піду в кіно» and «зроблю все можливе».'
-  - 'Cultural nuance: Integrating the proverb «Обіцяного три роки ждуть» (One waits
-    three years for what is promised) to discuss expectations and the reality of delayed
-    fulfillment.'
-  - 'Drill on commitment signals: Transforming process-oriented plans (буду писати)
-    into result-oriented promises (напишу) based on different conversational contexts.'
+  - 'Situational exchange: Planning a weekend versus making a solemn promise, using high-frequency collocations like «піду
+    в кіно» and «зроблю все можливе».'
+  - 'Cultural nuance: Integrating the proverb «Обіцяного три роки ждуть» (One waits three years for what is promised) to discuss
+    expectations and the reality of delayed fulfillment.'
+  - 'Drill on commitment signals: Transforming process-oriented plans (буду писати) into result-oriented promises (напишу)
+    based on different conversational contexts.'
 - section: Висновок та застосування (Conclusion and Application)
   words: 500
   points:
-  - 'Summary of structural differences: ''I will do'' (result = one word: зроблю)
-    vs ''I will be doing'' (process = two words: буду робити).'
-  - 'Production task: Drafting a response to a friend''s invitation, making at least
-    three specific promises using perfective future verbs (прийду, принесу, допоможу).'
-  - 'Final reflection on linguistic elegance: how the choice of aspect in the future
-    tense reflects the speaker''s agency and reliability.'
+  - 'Summary of structural differences: ''I will do'' (result = one word: зроблю) vs ''I will be doing'' (process = two words:
+    буду робити).'
+  - 'Production task: Drafting a response to a friend''s invitation, making at least three specific promises using perfective
+    future verbs (прийду, принесу, допоможу).'
+  - 'Final reflection on linguistic elegance: how the choice of aspect in the future tense reflects the speaker''s agency
+    and reliability.'
 vocabulary_hints:
   required:
-  - зроблю (I will do/make) — зроблю все можливе, обов'язково зроблю; High frequency
-    result marker
-  - напишу (I will write) — напишу листа, напишу повідомлення; High frequency for
-    commitments
+  - зроблю (I will do/make) — зроблю все можливе, обов'язково зроблю; High frequency result marker
+  - напишу (I will write) — напишу листа, напишу повідомлення; High frequency for commitments
   - скажу (I will say) — скажу правду, скажу завтра; Essential for future speech reporting
-  - буду (I will be/auxiliary) — буду чекати, буду працювати, буду там; Very high
-    frequency auxiliary for process
-  - піду (I will go) — піду в кіно, піду додому; High frequency motion verb in simple
-    future
+  - буду (I will be/auxiliary) — буду чекати, буду працювати, буду там; Very high frequency auxiliary for process
+  - піду (I will go) — піду в кіно, піду додому; High frequency motion verb in simple future
   - прочитаю (I will read) — прочитаю книгу до кінця; Focus on completion/result
   - побачу (I will see) — побачу тебе завтра; Standard future greeting/observation
   - почую (I will hear) — почую новини; Perception of future events
   - візьму (I will take) — візьму участь, візьму трубку; Common collocation for participation
-  - дам (I will give) — дам слово; Directly linked to the cultural value of keeping
-    promises
+  - дам (I will give) — дам слово; Directly linked to the cultural value of keeping promises
   - прийду (I will come) — прийду вчасно; Essential for punctuality and reliability
   - приїду (I will arrive) — приїду поїздом; Standard for travel and arrival plans
   - почну (I will begin) — почну нове життя; Marking the inception of a future state
@@ -103,39 +108,21 @@ activity_hints:
 - type: quiz
   focus: Future tense formation quiz
   items: 10+
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a2-12 (Aspect introduction)
-- a2-13 (Perfective past)
-- A1 future tense basics
 connects_to:
 - a2-15 (Aspect Morphology)
 - a2-16 (Aspect Mastery Pairs)
 - a2-22 (If I Were)
-objectives:
-- Learner can form the compound future tense (imperfective)
-- Learner can form the simple future tense (perfective)
-- Learner can distinguish between future process and future result
-- Learner can make promises and describe plans
+prerequisites:
+- a2-12 (Aspect introduction)
+- a2-13 (Perfective past)
+- A1 future tense basics
+persona:
+  voice: Encouraging Cultural Guide
+  role: Ambitious Startup Founder
 grammar:
 - imperfective future (буду + infinitive)
 - perfective future (conjugated)
 - promises vs plans
 - duration in future
 module_type: grammar
-sources:
-- name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
-  type: reference
-  notes: Future tense formation and aspect usage
-- name: Ukrainian Verb Conjugation - Future
-  url: https://uk.wikipedia.org/wiki/Дієслово
-  type: reference
-  notes: Future tense paradigms
 immersion: 50-60% Ukrainian
-phase: A2.2
-persona:
-  voice: Encouraging Cultural Guide
-  role: Ambitious Startup Founder
-word_target: 3000

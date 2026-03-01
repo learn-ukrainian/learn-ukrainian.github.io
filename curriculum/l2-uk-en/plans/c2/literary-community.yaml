@@ -6,7 +6,8 @@ version: '2.0'
 title: Літературна спільнота
 focus: literature
 pedagogy: TTT
-phase: 'C2.2 [Literature & Creative Writing]'
+phase: C2.2 [Literature & Creative Writing]
+word_target: 5000
 objectives:
 - TBD
 sources:
@@ -26,48 +27,54 @@ content_outline:
 - section: 'Вступ: Літературне поле (Introduction: The Literary Field)'
   words: 600
   points:
-  - 'Теорія П''єра Бурдьє: поняття літературного поля, габітусу та гравців у культурному
-    просторі.'
-  - 'Боротьба за капітал: розрізнення символічного капіталу (престиж, визнання) та
-    економічного капіталу (продажі, гонорари).'
+  - 'Теорія П''єра Бурдьє: поняття літературного поля, габітусу та гравців у культурному просторі.'
+  - 'Боротьба за капітал: розрізнення символічного капіталу (престиж, визнання) та економічного капіталу (продажі, гонорари).'
 - section: Професійні об'єднання та ПЕН Україна (Professional Unions and PEN Ukraine)
   words: 900
   points:
-  - 'Порівняльний аналіз інституцій: Національна спілка письменників (трансформація
-    радянського спадку) vs. незалежні об''єднання.'
-  - 'Роль ПЕН Україна: захист свободи слова, прав авторів та документація злочинів
-    проти культури під час війни.'
+  - 'Порівняльний аналіз інституцій: Національна спілка письменників (трансформація радянського спадку) vs. незалежні об''єднання.'
+  - 'Роль ПЕН Україна: захист свободи слова, прав авторів та документація злочинів проти культури під час війни.'
 - section: Фестивалі та Книжковий Арсенал (Festivals and Book Arsenal)
   words: 900
   points:
-  - 'Книжковий Арсенал у Києві: найбільший інтелектуальний фестиваль та його роль
-    у формуванні щорічних трендів.'
-  - 'Міжнародне визнання: аналіз успіху фестивалю (нагорода London Book Fair 2019)
-    як кейс ефективного культурного менеджменту.'
+  - 'Книжковий Арсенал у Києві: найбільший інтелектуальний фестиваль та його роль у формуванні щорічних трендів.'
+  - 'Міжнародне визнання: аналіз успіху фестивалю (нагорода London Book Fair 2019) як кейс ефективного культурного менеджменту.'
 - section: Видавнича індустрія та BookTok (Publishing Industry and BookTok)
   words: 900
   points:
-  - 'Видавничий цикл: шлях рукопису від подання та редакційного опрацювання до тиражування
-    й промоції.'
-  - 'Цифровізація літпроцесу: вплив соціальних мереж (Facebook, Instagram, BookTok)
-    на популярність авторів та продажі.'
+  - 'Видавничий цикл: шлях рукопису від подання та редакційного опрацювання до тиражування й промоції.'
+  - 'Цифровізація літпроцесу: вплив соціальних мереж (Facebook, Instagram, BookTok) на популярність авторів та продажі.'
 - section: Критика, медіа та рецензування (Criticism, Media and Reviewing)
   words: 1000
   points:
-  - 'Літературна критика в медіа: незалежність оглядачів та формування читацького
-    канону.'
-  - 'Вторинні тексти: практика написання рецензій та анотацій згідно з компетенціями
-    §4.3.8 Державного стандарту.'
-  - 'Культурна дипломатія: роль літературних журналів у представленні українського
-    голосу на міжнародній арені.'
+  - 'Літературна критика в медіа: незалежність оглядачів та формування читацького канону.'
+  - 'Вторинні тексти: практика написання рецензій та анотацій згідно з компетенціями §4.3.8 Державного стандарту.'
+  - 'Культурна дипломатія: роль літературних журналів у представленні українського голосу на міжнародній арені.'
 - section: Практичний вхід та подолання помилок (Practical Entry and Overcoming Errors)
   words: 700
   points:
   - 'Професійний нетворкінг для авторів: побудова репутації та навички пітчингу рукопису.'
-  - 'Типові помилки: розрізнення «роман» vs «новела» (калька novel) та вживання «видавати»
-    (книги) vs «публікувати» (статті).'
-  - 'Граматичне керування: вживання «рецензія на книгу» як професійного стандарту
-    на противагу варіативному «відгуку про».'
+  - 'Типові помилки: розрізнення «роман» vs «новела» (калька novel) та вживання «видавати» (книги) vs «публікувати» (статті).'
+  - 'Граматичне керування: вживання «рецензія на книгу» як професійного стандарту на противагу варіативному «відгуку про».'
+vocabulary_hints:
+  required:
+  - 'спільнота (community) — High frequency; collocations: літературна спільнота, професійна спільнота'
+  - 'поле (field) — Medium frequency; register: academic (concept of the literary field by Bourdieu)'
+  - 'видавництво (publishing house) — High frequency; collocations: незалежне видавництво, політика видавництва'
+  - 'рукопис (manuscript) — Medium frequency; usage: professional (to submit, edit, or reject a manuscript)'
+  - 'нетворкінг (networking) — Neologism; usage: professional context for authors and cultural managers'
+  - 'концепція (concept) — Usage: analysis of literary trends and methodology'
+  - аналіз (analysis) — High frequency; critical evaluation of texts
+  - 'дискурс (discourse) — Usage: academic/literary discussion of cultural phenomena'
+  - 'методологія (methodology) — Usage: structural approach to reviewing or researching literature'
+  recommended:
+  - символічний капітал (symbolic capital) — Key term from research; status/prestige in the literary field
+  - роман (novel) — Professional register; correction of the common error confusing it with 'новела'
+  - 'рецензія на (review of) — Usage note: specific management (рецензія на книгу) for professional reviews'
+  - 'видавати / публікувати — Register marker: books are ''видані'' while articles/posts are ''публіковані'''
+  - інтерпретація (interpretation) — Deep analysis of authorial intent
+  - контекстуалізація (contextualization) — Placing a work within historical/social fields
+  - синтез (synthesis) — Combining critical findings into a coherent secondary text
 vocabulary:
   required:
   - спільнота (community)
@@ -87,6 +94,15 @@ vocabulary:
   - контракт (contract)
   - дебют (debut)
   forbidden: '[]'
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
 activities:
   types_required:
   - quiz
@@ -101,45 +117,8 @@ connects_to:
 - c2-42-43 (C2.2 Practice modules)
 - c2-44 (C2.2 Review)
 - c2-45 (C2.2 Checkpoint)
-vocabulary_hints:
-  required:
-  - 'спільнота (community) — High frequency; collocations: літературна спільнота,
-    професійна спільнота'
-  - 'поле (field) — Medium frequency; register: academic (concept of the literary
-    field by Bourdieu)'
-  - 'видавництво (publishing house) — High frequency; collocations: незалежне видавництво,
-    політика видавництва'
-  - 'рукопис (manuscript) — Medium frequency; usage: professional (to submit, edit,
-    or reject a manuscript)'
-  - 'нетворкінг (networking) — Neologism; usage: professional context for authors
-    and cultural managers'
-  - 'концепція (concept) — Usage: analysis of literary trends and methodology'
-  - аналіз (analysis) — High frequency; critical evaluation of texts
-  - 'дискурс (discourse) — Usage: academic/literary discussion of cultural phenomena'
-  - 'методологія (methodology) — Usage: structural approach to reviewing or researching
-    literature'
-  recommended:
-  - символічний капітал (symbolic capital) — Key term from research; status/prestige
-    in the literary field
-  - роман (novel) — Professional register; correction of the common error confusing
-    it with 'новела'
-  - 'рецензія на (review of) — Usage note: specific management (рецензія на книгу)
-    for professional reviews'
-  - 'видавати / публікувати — Register marker: books are ''видані'' while articles/posts
-    are ''публіковані'''
-  - інтерпретація (interpretation) — Deep analysis of authorial intent
-  - контекстуалізація (contextualization) — Placing a work within historical/social
-    fields
-  - синтез (synthesis) — Combining critical findings into a coherent secondary text
-activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
 persona:
   voice: Senior Specialist
   role: Salon Host
+prerequisites:
+- literary-prizes-canon

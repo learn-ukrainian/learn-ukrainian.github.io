@@ -1,76 +1,77 @@
-module: b1-31
+module: b1-034
 level: B1
-sequence: 31
+sequence: 34
 slug: conditionals-real-yakshcho
 version: '2.0'
 title: 'Умовні речення: реальна умова (якщо)'
 subtitle: Real Conditionals - If Clauses
+focus: grammar
+pedagogy: TTT
+phase: B1.3a [Complex Sentences]
+word_target: 4000
+objectives:
+- Learner understands real conditional constructions
+- Learner can form conditional sentences with якщо
+- Learner can use correct tense sequences in conditionals
+- Learner can express future conditions accurately
 content_outline:
 - section: 'Вступ: Реальні умови в мовленні (Introduction: Real Conditions in Speech)'
   words: 600
   points:
-  - 'Introduce real conditional constructions aligned with State Standard §4.4.3:
-    complex sentences with the conjunction ''якщо'' for expressing realistic possibilities.'
-  - 'Cultural motivator using the proverb: «Якщо боятися труднощів, то не варто й
-    починати» (If you fear difficulties, it''s not worth starting) — focus on the
-    resilience mindset.'
-  - 'Diagnostic quiz: Pre-test learner''s ability to identify real vs. unreal conditions
-    to establish a baseline for the TTT (Test-Teach-Test) approach.'
-- section: 'Граматична презентація: Якщо та майбутній час (Grammar Presentation: ''Якщо''
-    and the Future Tense)'
+  - 'Introduce real conditional constructions aligned with State Standard §4.4.3: complex sentences with the conjunction ''якщо''
+    for expressing realistic possibilities.'
+  - 'Cultural motivator using the proverb: «Якщо боятися труднощів, то не варто й починати» (If you fear difficulties, it''s
+    not worth starting) — focus on the resilience mindset.'
+  - 'Diagnostic quiz: Pre-test learner''s ability to identify real vs. unreal conditions to establish a baseline for the TTT
+    (Test-Teach-Test) approach.'
+- section: 'Граматична презентація: Якщо та майбутній час (Grammar Presentation: ''Якщо'' and the Future Tense)'
   words: 1000
   points:
-  - 'The #1 Friction Point: Explicitly contrast «Якщо + Future» (Ukrainian) vs. «If
-    + Present» (English). Explain that Ukrainian logic requires the future tense in
-    the conditional clause for future events.'
-  - 'Correcting Tense Mismatch: Contrast the error «Якщо ти приходиш завтра...» (English
-    transfer) with the correct «Якщо ти прийдеш завтра...» (If you come tomorrow).'
-  - 'Structural variations: Drilling the ''якщо... то...'' correlative pair and identifying
-    when ''то'' can be omitted vs. when it adds emphasis to the result.'
+  - 'The #1 Friction Point: Explicitly contrast «Якщо + Future» (Ukrainian) vs. «If + Present» (English). Explain that Ukrainian
+    logic requires the future tense in the conditional clause for future events.'
+  - 'Correcting Tense Mismatch: Contrast the error «Якщо ти приходиш завтра...» (English transfer) with the correct «Якщо
+    ти прийдеш завтра...» (If you come tomorrow).'
+  - 'Structural variations: Drilling the ''якщо... то...'' correlative pair and identifying when ''то'' can be omitted vs.
+    when it adds emphasis to the result.'
   - Usage of 'навіть якщо' (even if) and 'що якщо' (what if) in complex sentence structures.
 - section: 'Семантичні нюанси: Якщо проти Коли (Semantic Nuances: ''Якщо'' vs. ''Коли'')'
   words: 800
   points:
-  - Distinguishing 'якщо' (conditional/possibility) from 'коли' (temporal/certainty).
-    Explain that using 'коли' implies the event will definitely happen.
-  - 'Error analysis: Correcting the common confusion where learners use «Коли...»
-    for conditions with doubt, e.g., «Якщо буде дощ...» (conditional) vs. «Коли буде
-    дощ...» (temporal certainty).'
-  - 'Timeline visualization: Mapping ''якщо'' as a fork in the road of possible outcomes,
-    distinct from the linear certainty of ''коли''.'
-- section: 'Практика: Культура, стилістика та лексика (Practice: Culture, Stylistics,
-    and Vocabulary)'
+  - Distinguishing 'якщо' (conditional/possibility) from 'коли' (temporal/certainty). Explain that using 'коли' implies the
+    event will definitely happen.
+  - 'Error analysis: Correcting the common confusion where learners use «Коли...» for conditions with doubt, e.g., «Якщо буде
+    дощ...» (conditional) vs. «Коли буде дощ...» (temporal certainty).'
+  - 'Timeline visualization: Mapping ''якщо'' as a fork in the road of possible outcomes, distinct from the linear certainty
+    of ''коли''.'
+- section: 'Практика: Культура, стилістика та лексика (Practice: Culture, Stylistics, and Vocabulary)'
   words: 900
   points:
-  - 'Cultural immersion with the proverb: «Взимку не зігрієшся, якщо літом не спітнієш»
-    — pedagogical focus on the future perfective «зігрієшся» and «спітнієш» in conditional
-    clauses.'
-  - 'Vocabulary depth: Distinguish between «результат» (positive outcome/achievement)
-    and «наслідок» (causal link, often negative or neutral consequences).'
-  - 'Register Note: Learners should avoid the bureaucratic «у результаті» in casual
-    speech, replacing it with «через це» or «тому» for naturalness.'
-  - 'Formal collocations: Introduction of «за умови» (on condition) and «у разі якщо»
-    (in case) for more formal or academic contexts.'
+  - 'Cultural immersion with the proverb: «Взимку не зігрієшся, якщо літом не спітнієш» — pedagogical focus on the future
+    perfective «зігрієшся» and «спітнієш» in conditional clauses.'
+  - 'Vocabulary depth: Distinguish between «результат» (positive outcome/achievement) and «наслідок» (causal link, often negative
+    or neutral consequences).'
+  - 'Register Note: Learners should avoid the bureaucratic «у результаті» in casual speech, replacing it with «через це» or
+    «тому» for naturalness.'
+  - 'Formal collocations: Introduction of «за умови» (on condition) and «у разі якщо» (in case) for more formal or academic
+    contexts.'
 - section: Діалоги та вироблення навичок (Dialogues and Skill Production)
   words: 700
   points:
-  - 'Interactive dialogues: Role-playing everyday scenarios (weather, travel, work)
-    using correct tense sequences in real conditionals.'
-  - 'Production task: Creating personal ''If-Then'' statements regarding career and
-    learning goals to solidify the use of future perfective forms.'
-  - 'Summary: Review of the State Standard §4.4.3 requirements and final self-assessment
-    check for register consistency (casual vs. formal outcomes).'
+  - 'Interactive dialogues: Role-playing everyday scenarios (weather, travel, work) using correct tense sequences in real
+    conditionals.'
+  - 'Production task: Creating personal ''If-Then'' statements regarding career and learning goals to solidify the use of
+    future perfective forms.'
+  - 'Summary: Review of the State Standard §4.4.3 requirements and final self-assessment check for register consistency (casual
+    vs. formal outcomes).'
 vocabulary_hints:
   required:
-  - якщо (if) — якщо... то... (if... then...), що якщо (what if), навіть якщо (even
-    if); High frequency (Top 100)
-  - умова (condition) — за умови (on condition), обов'язкова умова (mandatory condition),
-    необхідна умова (necessary condition), створювати умови (to create conditions);
-    High frequency, formal
-  - результат (result) — позитивний результат (positive result), у результаті (as
-    a result - outcome), досягти результату (to achieve a result); High frequency
-  - наслідок (consequence) — унаслідок (as a result of), мати наслідки (to have consequences),
-    небезпечні наслідки; Medium frequency, often neutral/negative
+  - якщо (if) — якщо... то... (if... then...), що якщо (what if), навіть якщо (even if); High frequency (Top 100)
+  - умова (condition) — за умови (on condition), обов'язкова умова (mandatory condition), необхідна умова (necessary condition),
+    створювати умови (to create conditions); High frequency, formal
+  - результат (result) — позитивний результат (positive result), у результаті (as a result - outcome), досягти результату
+    (to achieve a result); High frequency
+  - наслідок (consequence) — унаслідок (as a result of), мати наслідки (to have consequences), небезпечні наслідки; Medium
+    frequency, often neutral/negative
   - умовний (conditional) — умовний спосіб (conditional mood)
   - реальний (real) — реальна можливість (real possibility)
   - можливий (possible) — цілком можливо (quite possible)
@@ -93,24 +94,15 @@ activity_hints:
 - type: translate
   focus: English to Ukrainian
   items: 15
-focus: grammar
-pedagogy: TTT
-prerequisites:
-- b1-30 (Purpose Clauses щоб + past form)
 connects_to:
 - b1-32 (Conditionals Unreal якби)
-objectives:
-- Learner understands real conditional constructions
-- Learner can form conditional sentences with якщо
-- Learner can use correct tense sequences in conditionals
-- Learner can express future conditions accurately
+prerequisites:
+- b1-30 (Purpose Clauses щоб + past form)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Software Engineer
 grammar:
 - Real conditionals with якщо
 - Tense sequence in conditional sentences
 - Present and future in conditional clauses
 register: розмовний
-phase: B1.3a [Complex Sentences]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Software Engineer
-word_target: 4000

@@ -1,21 +1,33 @@
-sequence: 114
-module: ruth-114
+module: ruth-109
+level: RUTH
+sequence: 109
 slug: bajky-xvii-xviii
-title_uk: "Байки XVII-XVIII ст."
-title_en: "Ukrainian Fables (17th-18th c.)"
+version: '2.0'
+title: Байки XVII-XVIII ст.
+subtitle: Ukrainian Fables (17th-18th c.)
+focus: Ukrainian fables in vernacular — moral tales as vehicles for spoken language, Skovoroda's precursors
 phase: 5
-phase_id: linguistic-identity
-phase_name: "Мовна ідентичність"
-focus: "Ukrainian fables in vernacular — moral tales as vehicles for spoken language, Skovoroda's precursors"
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: "The fable tradition in Ukrainian literature. Connection to European Aesopic tradition and its Ukrainian transformation. Social function: teaching morality in the people's own language."
+  points:
+  - 'The fable tradition in Ukrainian literature. Connection to European Aesopic tradition and its Ukrainian transformation.
+    Social function: teaching morality in the people''s own language.'
+  words: 1250
 - section: Основний матеріал
-  description: "Reading 17th-18th century Ukrainian fables. Animal characters as social commentary. Language analysis: vernacular vocabulary, proverbs embedded in narrative, humor as pedagogical tool. Connection to Skovoroda's later fables."
+  points:
+  - 'Reading 17th-18th century Ukrainian fables. Animal characters as social commentary. Language analysis: vernacular vocabulary,
+    proverbs embedded in narrative, humor as pedagogical tool. Connection to Skovoroda''s later fables.'
+  words: 1250
 - section: Практика
-  description: "Analyzing fable language: identifying colloquialisms, proverbs, and idiomatic expressions. Tracing vocabulary from 18th-century fables to modern Ukrainian."
+  points:
+  - 'Analyzing fable language: identifying colloquialisms, proverbs, and idiomatic expressions. Tracing vocabulary from 18th-century
+    fables to modern Ukrainian.'
+  words: 1250
 - section: Підсумок
-  description: "Fables as Ukrainian moral philosophy in popular form. The genre bridges elite and folk culture, Church Slavonic and vernacular."
+  points:
+  - Fables as Ukrainian moral philosophy in popular form. The genre bridges elite and folk culture, Church Slavonic and vernacular.
+  words: 1250
 vocabulary_hints:
 - байка
 - мораль
@@ -23,12 +35,24 @@ vocabulary_hints:
 - приказка
 - прислів'я
 - народна мудрість
-activity_types:
-- transcription
-- etymology-trace
-- parallel-text
-- register-identify
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+- type: register-identify
+  focus: ''
+  items: 1
 persona:
-  voice: "Folklore Scholar"
-  role: "Storyteller"
-source_url: "http://litopys.org.ua/bajky/bajk.htm"
+  voice: Folklore Scholar
+  role: Storyteller
+source_url: http://litopys.org.ua/bajky/bajk.htm
+prerequisites:
+- poeziia-baroko
+connects_to:
+- pysovnyk-lystuvannia

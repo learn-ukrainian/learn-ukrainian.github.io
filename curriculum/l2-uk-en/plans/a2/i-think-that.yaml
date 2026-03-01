@@ -1,79 +1,19 @@
-module: a2-29
+module: a2-034
 level: A2
-sequence: 29
+sequence: 34
 slug: i-think-that
 version: '2.0'
 title: I Think That...
 subtitle: Expressing Opinions
-content_outline:
-- section: 'Вступ: Від фактів до поглядів (Introduction: From Facts to Perspectives)'
-  words: 400
-  points:
-  - The transition from stating objective facts (A1) to expressing subjective perspectives
-    (A2); referencing Ukrainian State Standard §2 (Каталог А) on expressing personal
-    stances.
-  - 'The cultural concept of sincerity (щирість) vs. politeness (ввічливість): Ukrainians
-    value directness but use specific linguistic markers to maintain social harmony
-    in formal contexts.'
-  - 'The ''No'' ambiguity: Exploring why a direct ''Ні'' is often avoided in favor
-    of explanatory phrases like ''Мені здається, що це не зовсім так'' to prevent
-    sounding harsh or confrontational.'
-- section: 'Презентація: Дієслова думки (Presentation: Thinking Verbs)'
-  words: 800
-  points:
-  - 'The contrast between ''Думати'' (mental process: ''I am thinking about it'')
-    and ''Вважати'' (firm opinion: ''I believe/consider it to be'').'
-  - 'Learner error alert: Explicitly debunking the use of ''рахувати'' (to count numbers)
-    for expressing opinions—a common calque from Russian ''считать'' (Error: ''Я рахую,
-    що...'' vs Correct: ''Я вважаю, що...'').'
-  - 'Introduction to ''Здаватися'' for impressions: Using the impersonal construction
-    ''Мені здається, що...'' to offer softer, less dogmatic opinions.'
-  - 'Gender-sensitive agreement: Teaching ''Я згоден'' (Masculine) vs ''Я згодна''
-    (Feminine) with specific drills to correct common mismatch errors (e.g., a woman
-    saying ''Я згоден'').'
-- section: 'Граматика: Сполучник ''що'' та впевненість (Grammar: Conjunction ''що''
-    and Certainty)'
-  words: 600
-  points:
-  - 'The ''Hard Comma'' Rule: Implementing State Standard §4.4.2 requirement for mandatory
-    commas before ''що'' in complex sentences (Contrast: ''Я знаю, що ми праві'' vs
-    English optional ''that'').'
-  - 'The Certainty Ladder: Categorizing phrases from ''Я впевнений(-а)'' to ''Напевно''
-    and ''Я сумніваюся'' as per State Standard §2 requirements for expressing stance.'
-  - 'Introductory structures: ''На мою думку'' and ''На мою особисту думку'' vs ''На
-    думку експертів'' for citing external authority.'
-- section: 'Практика: Обґрунтування думки (Practice: Justifying Opinions)'
-  words: 700
-  points:
-  - 'Elementary grounding drills: Practice expressing an opinion and providing a basic
-    ''тому що'' (because) justification as mandated by the A2 communicative standard.'
-  - 'Polite softening patterns: Using ''Вибачте, але...'', ''На жаль, я не згоден'',
-    and ''З одного боку... з іншого боку'' to structure balanced arguments.'
-  - 'Fact-to-Opinion conversion: Exercises changing ''Сьогодні холодно'' into ''Я
-    вважаю, що сьогодні холодно'' or ''Мені здається, що сьогодні холодно'' to distinguish
-    degrees of conviction.'
-- section: Діалоги та застосування (Dialogues and Application)
-  words: 500
-  points:
-  - 'Scenario-based dialogue: Discussing a movie or work proposal using softeners
-    to navigate disagreement without direct ''Ні''.'
-  - 'Roleplay: A talk show guest scenario where the learner must use ''Безумовно'',
-    ''Цілком можливо'', and ''Я впевнений'' to respond to different prompts.'
-  - 'Final summary: Reviewing the mandatory punctuation and the distinction between
-    process-thinking and opinion-holding.'
 focus: vocabulary
 pedagogy: PPP
+phase: A2.2
+word_target: 3000
 objectives:
 - Learner can express personal opinions clearly
 - Learner can agree or disagree politely
 - Learner can use introductory phrases to structure arguments
 - Learner can discuss topics using 'я вважаю' and 'мені здається'
-grammar:
-- opinion phrases (я думаю, на мою думку)
-- agreement/disagreement phrases
-- filler words (можливо, напевно)
-- justifying opinions
-module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Opinions
   url: https://mon.gov.ua/
@@ -83,33 +23,80 @@ sources:
   url: https://uk.wikipedia.org/wiki/Дискусія
   type: reference
   notes: Social norms for agreement and disagreement
-immersion: 60-75% Ukrainian
-phase: A2.2
+content_outline:
+- section: 'Вступ: Від фактів до поглядів (Introduction: From Facts to Perspectives)'
+  words: 400
+  points:
+  - The transition from stating objective facts (A1) to expressing subjective perspectives (A2); referencing Ukrainian State
+    Standard §2 (Каталог А) on expressing personal stances.
+  - 'The cultural concept of sincerity (щирість) vs. politeness (ввічливість): Ukrainians value directness but use specific
+    linguistic markers to maintain social harmony in formal contexts.'
+  - 'The ''No'' ambiguity: Exploring why a direct ''Ні'' is often avoided in favor of explanatory phrases like ''Мені здається,
+    що це не зовсім так'' to prevent sounding harsh or confrontational.'
+- section: 'Презентація: Дієслова думки (Presentation: Thinking Verbs)'
+  words: 800
+  points:
+  - 'The contrast between ''Думати'' (mental process: ''I am thinking about it'') and ''Вважати'' (firm opinion: ''I believe/consider
+    it to be'').'
+  - 'Learner error alert: Explicitly debunking the use of ''рахувати'' (to count numbers) for expressing opinions—a common
+    calque from Russian ''считать'' (Error: ''Я рахую, що...'' vs Correct: ''Я вважаю, що...'').'
+  - 'Introduction to ''Здаватися'' for impressions: Using the impersonal construction ''Мені здається, що...'' to offer softer,
+    less dogmatic opinions.'
+  - 'Gender-sensitive agreement: Teaching ''Я згоден'' (Masculine) vs ''Я згодна'' (Feminine) with specific drills to correct
+    common mismatch errors (e.g., a woman saying ''Я згоден'').'
+- section: 'Граматика: Сполучник ''що'' та впевненість (Grammar: Conjunction ''що'' and Certainty)'
+  words: 600
+  points:
+  - 'The ''Hard Comma'' Rule: Implementing State Standard §4.4.2 requirement for mandatory commas before ''що'' in complex
+    sentences (Contrast: ''Я знаю, що ми праві'' vs English optional ''that'').'
+  - 'The Certainty Ladder: Categorizing phrases from ''Я впевнений(-а)'' to ''Напевно'' and ''Я сумніваюся'' as per State
+    Standard §2 requirements for expressing stance.'
+  - 'Introductory structures: ''На мою думку'' and ''На мою особисту думку'' vs ''На думку експертів'' for citing external
+    authority.'
+- section: 'Практика: Обґрунтування думки (Practice: Justifying Opinions)'
+  words: 700
+  points:
+  - 'Elementary grounding drills: Practice expressing an opinion and providing a basic ''тому що'' (because) justification
+    as mandated by the A2 communicative standard.'
+  - 'Polite softening patterns: Using ''Вибачте, але...'', ''На жаль, я не згоден'', and ''З одного боку... з іншого боку''
+    to structure balanced arguments.'
+  - 'Fact-to-Opinion conversion: Exercises changing ''Сьогодні холодно'' into ''Я вважаю, що сьогодні холодно'' or ''Мені
+    здається, що сьогодні холодно'' to distinguish degrees of conviction.'
+- section: Діалоги та застосування (Dialogues and Application)
+  words: 500
+  points:
+  - 'Scenario-based dialogue: Discussing a movie or work proposal using softeners to navigate disagreement without direct
+    ''Ні''.'
+  - 'Roleplay: A talk show guest scenario where the learner must use ''Безумовно'', ''Цілком можливо'', and ''Я впевнений''
+    to respond to different prompts.'
+  - 'Final summary: Reviewing the mandatory punctuation and the distinction between process-thinking and opinion-holding.'
+vocabulary_hints:
+  required:
+  - думати (to think) — про майбутнє, довго думати, думати над проблемою; high frequency, denotes mental process
+  - 'вважати (to consider/believe) — я вважає, що...; вважати правильним; вважати за потрібне; high frequency, denotes firm
+    opinion; note: never use ''рахувати'''
+  - здаватися (to seem) — мені здається, що...; здається, дощ починається; medium frequency, denotes impression or soft stance
+  - згоден / згодна (agree) — я цілком згоден, я не згоден, я згодна з вами; requires gender agreement
+  - що (that) — mandatory comma before this conjunction in complex sentences (State Standard §4.4.2)
+  - впевнений / впевнена (sure/confident) — я впевнений(-а), що...; expressing high certainty (State Standard §2)
+  recommended:
+  - на думку (in the opinion of) — на мою думку, на думку експертів, на мою особисту думку; used as an introductory phrase
+  - можливо (possible/perhaps) — це можливо, цілком можливо, можливо, що...; high frequency probability marker
+  - напевно (probably) — medium certainty marker
+  - сумніватися (to doubt) — я сумніваюся, що...; expressing uncertainty (State Standard §2)
+  - вибачте, але (excuse me, but) — polite softener for disagreement
+  - на жаль (unfortunately) — softener for refusal or disagreement
 persona:
   voice: Encouraging Cultural Guide
   role: Talk Show Guest
-vocabulary_hints:
-  required:
-  - думати (to think) — про майбутнє, довго думати, думати над проблемою; high frequency,
-    denotes mental process
-  - 'вважати (to consider/believe) — я вважає, що...; вважати правильним; вважати
-    за потрібне; high frequency, denotes firm opinion; note: never use ''рахувати'''
-  - здаватися (to seem) — мені здається, що...; здається, дощ починається; medium
-    frequency, denotes impression or soft stance
-  - згоден / згодна (agree) — я цілком згоден, я не згоден, я згодна з вами; requires
-    gender agreement
-  - що (that) — mandatory comma before this conjunction in complex sentences (State
-    Standard §4.4.2)
-  - впевнений / впевнена (sure/confident) — я впевнений(-а), що...; expressing high
-    certainty (State Standard §2)
-  recommended:
-  - на думку (in the opinion of) — на мою думку, на думку експертів, на мою особисту
-    думку; used as an introductory phrase
-  - можливо (possible/perhaps) — це можливо, цілком можливо, можливо, що...; high
-    frequency probability marker
-  - напевно (probably) — medium certainty marker
-  - сумніватися (to doubt) — я сумніваюся, що...; expressing uncertainty (State Standard
-    §2)
-  - вибачте, але (excuse me, but) — polite softener for disagreement
-  - на жаль (unfortunately) — softener for refusal or disagreement
-word_target: 3000
+grammar:
+- opinion phrases (я думаю, на мою думку)
+- agreement/disagreement phrases
+- filler words (можливо, напевно)
+- justifying opinions
+module_type: vocabulary
+immersion: 60-75% Ukrainian
+prerequisites:
+- she-said-that
+connects_to:
+- i-feel-like

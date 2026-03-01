@@ -1,58 +1,90 @@
 module: istorio-061
-level: istorio
+level: ISTORIO
 sequence: 61
+slug: hreko-katolytska-tserkva
 version: '1.0'
 title: 'Греко-католицька церква: Між Сходом і Заходом'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
 - Evaluate the historical significance of унікальна церква
+sources:
+- name: УГКЦ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: Church history
+- name: Андрей Шептицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  type: reference
+  notes: Key 20th century figure
+- name: Львівський собор 1946
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
+  type: reference
+  notes: Soviet liquidation
 content_outline:
 - section: Вступ — Унікальна церква
-  subsections:
+  points:
   - УГКЦ — що це
   - Між Римом і Константинополем
   - Чому важлива для ідентичності
   - Структура модуля
+  words: 700
 - section: Від Берестя до Галичини
-  subsections:
+  points:
   - Перші століття — боротьба за виживання
   - Втрата території на сході
   - Зосередження в Галичині
   - Під Австрією — золота доба
+  words: 700
 - section: Церква і національний рух
-  subsections:
+  points:
   - Священики — національні лідери
   - Селянство і церква
   - Просвіта і церква
   - Москвофіли vs. народовці
   - Церква як нація-замінник
+  words: 700
 - section: Андрей Шептицький
-  subsections:
+  points:
   - Біографія — польський граф стає українським митрополитом
   - 44 роки служіння
   - Рятування євреїв
   - Складні відносини з ОУН
   - Спадщина
+  words: 700
 - section: Знищення і підпілля
-  subsections:
+  points:
   - 1946 — Львівський псевдособор
   - Примусове «возз'єднання» з РПЦ
   - Церква в катакомбах
   - Переслідування священиків
   - Діаспора — збереження
+  words: 700
 - section: Відродження
-  subsections:
+  points:
   - 1989 — легалізація
   - Повернення храмів
   - Сучасна УГКЦ
   - Роль у війні 2022
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - УГКЦ — маркер ідентичності
   - Між Сходом і Заходом
   - Підготовка до радянської антирелігійної політики
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - УГКЦ
 - греко-католицький
@@ -69,6 +101,15 @@ vocabulary:
 - прелат
 - душпастирство
 - примас
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: reading
   focus: Sheptytsky — complex figure analysis
@@ -80,38 +121,10 @@ activities:
   focus: UGCC role in 2022 — what changed?
 - type: essay-response
   focus: Чому УГКЦ стала символом галицької української ідентичності?
-sources:
-- name: УГКЦ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
-  type: reference
-  notes: Church history
-- name: Андрей Шептицький (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
-  type: reference
-  notes: Key 20th century figure
-- name: Львівський собор 1946
-  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
-  type: reference
-  notes: Soviet liquidation
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Church Union Historian
+prerequisites:
+- pravoslavna-identychnist
+connects_to:
+- radianska-antyrelihiyna-polityka

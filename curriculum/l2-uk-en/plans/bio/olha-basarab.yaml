@@ -1,45 +1,71 @@
-module: bio-88
+module: bio-091
 level: BIO
-sequence: 88
+sequence: 91
 slug: olha-basarab
 version: '2.0'
 title: 'Ольга Басараб: Розвідниця і мучениця'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of ольга басараб: розвідниця і мучениця'
+- Evaluate the contributions of незламна розвідниця
+- Trace the career and influence of посмертна слава та пам'ять
+sources:
+- name: Ольга Басараб (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
+  type: primary
+  notes: Біографія, розвідницька діяльність, загибель
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: УВО та розвідка
+- name: Центр досліджень визвольного руху
+  url: https://cdvr.org.ua
+  type: reference
+  notes: Дослідження підпільної діяльності
 content_outline:
 - section: Вступ — Незламна розвідниця
   points:
   - Басараб як символ жіночого героїзму в підпіллі
   - Трагічна загибель під тортурами
   - Значення для українського визвольного руху
+  words: 850
 - section: Молодість та формування (1889-1914)
   points:
   - Народження у Львові в інтелігентній родині
   - Навчання та музична освіта
   - Участь у культурному житті Львова
   - Шлюб з Дмитром Басарабом
+  words: 850
 - section: Перша світова війна та УСС (1914-1918)
   points:
   - Благодійна діяльність під час війни
   - Зв'язки з Українськими Січовими Стрільцями
   - Формування підпільної мережі
   - Початок розвідницької діяльності
+  words: 850
 - section: Розвідниця УВО (1920-1924)
   points:
   - Вступ до Української Військової Організації
   - Організація розвідницької мережі у Львові
   - Координація з центром у Відні
   - Ризикована подвійна гра
+  words: 850
 - section: Арешт та загибель (1924)
   points:
   - Викриття та арешт польською поліцією
   - Жорстокі допити та тортури
   - Відмова видати товаришів
   - Загибель у в'язниці — офіційно «самогубство»
+  words: 850
 - section: Посмертна слава та пам'ять
   points:
   - Реакція українського суспільства на загибель
   - Культ Ольги Басараб в українському русі
   - Пісні та вірші, присвячені їй
   - Вшанування в незалежній Україні
+  words: 750
 vocabulary_hints:
   required:
   - розвідниця (female intelligence agent)
@@ -66,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чому Басараб стала символом?
   output: Історичне есе
-focus: biography
-prerequisites:
-- bio-44 (Симон Петлюра)
 connects_to:
 - bio-61 (Олена Степанів)
 - bio-68 (Олена Теліга)
 - bio-108 (Євген Коновалець)
-module_type: biography
-sources:
-- name: Ольга Басараб (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
-  type: primary
-  notes: Біографія, розвідницька діяльність, загибель
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: УВО та розвідка
-- name: Центр досліджень визвольного руху
-  url: https://cdvr.org.ua
-  type: reference
-  notes: Дослідження підпільної діяльності
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of ольга басараб: розвідниця і мучениця'
-- Evaluate the contributions of незламна розвідниця
-- Trace the career and influence of посмертна слава та пам'ять
+prerequisites:
+- bio-44 (Симон Петлюра)
 persona:
   voice: Senior Biographer
   role: Underground Liaison
+module_type: biography
+immersion: 100% Ukrainian

@@ -1,27 +1,47 @@
-sequence: 22
 module: ruth-022
-module_number: 18
+level: RUTH
+sequence: 22
 slug: legal-profession
-title_uk: Юридична професія
-title_en: The Legal Profession
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: Юридична професія
+subtitle: The Legal Profession
 focus: Прокуратор, Возний — Roles in court
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Legal Profession
+  points:
+  - Introduction to The Legal Profession
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Tribunal Advocate
+prerequisites:
+- latinisms
+connects_to:
+- document-types

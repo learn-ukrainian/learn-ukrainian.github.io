@@ -1,49 +1,76 @@
 module: istorio-107
-level: istorio
+level: ISTORIO
 sequence: 107
+slug: syntez-ekonomichna-kolonizatsiia
 version: '1.0'
 title: 'Синтез: Економічна деколонізація'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of синтез: економічна деколонізація'
 - Evaluate the historical significance of від колонії до суб'єкта
+sources:
+- name: Економіка України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Економіка_України
+  type: reference
+  notes: Economic overview
+- name: Угода про асоціацію (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
+  type: reference
+  notes: EU integration
 content_outline:
 - section: Вступ — Від колонії до суб'єкта
-  subsections:
+  points:
   - Огляд модулів 103-106
   - Економічна колонізація — 300 років
   - Деколонізація — що це означає
   - Мета синтезу
+  words: 850
 - section: Еволюція експлуатації
-  subsections:
+  points:
   - Імперський період — зерно
   - Радянський — промисловість
   - Пострадянський — газ
   - Спільне — ресурси йдуть з України
+  words: 850
 - section: Механізми залежності
-  subsections:
+  points:
   - Торговельні зв'язки
   - Технологічна залежність
   - Фінансова залежність
   - Як кожен працював
+  words: 850
 - section: Розрив зв'язків
-  subsections:
+  points:
   - 2014 — початок
   - Торговельна переорієнтація
   - Енергетична незалежність
   - 2022 — повний розрив
+  words: 850
 - section: ЄС — нова залежність чи партнерство?
-  subsections:
+  points:
   - Угода про асоціацію
   - Відмінності від Росії
   - Ризики і можливості
   - Умови успіху
+  words: 850
 - section: Підсумок
-  subsections:
+  points:
   - Економічна деколонізація — процес
   - Не завершено
   - Перехід до інформаційної війни
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - синтез
 - економічна деколонізація
@@ -60,6 +87,15 @@ vocabulary:
 - структурна залежність
 - асиметрія
 - самодостатність
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: essay-response
   focus: Create economic colonization evolution diagram
@@ -71,34 +107,10 @@ activities:
   focus: EU integration — risks and opportunities
 - type: essay-response
   focus: Чи завершила Україна економічну деколонізацію?
-sources:
-- name: Економіка України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Економіка_України
-  type: reference
-  notes: Economic overview
-- name: Угода про асоціацію (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
-  type: reference
-  notes: EU integration
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Decolonial Economist
+prerequisites:
+- hazova-zbroia
+connects_to:
+- malorosiia-konstrukt

@@ -1,45 +1,71 @@
-module: bio-49
+module: bio-050
 level: BIO
-sequence: 49
+sequence: 50
 slug: olena-pchilka
 version: '2.0'
 title: 'Олена Пчілка: Письменниця і громадська діячка'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of олена пчілка: письменниця і громадська діячка'
+- Evaluate the contributions of мати українського відродження
+- Trace the career and influence of останні роки та спадщина (1920-1930)
+sources:
+- name: Олена Пчілка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
+  type: primary
+  notes: Біографія, творчість, громадська діяльність
+- name: Музей Лесі Українки
+  url: https://www.lesya.lutsk.ua
+  type: reference
+  notes: Родинна історія та спадщина
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
 content_outline:
 - section: Вступ — Мати українського відродження
   points:
   - Олена Пчілка як багатогранна постать українського руху
   - Роль у вихованні Лесі Українки
   - Внесок у літературу, етнографію та жіночий рух
+  words: 850
 - section: Ранні роки та родина Косачів (1849-1868)
   points:
   - Народження Ольги Драгоманової в Гадячі
   - Родина Драгоманових та її інтелектуальне середовище
   - Брат Михайло Драгоманов та його вплив
   - Освіта та формування національної свідомості
+  words: 850
 - section: Шлюб та літературні початки (1868-1880)
   points:
   - Шлюб із Петром Косачем
   - Народження дітей, зокрема Лесі
   - Перші літературні твори під псевдонімом Олена Пчілка
   - Переклади та етнографічні студії
+  words: 850
 - section: Видавнича та просвітницька діяльність (1880-1905)
   points:
   - Журнал «Рідний край»
   - Боротьба за українську мову в освіті
   - Альманах «Перший вінок» спільно з Наталією Кобринською
   - Дитяча література та виховання
+  words: 850
 - section: Революційні роки та трагедії (1905-1920)
   points:
   - Смерть Лесі Українки (1913)
   - Революція та громадянська війна
   - Втрата інших дітей
   - Продовження громадської діяльності попри все
+  words: 850
 - section: Останні роки та спадщина (1920-1930)
   points:
   - Робота над спадщиною Лесі Українки
   - Переслідування радянською владою
   - Смерть у Києві
   - Значення для українського національного руху
+  words: 750
 vocabulary_hints:
   required:
   - письменниця (writer)
@@ -66,34 +92,15 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
   output: Біографічне есе
-focus: biography
-prerequisites:
-- bio-20 (Тарас Шевченко)
-- bio-22 (Михайло Драгоманов)
 connects_to:
 - bio-40 (Леся Українка)
 - bio-25 (Наталія Кобринська)
 - bio-28 (Іван Франко)
-module_type: biography
-sources:
-- name: Олена Пчілка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
-  type: primary
-  notes: Біографія, творчість, громадська діяльність
-- name: Музей Лесі Українки
-  url: https://www.lesya.lutsk.ua
-  type: reference
-  notes: Родинна історія та спадщина
-- name: Інститут літератури НАНУ
-  url: https://ilnan.gov.ua
-  type: reference
-  notes: Літературознавчі дослідження
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of олена пчілка: письменниця і громадська діячка'
-- Evaluate the contributions of мати українського відродження
-- Trace the career and influence of останні роки та спадщина (1920-1930)
+prerequisites:
+- bio-20 (Тарас Шевченко)
+- bio-22 (Михайло Драгоманов)
 persona:
   voice: Senior Biographer
   role: Cultural Matriarch
+module_type: biography
+immersion: 100% Ukrainian

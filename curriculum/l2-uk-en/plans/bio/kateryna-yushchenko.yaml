@@ -1,45 +1,67 @@
-module: bio-129
+module: bio-132
 level: BIO
-sequence: 129
+sequence: 132
 slug: kateryna-yushchenko
 version: '2.0'
 title: 'Катерина Ющенко: Піонерка кібернетики'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of катерина ющенко: піонерка кібернетики'
+- Evaluate the contributions of мати мови програмування
+- Trace the career and influence of забутий геній
+sources:
+- name: Катерина Ющенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
+  type: primary
+  notes: Biography of the pioneering computer scientist
+- name: Інститут кібернетики ім. В.М. Глушкова НАН України
+  url: https://icyb.kiev.ua/
+  type: reference
+  notes: Institute where Yushchenko worked
 content_outline:
 - section: Вступ — Мати мови програмування
   points:
   - Піонерка програмування в СРСР
   - Творець адресної мови — першої високорівневої мови програмування
   - Жінка-вчений у чоловічому світі
+  words: 850
 - section: Юність та війна (1919-1945)
   points:
   - Народження в Чигирині
   - Освіта в Узбекистані
   - Математичні здібності
   - Війна та евакуація
+  words: 850
 - section: Шлях до кібернетики (1945-1955)
   points:
   - Аспірантура з математики
   - Знайомство з комп'ютерами
   - Робота з МСЕМ та «Київ»
   - Входження в команду Глушкова
+  words: 850
 - section: Адресна мова (1955-1965)
   points:
   - Створення першої високорівневої мови програмування
   - Концепція адресної мови
   - Вплив на розвиток програмування
   - Визнання в науковому світі
+  words: 850
 - section: Пізній період (1965-2001)
   points:
   - Педагогічна діяльність
   - Наукові праці
   - Визнання та нагороди
   - Смерть у Києві
+  words: 850
 - section: Спадщина — Забутий геній
   points:
   - Значення для світової інформатики
   - Чому її не знають на Заході
   - Сучасне вшанування
   - Ющенко як символ жінок у науці
+  words: 750
 vocabulary_hints:
   required:
   - кібернетика (cybernetics)
@@ -66,28 +88,13 @@ activity_hints:
 - type: essay-response
   focus: Чому адресна мова Ющенко важлива для історії програмування?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-69
 connects_to:
 - bio-99
 - bio-112
-module_type: biography
-sources:
-- name: Катерина Ющенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
-  type: primary
-  notes: Biography of the pioneering computer scientist
-- name: Інститут кібернетики ім. В.М. Глушкова НАН України
-  url: https://icyb.kiev.ua/
-  type: reference
-  notes: Institute where Yushchenko worked
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of катерина ющенко: піонерка кібернетики'
-- Evaluate the contributions of мати мови програмування
-- Trace the career and influence of забутий геній
+prerequisites:
+- bio-69
 persona:
   voice: Senior Biographer
   role: Algorithm Creator
+module_type: biography
+immersion: 100% Ukrainian

@@ -1,27 +1,47 @@
-sequence: 33
-module: ruth-033
-module_number: 27
+module: ruth-032
+level: RUTH
+sequence: 32
 slug: the-passion
-title_uk: Страсті
-title_en: The Passion
-phase: 2
-phase_id: sacred-word
-phase_name: Sacred Word
+version: '2.0'
+title: Страсті
+subtitle: The Passion
 focus: Dramatic narrative — Polish loanwords in legal terms
+phase: 2
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to The Passion
+  points:
+  - Introduction to The Passion
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Lenten Preacher
+prerequisites:
+- parable-prodigal-son
+connects_to:
+- the-resurrection

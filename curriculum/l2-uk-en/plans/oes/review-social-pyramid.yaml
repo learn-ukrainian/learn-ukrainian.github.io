@@ -1,27 +1,47 @@
-sequence: 70
-module: oes-070
-module_number: 56
+module: oes-068
+level: OES
+sequence: 68
 slug: review-social-pyramid
-title_uk: 'Огляд: Соціальна піраміда'
-title_en: 'Review: Social Pyramid'
-phase: 3
-phase_id: legal-tradition
-phase_name: Legal Tradition
+version: '2.0'
+title: 'Огляд: Соціальна піраміда'
+subtitle: 'Review: Social Pyramid'
 focus: Consolidation of social terms
+phase: 3
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Review: Social Pyramid'
+  points:
+  - 'Introduction to Review: Social Pyramid'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Census Taker
+prerequisites:
+- bankrupt-merchants
+connects_to:
+- treaty-911-oleg

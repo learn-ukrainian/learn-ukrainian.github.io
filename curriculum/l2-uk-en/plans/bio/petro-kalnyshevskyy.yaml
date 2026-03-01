@@ -1,39 +1,63 @@
-module: bio-32
+module: bio-032
 level: BIO
 sequence: 32
 slug: petro-kalnyshevskyy
 version: '2.0'
 title: 'Петро Калнишевський: Останній кошовий'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of петро калнишевський: останній кошовий'
+- Evaluate the contributions of останній лицар степу
+sources:
+- name: Петро Калнишевський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+  type: primary
+  notes: Biography, last koshovyi, imprisonment
+- name: Знищення Запорозької Січі
+  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+  type: primary
+  notes: Events of 1775
+- name: Соловецький монастир
+  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+  type: reference
+  notes: Place of imprisonment
 content_outline:
 - section: Вступ — Останній лицар степу
   points:
   - Калнишевський як символ кінця козацької епохи
   - Трагедія ліквідації Січі
   - Його мученицька доля
+  words: 700
 - section: Шлях до кошового отаманства
   points:
   - Походження та молодість
   - Козацька кар'єра
   - Обрання кошовим 1762 року
   - Характер та лідерські якості
+  words: 700
 - section: Розквіт Нової Січі
   points:
   - Економічний розвиток
   - Адміністративні реформи
   - Церковне будівництво
   - Відносини з Російською імперією
+  words: 700
 - section: Наростання загрози
   points:
   - Імперська політика Катерини II
   - Обмеження козацьких свобод
   - Спроби дипломатичного опору
   - Потьомкін і плани щодо Січі
+  words: 700
 - section: Ліквідація Січі 1775 року
   points:
   - Військова операція
   - Зречення Калнишевського клейнодів
   - Арешт старшини
   - Кінець козацької автономії
+  words: 700
 - section: Ув'язнення та смерть
   points:
   - Соловецький монастир
@@ -41,11 +65,13 @@ content_outline:
   - Умови ув'язнення
   - Смерть у 112 років (?)
   - Канонізація
+  words: 700
 - section: Підсумок — Мученик за волю
   points:
   - Калнишевський як символ опору імперії
   - Кінець козацької України
   - Пам'ять про останнього кошового
+  words: 800
 vocabulary_hints:
   required:
   - кошовий (koshovyi)
@@ -75,34 +101,16 @@ activity_hints:
 - type: critical-analysis
   focus: Evaluate the claim that he lived to 112
   output: Historical source criticism
-focus: biography
-prerequisites:
-- bio-13 (Kost Hordiyenko - earlier Sich leader)
-- bio-14 (Pylyp Orlyk - emigration alternative)
-- Understanding of 18th century Russian imperialism
 connects_to:
 - bio-16 (Hryhoriy Skovoroda - same era, different path)
 - bio-71 (Levko Lukyanenko - later political prisoner)
 - bio-77 (Vasyl Stus - prison martyrdom)
-module_type: biography
-sources:
-- name: Петро Калнишевський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
-  type: primary
-  notes: Biography, last koshovyi, imprisonment
-- name: Знищення Запорозької Січі
-  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
-  type: primary
-  notes: Events of 1775
-- name: Соловецький монастир
-  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
-  type: reference
-  notes: Place of imprisonment
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of петро калнишевський: останній кошовий'
-- Evaluate the contributions of останній лицар степу
+prerequisites:
+- bio-13 (Kost Hordiyenko - earlier Sich leader)
+- bio-14 (Pylyp Orlyk - emigration alternative)
+- Understanding of 18th century Russian imperialism
 persona:
   voice: Senior Biographer
   role: Solovky Exile
+module_type: biography
+immersion: 100% Ukrainian

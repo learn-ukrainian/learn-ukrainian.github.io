@@ -3,22 +3,20 @@ level: C2
 sequence: 69
 slug: language-policy-decolonization
 version: '2.0'
-title: 'Мовна політика та деколонізація'
-subtitle: 'Language Policy and Decolonization'
-phase: 'C2.4 [Meta-Skills & Capstone]'
+title: Мовна політика та деколонізація
+subtitle: Language Policy and Decolonization
 focus: culture
 pedagogy: TTT
-prerequisites:
-- c2-068 (Sociolinguistic Mastery)
+phase: C2.4 [Meta-Skills & Capstone]
+word_target: 5000
 objectives:
-- Learner can analyze historical and contemporary language policies in Ukraine using
-  appropriate academic terminology
-- Learner can articulate the mechanisms of linguistic colonization and decolonization
-  with reference to Ukrainian and global contexts
-- Learner can critically evaluate the sociolinguistic consequences of wartime language
-  shift and its implications for national identity
-- Learner can construct a well-argued analytical essay on language policy using evidence
-  from legal documents and sociological data
+- Learner can analyze historical and contemporary language policies in Ukraine using appropriate academic terminology
+- Learner can articulate the mechanisms of linguistic colonization and decolonization with reference to Ukrainian and global
+  contexts
+- Learner can critically evaluate the sociolinguistic consequences of wartime language shift and its implications for national
+  identity
+- Learner can construct a well-argued analytical essay on language policy using evidence from legal documents and sociological
+  data
 sources:
 - name: Масенко Л. Мова і суспільство
   url: https://masenko.movnepytannia.org.ua/
@@ -33,113 +31,96 @@ sources:
   type: reference
   notes: Academic analysis of language policy and identity formation in post-Soviet Ukraine
 content_outline:
-- section: 'Вступ: Мовна політика як академічна дисципліна (Introduction: Language Policy
-    as an Academic Discipline)'
+- section: 'Вступ: Мовна політика як академічна дисципліна (Introduction: Language Policy as an Academic Discipline)'
   words: 700
   points:
-  - 'Language policy as a field of study: definitions, key concepts (мовне планування,
-    мовний менеджмент), and the relationship between language, power, and ideology.'
-  - 'Language as a political instrument in Ukrainian history: how successive empires
-    weaponized language policy to suppress Ukrainian identity.'
-  - 'The concept of лінгвоцид (linguicide): distinguishing linguicide from natural
-    language shift; criteria for identifying deliberate language destruction.'
-- section: 'Історична мовна політика: від Валуєвського циркуляру до радянського мовного
-    планування (Historical Language Policy: From the Valuev Circular to Soviet Language
-    Planning)'
+  - 'Language policy as a field of study: definitions, key concepts (мовне планування, мовний менеджмент), and the relationship
+    between language, power, and ideology.'
+  - 'Language as a political instrument in Ukrainian history: how successive empires weaponized language policy to suppress
+    Ukrainian identity.'
+  - 'The concept of лінгвоцид (linguicide): distinguishing linguicide from natural language shift; criteria for identifying
+    deliberate language destruction.'
+- section: 'Історична мовна політика: від Валуєвського циркуляру до радянського мовного планування (Historical Language Policy:
+    From the Valuev Circular to Soviet Language Planning)'
   words: 900
   points:
-  - 'Imperial restrictions: the Valuev Circular (1863) and the Ems Decree (1876) as
-    systematic instruments of linguistic suppression; their impact on Ukrainian publishing,
-    education, and public life.'
-  - 'Розстріляне відродження and the destruction of the Ukrainian intelligentsia: how
-    the physical elimination of writers, linguists, and lexicographers (Skrypnyk, Khvylovyi,
-    Zerov) constituted cultural and linguistic genocide.'
-  - 'Soviet language planning: the 1958 education reform, русифікація through administrative
-    mechanisms, and the doctrine of зближення мов (convergence of languages) as ideological
-    cover for Russification.'
-- section: 'Мовне законодавство незалежної України (Language Legislation of Independent
-    Ukraine)'
+  - 'Imperial restrictions: the Valuev Circular (1863) and the Ems Decree (1876) as systematic instruments of linguistic suppression;
+    their impact on Ukrainian publishing, education, and public life.'
+  - 'Розстріляне відродження and the destruction of the Ukrainian intelligentsia: how the physical elimination of writers,
+    linguists, and lexicographers (Skrypnyk, Khvylovyi, Zerov) constituted cultural and linguistic genocide.'
+  - 'Soviet language planning: the 1958 education reform, русифікація through administrative mechanisms, and the doctrine
+    of зближення мов (convergence of languages) as ideological cover for Russification.'
+- section: Мовне законодавство незалежної України (Language Legislation of Independent Ukraine)
   words: 900
   points:
-  - 'Legal evolution: from the Language Law of 1989 (still Soviet era) through Article
-    10 of the 1996 Constitution to the landmark 2019 Law on State Language (Закон про
-    забезпечення функціонування української мови як державної).'
-  - 'Analysis of the 2019 law: scope, mechanisms of implementation, the role of the
-    Уповноважений із захисту державної мови (Language Ombudsman), and enforcement
-    challenges in practice.'
-  - 'Constitutional Court decisions on language: key rulings on the status of Ukrainian,
-    the rights of minority languages, and the balance between state language protection
-    and linguistic pluralism.'
-- section: 'Деколонізація мови (Decolonization of Language)'
+  - 'Legal evolution: from the Language Law of 1989 (still Soviet era) through Article 10 of the 1996 Constitution to the
+    landmark 2019 Law on State Language (Закон про забезпечення функціонування української мови як державної).'
+  - 'Analysis of the 2019 law: scope, mechanisms of implementation, the role of the Уповноважений із захисту державної мови
+    (Language Ombudsman), and enforcement challenges in practice.'
+  - 'Constitutional Court decisions on language: key rulings on the status of Ukrainian, the rights of minority languages,
+    and the balance between state language protection and linguistic pluralism.'
+- section: Деколонізація мови (Decolonization of Language)
   words: 800
   points:
-  - 'Theoretical foundations: Frantz Fanon and the colonial politics of language applied
-    to the Ukrainian context; how linguistic hierarchies replicate colonial power structures.'
-  - 'Суржик as a colonial trace vs суржик as a sociolect: analyzing the sociolinguistic
-    debate over whether суржик represents Russian-imposed language corruption or an
-    authentic transitional variety.'
-  - 'Мовне питання (the language question): tracing the evolution of the great language
-    debate from the 19th century to the present; the tension between prescriptivism
-    and descriptivism in decolonial linguistic practice.'
-- section: 'Воєнний мовний зсув (Wartime Language Shift)'
+  - 'Theoretical foundations: Frantz Fanon and the colonial politics of language applied to the Ukrainian context; how linguistic
+    hierarchies replicate colonial power structures.'
+  - 'Суржик as a colonial trace vs суржик as a sociolect: analyzing the sociolinguistic debate over whether суржик represents
+    Russian-imposed language corruption or an authentic transitional variety.'
+  - 'Мовне питання (the language question): tracing the evolution of the great language debate from the 19th century to the
+    present; the tension between prescriptivism and descriptivism in decolonial linguistic practice.'
+- section: Воєнний мовний зсув (Wartime Language Shift)
   words: 800
   points:
-  - 'Language shift after 2014 and 2022: sociological data on the acceleration of Ukrainian
-    language adoption; the concept of мовна мобілізація (linguistic mobilization).'
-  - 'The role of language in national resistance: how language choice became an act
-    of defiance and solidarity; media language, information warfare, and the function
-    of мова as a security marker (свій-чужий).'
-  - 'Institutional and grassroots dimensions: language transition in business, social
-    media, and daily life; the psychological and social dynamics of voluntary language
-    switching.'
-- section: 'Глобальний контекст (Global Context)'
+  - 'Language shift after 2014 and 2022: sociological data on the acceleration of Ukrainian language adoption; the concept
+    of мовна мобілізація (linguistic mobilization).'
+  - 'The role of language in national resistance: how language choice became an act of defiance and solidarity; media language,
+    information warfare, and the function of мова as a security marker (свій-чужий).'
+  - 'Institutional and grassroots dimensions: language transition in business, social media, and daily life; the psychological
+    and social dynamics of voluntary language switching.'
+- section: Глобальний контекст (Global Context)
   words: 600
   points:
-  - 'Ukrainian diaspora language maintenance: challenges of heritage language preservation
-    in Canada, the US, and Western Europe; the role of Saturday schools and community
-    organizations.'
-  - 'Comparative case studies: parallels with the Welsh revival, Hebrew revitalization,
-    and Irish language policy; lessons applicable to Ukrainian language planning.'
-  - 'EU multilingualism policy and linguistic rights: the European Charter for Regional
-    or Minority Languages and its implications for Ukrainian language policy.'
-- section: 'Практикум: Аналіз документа мовної політики (Workshop: Language Policy Document
-    Analysis)'
+  - 'Ukrainian diaspora language maintenance: challenges of heritage language preservation in Canada, the US, and Western
+    Europe; the role of Saturday schools and community organizations.'
+  - 'Comparative case studies: parallels with the Welsh revival, Hebrew revitalization, and Irish language policy; lessons
+    applicable to Ukrainian language planning.'
+  - 'EU multilingualism policy and linguistic rights: the European Charter for Regional or Minority Languages and its implications
+    for Ukrainian language policy.'
+- section: 'Практикум: Аналіз документа мовної політики (Workshop: Language Policy Document Analysis)'
   words: 300
   points:
-  - 'Applied analysis: guided reading and deconstruction of a language policy document
-    (excerpt from the 2019 law or a Уповноважений ruling) using sociolinguistic analytical
-    frameworks.'
-  - 'Argument essay task: constructing a structured analytical essay on a contemporary
-    language challenge, integrating legal, historical, and sociological evidence.'
+  - 'Applied analysis: guided reading and deconstruction of a language policy document (excerpt from the 2019 law or a Уповноважений
+    ruling) using sociolinguistic analytical frameworks.'
+  - 'Argument essay task: constructing a structured analytical essay on a contemporary language challenge, integrating legal,
+    historical, and sociological evidence.'
 vocabulary_hints:
   required:
-  - мовна політика (language policy) — державна мовна політика, формування мовної політики;
-    core disciplinary term for the module.
-  - лінгвоцид (linguicide) — лінгвоцид як систематичне знищення мови, ознаки лінгвоциду;
-    key concept distinguishing deliberate suppression from natural language shift.
-  - русифікація (Russification) — політика русифікації, адміністративна русифікація;
-    essential historical term for analyzing colonial language policy.
-  - деколонізація (decolonization) — мовна деколонізація, деколонізація свідомості;
-    theoretical framework connecting Fanon to Ukrainian context.
-  - мовне законодавство (language legislation) — чинне мовне законодавство, порушення
-    мовного законодавства; legal-administrative register.
-  - Уповноважений із захисту державної мови (Language Ombudsman) — офіс Уповноваженого,
-    звернення до Уповноваженого; institutional term from the 2019 law.
-  - мовне питання (the language question) — дискусія навколо мовного питання, вирішення
-    мовного питання; culturally loaded term spanning two centuries.
-  - мовний зсув (language shift) — прискорення мовного зсуву, добровільний мовний зсув;
-    sociolinguistic term for population-level language change.
+  - мовна політика (language policy) — державна мовна політика, формування мовної політики; core disciplinary term for the
+    module.
+  - лінгвоцид (linguicide) — лінгвоцид як систематичне знищення мови, ознаки лінгвоциду; key concept distinguishing deliberate
+    suppression from natural language shift.
+  - русифікація (Russification) — політика русифікації, адміністративна русифікація; essential historical term for analyzing
+    colonial language policy.
+  - деколонізація (decolonization) — мовна деколонізація, деколонізація свідомості; theoretical framework connecting Fanon
+    to Ukrainian context.
+  - мовне законодавство (language legislation) — чинне мовне законодавство, порушення мовного законодавства; legal-administrative
+    register.
+  - Уповноважений із захисту державної мови (Language Ombudsman) — офіс Уповноваженого, звернення до Уповноваженого; institutional
+    term from the 2019 law.
+  - мовне питання (the language question) — дискусія навколо мовного питання, вирішення мовного питання; culturally loaded
+    term spanning two centuries.
+  - мовний зсув (language shift) — прискорення мовного зсуву, добровільний мовний зсув; sociolinguistic term for population-level
+    language change.
   recommended:
-  - зближення мов (convergence of languages) — доктрина зближення мов, радянська концепція
-    зближення; Soviet-era ideological term masking Russification.
-  - мовна мобілізація (linguistic mobilization) — мовна мобілізація після 2022 року;
-    post-invasion term for accelerated language adoption.
-  - мовні права (language rights) — захист мовних прав, порушення мовних прав; human
-    rights register.
-  - ревіталізація мови (language revitalization) — досвід ревіталізації гебрейської,
-    стратегії ревіталізації; comparative linguistics term.
-  - Розстріляне відродження (Executed Renaissance) — митці Розстріляного відродження,
-    трагедія Розстріляного відродження; essential cultural-historical concept.
+  - зближення мов (convergence of languages) — доктрина зближення мов, радянська концепція зближення; Soviet-era ideological
+    term masking Russification.
+  - мовна мобілізація (linguistic mobilization) — мовна мобілізація після 2022 року; post-invasion term for accelerated language
+    adoption.
+  - мовні права (language rights) — захист мовних прав, порушення мовних прав; human rights register.
+  - ревіталізація мови (language revitalization) — досвід ревіталізації гебрейської, стратегії ревіталізації; comparative
+    linguistics term.
+  - Розстріляне відродження (Executed Renaissance) — митці Розстріляного відродження, трагедія Розстріляного відродження;
+    essential cultural-historical concept.
 activity_hints:
 - type: reading
   focus: Аналіз мовно-політичних документів та наукових текстів
@@ -152,10 +133,12 @@ activity_hints:
 - type: discussion
   focus: Дискусія навколо деколонізації та мовного питання
   items: 1
-persona:
-  voice: Senior Specialist
-  role: Policy Analyst
 connects_to:
 - c2-67 (Regional Varieties — dialectal diversity as context for policy)
 - c2-70 (Corpus Linguistics — empirical data for policy analysis)
 - c2-68 (Sociolinguistic Mastery — theoretical foundations applied to policy)
+prerequisites:
+- c2-068 (Sociolinguistic Mastery)
+persona:
+  voice: Senior Specialist
+  role: Policy Analyst

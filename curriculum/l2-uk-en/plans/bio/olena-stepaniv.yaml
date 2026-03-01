@@ -1,45 +1,71 @@
-module: bio-96
+module: bio-099
 level: BIO
-sequence: 96
+sequence: 99
 slug: olena-stepaniv
 version: '2.0'
 title: 'Олена Степанів: Перша жінка-офіцер'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of олена степанів: перша жінка-офіцер'
+- Evaluate the contributions of жінка, що зламала стереотипи
+- Trace the career and influence of спадщина та пам'ять
+sources:
+- name: Олена Степанів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Степанів_Олена_Львівна
+  type: primary
+  notes: Біографія, військова кар'єра, наукова діяльність
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Українські Січові Стрільці
+- name: Національний університет ім. І. Франка
+  url: https://lnu.edu.ua
+  type: reference
+  notes: Географічні дослідження
 content_outline:
 - section: Вступ — Жінка, що зламала стереотипи
   points:
   - Степанів як перша жінка-офіцер в українській армії
   - Поєднання військової служби та наукової кар'єри
   - Символ жіночої участі у визвольних змаганнях
+  words: 850
 - section: Молодість та освіта (1892-1914)
   points:
   - Народження у Львові в патріотичній родині
   - Навчання у Львівському університеті
   - Членство в товаристві «Пласт»
   - Формування національних переконань
+  words: 850
 - section: Українські Січові Стрільці (1914-1918)
   points:
   - Вступ до УСС на початку Першої світової
   - Бойове хрещення та участь у битвах
   - Отримання офіцерського звання хорунжої
   - Полон та повернення
+  words: 850
 - section: Визвольні змагання (1918-1921)
   points:
   - Участь у Листопадовому повстанні
   - Служба в Українській Галицькій армії
   - Шлюб з Романом Дашкевичем
   - Польський полон та інтернування
+  words: 850
 - section: Наукова кар'єра та репресії (1921-1963)
   points:
   - Захист докторської дисертації з географії
   - Викладання у Львівському університеті
   - Арешт НКВС та заслання (1940)
   - Повернення та продовження наукової роботи
+  words: 850
 - section: Спадщина та пам'ять
   points:
   - Внесок у українську географію
   - Роль у жіночому русі
   - Вшанування після незалежності
   - Символ для сучасних захисниць України
+  words: 750
 vocabulary_hints:
   required:
   - жінка-офіцер (female officer)
@@ -66,33 +92,14 @@ activity_hints:
 - type: essay-response
   focus: Чому участь жінок у війні була революційною?
   output: Історичне есе
-focus: biography
-prerequisites:
-- bio-32 (Кирило Трильовський)
 connects_to:
 - bio-59 (Ольга Басараб)
 - bio-68 (Олена Теліга)
 - bio-110 (Мілена Рудницька)
-module_type: biography
-sources:
-- name: Олена Степанів (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Степанів_Олена_Львівна
-  type: primary
-  notes: Біографія, військова кар'єра, наукова діяльність
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: Українські Січові Стрільці
-- name: Національний університет ім. І. Франка
-  url: https://lnu.edu.ua
-  type: reference
-  notes: Географічні дослідження
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of олена степанів: перша жінка-офіцер'
-- Evaluate the contributions of жінка, що зламала стереотипи
-- Trace the career and influence of спадщина та пам'ять
+prerequisites:
+- bio-32 (Кирило Трильовський)
 persona:
   voice: Senior Biographer
   role: Legionary Officer
+module_type: biography
+immersion: 100% Ukrainian

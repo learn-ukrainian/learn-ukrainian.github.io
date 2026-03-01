@@ -1,53 +1,55 @@
-module: a1-44
+module: a1-044
 level: A1
 sequence: 44
 slug: checkpoint-daily-life
 version: '2.0'
 title: 'Checkpoint: Daily Life'
 subtitle: Can You Manage the Day?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.4 [Tenses & Daily Life]
+word_target: 2000
+objectives:
+- Demonstrate past and future tense usage
+- Navigate daily life scenarios
+- Order food and shop effectively
+- Describe weather and daily activities
 content_outline:
 - section: Огляд (Overview)
   words: 300
   points:
-  - 'TTT checkpoint purpose: Testing consolidation of A1.4 skills — past/future tenses,
-    daily routine, food/shopping vocabulary, weather expressions.'
-  - 'Self-assessment orientation: Identifying strengths and weaknesses in tense usage,
-    daily life vocabulary, and practical communication scenarios.'
+  - 'TTT checkpoint purpose: Testing consolidation of A1.4 skills — past/future tenses, daily routine, food/shopping vocabulary,
+    weather expressions.'
+  - 'Self-assessment orientation: Identifying strengths and weaknesses in tense usage, daily life vocabulary, and practical
+    communication scenarios.'
 - section: 'Навичка 1: Часові форми (Skill 1: Tenses)'
   words: 500
   points:
-  - 'Past tense review: suffix pattern -в/-ла/-ло/-ли. Gender agreement in past tense.
-    Learner error: using wrong gender suffix (він ходила → він ходив).'
-  - 'Analytical future review: буду + infinitive (Я буду читати). Perfective future
-    preview for common verbs (Я прочитаю, Я зроблю).'
-  - 'Direction expressions: Куди?/Звідки?/Де? three-question paradigm with correct
-    case forms. Integration of spatial grammar with tense usage.'
+  - 'Past tense review: suffix pattern -в/-ла/-ло/-ли. Gender agreement in past tense. Learner error: using wrong gender suffix
+    (він ходила → він ходив).'
+  - 'Analytical future review: буду + infinitive (Я буду читати). Perfective future preview for common verbs (Я прочитаю,
+    Я зроблю).'
+  - 'Direction expressions: Куди?/Звідки?/Де? three-question paradigm with correct case forms. Integration of spatial grammar
+    with tense usage.'
 - section: 'Навичка 2: Повсякденне життя (Skill 2: Daily Life)'
   words: 400
   points:
-  - 'Daily routine vocabulary and sequence: вставати, снідати, обідати, вечеряти,
-    лягати спати. Telling what you do and when.'
-  - 'Food and drink vocabulary recall: Ordering food, expressing preferences, naming
-    common items from a1-39.'
-  - 'Shopping dialogue skills: Скільки коштує?, quantity expressions, polite request
-    patterns from a1-40.'
+  - 'Daily routine vocabulary and sequence: вставати, снідати, обідати, вечеряти, лягати спати. Telling what you do and when.'
+  - 'Food and drink vocabulary recall: Ordering food, expressing preferences, naming common items from a1-39.'
+  - 'Shopping dialogue skills: Скільки коштує?, quantity expressions, polite request patterns from a1-40.'
 - section: 'Навичка 3: Опис та погода (Skill 3: Description & Weather)'
   words: 400
   points:
-  - 'Adverbs of manner: добре, погано, швидко, повільно, тихо, голосно. Modifying
-    verbs to describe how actions are performed.'
-  - 'Weather expressions: Сьогодні тепло/холодно/сонячно/хмарно. Impersonal constructions
-    for weather description.'
-  - 'Seasons and weather association: Взимку холодно, влітку тепло. Seasonal vocabulary
-    from a1-43.'
+  - 'Adverbs of manner: добре, погано, швидко, повільно, тихо, голосно. Modifying verbs to describe how actions are performed.'
+  - 'Weather expressions: Сьогодні тепло/холодно/сонячно/хмарно. Impersonal constructions for weather description.'
+  - 'Seasons and weather association: Взимку холодно, влітку тепло. Seasonal vocabulary from a1-43.'
 - section: Інтеграційне завдання (Integration Task)
   words: 400
   points:
-  - 'Describe your yesterday: Вчора я встав о сьомій годині. Я снідав кашу. Потім
-    я пішов на роботу. Past tense + daily routine + food vocabulary in connected
-    narrative.'
-  - 'Describe your tomorrow: Завтра я буду готувати борщ. Я піду в магазин. Буде
-    тепло. Future tense + shopping + weather in connected narrative.'
+  - 'Describe your yesterday: Вчора я встав о сьомій годині. Я снідав кашу. Потім я пішов на роботу. Past tense + daily routine
+    + food vocabulary in connected narrative.'
+  - 'Describe your tomorrow: Завтра я буду готувати борщ. Я піду в магазин. Буде тепло. Future tense + shopping + weather
+    in connected narrative.'
 vocabulary_hints:
   required:
   - вчора (yesterday) — temporal anchor for past tense; high frequency
@@ -69,25 +71,16 @@ activity_hints:
 - type: quiz
   focus: Comprehensive A1.4 test covering tenses, daily life, food, shopping, weather
   items: 30
-focus: checkpoint
-pedagogy: TTT
-prerequisites:
-- a1-43 (Weather and Nature)
 connects_to:
 - a1-45 (Can and Know How)
-objectives:
-- Demonstrate past and future tense usage
-- Navigate daily life scenarios
-- Order food and shop effectively
-- Describe weather and daily activities
+prerequisites:
+- a1-43 (Weather and Nature)
+persona:
+  voice: Patient Supportive Tutor
+  role: Day Planner
 grammar:
 - Past tense (-в/-ла/-ло/-ли)
 - Future tense (буду + infinitive)
 - Daily routine expressions
 - Weather expressions (impersonal constructions)
 register: розмовний
-phase: A1.4 [Tenses & Daily Life]
-persona:
-  voice: Patient Supportive Tutor
-  role: Day Planner
-word_target: 2000

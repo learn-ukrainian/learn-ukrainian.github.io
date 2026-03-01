@@ -1,87 +1,82 @@
-module: a2-63
+module: a2-066
 level: A2
-sequence: 63
+sequence: 66
 slug: scheduling-appointments
 version: '2.0'
 title: Scheduling Appointments
 subtitle: Making and Changing Plans
+focus: practical
+pedagogy: PPP
+phase: A2.6 [Practical]
+word_target: 3000
+objectives:
+- Learner can make an appointment by phone
+- Learner can reschedule or cancel a meeting
+- Learner can understand appointment details
+- Learner can use polite phrases for scheduling
 content_outline:
 - section: Вступ (Introduction)
   words: 450
   points:
-  - 'The ''Academic Quarter'' hook: Cultural norms of social lateness (5-10 minutes)
-    vs. strict business and medical punctuality in Ukraine.'
-  - 'The Messenger Revolution: Explaining the dominance of Viber, Telegram, and WhatsApp
-    for booking appointments over traditional voice calls; ''Check your Viber'' as
-    a standard confirmation phrase.'
-  - 'Clock Systems: Distinguishing the 24-hour clock for official schedules (15:00)
-    vs. the 12-hour clock for colloquial speech (третя година дня).'
+  - 'The ''Academic Quarter'' hook: Cultural norms of social lateness (5-10 minutes) vs. strict business and medical punctuality
+    in Ukraine.'
+  - 'The Messenger Revolution: Explaining the dominance of Viber, Telegram, and WhatsApp for booking appointments over traditional
+    voice calls; ''Check your Viber'' as a standard confirmation phrase.'
+  - 'Clock Systems: Distinguishing the 24-hour clock for official schedules (15:00) vs. the 12-hour clock for colloquial speech
+    (третя година дня).'
 - section: Презентація (Presentation)
   words: 800
   points:
-  - 'Service vs. Social: Distinguish «записатися на...» (booking a service/appointment)
-    from «домовитися про зустріч» (arranging a hangout/meeting).'
-  - 'Collocations for booking: записатися на прийом (doctor), записатися на стрижку
-    (haircut), записатися на манікюр.'
-  - 'The ''Half Past'' Logic: Explaining the linguistic structure of ''half on the
-    next hour'' (e.g., «пів на четверту» is 3:30, not 4:30) to prevent common chronological
-    errors.'
-  - 'Polite Phone Etiquette: Standard phrases for opening and closing a scheduling
-    call or message.'
+  - 'Service vs. Social: Distinguish «записатися на...» (booking a service/appointment) from «домовитися про зустріч» (arranging
+    a hangout/meeting).'
+  - 'Collocations for booking: записатися на прийом (doctor), записатися на стрижку (haircut), записатися на манікюр.'
+  - 'The ''Half Past'' Logic: Explaining the linguistic structure of ''half on the next hour'' (e.g., «пів на четверту» is
+    3:30, not 4:30) to prevent common chronological errors.'
+  - 'Polite Phone Etiquette: Standard phrases for opening and closing a scheduling call or message.'
 - section: Практика (Practice)
   words: 650
   points:
-  - 'Time Prepositions Drill: Distinguishing «о котрій?» (at what time? - Locative)
-    vs. «на котру?» (for what time/deadline? - Accusative) with specific correction
-    for common errors like ''Я прийду на п''яту'' when meaning ''at 5:00''.'
-  - 'App Interface Immersion: Using realistic Ukrainian terms found in booking apps
-    (календар, вільне місце, підтвердити, деталі запису).'
-  - 'Verb Contrast: Drill distinguishing «зустріти» (to meet/greet someone arriving)
-    from «зустрітися з» (to meet with someone for an appointment).'
+  - 'Time Prepositions Drill: Distinguishing «о котрій?» (at what time? - Locative) vs. «на котру?» (for what time/deadline?
+    - Accusative) with specific correction for common errors like ''Я прийду на п''яту'' when meaning ''at 5:00''.'
+  - 'App Interface Immersion: Using realistic Ukrainian terms found in booking apps (календар, вільне місце, підтвердити,
+    деталі запису).'
+  - 'Verb Contrast: Drill distinguishing «зустріти» (to meet/greet someone arriving) from «зустрітися з» (to meet with someone
+    for an appointment).'
 - section: Діалоги (Dialogues)
   words: 600
   points:
-  - 'Formal Scenario: Scheduling a doctor''s appointment (записатися до лікаря) using
-    strict 24-hour time and checking availability («вільні місця»).'
-  - 'Informal Scenario: Rescheduling a coffee meetup via messenger, using «перенести»
-    and discussing the ''academic quarter'' for arrival time.'
-  - 'State Standard §1.1.2.1.1 practice: Producing and understanding messages for
-    changing or canceling meeting times.'
+  - 'Formal Scenario: Scheduling a doctor''s appointment (записатися до лікаря) using strict 24-hour time and checking availability
+    («вільні місця»).'
+  - 'Informal Scenario: Rescheduling a coffee meetup via messenger, using «перенести» and discussing the ''academic quarter''
+    for arrival time.'
+  - 'State Standard §1.1.2.1.1 practice: Producing and understanding messages for changing or canceling meeting times.'
 - section: Розповідь (Narrative)
   words: 350
   points:
-  - 'Narrative arc involving a character navigating multiple appointments: booking
-    a haircut, confirming via Viber, and having to reschedule a business meeting («перенести
-    на іншу годину»).'
-  - Integrating 'half past' logic within the story to test comprehension of 3:30 vs
-    4:30.
+  - 'Narrative arc involving a character navigating multiple appointments: booking a haircut, confirming via Viber, and having
+    to reschedule a business meeting («перенести на іншу годину»).'
+  - Integrating 'half past' logic within the story to test comprehension of 3:30 vs 4:30.
 - section: Підсумок (Summary)
   words: 150
   points:
   - Review of key collocations and the locative vs. accusative time distinction.
-  - Self-assessment checklist for State Standard §1.1.2.1.1 competencies (inviting,
-    changing, canceling).
+  - Self-assessment checklist for State Standard §1.1.2.1.1 competencies (inviting, changing, canceling).
 vocabulary_hints:
   required:
-  - записатися (to book/sign up) — записатися на прийом (appointment), записатися
-    до лікаря (to the doctor); implies a formal service context
-  - 'зустріч (meeting) — призначити зустріч (schedule), перенести зустріч (reschedule),
-    скасувати зустріч (cancel); note learner error: зустріти vs зустрітися з'
-  - вільний (free/available) — ви вільні? (are you free?), вільне місце (free spot/slot),
-    вільний час (free time)
+  - записатися (to book/sign up) — записатися на прийом (appointment), записатися до лікаря (to the doctor); implies a formal
+    service context
+  - 'зустріч (meeting) — призначити зустріч (schedule), перенести зустріч (reschedule), скасувати зустріч (cancel); note learner
+    error: зустріти vs зустрітися з'
+  - вільний (free/available) — ви вільні? (are you free?), вільне місце (free spot/slot), вільний час (free time)
   - зайнятий (busy) — я зайнятий, лінія зайнята; used for both people and phone lines
-  - перенести (to move/reschedule) — перенести на завтра, перенести на іншу годину;
-    high frequency in administrative contexts
+  - перенести (to move/reschedule) — перенести на завтра, перенести на іншу годину; high frequency in administrative contexts
   - скасувати (to cancel) — скасувати запис, скасувати зустріч
   - підтвердити (to confirm) — підтвердити запис, повідомлення для підтвердження
-  - о котрій? (at what time?) — uses Locative case (о п'ятій); used for specific point
-    in time
-  - на котру? (for what time?) — uses Accusative case (на п'яту); used for booking
-    slots or deadlines
+  - о котрій? (at what time?) — uses Locative case (о п'ятій); used for specific point in time
+  - на котру? (for what time?) — uses Accusative case (на п'яту); used for booking slots or deadlines
   recommended:
   - прийом (appointment/reception) — бути на прийомі, години прийому
-  - пів на... (half past...) — e.g., пів на четверту (3:30); requires Genitive of
-    the next hour's ordinal
+  - пів на... (half past...) — e.g., пів на четверту (3:30); requires Genitive of the next hour's ordinal
   - нагадування (reminder) — отримати нагадування в Телеграмі
   - запізнення (lateness) — без запізнень (without delay), невелике запізнення
   - раніше / пізніше (earlier / later)
@@ -93,26 +88,17 @@ activity_hints:
 - type: quiz
   focus: Schedule and reschedule
   items: 10
-focus: practical
-pedagogy: PPP
-prerequisites:
-- a2-62 (Rental Accommodation)
 connects_to:
 - a2-64 (Scheduling Interviews)
 - a2-59 (Medical Care)
-objectives:
-- Learner can make an appointment by phone
-- Learner can reschedule or cancel a meeting
-- Learner can understand appointment details
-- Learner can use polite phrases for scheduling
+prerequisites:
+- a2-62 (Rental Accommodation)
+persona:
+  voice: Encouraging Cultural Guide
+  role: Administrative Assistant
 grammar:
 - Making appointments (записатися на)
 - Rescheduling and canceling
 - Polite phone etiquette
 register: розмовний
 immersion: 75-90% Ukrainian
-phase: A2.6 [Practical]
-persona:
-  voice: Encouraging Cultural Guide
-  role: Administrative Assistant
-word_target: 3000

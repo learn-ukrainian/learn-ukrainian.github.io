@@ -1,55 +1,87 @@
 module: istorio-108
-level: istorio
+level: ISTORIO
 sequence: 108
+slug: malorosiia-konstrukt
 version: '1.0'
 title: '«Малоросія»: Як створювався міф'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of «малоросія»: як створювався міф'
 - Evaluate the historical significance of назви мають силу
+sources:
+- name: Малоросія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросія
+  type: reference
+  notes: Term history
+- name: Малоросійська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
+  type: reference
+  notes: Identity construction
+- name: Русифікація України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русифікація_України
+  type: reference
+  notes: Russification policies
 content_outline:
 - section: Вступ — Назви мають силу
-  subsections:
+  points:
   - «Малоросія» — не географія
   - Назва як інструмент підкорення
   - 300 років побудови наративу
   - Структура модуля
+  words: 700
 - section: Витоки терміна
-  subsections:
+  points:
   - Візантійське походження
   - Церковне значення
   - Імперське переосмислення
   - «Мала» = «менша»
+  words: 700
 - section: XVIII століття — Закріплення
-  subsections:
+  points:
   - Скасування гетьманщини
   - «Малоросійська колегія»
   - Офіційний статус терміна
   - Інтеграція еліти
+  words: 700
 - section: XIX століття — Теоретизація
-  subsections:
+  points:
   - «Велика, Мала, Біла Русь»
   - Погодін, Уваров — теоретики
   - «Триєдиний народ»
   - Наукове обґрунтування міфу
+  words: 700
 - section: Протидія — Українофільство
-  subsections:
+  points:
   - Шевченко — «Україна»
   - Костомаров — альтернатива
   - Емський указ — заборона
   - Боротьба за назву
+  words: 700
 - section: XX-XXI століття
-  subsections:
+  points:
   - Радянський період
   - Сучасна пропаганда
   - «Новоросія» — та сама логіка
   - Живучість міфу
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - «Малоросія» — політичний проект
   - Не описує — створює реальність
   - Перехід до радянської пропаганди
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - «Малоросія»
 - міф
@@ -66,6 +98,15 @@ vocabulary:
 - денаціоналізація
 - офіційний дискурс
 - контрнаратив
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: How "Little Russia" term evolved over 300 years
@@ -77,38 +118,10 @@ activities:
   focus: How the same logic appears today
 - type: essay-response
   focus: Чому 'Малоросія' — не географічний, а політичний термін?
-sources:
-- name: Малоросія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросія
-  type: reference
-  notes: Term history
-- name: Малоросійська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
-  type: reference
-  notes: Identity construction
-- name: Русифікація України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русифікація_України
-  type: reference
-  notes: Russification policies
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Semiotics Expert
+prerequisites:
+- syntez-ekonomichna-kolonizatsiia
+connects_to:
+- radianska-propaganda

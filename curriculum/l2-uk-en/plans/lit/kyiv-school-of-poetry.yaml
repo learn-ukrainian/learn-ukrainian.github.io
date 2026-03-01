@@ -1,1 +1,11 @@
+module: lit-221
+level: LIT
+sequence: 221
 slug: kyiv-school-of-poetry
+version: '2.0'
+word_target: 5000
+vocabulary_hints:
+  required: []
+  recommended: []
+prerequisites:
+- vaplite-literary-avant-garde

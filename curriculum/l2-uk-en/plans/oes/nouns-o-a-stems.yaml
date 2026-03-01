@@ -1,27 +1,47 @@
-sequence: 7
 module: oes-007
-module_number: 7
+level: OES
+sequence: 7
 slug: nouns-o-a-stems
-title_uk: 'Іменники I: О-основи та А-основи'
-title_en: 'Nouns I: O-stems & A-stems'
-phase: 1
-phase_id: vernacular-foundations
-phase_name: Vernacular Foundations
+version: '2.0'
+title: 'Іменники I: О-основи та А-основи'
+subtitle: 'Nouns I: O-stems & A-stems'
 focus: Basic declension in common names
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Nouns I: O-stems & A-stems'
+  points:
+  - 'Introduction to Nouns I: O-stems & A-stems'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Grammarian
+prerequisites:
+- greetings-invocations
+connects_to:
+- vocative-case

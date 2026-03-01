@@ -1,45 +1,67 @@
-module: bio-58
+module: bio-060
 level: BIO
-sequence: 58
+sequence: 60
 slug: kyrylo-trylovskyi
 version: '2.0'
 title: 'Кирило Трильовський: Засновник Січі'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of кирило трильовський: засновник січі'
+- Evaluate the contributions of батько «січі»
+- Trace the career and influence of батько українського спорту
+sources:
+- name: Кирило Трильовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+  type: primary
+  notes: Biography of the founder of the Sich movement
+- name: Українські Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+  type: reference
+  notes: History of the movement Trylovsky founded
 content_outline:
 - section: Вступ — Батько «Січі»
   points:
   - Засновник гімнастичного руху «Січ»
   - Адвокат і громадський діяч
   - Творець українського спортивно-патріотичного руху
+  words: 850
 - section: Юність та освіта (1864-1890)
   points:
   - Народження на Покутті
   - Освіта у Відні
   - Юридична кар'єра
   - Формування патріотичних поглядів
+  words: 850
 - section: Заснування «Січі» (1900-1914)
   points:
   - Ідея гімнастичних товариств
   - Перша «Січ» у Заваллі (1900)
   - Поширення руху Галичиною та Буковиною
   - Вплив сокольського руху
+  words: 850
 - section: Адвокатська та громадська діяльність (1890-1914)
   points:
   - Правовий захист селян
   - Політична діяльність
   - Депутат Галицького сейму
   - Боротьба за права українців
+  words: 850
 - section: Воєнні роки та еміграція (1914-1941)
   points:
   - Перша світова війна
   - Українські Січові Стрільці
   - Еміграція до Чехословаччини
   - Смерть у Празі
+  words: 850
 - section: Спадщина — Батько українського спорту
   points:
   - Вплив на український національний рух
   - «Січ» і сучасні спортивні організації
   - Трильовський у памяті нації
   - Значення для формування нації
+  words: 750
 vocabulary_hints:
   required:
   - Січ (Sich)
@@ -66,28 +88,13 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграв рух «Січ» у формуванні української нації?
   output: Analytical essay
-focus: biography
-prerequisites:
-- bio-31
 connects_to:
 - bio-28
 - bio-42
-module_type: biography
-sources:
-- name: Кирило Трильовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
-  type: primary
-  notes: Biography of the founder of the Sich movement
-- name: Українські Січові Стрільці
-  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
-  type: reference
-  notes: History of the movement Trylovsky founded
-immersion: 100% Ukrainian
-phase: BIO
-objectives:
-- 'Analyze the life and legacy of кирило трильовський: засновник січі'
-- Evaluate the contributions of батько «січі»
-- Trace the career and influence of батько українського спорту
+prerequisites:
+- bio-31
 persona:
   voice: Senior Biographer
   role: Sich Organizer
+module_type: biography
+immersion: 100% Ukrainian

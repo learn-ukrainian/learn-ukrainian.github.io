@@ -1,57 +1,89 @@
 module: istorio-073
-level: istorio
+level: ISTORIO
 sequence: 73
+slug: zakarpattia-tysiacholittia
 version: '1.0'
 title: 'Закарпаття: Тисячоліття на перехресті'
 focus: history
 pedagogy: seminar
+word_target: 5000
 objectives:
 - 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
 - Evaluate the historical significance of найзахідніший схід
+sources:
+- name: Закарпаття (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Закарпаття
+  type: reference
+  notes: Regional overview
+- name: Карпатська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
+  type: reference
+  notes: 1939 independence
+- name: Русини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Русини
+  type: reference
+  notes: Rusyn identity question
 content_outline:
 - section: Вступ — Найзахідніший схід
-  subsections:
+  points:
   - Закарпаття — географія
   - Тисяча років під Угорщиною
   - Ізоляція від решти України
   - Структура модуля
+  words: 700
 - section: Під Угорщиною (896-1918)
-  subsections:
+  points:
   - Угорська корона — тисячоліття
   - Статус — «руснаки»
   - Церква — греко-католицька
   - Мадяризація
   - Еміграція до Америки
+  words: 700
 - section: Чехословацький період (1919-1938)
-  subsections:
+  points:
   - Підкарпатська Русь
   - Автономія — обіцяна, не дана
   - Культурний розквіт
   - Ідентитети — русин, русский, український
+  words: 700
 - section: Карпатська Україна 1939
-  subsections:
+  points:
   - Автономія — нарешті
   - Августин Волошин
   - Проголошення незалежності
   - Угорська окупація
   - Героїчна оборона
+  words: 700
 - section: Радянський період
-  subsections:
+  points:
   - 1945 — «возз'єднання»
   - Примусова українізація?
   - Репресії
   - Ліквідація УГКЦ
+  words: 700
 - section: Русинське питання
-  subsections:
+  points:
   - Русин vs. українець
   - Політичне маніпулювання
   - Сучасний статус
   - Як розуміти ідентичність
+  words: 700
 - section: Підсумок
-  subsections:
+  points:
   - Закарпаття — унікальний шлях
   - 1939 — перша незалежність
   - Перехід до Волині
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
 vocabulary:
 - Закарпаття
 - русин
@@ -68,6 +100,15 @@ vocabulary:
 - етноніми
 - регіональний сепаратизм
 - інструменталізація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
 activities:
 - type: critical-analysis
   focus: Rusyn vs. Ukrainian identity — what's the question?
@@ -79,38 +120,10 @@ activities:
   focus: How different rulers treated Transcarpathia
 - type: essay-response
   focus: Чи русини — окремий народ чи частина українців?
-sources:
-- name: Закарпаття (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Закарпаття
-  type: reference
-  notes: Regional overview
-- name: Карпатська Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
-  type: reference
-  notes: 1939 independence
-- name: Русини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русини
-  type: reference
-  notes: Rusyn identity question
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
 persona:
   voice: Academic Historiographer
   role: Transcarpathian Regionalist
+prerequisites:
+- bukovyna-mizh-imperiiamy
+connects_to:
+- volyn-pamiat-i-travma

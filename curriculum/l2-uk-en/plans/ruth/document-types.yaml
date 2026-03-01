@@ -1,27 +1,47 @@
-sequence: 23
 module: ruth-023
-module_number: 19
+level: RUTH
+sequence: 23
 slug: document-types
-title_uk: Види документів
-title_en: Document Types
-phase: 1
-phase_id: chancery-legal
-phase_name: Chancery & Legal
+version: '2.0'
+title: Види документів
+subtitle: Document Types
 focus: Привілей, Лист, Універсал
+phase: 1
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: Introduction to Document Types
+  points:
+  - Introduction to Document Types
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Baroque Scholar
   role: Royal Archivist
+prerequisites:
+- legal-profession
+connects_to:
+- paleography-lab-skoropys

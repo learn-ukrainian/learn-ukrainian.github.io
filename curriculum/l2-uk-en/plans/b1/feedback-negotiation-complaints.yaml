@@ -1,92 +1,76 @@
-module: b1-91
+module: b1-099
 level: B1
-sequence: 91
+sequence: 99
 slug: feedback-negotiation-complaints
 version: '1.0'
 title: Зворотний зв'язок, переговори, скарги
 subtitle: Feedback, Negotiation & Making Complaints
+focus: practical
+pedagogy: PPP
+phase: B1.9 [Communication Skills]
+word_target: 4000
+objectives:
+- Learner can give constructive feedback in Ukrainian
+- Learner can receive criticism gracefully
+- Learner can negotiate and reach compromises
+- Learner can make complaints politely but firmly
 content_outline:
-- section: 'Вступ: Культура фідбеку та переговорів (Introduction: Feedback and Negotiation
-    Culture)'
+- section: 'Вступ: Культура фідбеку та переговорів (Introduction: Feedback and Negotiation Culture)'
   words: 500
   points:
-  - The role of feedback and negotiation in professional and everyday life according
-    to State Standard §1.4.1.2.1.
-  - Historical transition from the Soviet 'Книга скарг та пропозицій' (abolished 2020)
-    to modern digital customer feedback.
-  - Introduction to the 2024 'Law on Protection of Consumers' Rights' and the rise
-    of 'клієнтоорієнтованість' (customer-centricity) in Ukraine.
+  - The role of feedback and negotiation in professional and everyday life according to State Standard §1.4.1.2.1.
+  - Historical transition from the Soviet 'Книга скарг та пропозицій' (abolished 2020) to modern digital customer feedback.
+  - Introduction to the 2024 'Law on Protection of Consumers' Rights' and the rise of 'клієнтоорієнтованість' (customer-centricity)
+    in Ukraine.
 - section: Давати та отримувати зворотний зв'язок (Giving and Receiving Feedback)
   words: 800
   points:
-  - Linguistic distinction between 'зворотний зв'язок' (structured feedback) and 'відгук'
-    (general review or response).
-  - 'Implementing the ''Sandwich Method'' (Сендвіч-метод): structuring critique between
-    layers of praise using polite registers.'
-  - 'Grammar in action: using Conditional forms (''Варто було б...'', ''Я б порадив...'')
-    to soften constructive criticism.'
-  - 'Receiving criticism gracefully: key phrases like ''Дякую за зауваження'' and
-    ''Я обов''язково це врахую'' to maintain professional rapport.'
+  - Linguistic distinction between 'зворотний зв'язок' (structured feedback) and 'відгук' (general review or response).
+  - 'Implementing the ''Sandwich Method'' (Сендвіч-метод): structuring critique between layers of praise using polite registers.'
+  - 'Grammar in action: using Conditional forms (''Варто було б...'', ''Я б порадив...'') to soften constructive criticism.'
+  - 'Receiving criticism gracefully: key phrases like ''Дякую за зауваження'' and ''Я обов''язково це врахую'' to maintain
+    professional rapport.'
 - section: Мистецтво переговорів та компромісів (The Art of Negotiation and Compromise)
   words: 900
   points:
-  - 'Navigating positions vs. interests: phrases to uncover what parties actually
-    want (''Чого ви насправді очікуєте?'').'
-  - 'Learner Error Correction: practice ''йти на компроміс'' and ''приймати рішення''
-    to avoid literal ''make'' translations (''робити компроміс'').'
-  - 'Softening disagreement: transitioning from blunt ''Ні'' to diplomatic ''Я розумію
-    вашу позицію, але...'' or ''З одного боку..., проте...''.'
-  - 'Proposing alternatives and finding common ground: ''Давайте знайдемо середину''
-    and ''Ми могли б розглянути інший варіант''.'
-- section: Ввічливі скарги та захист прав споживачів (Polite Complaints and Consumer
-    Rights Protection)
+  - 'Navigating positions vs. interests: phrases to uncover what parties actually want (''Чого ви насправді очікуєте?'').'
+  - 'Learner Error Correction: practice ''йти на компроміс'' and ''приймати рішення'' to avoid literal ''make'' translations
+    (''робити компроміс'').'
+  - 'Softening disagreement: transitioning from blunt ''Ні'' to diplomatic ''Я розумію вашу позицію, але...'' or ''З одного
+    боку..., проте...''.'
+  - 'Proposing alternatives and finding common ground: ''Давайте знайдемо середину'' and ''Ми могли б розглянути інший варіант''.'
+- section: Ввічливі скарги та захист прав споживачів (Polite Complaints and Consumer Rights Protection)
   words: 1000
   points:
-  - 'Strategic politeness: replacing aggressive imperatives (''Дайте!'', ''Поверніть!'')
-    with soft requests (''Я хотів би повернути...'', ''Чи не могли б ви...?'').'
-  - 'Learner Error Correction: using ''обговорювати проблему'' (Accusative) correctly,
-    avoiding the English-influenced ''обговорювати про проблему''.'
-  - 'The anatomy of a formal complaint: stating the facts (''Справа в тому, що...''),
-    expressing expectations (''Я очікую на...''), and demanding resolution (''Прошу
-    розглянути мою скаргу'').'
-  - Handling service issues in specific contexts (banks, shops, post offices) as mandated
-    by competency standards for B1 learners.
+  - 'Strategic politeness: replacing aggressive imperatives (''Дайте!'', ''Поверніть!'') with soft requests (''Я хотів би
+    повернути...'', ''Чи не могли б ви...?'').'
+  - 'Learner Error Correction: using ''обговорювати проблему'' (Accusative) correctly, avoiding the English-influenced ''обговорювати
+    про проблему''.'
+  - 'The anatomy of a formal complaint: stating the facts (''Справа в тому, що...''), expressing expectations (''Я очікую
+    на...''), and demanding resolution (''Прошу розглянути мою скаргу'').'
+  - Handling service issues in specific contexts (banks, shops, post offices) as mandated by competency standards for B1 learners.
 - section: 'Практикум: Сценарії вирішення проблем (Workshop: Problem-Solving Scenarios)'
   words: 800
   points:
-  - 'Role-play 1: Providing a ''sandwich'' of feedback to a colleague about a recent
-    presentation or project.'
-  - 'Role-play 2: Negotiating terms of service or a discount in a professional business
-    setting.'
-  - 'Role-play 3: Asserting consumer rights in a store regarding a defective product
-    using the 2024 legislative context.'
-  - 'Final synthesis: reviewing the use of modal hedging markers and polite request
-    structures for effective L2 pragmatics.'
+  - 'Role-play 1: Providing a ''sandwich'' of feedback to a colleague about a recent presentation or project.'
+  - 'Role-play 2: Negotiating terms of service or a discount in a professional business setting.'
+  - 'Role-play 3: Asserting consumer rights in a store regarding a defective product using the 2024 legislative context.'
+  - 'Final synthesis: reviewing the use of modal hedging markers and polite request structures for effective L2 pragmatics.'
 vocabulary_hints:
   required:
-  - 'зворотний зв''язок (feedback) — High frequency; collocations: давати/отримувати/налагодити
-    зворотний зв''язок'
-  - 'скарга (complaint) — High frequency; collocations: подати/написати скаргу, книга
-    скарг (іст.), розглядати скаргу'
-  - 'переговори (negotiation) — High frequency; collocations: вести переговори, сісти
-    за стіл переговорів'
-  - 'компроміс (compromise) — Medium frequency; collocations: йти на компроміс, знайти
-    компроміс, досягти компромісу'
-  - 'пропозиція (proposal/offer) — Very High frequency; collocations: внести пропозицію,
-    розглянути пропозицію, вигідна пропозиція'
+  - 'зворотний зв''язок (feedback) — High frequency; collocations: давати/отримувати/налагодити зворотний зв''язок'
+  - 'скарга (complaint) — High frequency; collocations: подати/написати скаргу, книга скарг (іст.), розглядати скаргу'
+  - 'переговори (negotiation) — High frequency; collocations: вести переговори, сісти за стіл переговорів'
+  - 'компроміс (compromise) — Medium frequency; collocations: йти на компроміс, знайти компроміс, досягти компромісу'
+  - 'пропозиція (proposal/offer) — Very High frequency; collocations: внести пропозицію, розглянути пропозицію, вигідна пропозиція'
   recommended:
-  - 'відгук (review/response) — distinguish from systematic feedback; collocations:
-    залишити відгук'
-  - клієнтоорієнтованість (customer-centricity) — modern business term reflecting
-    high service standards
+  - 'відгук (review/response) — distinguish from systematic feedback; collocations: залишити відгук'
+  - клієнтоорієнтованість (customer-centricity) — modern business term reflecting high service standards
   - приймати рішення (to make a decision) — correct collocation to avoid 'робити рішення'
   - йти на поступки (to make concessions) — essential for the negotiation process
-  - врахувати (to take into account/consider) — critical for responding to feedback
-    or complaints
-  - незручності (inconveniences) — 'перепрошую за незручності' as a standard service
-    apology
-  - зауваження (remark/comment/critique) — often used in the context of receiving
-    professional feedback
+  - врахувати (to take into account/consider) — critical for responding to feedback or complaints
+  - незручності (inconveniences) — 'перепрошую за незручності' as a standard service apology
+  - зауваження (remark/comment/critique) — often used in the context of receiving professional feedback
 activity_hints:
 - type: fill-in
   focus: Complete feedback and complaint dialogues
@@ -103,24 +87,15 @@ activity_hints:
 - type: error-correction
   focus: Fix too aggressive/passive phrases
   items: 10
-focus: practical
-pedagogy: PPP
-prerequisites:
-- b1-90 (Presentations & Visuals)
 connects_to:
 - b1-93 (Indefinite & Negative Pronouns)
-objectives:
-- Learner can give constructive feedback in Ukrainian
-- Learner can receive criticism gracefully
-- Learner can negotiate and reach compromises
-- Learner can make complaints politely but firmly
+prerequisites:
+- b1-90 (Presentations & Visuals)
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Customer Support Lead
 grammar:
 - Conditional for suggestions (Можливо, варто було б...)
 - Polite request forms (Прошу..., Я очікую...)
 - Softening phrases (На жаль..., Перепрошую, але...)
 register: розмовний
-phase: B1.9 [Communication Skills]
-persona:
-  voice: Senior Language & Culture Specialist
-  role: Customer Support Lead
-word_target: 4000

@@ -1,48 +1,50 @@
-module: a1-27
+module: a1-027
 level: A1
 sequence: 27
 slug: accusative-prepositions
 version: '2.0'
 title: Accusative Prepositions
 subtitle: Where Are You Going?
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Cases & Navigation]
+word_target: 2000
+objectives:
+- Use в/у + Accusative for direction toward enclosed spaces
+- Use на + Accusative for direction toward surfaces and events
+- Apply за/через/про with Accusative correctly in common expressions
+- Choose the correct preposition based on semantic context
 content_outline:
-- section: 'Куди? з Acc (Direction with Acc)'
+- section: Куди? з Acc (Direction with Acc)
   words: 500
   points:
-  - 'Прийменник в/у + Знахідний для напрямку руху: Я іду в магазин, Я їду у Київ.
-    Евфонічний вибір в/у залежно від фонетичного контексту (§4.2.3.2).'
-  - 'Прийменник на + Знахідний для поверхонь та подій: Я іду на пошту, Я їду на
-    концерт, Я кладу на стіл. Контраст в/у (enclosed space) vs на (open/surface/event).'
-- section: 'За + Acc (Behind/For)'
+  - 'Прийменник в/у + Знахідний для напрямку руху: Я іду в магазин, Я їду у Київ. Евфонічний вибір в/у залежно від фонетичного
+    контексту (§4.2.3.2).'
+  - 'Прийменник на + Знахідний для поверхонь та подій: Я іду на пошту, Я їду на концерт, Я кладу на стіл. Контраст в/у (enclosed
+    space) vs на (open/surface/event).'
+- section: За + Acc (Behind/For)
   words: 400
   points:
-  - 'За + Знахідний у значенні «за/for/in exchange»: Дякую за допомогу. Платити за
-    квиток. Вибачте за запізнення.'
-  - 'За + Знахідний у часовому значенні «через (проміжок часу)»: за годину (in an
-    hour), за тиждень (in a week). За + Знахідний для напрямку «за»: зайти за будинок
-    (go behind the building).'
-- section: 'Через + Acc (Through/Because of)'
+  - 'За + Знахідний у значенні «за/for/in exchange»: Дякую за допомогу. Платити за квиток. Вибачте за запізнення.'
+  - 'За + Знахідний у часовому значенні «через (проміжок часу)»: за годину (in an hour), за тиждень (in a week). За + Знахідний
+    для напрямку «за»: зайти за будинок (go behind the building).'
+- section: Через + Acc (Through/Because of)
   words: 350
   points:
-  - 'Просторове значення: через парк (through the park), через дорогу (across the
-    road), через міст (across the bridge).'
-  - 'Часове та причинне значення: через годину (in an hour), через дощ (because
-    of rain), через роботу (because of work). Контраст із «за + Acc» у часовому
-    значенні.'
-- section: 'Про + Acc (About)'
+  - 'Просторове значення: через парк (through the park), через дорогу (across the road), через міст (across the bridge).'
+  - 'Часове та причинне значення: через годину (in an hour), через дощ (because of rain), через роботу (because of work).
+    Контраст із «за + Acc» у часовому значенні.'
+- section: Про + Acc (About)
   words: 350
   points:
-  - 'Про + Знахідний у значенні «про/about»: розповідати про Україну, думати про
-    маму, книга про історію, фільм про кохання.'
-  - 'Типові дієслова з «про»: говорити про, думати про, читати про, знати про,
-    забувати про. Конструкція «Про що?» як питання.'
-- section: 'Практика (Practice)'
+  - 'Про + Знахідний у значенні «про/about»: розповідати про Україну, думати про маму, книга про історію, фільм про кохання.'
+  - 'Типові дієслова з «про»: говорити про, думати про, читати про, знати про, забувати про. Конструкція «Про що?» як питання.'
+- section: Практика (Practice)
   words: 400
   points:
-  - 'Вправи на вибір правильного прийменника залежно від контексту: напрямок (в/у/на),
-    обмін/подяка (за), простір/причина (через), тема (про).'
-  - 'Діалоги про напрямки руху та щоденні ситуації з використанням усіх чотирьох
-    прийменників. Контрастні вправи.'
+  - 'Вправи на вибір правильного прийменника залежно від контексту: напрямок (в/у/на), обмін/подяка (за), простір/причина
+    (через), тема (про).'
+  - Діалоги про напрямки руху та щоденні ситуації з використанням усіх чотирьох прийменників. Контрастні вправи.
 vocabulary_hints:
   required:
   - магазин (shop) — іду в магазин, у магазині; Direction context
@@ -72,24 +74,15 @@ activity_hints:
 - type: unjumble
   focus: Reorder direction sentences
   items: 6
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-26 (The Accusative II)
 connects_to:
 - a1-28 (The Locative)
-objectives:
-- Use в/у + Accusative for direction toward enclosed spaces
-- Use на + Accusative for direction toward surfaces and events
-- Apply за/через/про with Accusative correctly in common expressions
-- Choose the correct preposition based on semantic context
+prerequisites:
+- a1-26 (The Accusative II)
+persona:
+  voice: Patient Supportive Tutor
+  role: Travel Agent
 grammar:
 - Accusative prepositions (в/у, на, за, через, про)
 - Direction expressions with Accusative
 - Preposition semantics and contrast
 register: розмовний
-phase: A1.3 [Cases & Navigation]
-persona:
-  voice: Patient Supportive Tutor
-  role: Travel Agent
-word_target: 2000

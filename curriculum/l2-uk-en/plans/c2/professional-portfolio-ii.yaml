@@ -6,7 +6,8 @@ version: '2.0'
 title: Професійне портфоліо II — Багатоформатна презентація
 focus: domain
 pedagogy: TTT
-phase: 'C2.3 [Professional Language]'
+phase: C2.3 [Professional Language]
+word_target: 5000
 objectives:
 - TBD
 sources:
@@ -26,45 +27,50 @@ content_outline:
 - section: Вступ — Мультиформатне портфоліо (Introduction — Multi-format Portfolio)
   words: 500
   points:
-  - 'Cultural shift: transitioning from traditional Ukrainian modesty to the proactive
-    ''personal branding'' paradigm prevalent in IT and creative sectors'
-  - 'Strategic consistency: maintaining a unified professional narrative across disparate
-    digital formats to ensure a coherent personal brand'
+  - 'Cultural shift: transitioning from traditional Ukrainian modesty to the proactive ''personal branding'' paradigm prevalent
+    in IT and creative sectors'
+  - 'Strategic consistency: maintaining a unified professional narrative across disparate digital formats to ensure a coherent
+    personal brand'
 - section: Цифрове портфоліо та платформи (Digital Portfolio and Platforms)
   words: 900
   points:
-  - 'Adaptation of content strategy for different platforms: professional tone for
-    LinkedIn vs. visual storytelling for Behance and Dribbble'
-  - 'Linguistic purism as a professional marker: using clean Ukrainian (without calques
-    or surzhyk) to signal high educational status and expertise'
+  - 'Adaptation of content strategy for different platforms: professional tone for LinkedIn vs. visual storytelling for Behance
+    and Dribbble'
+  - 'Linguistic purism as a professional marker: using clean Ukrainian (without calques or surzhyk) to signal high educational
+    status and expertise'
 - section: Відеопрезентація та риторика (Video Presentation and Rhetoric)
   words: 900
   points:
-  - 'Video resume: applying rhetorical elements of persuasion and composition according
-    to State Standard §4.3.5 for effective self-presentation'
-  - 'Technical quality and digital literacy: importance of lighting and sound in video
-    resumes as markers of professional attention to detail'
+  - 'Video resume: applying rhetorical elements of persuasion and composition according to State Standard §4.3.5 for effective
+    self-presentation'
+  - 'Technical quality and digital literacy: importance of lighting and sound in video resumes as markers of professional
+    attention to detail'
 - section: Кейс-стаді та методологія STAR (Case Study and STAR Methodology)
   words: 1000
   points:
-  - The STAR method (Situation, Task, Action, Result) as a rhetorical framework for
-    structuring achievement-oriented project descriptions
-  - 'Shifting from duty-based descriptions to result-based narratives: using measurable
-    metrics and quantitative indicators of success'
+  - The STAR method (Situation, Task, Action, Result) as a rhetorical framework for structuring achievement-oriented project
+    descriptions
+  - 'Shifting from duty-based descriptions to result-based narratives: using measurable metrics and quantitative indicators
+    of success'
 - section: Презентаційні матеріали та візуалізація (Presentation Materials and Visualization)
   words: 900
   points:
-  - 'Pitch deck structure according to State Standard §4.3.6: creating goal-oriented
-    professional texts following a specific stylistic plan'
-  - 'Infographics and visual hierarchy: highlighting key achievements and skills to
-    manage audience attention and information density'
+  - 'Pitch deck structure according to State Standard §4.3.6: creating goal-oriented professional texts following a specific
+    stylistic plan'
+  - 'Infographics and visual hierarchy: highlighting key achievements and skills to manage audience attention and information
+    density'
 - section: Практикум — Мовна чистота (Practicum — Linguistic Purity)
   words: 800
   points:
-  - 'Common learner error: correcting the Russian-influenced «приймати участь» with
-    the proper Ukrainian «брати участь» in professional contexts'
-  - 'Correction of temporal calques: using «протягом року» or «впродовж року» instead
-    of the erroneous «на протязі року» in project documentation'
+  - 'Common learner error: correcting the Russian-influenced «приймати участь» with the proper Ukrainian «брати участь» in
+    professional contexts'
+  - 'Correction of temporal calques: using «протягом року» or «впродовж року» instead of the erroneous «на протязі року» in
+    project documentation'
+vocabulary_hints:
+  required:
+  - word (translation) — collocations; frequency/usage notes
+  recommended:
+  - word (translation) — usage notes
 vocabulary:
   required:
   - цифрове портфоліо (digital portfolio)
@@ -84,6 +90,15 @@ vocabulary:
   - контент (content)
   - платформа (platform)
   forbidden: '[]'
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
 activities:
   types_required:
   - reading
@@ -99,20 +114,8 @@ connects_to:
 - c2-73 (Professional Identity)
 - c2-74 (C2.3 Review)
 - c2-75 (C2.3 Checkpoint)
-vocabulary_hints:
-  required:
-  - word (translation) — collocations; frequency/usage notes
-  recommended:
-  - word (translation) — usage notes
-activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
 persona:
   voice: Senior Specialist
   role: Agency Director
+prerequisites:
+- professional-portfolio-i

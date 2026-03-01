@@ -1,27 +1,47 @@
-sequence: 80
-module: oes-080
-module_number: 80
+module: oes-077
+level: OES
+sequence: 77
 slug: slovo-defeat
-title_uk: 'Слово: Поразка'
-title_en: 'Slovo: The Defeat'
-phase: 4
-phase_id: literary-art
-phase_name: Literary Art
+version: '2.0'
+title: 'Слово: Поразка'
+subtitle: 'Slovo: The Defeat'
 focus: Metaphor — "Sowing fields with bones"
+phase: 4
+word_target: 5000
 content_outline:
 - section: Вступ
-  description: 'Introduction to Slovo: The Defeat'
+  points:
+  - 'Introduction to Slovo: The Defeat'
+  words: 1250
 - section: Основний матеріал
-  description: Primary source analysis and grammar focus
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
 - section: Практика
-  description: Exercises and activities
+  points:
+  - Exercises and activities
+  words: 1250
 - section: Підсумок
-  description: Summary and connection to next module
-vocabulary_hints: '[]'
-activity_types:
-- transcription
-- etymology-trace
-- grammar-identify
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
 persona:
   voice: Senior Paleographer
   role: Survivor of Kayala
+prerequisites:
+- slovo-first-battle
+connects_to:
+- slovo-svyatoslav-dream
