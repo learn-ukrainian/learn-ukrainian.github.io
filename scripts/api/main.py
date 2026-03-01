@@ -35,6 +35,8 @@ from .dashboard_router import router as dashboard_router
 from .state_router import router as state_router
 from .comms_router import router as comms_router
 from .rag_router import router as rag_router
+from .images_router import router as images_router
+from .admin_router import router as admin_router
 
 app = FastAPI(
     title="Playground API",
@@ -66,6 +68,8 @@ app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(state_router, prefix="/api/state")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(rag_router, prefix="/api/rag")
+app.include_router(images_router, prefix="/api/images")
+app.include_router(admin_router, prefix="/api/admin")
 
 
 # Server start time for uptime calculation

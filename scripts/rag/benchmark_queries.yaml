@@ -1,0 +1,198 @@
+# Benchmark queries for embedding model comparison (BGE-M3 vs EmbeddingGemma-300M)
+# Each query has: text, period, collection, and expected relevant chunk_ids (ground truth).
+# Ground truth was manually curated from known-good RAG search results.
+#
+# Collections: literary_texts, textbook_chunks
+# Periods: old_east_slavic, middle_ukrainian, modern
+
+queries:
+  # ── Old East Slavic (X–XIII c.) ──────────────────────────────────
+  - query: "хрещення Русі"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "ce21e53f_c0169"  # PVL Лаврентіївський — passage about baptism
+      - "34aba42b_c0678"  # PVL Іпатський — variant readings on baptism
+
+  - query: "похід Ігоря на половців"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "c9f36928_c0010"  # Слово о полку Ігоревім — main text
+      - "73aa1f1a_c0250"  # Слово поетичні переклади
+
+  - query: "плач Ярославни"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "3faf433b_c0117"  # Перетц commentary on Плач Ярославни
+      - "73aa1f1a_c0267"  # Поетичні переклади — dark places
+
+  - query: "Руська Правда суд закон покарання"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "aff8f05d_c0948"  # Київський літопис — legal text about murder
+      - "45f18a4c_c0573"  # Галицько-Волинський літопис — same legal passage
+
+  - query: "битва на Каялі поразка"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "3faf433b_c0131"  # Перетц — тьма свет покрила на Каялі
+      - "3faf433b_c0127"  # Перетц — Канина зелену паполому
+
+  - query: "ѡц҃емь наслѣдникъ бывъ"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "34aba42b_c0301"  # PVL Іпатський — original OES text passage
+
+  - query: "Данило Галицький король коронація"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "45f18a4c_c0573"  # Галицько-Волинський літопис
+
+  - query: "половці набіг степ"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "34aba42b_c0307"  # PVL — Половці на Руську землю
+      - "3faf433b_c0131"  # Перетц — Половці акы пардуже гнездо
+
+  - query: "печеніги облога Києва"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "ce21e53f_c0169"  # PVL Лаврентіївський
+
+  - query: "монастир чернець подвижник"
+    period: old_east_slavic
+    collection: literary_texts
+    relevant_chunks:
+      - "34aba42b_c0301"  # PVL — about Феодосій and monastery life
+
+  # ── Middle Ukrainian (XIV–XVIII c.) ──────────────────────────────
+  - query: "козацькі літописи"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0000"  # Літопис Самовидця — вступ про літописну традицію
+      - "b167837e_c0026"  # Літопис Самовидця — про козацьку голоту
+
+  - query: "Хмельницький повстання війна"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0030"  # Самовидець — переговори Хмельницького
+      - "b167837e_c0028"  # Самовидець — ставлення до Хмельницького
+      - "b167837e_c0064"  # Самовидець — битва під Пилявцями
+
+  - query: "битва під Берестечком"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0076"  # Самовидець — Берестечко, переправи через Ікву
+
+  - query: "гетман козацьке військо полковники"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0064"  # Самовидець — козацьке військо при гетмані
+      - "b167837e_c0067"  # Самовидець — рада в Переяславлі
+
+  - query: "Переяславська рада посольство"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0067"  # Самовидець — послові королівські в Переяславлі
+
+  - query: "запорожці Січ козацький побут"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0000"  # Вступ — літописна традиція
+      - "b167837e_c0026"  # Про козацьку голоту і суспільні низи
+
+  - query: "автор літопису Самовидця хто написав"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0015"  # Самовидець — дискусія про авторство
+      - "b167837e_c0026"  # Самовидець — погляди автора
+
+  - query: "церковні справи православ'я"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0015"  # Самовидець — Куліш гадав автор був попом
+      - "b167837e_c0061"  # Самовидець — Рігельман
+
+  - query: "військо коронне поляки війна"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0076"  # Самовидець — військо коронне під Берестечком
+      - "b167837e_c0064"  # Самовидець — військо коронне під Пилявцями
+
+  - query: "привілей вольності булава"
+    period: middle_ukrainian
+    collection: literary_texts
+    relevant_chunks:
+      - "b167837e_c0067"  # Самовидець — привілей на вольності
+      - "b167837e_c0030"  # Самовидець — Хмельницький одержав привілей
+
+  # ── Modern Ukrainian (textbooks) ─────────────────────────────────
+  - query: "дієприкметник форма дієслова"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks:
+      - "7-klas-ukrmova-litvinova-2024_s0085"  # Grade 7 — розділ Дієприкметник
+      - "7-klas-ukrmova-litvinova-2024_s0084"  # Grade 7 — дієприкметник як форма
+      - "6-klas-ukrmova-betsa-2023_s0199"      # Grade 6 — дієприкметник і дієприслівник
+
+  - query: "відмінювання іменників відмінки"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated — search didn't return textbook hits
+
+  - query: "фонетичний розбір слова звуки"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated from actual search
+
+  - query: "прикметник ступені порівняння"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "речення підмет присудок"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "правопис апостроф м'який знак"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "числівник відмінювання"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "дієслово час теперішній минулий майбутній"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "сполучник підрядний сурядний"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated
+
+  - query: "пряма мова діалог розділові знаки"
+    period: modern
+    collection: textbook_chunks
+    relevant_chunks: []  # To be populated

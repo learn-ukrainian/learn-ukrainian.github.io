@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Images - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* Header */
+.header { padding: 20px 24px 0; display: flex; align-items: center; gap: 16px; }
+.header a { color: var(--text2); text-decoration: none; font-size: 14px; }
+.header a:hover { color: var(--blue); }
+.header h1 { font-size: 24px; font-weight: 700; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; margin: 16px 24px 0; border-bottom: 1px solid var(--border); }
+.tab { padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 14px; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* Panels */
+.panel { display: none; padding: 20px 24px; }
+.panel.active { display: block; }
+
+/* Stats pills */
+.stats-bar { display: flex; gap: 16px; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; flex-wrap: wrap; font-size: 13px; }
+.stat-pill { display: flex; gap: 6px; align-items: center; }
+.stat-pill .value { font-weight: 700; font-size: 18px; }
+.stat-pill .label { color: var(--text2); font-size: 11px; text-transform: uppercase; }
+
+/* Distribution bars */
+.dist-section { margin-bottom: 24px; }
+.dist-section h3 { font-size: 14px; margin-bottom: 8px; color: var(--text2); font-weight: 600; }
+.dist-bar { display: flex; height: 28px; border-radius: 6px; overflow: hidden; margin-bottom: 4px; }
+.dist-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; min-width: 20px; cursor: pointer; transition: opacity 0.15s; }
+.dist-bar .seg:hover { opacity: 0.8; }
+.dist-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--text2); margin-top: 4px; }
+.dist-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+/* Grade table */
+.grade-table { width: 100%; border-collapse: collapse; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.grade-table th { background: var(--bg3); padding: 8px 12px; text-align: left; font-size: 12px; color: var(--text2); text-transform: uppercase; }
+.grade-table td { padding: 8px 12px; border-top: 1px solid var(--border); font-size: 13px; }
+.grade-table tr:hover td { background: var(--bg3); }
+.grade-table .bar-cell { width: 200px; }
+.grade-table .mini-bar { height: 6px; border-radius: 3px; background: var(--bg3); overflow: hidden; }
+.grade-table .mini-bar-fill { height: 100%; background: var(--green); border-radius: 3px; }
+.grade-table .view-link { color: var(--blue); cursor: pointer; text-decoration: none; font-size: 12px; }
+.grade-table .view-link:hover { text-decoration: underline; }
+
+/* Filters */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+.filter-group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.filter-label { font-size: 12px; color: var(--text2); text-transform: uppercase; margin-right: 4px; font-weight: 600; }
+.filter-btn { padding: 4px 10px; font-size: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text2); cursor: pointer; transition: all 0.15s; }
+.filter-btn:hover { border-color: var(--blue); color: var(--text); }
+.filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* Annotation editor rows */
+.ann-row { display: flex; gap: 10px; align-items: center; padding: 8px 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; font-size: 12px; }
+.ann-row:hover { border-color: var(--blue); }
+.ann-row .thumb { width: 80px; height: 60px; object-fit: contain; background: #fff; border-radius: 4px; flex-shrink: 0; cursor: pointer; }
+.ann-row .thumb-placeholder { width: 80px; height: 60px; background: var(--bg3); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text3); font-size: 10px; flex-shrink: 0; }
+.ann-row input[type="text"] { flex: 1; min-width: 150px; padding: 4px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+.ann-row input[type="text"]:focus { border-color: var(--blue); outline: none; }
+.ann-row select { padding: 4px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+.ann-row select:focus { border-color: var(--blue); outline: none; }
+.ann-row .save-btn { padding: 4px 10px; background: var(--green); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; }
+.ann-row .save-btn:hover { opacity: 0.85; }
+.ann-row .save-btn:disabled { opacity: 0.4; cursor: default; }
+.ann-row input[type="checkbox"] { flex-shrink: 0; }
+
+/* Bulk actions bar */
+.bulk-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; padding: 8px 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+.bulk-bar button { padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; font-size: 12px; color: var(--text); background: var(--bg3); }
+.bulk-bar button:hover { border-color: var(--blue); }
+.bulk-bar button.danger { background: var(--red); color: #fff; border-color: var(--red); }
+.bulk-bar button.danger:hover { opacity: 0.85; }
+.bulk-bar select { padding: 4px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+.bulk-bar .sel-count { color: var(--text2); }
+
+/* Pagination */
+.pagination { display: flex; gap: 8px; align-items: center; margin: 16px 0; font-size: 13px; }
+.pagination button { padding: 6px 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); cursor: pointer; font-size: 12px; }
+.pagination button:hover { border-color: var(--blue); }
+.pagination button:disabled { opacity: 0.3; cursor: default; }
+.pagination .page-info { color: var(--text2); }
+
+/* Page context layout */
+.page-layout { display: flex; gap: 20px; align-items: flex-start; }
+.page-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.page-controls select { padding: 6px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; max-width: 400px; }
+.page-controls select:focus { border-color: var(--blue); outline: none; }
+.page-controls button { padding: 6px 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); cursor: pointer; font-size: 13px; }
+.page-controls button:hover { border-color: var(--blue); }
+.page-controls button:disabled { opacity: 0.3; cursor: default; }
+.page-controls .page-num { color: var(--text2); font-size: 13px; min-width: 80px; text-align: center; }
+.page-controls input[type="number"] { width: 60px; padding: 6px 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 13px; text-align: center; }
+.page-controls input[type="number"]:focus { border-color: var(--blue); outline: none; }
+
+.page-container { position: relative; flex-shrink: 0; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.4); max-width: 60vw; overflow: auto; }
+.page-container img { display: block; max-width: 100%; }
+.bbox-overlay { position: absolute; pointer-events: none; }
+.bbox-img { border: 2px solid var(--orange); background: rgba(240,136,62,0.1); }
+.bbox-img.highlighted { border-color: var(--yellow); border-width: 3px; background: rgba(210,153,34,0.25); }
+.bbox-text { border: 1px solid rgba(88,166,255,0.3); background: rgba(88,166,255,0.05); }
+.bbox-label { position: absolute; top: -1px; left: -1px; background: var(--orange); color: #fff; font-size: 10px; padding: 0 4px; font-weight: 600; line-height: 16px; }
+
+.page-sidebar { flex: 1; min-width: 320px; max-height: 80vh; overflow-y: auto; }
+.page-img-row { display: flex; gap: 8px; align-items: center; padding: 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.page-img-row:hover, .page-img-row.highlighted { border-color: var(--yellow); background: var(--bg3); }
+.page-img-row .thumb { width: 60px; height: 45px; object-fit: contain; background: #fff; border-radius: 3px; flex-shrink: 0; }
+.page-img-row .meta { flex: 1; }
+.page-img-row .meta .desc { color: var(--text); margin-bottom: 2px; }
+.page-img-row .meta .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.page-img-row .meta .tag { padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+.tag-high { background: #1a7f37; color: #fff; }
+.tag-medium { background: #9a6700; color: #fff; }
+.tag-low { background: #6e3b00; color: #fff; }
+.tag-none { background: var(--red); color: #fff; }
+.tag-type { background: var(--bg3); color: var(--text2); }
+
+.toggle-btn { padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; color: var(--text2); background: var(--bg2); }
+.toggle-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* Lightbox */
+.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; align-items: center; justify-content: center; cursor: pointer; }
+.lightbox.visible { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+
+/* Loading */
+.loading { text-align: center; padding: 40px; color: var(--text2); }
+.loading-sm { color: var(--text3); font-size: 12px; padding: 12px; text-align: center; }
+
+/* Toast */
+.toast { position: fixed; bottom: 20px; right: 20px; background: var(--green); color: #fff; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; z-index: 300; display: none; }
+.toast.error { background: var(--red); }
+/* Search */
+.search-box { display: flex; gap: 8px; margin-bottom: 16px; }
+.search-box input { flex: 1; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; outline: none; }
+.search-box input:focus { border-color: var(--blue); }
+.search-box input::placeholder { color: var(--text3); }
+.search-box button { padding: 10px 20px; background: var(--blue); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.search-box button:hover { opacity: 0.9; }
+.search-box button:disabled { opacity: 0.5; cursor: default; }
+
+.search-type-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+.search-type-btn { padding: 6px 14px; font-size: 13px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); cursor: pointer; transition: all 0.15s; }
+.search-type-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+.search-results-info { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+
+.search-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.search-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: all 0.15s; }
+.search-card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.search-card img { width: 100%; height: 180px; object-fit: contain; background: #fff; display: block; cursor: pointer; }
+.search-card .info { padding: 8px; font-size: 11px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.search-card .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 80px; color: var(--text2); }
+.search-card .score-badge { background: var(--purple); color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+.search-card .grade-badge { background: var(--bg3); padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+
+.text-result { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 10px; }
+.text-result .meta-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text2); }
+.text-result .body { font-size: 13px; line-height: 1.5; color: var(--text); white-space: pre-wrap; }
+
+.toast.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/">&larr; Home</a>
+  <h1>Images</h1>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="context" onclick="switchTab('context')">Page Context</div>
+  <div class="tab" data-tab="annotations" onclick="switchTab('annotations')">Annotations</div>
+  <div class="tab" data-tab="search" onclick="switchTab('search')">Search</div>
+  <div class="tab" data-tab="stats" onclick="switchTab('stats')">Stats & Quality</div>
+</div>
+
+<!-- ============ Tab 1: Page Context ============ -->
+<div class="panel active" id="panel-context">
+  <div class="page-controls">
+    <select id="textbook-select" onchange="onTextbookChange()">
+      <option value="">Select textbook...</option>
+    </select>
+    <button onclick="prevPage()" id="prev-btn" disabled>&larr;</button>
+    <span>Page</span>
+    <input type="number" id="page-input" value="1" min="1" onchange="goToPage()" onkeydown="if(event.key==='Enter')goToPage()">
+    <span id="page-total">/ ?</span>
+    <button onclick="nextPage()" id="next-btn" disabled>&rarr;</button>
+    <span style="margin-left: 12px;">
+      <button class="toggle-btn active" id="toggle-images" onclick="toggleOverlay('images')">Images</button>
+      <button class="toggle-btn active" id="toggle-text" onclick="toggleOverlay('text')">Text</button>
+    </span>
+  </div>
+  <div class="page-layout">
+    <div class="page-container" id="page-container">
+      <div class="loading" id="page-loading">Select a textbook to view pages</div>
+    </div>
+    <div class="page-sidebar" id="page-sidebar"></div>
+  </div>
+</div>
+
+<!-- ============ Tab 2: Annotation Editor ============ -->
+<div class="panel" id="panel-annotations">
+  <div class="filters" id="ann-filters">
+    <div class="filter-group">
+      <span class="filter-label">Grade</span>
+      <button class="filter-btn active" data-filter="grade" data-value="" onclick="setFilter('grade','',this)">All</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Teaching Value</span>
+      <button class="filter-btn active" data-filter="tv" data-value="" onclick="setFilter('tv','',this)">All</button>
+      <button class="filter-btn" data-filter="tv" data-value="high" onclick="setFilter('tv','high',this)">High</button>
+      <button class="filter-btn" data-filter="tv" data-value="medium" onclick="setFilter('tv','medium',this)">Medium</button>
+      <button class="filter-btn" data-filter="tv" data-value="low" onclick="setFilter('tv','low',this)">Low</button>
+      <button class="filter-btn" data-filter="tv" data-value="none" onclick="setFilter('tv','none',this)">None</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Type</span>
+      <button class="filter-btn active" data-filter="et" data-value="" onclick="setFilter('et','',this)">All</button>
+      <button class="filter-btn" data-filter="et" data-value="illustration" onclick="setFilter('et','illustration',this)">Illustration</button>
+      <button class="filter-btn" data-filter="et" data-value="decoration" onclick="setFilter('et','decoration',this)">Decoration</button>
+      <button class="filter-btn" data-filter="et" data-value="letter" onclick="setFilter('et','letter',this)">Letter</button>
+      <button class="filter-btn" data-filter="et" data-value="logo" onclick="setFilter('et','logo',this)">Logo</button>
+    </div>
+  </div>
+  <div class="bulk-bar">
+    <label><input type="checkbox" id="select-all" onchange="toggleSelectAll()"> Select all on page</label>
+    <span class="sel-count" id="sel-count">0 selected</span>
+    <span style="color:var(--text3)">|</span>
+    <span class="filter-label" style="margin: 0;">Bulk set TV:</span>
+    <select id="bulk-tv">
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+      <option value="none">None</option>
+    </select>
+    <button onclick="bulkSetTV()">Apply</button>
+    <button class="danger" onclick="bulkDelete()">Delete selected</button>
+  </div>
+  <div id="ann-list">
+    <div class="loading">Loading annotations...</div>
+  </div>
+  <div class="pagination" id="ann-pagination"></div>
+</div>
+
+<!-- ============ Tab: Search ============ -->
+<div class="panel" id="panel-search">
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="Search images in Ukrainian (e.g., яблуко, буква А, тварини)..." />
+    <button id="search-btn" onclick="doSearch()">Search</button>
+  </div>
+
+  <div class="search-type-toggle">
+    <button class="search-type-btn active" data-type="images" onclick="setSearchType(this, 'images')">Images</button>
+    <button class="search-type-btn" data-type="text" onclick="setSearchType(this, 'text')">Text</button>
+    <button class="search-type-btn" data-type="literary" onclick="setSearchType(this, 'literary')">Literary</button>
+  </div>
+
+  <div class="filters" id="search-filters">
+    <div class="filter-group">
+      <span class="filter-label">Grade</span>
+      <button class="filter-btn active" data-sgrade="" onclick="setSearchGrade(this, '')">All</button>
+    </div>
+  </div>
+
+  <div class="search-results-info" id="search-info"></div>
+  <div id="search-gallery"></div>
+</div>
+
+<!-- ============ Tab: Stats & Quality ============ -->
+<div class="panel" id="panel-stats">
+  <div id="stats-content">
+    <div class="loading">Loading stats...</div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="">
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────
+let currentTab = 'context';
+let textbooks = [];
+let currentStem = '';
+let currentPage = 1;
+let totalPages = 0;
+let showImageOverlay = true;
+let showTextOverlay = true;
+let highlightedIndex = -1;
+
+// Annotations state
+let annFilters = { grade: '', tv: '', et: '' };
+let annPage = 0;
+let annPerPage = 50;
+let selectedIds = new Set();
+
+// Search state
+let searchType = 'images';
+let searchGrade = '';
+let searchGradeButtonsBuilt = false;
+
+const API = '/api/images';
+
+// ── Utils ──────────────────────────────────────────────────────
+function toast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast visible' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+async function apiFetch(url, opts) {
+  const res = await fetch(url, opts);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || err.error || 'Request failed');
+  }
+  return res.json();
+}
+
+function tvColor(tv) {
+  const m = { high: 'var(--green)', medium: 'var(--yellow)', low: 'var(--orange)', none: 'var(--red)' };
+  return m[tv] || 'var(--gray)';
+}
+
+function tvTag(tv) {
+  if (!tv) return '';
+  return `<span class="tag tag-${tv}">${tv}</span>`;
+}
+
+function etTag(et) {
+  if (!et) return '';
+  return `<span class="tag tag-type">${et}</span>`;
+}
+
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(id) {
+  currentTab = id;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === `panel-${id}`));
+
+  if (id === 'stats') loadStats();
+  if (id === 'annotations') loadAnnotations();
+  if (id === 'context' && !textbooks.length) loadTextbooks();
+  if (id === 'search') buildSearchGradeButtons();
+}
+
+// ── Tab 3: Stats ───────────────────────────────────────────────
+async function loadStats() {
+  const el = document.getElementById('stats-content');
+  try {
+    const data = await apiFetch(`${API}/stats`);
+
+    const pills = `
+      <div class="stats-bar">
+        <div class="stat-pill"><span class="value">${data.total.toLocaleString()}</span><span class="label">Total</span></div>
+        <div class="stat-pill"><span class="value" style="color:var(--green)">${data.annotated.toLocaleString()}</span><span class="label">Annotated</span></div>
+        <div class="stat-pill"><span class="value" style="color:var(--yellow)">${data.unannotated.toLocaleString()}</span><span class="label">Gap</span></div>
+        <div class="stat-pill"><span class="value" style="color:var(--red)">${data.bad_candidates.toLocaleString()}</span><span class="label">Bad (none+low)</span></div>
+        <div class="stat-pill"><span class="value" style="color:var(--blue)">${data.pdfs_on_disk}</span><span class="label">PDFs on disk</span></div>
+      </div>`;
+
+    // Teaching value bar
+    const tvColors = { high: '#3fb950', medium: '#d29922', low: '#f0883e', none: '#f85149', unset: '#484f58' };
+    const tvTotal = Object.values(data.teaching_value).reduce((a, b) => a + b, 0);
+    let tvBar = '<div class="dist-bar">';
+    let tvLegend = '<div class="dist-legend">';
+    for (const [k, v] of Object.entries(data.teaching_value)) {
+      const pct = (v / tvTotal * 100).toFixed(1);
+      if (pct > 1) {
+        tvBar += `<div class="seg" style="width:${pct}%;background:${tvColors[k] || '#484f58'}" title="${k}: ${v} (${pct}%)" onclick="filterToAnnotations('tv','${k}')">${pct > 4 ? v : ''}</div>`;
+      }
+      tvLegend += `<span><span class="dot" style="background:${tvColors[k] || '#484f58'}"></span>${k}: ${v.toLocaleString()}</span>`;
+    }
+    tvBar += '</div>';
+    tvLegend += '</div>';
+
+    // Element type bar
+    const etColors = { illustration: '#58a6ff', letter: '#bc8cff', decoration: '#f0883e', logo: '#f85149', diagram: '#3fb950', photo: '#d29922', map: '#a5d6ff', unset: '#484f58' };
+    const etTotal = Object.values(data.element_type).reduce((a, b) => a + b, 0);
+    let etBar = '<div class="dist-bar">';
+    let etLegend = '<div class="dist-legend">';
+    for (const [k, v] of Object.entries(data.element_type)) {
+      const pct = (v / etTotal * 100).toFixed(1);
+      if (pct > 1) {
+        etBar += `<div class="seg" style="width:${pct}%;background:${etColors[k] || '#484f58'}" title="${k}: ${v} (${pct}%)" onclick="filterToAnnotations('et','${k}')">${pct > 4 ? v : ''}</div>`;
+      }
+      etLegend += `<span><span class="dot" style="background:${etColors[k] || '#484f58'}"></span>${k}: ${v.toLocaleString()}</span>`;
+    }
+    etBar += '</div>';
+    etLegend += '</div>';
+
+    // Per-grade table
+    let gradeRows = '';
+    for (const [g, info] of Object.entries(data.per_grade)) {
+      const pct = info.total > 0 ? (info.annotated / info.total * 100).toFixed(0) : 0;
+      gradeRows += `<tr>
+        <td>Grade ${g}</td>
+        <td>${info.total.toLocaleString()}</td>
+        <td>${info.annotated.toLocaleString()}</td>
+        <td>${(info.total - info.annotated).toLocaleString()}</td>
+        <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%"></div></div></td>
+        <td>${pct}%</td>
+        <td><a class="view-link" onclick="filterToAnnotations('grade','${g}')">View &rarr;</a></td>
+      </tr>`;
+    }
+
+    el.innerHTML = `
+      ${pills}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+        <div class="dist-section">
+          <h3>Teaching Value Distribution</h3>
+          ${tvBar}${tvLegend}
+        </div>
+        <div class="dist-section">
+          <h3>Element Type Distribution</h3>
+          ${etBar}${etLegend}
+        </div>
+      </div>
+      <div class="dist-section">
+        <h3>Per-Grade Coverage</h3>
+        <table class="grade-table">
+          <thead><tr><th>Grade</th><th>Total</th><th>Annotated</th><th>Gap</th><th>Coverage</th><th>%</th><th></th></tr></thead>
+          <tbody>${gradeRows}</tbody>
+        </table>
+      </div>`;
+  } catch (e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Error: ${e.message}</div>`;
+  }
+}
+
+function filterToAnnotations(filterKey, value) {
+  annFilters[filterKey] = value;
+  annPage = 0;
+  switchTab('annotations');
+  // Update filter button UI
+  document.querySelectorAll(`[data-filter="${filterKey}"]`).forEach(b => {
+    b.classList.toggle('active', b.dataset.value === value);
+  });
+}
+
+// ── Tab 2: Annotations ────────────────────────────────────────
+async function loadAnnotations() {
+  const listEl = document.getElementById('ann-list');
+  listEl.innerHTML = '<div class="loading-sm">Loading...</div>';
+
+  const params = new URLSearchParams({ page: annPage, per_page: annPerPage });
+  if (annFilters.grade) params.set('grade', annFilters.grade);
+  if (annFilters.tv) params.set('teaching_value', annFilters.tv);
+  if (annFilters.et) params.set('element_type', annFilters.et);
+
+  try {
+    const data = await apiFetch(`${API}/annotations?${params}`);
+
+    if (!data.items.length) {
+      listEl.innerHTML = '<div class="loading-sm">No images match filters</div>';
+      document.getElementById('ann-pagination').innerHTML = '';
+      return;
+    }
+
+    // Populate grade filter buttons if not done
+    ensureGradeFilters();
+
+    selectedIds.clear();
+    updateSelCount();
+    document.getElementById('select-all').checked = false;
+
+    let html = '';
+    for (const item of data.items) {
+      const imgSrc = item.image_path ? `/images/${item.image_path.replace('data/textbook_images/','')}` : '';
+      html += `<div class="ann-row" data-id="${item.image_id}">
+        <input type="checkbox" onchange="toggleSelect('${item.image_id}', this.checked)">
+        ${imgSrc ? `<img class="thumb" src="${imgSrc}" onclick="openLightbox('${imgSrc}')" loading="lazy">` : '<div class="thumb-placeholder">?</div>'}
+        <input type="text" value="${(item.description_uk || '').replace(/"/g,'&quot;')}" data-field="description_uk" placeholder="description_uk...">
+        <select data-field="teaching_value">
+          <option value="" ${!item.teaching_value ? 'selected' : ''}>--</option>
+          <option value="high" ${item.teaching_value==='high' ? 'selected' : ''}>High</option>
+          <option value="medium" ${item.teaching_value==='medium' ? 'selected' : ''}>Medium</option>
+          <option value="low" ${item.teaching_value==='low' ? 'selected' : ''}>Low</option>
+          <option value="none" ${item.teaching_value==='none' ? 'selected' : ''}>None</option>
+        </select>
+        <select data-field="element_type">
+          <option value="" ${!item.element_type ? 'selected' : ''}>--</option>
+          <option value="illustration" ${item.element_type==='illustration' ? 'selected' : ''}>illustration</option>
+          <option value="decoration" ${item.element_type==='decoration' ? 'selected' : ''}>decoration</option>
+          <option value="letter" ${item.element_type==='letter' ? 'selected' : ''}>letter</option>
+          <option value="logo" ${item.element_type==='logo' ? 'selected' : ''}>logo</option>
+          <option value="diagram" ${item.element_type==='diagram' ? 'selected' : ''}>diagram</option>
+          <option value="photo" ${item.element_type==='photo' ? 'selected' : ''}>photo</option>
+          <option value="map" ${item.element_type==='map' ? 'selected' : ''}>map</option>
+        </select>
+        <button class="save-btn" onclick="saveAnnotation('${item.image_id}', this.parentElement)">Save</button>
+      </div>`;
+    }
+    listEl.innerHTML = html;
+
+    // Pagination
+    const pagEl = document.getElementById('ann-pagination');
+    pagEl.innerHTML = `
+      <button onclick="annPage=0;loadAnnotations()" ${annPage === 0 ? 'disabled' : ''}>&laquo;</button>
+      <button onclick="annPage--;loadAnnotations()" ${annPage === 0 ? 'disabled' : ''}>&larr; Prev</button>
+      <span class="page-info">Page ${annPage + 1} / ${data.total_pages} (${data.total.toLocaleString()} images)</span>
+      <button onclick="annPage++;loadAnnotations()" ${annPage >= data.total_pages - 1 ? 'disabled' : ''}>Next &rarr;</button>
+      <button onclick="annPage=${data.total_pages - 1};loadAnnotations()" ${annPage >= data.total_pages - 1 ? 'disabled' : ''}>&raquo;</button>
+    `;
+  } catch (e) {
+    listEl.innerHTML = `<div class="loading-sm" style="color:var(--red)">Error: ${e.message}</div>`;
+  }
+}
+
+function ensureGradeFilters() {
+  const grp = document.querySelector('[data-filter="grade"]').parentElement;
+  if (grp.children.length > 2) return; // Already populated
+  for (let g = 1; g <= 11; g++) {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (annFilters.grade == g ? ' active' : '');
+    btn.dataset.filter = 'grade';
+    btn.dataset.value = String(g);
+    btn.textContent = String(g);
+    btn.onclick = () => setFilter('grade', String(g), btn);
+    grp.appendChild(btn);
+  }
+}
+
+function setFilter(key, value, btn) {
+  annFilters[key] = value;
+  annPage = 0;
+  // Update button UI
+  btn.parentElement.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.value === value);
+  });
+  loadAnnotations();
+}
+
+async function saveAnnotation(imageId, rowEl) {
+  const desc = rowEl.querySelector('[data-field="description_uk"]').value;
+  const tv = rowEl.querySelector('[data-field="teaching_value"]').value;
+  const et = rowEl.querySelector('[data-field="element_type"]').value;
+
+  const body = {};
+  if (desc) body.description_uk = desc;
+  if (tv) body.teaching_value = tv;
+  if (et) body.element_type = et;
+
+  try {
+    await apiFetch(`${API}/annotations/${imageId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    toast('Saved');
+  } catch (e) {
+    toast('Error: ' + e.message, true);
+  }
+}
+
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id); else selectedIds.delete(id);
+  updateSelCount();
+}
+
+function toggleSelectAll() {
+  const checked = document.getElementById('select-all').checked;
+  document.querySelectorAll('.ann-row input[type="checkbox"]').forEach(cb => {
+    cb.checked = checked;
+    const id = cb.parentElement.dataset.id;
+    if (checked) selectedIds.add(id); else selectedIds.delete(id);
+  });
+  updateSelCount();
+}
+
+function updateSelCount() {
+  document.getElementById('sel-count').textContent = `${selectedIds.size} selected`;
+}
+
+async function bulkSetTV() {
+  if (!selectedIds.size) return toast('No images selected', true);
+  const tv = document.getElementById('bulk-tv').value;
+  try {
+    await apiFetch(`${API}/annotations/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_ids: [...selectedIds], updates: { teaching_value: tv } }),
+    });
+    toast(`Set ${selectedIds.size} images to ${tv}`);
+    loadAnnotations();
+  } catch (e) {
+    toast('Error: ' + e.message, true);
+  }
+}
+
+async function bulkDelete() {
+  if (!selectedIds.size) return toast('No images selected', true);
+  if (!confirm(`Delete ${selectedIds.size} image files from disk? This cannot be undone.`)) return;
+  try {
+    await apiFetch(`${API}/cleanup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_ids: [...selectedIds] }),
+    });
+    toast(`Deleted ${selectedIds.size} images`);
+    selectedIds.clear();
+    loadAnnotations();
+  } catch (e) {
+    toast('Error: ' + e.message, true);
+  }
+}
+
+// ── Tab 1: Page Context ───────────────────────────────────────
+async function loadTextbooks() {
+  try {
+    textbooks = await apiFetch(`${API}/textbooks`);
+    const sel = document.getElementById('textbook-select');
+    for (const tb of textbooks) {
+      const opt = document.createElement('option');
+      opt.value = tb.stem;
+      opt.textContent = `${tb.stem} (${tb.page_count}p, ${tb.image_count} imgs)`;
+      sel.appendChild(opt);
+    }
+  } catch (e) {
+    document.getElementById('page-loading').textContent = 'Error loading textbooks: ' + e.message;
+  }
+}
+
+function onTextbookChange() {
+  const stem = document.getElementById('textbook-select').value;
+  if (!stem) return;
+  currentStem = stem;
+  const tb = textbooks.find(t => t.stem === stem);
+  totalPages = tb ? tb.page_count : 0;
+  currentPage = 1;
+  document.getElementById('page-input').value = 1;
+  document.getElementById('page-total').textContent = `/ ${totalPages}`;
+  loadPage();
+}
+
+function prevPage() {
+  if (currentPage > 1) { currentPage--; document.getElementById('page-input').value = currentPage; loadPage(); }
+}
+
+function nextPage() {
+  if (currentPage < totalPages) { currentPage++; document.getElementById('page-input').value = currentPage; loadPage(); }
+}
+
+function goToPage() {
+  const v = parseInt(document.getElementById('page-input').value);
+  if (v >= 1 && v <= totalPages) { currentPage = v; loadPage(); }
+}
+
+async function loadPage() {
+  if (!currentStem) return;
+
+  document.getElementById('prev-btn').disabled = currentPage <= 1;
+  document.getElementById('next-btn').disabled = currentPage >= totalPages;
+
+  const container = document.getElementById('page-container');
+  const sidebar = document.getElementById('page-sidebar');
+  container.innerHTML = '<div class="loading-sm">Loading page...</div>';
+  sidebar.innerHTML = '';
+
+  try {
+    const data = await apiFetch(`${API}/page/${currentStem}/${currentPage}`);
+
+    // Render page image with overlays
+    const imgUrl = `${API}/page_render/${currentStem}/${currentPage}.png`;
+    const scale = data.scale;
+
+    let imgOverlays = '';
+    let textOverlays = '';
+
+    data.images.forEach((img, i) => {
+      const [x0, y0, x1, y1] = img.bbox;
+      imgOverlays += `<div class="bbox-overlay bbox-img" id="bbox-${i}" data-idx="${i}"
+        style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
+        onmouseenter="highlightRow(${i})" onmouseleave="unhighlightRow(${i})">
+        <span class="bbox-label">${i+1}</span>
+      </div>`;
+    });
+
+    data.text_blocks.forEach(tb => {
+      const [x0, y0, x1, y1] = tb.bbox;
+      textOverlays += `<div class="bbox-overlay bbox-text"
+        style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
+        title="${tb.text.substring(0, 100)}"></div>`;
+    });
+
+    container.innerHTML = `
+      <img src="${imgUrl}" onload="this.parentElement.style.width=this.naturalWidth+'px'">
+      <div id="img-overlays" style="${showImageOverlay ? '' : 'display:none'}">${imgOverlays}</div>
+      <div id="text-overlays" style="${showTextOverlay ? '' : 'display:none'}">${textOverlays}</div>`;
+
+    // Sidebar: image list
+    let sidebarHtml = `<div style="font-size:12px;color:var(--text2);margin-bottom:8px;">${data.images.length} images, ${data.text_blocks.length} text blocks</div>`;
+
+    data.images.forEach((img, i) => {
+      const imgSrc = img.image_path ? `/images/${img.image_path.replace('data/textbook_images/','')}` : '';
+      sidebarHtml += `<div class="page-img-row" id="row-${i}" data-idx="${i}"
+        onmouseenter="highlightBbox(${i})" onmouseleave="unhighlightBbox(${i})"
+        onclick="if(event.target.tagName!=='IMG') highlightBbox(${i})">
+        ${imgSrc ? `<img class="thumb" src="${imgSrc}" onclick="openLightbox('${imgSrc}')" loading="lazy">` : '<div class="thumb-placeholder" style="width:60px;height:45px">?</div>'}
+        <div class="meta">
+          <div class="desc">${img.description_uk || '<span style="color:var(--text3)">no description</span>'}</div>
+          <div class="tags">
+            <span class="tag tag-type">#${i+1}</span>
+            ${tvTag(img.teaching_value)}
+            ${etTag(img.element_type)}
+            <span style="color:var(--text3)">${img.width}x${img.height}</span>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    sidebar.innerHTML = sidebarHtml;
+
+  } catch (e) {
+    container.innerHTML = `<div class="loading-sm" style="color:var(--red)">Error: ${e.message}</div>`;
+  }
+}
+
+function highlightRow(idx) {
+  document.getElementById(`row-${idx}`)?.classList.add('highlighted');
+}
+
+function unhighlightRow(idx) {
+  document.getElementById(`row-${idx}`)?.classList.remove('highlighted');
+}
+
+function highlightBbox(idx) {
+  document.getElementById(`bbox-${idx}`)?.classList.add('highlighted');
+}
+
+function unhighlightBbox(idx) {
+  document.getElementById(`bbox-${idx}`)?.classList.remove('highlighted');
+}
+
+function toggleOverlay(type) {
+  if (type === 'images') {
+    showImageOverlay = !showImageOverlay;
+    document.getElementById('toggle-images').classList.toggle('active', showImageOverlay);
+    const el = document.getElementById('img-overlays');
+    if (el) el.style.display = showImageOverlay ? '' : 'none';
+  } else {
+    showTextOverlay = !showTextOverlay;
+    document.getElementById('toggle-text').classList.toggle('active', showTextOverlay);
+    const el = document.getElementById('text-overlays');
+    if (el) el.style.display = showTextOverlay ? '' : 'none';
+  }
+}
+
+// ── Tab: Search (RAG) ─────────────────────────────────────────
+function setSearchType(btn, type) {
+  searchType = type;
+  document.querySelectorAll('.search-type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  document.getElementById('search-filters').style.display = type === 'literary' ? 'none' : 'flex';
+}
+
+function setSearchGrade(btn, grade) {
+  searchGrade = grade;
+  document.querySelectorAll('[data-sgrade]').forEach(b => b.classList.toggle('active', b.dataset.sgrade === grade));
+}
+
+function buildSearchGradeButtons() {
+  if (searchGradeButtonsBuilt) return;
+  searchGradeButtonsBuilt = true;
+  const grp = document.querySelector('[data-sgrade]').parentElement;
+  for (let g = 1; g <= 11; g++) {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.sgrade = String(g);
+    btn.textContent = `G${g}`;
+    btn.onclick = () => setSearchGrade(btn, String(g));
+    grp.appendChild(btn);
+  }
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function doSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.textContent = 'Searching...';
+  const gallery = document.getElementById('search-gallery');
+  gallery.innerHTML = '<div class="loading">Searching RAG...</div>';
+  const info = document.getElementById('search-info');
+
+  const params = new URLSearchParams({ q, limit: '20' });
+  if (searchGrade) params.set('grade', searchGrade);
+
+  const endpoint = `/api/rag/search_${searchType}`;
+
+  try {
+    const res = await fetch(`${endpoint}?${params}`);
+    if (res.status === 503) {
+      gallery.innerHTML = '<div class="loading" style="color:var(--red)">Qdrant unavailable. Start with: docker start qdrant</div>';
+      info.textContent = '';
+      return;
+    }
+    const data = await res.json();
+    const results = Array.isArray(data) ? data : [];
+    info.textContent = `${results.length} results for "${q}" (${searchType})`;
+
+    if (searchType === 'images') {
+      gallery.className = 'search-gallery';
+      gallery.innerHTML = results.map(hit => `
+        <div class="search-card">
+          <img src="/images/${hit.image_path}" loading="lazy" onclick="openLightbox('/images/${hit.image_path}')" alt="${hit.image_id}" />
+          <div class="info">
+            <span class="name" title="${hit.image_id}">${hit.image_id}</span>
+            <span class="score-badge">${hit.score.toFixed(3)}</span>
+            <span class="grade-badge">G${hit.grade}</span>
+            <span style="color:var(--text3)">${hit.width}x${hit.height}</span>
+          </div>
+        </div>`).join('') || '<div class="loading">No results</div>';
+    } else {
+      gallery.className = '';
+      gallery.innerHTML = '';
+      for (const hit of results) {
+        const meta = searchType === 'literary'
+          ? `<span style="color:var(--purple)">${hit.work || ''}</span> &middot; ${hit.genre || ''} &middot; ${hit.language_period || ''}`
+          : `Grade ${hit.grade || '?'} &middot; ${hit.section_title || ''} &middot; ${hit.author || ''}`;
+        gallery.innerHTML += `
+          <div class="text-result">
+            <div class="meta-line">
+              <div>${meta}</div>
+              <span class="search-card score-badge" style="background:var(--purple);color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;">${hit.score.toFixed(3)}</span>
+            </div>
+            <div class="body">${escapeHtml(hit.text || '')}</div>
+          </div>`;
+      }
+      if (!results.length) gallery.innerHTML = '<div class="loading">No results</div>';
+    }
+  } catch (e) {
+    gallery.innerHTML = `<div class="loading" style="color:var(--red)">Error: ${e.message}</div>`;
+    info.textContent = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search';
+  }
+}
+
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+// ── Lightbox ──────────────────────────────────────────────────
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('visible');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('visible');
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+  if (currentTab === 'context') {
+    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'ArrowRight') nextPage();
+  }
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ── Init ──────────────────────────────────────────────────────
+loadTextbooks();
+</script>
+</body>
+</html>

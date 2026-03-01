@@ -1,187 +1,135 @@
-# Plan: Image Annotation Pipeline — PyMuPDF Spatial Matching
+# Plan: Admin/Maintenance API + Dashboard
 
 ## Context
 
-Qdrant has 18,711 text chunks and 11,478 images from all grades 1-11, but images have **no Ukrainian text context**. SigLIP finds apple pictures for "яблуко", but we don't know what Ukrainian word/sentence was on the textbook page next to that image. This blocks building l2-uk-direct curriculum (#662) where images anchor meaning instead of English.
+The project has a Qdrant vector DB (561 MB, Docker), a SQLite message broker, scattered logs, and various maintenance scripts — but no centralized way to backup, health-check, or maintain them. The user wants:
 
-**Goal:** For each of the ~11.5K extracted images, find the nearest Ukrainian text from the same PDF page using PyMuPDF bounding box coordinates. Write annotations to `data/textbook_images/image_text_pairs.jsonl` — the file `ingest.py` already reads and merges into Qdrant payloads. No new dependencies, no API calls, no Gemini Vision.
+1. Qdrant backup (to iCloud/Google Drive)
+2. Other periodic maintenance tasks behind API calls
+3. A dashboard page to trigger these operations
 
-**Blocks:** #662 (A1 Module Build), #664 (source_images_direct.py)
+The existing FastAPI server (`scripts/api/main.py`, port 8765) already has modular routers for RAG, comms, state, images. Adding an `admin_router.py` follows the established pattern.
 
-## Pre-Step: POC Verification + Search Smoke Test
+**Issue**: To be created after plan approval.
 
-Before building anything, verify existing infrastructure works:
+## What Maintenance Operations Do We Need?
 
-1. **Search smoke test** — confirm Qdrant text+image search returns results:
-   ```bash
-   .venv/bin/python scripts/rag/query.py text "яблуко" --grade 1
-   .venv/bin/python scripts/rag/query.py images "яблуко" --grade 1
-   ```
-   Also test via MCP: `mcp__rag__search_text` and `mcp__rag__search_images`
+| Operation | Frequency | Current State |
+|-----------|-----------|---------------|
+| Qdrant backup (snapshot → file) | Before risky ops / weekly | Manual `tar` only |
+| Qdrant collection stats | On-demand | Exists in `rag_router.py /api/rag/stats` |
+| Qdrant re-index (text/images/literary) | After new scraping/extraction | Manual CLI scripts |
+| Message broker cleanup (stale msgs) | Weekly | Exists: `POST /api/comms/cleanup` |
+| Message broker vacuum (SQLite) | Monthly | Not implemented |
+| Log cleanup (scattered in `logs/`, `.mcp/`) | Monthly | Not implemented |
+| Disk usage report | On-demand | Not implemented |
+| Image annotation stats | On-demand | Manual `--stats` flag on script |
+| Embedding cache stats | On-demand | Manual `--stats` flag on script |
 
-2. **POC spatial matching** — run on 3 diverse pages, visually verify HTML output:
-   ```bash
-   .venv/bin/python scripts/rag/poc_pair_page.py data/textbooks/grade-01/1-klas-bukvar-zaharijchuk-2025-1.pdf 43 --open
-   .venv/bin/python scripts/rag/poc_pair_page.py data/textbooks/grade-05/5-klas-ukrmova-avramenko-2022.pdf 13 --open
-   .venv/bin/python scripts/rag/poc_pair_page.py data/textbooks/grade-03/3-klas-ukrainska-mova-vashulenko-2020-1.pdf 6 --open
-   ```
+## Step 1: Create `scripts/api/admin_router.py`
 
-3. **Verify xref mapping** — confirm that `page.get_images()[image_index][0]` xref matches `page.get_image_info(xrefs=True)` bbox for the same image. This is the critical bridge between extracted images and spatial coordinates.
+New router at `/api/admin/` with these endpoints:
 
-## Step 1: Build `scripts/rag/annotate_images.py`
+### Backup
+- `POST /api/admin/backup/qdrant` — Create Qdrant snapshot via REST API (`POST http://localhost:6333/snapshots`), then copy snapshot file to a configurable backup dir (default: `~/Library/Mobile Documents/com~apple~CloudDocs/learn-ukrainian-backups/` for iCloud, or `data/backups/` for local). Returns snapshot path + size.
+- `GET /api/admin/backup/list` — List existing backups with timestamps and sizes.
+- `DELETE /api/admin/backup/{filename}` — Delete old backup.
 
-### Core Algorithm
+### Health
+- `GET /api/admin/health` — Unified health check: Qdrant status, Docker container status, disk usage for `data/`, message broker DB status, API uptime.
+- `GET /api/admin/disk-usage` — Breakdown: `data/qdrant/storage/`, `data/textbook_images/`, `data/textbooks/`, `data/literary_texts/`, `data/textbook_chunks/`, `logs/`, `data/vesum.db`.
 
-For each book (PDF + its `-images.jsonl`):
-1. Load image records, group by page number
-2. Open PDF once
-3. For each page that has images:
-   - `page.get_images(full=True)` → xref list
-   - `page.get_image_info(xrefs=True)` → xref→bbox mapping
-   - `page.get_text("dict")` → text blocks with bboxes
-   - For each image record: recover xref via `image_index`, look up bbox, find nearest text block(s) by bbox distance
-4. Write annotations
+### Maintenance
+- `POST /api/admin/maintenance/vacuum-broker` — `VACUUM` the SQLite message broker DB.
+- `POST /api/admin/maintenance/clean-logs` — Rotate/delete logs older than N days (default 30). Covers `logs/`, `.mcp/servers/*/logs/`.
+- `GET /api/admin/maintenance/embedding-cache-stats` — Show cache status from `data/literary_texts/.embed_cache/`.
+- `GET /api/admin/maintenance/annotation-stats` — Image annotation quality stats (teaching_value distribution, empty descriptions, garbled encoding count).
 
-### Xref Mapping (Critical Bridge)
+### Collection Management
+- `GET /api/admin/collections` — Extended stats: points count, disk vs on-disk JSONL count, coverage gaps per grade/collection.
+- `POST /api/admin/collections/verify` — Compare Qdrant point counts vs JSONL chunk counts for all three collections, report gaps.
+
+## Step 2: Create `playgrounds/admin.html`
+
+Simple dashboard page (follows existing playground pattern — single HTML file with fetch calls to API).
+
+### Layout
 
 ```
-image_index (from JSONL) → page.get_images(full=True)[image_index][0] → xref
-xref → page.get_image_info(xrefs=True) → bbox
-bbox → bbox_distance(image_bbox, text_bbox) → nearest text
+┌─────────────────────────────────────────────┐
+│  🔧 Admin & Maintenance                     │
+├──────────┬──────────────────────────────────┤
+│          │                                  │
+│ Backup   │  [Create Qdrant Backup]          │
+│          │  Last backup: 2026-03-01, 561 MB │
+│          │  Backups: (list with delete)      │
+│          │                                  │
+├──────────┼──────────────────────────────────┤
+│          │                                  │
+│ Health   │  Qdrant: ● green (35K points)    │
+│          │  Broker: ● healthy (12 KB)       │
+│          │  Disk: 4.2 GB total              │
+│          │                                  │
+├──────────┼──────────────────────────────────┤
+│          │                                  │
+│ Maintain │  [Vacuum Broker DB]              │
+│          │  [Clean Old Logs]                │
+│          │  [Verify Collections]            │
+│          │                                  │
+├──────────┼──────────────────────────────────┤
+│          │                                  │
+│ Stats    │  Embedding cache: 147/162 cached  │
+│          │  Image annotations: 11,478        │
+│          │    high: 1,947 | garbled: 159    │
+│          │                                  │
+└──────────┴──────────────────────────────────┘
 ```
 
-`image_index` in JSONL is the enumeration position in `page.get_images()` (see `extract_images.py:53,83`), NOT a contiguous counter of kept images.
+### Interaction
+- Buttons trigger POST endpoints, show spinner, display result
+- Health section auto-refreshes every 30s
+- No frameworks — vanilla HTML/CSS/JS (matches existing playgrounds)
 
-### CLI Interface
+## Step 3: Wire Up
 
-```bash
-.venv/bin/python scripts/rag/annotate_images.py --all           # All books
-.venv/bin/python scripts/rag/annotate_images.py --grade 1 3     # Specific grades
-.venv/bin/python scripts/rag/annotate_images.py --book {stem}   # Single book
-.venv/bin/python scripts/rag/annotate_images.py --stats         # Progress/distribution stats
+### `scripts/api/main.py`
+Add 2 lines:
+```python
+from .admin_router import router as admin_router
+app.include_router(admin_router, prefix="/api/admin")
 ```
 
-### Output: `data/textbook_images/image_text_pairs.jsonl`
+### `playgrounds/index.html`
+Add link to admin page in the nav.
 
-One JSON line per image:
-```json
-{
-  "image_id": "3-klas-ukrainska-mova-vashulenko-2020-1_p006_i01",
-  "description_uk": "Вправа",
-  "associated_text_uk": "Прочитай вірш. Спиши, вставляючи пропущені букви.",
-  "teaching_value": "medium",
-  "element_type": "illustration",
-  "position": "top-right"
-}
-```
+### Backup directory
+Default to `data/backups/` (gitignored). User can configure iCloud path via env var `BACKUP_DIR`.
 
-- `description_uk` = nearest short text block (word/phrase) — for vocabulary images this IS the label
-- `associated_text_uk` = concatenated nearby text blocks, up to ~200 chars — the broader context
-- `teaching_value` = high / medium / low / none (heuristic, see below)
-- `element_type` = illustration / letter / diagram / decoration / QR / logo (heuristic)
-- `position` = 3×3 grid: top-left, center, bottom-right, etc.
-
-### Restartability
-
-- Progress dir: `data/textbook_images/.annotate_progress/`
-- After each book completes: write `{pdf_stem}.done` marker file
-- On startup: skip books with existing `.done` markers
-- Single book takes <2s, so losing in-progress book on crash is acceptable
-- `--all` rewrites entire `image_text_pairs.jsonl` atomically (temp file → rename)
-
-### Classification Heuristics
-
-**Teaching value:**
-| Condition | Value |
-|-----------|-------|
-| Rendered size < 30pt either dimension | `none` |
-| No text within 200pt | `none` |
-| Only nearby text is page number (bottom 5% of page, digits only) | `low` |
-| Nearest text ≤30 chars, distance < 80pt | `high` (vocabulary illustration) |
-| Nearest text ≤100 chars, distance < 50pt | `medium` |
-| Paragraph-level text nearby, distance < 50pt | `medium` |
-| Everything else | `low` |
-
-**Element type:**
-| Condition | Type |
-|-----------|------|
-| Square-ish (0.8-1.2 aspect), 30-120pt, small | `QR` |
-| Small (<80pt), near single-char text (≤3 chars) | `letter` |
-| Aspect ratio > 8 or < 0.125 (very wide/thin) | `decoration` |
-| Covers >90% of page | `decoration` |
-| Small (<60pt), in corner (<10% from edge) | `logo` |
-| Default | `illustration` |
-
-### Functions to Reuse from POC (`poc_pair_page.py`)
-
-- `extract_text_blocks(page)` → lines 29-49 (text blocks with bboxes)
-- `bbox_distance(b1, b2)` → lines 92-97 (min distance between bboxes)
-- `bbox_center(bbox)` → lines 87-88
-
-### Key Files
+## Key Files
 
 | File | Action |
 |------|--------|
-| `scripts/rag/annotate_images.py` | **CREATE** — main annotation script |
-| `scripts/rag/poc_pair_page.py` | READ — reuse spatial matching logic |
-| `scripts/rag/extract_images.py` | READ — understand `image_index` → xref mapping |
-| `scripts/rag/ingest.py:242-277` | NO CHANGE — already reads `image_text_pairs.jsonl` |
-| `scripts/rag/config.py` | READ — import `IMAGES_DIR`, `TEXTBOOKS_DIR`, `parse_pdf_metadata` |
-| `.mcp/servers/rag/server.py` | NO CHANGE — already returns annotation fields |
-
-## Step 2: Run Annotation
-
-```bash
-# Single book test first
-.venv/bin/python scripts/rag/annotate_images.py --book 1-klas-bukvar-zaharijchuk-2025-1
-
-# Verify output
-head -5 data/textbook_images/image_text_pairs.jsonl
-
-# Full batch
-.venv/bin/python scripts/rag/annotate_images.py --all
-
-# Check stats
-.venv/bin/python scripts/rag/annotate_images.py --stats
-```
-
-Expected: ~11.5K annotation records. Scanned books (empty JSONLs) auto-skipped. Runtime: <5 minutes for all books (PyMuPDF only, no ML models).
-
-## Step 3: Re-ingest Annotated Images
-
-```bash
-# Re-ingest all grades (upserts — same image IDs, enriched payloads)
-.venv/bin/python scripts/rag/ingest.py --all --grade 1 2 3 4 5 6 7 8 9 10 11
-```
-
-This reloads SigLIP (heavy), re-embeds images (unchanged vectors), and merges annotation fields from `image_text_pairs.jsonl` into Qdrant payloads. Existing points are upserted (same hash-based IDs).
-
-## Step 4: Verify End-to-End
-
-```bash
-# CLI search — should now show description_uk and associated_text_uk
-.venv/bin/python scripts/rag/query.py images "яблуко" --grade 1
-
-# MCP search
-# mcp__rag__search_images query="яблуко" grade=1
-
-# Filter by teaching value
-# mcp__rag__search_images query="буква А" teaching_value="high"
-
-# Playground
-.venv/bin/python -m uvicorn scripts.api.main:app --port 8790
-```
+| `scripts/api/admin_router.py` | **CREATE** — all admin endpoints |
+| `playgrounds/admin.html` | **CREATE** — dashboard UI |
+| `scripts/api/main.py` | **EDIT** — mount admin router (2 lines) |
+| `playgrounds/index.html` | **EDIT** — add admin link |
+| `.gitignore` | **EDIT** — add `data/backups/` |
+| `scripts/api/rag_router.py` | READ — reuse `_qdrant_available()` pattern |
+| `scripts/api/comms_router.py` | READ — reuse broker DB connection pattern |
 
 ## What Does NOT Change
 
-- `ingest.py` — already reads `image_text_pairs.jsonl` ✅
-- MCP server — already returns annotation fields ✅
-- `query.py` — already displays annotation fields ✅
-- Image extraction — already done ✅
-- Qdrant schema — `teaching_value` already indexed as KEYWORD ✅
+- Qdrant Docker setup — unchanged
+- Existing routers — no modifications
+- MCP servers — unchanged
+- Ingestion scripts — unchanged (admin only reports stats, doesn't trigger re-ingestion)
 
-## Resource Notes
+## Verification
 
-- Annotation: CPU-only, ~100MB RAM (PyMuPDF only, no ML models)
-- Re-ingestion: ~1.5GB RAM (SigLIP model loading)
-- Qdrant: already running
+1. Start API: `npm run api:reload`
+2. Test backup: `curl -X POST http://localhost:8765/api/admin/backup/qdrant`
+3. Test health: `curl http://localhost:8765/api/admin/health`
+4. Test disk: `curl http://localhost:8765/api/admin/disk-usage`
+5. Test verify: `curl -X POST http://localhost:8765/api/admin/collections/verify`
+6. Open dashboard: `http://localhost:8765/admin.html`
+7. Click "Create Backup" — verify file appears in `data/backups/`

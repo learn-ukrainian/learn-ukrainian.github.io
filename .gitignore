@@ -137,6 +137,7 @@ data/literary_texts/*.bin
 data/literary_texts/*.npy
 data/vesum/
 data/vesum.db
+data/backups/
 
 # Starlight
 starlight/dist
