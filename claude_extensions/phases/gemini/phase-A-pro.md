@@ -135,6 +135,11 @@ After completing research, rebuild the `content_outline` using:
 - Section "{section_name}": [!hook_type] — description
 - ...
 
+## Відеоресурси
+(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — навчальні відео, вебінари, офіційні відеоінструкції з DIIA чи урядових сайтів — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)
+- {Канал — Назва — URL — Короткий опис релевантності}
+- (нічого не знайдено)
+
 ## Section-Mapped Research Notes
 
 ### {Section 1 from content_outline}

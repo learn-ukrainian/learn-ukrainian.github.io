@@ -13,10 +13,14 @@ Other:
   .venv/bin/python scripts/assess_research.py a1 --gaps        # only modules with gaps
   .venv/bin/python scripts/assess_research.py --all            # all tracks overview
   .venv/bin/python scripts/assess_research.py a1 --json        # JSON output
+  .venv/bin/python scripts/assess_research.py a1 --coverage    # research coverage gaps
+  .venv/bin/python scripts/assess_research.py --all --coverage # full curriculum coverage
 
 Flags:
   --dry-run       Preview what would be done (works with --upgrade, --refresh)
   --min-score N   Score threshold (default: 9)
+  --coverage      Show research coverage gaps (manifest modules vs research files)
+  --strict        With --coverage, exit 1 if any gaps found (for CI)
 """
 
 import argparse
@@ -169,6 +173,8 @@ COLORS = {
 RESET = "\033[0m"
 BOLD = "\033[1m"
 DIM = "\033[2m"
+GREEN = "\033[32m"
+RED = "\033[31m"
 
 
 def _colored(text: str, quality: str | None) -> str:
@@ -683,6 +689,78 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 # ==================== MAIN ====================
 
 
+def _coverage_for_track(track_id: str, manifest: dict) -> dict:
+    """Compute research coverage for a track. Returns {total, researched, gaps: [slug]}."""
+    track_cfg = next((t for t in TRACKS if t["id"] == track_id), None)
+    if not track_cfg:
+        return {"total": 0, "researched": 0, "gaps": []}
+    track_dir = CURRICULUM_ROOT / track_cfg["path"]
+    modules_list = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
+    gaps = []
+    researched = 0
+    for m_entry in modules_list:
+        slug = _parse_slug(m_entry)
+        rp = find_research_path(track_dir, slug)
+        if rp:
+            researched += 1
+        else:
+            gaps.append(slug)
+    return {"total": len(modules_list), "researched": researched, "gaps": gaps}
+
+
+def _render_coverage_table(track_id: str, manifest: dict):
+    """Render coverage table for a single track."""
+    cov = _coverage_for_track(track_id, manifest)
+    track_name = _get_track_name(track_id)
+    total, researched = cov["total"], cov["researched"]
+    pct = f"{researched / total * 100:.0f}%" if total > 0 else "0%"
+    print(f"\n{BOLD}{track_name} Research Coverage{RESET}")
+    print("\u2550" * 60)
+    print(f"  Manifest modules:  {total}")
+    print(f"  Research files:    {researched}")
+    print(f"  Coverage:          {researched}/{total} ({pct})")
+    if cov["gaps"]:
+        print(f"\n  {BOLD}Missing research ({len(cov['gaps'])}):{RESET}")
+        for slug in cov["gaps"]:
+            print(f"    \u2022 {slug}")
+    else:
+        print(f"\n  {GREEN}\u2714 Full coverage{RESET}")
+    print()
+
+
+def _compute_all_coverage(manifest: dict) -> dict[str, dict]:
+    """Compute coverage for all non-empty tracks. Returns {track_id: coverage_dict}."""
+    result = {}
+    for track_cfg in TRACKS:
+        tid = track_cfg["id"]
+        cov = _coverage_for_track(tid, manifest)
+        if cov["total"] > 0:
+            result[tid] = cov
+    return result
+
+
+def _render_all_coverage(all_cov: dict[str, dict]):
+    """Render coverage overview table from pre-computed coverage data."""
+    print(f"\n{BOLD}Research Coverage Overview{RESET}")
+    print("\u2550" * 70)
+    print(f"{'Track':<14} {'Manifest':>8} {'Research':>9} {'Gaps':>5}  {'Coverage':>9}")
+    print("\u2500" * 70)
+    total_gaps = 0
+    for track_cfg in TRACKS:
+        tid = track_cfg["id"]
+        cov = all_cov.get(tid)
+        if not cov:
+            continue
+        pct = f"{cov['researched'] / cov['total'] * 100:.0f}%"
+        gap_count = len(cov["gaps"])
+        total_gaps += gap_count
+        gap_color = RED if gap_count > 0 else GREEN
+        print(f"{track_cfg['name']:<14} {cov['total']:>8} {cov['researched']:>9} {gap_color}{gap_count:>5}{RESET}  {pct:>9}")
+    print("\u2550" * 70)
+    print(f"  Total gaps: {total_gaps}")
+    print()
+
+
 def main():
     epilog = """\
 Example workflow:
@@ -690,6 +768,8 @@ Example workflow:
   assess_research.py a1 --upgrade        # 2. Regenerate research below 9/10
   assess_research.py a1 --enrich         # 3. Enrich plans from 9+ research
   assess_research.py a1 --refresh        # 4. Rebuild stale content
+  assess_research.py a1 --coverage       # Show research coverage gaps
+  assess_research.py --all --coverage    # Full curriculum coverage
 
 Add --dry-run to preview without making changes:
   assess_research.py a1 --upgrade --dry-run
@@ -709,9 +789,42 @@ Add --dry-run to preview without making changes:
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--all", action="store_true", help="Overview of all tracks")
+    parser.add_argument("--coverage", action="store_true", help="Show research coverage gaps (manifest vs research files)")
+    parser.add_argument("--strict", action="store_true", help="With --coverage, exit 1 if any gaps found (for CI)")
     args = parser.parse_args()
 
+    if args.strict and not args.coverage:
+        parser.error("--strict requires --coverage")
+
     manifest = _load_manifest()
+
+    # --coverage mode
+    if args.coverage:
+        if args.all:
+            all_cov = _compute_all_coverage(manifest)
+            if args.json:
+                print(json.dumps(all_cov, indent=2, ensure_ascii=False))
+            else:
+                _render_all_coverage(all_cov)
+            total_gaps = sum(len(c["gaps"]) for c in all_cov.values())
+            if args.strict and total_gaps > 0:
+                sys.exit(1)
+            return
+        if not args.track:
+            parser.print_help()
+            sys.exit(1)
+        track_id = args.track.lower()
+        if not any(t["id"] == track_id for t in TRACKS):
+            print(f"Error: Unknown track '{track_id}'", file=sys.stderr)
+            sys.exit(1)
+        cov = _coverage_for_track(track_id, manifest)
+        if args.json:
+            print(json.dumps(cov, indent=2, ensure_ascii=False))
+        else:
+            _render_coverage_table(track_id, manifest)
+        if args.strict and cov["gaps"]:
+            sys.exit(1)
+        return
 
     if args.all:
         if args.json:

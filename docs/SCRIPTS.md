@@ -2098,6 +2098,10 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/assess_research.py a1 --json     # JSON output
 .venv/bin/python scripts/assess_research.py a1 --upgrade --dry-run      # preview without building
 .venv/bin/python scripts/assess_research.py a1 --upgrade --min-score 8  # custom threshold
+.venv/bin/python scripts/assess_research.py a1 --coverage               # research coverage gaps
+.venv/bin/python scripts/assess_research.py --all --coverage            # full curriculum coverage
+.venv/bin/python scripts/assess_research.py c1 --coverage --strict      # exit 1 if gaps (CI)
+.venv/bin/python scripts/assess_research.py c1 --coverage --json        # JSON: {total, researched, gaps}
 ```
 
 **Self-healing retries:** `--upgrade` retries each module up to 3 attempts. Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
