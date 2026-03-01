@@ -1,0 +1,256 @@
+module: naholos
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: "Наголос"
+subtitle: "Наголос і ритм слова"
+standard_ref: "§4.1.5 — stress, §4.1.8 — basic intonation"
+textbook_ref: "Bolshakova 2018 Part 1 p.18; Grade 3 p.68; Grade 5 §38–39"
+
+# ─────────────────────────────────────────────
+# STRESS RULE
+# ─────────────────────────────────────────────
+stress_rule:
+  text: "Наголос — це виділення одного складу в слові голосом. Наголос позначаємо знаком ´ над голосною."
+  key_point: "В українській мові наголос може падати на будь-який склад."
+  examples:
+    - word: "со́нце"
+      stress_position: 1
+      syllables: 2
+      emoji: "☀️"
+    - word: "весна́"
+      stress_position: 2
+      syllables: 2
+      emoji: "🌸"
+    - word: "молоко́"
+      stress_position: 3
+      syllables: 3
+      emoji: "🥛"
+    - word: "Украї́на"
+      stress_position: 3
+      syllables: 4
+      emoji: "🇺🇦"
+
+# ─────────────────────────────────────────────
+# STRESS SHIFTS MEANING
+# ─────────────────────────────────────────────
+stress_meaning:
+  text: "Наголос може змінювати значення слова."
+  pairs:
+    - word_a: "за́мок"
+      meaning_a: "будівля"
+      emoji_a: "🏰"
+      word_b: "замо́к"
+      meaning_b: "на дверях"
+      emoji_b: "🔒"
+    - word_a: "о́бід"
+      meaning_a: "частина колеса"
+      emoji_a: "⭕"
+      word_b: "обі́д"
+      meaning_b: "їжа вдень"
+      emoji_b: "🍲"
+
+# ─────────────────────────────────────────────
+# 30 PRACTICE WORDS (grouped by stress position)
+# ─────────────────────────────────────────────
+practice_words:
+  - group: "Наголос на першому складі"
+    words:
+      - word: "со́нце"
+        emoji: "☀️"
+      - word: "ма́ма"
+        emoji: "👩"
+      - word: "о́сінь"
+        emoji: "🍂"
+      - word: "мі́сто"
+        emoji: "🏙️"
+      - word: "де́рево"
+        emoji: "🌳"
+      - word: "о́лень"
+        emoji: "🦌"
+      - word: "но́вий"
+        emoji: "✨"
+      - word: "кві́тка"
+        emoji: "🌸"
+      - word: "ра́нок"
+        emoji: "🌅"
+      - word: "ча́шка"
+        emoji: "☕"
+
+  - group: "Наголос на другому складі"
+    words:
+      - word: "весна́"
+        emoji: "🌷"
+      - word: "зима́"
+        emoji: "❄️"
+      - word: "вода́"
+        emoji: "💧"
+      - word: "земля́"
+        emoji: "🌍"
+      - word: "чита́ти"
+        emoji: "📖"
+      - word: "писа́ти"
+        emoji: "✏️"
+      - word: "рука́"
+        emoji: "✋"
+      - word: "доро́га"
+        emoji: "🛤️"
+      - word: "хати́на"
+        emoji: "🏠"
+      - word: "діти́на"
+        emoji: "👶"
+
+  - group: "Наголос на третьому складі"
+    words:
+      - word: "Украї́на"
+        emoji: "🇺🇦"
+      - word: "телефо́н"
+        emoji: "📱"
+      - word: "молоко́"
+        emoji: "🥛"
+      - word: "листопа́д"
+        emoji: "🍁"
+      - word: "беремо́"
+        emoji: "🤲"
+      - word: "голова́"
+        emoji: "🗣️"
+      - word: "далеко́"
+        emoji: "🏔️"
+      - word: "високо́"
+        emoji: "⬆️"
+      - word: "навесні́"
+        emoji: "🌻"
+      - word: "черепа́ха"
+        emoji: "🐢"
+
+# ─────────────────────────────────────────────
+# STRESS SHIFTS IN FORMS (awareness only)
+# ─────────────────────────────────────────────
+stress_shifts:
+  text: "Наголос може переходити з одного складу на інший у різних формах одного слова."
+  note: "Просто запам'ятай — правила будуть пізніше."
+  examples:
+    - base: "рука́"
+      forms: ["ру́ки", "рука́м"]
+    - base: "нога́"
+      forms: ["но́ги", "нога́м"]
+    - base: "о́ко"
+      forms: ["о́чі", "оче́й"]
+
+# ─────────────────────────────────────────────
+# DOUBLE STRESS (both acceptable)
+# ─────────────────────────────────────────────
+double_stress:
+  text: "Деякі слова мають подвійний наголос — обидва варіанти правильні."
+  source: "Grade 3 p.68"
+  examples:
+    - word: "завжди́ / за́вжди"
+    - word: "по́милка / поми́лка"
+
+# ─────────────────────────────────────────────
+# INTONATION
+# ─────────────────────────────────────────────
+intonation:
+  text: "Інтонація — це мелодія речення."
+  patterns:
+    - type: "statement"
+      symbol: "↘"
+      description: "Голос падає в кінці"
+      example: "Це кіт↘."
+    - type: "question"
+      symbol: "↗"
+      description: "Голос піднімається в кінці"
+      example: "Це кіт↗?"
+    - type: "exclamation"
+      symbol: "↗↘"
+      description: "Голос піднімається і різко падає"
+      example: "Який гарний кіт↗↘!"
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# ─────────────────────────────────────────────
+activities:
+
+  - type: pattern_drill
+    title: "На якому складі наголос?"
+    prompt: "Послухай слово. На якому складі наголос? Відповідь: 1, 2 або 3."
+    items:
+      - given: "со́нце (сон-це)"
+        answer: "1"
+      - given: "весна́ (вес-на)"
+        answer: "2"
+      - given: "молоко́ (мо-ло-ко)"
+        answer: "3"
+      - given: "ма́ма (ма-ма)"
+        answer: "1"
+      - given: "вода́ (во-да)"
+        answer: "2"
+      - given: "Украї́на (У-кра-ї-на)"
+        answer: "3"
+      - given: "кві́тка (квіт-ка)"
+        answer: "1"
+      - given: "земля́ (зем-ля)"
+        answer: "2"
+      - given: "телефо́н (те-ле-фон)"
+        answer: "3"
+      - given: "ра́нок (ра-нок)"
+        answer: "1"
+      - given: "рука́ (ру-ка)"
+        answer: "2"
+      - given: "далеко́ (да-ле-ко)"
+        answer: "3"
+
+  - type: true_false
+    title: "Правда чи неправда?"
+    items:
+      - statement: "Наголос у слові «вода́» — на першому складі."
+        answer: false
+      - statement: "Наголос у слові «со́нце» — на першому складі."
+        answer: true
+      - statement: "Наголос у слові «молоко́» — на третьому складі."
+        answer: true
+      - statement: "«За́мок» і «замо́к» — це одне слово з однаковим значенням."
+        answer: false
+      - statement: "В українській мові наголос завжди на першому складі."
+        answer: false
+      - statement: "Наголос у слові «Украї́на» — на третьому складі."
+        answer: true
+      - statement: "«За́вжди» і «завжди́» — обидва варіанти правильні."
+        answer: true
+
+  - type: pattern_drill
+    title: "Інтонація: питання чи відповідь?"
+    prompt: "Прочитай речення. Це питання (↗?) чи відповідь (↘.)?"
+    items:
+      - given: "Це кіт?"
+        answer: "↗"
+      - given: "Це кіт."
+        answer: "↘"
+      - given: "Мама читає?"
+        answer: "↗"
+      - given: "Мама читає."
+        answer: "↘"
+      - given: "Ти з України?"
+        answer: "↗"
+      - given: "Я з України."
+        answer: "↘"
+
+  - type: tongue_twister
+    title: "Скоромовка"
+    text: "Са́ні везу́ть Са́ню. Лу́ки зеленію́ть лу́ками."
+    focus: "Ритм і наголос — виділяй наголошені склади голосом"
+    source: "Adapted for stress practice"
+
+  - type: build_sentence
+    title: "Склади речення"
+    sentences:
+      - words: ["Це", "кіт", "."]
+        correct: "Це кіт."
+      - words: ["Це", "кіт", "?"]
+        correct: "Це кіт?"
+      - words: ["Мама", "читає", "."]
+        correct: "Мама читає."
+      - words: ["Мама", "читає", "?"]
+        correct: "Мама читає?"
+      - words: ["Дитина", "грає", "."]
+        correct: "Дитина грає."

@@ -1,0 +1,258 @@
+module: pryvit
+track: l2-uk-direct
+level: a1
+type: communicative
+title: "Привіт!"
+subtitle: "Привітання, прощання, ввічливість"
+standard_ref: "Catalogue A items 1–8"
+textbook_ref: "Bolshakova 2018 Part 2; Grade 2 Tsepova"
+
+# ─────────────────────────────────────────────
+# VOCABULARY: 25 expressions as fixed phrases
+# ─────────────────────────────────────────────
+
+# Register: Ти-form (informal) vs Ви-form (formal)
+register_note: "«З друзями» — ти. «З незнайомими» — Ви."
+
+vocabulary:
+  - category: "Привітання (greetings)"
+    items:
+      - phrase: "Привіт!"
+        register: "ти"
+        emoji: "👋"
+        context: "друзі, знайомі"
+      - phrase: "Добрий ранок!"
+        register: "Ви"
+        emoji: "🌅"
+        context: "до 12:00"
+      - phrase: "Добрий день!"
+        register: "Ви"
+        emoji: "☀️"
+        context: "12:00–18:00"
+      - phrase: "Добрий вечір!"
+        register: "Ви"
+        emoji: "🌆"
+        context: "після 18:00"
+
+  - category: "Прощання (farewells)"
+    items:
+      - phrase: "До побачення!"
+        register: "Ви"
+        emoji: "🤝"
+      - phrase: "Бувай!"
+        register: "ти"
+        emoji: "👋"
+      - phrase: "Бувайте!"
+        register: "Ви"
+        emoji: "👋"
+      - phrase: "На добраніч!"
+        register: "both"
+        emoji: "🌙"
+        context: "перед сном"
+      - phrase: "До зустрічі!"
+        register: "both"
+        emoji: "🔜"
+
+  - category: "Подяка (thanks)"
+    items:
+      - phrase: "Дякую!"
+        register: "both"
+        emoji: "🙏"
+      - phrase: "Дуже дякую!"
+        register: "both"
+        emoji: "🙏"
+      - phrase: "Будь ласка."
+        register: "both"
+        emoji: "😊"
+        note: "= you're welcome / please"
+
+  - category: "Вибачення (apologies)"
+    items:
+      - phrase: "Вибачте."
+        register: "Ви"
+        emoji: "🙇"
+      - phrase: "Пробачте."
+        register: "Ви"
+        emoji: "🙇"
+      - phrase: "Вибач."
+        register: "ти"
+        emoji: "🙇"
+
+  - category: "Привертання уваги (attention)"
+    items:
+      - phrase: "Вибачте."
+        register: "Ви"
+        note: "= excuse me (to attract attention)"
+      - phrase: "Скажіть, будь ласка."
+        register: "Ви"
+        emoji: "🗣️"
+
+  - category: "Вітання і побажання (congratulations & wishes)"
+    items:
+      - phrase: "Вітаю!"
+        register: "both"
+        emoji: "🎉"
+      - phrase: "Бажаю здоров'я!"
+        register: "both"
+        emoji: "💪"
+      - phrase: "Бажаю щастя!"
+        register: "both"
+        emoji: "😊"
+      - phrase: "Щасти!"
+        register: "both"
+        emoji: "🍀"
+
+  - category: "Відповіді (responses)"
+    items:
+      - phrase: "Так."
+        emoji: "✅"
+      - phrase: "Ні."
+        emoji: "❌"
+      - phrase: "Добре."
+        emoji: "👍"
+      - phrase: "Гаразд."
+        emoji: "👌"
+
+# ─────────────────────────────────────────────
+# TEXTBOOK ENRICHMENT
+# ─────────────────────────────────────────────
+proverb: "Ввічливе слово — золотий ключик."
+
+# ─────────────────────────────────────────────
+# ASKING "HOW ARE YOU?" (essential social pattern)
+# ─────────────────────────────────────────────
+social_patterns:
+  - pattern: "Як справи?"
+    answers:
+      - "Добре, дякую!"
+      - "Дуже добре!"
+      - "Нормально."
+      - "Так собі."
+  - pattern: "Як ти? / Як Ви?"
+    answers:
+      - "Добре, дякую! А ти? / А Ви?"
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# ─────────────────────────────────────────────
+activities:
+
+  - type: classify
+    title: "Привітання чи прощання?"
+    instruction: "Розподіли фрази"
+    categories:
+      - label: "Привітання"
+        items:
+          - "Привіт!"
+          - "Добрий ранок!"
+          - "Добрий день!"
+          - "Добрий вечір!"
+      - label: "Прощання"
+        items:
+          - "До побачення!"
+          - "Бувай!"
+          - "Бувайте!"
+          - "На добраніч!"
+          - "До зустрічі!"
+      - label: "Подяка"
+        items:
+          - "Дякую!"
+          - "Дуже дякую!"
+          - "Будь ласка."
+      - label: "Вибачення"
+        items:
+          - "Вибачте."
+          - "Пробачте."
+          - "Вибач."
+
+  - type: pattern_drill
+    title: "Що сказати?"
+    prompt: "Яку фразу ти скажеш?"
+    items:
+      - given: "Ти зустрічаєш друга вранці."
+        answer: "Привіт! Добрий ранок!"
+      - given: "Ти йдеш додому ввечері. Кажеш другу:"
+        answer: "Бувай! До побачення!"
+      - given: "Тобі допомогли знайти дорогу."
+        answer: "Дякую! Дуже дякую!"
+      - given: "Ти хочеш запитати незнайому людину на вулиці."
+        answer: "Вибачте. Скажіть, будь ласка."
+      - given: "Друг каже: «Як справи?»"
+        answer: "Добре, дякую! А ти?"
+      - given: "Перед сном кажеш родині:"
+        answer: "На добраніч!"
+
+  - type: true_false
+    title: "Правда чи неправда?"
+    items:
+      - statement: "«Бувай» — це привітання."
+        answer: false
+      - statement: "«Добрий ранок» кажемо вранці."
+        answer: true
+      - statement: "«Будь ласка» — це подяка."
+        answer: false
+      - statement: "«На добраніч» кажемо перед сном."
+        answer: true
+      - statement: "«Привіт» — це Ви-форма."
+        answer: false
+      - statement: "«Вибачте» і «Вибач» — це одне і те саме значення."
+        answer: true
+      - statement: "«Добрий вечір» кажемо після 18:00."
+        answer: true
+
+  - type: build_sentence
+    title: "Склади діалог"
+    sentences:
+      - words: ["Добрий", "день", "!"]
+        correct: "Добрий день!"
+      - words: ["Як", "справи", "?"]
+        correct: "Як справи?"
+      - words: ["Добре", ",", "дякую", "!"]
+        correct: "Добре, дякую!"
+      - words: ["До", "побачення", "!"]
+        correct: "До побачення!"
+      - words: ["Дуже", "дякую", "!"]
+        correct: "Дуже дякую!"
+
+  - type: reading
+    title: "Діалог на вулиці"
+    text: |
+      — Добрий день!
+      — Добрий день! Як справи?
+      — Добре, дякую! А Ви?
+      — Теж добре, дякую!
+      — До побачення!
+      — До побачення! До зустрічі!
+    questions:
+      - question: "Як справи у першої людини?"
+        answer: "Добре."
+      - question: "Як прощаються ці люди?"
+        answer: "До побачення! До зустрічі!"
+
+  - type: proverb_drill
+    title: "Прислів'я"
+    proverb: "Ввічливе слово — золотий ключик."
+    activity:
+      type: fill_gap
+      gap_word: "золотий"
+      options: ["золотий", "срібний", "залізний"]
+      answer: "золотий"
+      meaning: "Ввічливі слова допомагають усюди."
+
+  - type: classify
+    title: "Ти чи Ви?"
+    instruction: "Розподіли: «з друзями» (ти) чи «з незнайомими» (Ви)?"
+    categories:
+      - label: "Ти (з друзями)"
+        items:
+          - "Привіт!"
+          - "Бувай!"
+          - "Вибач."
+          - "Як ти?"
+      - label: "Ви (з незнайомими)"
+        items:
+          - "Добрий день!"
+          - "Бувайте!"
+          - "Вибачте."
+          - "Як Ви?"
+          - "Скажіть, будь ласка."

@@ -1,0 +1,234 @@
+module: tse
+track: l2-uk-direct
+level: a1
+type: vocabulary
+title: "Це..."
+subtitle: "Називаємо речі і людей. ХТО? ЩО?"
+standard_ref: "§4.2.3.1 — nominative, §4.3.1 — simple sentences"
+textbook_ref: "Bolshakova 2018 Part 1 pp.8–9"
+
+# ─────────────────────────────────────────────
+# KEY PATTERN
+# ─────────────────────────────────────────────
+key_pattern:
+  text: "Це + іменник"
+  examples:
+    - "Це мама."
+    - "Це кіт."
+    - "Це книга."
+
+# ─────────────────────────────────────────────
+# QUESTION WORDS
+# ─────────────────────────────────────────────
+question_words:
+  - question: "ХТО?"
+    description: "Питаємо про людей і тварин"
+    examples:
+      - "Хто це? — Це мама."
+      - "Хто це? — Це кіт."
+  - question: "ЩО?"
+    description: "Питаємо про речі"
+    examples:
+      - "Що це? — Це стіл."
+      - "Що це? — Це книга."
+
+# ─────────────────────────────────────────────
+# VOCABULARY: 20 words across 3 categories
+# ─────────────────────────────────────────────
+vocabulary:
+  - category: "Люди (ХТО?)"
+    items:
+      - word: "мама"
+        emoji: "👩"
+        sentence: "Це мама. Мама читає."
+      - word: "тато"
+        emoji: "👨"
+        sentence: "Це тато. Тато працює."
+      - word: "дитина"
+        emoji: "👶"
+        sentence: "Це дитина. Дитина грає."
+      - word: "друг"
+        emoji: "🧑‍🤝‍🧑"
+        sentence: "Це мій друг. Друг говорить."
+      - word: "вчитель"
+        emoji: "👩‍🏫"
+        sentence: "Це вчитель. Вчитель пише."
+      - word: "лікар"
+        emoji: "👨‍⚕️"
+        sentence: "Це лікар. Лікар допомагає."
+
+  - category: "Тварини (ХТО?)"
+    items:
+      - word: "кіт"
+        emoji: "🐱"
+        sentence: "Це кіт. Кіт спить."
+      - word: "пес"
+        emoji: "🐶"
+        sentence: "Це пес. Пес біжить."
+      - word: "птах"
+        emoji: "🐦"
+        sentence: "Це птах. Птах летить."
+      - word: "кінь"
+        emoji: "🐴"
+        sentence: "Це кінь. Кінь біжить."
+      - word: "риба"
+        emoji: "🐟"
+        sentence: "Це риба. Риба пливе."
+
+  - category: "Речі (ЩО?)"
+    items:
+      - word: "стіл"
+        emoji: "🪑"
+        sentence: "Це стіл. Стіл великий."
+      - word: "стілець"
+        emoji: "💺"
+        sentence: "Це стілець. Стілець маленький."
+      - word: "книга"
+        emoji: "📕"
+        sentence: "Це книга. Книга нова."
+      - word: "сумка"
+        emoji: "👜"
+        sentence: "Це сумка. Сумка велика."
+      - word: "телефон"
+        emoji: "📱"
+        sentence: "Це телефон. Телефон новий."
+      - word: "олівець"
+        emoji: "✏️"
+        sentence: "Це олівець. Олівець синій."
+      - word: "вода"
+        emoji: "💧"
+        sentence: "Це вода. Вода чиста."
+      - word: "хліб"
+        emoji: "🍞"
+        sentence: "Це хліб. Хліб смачний."
+      - word: "вікно"
+        emoji: "🪟"
+        sentence: "Це вікно. Вікно велике."
+
+# ─────────────────────────────────────────────
+# NEGATION PREVIEW
+# ─────────────────────────────────────────────
+negation_preview:
+  text: "Це НЕ..."
+  note: "Заперечення — детально у модулі 11"
+  examples:
+    - "Це не кіт. Це пес."
+    - "Це не стіл. Це стілець."
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# ─────────────────────────────────────────────
+activities:
+
+  - type: classify
+    title: "ХТО? чи ЩО?"
+    instruction: "Розподіли слова: ХТО? (люди і тварини) чи ЩО? (речі)"
+    categories:
+      - label: "ХТО?"
+        items:
+          - "мама"
+          - "кіт"
+          - "друг"
+          - "птах"
+          - "лікар"
+          - "пес"
+          - "вчитель"
+          - "кінь"
+          - "дитина"
+          - "риба"
+      - label: "ЩО?"
+        items:
+          - "стіл"
+          - "книга"
+          - "телефон"
+          - "вода"
+          - "хліб"
+          - "олівець"
+          - "сумка"
+          - "вікно"
+          - "стілець"
+
+  - type: build_sentence
+    title: "Склади речення з «Це»"
+    sentences:
+      - words: ["Це", "мама", "."]
+        correct: "Це мама."
+      - words: ["Це", "кіт", "."]
+        correct: "Це кіт."
+      - words: ["Це", "книга", "."]
+        correct: "Це книга."
+      - words: ["Хто", "це", "?"]
+        correct: "Хто це?"
+      - words: ["Що", "це", "?"]
+        correct: "Що це?"
+      - words: ["Це", "не", "пес", "."]
+        correct: "Це не пес."
+
+  - type: true_false
+    title: "Правда чи неправда?"
+    items:
+      - statement: "Кіт — це ХТО?"
+        answer: true
+      - statement: "Стіл — це ХТО?"
+        answer: false
+      - statement: "Книга — це ЩО?"
+        answer: true
+      - statement: "Мама — це ЩО?"
+        answer: false
+      - statement: "Пес — це ХТО?"
+        answer: true
+      - statement: "Вода — це ХТО?"
+        answer: false
+
+  - type: riddle
+    title: "Загадка"
+    clues:
+      - "Хоч не солодкий, та дуже смачний."
+      - "Щодня він на столі у нас."
+      - "Без нього важко буде нам."
+    answer: "ХЛІБ"
+    answer_emoji: "🍞"
+    source: "Grade 3 p.63"
+
+  - type: reading
+    title: "Читання"
+    text: |
+      Це мій стіл. На столі є книга і олівець. Книга нова. Олівець синій. Поряд сидить кіт. Кіт спить.
+    questions:
+      - question: "Що є на столі?"
+        answer: "Книга і олівець."
+      - question: "Хто сидить поряд?"
+        answer: "Кіт."
+      - question: "Що робить кіт?"
+        answer: "Кіт спить."
+
+  - type: proverb_drill
+    title: "Прислів'я"
+    proverb: "Без хліба нема обіду."
+    activity:
+      type: fill_gap
+      gap_word: "хліба"
+      options: ["хліба", "води", "молока"]
+      answer: "хліба"
+      meaning: "Хліб — основна їжа."
+
+  - type: pattern_drill
+    title: "Хто це? Що це?"
+    prompt: "Дивись на картинку і відповідай"
+    items:
+      - given: "🐱 — Хто це?"
+        answer: "Це кіт."
+      - given: "📕 — Що це?"
+        answer: "Це книга."
+      - given: "👩 — Хто це?"
+        answer: "Це мама."
+      - given: "📱 — Що це?"
+        answer: "Це телефон."
+      - given: "🐶 — Хто це?"
+        answer: "Це пес."
+      - given: "🍞 — Що це?"
+        answer: "Це хліб."
+      - given: "🐦 — Хто це?"
+        answer: "Це птах."
+      - given: "💧 — Що це?"
+        answer: "Це вода."

@@ -1,0 +1,233 @@
+module: shcho-robyt
+track: l2-uk-direct
+level: a1
+type: vocabulary
+title: "Що робить?"
+subtitle: "Дії — дієслова в теперішньому часі"
+standard_ref: "§4.2.4.1 — indicative present, §4.3.1 — simple sentences"
+textbook_ref: "Bolshakova 2018 Part 1 pp.10–11; Grade 3 p.81"
+
+# ─────────────────────────────────────────────
+# KEY PATTERN
+# ─────────────────────────────────────────────
+key_pattern:
+  text: "[ХТО?] + [ЩО РОБИТЬ?]"
+  question: "ЩО РОБИТЬ?"
+  examples:
+    - "Кіт спить."
+    - "Мама читає."
+    - "Дитина грає."
+
+# ─────────────────────────────────────────────
+# VOCABULARY: 15 core verbs
+# ─────────────────────────────────────────────
+vocabulary:
+  - category: "Рух (movement)"
+    items:
+      - infinitive: "іти"
+        present_3sg: "іде"
+        emoji: "🚶"
+        sentence: "Мама іде додому."
+        conjugation_type: "irregular"
+      - infinitive: "бігти"
+        present_3sg: "біжить"
+        emoji: "🏃"
+        sentence: "Пес біжить швидко."
+        conjugation_type: "irregular"
+      - infinitive: "сидіти"
+        present_3sg: "сидить"
+        emoji: "🪑"
+        sentence: "Кіт сидить на стільці."
+        conjugation_type: "-ить"
+      - infinitive: "стояти"
+        present_3sg: "стоїть"
+        emoji: "🧍"
+        sentence: "Друг стоїть біля дерева."
+        conjugation_type: "-їть"
+      - infinitive: "лежати"
+        present_3sg: "лежить"
+        emoji: "🛏️"
+        sentence: "Книга лежить на столі."
+        conjugation_type: "-ить"
+
+  - category: "Їжа і сон (eating, drinking, sleeping)"
+    items:
+      - infinitive: "їсти"
+        present_3sg: "їсть"
+        emoji: "🍽️"
+        sentence: "Дитина їсть хліб."
+        conjugation_type: "irregular"
+      - infinitive: "пити"
+        present_3sg: "п'є"
+        emoji: "🥤"
+        sentence: "Тато п'є воду."
+        conjugation_type: "irregular"
+      - infinitive: "спати"
+        present_3sg: "спить"
+        emoji: "😴"
+        sentence: "Кіт спить на ліжку."
+        conjugation_type: "-ить"
+
+  - category: "Навчання (learning)"
+    items:
+      - infinitive: "читати"
+        present_3sg: "читає"
+        emoji: "📖"
+        sentence: "Мама читає книгу."
+        conjugation_type: "-ає"
+      - infinitive: "писати"
+        present_3sg: "пише"
+        emoji: "✏️"
+        sentence: "Вчитель пише на дошці."
+        conjugation_type: "irregular"
+      - infinitive: "говорити"
+        present_3sg: "говорить"
+        emoji: "🗣️"
+        sentence: "Друг говорить українською."
+        conjugation_type: "-ить"
+      - infinitive: "слухати"
+        present_3sg: "слухає"
+        emoji: "👂"
+        sentence: "Дитина слухає музику."
+        conjugation_type: "-ає"
+
+  - category: "Творчість (creative)"
+    items:
+      - infinitive: "дивитися"
+        present_3sg: "дивиться"
+        emoji: "👀"
+        sentence: "Тато дивиться телевізор."
+        conjugation_type: "-иться"
+      - infinitive: "малювати"
+        present_3sg: "малює"
+        emoji: "🎨"
+        sentence: "Дитина малює квітку."
+        conjugation_type: "-ює"
+      - infinitive: "грати"
+        present_3sg: "грає"
+        emoji: "⚽"
+        sentence: "Друг грає у футбол."
+        conjugation_type: "-ає"
+
+# ─────────────────────────────────────────────
+# CONJUGATION PATTERNS (teach as patterns, not rules)
+# ─────────────────────────────────────────────
+conjugation_patterns:
+  - type: "-ає / -яє"
+    description: "Найчастіший тип"
+    examples: ["читає", "слухає", "малює", "грає"]
+  - type: "-ить"
+    description: "Другий частий тип"
+    examples: ["говорить", "сидить", "стоїть", "лежить", "спить"]
+  - type: "irregular"
+    description: "Особливі дієслова — запам'ятай"
+    examples: ["іде", "біжить", "їсть", "п'є", "пише"]
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# ─────────────────────────────────────────────
+activities:
+
+  - type: match_sound
+    title: "Дія і картинка"
+    pairs:
+      - letter: "🏃"
+        sound_hint: "біжить"
+      - letter: "😴"
+        sound_hint: "спить"
+      - letter: "📖"
+        sound_hint: "читає"
+      - letter: "✏️"
+        sound_hint: "пише"
+      - letter: "🍽️"
+        sound_hint: "їсть"
+      - letter: "🥤"
+        sound_hint: "п'є"
+      - letter: "🎨"
+        sound_hint: "малює"
+      - letter: "🗣️"
+        sound_hint: "говорить"
+
+  - type: build_sentence
+    title: "Хто що робить?"
+    sentences:
+      - words: ["Кіт", "спить", "."]
+        correct: "Кіт спить."
+      - words: ["Мама", "читає", "."]
+        correct: "Мама читає."
+      - words: ["Дитина", "грає", "."]
+        correct: "Дитина грає."
+      - words: ["Пес", "біжить", "."]
+        correct: "Пес біжить."
+      - words: ["Тато", "п'є", "воду", "."]
+        correct: "Тато п'є воду."
+      - words: ["Вчитель", "пише", "на", "дошці", "."]
+        correct: "Вчитель пише на дошці."
+
+  - type: pattern_drill
+    title: "ЩО РОБИТЬ?"
+    prompt: "Що робить? Відповідай повним реченням."
+    items:
+      - given: "Кіт (спати)"
+        answer: "Кіт спить."
+      - given: "Мама (читати)"
+        answer: "Мама читає."
+      - given: "Дитина (малювати)"
+        answer: "Дитина малює."
+      - given: "Пес (бігти)"
+        answer: "Пес біжить."
+      - given: "Друг (говорити)"
+        answer: "Друг говорить."
+      - given: "Тато (їсти)"
+        answer: "Тато їсть."
+      - given: "Вчитель (писати)"
+        answer: "Вчитель пише."
+      - given: "Дитина (слухати)"
+        answer: "Дитина слухає."
+
+  - type: true_false
+    title: "Правда чи неправда?"
+    items:
+      - statement: "«Читає» — це дія."
+        answer: true
+      - statement: "«Стіл» — це дія."
+        answer: false
+      - statement: "«Кіт спить» — кіт робить дію."
+        answer: true
+      - statement: "«Біжить» і «іде» — це одна дія."
+        answer: false
+      - statement: "«Мама читає» — мама ЩО РОБИТЬ? — читає."
+        answer: true
+      - statement: "«Грає» і «малює» закінчуються однаково: -є."
+        answer: true
+
+  - type: tongue_twister
+    title: "Скоромовка"
+    text: "Говорить горобець горобцеві: — Гарно говориш!"
+    focus: "Г/Ґ — говорить vs горобець"
+    source: "Grade 3 p.81"
+
+  - type: reading
+    title: "Що робить Оля?"
+    text: |
+      Це Оля. Оля читає книгу. Поряд сидить кіт. Кіт спить. Тато п'є каву. Мама пише листа. Усі вдома.
+    questions:
+      - question: "Що робить Оля?"
+        answer: "Оля читає книгу."
+      - question: "Що робить кіт?"
+        answer: "Кіт спить."
+      - question: "Що п'є тато?"
+        answer: "Тато п'є каву."
+      - question: "Що робить мама?"
+        answer: "Мама пише листа."
+
+  - type: classify
+    title: "Тип дієслова"
+    instruction: "Розподіли дієслова за закінченням"
+    categories:
+      - label: "-ає / -ує"
+        items: ["читає", "слухає", "малює", "грає"]
+      - label: "-ить / -їть"
+        items: ["говорить", "сидить", "стоїть", "лежить", "спить"]
+      - label: "Особливі"
+        items: ["іде", "біжить", "їсть", "п'є", "пише"]

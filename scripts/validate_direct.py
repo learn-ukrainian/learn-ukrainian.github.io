@@ -35,7 +35,7 @@ ALL_ACTIVITY_TYPES = {
     "true_false", "build_sentence", "match_sound", "pattern_drill",
     "riddle", "tongue_twister", "reading", "proverb_drill",
 }
-VALID_MODULE_TYPES = {"script_foundation", "vocabulary", "grammar", "checkpoint"}
+VALID_MODULE_TYPES = {"script_foundation", "vocabulary", "grammar", "checkpoint", "communicative"}
 VALID_LEVELS = {"a1", "a2"}
 
 YOUTUBE_RE = re.compile(
@@ -158,26 +158,43 @@ def check_vocabulary(data: dict, result: ValidationResult) -> None:
     if not vocab:
         return
 
-    for i, entry in enumerate(vocab):
-        ctx = f"vocabulary[{i}] ({entry.get('word', '?')})"
+    # Detect format: grouped (category + items) vs flat (word + examples)
+    if vocab and isinstance(vocab[0], dict) and "items" in vocab[0]:
+        # Grouped format: [{category: ..., items: [{word, emoji, sentence}, ...]}, ...]
+        total_words = 0
+        for i, group in enumerate(vocab):
+            cat = group.get("category", f"group_{i}")
+            items = group.get("items", [])
+            if not items:
+                result.warn(f"vocabulary group '{cat}': empty items list")
+            for j, item in enumerate(items):
+                ctx = f"vocabulary/{cat}[{j}]"
+                if "word" not in item and "phrase" not in item and "infinitive" not in item:
+                    result.error(f"{ctx}: missing 'word', 'phrase', or 'infinitive'")
+                total_words += 1
+        result.info(f"vocabulary: {total_words} words across {len(vocab)} categories")
+    else:
+        # Flat format: [{word, pronunciation_video, category, examples}, ...]
+        for i, entry in enumerate(vocab):
+            ctx = f"vocabulary[{i}] ({entry.get('word', '?')})"
 
-        for field in ["word", "pronunciation_video", "category", "examples"]:
-            if field not in entry:
-                result.error(f"{ctx}: missing required field '{field}'")
+            for field in ["word", "pronunciation_video", "category", "examples"]:
+                if field not in entry:
+                    result.error(f"{ctx}: missing required field '{field}'")
 
-        examples = entry.get("examples", [])
-        if len(examples) < 2:
-            result.error(f"{ctx}: must have ≥ 2 examples, found {len(examples)}")
+            examples = entry.get("examples", [])
+            if len(examples) < 2:
+                result.error(f"{ctx}: must have ≥ 2 examples, found {len(examples)}")
 
-        for j, ex in enumerate(examples):
-            if LATIN_RE.search(ex):
-                result.warn(f"{ctx}.examples[{j}]: possible non-Ukrainian text: '{ex[:60]}'")
+            for j, ex in enumerate(examples):
+                if LATIN_RE.search(ex):
+                    result.warn(f"{ctx}.examples[{j}]: possible non-Ukrainian text: '{ex[:60]}'")
 
-        check_video_url(
-            entry.get("pronunciation_video"),
-            f"{ctx}.pronunciation_video",
-            result,
-        )
+            check_video_url(
+                entry.get("pronunciation_video"),
+                f"{ctx}.pronunciation_video",
+                result,
+            )
 
 
 def check_activities(data: dict, result: ValidationResult) -> None:
@@ -327,7 +344,7 @@ def validate_file(yaml_path: Path) -> ValidationResult:
     module_type = data.get("type")
     if module_type == "script_foundation":
         check_letters(data, result)
-    if module_type in ("vocabulary", "grammar"):
+    if module_type in ("vocabulary", "grammar", "communicative"):
         check_vocabulary(data, result)
 
     check_activities(data, result)
