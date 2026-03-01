@@ -2,7 +2,7 @@
 """E2E Module Builder — Pipeline v4 (named phases) + v3 (legacy).
 
 Pipeline v4 (default):
-    research → content → activities → validate → [review] → mdx
+    research → discover → content → activities → validate → [review] → mdx
 
     Named phases replace v3's letter-coded A/B/C/D/E/F:
     - validate: merges v3 audit + D.0 + D.0.5 (all deterministic checks + Gemini fix)
@@ -130,10 +130,11 @@ ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes wh
 # ---------------------------------------------------------------------------
 # V4 pipeline constants — named phases, simplified architecture
 # ---------------------------------------------------------------------------
-PHASE_SEQUENCE_V4 = ["research", "content", "activities", "validate", "review", "mdx"]
+PHASE_SEQUENCE_V4 = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
 
 _V4_PHASE_STATE_IDS: dict[str, list[str]] = {
     "research":   ["v4-research"],
+    "discover":   ["v4-discover"],
     "content":    ["v4-content"],
     "activities": ["v4-activities"],
     "validate":   ["v4-validate"],
@@ -143,6 +144,7 @@ _V4_PHASE_STATE_IDS: dict[str, list[str]] = {
 
 PHASE_LABELS_V4: dict[str, str] = {
     "research":   "Research + Meta",
+    "discover":   "Discover (video + blog search)",
     "content":    "Content (prose)",
     "activities": "Activities + Vocab",
     "validate":   "Validate (audit + screen + Gemini fix)",
@@ -3454,6 +3456,80 @@ def phase_research_v4(ctx: ModuleContext, state: dict) -> bool:
     return result
 
 
+def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
+    """v4 discover — video/blog search. Always returns True (non-blocking)."""
+    if _is_phase_v4_complete(ctx, "discover", state):
+        log("  discover: SKIP (already complete)")
+        return True
+    if getattr(ctx, "skip_discover", False):
+        log("  discover: SKIP (--skip-discover)")
+        _mark_phase_v4(ctx, state, "discover", "complete", skipped=True)
+        return True
+    if ctx.dry_run:
+        log("  discover: SKIP (dry-run)")
+        return True
+
+    from video_discovery import (
+        run_discovery,
+        write_discovery_yaml,
+        format_discovery_for_template,
+    )
+
+    # Extract keywords from topic + vocabulary hints
+    keywords = [ctx.topic_title]
+    vocab_hints = ctx.plan.get("vocabulary_hints", {})
+    if isinstance(vocab_hints, dict):
+        keywords.extend(vocab_hints.get("required", [])[:5])
+    elif isinstance(vocab_hints, list):
+        keywords.extend(vocab_hints[:5])
+
+    log(f"  discover: searching for videos (keywords: {keywords[:3]}...)")
+    result = run_discovery(
+        topic=ctx.topic_title,
+        keywords=keywords,
+        outline=ctx.content_outline,
+        vocab=keywords[1:],  # skip topic title
+        dispatch_fn=pipeline_lib.dispatch_gemini_raw,
+        track=ctx.track,
+    )
+
+    discovery_path = ctx.orch_dir / "discovery.yaml"
+    write_discovery_yaml(result, discovery_path)
+
+    if result.error:
+        log(f"  discover: completed with error: {result.error}")
+    else:
+        relevant = [v for v in result.videos if v.relevance_score >= 0.5]
+        log(f"  discover: found {len(result.videos)} videos, {len(relevant)} relevant")
+
+    # Append video refs to research file
+    _append_discovery_to_research(ctx, result)
+
+    _mark_phase_v4(ctx, state, "discover", "complete")
+    return True  # always non-blocking
+
+
+def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
+    """Append a ## Video Discovery section to the research file."""
+    from video_discovery import DiscoveryResult
+    if not isinstance(result, DiscoveryResult):
+        return
+    relevant = [v for v in result.videos if v.relevance_score >= 0.5]
+    if not relevant:
+        return
+    research_path = ctx.paths.get("research")
+    if not research_path or not research_path.exists():
+        return
+    lines = ["\n\n## Video Discovery\n"]
+    for v in relevant:
+        lines.append(f"- [{v.title}]({v.url}) ({v.channel}) — {v.relevance_note}")
+    try:
+        with open(research_path, "a", encoding="utf-8") as f:
+            f.write("\n".join(lines) + "\n")
+    except Exception as e:
+        log(f"  discover: failed to append to research: {e}")
+
+
 def phase_content_v4(ctx: ModuleContext, state: dict) -> bool:
     """v4 content = v3 Phase B."""
     if _is_phase_v4_complete(ctx, "content", state):
@@ -3944,6 +4020,7 @@ def phase_mdx_v4(ctx: ModuleContext) -> bool:
 
 PHASE_FUNCTIONS_V4: dict[str, Any] = {
     "research":   phase_research_v4,
+    "discover":   phase_discover_v4,
     "content":    phase_content_v4,
     "activities": phase_activities_v4,
     "validate":   phase_validate_v4,
@@ -4017,13 +4094,8 @@ def run_pipeline_v4(ctx: ModuleContext, research_only: bool = False) -> bool:
         log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
             if not _call_phase_v4(PHASE_FUNCTIONS_V4[phase_id], phase_id, ctx, state):
-                # validate failure doesn't halt — continue to mdx for preview
-                if phase_id == "validate":
-                    log(f"  validate: FAIL — continuing to mdx for preview")
-                    continue
-                # review failure doesn't halt — continue to mdx
-                if phase_id == "review":
-                    log(f"  review: FAIL — continuing to mdx")
+                if phase_id in ("validate", "review", "discover"):
+                    log(f"  {phase_id}: FAIL — continuing")
                     continue
                 log(f"\n  PIPELINE STOPPED at {phase_id}")
                 return False
@@ -4040,13 +4112,8 @@ def run_pipeline_v4(ctx: ModuleContext, research_only: bool = False) -> bool:
 
         func = PHASE_FUNCTIONS_V4[phase_id]
         if not _call_phase_v4(func, phase_id, ctx, state):
-            # validate failure doesn't halt — continue to mdx for preview
-            if phase_id == "validate":
-                log(f"  validate: FAIL — continuing to mdx for preview")
-                continue
-            # review failure doesn't halt — continue to mdx
-            if phase_id == "review":
-                log(f"  review: FAIL — continuing to mdx")
+            if phase_id in ("validate", "review", "discover"):
+                log(f"  {phase_id}: FAIL — continuing")
                 continue
             log(f"\n  PIPELINE STOPPED at {phase_id}")
             return False
@@ -4340,6 +4407,7 @@ def preflight_v4(args: argparse.Namespace) -> ModuleContext:
 
     # v4-specific flags
     ctx.review = getattr(args, "review", False)  # type: ignore[attr-defined]
+    ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
 
     # --stop-before for v4 (named phases)
     sb = getattr(args, "stop_before", None)
@@ -4456,6 +4524,8 @@ def main() -> int:
                         help="Just run audit, print PASS/FAIL, exit")
     parser.add_argument("--research-only", action="store_true", dest="research_only",
                         help="Run research phase only")
+    parser.add_argument("--skip-discover", action="store_true", dest="skip_discover",
+                        help="Skip video/blog discovery phase")
     parser.add_argument("--review", action="store_true",
                         help="Include Claude review phase (default: RC mode without review)")
     parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",
@@ -4618,6 +4688,7 @@ def main() -> int:
                 rescreen=getattr(args, "rescreen", False),
                 use_v3=getattr(args, "use_v3", False),
                 gemini_model=getattr(args, "gemini_model", None),
+                skip_discover=getattr(args, "skip_discover", False),
             )
             rc = _run_single_module(single_args)
             if rc == 0:

@@ -1605,6 +1605,18 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "SCORING_SECTION": _get_scoring_section(ctx.track),
         "SCORING_OUTPUT_TABLE": _get_scoring_output_table(ctx.track),
     }
+    # Video discovery placeholder
+    discovery_path = ctx.orch_dir / "discovery.yaml"
+    if discovery_path.exists():
+        try:
+            from video_discovery import read_discovery_yaml, format_discovery_for_template
+            result = read_discovery_yaml(discovery_path)
+            placeholders["VIDEO_DISCOVERY"] = format_discovery_for_template(result)
+        except Exception:
+            placeholders["VIDEO_DISCOVERY"] = "(No video discoveries available)"
+    else:
+        placeholders["VIDEO_DISCOVERY"] = "(No video discoveries available)"
+
     placeholders.update(ctx.activity_config)
     placeholders_path.write_text(
         yaml.dump(placeholders, allow_unicode=True, default_flow_style=False, sort_keys=False),

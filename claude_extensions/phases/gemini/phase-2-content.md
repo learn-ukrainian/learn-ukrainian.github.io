@@ -24,6 +24,12 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 {PRIMARY_SOURCE_EXCERPTS}
 
+## Video Discoveries
+
+These videos were found during the discover phase. Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value (e.g., after the section suggested below). Only embed videos that genuinely enhance the lesson — don't force them in.
+
+{VIDEO_DISCOVERY}
+
 ---
 
 ## Your Task
