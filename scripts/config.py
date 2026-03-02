@@ -14,25 +14,25 @@ from typing import Dict, Any
 TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     # --- Core Tracks (Beginner/Intermediate) ---
     "a1": {
-        "model": "gemini-3.1-flash-preview",
+        "model": "gemini-3-flash-preview",
         "word_floor": 2000,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.10, 0.50],
     },
     "a2": {
-        "model": "gemini-3.1-flash-preview",
+        "model": "gemini-3-flash-preview",
         "word_floor": 2500,
         "persona": "The Cultural Guide",
         "immersion_range": [0.50, 0.90],
     },
     "b1": {
-        "model": "gemini-3.1-flash-preview",
+        "model": "gemini-3-flash-preview",
         "word_floor": 3000,
         "persona": "The Storyteller",
         "immersion_range": [0.85, 1.0],
     },
     "b2": {
-        "model": "gemini-3.1-flash-preview",
+        "model": "gemini-3-flash-preview",
         "word_floor": 3500,
         "persona": "The Urbanist",
         "immersion_range": [0.95, 1.0],
@@ -174,7 +174,7 @@ def get_next_turn(current_turn: float) -> float:
 def get_config(track: str) -> Dict[str, Any]:
     """Retrieves config for a specific track, falling back to default core config."""
     return TRACK_CONFIG.get(track, {
-        "model": "gemini-3.1-flash-preview",
+        "model": "gemini-3-flash-preview",
         "word_floor": 2500,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.5, 1.0],

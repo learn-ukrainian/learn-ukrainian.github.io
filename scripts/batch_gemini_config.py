@@ -22,7 +22,7 @@ PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
 # Model Tiering — Gemini
-FLASH_MODEL = "gemini-3.1-flash-preview"
+FLASH_MODEL = "gemini-3-flash-preview"
 PRO_MODEL = "gemini-3.1-pro-preview"
 
 # Model Tiering — Claude (used by build_module.py --use-claude phases)

@@ -295,7 +295,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=None)
     parser.add_argument("--module", type=int)
-    parser.add_argument("--model", default="gemini-3.1-flash-preview")
+    parser.add_argument("--model", default="gemini-3-flash-preview")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
