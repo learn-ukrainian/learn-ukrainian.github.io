@@ -1172,6 +1172,51 @@ def _extract_audit_failures(audit_output: str) -> str:
     return "\n".join(failure_lines)
 
 
+def _extract_gate_blockers(ctx: ModuleContext) -> str:
+    """Read status JSON and extract blocking_issues as GATE BLOCKER lines."""
+    try:
+        import json
+        status_path = ctx.paths.get("status")
+        if not status_path or not status_path.exists():
+            return ""
+        data = json.loads(status_path.read_text("utf-8"))
+        blockers = data.get("overall", {}).get("blocking_issues", [])
+        if not blockers:
+            return ""
+        lines = ["", "--- STATUS JSON GATE BLOCKERS ---"]
+        for b in blockers:
+            lines.append(f"GATE BLOCKER: {b}")
+        return "\n".join(lines)
+    except Exception:
+        return ""
+
+
+def _extract_vesum_failures(ctx: ModuleContext) -> str:
+    """Read screen-result.json and format VESUM not-found words for D.2."""
+    try:
+        import json
+        f = ctx.orch_dir / "screen-result.json"
+        if not f.exists():
+            return ""
+        data = json.loads(f.read_text("utf-8"))
+        not_found = data.get("vesum_not_found", [])
+        if not not_found:
+            return ""
+        lines = ["", "--- VESUM WORD VERIFICATION FAILURES ---"]
+        lines.append("These words were NOT found in the VESUM morphological dictionary.")
+        lines.append("Check if they are valid Ukrainian forms. Fix misspellings or Russianisms.")
+        for r in not_found[:20]:
+            word = r.get("original", r.get("clean", "?"))
+            source = r.get("source", "?")
+            status = r.get("status", "?")
+            lines.append(f"  {status} `{word}` (source: {source})")
+        if len(not_found) > 20:
+            lines.append(f"  ... and {len(not_found) - 20} more")
+        return "\n".join(lines)
+    except Exception:
+        return ""
+
+
 # Audit failure codes that indicate diffuse issues (not FIND/REPLACE fixable).
 # These require structural rewrite, not targeted repair.
 _DIFFUSE_FAILURE_CODES = {
@@ -1244,6 +1289,23 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
         except Exception as e:
             logger.warning("Auto-fix: YAML fix failed", exc_info=True)
             log(f"    Auto-fix: YAML fix failed: {e}")
+
+    # 3. YAML text-level fixes (vocab file)
+    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    if vocab_path and vocab_path.exists():
+        try:
+            from audit.checks.yaml_schema_validation import fix_raw_yaml_text
+            raw = vocab_path.read_text("utf-8")
+            fixed, fix_msgs = fix_raw_yaml_text(raw)
+            if fix_msgs:
+                vocab_path.write_text(fixed, "utf-8")
+                total += len(fix_msgs)
+                log(f"    Auto-fix: {len(fix_msgs)} vocab YAML text fix(es) in {vocab_path.name}")
+                for msg in fix_msgs[:3]:
+                    log(f"      {msg[:120]}")
+        except Exception as e:
+            logger.warning("Auto-fix: vocab YAML fix failed", exc_info=True)
+            log(f"    Auto-fix: vocab YAML fix failed: {e}")
 
     # 4. Forbidden activity removal (level/focus-dependent)
     if act_path and act_path.exists():
@@ -2279,8 +2341,8 @@ class DScreenResult:
     audit_passed: bool = False
     audit_output: str = ""
     h2_sections: str = ""
-    rag_verify_stats: dict = field(default_factory=dict)            # RAG word verification stats
-    rag_verify_not_found: list[dict] = field(default_factory=list)  # Words not in VESUM/RAG
+    vesum_stats: dict = field(default_factory=dict)                  # VESUM word verification stats
+    vesum_not_found: list[dict] = field(default_factory=list)       # Words not in VESUM
 
 
 @dataclass
@@ -2745,25 +2807,39 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
     # 7. Word verification (VESUM only — RAG/Qdrant adds latency for marginal value)
     if content_path and content_path.exists():
         try:
-            from rag_batch_verify import verify_module as rag_verify_module
-            rag_results, rag_stats = rag_verify_module(
+            from rag_batch_verify import verify_module as vesum_verify_module
+            vesum_results, vesum_stats = vesum_verify_module(
                 content_path, use_rag=False, skip_activities=False,
             )
-            result.rag_verify_stats = rag_stats
-            result.rag_verify_not_found = [
-                r for r in rag_results if r["status"] in ("❌", "⚠️")
+            result.vesum_stats = vesum_stats
+            result.vesum_not_found = [
+                r for r in vesum_results if r["status"] in ("❌", "⚠️")
             ]
-            n_not_found = rag_stats.get("not_found", 0)
-            n_partial = rag_stats.get("rag_hits", 0)
+            n_not_found = vesum_stats.get("not_found", 0)
+            n_partial = vesum_stats.get("rag_hits", 0)
+            total = vesum_stats.get("total", 0)
+            vesum_hits = vesum_stats.get("vesum_hits", 0)
             if n_not_found > 0 or n_partial > 0:
-                log(f"  D.0: RAG verify: {rag_stats['total']} words, "
-                    f"{rag_stats['vesum_hits']} VESUM ✓, "
+                log(f"  D.0: VESUM verify: {total} words, "
+                    f"{vesum_hits} VESUM ✓, "
                     f"{n_partial} RAG-only ⚠️, {n_not_found} not found ❌")
             else:
-                log(f"  D.0: RAG verify: {rag_stats['total']} words, "
+                log(f"  D.0: VESUM verify: {total} words, "
                     f"100% VESUM coverage ✅")
+            # Append VESUM stats to audit output for _extract_audit_failures()
+            pct = (vesum_hits / total * 100) if total else 100
+            result.audit_output += (
+                f"\nVESUM: {vesum_hits}/{total} ({pct:.0f}%) verified"
+            )
+            if n_not_found > 0:
+                not_found_words = [r["original"] for r in result.vesum_not_found
+                                   if r["status"] == "❌"][:10]
+                result.audit_output += (
+                    f"\n⚠️ VESUM not found ({n_not_found}): "
+                    + ", ".join(not_found_words)
+                )
         except Exception as e:
-            logger.warning("D.0: RAG word verification failed: %s", e)
+            logger.warning("D.0: VESUM word verification failed: %s", e)
 
     det_count = len(result.deterministic_issues)
     if det_count > 0:
@@ -2806,10 +2882,10 @@ def _format_filler_phrases(issues: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def _format_rag_verification(stats: dict, not_found: list[dict]) -> str:
-    """Format RAG word verification results for D.1 prompt injection."""
+def _format_vesum_verification(stats: dict, not_found: list[dict]) -> str:
+    """Format VESUM word verification results for D.1 prompt injection."""
     if not stats:
-        return "(RAG word verification did not run — VESUM DB may be missing)"
+        return "(VESUM word verification did not run — VESUM DB may be missing)"
 
     total = stats.get("total", 0)
     vesum = stats.get("vesum_hits", 0)
@@ -2975,11 +3051,11 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     rag_context = _prefetch_rag_context(ctx)
     prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
 
-    # RAG word verification (all tracks)
-    rag_word_context = _format_rag_verification(
-        screen.rag_verify_stats, screen.rag_verify_not_found,
+    # VESUM word verification (all tracks)
+    vesum_word_context = _format_vesum_verification(
+        screen.vesum_stats, screen.vesum_not_found,
     )
-    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", rag_word_context)
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_word_context)
 
     prompt_file.write_text(prompt_text, "utf-8")
 
@@ -3164,6 +3240,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
         log(f"  D.2{iter_suffix}: Dispatching targeted repair...")
         failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
+        failures += _extract_gate_blockers(ctx)
+        failures += _extract_vesum_failures(ctx)
 
         prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{2 + d2_iter}.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
@@ -3830,11 +3908,11 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     rag_context = _prefetch_rag_context(ctx)
     prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
 
-    # RAG word verification
-    rag_word_context = _format_rag_verification(
-        screen.rag_verify_stats, screen.rag_verify_not_found,
+    # VESUM word verification
+    vesum_word_context = _format_vesum_verification(
+        screen.vesum_stats, screen.vesum_not_found,
     )
-    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", rag_word_context)
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_word_context)
 
     prompt_file.write_text(prompt_text, "utf-8")
 
@@ -3972,6 +4050,8 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
 
         log(f"  review: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}{iter_suffix}...")
         failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
+        failures += _extract_gate_blockers(ctx)
+        failures += _extract_vesum_failures(ctx)
 
         prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):

@@ -104,24 +104,29 @@ def evaluate_structure(
     has_vocab_table: bool,
     has_activities: bool = True,
     has_resources: bool = True,
-    is_a2_plus: bool = False
+    is_a2_plus: bool = False,
+    vocab_error: str | None = None,
 ) -> GateResult:
     """Evaluate structure gate."""
     if not has_summary:
         return GateResult('FAIL', '❌', "Missing '## Summary'")
-    
+
     if is_a2_plus:
         if not has_activities:
             return GateResult('FAIL', '❌', "Missing '## Activities' header OR activities sidecar")
         if not has_vocab:
+            if vocab_error:
+                return GateResult('FAIL', '❌', f"Vocabulary sidecar {vocab_error}")
             return GateResult('FAIL', '❌', "Missing '## Vocabulary' header OR vocabulary sidecar")
     else:
         # Legacy/A1 checks
         if not has_vocab:
+            if vocab_error:
+                return GateResult('FAIL', '❌', f"Vocabulary sidecar {vocab_error}")
             return GateResult('FAIL', '❌', "Missing '## Vocabulary'")
         if not has_vocab_table:
             return GateResult('FAIL', '❌', "Missing Vocab Table")
-            
+
     return GateResult('PASS', '✅', "Valid Structure")
 
 

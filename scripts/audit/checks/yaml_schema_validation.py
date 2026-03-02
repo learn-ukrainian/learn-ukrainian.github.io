@@ -757,12 +757,26 @@ def fix_raw_yaml_text(content: str) -> Tuple[str, List[str]]:
     Fix YAML issues at the raw text level (before parsing).
 
     This handles issues that prevent YAML from parsing at all,
-    like double-quoted strings with asterisks being interpreted as aliases.
+    like double-quoted strings with asterisks being interpreted as aliases,
+    or first-entry indent bugs (common Gemini output error).
 
     Returns (fixed_content, list_of_fixes).
     """
     fixes = []
     import re
+
+    # Fix: First-entry indent bug — Gemini sometimes outputs the first list
+    # entry with extra indentation (e.g., "  - lemma:" instead of "- lemma:").
+    # This breaks YAML parsing. Only fix if the file starts with indented "- "
+    # and all subsequent entries are at the root level.
+    lines = content.split('\n')
+    if lines and re.match(r'^  - \S', lines[0]):
+        # Check if this looks like an indented first entry (rest are at root)
+        has_root_entries = any(re.match(r'^- \S', l) for l in lines[1:])
+        if has_root_entries:
+            lines[0] = lines[0][2:]  # Strip 2 leading spaces
+            content = '\n'.join(lines)
+            fixes.append("Fixed first-entry indent bug (removed leading spaces)")
 
     # Fix: Convert double-quoted text with asterisks to single quotes
     # YAML interprets *word as an alias reference, causing parse errors

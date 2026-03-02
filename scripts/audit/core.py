@@ -682,24 +682,30 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
         print(f"     {e}")
         return None
 
-def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
-    """Load vocabulary from YAML sidecar if exists."""
+def load_yaml_vocab(md_file_path: str) -> tuple[list[dict] | None, str | None]:
+    """Load vocabulary from YAML sidecar if exists.
+
+    Returns (data, error_msg):
+    - (list, None) on success
+    - (None, None) if file not found
+    - (None, error_string) on parse error
+    """
     from pathlib import Path
     md_path = Path(md_file_path)
     yaml_path = md_path.parent / 'vocabulary' / (md_path.stem + '.yaml')
     if not yaml_path.exists():
-        return None
+        return None, None
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
             # Support both 'items' (legacy?) and 'vocabulary' (standard) keys
             if isinstance(data, list):
-                 return data
-            return data.get('vocabulary', data.get('items', []))
+                 return data, None
+            return data.get('vocabulary', data.get('items', [])), None
     except Exception as e:
         print(f"  ❌ YAML parse error in vocabulary sidecar: {yaml_path}")
         print(f"     {e}")
-        return None
+        return None, f"YAML parse error in {yaml_path.name}: {e}"
 
 def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | None:
     """
@@ -816,7 +822,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 if field not in meta_data:
                     meta_data[field] = plan_data[field]
 
-    vocab_data = load_yaml_vocab(file_path)
+    vocab_data, vocab_error = load_yaml_vocab(file_path)
     
     # Parse frontmatter
     if meta_data:
@@ -1043,7 +1049,8 @@ def audit_module(file_path: str, skip_activities: bool = False,
         has_vocab_table=has_vocab_table or has_vocab_data or skip_activities,
         has_activities=has_activities_header or has_activities_data or skip_activities,
         has_resources=has_resources_header or has_resources_data,
-        is_a2_plus=is_clean_md_standard
+        is_a2_plus=is_clean_md_standard,
+        vocab_error=vocab_error,
     )
 
     if structure_gate.status == 'FAIL':

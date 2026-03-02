@@ -18,7 +18,6 @@ Usage:
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from datetime import datetime, timezone
@@ -31,7 +30,6 @@ import yaml
 # ---------------------------------------------------------------------------
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
-VESUM_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
 
 # Add scripts/ to sys.path for imports
 sys.path.insert(0, str(SCRIPT_DIR))
@@ -216,32 +214,7 @@ def extract_words_from_yaml(yaml_path: Path, is_vocab: bool = False) -> dict[str
 # VESUM verification
 # ---------------------------------------------------------------------------
 
-_vesum_conn = None
-
-
-def _get_vesum() -> sqlite3.Connection:
-    global _vesum_conn
-    if _vesum_conn is None:
-        if not VESUM_DB_PATH.exists():
-            print(f"ERROR: VESUM database not found at {VESUM_DB_PATH}", file=sys.stderr)
-            print("Run: .venv/bin/python scripts/rag/import_vesum.py", file=sys.stderr)
-            sys.exit(1)
-        _vesum_conn = sqlite3.connect(str(VESUM_DB_PATH), check_same_thread=False)
-        _vesum_conn.row_factory = sqlite3.Row
-    return _vesum_conn
-
-
-def vesum_lookup(word: str) -> list[dict]:
-    """Check if a word form exists in VESUM (case-insensitive via lowercase).
-
-    Returns list of {lemma, pos, tags} matches. Empty = not found.
-    """
-    conn = _get_vesum()
-    rows = conn.execute(
-        "SELECT lemma, pos, tags FROM forms WHERE word_form = ?",
-        (word.lower(),),
-    ).fetchall()
-    return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
+from rag.query import get_vesum_conn
 
 
 def vesum_batch_lookup(words: list[str], batch_size: int = 500) -> dict[str, list[dict]]:
@@ -249,7 +222,7 @@ def vesum_batch_lookup(words: list[str], batch_size: int = 500) -> dict[str, lis
 
     Returns: {word: [matches]} where matches can be empty.
     """
-    conn = _get_vesum()
+    conn = get_vesum_conn()
     results: dict[str, list[dict]] = {}
 
     for i in range(0, len(words), batch_size):
