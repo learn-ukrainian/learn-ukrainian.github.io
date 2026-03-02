@@ -1442,6 +1442,8 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
+    if pipeline_version and pipeline_version != "v4":
+        extra_fm_lines += "\ndraft: true"
     frontmatter = f'''---
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"

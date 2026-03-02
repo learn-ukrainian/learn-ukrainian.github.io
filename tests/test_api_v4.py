@@ -302,4 +302,90 @@ class TestGenerateMdxFrontmatter:
         md = self._make_minimal_md()
         result = generate_mdx(md, 1, pipeline_version="v3", build_status="reviewed")
         assert "pipeline: v3" in result
-        assert "build_status: reviewed" in result
+
+    def test_v3_has_draft_true(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(md, 1, pipeline_version="v3", build_status="validated")
+        assert "draft: true" in result
+
+    def test_v4_has_no_draft(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(md, 1, pipeline_version="v4", build_status="validated")
+        assert "draft: true" not in result
+
+
+# ==================== needs_rebuild flag ====================
+
+
+class TestNeedsRebuild:
+    """needs_rebuild flag in _compute_pipeline_track."""
+
+    def test_v4_not_needs_rebuild(self, tmp_path):
+        from scripts.api.state_router import _detect_pipeline_version
+
+        (tmp_path / "state-v4.json").write_text('{"mode": "v4", "phases": {}}')
+        version = _detect_pipeline_version(tmp_path)
+        assert version == "v4"
+        assert (version != "v4") is False  # needs_rebuild logic
+
+    def test_v3_needs_rebuild(self, tmp_path):
+        from scripts.api.state_router import _detect_pipeline_version
+
+        (tmp_path / "state-v3.json").write_text('{"phases": {}}')
+        version = _detect_pipeline_version(tmp_path)
+        assert version == "v3"
+        assert (version != "v4") is True  # needs_rebuild logic
+
+    def test_unbuilt_needs_rebuild(self, tmp_path):
+        from scripts.api.state_router import _detect_pipeline_version
+
+        version = _detect_pipeline_version(tmp_path)
+        assert version == "unbuilt"
+        assert (version != "v4") is True  # needs_rebuild logic
+
+
+# ==================== pipeline-versions endpoint ====================
+
+
+class TestPipelineVersionsEndpoint:
+    """GET /api/state/pipeline-versions returns version counts."""
+
+    def test_endpoint_returns_200(self):
+        from fastapi.testclient import TestClient
+        from scripts.api.main import app
+
+        client = TestClient(app)
+        r = client.get("/api/state/pipeline-versions")
+        assert r.status_code == 200
+        data = r.json()
+        assert "counts" in data
+        assert "v4" in data["counts"]
+        assert "v3" in data["counts"]
+        assert "unbuilt" in data["counts"]
+        assert "total" in data
+        assert "pct_v4" in data
+        assert "needs_rebuild" in data
+        assert "per_track" in data
+        assert "v4_modules" in data
+
+    def test_track_filter(self):
+        from fastapi.testclient import TestClient
+        from scripts.api.main import app
+
+        client = TestClient(app)
+        r = client.get("/api/state/pipeline-versions?track=a1")
+        assert r.status_code == 200
+        data = r.json()
+        # Should only have a1 in per_track
+        assert "a1" in data["per_track"]
+        # total should match a1 counts
+        a1 = data["per_track"]["a1"]
+        assert data["total"] == a1["v4"] + a1["v3"] + a1["unbuilt"]

@@ -130,6 +130,7 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             "slug": slug,
             "num": num,
             "pipeline_version": pipeline_version,
+            "needs_rebuild": pipeline_version != "v4",
             "status": overall_status,
             "word_count": word_count,
             "word_target": word_target,
@@ -403,6 +404,7 @@ async def module_detail(track_id: str, slug: str):
         # Pipeline version + v4 phase status
         version = _detect_pipeline_version(orch_dir)
         result["pipeline_version"] = version
+        result["needs_rebuild"] = version != "v4"
         if version == "v4":
             v4 = _read_v4_state(orch_dir)
             result["v4_phases"] = {
@@ -412,6 +414,7 @@ async def module_detail(track_id: str, slug: str):
     else:
         result["orchestration"] = []
         result["pipeline_version"] = "unbuilt"
+        result["needs_rebuild"] = True
 
     return result
 

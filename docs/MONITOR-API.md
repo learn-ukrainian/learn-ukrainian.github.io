@@ -145,10 +145,40 @@ Returns (v4 module):
 
 **Pipeline version detection** (per module): `state-v4.json` > `state-v3.json` > `state.json["mode"]` > `"unbuilt"`.
 
+All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v4.
+
 V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
 V3 phases: `A`, `B`, `C`, `audit`, `D`.
 
 Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
+
+---
+
+### `GET /api/state/pipeline-versions[?track=x]`
+
+Migration progress — how many modules are v4 vs v3/unbuilt. **The single-glance v4 migration dashboard.**
+
+```bash
+curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -m json.tool
+```
+
+Returns:
+```json
+{
+  "total": 64,
+  "counts": {"v4": 2, "v3": 62, "unbuilt": 0},
+  "pct_v4": 3,
+  "needs_rebuild": 62,
+  "per_track": {"a1": {"v4": 2, "v3": 62, "unbuilt": 0}},
+  "v4_modules": [
+    {"track": "a1", "num": 1, "slug": "the-cyrillic-code-i"},
+    {"track": "a1", "num": 10, "slug": "my-world-objects"}
+  ]
+}
+```
+
+`needs_rebuild` = `v3 + unbuilt` count. `v4_modules` lists only the modules already on v4.
 
 ---
 

@@ -56,7 +56,17 @@ curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 | `/api/state/review-coverage` | Review coverage health check |
 | `/api/state/issues` | Outstanding issues from reviews + audit |
 
-**Pipeline version**: All module-level responses include `pipeline_version` (`"v4"`, `"v3"`, `"unbuilt"`). V4 modules return named phases (`research`..`mdx`); v3 modules return letter-coded phases (`A`..`D`).
+**Pipeline version**: All module-level responses include `pipeline_version` (`"v4"`, `"v3"`, `"unbuilt"`) and `needs_rebuild` (`true`/`false`). V4 modules return named phases (`research`..`mdx`); v3 modules return letter-coded phases (`A`..`D`).
+
+## V4 Migration Progress
+
+```bash
+# How many modules are v4 vs v3?
+curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
+
+# For one track
+curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -m json.tool
+```
 
 ## Other Useful Endpoints
 

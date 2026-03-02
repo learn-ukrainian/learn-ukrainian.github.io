@@ -472,6 +472,7 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
                 "num": num,
                 "slug": slug,
                 "pipeline_version": "v4",
+                "needs_rebuild": False,
                 "phases": phases,
                 "audit": audit["status"],
                 "words": word_count,
@@ -501,6 +502,7 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
                 "num": num,
                 "slug": slug,
                 "pipeline_version": "v3" if version == "v3" else "unbuilt",
+                "needs_rebuild": True,
                 "phases": {
                     "A": _parse_phase_status(v3, "v3-A"),
                     "B": _parse_phase_status(v3, "v3-B"),
@@ -655,6 +657,56 @@ async def pipeline_track(track_id: str):
     if cached is not None:
         return cached
     result = await asyncio.to_thread(_compute_pipeline_track, track_id, level_cfg)
+    _cache_set(cache_key, result)
+    return result
+
+
+@router.get("/pipeline-versions")
+async def pipeline_versions(track: Optional[str] = Query(None)):
+    """All modules grouped by pipeline version. Quick overview of v4 migration progress."""
+    def _compute():
+        counts = {"v4": 0, "v3": 0, "unbuilt": 0}
+        by_version: dict[str, list] = {"v4": [], "v3": [], "unbuilt": []}
+        per_track: dict[str, dict] = {}
+
+        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
+
+        for level_cfg in level_cfgs:
+            track_id = level_cfg["id"]
+            plan_slugs = _get_plan_slugs(track_id)
+            if not plan_slugs:
+                continue
+
+            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            track_counts = {"v4": 0, "v3": 0, "unbuilt": 0}
+
+            for num, slug in plan_slugs:
+                orch_dir = track_dir / "orchestration" / slug
+                version = _detect_pipeline_version(orch_dir)
+                counts[version] += 1
+                track_counts[version] += 1
+                by_version[version].append({
+                    "track": track_id, "num": num, "slug": slug,
+                })
+
+            per_track[track_id] = track_counts
+
+        total = sum(counts.values())
+        return {
+            "total": total,
+            "counts": counts,
+            "pct_v4": round(counts["v4"] / total * 100) if total else 0,
+            "needs_rebuild": counts["v3"] + counts["unbuilt"],
+            "per_track": per_track,
+            "v4_modules": by_version["v4"],
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    cache_key = f"pipeline_versions_{track or 'all'}"
+    cached = _cache_get(cache_key, ttl=60.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
     _cache_set(cache_key, result)
     return result
 
@@ -1240,6 +1292,7 @@ async def module_detail(track_id: str, num: int):
             "num": num,
             "slug": slug,
             "pipeline_version": version,
+            "needs_rebuild": version != "v4",
             "phases": phases,
             "audit": {
                 "status": audit["status"],
