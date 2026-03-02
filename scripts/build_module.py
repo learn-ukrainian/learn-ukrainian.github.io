@@ -3636,17 +3636,20 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     if auto_fix_total > 0:
         log(f"  validate: {auto_fix_total} deterministic fix(es) applied")
 
+    def _log_screen(label: str, scr: DScreenResult) -> None:
+        dc = len(scr.deterministic_issues)
+        if scr.audit_passed and dc == 0:
+            log(f"  validate: {label} — PASS")
+        elif scr.audit_passed:
+            log(f"  validate: {label} — audit PASS, {dc} deterministic issue(s)")
+        elif dc > 0:
+            log(f"  validate: {label} — audit FAIL, {dc} deterministic issue(s)")
+        else:
+            log(f"  validate: {label} — audit FAIL (gate violations, no deterministic issues)")
+
     # Initial screen (content_only=False — full audit including activities)
     screen = _deterministic_screen(ctx, skip_review=_skip_review)
-    det_count = len(screen.deterministic_issues)
-    if screen.audit_passed and det_count == 0:
-        log("  validate: Initial — PASS")
-    elif screen.audit_passed:
-        log(f"  validate: Initial — audit PASS, {det_count} deterministic issue(s)")
-    elif det_count > 0:
-        log(f"  validate: Initial — audit FAIL, {det_count} deterministic issue(s)")
-    else:
-        log("  validate: Initial — audit FAIL (gate violations, no deterministic issues)")
+    _log_screen("Initial", screen)
 
     if screen.audit_passed and not screen.deterministic_issues:
         _save_screen_result(ctx, screen)
@@ -3687,15 +3690,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
 
         # Re-screen after proofread
         screen = _deterministic_screen(ctx, skip_review=_skip_review)
-        det_count = len(screen.deterministic_issues)
-        if screen.audit_passed and det_count == 0:
-            log("  validate: Post-proofread — PASS")
-        elif screen.audit_passed:
-            log(f"  validate: Post-proofread — audit PASS, {det_count} deterministic issue(s)")
-        elif det_count > 0:
-            log(f"  validate: Post-proofread — audit FAIL, {det_count} deterministic issue(s)")
-        else:
-            log("  validate: Post-proofread — audit FAIL (gate violations, no deterministic issues)")
+        _log_screen("Post-proofread", screen)
 
         if screen.audit_passed and not screen.deterministic_issues:
             _save_screen_result(ctx, screen)
