@@ -173,6 +173,68 @@ def fix_html_for_jsx(text: str) -> str:
     text = re.sub(r'<img([^>]*?)(?<!/)>', r'<img\1 />', text)
     return text
 
+def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | None]:
+    """Detect pipeline version and build status from orchestration dir.
+
+    Returns (pipeline_version, build_status) where:
+      pipeline_version: "v4", "v3", or None (unbuilt)
+      build_status: "draft", "validated", "reviewed", or None
+    """
+    orch_dir = level_dir / "orchestration" / slug
+
+    # Detect version
+    v4_file = orch_dir / "state-v4.json"
+    v3_file = orch_dir / "state-v3.json"
+    v2_file = orch_dir / "state.json"
+
+    version = None
+    phases = {}
+
+    if v4_file.exists():
+        version = "v4"
+        try:
+            data = json.loads(v4_file.read_text()) or {}
+            phases = data.get("phases", {})
+        except Exception:
+            pass
+    elif v3_file.exists():
+        version = "v3"
+        try:
+            data = json.loads(v3_file.read_text()) or {}
+            phases = data.get("phases", {})
+        except Exception:
+            pass
+    elif v2_file.exists():
+        try:
+            data = json.loads(v2_file.read_text()) or {}
+            if data.get("mode") == "v4":
+                version = "v4"
+            elif data:
+                version = "v3"
+            phases = data.get("phases", {})
+        except Exception:
+            pass
+
+    if version is None:
+        return None, None
+
+    # Determine build_status from phase completion
+    build_status = "draft"
+    if version == "v4":
+        if phases.get("v4-review", {}).get("status") == "complete":
+            build_status = "reviewed"
+        elif phases.get("v4-validate", {}).get("status") == "complete":
+            build_status = "validated"
+    else:
+        # v3: D = review, audit = validated
+        if phases.get("v3-D", {}).get("status") == "complete":
+            build_status = "reviewed"
+        elif phases.get("v3-audit", {}).get("status") == "complete":
+            build_status = "validated"
+
+    return version, build_status
+
+
 def parse_frontmatter(content: str) -> tuple[dict, str]:
     """Extract YAML frontmatter and body from markdown."""
     lines = content.split('\n')
@@ -1290,7 +1352,7 @@ def normalize_mdx(text: str) -> str:
 # MDX GENERATOR
 # =============================================================================
 
-def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activity] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None, external_resources: dict | None = None, level: str = 'a1') -> str:
+def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activity] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None, external_resources: dict | None = None, level: str = 'a1', pipeline_version: str | None = None, build_status: str | None = None) -> str:
     """Convert markdown content to MDX.
 
     Args:
@@ -1301,6 +1363,8 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
         vocab_items: Optional vocab list from YAML
         external_resources: Optional external resources dict (injected from YAML)
         level: Current level (used for specialized formatting like LIT)
+        pipeline_version: Optional pipeline version ("v3" or "v4")
+        build_status: Optional build status ("draft", "validated", "reviewed")
     """
     if meta_data:
         fm = meta_data
@@ -1373,12 +1437,17 @@ import ImageToLetter from '@site/src/components/ImageToLetter';
 import { Tabs, TabItem } from '@astrojs/starlight/components';"""
 
     # Frontmatter
+    extra_fm_lines = ""
+    if pipeline_version:
+        extra_fm_lines += f"\npipeline: {pipeline_version}"
+    if build_status:
+        extra_fm_lines += f"\nbuild_status: {build_status}"
     frontmatter = f'''---
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"
 sidebar:
   order: {module_num}
-  label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"
+  label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"{extra_fm_lines}
 ---
 '''
 
@@ -1930,7 +1999,9 @@ def main():
             try:
                 with open(vocab_file, 'r', encoding='utf-8') as f:
                     v_data = yaml.safe_load(f)
-                    if v_data and 'items' in v_data:
+                    if isinstance(v_data, list):
+                        vocab_items = v_data
+                    elif isinstance(v_data, dict) and 'items' in v_data:
                         vocab_items = v_data['items']
             except Exception as e:
                 print(f'\n❌ CRITICAL: Error parsing YAML vocabulary for {mod.slug}: {e}')
@@ -1957,7 +2028,10 @@ def main():
             numbered_id = f"{mod.level}-{str(mod.local_num).zfill(2)}-{mod.slug}"
             module_resources = all_resources.get(numbered_id, {})
 
-        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
+        # Detect pipeline version and build status
+        pv, bs = detect_pipeline_info(level_dir, mod.slug)
+
+        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs)
 
         # Write output — all tracks use slug-based filenames
         output_file = output_dir / f'{mod.slug}.mdx'

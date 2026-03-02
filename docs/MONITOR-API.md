@@ -60,8 +60,8 @@ curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
 
 Returns per-track counts:
 - `total` — plan files count (source of truth)
-- `research_done` — Phase A complete (`v3-A.status == "complete"`)
-- `content_done` — Phase B complete (`v3-B.status == "complete"`)
+- `research_done` — v4 research, v3 Phase A, or v2 phase 1 complete
+- `content_done` — v4 content, v3 Phase B, or v2 phase 2 complete
 - `audit_passing` — `status/*.json` overall == "pass"
 - `final_review_done` — `review/*-final-review.md` exists
 - `profile` — "core" | "seminar" | "pro"
@@ -90,14 +90,14 @@ Sample response:
 
 ### `GET /api/state/pipeline/{track}`
 
-Per-module v3 phase state for one track. Shows each module's phase progress.
+Per-module v3/v4 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
-curl -s http://localhost:8765/api/state/pipeline/hist | python3 -m json.tool
+curl -s http://localhost:8765/api/state/pipeline/a1 | python3 -m json.tool
 ```
 
-Returns:
+Returns (v3 module):
 ```json
 {
   "track": "hist",
@@ -105,6 +105,7 @@ Returns:
   "modules": [
     {
       "num": 1, "slug": "trypillian-civilization",
+      "pipeline_version": "v3",
       "phases": {
         "A": {"status": "complete", "mode": "meta-only", "ts": "2026-02-19T10:16:32Z"},
         "B": {"status": "complete", "ts": "..."},
@@ -120,6 +121,32 @@ Returns:
   ]
 }
 ```
+
+Returns (v4 module):
+```json
+{
+  "num": 10, "slug": "my-world-objects",
+  "pipeline_version": "v4",
+  "phases": {
+    "research": {"status": "complete", "ts": "2026-03-02T20:08:33Z"},
+    "discover": {"status": "complete", "ts": "2026-03-02T20:08:49Z"},
+    "content": {"status": "complete", "ts": "2026-03-02T20:12:36Z"},
+    "activities": {"status": "complete", "ts": "2026-03-02T20:15:12Z"},
+    "validate": {"status": "pending"},
+    "review": {"status": "pending"},
+    "mdx": {"status": "pending"}
+  },
+  "audit": "pass",
+  "words": 2100,
+  "word_target": 2000,
+  "research_score": null
+}
+```
+
+**Pipeline version detection** (per module): `state-v4.json` > `state-v3.json` > `state.json["mode"]` > `"unbuilt"`.
+
+V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
+V3 phases: `A`, `B`, `C`, `audit`, `D`.
 
 Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
@@ -171,7 +198,8 @@ curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
 ```
 
 Returns:
-- `phases` — A through F with status/timestamps
+- `pipeline_version` — `"v4"`, `"v3"`, or `"unbuilt"`
+- `phases` — v4: named phases (`research`..`mdx`); v3: letter-coded (`A`..`F`) with status/timestamps
 - `audit` — status, word_count, word_target, blocking_issues
 - `research` — exists, quality score (0-10)
 - `review` — exists
@@ -245,7 +273,7 @@ Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 
 
 ### `GET /api/state/ready-to-build[?track=x]`
 
-Modules where Phase A is complete but Phase B hasn't started. **The build queue.**
+Modules where research is complete but content hasn't started. **The build queue.** Checks v4 research/content, v3 Phase A/B, and v2 phases.
 
 ```bash
 # All tracks
@@ -255,7 +283,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Returns list sorted by track then num. Use before running `build_module.py --all`.
+Each entry includes `pipeline_version` (`"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module.py --all`.
 
 ---
 
@@ -279,14 +307,14 @@ Results sorted worst-first (audit fails > thin research > low words).
 
 ### `GET /api/state/failing[?track=x]`
 
-All modules with `audit status == "fail"` OR any phase status `== "failed"`.
+All modules with `audit status == "fail"` OR any phase status `== "failed"`. Detects pipeline version per module — extracts failed phases from v4 or v3 state as appropriate.
 
 ```bash
 curl -s http://localhost:8765/api/state/failing | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/failing?track=a1" | python3 -m json.tool
 ```
 
-Includes `blocking_issues` — failed gate names and messages.
+Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V4 failed phases use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
 
 ---
 
@@ -361,10 +389,13 @@ curl -s http://localhost:8765/api/batch/dispatcher
 # All tracks pass/fail overview
 curl -s http://localhost:8765/api/blue/live-status
 
-# Per-module detail for a track
+# Per-module detail for a track (includes pipeline_version per module)
 curl -s http://localhost:8765/api/dashboard/track/hist
 
-# Deep module inspection (plan + meta + gates + orchestration)
+# Deep module inspection (plan + meta + gates + orchestration + pipeline_version + v4_phases)
+curl -s http://localhost:8765/api/dashboard/module/a1/my-world-objects
+
+# Deep module inspection (legacy gold)
 curl -s http://localhost:8765/api/gold/inspect/hist/trypillian-civilization
 
 # Research coverage (detailed per-module scores)

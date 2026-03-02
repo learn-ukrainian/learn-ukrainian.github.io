@@ -15,6 +15,7 @@ import yaml
 from fastapi import APIRouter, HTTPException
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT, SEMINAR_TRACK_IDS
+from .state_router import _detect_pipeline_version, _read_v4_state, _parse_v4_phase_status, V4_PHASE_ORDER
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -115,6 +116,10 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             except Exception:
                 pass
 
+        # Pipeline version detection
+        orch_dir = track_dir / "orchestration" / slug
+        pipeline_version = _detect_pipeline_version(orch_dir) if orch_dir.exists() else "unbuilt"
+
         # Cross-agent review (Phase D) and optional final review (Phase F)
         review_file = track_dir / "review" / f"{slug}-review.md"
         has_review = review_file.exists()
@@ -124,6 +129,7 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
         mod = {
             "slug": slug,
             "num": num,
+            "pipeline_version": pipeline_version,
             "status": overall_status,
             "word_count": word_count,
             "word_target": word_target,
@@ -393,8 +399,19 @@ async def module_detail(track_id: str, slug: str):
                     ).isoformat(),
                 })
         result["orchestration"] = phases
+
+        # Pipeline version + v4 phase status
+        version = _detect_pipeline_version(orch_dir)
+        result["pipeline_version"] = version
+        if version == "v4":
+            v4 = _read_v4_state(orch_dir)
+            result["v4_phases"] = {
+                name: _parse_v4_phase_status(v4, name)
+                for name in V4_PHASE_ORDER
+            }
     else:
         result["orchestration"] = []
+        result["pipeline_version"] = "unbuilt"
 
     return result
 

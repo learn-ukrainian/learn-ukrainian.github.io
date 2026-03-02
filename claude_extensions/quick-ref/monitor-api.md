@@ -48,13 +48,15 @@ curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 | Endpoint | When to use |
 |----------|-------------|
 | `/api/state/summary` | Session start — total snapshot |
-| `/api/state/pipeline/{track}` | Inspect one track's v3 phase progress |
+| `/api/state/pipeline/{track}` | Inspect one track's v3/v4 phase progress (auto-detects per module) |
 | `/api/state/ready-to-build` | Before `build_module --all` |
 | `/api/state/weak-points` | After batch — find what needs fixing |
-| `/api/state/failing` | After batch — find hard failures |
+| `/api/state/failing` | After batch — find hard failures (includes `pipeline_version`) |
 | `/api/state/research-coverage` | Research quality health check |
 | `/api/state/review-coverage` | Review coverage health check |
 | `/api/state/issues` | Outstanding issues from reviews + audit |
+
+**Pipeline version**: All module-level responses include `pipeline_version` (`"v4"`, `"v3"`, `"unbuilt"`). V4 modules return named phases (`research`..`mdx`); v3 modules return letter-coded phases (`A`..`D`).
 
 ## Other Useful Endpoints
 
