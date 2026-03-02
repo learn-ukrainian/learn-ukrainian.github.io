@@ -1217,6 +1217,25 @@ def _extract_vesum_failures(ctx: ModuleContext) -> str:
         return ""
 
 
+def _inject_file_contents(prompt_text: str, ctx: ModuleContext) -> str:
+    """Inject module file contents into D.2 prompt, replacing placeholders.
+
+    Eliminates Read tool round-trips — Claude gets everything in one shot.
+    """
+    content_path = ctx.paths.get("md")
+    act_path = ctx.paths.get("activities")
+    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+
+    content_text = content_path.read_text("utf-8") if content_path and content_path.exists() else "(file not found)"
+    act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(file not found)"
+    vocab_text = vocab_path.read_text("utf-8") if vocab_path and vocab_path.exists() else "(file not found)"
+
+    prompt_text = prompt_text.replace("{CONTENT_FILE_CONTENT}", content_text)
+    prompt_text = prompt_text.replace("{ACTIVITIES_FILE_CONTENT}", act_text)
+    prompt_text = prompt_text.replace("{VOCAB_FILE_CONTENT}", vocab_text)
+    return prompt_text
+
+
 # Audit failure codes that indicate diffuse issues (not FIND/REPLACE fixable).
 # These require structural rewrite, not targeted repair.
 _DIFFUSE_FAILURE_CODES = {
@@ -2708,9 +2727,9 @@ TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
 TIMEOUT_REVIEW_SEMINAR = 750    # Seminar tracks (12.5 min)
 
 # D.2 fix timeouts — shorter than D.1 (mechanical task, Read tool only)
-TIMEOUT_FIX_CORE = 300          # A1-B2 fix (5 min max, typically ~1-2 min)
-TIMEOUT_FIX_SEMINAR = 420       # Seminar fix (7 min max, typically ~2-4 min)
-TIMEOUT_FIX_AUDIT_ONLY = 180    # Audit-only fix (3 min max, typically <1 min)
+TIMEOUT_FIX_CORE = 600          # 10 min ceiling — actual time ~1-2 min without Read tool
+TIMEOUT_FIX_SEMINAR = 600       # 10 min ceiling — actual time ~2-4 min without Read tool
+TIMEOUT_FIX_AUDIT_ONLY = 600    # 10 min ceiling — actual time <1 min without Read tool
 
 
 def _get_review_timeout(track: str) -> int:
@@ -3250,12 +3269,13 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+        # Inject file contents directly — eliminates Read tool round-trips
+        prompt2_text = _inject_file_contents(prompt2_text, ctx)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model_D, timeout=v3_fix_timeout,
-            allow_tools=["Read"],
         )
         if not ok2:
             log(f"  D.2{iter_suffix}: Dispatch FAILED")
@@ -4060,12 +4080,13 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+        # Inject file contents directly — eliminates Read tool round-trips
+        prompt2_text = _inject_file_contents(prompt2_text, ctx)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model, timeout=fix_timeout,
-            allow_tools=["Read"],
         )
         if not ok2:
             log(f"  review: Fix dispatch failed{iter_suffix}")

@@ -1,7 +1,7 @@
 # Phase D.2: Targeted Repair
 
 > **You are an expert Ukrainian language editor applying targeted fixes based on a review.**
-> **You have Read tool access.** Use it to read file content before writing FIND/REPLACE pairs.
+> All file contents are provided below — produce FIND/REPLACE pairs directly.
 
 ---
 
@@ -28,22 +28,34 @@
 
 ---
 
-## Files to Read
+## File Contents
 
-1. **Content**: `{CONTENT_PATH}`
-2. **Activities**: `{ACTIVITIES_PATH}`
-3. **Vocabulary**: `{VOCAB_PATH}`
+### Content: `{CONTENT_PATH}`
+
+```markdown
+{CONTENT_FILE_CONTENT}
+```
+
+### Activities: `{ACTIVITIES_PATH}`
+
+```yaml
+{ACTIVITIES_FILE_CONTENT}
+```
+
+### Vocabulary: `{VOCAB_PATH}`
+
+```yaml
+{VOCAB_FILE_CONTENT}
+```
 
 ---
 
 ## Instructions
 
-1. Read the content file using the Read tool
-2. For each issue identified in the Fix Plan OR in the audit failures:
-   a. Find the exact text in the file you read
-   b. Produce a FIND/REPLACE pair with verbatim FIND text
+1. For each issue in the Fix Plan or audit failures, find the exact text in the file contents above
+2. Produce a FIND/REPLACE pair with verbatim FIND text copied exactly from above
 3. Only fix issues documented above — no silent extra changes
-4. Prioritize fixes by impact: audit gate failures first, then review issues
+4. Prioritize: audit gate failures first, then review issues
 
 ---
 
@@ -56,7 +68,7 @@
 FILE: {CONTENT_PATH}
 ---
 FIND:
-exact text to replace (full sentence or paragraph, verbatim from the file)
+exact text to replace (full sentence or paragraph, verbatim from the file contents above)
 REPLACE:
 corrected replacement text
 ---
@@ -77,7 +89,7 @@ corrected activity text
 
 ## Fix Rules
 
-- **FIND text must be verbatim** from the file — copy from Read tool output exactly
+- **FIND text must be verbatim** — copy from the file contents above exactly
 - Only fix issues documented in the Fix Plan or audit failures above
 - You MAY add new activities or modify existing ones if the Fix Plan explicitly requests it
 - To ADD a new YAML item, FIND the last existing item in the list, REPLACE it with that same item followed by your new item. Preserve exact YAML indentation.
