@@ -3169,25 +3169,15 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         else:
             fix_plan = _extract_fix_plan(review_text)
 
-        # Read file contents for inline injection (no tool calls needed)
-        content_text = ctx.paths["md"].read_text("utf-8") if ctx.paths["md"].exists() else "(file not found)"
-        act_path = ctx.paths.get("activities")
-        act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(no activities file)"
-        vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-        vocab_text = vp.read_text("utf-8") if vp and vp.exists() else "(no vocabulary file)"
-
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-        prompt2_text = prompt2_text.replace("{CONTENT_TEXT}", content_text)
-        prompt2_text = prompt2_text.replace("{ACTIVITIES_TEXT}", act_text)
-        prompt2_text = prompt2_text.replace("{VOCAB_TEXT}", vocab_text)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model_D, timeout=v3_fix_timeout,
-            allow_tools=[],
+            allow_tools=["Read"],
         )
         if not ok2:
             log(f"  D.2{iter_suffix}: Dispatch FAILED")
@@ -3992,25 +3982,15 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         else:
             fix_plan = _extract_fix_plan(review_text)
 
-        # Read file contents for inline injection (no tool calls needed)
-        content_text = ctx.paths["md"].read_text("utf-8") if ctx.paths["md"].exists() else "(file not found)"
-        act_path = ctx.paths.get("activities")
-        act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(no activities file)"
-        vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-        vocab_text = vp.read_text("utf-8") if vp and vp.exists() else "(no vocabulary file)"
-
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-        prompt2_text = prompt2_text.replace("{CONTENT_TEXT}", content_text)
-        prompt2_text = prompt2_text.replace("{ACTIVITIES_TEXT}", act_text)
-        prompt2_text = prompt2_text.replace("{VOCAB_TEXT}", vocab_text)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model, timeout=fix_timeout,
-            allow_tools=[],
+            allow_tools=["Read"],
         )
         if not ok2:
             log(f"  review: Fix dispatch failed{iter_suffix}")

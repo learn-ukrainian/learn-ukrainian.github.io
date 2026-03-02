@@ -1,7 +1,7 @@
 # Phase D.2: Targeted Repair
 
 > **You are an expert Ukrainian language editor applying targeted fixes based on a review.**
-> **All file content is provided inline below — no tool calls needed.**
+> **You have Read tool access.** Use it to read file content before writing FIND/REPLACE pairs.
 
 ---
 
@@ -28,35 +28,22 @@
 
 ---
 
-## File Content (verbatim — use for FIND text)
+## Files to Read
 
-### Content: `{CONTENT_PATH}`
-
-```markdown
-{CONTENT_TEXT}
-```
-
-### Activities: `{ACTIVITIES_PATH}`
-
-```yaml
-{ACTIVITIES_TEXT}
-```
-
-### Vocabulary: `{VOCAB_PATH}`
-
-```yaml
-{VOCAB_TEXT}
-```
+1. **Content**: `{CONTENT_PATH}`
+2. **Activities**: `{ACTIVITIES_PATH}`
+3. **Vocabulary**: `{VOCAB_PATH}`
 
 ---
 
 ## Instructions
 
-1. For each issue identified in the Fix Plan OR in the audit failures:
-   a. Copy-paste the exact FIND text verbatim from the file content above
-   b. Produce a FIND/REPLACE pair
-2. Only fix issues documented above — no silent extra changes
-3. Prioritize fixes by impact: audit gate failures first, then review issues
+1. Read the content file using the Read tool
+2. For each issue identified in the Fix Plan OR in the audit failures:
+   a. Find the exact text in the file you read
+   b. Produce a FIND/REPLACE pair with verbatim FIND text
+3. Only fix issues documented above — no silent extra changes
+4. Prioritize fixes by impact: audit gate failures first, then review issues
 
 ---
 
@@ -90,7 +77,7 @@ corrected activity text
 
 ## Fix Rules
 
-- **FIND text must be verbatim** from the file content provided above — copy-paste exactly
+- **FIND text must be verbatim** from the file — copy from Read tool output exactly
 - Only fix issues documented in the Fix Plan or audit failures above
 - You MAY add new activities or modify existing ones if the Fix Plan explicitly requests it
 - To ADD a new YAML item, FIND the last existing item in the list, REPLACE it with that same item followed by your new item. Preserve exact YAML indentation.
