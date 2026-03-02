@@ -2646,9 +2646,9 @@ TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
 TIMEOUT_REVIEW_SEMINAR = 750    # Seminar tracks (12.5 min)
 
 # D.2 fix timeouts — shorter than D.1 (mechanical task, no tools)
-TIMEOUT_FIX_CORE = 240          # A1-B2 fix (4 min — inline content adds prompt size)
-TIMEOUT_FIX_SEMINAR = 360       # Seminar fix (6 min — large inline content)
-TIMEOUT_FIX_AUDIT_ONLY = 120    # Audit-only fix (2 min)
+TIMEOUT_FIX_CORE = 300          # A1-B2 fix (5 min max, typically ~1-2 min)
+TIMEOUT_FIX_SEMINAR = 420       # Seminar fix (7 min max, typically ~2-4 min)
+TIMEOUT_FIX_AUDIT_ONLY = 180    # Audit-only fix (3 min max, typically <1 min)
 
 
 def _get_review_timeout(track: str) -> int:
