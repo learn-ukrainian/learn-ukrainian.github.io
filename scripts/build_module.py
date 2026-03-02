@@ -2645,7 +2645,7 @@ def _prefetch_rag_context(ctx: ModuleContext) -> str:
 TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
 TIMEOUT_REVIEW_SEMINAR = 750    # Seminar tracks (12.5 min)
 
-# D.2 fix timeouts — shorter than D.1 (mechanical task, no tools)
+# D.2 fix timeouts — shorter than D.1 (mechanical task, Read tool only)
 TIMEOUT_FIX_CORE = 300          # A1-B2 fix (5 min max, typically ~1-2 min)
 TIMEOUT_FIX_SEMINAR = 420       # Seminar fix (7 min max, typically ~2-4 min)
 TIMEOUT_FIX_AUDIT_ONLY = 180    # Audit-only fix (3 min max, typically <1 min)
@@ -3147,6 +3147,17 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
     v3_fix_timeout = _get_fix_timeout(ctx.track, audit_only=_audit_only_d2)
 
+    # Build fix plan once (constant across iterations — review_text doesn't change)
+    if _audit_only_d2:
+        fix_plan = (
+            "**IMPORTANT: The D.1 review verdict was PASS. "
+            "Fix ONLY the audit failures listed below. "
+            "Do NOT fix review suggestions — they are informational only.**\n\n"
+            "(Review omitted — verdict was PASS)\n"
+        )
+    else:
+        fix_plan = _extract_fix_plan(review_text)
+
     for d2_iter in range(MAX_D2_ITERS):
         iter_suffix = "" if d2_iter == 0 else f" (iter {d2_iter + 1})"
         total_attempts = 2 + d2_iter
@@ -3157,17 +3168,6 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{2 + d2_iter}.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
-
-        # Build fix plan (extracted actionable sections or audit-only notice)
-        if _audit_only_d2:
-            fix_plan = (
-                "**IMPORTANT: The D.1 review verdict was PASS. "
-                "Fix ONLY the audit failures listed below. "
-                "Do NOT fix review suggestions — they are informational only.**\n\n"
-                "(Review omitted — verdict was PASS)\n"
-            )
-        else:
-            fix_plan = _extract_fix_plan(review_text)
 
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
@@ -3960,6 +3960,17 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     # -----------------------------------------------------------------------
     fix_timeout = _get_fix_timeout(ctx.track, audit_only=_audit_only_fix)
 
+    # Build fix plan once (constant across iterations — review_text doesn't change)
+    if _audit_only_fix:
+        fix_plan = (
+            "**IMPORTANT: The review verdict was PASS. "
+            "Fix ONLY the audit failures listed below. "
+            "Do NOT fix review suggestions — they are informational only.**\n\n"
+            "(Review omitted — verdict was PASS)\n"
+        )
+    else:
+        fix_plan = _extract_fix_plan(review_text)
+
     for fix_iter in range(MAX_REVIEW_FIX_ITERS):
         iter_suffix = "" if fix_iter == 0 else f" (iter {fix_iter + 1})"
         total_attempts = 2 + fix_iter
@@ -3970,17 +3981,6 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
-
-        # Build fix plan (extracted actionable sections or audit-only notice)
-        if _audit_only_fix:
-            fix_plan = (
-                "**IMPORTANT: The review verdict was PASS. "
-                "Fix ONLY the audit failures listed below. "
-                "Do NOT fix review suggestions — they are informational only.**\n\n"
-                "(Review omitted — verdict was PASS)\n"
-            )
-        else:
-            fix_plan = _extract_fix_plan(review_text)
 
         prompt2_text = prompt_file2.read_text("utf-8")
         prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
