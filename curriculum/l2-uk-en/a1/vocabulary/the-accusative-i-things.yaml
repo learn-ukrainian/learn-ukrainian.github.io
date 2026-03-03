@@ -1,61 +1,61 @@
-  lemma: бачити
+items:
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: мати
   pos: verb
-  translation: to see
-  lemma: чути
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: ви
+  pos: noun
+- lemma: маяти
   pos: verb
-  translation: to hear
-  lemma: брати
+- lemma: бачити
   pos: verb
-  translation: to take
-  lemma: мати
+- lemma: ми
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: закінчення
+  pos: noun
+- lemma: кава
+  pos: noun
+- lemma: дія
+  pos: noun
+- lemma: купувати
   pos: verb
-  translation: to have
-  lemma: хотіти
+- lemma: хліб
+  pos: noun
+- lemma: брати
   pos: verb
-  translation: to want
-  lemma: купувати
+- lemma: пакет
+  pos: noun
+- lemma: знахідний
+  pos: adj
+- lemma: вони
+  pos: noun
+- lemma: хотіти
   pos: verb
-  translation: to buy
-  lemma: книга
+- lemma: хтіти
+  pos: verb
+- lemma: як
+  pos: adv
+- lemma: стіл
   pos: noun
-  translation: book
-  lemma: кава
+- lemma: кожний
+  pos: adj
+- lemma: великий
+  pos: adj
+- lemma: рід
   pos: noun
-  translation: coffee
-  lemma: стіл
-  pos: noun
-  translation: table
-  lemma: лампа
-  pos: noun
-  translation: lamp
-  lemma: вікно
-  pos: noun
-  translation: window
-  lemma: вода
-  pos: noun
-  translation: water
-  lemma: піца
-  pos: noun
-  translation: pizza
-  lemma: чай
-  pos: noun
-  translation: tea
-  lemma: хліб
-  pos: noun
-  translation: bread
-  lemma: сумка
-  pos: noun
-  translation: bag (handbag/shopping bag)
-  lemma: пакет
-  pos: noun
-  translation: bag (plastic/paper package)
-  lemma: гречка
-  pos: noun
-  translation: buckwheat
-  lemma: базар
-  pos: noun
-  translation: market (bazaar)
-  lemma: ціна
-  pos: noun
-  translation: price
-
+- lemma: абсолютно
+  pos: adv
+- lemma: смачний
+  pos: adj
+- lemma: свіжий
+  pos: adj

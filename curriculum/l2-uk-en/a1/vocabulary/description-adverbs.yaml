@@ -1,101 +1,61 @@
-  lemma: добре
-  pos: adverb
-  translation: well
-  notes: "Irregular adverb from 'добрий' (good)"
-  lemma: погано
-  pos: adverb
-  translation: badly/poorly
-  example: "Я погано чую. (I hear poorly.)"
-  lemma: швидко
-  pos: adverb
-  translation: quickly/fast
-  example: "Він бігає швидко."
-  lemma: повільно
-  pos: adverb
-  translation: slowly
-  example: "Говоріть повільно, будь ласка."
-  lemma: завжди
-  pos: adverb
-  translation: always
-  notes: "Stress on the second syllable"
-  lemma: часто
-  pos: adverb
-  translation: often
-  lemma: іноді
-  pos: adverb
-  translation: sometimes
-  lemma: ніколи
-  pos: adverb
-  translation: never
-  notes: "Requires 'не' before the verb"
-  lemma: голосно
-  pos: adverb
-  translation: loudly
-  lemma: тихо
-  pos: adverb
-  translation: quietly
-  lemma: рідко
-  pos: adverb
-  translation: rarely
-  lemma: зазвичай
-  pos: adverb
-  translation: usually
-  lemma: легко
-  pos: adverb
-  translation: easily
-  lemma: важко
-  pos: adverb
-  translation: hard/with difficulty
-  example: "Мені важко це робити."
-  lemma: дуже
-  pos: adverb
-  translation: very/really
-  notes: "Always placed BEFORE the word it modifies"
-  lemma: активно
-  pos: adverb
-  translation: actively
-  lemma: рано
-  pos: adverb
-  translation: early
-  lemma: пізно
-  pos: adverb
-  translation: late
-  lemma: спокійно
-  pos: adverb
-  translation: calmly
-  lemma: уважно
-  pos: adverb
-  translation: attentively/carefully
-  lemma: прикметник
+items:
+- lemma: цей
+  pos: adj
+- lemma: ви
   pos: noun
-  translation: adjective
-  notes: "Grammar term"
-  lemma: іменник
+- lemma: він
   pos: noun
-  translation: noun
-  notes: "Grammar term"
-  lemma: дієслово
+- lemma: як
   pos: noun
-  translation: verb
-  notes: "Grammar term"
-  lemma: прислівник
+- lemma: це
   pos: noun
-  translation: adverb
-  notes: "Grammar term"
-
-  lemma: прикметник
+- lemma: слово
   pos: noun
-  translation: adjective
-  notes: "Grammar term"
-  lemma: іменник
+- lemma: вони
   pos: noun
-  translation: noun
-  notes: "Grammar term"
-  lemma: дієслово
+- lemma: до
   pos: noun
-  translation: verb
-  notes: "Grammar term"
-  lemma: прислівник
+- lemma: ми
   pos: noun
-  translation: adverb
-  notes: "Grammar term"
+- lemma: вона
+  pos: noun
+- lemma: дія
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: ти
+  pos: noun
+- lemma: працювати
+  pos: verb
+- lemma: повільно
+  pos: adv
+- lemma: описувати
+  pos: verb
+- lemma: шов
+  pos: noun
+- lemma: праця
+  pos: noun
+- lemma: прислівник
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: мати
+  pos: verb
+- lemma: га
+  pos: noun
+- lemma: ваш
+  pos: adj
+- lemma: завжди
+  pos: adv
+- lemma: новий
+  pos: adj
+- lemma: речення
+  pos: noun
+- lemma: маяти
+  pos: verb
+- lemma: той
+  pos: adj
+- lemma: відпочивати
+  pos: verb

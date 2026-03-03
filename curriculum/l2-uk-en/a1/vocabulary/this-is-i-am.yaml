@@ -1,15 +1,61 @@
-  lemma: студент
+items:
+- lemma: ти
   pos: noun
-  translation: student (male)
-  lemma: вчитель
+- lemma: ви
   pos: noun
-  translation: teacher (male)
-  lemma: лікар
+- lemma: це
   pos: noun
-  translation: doctor
-  lemma: українець
+- lemma: цей
+  pos: adj
+- lemma: студент
   pos: noun
-  translation: Ukrainian (male)
-  lemma: дієслово
+- lemma: тут
+  pos: adv
+- lemma: він
   pos: noun
-  translation: verb
+- lemma: хто
+  pos: noun
+- lemma: що
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: воно
+  pos: noun
+- lemma: там
+  pos: adv
+- lemma: ми
+  pos: noun
+- lemma: стіл
+  pos: noun
+- lemma: дім
+  pos: noun
+- lemma: привіт
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: вони
+  pos: noun
+- lemma: лампа
+  pos: noun
+- lemma: я
+  pos: noun
+- lemma: займенник
+  pos: noun
+- lemma: лікар
+  pos: noun
+- lemma: так
+  pos: adv
+- lemma: вдома
+  pos: adv
+- lemma: мій
+  pos: adj
+- lemma: брат
+  pos: noun
+- lemma: вікно
+  pos: noun
+- lemma: теплий
+  pos: adj
+- lemma: хлопець
+  pos: noun
+- lemma: професор
+  pos: noun

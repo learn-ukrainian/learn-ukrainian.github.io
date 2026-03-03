@@ -1,98 +1,61 @@
-  lemma: ринок
-  pos: noun
-  gender: m
-  translation: market
-  example: "Я йду на ринок."
-  lemma: кілограм
-  pos: noun
-  gender: m
-  translation: kilogram
-  example: "Один кілограм картоплі."
-  lemma: грам
-  pos: noun
-  gender: m
-  translation: gram
-  example: "Двісті грам сиру."
-  lemma: штука
-  pos: noun
-  gender: f
-  translation: piece / item
-  example: "Одна штука."
-  lemma: пучок
-  pos: noun
-  gender: m
-  translation: bunch (of greens)
-  example: "Пучок петрушки."
-  lemma: свіжий
+items:
+- lemma: цей
   pos: adj
-  translation: fresh
-  example: "Свіжий хліб."
-  lemma: овочі
+- lemma: це
   pos: noun
-  translation: vegetables
-  notes: always plural
-  lemma: фрукти
+- lemma: ви
   pos: noun
-  translation: fruits
-  notes: usually plural
-  lemma: скільки
+- lemma: дуже
   pos: adv
-  translation: how much / how many
-  usage: "Скільки коштує?"
-  lemma: дайте
+- lemma: дужий
+  pos: adj
+- lemma: кілограм
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: продавець
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: ринка
+  pos: noun
+- lemma: ринок
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: решта
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: хотіти
   pos: verb
-  translation: give (imperative, polite)
-  usage: "Дайте, будь ласка..."
-  lemma: здача
-  pos: noun
-  gender: f
-  translation: change (money)
-  example: "Ваша здача."
-  lemma: продавець
-  pos: noun
-  gender: m
-  translation: vendor / seller
-  lemma: яблуко
-  pos: noun
-  gender: n
-  translation: apple
-  lemma: картопля
-  pos: noun
-  gender: f
-  translation: potato
-  notes: usually singular in Ukrainian (collective)
-  lemma: помідор
-  pos: noun
-  gender: m
-  translation: tomato
-  lemma: огірок
-  pos: noun
-  gender: m
-  translation: cucumber
-  lemma: морква
-  pos: noun
-  gender: f
-  translation: carrot
-  notes: usually singular (collective)
-  lemma: цибуля
-  pos: noun
-  gender: f
-  translation: onion
-  notes: usually singular (collective)
-  lemma: смачний
-  pos: adj
-  translation: tasty / delicious
-  lemma: солодкий
-  pos: adj
-  translation: sweet
-  lemma: стиглий
-  pos: adj
-  translation: ripe
-  lemma: готівка
-  pos: noun
-  gender: f
-  translation: cash
-  lemma: зважте
+- lemma: хтіти
   pos: verb
-  translation: weigh (imperative, polite)
-  usage: "Зважте, будь ласка..."
+- lemma: товар
+  pos: noun
+- lemma: бути
+  pos: verb
+- lemma: купити
+  pos: verb
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: огірок
+  pos: noun
+- lemma: дати
+  pos: verb
+- lemma: ваш
+  pos: adj
+- lemma: могти
+  pos: verb
+- lemma: говорити
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: картопля
+  pos: noun
+- lemma: помідор
+  pos: noun

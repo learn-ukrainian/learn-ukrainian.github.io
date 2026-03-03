@@ -1,104 +1,61 @@
-  lemma: рід
-  notes: Grammatical gender (masculine, feminine, neuter)
-  pos: noun
-  translation: gender; kind; lineage
-  lemma: сонце
-  notes: Neuter gender (ends in -e)
-  pos: noun
-  translation: sun
-  lemma: стіл
-  notes: Masculine gender (consonant ending)
-  pos: noun
-  translation: table
-  lemma: книга
-  notes: Feminine gender (ends in -a)
-  pos: noun
-  translation: book
-  lemma: вікно
-  notes: Neuter gender (ends in -o)
-  pos: noun
-  translation: window
-  lemma: дім
-  notes: Masculine gender
-  pos: noun
-  translation: house; home
-  lemma: мама
-  notes: Feminine gender
-  pos: noun
-  translation: mom
-  lemma: тато
-  notes: Masculine gender despite -o ending (biological gender rules)
-  pos: noun
-  translation: dad
-  lemma: брат
-  notes: Masculine gender
-  pos: noun
-  translation: brother
-  lemma: сестра
-  notes: Feminine gender
-  pos: noun
-  translation: sister
-  lemma: місто
-  notes: Neuter gender
-  pos: noun
-  translation: city
-  lemma: море
-  notes: Neuter gender
-  pos: noun
-  translation: sea
-  lemma: серце
-  notes: Neuter gender
-  pos: noun
-  translation: heart
-  lemma: земля
-  notes: Feminine gender
-  pos: noun
-  translation: earth; land; ground
-  lemma: день
-  notes: Masculine gender (soft sign exception)
-  pos: noun
-  translation: day
-  lemma: ніч
-  notes: Feminine gender (consonant ending exception)
-  pos: noun
-  translation: night
-  lemma: ім'я
-  notes: Neuter gender (ends in -я but is neuter)
-  pos: noun
-  translation: name
-  lemma: собака
-  notes: Masculine gender despite -a ending
-  pos: noun
-  translation: dog
-  lemma: чоловік
-  notes: Masculine gender
-  pos: noun
-  translation: man; husband
-  lemma: жінка
-  notes: Feminine gender
-  pos: noun
-  translation: woman; wife; feminine (gender)
-  lemma: чоловічий
-  notes: Adjective used for grammatical gender
+items:
+- lemma: мій
   pos: adj
-  translation: masculine
-  lemma: жіночий
-  notes: Adjective used for grammatical gender
+- lemma: тато
+  pos: noun
+- lemma: дім
+  pos: noun
+- lemma: ім'я
+  pos: noun
+- lemma: ніч
+  pos: noun
+- lemma: земля
+  pos: noun
+- lemma: мама
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: брат
+  pos: noun
+- lemma: день
+  pos: noun
+- lemma: вікно
+  pos: noun
+- lemma: собака
+  pos: noun
+- lemma: місто
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: цей
   pos: adj
-  translation: feminine
-  lemma: середній
-  notes: Adjective used for grammatical gender
+- lemma: чоловічий
   pos: adj
-  translation: neuter; middle; average
-  lemma: артефакт
-  notes: S.T.A.L.K.E.R. hook; masculine consonant ending
+- lemma: стіл
   pos: noun
-  translation: artifact
-  lemma: зона
-  notes: S.T.A.L.K.E.R. hook; feminine -a ending
+- lemma: добрий
+  pos: adj
+- lemma: сестра
   pos: noun
-  translation: zone
-  lemma: укриття
-  notes: S.T.A.L.K.E.R. hook; neuter -я ending after doubled consonant
+- lemma: серце
   pos: noun
-  translation: shelter; cover
+- lemma: рід
+  pos: noun
+- lemma: жіночий
+  pos: adj
+- lemma: добрити
+  pos: verb
+- lemma: рідний
+  pos: adj
+- lemma: мат
+  pos: noun
+- lemma: мата
+  pos: noun
+- lemma: привіт
+  pos: noun
+- lemma: середній
+  pos: adj
+- lemma: воно
+  pos: noun
+- lemma: той
+  pos: adj

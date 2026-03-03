@@ -2,56 +2,58 @@ slug: the-cyrillic-code-ii
 title: The Cyrillic Code II
 word_target: 2000
 content_outline:
-- section: Вступ
-  words: 300
+- section: Вступ — Introduction
+  words: 200
   points:
-  - 'Note on Immersion: Explicitly establish the 10-50% A1 immersion band; state that
-    clear English scaffolding will be used to explain phonetics safely and thoroughly.'
-  - Quickly review the first 19 letters (from a1-01) with a brief diagnostic reading
-    exercise to build confidence before introducing new material.
-  - 'Introduce the ''Identity Letters'' concept: frame the final 14 letters as keys
-    to Ukrainian distinctness and linguistic sovereignty, independent of any other
-    language.'
-- section: Унікальні приголосні
+  - Establish the A1 immersion band (10-15%), explicitly using English scaffolding
+    to safely introduce these new phonetic concepts.
+  - Provide a brief H3 reading exercise with 3 words from Code I (мама, сума, луна)
+    to build immediate confidence.
+  - 'State the module goal in a dedicated H3: Mastering 7 new letters (5 приголосні:
+    К, Р, Б, В, Д; 2 голосні: И, І) plus О to read real Ukrainian words.'
+- section: 'Голосні — Vowels: И, І, О'
   words: 450
   points:
-  - Present the 'Unique Seven' consonants (Г, Ґ, Ж, Ш, Щ, Ч, Ц) using clear English
-    phonetic equivalents, dedicating an H3 to each or grouped logically by sound type.
-  - 'Provide a dedicated H3 for the Г vs Ґ distinction: define Г as a voiced ''h''
-    (head) and Ґ as the hard ''g'' (go), using minimal pairs to avoid the common learner
-    error of blending them.'
-  - 'Cultural Hook: Integrate a callout about the repressed letter Ґ (banned 1933-1990)
-    as an act of colonial erasure and its modern role as a symbol of restored Ukrainian
-    identity.'
-- section: Йотовані голосні та М’який знак
-  words: 450
+  - Create a dedicated H3 for each vowel (И, І, О) detailing its phonetic definition
+    and physical articulation cues (e.g., relaxed jaw for И, smile for І).
+  - Contrast 'И' and 'І' in an H3 using the State Standard minimal pair 'Рим – Рівне'
+    to emphasize the phonemic distinction.
+  - Include a Cultural Hook callout box about the dotted 'І' as a unique symbol of
+    Ukrainian typography and identity.
+  - Note explicitly that Ukrainian unstressed 'О' maintains absolute phonetic purity
+    (/o/) and never reduces to an 'a' sound.
+- section: 'Приголосні — Consonants: К, Р, Б, В, Д'
+  words: 500
   points:
-  - Introduce the Iotated Four (Є, Ї, Ю, Я) in their own H3, explaining their function
-    in euphony and smoothing consonant clusters.
-  - 'Cultural Hook: Highlight the letter Ї as a unique symbol of modern Ukrainian
-    resistance, detailing its use in 2022 Mariupol graffiti.'
-  - 'Explain the Soft Sign (Ь) mechanically in an H3: debunk the ''silent letter''
-    myth by describing palatalization (pressing the tongue flat against the roof of
-    the mouth).'
-  - 'Drill State Standard §4.1.3 examples: ''Львів'', ''шість'', and ''день'', providing
-    IPA for their first occurrence and breaking down the phonetic shift.'
-- section: Голосні та напівголосні
+  - Dedicate an H3 to each consonant, providing clear phonetic guides and high-frequency
+    examples (кіт, банан, дім).
+  - Create a specific H3 for 'visual trap letters' ('Р' as trilled /r/ and 'В' as
+    /v/ or /w/), contrasting them carefully with Latin P and B.
+  - Frame the pronunciation of the trilled 'Р' independently, emphasizing the active
+    tongue-tip articulation.
+- section: Перші слова — First Words
   words: 400
   points:
-  - Contrast Hard I (И) and Soft I (І) using the 'Smile (І) vs Grin (И)' physiological
-    technique in a dedicated H3.
-  - 'Demonstrate the И/І distinction using State Standard §4.1.4 minimal pairs: ''Рим
-    – Рівне'', explaining the precise tongue and jaw position for each.'
-  - Introduce the Short Y (Й) in an H3, explaining its usage in high-frequency collocations
-    and contrasting it with the English 'y' sound.
-- section: Практика та вимова
-  words: 400
+  - Demonstrate reading core vocabulary in an H3 by combining the 13 known letters
+    to form real words (вода, молоко, кіно, рука).
+  - 'Introduce simple collocations and noun phrases in dedicated H3s with English
+    translations: «Банан і слива», «Дім і вулиця».'
+  - Conclude with a short, fully decodable reading exercise paragraph using only the
+    13 known letters, proving learners can read real words.
+- section: Практика — Practice
+  words: 250
   points:
-  - 'Provide focused contrast drills for common hearing errors: И vs І, Г vs Ґ, and
-    hard vs soft consonants (С vs СЬ), using simple visual tables and English guidance.'
-  - 'Apply State Standard §4.1.1 by having learners practice the correct spelling
-    and pronunciation of core identity markers: ''Київ'', ''київський'', ''Україна'',
-    ''українець''.'
-  - 'Guided reading practice: Feature sentences using high-frequency vocabulary (центр,
-    чай, школа, гарний, жити, день) with specific focus on proper word stress and
-    phonetic accuracy.'
+  - Design visual contrast drills in an H3 to help learners distinguish trap letters
+    ('Р' vs Latin P, 'В' vs Latin B).
+  - Include contextual practice drills in an H3 for 'И' vs 'І' to reinforce the hard/soft
+    phonetic distinction.
+  - Provide a self-check reading list where learners decode high-frequency words without
+    transliteration or IPA.
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - 'Recap the milestone in an H3: knowing 13 out of 33 letters (4 голосні, 9 приголосні)
+    allows reading first words.'
+  - Explicitly list the 7 new letters and 'О' mastered in a summary table.
+  - Preview the next module (The Cyrillic Code III) which introduces voiced/voiceless
+    pairs, maintaining motivation.

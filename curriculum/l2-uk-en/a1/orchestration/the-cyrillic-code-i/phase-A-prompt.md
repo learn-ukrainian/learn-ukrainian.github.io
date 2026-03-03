@@ -1,6 +1,6 @@
 # Phase A: Meta + Lightweight Research (Core Track)
 
-> **You are Gemini, executing Phase A of an optimised rebuild (build_module_v3).**
+> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**
 > **This is a combined Phase 0 + Phase 1. Your ONLY task: Lightweight research AND meta outline in one pass.**
 
 ---
@@ -128,6 +128,11 @@ Alignment: {how this module addresses the standard}
 ## Cross-References
 - Builds on: {module slugs}
 - Prepares for: {module slugs}
+
+## Multimedia Resources
+(If you naturally encountered relevant Ukrainian-language YouTube videos or audio resources during your web research, note them here. Do NOT search specifically for videos — the discover phase handles that. Maximum 3 entries.)
+- {Channel — Title — URL — 1-sentence relevance note}
+- (none encountered)
 
 ## Notes for Content Writing
 - {Any additional observations for Phase B}

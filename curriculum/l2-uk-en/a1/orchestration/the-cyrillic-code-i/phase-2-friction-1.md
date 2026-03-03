@@ -1,5 +1,5 @@
 **Phase**: Phase 2: Content
-**Step**: Expanding text to meet the 1.5x section budget targets
+**Step**: Generating content prose
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

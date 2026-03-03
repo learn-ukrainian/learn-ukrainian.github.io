@@ -11,13 +11,29 @@ Before writing ANY YAML, confirm these targets:
 |--------|-------|
 | Skill identity | Patient & Supportive Ukrainian Tutor |
 | Module persona | Patient Supportive Tutor, acting as Typography Artist |
-| Activities required | 8–{ACTIVITY_MAX} |
-| Items per activity | ≥12 |
+| Activities required | 8–15 |
 | Required types |  |
-| Priority types | fill-in, match-up, anagram, unjumble, quiz |
+| Priority types | fill-in, match-up, anagram, unjumble, quiz, true-false, classify, image-to-letter, watch-and-repeat |
 | Vocabulary items | 20 |
 
-Keep this table visible as you write. Every activity and vocab item must serve these targets.
+### Minimum Items Per Activity Type (HARD FAIL if under)
+
+These are the **audit gate minimums** — generating fewer items causes a COMPLEXITY violation and triggers a fix loop. Generate AT LEAST this many:
+
+| Type | Minimum |
+|------|--------|
+| quiz | ≥8 items |
+| true-false | ≥8 items |
+| fill-in | ≥8 items |
+| match-up | ≥8 pairs |
+| anagram | ≥8 items |
+| unjumble | ≥6 items |
+| group-sort | ≥8 items |
+| watch-and-repeat | ≥1 items |
+| classify | ≥1 items |
+| image-to-letter | ≥5 items |
+
+Keep both tables visible as you write. Every activity and vocab item must serve these targets.
 
 ## Your Input
 
@@ -77,7 +93,7 @@ Generate two YAML blocks: activities and vocabulary.
 
 ### CRITICAL: Activity Type Constraints for a1
 
-**ALLOWED types (use ONLY these):** quiz, fill-in, match-up, anagram, unjumble, group-sort
+**ALLOWED types (use ONLY these):** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
 
 **FORBIDDEN types (audit will auto-FAIL if you use these):** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
 
@@ -186,6 +202,51 @@ options:
 
 7. **Item count consistency** — Activities of the same type should have similar item counts (±2). Don't have one quiz with 4 items and another with 12.
 
+### A1–A2 Activity Language Rules (CRITICAL)
+
+**Metalanguage (grammar terminology) is introduced at B1.** A1–A2 learners do NOT know terms like іменник (noun), дієслово (verb), частина мови (part of speech), голосний (vowel), відмінок (case). These are grammar jargon that hasn't been taught yet. Writing "Яка частина мови позначає дію?" to an A1–A2 learner is meaningless.
+
+**The rule for ALL A1 and A2 activities:**
+- **Questions, explanations, instructions** → English (this is scaffolding, same as the lesson prose)
+- **Target content being practiced** → Ukrainian (the words, phrases, sentences learners are learning)
+- **Option text** → Ukrainian when selecting Ukrainian words/phrases, English when selecting concepts
+
+This matches the A1 immersion band (10–50%) and A2 band (30–70%): English scaffolding for metalanguage, Ukrainian for target content.
+
+**Additional rule for Cyrillic Code modules (a1-1 through a1-4):**
+- Only use letters/words from the module's taught letter set. If the module teaches А, У, М, Л, Н, С — every Ukrainian word in activities must use ONLY those 6 letters.
+- Do not invent pedagogical terminology. "Справжні друзі / Оманливі друзі" (true/false friends) is a term for WORDS between languages, not individual letters. Say "visual traps" instead.
+
+Example quiz for A1:
+```yaml
+- type: quiz
+  title: "Check Your Knowledge"
+  instruction: Choose the correct answer.
+  items:
+    - question: "Which letter looks like English H but represents the /n/ sound?"
+      explanation: "Н is a visual trap — it looks like H but sounds like N."
+      options:
+        - text: "Н"
+          correct: true
+        - text: "М"
+          correct: false
+        - text: "С"
+          correct: false
+        - text: "Л"
+          correct: false
+    - question: "What does the word сума mean?"
+      explanation: "Сума means sum/amount in Ukrainian."
+      options:
+        - text: "sum/amount"
+          correct: true
+        - text: "bag"
+          correct: false
+        - text: "moon"
+          correct: false
+        - text: "mom"
+          correct: false
+```
+
 ### YAML Formatting Rules (HARD FAIL if violated)
 
 **Do NOT use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when combined with colons.
@@ -214,9 +275,9 @@ options:
 
 ### Pronunciation in Activity Explanations (HARD FAIL)
 
-**In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration.**
+**When referencing Ukrainian words, use Cyrillic — NEVER Latin transliteration.**
 
-YAML explanations should reference Ukrainian words in Cyrillic.
+Note: At A1–A2, explanations themselves are written in English (see A1 Activity Language Rules above). But Ukrainian words within those English explanations must be in Cyrillic.
 
 ```yaml
 ❌ WRONG (Latin transliteration):
@@ -234,9 +295,10 @@ YAML explanations should reference Ukrainian words in Cyrillic.
 ```
 
 **Rules:**
-1. Reference words in Cyrillic, not Latin transliteration (ZhYty → Жити)
-2. Keep explanations simple and readable — use Cyrillic only
-3. English descriptions of sounds are fine ("hard И", "soft І", "the ch sound")
+1. Reference Ukrainian words in Cyrillic, not Latin transliteration (ZhYty → Жити)
+2. At A1–A2: write explanations in English, with Ukrainian words in Cyrillic (see A1–A2 Activity Language Rules)
+3. At B1+: write explanations in Ukrainian, using metalanguage naturally
+4. English descriptions of sounds are always fine ("hard И", "soft І", "the ch sound")
 
 ### Vocabulary YAML Rules
 

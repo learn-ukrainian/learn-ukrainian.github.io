@@ -3,17 +3,26 @@
   "slug": "the-cyrillic-code-i",
   "mode": "v4",
   "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-03T21:39:34Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-03T21:39:57Z"
+    },
     "v4-content": {
       "status": "complete",
-      "ts": "2026-03-01T11:47:57Z"
+      "ts": "2026-03-03T21:44:04Z"
     },
     "v4-activities": {
       "status": "complete",
-      "ts": "2026-03-01T11:47:57Z"
+      "ts": "2026-03-03T21:45:36Z"
     },
-    "v4-research": {
+    "v4-validate": {
       "status": "complete",
-      "ts": "2026-03-01T11:48:06Z"
+      "ts": "2026-03-03T22:01:11Z",
+      "attempts": 2
     }
   }
 }

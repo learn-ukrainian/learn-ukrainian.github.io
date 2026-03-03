@@ -1,81 +1,61 @@
 items:
-  - lemma: "іти"
-    translation: "to go on foot"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "їхати"
-    translation: "to go by vehicle"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "до"
-    translation: "to, towards"
-    pos: "preposition"
-    notes: "Takes Genitive case. Used for people and approaching limits."
-  - lemma: "від"
-    translation: "from (a person)"
-    pos: "preposition"
-    notes: "Takes Genitive case. Used for returning from people."
-  - lemma: "з"
-    translation: "from, out of"
-    pos: "preposition"
-    notes: "Takes Genitive case. Has euphonic forms із, зі."
-  - lemma: "лікар"
-    translation: "doctor"
-    pos: "noun"
-    gender: "m"
-  - lemma: "робота"
-    translation: "work"
-    pos: "noun"
-    gender: "f"
-  - lemma: "пошта"
-    translation: "post office"
-    pos: "noun"
-    gender: "f"
-  - lemma: "Київ"
-    translation: "Kyiv"
-    pos: "noun"
-    gender: "m"
-  - lemma: "Україна"
-    translation: "Ukraine"
-    pos: "noun"
-    gender: "f"
-  - lemma: "повертатися"
-    translation: "to return"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "виходити"
-    translation: "to go out, exit"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "аеропорт"
-    translation: "airport"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вокзал"
-    translation: "train station"
-    pos: "noun"
-    gender: "m"
-  - lemma: "магазин"
-    translation: "store"
-    pos: "noun"
-    gender: "m"
-  - lemma: "друг"
-    translation: "friend"
-    pos: "noun"
-    gender: "m"
-  - lemma: "школа"
-    translation: "school"
-    pos: "noun"
-    gender: "f"
-  - lemma: "мама"
-    translation: "mom"
-    pos: "noun"
-    gender: "f"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "Львів"
-    translation: "Lviv"
-    pos: "noun"
-    gender: "m"
+- lemma: до
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: йти
+  pos: verb
+- lemma: ми
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: їхати
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: куди
+  pos: adv
+- lemma: звідки
+  pos: adv
+- lemma: слово
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: він
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: іти
+  pos: verb
+- lemma: рух
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: завжди
+  pos: adv
+- lemma: використовувати
+  pos: verb
+- lemma: рід
+  pos: noun
+- lemma: швидко
+  pos: adv
+- lemma: наш
+  pos: adj
+- lemma: зараз
+  pos: adv
+- lemma: зараза
+  pos: noun
+- lemma: парк
+  pos: noun
+- lemma: питання
+  pos: noun
+- lemma: правило
+  pos: noun
+- lemma: відмінок
+  pos: noun
+- lemma: додому
+  pos: adv

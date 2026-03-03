@@ -1,80 +1,61 @@
 items:
-  - lemma: "могти"
-    translation: "can / be able to"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Expresses physical or circumstantial ability."
-  - lemma: "вміти"
-    translation: "know how to"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Expresses learned skill or practical knowledge."
-  - lemma: "можна"
-    translation: "it is allowed / one may"
-    pos: "adverb"
-    notes: "Impersonal word used for general permission."
-  - lemma: "плавати"
-    translation: "to swim"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "готувати"
-    translation: "to cook"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "фотографувати"
-    translation: "to photograph"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "курити"
-    translation: "to smoke"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "водити"
-    translation: "to drive"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "кататися"
-    translation: "to ride / to skate"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "малювати"
-    translation: "to draw"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "співати"
-    translation: "to sing"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "грати"
-    translation: "to play"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "приходити"
-    translation: "to come"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "запитувати"
-    translation: "to ask"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "допомагати"
-    translation: "to help"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "стілець"
-    translation: "chair"
-    pos: "noun"
-    gender: "m"
-  - lemma: "зараз"
-    translation: "right now"
-    pos: "adverb"
-  - lemma: "завтра"
-    translation: "tomorrow"
-    pos: "adverb"
-  - lemma: "сьогодні"
-    translation: "today"
-    pos: "adverb"
-  - lemma: "басейн"
-    translation: "swimming pool"
-    pos: "noun"
-    gender: "m"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: можний
+  pos: adj
+- lemma: воно
+  pos: noun
+- lemma: могти
+  pos: verb
+- lemma: ми
+  pos: noun
+- lemma: як
+  pos: adv
+- lemma: дієслово
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: вміти
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: ваш
+  pos: adj
+- lemma: мо
+  pos: adv
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: тут
+  pos: adv
+- lemma: використовувати
+  pos: verb
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: правило
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: описувати
+  pos: verb
+- lemma: вони
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: навичка
+  pos: noun
+- lemma: форма
+  pos: noun
+- lemma: йога
+  pos: noun
+- lemma: його
+  pos: adj
+- lemma: повинний
+  pos: adj

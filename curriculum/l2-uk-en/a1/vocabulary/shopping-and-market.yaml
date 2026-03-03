@@ -1,83 +1,61 @@
 items:
-  - lemma: "коштувати"
-    translation: "to cost"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "Скільки коштує?; core shopping verb"
-  - lemma: "купити"
-    translation: "to buy"
-    pos: "verb"
-    aspect: "perfective"
-    notes: "Я хочу купити; perfective for single purchase"
-  - lemma: "гривня"
-    translation: "hryvnia"
-    pos: "noun"
-    gender: "f"
-    notes: "одна гривня, дві гривні, п'ять гривень"
-  - lemma: "кілограм"
-    translation: "kilogram"
-    pos: "noun"
-    gender: "m"
-  - lemma: "літр"
-    translation: "litre"
-    pos: "noun"
-    gender: "m"
-  - lemma: "пачка"
-    translation: "packet"
-    pos: "noun"
-    gender: "f"
-  - lemma: "пляшка"
-    translation: "bottle"
-    pos: "noun"
-    gender: "f"
-  - lemma: "магазин"
-    translation: "store"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ринок"
-    translation: "market"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мило"
-    translation: "soap"
-    pos: "noun"
-    gender: "n"
-  - lemma: "шампунь"
-    translation: "shampoo"
-    pos: "noun"
-    gender: "m"
-  - lemma: "рушник"
-    translation: "towel"
-    pos: "noun"
-    gender: "m"
-  - lemma: "решта"
-    translation: "change (money)"
-    pos: "noun"
-    gender: "f"
-  - lemma: "картка"
-    translation: "card"
-    pos: "noun"
-    gender: "f"
-  - lemma: "штука"
-    translation: "piece / item"
-    pos: "noun"
-    gender: "f"
-  - lemma: "зубна паста"
-    translation: "toothpaste"
-    pos: "noun"
-    gender: "f"
-  - lemma: "туалетний папір"
-    translation: "toilet paper"
-    pos: "noun"
-    gender: "m"
-  - lemma: "аптека"
-    translation: "pharmacy"
-    pos: "noun"
-    gender: "f"
-  - lemma: "оплатити"
-    translation: "to pay"
-    pos: "verb"
-    aspect: "perfective"
-  - lemma: "свіжий"
-    translation: "fresh"
-    pos: "adjective"
+- lemma: цей
+  pos: adj
+- lemma: ви
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: гривня
+  pos: noun
+- lemma: коштувати
+  pos: verb
+- lemma: слово
+  pos: noun
+- lemma: товар
+  pos: noun
+- lemma: продавець
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: бути
+  pos: verb
+- lemma: скільки
+  pos: adv
+- lemma: купити
+  pos: verb
+- lemma: покупець
+  pos: noun
+- lemma: використовувати
+  pos: verb
+- lemma: кілограм
+  pos: noun
+- lemma: ласка
+  pos: noun
+- lemma: форма
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: цифра
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: дати
+  pos: verb
+- lemma: літр
+  pos: noun
+- lemma: магазин
+  pos: noun
+- lemma: рід
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: молоко
+  pos: noun
+- lemma: шампунь
+  pos: noun

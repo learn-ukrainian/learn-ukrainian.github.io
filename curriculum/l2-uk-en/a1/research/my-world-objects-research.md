@@ -1,30 +1,34 @@
 # Дослідження: My World: Objects
 
 ## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: ... ті, ці."
-Alignment: This module precisely delivers the §4.2.2 requirement by introducing the formation and usage of demonstrative pronouns (цей/той) across all genders and the plural form, mapping them to foundational vocabulary.
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це; ... утворення форм множини присвійних і вказівних займенників: ... ті, ці."
+Alignment: This module directly fulfills the requirement to form and use the gendered and plural forms of the demonstrative pronouns "цей" (this) and "той" (that) in spatial contexts.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| цей / той | Top 100 / 200 | цей стіл, той будинок, ця кімната |
-| стіл | High (household) | письмовий стіл, на столі |
-| вікно | High (general) | біля вікна, велике вікно |
-| книга | High | цікава книга, читати книгу |
-| двері | High (plural only) | ці двері, вхідні двері |
+| цей/ця/це/ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
+| той/та/те/ті | High (Top 200) | той будинок, та жінка, те місце, ті двері |
+| стіл | High household | на столі, за столом, обідній стіл |
+| книга | High general | цікава книга, читати книгу |
+| двері | High household (plural only) | ці двері, вхідні двері |
 
 ## Cultural Hooks
-1. **Покуття (Pokuttia)**: The "Red Corner" or focal point of a traditional Ukrainian home. Historically the place for icons and embroidered towels (rushnyky), demonstrating how physical space and objects are culturally organized.
-2. **Дім vs Хата vs Квартира**: The emotional anchor of the proverb «В гостях добре, а вдома краще» introduces the cultural warmth of 'дім' (home) as a concept, contrasting with a physical 'квартира' (modern apartment) and 'хата' (traditional rural house).
+1. **Покуття (The Red Corner)**: The traditional focal point of a Ukrainian home diagonally opposite the stove, decorated with icons and rushnyky. Historically, it served as a key anchor for spatial orientation within a dwelling.
+2. **«В гостях добре, а вдома краще»**: A foundational proverb (East or West, home is best) reflecting the cultural importance and warmth associated with one's own living space (дім).
 
 ## Common Learner Errors
-1. **Identification vs Specification**: Confusing the invariant subject "Це" in "Це стіл" (This is a table) with the gendered demonstrative adjective "Цей" in "Цей стіл" (This table).
-2. **Gender Mismatch**: Defaulting to the masculine "цей" for all objects (e.g., saying "цей книга" instead of "ця книга") because English "this" does not change.
+1. **Gender Mismatch ("цей книга" → "ця книга")**: Forgetting to align the demonstrative with the noun's grammatical gender. Overcome by explicitly teaching and practicing the rhyming endings (цЯ книгА, цЕ вікнО).
+2. **Identification vs. Specification ("Це стіл" vs "Цей стіл")**: Confusing the invariant identifier "це" (This is...) with the specifying adjective "цей/ця/це/ці" (This...). 
 
 ## Cross-References
-- Builds on: a1-09 (This Is, I Am)
+- Builds on: a1-03 (Gender), a1-04 (Identification), a1-09 (This Is, I Am)
 - Prepares for: a1-15 (The Living Verb I), a1-29 (Around the City)
 
+## Multimedia Resources
+- (none encountered)
+
 ## Notes for Content Writing
-- **Decolonization & Framing**: Frame the Ukrainian gender-matching system (e.g., цЯ-книгА, цЕ-вікнО) as an elegant, rhythmic, and poetic feature native to the language's structure. Emphasize how endings naturally rhyme, aiding memory. Do not use Russian grammar as a comparison point.
-- **Scaffolding Requirement**: As an A1 First Contact module (immersion 15-25%), explicit English metalanguage is required to explain the grammatical distinction between pointing at an object (identification) and modifying a noun (specification).
+- **Decolonized Framing**: Frame the "Це (identifier) vs. Цей (specifier)" distinction as a natural mark of Ukrainian linguistic precision. Do not rely on Russian syntactic baselines for comparison.
+- **English Scaffolding**: Since this is A1 (low immersion), the abstract distinction between identification and specification must be clearly explained in English before presenting the Ukrainian paradigms.
+- **Plural Only Nouns**: Note that "двері" (door) is exclusively plural in Ukrainian, meaning it always takes the plural demonstratives "ці" or "ті", contrasting with English singular logic.

@@ -1,73 +1,61 @@
 items:
-  - lemma: "новий"
-    translation: "new"
-    pos: "adjective"
-  - lemma: "великий"
-    translation: "big, large"
-    pos: "adjective"
-  - lemma: "маленький"
-    translation: "small, little"
-    pos: "adjective"
-  - lemma: "красивий"
-    translation: "beautiful"
-    pos: "adjective"
-  - lemma: "старий"
-    translation: "old"
-    pos: "adjective"
-  - lemma: "цікавий"
-    translation: "interesting"
-    pos: "adjective"
-  - lemma: "смачний"
-    translation: "tasty, delicious"
-    pos: "adjective"
-  - lemma: "дорогий"
-    translation: "expensive, dear"
-    pos: "adjective"
-  - lemma: "український"
-    translation: "Ukrainian"
-    pos: "adjective"
-  - lemma: "молодий"
-    translation: "young"
-    pos: "adjective"
-  - lemma: "важливий"
-    translation: "important"
-    pos: "adjective"
-  - lemma: "популярний"
-    translation: "popular"
-    pos: "adjective"
-  - lemma: "фільм"
-    translation: "movie, film"
-    pos: "noun"
-    gender: "m"
-  - lemma: "книга"
-    translation: "book"
-    pos: "noun"
-    gender: "f"
-  - lemma: "студент"
-    translation: "student"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кава"
-    translation: "coffee"
-    pos: "noun"
-    gender: "f"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "парк"
-    translation: "park"
-    pos: "noun"
-    gender: "m"
-  - lemma: "церква"
-    translation: "church"
-    pos: "noun"
-    gender: "f"
-  - lemma: "площа"
-    translation: "square"
-    pos: "noun"
-    gender: "f"
-  - lemma: "прикметник"
-    translation: "adjective"
-    pos: "noun"
-    gender: "m"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: закінчення
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: відмінок
+  pos: noun
+- lemma: форма
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: опис
+  pos: noun
+- lemma: студент
+  pos: noun
+- lemma: знахідний
+  pos: adj
+- lemma: бачити
+  pos: verb
+- lemma: де
+  pos: adv
+- lemma: ви
+  pos: noun
+- lemma: старий
+  pos: adj
+- lemma: книга
+  pos: noun
+- lemma: працювати
+  pos: verb
+- lemma: правило
+  pos: noun
+- lemma: правити
+  pos: verb
+- lemma: жіночий
+  pos: adj
+- lemma: ом
+  pos: noun
+- lemma: використовувати
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: читати
+  pos: verb
+- lemma: рід
+  pos: noun

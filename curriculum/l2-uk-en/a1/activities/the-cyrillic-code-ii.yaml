@@ -1,428 +1,397 @@
-- instruction: Match the Ukrainian letter to its English sound equivalent.
+- type: watch-and-repeat
+  title: "Watch and Repeat"
+  instruction: "Watch Anna's video for each new letter and repeat the sound aloud."
+  items:
+    - letter: "К"
+      word: "кіт"
+      video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+    - letter: "И"
+      word: "риба"
+      video: "https://www.youtube.com/watch?v=W-1rCu0indE"
+    - letter: "Р"
+      word: "рука"
+      video: "https://www.youtube.com/watch?v=fMGsQ5KPQgg"
+    - letter: "Б"
+      word: "банан"
+      video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+    - letter: "В"
+      word: "вода"
+      video: "https://www.youtube.com/watch?v=aFcvYfvQ2X4"
+    - letter: "Д"
+      word: "дім"
+      video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+    - letter: "І"
+      word: "кіно"
+      video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+    - letter: "О"
+      word: "молоко"
+      video: "https://www.youtube.com/watch?v=QT3c1TiZZgk"
+
+- type: classify
+  title: "Vowels and Consonants"
+  instruction: "Sort the new letters into vowels and consonants."
+  categories:
+    - label: "Голосні (Vowels)"
+      symbol_hint: "vowel"
+      items:
+        - "И"
+        - "І"
+        - "О"
+    - label: "Приголосні (Consonants)"
+      symbol_hint: "consonant"
+      items:
+        - "К"
+        - "Р"
+        - "Б"
+        - "В"
+        - "Д"
+
+- type: image-to-letter
+  title: "First Sound"
+  instruction: "Look at the emoji and select the letter its Ukrainian word starts with."
+  items:
+    - emoji: "🐱"
+      answer: "К"
+      distractors:
+        - "Р"
+        - "Б"
+      note: "кіт"
+    - emoji: "🍌"
+      answer: "Б"
+      distractors:
+        - "В"
+        - "Д"
+      note: "банан"
+    - emoji: "🐺"
+      answer: "В"
+      distractors:
+        - "Б"
+        - "Р"
+      note: "вовк"
+    - emoji: "🏠"
+      answer: "Д"
+      distractors:
+        - "К"
+        - "Б"
+      note: "дім"
+    - emoji: "🐟"
+      answer: "Р"
+      distractors:
+        - "К"
+        - "Д"
+      note: "риба"
+    - emoji: "🥛"
+      answer: "О"
+      distractors:
+        - "И"
+        - "І"
+      note: "молоко"
+    - emoji: "🖐️"
+      answer: "Р"
+      distractors:
+        - "В"
+        - "Б"
+      note: "рука"
+    - emoji: "👩"
+      answer: "М"
+      distractors:
+        - "Н"
+        - "К"
+      note: "мама"
+
+- type: match-up
+  title: "Letter to Word Match"
+  instruction: "Match each new letter with its key vocabulary word."
   pairs:
-  - left: Г
-    right: h (voiced, like 'ahead')
-  - left: Ґ
-    right: g (hard, like 'go')
-  - left: Ж
-    right: zh (like 'pleasure')
-  - left: Ш
-    right: sh (like 'shoe')
-  - left: Ч
-    right: ch (like 'chair')
-  - left: Ц
-    right: ts (like 'cats')
-  - left: Щ
-    right: shch (fresh cheese)
-  - left: Є
-    right: ye (like 'yes')
-  - left: Ї
-    right: yi (like 'yield')
-  - left: Ю
-    right: yu (like 'universe')
-  - left: Я
-    right: ya (like 'yard')
-  - left: Й
-    right: y (like 'boy')
-  title: Letter to Sound Match
-  type: match-up
-- groups:
-  - items:
-    - Г
-    - Ґ
-    - Ж
-    - Ш
-    - Щ
-    - Ч
-    - Ц
-    name: Consonants (Приголосні)
-  - items:
-    - Є
-    - Ї
-    - Ю
-    - Я
-    - И
-    - І
-    name: Vowels (Голосні)
-  - items:
-    - Й
-    name: Semivowels (Напівголосні)
-  instruction: 'Sort the new letters into the correct category: Consonants, Vowels, or Semivowels.'
-  title: Consonants, Vowels & Semivowels
-  type: group-sort
-- instruction: Choose the correct answer for each question about the unique Ukrainian
-    letters.
+    - left: "К"
+      right: "кіт"
+    - left: "Р"
+      right: "рука"
+    - left: "Б"
+      right: "банан"
+    - left: "В"
+      right: "вода"
+    - left: "Д"
+      right: "дім"
+    - left: "И"
+      right: "риба"
+    - left: "І"
+      right: "кіно"
+    - left: "О"
+      right: "молоко"
+
+- type: quiz
+  title: "Sound Recognition"
+  instruction: "Choose the correct answer based on what you learned about the new letters."
   items:
-  - explanation: Г is the standard voiced 'h' sound in Ukrainian. Ґ is the hard 'g'.
-    options:
-    - correct: true
-      text: Г
-    - correct: false
-      text: Ґ
-    - correct: false
-      text: Х
-    - correct: false
-      text: К
-    question: Which letter represents the voiced [ɦ] sound (like in 'ahead')?
-  - explanation: Ш makes the 'sh' sound. Щ makes 'shch'.
-    options:
-    - correct: true
-      text: Ш
-    - correct: false
-      text: Щ
-    - correct: false
-      text: Ч
-    - correct: false
-      text: Ж
-    question: Which letter creates the 'sh' sound as in 'shoe'?
-  - explanation: The soft sign (Ь) has no sound of its own; it softens the previous
-      consonant.
-    options:
-    - correct: true
-      text: It softens the previous consonant
-    - correct: false
-      text: It makes a 'b' sound
-    - correct: false
-      text: It hardens the previous consonant
-    - correct: false
-      text: It is silent and does nothing
-    question: What is the function of the Soft Sign (Ь)?
-  - explanation: І (Soft I) requires a smile. И (Hard I) requires a relaxed, dropped
-      jaw.
-    options:
-    - correct: true
-      text: І
-    - correct: false
-      text: И
-    - correct: false
-      text: А
-    - correct: false
-      text: О
-    question: Which vowel requires you to smile (wide mouth) to pronounce it correctly?
-  - explanation: 'Щ represents two sounds: Sh + Ch (Ш + Ч).'
-    options:
-    - correct: true
-      text: Sh + Ch (Ш + Ч)
-    - correct: false
-      text: S + Ch (С + Ч)
-    - correct: false
-      text: Z + H (З + Г)
-    - correct: false
-      text: T + S (Т + С)
-    question: Which letter combination does Щ represent?
-  - explanation: The letter Ґ was banned to erase the distinction between the two
-      'G' sounds.
-    options:
-    - correct: true
-      text: Ґ
-    - correct: false
-      text: Г
-    - correct: false
-      text: Ї
-    - correct: false
-      text: Є
-    question: Which letter was removed from the Ukrainian alphabet in 1933 and restored
-      in 1990?
-  - explanation: The letter Ц makes the 'ts' sound, as in 'cats' or 'tsunami'.
-    options:
-    - correct: true
-      text: Ц
-    - correct: false
-      text: Ч
-    - correct: false
-      text: Ш
-    - correct: false
-      text: Щ
-    question: Which letter makes the 'ts' sound?
-  - explanation: The Soft Sign (Ь) modifies the consonant before it.
-    options:
-    - correct: true
-      text: Ь
-    - correct: false
-      text: Р
-    - correct: false
-      text: Б
-    - correct: false
-      text: В
-    question: Which symbol is the 'Soft Sign'?
-  title: Identity Letters Challenge
-  type: quiz
-- instruction: 'Complete the words by choosing the correct letter: Г (soft h) or Ґ
-    (hard g).'
+    - question: "Which Cyrillic letter looks like a Latin P but sounds like a rolled R?"
+      explanation: "The letter Р is a visual trap; it makes the rolled r sound."
+      options:
+        - text: "Р"
+          correct: true
+        - text: "П"
+          correct: false
+        - text: "В"
+          correct: false
+        - text: "К"
+          correct: false
+    - question: "Which Cyrillic letter looks like a Latin B but makes a v sound?"
+      explanation: "The letter В looks like a B but sounds like a v or w."
+      options:
+        - text: "В"
+          correct: true
+        - text: "Б"
+          correct: false
+        - text: "Р"
+          correct: false
+        - text: "Д"
+          correct: false
+    - question: "What is the key difference between the vowels И and І?"
+      explanation: "И is deep and relaxed, while І is high, sharp, and smiling."
+      options:
+        - text: "И is deep and hard, while І is high and soft"
+          correct: true
+        - text: "И is high and soft, while І is deep and hard"
+          correct: false
+        - text: "И sounds like o, while І sounds like a"
+          correct: false
+        - text: "И sounds like ee, while І sounds like u"
+          correct: false
+    - question: "Does the unstressed Ukrainian letter О ever reduce to an a sound?"
+      explanation: "In Ukrainian, the unstressed О maintains a pure o sound and never reduces."
+      options:
+        - text: "No, it always maintains a pure o sound"
+          correct: true
+        - text: "Yes, it always reduces to an a sound"
+          correct: false
+        - text: "Only at the end of a word"
+          correct: false
+        - text: "Only when followed by a consonant"
+          correct: false
+    - question: "Which letter provides the bright, smiling sound in the word кіно?"
+      explanation: "The dotted І gives кіно its sharp, smiling ee sound."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "О"
+          correct: false
+        - text: "К"
+          correct: false
+    - question: "Which consonant requires an active tongue-tip trill to pronounce correctly?"
+      explanation: "The letter Р requires a trill from the tip of your tongue."
+      options:
+        - text: "Р"
+          correct: true
+        - text: "Д"
+          correct: false
+        - text: "К"
+          correct: false
+        - text: "В"
+          correct: false
+    - question: "Which letter represents the d sound, resembling a small house on legs?"
+      explanation: "The letter Д looks like a house and makes a d sound."
+      options:
+        - text: "Д"
+          correct: true
+        - text: "Б"
+          correct: false
+        - text: "В"
+          correct: false
+        - text: "К"
+          correct: false
+    - question: "Which word correctly begins with the Cyrillic letter for the b sound?"
+      explanation: "The word банан begins with the letter Б."
+      options:
+        - text: "банан"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "рука"
+          correct: false
+        - text: "кіт"
+          correct: false
+    - question: "Which of the following letters is entirely phonetic friends with its English equivalent?"
+      explanation: "The letter К looks and sounds exactly like the English K."
+      options:
+        - text: "К"
+          correct: true
+        - text: "Р"
+          correct: false
+        - text: "В"
+          correct: false
+        - text: "И"
+          correct: false
+    - question: "How should you physically prepare your mouth to pronounce the letter И?"
+      explanation: "For the deep И sound, your jaw should be relaxed and slightly pulled back."
+      options:
+        - text: "Keep the jaw relaxed and slightly dropped"
+          correct: true
+        - text: "Pull the lips back into a wide smile"
+          correct: false
+        - text: "Round the lips forward in a tight circle"
+          correct: false
+        - text: "Bite the bottom lip lightly"
+          correct: false
+
+- type: true-false
+  title: "Fact Check"
+  instruction: "Decide if these statements about the Cyrillic alphabet are true or false."
   items:
-  - answer: гарний
-    explanation: The word 'гарний' uses the standard soft Г.
-    options:
-    - гарний
-    - ґарний
-    - харний
-    - карний
-    sentence: Це дуже ___арний день. (It is a very beautiful day.)
-  - answer: ґанку
-    explanation: The word 'ґанок' (porch) is one of the few words that uses the hard
-      Ґ.
-    options:
-    - ґанку
-    - ганку
-    - ханку
-    - канку
-    sentence: Я сиджу на ___анку. (I am sitting on the porch.)
-  - answer: ґудзик
-    explanation: The word 'ґудзик' (button) uses the hard Ґ.
-    options:
-    - ґудзик
-    - гудзик
-    - худзик
-    - кудзик
-    sentence: У мене є ___удзик. (I have a button.)
-  - answer: грає
-    explanation: The word 'грати' (to play) uses the standard soft Г.
-    options:
-    - грає
-    - ґрає
-    - крає
-    - храє
-    sentence: Він ___рає в футбол. (He plays football.)
-  - answer: голова
-    explanation: The word 'голова' (head) uses the standard soft Г.
-    options:
-    - голова
-    - ґолова
-    - колова
-    - холова
-    sentence: Це моя ___олова. (This is my head.)
-  - answer: гора
-    explanation: The word 'гора' (mountain) uses the standard soft Г.
-    options:
-    - гора
-    - ґора
-    - кора
-    - хора
-    sentence: Це велика ___ора. (This is a big mountain.)
-  - answer: гра
-    explanation: The word 'гра' (game) uses the standard soft Г.
-    options:
-    - гра
-    - ґра
-    - кра
-    - хра
-    sentence: Це цікава ___ра. (It is an interesting game.)
-  - answer: гуси
-    explanation: The word 'гуси' (geese) uses the standard soft Г.
-    options:
-    - гуси
-    - ґуси
-    - куси
-    - хуси
-    sentence: Там летять ___уси. (Geese are flying there.)
-  title: Г or Ґ?
-  type: fill-in
-- instruction: 'Complete the words by choosing the correct vowel: И (hard) or І (soft).'
+    - statement: "The Cyrillic letter Р represents the p sound in Ukrainian."
+      correct: false
+      explanation: "The letter Р is a rolled r sound."
+    - statement: "The Ukrainian letter В makes a sound similar to the English v."
+      correct: true
+      explanation: "The letter В looks like a B but sounds like a v or w."
+    - statement: "The unstressed letter О in the word молоко sounds exactly like an a."
+      correct: false
+      explanation: "In Ukrainian, the letter О maintains its pure o sound even when unstressed."
+    - statement: "The letter Д represents the d sound and looks like a small house."
+      correct: true
+      explanation: "Yes, Д makes the d sound and resembles a house."
+    - statement: "To pronounce the letter І, you should pull your lips into a smile."
+      correct: true
+      explanation: "The dotted І is a high, sharp sound that requires smiling lips."
+    - statement: "The letter И is pronounced exactly like the English letter ee."
+      correct: false
+      explanation: "И is a deep, relaxed sound, not a sharp ee sound."
+    - statement: "The word вода starts with the Cyrillic letter В."
+      correct: true
+      explanation: "Вода begins with В, which sounds like v."
+    - statement: "The letter Б looks exactly like the English B."
+      correct: false
+      explanation: "The letter В looks like an English B. The letter Б looks like a 6 with a flat top."
+
+- type: anagram
+  title: "Unscramble the Words"
+  instruction: "Rearrange the letters to form words using the letters you know."
   items:
-  - answer: жити
-    explanation: Жити (to live) uses the hard И because Ж is a hard consonant.
-    options:
-    - жити
-    - жіти
-    - жати
-    - жети
-    sentence: Ми хочемо ж___ти в мирі. (We want to live in peace.)
-  - answer: діти
-    explanation: Діти (children) uses the soft І, which softens the D sound.
-    options:
-    - діти
-    - дити
-    - дати
-    - дути
-    sentence: Це мої д___ти. (These are my children.)
-  - answer: літо
-    explanation: Літо (summer) uses the soft І, which softens the L sound.
-    options:
-    - літо
-    - лито
-    - лато
-    - луто
-    sentence: Я люблю л___то. (I love summer.)
-  - answer: пити
-    explanation: Пити (to drink) uses the hard И.
-    options:
-    - пити
-    - піти
-    - пати
-    - пети
-    sentence: Я хочу п___ти чай. (I want to drink tea.)
-  - answer: Київ
-    explanation: Київ uses И after К — the sound is the relaxed "grin" vowel [ɪ], not the tense "smile" vowel [i].
-    options:
-    - Київ
-    - Кіїв
-    - Каїв
-    - Кеїв
-    sentence: К___їв — столиця України. (Kyiv is the capital of Ukraine.)
-  - answer: Ви
-    explanation: Ви (you) uses the hard И.
-    options:
-    - Ви
-    - Ві
-    - Ва
-    - Во
-    sentence: В___ тут? (Are you here?)
-  - answer: стіл
-    explanation: Стіл (table) uses the soft І.
-    options:
-    - стіл
-    - стил
-    - стал
-    - стел
-    sentence: Це мій ст___л. (This is my table.)
-  - answer: син
-    explanation: Син (son) uses the hard И.
-    options:
-    - син
-    - сін
-    - сан
-    - сен
-    sentence: Це мій с___н. (This is my son.)
-  title: И or І?
-  type: fill-in
-- instruction: Rearrange the letters to form words from the lesson.
+    - scrambled: "і к т"
+      answer: "кіт"
+    - scrambled: "о д а в"
+      answer: "вода"
+    - scrambled: "і д м"
+      answer: "дім"
+    - scrambled: "у к а р"
+      answer: "рука"
+    - scrambled: "о н і к"
+      answer: "кіно"
+    - scrambled: "н а б а н"
+      answer: "банан"
+    - scrambled: "о к о м л о"
+      answer: "молоко"
+    - scrambled: "и в с а л"
+      answer: "слива"
+
+- type: fill-in
+  title: "Complete the Words"
+  instruction: "Choose the correct missing letter to complete the Ukrainian word."
   items:
-  - answer: школа
-    scrambled: а л ш к о
-  - answer: центр
-    scrambled: р ц е т н
-  - answer: яблуко
-    scrambled: к о б я л у
-  - answer: Європа
-    scrambled: р п а Є в о
-  - answer: гарний
-    scrambled: й р а н г и
-  - answer: чай
-    scrambled: й ч а
-  - answer: день
-    scrambled: н ь е д
-  - answer: жити
-    scrambled: т и ж и
-  title: Vocabulary Scramble
-  type: anagram
-- instruction: Decide if the statement about the Ukrainian alphabet is true or false.
+    - sentence: "The Ukrainian word for water (вода) starts with the letter ___."
+      answer: "в"
+      options:
+        - "в"
+        - "б"
+        - "р"
+        - "к"
+      explanation: "Вода starts with the letter В."
+    - sentence: "The Ukrainian word for cat (кіт) uses the vowel ___."
+      answer: "і"
+      options:
+        - "і"
+        - "и"
+        - "о"
+        - "а"
+      explanation: "Кіт uses the sharp, smiling І."
+    - sentence: "The Ukrainian word for banana (банан) starts with the letter ___."
+      answer: "б"
+      options:
+        - "б"
+        - "в"
+        - "д"
+        - "р"
+      explanation: "Банан begins with the letter Б."
+    - sentence: "The Ukrainian word for house (дім) starts with the letter ___."
+      answer: "д"
+      options:
+        - "д"
+        - "к"
+        - "б"
+        - "м"
+      explanation: "Дім begins with the letter Д."
+    - sentence: "The Ukrainian word for hand or arm (рука) starts with the letter ___."
+      answer: "р"
+      options:
+        - "р"
+        - "в"
+        - "п"
+        - "к"
+      explanation: "Рука begins with the trilled Р."
+    - sentence: "The Ukrainian word for milk (молоко) uses the pure vowel ___."
+      answer: "о"
+      options:
+        - "о"
+        - "а"
+        - "и"
+        - "і"
+      explanation: "Молоко uses the pure vowel О."
+    - sentence: "The Ukrainian word for cinema (кіно) uses the dotted vowel ___."
+      answer: "і"
+      options:
+        - "і"
+        - "и"
+        - "о"
+        - "у"
+      explanation: "Кіно uses the dotted І."
+    - sentence: "The Ukrainian word for fish (риба) uses the vowel ___."
+      answer: "и"
+      options:
+        - "и"
+        - "і"
+        - "а"
+        - "о"
+      explanation: "Риба uses the deep, relaxed И."
+
+- type: anagram
+  title: "Unscramble the Short Words"
+  instruction: "Rearrange the letters to form words you know."
   items:
-  - correct: true
-    explanation: Correct. Ґ is hard [g], while Г is soft [ɦ].
-    statement: The letter Ґ represents the hard 'g' sound as in 'go'.
-  - correct: true
-    explanation: Correct. Ї is a distinct letter symbolising 'yi'.
-    statement: The letter Ї is unique because it always has two dots and makes the
-      'yi' sound.
-  - correct: false
-    explanation: Incorrect. Ь (soft sign) has no sound; it modifies the previous consonant.
-    statement: The letter Ь is pronounced like a hard 'b'.
-  - correct: false
-    explanation: Incorrect. It is spelled Київ (Kyiv).
-    statement: Kyiv is spelled with 'ie' in Ukrainian.
-  - correct: true
-    explanation: Correct. І requires a wide smile position.
-    statement: To say the letter І, you should smile.
-  - correct: false
-    explanation: Incorrect. Ш is 'sh' (shoe). Ч is 'ch' (chair).
-    statement: The letter Ш sounds like 'ch' in 'chair'.
-  - correct: true
-    explanation: Correct. Ц represents the 'ts' sound.
-    statement: The letter Ц sounds like 'ts' in 'cats'.
-  - correct: false
-    explanation: Incorrect. Ж represents 'zh' (pleasure), not 'k'.
-    statement: The letter Ж looks like and sounds like a 'K'.
-  title: Alphabet Facts
-  type: true-false
-- instruction: Select the correct translation for the Ukrainian word.
-  items:
-  - explanation: Школа means School.
-    options:
-    - correct: true
-      text: School
-    - correct: false
-      text: Shop
-    - correct: false
-      text: Street
-    - correct: false
-      text: Sky
-    question: What does 'школа' mean?
-  - explanation: День means Day.
-    options:
-    - correct: true
-      text: Day
-    - correct: false
-      text: Night
-    - correct: false
-      text: Morning
-    - correct: false
-      text: Evening
-    question: What does 'день' mean?
-  - explanation: Гарний means Beautiful.
-    options:
-    - correct: true
-      text: Beautiful
-    - correct: false
-      text: Bad
-    - correct: false
-      text: Big
-    - correct: false
-      text: Small
-    question: What does 'гарний' mean?
-  - explanation: Жити means To live.
-    options:
-    - correct: true
-      text: To live
-    - correct: false
-      text: To love
-    - correct: false
-      text: To eat
-    - correct: false
-      text: To sleep
-    question: What does 'жити' mean?
-  - explanation: Чай means Tea.
-    options:
-    - correct: true
-      text: Tea
-    - correct: false
-      text: Coffee
-    - correct: false
-      text: Water
-    - correct: false
-      text: Juice
-    question: What does 'чай' mean?
-  - explanation: Яблуко means Apple.
-    options:
-    - correct: true
-      text: Apple
-    - correct: false
-      text: Pear
-    - correct: false
-      text: Plum
-    - correct: false
-      text: Peach
-    question: What does 'яблуко' mean?
-  - explanation: Сім'я means Family.
-    options:
-    - correct: true
-      text: Family
-    - correct: false
-      text: Friends
-    - correct: false
-      text: Work
-    - correct: false
-      text: House
-    question: What does 'сім'я' mean?
-  - explanation: Центр means Center.
-    options:
-    - correct: true
-      text: Center
-    - correct: false
-      text: Circle
-    - correct: false
-      text: Corner
-    - correct: false
-      text: City
-    question: What does 'центр' mean?
-  title: Word Recognition
-  type: quiz
+    - scrambled: "а м а м"
+      answer: "мама"
+    - scrambled: "и с н"
+      answer: "син"
+    - scrambled: "а к м"
+      answer: "мак"
+    - scrambled: "и р с"
+      answer: "рис"
+    - scrambled: "р б а т"
+      answer: "брат"
+    - scrambled: "в о к в"
+      answer: "вовк"
+    - scrambled: "о л с в о"
+      answer: "слово"
+    - scrambled: "а к в а"
+      answer: "кава"
+
+- type: group-sort
+  title: "Sort by Letter: В vs Б"
+  instruction: "Sort the words based on whether they contain the letter В or the letter Б."
+  groups:
+    - name: "Words with В (v-sound)"
+      items:
+        - "вода"
+        - "вовк"
+        - "нива"
+        - "слива"
+        - "кава"
+        - "слово"
+    - name: "Words with Б (b-sound)"
+      items:
+        - "банан"
+        - "риба"
+        - "баба"
+        - "брат"
+        - "банк"
+        - "бар"

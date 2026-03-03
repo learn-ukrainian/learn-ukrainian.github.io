@@ -197,6 +197,17 @@ MODULE_TYPE_TARGETS = {
         'visual': 3,
         'threshold': 85,  # Checkpoints focus on variety, lower threshold
     },
+    'beginner': {  # A1/A2 modules — alphabet, basic grammar, first words
+        'engagement': 3,
+        'examples': 12,
+        'dialogues': 0,
+        'cultural': 1,
+        'realworld': 1,
+        'questions': 2,
+        'tables': 1,
+        'video_embeds': 2,
+        'threshold': 70,  # Tier-1 guidance: A1 richness minimum 70%
+    },
     'skills': {  # Communication skills modules (M85-93)
         'engagement': 5,
         'examples': 15,
@@ -299,6 +310,19 @@ MODULE_TYPE_WEIGHTS = {
         'visual': 0.10,
         'review_sections': 0.20,  # Comprehensive review coverage
         'paragraph_var': 0.10,
+    },
+    'beginner': {
+        # A1/A2: emphasis on examples, tables, video embeds, engagement
+        'engagement': 0.15,
+        'examples': 0.20,
+        'tables': 0.15,
+        'video_embeds': 0.15,
+        'variety': 0.10,
+        'cultural': 0.05,
+        'realworld': 0.05,
+        'questions': 0.05,
+        'visual': 0.05,
+        'paragraph_var': 0.05,
     },
     'skills': {
         # Skills modules focus on practical application with examples
@@ -612,9 +636,13 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
     if '/bio/' in path_str:
         return 'biography'
 
-    # Default to grammar for B1-B2, content for others
+    # Default to beginner for A1/A2, grammar for B1-B2, content for others
     level = extract_level(file_path)
-    
+
+    # A1/A2: beginner type (adjusted richness targets)
+    if level in ('A1', 'A2'):
+        return 'beginner'
+
     # Special Case: B1 Bridge Modules (M01-05)
     if level == 'B1' and file_path:
         slug = Path(file_path).stem
@@ -1045,6 +1073,15 @@ def count_tables(content: str) -> int:
     return len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
 
 
+def count_video_embeds(content: str) -> int:
+    """Count YouTube video links and Starlight youtubeVideo embeds."""
+    youtube_links = len(re.findall(r'youtube\.com/watch', content))
+    youtube_components = len(re.findall(r'\{%\s*youtubeVideo\s', content))
+    # Also count MDX-style YouTube components
+    mdx_youtube = len(re.findall(r'<YouTubeVideo\b', content, re.IGNORECASE))
+    return youtube_links + youtube_components + mdx_youtube
+
+
 def count_mermaid_diagrams(content: str) -> int:
     """Count mermaid diagram blocks."""
     return len(re.findall(r'```mermaid', content))
@@ -1132,6 +1169,10 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
     """
     # Determine module type for type-specific criteria
     module_type = extract_module_type(content, file_path) if file_path else 'grammar'
+    # Override to beginner for A1/A2 — these levels have fundamentally different
+    # richness expectations (no dialogues, lower example counts, video embeds matter)
+    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
+        module_type = 'beginner'
     targets = MODULE_TYPE_TARGETS.get(module_type, MODULE_TYPE_TARGETS['grammar'])
     weights = MODULE_TYPE_WEIGHTS.get(module_type, DEFAULT_WEIGHTS)
 
@@ -1147,7 +1188,16 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
     }
 
     # Add type-specific components based on module type
-    if module_type == 'grammar':
+    if module_type == 'beginner':
+        raw.update({
+            'examples': count_examples(prose),
+            'dialogues': count_dialogues(prose),
+            'realworld': count_realworld(prose),
+            'questions': count_questions(prose),
+            'tables': count_tables(prose),
+            'video_embeds': count_video_embeds(prose),
+        })
+    elif module_type == 'grammar':
         raw.update({
             'examples': count_examples(prose),
             'dialogues': count_dialogues(prose),
@@ -1273,6 +1323,8 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
     flags = []
     prose = get_prose_content(content)
     module_type = extract_module_type(content, file_path) if file_path else 'grammar'
+    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
+        module_type = 'beginner'
 
     # Universal flags (all module types)
     # NO_ENGAGEMENT: Less than 2 engagement boxes
@@ -1293,7 +1345,12 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
         flags.append('REPETITIVE_STARTERS')
 
     # Type-specific flags - use 50% of target as threshold
-    if module_type == 'bridge':
+    if module_type == 'beginner':
+        # Beginner modules: lower thresholds, no dialogue required
+        if count_examples(prose) < 6:  # < 50% of target 12
+            flags.append('NO_EXAMPLES')
+
+    elif module_type == 'bridge':
         # Bridge modules: examples (target 20), cultural (target 2), realworld (target 2)
         # NO dialogues or proverbs required
         if count_examples(prose) < 10:

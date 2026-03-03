@@ -1,0 +1,52 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "3849",
+    "COMPUTED_WORD_TARGET": "2000",
+    "COMPUTED_WORD_PERCENT": "192.5",
+    "COMPUTED_ACTIVITY_COUNT": "10",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "7",
+    "COMPUTED_IMMERSION_PERCENT": "5.1",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "53",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "cultural: 0/3, examples: 4/24, dialogues: 0/4, tables: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "============================================================\n  HETMAN VERIFY: the-cyrillic-code-i\n============================================================\n\n[1/4] Running full audit...\n[2/4] Checking sidecar files...\n[3/4] Reading status JSON...\n[4/4] Checking overall status...\n\n────────────────────────────────────────────────────────────\n  VERDICT: PASS\n  Module:  the-cyrillic-code-i\n  Gates:   6 pass, 1 info\n────────────────────────────────────────────────────────────\n\n  Module is FULLY COMPLETE.\n  Hetman may now write completion.md and proceed.\n\nVESUM: 81/82 (99%) verified\n⚠️ VESUM not found (1): Африка",
+  "h2_sections": "1. Вступ — Introduction\n2. Голосні — Vowels: А, У\n3. Приголосні — Consonants: М, Л, Н, С\n4. Перші склади — First Syllables\n5. Практика читання — Reading Practice",
+  "vesum_stats": {
+    "total": 82,
+    "vesum_hits": 81,
+    "rag_hits": 0,
+    "not_found": 1,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 79,
+        "vesum_hits": 78,
+        "not_found": 1
+      },
+      "activities": {
+        "total": 3,
+        "vesum_hits": 3,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "Африка",
+      "clean": "африка",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "a277e7776553edcb"
+}

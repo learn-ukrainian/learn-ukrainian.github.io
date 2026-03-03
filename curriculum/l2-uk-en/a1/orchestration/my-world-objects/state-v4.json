@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "my-world-objects",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-02T20:08:33Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-02T20:08:49Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-02T20:12:36Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-02T20:15:12Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-02T21:05:08Z",
+      "attempts": 2
+    }
+  }
+}

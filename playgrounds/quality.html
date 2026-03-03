@@ -76,6 +76,7 @@ tr:hover td { background: var(--bg3); }
 .tag-audit { background: rgba(248,81,73,0.15); color: var(--red); }
 .tag-research { background: rgba(210,153,34,0.15); color: var(--yellow); }
 .tag-words { background: rgba(88,166,255,0.15); color: var(--blue); }
+.tag-v3 { background: rgba(72,79,88,0.25); color: var(--text3); }
 
 .stat-row { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
 .stat-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; }
@@ -395,12 +396,15 @@ function filterWeak() {
   }
 
   const rows = filtered.map(m => {
-    const tags = m.issues.map(issue => {
+    let tags = m.issues.map(issue => {
       if (issue === 'audit_fail') return `<span class="issue-tag tag-audit">audit fail</span>`;
       if (issue.startsWith('research_score')) return `<span class="issue-tag tag-research">${issue.replace('research_score_', 'score: ')}</span>`;
       if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${issue.replace('low_words_', 'words: ')}</span>`;
       return `<span class="issue-tag">${issue}</span>`;
     }).join('');
+    if (m.pipeline_version && m.pipeline_version !== 'v4') {
+      tags += `<span class="issue-tag tag-v3">${m.pipeline_version}</span>`;
+    }
     const rsStr = m.research_score !== null ? `${m.research_score}/10` : '—';
     const rsCls = scoreClass(m.research_score);
     const wordsStr = m.word_target > 0 ? `${m.words}/${m.word_target}` : `${m.words}`;

@@ -1,68 +1,61 @@
 items:
-  - lemma: 'вчора'
-    translation: 'yesterday'
-    pos: 'adverb'
-  - lemma: 'завтра'
-    translation: 'tomorrow'
-    pos: 'adverb'
-  - lemma: 'ранок'
-    translation: 'morning'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'вранці'
-    translation: 'in the morning'
-    pos: 'adverb'
-  - lemma: 'снідати'
-    translation: 'to have breakfast'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'обідати'
-    translation: 'to have lunch'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'вечеряти'
-    translation: 'to have dinner'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'вставати'
-    translation: 'to get up'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'купувати'
-    translation: 'to buy'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'коштувати'
-    translation: 'to cost'
-    pos: 'verb'
-    aspect: 'imperfective'
-  - lemma: 'тепло'
-    translation: 'warm'
-    pos: 'adverb'
-  - lemma: 'холодно'
-    translation: 'cold'
-    pos: 'adverb'
-  - lemma: 'сонячно'
-    translation: 'sunny'
-    pos: 'adverb'
-  - lemma: 'добре'
-    translation: 'well'
-    pos: 'adverb'
-  - lemma: 'погано'
-    translation: 'badly'
-    pos: 'adverb'
-  - lemma: 'швидко'
-    translation: 'quickly'
-    pos: 'adverb'
-  - lemma: 'повільно'
-    translation: 'slowly'
-    pos: 'adverb'
-  - lemma: 'зазвичай'
-    translation: 'usually'
-    pos: 'adverb'
-  - lemma: 'часто'
-    translation: 'often'
-    pos: 'adverb'
-  - lemma: 'рідко'
-    translation: 'rarely'
-    pos: 'adverb'
+- lemma: ми
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: бути
+  pos: verb
+- lemma: слово
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: завжди
+  pos: adv
+- lemma: час
+  pos: noun
+- lemma: могти
+  pos: verb
+- lemma: наш
+  pos: adj
+- lemma: використовувати
+  pos: verb
+- lemma: ваш
+  pos: adj
+- lemma: вони
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: він
+  pos: noun
+- lemma: абсолютно
+  pos: adv
+- lemma: закінчення
+  pos: noun
+- lemma: часто
+  pos: adv
+- lemma: форма
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: дієслово
+  pos: noun
+- lemma: щоденний
+  pos: adj
+- lemma: український
+  pos: adj
+- lemma: мова
+  pos: noun
+- lemma: весь
+  pos: adj
+- lemma: рід
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: день
+  pos: noun

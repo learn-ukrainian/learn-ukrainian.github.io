@@ -1,7 +1,7 @@
 # Workstreams — V4 Full Curriculum Rebuild
 
 > Master epic: [#717](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/717)
-> Last updated: 2026-03-01
+> Last updated: 2026-03-03
 
 ## Overview
 
@@ -34,10 +34,14 @@ gh issue list --label "ws:rebuild-core" --state open
 | 667 | Pipeline hardening (test regime) | Revised for v4 |
 | 670 | Diagnose failing modules | Re-scope for v4 |
 | 672 | Batch runs | Re-scope for v4 |
-| 681 | Gemini 3-preview → 3.1-preview | Not started |
+| ~~681~~ | ~~Gemini 3-preview → 3.1-preview~~ | ✅ Done |
 | 640 | Prose proofreading script | Integrated into v4 validate |
+| 718 | V4 upgrade: A1 track + HIST alignment audit | New |
+| 719 | D.1 inline fixes — eliminate D.2 for simple repairs | New |
+| 720 | V4 research quality evaluation | New |
+| 725 | Audit & clean external_resources.yaml | In progress |
 
-**Next action**: Write `test_pipeline_v4.py` + smoke test 1 HIST upgrade + 1 A1 rebuild.
+**Next action**: Run A1 track upgrade (#718) — 64 modules through v4 discover→content→review.
 
 ## ws:rebuild-core — Core Tracks A1-B2 (Wave 1)
 
@@ -106,6 +110,9 @@ gh issue list --label "ws:rebuild-core" --state open
 | 713 | Image annotation bugs | Not started |
 | 715 | ZNO exam dataset (2,328 questions) | Not started |
 | 376 | Map Dobra Forma textbook | Not started |
+| 722 | Crawl and index ESU into RAG | New |
+| 723 | Live query tools for research verification | New |
+| 724 | Scrape ukrainianlessons.com full content | New |
 
 ## ws:l2-uk-direct — Direct Track
 

@@ -142,7 +142,7 @@ P2_AUTHORS = {
         "period": "modern",
     },
     "pidmohylny": {
-        "id": 17,
+        "id": 87,
         "name": "Підмогильний В.",
         "full_name": "Валер'ян Підмогильний",
         "years": "1901-1937",
@@ -170,6 +170,146 @@ P2_AUTHORS = {
         "name": "Кобилянська О.",
         "full_name": "Ольга Кобилянська",
         "years": "1863-1942",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+}
+
+# Priority 3: Розстріляне відродження + missing canon authors
+P3_AUTHORS = {
+    "khvylovy": {
+        "id": 20,
+        "name": "Хвильовий М.",
+        "full_name": "Микола Хвильовий",
+        "years": "1893-1933",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "zerov": {
+        "id": 187,
+        "name": "Зеров М.",
+        "full_name": "Микола Зеров",
+        "years": "1890-1937",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "pluzhnyk": {
+        "id": 244,
+        "name": "Плужник Є.",
+        "full_name": "Євген Плужник",
+        "years": "1898-1936",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "antonych": {
+        "id": 25,
+        "name": "Антонич Б.-І.",
+        "full_name": "Богдан-Ігор Антонич",
+        "years": "1909-1937",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "vyshnya": {
+        "id": 17,
+        "name": "Вишня О.",
+        "full_name": "Остап Вишня",
+        "years": "1889-1956",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "dovzhenko": {
+        "id": 21,
+        "name": "Довженко О.",
+        "full_name": "Олександр Довженко",
+        "years": "1894-1956",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "oles": {
+        "id": 18,
+        "name": "Олесь О.",
+        "full_name": "Олександр Олесь",
+        "years": "1878-1944",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "stus": {
+        "id": 106,
+        "name": "Стус В.",
+        "full_name": "Василь Стус",
+        "years": "1938-1985",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "symonenko": {
+        "id": 98,
+        "name": "Симоненко В.",
+        "full_name": "Василь Симоненко",
+        "years": "1935-1963",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "bahryanyi": {
+        "id": 29,
+        "name": "Багряний І.",
+        "full_name": "Іван Багряний",
+        "years": "1906-1963",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "yanovsky": {
+        "id": 128,
+        "name": "Яновський Ю.",
+        "full_name": "Юрій Яновський",
+        "years": "1902-1954",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "drai_khmara": {
+        "id": 199,
+        "name": "Драй-Хмара М.",
+        "full_name": "Михайло Драй-Хмара",
+        "years": "1889-1939",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "hrinchenko": {
+        "id": 48,
+        "name": "Грінченко Б.",
+        "full_name": "Борис Грінченко",
+        "years": "1863-1910",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "kulish": {
+        "id": 19,
+        "name": "Куліш П.",
+        "full_name": "Пантелеймон Куліш",
+        "years": "1819-1897",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "sosyura": {
+        "id": 104,
+        "name": "Сосюра В.",
+        "full_name": "Володимир Сосюра",
+        "years": "1898-1965",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
+    "honchar": {
+        "id": 46,
+        "name": "Гончар О.",
+        "full_name": "Олесь Гончар",
+        "years": "1918-1995",
+        "genre_default": "prose",
+        "period": "modern",
+    },
+    "tyutyunnyk": {
+        "id": 110,
+        "name": "Тютюнник Г.",
+        "full_name": "Григір Тютюнник",
+        "years": "1931-1980",
         "genre_default": "prose",
         "period": "modern",
     },
@@ -590,7 +730,7 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Scrape Ukrainian literary canon from ukrlib.com.ua")
-    parser.add_argument("--priority", choices=["P1", "P2", "all"], help="Scrape authors by priority")
+    parser.add_argument("--priority", choices=["P1", "P2", "P3", "all"], help="Scrape authors by priority")
     parser.add_argument("--author", type=str, help="Scrape a specific author by slug")
     parser.add_argument("--tid", type=int, help="Scrape a single work by tid")
     parser.add_argument("--work", type=str, help="Work title (for --tid)")
@@ -601,14 +741,12 @@ def main():
     args = parser.parse_args()
 
     if args.list:
-        print("P1 (Core Canon):")
-        for slug, info in P1_AUTHORS.items():
-            done = " [DONE]" if is_done(slug) else ""
-            print(f"  {slug:20s} id={info['id']:3d}  {info['full_name']} ({info['years']}){done}")
-        print("\nP2 (Extended Canon):")
-        for slug, info in P2_AUTHORS.items():
-            done = " [DONE]" if is_done(slug) else ""
-            print(f"  {slug:20s} id={info['id']:3d}  {info['full_name']} ({info['years']}){done}")
+        for label, authors in [("P1 (Core Canon)", P1_AUTHORS), ("P2 (Extended Canon)", P2_AUTHORS), ("P3 (Розстріляне відродження + missing)", P3_AUTHORS)]:
+            print(f"{label}:")
+            for slug, info in authors.items():
+                done = " [DONE]" if is_done(slug) else ""
+                print(f"  {slug:20s} id={info['id']:3d}  {info['full_name']} ({info['years']}){done}")
+            print()
         return
 
     if args.force:
@@ -654,7 +792,7 @@ def main():
     # Determine which authors to scrape
     all_authors = {}
     if args.author:
-        combined = {**P1_AUTHORS, **P2_AUTHORS}
+        combined = {**P1_AUTHORS, **P2_AUTHORS, **P3_AUTHORS}
         if args.author not in combined:
             print(f"Unknown author '{args.author}'. Use --list to see available.")
             return
@@ -663,8 +801,10 @@ def main():
         all_authors = P1_AUTHORS
     elif args.priority == "P2":
         all_authors = P2_AUTHORS
+    elif args.priority == "P3":
+        all_authors = P3_AUTHORS
     elif args.priority == "all":
-        all_authors = {**P1_AUTHORS, **P2_AUTHORS}
+        all_authors = {**P1_AUTHORS, **P2_AUTHORS, **P3_AUTHORS}
     else:
         parser.print_help()
         return

@@ -1,101 +1,61 @@
-  lemma: читати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to read
-  lemma: писати
-  notes: 'type 1 (irregular stem: пиш-); imperfective'
-  pos: verb
-  translation: to write
-  lemma: працювати
-  notes: type 1 (-ювати → -юю); imperfective
-  pos: verb
-  translation: to work
-  lemma: знати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to know
-  lemma: слухати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to listen
-  lemma: питати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to ask
-  lemma: грати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to play
-  lemma: відпочивати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to rest
-  lemma: співати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to sing
-  lemma: чекати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to wait
-  lemma: думати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to think
-  lemma: вивчати
-  notes: type 1 (-ати); imperfective
-  pos: verb
-  translation: to study
-  lemma: розуміти
-  notes: type 1 (-іти, I conjugation endings); imperfective
-  pos: verb
-  translation: to understand
-  lemma: я
-  notes: 1st person singular
-  pos: pronoun
-  translation: I
-  lemma: ти
-  notes: 2nd person singular
-  pos: pronoun
-  translation: you (informal)
-  lemma: він
-  notes: 3rd person singular (masculine)
-  pos: pronoun
-  translation: he
-  lemma: вона
-  notes: 3rd person singular (feminine)
-  pos: pronoun
-  translation: she
-  lemma: ми
-  notes: 1st person plural
-  pos: pronoun
-  translation: we
-  lemma: ви
-  notes: 2nd person plural/formal
-  pos: pronoun
-  translation: you (formal/plural)
-  lemma: вони
-  notes: 3rd person plural
-  pos: pronoun
-  translation: they
-  lemma: журнал
-  notes: masculine
+items:
+- lemma: ти
   pos: noun
-  translation: magazine
-  lemma: текст
-  notes: masculine
+- lemma: читати
+  pos: verb
+- lemma: ми
   pos: noun
-  translation: text
-  lemma: лист
-  notes: masculine
+- lemma: вони
   pos: noun
-  translation: letter
-  lemma: радіо
-  notes: neuter; indeclinable
+- lemma: ви
   pos: noun
-  translation: radio
-  lemma: дієслово
-  notes: neuter; grammar term
+- lemma: відпочивати
+  pos: verb
+- lemma: знати
+  pos: verb
+- lemma: вивчати
+  pos: verb
+- lemma: співати
+  pos: verb
+- lemma: праця
   pos: noun
-  translation: verb (grammar term)
-
+- lemma: він
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: слухати
+  pos: verb
+- lemma: працювати
+  pos: verb
+- lemma: розум
+  pos: noun
+- lemma: розуміти
+  pos: verb
+- lemma: питати
+  pos: verb
+- lemma: мати
+  pos: verb
+- lemma: грати
+  pos: verb
+- lemma: гра
+  pos: noun
+- lemma: чек
+  pos: noun
+- lemma: чека
+  pos: noun
+- lemma: чекати
+  pos: verb
+- lemma: думати
+  pos: verb
+- lemma: текст
+  pos: noun
+- lemma: що
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: добре
+  pos: adv
+- lemma: добрий
+  pos: adj
+- lemma: мама
+  pos: noun

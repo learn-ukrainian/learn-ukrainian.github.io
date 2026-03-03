@@ -1,81 +1,61 @@
 items:
-  - lemma: "чай"
-    translation: "tea"
-    pos: "noun"
-    gender: "m"
-  - lemma: "школа"
-    translation: "school"
-    pos: "noun"
-    gender: "f"
-  - lemma: "центр"
-    translation: "center"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ще"
-    translation: "more, still"
-    pos: "adverb"
-    notes: "high frequency function word"
-  - lemma: "яблуко"
-    translation: "apple"
-    pos: "noun"
-    gender: "n"
-  - lemma: "Європа"
-    translation: "Europe"
-    pos: "noun"
-    gender: "f"
-  - lemma: "їжа"
-    translation: "food"
-    pos: "noun"
-    gender: "f"
-  - lemma: "день"
-    translation: "day"
-    pos: "noun"
-    gender: "m"
-  - lemma: "сім'я"
-    translation: "family"
-    pos: "noun"
-    gender: "f"
-    notes: "demonstrates apostrophe usage"
-  - lemma: "Львів"
-    translation: "Lviv"
-    pos: "noun"
-    gender: "m"
-    notes: "demonstrates soft sign palatalization"
-  - lemma: "щастя"
-    translation: "happiness"
-    pos: "noun"
-    gender: "n"
-  - lemma: "юнак"
-    translation: "young man"
-    pos: "noun"
-    gender: "m"
-  - lemma: "м'ясо"
-    translation: "meat"
-    pos: "noun"
-    gender: "n"
-  - lemma: "сіль"
-    translation: "salt"
-    pos: "noun"
-    gender: "f"
-  - lemma: "час"
-    translation: "time"
-    pos: "noun"
-    gender: "m"
-  - lemma: "число"
-    translation: "number"
-    pos: "noun"
-    gender: "n"
-  - lemma: "цукор"
-    translation: "sugar"
-    pos: "noun"
-    gender: "m"
-  - lemma: "юрист"
-    translation: "lawyer"
-    pos: "noun"
-    gender: "m"
-  - lemma: "цікавий"
-    translation: "interesting"
-    pos: "adjective"
-  - lemma: "п'ять"
-    translation: "five"
-    pos: "numeral"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: мій
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: до
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: читати
+  pos: verb
+- lemma: любити
+  pos: verb
+- lemma: мама
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: євро
+  pos: noun
+- lemma: веліти
+  pos: verb
+- lemma: вести
+  pos: verb
+- lemma: сім'я
+  pos: noun
+- lemma: га
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: ще
+  pos: adv
+- lemma: ви
+  pos: noun
+- lemma: вити
+  pos: verb
+- lemma: за
+  pos: adv
+- lemma: ко
+  pos: noun
+- lemma: юний
+  pos: adj
+- lemma: сей
+  pos: adj
+- lemma: купа
+  pos: noun
+- lemma: мі
+  pos: noun
+- lemma: йти
+  pos: verb
+- lemma: той
+  pos: adj
+- lemma: па
+  pos: noun

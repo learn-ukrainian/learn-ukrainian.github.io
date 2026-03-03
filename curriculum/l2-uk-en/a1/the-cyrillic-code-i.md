@@ -1,209 +1,271 @@
 <!-- SCOPE
-Covers: The first 6 letters of the Ukrainian alphabet (А, М, Л, У, Н, С), phonetic principles, open/closed syllables, and first reading practice.
+Covers: The first 6 letters of the Ukrainian alphabet (А, М, Л, У, Н, С), phonetic principles, vowel stability, open and closed syllables, basic word decoding.
 Not covered:
-  - Remaining 27 letters of the alphabet → a1-02
+  - The remaining 27 letters of the alphabet → a1-02
 Related: a1-02
 -->
 
 # The Cyrillic Code I
 
-> **Чому це важливо?**
+> **Why does this matter?**
 >
-> Learning the Ukrainian alphabet is your absolute first step into a massive cultural and linguistic world. By mastering just a few letters at a time, learners immediately begin reading real words and building a solid foundation for everything that follows. Цей модуль (This module) unlocks the Cyrillic code, transforming unfamiliar symbols into meaningful sounds and giving you the power to pronounce Ukrainian with profound confidence.
+> The Cyrillic alphabet might look intimidating, but it is highly logical. By learning just six high-frequency letters today, you won't simply be memorizing shapes — you will immediately begin reading real Ukrainian words by the end of this lesson. This small step proves that reading Ukrainian is much easier than it first appears.
 
-## Вступ
+## Вступ — Introduction
 
-Привіт! (Hello!) Welcome to your very first module of the Ukrainian language. At the A1 level, we follow a strict immersion protocol to ensure your success. We use English extensively throughout these early lessons to scaffold the grammar, explain phonetic rules clearly, and provide a safe harbor for your understanding. Meanwhile, all of the target vocabulary, example sentences, and core language content will be presented entirely in Ukrainian. This balanced approach guarantees that you understand the «why» and «how» perfectly before you practice the language itself. Читайте уважно! (Read carefully!)
+Welcome to your very first step in reading the Ukrainian language. If you have spent your life reading only the Latin alphabet (the script used for languages like English, French, or Spanish), looking at a full page of Ukrainian text might feel deeply intimidating. Your brain sees completely unfamiliar geometric shapes and instinctively tries to map them onto the English sounds you already know, which inevitably leads to confusion and frustration.
 
-The Ukrainian alphabet consists of 33 letters. It is a highly phonetic system, which is fantastic news for a language learner. In a highly phonetic alphabet, each letter reliably maps to one specific sound. Once you learn the sound a given letter makes, it almost always makes that exact same sound, no matter where it appears in a word. There are no hidden spelling rules, no silent letters at the ends of words, and no guessing games. You simply read exactly what is written on the page. In this introductory module, we focus solely on mastering the first 6 core letters. We have selected these specific letters because they appear incredibly frequently in everyday Ukrainian text, allowing learners to begin reading real words immediately.
+Our goal in this module is to demystify the reading process. We will break down the "Cyrillic Code" step by step, explaining the sounds clearly so you can understand how the language operates before you start using it.
 
-To help master these sounds perfectly, we are partnering with Anna Ohoiko from Ukrainian Lessons, an expert phonetic guide. For every single letter introduced, engage in a specific, repeatable learning loop. First, watch Anna's video linked in the lesson. Pay close attention to the shape of her mouth and the placement of her tongue. Second, pause the video and repeat the sound aloud. You must physically speak the sound out loud to build muscle memory in your mouth. Finally, practice reading the example words provided in this text. Слухайте і повторюйте! (Listen and repeat!)
+> [!culture] Українська мова — The Ukrainian Language
+> Ласкаво просимо! Це ваш перший крок у вивченні української мови. Ми будемо читати слова та речення. Українська абетка — це дуже логічна та красива система. Наша мета — навчитися читати швидко і правильно.
+> 
+> *(Welcome! This is your first step in learning the Ukrainian language. We will read words and sentences. The Ukrainian alphabet is a very logical and beautiful system. Our goal is to learn to read quickly and correctly.)*
 
-You can watch her excellent overview of the entire alphabet right here: [Anna Ohoiko — Alphabet Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc).
+The Ukrainian alphabet, known natively as the **абе́тка** [ɐˈbɛtkɐ], consists of exactly 33 letters. Unlike English, which is notorious worldwide for its highly chaotic, unpredictable spelling rules (where the word "read" can be pronounced in two entirely different ways, and a letter combination like "ough" can represent six different sounds), the Ukrainian writing system operates on a highly phonetic, mathematical principle. This means that, for the vast majority of the language, one specific letter maps reliably and predictably to one specific sound. Once you learn the acoustic sound a letter makes, you can independently sound out almost any word you encounter in the wild. There are no frustrating "silent letters" hiding at the ends of words to trick you, and you do not have to spend years memorizing thousands of complex, unpredictable spelling exceptions.
 
-### Корисні вирази (Useful Expressions)
+> [!myth-buster] Decolonizing the Script's Origins
+> A very common, persistent misconception among English speakers and Western learners is that the Cyrillic script is simply "the Russian alphabet." This is historically inaccurate and represents a deeply colonial perspective on Eastern European linguistics. The Cyrillic script was actually developed in the late 9th century within the First Bulgarian Empire by the dedicated students of Saints Cyril and Methodius (most notably scholars like Clement of Ohrid), who adapted it to fit the specific phonetic structures of Slavic speech. It is an ancient, fiercely independent writing system that serves as the foundation for dozens of languages across Eastern Europe and Central Asia. Ukrainian Cyrillic has its own distinct, centuries-old history and includes specific letters that do not exist in any neighboring languages.
 
-Ми часто кажемо ці прості слова. (We often say these simple words.) Вони дуже важливі. (They are very important.)
-*   **Слухайте!** — Listen!
-*   **Читайте!** — Read!
-*   **Повторюйте!** — Repeat!
-*   **Пишіть!** — Write!
-*   **Дивіться!** — Look!
-*   **Розумієте?** — Do you understand?
-*   **Так, я розумію.** — Yes, I understand.
-*   **Ні, я не розумію.** — No, I don't understand.
-*   **Чудово!** — Excellent!
-*   **Добре!** — Good!
-*   **Готові?** — Ready?
-*   **Поїхали!** — Let's go!
+We won't overwhelm you with all 33 letters at once. Instead, we are starting with six of the most common letters: **А, М, Л, У, Н, С**. By mastering these first, you will immediately have the tools to sound out your very first Ukrainian words.
 
-Слухайте вчителя. (Listen to the teacher.) Читайте текст. (Read the text.) Повторюйте слова щодня. (Repeat the words every day.) Це дуже просто і корисно. (It is very simple and useful.) Успіхів сьогодні! (Good luck today!)
+To ensure your pronunciation is perfectly accurate, crisp, and native-like from the very start, we will rely on the authoritative acoustic guidance of Anna Ohoiko from the renowned Ukrainian Lessons platform. Her detailed pronunciation videos will serve as your absolute reference point for every single new sound we introduce.
 
-> [!culture] **The Roots of the Alphabet**
-> The Cyrillic alphabet boasts a profound and independent Eastern European heritage. It descends directly from the script created by the students of Saints Cyril and Methodius in the First Bulgarian Empire during the ninth century. It was meticulously designed by scholars to capture the complex, rich phonetic sounds of Slavic languages that the Latin alphabet simply could not accurately accommodate. Learning these letters connects you to centuries of continuous linguistic tradition.
+Your learning methodology for this entire module must be simple but exceptionally rigorous:
+1. **Watch**: Click the provided video link for each letter and closely watch how Anna's mouth, lips, and jaw move.
+2. **Listen**: Focus heavily on the exact acoustic quality of the sound she produces.
+3. **Repeat aloud**: Do not skip this step! Building physical muscle memory in your vocal tract is absolutely mandatory for language acquisition.
+4. **Practice reading**: Apply the isolated sound directly to the written letter in our carefully structured reading drills.
 
-Learning a new alphabet is not just about memorizing shapes; it is about rewiring the way your brain processes visual information. At first, it feels like decoding a secret message. Learners look at a word, pause, translate the symbols into sounds, and then suddenly hear a word they might already recognize. This moment of realization is incredibly powerful. As you practice, this conscious decoding process becomes entirely automatic, just as it is when reading English today.
+Before we dive into isolating the specific letters, take a moment to watch the overall introduction to the Ukrainian alphabet below to orient yourself.
 
-## Голосні — А, У
+[Watch Anna Ohoiko — Ukrainian Alphabet Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc)
 
-In linguistics, sounds are divided into two main phonetic categories. The first category is vowels, known in Ukrainian as **голосні** (vowels). The word literally translates to «voiced». Vowels are pure sounds produced entirely by your vocal cords without any physical obstruction from your lips, teeth, or tongue. The air flows freely outwards. When you produce a vowel, you should feel nothing but the vibration of your vocal cords and the specific shape of your lips. The unobstructed flow of air is what allows vowels to carry the volume and emotion of a spoken sentence. The Ukrainian language features a total of 10 vowels, which give the spoken language its famous melodic and flowing quality. Today, we introduce and master the first two. Готові? (Ready?)
+Now, let us officially begin decoding the system.
+
+## Голосні — Vowels: А, У
+
+We must begin our phonetic journey with the vowels. In Ukrainian, these essential sounds are called **голосні́** [ɦɔlɔs⁽ʲ⁾ˈn⁽ʲ⁾i].
+
+What exactly is a vowel? Simply put, it's a sound made with open airflow. When you say a vowel, your breath flows freely outward without your tongue, teeth, or lips blocking it. You just change the shape of your mouth to create different sounds.
+
+The Ukrainian language features a concise, highly symmetrical system of exactly 10 vowels. In this initial module, we will focus all our attention on mastering the first two foundational sounds.
+
+However, before we even look at the shapes of the letters, we must establish the single most critical phonetic rule of the entire Ukrainian language.
+
+> [!warning] The Golden Rule: Vowel Stability
+> In English, we often get lazy with vowels in unstressed syllables, reducing them to a generic "uh" sound. For example, the 'a' in "about" sounds like "uh-bout." 
+>
+> **Ukrainian does not do this.** Ukrainian vowels are perfectly stable. An 'А' must always sound like a clear, open "ah," whether it's heavily stressed or quietly sitting at the end of a word. Train yourself to pronounce every vowel clearly — never reduce a Ukrainian vowel to an English "uh."
 
 ### Літера А
+Our very first letter is the absolute foundation of the entire alphabet. Visually, the printed capital letter **А** and its lowercase counterpart **а** look entirely identical to the English 'A'. This makes it highly accessible.
 
-Let us begin with the very first letter of the alphabet. The letter **А** looks exactly like its English equivalent, both in its uppercase and lowercase forms. However, the sound it produces is distinct and requires precision. It produces a clear, wide, open sound, perfectly mirroring the «a» in the English word «father» or «car». This vowel is never pronounced as the flat, nasal «a» found in «cat», nor does it ever glide into a diphthong like the «a» in «cake».
+The sound it produces is also very familiar, but it requires precision. The Ukrainian **А** represents a pure, open, unrounded back vowel. It sounds very much like the clear, elongated "a" found in the English word "father" or "car". To pronounce it correctly and authentically, you must physically drop your jaw noticeably, let your tongue rest completely flat and relaxed at the bottom of your mouth, and push out a steady, clear vocal tone from your chest.
 
-Watch Anna Ohoiko demonstrate the perfect, open pronunciation here: [Літера А](https://www.youtube.com/watch?v=hvB3VpcR3ZE).
+[Watch Anna Ohoiko pronounce Літера А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
 
-This letter appears everywhere in the language. Think of the word **анана́с** (pineapple), which uses the letter three distinct times, and every single time, it is the exact same wide, open sound. It also sounds clearly at the beginning of international geographical names like **А́фрика** (Africa) and **Аргенті́на** (Argentina). Learners often spot it in critical transit locations like an **аеропо́рт** (airport), or in common everyday nouns like **авто́бус** (bus) and **аку́ла** (shark). When you say these words aloud, ensure your jaw drops slightly and your mouth remains relaxed and open.
+Let us meticulously analyze some examples from the video and beyond. Pay extremely close attention to how the 'A' sound maintains its rigid shape and clarity, even when it appears multiple times in the exact same word, regardless of where the stress falls.
+
+*   **анана́с** [ɐnɐˈnɑs] (pineapple) — Listen carefully to how all three 'A's hold their distinct, open shape. A native English speaker desperately wants to say "uh-nuh-nas", but a Ukrainian speaker clearly articulates "ah-nah-nas".
+*   **А́фрика** [ˈɑfrɪkɐ] (Africa) — The final unstressed 'A' is just as pure as the first stressed 'A'.
+*   **авто́бус** [ɐu̯ˈtɔbʊs] (bus)
 
 ### Літера У
+Our second vowel requires highly careful visual attention and mental discipline. The printed uppercase **У** and its lowercase form **у** look exactly like the English consonant 'Y'. However, they have absolutely nothing whatsoever to do with the English "yuh" sound.
 
-The next vowel is **У**. Visually, this letter represents your very first cognitive challenge in the Cyrillic alphabet. It looks perfectly identical to the English uppercase letter «Y». You must actively train your brain to stop seeing a «Y». In the Cyrillic alphabet, this symbol represents a deep, resonant, and rounded vowel. It sounds exactly like the «oo» in the English word «moon» or «boot».
+The Ukrainian **У** represents a close, back, tightly rounded vowel. It sounds very similar to the deep "oo" sound found in the English word "moon", "boot", or "flute". To produce this sound correctly, you cannot keep your mouth relaxed. You must actively engage your facial muscles. Round your lips tightly into a small circle, push them forward slightly away from your teeth, raise the back of your tongue toward the roof of your mouth, and voice a deep, resonant sound.
 
-Watch Anna's comprehensive guide on forming this specific sound: [Літера У](https://www.youtube.com/watch?v=VB1O6PmtYRU).
+[Watch Anna Ohoiko pronounce Літера У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
 
-This beautiful vowel stands prominently at the very front of the name of the country itself: **Украї́на** (Ukraine). It forms the foundation of essential academic words like **університе́т** (university) and **уро́к** (lesson), much like the lesson you are completing right now. It also appears in global geographic names such as **Уругва́й** (Uruguay) and **Узбекиста́н** (Uzbekistan). It also appears in common nouns like an **учи́тель** (teacher). To pronounce it correctly, you must push your lips forward into a tight, distinct circle, much more actively than you would when speaking English.
+Here are clear examples of this letter operating in everyday words:
 
-### The Absolute Rule of Vowel Stability
+*   **Украї́на** [ʊkrɐˈjinɐ] (Ukraine) — Notice the deep, rounded start to the country's name.
+*   **університе́т** [ʊn⁽ʲ⁾iwersɪˈtɛt] (university)
+*   **уро́к** [ʊˈrɔk] (lesson)
 
-We now arrive at a critical phonetic principle, drawn directly from the State Standard §4.1.4 guidelines. Here stands the most important pronunciation rule taught in this level: Ukrainian vowels are perfectly stable. Це важливо! (This is important!)
+> [!tip] Physical Calibration Practice
+> To ensure you are truly mastering the physical difference between these two core sounds, try alternating slowly back and forth between them in front of a mirror: "Aaaa — Uuuu — Aaaa — Uuuu". You should feel and see a dramatic physical shift in your facial structure. For 'A', your jaw is fully dropped and your lips are totally relaxed. For 'U', your jaw closes significantly and your lips purse together tightly. Paying close attention to these explicit physical mechanics is the ultimate secret to achieving native-like pronunciation early on.
 
-In the English language, if a vowel does not receive the primary stress of the word, it becomes lazy and reduced. For example, the «a» in the English word «about» sounds like an indistinct, mumbled «uh» sound, known in linguistics as a schwa. English relies heavily on this vowel reduction to create its sentence rhythm.
+## Приголосні — Consonants: М, Л, Н, С
 
-In the Ukrainian phonetic system, vowel reduction simply does not exist for these core vowels. Whether a vowel carries the heavy stress of the word or sits quietly in an unstressed syllable, it must always retain its pure, crisp, original sound. An unstressed **А** remains a bright, clear «ah». An unstressed **У** remains a deep, tight «oo». Maintaining this unyielding clarity across every single syllable is the absolute key to developing a beautiful, authentic Ukrainian accent. Do not let your English habits trick you into mumbling unstressed vowels!
+Now that we understand the open airflow of vowels, we must move to the consonants. In Ukrainian, these structural sounds are called **приголосні́** [ˈprɪɦɔlɔsn⁽ʲ⁾i].
 
-> [!myth-buster] **The Mumbling Myth**
-> Because native speakers often speak very quickly, learners sometimes mistakenly believe that unstressed letters are skipped, mumbled, or swallowed entirely. That assumption proves entirely false. A fast Ukrainian speaker is still articulating every single vowel perfectly; they are simply doing it at a much higher speed. Your goal as a beginner is to pronounce every vowel with equal, deliberate clarity, regardless of your reading speed. Accuracy always comes before velocity.
+While vowels are made of free-flowing, unobstructed air, consonants are defined entirely by obstruction. To create a consonant sound, you must physically interrupt, restrict, or completely block the continuous flow of air originating from your lungs. You accomplish this by using your lips, your teeth, or various parts of your tongue. Consonants provide the crisp "edges" and boundaries that separate vowels into distinct, comprehensible words.
 
-## Приголосні — М, Л, Н, С
+The Ukrainian alphabet features a robust system of 22 consonants. Today, we will focus exclusively on four of the most foundational ones. Two of these will be highly visually familiar to you, and two are notorious "visual traps" that will require your intense active concentration to master.
 
-Having successfully mastered two pure vowels, we now turn our attention to consonants, known in Ukrainian as **приголосні** (consonants). While vowels rely on entirely free airflow, consonants are formed by creating a physical obstruction to the air using your lips, teeth, or tongue. A physical resistance is always felt when articulating them. The Ukrainian language boasts a rich phonetic inventory of 22 consonants. In this introductory module, we will learn 4 of them. To make memorization significantly easier, we divide these four letters into two psychological categories based on how they interact with your English reading habits: the True Friends and the False Friends.
+### Літера М
+This is universally the easiest consonant for learners to master because it acts exactly as your English brain expects it to. Visually, the printed capital **М** and the lowercase **м** perfectly mirror the English letter 'M'.
 
-### Справжні друзі (True Friends) — М та Л
+You produce it exactly as you do in English: press your lips together and make a humming "m" sound.
 
-We label these letters «True Friends» because they either look completely identical to their English counterparts and make the exact same sound, or they have a highly unique, memorable shape that is entirely unproblematic to learn. They will not trick your brain or cause cognitive dissonance. Чудово! (Great!)
+[Watch Anna Ohoiko pronounce Літера М](https://www.youtube.com/watch?v=Ez95H4ibuJo)
 
-Let us examine the letter **М**. It is shaped exactly like an English uppercase «M» and produces the exact same bilabial nasal sound. You simply press your lips tightly together and hum to produce the /m/ sound. The letter **М** is one of the most universal sounds in human language, which is why it forms the basis of the word for «mother» across the globe. Its comforting, continuous hum makes it an excellent anchor point for your first reading exercises. You can hold the sound indefinitely.
-Watch Anna pronounce it clearly: [Літера М](https://www.youtube.com/watch?v=Ez95H4ibuJo).
-This friendly letter appears prominently in universal words like **ма́ма** (mom) and **молоко́** (milk). It also features frequently when talking about everyday locations, such as a **мі́сто** (city), geographic entities like **Ме́ксика** (Mexico) or **Мінськ** (Minsk), or counting a massive **мільйо́н** (million) of something. This shape is completely reliable and straightforward.
+Here are clear, practical examples of this foundational letter:
 
-Next, we meet the letter **Л**. This letter has a unique shape that looks slightly like a small tent or a triangle missing its bottom line. It produces an «L» sound, very similar to the «l» in the English word «lamp» or «light». The physical action required to produce the sound—pressing the tip of your tongue against the back of your upper teeth—is perfectly natural for an English speaker.
-Watch the video guide here: [Літера Л](https://www.youtube.com/watch?v=v6-3Xg52Buk).
-This letter soars through the sky in words like **літа́к** (airplane) or echoes across a mountain valley in the word **луна́** (echo). It is also central to academic terms like **літерату́ра** (literature) and geographic locations such as **Ла́твія** (Latvia) and **Лі́ма** (Lima). It also appears in everyday objects like a **ла́мпа** (lamp) and a sour **лимо́н** (lemon). Because its shape is entirely new, your brain will easily associate it with its correct sound without any English interference.
+*   **мо́рква** [ˈmɔrkwɐ] (carrot)
+*   **ма́ма** [ˈmɑmɐ] (mom)
+*   **мі́сто** [ˈm⁽ʲ⁾istɔ] (city)
 
-### Оманливі друзі (False Friends) — Н та С
+### Літера Л
+This letter introduces an entirely new visual shape to your repertoire. The printed capital **Л** looks somewhat like a small pitched tent, or the Greek letter Lambda (Λ). The lowercase **л** is simply a smaller, mathematically proportional version of the same shape. In certain typefaces or handwriting styles, the left leg of the letter might curve inward slightly.
 
-This second category demands your absolute, intensely focused attention. These letters are the «False Friends». They look perfectly identical to highly familiar English letters, but they represent entirely different phonetic sounds in the Cyrillic alphabet. Your brain will aggressively want to read them using English pronunciation rules, and you must consciously, actively override that deep-seated instinct every single time you see them. Увага! (Attention!)
+The sound it produces is an alveolar lateral approximant. It sounds very similar to the English 'L', but requires a slightly different tongue placement for maximum authenticity. To pronounce it, press the flat tip of your tongue firmly against the alveolar ridge (the hard, bumpy area situated right behind your upper front teeth) and let the voiced airflow smoothly escape out along the sides of your tongue. The standard unpalatalized Ukrainian **Л** is a "hard" consonant. It sounds quite firm and "dark", similar to the 'l' in the English word "pull" or "ball", rather than the light 'l' in "leaf".
 
-To illustrate these specific traps clearly, please carefully review this comparison table:
+[Watch Anna Ohoiko pronounce Літера Л](https://www.youtube.com/watch?v=v6-3Xg52Buk)
 
-| Cyrillic Letter | The Visual Trap (English Habit) | The True Sound (Ukrainian) | Приклад (Example) |
-| :--- | :--- | :--- | :--- |
-| **Н** | Looks like «H» (as in hat) | Sounds like «N» (as in nest) | **ніс** (nose) |
-| **С** | Looks like «C» (as in cat / city) | Sounds strictly like «S» (as in sun) | **сон** (sleep / dream) |
+Listen closely to how this consonant operates in these examples:
 
-First, let us thoroughly analyze the letter **Н**. It looks exactly like an English uppercase «H». However, it has absolutely nothing whatsoever to do with the breathless «H» sound. In the Ukrainian phonetic system, this symbol represents a clear, firm «N» sound.
-Watch the video closely to train your eyes to see the «N»: [Літера Н](https://www.youtube.com/watch?v=vNUfiKHPYaU).
-This letter is absolutely essential for basic daily communication. Speakers constantly need it to say words like **ніс** (nose) or **нуль** (zero). This symbol represents the very first letter in **но́жиці** (scissors) and major geographical names like **Нідерла́нди** (Netherlands) and **Нова́ Зела́ндія** (New Zealand). The letter is also essential for basic nouns like the **ніч** (night). Every time you see it, tell yourself: this is an «N».
+*   **літа́к** [l⁽ʲ⁾iˈtɑk] (airplane)
+*   **луна́** [lʊˈnɑ] (echo)
+*   **лимо́н** [lɪˈmɔn] (lemon)
 
-Second, we must confront the letter **С**. This symbol looks perfectly like an English «C». In the English language, a «C» is incredibly inconsistent—it can make a hard «K» sound in «cat» or a soft «S» sound in «city». In Ukrainian, this letter is fiercely consistent and stable. The letter remains strictly and always an «S» sound. The symbol will never, under any circumstances, make a «K» sound.
-Here is Anna's guide to perfect, hissing pronunciation: [Літера С](https://www.youtube.com/watch?v=7UsFBgSL91E).
-This highly stable «S» sound helps talk about carrying a **су́мка** (bag), describing being entirely **сам** (alone), or whispering a hidden **секре́т** (secret). People use it to describe adding **сіль** (salt) to a savory meal. It also features prominently in planetary names like **Сату́рн** (Saturn) and global cities like **Сідне́й** (Sydney).
+### Літера Н — Візуальна пастка
+We have now arrived at our very first major cognitive hurdle. You must pay extremely close attention to this section.
 
-> [!warning] **The Intense Effort of Unlearning**
-> When you look closely at the word **САМ**, your English-speaking brain will automatically want to read it loudly as «CAM» (like a camera). When you see the letter **Н**, you will instinctively want to exhale heavily from your throat. Do not feel frustrated when you inevitably stumble during these early stages. Overriding decades of English reading habits requires active, deliberate mental effort. Slow down your reading pace and forcefully remind yourself: **С** is always /s/, and **Н** is always /n/.
+Visually, the uppercase **Н** and the lowercase **н** look completely identical to the English letter 'H'. However, in the Ukrainian phonetic system, **this specific symbol never, ever, under any circumstances, makes an aspirated "H" sound.**
 
-## Перші склади
+The Ukrainian **Н** represents the clear, distinct sound /n/. It is phonetically identical to the English letter 'N' found in words like "net", "never", or "no". To produce it mechanically, press the tip of your tongue fully and firmly against the ridge behind your upper teeth, entirely blocking the airflow through the oral cavity, and let the voiced air resonate exclusively through your nose.
 
-You have now successfully acquired two powerful vowels and four essential consonants. It is time to dynamically combine them into functional linguistic units. The fundamental building block of reading in the Ukrainian language is the syllable, known formally as a **склад** (syllable). A syllable can be a single standalone vowel, or it can be a combination of a consonant firmly joined with a vowel. Unlike in some languages where multiple letters blur and blend together into a continuous mush, Ukrainian syllables are pronounced clearly, distinctly, and evenly. Читаємо разом! (Let's read together!)
+When your eyes see the printed word **ні**, your English-trained brain will experience a phenomenon known as proactive interference. Your deeply ingrained English reflexes will instinctively scream at you to read the word as "Hi". You must consciously, deliberately, and forcefully override this natural reflex. This is what we call a highly dangerous "visual trap."
 
-### Відкриті склади (Open Syllables)
+> [!tip] The Mental Override Trick
+> To successfully break your English reading habit, you need a psychological anchor. Try to permanently associate the visual geometric shape of the Cyrillic **Н** with the physical concept of a **N**et stretched tightly between two vertical metal posts. Every single time your eyes encounter this symbol, force your internal monologue to shout "Net!" to successfully trigger the correct /n/ sound.
 
-An open syllable is specifically defined as a syllable that ends in a vowel. Because the vowel stands at the very end of the sound unit, the airflow from your lungs travels freely outwards into the room, leaving the syllable phonetically «open». This structure is the most common, highly rhythmic, and natural type of syllable found in the language.
+[Watch Anna Ohoiko pronounce Літера Н](https://www.youtube.com/watch?v=vNUfiKHPYaU)
 
-Let us practice purposefully combining our four new consonants with our two new vowels to construct open syllables. Read the following combinations aloud. The primary goal is to connect the initial consonant smoothly to the following vowel without leaving any pause, gap, or hesitation between them:
+Observe these examples and aggressively practice overriding your English reflex:
 
-- **МА**
-- **МУ**
-- **НА**
-- **НУ**
-- **ЛА**
-- **ЛУ**
-- **СА**
-- **СУ**
+*   **но́жиці** [ˈnɔʒɪt͡s⁽ʲ⁾i] (scissors)
+*   **ніс** [n⁽ʲ⁾is] (nose)
+*   **ні** [n⁽ʲ⁾i] (no)
 
-As you read these aloud, pay deep attention to the strict vowel stability rule we discussed earlier. The **А** in the syllable **МА** is the exact same open, bright sound as the **А** in the syllable **СА**. The deep, resonant **У** in **МУ** is completely identical to the **У** in **ЛУ**. This unwavering phonetic consistency is the true beauty of the Cyrillic code. Once you know the sound, the alphabet never betrays you.
+### Літера С — Візуальна пастка
+Here is our second dangerous visual trap, requiring equal diligence.
 
-### Закриті склади (Closed Syllables)
+The printed uppercase **С** and lowercase **с** look entirely identical to the English letter 'C'. In the English language, the letter 'C' is highly chaotic and unpredictable; depending on the surrounding vowels, it can make a soft /s/ sound (like in the word "city") or a hard, sharp /k/ sound (like in the word "cat").
 
-A closed syllable represents the exact opposite phonetic structure. It ends securely with a consonant rather than a vowel. The outward airflow is literally «closed» or abruptly stopped by the final consonant sound. These syllables require a slightly different speaking rhythm and physical approach, ensuring that you physically articulate and completely finish the final consonant crisply.
+In Ukrainian, there is absolutely no ambiguity. The letter **С** always makes a sharp /s/ sound, exactly like the English 'S' in "sun" or "snake".
 
-Let us creatively reverse the order of our letters to practice these closed syllables. Once again, you must read them aloud, but this time, place your phonetic emphasis on fully and properly completing the final consonant:
+It is crucial to remember that the Cyrillic **С** never makes a "K" sound.
 
-- **АМ**
-- **УМ**
-- **АН**
-- **УН**
-- **АС**
-- **УС**
-- **АЛ**
-- **УЛ**
+[Watch Anna Ohoiko pronounce Літера С](https://www.youtube.com/watch?v=7UsFBgSL91E)
 
-> [!note] **Feeling the Flow of Air**
-> When transitioning your vocal practice from open syllables directly to closed syllables, pay deep attention to the physical articulation of the final consonant. In a closed syllable like **АМ**, your lips must come fully and firmly together at the very end to stop the sound cleanly. In the syllable **УС**, your tongue must press precisely upward to hiss the «S» sound until the breath entirely stops. Do not let the sound lazily trail off into the air as it often does in English.
+Review these examples, focusing intensely on producing a strong, clear hissing sound:
 
-By mastering these fundamental syllable combinations, you have just unlocked a profound milestone: the ability to decode and read your very first actual Ukrainian words. By simply taking two open syllables and placing them together, such as smoothly combining **МА** and **МА**, you create the complete word **ма́ма**. You are no longer just making random phonetic sounds; you are officially reading language. Молодці! (Well done!)
+*   **су́мка** [ˈsumkɐ] (bag)
+*   **сон** [sɔn] (dream)
+*   **сам** [sɑm] (self, alone — masculine form)
 
-## Практика читання
+## Перші склади — First Syllables
 
-Now that you have confidently mastered the complex mechanics of both open and closed syllables, you are perfectly positioned for real, highly meaningful reading practice. The most effective strategy for a beginner facing an entirely new alphabet is progressive decoding. Do not attempt to look at a whole word and magically guess its meaning simultaneously. Instead, systematically break the process down. First, look at the individual letters and identify their specific sounds. Second, group those letters into manageable syllables. Finally, blend those syllables together to form the complete, accurately spoken word. Take your time and breathe deeply; absolute accuracy at this stage is immensely more important than reading speed.
+You now possess a functional, working knowledge of six crucial linguistic building blocks: two stable vowels (А, У) and four highly frequent consonants (М, Л, Н, С). Knowing the isolated, individual letters is an excellent start, but real, functional reading requires us to stitch these disparate sounds together fluidly and continuously.
 
-### Ваші перші слова (Your First Words)
+A syllable (called a **склад** [sklɑd] in Ukrainian) is a single, unbroken beat of spoken sound. Think of syllables as the building blocks of words. Each syllable contains one vowel, often paired with consonants to give it structure.
 
-Читайте повільно. (Read slowly.) Слухайте кожен звук. (Listen to every sound.) Звертайте увагу на букви. (Pay attention to the letters.) Це ваш перший крок! (This is your first step!)
+Let us deliberately practice combining the specific letters we know into fundamental syllables. Our primary focus here will be on achieving smooth, seamless transitions. When reading a syllable, do not aggressively say the consonant sound, pause to take a breath, and then loudly say the vowel. You must blend them together seamlessly in one single, continuous push of breath.
 
-Below is a dedicated, carefully curated word practice list. Every single word in this vocabulary list is built entirely and exclusively from the 6 letters you have just learned (**А**, **У**, **М**, **Л**, **Н**, **С**).
+### Відкриті склади — Open Syllables
+An open syllable is defined structurally as one that ends with a vowel. Because the vowel is positioned at the very end of the sequence, your mouth remains physically open as the sound finishes, allowing the acoustic energy to flow out freely and ring out into the room. This means the consonant is articulated first, immediately followed by the vowel.
 
-Read each word aloud slowly and deliberately. To actively assist you in this first encounter, we have included standard International Phonetic Alphabet (IPA) transcriptions to guide your pronunciation accurately, alongside the helpful English translations. Читайте! (Read!)
+Read these specific pairings aloud. Focus intently on starting with your mouth securely in the exact physical position required for the consonant, and then smoothly, effortlessly sliding your jaw and lips into the dropped position of 'A' or the tight rounding of 'U' without ever breaking the steady stream of breath.
 
-- **ма́ма** /mɑˈmɑ/ — Mom. This consists of two identical open syllables: МА + МА.
-- **су́ма** /ˈsumɑ/ — A sum or an amount. This consists of two distinct open syllables: СУ + МА.
-- **нас** /nɑs/ — Us (a pronoun). The single closed syllable here functions simply. Remember your rigorous training: **Н** is /n/ and **С** is /s/.
-- **сам** /sɑm/ — Alone or self. The single closed syllable here functions simply.
-- **мул** /mul/ — A mule. The word acts as one closed syllable ending firmly with our «tent» letter.
-- **луна́** /luˈnɑ/ — An echo. This features two open syllables: ЛУ + НА. Notice closely how the stress elegantly falls on the second syllable.
-- **мус** /mus/ — Mousse (the dessert). One simple, crisp closed syllable.
-- **ма́са** /ˈmɑsɑ/ — Mass or bulk. Another simple word built from open syllables.
+*   **МА** (M + A)  |  **МУ** (M + U)
+*   **НА** (N + A)  |  **НУ** (N + U)
+*   **ЛА** (L + A)
 
-### Ваші перші фрази (Your First Phrases)
+Did you actively remember that **НА** is pronounced "NA", and absolutely not "HA"? Did you successfully remember that the letter **С** is pronounced strictly as "S", and never as "K"? If your English brain stumbled and tricked you, that is a perfectly normal part of the cognitive rewiring process. Go back to the top of the list and meticulously read it aloud three more times until the visual traps lose their deceptive power over you.
 
-Once you can comfortably decode, recognize, and read individual words, the logical next step is stringing them together into complete, meaningful phrases. The Ukrainian language does not require overwhelmingly complex grammar or massive vocabularies to start making logical sense. Even utilizing a tiny inventory of just six letters, you can actively read and understand complete thoughts.
+### Закриті склади — Closed Syllables
+Conversely, a closed syllable is defined structurally as one that ends decisively with a consonant. Your mouth physically closes or restricts the airflow to finalize and terminate the sound abruptly. In this configuration, you begin with the vocalic sound and terminate abruptly with the consonant.
 
-Take a deep breath, look closely at the letters, and try reading these three short sentences aloud. Let us deeply analyze these phrases to understand how they function structurally. Не поспішайте! (Do not rush!) Читайте кожне слово чітко. (Read every word clearly.) Ми віримо у вас. (We believe in you.) Ви можете це зробити. (You can do this.) Починаємо! (Let's start!)
+For these specific syllables, you must start by projecting a pure, loud, clear vowel sound, and then rapidly use your lips or tongue to sharply and cleanly cut off the acoustic resonance with the trailing consonant.
 
-1. **Ма́ма сама́.** — This translates to «Mom is alone.» In this sentence, we elegantly combine the universal word for mother with the word for «alone». Even without complex verb structures, the fundamental meaning is immediately clear and grounded.
-2. **Нас сам.** — This translates to «We are alone.» (Literally constructed as: us alone). Here, we place two completely closed syllables side by side. You must ensure you pronounce the **С** at the very end of **нас** clearly, and then immediately transition into the **С** at the beginning of **сам**. It requires excellent breath control.
-3. **Су́ма мала́.** — This translates to «The sum is small.» This phrase introduces an adjective. Notice the beautiful, steady rhythm created by the alternating vowels and consonants: consonant-vowel-consonant-vowel. This specific rhythm is the heartbeat of the spoken Ukrainian language. Notice how the new word **мала́** (small) uses exclusively the letters you have already mastered perfectly!
+*   **УМ** (U + M)
+*   **АС** (A + S)
 
-> [!tip] **The Profound Power of the Spoken Word**
-> Never practice reading Cyrillic silently in your head during these crucial early stages. Silent reading naturally allows your brain to skip over difficult letters and revert seamlessly to English phonetic approximations without you even noticing. Speaking aloud forces your mouth and vocal cords to confront the physical reality of the Ukrainian sounds, rapidly accelerating your permanent mastery of the alphabet.
+> [!tip] Building Blocks
+> All multi-syllabic Ukrainian words are simply these exact same blocks sequentially chained together. If you can read the open syllable **МА** and recognize the closed syllable **УМ**, you already have the skills needed to sound out longer words.
 
-# Підсумок
+## Практика читання — Reading Practice
 
-Congratulations on reaching the end of your extremely important first lesson! You have successfully completed your initial contact with the Cyrillic code. You can now confidently recognize, accurately decode, and perfectly pronounce 6 out of the 33 letters in the Ukrainian alphabet. You have mastered 2 absolutely crucial vowels (**А**, **У**) and 4 highly frequent consonants (**М**, **Л**, **Н**, **С**).
+It's time to apply what you've learned and read real Ukrainian words. Every word below uses only the six letters we've studied today.
 
-Most importantly, you have deeply internalized the golden rule of phonetic purity: Ukrainian vowels are completely stable and never, ever reduce to a lazy schwa sound, regardless of whether they carry the stress of the word or sit quietly unstressed. You have also successfully trained your brain to navigate the dangerous visual traps posed by "false friends" like the misleading letters **Н** and **С**.
+When reading these words, try not to guess based on their shape. Instead, sound them out letter by letter and syllable by syllable.
 
-In our next critical module, *The Cyrillic Code II*, we will significantly expand your phonetic repertoire by systematically introducing 7 brand new letters. This will unlock your ability to read vastly more complex words and seamlessly construct much richer sentences.
+Read the following words aloud, slowly and deliberately:
 
-For your independent practice this week, we highly recommend returning repeatedly to the [Anna Ohoiko full YouTube playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV). Use it to systematically review the precise sounds of all 33 letters and continually refine your ear for the authentic sounds of the language.
+*   **ма́ма** (mom) — This is simply two identical open syllables combined perfectly together: MA-MA. Ensure both 'A' sounds are equally clear, open, and unreduced.
+*   **су́ма** (sum or total amount) — Combine the open syllable SU with the open syllable MA. SU-MA.
+*   **луна́** (echo) — Combine LU and NA. Be extremely careful here! Your brain will aggressively try to read this as "lu-ha". Force it to read LU-NA.
+*   **мул** (mule) — A single, tightly closed syllable. M-U-L.
+*   **сам** (self or alone, specifically referring to a masculine subject) — A single closed syllable. S-A-M. Do not let your brain interpret the 'C' as a 'K'. It is absolutely not "cam".
+*   **нас** (us) — A single closed syllable. N-A-S. This word contains two distinct visual traps packed closely together. Your eye sees H-A-C. Your English reflex screams "Hac". You must pause, forcibly reassign the H to N, and reassign the C to S. N-A-S. Nas.
+*   **сум** (sadness) — A single closed syllable. S-U-M. Trap check: Ensure you are reading "soom" with a sharp S and a deep U.
+*   **мус** (mousse dessert) — A single closed syllable. M-U-S. Trap check: Ensure you are reading "mus", not "myc".
 
-**Перевірте себе:**
+> [!observe] Real-World Practical Progress
+> Look back at the concise word list above and recognize your achievement. You are no longer just making random phonetic noises in a vacuum; you are actively reading highly frequent vocabulary that native Ukrainians use in daily conversation. The word **мама** is universally understood across the country, and **сума** is a highly practical, everyday word you will inevitably see printed on shopping receipts and banking apps.
 
-1. What is the fundamental, physical difference between how a pure vowel (голосна) and a consonant (приголосна) are produced in your mouth and vocal tract?
-2. Why do we explicitly classify the Cyrillic letters **Н** and **С** as dangerous «False Friends» for English speakers? What specific English phonetic sounds might you mistakenly associate with them if you are not careful?
-3. Explain the absolute rule of vowel stability. What happens to the pronunciation of the letter **А** when it appears in an unstressed syllable of a word compared to when it is stressed?
-4. How do you construct an open syllable structurally? Provide one clear, accurate example using exclusively the letters successfully learned in this specific lesson.
-5. Look carefully at the printed word **луна́**. Does the specific letter **У** in this word sound closer to the English word «up» or the English word «moon»?
+Now, let us push your new skills slightly further. We can arrange these newly decoded words into very short, incredibly simple phrases. Because we have not yet learned any complex Ukrainian verbs or grammatical conjugations, these are simply basic strings of declarative meaning.
+
+Read these phrases out loud, focusing intensely on maintaining a steady, confident rhythm without stumbling over the visual traps:
+
+*   «**Ма́ма сама́.**» (Mom is alone.) — *Note: The word **сама** is simply the feminine version of the masculine word **сам**, utilizing letters you already know perfectly.*
+*   «**Мул сам.**» (The mule is alone.)
+*   «**Су́ма мала́.**» (The sum is small.) — *Note: The word **мала** translates to "small", again relying entirely on the foundational letters we have covered.*
+
+**Check Your Independent Decoding Skills**
+It is time for a rigorous self-assessment. Cover the right side of your screen with your hand or a piece of paper to completely hide the English translations and phonetic hints. Focus your eyes strictly and exclusively on the Cyrillic text below. Can you confidently, loudly, and accurately read these three core words without hesitation?
+1. **мама**
+2. **сума**
+3. **луна**
+
+If you successfully read "ma-ma", "soo-ma", and "loo-na", congratulations. You have cracked the first layer of the code. You are officially reading the Ukrainian language.
+
+### Текст для читання — Reading Text
+Прочитайте ці речення вголос дуже повільно (Read these sentences aloud very slowly). Focus on your pronunciation of every single letter. The meaning is not important here; focus entirely on the acoustic sounds:
+
+«Мама сама. Мул сам. Сума мала.
+Луна сама. Мул, мама, сума.
+Сам мул. Сама мама. У нас мала сума.
+Мама, луна, мул, нас, сам, сума, мала.
+Сам мул. Сама мама. Мама сама. Мул сам.
+Сума мала. Луна сама.
+Мама, мама, мама! Мул, мул, мул!
+Мама сама, мул сам, сума мала, луна сама.
+У нас сума, у нас мама, у нас мул.
+Сам мул, сама мама. Мала сума. Мала луна.
+У нас мала сума. У нас мама.»
+
+---
+
+# Підсумок — Summary
+
+You have successfully taken your first step into reading the Cyrillic alphabet, proving that it is a logical and highly accessible system, not an impossible puzzle.
+
+Let us rigorously review exactly what linguistic tools you have mastered today:
+*   You can now confidently recognize, isolate, and accurately pronounce **6 out of the 33 letters** of the Ukrainian alphabet.
+*   You fundamentally understand the deep anatomical difference between **2 голосні** (vowels: А, У, produced with open airflow) and **4 приголосні** (consonants: М, Л, Н, С, produced with restricted airflow).
+*   You successfully navigated and neutralized two highly dangerous visual traps, permanently training your brain that the Cyrillic **Н** sounds precisely like /n/ and the Cyrillic **С** sounds precisely like /s/.
+*   You internalized the Golden Rule of Ukrainian pronunciation: **vowels are perfectly stable** and must never, under any circumstances, be lazily reduced to an English schwa sound.
+*   You learned how to blend isolated sounds together seamlessly to construct both open and closed syllables, and you actively used those newly forged skills to independently decode your very first authentic Ukrainian words, such as **мама**, **сума**, and **луна**.
+
+For crucial independent practice and phonetic reinforcement, we highly recommend returning repeatedly to Anna Ohoiko's instructional videos. You can proactively explore the pronunciation of the entire remaining alphabet by listening to her complete, comprehensive playlist right here: [Anna Ohoiko — Full Alphabet Playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV).
+
+In our next exciting module, *The Cyrillic Code II*, we will rapidly and dramatically expand your phonetic toolkit by systematically introducing seven entirely new letters (К, И, Р, Б, В, Д, І). With those powerful new additions, your reading vocabulary will multiply exponentially from a small handful of basic words to literally hundreds of practical terms.
+
+> [!culture] Чудова робота! — Excellent Work!
+> Ви великі молодці! Ви вже знаєте шість літер. Ви вже вмієте читати українською мовою. Це тільки початок. Далі буде ще цікавіше. Дякую за урок!
+> 
+> *(You did a great job! You already know six letters. You already know how to read in the Ukrainian language. This is just the beginning. It will be even more interesting later. Thank you for the lesson!)*
+
+**Check yourself before moving on:**
+1. What is the fundamental, anatomical difference in how vowels and consonants are physically produced within the human vocal tract?
+2. What is the critical "Golden Rule" regarding how unstressed vowels must be handled in Ukrainian, compared to how they are treated in English?
+3. Which specific Cyrillic letter looks exactly like an English 'H' but makes a completely different sound? What exact sound does it make?
+4. True or False: The Cyrillic letter **С** can occasionally be pronounced as a sharp /k/ sound, similar to how the letter 'C' operates in the English word "cat".
+5. Can you clearly and concisely explain the structural difference between an open syllable and a closed syllable, providing one written example of each using only the letters А, У, М, and С?
 
 ---

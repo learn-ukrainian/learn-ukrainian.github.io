@@ -12,12 +12,17 @@ Before writing ANY YAML, confirm these targets:
 | Skill identity | {SKILL_IDENTITY} |
 | Module persona | {PERSONA_VOICE}, acting as {PERSONA_ROLE} |
 | Activities required | {ACTIVITY_MIN}–{ACTIVITY_MAX} |
-| Items per activity | ≥{ITEMS_MIN} |
 | Required types | {REQUIRED_TYPES} |
 | Priority types | {PRIORITY_TYPES} |
 | Vocabulary items | {VOCAB_COUNT_TARGET} |
 
-Keep this table visible as you write. Every activity and vocab item must serve these targets.
+### Minimum Items Per Activity Type (HARD FAIL if under)
+
+These are the **audit gate minimums** — generating fewer items causes a COMPLEXITY violation and triggers a fix loop. Generate AT LEAST this many:
+
+{ITEM_MINIMUMS_TABLE}
+
+Keep both tables visible as you write. Every activity and vocab item must serve these targets.
 
 ## Your Input
 
@@ -186,6 +191,51 @@ options:
 
 7. **Item count consistency** — Activities of the same type should have similar item counts (±2). Don't have one quiz with 4 items and another with 12.
 
+### A1–A2 Activity Language Rules (CRITICAL)
+
+**Metalanguage (grammar terminology) is introduced at B1.** A1–A2 learners do NOT know terms like іменник (noun), дієслово (verb), частина мови (part of speech), голосний (vowel), відмінок (case). These are grammar jargon that hasn't been taught yet. Writing "Яка частина мови позначає дію?" to an A1–A2 learner is meaningless.
+
+**The rule for ALL A1 and A2 activities:**
+- **Questions, explanations, instructions** → English (this is scaffolding, same as the lesson prose)
+- **Target content being practiced** → Ukrainian (the words, phrases, sentences learners are learning)
+- **Option text** → Ukrainian when selecting Ukrainian words/phrases, English when selecting concepts
+
+This matches the A1 immersion band (10–50%) and A2 band (30–70%): English scaffolding for metalanguage, Ukrainian for target content.
+
+**Additional rule for Cyrillic Code modules (a1-1 through a1-4):**
+- Only use letters/words from the module's taught letter set. If the module teaches А, У, М, Л, Н, С — every Ukrainian word in activities must use ONLY those 6 letters.
+- Do not invent pedagogical terminology. "Справжні друзі / Оманливі друзі" (true/false friends) is a term for WORDS between languages, not individual letters. Say "visual traps" instead.
+
+Example quiz for A1:
+```yaml
+- type: quiz
+  title: "Check Your Knowledge"
+  instruction: Choose the correct answer.
+  items:
+    - question: "Which letter looks like English H but represents the /n/ sound?"
+      explanation: "Н is a visual trap — it looks like H but sounds like N."
+      options:
+        - text: "Н"
+          correct: true
+        - text: "М"
+          correct: false
+        - text: "С"
+          correct: false
+        - text: "Л"
+          correct: false
+    - question: "What does the word сума mean?"
+      explanation: "Сума means sum/amount in Ukrainian."
+      options:
+        - text: "sum/amount"
+          correct: true
+        - text: "bag"
+          correct: false
+        - text: "moon"
+          correct: false
+        - text: "mom"
+          correct: false
+```
+
 ### YAML Formatting Rules (HARD FAIL if violated)
 
 **Do NOT use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when combined with colons.
@@ -214,9 +264,9 @@ options:
 
 ### Pronunciation in Activity Explanations (HARD FAIL)
 
-**In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration.**
+**When referencing Ukrainian words, use Cyrillic — NEVER Latin transliteration.**
 
-YAML explanations should reference Ukrainian words in Cyrillic.
+Note: At A1–A2, explanations themselves are written in English (see A1 Activity Language Rules above). But Ukrainian words within those English explanations must be in Cyrillic.
 
 ```yaml
 ❌ WRONG (Latin transliteration):
@@ -234,9 +284,10 @@ YAML explanations should reference Ukrainian words in Cyrillic.
 ```
 
 **Rules:**
-1. Reference words in Cyrillic, not Latin transliteration (ZhYty → Жити)
-2. Keep explanations simple and readable — use Cyrillic only
-3. English descriptions of sounds are fine ("hard И", "soft І", "the ch sound")
+1. Reference Ukrainian words in Cyrillic, not Latin transliteration (ZhYty → Жити)
+2. At A1–A2: write explanations in English, with Ukrainian words in Cyrillic (see A1–A2 Activity Language Rules)
+3. At B1+: write explanations in Ukrainian, using metalanguage naturally
+4. English descriptions of sounds are always fine ("hard И", "soft І", "the ch sound")
 
 ### Vocabulary YAML Rules
 

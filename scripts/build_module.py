@@ -148,7 +148,7 @@ PHASE_LABELS_V4: dict[str, str] = {
     "content":    "Content (prose)",
     "activities": "Activities + Vocab",
     "validate":   "Validate (audit + screen + Gemini fix)",
-    "review":     "Review (Claude, optional)",
+    "review":     "Review (Gemini/Claude, optional)",
     "mdx":        "MDX Generation",
 }
 
@@ -214,7 +214,13 @@ def _is_phase_v3_complete(ctx: ModuleContext, phase_id: str, state: dict) -> boo
 
 
 def _mark_phase_v3(ctx: ModuleContext, state: dict, phase_id: str, status: str, **extra: Any) -> None:
-    """Mark a v3 phase in state-v3.json (thread-safe via file lock)."""
+    """Mark a v3 phase in state-v3.json (thread-safe via file lock).
+
+    Skips the file write when running in v4 mode — v4 state is authoritative
+    and v3 state files are not needed.
+    """
+    if getattr(ctx, "mode", None) == "v4":
+        return
     lock = _state_lock or FileLock(str(ctx.orch_dir / "state-v3.json.lock"))
     with lock:
         phases = state.setdefault("phases", {})
@@ -291,7 +297,7 @@ def _compute_content_hash(ctx: ModuleContext) -> str:
     """Hash md + activities + vocab files for cache invalidation."""
     import hashlib
     h = hashlib.md5()
-    for key in ("md", "activities", "vocabulary", "vocab"):
+    for key in ("md", "activities", "vocabulary"):
         p = ctx.paths.get(key)
         if p and p.exists():
             h.update(p.read_bytes())
@@ -545,6 +551,33 @@ CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D.1/D.2 default (deep an
 CLAUDE_MODEL_REREVIEW   = "claude-opus-4-6"     # Phase D.3 default — same model as D.1 to prevent calibration drift (#633)
 
 
+def _clean_fix_text(text: str) -> str:
+    """Strip LLM formatting artifacts from FIND/REPLACE text.
+
+    Claude sometimes wraps FIND text in metadata headers (Section: "...", Line N),
+    triple-backtick fences, or guillemet quotes. Strip these so the text matches
+    the actual file content.
+    """
+    lines = text.split("\n")
+    cleaned: list[str] = []
+    for line in lines:
+        s = line.strip()
+        # Skip Section/Line metadata headers (e.g. 'Section: "Практика", Line 269')
+        if re.match(r'^Section:\s*["\u201c\u00ab]', s, re.IGNORECASE):
+            continue
+        # Skip triple-backtick fences (```markdown, ```yaml, ```, etc.)
+        if s.startswith("```"):
+            continue
+        cleaned.append(line)
+    result = "\n".join(cleaned).strip()
+    # Strip «» or „" wrapper quotes if the entire block is wrapped
+    if result.startswith("«") and result.endswith("»"):
+        result = result[1:-1]
+    if result.startswith("\u201e") and result.endswith("\u201c"):
+        result = result[1:-1]
+    return result
+
+
 def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
     """Apply FIND/REPLACE fix pairs from D.2 output to a file.
 
@@ -559,15 +592,17 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
     if not file_path.exists():
         return 0
 
-    # Extract the fix block
-    fix_match = re.search(
+    # Extract the fix block — use the LAST match to skip prompt echo artifacts
+    # (the bridge echoes the full prompt, which may contain template examples
+    # with ===SECTION_FIX_START=== delimiters)
+    fix_matches = re.findall(
         r"===SECTION_FIX_START===\s*\n(.*?)===SECTION_FIX_END===",
         raw_output, re.DOTALL,
     )
-    if not fix_match:
+    if not fix_matches:
         return 0
 
-    fix_block = fix_match.group(1)
+    fix_block = fix_matches[-1]  # Last match = actual LLM output
 
     # Only process lines targeting this file.
     # Default to active — if Claude omits FILE: headers (single-file fix),
@@ -632,18 +667,14 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
 
     content = file_path.read_text("utf-8")
     applied = 0
+    skipped = []
 
-    for find_text, replace_text in pairs:
-        find_text = find_text.strip()
-        replace_text = replace_text.strip()
+    for i, (find_text, replace_text) in enumerate(pairs, 1):
+        find_text = _clean_fix_text(find_text)
+        replace_text = _clean_fix_text(replace_text)
         if not find_text or find_text == replace_text:
+            skipped.append((i, "empty/identical", find_text[:60].replace('\n', ' ') if find_text else ""))
             continue
-
-        # Strip «» quotes if present (some models wrap in guillemets)
-        if find_text.startswith("«") and find_text.endswith("»"):
-            find_text = find_text[1:-1]
-        if replace_text.startswith("«") and replace_text.endswith("»"):
-            replace_text = replace_text[1:-1]
 
         # Try exact match first
         if find_text in content:
@@ -662,12 +693,12 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
             # by counting non-whitespace characters up to idx
             char_count = 0
             orig_start = 0
-            for i, ch in enumerate(content):
+            for i_ch, ch in enumerate(content):
                 if char_count >= idx:
-                    orig_start = i
+                    orig_start = i_ch
                     break
                 if ch in (' ', '\t', '\n', '\r'):
-                    if i == 0 or content[i-1] not in (' ', '\t', '\n', '\r'):
+                    if i_ch == 0 or content[i_ch-1] not in (' ', '\t', '\n', '\r'):
                         char_count += 1
                 else:
                     char_count += 1
@@ -675,23 +706,32 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
             end_count = 0
             orig_end = orig_start
             target_len = len(normalized_find)
-            for i in range(orig_start, len(content)):
-                ch = content[i]
+            for i_ch in range(orig_start, len(content)):
+                ch = content[i_ch]
                 if ch in (' ', '\t', '\n', '\r'):
-                    if i == orig_start or content[i-1] not in (' ', '\t', '\n', '\r'):
+                    if i_ch == orig_start or content[i_ch-1] not in (' ', '\t', '\n', '\r'):
                         end_count += 1
                 else:
                     end_count += 1
                 if end_count >= target_len:
-                    orig_end = i + 1
+                    orig_end = i_ch + 1
                     break
 
             content = content[:orig_start] + replace_text + content[orig_end:]
             applied += 1
-            log(f"    Fix applied (fuzzy match): {find_text[:60]}...")
         else:
-            log(f"    Fix SKIPPED (no match): {find_text[:80]}...")
+            find_preview = find_text[:60].replace('\n', ' ')
+            skipped.append((i, "no match", find_preview))
 
+    # Brief summary line
+    total = len(pairs)
+    parts = [f"{applied}/{total} applied"]
+    if skipped:
+        parts.append(f"{len(skipped)} skipped")
+    log(f"    FIND/REPLACE {file_path.name}: {', '.join(parts)}")
+    # Only log skipped fixes (those need attention)
+    for idx, reason, preview in skipped:
+        log(f"      ⚠ #{idx} {reason}: {preview}...")
     if applied > 0:
         file_path.write_text(content, "utf-8")
 
@@ -738,10 +778,29 @@ def _dispatch_claude_phase(
             expected_start, expected_end = _PHASE_DELIMITERS[key]
             break
 
-    cmd.extend(["--append-system-prompt",
-                 f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
-                 "delimiters wrapping the full structured output. Output without these delimiters "
-                 "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
+    # D.1 produces BOTH review and fix blocks
+    if "D.1" in phase_label:
+        cmd.extend(["--append-system-prompt",
+                     f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
+                     "delimiters wrapping the review, AND ===SECTION_FIX_START=== / ===SECTION_FIX_END=== "
+                     "delimiters wrapping FIND/REPLACE fix pairs for every issue found. "
+                     "Both blocks are required. Output without these delimiters is automatically discarded. "
+                     "FIND/REPLACE FORMAT: The FIND text must be RAW file content copy-pasted from Read output. "
+                     "Do NOT add Section/Line metadata headers, do NOT wrap in triple backticks, "
+                     "do NOT add any framing text. Just the raw text that exists in the file."])
+    elif "D.2" in phase_label and allow_tools:
+        # D.2 with tools: edits files directly, no delimiter parsing needed
+        cmd.extend(["--append-system-prompt",
+                     "You have Edit and Grep tools. Fix each issue by editing files directly. "
+                     "Use Grep to verify text exists before editing. "
+                     "Do NOT output FIND/REPLACE blocks — use the Edit tool instead. "
+                     "After all fixes, output a ===FRICTION_START=== / ===FRICTION_END=== block "
+                     "documenting any issues encountered."])
+    else:
+        cmd.extend(["--append-system-prompt",
+                     f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
+                     "delimiters wrapping the full structured output. Output without these delimiters "
+                     "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
 
     try:
         from pipeline_lib import _run_with_heartbeat
@@ -953,8 +1012,8 @@ def _compute_metrics_direct(ctx: ModuleContext) -> dict[str, str]:
             pass
     metrics["COMPUTED_ACTIVITY_COUNT"] = str(act_count)
 
-    # Vocabulary count (from YAML sidecar — key may be "vocab" or "vocabulary")
-    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    # Vocabulary count (from YAML sidecar)
+    vocab_path = ctx.paths.get("vocabulary")
     vocab_count = 0
     if vocab_path and vocab_path.exists():
         try:
@@ -1224,7 +1283,7 @@ def _inject_file_contents(prompt_text: str, ctx: ModuleContext) -> str:
     """
     content_path = ctx.paths.get("md")
     act_path = ctx.paths.get("activities")
-    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    vocab_path = ctx.paths.get("vocabulary")
 
     content_text = content_path.read_text("utf-8") if content_path and content_path.exists() else "(file not found)"
     act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(file not found)"
@@ -1234,6 +1293,115 @@ def _inject_file_contents(prompt_text: str, ctx: ModuleContext) -> str:
     prompt_text = prompt_text.replace("{ACTIVITIES_FILE_CONTENT}", act_text)
     prompt_text = prompt_text.replace("{VOCAB_FILE_CONTENT}", vocab_text)
     return prompt_text
+
+
+def _module_file_paths(ctx: ModuleContext) -> list[tuple[str, Path | None]]:
+    """Return [(label, path)] for the three module files (md, activities, vocab).
+
+    Centralises the file-path resolution so callers don't repeat it.
+    """
+    return [
+        ("md", ctx.paths.get("md")),
+        ("activities", ctx.paths.get("activities")),
+        ("vocabulary", ctx.paths.get("vocabulary")),
+    ]
+
+
+def _snapshot_module_files(ctx: ModuleContext) -> dict[str, str]:
+    """Snapshot content/activities/vocab before an edit pass."""
+    snapshots = {}
+    for label, p in _module_file_paths(ctx):
+        if p and p.exists():
+            snapshots[label] = p.read_text("utf-8")
+    return snapshots
+
+
+def _log_d1_edits(ctx: ModuleContext, pre_snapshots: dict[str, str]) -> None:
+    """Log what D.1 changed via Edit tool by diffing pre/post snapshots."""
+    import difflib
+
+    any_changes = False
+    diff_lines: list[str] = []
+
+    for label, p in _module_file_paths(ctx):
+        old = pre_snapshots.get(label, "")
+        if not p or not p.exists():
+            continue
+        new = p.read_text("utf-8")
+        if old == new:
+            continue
+
+        any_changes = True
+        diff = list(difflib.unified_diff(
+            old.splitlines(keepends=True),
+            new.splitlines(keepends=True),
+            fromfile=f"{label} (before D.1)",
+            tofile=f"{label} (after D.1)",
+            n=1,
+        ))
+        n_changed = sum(1 for line in diff if line.startswith('+') and not line.startswith('+++'))
+        log(f"  D.1 edit: {label} — {n_changed} line(s) changed")
+        diff_lines.extend(diff)
+
+    if any_changes:
+        diff_path = ctx.orch_dir / "d1-edits.diff"
+        diff_path.write_text("".join(diff_lines), "utf-8")
+        log(f"  D.1 edit: Full diff saved → {diff_path.name}")
+    else:
+        log("  D.1 edit: No file changes detected (Edit tool not used or all edits reverted)")
+
+
+def _apply_module_fixes(ctx: ModuleContext, raw_output: str) -> int:
+    """Apply FIND/REPLACE fix pairs from LLM output to all module files.
+
+    Used by both D.1 inline fixes and D.2 repair. Returns total fixes applied.
+    """
+    if "===SECTION_FIX_START===" not in raw_output:
+        return 0
+    total = 0
+    for _label, p in _module_file_paths(ctx):
+        if p and p.exists():
+            total += _apply_find_replace_fixes(p, raw_output)
+    return total
+
+
+def _apply_fixes_with_rollback(
+    ctx: ModuleContext, raw_output: str, log_prefix: str,
+) -> tuple[bool, int]:
+    """Apply FIND/REPLACE fixes with diff-size guard and rollback.
+
+    Snapshots all module files, applies fixes, measures total changed lines.
+    If changes exceed the safety threshold, rolls back all files.
+
+    Returns (accepted: bool, n_fixes: int).
+    """
+    if "===SECTION_FIX_START===" not in raw_output:
+        return True, 0
+
+    before = _snapshot_module_files(ctx)
+    n_fixes = _apply_module_fixes(ctx, raw_output)
+
+    fix_pair_count = raw_output.count("FIND:") if "FIND:" in raw_output else 1
+    after = _snapshot_module_files(ctx)
+
+    changed_lines = 0
+    for label in before:
+        if label in after:
+            changed_lines += _count_diff_lines(before[label], after[label])
+
+    max_allowed = max(fix_pair_count * 25, 50)
+
+    if changed_lines > max_allowed:
+        log(f"  {log_prefix}: REJECTED — {changed_lines} lines changed "
+            f"(max {max_allowed} for {fix_pair_count} fix pairs)")
+        # Rollback
+        for label, p in _module_file_paths(ctx):
+            if label in before and p:
+                p.write_text(before[label], "utf-8")
+        return False, n_fixes
+
+    log(f"  {log_prefix}: Fixes applied ({changed_lines} lines, {fix_pair_count} pairs)")
+    return True, n_fixes
 
 
 # Audit failure codes that indicate diffuse issues (not FIND/REPLACE fixable).
@@ -1269,7 +1437,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     # Dirty-flag: skip if no files changed since last fix pass
     target_files = [
         content_path,
-        ctx.paths.get("vocab") or ctx.paths.get("vocabulary"),
+        ctx.paths.get("vocabulary"),
         ctx.paths.get("activities"),
     ]
     current_max_mtime = max(
@@ -1310,7 +1478,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             log(f"    Auto-fix: YAML fix failed: {e}")
 
     # 3. YAML text-level fixes (vocab file)
-    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    vocab_path = ctx.paths.get("vocabulary")
     if vocab_path and vocab_path.exists():
         try:
             from audit.checks.yaml_schema_validation import fix_raw_yaml_text
@@ -1599,6 +1767,11 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
             outline_data = None
 
         if outline_data and isinstance(outline_data, dict) and "content_outline" in outline_data:
+            # Ensure bilingual section titles for early A1 modules
+            from pipeline_lib import bilingualify_section_titles
+            outline_data["content_outline"] = bilingualify_section_titles(
+                outline_data["content_outline"], ctx.track, ctx.module_num,
+            )
             meta_path = ctx.paths.get("meta")
             if meta_path and meta_path.exists():
                 try:
@@ -2131,7 +2304,7 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
         if not content_only:
             if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                 _apply_section_fixes(ctx.paths["activities"], output)
-            _vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+            _vp = ctx.paths.get("vocabulary")
             if _vp and _vp.exists():
                 _apply_section_fixes(_vp, output)
         escalation_agent = "Gemini" if primary_agent == "claude" else "Claude"
@@ -3089,15 +3262,21 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         n_quotes = rag_context.count("### Quote:")
         log(f"    RAG verification: {n_quotes} quote(s) checked against primary sources")
 
+    # Snapshot files before D.1 (D.1 can now edit directly)
+    _pre_d1_snapshots = _snapshot_module_files(ctx)
+
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
         model=claude_model_D, timeout=review_timeout,
-        allow_tools=["Read", "Grep", "Glob"],
+        allow_tools=["Read", "Grep", "Glob", "Edit"],
     )
     if not ok:
         log("  D.1: Dispatch FAILED")
         _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-dispatch-failed")
         return False
+
+    # Log what D.1 changed via Edit tool
+    _log_d1_edits(ctx, _pre_d1_snapshots)
 
     # Parse Markdown review
     d1 = _parse_d1_review(raw_output)
@@ -3110,7 +3289,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         ok2, raw2 = _dispatch_claude_phase(
             prompt_file, "Phase D.1 (retry)",
             model=claude_model_D, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob"],
+            allow_tools=["Read", "Grep", "Glob", "Edit"],
         )
         if ok2:
             d1 = _parse_d1_review(raw2)
@@ -3139,7 +3318,16 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # Save review with content hash for staleness detection (#618)
     write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
     (ctx.orch_dir / "phase-D-review-1.md").write_text(review_text, "utf-8")
+    # Always save raw D.1 output for debugging inline fix extraction
+    (ctx.orch_dir / "phase-D1-raw-output.md").write_text(raw_output, "utf-8")
     log(f"  D.1: Review saved → {ctx.paths['review'].name}")
+
+    # Apply D.1 inline fixes — D.1 now produces FIND/REPLACE pairs alongside review
+    n_d1_fixes = _apply_module_fixes(ctx, raw_output)
+    if n_d1_fixes > 0:
+        log(f"  D.1: Applied {n_d1_fixes} inline fix(es) from review")
+    elif "===SECTION_FIX_START===" in raw_output:
+        log(f"  D.1: Fix block found but 0 fixes matched — check phase-D1-raw-output.md")
 
     # Deterministic fixes after review save — zero API cost
     n_postD1 = _run_deterministic_fixes(ctx)
@@ -3193,6 +3381,15 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             log(f"    {line}")
         review_says_fail = True  # Force D.2 entry
         _audit_only_d2 = True  # Flag: D.2 should fix audit failures only, not review issues
+
+    if passed and review_says_fail and n_d1_fixes > 0:
+        # D.1 inline fixes applied + audit passes → review issues were fixed
+        log(f"  Phase D: PASS (D.1 inline fixes resolved review issues — {n_d1_fixes} fix(es) applied)")
+        _mark_phase_v3(ctx, state, phase, "complete", attempts=1, note="d1-inline-fixes")
+        mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
+        return True
 
     if passed and review_says_fail:
         log("  D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
@@ -3273,9 +3470,13 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         prompt2_text = _inject_file_contents(prompt2_text, ctx)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
+        # Snapshot before D.2 edits (D.2 now uses Edit tool directly)
+        before_d2 = _snapshot_module_files(ctx)
+
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model_D, timeout=v3_fix_timeout,
+            allow_tools=["Edit", "Grep"],
         )
         if not ok2:
             log(f"  D.2{iter_suffix}: Dispatch FAILED")
@@ -3283,58 +3484,27 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
                            note="d2-dispatch-failed")
             return False
 
-        # Apply fixes with diff-size blocker (#623)
-        if "===SECTION_FIX_START===" in raw_output2:
-            content_before = ctx.paths["md"].read_text("utf-8")
-            act_before: str | None = None
-            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                act_before = ctx.paths["activities"].read_text("utf-8")
-            vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-            vocab_before: str | None = None
-            if vp and vp.exists():
-                vocab_before = vp.read_text("utf-8")
+        # Check what D.2 changed via Edit tool (snapshot diff)
+        after_d2 = _snapshot_module_files(ctx)
+        changed_lines = 0
+        for label in before_d2:
+            if label in after_d2:
+                changed_lines += _count_diff_lines(before_d2[label], after_d2[label])
 
-            n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
-            n_act = 0
-            if ctx.paths.get("activities"):
-                n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
-            n_vocab = 0
-            if vp and vp.exists():
-                n_vocab = _apply_find_replace_fixes(vp, raw_output2)
-            log(f"  D.2{iter_suffix}: Applied {n_md} content, {n_act} activity, {n_vocab} vocab fix(es)")
-
-            fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
-            content_after = ctx.paths["md"].read_text("utf-8")
-            act_after: str | None = None
-            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                act_after = ctx.paths["activities"].read_text("utf-8")
-            vocab_after: str | None = None
-            if vp and vp.exists():
-                vocab_after = vp.read_text("utf-8")
-
-            changed_lines = _count_diff_lines(content_before, content_after)
-            if act_before is not None and act_after is not None:
-                changed_lines += _count_diff_lines(act_before, act_after)
-            if vocab_before is not None and vocab_after is not None:
-                changed_lines += _count_diff_lines(vocab_before, vocab_after)
-            max_allowed = max(fix_pair_count * 25, 50)
-
-            if changed_lines > max_allowed:
-                log(f"  D.2{iter_suffix}: REJECTED — {changed_lines} lines changed "
-                    f"(max {max_allowed} for {fix_pair_count} fix pairs)")
-                ctx.paths["md"].write_text(content_before, "utf-8")
-                if act_before is not None and ctx.paths.get("activities"):
-                    ctx.paths["activities"].write_text(act_before, "utf-8")
-                if vocab_before is not None and vp:
-                    vp.write_text(vocab_before, "utf-8")
-                _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
-                               note="d2-diff-too-large")
-                return False
-
-            log(f"  D.2{iter_suffix}: Fixes applied ({changed_lines} lines, {fix_pair_count} pairs)")
-        else:
-            log(f"  D.2{iter_suffix}: WARNING — no SECTION_FIX delimiters")
+        if changed_lines > 200:
+            log(f"  D.2{iter_suffix}: REJECTED — {changed_lines} lines changed (max 200)")
+            # Rollback
+            for label, p in _module_file_paths(ctx):
+                if label in before_d2 and p:
+                    p.write_text(before_d2[label], "utf-8")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
+                           note="d2-diff-too-large")
+            return False
+        if changed_lines == 0:
+            log(f"  D.2{iter_suffix}: WARNING — no file changes")
             (ctx.orch_dir / f"phase-D2-iter{d2_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
+        else:
+            log(f"  D.2{iter_suffix}: Fixes applied ({changed_lines} lines changed)")
 
         # Post-D.2 deterministic fixes + single audit (NO D.3 re-review)
         _run_deterministic_fixes(ctx)
@@ -3618,17 +3788,21 @@ def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
         run_discovery,
         write_discovery_yaml,
         format_discovery_for_template,
+        build_search_keywords,
+        build_discovery_keywords,
+        search_blogs,
+        search_rag,
     )
 
-    # Extract keywords from topic + vocabulary hints
-    keywords = [ctx.topic_title]
-    vocab_hints = ctx.plan.get("vocabulary_hints", {})
-    if isinstance(vocab_hints, dict):
-        keywords.extend(vocab_hints.get("required", [])[:5])
-    elif isinstance(vocab_hints, list):
-        keywords.extend(vocab_hints[:5])
+    # Extract keywords from full plan metadata (with fallback to vocab-only)
+    keywords = build_discovery_keywords(ctx.plan)
+    if not keywords:
+        vocab_hints = ctx.plan.get("vocabulary_hints", {})
+        keywords = build_search_keywords(ctx.topic_title, vocab_hints)
 
-    log(f"  discover: searching for videos (keywords: {keywords[:3]}...)")
+    log(f"  discover: searching (keywords: {keywords[:4]}...)")
+
+    # Video discovery
     result = run_discovery(
         topic=ctx.topic_title,
         keywords=keywords,
@@ -3638,8 +3812,39 @@ def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
         track=ctx.track,
     )
 
-    discovery_path = ctx.orch_dir / "discovery.yaml"
+    # Blog discovery
+    slug = ctx.slug if hasattr(ctx, "slug") else ""
+    level = getattr(ctx, "level", "") or ctx.plan.get("level", "")
+    blogs = search_blogs(
+        module_slug=slug,
+        level=level,
+        topic_title=ctx.topic_title,
+        keywords=keywords,
+    )
+    result.blogs = blogs
+
+    # RAG discovery — textbook chunks, literary sources
+    # Skip image search (limit_images=0) to avoid loading SigLIP (~800MB, 10s)
+    # Image descriptions add marginal value vs text chunks for prompt injection
+    rag_results = search_rag(
+        keywords=keywords,
+        track=ctx.track,
+        level=level,
+        limit_images=0,
+    )
+    result.rag_chunks = rag_results.get("text_chunks", [])
+    result.rag_images = rag_results.get("images", [])
+    result.rag_literary = rag_results.get("literary", [])
+
+    # Canonical location (permanent sidecar alongside meta, vocab, activities)
+    discovery_dir = ctx.paths["md"].parent / "discovery"
+    discovery_dir.mkdir(parents=True, exist_ok=True)
+    discovery_path = discovery_dir / f"{ctx.slug}.yaml"
     write_discovery_yaml(result, discovery_path)
+
+    # Also write to orchestration for backward compat
+    orch_discovery = ctx.orch_dir / "discovery.yaml"
+    write_discovery_yaml(result, orch_discovery)
 
     if result.error:
         log(f"  discover: completed with error: {result.error}")
@@ -3647,9 +3852,11 @@ def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
         log(f"  discover: {result.warning}")
     else:
         relevant = [v for v in result.videos if v.relevance_score >= 0.5]
-        log(f"  discover: found {len(result.videos)} videos, {len(relevant)} relevant")
+        n_rag = len(result.rag_chunks) + len(result.rag_images) + len(result.rag_literary)
+        log(f"  discover: found {len(result.videos)} videos ({len(relevant)} relevant), "
+            f"{len(result.blogs)} blogs, {n_rag} RAG items")
 
-    # Append video refs to research file
+    # Append resource refs to research file
     _append_discovery_to_research(ctx, result)
 
     _mark_phase_v4(ctx, state, "discover", "complete")
@@ -3657,19 +3864,47 @@ def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
 
 
 def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
-    """Append a ## Video Discovery section to the research file."""
+    """Append ## Resource Discovery section to the research file."""
     from video_discovery import DiscoveryResult
     if not isinstance(result, DiscoveryResult):
         return
-    relevant = [v for v in result.videos if v.relevance_score >= 0.5]
-    if not relevant:
+    relevant_vids = [v for v in result.videos if v.relevance_score >= 0.5]
+    has_blogs = bool(result.blogs)
+    has_rag = bool(result.rag_chunks or result.rag_images or result.rag_literary)
+    if not relevant_vids and not has_blogs and not has_rag:
         return
     research_path = ctx.paths.get("research")
     if not research_path or not research_path.exists():
         return
-    lines = ["\n\n## Video Discovery\n"]
-    for v in relevant:
-        lines.append(f"- [{v.title}]({v.url}) ({v.channel}) — {v.relevance_note}")
+    lines = ["\n\n## Resource Discovery\n"]
+    if relevant_vids:
+        lines.append("### Videos")
+        for v in relevant_vids:
+            lines.append(f"- [{v.title}]({v.url}) ({v.channel}) — {v.relevance_note}")
+    if has_blogs:
+        lines.append("\n### Blog Articles")
+        for b in result.blogs:
+            lines.append(f"- [{b['title']}]({b['url']}) ({b.get('source', '')})")
+    if result.rag_chunks:
+        lines.append("\n### Textbook References (RAG)")
+        for ch in result.rag_chunks[:5]:
+            section = ch.get("section_title", "")
+            grade = ch.get("grade", 0)
+            text_preview = ch.get("text", "")[:100]
+            lines.append(f"- Grade {grade}, {section}: {text_preview}...")
+    if result.rag_images:
+        lines.append("\n### Textbook Images (RAG)")
+        for img in result.rag_images[:3]:
+            desc = img.get("description_uk", img.get("associated_text_uk", ""))
+            grade = img.get("grade", 0)
+            tv = img.get("teaching_value", "")
+            lines.append(f"- Grade {grade} [{tv}]: {desc[:80]}")
+    if result.rag_literary:
+        lines.append("\n### Literary Sources (RAG)")
+        for lit in result.rag_literary[:3]:
+            work = lit.get("work", "")
+            year = lit.get("year", "")
+            lines.append(f"- {work} ({year}): {lit.get('text', '')[:80]}...")
     try:
         with open(research_path, "a", encoding="utf-8") as f:
             f.write("\n".join(lines) + "\n")
@@ -3799,6 +4034,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     # Gemini fix loop (audit fix loop logic from phase_audit_v3)
     max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
     content_path = ctx.paths["md"]
+    prev_audit_output = screen.audit_output  # Track previous audit for progress detection
 
     for attempt in range(1, max_iters + 1):
         log(f"  validate: Fix attempt {attempt}/{max_iters}...")
@@ -3827,7 +4063,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
                 # Apply fixes to activities/vocab too (content_only=False)
                 if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                     _apply_section_fixes(ctx.paths["activities"], fix_text)
-                _vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+                _vp = ctx.paths.get("vocabulary")
                 if _vp and _vp.exists():
                     _apply_section_fixes(_vp, fix_text)
 
@@ -3836,6 +4072,11 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
 
         # Re-screen
         screen = _deterministic_screen(ctx, skip_review=_skip_review)
+
+        # No-progress detection: if audit output is identical, the fix had no effect
+        if attempt > 0 and screen.audit_output == prev_audit_output:
+            log(f"  validate: WARNING — fix {attempt} made no progress (audit output identical)")
+        prev_audit_output = screen.audit_output
 
         if screen.audit_passed and not screen.deterministic_issues:
             _save_screen_result(ctx, screen)
@@ -3942,15 +4183,21 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         f"{screen.metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
         f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
 
+    # Snapshot files before D.1 (D.1 can now edit directly)
+    _pre_d1_snapshots = _snapshot_module_files(ctx)
+
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
         model=claude_model, timeout=review_timeout,
-        allow_tools=["Read", "Grep", "Glob"],
+        allow_tools=["Read", "Grep", "Glob", "Edit"],
     )
     if not ok:
         log("  review: Dispatch FAILED")
         _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="dispatch-failed")
         return False
+
+    # Log what D.1 changed via Edit tool
+    _log_d1_edits(ctx, _pre_d1_snapshots)
 
     # Parse review
     d1 = _parse_d1_review(raw_output)
@@ -3962,7 +4209,7 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         ok2, raw2 = _dispatch_claude_phase(
             prompt_file, "Phase D.1 (retry)",
             model=claude_model, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob"],
+            allow_tools=["Read", "Grep", "Glob", "Edit"],
         )
         if ok2:
             d1 = _parse_d1_review(raw2)
@@ -3989,7 +4236,16 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     # Save review
     write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
     (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
+    # Always save raw D.1 output for debugging inline fix extraction
+    (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
     log(f"  review: Review saved → {ctx.paths['review'].name}")
+
+    # Apply D.1 inline fixes — D.1 now produces FIND/REPLACE pairs alongside review
+    n_d1_fixes = _apply_module_fixes(ctx, raw_output)
+    if n_d1_fixes > 0:
+        log(f"  review: Applied {n_d1_fixes} inline fix(es) from review")
+    elif "===SECTION_FIX_START===" in raw_output:
+        log(f"  review: Fix block found but 0 fixes matched — check review-raw-output.md")
 
     # Deterministic fixes after review
     _run_deterministic_fixes(ctx)
@@ -4013,6 +4269,15 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     if passed and not review_says_fail:
         log("  review: PASS (no repair needed)")
         _mark_phase_v4(ctx, state, phase, "complete", attempts=1, note="review-only")
+        _update_pipeline_status(ctx, "reviewed")
+        mark_phase_locked(ctx, "6", "complete", note="v4-review")
+        mark_phase_locked(ctx, "7-final", "complete", note="v4-review")
+        return True
+
+    # D.1 inline fixes resolved everything → audit passes, skip D.2
+    if passed and review_says_fail and n_d1_fixes > 0:
+        log(f"  review: PASS (D.1 inline fixes resolved review issues — {n_d1_fixes} fix(es))")
+        _mark_phase_v4(ctx, state, phase, "complete", attempts=1, note="d1-inline-fixes")
         _update_pipeline_status(ctx, "reviewed")
         mark_phase_locked(ctx, "6", "complete", note="v4-review")
         mark_phase_locked(ctx, "7-final", "complete", note="v4-review")
@@ -4084,9 +4349,13 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         prompt2_text = _inject_file_contents(prompt2_text, ctx)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
+        # Snapshot before D.2 edits (D.2 now uses Edit tool directly)
+        before_d2 = _snapshot_module_files(ctx)
+
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
             model=claude_model, timeout=fix_timeout,
+            allow_tools=["Edit", "Grep"],
         )
         if not ok2:
             log(f"  review: Fix dispatch failed{iter_suffix}")
@@ -4094,57 +4363,28 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
                            attempts=total_attempts, note="fix-dispatch-failed")
             return False
 
-        # Apply FIND/REPLACE fixes with diff-size blocker
-        if "===SECTION_FIX_START===" in raw_output2:
-            content_before = ctx.paths["md"].read_text("utf-8")
-            act_before: str | None = None
-            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                act_before = ctx.paths["activities"].read_text("utf-8")
-            vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-            vocab_before: str | None = None
-            if vp and vp.exists():
-                vocab_before = vp.read_text("utf-8")
+        # Check what D.2 changed via Edit tool (snapshot diff)
+        after_d2 = _snapshot_module_files(ctx)
+        changed_lines = 0
+        for label in before_d2:
+            if label in after_d2:
+                changed_lines += _count_diff_lines(before_d2[label], after_d2[label])
 
-            n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
-            n_act = 0
-            if ctx.paths.get("activities"):
-                n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
-            n_vocab = 0
-            if vp and vp.exists():
-                n_vocab = _apply_find_replace_fixes(vp, raw_output2)
-            log(f"  review: Applied {n_md} content, {n_act} activity, {n_vocab} vocab fix(es)")
-
-            fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
-            content_after = ctx.paths["md"].read_text("utf-8")
-            act_after: str | None = None
-            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                act_after = ctx.paths["activities"].read_text("utf-8")
-            vocab_after: str | None = None
-            if vp and vp.exists():
-                vocab_after = vp.read_text("utf-8")
-
-            changed_lines = _count_diff_lines(content_before, content_after)
-            if act_before is not None and act_after is not None:
-                changed_lines += _count_diff_lines(act_before, act_after)
-            if vocab_before is not None and vocab_after is not None:
-                changed_lines += _count_diff_lines(vocab_before, vocab_after)
-            max_allowed = max(fix_pair_count * 25, 50)
-
-            if changed_lines > max_allowed:
-                log(f"  review: REJECTED — {changed_lines} lines changed "
-                    f"(max {max_allowed} for {fix_pair_count} fix pairs)")
-                ctx.paths["md"].write_text(content_before, "utf-8")
-                if act_before is not None and ctx.paths.get("activities"):
-                    ctx.paths["activities"].write_text(act_before, "utf-8")
-                if vocab_before is not None and vp:
-                    vp.write_text(vocab_before, "utf-8")
-                _mark_phase_v4(ctx, state, phase, "failed",
-                               attempts=total_attempts, note="diff-too-large")
-                _update_pipeline_status(ctx, "needs-manual-review")
-                return False
-        else:
-            log(f"  review: WARNING — no SECTION_FIX delimiters{iter_suffix}")
+        if changed_lines > 200:
+            log(f"  review: REJECTED — D.2 changed {changed_lines} lines (max 200){iter_suffix}")
+            # Rollback
+            for label, p in _module_file_paths(ctx):
+                if label in before_d2 and p:
+                    p.write_text(before_d2[label], "utf-8")
+            _mark_phase_v4(ctx, state, phase, "failed",
+                           attempts=total_attempts, note="diff-too-large")
+            _update_pipeline_status(ctx, "needs-manual-review")
+            return False
+        if changed_lines == 0:
+            log(f"  review: WARNING — D.2 made no file changes{iter_suffix}")
             (ctx.orch_dir / f"review-fix-{fix_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
+        else:
+            log(f"  review: D.2 applied fixes ({changed_lines} lines changed){iter_suffix}")
 
         # Post-fix deterministic fixes + audit
         _run_deterministic_fixes(ctx)
@@ -4169,6 +4409,587 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     return False
 
 
+# ---------------------------------------------------------------------------
+# Gemini Review (RAG-grounded, sharded: Fact Checker + Language Pedant)
+# ---------------------------------------------------------------------------
+
+
+def _load_rag_for_review(ctx: ModuleContext) -> dict[str, list]:
+    """Load RAG data from discovery.yaml. If empty, re-run search_rag() as fallback.
+
+    Returns {"text_chunks": [...], "images": [...], "literary": [...]}.
+    """
+    from video_discovery import read_discovery_yaml, search_rag
+
+    discovery_path = ctx.orch_dir / "discovery.yaml"
+    rag_data: dict[str, list] = {"text_chunks": [], "images": [], "literary": []}
+
+    if discovery_path.exists():
+        try:
+            disc = read_discovery_yaml(discovery_path)
+            rag_data["text_chunks"] = disc.rag_chunks or []
+            rag_data["images"] = disc.rag_images or []
+            rag_data["literary"] = disc.rag_literary or []
+        except Exception as e:
+            log(f"  review-gemini: Failed to parse discovery.yaml: {e}")
+
+    # Fallback: if discovery.yaml had no RAG data, try live search
+    total = len(rag_data["text_chunks"]) + len(rag_data["images"]) + len(rag_data["literary"])
+    if total == 0:
+        log("  review-gemini: No RAG in discovery.yaml — trying live search")
+        try:
+            keywords = ctx.plan.get("vocabulary_hints", {}).get("required", [])
+            if not keywords:
+                keywords = [ctx.slug.replace("-", " ")]
+            level = ctx.track.split("-")[0] if "-" in ctx.track else ctx.track
+            rag_data = search_rag(keywords, ctx.track, level=level, limit_images=0)
+        except Exception as e:
+            log(f"  review-gemini: RAG fallback failed: {e}")
+
+    return rag_data
+
+
+def _build_pass1_prompt(ctx: ModuleContext, screen: DScreenResult, rag_data: dict) -> str:
+    """Build Gemini Fact Checker prompt with inline content + RAG references."""
+    template_path = PHASES_DIR / "phase-gemini-review-pass1.md"
+    prompt_text = template_path.read_text("utf-8")
+
+    # Inject module content (truncate before injection to avoid fragile post-hoc replace)
+    content_path = ctx.paths.get("md")
+    content_text = content_path.read_text("utf-8") if content_path and content_path.exists() else "(file not found)"
+    if len(content_text) > 60_000:
+        log(f"  review-gemini: Pass 1 content too large ({len(content_text)} chars) — truncating to 60K")
+        content_text = content_text[:60_000] + "\n\n... (content truncated for prompt size) ..."
+    prompt_text = prompt_text.replace("{CONTENT_FILE_CONTENT}", content_text)
+    prompt_text = prompt_text.replace("{CONTENT_PATH}", str(content_path or ""))
+
+    # Inject plan
+    plan_path = ctx.paths.get("plan")
+    plan_text = plan_path.read_text("utf-8") if plan_path and plan_path.exists() else "(no plan)"
+    prompt_text = prompt_text.replace("{PLAN_CONTENT}", plan_text)
+
+    # Inject research notes
+    research_path = ctx.paths.get("research")
+    research_text = research_path.read_text("utf-8") if research_path and research_path.exists() else "(no research notes)"
+    prompt_text = prompt_text.replace("{RESEARCH_CONTENT}", research_text)
+
+    # Inject RAG data (formatted by tier)
+    text_chunks = rag_data.get("text_chunks", [])
+    images = rag_data.get("images", [])
+    literary = rag_data.get("literary", [])
+
+    # Format text chunks with chunk IDs
+    if text_chunks:
+        lines = []
+        for i, ch in enumerate(text_chunks):
+            chunk_id = ch.get("id", ch.get("chunk_id", f"chunk_{i}"))
+            grade = ch.get("grade", 0)
+            section = ch.get("section_title", "")
+            text = ch.get("text", "")[:300]
+            header = f"Textbook, Grade {grade}" if grade else "Textbook"
+            if section:
+                header += f", {section}"
+            lines.append(f"- **[{chunk_id}]** {header}")
+            lines.append(f"  {text}")
+            lines.append("")
+        prompt_text = prompt_text.replace("{RAG_TEXT_CHUNKS}", "\n".join(lines))
+    else:
+        prompt_text = prompt_text.replace("{RAG_TEXT_CHUNKS}", "(No textbook chunks available)")
+
+    # Format images
+    if images:
+        lines = []
+        for img in images:
+            desc = img.get("description_uk", img.get("associated_text_uk", "(no description)"))
+            grade = img.get("grade", 0)
+            tv = img.get("teaching_value", "")
+            lines.append(f"- Grade {grade} [{tv}]: {desc}")
+        prompt_text = prompt_text.replace("{RAG_IMAGES}", "\n".join(lines))
+    else:
+        prompt_text = prompt_text.replace("{RAG_IMAGES}", "(No textbook images available)")
+
+    # Format literary
+    if literary:
+        lines = []
+        for lit in literary:
+            work = lit.get("work", "")
+            year = lit.get("year", "")
+            genre = lit.get("genre", "")
+            text = lit.get("text", "")[:200]
+            lines.append(f"- **{work}** ({year}, {genre})")
+            lines.append(f"  {text}")
+            lines.append("")
+        prompt_text = prompt_text.replace("{RAG_LITERARY}", "\n".join(lines))
+    else:
+        prompt_text = prompt_text.replace("{RAG_LITERARY}", "(No literary sources available)")
+
+    # Inject VESUM verification
+    vesum_context = _format_vesum_verification(screen.vesum_stats, screen.vesum_not_found)
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_context)
+
+    # Inject metrics
+    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
+
+    return prompt_text
+
+
+def _build_pass2_prompt(ctx: ModuleContext, screen: DScreenResult) -> str:
+    """Build Gemini Language Pedant prompt with inline content + checklists."""
+    from pipeline_lib import _get_scoring_section, _get_scoring_output_table
+
+    template_path = PHASES_DIR / "phase-gemini-review-pass2.md"
+    prompt_text = template_path.read_text("utf-8")
+
+    # Inject file contents (truncate content before injection to avoid fragile post-hoc replace)
+    content_path = ctx.paths.get("md")
+    act_path = ctx.paths.get("activities")
+    vocab_path = ctx.paths.get("vocabulary")
+    content_text = content_path.read_text("utf-8") if content_path and content_path.exists() else "(file not found)"
+    if len(content_text) > 60_000:
+        log(f"  review-gemini: Pass 2 content too large ({len(content_text)} chars) — truncating to 60K")
+        content_text = content_text[:60_000] + "\n\n... (content truncated for prompt size) ..."
+    act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(file not found)"
+    vocab_text = vocab_path.read_text("utf-8") if vocab_path and vocab_path.exists() else "(file not found)"
+    prompt_text = prompt_text.replace("{CONTENT_FILE_CONTENT}", content_text)
+    prompt_text = prompt_text.replace("{ACTIVITIES_FILE_CONTENT}", act_text)
+    prompt_text = prompt_text.replace("{VOCAB_FILE_CONTENT}", vocab_text)
+    prompt_text = prompt_text.replace("{CONTENT_PATH}", str(content_path or ""))
+    prompt_text = prompt_text.replace("{ACTIVITIES_PATH}", str(act_path or ""))
+    prompt_text = prompt_text.replace("{VOCAB_PATH}", str(vocab_path or ""))
+
+    # Inject metrics
+    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
+    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", screen.h2_sections)
+
+    # Inject checklists
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    track_calibration = _get_track_calibration(ctx.track, module_num)
+    russicism_table = _get_russicism_table(ctx.track)
+
+    prompt_text = prompt_text.replace("{TRACK_CALIBRATION}", track_calibration or "(No track calibration available)")
+    prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
+    prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
+    prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table)")
+
+    # VESUM verification
+    vesum_context = _format_vesum_verification(screen.vesum_stats, screen.vesum_not_found)
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_context)
+
+    # Scoring rubric
+    prompt_text = prompt_text.replace("{SCORING_SECTION}", _get_scoring_section(ctx.track))
+    prompt_text = prompt_text.replace("{SCORING_OUTPUT_TABLE}", _get_scoring_output_table(ctx.track))
+
+    return prompt_text
+
+
+def _parse_factual_review(raw_output: str) -> D1Result:
+    """Parse Gemini Fact Checker output from ===FACTUAL_REVIEW_START/END=== delimiters.
+
+    Extracts discrepancy count, factual alignment score, unverified count.
+    Returns a D1Result with factual-specific fields.
+    """
+    review_text = _extract_delimiter(raw_output, "===FACTUAL_REVIEW_START===", "===FACTUAL_REVIEW_END===")
+    if not review_text:
+        review_text = _extract_delimiter_tolerant(
+            raw_output, "===FACTUAL_REVIEW_START===", "===FACTUAL_REVIEW_END===",
+            content_type="markdown",
+        )
+
+    if not review_text:
+        return D1Result(ok=False, raw_review="", verdict="")
+
+    # Extract verdict
+    verdict = ""
+    status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+    if status_m:
+        verdict = status_m.group(1)
+
+    # Extract factual alignment score
+    scores: dict[str, float] = {}
+    score_m = re.search(r'\*\*Factual Alignment Score:\*\*\s*([\d.]+)/10', review_text)
+    if score_m:
+        scores["factual_accuracy"] = float(score_m.group(1))
+
+    # Extract discrepancy count
+    disc_m = re.search(r'\*\*Discrepancies \[Tier 1\]:\*\*\s*(\d+)', review_text)
+    discrepancy_count = int(disc_m.group(1)) if disc_m else 0
+
+    # Extract unverified count
+    unv_m = re.search(r'\*\*Unverified:\*\*\s*(\d+)', review_text)
+    unverified_count = int(unv_m.group(1)) if unv_m else 0
+
+    # Build issues from discrepancies
+    issues: list[dict] = []
+    disc_blocks = re.findall(
+        r'### Discrepancy \d+:\s*(.+?)(?=### Discrepancy|\Z)',
+        review_text,
+        re.DOTALL,
+    )
+    for block in disc_blocks:
+        issue: dict[str, str] = {"type": "FACTUAL_DISCREPANCY", "severity": "HIGH"}
+        mod_m = re.search(r'\*\*Module says:\*\*\s*"(.+?)"', block)
+        if mod_m:
+            issue["text"] = mod_m.group(1).strip()
+        ref_m = re.search(r'\*\*Reference says:\*\*\s*"(.+?)"', block)
+        if ref_m:
+            issue["reference"] = ref_m.group(1).strip()
+        src_m = re.search(r'\*\*Source:\*\*\s*(.+)', block)
+        if src_m:
+            issue["source"] = src_m.group(1).strip()
+        fix_m = re.search(r'\*\*Suggested fix:\*\*\s*(.+)', block)
+        if fix_m:
+            issue["fix"] = fix_m.group(1).strip()
+        issues.append(issue)
+
+    # Derive verdict from discrepancy count if not explicit
+    if not verdict:
+        verdict = "FAIL" if discrepancy_count > 0 else "PASS"
+
+    return D1Result(
+        ok=True,
+        issues=issues,
+        scores=scores,
+        verdict=verdict,
+        raw_review=review_text,
+    )
+
+
+def _merge_gemini_review_passes(
+    pass1: D1Result | None,
+    pass2: D1Result | None,
+) -> D1Result:
+    """Merge results from Fact Checker (pass1) and Language Pedant (pass2).
+
+    - Both ok: merge raw reviews, combine scores, FAIL if either FAIL
+    - One failed dispatch: use the other alone (graceful degradation)
+    - Both failed: D1Result(ok=False)
+    """
+    if pass1 and pass1.ok and pass2 and pass2.ok:
+        # Merge scores — factual from P1, all others from P2
+        merged_scores = dict(pass2.scores)
+        merged_scores.update(pass1.scores)  # P1 overwrites factual_accuracy
+
+        # Merge issues
+        merged_issues = list(pass1.issues) + list(pass2.issues)
+
+        # FAIL if either FAIL
+        verdict = "FAIL" if (pass1.verdict == "FAIL" or pass2.verdict == "FAIL") else "PASS"
+
+        # Merge raw reviews
+        raw = (
+            "# Factual Review (Pass 1)\n\n"
+            + pass1.raw_review
+            + "\n\n---\n\n# Language Review (Pass 2)\n\n"
+            + pass2.raw_review
+        )
+
+        return D1Result(
+            ok=True,
+            issues=merged_issues,
+            scores=merged_scores,
+            verdict=verdict,
+            raw_review=raw,
+        )
+
+    # Graceful degradation: one pass failed
+    if pass2 and pass2.ok:
+        log("  review-gemini: Pass 1 dispatch failed — using Pass 2 only")
+        return pass2
+    if pass1 and pass1.ok:
+        log("  review-gemini: Pass 2 dispatch failed — using Pass 1 only")
+        return pass1
+
+    # Both failed
+    log("  review-gemini: Both passes failed")
+    return D1Result(ok=False, raw_review="", verdict="")
+
+
+def _gemini_fix_iteration(
+    ctx: ModuleContext, fix_plan: str, audit_out: str, fix_iter: int,
+) -> bool:
+    """Run one Gemini fix iteration: build prompt → dispatch → apply FIND/REPLACE.
+
+    Returns True if fixes were applied (not necessarily passing audit).
+    """
+    template_path = PHASES_DIR / "phase-gemini-review-fix.md"
+    if not template_path.exists():
+        log(f"  review-gemini: Fix template not found: {template_path}")
+        return False
+
+    prompt_text = template_path.read_text("utf-8")
+
+    # Inject fix plan and audit failures
+    failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus on the Fix Plan."
+    failures += _extract_gate_blockers(ctx)
+    failures += _extract_vesum_failures(ctx)
+
+    prompt_text = prompt_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
+    prompt_text = prompt_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+
+    # Inject file contents
+    prompt_text = _inject_file_contents(prompt_text, ctx)
+    prompt_text = prompt_text.replace("{CONTENT_PATH}", str(ctx.paths.get("md", "")))
+    prompt_text = prompt_text.replace("{ACTIVITIES_PATH}", str(ctx.paths.get("activities", "")))
+    prompt_text = prompt_text.replace("{VOCAB_PATH}", str(ctx.paths.get("vocabulary", "")))
+
+    log(f"  review-gemini: Fix {fix_iter + 1} — dispatching to Gemini ({len(prompt_text)} chars)...")
+
+    ok, raw_output = pipeline_lib.dispatch_gemini_raw(
+        prompt_text,
+        task_id=f"{ctx.slug}-review-fix-{fix_iter + 1}",
+        timeout=600,
+    )
+
+    if not ok:
+        log(f"  review-gemini: Fix dispatch failed (iter {fix_iter + 1})")
+        return False
+
+    # Save raw output for debugging
+    (ctx.orch_dir / f"review-fix-{fix_iter + 1}-raw.md").write_text(raw_output, "utf-8")
+
+    # Apply FIND/REPLACE fixes with rollback guard
+    accepted, n_fixes = _apply_fixes_with_rollback(ctx, raw_output, f"Gemini fix {fix_iter + 1}")
+    if not accepted:
+        return False
+
+    if n_fixes > 0:
+        log(f"  review-gemini: Applied {n_fixes} fix(es) in iteration {fix_iter + 1}")
+    else:
+        log(f"  review-gemini: No fixes matched in iteration {fix_iter + 1}")
+
+    return n_fixes > 0
+
+
+def _complete_gemini_review(
+    ctx: ModuleContext, state: dict, phase: str, attempts: int, note: str,
+    *, grounding: str = "rag-textbook",
+) -> bool:
+    """Mark Gemini review as complete — shared across all success paths."""
+    _mark_phase_v4(ctx, state, phase, "complete", attempts=attempts,
+                   note=note, review_grounding=grounding)
+    _update_pipeline_status(ctx, "reviewed")
+    mark_phase_locked(ctx, "6", "complete", note="v4-gemini-review")
+    mark_phase_locked(ctx, "7-final", "complete", note="v4-gemini-review")
+    return True
+
+
+def phase_review_gemini_v4(ctx: ModuleContext, state: dict) -> bool:
+    """Gemini RAG-grounded review: sharded Fact Checker + Language Pedant.
+
+    Two parallel Gemini dispatches (factual + linguistic), merged verdict,
+    then up to 2 Gemini fix iterations if FAIL.
+    """
+    phase = "review"
+    if _is_phase_v4_complete(ctx, phase, state):
+        log("  review-gemini: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  review-gemini: DRY-RUN — would dispatch Gemini sharded review")
+        return True
+
+    # 1. Load cached screen from validate phase
+    screen = _load_screen_result(ctx)
+    if screen is None:
+        log("  review-gemini: No cached screen — running fresh screen")
+        screen = _deterministic_screen(ctx)
+
+    # 2. Load RAG discovery data
+    rag_data = _load_rag_for_review(ctx)
+    total_rag = len(rag_data["text_chunks"]) + len(rag_data["images"]) + len(rag_data["literary"])
+    log(f"  review-gemini: RAG data loaded — {total_rag} items "
+        f"(text: {len(rag_data['text_chunks'])}, images: {len(rag_data['images'])}, "
+        f"literary: {len(rag_data['literary'])})")
+
+    # 3-4. Dispatch Pass 1 (Fact Checker) + Pass 2 (Language Pedant) in parallel
+    from concurrent.futures import ThreadPoolExecutor
+
+    raw1 = ""
+    raw2 = ""
+    pass1_result: D1Result | None = None
+    pass2_result: D1Result | None = None
+
+    # Build prompts (fast, CPU-only)
+    pass1_prompt: str | None = None
+    if total_rag > 0:
+        pass1_prompt = _build_pass1_prompt(ctx, screen, rag_data)
+        (ctx.orch_dir / "review-pass1-prompt.md").write_text(pass1_prompt, "utf-8")
+    else:
+        log("  review-gemini: Pass 1 SKIPPED (no RAG sources)")
+        pass1_result = D1Result(ok=True, verdict="PASS", raw_review="(No RAG sources available — factual check skipped)")
+
+    pass2_prompt = _build_pass2_prompt(ctx, screen)
+    (ctx.orch_dir / "review-pass2-prompt.md").write_text(pass2_prompt, "utf-8")
+
+    # Dispatch both passes in parallel (each blocks up to 600s)
+    def _dispatch_pass1() -> tuple[bool, str]:
+        return pipeline_lib.dispatch_gemini_raw(
+            pass1_prompt,
+            task_id=f"{ctx.slug}-review-pass1",
+            timeout=600,
+        )
+
+    def _dispatch_pass2() -> tuple[bool, str]:
+        return pipeline_lib.dispatch_gemini_raw(
+            pass2_prompt,
+            task_id=f"{ctx.slug}-review-pass2",
+            timeout=600,
+        )
+
+    log("  review-gemini: Dispatching review passes"
+        f" {'(Pass 1 + Pass 2 in parallel)' if pass1_prompt else '(Pass 2 only)'}...")
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        fut1 = pool.submit(_dispatch_pass1) if pass1_prompt else None
+        fut2 = pool.submit(_dispatch_pass2)
+
+        if fut1:
+            ok1, raw1 = fut1.result()
+            if ok1:
+                (ctx.orch_dir / "review-pass1-raw.md").write_text(raw1, "utf-8")
+                pass1_result = _parse_factual_review(raw1)
+                if pass1_result.ok:
+                    disc_count = len([i for i in pass1_result.issues if i.get("type") == "FACTUAL_DISCREPANCY"])
+                    log(f"  review-gemini: Pass 1 — {pass1_result.verdict} "
+                        f"({disc_count} discrepancies, score {pass1_result.scores.get('factual_accuracy', '?')})")
+                else:
+                    log("  review-gemini: Pass 1 — failed to parse output")
+            else:
+                log("  review-gemini: Pass 1 — dispatch failed")
+
+        ok2, raw2 = fut2.result()
+
+    if ok2:
+        (ctx.orch_dir / "review-pass2-raw.md").write_text(raw2, "utf-8")
+        pass2_result = _parse_d1_review(raw2)  # Same delimiters as existing D.1
+        if pass2_result.ok:
+            log(f"  review-gemini: Pass 2 — {pass2_result.verdict} "
+                f"(overall {pass2_result.scores.get('overall', '?')}/10)")
+        else:
+            log("  review-gemini: Pass 2 — failed to parse output")
+    else:
+        log("  review-gemini: Pass 2 — dispatch failed")
+
+    # 5. Merge results
+    merged = _merge_gemini_review_passes(pass1_result, pass2_result)
+    if not merged.ok:
+        log("  review-gemini: Merge FAILED — both passes unusable")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="dispatch-failed")
+        return False
+
+    # Determine review grounding — honest metadata about what was actually verified
+    pass1_contributed = (pass1_result is not None and pass1_result.ok
+                         and "factual_accuracy" in pass1_result.scores)
+    review_grounding = "rag-textbook" if pass1_contributed else "linguistic-only"
+    if not pass1_contributed and total_rag > 0:
+        log("  review-gemini: WARNING — Pass 1 (factual check) failed, "
+            "review grounding downgraded to linguistic-only")
+
+    review_text = merged.raw_review
+
+    # 6. Quality gate check (relaxed for Gemini — skip citation density check
+    #    since Gemini doesn't use verbatim copy-paste from Read tool)
+    if len(review_text.split()) < 100:
+        log(f"  review-gemini: REJECTED — review too short ({len(review_text.split())} words)")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="shallow-review")
+        return False
+
+    # 7. Inject Reviewed-By metadata
+    if "Reviewed-By:" not in review_text:
+        review_text = f"**Reviewed-By:** gemini-2.5-pro (RAG-grounded)\n\n{review_text}"
+
+    # 8. Save review
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
+    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
+    log(f"  review-gemini: Review saved → {ctx.paths['review'].name}")
+
+    # 9. Apply inline FIND/REPLACE fixes from both passes
+    n_fixes = 0
+    if raw1 and "===SECTION_FIX_START===" in raw1:
+        n_fixes += _apply_module_fixes(ctx, raw1)
+    if raw2 and "===SECTION_FIX_START===" in raw2:
+        n_fixes += _apply_module_fixes(ctx, raw2)
+    if n_fixes > 0:
+        log(f"  review-gemini: Applied {n_fixes} inline fix(es) from review passes")
+
+    # 10. Run deterministic fixes
+    _run_deterministic_fixes(ctx)
+
+    # 11. Post-review audit
+    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+    # Check review verdict
+    review_says_fail = merged.verdict == "FAIL"
+    if not review_says_fail and merged.scores.get("overall", 10) < 9.0:
+        review_says_fail = True
+
+    # Fast path: review PASS + audit PASS → done
+    if passed and not review_says_fail:
+        log("  review-gemini: PASS (no repair needed)")
+        return _complete_gemini_review(ctx, state, phase, 1, "gemini-review-only", grounding=review_grounding)
+
+    # Inline fixes resolved everything
+    if passed and review_says_fail and n_fixes > 0:
+        log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es))")
+        return _complete_gemini_review(ctx, state, phase, 1, "gemini-inline-fixes", grounding=review_grounding)
+
+    # Pre-fix triage: skip if all issues are diffuse
+    if _all_issues_diffuse(audit_out):
+        log("  review-gemini: SKIPPED fix — all issues diffuse (needs manual review)")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="needs-manual-review")
+        _update_pipeline_status(ctx, "needs-manual-review")
+        return False
+
+    # Build fix plan from merged review
+    _audit_only_fix = not review_says_fail and not passed
+    if _audit_only_fix:
+        fix_plan = (
+            "**IMPORTANT: The review verdict was PASS. "
+            "Fix ONLY the audit failures listed below. "
+            "Do NOT fix review suggestions — they are informational only.**\n\n"
+            "(Review omitted — verdict was PASS)\n"
+        )
+    else:
+        fix_plan = _extract_fix_plan(review_text)
+
+    # 12. Fix loop (max 2 iterations)
+    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
+        total_attempts = 2 + fix_iter
+        log(f"  review-gemini: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}...")
+
+        applied = _gemini_fix_iteration(ctx, fix_plan, audit_out, fix_iter)
+        if not applied and fix_iter == 0:
+            log("  review-gemini: No fixes applied — trying once more")
+
+        # Post-fix deterministic fixes + audit
+        _run_deterministic_fixes(ctx)
+        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+        if passed:
+            log(f"  review-gemini: PASS (after fix {fix_iter + 1})")
+            return _complete_gemini_review(ctx, state, phase, total_attempts, f"gemini-fix-iter{fix_iter + 1}", grounding=review_grounding)
+
+        if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
+            log(f"  review-gemini: Fix {fix_iter + 1} insufficient — trying again...")
+
+    log("  review-gemini: EXHAUSTED — review + fix attempts all insufficient")
+    _mark_phase_v4(ctx, state, phase, "failed",
+                   attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+def phase_review_v4_dispatch(ctx: ModuleContext, state: dict) -> bool:
+    """Route review to Gemini (default) or Claude based on ctx.review_agent."""
+    review_agent = getattr(ctx, "review_agent", "gemini")
+    if review_agent == "claude":
+        log("  review: Using Claude reviewer (--review-claude)")
+        return phase_review_v4(ctx, state)
+    else:
+        log("  review: Using Gemini RAG-grounded reviewer (--review)")
+        return phase_review_gemini_v4(ctx, state)
+
+
 def phase_mdx_v4(ctx: ModuleContext) -> bool:
     """v4 mdx = v3 Phase E (MDX generation + lint)."""
     # Reset v2 MDX state so it regenerates
@@ -4187,7 +5008,7 @@ PHASE_FUNCTIONS_V4: dict[str, Any] = {
     "content":    phase_content_v4,
     "activities": phase_activities_v4,
     "validate":   phase_validate_v4,
-    "review":     phase_review_v4,
+    "review":     phase_review_v4_dispatch,
     "mdx":        phase_mdx_v4,
 }
 
@@ -4254,6 +5075,9 @@ def run_pipeline_v4(ctx: ModuleContext, research_only: bool = False) -> bool:
             for sid in _V4_PHASE_STATE_IDS.get(pid, []):
                 phases.pop(sid, None)
         _save_state_v4(ctx, state)
+        # Force v3 guards to re-run when --restart-from includes their phase
+        if "research" in remaining:
+            ctx.force_research = True  # type: ignore[attr-defined]
         log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
             if not _call_phase_v4(PHASE_FUNCTIONS_V4[phase_id], phase_id, ctx, state):
@@ -4569,8 +5393,16 @@ def preflight_v4(args: argparse.Namespace) -> ModuleContext:
     ctx.state["mode"] = "v4"
 
     # v4-specific flags
-    ctx.review = getattr(args, "review", False)  # type: ignore[attr-defined]
+    ctx.review = getattr(args, "review", False) or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
     ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
+
+    # Review agent routing: --review → gemini (default), --review-claude → claude
+    if getattr(args, "review_claude", False):
+        ctx.review_agent = "claude"  # type: ignore[attr-defined]
+    elif getattr(args, "review", False):
+        ctx.review_agent = "gemini"  # type: ignore[attr-defined]
+    else:
+        ctx.review_agent = "gemini"  # type: ignore[attr-defined]
 
     # --stop-before for v4 (named phases)
     sb = getattr(args, "stop_before", None)
@@ -4690,7 +5522,9 @@ def main() -> int:
     parser.add_argument("--skip-discover", action="store_true", dest="skip_discover",
                         help="Skip video/blog discovery phase")
     parser.add_argument("--review", action="store_true",
-                        help="Include Claude review phase (default: RC mode without review)")
+                        help="Include Gemini RAG-grounded review phase (default: RC mode without review)")
+    parser.add_argument("--review-claude", action="store_true", dest="review_claude",
+                        help="Include Claude review phase (paid, uses Claude instead of Gemini)")
     parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",
                         help="Stop before this phase (e.g. --stop-before validate)")
     parser.add_argument("--stop-after", type=str, default=None, dest="stop_after",
@@ -4838,6 +5672,7 @@ def main() -> int:
                 refresh=getattr(args, "refresh", False), verify=False,
                 research_only=args.research_only,
                 review=getattr(args, "review", False) or getattr(args, "final_review", False),
+                review_claude=getattr(args, "review_claude", False),
                 final_review=getattr(args, "final_review", False),
                 final_review_agent=getattr(args, "final_review_agent", "claude"),
                 use_claude=getattr(args, "use_claude", ""),
@@ -4959,17 +5794,19 @@ def _run_single_module(args: argparse.Namespace) -> int:
         args.review = True
 
     try:
-        # --rebuild: nuke state files
+        # --rebuild: clean orchestration directory (remove stale prompts, logs, state)
         if args.rebuild:
             slug = slug_for_num(args.track, args.num)
             paths = get_module_paths(args.track, slug)
             orch_dir = (paths.get("orchestration")
                         or CURRICULUM_DIR / "l2-uk-en" / args.track / "orchestration" / slug)
-            for state_name in ("state-v4.json", "state-v3.json"):
-                sf = orch_dir / state_name
-                if sf.exists():
-                    sf.unlink()
-                    print(f"  --rebuild: cleared {state_name}", flush=True)
+            if orch_dir.is_dir():
+                removed = 0
+                for f in orch_dir.iterdir():
+                    if f.is_file():
+                        f.unlink()
+                        removed += 1
+                print(f"  --rebuild: cleaned orchestration dir ({removed} files removed)", flush=True)
 
         if use_v3:
             ctx = preflight_v3(args)

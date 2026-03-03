@@ -768,7 +768,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
     },
     'B2-capstone': {
-        'target_words': 2714,  # Adjusted to pass audit without rewriting
+        'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
         'min_activities': 10,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
         'min_types_unique': 4,

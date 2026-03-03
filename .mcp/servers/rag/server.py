@@ -145,6 +145,34 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="search_esu",
+            description=(
+                "Search the Encyclopedia of Modern Ukraine (ESU, esu.com.ua) — "
+                "81K+ authoritative articles by NAS Ukraine. Covers history, biography, "
+                "culture, geography, science. Use for factual grounding of research claims. "
+                "Returns text chunks with article title, URL, author, and keywords."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query in Ukrainian (e.g., 'Богдан Хмельницький', 'Київська Русь')"
+                    },
+                    "letter": {
+                        "type": "string",
+                        "description": "Filter by first letter (Ukrainian lowercase, e.g., 'б'). Optional."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results to return (default 5, max 20)",
+                        "default": 5
+                    }
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
             name="get_full_text",
             description=(
                 "Load the full text of a short literary work from the RAG database. "
@@ -240,6 +268,126 @@ async def list_tools() -> list[Tool]:
                 "required": ["lemma"]
             },
         ),
+        # ── Live source query tools ──────────────────────────────
+        Tool(
+            name="query_wikipedia",
+            description=(
+                "Query Ukrainian Wikipedia (uk.wikipedia.org) for article summaries or search results. "
+                "Use mode='summary' for a specific article, mode='search' for keyword search. "
+                "Returns title, description, extract, and URL."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Article title (for summary) or search query (for search)"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "description": "Query mode: 'summary' for article summary, 'search' for keyword search",
+                        "enum": ["summary", "search"],
+                        "default": "summary"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max search results (default 5, only for search mode)",
+                        "default": 5
+                    }
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="query_grac",
+            description=(
+                "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, "
+                "lemma form distribution, concordance examples, or collocations. "
+                "Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, "
+                "'collocations' for common word combinations."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Ukrainian word or lemma to look up"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "description": (
+                            "Query mode: 'frequency' (word frequency + IPM), "
+                            "'lemma_forms' (all forms of a lemma with frequencies), "
+                            "'concordance' (KWIC usage examples), "
+                            "'collocations' (common word combinations)"
+                        ),
+                        "enum": ["frequency", "lemma_forms", "concordance", "collocations"],
+                        "default": "frequency"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results (default 10)",
+                        "default": 10
+                    }
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="query_ulif",
+            description=(
+                "Get declension/conjugation paradigm table from ULIF (Ukrainian Lingua-Information Fund). "
+                "Returns full paradigm with all case forms for nouns/adjectives or conjugation for verbs."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word to look up paradigm for (e.g., 'стіл', 'писати')"
+                    },
+                },
+                "required": ["word"]
+            },
+        ),
+        Tool(
+            name="query_r2u",
+            description=(
+                "Look up Russian→Ukrainian translations on r2u.org.ua. "
+                "Useful for checking Russianisms — finds proper Ukrainian equivalents for Russian words."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Russian word to find Ukrainian equivalent for (e.g., 'хорошо', 'кот')"
+                    },
+                },
+                "required": ["word"]
+            },
+        ),
+        Tool(
+            name="query_pravopys",
+            description=(
+                "Look up Ukrainian orthography rules from the official 2019 Pravopys. "
+                "Query by topic keyword (e.g., 'апостроф', 'м-який-знак', 'у-в') "
+                "or by section number (1-61)."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "topic": {
+                        "type": "string",
+                        "description": (
+                            "Topic keyword (e.g., 'апостроф', 'м-який-знак', 'у-в', 'подвоєння', "
+                            "'велика-літера', 'префікси') or section number as string (e.g., '7')"
+                        )
+                    },
+                },
+                "required": ["topic"]
+            },
+        ),
     ]
 
 
@@ -253,6 +401,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_search_images(arguments)
         elif name == "search_literary":
             return await handle_search_literary(arguments)
+        elif name == "search_esu":
+            return await handle_search_esu(arguments)
         elif name == "get_full_text":
             return await handle_get_full_text(arguments)
         elif name == "get_chunk_context":
@@ -263,6 +413,16 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_verify_word(arguments)
         elif name == "verify_lemma":
             return await handle_verify_lemma(arguments)
+        elif name == "query_wikipedia":
+            return await handle_query_wikipedia(arguments)
+        elif name == "query_grac":
+            return await handle_query_grac(arguments)
+        elif name == "query_ulif":
+            return await handle_query_ulif(arguments)
+        elif name == "query_r2u":
+            return await handle_query_r2u(arguments)
+        elif name == "query_pravopys":
+            return await handle_query_pravopys(arguments)
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
     except Exception as e:
@@ -318,6 +478,31 @@ async def handle_search_literary(args: dict) -> list[TextContent]:
         lines.append(f"- **Text**:\n{hit['text']}")
         if hit.get("original_text"):
             lines.append(f"- **Original text**:\n{hit['original_text']}")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_esu(args: dict) -> list[TextContent]:
+    query = args["query"]
+    letter = args.get("letter")
+    limit = min(args.get("limit", 5), 20)
+
+    from rag.query import search_esu
+    hits = await asyncio.to_thread(search_esu, query, letter, limit)
+
+    if not hits:
+        return [TextContent(type="text", text="No ESU results found.")]
+
+    lines = [f"Found {len(hits)} ESU results for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
+        lines.append(f"- **Article**: {hit['title']}")
+        lines.append(f"- **URL**: {hit['url']}")
+        lines.append(f"- **Author**: {hit['author']}")
+        lines.append(f"- **Keywords**: {hit['keywords'][:150]}")
+        lines.append(f"- **Chunk ID**: `{hit['chunk_id']}`")
+        lines.append(f"- **Text**:\n{hit['text']}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -446,6 +631,134 @@ async def handle_verify_lemma(args: dict) -> list[TextContent]:
             lines.append(f"- {f['word_form']}  |  `{f['tags']}`")
         lines.append("")
 
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_wikipedia(args: dict) -> list[TextContent]:
+    mode = args.get("mode", "summary")
+    query = args["query"]
+    limit = args.get("limit", 5)
+
+    from rag.source_query import wikipedia_summary, wikipedia_search
+
+    if mode == "summary":
+        result = await asyncio.to_thread(wikipedia_summary, query)
+        if not result:
+            return [TextContent(type="text", text=f"Wikipedia article not found: '{query}'")]
+        lines = [
+            f"# {result['title']}",
+            f"**Description**: {result['description']}",
+            f"**URL**: {result['url']}",
+            "",
+            result["extract"],
+        ]
+        return [TextContent(type="text", text="\n".join(lines))]
+    else:
+        results = await asyncio.to_thread(wikipedia_search, query, limit)
+        if not results:
+            return [TextContent(type="text", text=f"No Wikipedia results for: '{query}'")]
+        lines = [f"Wikipedia search: '{query}' — {len(results)} results\n"]
+        for i, r in enumerate(results, 1):
+            lines.append(f"{i}. **{r['title']}** — {r['snippet']}")
+        return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_grac(args: dict) -> list[TextContent]:
+    query = args["query"]
+    mode = args.get("mode", "frequency")
+    limit = args.get("limit", 10)
+
+    from rag.source_query import (
+        grac_frequency, grac_lemma_frequency, grac_concordance, grac_collocations,
+    )
+
+    if mode == "frequency":
+        result = await asyncio.to_thread(grac_frequency, query)
+        if not result:
+            return [TextContent(type="text", text=f"GRAC query failed for: '{query}'")]
+        return [TextContent(type="text", text=(
+            f"**{result['word']}**: frequency = {result['freq']:,}, "
+            f"relative = {result['rel_freq']:.2f} per million"
+        ))]
+
+    elif mode == "lemma_forms":
+        result = await asyncio.to_thread(grac_lemma_frequency, query)
+        if not result:
+            return [TextContent(type="text", text=f"GRAC lemma query failed for: '{query}'")]
+        lines = [f"Lemma '{result['lemma']}' — total frequency: {result['total_freq']:,}\n"]
+        for form in result["forms"][:limit]:
+            lines.append(f"- {form['word']}: {form['freq']:,} ({form['pct']:.1f}%)")
+        return [TextContent(type="text", text="\n".join(lines))]
+
+    elif mode == "concordance":
+        results = await asyncio.to_thread(grac_concordance, query, limit)
+        if not results:
+            return [TextContent(type="text", text=f"No concordance results for: '{query}'")]
+        lines = [f"Concordance for '{query}' — {len(results)} lines\n"]
+        for r in results:
+            lines.append(f"...{r['left']} **{r['kwic']}** {r['right']}...")
+        return [TextContent(type="text", text="\n".join(lines))]
+
+    else:  # collocations
+        results = await asyncio.to_thread(grac_collocations, query, limit=limit)
+        if not results:
+            return [TextContent(type="text", text=f"No collocations found for: '{query}'")]
+        lines = [f"Collocations for '{query}' — {len(results)} results\n"]
+        for r in results:
+            lines.append(f"- **{r['word']}**: freq={r['freq']:,}, score={r['score']:.2f}")
+        return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_ulif(args: dict) -> list[TextContent]:
+    word = args["word"]
+
+    from rag.source_query import ulif_paradigm
+    result = await asyncio.to_thread(ulif_paradigm, word)
+
+    if not result:
+        return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
+
+    lines = [f"Paradigm for '{word}':\n"]
+    for row in result["rows"]:
+        lines.append(" | ".join(cell for cell in row))
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_r2u(args: dict) -> list[TextContent]:
+    word = args["word"]
+
+    from rag.source_query import r2u_translate
+    results = await asyncio.to_thread(r2u_translate, word)
+
+    if not results:
+        return [TextContent(type="text", text=f"No r2u translation found for: '{word}'")]
+
+    lines = [f"Russian→Ukrainian translations for '{word}':\n"]
+    for entry in results[:10]:
+        lines.append(f"- **{entry['headword']}**: {entry['translation'][:200]}")
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_pravopys(args: dict) -> list[TextContent]:
+    topic = args["topic"]
+
+    from rag.source_query import pravopys_section, pravopys_lookup
+
+    # Check if topic is a number
+    if topic.strip().isdigit():
+        result = await asyncio.to_thread(pravopys_section, int(topic.strip()))
+    else:
+        result = await asyncio.to_thread(pravopys_lookup, topic)
+
+    if not result:
+        return [TextContent(type="text", text=f"No pravopys section found for: '{topic}'")]
+
+    lines = [
+        f"**Pravopys section {result['section']}**",
+        f"**URL**: {result['url']}",
+        "",
+        result["text"][:3000],
+    ]
     return [TextContent(type="text", text="\n".join(lines))]
 
 

@@ -1,5 +1,5 @@
-version: '2.3'
-generated_at: '2026-01-07'
+version: '3.0'
+generated_at: '2026-03-03'
 resources:
   a1-01-the-cyrillic-code-i:
     youtube:
@@ -11,38 +11,17 @@ resources:
       url: https://www.youtube.com/watch?v=2tEPOopp7-I
       relevance: high
       channel: Red Purple Ukrainian
+    articles:
+    - title: Ukrainian Lessons Podcast — Beginner Episodes
+      url: https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/
+      relevance: high
+      source: Curated Season 1 episodes for beginners, with native speaker audio
     websites:
     - title: Talk Ukrainian - Alphabet with Audio
       url: https://talkukrainian.com/ukrainian-alphabet/
       relevance: high
       source: All 33 letters with IPA and native audio
-    - title: Ukrainian Course - Lesson 1
-      url: https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/
-      relevance: high
-      source: Interactive alphabet exercises
-    - title: Omniglot - Ukrainian
-      url: https://www.omniglot.com/writing/ukrainian.htm
-      relevance: high
-      source: Detailed explanation of the unique Ukrainian sounds
-    - title: ENGin Program - Pronunciation Basics
-      url: https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners
-      relevance: high
-      source: Tips for tricky sounds (Щ, Ї, rolled Р)
-    articles:
-    - title: Ukrainian Lessons Podcast
-      url: https://www.ukrainianlessons.com/thepodcast/
-      relevance: high
-      source: Season 1 for beginners, with native speaker audio
   a1-02-the-cyrillic-code-ii:
-    websites:
-    - title: Omniglot - Ukrainian
-      url: https://www.omniglot.com/writing/ukrainian.htm
-      relevance: high
-      source: Detailed explanation of unique Ukrainian sounds
-    - title: ENGin Program - Pronunciation Basics
-      url: https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners
-      relevance: high
-      source: Tips for tricky sounds (Щ, Ї, rolled Р)
     youtube:
     - title: 'UKRAINIAN: handwritten cyrillic alphabet'
       url: https://www.youtube.com/watch?v=2tEPOopp7-I
@@ -297,8 +276,7 @@ resources:
       source: Quick overview of all 7 cases
   a1-12-the-accusative-ii-people:
     youtube:
-    - title: 'Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and
-        adjectives)'
+    - title: 'Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)'
       url: https://www.youtube.com/watch?v=BYBWx6ds8Fk
       relevance: high
       channel: Let's Learn Ukrainian
@@ -418,8 +396,7 @@ resources:
       match_reason: 'Level-aligned topic match: yours'
   a1-15-around-the-city:
     youtube:
-    - title: 'Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian
-        #letslearnukrainian'
+    - title: 'Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian'
       url: https://www.youtube.com/watch?v=40HW7URLQNI
       relevance: high
       channel: Let's Learn Ukrainian
@@ -592,10 +569,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode12/
       relevance: high
       source: Where and how to order in Ukrainian
-    - title: Ukrainian Lessons - At the Market
-      url: https://www.ukrainianlessons.com/thepodcast/
+    - title: Ukrainian Lessons — How much does it cost? At the market in Ukraine
+      url: https://www.ukrainianlessons.com/episode9/
       relevance: high
-      source: Shopping vocabulary practice
+      source: Shopping vocabulary practice (ULP S1 Ep9)
   a1-19-at-the-cafe:
     youtube:
     - title: Menu in the coffee shop in the Ukrainian language
@@ -654,11 +631,6 @@ resources:
       url: https://www.ukrainianlessons.com/grammar-past-tense/
       relevance: high
       source: Ukrainian Lessons
-    websites:
-    - title: Past Tense Exercises
-      url: https://ukrainianlanguage.uk/exercise-past-tense/
-      relevance: high
-      source: Ukrainian Language
     podcasts:
     - episode_id: ULP-026
       title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
@@ -676,14 +648,12 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: tense'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Cross-level topic match: tense'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Cross-level topic match: tense'
@@ -719,14 +689,12 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: future, tense'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Cross-level topic match: future, tense'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Cross-level topic match: future, tense'
@@ -782,11 +750,6 @@ resources:
       url: https://www.ukrainianlessons.com/modal-verbs/
       relevance: high
       source: Ukrainian Lessons
-    websites:
-    - title: Can and Must in Ukrainian
-      url: https://ukrainianlanguage.uk/modal-verbs-can-must/
-      relevance: high
-      source: Listening practice with audio
     podcasts:
     - episode_id: FMU-013
       title: 10 Ukrainian dishes you must try in Ukraine
@@ -804,11 +767,6 @@ resources:
       url: https://www.ukrainianlessons.com/reflexive-verbs/
       relevance: high
       source: Ukrainian Lessons
-    websites:
-    - title: Daily Routine Text
-      url: https://ukrainianlanguage.uk/exercise-daily-routine/
-      relevance: high
-      source: Ukrainian Language
     podcasts:
     - episode_id: FMU-058
       title: How to describe your daily routine in Ukrainian
@@ -878,26 +836,22 @@ resources:
       source: Video lessons
     podcasts:
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
     - episode_id: ULP-106
-      title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative
-        adverbs and pronouns in Ukrainian
+      title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/106/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
@@ -975,20 +929,17 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: body'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: health'
@@ -1040,8 +991,7 @@ resources:
       source: Video lessons
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Cross-level topic match: holidays'
@@ -1098,10 +1048,6 @@ resources:
       relevance: high
       source: Overview of all 7 cases
     websites:
-    - title: Talk Ukrainian - Cases
-      url: https://talkukrainian.com/grammatical-cases/
-      relevance: high
-      source: Practice exercises
     - title: 'Dobra Forma 15-1: Personal Pronouns (Dative Forms)'
       url: https://opentext.ku.edu/dobraforma/chapter/15-1/
       relevance: high
@@ -1110,6 +1056,10 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/15-2/
       relevance: high
       source: University of Kansas
+    - title: Talk Ukrainian - Cases
+      url: https://talkukrainian.com/grammatical-cases/
+      relevance: high
+      source: Practice exercises
     podcasts:
     - episode_id: ULP-051
       title: ULP 2-51 Electronics and technology + Dative case
@@ -1152,10 +1102,6 @@ resources:
       relevance: high
       source: Unknown
     websites:
-    - title: Nouns in Dative Case
-      url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/
-      relevance: high
-      source: Unknown
     - title: 'Dobra Forma 11-1: Dative Case (Feminine)'
       url: https://opentext.ku.edu/dobraforma/chapter/11-1/
       relevance: high
@@ -1242,14 +1188,6 @@ resources:
       relevance: high
       source: Unknown
     websites:
-    - title: Instrumental Case Guide
-      url: https://www.talkukrainian.com/instrumental-case/
-      relevance: high
-      source: Unknown
-    - title: Instrumental Usage
-      url: https://www.speakua.com/blog/instrumental-case-ukrainian
-      relevance: high
-      source: Unknown
     - title: 'Dobra Forma 9-1: Instrumental Case (Intro)'
       url: https://opentext.ku.edu/dobraforma/chapter/9-1/
       relevance: high
@@ -1258,6 +1196,10 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/9-4/
       relevance: high
       source: University of Kansas
+    - title: Instrumental Case Guide
+      url: https://www.talkukrainian.com/instrumental-case/
+      relevance: high
+      source: Unknown
     podcasts:
     - episode_id: ULP-061
       title: ULP 2-61 Christmas dinner in Ukraine + Instrumental case
@@ -1337,10 +1279,6 @@ resources:
       relevance: high
       source: All 7 cases explained
     websites:
-    - title: Talk Ukrainian - Cases
-      url: https://talkukrainian.com/grammatical-cases/
-      relevance: high
-      source: Practice exercises
     - title: 'Dobra Forma 7-1: Genitive after Prepositions (з, до, в/у)'
       url: https://opentext.ku.edu/dobraforma/chapter/7-1/
       relevance: high
@@ -1349,6 +1287,10 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/7-2/
       relevance: high
       source: University of Kansas
+    - title: Talk Ukrainian - Cases
+      url: https://talkukrainian.com/grammatical-cases/
+      relevance: high
+      source: Practice exercises
     podcasts:
     - episode_id: ULP-057
       title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
@@ -1402,8 +1344,7 @@ resources:
       relevance: medium
       match_reason: 'Challenge listening (B1): bank'
     - episode_id: ULP-089
-      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine +
-        Prefixes на-, за-
+      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-
       url: https://www.ukrainianlessons.com/lesson/89/
       relevance: medium
       match_reason: 'Challenge listening (B1): post'
@@ -1454,26 +1395,22 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): perfective'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Challenge listening (B1): imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective'
@@ -1495,8 +1432,7 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): past'
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: medium
       match_reason: 'Challenge listening (B1): past'
@@ -1518,20 +1454,18 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): future, plans'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Challenge listening (B1): future'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Challenge listening (B1): future, plans'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Challenge listening (B1): future'
@@ -1566,26 +1500,22 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): perfective'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Challenge listening (B1): imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective'
@@ -1602,26 +1532,22 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): perfective'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective, aspect, imperfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective, aspect'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective, imperfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective'
@@ -1657,10 +1583,6 @@ resources:
       url: https://www.youtube.com/@LetsLearnUkrainian
       relevance: high
       source: Let's Learn Ukrainian
-    - title: Degrees of Comparison
-      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
-      relevance: high
-      source: Unknown
     - title: 'Dobra Forma 20-1: Comparative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-1/
       relevance: high
@@ -1669,6 +1591,10 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/20-2/
       relevance: high
       source: University of Kansas
+    - title: Degrees of Comparison
+      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+      relevance: high
+      source: Unknown
   a2-19-the-best-the-worst:
     articles:
     - title: Adjectives Guide
@@ -1684,14 +1610,14 @@ resources:
       url: https://www.youtube.com/@LetsLearnUkrainian
       relevance: high
       source: Let's Learn Ukrainian
-    - title: Degrees of Comparison
-      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
-      relevance: high
-      source: Unknown
     - title: 'Dobra Forma 20-3: Superlative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-3/
       relevance: high
       source: University of Kansas
+    - title: Degrees of Comparison
+      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+      relevance: high
+      source: Unknown
   a2-20-preferences-and-choices:
     articles:
     - title: Nouns After Numbers
@@ -1727,10 +1653,6 @@ resources:
       relevance: high
       source: Ukrainian Lessons
     websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     - title: 'Dobra Forma 6-1: Genitive with Quantity (Masculine Plural)'
       url: https://opentext.ku.edu/dobraforma/chapter/6-1/
       relevance: high
@@ -1818,26 +1740,22 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): perfective'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Challenge listening (B1): aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Challenge listening (B1): imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Challenge listening (B1): perfective'
@@ -1895,10 +1813,6 @@ resources:
       url: https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary
       relevance: high
       source: Slow Ukrainian with Yevhen
-    - title: Pronunciation of Ukrainian Emotions
-      url: https://forvo.com/languages/uk/
-      relevance: high
-      source: Forvo Database
     podcasts:
     - episode_id: ULP-014
       title: ULP 1-14 Likes and dislikes – common verbs in Ukrainian
@@ -1906,8 +1820,7 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): like'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: medium
       match_reason: 'Challenge listening (B1): feel'
@@ -1939,11 +1852,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
   a2-33-time-clauses:
     podcasts:
     - episode_id: ULP-067
@@ -1952,14 +1860,12 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: time'
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: medium
       match_reason: 'Challenge listening (B1): clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Challenge listening (B1): clauses'
@@ -1974,21 +1880,14 @@ resources:
       url: https://www.ukrainianlessons.com/something-hurts/
       relevance: high
       source: Ukrainian Lessons
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Challenge listening (B1): doctor'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Challenge listening (B1): doctor'
@@ -2023,30 +1922,23 @@ resources:
       relevance: high
       source: Audio examples and drills.
     websites:
-    - title: Visual Motion Verbs
-      url: https://www.education-ukrainian.com/motion-verbs
-      relevance: high
-      source: Diagrams of prefixes to help with spatial memory.
     - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
       url: https://opentext.ku.edu/dobraforma/chapter/28-3/
       relevance: high
       source: University of Kansas
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
@@ -2056,8 +1948,7 @@ resources:
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
@@ -2073,30 +1964,23 @@ resources:
       relevance: high
       source: Grammar overview
     websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
       url: https://opentext.ku.edu/dobraforma/chapter/28-3/
       relevance: high
       source: University of Kansas
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
@@ -2106,8 +1990,7 @@ resources:
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
@@ -2123,10 +2006,6 @@ resources:
       relevance: high
       source: Grammar overview
     websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
       relevance: high
@@ -2153,8 +2032,7 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): verb'
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: medium
       match_reason: 'Challenge listening (B1): prefixes'
@@ -2185,22 +2063,12 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
   a2-44-checkpoint-word-formation:
     articles:
     - title: Ukrainian Grammar
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-035
       title: ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)
@@ -2208,14 +2076,13 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): word'
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Challenge listening (B1): word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Challenge listening (B1): word'
@@ -2235,11 +2102,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-047
       title: ULP 2-47 Food festivals + Genitive case
@@ -2262,8 +2124,7 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): food'
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Challenge listening (B1): food'
@@ -2278,11 +2139,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-045
       title: 'ULP 2-45 Review: 41-44 + My home'
@@ -2300,11 +2156,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-016
       title: ULP 1-16 Talking about weather in Ukrainian
@@ -2327,15 +2178,9 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Challenge listening (B1): motion'
@@ -2345,11 +2190,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-008
       title: ULP 1-08 Talking about jobs and professions in Ukrainian
@@ -2377,11 +2217,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-051
       title: ULP 2-51 Electronics and technology + Dative case
@@ -2404,15 +2239,9 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-115
-      title: ULP 3-115 Мої нові захоплення (Голосове повідомлення №7) – My new hobbies
-        (Voice message №7)
+      title: ULP 3-115 Мої нові захоплення (Голосове повідомлення №7) – My new hobbies (Voice message №7)
       url: https://www.ukrainianlessons.com/lesson/115/
       relevance: medium
       match_reason: 'Challenge listening (B1): hobbies'
@@ -2432,11 +2261,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-171
       title: ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі
@@ -2449,14 +2273,12 @@ resources:
       relevance: medium
       match_reason: 'Challenge listening (B1): education'
     - episode_id: ULP-089
-      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine +
-        Prefixes на-, за-
+      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-
       url: https://www.ukrainianlessons.com/lesson/89/
       relevance: medium
       match_reason: 'Challenge listening (B1): навчання, education'
     - episode_id: ULP-090
-      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
-        №2 – Voice message №2)
+      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)
       url: https://www.ukrainianlessons.com/lesson/90/
       relevance: medium
       match_reason: 'Challenge listening (B1): education'
@@ -2476,11 +2298,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-031
       title: ULP 1-31 Shopping in Ukrainian – At the shoe shop
@@ -2503,11 +2320,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: FMU-025
       title: Vocabulary booster! Sports in Ukrainian
@@ -2525,27 +2337,19 @@ resources:
       url: https://www.ukrainianlessons.com/something-hurts/
       relevance: high
       source: Common health expressions
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Challenge listening (B1): лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Challenge listening (B1): лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Challenge listening (B1): health'
@@ -2565,11 +2369,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: FMU-004
       title: Vocabulary booster! Transport in Ukrainian
@@ -2607,11 +2406,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-041
       title: 'ULP 2-41 Review: Season 1'
@@ -2649,11 +2443,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-tenses/
       relevance: high
       source: Grammar overview
-    websites:
-    - title: Talk Ukrainian
-      url: https://talkukrainian.com/
-      relevance: high
-      source: Practice exercises
     podcasts:
     - episode_id: ULP-041
       title: 'ULP 2-41 Review: Season 1'
@@ -2697,8 +2486,8 @@ resources:
       source: Grammar episodes
     podcasts:
     - episode_id: ULP-113
-      title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery
-        master class +  More about the Imperative mood in Ukrainian
+      title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery master class +  More about the Imperative
+        mood in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/113/
       relevance: high
       match_reason: 'Level-aligned topic match: about'
@@ -2739,32 +2528,27 @@ resources:
       source: Grammar episodes
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
@@ -2826,14 +2610,12 @@ resources:
       source: YouTube tutorials
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: sentence'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: sentence'
@@ -2879,26 +2661,22 @@ resources:
       source: подкаст урок
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -2924,32 +2702,27 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: high
       match_reason: 'Level-aligned topic match: past'
@@ -2970,32 +2743,27 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: high
       match_reason: 'Level-aligned topic match: past'
@@ -3010,43 +2778,29 @@ resources:
       url: https://www.ukrainianlessons.com/future-tense/
       relevance: high
       source: Unknown
-    websites:
-    - title: 'Ukrainian Case: Verb Conjugation'
-      url: https://ukrainiancase.com/verbs/
-      relevance: high
-      source: Unknown
-    - title: Українська правда
-      url: https://www.pravda.com.ua/
-      relevance: high
-      source: Unknown
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: future, perfective'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: future'
@@ -3062,36 +2816,28 @@ resources:
       relevance: high
       source: Unknown
     websites:
-    - title: 'Ukrainian Grammar: Aspect and Negation'
-      url: https://ukrainiangrammar.com/aspect-negation/
-      relevance: high
-      source: Unknown
     - title: Практикуй українську
       url: https://www.youtube.com/@PraktyukrainianLanguage
       relevance: high
       source: Unknown
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -3117,26 +2863,22 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -3162,26 +2904,22 @@ resources:
       source: онлайн довідник
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective, aspect, imperfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective, aspect'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective, imperfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -3211,32 +2949,27 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-106
-      title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative
-        adverbs and pronouns in Ukrainian
+      title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/106/
       relevance: high
       match_reason: 'Level-aligned topic match: week'
@@ -3257,26 +2990,22 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -3288,26 +3017,22 @@ resources:
   b1-15-checkpoint-aspect-mastery:
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
@@ -3333,32 +3058,27 @@ resources:
       source: подкаст уроки (Slavic comparison)
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion, verbs'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
@@ -3373,14 +3093,9 @@ resources:
       url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes
       relevance: high
       source: відео пояснення
-    - title: Verbs of Motion
-      url: https://www.ukrainianlanguage.uk/
-      relevance: high
-      source: граматичний довідник
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -3411,8 +3126,7 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -3429,8 +3143,7 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -3451,8 +3164,7 @@ resources:
       source: відео пояснення
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -3468,20 +3180,17 @@ resources:
       source: Ресурс Ukrainian Lessons.
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: uses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: uses'
@@ -3502,20 +3211,17 @@ resources:
       source: Відео уроки
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: high
       match_reason: 'Level-aligned topic match: prefix'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: high
       match_reason: 'Level-aligned topic match: prefix'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: high
       match_reason: 'Level-aligned topic match: prefix'
@@ -3525,8 +3231,7 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: prefix'
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: high
       match_reason: 'Level-aligned topic match: prefix'
@@ -3547,32 +3252,27 @@ resources:
       source: Відео пояснення
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs, motion'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
@@ -3583,18 +3283,13 @@ resources:
       relevance: high
       source: аудіо урок про напрямки.
     websites:
-    - title: Google Maps українською
-      url: https://www.google.com.ua/maps
-      relevance: high
-      source: спробуйте побудувати маршрут і прочитати інструкції.
     - title: Фразеологізми про рух
       url: http://lcorp.ulif.org.ua/dictua/
       relevance: high
       source: словник сталих виразів.
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -3603,36 +3298,30 @@ resources:
     - title: 'YouTube: Learn Ukrainian with Anna Ohoiko — Verbs of Motion'
       url: https://www.youtube.com/@LearnUkrainianWithAnna
       relevance: high
-      source: Verbs of Motion](https://www.youtube.com/@LearnUkrainianWithAnna) —
-        Відеоуроки про дієслова руху
+      source: Verbs of Motion](https://www.youtube.com/@LearnUkrainianWithAnna) — Відеоуроки про дієслова руху
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs, motion'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
@@ -3653,14 +3342,12 @@ resources:
       source: подкаст уроки для аудіального навчання
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
@@ -3681,14 +3368,12 @@ resources:
       source: подкаст уроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
@@ -3709,14 +3394,12 @@ resources:
       source: подкаст уроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
@@ -3752,20 +3435,17 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: form'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: form'
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: high
       match_reason: 'Level-aligned topic match: past'
@@ -3826,14 +3506,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: complex'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: complex'
@@ -3854,14 +3532,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: sentences, complex'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: sentences, complex'
@@ -3907,14 +3583,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
@@ -3935,14 +3609,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: clauses'
@@ -3963,14 +3635,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: sentence, complex'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: sentence, complex'
@@ -4031,14 +3701,12 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: sentences, complex'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: high
       match_reason: 'Level-aligned topic match: sentences, complex'
@@ -4065,26 +3733,22 @@ resources:
       source: відеоуроки
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: imperfective'
     - episode_id: ULP-107
-      title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial
-        participle in Ukrainian
+      title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/107/
       relevance: high
       match_reason: 'Level-aligned topic match: adverbial'
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: adverbial'
@@ -4101,32 +3765,27 @@ resources:
       source: відеопояснення
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: high
       match_reason: 'Level-aligned topic match: perfective'
     - episode_id: ULP-107
-      title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial
-        participle in Ukrainian
+      title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/107/
       relevance: high
       match_reason: 'Level-aligned topic match: adverbial'
@@ -4135,8 +3794,7 @@ resources:
     - title: Ukrainian Lessons — Канцелярити
       url: https://www.ukrainianlessons.com/
       relevance: high
-      source: Канцелярити](https://www.ukrainianlessons.com/) — практичні уроки з
-        деколонізації мови
+      source: Канцелярити](https://www.ukrainianlessons.com/) — практичні уроки з деколонізації мови
     websites:
     - title: Словник.UA
       url: https://slovnyk.ua/
@@ -4146,10 +3804,6 @@ resources:
       url: https://r2u.org.ua/yak-my-hovorymo/
       relevance: high
       source: класичний посібник О. Антоненка-Давидовича про русизми
-    - title: Мова — ДНК нації
-      url: https://mova-dnk.org.ua/
-      relevance: high
-      source: ДНК нації](https://mova-dnk.org.ua/) — сучасні матеріали про мовну культуру
     podcasts:
     - episode_id: FMU-002
       title: Useful phrases for learning Ukrainian
@@ -4177,19 +3831,13 @@ resources:
       url: https://sum.in.ua/
       relevance: high
       source: перевірка форм дієприкметників
-    - title: Українське радіо
-      url: https://www.nrcu.gov.ua/
-      relevance: high
-      source: слухайте новини, зверніть увагу на пасивні конструкції
     - title: Мова — ДНК нації
       url: https://www.youtube.com/@MovaDNK
       relevance: high
-      source: ДНК нації](https://www.youtube.com/@MovaDNK) — YouTube-канал про українську
-        мову
+      source: ДНК нації](https://www.youtube.com/@MovaDNK) — YouTube-канал про українську мову
     podcasts:
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: high
       match_reason: 'Level-aligned topic match: past'
@@ -4220,8 +3868,7 @@ resources:
       source: відео уроки
     podcasts:
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: high
       match_reason: 'Level-aligned topic match: past'
@@ -4267,14 +3914,13 @@ resources:
       source: відео уроки
     podcasts:
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: high
       match_reason: 'Level-aligned topic match: master'
     - episode_id: ULP-113
-      title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery
-        master class +  More about the Imperative mood in Ukrainian
+      title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery master class +  More about the Imperative
+        mood in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/113/
       relevance: high
       match_reason: 'Level-aligned topic match: class, master'
@@ -4295,8 +3941,7 @@ resources:
       source: відео уроки
     podcasts:
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: numerals'
@@ -4373,21 +4018,7 @@ resources:
     - title: Ukrainian Lessons — Abstract Vocabulary
       url: https://www.ukrainianlessons.com/
       relevance: high
-      source: Abstract Vocabulary](https://www.ukrainianlessons.com/) — практичні
-        поради
-    websites:
-    - title: Online Corrector
-      url: https://onlinecorrector.com.ua/
-      relevance: high
-      source: перевірка типових поєднань слів
-    - title: Радіо Свобода
-      url: https://www.radiosvoboda.org/
-      relevance: high
-      source: приклад якісної абстрактної мови в новинах
-    - title: Мова — ДНК нації
-      url: https://mova-dnk.org.ua/
-      relevance: high
-      source: ДНК нації](https://mova-dnk.org.ua/) — картки про абстрактні іменники
+      source: Abstract Vocabulary](https://www.ukrainianlessons.com/) — практичні поради
   b1-53-abstract-concepts-processes:
     articles:
     - title: Ukrainian Lessons Podcast — Episode on Business
@@ -4399,14 +4030,6 @@ resources:
       url: https://slovnyk.ua/
       relevance: high
       source: пошук антонімів та синонімів для слів зростання/спадання
-    - title: Економічна Правда
-      url: https://www.epravda.com.ua/
-      relevance: high
-      source: використання лексики процесів у реальних новинах
-    - title: Інститут мовознавства ім. О.О. Потебні
-      url: http://www.inmov.org.ua/
-      relevance: high
-      source: офіційні роз'яснення новотворів
   b1-54-expressing-opinions:
     websites:
     - title: 'Ukrainian Lessons: Expressing Opinions'
@@ -4420,10 +4043,6 @@ resources:
       relevance: high
       source: Episode on Debates](https://www.ukrainianlessons.com/)
     websites:
-    - title: Kym.ua
-      url: https://kym.ua/
-      relevance: high
-      source: правила ведення дебатів українською мовою
     - title: Канал «Твоя підпільна гуманітарка»
       url: https://www.youtube.com/c/ТвояПідпільнаГуманітарка
       relevance: high
@@ -4446,23 +4065,14 @@ resources:
       url: https://slovnyk.ua/kultura_slova/
       relevance: high
       source: поради щодо вживання вставних слів та маркерів
-    - title: Офіційний сайт української мови
-      url: https://ukrainskamova.org/
-      relevance: high
-      source: правила пунктуації при маркерах
     - title: 'Уроки української мови: вставні слова та конструкції'
       url: https://www.youtube.com/results?search_query=вставні+слова+українська
       relevance: high
       source: відеопояснення
-    - title: Напишіть своє перше есе українською
-      url: https://osvitoria.media/
-      relevance: high
-      source: поради від "Освіторії"
   b1-58-describing-changes:
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: changes'
@@ -4473,39 +4083,6 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/53/
       relevance: medium
       match_reason: 'Cross-level topic match: media'
-  b1-60-society-politics:
-    websites:
-    - title: Верховна Рада України
-      url: https://www.rada.gov.ua/
-      relevance: high
-      source: офіційні тексти законів та стенограми засідань
-    - title: Дія. Цифрова держава
-      url: https://diia.gov.ua/
-      relevance: high
-      source: приклад сучасної взаємодії держави та громадянина
-    - title: Громадське Телебачення
-      url: https://hromadske.ua/
-      relevance: high
-      source: аналітика про громадянське суспільство
-  b1-61-professional-communication:
-    websites:
-    - title: DOU.ua
-      url: https://dou.ua/
-      relevance: high
-      source: головна спільнота українських IT-фахівців (новини, вакансії, форуми)
-    - title: Robota.ua
-      url: https://robota.ua/
-      relevance: high
-      source: пошук роботи та поради щодо складання резюме
-    - title: Prometheus — Ділова українська мова
-      url: https://prometheus.org.ua/
-      relevance: high
-      source: Ділова українська мова](https://prometheus.org.ua/) — онлайн-курс про
-        професійну комунікацію
-    - title: Online Corrector
-      url: https://onlinecorrector.com.ua/
-      relevance: high
-      source: допомога у виправленні ділових помилок
   b1-62-environment-ecology:
     websites:
     - title: 'Ukrainian Vocabulary: Environment'
@@ -4515,16 +4092,14 @@ resources:
   b1-63-health-wellness:
     podcasts:
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: high
       match_reason: 'Level-aligned topic match: health'
   b1-64-emotions-deep-dive:
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -4534,30 +4109,10 @@ resources:
       url: https://www.ukrainianlessons.com/family-relationships/
       relevance: high
       source: Ukrainian Lessons
-  b1-66-business-basics:
-    websites:
-    - title: Дія.Бізнес
-      url: https://business.diia.gov.ua/
-      relevance: high
-      source: все про підприємництво в Україні
-    - title: Економічна Правда
-      url: https://www.epravda.com.ua/
-      relevance: high
-      source: головні бізнес-новини та аналітика
-    - title: Forbes Ukraine
-      url: https://forbes.ua/
-      relevance: high
-      source: історії успіху та стратегії українських компаній
-    - title: Coursera — Українська для ділового спілкування
-      url: https://www.coursera.org/
-      relevance: high
-      source: Українська для ділового спілкування](https://www.coursera.org/) (різні
-        платформи)
   b1-67-travel-geography:
     podcasts:
     - episode_id: ULP-099
-      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
-        message №4)
+      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice message №4)
       url: https://www.ukrainianlessons.com/lesson/99/
       relevance: high
       match_reason: 'Level-aligned topic match: подорож, travel'
@@ -4591,114 +4146,68 @@ resources:
       url: https://www.youtube.com/c/Твояпідпільнагуманітарка
       relevance: high
       source: про мову та мислення
-    - title: EdEra — Критичне мислення
-      url: https://www.ed-era.com/
-      relevance: high
-      source: Критичне мислення](https://www.ed-era.com/) — безкоштовні курси про
-        аналіз інформації
-    - title: Словник синонімів української мови
-      url: https://synonims.com.ua/
-      relevance: high
-      source: для глибшого осмислення відтінків
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
   b1-69-synonymy-speaking-verbs:
     websites:
-    - title: Культура слова
-      url: https://culture_slova.net.ua/
-      relevance: high
-      source: поради щодо правильного вживання дієслів
-    - title: Суспільне Мовлення
-      url: https://suspilne.media/
-      relevance: high
-      source: приклади якісної журналістської української
     - title: Словник української мови (СУМ-11)
       url: http://sum.in.ua/
       relevance: high
       source: детальні пояснення значень дієслів
-    - title: '"Сродна праця"'
-      url: https://theukrainians.org/podcasts/srodna-pracya/
-      relevance: high
-      source: розмови про професію та покликання
     podcasts:
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: high
       match_reason: 'Level-aligned topic match: verbs'
-  b1-70-collocations-expressions:
-    websites:
-    - title: Online Corrector
-      url: https://onlinecorrector.com.ua/
-      relevance: high
-      source: автоматично виправляє типові помилки в колокаціях
-    - title: НВ. Бізнес
-      url: https://nv.ua/ukr/biz
-      relevance: high
-      source: сучасна ділова українська в дії
-    - title: Словник сталих словосполучень
-      url: https://phraseology.com.ua/
-      relevance: high
-      source: для глибшого вивчення сполук
   b1-71-emotional-intelligence:
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: motion'
@@ -4711,8 +4220,7 @@ resources:
   b1-73-regions-east:
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: high
       match_reason: 'Level-aligned topic match: east'
@@ -4721,22 +4229,15 @@ resources:
     - title: Одеса — Вікіпедія
       url: https://uk.wikipedia.org/wiki/Одеса
       relevance: high
-      source: Вікіпедія](https://uk.wikipedia.org/wiki/Одеса) — історія та культура
-        міста
+      source: Вікіпедія](https://uk.wikipedia.org/wiki/Одеса) — історія та культура міста
     - title: Чорне море — Вікіпедія
       url: https://uk.wikipedia.org/wiki/Чорне_море
       relevance: high
-      source: Вікіпедія](https://uk.wikipedia.org/wiki/Чорне_море) — географія та
-        значення
+      source: Вікіпедія](https://uk.wikipedia.org/wiki/Чорне_море) — географія та значення
     - title: Херсонська область
       url: https://uk.wikipedia.org/wiki/Херсонська_область
       relevance: high
       source: інформація про регіон
-    websites:
-    - title: BBC News Україна
-      url: https://www.bbc.com/ukrainian
-      relevance: high
-      source: новини про Україну
   b1-75-regions-center:
     websites:
     - title: 'Central Ukraine: Culture and History'
@@ -4746,81 +4247,54 @@ resources:
   b1-76-ukrainian-music-today:
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
   b1-77-ukrainian-cinema-and-tv:
-    websites:
-    - title: Українська правда. Культура
-      url: https://life.pravda.com.ua/
-      relevance: high
-      source: новини про українське кіно
-    - title: Держкіно України
-      url: https://dergkino.gov.ua/
-      relevance: high
-      source: офіційний сайт про кіновиробництво
-    - title: Одеський кінофестиваль
-      url: https://oiff.com.ua/
-      relevance: high
-      source: програма та новини фестивалю
-    - title: Docudays UA
-      url: https://docudays.ua/
-      relevance: high
-      source: документальне кіно України
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
@@ -4838,22 +4312,10 @@ resources:
       match_reason: 'Cross-level topic match: інтернет'
   b1-79-sports-in-ukraine:
     websites:
-    - title: Tribuna.com Україна
-      url: https://ua.tribuna.com/
-      relevance: high
-      source: провідний спортивний портал
     - title: Боксерський канал Усика
       url: https://www.youtube.com/@Usyk17
       relevance: high
       source: ексклюзиви від чемпіона
-    - title: Суспільне Спорт
-      url: https://suspilne.media/sport/
-      relevance: high
-      source: офіційні новини та трансляції
-    - title: Instagram НОК України
-      url: https://www.instagram.com/olympic_team_ukraine/
-      relevance: high
-      source: життя олімпійської збірної
     podcasts:
     - episode_id: ULP-084
       title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
@@ -4861,8 +4323,7 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
@@ -4877,25 +4338,12 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
     - episode_id: ULP-089
-      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine +
-        Prefixes на-, за-
+      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-
       url: https://www.ukrainianlessons.com/lesson/89/
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
   b1-80-active-lifestyle:
     websites:
-    - title: Kyiv Parks Guide
-      url: https://kyivcity.gov.ua/
-      relevance: high
-      source: Unknown
-    - title: Mixsport
-      url: https://mixsport.pro/
-      relevance: high
-      source: Unknown
-    - title: Nogibogi
-      url: https://nogibogi.com/
-      relevance: high
-      source: Unknown
     - title: Спортзал просто неба "Качалка"
       url: https://www.youtube.com/results?search_query=качалка+гідропарк
       relevance: high
@@ -4904,41 +4352,16 @@ resources:
       url: https://www.youtube.com/
       relevance: high
       source: Unknown
-    - title: Strava Ukraine
-      url: https://www.strava.com/
-      relevance: high
-      source: Unknown
     podcasts:
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: high
       match_reason: 'Level-aligned topic match: lifestyle'
   b1-81-running-in-ukraine:
     websites:
-    - title: Run Ukraine
-      url: https://runukraine.org/
-      relevance: high
-      source: Unknown
-    - title: Parkrun Ukraine
-      url: https://www.facebook.com/parkrunukraine/
-      relevance: high
-      source: Unknown
-    - title: Журнал "Ногибоги"
-      url: https://nogibogi.com/
-      relevance: high
-      source: Unknown
-    - title: Пробіг під каштанами
-      url: https://probeg.com.ua/
-      relevance: high
-      source: Unknown
     - title: 'YouTube: Як почати бігати'
       url: https://www.youtube.com/
-      relevance: high
-      source: Unknown
-    - title: Подкаст "Вухами"
-      url: https://thevillage.com.ua/
       relevance: high
       source: Unknown
     podcasts:
@@ -4948,8 +4371,7 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
@@ -4964,65 +4386,20 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
     - episode_id: ULP-089
-      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine +
-        Prefixes на-, за-
+      title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-
       url: https://www.ukrainianlessons.com/lesson/89/
       relevance: high
       match_reason: 'Level-aligned topic match: ukraine'
-  b1-82-mountains-trail:
-    websites:
-    - title: Карпатський біосферний заповідник
-      url: http://cbr.nature.org.ua/
-      relevance: high
-      source: Офіційний сайт заповідника.
-    - title: Клуб піших туристів
-      url: https://www.facebook.com/groups/trekking.ua/
-      relevance: high
-      source: Спільнота для обміну досвідом.
-    - title: Прогноз погоди в горах
-      url: https://www.snow-forecast.com/
-      relevance: high
-      source: Точні дані для безпеки.
   b1-83-cycling-water:
     websites:
-    - title: Велосипедний Київ
-      url: https://kyiv.cycle.org.ua/
-      relevance: high
-      source: Мапа велодоріжок та поради велосипедистам.
-    - title: Kayak Canoe Center
-      url: https://kayakcenter.com.ua/
-      relevance: high
-      source: Оренда каяків та SUP-дошок по всій Україні.
-    - title: Triathlon Ukraine
-      url: https://triathlonukraine.com/
-      relevance: high
-      source: Офіційний календар змагань та результати.
     - title: 'YouTube: Правила їзди на велосипеді в місті'
       url: https://www.youtube.com/
       relevance: high
       source: Освітнє відео для безпеки.
-    - title: 'Документальний проєкт "Ukraїner": Річки України'
-      url: https://ukrainer.net/
-      relevance: high
-      source: Неймовірні кадри українських водойм.
   b1-84-winter-sports:
-    websites:
-    - title: Snow.com.ua
-      url: https://snow.com.ua/
-      relevance: high
-      source: Портал про гірськолижні курорти України.
-    - title: Bukovel 24
-      url: https://bukovel24.com/
-      relevance: high
-      source: Онлайн-камери та купівля квитків.
-    - title: Громадська організація "Спортивна нація"
-      url: https://sportnation.ua/
-      relevance: high
-      source: Розвиток масового спорту.
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       match_reason: 'Level-aligned topic match: winter'
@@ -5039,32 +4416,27 @@ resources:
   b1-85-ukrainian-cuisine:
     podcasts:
     - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
-        ви- and пере-
+      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
       url: https://www.ukrainianlessons.com/lesson/81/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
-        + Prefixes при- and по-
+      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-
       url: https://www.ukrainianlessons.com/lesson/82/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
-        до- and під-
+      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
       url: https://www.ukrainianlessons.com/lesson/83/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       match_reason: 'Level-aligned topic match: ukrainian'
@@ -5078,32 +4450,6 @@ resources:
       url: https://www.ukrainianlessons.com/festivals/
       relevance: high
       source: Cultural guide
-  b1-87-novyny-yak-chytaty:
-    websites:
-    - title: BBC News Україна
-      url: https://www.bbc.com/ukrainian
-      relevance: high
-      source: міжнародні та українські новини
-    - title: Українська правда
-      url: https://www.pravda.com.ua/
-      relevance: high
-      source: новини та аналітика
-    - title: Суспільне Новини
-      url: https://suspilne.media/
-      relevance: high
-      source: суспільне мовлення
-    - title: Hromadske
-      url: https://hromadske.ua/
-      relevance: high
-      source: незалежна журналістика
-    - title: Дзеркало тижня
-      url: https://zn.ua/
-      relevance: high
-      source: тижневий огляд
-    - title: Detector Media
-      url: https://detector.media/
-      relevance: high
-      source: медіаграмотність та аналіз
   b1-88-interviu-ta-podkasty:
     websites:
     - title: Ukrainian Lessons Podcast
@@ -5170,61 +4516,39 @@ resources:
       url: https://www.ukrainianlessons.com/category/podcast/
       relevance: high
       source: уроки для вивчення мови
-    websites:
-    - title: Книжковий Арсенал
-      url: https://bookforum.ua/podcast/
-      relevance: high
-      source: про книги та культуру
-    - title: Розмова.Медіа
-      url: https://rozmova.media/
-      relevance: high
-      source: інтерв'ю з цікавими людьми
-    - title: Суспільне Радіо
-      url: https://suspilne.media/radio/
-      relevance: high
-      source: новини та аналітика
   b2-01-passive-voice-system:
     websites:
     - title: Пасивний стан в українській мові
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
       relevance: high
       source: пояснення від носіїв мови
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук прикладів пасивних конструкцій
     - title: Hrinchenko Dictionary Online
       url: https://r2u.org.ua/
       relevance: high
       source: словник із прикладами вживання
     podcasts:
     - episode_id: ULP-085
-      title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review
-        episode)
+      title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review episode)
       url: https://www.ukrainianlessons.com/lesson/85/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-090
-      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
-        №2 – Voice message №2)
+      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)
       url: https://www.ukrainianlessons.com/lesson/90/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-095
-      title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv
-        (Voice message №3)
+      title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv (Voice message №3)
       url: https://www.ukrainianlessons.com/lesson/95/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-099
-      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
-        message №4)
+      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice message №4)
       url: https://www.ukrainianlessons.com/lesson/99/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-105
-      title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice
-        message №5)
+      title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice message №5)
       url: https://www.ukrainianlessons.com/lesson/105/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
@@ -5239,14 +4563,9 @@ resources:
       url: https://r2u.org.ua
       relevance: high
       source: граматичний портал
-    - title: Вправи на дієприкметники
-      url: https://ukrainianlanguage.org.uk
-      relevance: high
-      source: інтерактивні завдання
     podcasts:
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: medium
       match_reason: 'Cross-level topic match: past'
@@ -5266,14 +4585,6 @@ resources:
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська
       relevance: high
       source: пошук відеоуроків
-    - title: Верховна Рада України
-      url: https://www.rada.gov.ua/
-      relevance: high
-      source: читайте справжні офіційні документи
-    - title: Українська мова для державних службовців
-      url: https://mova.dn.ua/
-      relevance: high
-      source: офіційно-діловий стиль
   b2-04-reflexive-passive:
     articles:
     - title: Українські уроки
@@ -5289,10 +4600,6 @@ resources:
       url: https://www.youtube.com/@ridnamova
       relevance: high
       source: відеоуроки з української граматики
-    - title: Громадське радіо
-      url: https://hromadske.radio/
-      relevance: high
-      source: приклади -ся пасиву в новинах
     podcasts:
     - episode_id: ULP-109
       title: ULP 3-109 На побаченні – On a date in Ukrainian + Reflexive verbs
@@ -5322,14 +4629,14 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: plural'
     - episode_id: ULP-112
-      title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky
-        +  Imperative mood of the second person plural
+      title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky +  Imperative mood of the second person
+        plural
       url: https://www.ukrainianlessons.com/lesson/112/
       relevance: medium
       match_reason: 'Cross-level topic match: person, plural'
     - episode_id: ULP-114
-      title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative
-        mood of the verbs in the first person plural (Let's…)
+      title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative mood of the verbs in the first person
+        plural (Let's…)
       url: https://www.ukrainianlessons.com/lesson/114/
       relevance: medium
       match_reason: 'Cross-level topic match: person, plural'
@@ -5339,19 +4646,10 @@ resources:
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
       relevance: high
       source: пояснення від носіїв мови
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук прикладів пасивних конструкцій у різних регістрах
-    - title: Культура слова
-      url: http://kulturamovy.univ.kiev.ua/
-      relevance: high
-      source: журнал Інституту української мови НАН України
   b2-07-active-participles-present:
     podcasts:
     - episode_id: ULP-111
-      title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative
-        mood in Ukrainian
+      title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/111/
       relevance: medium
       match_reason: 'Cross-level topic match: present'
@@ -5366,18 +4664,9 @@ resources:
       url: https://sum.in.ua
       relevance: high
       source: перевірка правильності форм
-    - title: Корпус української мови
-      url: https://mova.info/corpus.aspx
-      relevance: high
-      source: приклади вживання в контексті
-    - title: Мовний портал
-      url: https://mova.info
-      relevance: high
-      source: граматичні пояснення та вправи
     podcasts:
     - episode_id: ULP-118
-      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
-        past tense in Ukrainian
+      title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/118/
       relevance: medium
       match_reason: 'Cross-level topic match: past'
@@ -5398,28 +4687,18 @@ resources:
       relevance: high
       source: детальний огляд системи дієприкметників
     websites:
-    - title: 'Mova.info: Підрядні речення'
-      url: https://mova.info/grammatics/subordinate
-      relevance: high
-      source: граматичний довідник з підрядними реченнями
     - title: 'YouTube: Українська з Анною'
       url: https://youtube.com/ukrainewithlove
       relevance: high
       source: відеоуроки про складні граматичні теми
-    - title: LanguageTool Ukrainian
-      url: https://languagetool.org/uk
-      relevance: high
-      source: перевірка граматики онлайн
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: medium
       match_reason: 'Cross-level topic match: clauses'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Cross-level topic match: clauses'
@@ -5436,32 +4715,27 @@ resources:
       source: Детальний посібник з прикладами
     podcasts:
     - episode_id: ULP-085
-      title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review
-        episode)
+      title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review episode)
       url: https://www.ukrainianlessons.com/lesson/85/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-090
-      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
-        №2 – Voice message №2)
+      title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)
       url: https://www.ukrainianlessons.com/lesson/90/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-095
-      title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv
-        (Voice message №3)
+      title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv (Voice message №3)
       url: https://www.ukrainianlessons.com/lesson/95/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-099
-      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
-        message №4)
+      title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice message №4)
       url: https://www.ukrainianlessons.com/lesson/99/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
     - episode_id: ULP-105
-      title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice
-        message №5)
+      title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice message №5)
       url: https://www.ukrainianlessons.com/lesson/105/
       relevance: medium
       match_reason: 'Cross-level topic match: voice'
@@ -5471,63 +4745,16 @@ resources:
       url: http://litopys.org.ua
       relevance: high
       source: повне зібрання творів та аналітики.
-    - title: Віртуальний музей Шевченка
-      url: https://museumshevchenko.org.ua
-      relevance: high
-      source: 3D-тури та галерея картин.
     - title: Кобзар (аудіокнига)
       url: https://youtube.com
       relevance: high
       source: слухайте вірші у виконанні Богдана Ступки.
-  b2-102-franko-lesia-hrinchenko:
-    websites:
-    - title: Електронна бібліотека Франка
-      url: http://franko.lviv.ua
-      relevance: high
-      source: повне зібрання творів.
-    - title: Музей Лесі Українки в Києві
-      url: https://lesya.kyiv.ua
-      relevance: high
-      source: віртуальні тури.
-    - title: Словник Грінченка онлайн
-      url: http://hrinchenko.com
-      relevance: high
-      source: пошук слів у 4 томах.
   b2-104-first-world-war:
     websites:
-    - title: 'Локальна історія: Легіон УСС'
-      url: https://localhistory.org.ua
-      relevance: high
-      source: тут ви знайдете унікальні фотографії стрільців, їхні щоденники та детальні
-        карти боїв.
     - title: Ой у лузі червона калина (історія пісні)
       url: https://youtube.com
       relevance: high
       source: відео про те, як гімн стрільців став світовим хітом.
-    - title: Віртуальний музей УНР
-      url: https://unr.museum
-      relevance: high
-      source: огляньте 3D-моделі нагород, уніформи та зброї часів визвольних змагань.
-  b2-105-unr-zunr:
-    websites:
-    - title: Історична правда
-      url: https://istpravda.com.ua
-      relevance: high
-      source: архів документів і статей про революцію.
-  b2-106-vistovtsi-neoclassicists:
-    websites:
-    - title: Віртуальна виставка «Український авангард»
-      url: https://namu.ua/
-      relevance: high
-      source: шедеври живопису.
-    - title: Книга «Наші 20-ті» Ярини Цимбал
-      url: https://tempora.com.ua/
-      relevance: high
-      source: найкращий путівник епохою.
-    - title: 'Радіофільм «Харків: Будинок Слово»'
-      url: https://suspilne.media/
-      relevance: high
-      source: звуки історії.
   b2-107-syntez-kozachchyna-1920:
     articles:
     - title: Українські Уроки Podcast
@@ -5544,14 +4771,7 @@ resources:
     - title: Розстріляне відродження — Ukraїner
       url: https://www.youtube.com/watch?v=YE8VzlFhT-4
       relevance: high
-      channel: Ukraїner](https://www.youtube.com/watch?v=YE8VzlFhT-4) — документальний
-        фільм про знищене покоління.
-    websites:
-    - title: Будинок «Слово» — віртуальний тур
-      url: https://slovo.org.ua/
-      relevance: high
-      source: віртуальний тур](https://slovo.org.ua/) — інтерактивна історія будинку
-        письменників у Харкові.
+      channel: Ukraїner](https://www.youtube.com/watch?v=YE8VzlFhT-4) — документальний фільм про знищене покоління.
   b2-11-multi-clause-sentences:
     articles:
     - title: Синтаксис української мови
@@ -5563,20 +4783,14 @@ resources:
       url: https://pravopys.net/
       relevance: high
       source: офіційні правила пунктуації
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: приклади складних речень
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: medium
       match_reason: 'Cross-level topic match: sentences, clause'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Cross-level topic match: sentences, clause'
@@ -5590,62 +4804,8 @@ resources:
       url: https://www.ukrainianlessons.com/fmu32/
       relevance: medium
       match_reason: 'Listening review (A1): sentences'
-  b2-110-holodomor-mekhanizm:
-    websites:
-    - title: Український інститут національної пам'яті — Голодомор
-      url: https://uinp.gov.ua/informaciyni-materialy/holodomor
-      relevance: high
-      source: Голодомор](https://uinp.gov.ua/informaciyni-materialy/holodomor) — офіційний
-        ресурс з документами та дослідженнями
-    - title: Holodomor Museum
-      url: https://holodomormuseum.org.ua/
-      relevance: high
-      source: Національний музей Голодомору-геноциду у Києві
-    - title: Фільм «Mr. Jones»
-      url: https://www.imdb.com/title/tt6828390/
-      relevance: high
-      source: художній фільм про Гарета Джонса
-    - title: Harvard Ukrainian Research Institute
-      url: https://huri.harvard.edu/
-      relevance: high
-      source: наукові дослідження з історії України
-  b2-111-holodomor-ii-pamiat:
-    articles:
-    - title: Фільм «Ціна правди» (Mr. Jones)
-      url: <https://uk.wikipedia.org/wiki/%D0%A6%D1%96%D0%BD%D0%B0_%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%B8_(%D1%84%D1%96%D0%BB%D1%8C%D0%BC
-      relevance: high
-      source: Unknown
-    websites:
-    - title: Сайт Національного музею Голодомору-геноциду
-      url: https://holodomormuseum.org.ua/
-      relevance: high
-      source: Unknown
-    - title: Книга Енн Епплбом «Червоний голод»
-      url: https://www.goodreads.com/book/show/34035114-red-famine
-      relevance: high
-      source: Unknown
-    - title: 'Ukraїner: Голодомор'
-      url: https://ukrainer.net/holodomor/
-      relevance: high
-      source: Unknown
   b2-112-druha-svitova-okupatsii:
     websites:
-    - title: Меморіальний центр «Бабин Яр»
-      url: https://babynyar.org/en
-      relevance: high
-      source: Офіційний сайт з архівами та контекстом трагедії.
-    - title: Український інститут національної пам'яті
-      url: https://uinp.gov.ua/
-      relevance: high
-      source: Матеріали про Україну в Другій світовій війні.
-    - title: Подкаст «Без Брому» з Віталієм Ляскою
-      url: https://localhistory.org.ua/podcasts/bez-bromu/
-      relevance: high
-      source: Розмови з істориками про справжню історію.
-    - title: Тімоті Снайдер «Криваві землі»
-      url: https://www.timothysnyder.org/books/bloodlands
-      relevance: high
-      source: Книга, що змінила бачення історії Східної Європи.
     - title: Відео-проект «Історія без міфів»
       url: https://www.youtube.com/@History_Without_Myths
       relevance: high
@@ -5656,18 +4816,6 @@ resources:
       url: https://www.youtube.com/...
       relevance: high
       source: Документальний цикл про ключові події.
-    - title: History of Ukraine (Subtelny)
-      url: https://chtyvo.org.ua/
-      relevance: high
-      source: Класичний підручник про тривалий шлях до незалежності.
-    - title: National Museum of the Holodomor-Genocide
-      url: https://holodomormuseum.org.ua/
-      relevance: high
-      source: Віртуальні тури та свідчення очевидців.
-    - title: Ukrainian Institute of National Remembrance
-      url: https://uinp.gov.ua/
-      relevance: high
-      source: Актуальні матеріали про деколонізацію.
   b2-12-parenthetical-expressions:
     articles:
     - title: Синтаксис української мови
@@ -5716,18 +4864,6 @@ resources:
       url: https://www.youtube.com/...
       relevance: high
       source: Унікальні архівні кадри
-    - title: 'Україна: Історія (Орест Субтельний)'
-      url: https://chtyvo.org.ua/
-      relevance: high
-      source: Розділ про становлення незалежності
-    - title: 'Музей Майдану: Віртуальна виставка'
-      url: https://maidanmuseum.org/
-      relevance: high
-      source: Документи та артефакти
-    - title: Архів «Української Правди» 2004
-      url: https://www.pravda.com.ua/news/2004/
-      relevance: high
-      source: Хроніка подій у реальному часі
   b2-125-shliakh-do-voli:
     websites:
     - title: 'The Collapse: How Ukrainians Destroyed the Evil Empire'
@@ -5738,86 +4874,20 @@ resources:
       url: https://www.youtube.com/@HistoryUkraine
       relevance: high
       source: Короткі відео про кожен рік незалежності.
-    - title: Electronic Archive of the Liberation Movement
-      url: https://avr.org.ua/
-      relevance: high
-      source: Документи про боротьбу за незалежність.
-  b2-126-revoliutsiia-hidnosti:
-    websites:
-    - title: 'Winter on Fire: Ukraine''s Fight for Freedom'
-      url: https://www.netflix.com/title/80031666
-      relevance: high
-      source: Документальний фільм "Зима у вогні", номінант на "Оскар".
-    - title: All the Truth about the Revolution of Dignity
-      url: https://maidanmuseum.org/en
-      relevance: high
-      source: Матеріали Музею Майдану.
-    - title: Небесна Сотня
-      url: https://nebesnasotnya.com/
-      relevance: high
-      source: Сайт пам'яті загиблих героїв.
   b2-13-emphasis-and-inversion:
     articles:
     - title: Синтаксис української мови
       url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
       relevance: high
       source: теоретичні основи
-    websites:
-    - title: Пономарів О. Стилістика сучасної української мови
-      url: https://kulturamovy.univ.kiev.ua/
-      relevance: high
-      source: академічний підручник
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: приклади різних порядків слів
-  b2-131-syntez-viyna-za-isnuvannya:
-    websites:
-    - title: 'Проєкт "Україна: 30 років незалежності"'
-      url: https://30.ukraine.ua/
-      relevance: high
-      source: Історія успіху та боротьби.
-    - title: Музей Революції Гідності
-      url: https://www.maidanmuseum.org/
-      relevance: high
-      source: Архів пам'яті про Майдан.
-    - title: Платформа United24
-      url: https://u24.gov.ua/
-      relevance: high
-      source: Головне вікно для підтримки України у світі.
-    - title: Книга "Брама Європи" Сергія Плохія
-      url: https://www.goodreads.com/book/show/25663717-the-gates-of-europe
-      relevance: high
-      source: Для глибокого розуміння контексту.
-    - title: Документальний фільм "Зима у вогні"
-      url: https://www.netflix.com/title/80031666
-      relevance: high
-      source: Про події на Майдані.
   b2-14-stylistic-connectors:
     articles:
     - title: Сполучники української мови
       url: https://uk.wikipedia.org/wiki/Сполучник
       relevance: high
       source: теоретичні основи
-    websites:
-    - title: Культура мови
-      url: https://kulturamovy.univ.kiev.ua/
-      relevance: high
-      source: академічний підручник
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: приклади вживання сполучників
   b2-15-register-introduction:
     websites:
-    - title: 'Сучасна українська літературна мова: Стилістика'
-      url: https://shron1.chtyvo.org.ua/
-      relevance: high
-      source: академічний погляд на функціональні стилі
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук прикладів різних стилів
     - title: Словник української мови
       url: https://sum.in.ua/
       relevance: high
@@ -5901,10 +4971,6 @@ resources:
       relevance: high
       source: структура та вимоги
     websites:
-    - title: Vernadsky National Library
-      url: http://www.nbuv.gov.ua/
-      relevance: high
-      source: українські наукові публікації
     - title: Словник української мови
       url: https://sum.in.ua/
       relevance: high
@@ -5937,32 +5003,16 @@ resources:
       match_reason: 'Cross-level topic match: ukrainian'
   b2-19-register-official-legal:
     websites:
-    - title: Верховна Рада України
-      url: https://zakon.rada.gov.ua/
-      relevance: high
-      source: офіційний портал законодавства
     - title: Юридичний словник
       url: https://slovnyk.ua/
       relevance: high
       source: термінологія права
-    - title: Зразки документів
-      url: https://www.kmu.gov.ua/
-      relevance: high
-      source: офіційні зразки заяв та звернень
   b2-20-register-medical-ukrainian:
     websites:
     - title: Медичний словник української мови
       url: https://slovnyk.ua/
       relevance: high
       source: пошук медичних термінів
-    - title: Офіційний сайт МОЗ України
-      url: https://moz.gov.ua/
-      relevance: high
-      source: офіційна медична інформація
-    - title: Медичний довідник
-      url: https://compendium.com.ua/
-      relevance: high
-      source: довідник лікарських засобів
     podcasts:
     - episode_id: ULP-042
       title: ULP 2-42My Room + Plural nouns in Ukrainian
@@ -5995,24 +5045,8 @@ resources:
       url: https://sum.in.ua/
       relevance: high
       source: академічний словник української мови
-    - title: Наукова періодика України
-      url: http://journals.uran.ua/
-      relevance: high
-      source: доступ до українських наукових публікацій
-    - title: ДСТУ онлайн
-      url: https://dstu.ua/
-      relevance: high
-      source: державні стандарти України
   b2-22-register-literary-ukrainian:
     websites:
-    - title: Чтиво
-      url: https://chtyvo.org.ua/
-      relevance: high
-      source: безкоштовна електронна бібліотека української літератури
-    - title: Слухай
-      url: https://slukhai.com.ua/
-      relevance: high
-      source: українська література в аудіоформаті
     - title: Словник української мови
       url: https://sum.in.ua/
       relevance: high
@@ -6044,23 +5078,6 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: ukrainian'
   b2-23-register-media-journalistic:
-    websites:
-    - title: Українська правда
-      url: https://www.pravda.com.ua/
-      relevance: high
-      source: провідне онлайн-видання
-    - title: Суспільне Новини
-      url: https://suspilne.media/news/
-      relevance: high
-      source: державне мовлення
-    - title: Радіо Свобода
-      url: https://www.radiosvoboda.org/
-      relevance: high
-      source: незалежна журналістика
-    - title: Детектор медіа
-      url: https://detector.media/
-      relevance: high
-      source: медіакритика та аналіз
     podcasts:
     - episode_id: ULP-053
       title: ULP 2-53 Social Media in Ukrainian + Dative case
@@ -6073,18 +5090,9 @@ resources:
       url: https://www.youtube.com/results?search_query=українська+розмовна+мова
       relevance: high
       source: реальні приклади від носіїв
-    - title: Так, українською
-      url: https://soundcloud.com/takukrayinskou
-      relevance: high
-      source: сучасна розмовна українська
-    - title: Словник українського сленгу
-      url: https://www.urbandictionary.com/define.php?term=Ukrainian%20slang
-      relevance: high
-      source: неформальна лексика
     podcasts:
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: style'
@@ -6094,28 +5102,7 @@ resources:
       url: https://slovnyk.ua/
       relevance: high
       source: перевірка стилістичних позначок слів
-    - title: ГРАК
-      url: https://grammarly.ua/
-      relevance: high
-      source: приклади слів у контексті
-    - title: Практична стилістика
-      url: https://shron1.chtyvo.org.ua/
-      relevance: high
-      source: вправи на стильову трансформацію
   b2-26-politics-government-vocabulary:
-    websites:
-    - title: Верховна Рада України
-      url: https://rada.gov.ua/
-      relevance: high
-      source: офіційний портал парламенту
-    - title: Українська правда
-      url: https://www.pravda.com.ua/
-      relevance: high
-      source: політичні новини
-    - title: Термінологічний словник
-      url: https://term.in.ua/
-      relevance: high
-      source: юридичні та політичні терміни
     podcasts:
     - episode_id: FMU-004
       title: Vocabulary booster! Transport in Ukrainian
@@ -6143,19 +5130,6 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): vocabulary'
   b2-27-law-justice-vocabulary:
-    websites:
-    - title: Верховний Суд України
-      url: https://supreme.court.gov.ua/
-      relevance: high
-      source: судова практика
-    - title: Законодавство України
-      url: https://zakon.rada.gov.ua/
-      relevance: high
-      source: повна база законів
-    - title: Уповноважений ВР з прав людини
-      url: https://ombudsman.gov.ua/
-      relevance: high
-      source: захист прав
     podcasts:
     - episode_id: FMU-004
       title: Vocabulary booster! Transport in Ukrainian
@@ -6183,19 +5157,6 @@ resources:
       relevance: medium
       match_reason: 'Listening review (A1): vocabulary'
   b2-28-economics-business-vocabulary:
-    websites:
-    - title: Економічна правда
-      url: https://www.epravda.com.ua/
-      relevance: high
-      source: провідне українське економічне видання
-    - title: Державна служба статистики
-      url: https://www.ukrstat.gov.ua/
-      relevance: high
-      source: офіційні економічні дані
-    - title: VoxUkraine
-      url: https://voxukraine.org/
-      relevance: high
-      source: економічна аналітика
     podcasts:
     - episode_id: FMU-004
       title: Vocabulary booster! Transport in Ukrainian
@@ -6222,20 +5183,6 @@ resources:
       url: https://www.ukrainianlessons.com/fmu25/
       relevance: medium
       match_reason: 'Listening review (A1): vocabulary'
-  b2-29-b21-integration-practice:
-    websites:
-    - title: Наукова періодика України
-      url: http://www.nbuv.gov.ua/
-      relevance: high
-      source: електронні наукові видання
-    - title: Урядовий портал
-      url: https://www.kmu.gov.ua/
-      relevance: high
-      source: зразки офіційних документів
-    - title: Українська правда
-      url: https://www.pravda.com.ua/
-      relevance: high
-      source: приклади різних регістрів
   b2-30-b21-checkpoint:
     youtube:
     - title: Функціональні стилі української мови
@@ -6258,11 +5205,6 @@ resources:
       url: https://ukrainianlessons.com/time
       relevance: high
       source: Ukrainian Lessons Podcast
-    websites:
-    - title: Числівники в українській мові
-      url: https://goroh.pp.ua/граматика/числівник
-      relevance: high
-      source: Горох (граматика)
     podcasts:
     - episode_id: ULP-067
       title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
@@ -6275,8 +5217,7 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: dates'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: numeral'
@@ -6292,10 +5233,6 @@ resources:
       relevance: high
       source: Ukrainian Lessons
     websites:
-    - title: Числівник в українській мові
-      url: https://goroh.pp.ua/граматика/числівник
-      relevance: high
-      source: Горох
     - title: Числові вирази
       url: https://sum.in.ua
       relevance: high
@@ -6307,8 +5244,7 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: numbers'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: numeral'
@@ -6339,26 +5275,25 @@ resources:
       source: приклади вживання
     podcasts:
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-112
-      title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky
-        +  Imperative mood of the second person plural
+      title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky +  Imperative mood of the second person
+        plural
       url: https://www.ukrainianlessons.com/lesson/112/
       relevance: medium
       match_reason: 'Cross-level topic match: person'
     - episode_id: ULP-114
-      title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative
-        mood of the verbs in the first person plural (Let's…)
+      title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative mood of the verbs in the first person
+        plural (Let's…)
       url: https://www.ukrainianlessons.com/lesson/114/
       relevance: medium
       match_reason: 'Cross-level topic match: person'
@@ -6399,14 +5334,13 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: nouns'
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
@@ -6427,14 +5361,13 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: place'
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
@@ -6454,24 +5387,19 @@ resources:
       url: https://r2u.org.ua/
       relevance: high
       source: онлайн-словник з етимологією
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук словотвірних моделей
     - title: Словотворення прикметників
       url: https://www.youtube.com/results?search_query=словотворення+прикметників+українська
       relevance: high
       source: відеоуроки
     podcasts:
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
@@ -6491,42 +5419,34 @@ resources:
       url: https://r2u.org.ua/
       relevance: high
       source: онлайн-словник з етимологією
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук словотвірних моделей
     - title: Творення прислівників
       url: https://www.youtube.com/results?search_query=творення+прислівників+українська
       relevance: high
       source: відеоуроки
     podcasts:
     - episode_id: ULP-093
-      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
-        words in Ukrainian
+      title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/93/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-098
-      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
-        –  One-word synthetic future tense in Ukrainian
+      title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/98/
       relevance: medium
       match_reason: 'Cross-level topic match: word'
     - episode_id: ULP-101
-      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs
-        in Ukrainian
+      title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/101/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: adverbs'
@@ -6543,14 +5463,12 @@ resources:
       source: офіційні правила
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: medium
       match_reason: 'Cross-level topic match: sentences'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Cross-level topic match: sentences'
@@ -6571,18 +5489,10 @@ resources:
       match_reason: 'Listening review (A1): member'
   b2-39-register-religious-epistolary:
     websites:
-    - title: Православ'я в Україні
-      url: https://orthodox.org.ua/
-      relevance: high
-      source: молитви та богослужіння українською
     - title: Електронна бібліотека
       url: http://litopys.org.ua/
       relevance: high
       source: листи класиків української літератури
-    - title: Офіційний портал
-      url: https://zakon.rada.gov.ua/
-      relevance: high
-      source: зразки офіційних документів
   b2-40-b21c-checkpoint:
     websites:
     - title: Український правопис 2019
@@ -6597,16 +5507,8 @@ resources:
       url: https://www.youtube.com/c/Ukrainer
       relevance: high
       source: автентичні українські матеріали
-    - title: Мова — ДНК нації
-      url: https://mova.info/
-      relevance: high
-      source: ДНК нації](https://mova.info/) — онлайн-вправи з української мови
   b2-41-aspect-nuances-secondary-imperfectivization:
     websites:
-    - title: Український правопис 2019
-      url: https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019
-      relevance: high
-      source: офіційні правила словотвору
     - title: ГРАК
       url: https://uacorpus.org/
       relevance: high
@@ -6617,26 +5519,22 @@ resources:
       source: перевірка видових пар
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Cross-level topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Cross-level topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Cross-level topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Cross-level topic match: perfective'
@@ -6651,42 +5549,33 @@ resources:
       url: https://www.youtube.com/results?search_query=наказовий+спосіб+українська+мова
       relevance: high
       source: пояснення від носіїв мови
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук прикладів наказових форм
     - title: Словник української мови
       url: https://sum.in.ua/
       relevance: high
       source: видові пари дієслів
     podcasts:
     - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
-        and perfective  verb aspects in Ukrainian
+      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/91/
       relevance: medium
       match_reason: 'Cross-level topic match: aspect, imperfective, perfective'
     - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming
-        perfective aspect in Ukrainian
+      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: medium
       match_reason: 'Cross-level topic match: aspect, perfective'
     - episode_id: ULP-094
-      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
-        and perfective verbs in Ukrainian
+      title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/94/
       relevance: medium
       match_reason: 'Cross-level topic match: imperfective, perfective'
     - episode_id: ULP-096
-      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school
-        + Perfective future tense in Ukrainian
+      title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/96/
       relevance: medium
       match_reason: 'Cross-level topic match: perfective'
     - episode_id: ULP-111
-      title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative
-        mood in Ukrainian
+      title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/111/
       relevance: medium
       match_reason: 'Cross-level topic match: imperative'
@@ -6701,10 +5590,6 @@ resources:
       url: https://pravopys.net/
       relevance: high
       source: пунктуація у складних реченнях
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: приклади співвідносних конструкцій
   b2-44-complex-syntax-ellipsis-parcelling:
     websites:
     - title: Електронна бібліотека
@@ -6721,14 +5606,12 @@ resources:
       source: сучасний граматичний довідник
     podcasts:
     - episode_id: ULP-116
-      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences
-        with Adverbial Clauses
+      title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses
       url: https://www.ukrainianlessons.com/lesson/116/
       relevance: medium
       match_reason: 'Cross-level topic match: complex'
     - episode_id: ULP-117
-      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
-        with Attributive Clauses
+      title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Cross-level topic match: complex'
@@ -6793,20 +5676,17 @@ resources:
       source: відеоуроки з вимовою
     podcasts:
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: health'
@@ -6846,36 +5726,28 @@ resources:
       url: https://www.youtube.com/results?search_query=ukrainian+idioms+body
       relevance: high
       source: відеоуроки з соматичними фразеологізмами
-    - title: Goroh - Фразеологічний словник
-      url: https://goroh.pp.ua/
-      relevance: high
-      source: онлайн-словник фразеологізмів
     - title: Learn Ukrainian with Anna - Idioms
       url: https://www.youtube.com/c/LearnUkrainianWithAnna
       relevance: high
       source: популярний канал з поясненням ідіом
     podcasts:
     - episode_id: ULP-086
-      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
-        school in Ukraine + Prefixes в-, у-
+      title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
       url: https://www.ukrainianlessons.com/lesson/86/
       relevance: medium
       match_reason: 'Cross-level topic match: head'
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: health'
@@ -6901,20 +5773,17 @@ resources:
       source: відеоуроки з вимовою
     podcasts:
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: health'
@@ -6931,20 +5800,17 @@ resources:
   b2-51-idioms-body:
     podcasts:
     - episode_id: ULP-102
-      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
-        + Indefinite adverbs and pronouns
+      title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns
       url: https://www.ukrainianlessons.com/lesson/102/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-103
-      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from
-        the numerals
+      title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
       url: https://www.ukrainianlessons.com/lesson/103/
       relevance: medium
       match_reason: 'Cross-level topic match: лікар'
     - episode_id: ULP-104
-      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
-        in Ukrainian
+      title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
       url: https://www.ukrainianlessons.com/lesson/104/
       relevance: medium
       match_reason: 'Cross-level topic match: health'
@@ -6961,8 +5827,7 @@ resources:
   b2-55-synonyms-emotion:
     podcasts:
     - episode_id: ULP-097
-      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
-        tense of the verbs of motion
+      title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: medium
       match_reason: 'Cross-level topic match: motion'
@@ -6974,8 +5839,7 @@ resources:
       relevance: medium
       match_reason: 'Cross-level topic match: movement'
     - episode_id: ULP-075
-      title: ULP 2-75 Ukrainian History Course Part 5 – The liberation movement of
-        1917-1922
+      title: ULP 2-75 Ukrainian History Course Part 5 – The liberation movement of 1917-1922
       url: https://www.ukrainianlessons.com/lesson/75/
       relevance: medium
       match_reason: 'Cross-level topic match: movement'
@@ -6998,20 +5862,6 @@ resources:
       url: https://www.ukrainianlessons.com/fmu41/
       relevance: medium
       match_reason: 'Listening review (A1): place'
-  b2-70-b2-checkpoint:
-    websites:
-    - title: Тести з української мови (ЗНО)
-      url: https://zno.osvita.ua/
-      relevance: high
-      source: складні рівні для тренування.
-    - title: 'Культура слова: типові помилки'
-      url: https://shron1.chtyvo.org.ua/
-      relevance: high
-      source: для швидкого повторення перед тестом.
-    - title: Словник складних випадків української мови
-      url: https://rozum.org.ua/
-      relevance: high
-      source: ваша допомога у сумнівних моментах.
   b2-76-yaroslav-the-wise:
     websites:
     - title: Ярослав Мудрий — Велич Київської Русі (Історія України)
@@ -7019,33 +5869,16 @@ resources:
       relevance: high
       source: Велич Київської Русі (Історія України)](https://www.youtube.com/results?search_query=Ярослав+Мудрий+історія+України)
         — документальні фільми про епоху Ярослава
-    - title: Національний заповідник "Софія Київська"
-      url: https://st-sophia.org.ua/
-      relevance: high
-      source: офіційний сайт собору з віртуальними турами
     - title: Руська Правда — повний текст
       url: https://litopys.org.ua/oldukr2/oldukr51.htm
       relevance: high
-      source: повний текст](https://litopys.org.ua/oldukr2/oldukr51.htm) — оригінал
-        із перекладом на сучасну українську
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук історичної лексики в контексті
+      source: повний текст](https://litopys.org.ua/oldukr2/oldukr51.htm) — оригінал із перекладом на сучасну українську
   b2-77-kultura-kyivskoi-rusi:
     websites:
     - title: Культура Київської Русі (Історія України)
       url: https://www.youtube.com/results?search_query=культура+київської+русі
       relevance: high
       source: документальні фільми про мистецтво та писемність
-    - title: Національний заповідник "Софія Київська"
-      url: https://st-sophia.org.ua/
-      relevance: high
-      source: віртуальні тури та колекція графіті
-    - title: Берестяні грамоти — цифровий архів
-      url: http://gramoty.ru/
-      relevance: high
-      source: цифровий архів](http://gramoty.ru/) — база давніх текстів із перекладами
     - title: Літописи Київської Русі
       url: https://litopys.org.ua/
       relevance: high
@@ -7059,33 +5892,13 @@ resources:
     - title: Повчання Володимира Мономаха — повний текст
       url: https://litopys.org.ua/pvlyar/yar14.htm
       relevance: high
-      source: повний текст](https://litopys.org.ua/pvlyar/yar14.htm) — оригінал із
-        перекладом на сучасну українську
-    - title: Національний музей історії України
-      url: https://nmiu.com.ua/
-      relevance: high
-      source: експозиції періоду Русі
-    - title: Український національний лінгвістичний корпус
-      url: https://www.unlc.org.ua/
-      relevance: high
-      source: пошук історичної лексики в контексті
+      source: повний текст](https://litopys.org.ua/pvlyar/yar14.htm) — оригінал із перекладом на сучасну українську
   b2-79-mongolska-navala-1240:
     youtube:
     - title: Падіння Києва 1240 — Історія без міфів
       url: https://www.youtube.com/watch?v=example
       relevance: high
-      channel: Історія без міфів](https://www.youtube.com/watch?v=example) — детальний
-        аналіз подій монгольської навали
-    websites:
-    - title: Ліквідація Київської Русі
-      url: https://www.istpravda.com.ua/
-      relevance: high
-      source: академічний погляд на наслідки навали
-    - title: Ukrainer — Київ до і після монголів
-      url: https://ukrainer.net/
-      relevance: high
-      source: Київ до і після монголів](https://ukrainer.net/) — сучасна інтерпретація
-        історичних подій
+      channel: Історія без міфів](https://www.youtube.com/watch?v=example) — детальний аналіз подій монгольської навали
   b2-92-ivan-mazepa-i-derzhavnyk:
     podcasts:
     - episode_id: ULP-071
@@ -7112,56 +5925,25 @@ resources:
     - title: 'Ukrainian Lessons: Галичина — історія'
       url: https://www.ukrainianlessons.com/galicia-history
       relevance: high
-      source: історія](https://www.ukrainianlessons.com/galicia-history) — подкаст
-        про історію регіону
-    websites:
-    - title: 'Zbruch.eu: Руська Трійця'
-      url: https://zbruch.eu/ruska-triytsia
-      relevance: high
-      source: статті про засновників українського руху
-  151-honcharstvo-ta-rizbyarstvo:
-    websites:
-    - title: Національний музей-заповідник українського гончарства в Опішному
-      url: http://www.opishne-museum.gov.ua/
-      relevance: high
-      source: Official museum website
-    - title: 'UNESCO: Tradition of Kosiv painted ceramics'
-      url: https://ich.unesco.org/en/RL/tradition-of-kosiv-painted-ceramics-01456
-      relevance: high
-      source: UNESCO Intangible Heritage
+      source: історія](https://www.ukrainianlessons.com/galicia-history) — подкаст про історію регіону
   a1-35-at-the-cafe:
     youtube:
     - title: Ordering in a Ukrainian Cafe
       url: https://www.youtube.com/watch?v=FjI1V3I-9_w
       relevance: high
       channel: Ukrainian Lessons
-    websites:
-    - title: Ukrainian Coffee Culture
-      url: https://ukrainer.net/coffee/
-      relevance: high
-      source: Authentic stories and photos from coffee shops across Ukraine
   a1-36-at-the-restaurant:
     youtube:
     - title: Ordering in a Ukrainian Cafe/Restaurant
       url: https://www.youtube.com/watch?v=FjI1V3I-9_w
       relevance: high
       channel: Ukrainian Lessons
-    websites:
-    - title: Ukrainian Cuisine Guide
-      url: https://ukraine.ua/visit/cuisine/
-      relevance: high
-      source: Official guide to Ukrainian food culture
   a1-37-at-the-market:
     youtube:
     - title: Fruits and Vegetables in Ukrainian
       url: https://www.youtube.com/watch?v=F0O5y9D1kGg
       relevance: high
       channel: Ukrainian Lessons
-    websites:
-    - title: Bessarabsky Market in Kyiv
-      url: https://discover-ukraine.info/index.php/en/places/kyiv/kyiv-places/bessarabsky-market
-      relevance: high
-      source: History and guide to the famous Kyiv market
   a1-38-at-the-store:
     youtube:
     - title: Shopping in Ukrainian - Supermarket Vocabulary
@@ -7174,11 +5956,6 @@ resources:
       relevance: high
       source: Detailed list of grocery items and checkout phrases
   a1-39-buying-tickets:
-    websites:
-    - title: Ukrainian Railways (Ukrzaliznytsia) Booking
-      url: https://booking.uz.gov.ua/en/
-      relevance: high
-      source: Official train ticket booking site with English interface
     articles:
     - title: Transportation in Ukrainian
       url: https://www.ukrainianlessons.com/transport/
@@ -7186,10 +5963,6 @@ resources:
       source: Vocabulary and phrases for trains, buses, and planes
   a1-40-taking-transport:
     websites:
-    - title: Kyiv Metro Official Map
-      url: https://metro.kyiv.ua/ru/karta-metro/
-      relevance: high
-      source: Official interactive map of the Kyiv Metro lines
     - title: How to Ride a Marshrutka
       url: https://www.ukrainianlessons.com/marshrutka/
       relevance: high
@@ -7200,50 +5973,24 @@ resources:
       url: https://www.ukrainianlessons.com/phone/
       relevance: high
       source: Cheat sheet for phone conversations with audio
-    websites:
-    - title: Kyivstar - Largest Mobile Operator
-      url: https://kyivstar.ua/en
-      relevance: medium
-      source: Explore plans and services to see real-world terminology
   a1-42-emergencies:
-    websites:
-    - title: Visit Ukraine - Emergency Contacts
-      url: https://visitukraine.today/blog/69/emergency-phone-numbers-in-ukraine
-      relevance: high
-      source: Complete list of emergency numbers for tourists and residents
     articles:
     - title: Medical and Health Vocabulary
       url: https://www.ukrainianlessons.com/health/
       relevance: high
       source: Phrases for doctor visits and emergencies with audio
   a1-43-combined-practice:
-    websites:
-    - title: Visit Kyiv - Official City Guide
-      url: https://visitkyiv.travel/
-      relevance: medium
-      source: Explore things to do and places to visit in the capital
     articles:
     - title: Ukrainian Daily Routine Vocabulary
       url: https://www.ukrainianlessons.com/daily-routine/
       relevance: high
       source: Review common verbs and nouns for daily activities
-  a1-44-a1-final-exam:
-    websites:
-    - title: National Commission for State Language Standards
-      url: https://mova.gov.ua/
-      relevance: medium
-      source: Information on official Ukrainian language exams and standards
   18-women-in-kobzar:
     youtube:
-    - title: "Фільм-опера 'Наймичка' (1963)"
+    - title: Фільм-опера 'Наймичка' (1963)
       url: https://www.youtube.com/results?search_query=фільм+наймичка+1963
       relevance: high
       channel: Search Results
-    - title: "Оксана Забужко про Шевченка"
+    - title: Оксана Забужко про Шевченка
       url: https://www.youtube.com/results?search_query=оксана+забужко+шевченко
       relevance: high
-    articles:
-    - title: "Шевченко як міфотворець"
-      url: https://krytyka.com/ua/articles/shevchenko-mifotvorets
-      relevance: high
-      source: Krytyka

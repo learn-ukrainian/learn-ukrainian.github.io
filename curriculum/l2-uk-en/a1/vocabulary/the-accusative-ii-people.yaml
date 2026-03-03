@@ -1,61 +1,61 @@
-  lemma: брат
+items:
+- lemma: цей
+  pos: adj
+- lemma: це
   pos: noun
-  translation: brother
-  lemma: сестра
+- lemma: ми
   pos: noun
-  translation: sister
-  lemma: мама
+- lemma: слово
   pos: noun
-  translation: mom
-  lemma: тато
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: вони
   pos: noun
-  translation: dad
-  lemma: друг
+- lemma: людина
   pos: noun
-  translation: friend (male)
-  lemma: подруга
-  pos: noun
-  translation: friend (female)
-  lemma: лікар
-  pos: noun
-  translation: doctor
-  lemma: вчитель
-  pos: noun
-  translation: teacher
-  lemma: студент
-  pos: noun
-  translation: student
-  lemma: кіт
-  pos: noun
-  translation: cat
-  lemma: пес
-  pos: noun
-  translation: dog
-  lemma: сусід
-  pos: noun
-  translation: neighbor
-  lemma: колега
-  pos: noun
-  translation: colleague
-  lemma: син
-  pos: noun
-  translation: son
-  lemma: дочка
-  pos: noun
-  translation: daughter
-  lemma: знайомий
-  pos: noun
-  translation: acquaintance
-  lemma: бачити
+- lemma: наш
+  pos: adj
+- lemma: бачити
   pos: verb
-  translation: to see
-  lemma: знати
+- lemma: ви
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: свій
+  pos: adj
+- lemma: знати
   pos: verb
-  translation: to know
-  lemma: любити
+- lemma: ваш
+  pos: adj
+- lemma: український
+  pos: adj
+- lemma: живий
+  pos: adj
+- lemma: друг
+  pos: noun
+- lemma: правило
+  pos: noun
+- lemma: як
+  pos: adv
+- lemma: знайомий
+  pos: adj
+- lemma: істота
+  pos: noun
+- lemma: закінчення
+  pos: noun
+- lemma: мати
   pos: verb
-  translation: to love
-  lemma: чекати
+- lemma: маяти
   pos: verb
-  translation: to wait for
-
+- lemma: відмінок
+  pos: noun
+- lemma: українська
+  pos: noun
+- lemma: великий
+  pos: adj
+- lemma: завжди
+  pos: adv
+- lemma: до
+  pos: noun

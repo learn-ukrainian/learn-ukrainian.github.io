@@ -1,0 +1,41 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "2358",
+    "COMPUTED_WORD_TARGET": "2000",
+    "COMPUTED_WORD_PERCENT": "117.9",
+    "COMPUTED_ACTIVITY_COUNT": "10",
+    "COMPUTED_VOCAB_COUNT": "21",
+    "COMPUTED_ENGAGEMENT_COUNT": "4",
+    "COMPUTED_IMMERSION_PERCENT": "5.5",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "49",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 0/3, examples: 6/24, dialogues: 0/4, proverbs: 0/1",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "============================================================\n  HETMAN VERIFY: the-cyrillic-code-ii\n============================================================\n\n[1/4] Running full audit...\n[2/4] Checking sidecar files...\n[3/4] Reading status JSON...\n[4/4] Checking overall status...\n\n────────────────────────────────────────────────────────────\n  VERDICT: PASS\n  Module:  the-cyrillic-code-ii\n  Gates:   6 pass, 1 info\n────────────────────────────────────────────────────────────\n\n  Module is FULLY COMPLETE.\n  Hetman may now write completion.md and proceed.\n\nVESUM: 74/74 (100%) verified",
+  "h2_sections": "1. Вступ — Introduction\n2. Голосні — Vowels: И, І, О\n3. Приголосні — Consonants: К, Р, Б, В, Д\n4. Перші слова — First Words\n5. Практика — Practice",
+  "vesum_stats": {
+    "total": 74,
+    "vesum_hits": 74,
+    "rag_hits": 0,
+    "not_found": 0,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 71,
+        "vesum_hits": 71,
+        "not_found": 0
+      },
+      "activities": {
+        "total": 3,
+        "vesum_hits": 3,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [],
+  "content_hash": "3458cd6bd9d38d48"
+}

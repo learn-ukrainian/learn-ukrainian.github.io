@@ -24,6 +24,56 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 (No primary source excerpts available from RAG)
 
+## Resource Discoveries
+
+These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
+
+- **Videos**: Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value
+- **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
+- **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
+- **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
+
+(No video discoveries available)
+### Research Videos
+*These videos were found during the research phase. Embed each one next to its corresponding letter/topic section using a markdown link.*
+
+- Anna Ohoiko — Ukrainian Alphabet: Pronunciation, Writing & Examples — https://www.youtube.com/watch?v=ksXIXj7CXwc
+
+### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)
+*Credit: Anna Ohoiko — Ukrainian Lessons*
+
+- **Overview**: https://www.youtube.com/watch?v=ksXIXj7CXwc
+- **Full Playlist**: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+
+**Each letter below MUST get its video embedded in the corresponding H3 section:**
+
+- **Літера А**: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+- **Літера М**: https://www.youtube.com/watch?v=Ez95H4ibuJo
+- **Літера Л**: https://www.youtube.com/watch?v=v6-3Xg52Buk
+- **Літера У**: https://www.youtube.com/watch?v=VB1O6PmtYRU
+- **Літера Н**: https://www.youtube.com/watch?v=vNUfiKHPYaU
+- **Літера С**: https://www.youtube.com/watch?v=7UsFBgSL91E
+
+## Module Sequence Constraints (HARD FAIL if violated)
+
+DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
+- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)
+- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary with immediate English translation: «Привіт!» (Hello!)
+- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read
+
+GRAMMAR BAN (no verbs exist yet in the student's knowledge):
+- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED
+- NO verb conjugation of any kind (present, past, future)
+- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'
+- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+
+METALANGUAGE:
+- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'
+- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')
+- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet
+
+> **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
+
 ---
 
 ## Your Task
@@ -55,12 +105,12 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Вступ | 300 | 450 |
-| Голосні — А, У | 400 | 600 |
-| Приголосні — М, Л, Н, С | 500 | 750 |
-| Перші склади | 350 | 525 |
-| Практика читання | 300 | 450 |
-| Підсумок | 200 | 300 |
+| Вступ — Introduction | 300 | 450 |
+| Голосні — Vowels: А, У | 400 | 600 |
+| Приголосні — Consonants: М, Л, Н, С | 500 | 750 |
+| Перші склади — First Syllables | 350 | 525 |
+| Практика читання — Reading Practice | 250 | 375 |
+| Підсумок — Summary | 200 | 300 |
 | **Total** | **2000** | **3000** |
 
 ---
@@ -144,10 +194,10 @@ Use at least **4 DIFFERENT** callout types across the module:
 
 ### Rule 6: Self-Check Questions in Summary
 
-The Підсумок section MUST include 4-6 self-assessment questions:
+The Summary section MUST include 4-6 self-assessment questions:
 
 ```markdown
-**Перевірте себе:**
+**Check yourself:**
 1. {question testing core concept 1}
 2. {question testing core concept 2}
 3. {question requiring application, not recall}
@@ -405,7 +455,7 @@ Related: {connected slugs}
 
 # {Title}
 
-> **Чому це важливо?**
+> **Why does this matter?**
 >
 > {2-3 sentences of significance}
 
@@ -427,7 +477,7 @@ Related: {connected slugs}
 
 ---
 
-# Підсумок
+# Summary
 
 {Summary + 4-6 self-check questions (~200 words)}
 

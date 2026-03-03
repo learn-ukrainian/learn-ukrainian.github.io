@@ -1,68 +1,61 @@
 items:
-  - lemma: "телефон"
-    translation: "phone"
-    pos: "noun"
-    gender: "m"
-  - lemma: "дзвонити"
-    translation: "to call"
-    pos: "verb"
-  - lemma: "відповідати"
-    translation: "to answer"
-    pos: "verb"
-  - lemma: "номер"
-    translation: "number"
-    pos: "noun"
-    gender: "m"
-  - lemma: "повідомлення"
-    translation: "message"
-    pos: "noun"
-    gender: "n"
-  - lemma: "зайнятий"
-    translation: "busy"
-    pos: "adjective"
-  - lemma: "передзвонити"
-    translation: "to call back"
-    pos: "verb"
-  - lemma: "алло"
-    translation: "hello (on the phone)"
-    pos: "interjection"
-  - lemma: "слухаю"
-    translation: "I am listening (polite phone answer)"
-    pos: "verb"
-  - lemma: "хвилинка"
-    translation: "a moment / a little minute"
-    pos: "noun"
-    gender: "f"
-  - lemma: "помилитися"
-    translation: "to make a mistake"
-    pos: "verb"
-  - lemma: "передати"
-    translation: "to pass on"
-    pos: "verb"
-  - lemma: "телефонувати"
-    translation: "to phone"
-    pos: "verb"
-  - lemma: "зачекайте"
-    translation: "wait (formal imperative)"
-    pos: "verb"
-  - lemma: "до зв'язку"
-    translation: "talk soon / until the connection"
-    pos: "phrase"
-  - lemma: "повторіть"
-    translation: "repeat (formal imperative)"
-    pos: "verb"
-  - lemma: "кур'єр"
-    translation: "courier / delivery driver"
-    pos: "noun"
-    gender: "m"
-  - lemma: "лінія"
-    translation: "line (phone line)"
-    pos: "noun"
-    gender: "f"
-  - lemma: "особистий"
-    translation: "personal"
-    pos: "adjective"
-  - lemma: "зв'язок"
-    translation: "connection"
-    pos: "noun"
-    gender: "m"
+- lemma: ви
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: фраза
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: бути
+  pos: verb
+- lemma: до
+  pos: noun
+- lemma: слухати
+  pos: verb
+- lemma: форма
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: ласка
+  pos: noun
+- lemma: могти
+  pos: verb
+- lemma: дзвонити
+  pos: verb
+- lemma: телефон
+  pos: noun
+- lemma: сказати
+  pos: verb
+- lemma: дзвінка
+  pos: noun
+- lemma: дзвінок
+  pos: noun
+- lemma: зайнятий
+  pos: adj
+- lemma: використовувати
+  pos: verb
+- lemma: повідомлення
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: ваш
+  pos: adj
+- lemma: як
+  pos: noun
+- lemma: добрий
+  pos: adj
+- lemma: розмова
+  pos: noun
+- lemma: людина
+  pos: noun

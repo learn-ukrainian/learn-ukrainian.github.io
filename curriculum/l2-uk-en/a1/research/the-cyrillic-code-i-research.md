@@ -1,32 +1,76 @@
 # Дослідження: The Cyrillic Code I
 
 ## State Standard Reference
-§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери..."
+§4.1.1: "Український алфавіт. Друковані та писані літери."
 §4.1.4: "Голосні та приголосні звуки: вимова голосних у наголошеній і ненаголошеній позиціях... тверді та м’які приголосні..."
-Alignment: This module establishes the foundational recognition of the Ukrainian alphabet (the first 6 core letters) and introduces the fundamental phonetic principle of vowel stability (no reduction).
+Alignment: This module directly addresses the foundational phonetics and graphics requirement for A1 level by introducing the first 6 letters, distinguishing vowels from consonants, and teaching core reading mechanics.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| мама | Extremely High | моя мама (my mom) |
-| нас | Very High (Pronoun) | для нас (for us) |
-| сам | High (Adj/Pronoun)| я сам (I myself) |
-| луна | Medium (Noun) | гучна луна (loud echo) |
-| сума | High (Noun) | велика сума (large sum) |
+| А | 7.2% – 8.3% (2nd most frequent) | N/A (letter frequency) |
+| Н | 6.5% – 7.1% (3rd most frequent) | N/A (letter frequency) |
+| С | 3.7% – 4.6% (~10th most frequent) | N/A (letter frequency) |
+| Л, У, М | ~13th-16th most frequent | N/A (letter frequency) |
+*Note: These six high-frequency letters allow learners to immediately construct their first meaningful words (мама, нас, сам, луна).*
 
 ## Cultural Hooks
-1. The Cyrillic alphabet originates from the First Bulgarian Empire, developed by the students of Saints Cyril and Methodius. This establishes independent, ancient Eastern European roots for the Ukrainian writing system.
-2. The letter «У» features prominently in the word «Україна» (Ukraine), providing an immediate, meaningful cultural anchor for absolute beginners.
+1. **Decolonized Origin**: The Cyrillic alphabet is not Russian; it was developed in the 9th century in the First Bulgarian Empire by students of Saints Cyril and Methodius (such as Clement of Ohrid) for Old Church Slavonic.
+2. **Typography**: The modern printed form of Cyrillic letters (including Ukrainian) is rooted in historical uncial script, which evolved significantly independently from Latin scripts before standardisation.
 
 ## Common Learner Errors
-1. Visual false friends (Н, С) → English speakers habitually pronounce Н as /h/ and С as /k/ or an inconsistent /s/. This requires explicit, early unlearning.
-2. Vowel reduction → English speakers naturally reduce unstressed vowels (like 'А') to a schwa (/ə/). In Ukrainian, vowels must retain their pure, crisp sound regardless of word stress.
+1. **Visual Trap "С"** → Pronouncing it as English /k/. *Correction*: Always maps to /s/ (like in "sun").
+2. **Visual Trap "Н"** → Pronouncing it as English /h/. *Correction*: Maps strictly to /n/ (like in "net").
+3. **Vowel Reduction** → English speakers tend to reduce unstressed "А" and "У" to a schwa (/ə/ or "uh"). *Correction*: Ukrainian vowels are perfectly stable and must retain full clarity regardless of stress.
 
 ## Cross-References
-- Builds on: None (First Contact)
-- Prepares for: a1-02 (The Cyrillic Code II)
+- Builds on: None (First Contact module)
+- Prepares for: `a1-02` (The Cyrillic Code II - introducing 7 new letters)
+
+## Multimedia Resources
+- Anna Ohoiko — Ukrainian Lessons Alphabet Playlist — https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV — Authoritative phonetic guide for standard pronunciation.
 
 ## Notes for Content Writing
-- Decolonized framing: Emphasize the direct historical lineage of the Ukrainian alphabet and its phonetic purity. Absolutely avoid any comparisons to Russian. Frame features positively ("Ukrainian vowels are perfectly stable" instead of "Unlike in other languages...").
-- English scaffolding: Use English clearly and cleanly to explain the mechanics of the alphabet and pronunciation, providing a "safe harbor" for A1 learners, but keep Ukrainian examples pure.
-- Focus strictly on standard printed uppercase and lowercase letters; do not introduce cursive variants at this stage.
+- English scaffolding is mandatory for explaining linguistic concepts (vowels vs. consonants, syllables) since immersion is capped at 10-50%.
+- Avoid referencing Russian when discussing "visual traps"; instead, just state they look like English but sound different.
+- Frame Ukrainian as a highly logical, phonetic system.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
+- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
+- [Talk Ukrainian: Ukrainian alphabet with pronunciation](https://talkukrainian.com/ukrainian-alphabet/) (talkukrainian)
+- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode200/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 2, Сторінка 3: ЗВУКИ І БУКВИ
+к
+і
+<
+ЗВУКИ
+СКЛАД^
+У розділі ти будеш вивчати:
+БУКВИ
+НАГОЛОС
+Дізнаєшся про:
+к
+1
+г
+л
+І
+...
+- Grade 1, Сторінка 44: 42
+Бачу И, и. Чую  [и].
+	 Прочитай букви, слідкуючи за стрілками. 
+Збільшуй силу голосу, коли стрілк...
+- Grade 4, Сторінка 188: 66
+Урок розвитку писемного мовлення
+Вибірковий переказ тексту з елементами о п и с у...................
+- Grade 1, Сторінка 17: 15
+Приголосні тверді та м’які
+	 Вимов звуки, які ти чуєш на початку слів — 
+назв намальованих предме...
+- Grade 4, Сторінка 91: •  Спишіть, підкресліть хвилястою лінією прикметники в почат­
+ковій формі. Провідміняйте, користуючи...

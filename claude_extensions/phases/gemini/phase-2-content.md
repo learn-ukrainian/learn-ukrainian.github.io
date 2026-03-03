@@ -24,11 +24,24 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 {PRIMARY_SOURCE_EXCERPTS}
 
-## Video Discoveries
+## Resource Discoveries
 
-These videos were found during the discover phase. Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value (e.g., after the section suggested below). Only embed videos that genuinely enhance the lesson — don't force them in.
+These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
+
+- **Videos**: Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value
+- **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
+- **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
+- **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
 
 {VIDEO_DISCOVERY}
+
+{PRONUNCIATION_VIDEOS}
+
+## Module Sequence Constraints (HARD FAIL if violated)
+
+{PEDAGOGICAL_CONSTRAINTS}
+
+> **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
 
 ---
 
@@ -142,10 +155,10 @@ Use at least **4 DIFFERENT** callout types across the module:
 
 ### Rule 6: Self-Check Questions in Summary
 
-The Підсумок section MUST include 4-6 self-assessment questions:
+The {SUMMARY_HEADING} section MUST include 4-6 self-assessment questions:
 
 ```markdown
-**Перевірте себе:**
+**{SELF_CHECK_HEADING}**
 1. {question testing core concept 1}
 2. {question testing core concept 2}
 3. {question requiring application, not recall}
@@ -403,7 +416,7 @@ Related: {connected slugs}
 
 # {Title}
 
-> **Чому це важливо?**
+> **{INTRO_HOOK}**
 >
 > {2-3 sentences of significance}
 
@@ -425,7 +438,7 @@ Related: {connected slugs}
 
 ---
 
-# Підсумок
+# {SUMMARY_HEADING}
 
 {Summary + 4-6 self-check questions (~200 words)}
 

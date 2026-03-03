@@ -1,27 +1,19 @@
 {
-  "track": "a1",
-  "slug": "my-world-objects",
-  "mode": "v3",
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T15:47:10Z",
+      "ts": "2026-03-02T20:08:33Z",
       "task_id": "v3-my-world-objects-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T15:51:15Z"
+      "ts": "2026-03-02T20:12:36Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T15:51:15Z",
-      "note": "adopted-existing"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-28T15:56:39Z",
-      "attempts": 2
+      "ts": "2026-03-02T20:15:12Z",
+      "task_id": "v3-my-world-objects-pC"
     }
   }
 }

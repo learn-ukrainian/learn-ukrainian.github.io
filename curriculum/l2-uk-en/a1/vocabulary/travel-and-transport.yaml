@@ -1,62 +1,61 @@
 items:
-  - lemma: "автобус"
-    translation: "bus"
-    pos: "noun"
-  - lemma: "метро"
-    translation: "metro"
-    pos: "noun"
-    notes: "indeclinable neuter noun"
-  - lemma: "потяг"
-    translation: "train"
-    pos: "noun"
-  - lemma: "літак"
-    translation: "airplane"
-    pos: "noun"
-  - lemma: "вокзал"
-    translation: "train station"
-    pos: "noun"
-  - lemma: "аеропорт"
-    translation: "airport"
-    pos: "noun"
-  - lemma: "наліво"
-    translation: "left"
-    pos: "adverb"
-  - lemma: "направо"
-    translation: "right"
-    pos: "adverb"
-  - lemma: "прямо"
-    translation: "straight"
-    pos: "adverb"
-  - lemma: "маршрутка"
-    translation: "minibus"
-    pos: "noun"
-  - lemma: "трамвай"
-    translation: "tram"
-    pos: "noun"
-  - lemma: "зупинка"
-    translation: "stop"
-    pos: "noun"
-  - lemma: "квиток"
-    translation: "ticket"
-    pos: "noun"
-  - lemma: "розклад"
-    translation: "schedule"
-    pos: "noun"
-  - lemma: "каса"
-    translation: "ticket office"
-    pos: "noun"
-  - lemma: "перон"
-    translation: "platform"
-    pos: "noun"
-  - lemma: "їхати"
-    translation: "to go by vehicle"
-    pos: "verb"
-  - lemma: "іти"
-    translation: "to go on foot"
-    pos: "verb"
-  - lemma: "тролейбус"
-    translation: "trolleybus"
-    pos: "noun"
-  - lemma: "назад"
-    translation: "back"
-    pos: "adverb"
+- lemma: ви
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: їхати
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: до
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: могти
+  pos: verb
+- lemma: потяг
+  pos: noun
+- lemma: як
+  pos: adv
+- lemma: ми
+  pos: noun
+- lemma: транспорт
+  pos: noun
+- lemma: автобус
+  pos: noun
+- lemma: сказати
+  pos: verb
+- lemma: знати
+  pos: verb
+- lemma: вокзал
+  pos: noun
+- lemma: метро
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: довгий
+  pos: adj
+- lemma: бути
+  pos: verb
+- lemma: також
+  pos: adv
+- lemma: вони
+  pos: noun
+- lemma: туди
+  pos: adv
+- lemma: великий
+  pos: adj
+- lemma: де
+  pos: adv
+- lemma: іти
+  pos: verb
+- lemma: місто
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb

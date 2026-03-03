@@ -1,76 +1,61 @@
 items:
-  - lemma: "подобатися"
-    translation: "to like / to appeal"
-    pos: "verb"
-    aspect: "imperf"
-  - lemma: "любити"
-    translation: "to love"
-    pos: "verb"
-    aspect: "imperf"
-  - lemma: "хотіти"
-    translation: "to want"
-    pos: "verb"
-    aspect: "imperf"
-  - lemma: "кава"
-    translation: "coffee"
-    pos: "noun"
-    gender: "f"
-  - lemma: "музика"
-    translation: "music"
-    pos: "noun"
-    gender: "f"
-  - lemma: "читати"
-    translation: "to read"
-    pos: "verb"
-    aspect: "imperf"
-  - lemma: "їсти"
-    translation: "to eat"
-    pos: "verb"
-    aspect: "imperf"
-  - lemma: "піти"
-    translation: "to go"
-    pos: "verb"
-    aspect: "perf"
-  - lemma: "цікавий"
-    translation: "interesting"
-    pos: "adj"
-  - lemma: "нудний"
-    translation: "boring"
-    pos: "adj"
-  - lemma: "смачний"
-    translation: "tasty"
-    pos: "adj"
-  - lemma: "улюблений"
-    translation: "favourite"
-    pos: "adj"
-  - lemma: "борщ"
-    translation: "borsch (beetroot soup)"
-    pos: "noun"
-    gender: "m"
-  - lemma: "чай"
-    translation: "tea"
-    pos: "noun"
-    gender: "m"
-  - lemma: "спорт"
-    translation: "sport"
-    pos: "noun"
-    gender: "m"
-  - lemma: "фільм"
-    translation: "film"
-    pos: "noun"
-    gender: "m"
-  - lemma: "книга"
-    translation: "book"
-    pos: "noun"
-    gender: "f"
-  - lemma: "квітка"
-    translation: "flower"
-    pos: "noun"
-    gender: "f"
-  - lemma: "піца"
-    translation: "pizza"
-    pos: "noun"
-    gender: "f"
-  - lemma: "також"
-    translation: "also / too"
-    pos: "adv"
+- lemma: любити
+  pos: verb
+- lemma: хотіти
+  pos: verb
+- lemma: хтіти
+  pos: verb
+- lemma: подобатися
+  pos: verb
+- lemma: ти
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: я
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: кава
+  pos: noun
+- lemma: музика
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: ви
+  pos: noun
+- lemma: цікавий
+  pos: adj
+- lemma: їсти
+  pos: verb
+- lemma: так
+  pos: adv
+- lemma: новий
+  pos: adj
+- lemma: чай
+  pos: noun
+- lemma: добрий
+  pos: adj
+- lemma: спорт
+  pos: noun
+- lemma: добре
+  pos: adv
+- lemma: говорити
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: книга
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: великий
+  pos: adj
+- lemma: робити
+  pos: verb
+- lemma: що
+  pos: noun

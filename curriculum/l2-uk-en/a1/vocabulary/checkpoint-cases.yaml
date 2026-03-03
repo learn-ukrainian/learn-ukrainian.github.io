@@ -1,78 +1,61 @@
 items:
-  - lemma: "де"
-    translation: "where (location)"
-    pos: "adverb"
-    usage: "Requires Locative case"
-  - lemma: "куди"
-    translation: "where to (direction)"
-    pos: "adverb"
-    usage: "Requires Accusative case"
-  - lemma: "звідки"
-    translation: "from where (origin)"
-    pos: "adverb"
-    usage: "Requires Genitive case"
-  - lemma: "немає"
-    translation: "there is no"
-    pos: "verb"
-    notes: "Always followed by Genitive case"
-  - lemma: "новий"
-    translation: "new"
-    pos: "adjective"
-  - lemma: "великий"
-    translation: "big"
-    pos: "adjective"
-  - lemma: "мене"
-    translation: "me"
-    pos: "pronoun"
-    notes: "Acc/Gen of я"
-  - lemma: "тебе"
-    translation: "you"
-    pos: "pronoun"
-    notes: "Acc/Gen of ти"
-  - lemma: "його"
-    translation: "him, his, it"
-    pos: "pronoun"
-    notes: "Takes prefix н- after prepositions"
-  - lemma: "через"
-    translation: "through, across"
-    pos: "preposition"
-    usage: "Requires Accusative case"
-  - lemma: "за"
-    translation: "for (exchange, thanks)"
-    pos: "preposition"
-    usage: "Requires Accusative case in this context"
-  - lemma: "про"
-    translation: "about"
-    pos: "preposition"
-    usage: "Requires Accusative case"
-  - lemma: "красивий"
-    translation: "beautiful"
-    pos: "adjective"
-  - lemma: "маленький"
-    translation: "small"
-    pos: "adjective"
-  - lemma: "парк"
-    translation: "park"
-    pos: "noun"
-    gender: "m"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "кафе"
-    translation: "cafe"
-    pos: "noun"
-    gender: "n"
-    notes: "Indeclinable noun"
-  - lemma: "вулиця"
-    translation: "street"
-    pos: "noun"
-    gender: "f"
-  - lemma: "театр"
-    translation: "theater"
-    pos: "noun"
-    gender: "m"
-  - lemma: "чекати"
-    translation: "to wait"
-    pos: "verb"
-    usage: "чекати на + Accusative"
+- lemma: ти
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: йти
+  pos: verb
+- lemma: де
+  pos: adv
+- lemma: за
+  pos: adv
+- lemma: воно
+  pos: noun
+- lemma: парк
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: кафе
+  pos: noun
+- lemma: веліти
+  pos: verb
+- lemma: вести
+  pos: verb
+- lemma: куди
+  pos: adv
+- lemma: новий
+  pos: adj
+- lemma: відмінок
+  pos: noun
+- lemma: бачити
+  pos: verb
+- lemma: ми
+  pos: noun
+- lemma: йога
+  pos: noun
+- lemma: його
+  pos: adj
+- lemma: знахідний
+  pos: adj
+- lemma: зараз
+  pos: adv
+- lemma: зараза
+  pos: noun
+- lemma: кий
+  pos: noun
+- lemma: малий
+  pos: adj
+- lemma: краса
+  pos: noun
+- lemma: красити
+  pos: verb
+- lemma: нове
+  pos: noun
+- lemma: хто
+  pos: noun
+- lemma: місто
+  pos: noun
+- lemma: до
+  pos: noun
+- lemma: місцевий
+  pos: adj

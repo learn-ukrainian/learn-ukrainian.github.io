@@ -1,0 +1,134 @@
+# Trusted Ukrainian-language sources for research grounding.
+#
+# Each source is queryable programmatically via scripts/rag/source_query.py
+# or indexed locally in Qdrant (type: rag).
+#
+# Categories:
+#   rag       — indexed locally in Qdrant (offline search)
+#   live      — queried via HTTP at research time
+#   reference — static rules, looked up by topic/section
+#
+# query_function refers to the Python function in rag.source_query
+
+version: "1.0"
+updated: "2026-03-03"
+
+sources:
+  # ── RAG-indexed (local Qdrant) ────────────────────────────────
+  - id: textbooks
+    name: Ukrainian school textbooks
+    type: rag
+    collection: textbook_chunks
+    description: >
+      1,200+ chunks from Ukrainian-language school textbooks (grades 1-11).
+      NUS 2022+ editions are trust tier 1.
+    coverage: Grammar rules, morphology, orthography, literature
+    mcp_tool: search_text
+
+  - id: literary
+    name: Ukrainian literary primary sources
+    type: rag
+    collection: literary_texts
+    description: >
+      Chronicles, poetry, legal texts, grammars from Old East Slavic
+      through modern Ukrainian. Original texts with modern translations.
+    coverage: X-XXI century literary works
+    mcp_tool: search_literary
+
+  - id: esu
+    name: Encyclopedia of Modern Ukraine (ESU)
+    type: rag
+    collection: esu_encyclopedia
+    url: https://esu.com.ua
+    description: >
+      81,000+ authoritative articles by NAS Ukraine scholars.
+      Covers history, biography, culture, geography, science.
+    coverage: All domains of Ukrainian knowledge
+    mcp_tool: search_esu
+
+  - id: vesum
+    name: VESUM morphological dictionary
+    type: rag
+    collection: vesum (SQLite)
+    description: >
+      415K lemmas, ~6M inflected forms. Brown-UK project.
+      POS tags, morphological features, full paradigms.
+    coverage: All Ukrainian word forms
+    mcp_tool: verify_word, verify_lemma
+
+  # ── Live query sources ────────────────────────────────────────
+  - id: wikipedia
+    name: Ukrainian Wikipedia
+    type: live
+    url: https://uk.wikipedia.org
+    api: REST + MediaWiki
+    description: >
+      Encyclopedic articles in Ukrainian. REST API for summaries,
+      MediaWiki API for full text, sections, and search.
+    coverage: General encyclopedic knowledge
+    query_function: wikipedia_summary, wikipedia_search
+    mcp_tool: query_wikipedia
+
+  - id: grac
+    name: GRAC corpus
+    type: live
+    url: https://uacorpus.org
+    api: NoSketch Engine (sketch.uacorpus.org)
+    description: >
+      General Regionally Annotated Corpus of Ukrainian — 2.02 billion tokens.
+      Word frequency, concordance, collocations, lemma distribution.
+      CQL query support. VESUM-based morphological tags.
+    coverage: Word frequency, usage examples, collocations
+    query_function: grac_frequency, grac_lemma_frequency, grac_concordance, grac_collocations
+    mcp_tool: query_grac
+
+  - id: ulif
+    name: ULIF dictionary portal
+    type: live
+    url: https://lcorp.ulif.org.ua/dictua
+    description: >
+      Ukrainian Lingua-Information Fund. Declension/conjugation paradigm
+      tables with all case forms (називний through кличний).
+    coverage: Morphological paradigms
+    query_function: ulif_paradigm
+    mcp_tool: query_ulif
+
+  - id: r2u
+    name: r2u Russian-Ukrainian dictionary
+    type: live
+    url: https://r2u.org.ua
+    description: >
+      Comprehensive Russian→Ukrainian translation dictionary.
+      Useful for identifying Russianisms and finding proper Ukrainian equivalents.
+    coverage: Russian→Ukrainian translations
+    query_function: r2u_translate
+    mcp_tool: query_r2u
+
+  # ── Reference sources ─────────────────────────────────────────
+  - id: pravopys
+    name: Ukrainian Pravopys (2019)
+    type: reference
+    url: https://2019.pravopys.net
+    description: >
+      Official Ukrainian orthography rules approved by Cabinet of Ministers
+      Resolution #437, May 22, 2019. 61 sections covering spelling,
+      capitalization. No server-side search — uses topic-to-section mapping.
+    coverage: Spelling rules (sections 1-44), capitalization (sections 45-61)
+    limitations: >
+      Categories III-V (foreign words, proper names, punctuation) not yet
+      published on the site. Client-side JS search only.
+    query_function: pravopys_lookup, pravopys_section
+    mcp_tool: query_pravopys
+
+  - id: sum20
+    name: SUM-20 academic dictionary
+    type: live
+    url: https://sum20ua.com
+    description: >
+      Словник української мови у 20 томах. Academic definitions with
+      literary citations and phraseological expressions.
+    coverage: Volumes 1-16 only (А–Р). С–Я not available.
+    limitations: >
+      Server is slow and intermittently unreliable. Only covers ~60% of
+      the alphabet. Use VESUM or GRAC as primary, SUM-20 as supplementary.
+    query_function: sum_definition

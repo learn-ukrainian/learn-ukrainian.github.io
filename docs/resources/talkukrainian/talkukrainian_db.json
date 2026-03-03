@@ -1,0 +1,546 @@
+{
+  "version": "1.0",
+  "source": "Talk Ukrainian (talkukrainian.com) — grammar and vocabulary guides by a native speaker from Kherson",
+  "url": "https://talkukrainian.com/",
+  "generated_at": "2026-03-03",
+  "total_articles": 36,
+  "articles": [
+    {
+      "id": "tu-000",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/ukrainian-alphabet/",
+      "title": "Talk Ukrainian: Ukrainian alphabet with pronunciation",
+      "topics": [
+        "alphabet",
+        "letters",
+        "pronunciation",
+        "cyrillic"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-001",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/greetings/",
+      "title": "Talk Ukrainian: Greetings in Ukrainian",
+      "topics": [
+        "greetings",
+        "hello",
+        "привіт",
+        "introductions"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-002",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/introducing-yourself/",
+      "title": "Talk Ukrainian: Introducing yourself in Ukrainian – Мене звати",
+      "topics": [
+        "introductions",
+        "мене звати",
+        "name",
+        "self-introduction"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-003",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/family/",
+      "title": "Talk Ukrainian: Family – Родина",
+      "topics": [
+        "family",
+        "родина",
+        "сім'я",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-004",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/occupations/",
+      "title": "Talk Ukrainian: Occupations",
+      "topics": [
+        "occupations",
+        "professions",
+        "робота",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-005",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/days-months-seasons/",
+      "title": "Talk Ukrainian: Days, Months and Seasons in Ukrainian",
+      "topics": [
+        "days",
+        "months",
+        "seasons",
+        "time",
+        "calendar",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-006",
+      "category": "vocabulary",
+      "url": "https://talkukrainian.com/count-in-ukrainian/",
+      "title": "Talk Ukrainian: Learn to count in Ukrainian",
+      "topics": [
+        "numbers",
+        "counting",
+        "numerals",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-007",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/noun-genders/",
+      "title": "Talk Ukrainian: Noun Genders and Adjective Agreement",
+      "topics": [
+        "gender",
+        "nouns",
+        "adjectives",
+        "agreement",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-008",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/noun-declensions/",
+      "title": "Talk Ukrainian: Noun declensions",
+      "topics": [
+        "declension",
+        "nouns",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-009",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/plurals/",
+      "title": "Talk Ukrainian: Plurals",
+      "topics": [
+        "plural",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-010",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/personal-pronouns/",
+      "title": "Talk Ukrainian: Personal Pronouns",
+      "topics": [
+        "pronouns",
+        "personal",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-011",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/possessive-pronouns/",
+      "title": "Talk Ukrainian: Possessive Pronouns – мій, твій vs свій",
+      "topics": [
+        "possessive",
+        "pronouns",
+        "свій",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-012",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/interrogative-relative-pronouns/",
+      "title": "Talk Ukrainian: Interrogative and Relative Pronouns",
+      "topics": [
+        "interrogative",
+        "relative",
+        "pronouns",
+        "який",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-013",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/indefinite-negative-pronouns/",
+      "title": "Talk Ukrainian: Indefinite and Negative Pronouns",
+      "topics": [
+        "indefinite",
+        "negative",
+        "pronouns",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-014",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/grammatical-cases/",
+      "title": "Talk Ukrainian: Ukrainian Grammatical Cases",
+      "topics": [
+        "cases",
+        "grammar",
+        "overview",
+        "відмінки"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-015",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/nominative-case/",
+      "title": "Talk Ukrainian: Nominative case",
+      "topics": [
+        "nominative",
+        "називний",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-016",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/genitive-case/",
+      "title": "Talk Ukrainian: Genitive case",
+      "topics": [
+        "genitive",
+        "родовий",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-017",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/dative-case/",
+      "title": "Talk Ukrainian: Dative case",
+      "topics": [
+        "dative",
+        "давальний",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-018",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/accusative-case/",
+      "title": "Talk Ukrainian: Accusative case",
+      "topics": [
+        "accusative",
+        "знахідний",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-019",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/instrumental-case/",
+      "title": "Talk Ukrainian: Instrumental case",
+      "topics": [
+        "instrumental",
+        "орудний",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-020",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/locative-case/",
+      "title": "Talk Ukrainian: Locative case",
+      "topics": [
+        "locative",
+        "місцевий",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-021",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/vocative-case/",
+      "title": "Talk Ukrainian: Vocative case",
+      "topics": [
+        "vocative",
+        "кличний",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-022",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/adjectives/",
+      "title": "Talk Ukrainian: Adjectives",
+      "topics": [
+        "adjectives",
+        "прикметник",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-023",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/adjectives-degrees-comparison/",
+      "title": "Talk Ukrainian: Degrees of comparison of Adjectives",
+      "topics": [
+        "comparative",
+        "superlative",
+        "adjectives",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-024",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/adverbs/",
+      "title": "Talk Ukrainian: Adverbs",
+      "topics": [
+        "adverbs",
+        "прислівник",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-025",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/adverbs-degrees-comparison/",
+      "title": "Talk Ukrainian: Degrees of Comparison of Adverbs",
+      "topics": [
+        "comparative",
+        "superlative",
+        "adverbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-026",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/verbs/",
+      "title": "Talk Ukrainian: Verbs and Common Constructions with Infinitives",
+      "topics": [
+        "verbs",
+        "infinitive",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-027",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/present-tense/",
+      "title": "Talk Ukrainian: Present Tense",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-028",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/past-tense/",
+      "title": "Talk Ukrainian: Past Tense",
+      "topics": [
+        "past tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-029",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/future-tense/",
+      "title": "Talk Ukrainian: Future Tense",
+      "topics": [
+        "future tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-030",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/verb-aspect/",
+      "title": "Talk Ukrainian: Verb Aspect",
+      "topics": [
+        "aspect",
+        "verbs",
+        "доконаний",
+        "недоконаний",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-031",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/verb-transitivity/",
+      "title": "Talk Ukrainian: Verb Transitivity",
+      "topics": [
+        "transitivity",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-032",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/verb-voice-active-passive/",
+      "title": "Talk Ukrainian: Verb Voice: active / passive",
+      "topics": [
+        "voice",
+        "active",
+        "passive",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-033",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/verb-mood/",
+      "title": "Talk Ukrainian: Verb Mood",
+      "topics": [
+        "mood",
+        "imperative",
+        "subjunctive",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-034",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/prepositions/",
+      "title": "Talk Ukrainian: Ukrainian prepositions",
+      "topics": [
+        "prepositions",
+        "прийменник",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    },
+    {
+      "id": "tu-035",
+      "category": "grammar",
+      "url": "https://talkukrainian.com/conjunctions/",
+      "title": "Talk Ukrainian: Ukrainian conjunctions",
+      "topics": [
+        "conjunctions",
+        "сполучник",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_guide",
+      "source": "talkukrainian"
+    }
+  ]
+}

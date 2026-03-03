@@ -1,70 +1,61 @@
-  lemma: вулиця
+items:
+- lemma: цей
+  pos: adj
+- lemma: ви
   pos: noun
-  translation: street
-  lemma: площа
+- lemma: це
   pos: noun
-  translation: square
-  lemma: майдан
+- lemma: слово
   pos: noun
-  translation: square, plaza
-  lemma: зупинка
+- lemma: де
+  pos: adv
+- lemma: ми
   pos: noun
-  translation: stop (bus/tram)
-  lemma: аптека
+- lemma: місто
   pos: noun
-  translation: pharmacy
-  lemma: пошта
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: куди
+  pos: adv
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: йти
+  pos: verb
+- lemma: людина
   pos: noun
-  translation: post office
-  lemma: станція
+- lemma: метро
   pos: noun
-  translation: station
-  lemma: парк
+- lemma: тут
+  pos: adv
+- lemma: там
+  pos: adv
+- lemma: багато
+  pos: adv
+- lemma: використовувати
+  pos: verb
+- lemma: аптека
   pos: noun
-  translation: park
-  lemma: центр
+- lemma: як
+  pos: adv
+- lemma: великий
+  pos: adj
+- lemma: парк
   pos: noun
-  translation: center
-  lemma: прямо
-  pos: adverb
-  translation: straight
-  lemma: наліво
-  pos: adverb
-  translation: to the left
-  lemma: направо
-  pos: adverb
-  translation: to the right
-  lemma: ліворуч
-  pos: adverb
-  translation: on the left
-  lemma: праворуч
-  pos: adverb
-  translation: on the right
-  lemma: біля
-  pos: preposition
-  translation: near, by
-  lemma: навпроти
-  pos: preposition
-  translation: opposite
-  lemma: де
-  pos: adverb
-  translation: where (location)
-  lemma: куди
-  pos: adverb
-  translation: where to (direction)
-  lemma: спочатку
-  pos: adverb
-  translation: at first, first
-  lemma: потім
-  pos: adverb
-  translation: then, later
-  lemma: назад
-  pos: adverb
-  translation: back, backwards
-  lemma: світлофор
+- lemma: той
+  pos: adj
+- lemma: знати
+  pos: verb
+- lemma: простий
+  pos: adj
+- lemma: кожний
+  pos: adj
+- lemma: вони
   pos: noun
-  translation: traffic light
-  lemma: маршрутка
+- lemma: банк
   pos: noun
-  translation: minibus
-
+- lemma: український
+  pos: adj

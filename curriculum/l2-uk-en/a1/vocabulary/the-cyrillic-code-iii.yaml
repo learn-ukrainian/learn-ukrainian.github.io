@@ -1,81 +1,61 @@
 items:
-  - lemma: "пошта"
-    translation: "post office"
-    pos: "noun"
-    gender: "f"
-  - lemma: "ресторан"
-    translation: "restaurant"
-    pos: "noun"
-    gender: "m"
-  - lemma: "транспорт"
-    translation: "transport"
-    pos: "noun"
-    gender: "m"
-  - lemma: "фото"
-    translation: "photo"
-    pos: "noun"
-    gender: "n"
-  - lemma: "хліб"
-    translation: "bread"
-    pos: "noun"
-    gender: "m"
-  - lemma: "стоп"
-    translation: "stop"
-    pos: "interjection"
-    notes: "international cognate"
-  - lemma: "порт"
-    translation: "port"
-    pos: "noun"
-    gender: "m"
-  - lemma: "факт"
-    translation: "fact"
-    pos: "noun"
-    gender: "m"
-  - lemma: "джерело"
-    translation: "spring, source"
-    pos: "noun"
-    gender: "n"
-  - lemma: "дзвінок"
-    translation: "bell, call"
-    pos: "noun"
-    gender: "m"
-  - lemma: "фонтан"
-    translation: "fountain"
-    pos: "noun"
-    gender: "m"
-  - lemma: "футбол"
-    translation: "football"
-    pos: "noun"
-    gender: "m"
-  - lemma: "суп"
-    translation: "soup"
-    pos: "noun"
-    gender: "m"
-  - lemma: "парк"
-    translation: "park"
-    pos: "noun"
-    gender: "m"
-  - lemma: "паспорт"
-    translation: "passport"
-    pos: "noun"
-    gender: "m"
-  - lemma: "робота"
-    translation: "work, job"
-    pos: "noun"
-    gender: "f"
-  - lemma: "текст"
-    translation: "text"
-    pos: "noun"
-    gender: "m"
-  - lemma: "радіо"
-    translation: "radio"
-    pos: "noun"
-    gender: "n"
-  - lemma: "тест"
-    translation: "test"
-    pos: "noun"
-    gender: "m"
-  - lemma: "джаз"
-    translation: "jazz"
-    pos: "noun"
-    gender: "m"
+- lemma: це
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: літера
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: хліб
+  pos: noun
+- lemma: мій
+  pos: adj
+- lemma: читати
+  pos: verb
+- lemma: вголос
+  pos: adv
+- lemma: стоп
+  pos: noun
+- lemma: стопа
+  pos: noun
+- lemma: факт
+  pos: noun
+- lemma: приклад
+  pos: noun
+- lemma: прикласти
+  pos: verb
+- lemma: порт
+  pos: noun
+- lemma: па
+  pos: noun
+- lemma: суп
+  pos: noun
+- lemma: тест
+  pos: noun
+- lemma: джерело
+  pos: noun
+- lemma: сей
+  pos: adj
+- lemma: новий
+  pos: adj
+- lemma: пер
+  pos: noun
+- lemma: перо
+  pos: noun
+- lemma: співати
+  pos: verb
+- lemma: кіно
+  pos: noun
+- lemma: зеро
+  pos: noun
+- lemma: парк
+  pos: noun
+- lemma: йти
+  pos: verb
+- lemma: спорт
+  pos: noun
+- lemma: тут
+  pos: adv

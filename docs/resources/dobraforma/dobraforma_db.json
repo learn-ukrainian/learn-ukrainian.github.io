@@ -1,0 +1,1323 @@
+{
+  "version": "1.0",
+  "source": "Добра форма / Dobra Forma (University of Kansas, CC license)",
+  "url": "https://opentext.ku.edu/dobraforma/",
+  "generated_at": "2026-03-02",
+  "total_articles": 90,
+  "articles": [
+    {
+      "id": "df-000",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/1-1/",
+      "title": "Dobra Forma: Gender of Nouns",
+      "topics": [
+        "gender",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-001",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/1-2/",
+      "title": "Dobra Forma: Gender of Nouns (Masculine and Feminine)",
+      "topics": [
+        "gender",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-002",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/1-3/",
+      "title": "Dobra Forma: Gender of Nouns (Neuter)",
+      "topics": [
+        "gender",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-003",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/2-1/",
+      "title": "Dobra Forma: Regular Plural Nouns",
+      "topics": [
+        "plural",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-004",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/2-2/",
+      "title": "Dobra Forma: Plural Nouns in -ї and Exceptions",
+      "topics": [
+        "plural",
+        "nouns",
+        "grammar",
+        "exceptions"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-005",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/2-3/",
+      "title": "Dobra Forma: Plural Nouns with Stem Changes",
+      "topics": [
+        "plural",
+        "nouns",
+        "grammar",
+        "alternation"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-006",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/2-4/",
+      "title": "Dobra Forma: Exceptions, Plural-only and Singular-only Nouns",
+      "topics": [
+        "plural",
+        "nouns",
+        "grammar",
+        "exceptions"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-007",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/3-1/",
+      "title": "Dobra Forma: Vocative Case (Feminine Nouns)",
+      "topics": [
+        "vocative",
+        "cases",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-008",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/3-2/",
+      "title": "Dobra Forma: Vocative Case (Masculine Nouns)",
+      "topics": [
+        "vocative",
+        "cases",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-009",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/3-3/",
+      "title": "Dobra Forma: Vocative Case (Plural Nouns)",
+      "topics": [
+        "vocative",
+        "cases",
+        "nouns",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-010",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-1/",
+      "title": "Dobra Forma: Locative Case (Use of в and у)",
+      "topics": [
+        "locative",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-011",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-2/",
+      "title": "Dobra Forma: Locative Case (в, у and на)",
+      "topics": [
+        "locative",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-012",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-3/",
+      "title": "Dobra Forma: Locative Case (Consonant Mutations)",
+      "topics": [
+        "locative",
+        "cases",
+        "grammar",
+        "alternation"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-013",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-4/",
+      "title": "Dobra Forma: Locative Case (Endings in -ї and -у)",
+      "topics": [
+        "locative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-014",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-5/",
+      "title": "Dobra Forma: Locative Case (Foreign Loan Words)",
+      "topics": [
+        "locative",
+        "cases",
+        "grammar",
+        "loanwords"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-015",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/4-6/",
+      "title": "Dobra Forma: Locative Case (Plural)",
+      "topics": [
+        "locative",
+        "cases",
+        "grammar",
+        "plural"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-016",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/5-1/",
+      "title": "Dobra Forma: Inanimate Nouns as Direct Objects (Accusative Case)",
+      "topics": [
+        "accusative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-017",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/5-2/",
+      "title": "Dobra Forma: Inanimate Nouns as Direct Objects (Accusative and Genitive)",
+      "topics": [
+        "accusative",
+        "genitive",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-018",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/5-3/",
+      "title": "Dobra Forma: Genitive Case for Direct Objects after Negation (Neuter and Masculine)",
+      "topics": [
+        "genitive",
+        "negation",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-019",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/5-4/",
+      "title": "Dobra Forma: Genitive Case for Direct Objects after Negation (Masculine)",
+      "topics": [
+        "genitive",
+        "negation",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-020",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/6-1/",
+      "title": "Dobra Forma: Genitive Case with Expressions of Quantity (Masculine Plural)",
+      "topics": [
+        "genitive",
+        "cases",
+        "quantity",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-021",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/6-2/",
+      "title": "Dobra Forma: Genitive Case with Expressions of Quantity (Feminine and Neuter Plural)",
+      "topics": [
+        "genitive",
+        "cases",
+        "quantity",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-022",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/6-3/",
+      "title": "Dobra Forma: Genitive Case with Expressions of Quantity (Exceptions)",
+      "topics": [
+        "genitive",
+        "cases",
+        "quantity",
+        "grammar",
+        "exceptions"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-023",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/7-1/",
+      "title": "Dobra Forma: Genitive Case after Prepositions з, до, and в/у",
+      "topics": [
+        "genitive",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-024",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/7-2/",
+      "title": "Dobra Forma: Genitive Case after Prepositions біля, після, для and без",
+      "topics": [
+        "genitive",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-025",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/7-3/",
+      "title": "Dobra Forma: Genitive Case to Express Possession and Relationship",
+      "topics": [
+        "genitive",
+        "cases",
+        "possession",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-026",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/7-4/",
+      "title": "Dobra Forma: Genitive Case to Express Quantity and Attributive Function",
+      "topics": [
+        "genitive",
+        "cases",
+        "quantity",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-027",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/8-1/",
+      "title": "Dobra Forma: Accusative Case of Animate Nouns",
+      "topics": [
+        "accusative",
+        "cases",
+        "animate",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-028",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/8-2/",
+      "title": "Dobra Forma: Accusative Case after Prepositions в/у, на and про",
+      "topics": [
+        "accusative",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-029",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/9-1/",
+      "title": "Dobra Forma: Instrumental Case (Intro to Singular Endings)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-030",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/9-2/",
+      "title": "Dobra Forma: Instrumental Case (Other Singular Endings and Stem Changes)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "grammar",
+        "alternation"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-031",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/9-3/",
+      "title": "Dobra Forma: Instrumental Case (Plural Nouns)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "grammar",
+        "plural"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-032",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/9-4/",
+      "title": "Dobra Forma: Instrumental Case (Use of зі and із)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-033",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/10-1/",
+      "title": "Dobra Forma: Instrumental Case after Verbs",
+      "topics": [
+        "instrumental",
+        "cases",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-034",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/10-2/",
+      "title": "Dobra Forma: Instrumental Case after Verbs (цікавитися, захоплюватися, займатися)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-035",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/10-3/",
+      "title": "Dobra Forma: Instrumental Case after Verbs (працювати, бути, стати)",
+      "topics": [
+        "instrumental",
+        "cases",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-036",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/11-1/",
+      "title": "Dobra Forma: Dative Case (Feminine Nouns)",
+      "topics": [
+        "dative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-037",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/11-2/",
+      "title": "Dobra Forma: Dative Case (Masculine and Neuter Nouns)",
+      "topics": [
+        "dative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-038",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/11-3/",
+      "title": "Dobra Forma: Dative Case (Animate Masculine Nouns)",
+      "topics": [
+        "dative",
+        "cases",
+        "animate",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-039",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/11-4/",
+      "title": "Dobra Forma: Dative Case (Plural Nouns)",
+      "topics": [
+        "dative",
+        "cases",
+        "grammar",
+        "plural"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-040",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/12-1/",
+      "title": "Dobra Forma: Possessive Pronouns (мій, твій, чий in Nominative)",
+      "topics": [
+        "possessive",
+        "pronouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-041",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/12-2/",
+      "title": "Dobra Forma: Possessive Pronouns (наш and ваш in Nominative)",
+      "topics": [
+        "possessive",
+        "pronouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-042",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/12-3/",
+      "title": "Dobra Forma: Possessive Pronouns (його, її and їхній in Nominative)",
+      "topics": [
+        "possessive",
+        "pronouns",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-043",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/13-1/",
+      "title": "Dobra Forma: Personal Pronouns (Nominative and Accusative Cases)",
+      "topics": [
+        "pronouns",
+        "accusative",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-044",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/13-2/",
+      "title": "Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)",
+      "topics": [
+        "pronouns",
+        "accusative",
+        "genitive",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-045",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/13-3/",
+      "title": "Dobra Forma: Personal Pronouns (Accusative and Genitive after Prepositions)",
+      "topics": [
+        "pronouns",
+        "prepositions",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-046",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/14-1/",
+      "title": "Dobra Forma: Personal Pronouns (Instrumental Case after з)",
+      "topics": [
+        "pronouns",
+        "instrumental",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-047",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/14-2/",
+      "title": "Dobra Forma: Personal Pronouns (Instrumental Case after Verbs)",
+      "topics": [
+        "pronouns",
+        "instrumental",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-048",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/15-1/",
+      "title": "Dobra Forma: Personal Pronouns (Dative Case Forms)",
+      "topics": [
+        "pronouns",
+        "dative",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-049",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/15-2/",
+      "title": "Dobra Forma: Personal Pronouns (Dative Case for Indirect Object)",
+      "topics": [
+        "pronouns",
+        "dative",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-050",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/16-1/",
+      "title": "Dobra Forma: Adjectives (Gender and Number in Nominative)",
+      "topics": [
+        "adjectives",
+        "gender",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-051",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/16-2/",
+      "title": "Dobra Forma: Soft-Stem Adjectives (Gender and Number in Nominative)",
+      "topics": [
+        "adjectives",
+        "soft stem",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-052",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/16-3/",
+      "title": "Dobra Forma: Ordinal Numerals (Gender and Number in Nominative)",
+      "topics": [
+        "ordinal",
+        "numerals",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-053",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/17-1/",
+      "title": "Dobra Forma: Accusative Case of Adjectives (With Inanimate Nouns)",
+      "topics": [
+        "adjectives",
+        "accusative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-054",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/17-2/",
+      "title": "Dobra Forma: Accusative Case of Adjectives (With Animate Nouns)",
+      "topics": [
+        "adjectives",
+        "accusative",
+        "animate",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-055",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/17-3/",
+      "title": "Dobra Forma: Genitive Case of Adjectives",
+      "topics": [
+        "adjectives",
+        "genitive",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-056",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/17-4/",
+      "title": "Dobra Forma: Genitive Case of Adjectives and Ordinal Numerals (Time Expressions)",
+      "topics": [
+        "adjectives",
+        "genitive",
+        "time",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-057",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/18-1/",
+      "title": "Dobra Forma: Locative Case of Adjectives and Ordinal Numerals",
+      "topics": [
+        "adjectives",
+        "locative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-058",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/18-2/",
+      "title": "Dobra Forma: Dative Case of Adjectives",
+      "topics": [
+        "adjectives",
+        "dative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-059",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/19-1/",
+      "title": "Dobra Forma: Instrumental Case of Adjectives",
+      "topics": [
+        "adjectives",
+        "instrumental",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-060",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/20-1/",
+      "title": "Dobra Forma: Comparative Degree of Adjectives",
+      "topics": [
+        "comparative",
+        "adjectives",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-061",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/20-2/",
+      "title": "Dobra Forma: Comparative Degree of Adjectives (Exceptions)",
+      "topics": [
+        "comparative",
+        "adjectives",
+        "grammar",
+        "exceptions"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-062",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/20-3/",
+      "title": "Dobra Forma: Superlative Degree of Adjectives",
+      "topics": [
+        "superlative",
+        "adjectives",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-063",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/21-1/",
+      "title": "Dobra Forma: Present Tense of Verbs (Читати Type)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-064",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/21-2/",
+      "title": "Dobra Forma: Present Tense of Verbs (Працювати Type)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-065",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/21-3/",
+      "title": "Dobra Forma: Present Tense of Verbs (Other First Conjugation Verbs)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-066",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/21-4/",
+      "title": "Dobra Forma: Present Tense of Verbs (Бути)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "бути",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-067",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/22-1/",
+      "title": "Dobra Forma: Present Tense of Verbs (Лежати and Сидіти Types)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-068",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/22-2/",
+      "title": "Dobra Forma: Present Tense of Verbs (Говорити and Любити Types)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-069",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/22-3/",
+      "title": "Dobra Forma: Present Tense of Verbs (Other Second-Conjugation Verbs)",
+      "topics": [
+        "present tense",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-070",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/23-1/",
+      "title": "Dobra Forma: Present Tense of -ся Verbs (First Conjugation)",
+      "topics": [
+        "reflexive",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-071",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/23-2/",
+      "title": "Dobra Forma: Present Tense of -ся Verbs (Second Conjugation)",
+      "topics": [
+        "reflexive",
+        "verbs",
+        "conjugation",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-072",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/24-1/",
+      "title": "Dobra Forma: Past Tense of Verbs",
+      "topics": [
+        "past tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-073",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/24-2/",
+      "title": "Dobra Forma: Past Tense of -ся Verbs",
+      "topics": [
+        "past tense",
+        "reflexive",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-074",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/25-1/",
+      "title": "Dobra Forma: Future Tense of Verbs (With бути)",
+      "topics": [
+        "future tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-075",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/25-2/",
+      "title": "Dobra Forma: Future Tense of Verbs (Synthetic: Читатиму)",
+      "topics": [
+        "future tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-076",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/26-1/",
+      "title": "Dobra Forma: Modal Verbs (Want, Must, Can)",
+      "topics": [
+        "modal",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-077",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/26-2/",
+      "title": "Dobra Forma: Modal Constructions (треба and можна)",
+      "topics": [
+        "modal",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-078",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/27-1/",
+      "title": "Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs)",
+      "topics": [
+        "aspect",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-079",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/27-2/",
+      "title": "Dobra Forma: Verbal Aspect (Past Tense)",
+      "topics": [
+        "aspect",
+        "verbs",
+        "past tense",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-080",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/27-3/",
+      "title": "Dobra Forma: Verbal Aspect (Other Types of Aspectual Pairs)",
+      "topics": [
+        "aspect",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-081",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/27-4/",
+      "title": "Dobra Forma: Verbal Aspect (Future Tense)",
+      "topics": [
+        "aspect",
+        "verbs",
+        "future tense",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-082",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/28-1/",
+      "title": "Dobra Forma: Verbs of Motion (іти – їхати)",
+      "topics": [
+        "motion",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-083",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/28-2/",
+      "title": "Dobra Forma: Verbs of Motion (ходити – їздити)",
+      "topics": [
+        "motion",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-084",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/28-3/",
+      "title": "Dobra Forma: Verbs of Motion (піти – прийти, поїхати – приїхати)",
+      "topics": [
+        "motion",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-085",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/29-1/",
+      "title": "Dobra Forma: Imperatives (Читай Type)",
+      "topics": [
+        "imperative",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-086",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/29-2/",
+      "title": "Dobra Forma: Imperatives (Пиши Type)",
+      "topics": [
+        "imperative",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-087",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/29-3/",
+      "title": "Dobra Forma: Imperatives (Other Forms and Exceptions)",
+      "topics": [
+        "imperative",
+        "verbs",
+        "grammar",
+        "exceptions"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-088",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/30-1/",
+      "title": "Dobra Forma: Adverbs (Formation from Adjectives)",
+      "topics": [
+        "adverbs",
+        "grammar",
+        "word formation"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    },
+    {
+      "id": "df-089",
+      "category": "grammar",
+      "url": "https://opentext.ku.edu/dobraforma/chapter/30-2/",
+      "title": "Dobra Forma: Using Adverbs",
+      "topics": [
+        "adverbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "grammar_exercises",
+      "source": "dobraforma"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory** (MCP `memory` server): `mcp__memory__search_nodes`, `mcp__memory__create_entities`, `mcp__memory__add_observations` | Storage: `tasks/memory.json` | NOT the same as `mcp__message-broker__*` (that's for Gemini comms)
+> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge.py` (not MCP).
 
 ---
 
@@ -42,11 +42,11 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 <critical>
 
-**Cross-agent build pipeline (v4):**
-- Pipeline: research → discover → content → activities → validate → [review] → mdx
-- **Gemini** builds: research, discover (video/blog search), content, activities
+**Cross-agent build pipeline:**
+- **v4** (default): research → discover → content → activities → validate → [review] → mdx
+- **v3** (legacy, `--v3`): A → B → C → audit → D → [F] → E
+- **Gemini** builds: research, discover, content, activities
 - **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)
-- **Discover** phase: automated YouTube search across curated channel allowlist, Gemini Flash scoring
 - Discover is non-blocking — failures don't halt the pipeline. Skip with `--skip-discover`.
 - Model defaults: `scripts/batch_gemini_config.py` | Review default: `claude-opus-4-6`
 
@@ -155,5 +155,4 @@ Ukrainian language verification and textbook content search:
 ## Workflow
 
 - **Plan mode** for any non-trivial task (3+ steps or architectural decisions)
-- **Self-improvement**: after any user correction, update `tasks/lessons.md`
 - **Simplicity first**: minimal code impact, find root causes, verify before done

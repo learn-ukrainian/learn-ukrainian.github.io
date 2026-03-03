@@ -1,7 +1,6 @@
 ## Output Format
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
-> **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a separate step if needed.
 
 ### Output Block 0: Citation Bank (BEFORE the review)
 
@@ -133,7 +132,66 @@ Plan-Content Alignment: [PASS/FAIL]
 ===REVIEW_END===
 ```
 
-### Output Block 2: Friction Report (MANDATORY)
+### Output Block 2: Inline Fixes (MANDATORY if FAIL)
+
+**PRIMARY: Use the Edit tool to fix issues as you find them during the review.** This is the most reliable approach — you can verify exact text with Grep and apply precise fixes.
+
+**BACKUP: Also produce FIND/REPLACE pairs below** in case any Edit tool calls fail (network issues, permission errors, etc). The pipeline applies these automatically via exact string matching.
+
+**CRITICAL — FIND TEXT VERIFICATION (same workflow as citations):**
+
+For each FIND/REPLACE pair:
+1. Use Read tool to re-read the exact passage you want to fix
+2. Copy-paste the FIND text directly from Read tool output — do NOT type it from memory
+3. Verify with Grep: `Grep pattern="first 5 words of FIND text" path="{file}"`
+4. If Grep returns no match → you paraphrased. Re-copy from Read output.
+
+**Do NOT reconstruct FIND text from memory. Copy-paste only.**
+
+**FORMAT RULES — the parser is a dumb string matcher:**
+- FIND text = ONLY raw file content. Nothing else between `FIND:` and `REPLACE:`.
+- Do NOT add `Section: "...", Line N` headers before the text
+- Do NOT wrap text in triple backticks (` ``` `)
+- Do NOT add commentary, line numbers, or markdown formatting
+- The text between FIND: and REPLACE: is matched literally against the file
+
+```
+===SECTION_FIX_START===
+FILE: {CONTENT_PATH}
+---
+FIND:
+exact text from the content file (verified with Grep)
+REPLACE:
+corrected text
+---
+FILE: {VOCAB_PATH}
+---
+FIND:
+last existing vocab entry (verified with Grep)
+REPLACE:
+last existing vocab entry
+- lemma: new_word
+  pos: noun
+  translation: meaning
+  notes: context
+---
+===SECTION_FIX_END===
+```
+
+**Rules:**
+- FIND text must be verified with Grep before including — if Grep doesn't find it, don't include it
+- Only fix issues documented in your review above — no silent extra changes
+- To ADD content (tables, callouts, scaffolding), FIND the line before the insertion point, REPLACE with that line + new content
+- To ADD a YAML entry, FIND the last existing entry, REPLACE with that entry + new entry
+- Maximum **10 FIND/REPLACE pairs** (prioritize audit gate failures, then critical issues)
+- Each `FILE:` line starts fixes for that file
+- If review verdict is PASS with no fixes needed, output empty delimiters:
+  ```
+  ===SECTION_FIX_START===
+  ===SECTION_FIX_END===
+  ```
+
+### Output Block 3: Friction Report (MANDATORY)
 
 ```
 ===FRICTION_START===
@@ -152,4 +210,9 @@ Plan-Content Alignment: [PASS/FAIL]
 
 **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT cite it — you are hallucinating. Use your Citation Bank as the single source of verified quotes.
 
-Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===` BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the citation bank, then the structured review inside the delimiters.
+Your output MUST contain these delimiter blocks in order:
+1. `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
+2. `===REVIEW_START===` / `===REVIEW_END===`
+3. `===SECTION_FIX_START===` / `===SECTION_FIX_END===` (if FAIL — fixes for every issue found)
+
+Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the citation bank, then the structured review, then the inline fixes.

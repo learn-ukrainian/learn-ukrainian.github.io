@@ -1632,12 +1632,20 @@ _YT_VIDEO_LINK_RE = re.compile(
 _YT_VID_ID_RE = re.compile(r'(?:v=|/embed/|youtu\.be/)([A-Za-z0-9_-]{11})')
 
 
+_YT_JINJA_RE = re.compile(
+    r'\{%\s*youtubeVideo\s+"(https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[\w-]+[^"]*?)"\s*%\}'
+)
+
+
 def _embed_youtube_video_links(body: str) -> str:
     """Replace YouTube markdown links with inline ``<YouTubeVideo>`` components.
 
     Transforms ``[text](youtube-watch-url)`` into a React component that shows
     a thumbnail and plays the video inline when clicked (no page navigation).
     Only matches watch / short-link URLs — playlist links are left as-is.
+
+    Also handles Jinja/Nunjucks-style ``{% youtubeVideo "url" %}`` tags that
+    Gemini sometimes produces instead of markdown links.
     """
 
     def _yt_replace(m: re.Match) -> str:
@@ -1651,7 +1659,98 @@ def _embed_youtube_video_links(body: str) -> str:
             f'\n\n<YouTubeVideo client:load url="{url}" label="{label}" />\n\n'
         )
 
+    def _yt_jinja_replace(m: re.Match) -> str:
+        url = m.group(1)
+        vid_match = _YT_VID_ID_RE.search(url)
+        if not vid_match:
+            return m.group(0)
+        return (
+            f'\n\n<YouTubeVideo client:load url="{url}" label="Video" />\n\n'
+        )
+
+    body = _YT_JINJA_RE.sub(_yt_jinja_replace, body)
     return _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
+
+
+# ---------------------------------------------------------------------------
+# Discovery → MDX resources bridge
+# ---------------------------------------------------------------------------
+
+def _load_discovery_resources(level_dir: Path, slug: str) -> dict:
+    """Load discovery.yaml and convert to external_resources format.
+
+    Reads from the canonical sidecar location: discovery/{slug}.yaml.
+    Filters blogs with relevance_score >= 0.5 and maps content_type
+    to the appropriate resource category (podcasts vs articles).
+
+    Returns dict with keys: articles, podcasts (matching format_resources_for_mdx).
+    """
+    discovery_path = level_dir / "discovery" / f"{slug}.yaml"
+    if not discovery_path.exists():
+        return {}
+
+    try:
+        data = yaml.safe_load(discovery_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    if not data or not isinstance(data, dict):
+        return {}
+
+    articles: list[dict] = []
+    podcasts: list[dict] = []
+
+    for blog in data.get("blogs", []):
+        score = blog.get("relevance_score", 0)
+        if score < 0.5:
+            continue
+        item = {
+            "title": blog.get("title", ""),
+            "url": blog.get("url", ""),
+            "source": blog.get("source", ""),
+            "relevance": "high" if score >= 0.7 else "medium",
+        }
+        content_type = blog.get("content_type", "")
+        if content_type.startswith("podcast_episode"):
+            podcasts.append(item)
+        else:
+            articles.append(item)
+
+    result: dict[str, list] = {}
+    if articles:
+        result["articles"] = articles
+    if podcasts:
+        result["podcasts"] = podcasts
+    return result
+
+
+def _merge_resources(curated: dict, discovery: dict) -> dict:
+    """Merge curated and discovery resources, deduplicating by URL.
+
+    Curated items appear first (higher priority). For each category
+    (articles, podcasts, youtube, websites, books), items are merged
+    and deduplicated by URL.
+    """
+    if not discovery:
+        return curated
+    if not curated:
+        return discovery
+
+    merged = dict(curated)  # shallow copy
+    for category in ("articles", "podcasts", "youtube", "websites", "books"):
+        curated_items = curated.get(category, [])
+        discovery_items = discovery.get(category, [])
+        if not discovery_items:
+            continue
+        seen_urls = {item.get("url", "") for item in curated_items if item.get("url")}
+        deduped = list(curated_items)
+        for item in discovery_items:
+            url = item.get("url", "")
+            if url and url not in seen_urls:
+                seen_urls.add(url)
+                deduped.append(item)
+        merged[category] = deduped
+    return merged
 
 
 def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False) -> str:
@@ -1669,12 +1768,10 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
         return ""
 
     header_title = "Зовнішні ресурси" if is_ukrainian_forced else "External Resources"
-    has_non_youtube = any(resources.get(t) for t in ['podcasts', 'articles', 'books', 'websites'])
 
     lines = []
-    if has_non_youtube:
-        lines.append(f"> [!resources] 🔗 {header_title}")
-        lines.append(">")
+    lines.append(f"> [!resources] 🔗 {header_title}")
+    lines.append(">")
 
     # Emoji icons per resource type
     display_names = {
@@ -1701,10 +1798,6 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
     for resource_type, icon, display_name in resource_config:
         items = resources.get(resource_type, [])
         if not items:
-            continue
-
-        # YouTube videos are rendered as embedded players below the callout
-        if resource_type == 'youtube':
             continue
 
         final_display_name = display_names.get(display_name, display_name) if is_ukrainian_forced else display_name
@@ -1754,6 +1847,13 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
                     parts.append(f"— {desc}")
                 lines.append(f"> - {' '.join(parts)}")
 
+            elif resource_type == 'youtube':
+                channel = item.get('channel', '')
+                if channel:
+                    lines.append(f"> - [{title}]({url}) — {channel}")
+                else:
+                    lines.append(f"> - [{title}]({url})")
+
             elif resource_type == 'websites':
                 source = item.get('source', '')
                 desc = item.get('description', source)
@@ -1767,42 +1867,6 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
 
     # Remove trailing blank line
     if lines and lines[-1] == ">":
-        lines.pop()
-
-    # --- YouTube videos as embedded players (outside the callout) ---
-    yt_items = resources.get('youtube', [])
-    if yt_items:
-        yt_header = "YouTube"
-        yt_sorted = sorted(
-            yt_items,
-            key=lambda x: (
-                -priority_map.get(x.get('priority'), 0),
-                -relevance_priority.get(x.get('relevance', 'low'), 0),
-                x.get('title', '').lower()
-            )
-        )
-        lines.append("")
-        lines.append(f"### 📺 {yt_header}")
-        lines.append("")
-        for item in yt_sorted:
-            title = item.get('title', 'Video')
-            url = validate_and_clean_url(item.get('url', ''), title)
-            channel = item.get('channel', '')
-            desc = item.get('description', '')
-            caption_parts = []
-            if channel:
-                caption_parts.append(channel)
-            if desc:
-                caption_parts.append(desc)
-            caption = " — ".join(caption_parts)
-            label = escape_jsx(title)
-            lines.append(f'<YouTubeVideo client:load url="{url}" label="{label}" />')
-            if caption:
-                lines.append(f"*{caption}*")
-            lines.append("")
-
-    # Remove any trailing empty lines
-    while lines and lines[-1] in ("", ">"):
         lines.pop()
 
     return '\n'.join(lines)
@@ -2029,6 +2093,10 @@ def main():
         if not module_resources:
             numbered_id = f"{mod.level}-{str(mod.local_num).zfill(2)}-{mod.slug}"
             module_resources = all_resources.get(numbered_id, {})
+
+        # Merge discovered resources (from pipeline discover phase)
+        discovery_resources = _load_discovery_resources(level_dir, mod.slug)
+        module_resources = _merge_resources(module_resources, discovery_resources)
 
         # Detect pipeline version and build status
         pv, bs = detect_pipeline_info(level_dir, mod.slug)

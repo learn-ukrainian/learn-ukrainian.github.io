@@ -1,95 +1,61 @@
 items:
-  - lemma: "магазин"
-    translation: "store"
-    pos: "noun"
-    gender: "m"
-    usage: "Я йду в магазин."
-  - lemma: "супермаркет"
-    translation: "supermarket"
-    pos: "noun"
-    gender: "m"
-    example: "Цей супермаркет дуже великий."
-  - lemma: "каса"
-    translation: "checkout"
-    pos: "noun"
-    gender: "f"
-    usage: "Оплата на касі."
-  - lemma: "відділ"
-    translation: "department"
-    pos: "noun"
-    gender: "m"
-    example: "Де молочний відділ?"
-  - lemma: "пакет"
-    translation: "bag (plastic)"
-    pos: "noun"
-    gender: "m"
-    usage: "Пакет потрібен?"
-  - lemma: "знижка"
-    translation: "discount"
-    pos: "noun"
-    gender: "f"
-    example: "Сьогодні велика знижка."
-  - lemma: "ціна"
-    translation: "price"
-    pos: "noun"
-    gender: "f"
-    usage: "Яка ціна?"
-  - lemma: "чек"
-    translation: "receipt"
-    pos: "noun"
-    gender: "m"
-    example: "Ваш чек, будь ласка."
-  - lemma: "кошик"
-    translation: "basket"
-    pos: "noun"
-    gender: "m"
-    notes: "Handheld basket for shopping"
-  - lemma: "візок"
-    translation: "cart / trolley"
-    pos: "noun"
-    gender: "m"
-    notes: "Large cart on wheels"
-  - lemma: "акція"
-    translation: "promotion / sale"
-    pos: "noun"
-    gender: "f"
-    example: "Це товар по акції."
-  - lemma: "готівка"
-    translation: "cash"
-    pos: "noun"
-    gender: "f"
-    usage: "Платити готівкою."
-  - lemma: "картка"
-    translation: "card"
-    pos: "noun"
-    gender: "f"
-    usage: "Платити карткою."
-  - lemma: "молочний"
-    translation: "dairy (adj)"
-    pos: "adjective"
-    example: "Молочний відділ."
-  - lemma: "м'ясний"
-    translation: "meat (adj)"
-    pos: "adjective"
-    example: "М'ясний відділ."
-  - lemma: "кондитерський"
-    translation: "confectionery (adj)"
-    pos: "adjective"
-    example: "Кондитерський відділ."
-  - lemma: "овочі"
-    translation: "vegetables"
-    pos: "noun"
-    notes: "Plural only in this context"
-  - lemma: "фрукти"
-    translation: "fruits"
-    pos: "noun"
-    notes: "Plural"
-  - lemma: "випічка"
-    translation: "bakery / pastry"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сметана"
-    translation: "sour cream"
-    pos: "noun"
-    gender: "f"
-    example: "Я люблю сметану."
+- lemma: цей
+  pos: adj
+- lemma: ви
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: відділ
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: купувати
+  pos: verb
+- lemma: каса
+  pos: noun
+- lemma: пакет
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: касир
+  pos: noun
+- lemma: ціна
+  pos: noun
+- lemma: супермаркет
+  pos: noun
+- lemma: товар
+  pos: noun
+- lemma: хліб
+  pos: noun
+- lemma: ваш
+  pos: adj
+- lemma: магазин
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: той
+  pos: adj
+- lemma: робити
+  pos: verb
+- lemma: сир
+  pos: noun
+- lemma: брати
+  pos: verb
+- lemma: знаходитися
+  pos: verb
+- lemma: працівник
+  pos: noun
+- lemma: картка
+  pos: noun
+- lemma: бути
+  pos: verb
+- lemma: чек
+  pos: noun
+- lemma: чека
+  pos: noun

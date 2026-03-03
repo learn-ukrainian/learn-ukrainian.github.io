@@ -198,44 +198,200 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
     "c2": "No grammar restrictions. Full literary Ukrainian.",
 }
 
+PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
+    "a1-m01": (
+        "DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):\n"
+        "- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)\n"
+        "- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary "
+        "with immediate English translation: «Привіт!» (Hello!)\n"
+        "- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read\n\n"
+        "GRAMMAR BAN (no verbs exist yet in the student's knowledge):\n"
+        "- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED\n"
+        "- NO verb conjugation of any kind (present, past, future)\n"
+        "- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'\n"
+        "- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)\n\n"
+        "METALANGUAGE:\n"
+        "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'\n"
+        "- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')\n"
+        "- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet"
+    ),
+    "a1-m02": (
+        "DECODABILITY (M2 — 14 known letters: А М Л У Н С + К И Р Б В Д І О):\n"
+        "- Reading drills MUST use ONLY these 14 letters (e.g., банан, вода, молоко, кіно, рука, дім, бік, він)\n"
+        "- Still unknown: П, Т, Г, Ґ, Е, З, Ж, Ш, Х, Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф\n"
+        "- Words needing unknown letters require immediate English translation\n\n"
+        "GRAMMAR BAN (no verbs exist yet):\n"
+        "- NO imperative forms — ALL BANNED. Use English for instructions.\n"
+        "- NO verb conjugation of any kind\n"
+        "- Allowed: bare nouns, noun phrases using known letters\n\n"
+        "METALANGUAGE:\n"
+        "- All terminology English-first with Ukrainian in parentheses"
+    ),
+    "a1-m03": (
+        "DECODABILITY (M3 — 23 known letters: previous 14 + П Т Г Ґ Е З Ж Ш Х):\n"
+        "- Nearly all common text is readable now. Reading drills use these 23 letters.\n"
+        "- Still unknown: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф + digraphs ДЖ, ДЗ\n"
+        "- Words needing unknown letters require English translation\n\n"
+        "GRAMMAR BAN (no verbs exist yet):\n"
+        "- NO imperative forms — BANNED. English for instructions.\n"
+        "- NO verb conjugation\n"
+        "- Allowed: bare nouns, noun phrases\n\n"
+        "METALANGUAGE: English-first, Ukrainian in parentheses"
+    ),
+    "a1-m04": (
+        "DECODABILITY (M4 — full 33-letter alphabet now complete):\n"
+        "- No letter restrictions — all Ukrainian words are decodable after this module.\n\n"
+        "GRAMMAR BAN (no verbs exist yet):\n"
+        "- NO imperative forms — BANNED. English for instructions.\n"
+        "- NO verb conjugation\n"
+        "- Allowed: bare nouns, noun phrases, Це + noun (preview)\n\n"
+        "METALANGUAGE: English-first, Ukrainian in parentheses"
+    ),
+    "a1-m05-10": (
+        "SEQUENCE CONSTRAINTS (M5-10 — Phonology & First Grammar):\n"
+        "Full alphabet known. Modules teach: syllables (M5), stress (M6), gender (M7), "
+        "greetings (M8), Це/Я/Мене звати (M9), Що це? (M10).\n\n"
+        "GRAMMAR STATUS:\n"
+        "- AVAILABLE: bare nouns, gender classification, Це + noun, Я + noun, "
+        "memorized politeness phrases (Дякую, Будь ласка, Вибачте from M8)\n"
+        "- FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases except nominative\n"
+        "- Use English for all classroom instructions\n\n"
+        "METALANGUAGE: English-first, Ukrainian term in parentheses on first use"
+    ),
+    "a1-m11-14": (
+        "SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):\n"
+        "Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.\n"
+        "Learning: adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M14).\n\n"
+        "GRAMMAR STATUS:\n"
+        "- AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement (from M11), "
+        "Це/Я sentences, memorized phrases\n"
+        "- FORBIDDEN: verb conjugation (starts M15), imperatives (M47), "
+        "cases beyond nominative (accusative starts M25)\n"
+        "- Use English for classroom instructions\n\n"
+        "METALANGUAGE: English-first, Ukrainian in parentheses"
+    ),
+    "a1-m15+": (
+        "SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):\n"
+        "Present tense verbs start at M15. Past tense at M36. Future at M37.\n\n"
+        "KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) "
+        "are NOT taught until M47 (imperative-and-requests). "
+        "Before M47, use indirect requests or English for instructions.\n\n"
+        "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) "
+        "apply in addition to this constraint."
+    ),
+}
+
+
+# Common Ukrainian section titles → bilingual equivalents
+_BILINGUAL_TITLES: dict[str, str] = {
+    "Вступ": "Вступ — Introduction",
+    "Практика": "Практика — Practice",
+    "Підсумок": "Підсумок — Summary",
+    "Перші слова": "Перші слова — First Words",
+    "Перші склади": "Перші склади — First Syllables",
+    "Практика читання": "Практика читання — Reading Practice",
+}
+# Pattern: "Голосні — X, Y" → "Голосні — Vowels: X, Y"
+_BILINGUAL_PREFIXES: dict[str, str] = {
+    "Голосні": "Vowels",
+    "Приголосні": "Consonants",
+}
+
+
+def bilingualify_section_titles(content_outline: list, track: str, module_num: int) -> list:
+    """Make section titles bilingual for early A1 modules (M1-M14).
+
+    Modifies the content_outline in-place and returns it. For A2+ or M15+,
+    returns the outline unchanged. This ensures Gemini sees bilingual titles
+    in the meta and produces bilingual headers in its output.
+    """
+    base = track.split("-")[0]
+    if base != "a1" or module_num > 14:
+        return content_outline
+
+    for section in content_outline:
+        if not isinstance(section, dict) or "section" not in section:
+            continue
+        title = section["section"]
+        # Already bilingual (contains " — " with Latin chars after)?
+        if " — " in title and any(c.isascii() and c.isalpha() for c in title.split(" — ", 1)[1]):
+            continue
+        # Exact match
+        if title in _BILINGUAL_TITLES:
+            section["section"] = _BILINGUAL_TITLES[title]
+            continue
+        # Prefix match: "Голосні — И, І, О" → "Голосні — Vowels: И, І, О"
+        for ukr_prefix, eng_equiv in _BILINGUAL_PREFIXES.items():
+            if title.startswith(ukr_prefix):
+                rest = title[len(ukr_prefix):]
+                if rest.startswith(" — "):
+                    section["section"] = f"{ukr_prefix} — {eng_equiv}: {rest[3:]}"
+                else:
+                    section["section"] = f"{ukr_prefix} — {eng_equiv}{rest}"
+                break
+
+    return content_outline
+
+
+def get_pedagogical_constraints(track: str, module_num: int) -> str:
+    """Module-sequence-aware pedagogical constraints for A1."""
+    base = track.split("-")[0]
+    if base != "a1":
+        return ""
+    if module_num == 1:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m01"]
+    elif module_num == 2:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m02"]
+    elif module_num == 3:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m03"]
+    elif module_num == 4:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m04"]
+    elif module_num <= 10:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m05-10"]
+    elif module_num <= 14:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m11-14"]
+    else:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m15+"]
+
+
 ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
     "a1": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
         "VOCAB_COUNT_TARGET": "20",
         "FORBIDDEN_ACTIVITY_TYPES": "cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, anagram, unjumble, group-sort",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, match-up, anagram, unjumble, quiz",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter",
+        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, match-up, anagram, unjumble, quiz, true-false, classify, image-to-letter, watch-and-repeat",
     },
     "a2": {
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
         "VOCAB_COUNT_TARGET": "25",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, comparative-study, authorial-intent",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "error-correction, unjumble, fill-in",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, watch-and-repeat, classify, image-to-letter",
+        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "error-correction, unjumble, fill-in, classify, watch-and-repeat",
     },
     "b1-bridge": {
-        "ACTIVITY_COUNT_TARGET": "6", "ACTIVITY_MIN": "4", "ITEMS_MIN": "6",
+        "ACTIVITY_COUNT_TARGET": "6", "ACTIVITY_MIN": "4", "ACTIVITY_MAX": "10", "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "25",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, comparative-study, authorial-intent",
         "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, essay-response, critical-analysis",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "quiz, match-up, fill-in, error-correction, mark-the-words",
     },
     "b1-core": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, comparative-study, authorial-intent",
         "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, unjumble, error-correction",
     },
     "b2": {
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ITEMS_MIN": "14",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ACTIVITY_MAX": "15", "ITEMS_MIN": "14",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram",
         "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, unjumble, error-correction",
     },
     "c1-core": {
-        "ACTIVITY_COUNT_TARGET": "14", "ACTIVITY_MIN": "12", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "14", "ACTIVITY_MIN": "12", "ACTIVITY_MAX": "18", "ITEMS_MIN": "12",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram",
         "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate",
@@ -258,16 +414,16 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
     "bio": {
         "ACTIVITY_COUNT_TARGET": "5", "ACTIVITY_MIN": "3", "ACTIVITY_MAX": "9", "ITEMS_MIN": "1",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, quiz, true-false",
+        "FORBIDDEN_ACTIVITY_TYPES": "quiz, match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words, error-correction, select, translate",
+        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, true-false",
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
-        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, quiz",
+        "PRIORITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent",
     },
     "istorio": {
         "ACTIVITY_COUNT_TARGET": "5", "ACTIVITY_MIN": "3", "ACTIVITY_MAX": "9", "ITEMS_MIN": "1",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words",
-        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, quiz, true-false",
+        "FORBIDDEN_ACTIVITY_TYPES": "quiz, match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words, error-correction, select, translate",
+        "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, true-false",
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
         "PRIORITY_TYPES": "reading, essay-response, critical-analysis, comparative-study",
     },
@@ -375,6 +531,47 @@ def get_activity_config(track: str, module_num: int) -> dict[str, str]:
     if track in ACTIVITY_CONFIGS:
         return ACTIVITY_CONFIGS[track]
     return ACTIVITY_CONFIGS["b2"]
+
+
+def get_item_minimums_table(track: str, module_num: int) -> str:
+    """Build a markdown table of per-type item minimums from audit config."""
+    try:
+        from audit.config import ACTIVITY_COMPLEXITY
+    except ImportError:
+        return "*(Item minimums table unavailable)*"
+
+    config = get_activity_config(track, module_num)
+    allowed = [t.strip() for t in config.get("ALLOWED_ACTIVITY_TYPES", "").split(",") if t.strip()]
+    if not allowed:
+        return "*(No allowed activity types)*"
+
+    # Resolve the audit config level key
+    _TRACK_TO_AUDIT = {
+        "hist": "history", "bio": "B2-biography", "istorio": "istorio",
+        "lit": "lit", "oes": "C2", "ruth": "C2",
+        "b2-pro": "B2", "c1-pro": "C1",
+    }
+    level_key = _TRACK_TO_AUDIT.get(track, track.upper().replace("-BRIDGE", "").replace("-CORE", ""))
+    if track == "b1" and module_num <= 5:
+        level_key = "B1"
+
+    rows = []
+    for atype in allowed:
+        if atype not in ACTIVITY_COMPLEXITY:
+            continue
+        rules = ACTIVITY_COMPLEXITY[atype].get(level_key) or ACTIVITY_COMPLEXITY[atype].get(track)
+        if not rules:
+            # Try base level (A1, B1, etc.)
+            base = track.split("-")[0].upper()
+            rules = ACTIVITY_COMPLEXITY[atype].get(base, {})
+        min_items = rules.get("min_items", rules.get("pairs_min", rules.get("items_min", "")))
+        if min_items:
+            unit = "pairs" if atype == "match-up" else "items"
+            rows.append(f"| {atype} | ≥{min_items} {unit} |")
+
+    if not rows:
+        return "*(No per-type minimums defined)*"
+    return "| Type | Minimum |\n|------|--------|\n" + "\n".join(rows)
 
 
 def get_level_label(track: str) -> str:
@@ -532,8 +729,13 @@ def _init_state_lock(ctx: ModuleContext) -> None:
 # ============================================================================
 
 def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> None:
-    """Update phase status in state and persist (thread-safe via FileLock)."""
+    """Update phase status in state.json and persist (thread-safe via FileLock).
+
+    Skips the file write in v4 mode — v4 uses state-v4.json exclusively.
+    """
     if ctx.dry_run:
+        return
+    if getattr(ctx, "mode", None) == "v4":
         return
     lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
     with lock:
@@ -1280,7 +1482,7 @@ def dispatch_claude_final_review(ctx: ModuleContext) -> tuple[bool, str, str]:
 
     content_text   = _read(ctx.paths.get("md"))
     activities_text = _read(ctx.paths.get("activities"))
-    vocab_text     = _read(ctx.paths.get("vocab"))
+    vocab_text     = _read(ctx.paths.get("vocabulary"))
     plan_path = PROJECT_ROOT / f"curriculum/l2-uk-en/plans/{ctx.track}/{ctx.slug}.yaml"
     plan_text      = _read(plan_path)
     meta_text      = _read(ctx.paths.get("meta"))
@@ -1573,8 +1775,17 @@ def write_placeholders(ctx: ModuleContext) -> None:
     """Write placeholders.yaml for template filling."""
     placeholders_path = ctx.orch_dir / "placeholders.yaml"
     if placeholders_path.exists() and not ctx.rebuild and not getattr(ctx, "force_phase", False):
-        log("Placeholders: Using existing")
-        return
+        # Check for missing critical keys that may indicate stale placeholders
+        try:
+            existing = yaml.safe_load(placeholders_path.read_text("utf-8")) or {}
+            _critical_keys = {"ITEM_MINIMUMS_TABLE", "ACTIVITY_MAX", "ACTIVITY_MIN",
+                               "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS"}
+            if _critical_keys <= set(existing.keys()):
+                log("Placeholders: Using existing")
+                return
+            log("Placeholders: Regenerating (missing critical keys)")
+        except Exception:
+            pass  # Fall through to regenerate
 
     level_label = get_level_label(ctx.track)
     quick_ref_path = ctx.track_config.get("quick_ref", "")
@@ -1600,6 +1811,22 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "PERSONA_ROLE": ctx.plan.get("persona", {}).get("role", ""),
         "IMMERSION_RULE": ctx.immersion_rule,
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
+        "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num),
+        "INTRO_HOOK": (
+            "Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
+            else "Чому це важливо? — Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
+            else "Чому це важливо?"
+        ),
+        "SUMMARY_HEADING": (
+            "Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
+            else "Підсумок — Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
+            else "Підсумок"
+        ),
+        "SELF_CHECK_HEADING": (
+            "Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
+            else "Перевірте себе — Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
+            else "Перевірте себе:"
+        ),
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
         "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
         "SCORING_SECTION": _get_scoring_section(ctx.track),
@@ -1617,7 +1844,54 @@ def write_placeholders(ctx: ModuleContext) -> None:
     else:
         placeholders["VIDEO_DISCOVERY"] = "(No video discoveries available)"
 
+    # Supplement with YouTube links from research (research may find per-letter
+    # videos that channel-based discovery missed)
+    research_path = ctx.paths.get("research")
+    if research_path and research_path.exists():
+        try:
+            import re as _re
+            research_text = research_path.read_text("utf-8")
+            yt_links = _re.findall(
+                r'-\s*(.+?)\s*[-—]\s*(https://www\.youtube\.com/watch\?v=[^\s]+)',
+                research_text,
+            )
+            if yt_links:
+                lines = ["\n### Research Videos"]
+                lines.append("*These videos were found during the research phase. "
+                             "Embed each one next to its corresponding letter/topic section "
+                             "using a markdown link.*\n")
+                for desc, url in yt_links:
+                    lines.append(f"- {desc.strip()} — {url}")
+                placeholders["VIDEO_DISCOVERY"] += "\n".join(lines)
+        except Exception:
+            pass
+
+    # Pronunciation videos from plan (alphabet modules)
+    pv = ctx.plan.get("pronunciation_videos")
+    if pv and isinstance(pv, dict):
+        letters = pv.get("letters", {})
+        if letters:
+            pv_lines = ["### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)"]
+            pv_lines.append(f"*Credit: {pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')}*\n")
+            overview = pv.get("overview")
+            if overview:
+                pv_lines.append(f"- **Overview**: {overview}")
+            playlist = pv.get("playlist")
+            if playlist:
+                pv_lines.append(f"- **Full Playlist**: {playlist}")
+            pv_lines.append("")
+            pv_lines.append("**Each letter below MUST get its video embedded "
+                            "in the corresponding H3 section:**\n")
+            for letter, url in letters.items():
+                pv_lines.append(f"- **Літера {letter}**: {url}")
+            placeholders["PRONUNCIATION_VIDEOS"] = "\n".join(pv_lines)
+        else:
+            placeholders["PRONUNCIATION_VIDEOS"] = ""
+    else:
+        placeholders["PRONUNCIATION_VIDEOS"] = ""
+
     placeholders.update(ctx.activity_config)
+    placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
     placeholders_path.write_text(
         yaml.dump(placeholders, allow_unicode=True, default_flow_style=False, sort_keys=False),
         encoding="utf-8",
@@ -1917,6 +2191,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not sections:
         log("  Phase 2: FAILED — no content_outline in meta")
         return False
+    # Ensure bilingual section titles for early A1 (idempotent)
+    sections = bilingualify_section_titles(sections, ctx.track, ctx.module_num)
 
     num_sections = len(sections)
     engagement_min = ctx.meta.get("engagement_min", 4)
@@ -2253,17 +2529,19 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
             log(f"State: RESET (--rebuild) — deleted {deleted} artifacts")
     else:
         ctx.state = load_state(ctx)
+        restart_from = getattr(args, "restart_from", None)
         if not is_dry:
             if getattr(args, "force_phase", None):
                 deleted = clean_phase_artifacts(ctx, args.force_phase, forward=False)
                 if deleted:
                     log(f"Cleaned {deleted} artifacts for phase {args.force_phase}")
-            restart_from = getattr(args, "restart_from", None)
             if restart_from:
                 deleted = clean_phase_artifacts(ctx, restart_from, forward=True)
                 if deleted:
                     log(f"Cleaned {deleted} artifacts from phase {restart_from} onward")
-        if ctx.state.get("phases"):
+        if restart_from:
+            log(f"State: Restarting from {restart_from}")
+        elif ctx.state.get("phases"):
             completed = [p for p, v in ctx.state["phases"].items() if v.get("status") == "complete"]
             log(f"State: Loaded — phases complete: {', '.join(completed) or 'none'}")
         else:

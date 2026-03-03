@@ -1,86 +1,61 @@
 items:
-  - lemma: "хліб"
-    translation: "bread"
-    pos: "noun"
-    gender: "m"
-    notes: "Sacred symbol in Ukrainian culture"
-  - lemma: "борщ"
-    translation: "borscht"
-    pos: "noun"
-    gender: "m"
-    notes: "Traditional Ukrainian beet soup"
-  - lemma: "м'ясо"
-    translation: "meat"
-    pos: "noun"
-    gender: "n"
-  - lemma: "овочі"
-    translation: "vegetables"
-    pos: "noun"
-    notes: "Plural noun"
-  - lemma: "фрукти"
-    translation: "fruits"
-    pos: "noun"
-    notes: "Plural noun"
-  - lemma: "вода"
-    translation: "water"
-    pos: "noun"
-    gender: "f"
-    usage: "Accusative: воду"
-  - lemma: "кава"
-    translation: "coffee"
-    pos: "noun"
-    gender: "f"
-    usage: "Accusative: каву"
-  - lemma: "чай"
-    translation: "tea"
-    pos: "noun"
-    gender: "m"
-  - lemma: "молоко"
-    translation: "milk"
-    pos: "noun"
-    gender: "n"
-  - lemma: "сік"
-    translation: "juice"
-    pos: "noun"
-    gender: "m"
-  - lemma: "суп"
-    translation: "soup"
-    pos: "noun"
-    gender: "m"
-    usage: "Use with verb їсти"
-  - lemma: "паляниця"
-    translation: "traditional hearth-baked bread"
-    pos: "noun"
-    gender: "f"
-    notes: "A cultural shibboleth during the 2022 invasion"
-  - lemma: "каша"
-    translation: "porridge"
-    pos: "noun"
-    gender: "f"
-  - lemma: "компот"
-    translation: "compote"
-    pos: "noun"
-    gender: "m"
-    notes: "Traditional drink made from boiled fruits"
-  - lemma: "риба"
-    translation: "fish"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сир"
-    translation: "cheese"
-    pos: "noun"
-    gender: "m"
-  - lemma: "їсти"
-    translation: "to eat"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "пити"
-    translation: "to drink"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "смачний"
-    translation: "tasty"
-    pos: "adjective"
-  - lemma: "свіжий"
-    translation: "fresh"
-    pos: "adjective"
+- lemma: цей
+  pos: adj
+- lemma: як
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: ви
+  pos: noun
+- lemma: вода
+  pos: noun
+- lemma: їсти
+  pos: verb
+- lemma: сей
+  pos: adj
+- lemma: працювати
+  pos: verb
+- lemma: той
+  pos: adj
+- lemma: маяти
+  pos: verb
+- lemma: приклад
+  pos: noun
+- lemma: прикласти
+  pos: verb
+- lemma: контекст
+  pos: noun
+- lemma: я
+  pos: noun
+- lemma: смачний
+  pos: adj
+- lemma: ти
+  pos: noun
+- lemma: що
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: любити
+  pos: verb
+- lemma: баба
+  pos: noun
+- lemma: молоко
+  pos: noun
+- lemma: пити
+  pos: verb
+- lemma: грн
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: напій
+  pos: noun

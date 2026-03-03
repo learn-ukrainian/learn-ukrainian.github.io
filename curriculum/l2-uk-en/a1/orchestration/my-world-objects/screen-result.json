@@ -1,0 +1,41 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "4010",
+    "COMPUTED_WORD_TARGET": "2000",
+    "COMPUTED_WORD_PERCENT": "200.5",
+    "COMPUTED_ACTIVITY_COUNT": "9",
+    "COMPUTED_VOCAB_COUNT": "29",
+    "COMPUTED_ENGAGEMENT_COUNT": "4",
+    "COMPUTED_IMMERSION_PERCENT": "15.4",
+    "COMPUTED_IMMERSION_TARGET": "15-35%",
+    "COMPUTED_RICHNESS_SCORE": "70",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3, examples: 11/24, dialogues: 3/4, tables: 1/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "============================================================\n  HETMAN VERIFY: my-world-objects\n============================================================\n\n[1/4] Running full audit...\n[2/4] Checking sidecar files...\n[3/4] Reading status JSON...\n[4/4] Checking overall status...\n\n────────────────────────────────────────────────────────────\n  VERDICT: PASS\n  Module:  my-world-objects\n  Gates:   6 pass, 1 info\n────────────────────────────────────────────────────────────\n\n  Module is FULLY COMPLETE.\n  Hetman may now write completion.md and proceed.\n\nVESUM: 327/327 (100%) verified",
+  "h2_sections": "1. Вступ\n2. Презентація\n3. Практика\n4. Культурний контекст\n5. Продукція та підсумок",
+  "vesum_stats": {
+    "total": 327,
+    "vesum_hits": 327,
+    "rag_hits": 0,
+    "not_found": 0,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 216,
+        "vesum_hits": 216,
+        "not_found": 0
+      },
+      "activities": {
+        "total": 111,
+        "vesum_hits": 111,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [],
+  "content_hash": "74af126cff13eaae"
+}

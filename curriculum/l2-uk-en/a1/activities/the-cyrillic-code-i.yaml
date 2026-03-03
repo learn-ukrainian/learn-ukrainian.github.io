@@ -1,0 +1,355 @@
+- type: watch-and-repeat
+  title: "Watch and Repeat"
+  instruction: "Watch Anna Ohoiko pronounce each letter and repeat aloud."
+  items:
+    - letter: "А"
+      word: "ананас"
+      video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+    - letter: "У"
+      word: "Україна"
+      video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+    - letter: "М"
+      word: "морква"
+      video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+    - letter: "Л"
+      word: "літак"
+      video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+    - letter: "Н"
+      word: "ножиці"
+      video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+    - letter: "С"
+      word: "сумка"
+      video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+
+- type: classify
+  title: "Vowels and Consonants"
+  instruction: "Sort the 6 letters into vowels and consonants."
+  categories:
+    - label: "Голосні (Vowels)"
+      symbol_hint: "vowel"
+      items:
+        - "А"
+        - "У"
+    - label: "Приголосні (Consonants)"
+      symbol_hint: "consonant"
+      items:
+        - "М"
+        - "Л"
+        - "Н"
+        - "С"
+
+- type: image-to-letter
+  title: "First Letter Match"
+  instruction: "Look at the emoji and select the Cyrillic letter its Ukrainian word starts with."
+  items:
+    - emoji: "🍍"
+      answer: "А"
+      distractors:
+        - "М"
+        - "Л"
+        - "У"
+    - emoji: "🇺🇦"
+      answer: "У"
+      distractors:
+        - "С"
+        - "Н"
+        - "А"
+    - emoji: "🥕"
+      answer: "М"
+      distractors:
+        - "Н"
+        - "Л"
+        - "С"
+    - emoji: "✈️"
+      answer: "Л"
+      distractors:
+        - "А"
+        - "М"
+        - "У"
+    - emoji: "✂️"
+      answer: "Н"
+      distractors:
+        - "М"
+        - "С"
+        - "Л"
+    - emoji: "👜"
+      answer: "С"
+      distractors:
+        - "Л"
+        - "Н"
+        - "А"
+
+- type: match-up
+  title: "Sound to Key Word"
+  instruction: "Match each letter or syllable to the word that starts with it."
+  pairs:
+    - left: "А"
+      right: "ананас"
+    - left: "У"
+      right: "Україна"
+    - left: "М"
+      right: "морква"
+    - left: "Л"
+      right: "літак"
+    - left: "Н"
+      right: "ножиці"
+    - left: "С"
+      right: "сумка"
+    - left: "МА"
+      right: "мама"
+    - left: "НА"
+      right: "нас"
+
+- type: group-sort
+  title: "Open and Closed Endings"
+  instruction: "Sort the words into those ending in an open vowel sound and those ending in a closed consonant sound."
+  groups:
+    - name: "Ends in a Vowel"
+      items:
+        - "мама"
+        - "сума"
+        - "луна"
+        - "мала"
+        - "сама"
+        - "сауна"
+    - name: "Ends in a Consonant"
+      items:
+        - "мул"
+        - "сам"
+        - "нас"
+        - "мус"
+        - "сум"
+        - "ананас"
+
+- type: quiz
+  title: "Phonetics Knowledge Check"
+  instruction: "Choose the correct answer based on the reading."
+  items:
+    - question: "Which of the following describes how a vowel is produced?"
+      explanation: "Vowels are voice-only sounds with no airflow obstruction."
+      options:
+        - text: "Without any significant obstruction of airflow"
+          correct: true
+        - text: "By pressing lips together"
+          correct: false
+        - text: "By creating friction with the tongue"
+          correct: false
+        - text: "By blocking the nasal cavity"
+          correct: false
+    - question: "What is the 'Golden Rule' regarding Ukrainian vowels?"
+      explanation: "Ukrainian vowels are perfectly stable and never reduce to a schwa."
+      options:
+        - text: "They remain perfectly stable and clear"
+          correct: true
+        - text: "They are reduced when unstressed"
+          correct: false
+        - text: "They change sound based on consonants"
+          correct: false
+        - text: "They are often silent at the end"
+          correct: false
+    - question: "Which Cyrillic letter is a dangerous 'visual trap' that looks like H?"
+      explanation: "The Cyrillic Н makes the /n/ sound, not an /h/ sound."
+      options:
+        - text: "Н"
+          correct: true
+        - text: "М"
+          correct: false
+        - text: "Л"
+          correct: false
+        - text: "С"
+          correct: false
+    - question: "What sound does the Cyrillic letter С always make?"
+      explanation: "С is always a sharp, unvoiced /s/ sound, never a /k/."
+      options:
+        - text: "The sharp /s/ sound"
+          correct: true
+        - text: "The hard /k/ sound"
+          correct: false
+        - text: "The soft /c/ sound"
+          correct: false
+        - text: "The deep /sh/ sound"
+          correct: false
+    - question: "Which structural pattern defines an open syllable?"
+      explanation: "An open syllable ends with a vowel, keeping the airflow open."
+      options:
+        - text: "It ends with a vowel"
+          correct: true
+        - text: "It ends with a consonant"
+          correct: false
+        - text: "It contains no vowels"
+          correct: false
+        - text: "It has two consonants"
+          correct: false
+    - question: "Which word means 'pineapple' and features three clear А sounds?"
+      explanation: "Ананас means pineapple and requires three stable A vowels."
+      options:
+        - text: "ананас"
+          correct: true
+        - text: "автобус"
+          correct: false
+        - text: "акула"
+          correct: false
+        - text: "сауна"
+          correct: false
+    - question: "Why is the word 'нам' considered a visual trap for English speakers?"
+      explanation: "The Cyrillic letter Н sounds like N, not H."
+      options:
+        - text: "The first letter looks like H but sounds like N"
+          correct: true
+        - text: "The vowels are silent at the end"
+          correct: false
+        - text: "The word has no vowels at all"
+          correct: false
+        - text: "The last letter sounds like a P"
+          correct: false
+    - question: "Which letter looks like a small pitched tent or Greek Lambda?"
+      explanation: "Л looks like a tent and makes the /l/ sound."
+      options:
+        - text: "Л"
+          correct: true
+        - text: "А"
+          correct: false
+        - text: "У"
+          correct: false
+        - text: "М"
+          correct: false
+
+- type: true-false
+  title: "Fact Check: The Cyrillic Code"
+  instruction: "Determine if the statements are true or false."
+  items:
+    - statement: "The Cyrillic script is simply another name for the Russian alphabet."
+      correct: false
+      explanation: "It is an independent script developed in the First Bulgarian Empire."
+    - statement: "In Ukrainian, the letter А sounds like the 'a' in the English word 'father'."
+      correct: true
+      explanation: "А represents a pure, open, unrounded back vowel."
+    - statement: "When a Ukrainian vowel is unstressed, it should be reduced to an 'uh' sound."
+      correct: false
+      explanation: "Vowels are perfectly stable and must never be reduced to a lazy 'uh'."
+    - statement: "The Cyrillic letter У looks like English Y but sounds like the 'oo' in 'moon'."
+      correct: true
+      explanation: "У is a close, tightly rounded back vowel."
+    - statement: "The word 'мама' consists of two identical open syllables."
+      correct: true
+      explanation: "MA-MA are both open syllables ending in the vowel A."
+    - statement: "The Cyrillic letter С can sometimes be pronounced as a sharp /k/ sound."
+      correct: false
+      explanation: "С is always a sharp, unvoiced /s/ sound, without exception."
+    - statement: "The letter М is a consonant because it involves obstructing the airflow."
+      correct: true
+      explanation: "Consonants are created by interrupting or restricting the continuous flow of air."
+    - statement: "The Cyrillic letter Н produces an identical sound to the English letter H."
+      correct: false
+      explanation: "Н produces the /n/ sound, which is why it is considered a visual trap."
+
+- type: anagram
+  title: "Unscramble the First Words"
+  instruction: "Rearrange the letters to form the correct Ukrainian word using only the 6 known letters."
+  items:
+    - scrambled: "а м а м"
+      answer: "мама"
+    - scrambled: "у м а с"
+      answer: "сума"
+    - scrambled: "у а л н"
+      answer: "луна"
+    - scrambled: "с а н"
+      answer: "нас"
+    - scrambled: "м а с"
+      answer: "сам"
+    - scrambled: "л у м"
+      answer: "мул"
+    - scrambled: "у м с"
+      answer: "сум"
+    - scrambled: "с у м"
+      answer: "мус"
+
+- type: match-up
+  title: "Vocabulary Match"
+  instruction: "Match the Ukrainian word to its English translation."
+  pairs:
+    - left: "мама"
+      right: "mom"
+    - left: "сума"
+      right: "sum / bag"
+    - left: "луна"
+      right: "echo"
+    - left: "нас"
+      right: "us"
+    - left: "сам"
+      right: "self / alone"
+    - left: "мул"
+      right: "mule"
+    - left: "сум"
+      right: "sadness"
+    - left: "мала"
+      right: "small"
+
+- type: fill-in
+  title: "Complete the Phrase"
+  instruction: "Choose the correct missing word to complete the short Ukrainian phrase or statement."
+  items:
+    - sentence: "Мама ___."
+      answer: "сама"
+      options:
+        - "сама"
+        - "сам"
+        - "сума"
+        - "нас"
+      explanation: "The phrase is 'Мама сама' (Mom is alone)."
+    - sentence: "Мул ___."
+      answer: "сам"
+      options:
+        - "сам"
+        - "сама"
+        - "мус"
+        - "сум"
+      explanation: "The phrase is 'Мул сам' (The mule is alone)."
+    - sentence: "Сума ___."
+      answer: "мала"
+      options:
+        - "мала"
+        - "мул"
+        - "мама"
+        - "луна"
+      explanation: "The phrase is 'Сума мала' (The sum is small)."
+    - sentence: "The Cyrillic letter Н makes the sound ___."
+      answer: "/n/"
+      options:
+        - "/n/"
+        - "/h/"
+        - "/m/"
+        - "/s/"
+      explanation: "Н is a visual trap that sounds like the English N."
+    - sentence: "The word ___ means 'echo' in Ukrainian."
+      answer: "луна"
+      options:
+        - "луна"
+        - "сума"
+        - "мама"
+        - "мул"
+      explanation: "Луна means echo."
+    - sentence: "An open syllable always ends with a ___."
+      answer: "vowel"
+      options:
+        - "vowel"
+        - "consonant"
+        - "letter"
+        - "sound"
+      explanation: "Open syllables end with a vowel, like МА or НУ."
+    - sentence: "A closed syllable always ends with a ___."
+      answer: "consonant"
+      options:
+        - "consonant"
+        - "vowel"
+        - "syllable"
+        - "trap"
+      explanation: "Closed syllables end with a consonant, like УМ or АС."
+    - sentence: "The Cyrillic letter ___ looks like an English Y but sounds like the 'oo' in moon."
+      answer: "У"
+      options:
+        - "У"
+        - "А"
+        - "М"
+        - "Л"
+      explanation: "У is a tightly rounded vowel."

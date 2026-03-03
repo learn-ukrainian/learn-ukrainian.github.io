@@ -1,81 +1,114 @@
-  lemma: цей
-  notes: Used for masculine nouns near the speaker
-  pos: pronoun
-  translation: this (masc.)
-  lemma: ця
-  notes: Used for feminine nouns near the speaker
-  pos: pronoun
-  translation: this (fem.)
-  lemma: це
-  notes: Used for neuter nouns near speaker OR general identification (This is...)
-  pos: pronoun
-  translation: this (neut.) / this is
-  lemma: ці
-  notes: Plural form for near objects
-  pos: pronoun
-  translation: these
-  lemma: той
-  notes: Used for masculine nouns far from the speaker
-  pos: pronoun
-  translation: that (masc.)
-  lemma: та
-  notes: Used for feminine nouns far from the speaker
-  pos: pronoun
-  translation: that (fem.)
-  lemma: те
-  notes: Used for neuter nouns far from the speaker
-  pos: pronoun
-  translation: that (neut.)
-  lemma: ті
-  notes: Plural form for far objects
-  pos: pronoun
-  translation: those
-  lemma: стіл
-  notes: Masculine
-  pos: noun
-  translation: table
-  lemma: стілець
-  notes: Masculine
-  pos: noun
-  translation: chair
-  lemma: диван
-  notes: Masculine
-  pos: noun
-  translation: sofa
-  lemma: телефон
-  notes: Masculine
-  pos: noun
-  translation: phone
-  lemma: шафа
-  notes: Feminine
-  pos: noun
-  translation: wardrobe
-  lemma: книга
-  notes: Feminine
-  pos: noun
-  translation: book
-  lemma: кімната
-  notes: Feminine
-  pos: noun
-  translation: room
-  lemma: лампа
-  notes: Feminine
-  pos: noun
-  translation: lamp
-  lemma: вікно
-  notes: Neuter
-  pos: noun
-  translation: window
-  lemma: ліжко
-  notes: Neuter
-  pos: noun
-  translation: bed
-  lemma: крісло
-  notes: Neuter
-  pos: noun
-  translation: armchair
-  lemma: двері
-  notes: Always plural in Ukrainian
-  pos: noun
-  translation: door / doors
-
+items:
+  - lemma: "цей"
+    translation: "this"
+    pos: "pronoun"
+    notes: "near, masculine"
+  - lemma: "ця"
+    translation: "this"
+    pos: "pronoun"
+    notes: "near, feminine"
+  - lemma: "це"
+    translation: "this / this is"
+    pos: "pronoun"
+    notes: "near, neuter; also invariant identifier"
+  - lemma: "ці"
+    translation: "these"
+    pos: "pronoun"
+    notes: "near, plural"
+  - lemma: "той"
+    translation: "that"
+    pos: "pronoun"
+    notes: "far, masculine"
+  - lemma: "та"
+    translation: "that"
+    pos: "pronoun"
+    notes: "far, feminine"
+  - lemma: "те"
+    translation: "that"
+    pos: "pronoun"
+    notes: "far, neuter"
+  - lemma: "ті"
+    translation: "those"
+    pos: "pronoun"
+    notes: "far, plural"
+  - lemma: "стіл"
+    translation: "table"
+    pos: "noun"
+    gender: "m"
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+  - lemma: "телефон"
+    translation: "phone"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кімната"
+    translation: "room"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стілець"
+    translation: "chair"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ліжко"
+    translation: "bed"
+    pos: "noun"
+    gender: "n"
+  - lemma: "лампа"
+    translation: "lamp"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вікно"
+    translation: "window"
+    pos: "noun"
+    gender: "n"
+  - lemma: "шафа"
+    translation: "wardrobe"
+    pos: "noun"
+    gender: "f"
+  - lemma: "двері"
+    translation: "door / doors"
+    pos: "noun"
+    notes: "always plural"
+  - lemma: "дім"
+    translation: "home / house"
+    pos: "noun"
+    gender: "m"
+  - lemma: "квартира"
+    translation: "apartment"
+    pos: "noun"
+    gender: "f"
+  - lemma: "множина"
+    translation: "plural"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рід"
+    translation: "gender"
+    pos: "noun"
+    gender: "m"
+  - lemma: "місце"
+    translation: "place"
+    pos: "noun"
+    gender: "n"
+  - lemma: "речі"
+    translation: "things"
+    pos: "noun"
+    notes: "plural only in this context"
+  - lemma: "середній"
+    translation: "neuter"
+    pos: "adjective"
+  - lemma: "чоловічий"
+    translation: "masculine"
+    pos: "adjective"
+  - lemma: "жіночий"
+    translation: "feminine"
+    pos: "adjective"
+  - lemma: "однина"
+    translation: "singular"
+    pos: "noun"
+    gender: "f"
+  - lemma: "займенник"
+    translation: "pronoun"
+    pos: "noun"
+    gender: "m"

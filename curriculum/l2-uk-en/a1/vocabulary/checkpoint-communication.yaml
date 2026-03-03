@@ -1,76 +1,61 @@
 items:
-  - lemma: "могти"
-    translation: "to be able to (physically)"
-    pos: "verb"
-    notes: "circumstantial ability"
-  - lemma: "вміти"
-    translation: "to know how to (skill)"
-    pos: "verb"
-    notes: "learned skill"
-  - lemma: "треба"
-    translation: "it is necessary"
-    pos: "adverb"
-    notes: "impersonal necessity, takes Dative"
-  - lemma: "повинен"
-    translation: "must / obliged"
-    pos: "adjective"
-    notes: "personal duty, changes by gender"
-  - lemma: "хотіти"
-    translation: "to want"
-    pos: "verb"
-    notes: "personal desire"
-  - lemma: "читай"
-    translation: "read!"
-    pos: "verb"
-    notes: "imperative form for ти"
-  - lemma: "скажи"
-    translation: "say! / tell!"
-    pos: "verb"
-    notes: "imperative form for ти"
-  - lemma: "дай"
-    translation: "give!"
-    pos: "verb"
-    notes: "imperative form for ти"
-  - lemma: "подорож"
-    translation: "journey / trip"
-    pos: "noun"
-    gender: "f"
-  - lemma: "автобус"
-    translation: "bus"
-    pos: "noun"
-    gender: "m"
-  - lemma: "хобі"
-    translation: "hobby"
-    pos: "noun"
-    gender: "n"
-  - lemma: "стадіон"
-    translation: "stadium"
-    pos: "noun"
-    gender: "m"
-  - lemma: "запрошувати"
-    translation: "to invite"
-    pos: "verb"
-  - lemma: "наліво"
-    translation: "to the left"
-    pos: "adverb"
-  - lemma: "направо"
-    translation: "to the right"
-    pos: "adverb"
-  - lemma: "прямо"
-    translation: "straight ahead"
-    pos: "adverb"
-  - lemma: "квиток"
-    translation: "ticket"
-    pos: "noun"
-    gender: "m"
-  - lemma: "намет"
-    translation: "tent"
-    pos: "noun"
-    gender: "m"
-  - lemma: "пішки"
-    translation: "on foot"
-    pos: "adverb"
-  - lemma: "волосся"
-    translation: "hair"
-    pos: "noun"
-    gender: "n"
+- lemma: ти
+  pos: noun
+- lemma: мо
+  pos: adv
+- lemma: ви
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: баба
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: терти
+  pos: verb
+- lemma: бути
+  pos: verb
+- lemma: ласка
+  pos: noun
+- lemma: до
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: гра
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: се
+  pos: noun
+- lemma: сей
+  pos: adj
+- lemma: я
+  pos: noun
+- lemma: купа
+  pos: noun
+- lemma: купити
+  pos: verb
+- lemma: демо
+  pos: noun
+- lemma: могти
+  pos: verb
+- lemma: воно
+  pos: noun
+- lemma: раз
+  pos: adv
+- lemma: те
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: іти
+  pos: verb
+- lemma: день
+  pos: noun
+- lemma: дно
+  pos: noun
+- lemma: квиток
+  pos: noun
+- lemma: писати
+  pos: verb
+- lemma: просити
+  pos: verb

@@ -1,82 +1,61 @@
 items:
-  - lemma: "у"
-    translation: "in, at (after consonant)"
-    pos: "preposition"
-    notes: "Used after a word ending in a consonant or at the beginning of a phrase."
-  - lemma: "в"
-    translation: "in, at (after vowel)"
-    pos: "preposition"
-    notes: "Used after a word ending in a vowel."
-  - lemma: "і"
-    translation: "and (after consonant)"
-    pos: "conjunction"
-    notes: "Used after a word ending in a consonant."
-  - lemma: "й"
-    translation: "and (after vowel)"
-    pos: "conjunction"
-    notes: "Used after a word ending in a vowel."
-  - lemma: "та"
-    translation: "and (alternative)"
-    pos: "conjunction"
-    notes: "A synonym for і/й that naturally avoids phonetic crashes."
-  - lemma: "з"
-    translation: "from, with (default)"
-    pos: "preposition"
-    notes: "Used before words starting with vowels or single consonants."
-  - lemma: "із"
-    translation: "from, with (before clusters)"
-    pos: "preposition"
-    notes: "Used before heavy consonant clusters."
-  - lemma: "зі"
-    translation: "from, with (before sibilants)"
-    pos: "preposition"
-    notes: "Used before hissing sounds (з, с, ш, щ) and the pronoun мною."
-  - lemma: "мене"
-    translation: "me (genitive)"
-    pos: "pronoun"
-    example: "У мене є новий комп'ютер."
-  - lemma: "мною"
-    translation: "me (instrumental)"
-    pos: "pronoun"
-    notes: "Always takes the euphonic preposition зі (зі мною)."
-  - lemma: "школа"
-    translation: "school"
-    pos: "noun"
-    gender: "f"
-  - lemma: "Київ"
-    translation: "Kyiv"
-    pos: "noun"
-    gender: "m"
-  - lemma: "Львів"
-    translation: "Lviv"
-    pos: "noun"
-    gender: "m"
-  - lemma: "батько"
-    translation: "father"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мати"
-    translation: "mother"
-    pos: "noun"
-    gender: "f"
-  - lemma: "евфонія"
-    translation: "euphony"
-    pos: "noun"
-    gender: "f"
-    notes: "The built-in system of acoustic harmony in Ukrainian."
-  - lemma: "чергування"
-    translation: "alternation"
-    pos: "noun"
-    gender: "n"
-    notes: "The alternation of forms depending on surrounding sounds."
-  - lemma: "приголосний"
-    translation: "consonant"
-    pos: "noun"
-    gender: "m"
-  - lemma: "голосний"
-    translation: "vowel"
-    pos: "noun"
-    gender: "m"
-  - lemma: "удень"
-    translation: "in the daytime (after consonant)"
-    pos: "adverb"
+- lemma: цей
+  pos: adj
+- lemma: голосний
+  pos: adj
+- lemma: мати
+  pos: verb
+- lemma: слово
+  pos: noun
+- lemma: приголосний
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: звук
+  pos: noun
+- lemma: маяти
+  pos: verb
+- lemma: це
+  pos: noun
+- lemma: форма
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: вони
+  pos: noun
+- lemma: брат
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: правило
+  pos: noun
+- lemma: школа
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: уникати
+  pos: verb
+- lemma: як
+  pos: adv
+- lemma: мат
+  pos: noun
+- lemma: мата
+  pos: noun
+- lemma: сестра
+  pos: noun
+- lemma: правити
+  pos: verb
+- lemma: працювати
+  pos: verb
+- lemma: використовувати
+  pos: verb
+- lemma: ставити
+  pos: verb
+- lemma: речення
+  pos: noun
+- lemma: пауза
+  pos: noun
+- lemma: починатися
+  pos: verb

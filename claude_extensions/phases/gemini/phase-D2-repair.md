@@ -1,7 +1,8 @@
 # Phase D.2: Targeted Repair
 
 > **You are an expert Ukrainian language editor applying targeted fixes based on a review.**
-> All file contents are provided below — produce FIND/REPLACE pairs directly.
+> The review already applied some fixes. You handle what's still failing.
+> You have **Edit** and **Grep** tools — fix files directly.
 
 ---
 
@@ -28,7 +29,7 @@
 
 ---
 
-## File Contents
+## File Contents (for reference)
 
 ### Content: `{CONTENT_PATH}`
 
@@ -52,67 +53,45 @@
 
 ## Instructions
 
-1. For each issue in the Fix Plan or audit failures, find the exact text in the file contents above
-2. Produce a FIND/REPLACE pair with verbatim FIND text copied exactly from above
+1. For each issue in the Fix Plan or audit failures, use **Grep** to verify the exact text exists in the file
+2. Use the **Edit** tool to fix each issue directly in the file
 3. Only fix issues documented above — no silent extra changes
 4. Prioritize: audit gate failures first, then review issues
 
 ---
 
-## Output Format
+## How to Fix
 
-> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
+Use the Edit tool for each fix. The workflow for each issue:
 
-```
-===SECTION_FIX_START===
-FILE: {CONTENT_PATH}
----
-FIND:
-exact text to replace (full sentence or paragraph, verbatim from the file contents above)
-REPLACE:
-corrected replacement text
----
-FIND:
-next problematic text
-REPLACE:
-corrected replacement
----
-FILE: {ACTIVITIES_PATH}
----
-FIND:
-exact activity text to replace
-REPLACE:
-corrected activity text
----
-===SECTION_FIX_END===
-```
+1. **Grep** the file to confirm the text exists and is unique
+2. **Edit** the file: provide `old_string` (exact text from file) and `new_string` (corrected text)
+3. Move to next issue
+
+File paths:
+- Content: `{CONTENT_PATH}`
+- Activities: `{ACTIVITIES_PATH}`
+- Vocabulary: `{VOCAB_PATH}`
 
 ## Fix Rules
 
-- **FIND text must be verbatim** — copy from the file contents above exactly
 - Only fix issues documented in the Fix Plan or audit failures above
 - You MAY add new activities or modify existing ones if the Fix Plan explicitly requests it
-- To ADD a new YAML item, FIND the last existing item in the list, REPLACE it with that same item followed by your new item. Preserve exact YAML indentation.
 - Do NOT add new prose sections or vocabulary items unless the Fix Plan explicitly requests it
-- Maximum **20 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
-- Each FILE: line starts a new sub-block for that file
-- If nothing needs fixing, output:
-  ```
-  ===SECTION_FIX_START===
-  ===SECTION_FIX_END===
-  ```
+- Maximum **20 edits** total (prioritize the most impactful fixes)
+- If nothing needs fixing, state that clearly
 
 ---
 
 ## Friction Report (MANDATORY)
 
-After the fix block, include:
+After all fixes, output:
 
 ```
 ===FRICTION_START===
 **Phase**: Phase D.2: Targeted Repair
 **Step**: {what you were doing when friction occurred, or "Full Phase D.2"}
-**Friction Type**: NONE | FIND_TEXT_MISMATCH | FILE_NOT_FOUND | ...
+**Friction Type**: NONE | EDIT_FAILED | TEXT_NOT_FOUND | ...
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
@@ -125,6 +104,6 @@ After the fix block, include:
 
 - Do NOT write a review — that was already done in Phase D.1
 - Do NOT output ===REVIEW_START=== blocks
-- Do NOT modify files directly — only output fix blocks
-- You MAY add/modify activities if the Fix Plan requests it (use FIND/REPLACE on the YAML file)
+- Do NOT output FIND/REPLACE blocks — use the Edit tool instead
+- You MAY add/modify activities if the Fix Plan requests it
 - Do NOT make cosmetic changes beyond what the review flagged

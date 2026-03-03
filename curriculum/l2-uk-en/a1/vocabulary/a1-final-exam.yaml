@@ -1,80 +1,61 @@
 items:
-  - lemma: "знати"
-    translation: "to know"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "говорити"
-    translation: "to speak"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "слухати"
-    translation: "to listen"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "розуміти"
-    translation: "to understand"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "читати"
-    translation: "to read"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "писати"
-    translation: "to write"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "відповідати"
-    translation: "to answer"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "питати"
-    translation: "to ask"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "правильно"
-    translation: "correctly"
-    pos: "adverb"
-  - lemma: "помилка"
-    translation: "mistake"
-    pos: "noun"
-    gender: "f"
-  - lemma: "завдання"
-    translation: "task"
-    pos: "noun"
-    gender: "n"
-  - lemma: "оцінка"
-    translation: "grade"
-    pos: "noun"
-    gender: "f"
-  - lemma: "каштан"
-    translation: "chestnut tree"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кава"
-    translation: "coffee"
-    pos: "noun"
-    gender: "f"
-  - lemma: "вокзал"
-    translation: "train station"
-    pos: "noun"
-    gender: "m"
-  - lemma: "квиток"
-    translation: "ticket"
-    pos: "noun"
-    gender: "m"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "річка"
-    translation: "river"
-    pos: "noun"
-    gender: "f"
-  - lemma: "столиця"
-    translation: "capital"
-    pos: "noun"
-    gender: "f"
-  - lemma: "правило"
-    translation: "rule"
-    pos: "noun"
-    gender: "n"
+- lemma: ви
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: відмінок
+  pos: noun
+- lemma: знати
+  pos: verb
+- lemma: той
+  pos: adj
+- lemma: слово
+  pos: noun
+- lemma: дієслово
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: закінчення
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: розуміти
+  pos: verb
+- lemma: питання
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: мова
+  pos: noun
+- lemma: український
+  pos: adj
+- lemma: говорити
+  pos: verb
+- lemma: ваш
+  pos: adj
+- lemma: форма
+  pos: noun
+- lemma: знахідний
+  pos: adj
+- lemma: клас
+  pos: noun
+- lemma: рівень
+  pos: noun
+- lemma: рівня
+  pos: noun
+- lemma: текст
+  pos: noun
+- lemma: українська
+  pos: noun
+- lemma: добре
+  pos: adv

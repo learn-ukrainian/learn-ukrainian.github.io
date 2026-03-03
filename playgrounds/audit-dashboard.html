@@ -64,6 +64,10 @@ a:hover { text-decoration: underline; }
 .module-cell.missing { background: var(--gray); color: var(--text3); }
 .module-cell .review-badge { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #a371f7; border: 1px solid var(--bg2); }
 .module-cell .qa-badge { position: absolute; top: -3px; left: -3px; width: 8px; height: 8px; border-radius: 50%; background: #58a6ff; border: 1px solid var(--bg2); }
+.module-cell .v4-badge { position: absolute; bottom: -2px; right: -2px; background: var(--green); color: #000; font-size: 7px; padding: 1px 2px; border-radius: 2px; font-weight: 700; line-height: 1; }
+
+/* Obsolete (non-v4) modules */
+.obsolete { opacity: 0.4; }
 
 /* Side panel */
 .side-panel { position: fixed; top: 0; right: -480px; width: 480px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); transition: right 0.3s; z-index: 100; overflow-y: auto; padding: 24px; }
@@ -198,6 +202,8 @@ a:hover { text-decoration: underline; }
   <div class="legend-item"><div class="legend-dot" style="background:var(--gray)"></div> Missing</div>
   <div class="legend-item"><div class="legend-dot" style="background:#a371f7;border-radius:50%"></div> Reviewed (top-right dot)</div>
   <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;border-radius:50%"></div> Final QA (top-left dot, optional)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green);border-radius:2px;font-size:6px;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;">v4</div> V4 pipeline</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Obsolete (v3/unbuilt)</div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -208,6 +214,7 @@ a:hover { text-decoration: underline; }
 
 <script>
 const API = '/api/dashboard';
+const V4_PHASE_ORDER = ['research','discover','content','activities','validate','review','mdx'];
 let overviewData = null;
 let trackCache = {};
 
@@ -300,15 +307,19 @@ async function toggleTrack(trackId) {
 function renderModuleGrid(container, data, trackId) {
   const cells = data.modules.map(m => {
     const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
+    const isV4 = m.pipeline_version === 'v4';
+    const obsolete = isV4 ? '' : ' obsolete';
     const reviewBadge = m.has_review ? '<div class="review-badge" title="Reviewed"></div>' : '';
     const qaBadge = m.has_final_review ? '<div class="qa-badge" title="Final QA done"></div>' : '';
+    const v4Badge = isV4 ? '<div class="v4-badge">v4</div>' : '';
+    const verLabel = m.pipeline_version ? ` [${m.pipeline_version}]` : '';
     const reviewLabel = m.has_review ? ' ✓Rev' : '';
     const qaLabel = m.has_final_review ? ' ✓QA' : '';
     return `
-      <div class="module-cell ${cls}" onclick="openModule('${trackId}','${m.slug}')" title="${m.slug}">
+      <div class="module-cell ${cls}${obsolete}" onclick="openModule('${trackId}','${m.slug}')" title="${m.slug}">
         ${m.num}
-        ${reviewBadge}${qaBadge}
-        <div class="tooltip">${m.slug} (${m.status})${reviewLabel}${qaLabel}</div>
+        ${reviewBadge}${qaBadge}${v4Badge}
+        <div class="tooltip">${m.slug} (${m.status})${verLabel}${reviewLabel}${qaLabel}</div>
       </div>
     `;
   }).join('');
@@ -396,9 +407,31 @@ function renderModulePanel(container, m) {
     `;
   }
 
+  // Pipeline version info
+  const pipelineVersion = m.pipeline_version || 'unknown';
+  const versionColor = pipelineVersion === 'v4' ? 'var(--green)' : 'var(--text3)';
+
+  // V4 phases display
+  let v4PhasesHtml = '';
+  if (pipelineVersion === 'v4' && m.v4_phases) {
+    v4PhasesHtml = `
+      <div style="margin-top:16px">
+        <div class="word-bar-label">V4 Pipeline Phases</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+          ${V4_PHASE_ORDER.map(p => {
+            const ph = m.v4_phases[p];
+            const st = ph ? ph.status : 'pending';
+            const color = st === 'complete' ? 'var(--green)' : st === 'in_progress' ? 'var(--blue)' : 'var(--text3)';
+            return `<span style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:11px;color:${color}">${p}: ${st}</span>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   container.innerHTML = `
     <h2>${m.slug}</h2>
-    <div class="track-label">${m.track} &middot; Module</div>
+    <div class="track-label">${m.track} &middot; Module &middot; <span style="color:${versionColor};font-weight:600">${pipelineVersion}</span></div>
     <span class="status-badge ${statusCls}">${status}</span>
 
     <div class="word-bar-container">
@@ -421,6 +454,7 @@ function renderModulePanel(container, m) {
     </div>
 
     ${actHtml}
+    ${v4PhasesHtml}
     ${orchHtml}
 
     <div class="meta-info">

@@ -1,26 +1,61 @@
 items:
-  - lemma: рід
-    translation: gender
-    pos: noun
-    gender: m
-    note: —
-  - lemma: дієслово
-    translation: verb
-    pos: noun
-    gender: n
-    note: —
-  - lemma: чоловічий
-    translation: masculine
-    pos: adj
-    gender: m
-    note: —
-  - lemma: жіночий
-    translation: feminine
-    pos: adj
-    gender: m
-    note: —
-  - lemma: середній
-    translation: middle / neuter
-    pos: adj
-    gender: m
-    note: —
+- lemma: читати
+  pos: verb
+- lemma: ти
+  pos: noun
+- lemma: говорити
+  pos: verb
+- lemma: цей
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: смачний
+  pos: adj
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: кава
+  pos: noun
+- lemma: знати
+  pos: verb
+- lemma: ви
+  pos: noun
+- lemma: говір
+  pos: noun
+- lemma: мій
+  pos: adj
+- lemma: він
+  pos: noun
+- lemma: тато
+  pos: noun
+- lemma: смачне
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: твій
+  pos: adj
+- lemma: великий
+  pos: adj
+- lemma: текст
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: українська
+  pos: noun
+- lemma: український
+  pos: adj
+- lemma: бути
+  pos: verb
+- lemma: ласка
+  pos: noun
+- lemma: можний
+  pos: adj
+- lemma: тут
+  pos: adv
+- lemma: гарний
+  pos: adj

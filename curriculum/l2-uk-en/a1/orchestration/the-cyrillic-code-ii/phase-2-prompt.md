@@ -24,6 +24,55 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 (No primary source excerpts available from RAG)
 
+## Resource Discoveries
+
+These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
+
+- **Videos**: Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value
+- **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
+- **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
+- **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
+
+(No video discoveries available)
+### Research Videos
+*These videos were found during the research phase. Embed each one next to its corresponding letter/topic section using a markdown link.*
+
+- Ukrainian Lessons — How to pronounce the Ukrainian К — https://www.youtube.com/watch?v=J7sGEI4-xJo
+- Ukrainian Lessons — How to pronounce the Ukrainian Р — https://www.youtube.com/watch?v=fMGsQ5KPQgg
+
+### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)
+*Credit: Anna Ohoiko — Ukrainian Lessons*
+
+- **Full Playlist**: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+
+**Each letter below MUST get its video embedded in the corresponding H3 section:**
+
+- **Літера К**: https://www.youtube.com/watch?v=J7sGEI4-xJo
+- **Літера И**: https://www.youtube.com/watch?v=W-1rCu0indE
+- **Літера Р**: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+- **Літера Б**: https://www.youtube.com/watch?v=V1hxBE_JbGg
+- **Літера В**: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+- **Літера Д**: https://www.youtube.com/watch?v=g4Bh-lqzd48
+- **Літера І**: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+- **Літера О**: https://www.youtube.com/watch?v=QT3c1TiZZgk
+
+## Module Sequence Constraints (HARD FAIL if violated)
+
+DECODABILITY (M2 — 14 known letters: А М Л У Н С + К И Р Б В Д І О):
+- Reading drills MUST use ONLY these 14 letters (e.g., банан, вода, молоко, кіно, рука, дім, бік, він)
+- Still unknown: П, Т, Г, Ґ, Е, З, Ж, Ш, Х, Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф
+- Words needing unknown letters require immediate English translation
+
+GRAMMAR BAN (no verbs exist yet):
+- NO imperative forms — ALL BANNED. Use English for instructions.
+- NO verb conjugation of any kind
+- Allowed: bare nouns, noun phrases using known letters
+
+METALANGUAGE:
+- All terminology English-first with Ukrainian in parentheses
+
+> **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
+
 ---
 
 ## Your Task
@@ -55,11 +104,12 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Вступ | 300 | 450 |
-| Унікальні приголосні | 450 | 675 |
-| Йотовані голосні та М’який знак | 450 | 675 |
-| Голосні та напівголосні | 400 | 600 |
-| Практика та вимова | 400 | 600 |
+| Вступ — Introduction | 200 | 300 |
+| Голосні — Vowels: И, І, О | 450 | 675 |
+| Приголосні — Consonants: К, Р, Б, В, Д | 500 | 750 |
+| Перші слова — First Words | 400 | 600 |
+| Практика — Practice | 250 | 375 |
+| Підсумок — Summary | 200 | 300 |
 | **Total** | **2000** | **3000** |
 
 ---
@@ -143,10 +193,10 @@ Use at least **4 DIFFERENT** callout types across the module:
 
 ### Rule 6: Self-Check Questions in Summary
 
-The Підсумок section MUST include 4-6 self-assessment questions:
+The Summary section MUST include 4-6 self-assessment questions:
 
 ```markdown
-**Перевірте себе:**
+**Check yourself:**
 1. {question testing core concept 1}
 2. {question testing core concept 2}
 3. {question requiring application, not recall}
@@ -404,7 +454,7 @@ Related: {connected slugs}
 
 # {Title}
 
-> **Чому це важливо?**
+> **Why does this matter?**
 >
 > {2-3 sentences of significance}
 
@@ -426,7 +476,7 @@ Related: {connected slugs}
 
 ---
 
-# Підсумок
+# Summary
 
 {Summary + 4-6 self-check questions (~200 words)}
 

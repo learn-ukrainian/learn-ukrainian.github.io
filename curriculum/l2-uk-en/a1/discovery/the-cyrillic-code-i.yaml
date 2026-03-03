@@ -1,0 +1,189 @@
+discovered_at: '2026-03-03T21:39:34.974317+00:00'
+query_keywords:
+- The Cyrillic Code I
+- Голосні
+- Приголосні
+- Перші склади
+- Практика читання
+- Ukrainian letters (А, М, Л, У, Н, С)
+- letters as голосні (vowels) or приголосні (consonants)
+- letters into open and closed syllables
+- simple words using the 6 known letters
+- Letter recognition (А, М, Л, У, Н, С)
+- Sound-letter correspondence
+- Vowel vs consonant classification
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+  title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+  source: ukrainianlessons.com
+  relevance_score: 0.6000000000000001
+  topics:
+  - alphabet
+  - cyrillic
+  - letters
+  - sounds
+- url: https://talkukrainian.com/ukrainian-alphabet/
+  title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
+  source: talkukrainian
+  relevance_score: 0.5
+  topics:
+  - alphabet
+  - letters
+  - pronunciation
+  - cyrillic
+- url: https://www.ukrainianlessons.com/episode200/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 200
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0001
+  text: 'ЗВУКИ І БУКВИ
+
+    к
+
+    і
+
+    <
+
+    ЗВУКИ
+
+    СКЛАД^
+
+    У розділі ти будеш вивчати:
+
+    БУКВИ
+
+    НАГОЛОС
+
+    Дізнаєшся про:
+
+    к
+
+    1
+
+    г
+
+    л
+
+    І
+
+    1
+
+    наголошені
+
+    ГОЛОСНІ ЗВУКИ
+
+    ____________________
+
+    ненаголошені
+
+    дзвінкі, глухі
+
+    г
+
+    тверді, м''які
+
+    ^ПРИГОЛОСНІ ЗВУКИ
+
+    СКЛАДИ J
+
+    ................................................................. ................
+
+    наголошені
+
+    У
+
+    ненаголошені
+
+    З'
+  section_title: Сторінка 3
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0042
+  text: "42\nБачу И, и. Чую  [и].\n\t Прочитай букви, слідкуючи за стрілками. \nЗбільшуй\
+    \ силу голосу, коли стрілка піднята \nвверх.\n\t\nВідшукай слова — назви предметів,\
+    \ у яких є \nдві букви а; дві букви о; три букви у.\n[ – • – ]\nА\nу\nо\nи\nа\n\
+    о\nу\nи \n\t Визнач, якому слову — назві предмета від-\nповідає кожна схема. Чи\
+    \ є в цих словах бук-\nва и?\n* и * о * и\n* и *\n* и * * и * а\n[ – • | –•| \
+    \ – •]\nИ и\nи\nи\nи\nу\nу\nу\nа а\nо\nу\nу\nу\nа\n\t Прочитай букви, слідкуючи\
+    \ за стрілками, по-\nшепки, голосно, дуже голосно й навпаки."
+  section_title: Сторінка 44
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0188
+  text: '66
+
+    Урок розвитку писемного мовлення
+
+    Вибірковий переказ тексту з елементами о п и с у........................ 67
+
+    Зміна приголосних [г], [к], [х] на [з''], [ц''], [с'']
+
+    перед закінченням -і в іменниках різного роду.............................67
+
+    Закінчення іменників жіночого роду
+
+    з кінцевим приголосним основи......................................................69
+
+    Чергування кореневих звуків [о], [е] з [і] в іменниках жіночого
+
+    та чоловічого роду з основою на приголосний.............................72'
+  section_title: Сторінка 188
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0015
+  text: "15\nПриголосні тверді та м’які\n\t Вимов звуки, які ти чуєш на початку слів\
+    \ — \nназв намальованих предметів.\n\t Порівняй вимову перших звуків у словах\
+    \ — на-\nзвах предметів. У яких словах перші звуки ви-\nмовляємо м’яко? М’які\
+    \ звуки позначай так: [ =].\n\t Який у тебе сьогодні настрій? Вибери.\n [    \
+    \  ] \n [      ] \n [      ] \n [      ] \n [      ] \n [      ] \n [ = ]  \n\
+    \ [ = ]  \n [ = ]  \n [ – ] \n [ – ] \n [ – ] \n\t Хто неправильно поділив слово\
+    \ — назву нама-\nльованого предмета на склади?"
+  section_title: Сторінка 17
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0090
+  text: "•  Спишіть, підкресліть хвилястою лінією прикметники в почат­\nковій формі.\
+    \ Провідміняйте, користуючись таблицями відмі­\nнювання (с. 85, 87), один із прикметників\
+    \ з основою на твер­\nдий і м’який приголосний (на вибір). Позначте закінчення.\n\
+    *202. Прочитайте прикметники.\nВерхній, добра, осінній, вечірнє, мідний, кругосвітній,\
+    \ \nгородній, давній, довге, житніи, пшенична.\n•  Спишіть прикметники спочатку\
+    \ з основою на твердий, а по­\nтім на м’який приголосний.\nІЮ ір іе ї^ 0\nДетальний\
+    \ переказ тексту за ко"
+  section_title: Сторінка 91
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

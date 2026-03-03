@@ -1,64 +1,61 @@
-  lemma: мій
-  pos: pronoun
-  translation: my (masc.)
-  lemma: моя
-  pos: pronoun
-  translation: my (fem.)
-  lemma: моє
-  pos: pronoun
-  translation: my (neut.)
-  lemma: твій
-  pos: pronoun
-  translation: your (masc. informal)
-  lemma: твоя
-  pos: pronoun
-  translation: your (fem. informal)
-  lemma: твоє
-  pos: pronoun
-  translation: your (neut. informal)
-  lemma: наш
-  pos: pronoun
-  translation: our (masc.)
-  lemma: наша
-  pos: pronoun
-  translation: our (fem.)
-  lemma: ваш
-  pos: pronoun
-  translation: your (masc. formal/plural)
-  lemma: ваша
-  pos: pronoun
-  translation: your (fem. formal/plural)
-  lemma: його
-  pos: pronoun
-  translation: his
-  lemma: її
-  pos: pronoun
-  translation: her
-  lemma: їхній
-  pos: pronoun
-  translation: their
-  lemma: чий
-  pos: pronoun
-  translation: whose (masc.)?
-  lemma: чия
-  pos: pronoun
-  translation: whose (fem.)?
-  lemma: чиє
-  pos: pronoun
-  translation: whose (neut.)?
-  lemma: чиї
-  pos: pronoun
-  translation: whose (plur.)?
-  lemma: свій
-  pos: pronoun
-  translation: one's own
-  lemma: річ
+items:
+- lemma: мій
+  pos: adj
+- lemma: це
   pos: noun
-  translation: thing
-  lemma: займенник
+- lemma: цей
+  pos: adj
+- lemma: наш
+  pos: adj
+- lemma: твій
+  pos: adj
+- lemma: ваш
+  pos: adj
+- lemma: вона
   pos: noun
-  translation: pronoun
-  lemma: прикметник
+- lemma: чий
+  pos: adj
+- lemma: він
   pos: noun
-  translation: adjective
-
+- lemma: воно
+  pos: noun
+- lemma: її
+  pos: adj
+- lemma: їхній
+  pos: adj
+- lemma: йога
+  pos: noun
+- lemma: його
+  pos: adj
+- lemma: телефон
+  pos: noun
+- lemma: сумка
+  pos: noun
+- lemma: кава
+  pos: noun
+- lemma: свій
+  pos: adj
+- lemma: паспорт
+  pos: noun
+- lemma: дім
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: книга
+  pos: noun
+- lemma: друг
+  pos: noun
+- lemma: вікно
+  pos: noun
+- lemma: річ
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: місто
+  pos: noun
+- lemma: змінюватися
+  pos: verb
+- lemma: мама
+  pos: noun

@@ -1,50 +1,51 @@
 slug: my-world-objects
 title: 'My World: Objects'
-word_target: 2000
+word_target: 3300
 content_outline:
 - section: Вступ
-  words: 300
+  words: 350
   points:
-  - 'Explicit English scaffolding: explain the core goal of pointing to near vs. far
-    objects in our personal space before introducing Ukrainian terminology.'
-  - 'Recap module a1-03 (Gender) quickly: remind learners that every object has a
-    grammatical gender, which is the necessary key to unlocking demonstratives.'
-  - Introduce the cultural proverb «В гостях добре, а вдома краще» (East or West,
-    home is best) to set a welcoming, home-centric theme for the vocabulary.
+  - 'Explicit English scaffolding: explain the module''s goal of pointing to near
+    vs. far objects in our personal space before introducing Ukrainian terminology.'
+  - 'Recap module a1-03 (Gender) quickly: remind learners that a noun''s grammatical
+    gender is the necessary key to unlocking demonstratives.'
+  - Introduce the proverb «В гостях добре, а вдома краще» to set a welcoming, home-centric
+    theme for the upcoming vocabulary.
 - section: Презентація
-  words: 700
+  words: 1200
   points:
-  - 'H3: Near Objects (Цей, Ця, Це, Ці). Present the table of ''near'' demonstratives
-    with hand-touching visual cues. Emphasize the rhyming endings (цЯ книгА, цЕ вікнО).'
-  - 'H3: Far Objects (Той, Та, Те, Ті). Present the table of ''far'' demonstratives.
-    Provide a phonetic mnemonic: the ''T'' sound for ''That/There''.'
+  - 'H3: Near Objects (Цей, Ця, Це, Ці). Present the paradigm of ''near'' demonstratives
+    with clear examples. Emphasize the rhyming endings (цЯ книгА, цЕ вікнО) to build
+    intuition.'
+  - 'H3: Far Objects (Той, Та, Те, Ті). Present the paradigm of ''far'' demonstratives.
+    Provide a phonetic mnemonic: the ''T'' sound stands for ''That/There'' (Той).'
   - 'H3: The ''Це'' vs ''Цей'' Hurdle. Provide a clear contrast using English metalanguage:
     ''Це стіл'' (Identification: This is a table) vs ''Цей стіл'' (Specification:
     This table).'
-  - 'H3: Special Plurals. Highlight the inherently plural noun ''двері'' (ці двері
-    / ті двері) directly from the research vocabulary, noting it always takes the
-    plural demonstrative.'
+  - 'H3: Special Plural (Двері). Highlight the inherently plural noun ''двері'' (ці
+    двері / ті двері), noting that it systematically takes plural demonstratives.'
 - section: Практика
-  words: 450
+  words: 950
   points:
-  - 'H3: Gender Matching Drill. Use minimal pairs and phonological reinforcement to
-    correct the common learner error ''цей книга'' (always match the ending!).'
-  - 'H3: Sorting the Room. Group new household vocabulary (ніж, ложка, диван, шафа,
-    ліжко) by their grammatical gender using ''цей'' and ''той''.'
-  - 'H3: Near or Far? Mini-dialogues applying the proximity concept. Contrast ''Цей
-    телефон'' (in hand) vs ''Той стіл'' (across the room) using clear spatial contexts.'
+  - 'H3: Gender Matching Drill. Use minimal pairs and pattern recognition to correct
+    the common learner error ''цей книга'' (always match the ending!).'
+  - 'H3: Sorting the Room. Group new household vocabulary (стіл, ліжко, лампа, вікно,
+    шафа) by grammatical gender using ''цей'' and ''той''.'
+  - 'H3: Near or Far? Provide mini-dialogues applying the proximity concept. Contrast
+    ''Цей телефон'' (in hand) vs ''Той стіл'' (across the room) using specific spatial
+    contexts.'
 - section: Культурний контекст
-  words: 300
+  words: 500
   points:
-  - 'H3: The Traditional Ukrainian Home. Explain the concept of ''Покуття'' (Red Corner)
-    as a traditional focal point for spatial orientation in a room.'
-  - 'H3: Дім, Хата, Квартира. Contrast the rural ''хата'' with the modern urban ''квартира'',
-    while discussing the broader, emotional concept of ''дім'' (home) as the space
-    where one belongs.'
+  - 'H3: The Traditional Ukrainian Home. Explain ''Покуття'' (Red Corner) as a traditional
+    focal point for spatial and spiritual orientation in a room.'
+  - 'H3: Дім, Хата, Квартира. Contrast the traditional rural ''хата'' with the modern
+    urban ''квартира'', while discussing the broader, emotional concept of ''дім''
+    (home).'
 - section: Продукція та підсумок
-  words: 250
+  words: 300
   points:
   - 'H3: Interior Designer Task. Persona roleplay navigating a living space: point
     to 3 distant and 3 near objects, specifying them with the correct gendered demonstratives.'
   - 'Review checklist of §4.2.2 State Standard competencies: self-assessing the ability
-    to match demonstrative gender/number with basic household items.'
+    to match demonstrative gender and number with basic household items.'

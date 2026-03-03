@@ -1,81 +1,61 @@
 items:
-  - lemma: "молоко"
-    translation: "milk"
-    pos: "noun"
-    gender: "n"
-  - lemma: "Україна"
-    translation: "Ukraine"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сестра"
-    translation: "sister"
-    pos: "noun"
-    gender: "f"
-  - lemma: "дерево"
-    translation: "tree"
-    pos: "noun"
-    gender: "n"
-  - lemma: "вулиця"
-    translation: "street"
-    pos: "noun"
-    gender: "f"
-  - lemma: "автобус"
-    translation: "bus"
-    pos: "noun"
-    gender: "m"
-  - lemma: "бібліотека"
-    translation: "library"
-    pos: "noun"
-    gender: "f"
-  - lemma: "університет"
-    translation: "university"
-    pos: "noun"
-    gender: "m"
-  - lemma: "склад"
-    translation: "syllable"
-    pos: "noun"
-    gender: "m"
-  - lemma: "переніс"
-    translation: "hyphenation"
-    pos: "noun"
-    gender: "m"
-  - lemma: "голосний"
-    translation: "vowel"
-    pos: "noun"
-    gender: "m"
-  - lemma: "приголосний"
-    translation: "consonant"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кіт"
-    translation: "cat"
-    pos: "noun"
-    gender: "m"
-  - lemma: "око"
-    translation: "eye"
-    pos: "noun"
-    gender: "n"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "сім'я"
-    translation: "family"
-    pos: "noun"
-    gender: "f"
-  - lemma: "палець"
-    translation: "finger"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ґудзик"
-    translation: "button"
-    pos: "noun"
-    gender: "m"
-  - lemma: "наголос"
-    translation: "stress"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мова"
-    translation: "language"
-    pos: "noun"
-    gender: "f"
+- lemma: склад
+  pos: noun
+- lemma: скласти
+  pos: verb
+- lemma: мати
+  pos: verb
+- lemma: цей
+  pos: adj
+- lemma: маяти
+  pos: verb
+- lemma: наголос
+  pos: adv
+- lemma: це
+  pos: noun
+- lemma: терти
+  pos: verb
+- lemma: звук
+  pos: noun
+- lemma: де
+  pos: adv
+- lemma: молоко
+  pos: noun
+- lemma: ко
+  pos: noun
+- lemma: голосний
+  pos: adj
+- lemma: старий
+  pos: adj
+- lemma: він
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: сей
+  pos: adj
+- lemma: мі
+  pos: noun
+- lemma: кіт
+  pos: noun
+- lemma: мій
+  pos: adj
+- lemma: приголосний
+  pos: adj
+- lemma: рева
+  pos: noun
+- lemma: мо
+  pos: adv
+- lemma: рахувати
+  pos: verb
+- lemma: лице
+  pos: noun
+- lemma: бус
+  pos: noun
+- lemma: сестра
+  pos: noun
+- lemma: се
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: тета
+  pos: noun

@@ -9,7 +9,7 @@
   --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
   --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
   --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
-  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -63,7 +63,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   <a class="card progress" href="/progress.html">
     <div class="icon">&#9654;</div>
     <h2>Progress</h2>
-    <p>v3 pipeline state across all tracks. Research → Content → Audit → Final Review progress bars.</p>
+    <p>Pipeline state across all tracks. V4 migration progress. Research → Content → Audit → Review.</p>
     <div class="card-stat" id="progress-stat"></div>
   </a>
   <a class="card curriculum" href="/curriculum-dashboard.html">
@@ -108,15 +108,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 
 <script>
 async function loadStats() {
+  let v4Count = 0, v4Pct = 0;
   try {
-    const res = await fetch('/api/dashboard/overview');
-    const data = await res.json();
+    const [data, pv] = await Promise.all([
+      fetch('/api/dashboard/overview').then(r => r.json()),
+      fetch('/api/state/pipeline-versions').then(r => r.json()).catch(() => ({})),
+    ]);
     const t = data.totals;
+    v4Count = pv.counts?.v4 || 0;
+    v4Pct = pv.pct_v4 || 0;
 
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${v4Count} (${v4Pct}%)</div><div class="label">V4 Pipeline</div></div>
       <div class="stat"><div class="value" style="color:var(--purple)">${t.total > 0 ? Math.round(t.pass / t.total * 100) : 0}%</div><div class="label">Complete</div></div>
     `;
 
@@ -131,7 +137,7 @@ async function loadStats() {
     const data = await res.json();
     const t = data.totals;
     document.getElementById('progress-stat').textContent =
-      `${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
+      `${v4Count} v4 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
   } catch(e) {}
 
   try {

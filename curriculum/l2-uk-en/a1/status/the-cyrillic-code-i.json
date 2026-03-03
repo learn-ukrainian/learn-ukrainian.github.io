@@ -2,15 +2,15 @@
   "module": "the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-01T01:25:40.848177Z",
+  "last_audit": "2026-03-03T23:01:12.630472Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-01T01:25:14.012480Z",
-    "meta": "2026-03-01T01:24:38.531325Z",
-    "activities": "2026-03-01T01:20:25.482116Z",
-    "vocabulary": "2026-02-26T10:56:53.939984Z",
-    "plan": "2026-03-01T00:55:39.731045Z",
-    "research": "2026-03-01T01:12:42.206332Z"
+    "md": "2026-03-03T23:00:34.436666Z",
+    "meta": "2026-03-03T22:39:34.968079Z",
+    "activities": "2026-03-03T22:56:41.583670Z",
+    "vocabulary": "2026-03-03T22:56:41.579281Z",
+    "plan": "2026-03-01T10:58:35.041964Z",
+    "research": "2026-03-03T22:39:57.112502Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3851/2000 (raw: 4050)"
+      "message": "3849/2000 (raw: 3976)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 6,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

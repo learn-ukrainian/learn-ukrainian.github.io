@@ -1,81 +1,61 @@
 items:
-  - lemma: "хобі"
-    translation: "hobby"
-    pos: "noun"
-    gender: "n"
-  - lemma: "вільний час"
-    translation: "free time"
-    pos: "noun"
-    gender: "m"
-  - lemma: "читати"
-    translation: "to read"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "книга"
-    translation: "book"
-    pos: "noun"
-    gender: "f"
-  - lemma: "грати"
-    translation: "to play"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "музика"
-    translation: "music"
-    pos: "noun"
-    gender: "f"
-  - lemma: "спорт"
-    translation: "sport"
-    pos: "noun"
-    gender: "m"
-  - lemma: "малювати"
-    translation: "to draw"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "дивитися"
-    translation: "to watch"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "фільм"
-    translation: "film"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кіно"
-    translation: "cinema"
-    pos: "noun"
-    gender: "n"
-  - lemma: "гуляти"
-    translation: "to walk"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "парк"
-    translation: "park"
-    pos: "noun"
-    gender: "m"
-  - lemma: "танцювати"
-    translation: "to dance"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "співати"
-    translation: "to sing"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "готувати"
-    translation: "to cook"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "подорожувати"
-    translation: "to travel"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "фотографувати"
-    translation: "to photograph"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "плавати"
-    translation: "to swim"
-    pos: "verb"
-    aspect: "impf"
-  - lemma: "відпочивати"
-    translation: "to rest"
-    pos: "verb"
-    aspect: "impf"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: хобі
+  pos: noun
+- lemma: ходити
+  pos: verb
+- lemma: грати
+  pos: verb
+- lemma: йти
+  pos: verb
+- lemma: давати
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: любити
+  pos: verb
+- lemma: стадіон
+  pos: noun
+- lemma: басейн
+  pos: noun
+- lemma: дивитися
+  pos: verb
+- lemma: мій
+  pos: adj
+- lemma: вона
+  pos: noun
+- lemma: захоплюватися
+  pos: verb
+- lemma: ви
+  pos: noun
+- lemma: вихідний
+  pos: adj
+- lemma: привіт
+  pos: noun
+- lemma: спортзал
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: парк
+  pos: noun
+- lemma: я
+  pos: noun
+- lemma: кіно
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: друг
+  pos: noun

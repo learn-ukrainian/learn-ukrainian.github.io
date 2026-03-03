@@ -41,6 +41,43 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
+
+  - Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна,
+  мул, нам)
+
+  - Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary
+  with immediate English translation: «Привіт!» (Hello!)
+
+  - Video example words for the letter being taught (ананас for А) are fine — they
+  are heard, not read
+
+
+  GRAMMAR BAN (no verbs exist yet in the student''s knowledge):
+
+  - NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED
+
+  - NO verb conjugation of any kind (present, past, future)
+
+  - Classroom instructions MUST be in English: ''Listen carefully'', ''Read aloud'',
+  ''Repeat after the video''
+
+  - Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+
+
+  METALANGUAGE:
+
+  - ALL terminology in English first, Ukrainian in parentheses: ''vowels (голосні)'',
+  ''consonants (приголосні)''
+
+  - Section headings MUST be bilingual as shown in the content_outline (e.g., ''##
+  Голосні — Vowels'')
+
+  - NEVER write Ukrainian-only section headers or explanatory prose — the student
+  cannot read it yet'
+INTRO_HOOK: Why does this matter?
+SUMMARY_HEADING: Summary
+SELF_CHECK_HEADING: 'Check yourself:'
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -467,288 +504,100 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-D1_OUTPUT_FORMAT: '## Output Format
-
-
-  > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded
-  by the extraction pipeline.
-
-  > **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a
-  separate step if needed.
-
-
-  ### Output Block 0: Citation Bank (BEFORE the review)
-
-
-  **MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting
-  exact quotes.
-
-  Each citation must be verified with Grep before adding to the bank.
-
-  Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those
-  appear inside Ukrainian text and cause parsing collisions).
-
-
-  ```
-
-  ===CITATION_BANK_START===
-
-  1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  ...
-
-  ===CITATION_BANK_END===
-
-  ```
-
-
-  **Rules:**
-
-  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
-
-  - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
-
-  - If Grep returns no match, you paraphrased — delete and re-copy
-
-  - Minimum 8 citations for modules >2000 words
-
-  - In the review body below, you may ONLY use `「」` citations that appear in this
-  bank
-
-
-  ### Output Block 1: Review
-
-
-  ```
-
-  ===REVIEW_START===
-
-  # Рецензія: {TOPIC_TITLE}
-
-
-  **Level:** {LEVEL} | **Module:** {MODULE_NUM}
-
-  **Overall Score:** {X.X}/10
-
-  **Status:** PASS / FAIL
-
-  **Reviewed:** {date}
-
-
-  ## Plan Verification
-
-
-  ```
-
-  Plan-Content Alignment: [PASS/FAIL]
-
-  - Sections: [status]
-
-  - Vocabulary: [X/Y from plan, Z extra]
-
-  - Grammar scope: [status]
-
-  - Objectives: [status]
-
-  ```
-
-
-  ## Scores    <!-- REQUIRED — rejection if missing -->
-
-
-  {SCORING_OUTPUT_TABLE}
-
-
-  **Weighted Overall:** {show calculation} = **X.X/10**
-
-
-  ## Auto-Fail Checklist Results
-
-
-  - Russianisms: [CLEAN] or [list]
-
-  - Calques: [CLEAN] or [list]
-
-  - Grammar scope: [CLEAN] or [list]
-
-  - Activity errors: [CLEAN] or [list]
-
-  - Beginner safety: X/5
-
-  - Factual accuracy: [CLEAN] or [list of discrepancies]
-
-
-  ## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
-
-
-  ### Issue 1: {Category}
-
-  - **Location**: Line {N} / Section "{name}"
-
-  - **Original**: 「{exact Ukrainian text from Citation Bank}」
-
-  - **Problem**: {why it''s wrong}
-
-  - **Fix**: {concrete replacement}
-
-
-  [... more issues ...]
-
-
-  ## Ukrainian Language Issues
-
-
-  | Line | Current | Corrected | Type |
-
-  |------|---------|-----------|------|
-
-  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
-
-
-  ## Beginner Safety Audit
-
-
-  "Would I Continue?" Test: X/5
-
-  - Overwhelmed? [Pass/Fail]
-
-  - Instructions clear? [Pass/Fail]
-
-  - Quick wins? [Pass/Fail]
-
-  - Ukrainian scary? [Pass/Fail]
-
-  - Come back tomorrow? [Pass/Fail]
-
-
-  ## Strengths
-
-  - [Specific strength with evidence]
-
-
-  ## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
-
-
-  ### {Dimension Name}: {current}/10 -> 9/10
-
-  **What to fix:**
-
-  1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
-
-  2. Section "{name}": {action} — {impact}
-
-
-  **Expected score after fix:** {X}/10
-
-
-  ### Projected Overall After Fixes
-
-  ```
-
-  {Recalculate weighted overall with projected scores}
-
-  ```
-
-
-  ## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing
-  -->
-
-
-  - Research notes consulted: {YES/NO/NOT_APPLICABLE}
-
-  - Key Facts Ledger present: {YES/NO}
-
-  - Dates checked: {X} ({all correct / N discrepancies listed below})
-
-  - Named figures verified: {X}
-
-  - Primary quotes cross-referenced: {X/Y matched}
-
-  - Chronological sequence: {CONSISTENT / ISSUES}
-
-  - Claims without research grounding: {N found — listed below if any}
-
-
-  {If discrepancies found, list each one:}
-
-  {- Line N: Prose says "X" but research says "Y" for [event/date/attribution]}
-
-
-  ## Verification Summary    <!-- REQUIRED — rejection if missing -->
-
-
-  - Content lines read: {X}
-
-  - Activity items checked: {X}
-
-  - Ukrainian sentences verified: {X}
-
-  - Citations in bank: {X}
-
-  - Issues found: {X}
-
-
-  ## Verdict    <!-- REQUIRED — rejection if missing -->
-
-
-  **PASS** or **FAIL**
-
-
-  {1-3 sentences. If FAIL, list blocking issues.}
-
-
-  ===REVIEW_END===
-
-  ```
-
-
-  ### Output Block 2: Friction Report (MANDATORY)
-
-
-  ```
-
-  ===FRICTION_START===
-
-  **Phase**: Phase D.1: Evidence Review
-
-  **Step**: {what you were doing when friction occurred, or "Full Phase D.1"}
-
-  **Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
-
-  **Raw Error**: {actual error or "None"}
-
-  **Self-Correction**: {what you changed, or "N/A"}
-
-  **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
-
-  ===FRICTION_END===
-
-  ```
-
-
-  ---
-
-
-  ## CRITICAL: Output Format Reminder
-
-
-  **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review
-  MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT
-  cite it — you are hallucinating. Use your Citation Bank as the single source of
-  verified quotes.
-
-
-  Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
-  BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these
-  exact delimiters. Any output without these delimiters is **automatically discarded**
-  and the entire phase fails. Do not write a summary or conversational response —
-  output the citation bank, then the structured review inside the delimiters.
-
-  '
+D1_OUTPUT_FORMAT: "## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside\
+  \ delimiters is automatically discarded by the extraction pipeline.\n\n### Output\
+  \ Block 0: Citation Bank (BEFORE the review)\n\n**MANDATORY** — Build this FIRST\
+  \ by reading files with Read tool and copy-pasting exact quotes.\nEach citation\
+  \ must be verified with Grep before adding to the bank.\nUse `「...」` (CJK corner\
+  \ brackets) for ALL Ukrainian citations — NOT `«»` (those appear inside Ukrainian\
+  \ text and cause parsing collisions).\n\n```\n===CITATION_BANK_START===\n1. Line\
+  \ {N}: 「{exact Ukrainian text copy-pasted from Read output}」\n2. Line {N}: 「{exact\
+  \ Ukrainian text copy-pasted from Read output}」\n3. Line {N}: 「{exact Ukrainian\
+  \ text copy-pasted from Read output}」\n...\n===CITATION_BANK_END===\n```\n\n**Rules:**\n\
+  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording\n\
+  - Verify each with Grep before adding: `Grep pattern=\"first 5 words\" path=\"{CONTENT_PATH}\"\
+  `\n- If Grep returns no match, you paraphrased — delete and re-copy\n- Minimum 8\
+  \ citations for modules >2000 words\n- In the review body below, you may ONLY use\
+  \ `「」` citations that appear in this bank\n\n### Output Block 1: Review\n\n```\n\
+  ===REVIEW_START===\n# Рецензія: {TOPIC_TITLE}\n\n**Level:** {LEVEL} | **Module:**\
+  \ {MODULE_NUM}\n**Overall Score:** {X.X}/10\n**Status:** PASS / FAIL\n**Reviewed:**\
+  \ {date}\n\n## Plan Verification\n\n```\nPlan-Content Alignment: [PASS/FAIL]\n-\
+  \ Sections: [status]\n- Vocabulary: [X/Y from plan, Z extra]\n- Grammar scope: [status]\n\
+  - Objectives: [status]\n```\n\n## Scores    <!-- REQUIRED — rejection if missing\
+  \ -->\n\n{SCORING_OUTPUT_TABLE}\n\n**Weighted Overall:** {show calculation} = **X.X/10**\n\
+  \n## Auto-Fail Checklist Results\n\n- Russianisms: [CLEAN] or [list]\n- Calques:\
+  \ [CLEAN] or [list]\n- Grammar scope: [CLEAN] or [list]\n- Activity errors: [CLEAN]\
+  \ or [list]\n- Beginner safety: X/5\n- Factual accuracy: [CLEAN] or [list of discrepancies]\n\
+  \n## Critical Issues Found    <!-- REQUIRED — rejection if missing -->\n\n### Issue\
+  \ 1: {Category}\n- **Location**: Line {N} / Section \"{name}\"\n- **Original**:\
+  \ 「{exact Ukrainian text from Citation Bank}」\n- **Problem**: {why it's wrong}\n\
+  - **Fix**: {concrete replacement}\n\n[... more issues ...]\n\n## Ukrainian Language\
+  \ Issues\n\n| Line | Current | Corrected | Type |\n|------|---------|-----------|------|\n\
+  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |\n\n\
+  ## Beginner Safety Audit\n\n\"Would I Continue?\" Test: X/5\n- Overwhelmed? [Pass/Fail]\n\
+  - Instructions clear? [Pass/Fail]\n- Quick wins? [Pass/Fail]\n- Ukrainian scary?\
+  \ [Pass/Fail]\n- Come back tomorrow? [Pass/Fail]\n\n## Strengths\n- [Specific strength\
+  \ with evidence]\n\n## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)\n\n### {Dimension\
+  \ Name}: {current}/10 -> 9/10\n**What to fix:**\n1. Line {N}: Change 「{current}」\
+  \ -> 「{replacement}」 — {why}\n2. Section \"{name}\": {action} — {impact}\n\n**Expected\
+  \ score after fix:** {X}/10\n\n### Projected Overall After Fixes\n```\n{Recalculate\
+  \ weighted overall with projected scores}\n```\n\n## Factual Verification    <!--\
+  \ REQUIRED for seminar tracks — rejection if missing -->\n\n- Research notes consulted:\
+  \ {YES/NO/NOT_APPLICABLE}\n- Key Facts Ledger present: {YES/NO}\n- Dates checked:\
+  \ {X} ({all correct / N discrepancies listed below})\n- Named figures verified:\
+  \ {X}\n- Primary quotes cross-referenced: {X/Y matched}\n- Chronological sequence:\
+  \ {CONSISTENT / ISSUES}\n- Claims without research grounding: {N found — listed\
+  \ below if any}\n\n{If discrepancies found, list each one:}\n{- Line N: Prose says\
+  \ \"X\" but research says \"Y\" for [event/date/attribution]}\n\n## Verification\
+  \ Summary    <!-- REQUIRED — rejection if missing -->\n\n- Content lines read: {X}\n\
+  - Activity items checked: {X}\n- Ukrainian sentences verified: {X}\n- Citations\
+  \ in bank: {X}\n- Issues found: {X}\n\n## Verdict    <!-- REQUIRED — rejection if\
+  \ missing -->\n\n**PASS** or **FAIL**\n\n{1-3 sentences. If FAIL, list blocking\
+  \ issues.}\n\n===REVIEW_END===\n```\n\n### Output Block 2: Inline Fixes (MANDATORY\
+  \ if FAIL)\n\n**PRIMARY: Use the Edit tool to fix issues as you find them during\
+  \ the review.** This is the most reliable approach — you can verify exact text with\
+  \ Grep and apply precise fixes.\n\n**BACKUP: Also produce FIND/REPLACE pairs below**\
+  \ in case any Edit tool calls fail (network issues, permission errors, etc). The\
+  \ pipeline applies these automatically via exact string matching.\n\n**CRITICAL\
+  \ — FIND TEXT VERIFICATION (same workflow as citations):**\n\nFor each FIND/REPLACE\
+  \ pair:\n1. Use Read tool to re-read the exact passage you want to fix\n2. Copy-paste\
+  \ the FIND text directly from Read tool output — do NOT type it from memory\n3.\
+  \ Verify with Grep: `Grep pattern=\"first 5 words of FIND text\" path=\"{file}\"\
+  `\n4. If Grep returns no match → you paraphrased. Re-copy from Read output.\n\n\
+  **Do NOT reconstruct FIND text from memory. Copy-paste only.**\n\n**FORMAT RULES\
+  \ — the parser is a dumb string matcher:**\n- FIND text = ONLY raw file content.\
+  \ Nothing else between `FIND:` and `REPLACE:`.\n- Do NOT add `Section: \"...\",\
+  \ Line N` headers before the text\n- Do NOT wrap text in triple backticks (` ```\
+  \ `)\n- Do NOT add commentary, line numbers, or markdown formatting\n- The text\
+  \ between FIND: and REPLACE: is matched literally against the file\n\n```\n===SECTION_FIX_START===\n\
+  FILE: {CONTENT_PATH}\n---\nFIND:\nexact text from the content file (verified with\
+  \ Grep)\nREPLACE:\ncorrected text\n---\nFILE: {VOCAB_PATH}\n---\nFIND:\nlast existing\
+  \ vocab entry (verified with Grep)\nREPLACE:\nlast existing vocab entry\n- lemma:\
+  \ new_word\n  pos: noun\n  translation: meaning\n  notes: context\n---\n===SECTION_FIX_END===\n\
+  ```\n\n**Rules:**\n- FIND text must be verified with Grep before including — if\
+  \ Grep doesn't find it, don't include it\n- Only fix issues documented in your review\
+  \ above — no silent extra changes\n- To ADD content (tables, callouts, scaffolding),\
+  \ FIND the line before the insertion point, REPLACE with that line + new content\n\
+  - To ADD a YAML entry, FIND the last existing entry, REPLACE with that entry + new\
+  \ entry\n- Maximum **10 FIND/REPLACE pairs** (prioritize audit gate failures, then\
+  \ critical issues)\n- Each `FILE:` line starts fixes for that file\n- If review\
+  \ verdict is PASS with no fixes needed, output empty delimiters:\n  ```\n  ===SECTION_FIX_START===\n\
+  \  ===SECTION_FIX_END===\n  ```\n\n### Output Block 3: Friction Report (MANDATORY)\n\
+  \n```\n===FRICTION_START===\n**Phase**: Phase D.1: Evidence Review\n**Step**: {what\
+  \ you were doing when friction occurred, or \"Full Phase D.1\"}\n**Friction Type**:\
+  \ NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...\n**Raw Error**: {actual\
+  \ error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed\
+  \ Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n```\n\
+  \n---\n\n## CRITICAL: Output Format Reminder\n\n**CITATION RULE (LAST REMINDER):**\
+  \ Every `「」`-quoted Ukrainian text in your review MUST appear verbatim in the source\
+  \ files. If you cannot find it with Grep, do NOT cite it — you are hallucinating.\
+  \ Use your Citation Bank as the single source of verified quotes.\n\nYour output\
+  \ MUST contain these delimiter blocks in order:\n1. `===CITATION_BANK_START===`\
+  \ / `===CITATION_BANK_END===`\n2. `===REVIEW_START===` / `===REVIEW_END===`\n3.\
+  \ `===SECTION_FIX_START===` / `===SECTION_FIX_END===` (if FAIL — fixes for every\
+  \ issue found)\n\nAny output without these delimiters is **automatically discarded**\
+  \ and the entire phase fails. Do not write a summary or conversational response\
+  \ — output the citation bank, then the structured review, then the inline fixes.\n"
 SCORING_SECTION: "### STEP 4: Score 7 Dimensions\n\n| # | Dimension | Weight | Auto-fail\
   \ |\n|---|-----------|--------|-----------|\n| 1 | Experience Quality | 1.5 | <7\
   \ |\n| 2 | Language | 1.1 | <8 |\n| 3 | Pedagogy | 1.2 | <7 |\n| 4 | Activities\
@@ -777,12 +626,90 @@ SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
   | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 
   | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
+VIDEO_DISCOVERY: "### Podcast Episodes\n*Each episode has audio + transcript + vocabulary\
+  \ list — recommend to students as supplementary listening.*\n\n- **ULP S5 Ep200:\
+  \ Ukrainian Lessons Podcast Season 5**\n  URL: https://www.ukrainianlessons.com/episode200/\n\
+  \  Relevance: 0.2\n  Topics: grammar, verbs, future tense, listening\n\n### Blog\
+  \ Articles & Guides\n- **Ukrainian Alphabet: Full Guide with Examples and Pronunciation**\
+  \ (ukrainianlessons.com)\n  URL: https://www.ukrainianlessons.com/ukrainian-alphabet/\n\
+  \  Relevance: 0.9\n\n- **Ukrainian Cyrillic Alphabet — Letters and Sounds** (ukrainianlessons.com)\n\
+  \  URL: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/\n  Relevance:\
+  \ 0.6\n  Topics: alphabet, cyrillic, letters, sounds\n\n- **Talk Ukrainian: Ukrainian\
+  \ alphabet with pronunciation** (talkukrainian)\n  URL: https://talkukrainian.com/ukrainian-alphabet/\n\
+  \  Relevance: 0.5\n  Topics: alphabet, letters, pronunciation, cyrillic\n\n\n###\
+  \ Textbook References\n- **Grade 2, Сторінка 3**\n  ЗВУКИ І БУКВИ\nк\nі\n<\nЗВУКИ\n\
+  СКЛАД^\nУ розділі ти будеш вивчати:\nБУКВИ\nНАГОЛОС\nДізнаєшся про:\nк\n1\nг\nл\n\
+  І\n1\nнаголошені\nГОЛОСНІ ЗВУКИ\n____________________\nненаголошені\nдзвінкі, глухі\n\
+  г\nтверді, м'які\n^ПРИГОЛО...\n\n- **Grade 1, Сторінка 44**\n  42\nБачу И, и. Чую\
+  \  [и].\n\t Прочитай букви, слідкуючи за стрілками. \nЗбільшуй силу голосу, коли\
+  \ стрілка піднята \nвверх.\n\t\nВідшукай слова — назви предметів, у яких є \nдві\
+  \ букви а; дві букви о; три букви ...\n\n- **Grade 4, Сторінка 188**\n  66\nУрок\
+  \ розвитку писемного мовлення\nВибірковий переказ тексту з елементами о п и с у........................\
+  \ 67\nЗміна приголосних [г], [к], [х] на [з'], [ц'], [с']\nперед закінченням -і\
+  \ в іменниках різ...\n\n- **Grade 1, Сторінка 17**\n  15\nПриголосні тверді та м’які\n\
+  \t Вимов звуки, які ти чуєш на початку слів — \nназв намальованих предметів.\n\t\
+  \ Порівняй вимову перших звуків у словах — на-\nзвах предметів. У яких словах перші\
+  \ звуки ви-\nмо...\n\n- **Grade 4, Сторінка 91**\n  •  Спишіть, підкресліть хвилястою\
+  \ лінією прикметники в почат­\nковій формі. Провідміняйте, користуючись таблицями\
+  \ відмі­\nнювання (с. 85, 87), один із прикметників з основою на твер­\nдий і м’який\
+  \ пригол...\n"
+PRONUNCIATION_VIDEOS: '### Per-Letter Pronunciation Videos (from plan — MANDATORY
+  embeds)
+
+  *Credit: Anna Ohoiko — Ukrainian Lessons*
+
+
+  - **Overview**: https://www.youtube.com/watch?v=ksXIXj7CXwc
+
+  - **Full Playlist**: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+
+
+  **Each letter below MUST get its video embedded in the corresponding H3 section:**
+
+
+  - **Літера А**: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+
+  - **Літера М**: https://www.youtube.com/watch?v=Ez95H4ibuJo
+
+  - **Літера Л**: https://www.youtube.com/watch?v=v6-3Xg52Buk
+
+  - **Літера У**: https://www.youtube.com/watch?v=VB1O6PmtYRU
+
+  - **Літера Н**: https://www.youtube.com/watch?v=vNUfiKHPYaU
+
+  - **Літера С**: https://www.youtube.com/watch?v=7UsFBgSL91E'
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
+ACTIVITY_MAX: '15'
 ITEMS_MIN: '12'
 VOCAB_COUNT_TARGET: '20'
 FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
   essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+ALLOWED_ACTIVITY_TYPES: quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort,
+  watch-and-repeat, classify, image-to-letter
 REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz, true-false, classify,
+  image-to-letter, watch-and-repeat
+ITEM_MINIMUMS_TABLE: '| Type | Minimum |
+
+  |------|--------|
+
+  | quiz | ≥8 items |
+
+  | true-false | ≥8 items |
+
+  | fill-in | ≥8 items |
+
+  | match-up | ≥8 pairs |
+
+  | anagram | ≥8 items |
+
+  | unjumble | ≥6 items |
+
+  | group-sort | ≥8 items |
+
+  | watch-and-repeat | ≥1 items |
+
+  | classify | ≥1 items |
+
+  | image-to-letter | ≥5 items |'

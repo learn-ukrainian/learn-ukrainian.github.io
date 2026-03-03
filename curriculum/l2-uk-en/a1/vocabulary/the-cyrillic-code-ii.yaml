@@ -1,61 +1,85 @@
-  lemma: центр
-  pos: noun
-  translation: center
-  lemma: чай
-  pos: noun
-  translation: tea
-  lemma: школа
-  pos: noun
-  translation: school
-  lemma: гарний
-  pos: adj
-  translation: beautiful
-  lemma: жити
-  pos: verb
-  translation: to live
-  lemma: день
-  pos: noun
-  translation: day
-  lemma: Європа
-  pos: noun
-  translation: Europe
-  lemma: яблуко
-  pos: noun
-  translation: apple
-  lemma: ще
-  pos: adv
-  translation: still, more
-  lemma: ґанок
-  pos: noun
-  translation: porch
-  lemma: їжа
-  pos: noun
-  translation: food
-  lemma: юнак
-  pos: noun
-  translation: young man
-  lemma: сім'я
-  pos: noun
-  translation: family
-  lemma: літо
-  pos: noun
-  translation: summer
-  lemma: ми
-  pos: pronoun
-  translation: we
-  lemma: мій
-  pos: pronoun
-  translation: my
-  lemma: сіль
-  pos: noun
-  translation: salt
-  lemma: ніч
-  pos: noun
-  translation: night
-  lemma: пити
-  pos: verb
-  translation: to drink
-  lemma: діти
-  pos: noun
-  translation: children
-
+items:
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+  - lemma: "банан"
+    translation: "banana"
+    pos: "noun"
+    gender: "m"
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+    gender: "n"
+  - lemma: "рука"
+    translation: "hand/arm"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кіно"
+    translation: "cinema"
+    pos: "noun"
+    gender: "n"
+  - lemma: "дім"
+    translation: "house/home"
+    pos: "noun"
+    gender: "m"
+  - lemma: "друг"
+    translation: "friend"
+    pos: "noun"
+    gender: "m"
+  - lemma: "брат"
+    translation: "brother"
+    pos: "noun"
+    gender: "m"
+  - lemma: "слива"
+    translation: "plum"
+    pos: "noun"
+    gender: "f"
+  - lemma: "риба"
+    translation: "fish"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вовк"
+    translation: "wolf"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мама"
+    translation: "mother"
+    pos: "noun"
+    gender: "f"
+  - lemma: "син"
+    translation: "son"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мак"
+    translation: "poppy"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рис"
+    translation: "rice"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сила"
+    translation: "strength"
+    pos: "noun"
+    gender: "f"
+  - lemma: "дим"
+    translation: "smoke"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ліс"
+    translation: "forest"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сік"
+    translation: "juice"
+    pos: "noun"
+    gender: "m"
+  - lemma: "нива"
+    translation: "field"
+    pos: "noun"
+    gender: "f"

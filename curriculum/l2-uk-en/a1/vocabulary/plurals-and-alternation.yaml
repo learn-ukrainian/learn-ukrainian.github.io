@@ -1,108 +1,61 @@
 items:
-  - lemma: "студент"
-    translation: "student"
-    pos: "noun"
-    gender: "m"
-  - lemma: "книга"
-    translation: "book"
-    pos: "noun"
-    gender: "f"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "кіт"
-    translation: "cat"
-    pos: "noun"
-    gender: "m"
-    notes: "vowel alternation і to о in plural"
-  - lemma: "дитина"
-    translation: "child"
-    pos: "noun"
-    gender: "f"
-    notes: "irregular plural"
-  - lemma: "діти"
-    translation: "children"
-    pos: "noun"
-    notes: "irregular plural of дитина"
-  - lemma: "людина"
-    translation: "person"
-    pos: "noun"
-    gender: "f"
-    notes: "irregular plural"
-  - lemma: "люди"
-    translation: "people"
-    pos: "noun"
-    notes: "irregular plural of людина"
-  - lemma: "гроші"
-    translation: "money"
-    pos: "noun"
-    notes: "plural-only noun"
-  - lemma: "двері"
-    translation: "door"
-    pos: "noun"
-    notes: "plural-only noun"
-  - lemma: "око"
-    translation: "eye"
-    pos: "noun"
-    gender: "n"
-    notes: "irregular plural"
-  - lemma: "очі"
-    translation: "eyes"
-    pos: "noun"
-    notes: "irregular plural of око"
-  - lemma: "ножиці"
-    translation: "scissors"
-    pos: "noun"
-    notes: "plural-only noun"
-  - lemma: "цукор"
-    translation: "sugar"
-    pos: "noun"
-    gender: "m"
-    notes: "uncountable noun"
-  - lemma: "молоко"
-    translation: "milk"
-    pos: "noun"
-    gender: "n"
-    notes: "uncountable noun"
-  - lemma: "хлопець"
-    translation: "boy, young man"
-    pos: "noun"
-    gender: "m"
-  - lemma: "словник"
-    translation: "dictionary"
-    pos: "noun"
-    gender: "m"
-  - lemma: "земля"
-    translation: "land, earth"
-    pos: "noun"
-    gender: "f"
-  - lemma: "вікно"
-    translation: "window"
-    pos: "noun"
-    gender: "n"
-  - lemma: "рік"
-    translation: "year"
-    pos: "noun"
-    gender: "m"
-    notes: "vowel alternation і to о in plural"
-  - lemma: "ніж"
-    translation: "knife"
-    pos: "noun"
-    gender: "m"
-    notes: "vowel alternation і to о in plural"
-  - lemma: "піч"
-    translation: "oven, stove"
-    pos: "noun"
-    gender: "f"
-    notes: "vowel alternation і to е in plural"
-  - lemma: "палець"
-    translation: "finger"
-    pos: "noun"
-    gender: "m"
-    notes: "vowel alternation in plural"
-  - lemma: "множина"
-    translation: "plural"
-    pos: "noun"
-    gender: "f"
-    notes: "metalanguage term"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: українська
+  pos: noun
+- lemma: український
+  pos: adj
+- lemma: мій
+  pos: adj
+- lemma: слово
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: вони
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: великий
+  pos: adj
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: голосний
+  pos: adj
+- lemma: місто
+  pos: noun
+- lemma: людина
+  pos: noun
+- lemma: молодий
+  pos: adj
+- lemma: літера
+  pos: noun
+- lemma: старий
+  pos: adj
+- lemma: форма
+  pos: noun
+- lemma: дитина
+  pos: noun
+- lemma: вправа
+  pos: noun
+- lemma: звук
+  pos: noun
+- lemma: добрий
+  pos: adj
+- lemma: де
+  pos: adv
+- lemma: книга
+  pos: noun
+- lemma: закінчення
+  pos: noun
+- lemma: рід
+  pos: noun

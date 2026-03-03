@@ -1,69 +1,61 @@
-- lemma: вмиватися
-  pos: verb
-  translation: to wash one's face
-- lemma: одягатися
-  pos: verb
-  translation: to dress oneself
+items:
+- lemma: ми
+  pos: noun
 - lemma: дивитися
   pos: verb
-  translation: to look, to watch
-- lemma: сміятися
-  pos: verb
-  translation: to laugh
-- lemma: називатися
-  pos: verb
-  translation: to be called
-- lemma: вчитися
-  pos: verb
-  translation: to study, to learn
-- lemma: займатися
-  pos: verb
-  translation: to engage in, to practice
-- lemma: повертатися
-  pos: verb
-  translation: to return, to come back
-- lemma: зупинятися
-  pos: verb
-  translation: to stop (oneself)
-- lemma: зустрічатися
-  pos: verb
-  translation: to meet (each other)
-- lemma: вітатися
-  pos: verb
-  translation: to greet (each other)
-- lemma: цілуватися
-  pos: verb
-  translation: to kiss (each other)
-- lemma: обійматися
-  pos: verb
-  translation: to hug (each other)
-- lemma: хвилюватися
-  pos: verb
-  translation: to worry
-- lemma: боятися
-  pos: verb
-  translation: to be afraid
-- lemma: надіятися
-  pos: verb
-  translation: to hope
-- lemma: прокидатися
-  pos: verb
-  translation: to wake up
-- lemma: взуватися
-  pos: verb
-  translation: to put on shoes
-- lemma: почуватися
-  pos: verb
-  translation: to feel (about health/state)
-- lemma: втомлюватися
-  pos: verb
-  translation: to get tired
+- lemma: сей
+  pos: adj
+- lemma: цей
+  pos: adj
+- lemma: вони
+  pos: noun
 - lemma: дієслово
   pos: noun
-  translation: verb
-- lemma: сподіватися
+- lemma: себе
+  pos: noun
+- lemma: зворотний
+  pos: adj
+- lemma: він
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: мати
   pos: verb
-  translation: to hope
-- lemma: лінуватися
+- lemma: маяти
   pos: verb
-  translation: to be lazy
+- lemma: як
+  pos: adv
+- lemma: це
+  pos: noun
+- lemma: дія
+  pos: noun
+- lemma: сміятися
+  pos: verb
+- lemma: називатися
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: вчитися
+  pos: verb
+- lemma: вмиватися
+  pos: verb
+- lemma: форма
+  pos: noun
+- lemma: дивити
+  pos: verb
+- lemma: ти
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: група
+  pos: noun
+- lemma: діалог
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: воно
+  pos: noun

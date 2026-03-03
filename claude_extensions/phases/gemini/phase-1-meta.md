@@ -45,6 +45,8 @@ Read the **old meta file** (for reference only — you are REPLACING the content
 - **Bridge modules (immersion < 90%):** Note the plan's `immersion` field in the outline. The intro section should explicitly list English scaffolding requirements.
 - Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 - If the research found mnemonics, cultural anchors, or notable quotes: ensure the outline allocates space for them in the appropriate section's `points`
+- **Do NOT invent pedagogical terminology.** Only use terms that appear in the research notes or established linguistics. Example: "Справжні друзі / Оманливі друзі" (true/false friends) is a linguistic term for WORDS between languages, not for individual letter appearances. If the research mentions "visual false friends" for letters that look like Latin but sound different, say "visual traps" — do not repackage it as a formal bilingual framework.
+- **Early alphabet modules:** For Cyrillic Code modules, activity-facing content must account for learners who cannot yet read Ukrainian. Quiz questions and explanations should be in English.
 
 ### Output Format
 

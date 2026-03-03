@@ -56,6 +56,12 @@ a:hover { text-decoration: underline; }
 .module-table .rq-score.thin { color: #f0883e; }
 .module-table .rq-score.stub { color: var(--red); }
 .module-table .rq-coverage { color: var(--text3); font-size: 11px; }
+.module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
+.module-table .ver-v4 { background: rgba(63,185,80,0.15); color: var(--green); }
+.module-table .ver-v3, .module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
+
+/* Obsolete (non-v4) modules */
+.obsolete { opacity: 0.4; }
 
 /* Dimension bar */
 .dim-bar { display: flex; gap: 2px; align-items: center; margin: 2px 0; }
@@ -210,10 +216,14 @@ async function loadTrackDetail(trackId) {
       ${researchStat}
     </div>
     <table class="module-table">
-      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
+      <thead><tr><th>#</th><th>Module</th><th>Ver</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
       <tbody>
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
+          const ver = m.pipeline_version || 'unbuilt';
+          const isV4 = ver === 'v4';
+          const obsolete = isV4 ? '' : ' obsolete';
+          const verCls = isV4 ? 'ver-v4' : ver === 'v3' ? 'ver-v3' : 'ver-unbuilt';
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
           const r = m.research || {};
           let rCol;
@@ -228,9 +238,10 @@ async function loadTrackDetail(trackId) {
             ? `<td style="color:#58a6ff;font-weight:600" title="Claude QA done">✓</td>`
             : (m.status === 'pass' ? `<td style="color:var(--text3)">⏳</td>` : `<td style="color:var(--text3)">-</td>`);
           return `
-            <tr onclick="loadModuleDetail('${trackId}','${m.slug}')">
+            <tr class="${obsolete}" onclick="loadModuleDetail('${trackId}','${m.slug}')">
               <td>${m.num}</td>
               <td>${m.slug}</td>
+              <td><span class="ver-label ${verCls}">${ver}</span></td>
               <td><span class="status-dot ${cls}"></span> ${m.status}</td>
               <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
               ${rCol}
@@ -373,9 +384,12 @@ async function loadModuleDetail(trackId, slug) {
         ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:var(--yellow)">⏳ Pending — run with --final-review</span></div></div>`
         : '');
 
+  const pipelineVer = m.pipeline_version || 'unknown';
+  const verColor = pipelineVer === 'v4' ? 'var(--green)' : 'var(--text3)';
+
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
-    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId}</div>
+    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId} &middot; <span style="color:${verColor};font-weight:600">${pipelineVer}</span></div>
     ${qaHtml}
     ${researchHtml}
     ${planHtml}

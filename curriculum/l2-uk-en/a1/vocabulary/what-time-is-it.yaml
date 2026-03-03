@@ -1,85 +1,61 @@
-  lemma: година
-  notes: f; Котра година? О першій годині
+items:
+- lemma: цей
+  pos: adj
+- lemma: це
   pos: noun
-  translation: hour
-  lemma: хвилина
-  notes: f; за п'ять хвилин, одна хвилина
+- lemma: година
   pos: noun
-  translation: minute
-  lemma: день
-  notes: m; добрий день, робочий день
+- lemma: зараз
+  pos: adv
+- lemma: зараза
   pos: noun
-  translation: day
-  lemma: тиждень
-  notes: m; на цьому тижні (Loc), наступного тижня (Gen)
+- lemma: день
   pos: noun
-  translation: week
-  lemma: місяць
-  notes: m; у цьому місяці (Loc)
+- lemma: час
   pos: noun
-  translation: month
-  lemma: рік
-  notes: m; новий рік, цього року (Gen)
+- lemma: мій
+  pos: adj
+- lemma: мати
+  pos: verb
+- lemma: до
   pos: noun
-  translation: year
-  lemma: ранок
-  notes: m; доброго ранку, о восьмій ранку
+- lemma: йти
+  pos: verb
+- lemma: робот
   pos: noun
-  translation: morning
-  lemma: вечір
-  notes: m; добрий вечір, о сьомій вечора
+- lemma: робота
   pos: noun
-  translation: evening
-  lemma: зараз
-  notes: Зараз третя десять.
-  pos: adverb
-  translation: now
-  lemma: о котрій
-  notes: О котрій ти прийдеш?
-  pos: phrase
-  translation: at what time
-  lemma: понеділок
-  notes: m; у понеділок (Acc)
+- lemma: працювати
+  pos: verb
+- lemma: він
   pos: noun
-  translation: Monday
-  lemma: вівторок
-  notes: m; у вівторок (Acc)
+- lemma: ми
   pos: noun
-  translation: Tuesday
-  lemma: середа
-  notes: f; у середу (Acc)
+- lemma: котрий
+  pos: adj
+- lemma: маяти
+  pos: verb
+- lemma: той
+  pos: adj
+- lemma: вони
   pos: noun
-  translation: Wednesday
-  lemma: четвер
-  notes: m; у четвер (Acc)
+- lemma: знати
+  pos: verb
+- lemma: розклад
   pos: noun
-  translation: Thursday
-  lemma: п'ятниця
-  notes: f; у п'ятницю (Acc)
+- lemma: вона
   pos: noun
-  translation: Friday
-  lemma: субота
-  notes: f; у суботу (Acc)
+- lemma: читати
+  pos: verb
+- lemma: раз
   pos: noun
-  translation: Saturday
-  lemma: неділя
-  notes: f; у неділю (Acc)
+- lemma: ви
   pos: noun
-  translation: Sunday
-  lemma: сьогодні
-  pos: adverb
-  translation: today
-  lemma: завтра
-  pos: adverb
-  translation: tomorrow
-  lemma: пізно
-  pos: adverb
-  translation: late
-  lemma: вчасно
-  notes: бути вчасно, прийти вчасно
-  pos: adverb
-  translation: on time
-  lemma: рано
-  notes: Ще рано.
-  pos: adverb
-  translation: early
+- lemma: любити
+  pos: verb
+- lemma: тепло
+  pos: adv
+- lemma: відпочивати
+  pos: verb
+- lemma: книга
+  pos: noun

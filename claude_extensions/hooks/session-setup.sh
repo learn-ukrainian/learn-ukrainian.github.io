@@ -59,6 +59,18 @@ if [ "$IN_PROGRESS_COUNT" -gt 0 ]; then
   INFO+=("$IN_PROGRESS_COUNT module build(s) currently in progress")
 fi
 
+# 6. Check MEMORY.md line count (truncated at 200 lines by system)
+MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
+MEMORY_FILE="$MEMORY_DIR/MEMORY.md"
+if [ -f "$MEMORY_FILE" ]; then
+  MEMORY_LINES=$(wc -l < "$MEMORY_FILE" | tr -d ' ')
+  if [ "$MEMORY_LINES" -gt 150 ]; then
+    ISSUES+=("MEMORY.md is $MEMORY_LINES lines (limit: 200, budget: 150). Lines after 200 are INVISIBLE. Trim NOW before doing anything else. Move reference data to topic files in memory/.")
+  elif [ "$MEMORY_LINES" -gt 120 ]; then
+    INFO+=("MEMORY.md is $MEMORY_LINES/150 lines — approaching budget. Be selective about new entries.")
+  fi
+fi
+
 # Build output
 if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ]; then
   exit 0

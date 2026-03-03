@@ -256,18 +256,22 @@ async function selectTrack(trackId) {
   el.innerHTML = '<div class="loading">Loading track health...</div>';
 
   try {
-    const [health, buildStatus] = await Promise.all([
+    const [health, buildStatus, pv] = await Promise.all([
       fetch(`/api/state/track-health/${trackId}`).then(r => r.json()),
       fetch(`/api/state/build-status/${trackId}`).then(r => r.json()),
+      fetch(`/api/state/pipeline-versions?track=${trackId}`).then(r => r.json()).catch(() => ({})),
     ]);
 
     const h = health;
     const bs = buildStatus;
+    const v4Pct = pv.pct_v4 || 0;
+    const v4Count = pv.counts?.v4 || 0;
 
     // Health cards
     let cards = '';
     cards += healthCard('Build Progress', `${h.build.pct}%`, `${h.build.done}/${h.total} modules`, h.build.pct);
     cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct);
+    cards += healthCard('V4 Migration', `${v4Pct}%`, `${v4Count}/${h.total} modules on v4`, v4Pct, 'var(--cyan)');
     cards += healthCard('Enrichment', `${h.enrichment.pct}%`, `${h.enrichment.done}/${h.total} plans enriched`, h.enrichment.pct, 'var(--orange)');
     cards += healthCard('Final Review', h.final_review.approval_rate, `${h.final_review.approved}/${h.final_review.reviewed} approved`, h.final_review.reviewed > 0 ? Math.round(h.final_review.approved/h.final_review.reviewed*100) : 0, 'var(--purple)');
     cards += healthCard('Word Quality', h.words.avg_ratio, 'avg words vs target', null, 'var(--cyan)');
@@ -412,8 +416,15 @@ async function inspectModule(trackId, num) {
 }
 
 function renderInspector(mod, extraComms) {
-  const PHASES = ['A', 'B', 'C', 'audit', 'D', 'E', 'F'];
-  const phaseLabels = { A: 'Research', B: 'Content', C: 'Activities', audit: 'Audit', D: 'Review', E: 'Repair', F: 'Final' };
+  const isV4 = mod.pipeline_version === 'v4';
+
+  const V3_PHASES = ['A', 'B', 'C', 'audit', 'D', 'E', 'F'];
+  const V3_LABELS = { A: 'Research', B: 'Content', C: 'Activities', audit: 'Audit', D: 'Review', E: 'Repair', F: 'Final' };
+  const V4_PHASES = ['research', 'discover', 'content', 'activities', 'validate', 'review', 'mdx'];
+  const V4_LABELS = { research: 'Research', discover: 'Discover', content: 'Content', activities: 'Activities', validate: 'Validate', review: 'Review', mdx: 'MDX' };
+
+  const PHASES = isV4 ? V4_PHASES : V3_PHASES;
+  const phaseLabels = isV4 ? V4_LABELS : V3_LABELS;
   const phases = mod.phases || {};
 
   // Phase timeline
@@ -438,12 +449,14 @@ function renderInspector(mod, extraComms) {
     ['Track', mod.track || '—'],
     ['Module #', mod.num || '—'],
     ['Slug', mod.slug || '—'],
+    ['Pipeline', mod.pipeline_version || 'unknown'],
     ['Words', wordCount ? `${wordCount}` : '—'],
     ['Word Target', wordTarget ? `${wordTarget}` : '—'],
     ['Audit', auditStatus],
   ];
   const infoHtml = info.map(([k, v]) => {
     let style = '';
+    if (k === 'Pipeline') style = v === 'v4' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
     if (k === 'Audit') style = v === 'pass' ? 'color:var(--green)' : v === 'fail' ? 'color:var(--red)' : '';
     if (k === 'Words' && wordTarget > 0) {
       const ratio = wordCount / wordTarget;
@@ -541,7 +554,7 @@ function renderInspector(mod, extraComms) {
 
   inspectorBody.innerHTML = `
     <div class="insp-section">
-      <div class="insp-section-title">Pipeline Phases</div>
+      <div class="insp-section-title">Pipeline Phases <span style="font-size:10px;color:${isV4 ? 'var(--green)' : 'var(--text3)'};font-weight:400">(${mod.pipeline_version || 'unknown'})</span></div>
       <div class="phase-timeline">${timeline}</div>
     </div>
     <div class="insp-section">

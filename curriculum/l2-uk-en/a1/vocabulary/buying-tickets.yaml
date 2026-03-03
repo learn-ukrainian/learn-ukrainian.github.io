@@ -1,98 +1,61 @@
 items:
-  - lemma: "квиток"
-    translation: "ticket"
-    pos: "noun"
-    gender: "m"
-    example: "Мені потрібен один квиток."
-  - lemma: "поїзд"
-    translation: "train"
-    pos: "noun"
-    gender: "m"
-    example: "Поїзд прибуває вчасно."
-  - lemma: "автобус"
-    translation: "bus"
-    pos: "noun"
-    gender: "m"
-    example: "Де стоїть мій автобус?"
-  - lemma: "маршрутка"
-    translation: "minibus"
-    pos: "noun"
-    gender: "f"
-    notes: "small bus on fixed route"
-  - lemma: "вокзал"
-    translation: "railway terminal"
-    pos: "noun"
-    gender: "m"
-    example: "Я їду на вокзал."
-  - lemma: "автостанція"
-    translation: "bus station"
-    pos: "noun"
-    gender: "f"
-    notes: "smaller than a terminal"
-  - lemma: "платформа"
-    translation: "platform"
-    pos: "noun"
-    gender: "f"
-    example: "Поїзд на першій платформі."
-  - lemma: "вагон"
-    translation: "carriage"
-    pos: "noun"
-    gender: "m"
-    example: "Ваш вагон номер п'ять."
-  - lemma: "місце"
-    translation: "seat/bunk"
-    pos: "noun"
-    gender: "n"
-    example: "Моє місце нижнє."
-  - lemma: "купе"
-    translation: "coupe (compartment)"
-    pos: "noun"
-    gender: "n"
-    notes: "indeclinable noun"
-  - lemma: "плацкарт"
-    translation: "open dormitory car"
-    pos: "noun"
-    gender: "m"
-  - lemma: "каса"
-    translation: "ticket office"
-    pos: "noun"
-    gender: "f"
-    example: "Де тут каса?"
-  - lemma: "розклад"
-    translation: "schedule"
-    pos: "noun"
-    gender: "m"
-  - lemma: "відправлення"
-    translation: "departure"
-    pos: "noun"
-    gender: "n"
-    example: "О котрій відправлення?"
-  - lemma: "прибуття"
-    translation: "arrival"
-    pos: "noun"
-    gender: "n"
-    example: "Коли прибуття до Києва?"
-  - lemma: "провідник"
-    translation: "conductor"
-    pos: "noun"
-    gender: "m"
-    example: "Провідник перевіряє квитки."
-  - lemma: "підстаканник"
-    translation: "metal cup holder"
-    pos: "noun"
-    gender: "m"
-    notes: "traditional way to serve tea on trains"
-  - lemma: "постіль"
-    translation: "bed linen"
-    pos: "noun"
-    gender: "f"
-  - lemma: "до"
-    translation: "to"
-    pos: "preposition"
-    notes: "used with Genitive case for direction"
-  - lemma: "туди"
-    translation: "there (direction)"
-    pos: "adverb"
-  - lemma: "назад"
-    translation: "back"
-    pos: "adverb"
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: квиток
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: поїзд
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: до
+  pos: noun
+- lemma: їхати
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: місце
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: автобус
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: слово
+  pos: noun
+- lemma: маяти
+  pos: verb
+- lemma: де
+  pos: adv
+- lemma: транспорт
+  pos: noun
+- lemma: людина
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: вокзал
+  pos: noun
+- lemma: знати
+  pos: verb
+- lemma: говорити
+  pos: verb
+- lemma: вагон
+  pos: noun
+- lemma: там
+  pos: adv
+- lemma: мій
+  pos: adj
+- lemma: він
+  pos: noun
+- lemma: використовувати
+  pos: verb
+- lemma: бути
+  pos: verb
+- lemma: великий
+  pos: adj

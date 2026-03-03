@@ -1,82 +1,61 @@
 items:
-  - lemma: "треба"
-    translation: "it is necessary"
-    pos: "adverb"
-    notes: "impersonal necessity construction"
-  - lemma: "потрібно"
-    translation: "it is needed"
-    pos: "adverb"
-    notes: "slightly more formal synonym of треба"
-  - lemma: "повинен"
-    translation: "must / should"
-    pos: "adjective"
-    notes: "personal obligation with gender agreement"
-  - lemma: "хотіти"
-    translation: "to want"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "працювати"
-    translation: "to work"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "спати"
-    translation: "to sleep"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "лікар"
-    translation: "doctor"
-    pos: "noun"
-    gender: "m"
-  - lemma: "допомога"
-    translation: "help"
-    pos: "noun"
-    gender: "f"
-  - lemma: "необхідно"
-    translation: "it is necessary"
-    pos: "adverb"
-    notes: "formal register; synonym of потрібно"
-  - lemma: "бажати"
-    translation: "to wish / desire"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "more formal than хотіти"
-  - lemma: "мріяти"
-    translation: "to dream"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "варто"
-    translation: "it is worth / should"
-    pos: "adverb"
-    notes: "impersonal recommendation"
-  - lemma: "авто"
-    translation: "car"
-    pos: "noun"
-    gender: "n"
-  - lemma: "хліб"
-    translation: "bread"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кава"
-    translation: "coffee"
-    pos: "noun"
-    gender: "f"
-  - lemma: "відповідальність"
-    translation: "responsibility"
-    pos: "noun"
-    gender: "f"
-  - lemma: "порада"
-    translation: "advice"
-    pos: "noun"
-    gender: "f"
-  - lemma: "обов'язок"
-    translation: "duty"
-    pos: "noun"
-    gender: "m"
-  - lemma: "десерт"
-    translation: "dessert"
-    pos: "noun"
-    gender: "m"
-  - lemma: "чек"
-    translation: "bill / receipt"
-    pos: "noun"
-    gender: "m"
+- lemma: ти
+  pos: noun
+- lemma: терти
+  pos: verb
+- lemma: баба
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: той
+  pos: adj
+- lemma: вона
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: хіть
+  pos: noun
+- lemma: хота
+  pos: noun
+- lemma: повинний
+  pos: adj
+- lemma: тут
+  pos: adv
+- lemma: ви
+  pos: noun
+- lemma: раз
+  pos: adv
+- lemma: йти
+  pos: verb
+- lemma: за
+  pos: adv
+- lemma: роба
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: вони
+  pos: noun
+- lemma: хотіти
+  pos: verb
+- lemma: потрібний
+  pos: adj
+- lemma: дно
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: треба
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: день
+  pos: noun
+- lemma: спа
+  pos: noun
+- lemma: знати
+  pos: verb
+- lemma: що
+  pos: noun

@@ -184,8 +184,8 @@ class TestGetFixTimeout:
         assert _get_fix_timeout("hist", audit_only=True) == TIMEOUT_FIX_AUDIT_ONLY
 
     def test_timeout_ordering(self):
-        """audit_only < core < seminar."""
-        assert TIMEOUT_FIX_AUDIT_ONLY < TIMEOUT_FIX_CORE < TIMEOUT_FIX_SEMINAR
+        """audit_only <= core <= seminar (all currently 600s — generous timeouts)."""
+        assert TIMEOUT_FIX_AUDIT_ONLY <= TIMEOUT_FIX_CORE <= TIMEOUT_FIX_SEMINAR
 
 
 class TestGetReviewTimeout:
@@ -684,16 +684,16 @@ class TestTimeoutConstants:
         assert TIMEOUT_REVIEW_CORE > 0
         assert TIMEOUT_REVIEW_SEMINAR > 0
 
-    def test_fix_shorter_than_review(self):
-        """Fix timeouts should be shorter than review timeouts."""
-        assert TIMEOUT_FIX_CORE < TIMEOUT_REVIEW_CORE
-        assert TIMEOUT_FIX_SEMINAR < TIMEOUT_REVIEW_SEMINAR
+    def test_fix_not_longer_than_review(self):
+        """Fix timeouts should be <= review timeouts."""
+        assert TIMEOUT_FIX_CORE <= TIMEOUT_REVIEW_CORE
+        assert TIMEOUT_FIX_SEMINAR <= TIMEOUT_REVIEW_SEMINAR
 
     def test_specific_values(self):
-        """Pin current values to catch unintended changes."""
-        assert TIMEOUT_FIX_CORE == 300
-        assert TIMEOUT_FIX_SEMINAR == 420
-        assert TIMEOUT_FIX_AUDIT_ONLY == 180
+        """Pin current values to catch unintended changes (generous 600s timeouts)."""
+        assert TIMEOUT_FIX_CORE == 600
+        assert TIMEOUT_FIX_SEMINAR == 600
+        assert TIMEOUT_FIX_AUDIT_ONLY == 600
 
 
 # =============================================================================

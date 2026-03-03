@@ -1,69 +1,61 @@
-  lemma: де
+items:
+- lemma: ми
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: де
   pos: adv
-  translation: where
-  lemma: в
-  notes: var. у [u]
-  pos: prep
-  translation: in / into
-  lemma: на
-  pos: prep
-  translation: on / at
-  lemma: вдома
+- lemma: вони
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: дуже
   pos: adv
-  translation: at home
-  lemma: робота
-  notes: loc. на роботі
+- lemma: дужий
+  pos: adj
+- lemma: цей
+  pos: adj
+- lemma: мій
+  pos: adj
+- lemma: стіл
   pos: noun
-  translation: work / job
-  lemma: школа
-  notes: loc. у школі
+- lemma: це
   pos: noun
-  translation: school
-  lemma: кімната
+- lemma: кімната
   pos: noun
-  translation: room
-  lemma: стіл
+- lemma: парк
   pos: noun
-  translation: table
-  lemma: магазин
+- lemma: вулиця
   pos: noun
-  translation: store / shop
-  lemma: парк
+- lemma: жити
+  pos: verb
+- lemma: зараз
+  pos: adv
+- lemma: зараза
   pos: noun
-  translation: park
-  lemma: вулиця
+- lemma: книга
   pos: noun
-  translation: street
-  lemma: банк
+- lemma: аптека
   pos: noun
-  translation: bank
-  lemma: вокзал
-  notes: loc. на вокзалі
+- lemma: банк
   pos: noun
-  translation: train station
-  lemma: стіна
+- lemma: підлога
   pos: noun
-  translation: wall
-  lemma: підлога
+- lemma: парка
   pos: noun
-  translation: floor
-  lemma: сумка
-  notes: loc. у сумці (к→ц)
+- lemma: паркий
+  pos: adj
+- lemma: робот
   pos: noun
-  translation: bag
-  lemma: книга
-  notes: loc. у книзі (г→з)
+- lemma: робота
   pos: noun
-  translation: book
-  lemma: пошта
-  notes: loc. на пошті
+- lemma: працювати
+  pos: verb
+- lemma: приголосний
+  pos: adj
+- lemma: там
+  pos: adv
+- lemma: той
+  pos: adj
+- lemma: банка
   pos: noun
-  translation: post office
-  lemma: центр
-  pos: noun
-  translation: center
-  lemma: вухо
-  notes: loc. у вусі (х→с)
-  pos: noun
-  translation: ear
-

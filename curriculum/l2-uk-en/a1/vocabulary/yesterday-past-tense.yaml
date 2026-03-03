@@ -1,61 +1,61 @@
-  lemma: вчора
-  pos: adv
-  translation: yesterday
-  lemma: сьогодні
-  pos: adv
-  translation: today
-  lemma: минулий
+items:
+- lemma: бути
+  pos: verb
+- lemma: вона
+  pos: noun
+- lemma: ти
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: цей
   pos: adj
-  translation: past, last
-  lemma: тиждень
+- lemma: булий
+  pos: adj
+- lemma: ми
   pos: noun
-  translation: week
-  lemma: місяць
+- lemma: робити
+  pos: verb
+- lemma: дивитися
+  pos: verb
+- lemma: вчора
+  pos: adv
+- lemma: вони
   pos: noun
-  translation: month
-  lemma: рік
+- lemma: це
   pos: noun
-  translation: year
-  lemma: бути
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: працювати
   pos: verb
-  translation: to be
-  lemma: робити
+- lemma: пити
   pos: verb
-  translation: to do, to make
-  lemma: читати
+- lemma: говорити
   pos: verb
-  translation: to read
-  lemma: працювати
+- lemma: їсти
   pos: verb
-  translation: to work
-  lemma: пити
+- lemma: там
+  pos: adv
+- lemma: писати
   pos: verb
-  translation: to drink
-  lemma: їсти
+- lemma: відпочивати
   pos: verb
-  translation: to eat
-  lemma: йти
+- lemma: минулий
+  pos: adj
+- lemma: книга
+  pos: noun
+- lemma: ви
+  pos: noun
+- lemma: минуле
+  pos: noun
+- lemma: потім
+  pos: adv
+- lemma: іти
   pos: verb
-  translation: to go (on foot)
-  lemma: ходити
+- lemma: хотіти
   pos: verb
-  translation: to walk, to go
-  lemma: дивитися
-  pos: verb
-  translation: to watch
-  lemma: слухати
-  pos: verb
-  translation: to listen
-  lemma: готувати
-  pos: verb
-  translation: to cook, to prepare
-  lemma: спати
-  pos: verb
-  translation: to sleep
-  lemma: грати
-  pos: verb
-  translation: to play
-  lemma: прокидатися
-  pos: verb
-  translation: to wake up
-
+- lemma: день
+  pos: noun

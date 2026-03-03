@@ -1,105 +1,61 @@
 items:
-  - lemma: "новий"
-    translation: "new"
-    pos: "adj"
-    example: "Це новий телефон."
-  - lemma: "старий"
-    translation: "old"
-    pos: "adj"
-    example: "Це старий дім."
-  - lemma: "гарний"
-    translation: "beautiful, nice, good"
-    pos: "adj"
-    example: "Сьогодні гарна погода."
-  - lemma: "великий"
-    translation: "big, large"
-    pos: "adj"
-    example: "Київ — велике місто."
-  - lemma: "малий"
-    translation: "small, little"
-    pos: "adj"
-    example: "Це мала дитина."
-  - lemma: "добрий"
-    translation: "good, kind"
-    pos: "adj"
-    example: "Він добрий чоловік."
-  - lemma: "поганий"
-    translation: "bad"
-    pos: "adj"
-    example: "У мене поганий настрій."
-  - lemma: "цікавий"
-    translation: "interesting"
-    pos: "adj"
-    example: "Це цікава книга."
-  - lemma: "синій"
-    translation: "dark blue"
-    pos: "adj"
-    example: "Мені подобається синій колір."
-  - lemma: "червоний"
-    translation: "red"
-    pos: "adj"
-    example: "Це червоне яблуко."
-  - lemma: "молодий"
-    translation: "young"
-    pos: "adj"
-    example: "Вона молода жінка."
-  - lemma: "дорогий"
-    translation: "expensive, dear"
-    pos: "adj"
-    example: "Цей ресторан дорогий."
-  - lemma: "дешевий"
-    translation: "cheap"
-    pos: "adj"
-    example: "Цей квиток дешевий."
-  - lemma: "смачний"
-    translation: "tasty, delicious"
-    pos: "adj"
-    example: "Борщ дуже смачний."
-  - lemma: "світлий"
-    translation: "bright, light"
-    pos: "adj"
-    example: "Кімната світла."
-  - lemma: "зручний"
-    translation: "comfortable, convenient"
-    pos: "adj"
-    example: "Це крісло зручне."
-  - lemma: "нормальний"
-    translation: "normal, okay"
-    pos: "adj"
-    example: "Ціна нормальна."
-  - lemma: "чорний"
-    translation: "black"
-    pos: "adj"
-    example: "У мене чорний кіт."
-  - lemma: "швидкий"
-    translation: "fast, quick"
-    pos: "adj"
-    example: "Цей телефон швидкий."
-  - lemma: "білий"
-    translation: "white"
-    pos: "adj"
-    example: "Це біле вікно."
-  - lemma: "множина"
-    translation: "plural"
-    pos: "noun"
-    example: "Слово «книги» — це множина."
-  - lemma: "темний"
-    translation: "dark"
-    pos: "adj"
-    example: "Це темна кімната."
-  - lemma: "давній"
-    translation: "ancient, old"
-    pos: "adj"
-    example: "Київ — давнє місто."
-  - lemma: "чистий"
-    translation: "clean"
-    pos: "adj"
-    example: "Стіл чистий."
-  - lemma: "брудний"
-    translation: "dirty"
-    pos: "adj"
-    example: "Це брудне вікно."
-  - lemma: "нудний"
-    translation: "boring"
-    pos: "adj"
-    example: "Цей фільм нудний."
+- lemma: цей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: новий
+  pos: adj
+- lemma: слово
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: книга
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: місто
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: вони
+  pos: noun
+- lemma: старий
+  pos: adj
+- lemma: вікно
+  pos: noun
+- lemma: веліти
+  pos: verb
+- lemma: вести
+  pos: verb
+- lemma: опис
+  pos: noun
+- lemma: маяти
+  pos: verb
+- lemma: рід
+  pos: noun
+- lemma: великий
+  pos: adj
+- lemma: студент
+  pos: noun
+- lemma: га
+  pos: noun
+- lemma: використовувати
+  pos: verb
+- lemma: який
+  pos: adj
+- lemma: добрий
+  pos: adj
+- lemma: дім
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: закінчення
+  pos: noun
+- lemma: гарний
+  pos: adj
+- lemma: нове
+  pos: noun
+- lemma: розумний
+  pos: adj

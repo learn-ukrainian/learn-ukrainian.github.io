@@ -1,61 +1,61 @@
-  lemma: один
-  pos: num
-  translation: one
-  lemma: два
-  pos: num
-  translation: two
-  lemma: три
-  pos: num
-  translation: three
-  lemma: чотири
-  pos: num
-  translation: four
-  lemma: п'ять
-  pos: num
-  translation: five
-  lemma: десять
-  pos: num
-  translation: ten
-  lemma: одинадцять
-  pos: num
-  translation: eleven
-  lemma: двадцять
-  pos: num
-  translation: twenty
-  lemma: сто
-  pos: num
-  translation: one hundred
-  lemma: гривня
+items:
+- lemma: гривня
   pos: noun
-  translation: hryvnia
-  lemma: копійка
+- lemma: цей
+  pos: adj
+- lemma: це
   pos: noun
-  translation: kopeck
-  lemma: скільки
-  pos: adv
-  translation: how much
-  lemma: коштувати
+- lemma: ви
+  pos: noun
+- lemma: мати
   pos: verb
-  translation: to cost
-  lemma: ціна
+- lemma: маяти
+  pos: verb
+- lemma: слово
   pos: noun
-  translation: price
-  lemma: дорого
+- lemma: долар
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: гривна
+  pos: noun
+- lemma: коштувати
+  pos: verb
+- lemma: число
+  pos: noun
+- lemma: добрий
+  pos: adj
+- lemma: скільки
   pos: adv
-  translation: expensive
-  lemma: дешево
+- lemma: давати
+  pos: verb
+- lemma: український
+  pos: adj
+- lemma: терти
+  pos: verb
+- lemma: використовувати
+  pos: verb
+- lemma: до
+  pos: noun
+- lemma: ціна
+  pos: noun
+- lemma: українська
+  pos: noun
+- lemma: кава
+  pos: noun
+- lemma: історія
+  pos: noun
+- lemma: дуже
   pos: adv
-  translation: cheap
-  lemma: решта
+- lemma: дужий
+  pos: adj
+- lemma: він
   pos: noun
-  translation: change (money)
-  lemma: готівка
+- lemma: наголос
+  pos: adv
+- lemma: як
   pos: noun
-  translation: cash
-  lemma: картка
+- lemma: вона
   pos: noun
-  translation: card (payment)
-  lemma: пакет
+- lemma: символ
   pos: noun
-  translation: bag (shopping)
-

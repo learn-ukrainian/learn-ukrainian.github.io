@@ -618,19 +618,24 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
             SelectActivity, TrueFalseActivity, EssayResponseActivity,
             CriticalAnalysisActivity, ComparativeStudyActivity, AuthorialIntentActivity,
-            EtymologyTraceActivity, GrammarIdentifyActivity
+            EtymologyTraceActivity, GrammarIdentifyActivity,
+            ImageToLetterActivity, WatchAndRepeatActivity, ClassifyActivity
         )
         
         if isinstance(activity, (QuizActivity, FillInActivity, UnjumbleActivity, 
                                  ErrorCorrectionActivity, TranslateActivity, AnagramActivity, 
                                  SelectActivity, TrueFalseActivity,
-                                 EtymologyTraceActivity, GrammarIdentifyActivity)):
+                                 EtymologyTraceActivity, GrammarIdentifyActivity,
+                                 ImageToLetterActivity, WatchAndRepeatActivity)):
             return len(activity.items)
         elif isinstance(activity, MatchUpActivity):
             return len(activity.pairs)
         elif isinstance(activity, GroupSortActivity):
             # Count total items across all groups
             return sum(len(group.items) for group in activity.groups)
+        elif isinstance(activity, ClassifyActivity):
+            # Count total items across all categories
+            return sum(len(cat.items) for cat in activity.categories)
         elif isinstance(activity, ClozeActivity):
             # If passage is parsed into blanks, use blanks count
             if activity.blanks:

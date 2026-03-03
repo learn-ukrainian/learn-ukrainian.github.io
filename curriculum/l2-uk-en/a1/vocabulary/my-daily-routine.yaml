@@ -1,106 +1,61 @@
-- lemma: "прокидатися"
-  translation: "to wake up"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я прокидаюся о сьомій."
-- lemma: "вставати"
-  translation: "to get up"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Він встає рано."
-- lemma: "вмиватися"
-  translation: "to wash oneself (face)"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Ти вмиваєшся холодною водою."
-- lemma: "чистити"
-  translation: "to clean (to brush)"
-  pos: "verb"
-  aspect: "imperfective"
-  example: "чистити зуби"
-  usage: "Ми чистимо зуби щоранку."
-- lemma: "одягатися"
-  translation: "to get dressed"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я швидко одягаюся."
-- lemma: "снідати"
-  translation: "to have breakfast"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Вони снідають на кухні."
-- lemma: "йти"
-  translation: "to go (on foot)"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Я йду на роботу."
-- lemma: "працювати"
-  translation: "to work"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Ми працюємо в офісі."
-- lemma: "обідати"
-  translation: "to have lunch"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Коли ти обідаєш?"
-- lemma: "повертатися"
-  translation: "to return"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я повертаюся додому."
-- lemma: "вечеряти"
-  translation: "to have dinner"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Ми вечеряємо о сьомій."
-- lemma: "відпочивати"
-  translation: "to rest"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Увечері я відпочиваю."
-- lemma: "лягати"
-  translation: "to lie down"
-  pos: "verb"
-  aspect: "imperfective"
-  example: "лягати спати"
-  usage: "Діти лягають спати."
-- lemma: "спати"
-  translation: "to sleep"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Я люблю спати."
-- lemma: "спочатку"
-  translation: "first / at first"
-  pos: "adverb"
-  usage: "Спочатку я снідаю."
-- lemma: "потім"
-  translation: "then"
-  pos: "adverb"
-  usage: "Потім я йду на роботу."
-- lemma: "зазвичай"
-  translation: "usually"
-  pos: "adverb"
-  usage: "Я зазвичай встаю рано."
-- lemma: "завжди"
-  translation: "always"
-  pos: "adverb"
-  usage: "Він завжди спізнюється."
-- lemma: "рідко"
-  translation: "rarely"
-  pos: "adverb"
-  usage: "Ми рідко ходимо в кіно."
-- lemma: "ніколи"
-  translation: "never"
-  pos: "adverb"
-  notes: "requires 'не' before the verb"
-  usage: "Я ніколи не курю."
-- lemma: "дієслово"
-  translation: "verb"
-  pos: "noun"
-  gender: "neuter"
-  usage: "Це дієслово має закінчення -ся."
+items:
+- lemma: ми
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: сей
+  pos: adj
+- lemma: це
+  pos: noun
+- lemma: день
+  pos: noun
+- lemma: робочий
+  pos: adj
+- lemma: йти
+  pos: verb
+- lemma: ви
+  pos: noun
+- lemma: вмиватися
+  pos: verb
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: вони
+  pos: noun
+- lemma: дивитися
+  pos: verb
+- lemma: дієслово
+  pos: noun
+- lemma: слово
+  pos: noun
+- lemma: вона
+  pos: noun
+- lemma: вихідний
+  pos: adj
+- lemma: мати
+  pos: verb
+- lemma: прокидатися
+  pos: verb
+- lemma: наш
+  pos: adj
+- lemma: кожний
+  pos: adj
+- lemma: маяти
+  pos: verb
+- lemma: дія
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: свій
+  pos: adj
+- lemma: час
+  pos: noun
+- lemma: воно
+  pos: noun
+- lemma: завжди
+  pos: adv
+- lemma: ти
+  pos: noun
+- lemma: використовувати
+  pos: verb

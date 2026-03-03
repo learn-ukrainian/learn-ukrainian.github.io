@@ -1,74 +1,61 @@
-  lemma: чи
-  pos: particle
-  translation: whether / (question particle)
-  lemma: не
-  pos: particle
-  translation: not
-  lemma: ні
-  pos: particle
-  translation: 'no'
-  lemma: так
-  pos: particle
-  translation: 'yes'
-  lemma: хто
-  pos: pronoun
-  translation: who
-  lemma: що
-  notes: 'Spoken variant: шо [ʃɔ]'
-  pos: pronoun
-  translation: what
-  lemma: де
-  pos: adverb
-  translation: where
-  lemma: коли
-  pos: adverb
-  translation: when
-  lemma: чому
-  pos: adverb
-  translation: why
-  lemma: як
-  pos: adverb
-  translation: how
-  lemma: скільки
-  pos: adverb
-  translation: how much / how many
-  lemma: куди
-  pos: adverb
-  translation: where to
-  lemma: завжди
-  pos: adverb
-  translation: always
-  lemma: ніколи
-  pos: adverb
-  translation: never
-  lemma: зазвичай
-  pos: adverb
-  translation: usually
-  lemma: знати
-  pos: verb
-  translation: to know
-  lemma: розуміти
-  pos: verb
-  translation: to understand
-  lemma: сирник
+items:
+- lemma: цей
+  pos: adj
+- lemma: це
   pos: noun
-  translation: cottage cheese pancake (syrnyk)
-  lemma: смачно
-  pos: adverb
-  translation: tasty / deliciously
-  lemma: звичайно
-  pos: adverb
-  translation: of course / certainly
-  lemma: дієслово
+- lemma: ти
   pos: noun
-  translation: verb
-  lemma: звідки
-  pos: adverb
-  translation: where from
-  lemma: часто
-  pos: adverb
-  translation: often
-  lemma: іноді
-  pos: adverb
-  translation: sometimes
-
+- lemma: ви
+  pos: noun
+- lemma: ми
+  pos: noun
+- lemma: знати
+  pos: verb
+- lemma: що
+  pos: noun
+- lemma: хто
+  pos: noun
+- lemma: як
+  pos: adv
+- lemma: де
+  pos: adv
+- lemma: слово
+  pos: noun
+- lemma: кіл
+  pos: noun
+- lemma: кола
+  pos: noun
+- lemma: коли
+  pos: adv
+- lemma: колоти
+  pos: verb
+- lemma: мова
+  pos: noun
+- lemma: зараз
+  pos: adv
+- lemma: зараза
+  pos: noun
+- lemma: працювати
+  pos: verb
+- lemma: праця
+  pos: noun
+- lemma: тут
+  pos: adv
+- lemma: новий
+  pos: adj
+- lemma: використовувати
+  pos: verb
+- lemma: чому
+  pos: adv
+- lemma: кава
+  pos: noun
+- lemma: сьогодні
+  pos: adv
+- lemma: вона
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: бути
+  pos: verb
+- lemma: так
+  pos: adv

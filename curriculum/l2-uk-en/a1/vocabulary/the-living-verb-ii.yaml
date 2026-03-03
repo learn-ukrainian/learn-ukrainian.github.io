@@ -1,78 +1,61 @@
-  lemma: говорити
-  notes: Type 2 (-ити)
-  pos: verb
-  translation: to speak
-  lemma: робити
-  notes: Type 2 (-ити); Labial L mutation (я роблю)
-  pos: verb
-  translation: to do / to make
-  lemma: любити
-  notes: Type 2 (-ити); Labial L mutation (я люблю)
-  pos: verb
-  translation: to love
-  lemma: бачити
-  notes: Type 2 (-ити)
-  pos: verb
-  translation: to see
-  lemma: ходити
-  notes: Type 2 (-ити); Mutation d→dzh (я ходжу)
-  pos: verb
-  translation: to walk / to go (on foot)
-  lemma: сидіти
-  notes: Type 2 (-ити); Mutation d→dzh (я сиджу)
-  pos: verb
-  translation: to sit
-  lemma: платити
-  notes: Type 2 (-ити); Mutation t→ch (я плачу)
-  pos: verb
-  translation: to pay
-  lemma: вчити
-  notes: Type 2 (-ити)
-  pos: verb
-  translation: to teach / to learn
-  lemma: їсти
-  notes: Irregular verb (я їм, ти їси)
-  pos: verb
-  translation: to eat
-  lemma: пити
-  notes: Irregular Type 1 pattern (я п'ю)
-  pos: verb
-  translation: to drink
-  lemma: хотіти
-  notes: Type 1 mixed pattern (я хочу, ти хочеш)
-  pos: verb
-  translation: to want
-  lemma: спати
-  notes: Type 2 behavior; Labial L mutation (я сплю)
-  pos: verb
-  translation: to sleep
-  lemma: кава
-  notes: 'Fem. (Acc: каву)'
+items:
+- lemma: ми
   pos: noun
-  translation: coffee
-  lemma: помилка
+- lemma: ти
   pos: noun
-  translation: mistake
-  lemma: світ
-  pos: noun
-  translation: world
-  lemma: правда
-  pos: noun
-  translation: truth
-  lemma: парк
-  pos: noun
-  translation: park
-  lemma: вибір
-  pos: noun
-  translation: choice
-  lemma: сюрприз
-  pos: noun
-  translation: surprise
-  lemma: щодня
-  pos: adverb
-  translation: every day
-  lemma: просити
-  notes: Type 2 (-ити); Mutation s→sh (я прошу)
+- lemma: любити
   pos: verb
-  translation: to ask / to request
-
+- lemma: говорити
+  pos: verb
+- lemma: робити
+  pos: verb
+- lemma: пити
+  pos: verb
+- lemma: чай
+  pos: noun
+- lemma: сидіти
+  pos: verb
+- lemma: вони
+  pos: noun
+- lemma: цей
+  pos: adj
+- lemma: бачити
+  pos: verb
+- lemma: їсти
+  pos: verb
+- lemma: він
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: дивитися
+  pos: verb
+- lemma: кава
+  pos: noun
+- lemma: вчити
+  pos: verb
+- lemma: тут
+  pos: adv
+- lemma: людина
+  pos: noun
+- lemma: ходити
+  pos: verb
+- lemma: вона
+  pos: noun
+- lemma: спати
+  pos: verb
+- lemma: теж
+  pos: adv
+- lemma: наш
+  pos: adj
+- lemma: так
+  pos: adv
+- lemma: парк
+  pos: noun
+- lemma: читати
+  pos: verb
+- lemma: часто
+  pos: adv

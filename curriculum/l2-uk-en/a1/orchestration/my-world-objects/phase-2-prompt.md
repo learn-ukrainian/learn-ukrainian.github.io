@@ -24,6 +24,12 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 (No primary source excerpts available from RAG)
 
+## Video Discoveries
+
+These videos were found during the discover phase. Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value (e.g., after the section suggested below). Only embed videos that genuinely enhance the lesson — don't force them in.
+
+(No relevant videos found)
+
 ---
 
 ## Your Task
@@ -55,11 +61,11 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Вступ | 300 | 450 |
+| Вступ | 250 | 375 |
 | Презентація | 700 | 1050 |
-| Практика | 450 | 675 |
+| Практика | 550 | 825 |
 | Культурний контекст | 300 | 450 |
-| Продукція та підсумок | 250 | 375 |
+| Продукція та підсумок | 200 | 300 |
 | **Total** | **2000** | **3000** |
 
 ---

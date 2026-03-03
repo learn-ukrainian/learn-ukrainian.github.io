@@ -1,113 +1,61 @@
-- lemma: 'зупинка'
-  translation: 'stop (bus/tram)'
-  pos: 'noun'
-  gender: 'f'
-  usage: 'автобусна зупинка'
-- lemma: 'метро'
-  translation: 'metro / subway'
-  pos: 'noun'
-  gender: 'n'
-  notes: 'indeclinable noun'
-- lemma: 'трамвай'
-  translation: 'tram'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'тролейбус'
-  translation: 'trolleybus'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'автобус'
-  translation: 'bus'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'маршрутка'
-  translation: 'minibus taxi'
-  pos: 'noun'
-  gender: 'f'
-  notes: 'short for маршрутне таксі'
-- lemma: 'таксі'
-  translation: 'taxi'
-  pos: 'noun'
-  gender: 'n'
-  notes: 'indeclinable noun'
-- lemma: 'поїзд'
-  translation: 'train'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'маршрут'
-  translation: 'route'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'станція'
-  translation: 'station (metro/train)'
-  pos: 'noun'
-  gender: 'f'
-- lemma: 'пересадка'
-  translation: 'transfer'
-  pos: 'noun'
-  gender: 'f'
-  usage: 'робити пересадку'
-- lemma: 'проїзд'
-  translation: 'fare / passage'
-  pos: 'noun'
-  gender: 'm'
-  usage: 'передайте за проїзд'
-- lemma: 'виходити'
-  translation: 'to exit / get off'
-  pos: 'verb'
-  aspect: 'imp'
-  usage: 'Ви виходите на наступній?'
-- lemma: 'заходити'
-  translation: 'to enter / get on'
-  pos: 'verb'
-  aspect: 'imp'
-- lemma: 'їхати'
-  translation: 'to go (by vehicle)'
-  pos: 'verb'
-  aspect: 'imp'
-- lemma: 'іти'
-  translation: 'to go (on foot)'
-  pos: 'verb'
-  aspect: 'imp'
-- lemma: 'квиток'
-  translation: 'ticket'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'проїзний'
-  translation: 'travel pass'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'валідатор'
-  translation: 'validator'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'завалідувати'
-  translation: 'to validate (ticket/payment)'
-  pos: 'verb'
-  aspect: 'perf'
-  usage: 'завалідувати квиток'
-- lemma: 'прокомпостувати'
-  translation: 'to validate (old style, punch ticket)'
-  pos: 'verb'
-  aspect: 'perf'
-  notes: 'legacy term; older generation usage'
-- lemma: 'водій'
-  translation: 'driver'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'пасажир'
-  translation: 'passenger'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'ескалатор'
-  translation: 'escalator'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'вхід'
-  translation: 'entrance'
-  pos: 'noun'
-  gender: 'm'
-- lemma: 'вихід'
-  translation: 'exit'
-  pos: 'noun'
-  gender: 'm'
+items:
+- lemma: цей
+  pos: adj
+- lemma: ми
+  pos: noun
+- lemma: це
+  pos: noun
+- lemma: їхати
+  pos: verb
+- lemma: ви
+  pos: noun
+- lemma: як
+  pos: noun
+- lemma: транспорт
+  pos: noun
+- lemma: метро
+  pos: noun
+- lemma: зупинка
+  pos: noun
+- lemma: до
+  pos: noun
+- lemma: той
+  pos: adj
+- lemma: дуже
+  pos: adv
+- lemma: дужий
+  pos: adj
+- lemma: де
+  pos: adv
+- lemma: могти
+  pos: verb
+- lemma: використовувати
+  pos: verb
+- lemma: автобус
+  pos: noun
+- lemma: рух
+  pos: noun
+- lemma: він
+  pos: noun
+- lemma: їда
+  pos: noun
+- lemma: мати
+  pos: verb
+- lemma: маяти
+  pos: verb
+- lemma: питання
+  pos: noun
+- lemma: куди
+  pos: adv
+- lemma: йти
+  pos: verb
+- lemma: великий
+  pos: adj
+- lemma: станція
+  pos: noun
+- lemma: бути
+  pos: verb
+- lemma: дієслово
+  pos: noun
+- lemma: наш
+  pos: adj

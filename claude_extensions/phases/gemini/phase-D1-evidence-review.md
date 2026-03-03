@@ -10,9 +10,9 @@ Do not assume you wrote this content. Do not be generous.**
 
 ---
 
-## TOOL ACCESS — READ THE ACTUAL FILES
+## TOOL ACCESS — READ AND FIX THE ACTUAL FILES
 
-**You have file system access.** Use Read, Grep, and Glob tools to read every file listed below BEFORE writing any review text.
+**You have file system access.** Use Read, Grep, Glob, and **Edit** tools. Read every file listed below BEFORE writing any review text. **When you find an issue, fix it immediately using the Edit tool** — don't just describe the fix, apply it.
 
 **CRITICAL — VERBATIM CITATION RULE:**
 
@@ -88,10 +88,11 @@ Follow the full review protocol. In summary:
 - Grammar scope: flag grammar from later modules (scope creep)
 - Objectives: all learning objectives addressed?
 
-### STEP 2: Deep Verification (Line by Line)
+### STEP 2: Deep Verification (Line by Line) — FIX AS YOU GO
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
 - Activities: check EVERY item individually
+- **When you find a problem: fix it immediately with the Edit tool, then note it in your review.** Don't accumulate issues for later — fix them now while you have the exact text in front of you.
 
 ### STEP 3: Auto-Fail Checklist
 - Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
@@ -232,8 +233,8 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 
 ## Boundaries
 
-- Do NOT modify content files directly — only output the review
-- Do NOT output any fix blocks (===SECTION_FIX_START=== etc.) — fixes are handled separately
+- FIX issues directly using the Edit tool as you find them — don't wait until the end
+- ALSO output ===SECTION_FIX_START=== fix blocks in case any Edit calls fail (backup)
 - Do NOT score generously — honesty prevents bad curriculum
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number

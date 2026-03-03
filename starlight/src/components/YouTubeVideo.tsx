@@ -35,7 +35,7 @@ export default function YouTubeVideo({ url, label }: YouTubeVideoProps) {
           }}
         >
           <iframe
-            src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
+            src={`https://www.youtube.com/embed/${videoId}?rel=0`}
             title={label || 'Video'}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

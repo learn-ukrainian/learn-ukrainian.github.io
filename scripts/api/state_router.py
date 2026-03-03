@@ -792,6 +792,8 @@ async def weak_points(
                     issues.append(f"low_words_{word_count}/{word_target}")
 
                 if issues:
+                    orch_dir = track_dir / "orchestration" / slug
+                    version = _detect_pipeline_version(orch_dir)
                     weak.append({
                         "track": track_id,
                         "num": num,
@@ -800,6 +802,7 @@ async def weak_points(
                         "word_count": word_count,
                         "word_target": word_target,
                         "research_score": research_score,
+                        "pipeline_version": version,
                         "issues": issues,
                     })
 
