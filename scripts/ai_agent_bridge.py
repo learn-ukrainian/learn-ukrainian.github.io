@@ -30,6 +30,7 @@ import argparse
 import atexit
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -635,7 +636,7 @@ def _detect_model_error(stderr: str, model: str) -> str | None:
     return None
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None, skip_github: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -679,11 +680,12 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     # Validation: Warn if handoff message is too long (handoff anti-pattern)
     # Only warn for handoff type - help/query messages can be long
     HANDOFF_WARNING_THRESHOLD = 500  # chars
-    if msg_type == "handoff" and len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
+    issue_num = _extract_issue_number(task_id) if task_id else None
+    if msg_type == "handoff" and len(content) > HANDOFF_WARNING_THRESHOLD and issue_num:
         print(f"⚠️  WARNING: Handoff message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
         print(f"   For task handoffs, the GitHub issue should contain details.")
         print(f"   Consider sending a SHORT message with issue reference only:")
-        print(f"   'Issue #{task_id.replace('gh-', '')} is assigned to you. Read it for details.'")
+        print(f"   'Issue #{issue_num} is assigned to you. Read it for details.'")
         print()
 
     # Step 1: Send the message (model param becomes to_model)
@@ -711,7 +713,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     else:
         if not stdout_only:
             print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, allow_write=allow_write, delimiters=delimiters)
+        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, allow_write=allow_write, delimiters=delimiters, skip_github=skip_github)
 
         # Post-process: extract delimited content if --extract was used
         if extract_tags is not None and response:
@@ -826,7 +828,124 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None):
+def _extract_issue_number(task_id: str) -> int | None:
+    """Extract GH issue number from task_id. Returns None if no issue pattern."""
+    if not task_id:
+        return None
+    match = re.match(r'^(?:issue|gh)-(\d+)$', task_id)
+    return int(match.group(1)) if match else None
+
+
+# GitHub comment/body limit is 65,536 chars. Use 64K with 1.5K safety margin for headers.
+_GH_CHAR_LIMIT = 64000
+
+
+def _format_review_chunk(chunk: str, model: str, part_num: int, total_parts: int) -> str:
+    """Format a review chunk with part header for GitHub posting."""
+    if total_parts > 1:
+        return f"**[Part {part_num}/{total_parts}]** Review ({model})\n\n{chunk}"
+    return f"**Review** ({model})\n\n{chunk}"
+
+
+def _split_content(content: str, limit: int = _GH_CHAR_LIMIT) -> list[str]:
+    """Split content into chunks at newline boundaries, each under limit chars."""
+    chunks = []
+    pos = 0
+    length = len(content)
+    while pos < length:
+        end = min(pos + limit, length)
+        if end >= length:
+            chunks.append(content[pos:])
+            break
+        # Find last newline before limit
+        split_at = content.rfind('\n', pos, end)
+        if split_at <= pos:
+            split_at = end  # No newline found, hard split
+        chunks.append(content[pos:split_at])
+        # Skip past the newline
+        pos = split_at + 1 if content[split_at] == '\n' else split_at
+    return chunks
+
+
+def _gh_comment(issue_num: int, body: str) -> bool:
+    """Post a comment on a GitHub issue. Returns True on success."""
+    result = subprocess.run(
+        ["gh", "issue", "comment", str(issue_num), "-F", "-"],
+        input=body, text=True, capture_output=True, timeout=15
+    )
+    if result.returncode != 0:
+        print(f"⚠️  GitHub comment failed: {result.stderr[:200]}")
+        return False
+    return True
+
+
+def _post_review_to_github(task_id: str, content: str, model: str) -> int | None:
+    """Post review content to a GitHub issue. Returns issue number on success, None on failure.
+
+    - If task_id matches issue-NNN or gh-NNN, posts as comment(s) on that issue.
+    - Otherwise, creates a new issue with label 'review-result'.
+    - Content >65K chars is split into multiple comments at newline boundaries.
+    - Never raises — failure prints a warning but doesn't break the bridge.
+    """
+    if not content:
+        return None
+
+    try:
+        issue_num = _extract_issue_number(task_id)
+        chunks = _split_content(content)
+        total_parts = len(chunks)
+
+        if issue_num:
+            # Post as comment(s) on existing issue
+            for i, chunk in enumerate(chunks, start=1):
+                body = _format_review_chunk(chunk, model, i, total_parts)
+                if not _gh_comment(issue_num, body):
+                    return None
+            print(f"   📎 Review posted to #{issue_num} ({total_parts} part{'s' if total_parts > 1 else ''})")
+            return issue_num
+        else:
+            # Create new issue
+            title = f"Review: {task_id}" if task_id else f"Review: {datetime.now(timezone.utc).isoformat()}"
+            first_body = _format_review_chunk(chunks[0], model, 1, total_parts)
+
+            result = subprocess.run(
+                ["gh", "issue", "create", "--title", title, "--label", "review-result", "-F", "-"],
+                input=first_body, text=True, capture_output=True, timeout=15
+            )
+            if result.returncode != 0:
+                print(f"⚠️  GitHub issue creation failed: {result.stderr[:200]}")
+                return None
+
+            # Parse issue number from URL output (e.g., "https://github.com/org/repo/issues/123")
+            url = result.stdout.strip()
+            url_match = re.search(r'/issues/(\d+)', url)
+            if not url_match:
+                print(f"⚠️  Could not parse issue number from: {url}")
+                return None
+            new_issue_num = int(url_match.group(1))
+
+            # Post remaining chunks as comments
+            for i, chunk in enumerate(chunks[1:], start=2):
+                body = _format_review_chunk(chunk, model, i, total_parts)
+                if not _gh_comment(new_issue_num, body):
+                    print(f"⚠️  Failed to post part {i}/{total_parts} — earlier parts were posted")
+                    break
+
+            print(f"   📎 Review posted as new issue #{new_issue_num} ({total_parts} part{'s' if total_parts > 1 else ''})")
+            return new_issue_num
+
+    except FileNotFoundError:
+        print("⚠️  gh CLI not found — skipping GitHub posting")
+        return None
+    except subprocess.TimeoutExpired:
+        print("⚠️  GitHub posting timed out — skipping")
+        return None
+    except Exception as e:
+        print(f"⚠️  GitHub posting failed: {e}")
+        return None
+
+
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None, skip_github: bool = False):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -1195,6 +1314,9 @@ Format your response clearly.
                         )
                         acknowledge(reply_id)
                         print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
+                        # Persist review to GitHub
+                        if not skip_github:
+                            _post_review_to_github(msg['task_id'], response, model)
                     _response_sent = True
 
                     # Acknowledge original message
@@ -1743,6 +1865,8 @@ def main():
                                    help="Comma-separated delimiter names for --allow-write mode. "
                                         "E.g., 'FINAL_REVIEW,FRICTION' → ===FINAL_REVIEW_START/END===. "
                                         "Injected into system prompt so model knows exact output tags.")
+    ask_gemini_parser.add_argument("--no-github", dest="no_github", action="store_true",
+                                   help="Skip auto-posting review to GitHub issue")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1799,7 +1923,7 @@ def main():
         if args.data:
             data = Path(args.data).read_text()
         content = sys.stdin.read() if args.content == "-" else args.content
-        ask_gemini(content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None))
+        ask_gemini(content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None), getattr(args, 'no_github', False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

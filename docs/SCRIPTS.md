@@ -2419,6 +2419,7 @@ npm run sync:landing:dry      # Preview changes without applying
 | `--delimiters X,Y` | Inject specific delimiter names into system prompt (e.g., `FINAL_REVIEW,FRICTION`) |
 | `--model` | Gemini model (always `gemini-3-pro-preview` for content) |
 | `--task-id` | Session isolation (prefix: `yw-` builder, `gr-` reviewer, `fr-` final review) |
+| `--no-github` | Skip auto-posting review to GitHub issue |
 
 ### Signal Script (Gemini → Claude notification)
 

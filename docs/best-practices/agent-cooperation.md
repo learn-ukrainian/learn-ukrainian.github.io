@@ -52,6 +52,20 @@ For requests needing immediate response:
   --task-id issue-559
 ```
 
+### Automatic Review Persistence
+
+Reviews dispatched via `ask-gemini` are automatically posted to GitHub:
+
+| task_id pattern | Behavior |
+|-----------------|----------|
+| `issue-NNN` / `gh-NNN` | Posted as comment on issue #NNN |
+| Any other value | New issue created with `review-result` label |
+| None | New issue created titled `Review: {timestamp}` |
+
+Reviews >65K chars are split into multiple comments. To skip: `--no-github`.
+
+Only applies to **standard mode** (not `--stdout-only` or `--output-path`).
+
 ### Passive notification (MCP send_message)
 For non-blocking FYI messages Gemini sees at next session start:
 ```python
