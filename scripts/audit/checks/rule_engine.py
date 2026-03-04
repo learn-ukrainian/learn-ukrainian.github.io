@@ -54,13 +54,13 @@ _BASE_SECTION_MARKERS = [
 
 _DECODABILITY_SPECS: list[tuple[int, str, str, list[str]]] = [
     # (module_num, allowed_chars, description_suffix, extra_markers)
-    (1, "АаМмЛлУуНнСс",
-     "АМЛУНС (6 letters). Students cannot decode other Cyrillic letters yet.",
+    (1, "АаОоУуМмЛлНнСс",
+     "АОУМЛНС (7 letters). Students cannot decode other Cyrillic letters yet.",
      []),
-    (2, "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІі",
+    (2, "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
      "the 14 letters learned so far.",
      ["Reading Drill", "Нові склади"]),
-    (3, "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІіДдПпЗзБбГгХхЖжШшЧч",
+    (3, "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕеБбДдПпЗзГгХхЖжШшЧч",
      "the 23 letters learned so far.",
      ["Reading Drill", "Нові склади"]),
 ]

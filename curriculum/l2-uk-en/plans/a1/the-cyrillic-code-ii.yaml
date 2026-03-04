@@ -2,92 +2,95 @@ module: a1-002
 level: A1
 sequence: 2
 slug: the-cyrillic-code-ii
-version: '3.0'
+version: '4.0'
 title: The Cyrillic Code II
-subtitle: К И Р Б В Д І — Now You Can Read Words
+subtitle: К И І Р В Т Е — Now You Can Read Words
 focus: grammar
 pedagogy: PPP
 phase: A1.1 [First Contact]
 word_target: 1200
 objectives:
-- Learner can recognize and pronounce 7 new letters (К, И, Р, Б, В, Д, І) plus О
+- Learner can recognize and pronounce 7 new letters (К, И, І, Р, В, Т, Е)
 - Learner can distinguish И (hard i) from І (soft i)
-- Learner can identify trap letters (Р looks like P, В looks like B)
-- Learner can read real Ukrainian words using 13 letters
+- Learner can identify trap letters (Р looks like P but is /r/, В looks like B but is /v/)
+- Learner can read real Ukrainian words using all 14 known letters
 content_outline:
-- section: Вступ
-  words: 200
-  points:
-  - 'Quick review: read 3 words from Code I (мама, сума, луна) as warm-up.'
-  - This module adds 7 letters (5 приголосні + 2 голосні). After this module you know 13 letters and can read real Ukrainian
-    words.
-- section: Голосні — И, І, О
-  words: 400
-  points:
-  - И — риба 🐟. Video link. И is a uniquely Ukrainian vowel — no exact equivalent in English or most European languages. Listen
-    carefully to Anna's video.
-  - 'І — індик 🦃. Video link. І is the soft i — European-style, like English ''ee'' in ''see''. Cultural note: the dotted
-    І as a symbol of Ukrainian identity.'
-  - О — огірок 🥒. Video link. О sounds like 'o' in 'more'. Unlike Russian, unstressed О stays /o/ in Ukrainian (never reduces
-    to /a/).
-  - 'The И vs І distinction is critical. И has a lower, harder sound (jaw relaxed); І is higher and brighter (like a smile).
-    Minimal pair preview: they will appear everywhere.'
-- section: Приголосні — К, Р, Б, В, Д
-  words: 500
-  points:
-  - 'К — кіт 🐱. Video link. Additional: кіно, каша, кава, Київ.'
-  - 'Р — ракета 🚀. Video link. Р is the rolled/trilled r. Looks like Latin P but sounds completely different. This is THE
-    key trap letter — practice the tongue-tip trill. Additional: рука, ранок, рис.'
-  - 'Б — банан 🍌. Video link. Additional: брат, бабуся, більше.'
-  - 'В — вовк 🐺. Video link. Looks like Latin B but sounds like English ''v''. Another trap. Additional: вода, вулиця, вечір.'
-  - 'Д — дім 🏠. Video link. Д looks unfamiliar but sounds simple — like English ''d''. Additional: добре, друг, день.'
-  - 'English sidebar: Trap letters recap — Р looks like P (is /r/), В looks like B (is /v/). These two cause the most confusion
-    for English speakers.'
-- section: Перші слова — First Real Words
-  words: 450
-  points:
-  - With 13 letters you can now read real Ukrainian words, not just syllables.
-  - 'Word drills: банан, рука, вода, молоко, кіно, сила, дірка, міна, лиса, нива, слива.'
-  - 'Phrase practice: Банан і слива. Вода і молоко. Дім і вулиця.'
-  - 'Reading exercise: short paragraph using only the 13 known letters.'
-- section: Практика
-  words: 300
-  points:
-  - 'Minimal pair drills: И vs І in context — ми (we) vs мі- (in compounds).'
-  - 'Trap letter practice: Р vs П (next module), В vs Б — recognizing the sound, not the shape.'
-  - 'Self-check: can you read банан? молоко? Київ?'
-- section: Підсумок
+- section: Вступ — Introduction
   words: 150
   points:
-  - 'Progress: 13 of 33 letters learned (4 голосні + 9 приголосні).'
+  - 'Quick review: read 3 words from Code I (мама, сом, масло) as warm-up.'
+  - This module adds 7 letters (3 голосні + 4 приголосні). After this module you know 14 letters and can read real Ukrainian
+    words like молоко, місто, кіт.
+- section: Голосні — Vowels И, І, Е
+  words: 300
+  points:
+  - 'И — uniquely Ukrainian vowel, no exact equivalent in English or most European languages. Key word: риба. Video link. Listen
+    carefully to Anna''s pronunciation. Jaw relaxed, lower sound.'
+  - 'І — the soft i, European-style, like English ''ee'' in ''see''. Key word: індик. Video link. Cultural note: the dotted
+    І as a symbol of Ukrainian identity.'
+  - 'Е — sounds like ''e'' in ''set''. Key word: екран. Video link. Not like Russian Э. Not like English ''ee''.'
+  - 'The И vs І distinction is critical — they are everywhere. И is lower/harder (jaw relaxed); І is higher/brighter (like
+    a smile). Minimal pair preview: they will appear constantly.'
+  - 'All 6 basic vowels now known: А, О, У (Code I) + И, І, Е (this module). The 4 iotated vowels come in Code IV.'
+- section: Приголосні — Consonants К, Р, В, Т
+  words: 350
+  points:
+  - 'К — key word: кіт. Video link. Additional: кіно, каша, кава.'
+  - 'Р — key word: ракета. Video link. Р is the rolled/trilled r. Looks like Latin P but sounds completely different. THE key
+    trap letter — practice the tongue-tip trill. Additional: рука, рис.'
+  - 'В — key word: вовк. Video link. Looks like Latin B but sounds like English ''v''. Another trap. Additional: вік, вікно.'
+  - 'Т — key word: тато. Video link. Т is a true friend — same sound as English T. Additional: стіл, місто, метро.'
+  - 'Trap letters recap: Р looks like P (is /r/), В looks like B (is /v/). These two cause the most confusion for English speakers.'
+- section: Перші слова — First Real Words
+  words: 250
+  points:
+  - With 14 letters you can now read real Ukrainian words, not just syllables.
+  - 'Word drills (all decodable from 14 letters): кіт, тато, рис, сир, місто, море, метро, ліс, вікно, стіл, молоко, кіно,
+    око, слово, літо, масло, ніс, він, вона.'
+  - 'Reading exercise: short paragraph using only the 14 known letters.'
+- section: Практика — Practice
+  words: 200
+  points:
+  - 'Minimal pair drills: И vs І in context — ми (we) vs мі- (in compounds), вік (age) vs вік (same — depends on context).'
+  - 'Trap letter practice: Р vs P shape, В vs B shape — recognizing the sound, not the shape.'
+  - 'Self-check: can you read молоко? кіт? місто?'
+- section: Підсумок — Summary
+  words: 100
+  points:
+  - 'Progress: 14 of 33 letters learned (6 голосні + 8 приголосні).'
   - You can now read real Ukrainian words and simple phrases.
-  - 'Next module: The Cyrillic Code III adds 9 more letters (П, Т, Г, Ґ, Е, З, Ж, Ш, Х) including voiced/voiceless pairs.'
+  - 'Next module: The Cyrillic Code III adds 9 more letters (Б, Д, П, З, Г, Х, Ж, Ш, Ч) including voiced/voiceless pairs.'
 vocabulary_hints:
   required:
   - 'кіт (cat) — key word for К; collocations: мій кіт, рудий кіт'
-  - 'вода (water) — readable from known letters; collocations: пити воду, холодна вода'
-  - банан (banana) — internationalism, readable from known letters
   - молоко (milk) — uses М, Л from Code I + О, К from Code II
-  - 'рука (hand/arm) — high frequency; collocations: ліва рука, права рука'
-  - 'кіно (cinema) — internationalism; collocations: іти в кіно'
-  - 'дім (house/home) — high frequency; collocations: мій дім, великий дім'
+  - 'рис (rice) — demonstrates Р; readable from known letters'
+  - 'сир (cheese) — demonstrates С+И+Р combination'
+  - 'тато (dad) — demonstrates Т; high frequency family word'
+  - 'місто (city) — high frequency; demonstrates І and Т'
+  - 'море (sea) — demonstrates М, О, Р, Е'
   recommended:
-  - друг (friend) — high frequency; demonstrates Д and Р together
-  - брат (brother) — family vocabulary; demonstrates Б and Р
-  - слива (plum) — uses С, Л from Code I + В, І from Code II
+  - метро (metro) — internationalism; demonstrates М, Е, Т, Р
+  - 'ліс (forest) — demonstrates Л, І, С'
+  - вікно (window) — demonstrates В, І, К
+  - стіл (table) — demonstrates С, Т, І, Л
+  - кіно (cinema) — internationalism; demonstrates К, І
+  - 'око (eye) — two-letter word using О and К'
+  - 'слово (word) — demonstrates С, Л, О, В'
+  - літо (summer) — demonstrates Л, І, Т
 activity_hints:
 - type: watch-and-repeat
-  focus: Watch Anna's video for each of the 7 new letters + О
-  items: 8
+  focus: Watch Anna's video for each of the 7 new letters
+  items: 7
 - type: classify
-  focus: Sort К И Р Б В Д І О into голосні vs приголосні
-  items: 8
+  focus: Sort К И І Р В Т Е into голосні vs приголосні
+  items: 7
 - type: image-to-letter
-  focus: See emoji (🐱🐟🚀🍌🐺🏠🦃🥒) — which letter?
-  items: 8
+  focus: See emoji — which letter? (🐱🐟🚀🐺📺🦃)
+  items: 7
 - type: match-up
   focus: Match letter to key word
-  items: 8
+  items: 7
 - type: quiz
   focus: Which letter makes this sound? (Р looks like P but sounds like...)
   items: 10
@@ -99,7 +102,7 @@ persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
 grammar:
-- Letter recognition (К, И, Р, Б, В, Д, І, О)
+- Letter recognition (К, И, І, Р, В, Т, Е)
 - Sound-letter correspondence
 - И vs І distinction
 - Trap letter awareness (Р, В)
@@ -110,9 +113,8 @@ pronunciation_videos:
   letters:
     К: https://www.youtube.com/watch?v=J7sGEI4-xJo
     И: https://www.youtube.com/watch?v=W-1rCu0indE
-    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
-    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
     І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-    О: https://www.youtube.com/watch?v=QT3c1TiZZgk
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk

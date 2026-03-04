@@ -2,95 +2,94 @@ module: a1-001
 level: A1
 sequence: 1
 slug: the-cyrillic-code-i
-version: '3.0'
+version: '4.0'
 title: The Cyrillic Code I
-subtitle: А М Л У Н С — Your First 6 Letters
+subtitle: А О У М Л Н С — Your First 7 Letters
 focus: grammar
 pedagogy: PPP
 phase: A1.1 [First Contact]
 word_target: 1200
 objectives:
-- Learner can recognize and pronounce 6 Ukrainian letters (А, М, Л, У, Н, С)
+- Learner can recognize and pronounce 7 Ukrainian letters (А, О, У, М, Л, Н, С)
 - Learner can classify letters as голосні (vowels) or приголосні (consonants)
 - Learner can combine letters into open and closed syllables
-- Learner can read simple words using the 6 known letters
+- Learner can read simple words using the 7 known letters
 content_outline:
-- section: Вступ
-  words: 300
+- section: Вступ — Introduction
+  words: 200
   points:
   - A1 immersion 10-50%. English scaffolding explains the system, Ukrainian carries the content.
-  - The Ukrainian alphabet has 33 letters. It is phonetic — each letter maps to one sound. This module covers the first 6
-    letters, chosen by frequency (how often they appear in Ukrainian text).
-  - Introduce Anna Ohoiko (Ukrainian Lessons) as the pronunciation guide. Embed overview video link.
-  - 'Brief cultural hook: the alphabet descends from the script created by students of Saints Cyril and Methodius in the First
+  - 'The Ukrainian alphabet has 33 letters. It is highly phonetic — each letter maps to one sound. This module covers the first
+    7 letters (3 vowels + 4 consonants), chosen to match Ukrainian primer textbooks (Bolshakova 2018, Zaharijchuk NUS 2025).'
+  - 'Cultural hook: the Cyrillic script descends from the alphabet created by students of Saints Cyril and Methodius in the First
     Bulgarian Empire.'
-  - 'Learning method: for each letter, watch Anna''s video → repeat aloud → practice reading.'
-- section: Голосні — А, У
-  words: 400
+  - Introduce Anna Ohoiko (Ukrainian Lessons) as the pronunciation guide. Embed overview video link.
+- section: Голосні — Vowels А, О, У
+  words: 250
   points:
-  - 'Explain: Ukrainian has 10 vowels (голосні). This module introduces 2. Vowels are ''voice only'' — no obstruction.'
-  - 'А — ананас 🍍. Anna Ohoiko video link. Examples from video: Африка, Аргентіна, аеропорт. Additional examples: ананас,
-    акула, автобус.'
-  - 'У — Україна 🇺🇦. Anna Ohoiko video link. Examples from video: Уругвай, Узбекистан, університет. Additional: улюблений,
-    урок.'
-  - 'Teaching point: Ukrainian vowels are stable — they keep their clear sound in any position, stressed or unstressed.'
-  - 'English sidebar: А sounds like ''a'' in ''father'' (never reduced). У sounds like ''oo'' in ''moon''.'
-- section: Приголосні — М, Л, Н, С
-  words: 500
+  - 'Explain: Ukrainian has 10 vowels (голосні). This module introduces 3. Vowels are ''voice only'' — no obstruction.'
+  - 'А — sounds like ''a'' in ''father'' (never reduced). Key word for Anna''s video: ананас. Additional video examples: Африка,
+    Аргентіна, аеропорт.'
+  - 'О — sounds like ''o'' in ''more''. Key word: око. Video. Critical contrast with Russian: Ukrainian О never reduces to /a/
+    in unstressed position. О stays О everywhere.'
+  - 'У — sounds like ''oo'' in ''moon''. Key word: Україна. Video.'
+  - 'Golden Rule: Ukrainian vowels stay pure and stable in any position, stressed or unstressed.'
+- section: Приголосні — Consonants М, Л, Н, С
+  words: 250
   points:
-  - 'Explain: Ukrainian has 22 consonants (приголосні). This module introduces 4. Consonants use some obstruction of airflow.'
-  - 'М — морква 🥕. Video link. Examples: Мексика, Мінськ, мільйон. Additional: мама, молоко, місто.'
-  - 'Л — літак ✈️. Video link. Examples: Латвія, Ліма, література. Additional: лимон, луна, лампа.'
-  - 'Н — ножиці ✂️. Video link. Examples: Нова Зеландія, Нідерланди, ніс. Additional: ніч, нуль, нам.'
-  - 'С — сумка 👜. Video link. Examples: Сатурн, Сідней, секрет. Additional: сон, сіль, сам.'
-  - 'English sidebar: Н looks like English H but is /n/. С looks like English C but is always /s/.'
-- section: Перші склади — First Syllables
-  words: 350
-  points:
-  - Now combine the 6 letters into syllables (склади). Syllable = vowel or consonant+vowel.
-  - 'Open syllables: МА, МУ, НА, НУ, ЛА, ЛУ, СА, СУ.'
-  - 'Closed syllables: АМ, УМ, АН, УН, АС, УС, АЛ, УЛ.'
-  - 'Reading drill: read each syllable aloud, then combine into first words.'
-  - 'First words from known letters: мама, нас, сам, сума, мул, нам, луна.'
-- section: Практика читання — Reading Practice
+  - 'Explain: Ukrainian has 22 consonants (приголосні). This module introduces 4.'
+  - 'М — like English M. Key word: мама. Video link.'
+  - 'Л — looks like a tent (Λ shape). Key word: лама. Video link.'
+  - 'Н — FALSE FRIEND: looks like English H but sounds like N. Key word: нам. Video link.'
+  - 'С — FALSE FRIEND: looks like English C but always /s/, never /k/. Key word: сом. Video link.'
+- section: Склади і слова — Syllables and Words
   words: 300
   points:
-  - 'Progressive decoding: syllables → words → short phrases.'
-  - 'Word practice: мама, сума, нас, сам, мул, луна, мус, нам.'
-  - 'First phrases: Мама нам. Нас сам. Сума мала (preview — мала uses only known letters).'
-  - 'Self-check: can you read мама? сума? луна?'
-- section: Підсумок
-  words: 150
+  - 'Open syllables (end in vowel): МА МО МУ НА НО НУ ЛА ЛО ЛУ СА СО СУ.'
+  - 'Closed syllables (end in consonant): АМ ОМ УМ АН ОН УН АС ОС УС АЛ ОЛ УЛ.'
+  - 'Blending syllables into words: ма+ма = мама, со+м = сом, со+сна = сосна, а+на+нас = ананас.'
+  - 'Word reading drill (all decodable from 7 letters): мама, сом, сон, оса, масло, сосна, ананас, насос, лама, смола, нам,
+    нас, сам, мало, слон.'
+  - 'Textbook phrases (from Bolshakova p.22): «У нас — ананас.» «У нас — сом.» «А у вас?»'
+- section: Підсумок — Summary
+  words: 100
   points:
-  - 'Progress: 6 of 33 letters learned (2 голосні + 4 приголосні).'
-  - You can now read syllables and simple words.
-  - 'Next module: The Cyrillic Code II adds 7 more letters (К, И, Р, Б, В, Д, І).'
-  - Link to Anna Ohoiko playlist for independent practice of all 33 letters.
+  - 'Progress: 7 of 33 letters learned (3 голосні + 4 приголосні).'
+  - 'Self-check: Can you read мама? сом? масло? What sound does Н make? What sound does С make?'
+  - 'Next module: The Cyrillic Code II adds 7 more letters (К, И, І, Р, В, Т, Е).'
 vocabulary_hints:
   required:
-  - мама — first word readable from 6 letters; universal
-  - нас (us) — pronoun, readable from known letters
-  - сам (self/alone) — adjective, readable from known letters
-  - луна (echo) — noun, readable from known letters
-  - сума (bag/sum) — noun, readable from known letters
+  - мама (mom) — first word readable from known letters; universal; Bolshakova p.12
+  - сом (catfish) — noun, decodable; Bolshakova p.22
+  - сон (dream/sleep) — noun, decodable; Bolshakova p.22
+  - масло (butter/oil) — noun, decodable; Bolshakova p.15
+  - ананас (pineapple) — noun, decodable; Bolshakova p.22; Anna's key word for А
+  - нам (to us) — pronoun, decodable; both bukvars
+  - нас (us) — pronoun, decodable; both bukvars
+  - сам (self/alone) — adjective, decodable; both bukvars
   recommended:
-  - ананас (pineapple) — Anna's key word for А
-  - 'молоко (milk) — preview: uses М, Л; О comes in Code II'
+  - оса (wasp) — noun, decodable; Bolshakova p.22
+  - сосна (pine tree) — noun, decodable; Bolshakova p.22
+  - насос (pump) — noun, decodable; Bolshakova p.22
+  - лама (llama) — noun, decodable; Bolshakova p.21
+  - смола (resin) — noun, decodable; Bolshakova p.22
+  - слон (elephant) — noun, decodable; Bolshakova p.30 (preview)
+  - мало (little/few) — adverb, decodable; Bolshakova p.14
 activity_hints:
 - type: watch-and-repeat
-  focus: Watch Anna's video for each of the 6 letters
-  items: 6
+  focus: Watch Anna's video for each of the 7 letters
+  items: 7
 - type: classify
-  focus: Sort А М Л У Н С into голосні vs приголосні
-  items: 6
+  focus: Sort А О У М Л Н С into голосні vs приголосні
+  items: 7
 - type: image-to-letter
-  focus: See emoji (🍍🥕✈️🇺🇦✂️👜) — which letter does the word start with?
-  items: 6
+  focus: See picture — which letter does the word start with?
+  items: 7
 - type: match-up
-  focus: Match letter to key word (А↔ананас, М↔морква, etc.)
-  items: 6
+  focus: Match letter to key word (А↔ананас, М↔мама, etc.)
+  items: 7
 - type: group-sort
-  focus: Sort syllables into open (МА, НУ) vs closed (АМ, УН)
+  focus: Sort syllables into open (МА, НО) vs closed (АМ, ОН)
   items: 12
 connects_to:
 - a1-02 (The Cyrillic Code II)
@@ -99,7 +98,7 @@ persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
 grammar:
-- Letter recognition (А, М, Л, У, Н, С)
+- Letter recognition (А, О, У, М, Л, Н, С)
 - Sound-letter correspondence
 - Vowel vs consonant classification
 - Syllable formation
@@ -110,8 +109,9 @@ pronunciation_videos:
   credit: Anna Ohoiko — Ukrainian Lessons
   letters:
     А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: https://www.youtube.com/watch?v=QT3c1TiZZgk
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
     М: https://www.youtube.com/watch?v=Ez95H4ibuJo
     Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
     Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
     С: https://www.youtube.com/watch?v=7UsFBgSL91E

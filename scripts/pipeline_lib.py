@@ -200,8 +200,8 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
 
 PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
     "a1-m01": (
-        "DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):\n"
-        "- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)\n"
+        "DECODABILITY (M1 — 7 known letters: А, О, У, М, Л, Н, С):\n"
+        "- Words in reading drills MUST use ONLY these 7 letters (e.g., мама, сом, сон, масло, ананас)\n"
         "- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary "
         "with immediate English translation: «Привіт!» (Hello!)\n"
         "- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read\n\n"
@@ -209,16 +209,16 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED\n"
         "- NO verb conjugation of any kind (present, past, future)\n"
         "- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'\n"
-        "- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)\n\n"
+        "- Allowed Ukrainian structures: bare nouns only (мама, сом, масло)\n\n"
         "METALANGUAGE:\n"
         "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'\n"
         "- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')\n"
         "- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet"
     ),
     "a1-m02": (
-        "DECODABILITY (M2 — 14 known letters: А М Л У Н С + К И Р Б В Д І О):\n"
-        "- Reading drills MUST use ONLY these 14 letters (e.g., банан, вода, молоко, кіно, рука, дім, бік, він)\n"
-        "- Still unknown: П, Т, Г, Ґ, Е, З, Ж, Ш, Х, Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф\n"
+        "DECODABILITY (M2 — 14 known letters: А О У М Л Н С + К И І Р В Т Е):\n"
+        "- Reading drills MUST use ONLY these 14 letters (e.g., кіт, молоко, місто, рис, сир, тато, вікно, він)\n"
+        "- Still unknown: Б, Д, П, З, Г, Ґ, Х, Ж, Ш, Ч, Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф\n"
         "- Words needing unknown letters require immediate English translation\n\n"
         "GRAMMAR BAN (no verbs exist yet):\n"
         "- NO imperative forms — ALL BANNED. Use English for instructions.\n"
@@ -228,9 +228,9 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "- All terminology English-first with Ukrainian in parentheses"
     ),
     "a1-m03": (
-        "DECODABILITY (M3 — 23 known letters: previous 14 + П Т Г Ґ Е З Ж Ш Х):\n"
+        "DECODABILITY (M3 — 23 known letters: previous 14 + Б Д П З Г Х Ж Ш Ч):\n"
         "- Nearly all common text is readable now. Reading drills use these 23 letters.\n"
-        "- Still unknown: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф + digraphs ДЖ, ДЗ\n"
+        "- Still unknown: Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ + digraphs ДЖ, ДЗ\n"
         "- Words needing unknown letters require English translation\n\n"
         "GRAMMAR BAN (no verbs exist yet):\n"
         "- NO imperative forms — BANNED. English for instructions.\n"
@@ -360,22 +360,23 @@ def get_pedagogical_constraints(track: str, module_num: int) -> str:
 
 # Charsets must match rule_engine._DECODABILITY_SPECS
 _DECODABLE_CHARSETS: dict[int, str] = {
-    1: "АаМмЛлУуНнСс",
-    2: "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІі",
-    3: "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІіДдПпЗзБбГгХхЖжШшЧч",
+    1: "АаОоУуМмЛлНнСс",
+    2: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
+    3: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕеБбДдПпЗзГгХхЖжШшЧч",
 }
 
 # All words below are VESUM-verified nouns/adjectives using only the module's charset
 _DECODABLE_WORDS: dict[int, list[str]] = {
-    1: [  # АМЛУНС (6 letters)
-        "мама", "сума", "луна", "мул", "нам", "нас", "сам", "ум", "масла", "мала",
+    1: [  # АОУМЛНС (7 letters) — Bolshakova 2018 p.12-22, Zaharijchuk NUS 2025
+        "мама", "сом", "сон", "оса", "масло", "сосна", "насос", "лама", "смола",
+        "ананас", "нам", "нас", "сам", "мало", "слон",
     ],
-    2: [  # +ТОКИВРЕІ (14 letters total)
-        "молоко", "кіно", "рука", "він", "вона", "рис", "сир", "кіт", "тато",
-        "місто", "ліс", "вікно", "стіл", "море", "метро", "око", "слово", "літо",
-        "масло", "ніс",
+    2: [  # +КИИІРВТЕ (14 letters total) — Bolshakova p.26-38
+        "кіт", "тато", "рис", "сир", "місто", "море", "метро", "ліс", "вікно",
+        "стіл", "молоко", "кіно", "око", "слово", "літо", "масло", "ніс", "він",
+        "вона", "рука", "вік",
     ],
-    3: [  # +ДПЗБГХЖШЧ (23 letters total) — large charset, use plan vocab_hints
+    3: [  # +БДПЗГХЖШЧ (23 letters total) — large charset, use plan vocab_hints
         # Placeholder: at 23 letters, most common words are decodable.
         # The function merges plan vocab_hints filtered by charset.
     ],
@@ -2214,12 +2215,13 @@ def _get_prompt_tier(track: str, module_num: int) -> str:
 
     Returns: 'beginner', 'core', or 'seminar'.
     """
-    base = track.split("-")[0].upper()
     track_lower = track.lower()
-    if base in ("HIST", "ISTORIO", "BIO", "LIT", "OES", "RUTH"):
+    # Use canonical SEMINAR_TRACKS/PRO_TRACKS sets from batch_gemini_config
+    if track_lower in SEMINAR_TRACKS or track_lower.split("-")[0] in SEMINAR_TRACKS:
         return "seminar"
-    if "pro" in track_lower:
+    if track_lower in PRO_TRACKS:
         return "core"
+    base = track.split("-")[0].upper()
     if base == "A1":
         return "beginner"
     if base == "A2" and module_num <= 20:

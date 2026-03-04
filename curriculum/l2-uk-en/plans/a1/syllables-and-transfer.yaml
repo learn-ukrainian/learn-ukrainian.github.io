@@ -2,8 +2,8 @@ module: a1-005
 level: A1
 sequence: 5
 slug: syllables-and-transfer
-version: '2.0'
-title: Syllables and Transfer
+version: '3.0'
+title: Syllables and Word Division
 subtitle: Breaking Words into Pieces
 focus: grammar
 pedagogy: PPP
@@ -12,54 +12,41 @@ word_target: 1200
 objectives:
 - Count syllables in Ukrainian words by identifying vowels
 - Identify open and closed syllables
-- Apply word transfer (hyphenation) rules correctly
+- Apply word division (переніс/hyphenation) rules correctly
 - Read multi-syllable words fluently
 content_outline:
-- section: Що таке склад? (What is a syllable?)
-  words: 400
-  points:
-  - 'Open vs closed syllables: vowel as the syllable core — every vowel creates one syllable, so counting syllables means
-    counting vowels'
-  - 'Counting syllables by vowels: мо-ло-ко (3 vowels = 3 syllables), кіт (1 vowel = 1 syllable), у-кра-ї-на (4 vowels = 4
-    syllables)'
-  - 'Contrast with English syllable intuition: Ukrainian syllable boundaries follow different rules, setting up transfer rules
-    below'
-- section: Типи складів (Syllable types)
-  words: 400
-  points:
-  - Open syllables end in a vowel (ма-, но-, мо-ло-ко) — the default and most common type in Ukrainian
-  - Closed syllables end in a consonant (кін-, бук-, кіт) — occur at word boundaries and before consonant clusters
-  - 'Consonant clusters: how Ukrainians split them — се-стра (not *сес-тра), о-стрів (not *ос-трів); the principle of maximal
-    onset'
-  - 'Practice identifying open and closed syllables in high-frequency words: ву-ли-ця, ав-то-бус, де-ре-во'
-- section: Правила переносу (Transfer rules)
-  words: 500
-  points:
-  - 'Word hyphenation (переніс) rules for writing: why correct transfer matters in Ukrainian handwriting and printing'
-  - 'Cannot split: a single letter from the rest of the word (*У-країна), the digraphs дж/дз when they represent one sound
-    (бу-дзьок, not *буд-зьок)'
-  - 'Cannot separate: Ь from the preceding consonant (паль-ці, not *пал-ьці), the apostrophe group from the consonant before
-    it (сім''я → сі-м''я, not *сім-''я)'
-  - 'Can split: between two consonants (сес-тра is wrong but сіль-ський is correct because ль is inseparable), between a vowel
-    and a consonant (мо-ло-ко)'
-  - 'Common learner errors: applying English hyphenation habits to Ukrainian words; drill with problem words like бібліотека,
-    університет'
-- section: Наголос і склади (Stress and syllables)
-  words: 400
-  points:
-  - 'Preview of stress (наголос): the stressed syllable is louder and longer than unstressed syllables — it carries the ''weight''
-    of the word'
-  - 'How syllable structure interacts with stress placement: stressed open syllables are longer (мо-ло-КО), stressed closed
-    syllables are more prominent (КІТ)'
-  - 'Stress as a word-level property: unlike English, Ukrainian stress is not predictable from spelling — it must be learned
-    per word'
-  - 'Dictionary notation: the accent mark (´) over the stressed vowel; practice reading dictionary entries with stress marks'
-- section: Практика (Practice)
+- section: Що таке склад? — What Is a Syllable?
   words: 300
   points:
-  - 'Syllable counting drills: given a word, count the vowels and identify each syllable boundary'
-  - 'Transfer exercises: mark correct hyphenation points in multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет)'
-  - 'Reading multi-syllable words aloud: building fluency by reading words syllable-by-syllable, then at full speed'
+  - 'Vowel as the syllable core — every vowel creates one syllable, so counting syllables means counting vowels.'
+  - 'Counting syllables by vowels: мо-ло-ко (3 vowels = 3 syllables), кіт (1 vowel = 1 syllable), у-кра-ї-на (4 vowels = 4
+    syllables).'
+  - 'Contrast with English syllable intuition: Ukrainian syllable boundaries follow different rules.'
+- section: Типи складів — Syllable Types
+  words: 300
+  points:
+  - Open syllables end in a vowel (ма-, но-, мо-ло-ко) — the default and most common type in Ukrainian.
+  - Closed syllables end in a consonant (кін-, бук-, кіт) — occur at word boundaries and before consonant clusters.
+  - 'Consonant clusters: how Ukrainians split them — се-стра (not *сес-тра), о-стрів (not *ос-трів); the principle of maximal
+    onset.'
+  - 'Practice identifying open and closed syllables in high-frequency words: ву-ли-ця, ав-то-бус, де-ре-во.'
+- section: Правила переносу — Word Division Rules
+  words: 400
+  points:
+  - 'Word division (переніс) rules for writing: why correct division matters in Ukrainian handwriting and printing.'
+  - 'Cannot split: a single letter from the rest of the word (*У-країна), the digraphs дж/дз when they represent one sound (бу-дзьок,
+    not *буд-зьок).'
+  - 'Cannot separate: Ь from the preceding consonant (паль-ці, not *пал-ьці), the apostrophe group from the consonant before
+    it (сім''я → сі-м''я, not *сім-''я).'
+  - 'Can split: between two consonants (сіль-ський — ль is inseparable), between a vowel and a consonant (мо-ло-ко).'
+  - 'Common learner errors: applying English hyphenation habits to Ukrainian words; drill with problem words like бібліотека,
+    університет.'
+- section: Практика — Practice
+  words: 200
+  points:
+  - 'Syllable counting drills: given a word, count the vowels and identify each syllable boundary.'
+  - 'Word division exercises: mark correct division points in multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).'
+  - 'Reading multi-syllable words aloud: building fluency by reading words syllable-by-syllable, then at full speed.'
 vocabulary_hints:
   required:
   - 'молоко (milk) — 3 open syllables мо-ло-ко; Top 500 word; collocations: пити молоко, склянка молока'
@@ -67,12 +54,12 @@ vocabulary_hints:
   - 'сестра (sister) — consonant cluster split се-стра; Top 500 word; collocations: моя сестра, старша сестра'
   - 'дерево (tree) — 3 syllables де-ре-во; collocations: старе дерево, зелене дерево'
   - 'вулиця (street) — 3 syllables ву-ли-ця; Top 500 word; collocations: на вулиці, головна вулиця'
-  - 'автобус (bus) — 3 syllables ав-то-бус (closed final syllable); collocations: їхати автобусом, зупинка автобуса'
-  - 'бібліотека (library) — 5 syllables бі-блі-о-те-ка; collocations: у бібліотеці, шкільна бібліотека'
-  - 'університет (university) — 5 syllables у-ні-вер-си-тет; collocations: навчатися в університеті'
+  - 'автобус (bus) — 3 syllables ав-то-бус (closed final syllable); collocations: їхати автобусом'
   recommended:
+  - 'бібліотека (library) — 5 syllables бі-блі-о-те-ка; collocations: у бібліотеці'
+  - 'університет (university) — 5 syllables у-ні-вер-си-тет; collocations: навчатися в університеті'
   - склад (syllable) — metalinguistic term; essential for understanding lesson content
-  - переніс (word transfer/hyphenation) — metalinguistic term for the writing rule
+  - переніс (word division/hyphenation) — metalinguistic term for the writing rule
   - голосний (vowel) — metalinguistic term; every голосний creates a syllable
   - приголосний (consonant) — metalinguistic term; consonant clusters follow specific split rules
 activity_hints:
@@ -80,7 +67,7 @@ activity_hints:
   focus: Count syllables in Ukrainian words
   items: 10
 - type: fill-in
-  focus: Mark correct word transfer/hyphenation points
+  focus: Mark correct word division points
   items: 8
 - type: group-sort
   focus: Sort syllables into open vs closed
@@ -98,5 +85,5 @@ persona:
 grammar:
 - Syllable structure
 - Open and closed syllables
-- Word transfer rules
+- Word division rules
 register: розмовний

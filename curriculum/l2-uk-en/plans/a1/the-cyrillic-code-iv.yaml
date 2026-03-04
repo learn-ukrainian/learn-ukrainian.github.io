@@ -2,9 +2,9 @@ module: a1-004
 level: A1
 sequence: 4
 slug: the-cyrillic-code-iv
-version: '3.0'
+version: '4.0'
 title: The Cyrillic Code IV
-subtitle: Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + ' — The Full Alphabet
+subtitle: Й Щ Я Ю Є Ь Ї Ц Ф Ґ + ДЖ ДЗ + ' — The Full Alphabet
 focus: grammar
 pedagogy: PPP
 phase: A1.1 [First Contact]
@@ -16,73 +16,71 @@ objectives:
 - Learner can identify ДЖ and ДЗ digraphs as single sounds
 - Learner can read the complete Ukrainian alphabet fluently
 content_outline:
-- section: Вступ
-  words: 200
+- section: Вступ — Introduction
+  words: 150
   points:
-  - You know 22 letters — only 11 characters remain plus 2 digraphs and the apostrophe. The finish line is in sight.
-  - 'Quick diagnostic: read 5 words using all 22 previously learned letters.'
-- section: Злиті звуки — Affricates
-  words: 300
+  - You know 23 letters — only 10 characters remain plus 2 digraphs and the apostrophe. The finish line is in sight.
+  - 'Quick diagnostic: read 5 words using all 23 previously learned letters.'
+- section: Злиті звуки — Affricates Ц, Щ, Ф
+  words: 250
   points:
-  - 'Ц — цибуля 🧅. Video link. An affricate: Т+С pronounced as one sound. Like English ''ts'' in ''cats''. Common in word
-    endings (-ець, -иця).'
-  - 'Ч — черепаха 🐢. Video link. An affricate: Т+Ш pronounced as one sound. Like English ''ch'' in ''church''. Very frequent.'
-  - 'Щ — щітка 🪥. Video link. Two sounds in one letter: Ш+Ч. Uniquely Ukrainian. Common in high-frequency words: ще, що, щастя.'
-  - Ф — фламінго 🦩. Video link. Like English 'f'. Rare in native Ukrainian words — appears mostly in borrowings (факт, фото,
-    футбол). Voiceless partner of В.
-- section: Йотовані голосні — Iotated Vowels
-  words: 400
+  - 'Ц — key word: цибуля. Video link. An affricate: Т+С pronounced as one sound. Like English ''ts'' in ''cats''. Common in
+    word endings (-ець, -иця).'
+  - 'Щ — key word: щітка. Video link. Two sounds in one letter: Ш+Ч. Uniquely Ukrainian. Common in high-frequency words: ще,
+    що, щастя.'
+  - "Ф — key word: фламінго. Video link. Like English 'f'. Rare in native Ukrainian words — appears mostly in borrowings (факт,
+    фото, футбол). Voiceless partner of В."
+- section: Йотовані голосні — Iotated Vowels Я, Ю, Є, Ї, Й
+  words: 350
   points:
   - 'Explain the ''dual nature'' concept: Я, Ю, Є, Ї represent TWO sounds at word beginning or after a vowel (Й+vowel), but
     soften the preceding consonant when after a consonant.'
-  - Я — яблуко 🍎. Video link. = /ja/ at word start. Also the word for 'I' (я іду). High frequency.
-  - 'Ю — юнак 🧑. Video link. = /ju/ at word start. After consonant: softens it (люди — Л becomes soft).'
-  - 'Є — єнот 🦝. Video link. = /je/ at word start. Relatively rare after consonants. Cultural touchstone: Євромайдан.'
-  - 'Ї — їжак 🦔. Video link. ALWAYS two sounds /ji/. Never softens a consonant. Cultural hook: the letter Ї as a symbol of
-    Ukrainian resistance — used in graffiti in occupied territories.'
-  - Й — йогурт 🥛. Video link. A very short consonant sound. Never forms a syllable on its own. Frequent in word endings (край,
-    рай, гай).
-- section: М'який знак та апостроф
-  words: 350
+  - "Я — key word: яблуко. Video link. = /ja/ at word start. Also the word for 'I' (я іду). High frequency."
+  - 'Ю — key word: юнак. Video link. = /ju/ at word start. After consonant: softens it (люди — Л becomes soft).'
+  - 'Є — key word: єнот. Video link. = /je/ at word start. Relatively rare after consonants. Cultural touchstone: Євромайдан.'
+  - 'Ї — ALWAYS two sounds /ji/. Never softens a consonant. Key word: їжак. Video link. Cultural hook: the letter Ї as a symbol
+    of Ukrainian resistance — used in graffiti in occupied territories.'
+  - 'Й — key word: йогурт. Video link. A very short consonant sound. Never forms a syllable on its own. Frequent in word endings
+    (край, рай, гай).'
+- section: М'який знак та апостроф — Soft Sign & Apostrophe
+  words: 250
   points:
-  - 'Ь (soft sign) — сіль 🧂. Video link. Not a letter with its own sound — a modifier that softens the preceding consonant
-    (palatalization). Examples: день, сіль, Львів.'
-  - 'Contrast: кон (horse, archaic) vs кінь (horse, modern) — the soft sign changes meaning.'
+  - 'Ь (soft sign) — not a letter with its own sound — a modifier that softens the preceding consonant (palatalization). Key
+    word: сіль. Examples: день, Львів.'
   - 'Апостроф ('') — separates a consonant from a following iotated vowel to preserve the /j/ sound. Examples: м''яч (ball),
     сім''я (family), п''ять (five).'
-  - 'Rule summary: Ь softens what comes BEFORE it. Apostrophe BLOCKS softening and keeps the /j/ in the following iotated
-    vowel.'
-- section: Дигріфи — ДЖ та ДЗ
-  words: 200
+  - 'Rule summary: Ь softens what comes BEFORE it. Apostrophe BLOCKS softening and keeps the /j/ in the following iotated vowel.'
+- section: Дигріфи та Ґ — Digraphs ДЖ, ДЗ + Letter Ґ
+  words: 150
   points:
-  - 'ДЖ — джерело ⛲. Two letters, one sound (voiced postalveolar affricate /dʒ/). Like English ''j'' in ''jungle''. Examples:
-    бджола, джаз.'
-  - 'ДЗ — дзвін 🔔. Two letters, one sound (voiced alveolar affricate /dz/). No English equivalent. Examples: дзвінок, дзеркало.
-    Uniquely Ukrainian — absent from Russian.'
-- section: 'Підсумок: Весь алфавіт'
-  words: 350
+  - 'ДЖ — key word: джерело. Two letters, one sound (voiced postalveolar affricate /dʒ/). Like English ''j'' in ''jungle''.
+    Examples: бджола, джаз.'
+  - 'ДЗ — key word: дзвін. Two letters, one sound (voiced alveolar affricate /dz/). No English equivalent. Examples: дзвінок,
+    дзеркало. Uniquely Ukrainian — absent from Russian.'
+  - 'Ґ — key word: ґанок. Video link. Ґ IS the hard ''g'' sound (like English ''go''). Extremely rare — only ~400 native words.
+    The repressed letter: removed 1933, restored 1990.'
+- section: 'Підсумок: Весь алфавіт — The Full Alphabet'
+  words: 100
   points:
   - 'The complete 33-letter Ukrainian alphabet: А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я.'
   - '10 голосні: А Е И І О У + 4 йотовані (Є Ї Ю Я). 22 приголосні. 1 special (Ь). 2 digraphs (ДЖ, ДЗ). 1 apostrophe.'
-  - 'Celebration: the learner has cracked the entire Cyrillic code. Reading fluency comes with practice — the letter recognition
-    phase is complete.'
-  - 'Full alphabet reading drill: a short paragraph using all 33 letters with stress marks.'
-  - 'Bridge to next module: syllables-and-transfer where letter knowledge becomes word-building skill.'
+  - 'The learner has cracked the entire Cyrillic code. Next: Syllables and Word Division.'
 vocabulary_hints:
   required:
-  - 'чай (tea) — top 500 word; demonstrates Ч; collocations: пити чай, чорний чай'
+  - 'чай (tea) — top 500 word; demonstrates Ч (from Code III); collocations: пити чай, чорний чай'
   - 'яблуко (apple) — key word for Я; collocations: червоне яблуко'
   - ще (more/still) — high frequency function word; demonstrates Щ
   - 'їжа (food) — demonstrates Ї; collocations: смачна їжа'
   - 'день (day) — top 50 word; demonstrates soft sign; collocations: добрий день'
   - 'сім''я (family) — demonstrates apostrophe; collocations: моя сім''я'
   - Львів (Lviv) — demonstrates soft sign; cultural significance
-  - 'Європа (Europe) — demonstrates Є; collocations: жити в Європі'
   recommended:
+  - 'Європа (Europe) — demonstrates Є; collocations: жити в Європі'
   - 'центр (center) — demonstrates Ц; collocations: центр міста'
   - 'щастя (happiness) — demonstrates Щ; collocations: бажаю щастя'
-  - м'яч (ball) — demonstrates apostrophe; demonstrates м'який знак concept
-  - 'факт (fact) — demonstrates Ф; internationalism; collocations: це факт'
+  - м'яч (ball) — demonstrates apostrophe
+  - 'факт (fact) — demonstrates Ф; internationalism'
+  - ґанок (porch) — demonstrates rare Ґ
 activity_hints:
 - type: watch-and-repeat
   focus: Watch Anna's video for each of the 10 new letters + Ь
@@ -94,31 +92,31 @@ activity_hints:
   focus: 'Full alphabet: голосний vs приголосний vs special (Ь)'
   items: 33
 - type: image-to-letter
-  focus: See emoji — which letter? (🐢🪥🍎🦝🦔🧅🦩🧂⛲🔔)
-  items: 10
+  focus: See emoji — which letter? (🧅🪥🦩🍎🧑🦝🦔🥛🧂⛲🔔🚪)
+  items: 12
 - type: group-sort
-  focus: Sort into affricates (Ц, Ч, Щ) vs iotated (Я, Ю, Є, Ї) vs modifiers (Ь, ')
-  items: 10
+  focus: Sort into affricates (Ц, Щ) vs iotated (Я, Ю, Є, Ї) vs modifiers (Ь, ')
+  items: 9
 connects_to:
-- a1-05 (Syllables and Transfer)
+- a1-05 (Syllables and Word Division)
 prerequisites:
 - a1-03 (The Cyrillic Code III)
 persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
 grammar:
-- Affricates (Ц, Ч, Щ)
+- Affricates (Ц, Щ)
 - Iotated vowels (Я, Ю, Є, Ї) — dual nature
 - Soft sign palatalization
 - Apostrophe function
 - Digraphs (ДЖ, ДЗ)
+- Ґ — the rare hard g
 register: розмовний
 pronunciation_videos:
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
   credit: Anna Ohoiko — Ukrainian Lessons
   letters:
     Й: https://www.youtube.com/watch?v=aq0cjB90s3w
-    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
     Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
     Я: https://www.youtube.com/watch?v=yhSAf41LX8I
     Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
@@ -127,3 +125,4 @@ pronunciation_videos:
     Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
     Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
     Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
