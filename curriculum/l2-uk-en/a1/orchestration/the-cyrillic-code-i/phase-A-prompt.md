@@ -71,7 +71,7 @@ Keep research notes under **1500 words**. Focus on density: facts, dates, quotes
 ## Downstream Audit Gates (Phase B content will be checked for)
 
 Plan your outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **2000** words — allocate outline sections accordingly
+- **Word count**: minimum **1200** words — allocate outline sections accordingly
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
 - **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
 - **Duplicate headers**: ensure outline section names don't share keywords
@@ -87,7 +87,7 @@ After completing research, rebuild the `content_outline` using:
 ### Rules for Meta Outline
 
 - **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations must sum to approximately **2000** words (±10% acceptable)
+- Allocations must sum to approximately **1200** words (±10% acceptable)
 - Minimum section allocation: 200 words (merge smaller sections)
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be in Ukrainian (these become H2 headings in the lesson)
@@ -155,7 +155,7 @@ content_outline:
     points:
       - "..."
   # ... all sections
-  # Total: ~2000 words
+  # Total: ~1200 words
 ===META_OUTLINE_END===
 ```
 
@@ -164,7 +164,7 @@ content_outline:
 - [ ] All section names are Ukrainian
 - [ ] Section names match plan structure
 - [ ] Each section has `words` and `points`
-- [ ] Sum of all `words` ≈ 2000
+- [ ] Sum of all `words` ≈ 1200
 - [ ] No section has fewer than 200 words
 - [ ] Points are actionable and specific
 

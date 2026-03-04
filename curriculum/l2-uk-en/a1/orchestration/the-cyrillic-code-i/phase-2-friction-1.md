@@ -1,5 +1,5 @@
 **Phase**: Phase 2: Content
-**Step**: Generating content prose
+**Step**: Final output generation
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

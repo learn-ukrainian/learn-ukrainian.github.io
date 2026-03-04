@@ -1,13 +1,13 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
-**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
+**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-03 23:01:12
+**Generated:** 2026-03-04 22:06:36
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 2000 words
+**Word Target:** 1200 words
 **Activities:** 8-12 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥6 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** classify, group-sort, image-to-letter, match-up, watch-and-repeat
@@ -19,16 +19,16 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | watch-and-repeat | Watch and Repeat | 6 | 1 | ✅ |
+| 1 | watch-and-repeat | Pronunciation Practice | 6 | 1 | ✅ |
 | 2 | classify | Vowels and Consonants | 6 | 1 | ✅ |
-| 3 | image-to-letter | First Letter Match | 6 | 5 | ✅ |
-| 4 | match-up | Sound to Key Word | 8 | 8 | ✅ |
-| 5 | group-sort | Open and Closed Endings | 12 | 12 | ✅ |
-| 6 | quiz | Phonetics Knowledge Check | 8 | 8 | ✅ |
-| 7 | true-false | Fact Check: The Cyrillic Code | 8 | 8 | ✅ |
-| 8 | anagram | Unscramble the First Words | 8 | 8 | ✅ |
-| 9 | match-up | Vocabulary Match | 8 | 8 | ✅ |
-| 10 | fill-in | Complete the Phrase | 8 | 8 | ✅ |
+| 3 | image-to-letter | First Letters | 6 | 5 | ✅ |
+| 4 | match-up | Match the Letters | 8 | 8 | ✅ |
+| 5 | group-sort | Open and Closed Syllables | 16 | 6 | ✅ |
+| 6 | true-false | Alphabet Rules | 8 | 8 | ✅ |
+| 7 | anagram | Unscramble the Words | 8 | 8 | ✅ |
+| 8 | quiz | Check Your Knowledge | 8 | 8 | ✅ |
+| 9 | fill-in | Complete the Words | 8 | 8 | ✅ |
+| 10 | match-up | Word Meanings | 8 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 8-12) ✅
@@ -38,31 +38,31 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3849/2000 (raw: 3976)
+- **Words:** ✅ 2440/1200 (raw: 2661)
 - **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 6
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/3
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 5.1% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 5.5% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code I** | ✅ | 60 | Included in Core |
-| **Вступ — Introduction** | ✅ | 673 | Included in Core |
-| **Голосні — Vowels: А, У** | ✅ | 675 | Included in Core |
-| **Приголосні — Consonants: М, Л, Н, С** | ✅ | 811 | Included in Core |
-| **Перші склади — First Syllables** | ✅ | 493 | Included in Core |
+| **The Cyrillic Code I** | ✅ | 100 | Included in Core |
+| **Вступ — Introduction** | ✅ | 457 | Included in Core |
+| **Голосні — Vowels: А, У** | ✅ | 311 | Included in Core |
+| **Приголосні — Consonants: М, Л, Н, С** | ✅ | 493 | Included in Core |
+| **Перші склади — First Syllables** | ✅ | 289 | Included in Core |
 | **Практика читання — Reading Practice** | ⚪️ | 0 | Skipped (using YAML) |
-| **Підсумок — Summary** | ✅ | 490 | Included in Core |
+| **Підсумок — Summary** | ✅ | 391 | Included in Core |

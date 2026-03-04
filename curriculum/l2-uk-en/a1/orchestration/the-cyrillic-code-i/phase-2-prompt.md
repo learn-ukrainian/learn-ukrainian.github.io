@@ -2,10 +2,10 @@
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor. Maintain this persona throughout — do not drift into generic AI tone.
 
-> **Your #1 job: Write 3000 words of rich, structured Ukrainian content.**
-> Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
+> **Your #1 job: Write approximately 1200 words of clear, well-structured Ukrainian content.**
+> Be concise — students know nothing yet. Short, clear explanations. Every H3 gets {H3_WORD_RANGE} words. The activities do the teaching, not the prose. Do NOT pad with adjectives, motivational filler, or over-explained phonetics.
 
-> **Output capacity: You can generate 65,000+ tokens per response.** A 2000-word Ukrainian module is ~4K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
+> **Output capacity: You can generate 65,000+ tokens per response.** A 1200-word Ukrainian module is ~2K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
 
 ## Files to Read
 
@@ -28,7 +28,7 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
 
-- **Videos**: Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value
+- **Videos**: Consider embedding relevant ones as `<YouTubeVideo id="VIDEO_ID" />` JSX components where they add value
 - **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
 - **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
 - **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
@@ -37,7 +37,7 @@ These resources were found during the discover phase. They include videos, blog 
 ### Research Videos
 *These videos were found during the research phase. Embed each one next to its corresponding letter/topic section using a markdown link.*
 
-- Anna Ohoiko — Ukrainian Alphabet: Pronunciation, Writing & Examples — https://www.youtube.com/watch?v=ksXIXj7CXwc
+- Anna Ohoiko — Ukrainian Lessons — https://www.youtube.com/watch?v=ksXIXj7CXwc
 
 ### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)
 *Credit: Anna Ohoiko — Ukrainian Lessons*
@@ -74,14 +74,155 @@ METALANGUAGE:
 
 > **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
 
+DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
+Use ONLY these words in activities and reading drills. Any word with a letter
+outside this set will FAIL the decodability audit gate.
+
+Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+
+If you need a word not on this list, check that ALL its letters are in the
+allowed set above. Words with unknown letters need English translation.
+
+## Textbook Reference Examples (from real Ukrainian буквар)
+
+These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration for style and difficulty level** — notice how they use simple syllable combinations, short words, and build progressively. Do NOT copy them verbatim, but match their pedagogical approach and simplicity.
+
+**Grade 1, zaharijchuk** — Сторінка 96:
+```
+94
+Бачу Д, д (де). Чую [д], [д'].
+д р і * д
+д * т е л
+дро-ва
+две-рі
+до-ріж-ка схо-ди
+ве-ран-да
+л е * і д *
+ [ –    =  • –  – ]
+ [ = • |  –•  – ]
+ [ – • |  =•  =  ]
+а
+о
+у
+и
+і
+Д
+да
+до
+ду
+ди
+ді
+а
+о
+у
+и
+і
+ад
+од
+уд
+ид
+ід
+Д
+бу-ди-нок
+під-ві-кон-ня
+дах
+ди-мар
+Д д
+```
+
+**Grade 1, zaharijchuk** — Сторінка 113:
+```
+111
+	 Запиши слова, добираючи до кожного відпо-
+відну схему.
+   півень          ялинка               джміль
+[ – =  = ]            [ =  |–  = ]            [ =  |–  – |–  ]
+	 Розглянь малюнки.
+	 Запиши слова — назви намальованих пред-
+метів за групами: овочі та шкільне приладдя.
+	 Розглянь малюнки.
+	 Запиши слова — назви намальованих пред-
+метів, які відповідають на питання хто?
+	 Прочитай текст.
+ВЕСНА
+Настала весна. Прилетіли птахи. На 
+березі шпаки.
+	 Випиши речення, яке відповідає схемі.
+    
+```
+
+**Grade 1, bolshakova** — Сторінка 24:
+```
+24
+ЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ
+Ти вимовляєш різні звуки: голосні і приголосні. 
+Голосні звуки утворюються за допомогою голосу.
+Голосні почуєш в пісні,
+І у темному у лісі, 
+І коли дивуєшся,
+І коли милуєшся.
+Легко вимовляються, 
+Весело співаються! 
+Прочитай. Назви букви, які позначають голосні звуки.
+ал – ам – ан 
+ла – ма – на 
+ул – ум – ун
+ол – ом – он 
+ло – мо – но 
+лу – му – ну
+ 
+Приголосні звуки утворюються 
+за допомогою голосу і шуму.
+Приголосні деренчать
+І тихенько шелестять, 
+Голосно свистя
+```
+
+**Grade 1, zaharijchuk** — Сторінка 78:
+```
+76
+За мотивами казки Е. Мозера
+Повторюємо разом
+Приголосні звуки: 
+тверді та глухі
+	 Прочитай імена головних героїнь, чітко ви-
+мовляючи перші звуки.
+Зося, Сюзі.
+	 Чи вони справжні подруги? Як одна з них до-
+помогла іншій? Знайди та прочитай про це. 
+	 Який із цих звуків вимовляємо дзвінко, з го-
+лосом? А який — тільки із шумом? 
+	 Перепиши виділене блакитним кольором ре-
+чення. Підкресли букви, які позначають при-
+голосні звуки. Вимов їх. 
+— Так, але я 
+сама не зможу.
+— Дякую. Ти 
+справжня моя 
+```
+
+**Grade 1, bolshakova** — Сторінка 79:
+```
+. . . . . . . . . . . . . . . . . . 44
+Т т . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+Тверді і пом’якшені  
+приголосні звуки . . . . . . . . . . . . . . 45
+Г г . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+Г г . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+Тверді і пом’якшені  
+приголосні звуки . . . . . . . . . . . . . . 47
+Ґ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+Ґ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 49
+Е е  . . . . . .
+```
+
 ---
 
 ## Your Task
 
 Write the full lesson prose for **The Cyrillic Code I** (a1 track).
 
-- **Total minimum**: 2000 words
-- **Write at least**: 3000 words (1.5x — aim for depth, not padding)
+- **Target**: approximately 1200 words (this is both the minimum AND the approximate ceiling — do not dramatically overshoot)
 - **Immersion**: TARGET: 5-15% Ukrainian, 85-95% English. ALL explanatory prose in English. ALL grammar explanations in English. ALL callout text in English. Ukrainian appears ONLY in: (1) example words/phrases in bold with [IPA] and (English translation), (2) vocabulary items. If you write a paragraph, it MUST be in English. Ukrainian sentences max 10 words.
 - **Engagement callouts**: 4+ across sections, at least 4 different types
 - **Example sentences**: 8+ in varied formats (inline, standalone, tables, dialogues)
@@ -89,7 +230,7 @@ Write the full lesson prose for **The Cyrillic Code I** (a1 track).
 ## Downstream Audit Gates (your content will be checked for)
 
 Write with these in mind — errors here trigger Phase D repair cycles:
-- **Word count**: minimum **2000** words (hard gate)
+- **Word count**: minimum **1200** words (hard gate)
 - **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
 - **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
@@ -103,15 +244,15 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 **The global word target is the hard gate. Section budgets are guidance** — aim for each section's target, but natural variation (±30%) between sections is fine as long as no section is starved (<50% of its budget) and the total meets the global minimum.
 
-| Section | Target | Write Minimum (1.5x) |
-|---------|--------|---------------------|
-| Вступ — Introduction | 300 | 450 |
-| Голосні — Vowels: А, У | 400 | 600 |
-| Приголосні — Consonants: М, Л, Н, С | 500 | 750 |
-| Перші склади — First Syllables | 350 | 525 |
-| Практика читання — Reading Practice | 250 | 375 |
-| Підсумок — Summary | 200 | 300 |
-| **Total** | **2000** | **3000** |
+| Section | Target |
+|---------|--------|
+| Вступ — Introduction | 200 |
+| Голосні — Vowels: А, У | 200 |
+| Приголосні — Consonants: М, Л, Н, С | 200 |
+| Перші склади — First Syllables | 200 |
+| Практика читання — Reading Practice | 200 |
+| Підсумок — Summary | 200 |
+| **Total** | **1200** |
 
 ---
 
@@ -119,63 +260,26 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 **These rules determine whether your output passes or fails audit. Read each one.**
 
-### Rule 1: Every Concept Gets Dedicated Depth (CRITICAL — #1 word count lever)
+### Rule 1: Every Letter/Concept Gets Its Own Section
 
-When an H2 section teaches multiple items in a category, each item (or logical group of closely related items) MUST get its own `### H3` subsection with dedicated depth.
+Each new letter or concept MUST get its own `### H3` subsection. Letter modules are presentation-heavy (video embeds, stroke order, examples) so depth comes from variety of examples, not paragraphs of explanation.
 
-**Grouping rule:** Closely related items that form a single system (e.g., masculine/feminine/neuter endings of the same paradigm) MAY share one H3 — but that H3 must then cover ALL items with equal depth. Independent concepts MUST get separate H3s.
+### Rule 2: Introduce → Show → Practice
 
-**Count the items from the plan/outline.** Each concept without dedicated depth = ~100 missing words.
+Each H3 block follows this pattern:
+1. **Introduce** the letter/concept (1-2 sentences)
+2. **Show** it in words and context (examples, video embed)
+3. **Practice tip** (what to listen for, what to try)
 
-```markdown
-❌ WRONG (compressed):
-## Частини мови
-Іменник та дієслово — найважливіші...
-(multiple concepts crammed into one paragraph)
-
-✅ RIGHT (each concept = dedicated depth):
-## Частини мови
-### Іменник
-{Definition, questions, 2+ examples, usage note — 80-100 words}
-### Дієслово
-{Same depth and pattern — 80-100 words}
-### Прикметник
-{Same depth and pattern — 80-100 words}
-
-✅ ALSO RIGHT (logical group with equal coverage):
-## Рід іменників
-### Закінчення за родами
-{Covers -а/-я (fem), consonant (masc), -о/-е (neut) as unified system — 200+ words}
-```
-
-### Rule 2: Depth Over Compression
-
-Each H3 concept block MUST contain ALL of these:
-
-1. **Definition/explanation** (2+ sentences)
-2. **How it works** (formation rules, patterns, grammatical function)
-3. **2+ example sentences** in context (not isolated words)
-4. **Usage note** — when/why a speaker uses this form
-
-Minimum **80-100 words per H3 block**. A 20-word table row is NOT a lesson.
+Minimum **30-50 words per H3 block**. Quality over quantity at this stage.
 
 ### Rule 3: Presentation Consistency
 
-All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).
-
-❌ Item A gets 150 words, Item B gets 40 words for equal-weight concepts
-✅ All items follow identical pattern: definition → formation → examples → usage note
+All letters in a group: SAME format, SAME depth (±30%), SAME example count (±1).
 
 ### Rule 4: Example Variety
 
-FORBIDDEN: 5+ consecutive examples in the same format (bullet lists, `_Приклад:_` blocks, `**Ukrainian.** (English.)` lines — any uniform pattern). Mix these formats across sections:
-- Standalone examples with context (max 3-4 consecutive in one format)
-- **Comparison tables** (paradigms, aspect pairs, case usage)
-- Inline examples woven into prose
-- **Mini-dialogues** showing real usage
-- Callout boxes with examples
-
-**Anti-batching rule**: If you notice 3+ sections each presenting examples as identical bullet lists, STOP and vary the format. Use a table in one section, inline examples in another, a dialogue in a third.
+No minimum format variety requirement for M1-M4 (letter-focused modules). Use whatever format best teaches the letter: word lists, audio examples, comparison pairs.
 
 ### Rule 5: Callout Type Variety
 
@@ -219,6 +323,20 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 - Use storytelling and real-world scenarios, not dry textbook listing
 - Each section should have its own narrative arc, not repeat the same skeleton
 
+### Rule 8b: No Repetitive Filler Patterns (HARD FAIL if detected)
+
+The audit auto-detects **repetitive LLM patterns** — the same transitional phrase used across multiple sections. A single "It's worth noting" is fine. Two or more instances across the module = automatic failure.
+
+**Always banned (even once):**
+- "In this lesson, we will..." / "In this module, we will..." — formulaic openers that signal auto-generated text
+
+**Flagged at 2+ occurrences (repetition = LLM pattern):**
+- "It's worth noting that..." / "Interestingly..." / "Let's explore..."
+- «Давайте розглянемо...» / «Варто зазначити, що...» / «Цікаво, що...»
+- Any phrase you catch yourself reusing across sections
+
+**Instead:** Vary your openers. Start each section differently — a fact, a question, a scenario, a Ukrainian phrase. If you notice you're repeating a pattern, stop and rephrase.
+
 ### Rule 9: Prefer Active Voice
 
 Ukrainian strongly prefers active constructions. Use passive only when:
@@ -230,23 +348,16 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 ---
 
-## How to Hit 3000 Words (Expansion Method)
+## How to Hit 1200 Words (Expansion Method)
 
-**Don't just write more — write deeper.** For EVERY concept you introduce:
+**Don't pad — add teaching value.** For EVERY letter you introduce:
 
-1. **Define it** (2+ sentences explaining what it is)
-2. **Show how it works** (pattern, rule, formation)
-3. **Give 2+ examples** in full sentences with context
-4. **Add a comparison** (table, before/after, correct vs incorrect)
-5. **Connect to real life** (when would a Ukrainian speaker use this?)
+1. **Show it** (uppercase + lowercase, with video embed)
+2. **Give 2-3 example words** the student can decode
+3. **Add a practice tip** (what to listen for, mouth position)
+4. **Connect to something familiar** (English sound comparison)
 
-**If a section is still under its Write Minimum after this, add:**
-- A `[!warning]` with a common mistake and correct alternative
-- A `[!culture]` or `[!quote]` connecting to Ukrainian culture
-- A mini-dialogue showing the concept in conversation
-- A comparison table or mermaid flowchart
-
-**The math:** If your H2 teaches 5 concepts × 100 words each = 500 words. Add an intro paragraph (50w) + 2 callouts (60w each) + a comparison table (80w) = **750 words** for that section. This is how you hit big targets.
+**If a section is still under target:** Add more example words, a `[!tip]` with pronunciation advice, or a comparison between similar-sounding letters.
 
 ---
 
@@ -425,7 +536,7 @@ For EACH occurrence, ask: **Is this literally true? Can I name a counterexample?
 
 Count words per section. Compare against the `words:` allocation in the content_outline:
 - If any section is below 70% of its budget → **expand it** (add examples, callouts, tables)
-- If the total is below 2000 → expand the thinnest sections first
+- If the total is below 1200 → expand the thinnest sections first
 - Report the counts honestly in the `===WORD_COUNTS===` block
 
 ### Check 4: Anti-Surzhyk & Language Scan
@@ -462,10 +573,10 @@ Related: {connected slugs}
 ## {Section 1 from content_outline}
 
 ### {Concept 1}
-{80-100+ words: definition, how it works, examples, usage}
+{30-50 words: clear explanation with examples}
 
 ### {Concept 2}
-{80-100+ words: same depth}
+{30-50 words: same depth}
 
 {comparison table or callout}
 
@@ -492,7 +603,7 @@ After the content block, report word counts per section:
 ===WORD_COUNTS===
 Section "{name}": {count} words (minimum: {allocation})
 ...
-Total: {total} words (target: 2000, ratio: {total/WORD_TARGET}x)
+Total: {total} words (target: 1200, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
 ```
 
@@ -524,7 +635,7 @@ Language scan: {CLEAN or list of fixes made}
 - Do NOT generate activities, exercises, or vocabulary tables (Phase 3 handles these)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than 2000 words total
+- Do NOT write fewer than 1200 words total. Do NOT write more than 150% of 1200 — excess prose is padding, not depth.
 - Do NOT request skills or delegate to Claude
 - Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
 - Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain

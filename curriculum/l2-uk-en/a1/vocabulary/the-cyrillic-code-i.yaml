@@ -1,74 +1,106 @@
 items:
-  - lemma: "А"
-    translation: "letter A (vowel)"
-    pos: "noun"
-  - lemma: "У"
-    translation: "letter U (vowel)"
-    pos: "noun"
-  - lemma: "М"
-    translation: "letter M (consonant)"
-    pos: "noun"
-  - lemma: "Л"
-    translation: "letter L (consonant)"
-    pos: "noun"
-  - lemma: "Н"
-    translation: "letter N (consonant)"
-    pos: "noun"
-  - lemma: "С"
-    translation: "letter S (consonant)"
-    pos: "noun"
-  - lemma: "мама"
-    translation: "mom"
-    pos: "noun"
-    gender: "f"
-  - lemma: "нас"
-    translation: "us"
-    pos: "pronoun"
-  - lemma: "сам"
-    translation: "self / alone"
-    pos: "adjective"
-    gender: "m"
-  - lemma: "луна"
-    translation: "echo"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сума"
-    translation: "sum / bag"
-    pos: "noun"
-    gender: "f"
-  - lemma: "ананас"
-    translation: "pineapple"
-    pos: "noun"
-    gender: "m"
-  - lemma: "молоко"
-    translation: "milk"
-    pos: "noun"
-    gender: "n"
-  - lemma: "мул"
-    translation: "mule"
-    pos: "noun"
-    gender: "m"
-  - lemma: "сум"
-    translation: "sadness"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мус"
-    translation: "mousse dessert"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мала"
-    translation: "small"
-    pos: "adjective"
-    gender: "f"
-  - lemma: "сама"
-    translation: "self / alone (feminine)"
-    pos: "adjective"
-    gender: "f"
-  - lemma: "сауна"
-    translation: "sauna"
-    pos: "noun"
-    gender: "f"
-  - lemma: "Україна"
-    translation: "Ukraine"
-    pos: "noun"
-    gender: "f"
+- lemma: мама
+  translation: mom
+  pos: noun
+- lemma: сума
+  translation: sum / amount
+  pos: noun
+- lemma: луна
+  translation: echo
+  pos: noun
+- lemma: нас
+  translation: us
+  pos: pronoun
+- lemma: сам
+  translation: alone / by himself
+  pos: adjective
+- lemma: мул
+  translation: mule
+  pos: noun
+- lemma: мала
+  translation: small
+  pos: pronoun
+- lemma: мус
+  translation: mousse
+  pos: noun
+- lemma: мала
+  translation: small
+  pos: adjective
+- lemma: ананас
+  translation: pineapple
+  pos: noun
+- lemma: молоко
+  translation: milk
+  pos: noun
+- lemma: акула
+  translation: shark
+  pos: noun
+- lemma: автобус
+  translation: bus
+  pos: noun
+- lemma: Україна
+  translation: Ukraine
+  pos: noun
+- lemma: урок
+  translation: lesson
+  pos: noun
+- lemma: успіх
+  translation: success
+  pos: noun
+- lemma: літак
+  translation: airplane
+  pos: noun
+- lemma: лимон
+  translation: lemon
+  pos: noun
+- lemma: ніс
+  translation: nose
+  pos: noun
+- lemma: сумка
+  translation: bag
+  pos: noun
+- lemma: маса
+  translation: mass
+  pos: noun
+- lemma: сала
+  translation: fat / lard
+  pos: noun
+- lemma: лама
+  translation: llama
+  pos: noun
+- lemma: аптека
+  translation: pharmacy
+  pos: noun
+- lemma: університет
+  translation: university
+  pos: noun
+- lemma: місто
+  translation: city
+  pos: noun
+- lemma: музика
+  translation: music
+  pos: noun
+- lemma: любов
+  translation: love
+  pos: noun
+- lemma: ліс
+  translation: forest
+  pos: noun
+- lemma: небо
+  translation: sky
+  pos: noun
+- lemma: надія
+  translation: hope
+  pos: noun
+- lemma: сонце
+  translation: sun
+  pos: noun
+- lemma: сестра
+  translation: sister
+  pos: noun
+- lemma: сніг
+  translation: snow
+  pos: noun
+- lemma: собака
+  translation: dog
+  pos: noun

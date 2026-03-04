@@ -35,6 +35,35 @@ These are the **audit gate minimums** — generating fewer items causes a COMPLE
 
 Keep both tables visible as you write. Every activity and vocab item must serve these targets.
 
+DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
+Use ONLY these words in activities and reading drills. Any word with a letter
+outside this set will FAIL the decodability audit gate.
+
+Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+
+If you need a word not on this list, check that ALL its letters are in the
+allowed set above. Words with unknown letters need English translation.
+
+## Module Sequence Constraints (HARD FAIL if violated)
+
+DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
+- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)
+- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary with immediate English translation: «Привіт!» (Hello!)
+- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read
+
+GRAMMAR BAN (no verbs exist yet in the student's knowledge):
+- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED
+- NO verb conjugation of any kind (present, past, future)
+- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'
+- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+
+METALANGUAGE:
+- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'
+- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')
+- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet
+
+> **These constraints apply to activities too.** If verbs are banned, do NOT create fill-in or quiz items that use verb forms. If only bare nouns are allowed, activities must test letter recognition, word decoding, and syllable building — NOT sentence comprehension or grammar.
+
 ## Your Input
 
 Read these files from disk:
@@ -213,9 +242,12 @@ options:
 
 This matches the A1 immersion band (10–50%) and A2 band (30–70%): English scaffolding for metalanguage, Ukrainian for target content.
 
-**Additional rule for Cyrillic Code modules (a1-1 through a1-4):**
+**Additional rules for Cyrillic Code modules (a1-1 through a1-4):**
 - Only use letters/words from the module's taught letter set. If the module teaches А, У, М, Л, Н, С — every Ukrainian word in activities must use ONLY those 6 letters.
 - Do not invent pedagogical terminology. "Справжні друзі / Оманливі друзі" (true/false friends) is a term for WORDS between languages, not individual letters. Say "visual traps" instead.
+- **NO sentence-level activities.** Students know bare nouns only — no verbs, no cases, no grammar. Do NOT create fill-in activities that ask students to "complete a phrase" or "choose the right word in a sentence." Activities must test: letter recognition, letter-sound mapping, syllable building, word decoding, and word-meaning matching.
+- **Do NOT use words as verbs.** Even if a word CAN be a verb form (e.g., "мала" can mean "had"), treat all decodable words as bare nouns/adjectives in activities. Do NOT create activities that rely on verb meanings.
+- **Prefer fewer, high-quality activities over padding.** If you only have 10 decodable words, 8 well-designed activities are better than 10 activities where the last 2 are garbage. Do NOT force fill-in or quiz items that require grammar the student hasn't learned.
 
 Example quiz for A1:
 ```yaml

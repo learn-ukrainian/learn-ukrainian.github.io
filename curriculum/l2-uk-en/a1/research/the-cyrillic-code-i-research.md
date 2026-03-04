@@ -1,39 +1,40 @@
 # Дослідження: The Cyrillic Code I
 
 ## State Standard Reference
-§4.1.1: "Український алфавіт. Друковані та писані літери."
-§4.1.4: "Голосні та приголосні звуки: вимова голосних у наголошеній і ненаголошеній позиціях... тверді та м’які приголосні..."
-Alignment: This module directly addresses the foundational phonetics and graphics requirement for A1 level by introducing the first 6 letters, distinguishing vowels from consonants, and teaching core reading mechanics.
+§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери."
+§4.1.4: "Голосні та приголосні звуки: вимова голосних у наголошеній і ненаголошеній позиціях..."
+Alignment: This module satisfies the foundational A1 requirements by introducing the concept of vowels (голосні) and consonants (приголосні), the concept of stable unstressed vowels, and the first 6 letters (А, М, Л, У, Н, С) of the Ukrainian alphabet.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| А | 7.2% – 8.3% (2nd most frequent) | N/A (letter frequency) |
-| Н | 6.5% – 7.1% (3rd most frequent) | N/A (letter frequency) |
-| С | 3.7% – 4.6% (~10th most frequent) | N/A (letter frequency) |
-| Л, У, М | ~13th-16th most frequent | N/A (letter frequency) |
-*Note: These six high-frequency letters allow learners to immediately construct their first meaningful words (мама, нас, сам, луна).*
+| мама | Very high (core) | мама сама |
+| сам | High | сам удома |
+| нас | High (pronoun) | для нас, у нас |
+| сума | Medium (common) | велика сума |
+| луна | Medium (poetic/nature) | гучна луна |
 
 ## Cultural Hooks
-1. **Decolonized Origin**: The Cyrillic alphabet is not Russian; it was developed in the 9th century in the First Bulgarian Empire by students of Saints Cyril and Methodius (such as Clement of Ohrid) for Old Church Slavonic.
-2. **Typography**: The modern printed form of Cyrillic letters (including Ukrainian) is rooted in historical uncial script, which evolved significantly independently from Latin scripts before standardisation.
+1. The Cyrillic script was formalized by the students of Saints Cyril and Methodius in the First Bulgarian Empire in the 9th century. It is an ancient European script with its own rich independent history, not a modern derivative of Russian standardization.
+2. The Ukrainian alphabet has exactly 33 letters and is highly phonetic. Ukrainian is known for its "euphony" (милозвучність), which relies heavily on its clear, unreduced vowels.
 
 ## Common Learner Errors
-1. **Visual Trap "С"** → Pronouncing it as English /k/. *Correction*: Always maps to /s/ (like in "sun").
-2. **Visual Trap "Н"** → Pronouncing it as English /h/. *Correction*: Maps strictly to /n/ (like in "net").
-3. **Vowel Reduction** → English speakers tend to reduce unstressed "А" and "У" to a schwa (/ə/ or "uh"). *Correction*: Ukrainian vowels are perfectly stable and must retain full clarity regardless of stress.
+1. Visual "false friends": Mispronouncing "Н" as /h/ instead of /n/ (like English "H").
+2. Visual "false friends": Mispronouncing "С" as /k/ or /ts/ instead of /s/ (like English "C").
+3. Vowel reduction: English speakers naturally reduce unstressed vowels to a "schwa" (ə). In Ukrainian, "А" and "У" must remain completely clear and stable even when unstressed.
 
 ## Cross-References
-- Builds on: None (First Contact module)
-- Prepares for: `a1-02` (The Cyrillic Code II - introducing 7 new letters)
+- Builds on: None (First module)
+- Prepares for: a1-02 (The Cyrillic Code II)
 
 ## Multimedia Resources
-- Anna Ohoiko — Ukrainian Lessons Alphabet Playlist — https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV — Authoritative phonetic guide for standard pronunciation.
+- Anna Ohoiko (Ukrainian Lessons) — Ukrainian Alphabet Pronunciation Guide — https://www.youtube.com/watch?v=ksXIXj7CXwc — The core pronunciation reference for all letters.
 
 ## Notes for Content Writing
-- English scaffolding is mandatory for explaining linguistic concepts (vowels vs. consonants, syllables) since immersion is capped at 10-50%.
-- Avoid referencing Russian when discussing "visual traps"; instead, just state they look like English but sound different.
-- Frame Ukrainian as a highly logical, phonetic system.
+- Immersion is capped at 10-50%. English scaffolding is strictly required to explain the phonetic system before presenting Ukrainian examples.
+- Do not use Russian phonetic approximations. Use international or English approximations (e.g., "a" in "father", "oo" in "moon").
+- Frame the Ukrainian sounds confidently and independently. 
+- Ensure all example words only use the letters introduced so far. The first words reading practice should genuinely empower the learner to decode without guessing.
 
 ## Resource Discovery
 

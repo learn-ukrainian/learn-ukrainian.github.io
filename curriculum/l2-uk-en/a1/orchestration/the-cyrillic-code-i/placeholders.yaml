@@ -12,7 +12,7 @@ RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en
 REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-cyrillic-code-i-review.md
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
+WORD_TARGET: '1200'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -75,6 +75,109 @@ PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 6 known letters: А, М, Л, У, 
 
   - NEVER write Ukrainian-only section headers or explanatory prose — the student
   cannot read it yet'
+DECODABLE_VOCABULARY: 'DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
+
+  Use ONLY these words in activities and reading drills. Any word with a letter
+
+  outside this set will FAIL the decodability audit gate.
+
+
+  Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+
+
+  If you need a word not on this list, check that ALL its letters are in the
+
+  allowed set above. Words with unknown letters need English translation.'
+STRUCTURAL_RULES: '### Rule 1: Every Letter/Concept Gets Its Own Section
+
+
+  Each new letter or concept MUST get its own `### H3` subsection. Letter modules
+  are presentation-heavy (video embeds, stroke order, examples) so depth comes from
+  variety of examples, not paragraphs of explanation.
+
+
+  ### Rule 2: Introduce → Show → Practice
+
+
+  Each H3 block follows this pattern:
+
+  1. **Introduce** the letter/concept (1-2 sentences)
+
+  2. **Show** it in words and context (examples, video embed)
+
+  3. **Practice tip** (what to listen for, what to try)
+
+
+  Minimum **30-50 words per H3 block**. Quality over quantity at this stage.
+
+
+  ### Rule 3: Presentation Consistency
+
+
+  All letters in a group: SAME format, SAME depth (±30%), SAME example count (±1).
+
+
+  ### Rule 4: Example Variety
+
+
+  No minimum format variety requirement for M1-M4 (letter-focused modules). Use whatever
+  format best teaches the letter: word lists, audio examples, comparison pairs.'
+H3_WORD_RANGE: 30-50
+EXPANSION_METHOD: '**Don''t pad — add teaching value.** For EVERY letter you introduce:
+
+
+  1. **Show it** (uppercase + lowercase, with video embed)
+
+  2. **Give 2-3 example words** the student can decode
+
+  3. **Add a practice tip** (what to listen for, mouth position)
+
+  4. **Connect to something familiar** (English sound comparison)
+
+
+  **If a section is still under target:** Add more example words, a `[!tip]` with
+  pronunciation advice, or a comparison between similar-sounding letters.'
+WRITING_TONE_INSTRUCTION: Be concise — students know nothing yet. Short, clear explanations.
+  Every H3 gets {H3_WORD_RANGE} words. The activities do the teaching, not the prose.
+  Do NOT pad with adjectives, motivational filler, or over-explained phonetics.
+TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian буквар)\n\n\
+  These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
+  \ for style and difficulty level** — notice how they use simple syllable combinations,\
+  \ short words, and build progressively. Do NOT copy them verbatim, but match their\
+  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 96:\n\
+  ```\n94\nБачу Д, д (де). Чую [д], [д'].\nд р і * д\nд * т е л\nдро-ва\nдве-рі\n\
+  до-ріж-ка схо-ди\nве-ран-да\nл е * і д *\n [ –    =  • –  – ]\n [ = • |  –•  – ]\n\
+  \ [ – • |  =•  =  ]\nа\nо\nу\nи\nі\nД\nда\nдо\nду\nди\nді\nа\nо\nу\nи\nі\nад\nод\n\
+  уд\nид\nід\nД\nбу-ди-нок\nпід-ві-кон-ня\nдах\nди-мар\nД д\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 113:\n```\n111\n\t Запиши слова, добираючи до кожного відпо-\nвідну\
+  \ схему.\n   півень          ялинка               джміль\n[ – =  = ]           \
+  \ [ =  |–  = ]            [ =  |–  – |–  ]\n\t Розглянь малюнки.\n\t Запиши слова\
+  \ — назви намальованих пред-\nметів за групами: овочі та шкільне приладдя.\n\t\
+  \ Розглянь малюнки.\n\t Запиши слова — назви намальованих пред-\nметів, які відповідають\
+  \ на питання хто?\n\t Прочитай текст.\nВЕСНА\nНастала весна. Прилетіли птахи. На\
+  \ \nберезі шпаки.\n\t Випиши речення, яке відповідає схемі.\n    \n```\n\n**Grade\
+  \ 1, bolshakova** — Сторінка 24:\n```\n24\nЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ\nТи вимовляєш\
+  \ різні звуки: голосні і приголосні. \nГолосні звуки утворюються за допомогою голосу.\n\
+  Голосні почуєш в пісні,\nІ у темному у лісі, \nІ коли дивуєшся,\nІ коли милуєшся.\n\
+  Легко вимовляються, \nВесело співаються! \nПрочитай. Назви букви, які позначають\
+  \ голосні звуки.\nал – ам – ан \nла – ма – на \nул – ум – ун\nол – ом – он \nло\
+  \ – мо – но \nлу – му – ну\n \nПриголосні звуки утворюються \nза допомогою голосу\
+  \ і шуму.\nПриголосні деренчать\nІ тихенько шелестять, \nГолосно свистя\n```\n\n\
+  **Grade 1, zaharijchuk** — Сторінка 78:\n```\n76\nЗа мотивами казки Е. Мозера\n\
+  Повторюємо разом\nПриголосні звуки: \nтверді та глухі\n\t Прочитай імена головних\
+  \ героїнь, чітко ви-\nмовляючи перші звуки.\nЗося, Сюзі.\n\t Чи вони справжні подруги?\
+  \ Як одна з них до-\nпомогла іншій? Знайди та прочитай про це. \n\t Який із цих\
+  \ звуків вимовляємо дзвінко, з го-\nлосом? А який — тільки із шумом? \n\t Перепиши\
+  \ виділене блакитним кольором ре-\nчення. Підкресли букви, які позначають при-\n\
+  голосні звуки. Вимов їх. \n— Так, але я \nсама не зможу.\n— Дякую. Ти \nсправжня\
+  \ моя \n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n```\n. . . . . . . . . .\
+  \ . . . . . . . . 44\nТ т . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+  \ 45\nТверді і пом’якшені  \nприголосні звуки . . . . . . . . . . . . . . 45\nГ\
+  \ г . . . . . . . . . . . . . . . . . . . . . . . . . . . 46\nГ г . . . . . . .\
+  \ . . . . . . . . . . . . . . . . . . . . 47\nТверді і пом’якшені  \nприголосні\
+  \ звуки . . . . . . . . . . . . . . 47\nҐ ґ . . . . . . . . . . . . . . . . . .\
+  \ . . . . . . . . . 48\nҐ ґ . . . . . . . . . . . . . . . . . . . . . . . . . .\
+  \ . 49\nЕ е  . . . . . .\n```"
 INTRO_HOOK: Why does this matter?
 SUMMARY_HEADING: Summary
 SELF_CHECK_HEADING: 'Check yourself:'
@@ -626,33 +729,15 @@ SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
   | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 
   | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
-VIDEO_DISCOVERY: "### Podcast Episodes\n*Each episode has audio + transcript + vocabulary\
-  \ list — recommend to students as supplementary listening.*\n\n- **ULP S5 Ep200:\
-  \ Ukrainian Lessons Podcast Season 5**\n  URL: https://www.ukrainianlessons.com/episode200/\n\
-  \  Relevance: 0.2\n  Topics: grammar, verbs, future tense, listening\n\n### Blog\
-  \ Articles & Guides\n- **Ukrainian Alphabet: Full Guide with Examples and Pronunciation**\
-  \ (ukrainianlessons.com)\n  URL: https://www.ukrainianlessons.com/ukrainian-alphabet/\n\
-  \  Relevance: 0.9\n\n- **Ukrainian Cyrillic Alphabet — Letters and Sounds** (ukrainianlessons.com)\n\
-  \  URL: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/\n  Relevance:\
-  \ 0.6\n  Topics: alphabet, cyrillic, letters, sounds\n\n- **Talk Ukrainian: Ukrainian\
-  \ alphabet with pronunciation** (talkukrainian)\n  URL: https://talkukrainian.com/ukrainian-alphabet/\n\
-  \  Relevance: 0.5\n  Topics: alphabet, letters, pronunciation, cyrillic\n\n\n###\
-  \ Textbook References\n- **Grade 2, Сторінка 3**\n  ЗВУКИ І БУКВИ\nк\nі\n<\nЗВУКИ\n\
-  СКЛАД^\nУ розділі ти будеш вивчати:\nБУКВИ\nНАГОЛОС\nДізнаєшся про:\nк\n1\nг\nл\n\
-  І\n1\nнаголошені\nГОЛОСНІ ЗВУКИ\n____________________\nненаголошені\nдзвінкі, глухі\n\
-  г\nтверді, м'які\n^ПРИГОЛО...\n\n- **Grade 1, Сторінка 44**\n  42\nБачу И, и. Чую\
-  \  [и].\n\t Прочитай букви, слідкуючи за стрілками. \nЗбільшуй силу голосу, коли\
-  \ стрілка піднята \nвверх.\n\t\nВідшукай слова — назви предметів, у яких є \nдві\
-  \ букви а; дві букви о; три букви ...\n\n- **Grade 4, Сторінка 188**\n  66\nУрок\
-  \ розвитку писемного мовлення\nВибірковий переказ тексту з елементами о п и с у........................\
-  \ 67\nЗміна приголосних [г], [к], [х] на [з'], [ц'], [с']\nперед закінченням -і\
-  \ в іменниках різ...\n\n- **Grade 1, Сторінка 17**\n  15\nПриголосні тверді та м’які\n\
-  \t Вимов звуки, які ти чуєш на початку слів — \nназв намальованих предметів.\n\t\
-  \ Порівняй вимову перших звуків у словах — на-\nзвах предметів. У яких словах перші\
-  \ звуки ви-\nмо...\n\n- **Grade 4, Сторінка 91**\n  •  Спишіть, підкресліть хвилястою\
-  \ лінією прикметники в почат­\nковій формі. Провідміняйте, користуючись таблицями\
-  \ відмі­\nнювання (с. 85, 87), один із прикметників з основою на твер­\nдий і м’який\
-  \ пригол...\n"
+VIDEO_DISCOVERY: '(No video discoveries available)
+
+  ### Research Videos
+
+  *These videos were found during the research phase. Embed each one next to its corresponding
+  letter/topic section using a markdown link.*
+
+
+  - Anna Ohoiko — Ukrainian Lessons — https://www.youtube.com/watch?v=ksXIXj7CXwc'
 PRONUNCIATION_VIDEOS: '### Per-Letter Pronunciation Videos (from plan — MANDATORY
   embeds)
 
@@ -681,7 +766,7 @@ PRONUNCIATION_VIDEOS: '### Per-Letter Pronunciation Videos (from plan — MANDAT
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'
-ITEMS_MIN: '12'
+ITEMS_MIN: '6'
 VOCAB_COUNT_TARGET: '20'
 FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
   essay-response, critical-analysis, comparative-study, authorial-intent

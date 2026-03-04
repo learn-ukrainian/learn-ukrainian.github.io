@@ -1,67 +1,79 @@
-        # Fix Phase — full audit failures
+        # Fix 7 issue(s) in `the-cyrillic-code-i`
 
-        The following audit errors must be fixed for module `the-cyrillic-code-i`:
+        ### Fix 1: DECODABILITY
+**What:** [DECODABILITY_M1] 'Приголосна' in 'Перші склади' contains unknown letter(s): П, г, и, о, р
+**How to fix:** Replace words containing unknown letters with words using only А, М, Л, У, Н, С. Or move the content to a later module.
+**Context (line 111):** ``
 
-        ## Audit Output (last 60 lines)
+### Fix 2: DECODABILITY
+**What:** [DECODABILITY_M1] 'З' in 'Перші склади' contains unknown letter(s): З
+**How to fix:** Replace words containing unknown letters with words using only А, М, Л, У, Н, С. Or move the content to a later module.
+**Context (line 111):** ``
 
-        ```
-        ============================================================
-  HETMAN VERIFY: the-cyrillic-code-i
-============================================================
+### Fix 3: DECODABILITY
+**What:** [DECODABILITY_M1] 'літерою' in 'Перші склади' contains unknown letter(s): е, о, р, т, ю, і
+**How to fix:** Replace words containing unknown letters with words using only А, М, Л, У, Н, С. Or move the content to a later module.
+**Context (line 111):** ``
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+### Fix: Gate `Words` FAIL — 1443/2000 (raw: 1670)
+**Action:** Expand content in the shortest sections. Add examples, explanations, or practice scenarios.
 
-────────────────────────────────────────────────────────────
-  VERDICT: FAIL
-  Module:  the-cyrillic-code-i
-────────────────────────────────────────────────────────────
-  audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  failing gates:
-    lesson: 3659/2000 (raw: 3779) | pedagogy: 5 violations | immersion: 2.1% LOW (target 5-15% (M01))
-    activities: 10/8 | density: 1 < 12
+### Fix: Gate `Density` FAIL — 1 < 6
 
-  Hetman has NOT completed this module.
-  Fix the issues above and re-run this script.
+### Fix: Gate `Pedagogy` FAIL — 7 violations
 
-─── Audit output (last 15 lines) ───
+### Fix: Gate `Immersion` FAIL — 3.9% LOW (target 5-15% (M01))
+**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
 
-  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-i-audit.log for details)
+### Other Audit Failures
 
-  Running RAG word verification...
-  Verifying: the-cyrillic-code-i.md
-    VESUM misses: 11 — querying RAG...
-  [embed] Loading BGE-M3 from BAAI/bge-m3...
-
-  Fetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]
-  Fetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 241979.08it/s]
-  [embed] BGE-M3 loaded.
-  You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
-    Words: 57 | VESUM: 46 (80.7%) | RAG: 6 | Not found: 5
-    Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-i-rag-audit.md
-  ⚠️  RAG verification found unverified words (see audit report)
-
-VESUM: 46/57 (81%) verified
-⚠️ VESUM not found (11): АЛ, АМ, АН, Африка, ЛУ, МА-МА, СА, СУ, УЛ, УН
-        ```
+```
+❌ Match the Letters
+❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (78% overlap): "Which Cyrillic character looks like an English «C» but permanently sounds like an «S»?". Shares significant keywords with sentence at index 71.
+📚 PEDAGOGICAL VIOLATIONS FOUND:
+❌ AUDIT FAILED. Correct errors before proceeding.
+❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-i-audit.log for details)
+```
 
 
-        ## Files to Fix
+## Constraints (do NOT violate while fixing)
+
+DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
+- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)
+- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary with immediate English translation: «Привіт!» (Hello!)
+- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read
+
+GRAMMAR BAN (no verbs exist yet in the student's knowledge):
+- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED
+- NO verb conjugation of any kind (present, past, future)
+- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'
+- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+
+METALANGUAGE:
+- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'
+- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')
+- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet
+
+
+DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
+Use ONLY these words in activities and reading drills. Any word with a letter
+outside this set will FAIL the decodability audit gate.
+
+Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+
+If you need a word not on this list, check that ALL its letters are in the
+allowed set above. Words with unknown letters need English translation.
+
+
+        ## Files
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-i.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-i.yaml`
+- Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml`
+- Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-i.yaml`
 
-        ## Instructions
+        ## Rules
 
-        1. Read the audit errors above carefully
-        2. Fix ONLY the issues mentioned — do not rewrite working content
-        3. Preserve section structure and word counts
-        4. After fixing, the audit must pass
-
-        **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
-        Fix only the specific violations listed above.
+        1. Fix ONLY the issues listed above — do not rewrite working content
+        2. Preserve section structure and word counts
+        3. Do NOT add or remove sections
 
