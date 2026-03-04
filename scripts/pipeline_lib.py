@@ -2234,7 +2234,8 @@ def _get_content_template(track: str, module_num: int) -> str:
     tier = _get_prompt_tier(track, module_num)
     if tier == "beginner":
         return "beginner-content.md"
-    # seminar tracks still use phase-2-content.md (no separate seminar content prompt yet)
+    if tier == "seminar":
+        return "phase-2-content.md"
     return "core-content.md"
 
 
@@ -2243,6 +2244,8 @@ def _get_activities_template(track: str, module_num: int) -> str:
     tier = _get_prompt_tier(track, module_num)
     if tier == "beginner":
         return "beginner-activities.md"
+    if tier == "seminar":
+        return "phase-3-activities.md"
     return "core-activities.md"
 
 
