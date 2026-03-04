@@ -2209,6 +2209,43 @@ def _get_scoring_output_table(track: str) -> str:
 | 13 | Factual Accuracy | X/10 | <8 | [specific finding or "N/A — core track"] |"""
 
 
+def _get_prompt_tier(track: str, module_num: int) -> str:
+    """Determine prompt tier based on track and module number.
+
+    Returns: 'beginner', 'core', or 'seminar'.
+    """
+    base = track.split("-")[0].upper()
+    track_lower = track.lower()
+    if base in ("HIST", "ISTORIO", "BIO", "LIT", "OES", "RUTH"):
+        return "seminar"
+    if "pro" in track_lower:
+        return "core"
+    if base == "A1":
+        return "beginner"
+    if base == "A2" and module_num <= 20:
+        return "beginner"
+    if base == "B1" and module_num <= 5:
+        return "beginner"
+    return "core"
+
+
+def _get_content_template(track: str, module_num: int) -> str:
+    """Return the content prompt filename for the given tier."""
+    tier = _get_prompt_tier(track, module_num)
+    if tier == "beginner":
+        return "beginner-content.md"
+    # seminar tracks still use phase-2-content.md (no separate seminar content prompt yet)
+    return "core-content.md"
+
+
+def _get_activities_template(track: str, module_num: int) -> str:
+    """Return the activities prompt filename for the given tier."""
+    tier = _get_prompt_tier(track, module_num)
+    if tier == "beginner":
+        return "beginner-activities.md"
+    return "core-activities.md"
+
+
 def _read_phase_file(filename: str) -> str:
     path = PHASES_DIR / filename
     if path.exists():
@@ -2231,7 +2268,8 @@ def write_placeholders(ctx: ModuleContext) -> None:
                                "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS",
                                "DECODABLE_VOCABULARY", "STRUCTURAL_RULES",
                                "H3_WORD_RANGE", "EXPANSION_METHOD",
-                               "WRITING_TONE_INSTRUCTION"}
+                               "WRITING_TONE_INSTRUCTION",
+                               "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES"}
             if _critical_keys <= set(existing.keys()):
                 log("Placeholders: Using existing")
                 return
@@ -2347,6 +2385,10 @@ def write_placeholders(ctx: ModuleContext) -> None:
             placeholders["PRONUNCIATION_VIDEOS"] = ""
     else:
         placeholders["PRONUNCIATION_VIDEOS"] = ""
+
+    # Shared rules (injected into tier-specific prompts via placeholders)
+    placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
+    placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
 
     placeholders.update(ctx.activity_config)
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
@@ -2809,7 +2851,15 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
-    template = PHASES_DIR / "phase-2-content.md"
+    # Tier-based content prompt dispatch
+    content_template_name = _get_content_template(ctx.track, ctx.module_num)
+    template = PHASES_DIR / content_template_name
+    if not template.exists():
+        # Fallback to monolithic prompt
+        template = PHASES_DIR / "phase-2-content.md"
+        log(f"  Phase 2: Tier template {content_template_name} not found, falling back to phase-2-content.md")
+    else:
+        log(f"  Phase 2: Using tier template: {content_template_name}")
     placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
     prompt_file = ctx.orch_dir / "phase-2-prompt.md"
 

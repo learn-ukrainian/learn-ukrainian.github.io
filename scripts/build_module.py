@@ -78,6 +78,8 @@ from pipeline_lib import (
     _state_lock, FileLock,
     # Validation
     _validate_activities_yaml,
+    # Tier-based prompt dispatch
+    _get_prompt_tier, _get_activities_template,
 )
 from batch_gemini_config import (
     CURRICULUM_DIR, PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
@@ -1708,7 +1710,17 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
         else:
             template_name = "phase-A-seminar.md"
     else:
-        template_name = "phase-A-core.md"
+        # Tier-based research dispatch for core tracks
+        tier = _get_prompt_tier(ctx.track, ctx.module_num)
+        if tier == "beginner":
+            template_name = "beginner-research.md"
+            if not (PHASES_DIR / template_name).exists():
+                template_name = "phase-A-core.md"  # fallback
+                log("  Phase A: beginner-research.md not found, falling back to phase-A-core.md")
+            else:
+                log(f"  Phase A: Using beginner tier research prompt")
+        else:
+            template_name = "phase-A-core.md"
 
     template = PHASES_DIR / template_name
 
@@ -2070,7 +2082,15 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
                         return True
             log("  Phase C: Vocab fast-path failed — falling through to full dispatch")
 
-    template = PHASES_DIR / "phase-3-activities.md"
+    # Tier-based activities prompt dispatch
+    activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
+    template = PHASES_DIR / activities_template_name
+    if not template.exists():
+        # Fallback to monolithic prompt
+        template = PHASES_DIR / "phase-3-activities.md"
+        log(f"  Phase C: Tier template {activities_template_name} not found, falling back to phase-3-activities.md")
+    else:
+        log(f"  Phase C: Using tier template: {activities_template_name}")
     if not template.exists():
         log(f"  Phase C: ERROR — template not found: {template}")
         return False
