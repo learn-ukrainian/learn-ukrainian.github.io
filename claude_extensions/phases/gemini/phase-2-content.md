@@ -28,7 +28,7 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
 
-- **Videos**: Consider embedding relevant ones as `<YouTubeVideo id="VIDEO_ID" />` JSX components where they add value
+- **Videos**: Embed relevant videos as markdown links: `[Label](https://www.youtube.com/watch?v=VIDEO_ID)`. The MDX generator will automatically convert these to `<YouTubeVideo>` components. **MANDATORY for pronunciation videos** — every letter's video MUST be embedded in its corresponding section.
 - **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
 - **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
 - **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
@@ -36,6 +36,8 @@ These resources were found during the discover phase. They include videos, blog 
 {VIDEO_DISCOVERY}
 
 {PRONUNCIATION_VIDEOS}
+
+**VIDEO EMBEDDING FORMAT**: Use markdown links `[Anna Ohoiko — Літера А](URL)`. Do NOT use JSX/HTML tags — the build pipeline converts links automatically.
 
 ## Module Sequence Constraints (HARD FAIL if violated)
 
@@ -312,7 +314,9 @@ Rotate openers: definition-first, question-led, scenario-led, function-first. No
 
 ### Visual Aids (Grammar Modules)
 
-Use tables for comparing patterns/paradigms/categories. Use mermaid flowcharts for decision logic (aspect choice, case selection). Don't force — use when pedagogically clearer than prose.
+Use tables for comparing patterns/paradigms/categories, syllable drills, and letter/word reading exercises. Use mermaid flowcharts for decision logic (aspect choice, case selection). Don't force — use when pedagogically clearer than prose.
+
+**For alphabet/phonology modules (M1-M6)**: Format syllable grids and reading drills as markdown tables, not plain text lists. Tables are visually cleaner and improve the richness score.
 
 ---
 

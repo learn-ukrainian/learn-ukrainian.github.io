@@ -85,7 +85,7 @@ IMMERSION_RULES: dict[str, str] = {
     "a1-m01-02": (
         "TARGET: 5-15% Ukrainian, 85-95% English. ALL explanatory prose in English. "
         "ALL grammar explanations in English. ALL callout text in English. Ukrainian appears ONLY in: "
-        "(1) example words/phrases in bold with [IPA] and (English translation), (2) vocabulary items. "
+        "(1) example words/phrases in bold with stress mark and (English translation), (2) vocabulary items. "
         "If you write a paragraph, it MUST be in English. Ukrainian sentences max 10 words."
     ),
     "a1-m03-05": (
@@ -2333,6 +2333,30 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "SCORING_SECTION": _get_scoring_section(ctx.track),
         "SCORING_OUTPUT_TABLE": _get_scoring_output_table(ctx.track),
     }
+
+    # Vocabulary hints from plan — injected inline so Gemini sees the actual
+    # required/recommended items without needing to read the plan file from disk.
+    vocab_hints = ctx.plan.get("vocabulary_hints", {})
+    if vocab_hints:
+        vh_lines = ["### Vocabulary from Plan (MANDATORY — include ALL required items)\n"]
+        required = vocab_hints.get("required", [])
+        recommended = vocab_hints.get("recommended", [])
+        if required:
+            vh_lines.append("**Required** (MUST appear in vocabulary YAML):")
+            for item in required:
+                vh_lines.append(f"- {item}")
+            vh_lines.append("")
+        if recommended:
+            vh_lines.append("**Recommended** (include if space allows):")
+            for item in recommended:
+                vh_lines.append(f"- {item}")
+            vh_lines.append("")
+        vh_lines.append("Do NOT add vocabulary items beyond this list unless they are "
+                        "decodable from the module's letter set and appear in the lesson content.")
+        placeholders["VOCAB_HINTS"] = "\n".join(vh_lines)
+    else:
+        placeholders["VOCAB_HINTS"] = ""
+
     # Video discovery placeholder
     discovery_path = ctx.orch_dir / "discovery.yaml"
     if discovery_path.exists():

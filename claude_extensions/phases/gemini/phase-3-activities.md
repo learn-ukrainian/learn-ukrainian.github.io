@@ -41,10 +41,12 @@ Read these files from disk:
 {CONTENT_PATH}
 ```
 
-**Plan file** (vocabulary_hints — vocabulary list to follow):
+**Plan file** (for objectives and context):
 ```
 {PLAN_PATH}
 ```
+
+{VOCAB_HINTS}
 
 **Meta file** (activity count targets, pedagogy):
 ```
@@ -303,7 +305,7 @@ Note: At A1–A2, explanations themselves are written in English (see A1 Activit
 ### Vocabulary YAML Rules
 
 1. **Object with `items:` wrapper** — NOT a bare list. Required structure: `items:` array
-2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
+2. **Follow plan's vocabulary_hints** — include ALL required items (mandatory), include recommended items if space allows. Do NOT add items not in the hints list unless they are decodable and appear in the lesson content
 3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
 4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
 5. **NO `ipa` field** — Do NOT include an `ipa` field in vocabulary YAML.
