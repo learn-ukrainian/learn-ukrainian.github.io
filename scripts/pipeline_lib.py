@@ -2400,15 +2400,16 @@ def write_placeholders(ctx: ModuleContext) -> None:
             pv_lines.append(f"*Credit: {pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')}*\n")
             overview = pv.get("overview")
             if overview:
-                pv_lines.append(f"- **Overview**: {overview}")
+                pv_lines.append(f"- **Overview**: [{credit} — Overview]({overview})")
             playlist = pv.get("playlist")
             if playlist:
-                pv_lines.append(f"- **Full Playlist**: {playlist}")
+                pv_lines.append(f"- **Full Playlist**: {playlist} (link only, do not embed)")
             pv_lines.append("")
+            credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
             pv_lines.append("**Each letter below MUST get its video embedded "
-                            "in the corresponding H3 section:**\n")
+                            "in the corresponding H3 section. Use this EXACT markdown link format:**\n")
             for letter, url in letters.items():
-                pv_lines.append(f"- **Літера {letter}**: {url}")
+                pv_lines.append(f"- **Літера {letter}**: [{credit} — {letter}]({url})")
             placeholders["PRONUNCIATION_VIDEOS"] = "\n".join(pv_lines)
         else:
             placeholders["PRONUNCIATION_VIDEOS"] = ""
