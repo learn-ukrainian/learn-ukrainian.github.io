@@ -23,7 +23,7 @@ TEMPLATE_METADATA:
   - Вправи
   - Словник
   pedagogy: PPP
-  min_word_count: 1000
+  min_word_count: 2000
   required_callouts: []
   description: A2 uses PPP pedagogy with bilingual structure and focus on all 7 cases
 -->
@@ -35,9 +35,9 @@ TEMPLATE_METADATA:
 Before submitting, verify:
 
 - [ ] Metadata sidecar complete in `meta/{slug}.yaml`
-- [ ] Word count meets target (1000+ words)
+- [ ] Word count meets target (3000+ words per config.py)
 - [ ] NO transliteration in body text
-- [ ] 10+ activities with 12+ items each in `activities/{slug}.yaml`
+- [ ] 10+ activities with 8+ items each in `activities/{slug}.yaml`
 - [ ] 4+ unique activity types including error-correction
 - [ ] 4+ engagement boxes
 - [ ] Bilingual structure (English intro + Ukrainian Вступ)
@@ -227,9 +227,9 @@ The build system (`generate_mdx.py`) will inject these sections at build time.
 
 | Metric           | Target |
 | ---------------- | ------ |
-| Words            | 1000+  |
+| Words            | 3000+  |
 | Activities       | 10+    |
-| Items/activity   | 12+    |
+| Items/activity   | 8+     |
 | Unique types     | 4+     |
 | Engagement boxes | 4+     |
 | Vocabulary       | 20+    |

@@ -17,7 +17,7 @@ TEMPLATE_METADATA:
   - Summary|Підсумок
   - Need More Practice?
   pedagogy: PPP
-  min_word_count: 1200
+  min_word_count: 4000
   required_callouts: []
   description: B1 metalanguage bridge modules teach grammar terminology bilingually (M01-M05 cover different terminology areas)
 -->
@@ -52,7 +52,7 @@ Before submitting a B1 metalanguage module, verify:
 
 ### Content Requirements
 
-- [ ] **Word count:** 1200+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, tables)
+- [ ] **Word count:** 4000+ words per config.py (core prose — excludes vocabulary section, activities section, tables)
 - [ ] **Vocabulary:** 25-45 items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Terminology coverage:** All target terms introduced with Ukrainian + English
 - [ ] **Usage examples:** Each term shown in context (sample sentences)
@@ -173,7 +173,7 @@ vocabulary_count: 25  # Must match count in vocabulary/{slug}.yaml
 
 ---
 
-### 3. Content Sections (1200+ words total)
+### 3. Content Sections (4000+ words total)
 
 **Structure for PPP pedagogy:**
 
@@ -459,7 +459,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Content
 
-- [ ] 1200+ words before activities
+- [ ] 4000+ words before activities
 - [ ] 25-45 vocabulary items in 5-column format
 - [ ] All target terminology introduced with Ukrainian + English
 - [ ] Bilingual tables for all term categories

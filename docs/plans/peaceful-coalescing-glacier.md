@@ -1,218 +1,181 @@
-# A1 Pedagogical Constraints Layer
+# Fix Prompt/Audit Friction for A1 and A2 Modules
 
 ## Context
 
-After rebuilding A1 alphabet modules, we found severe pedagogical errors that no existing gate catches:
-1. **Imperatives in lesson 1** — Слухайте!, Читайте!, Повторюйте! appear 46 modules before imperatives are taught (M47)
-2. **Undecipherable Ukrainian** — words like Читайте use letters (Ч, Т, Й) that M1 students can't read (only know А, М, Л, У, Н, С)
-3. **Untranslated metalanguage** — Ukrainian grammar terms without English equivalents
+Building A1 and A2 modules is slow and expensive because Gemini produces content that can't pass audit gates, triggering fix loops that often exhaust their 2-iteration cap. Root cause: **three layers of config contradictions** between what the prompt tells Gemini to do, what the schema validates, and what the audit expects.
 
-**Root cause**: `LEVEL_CONSTRAINTS` is per-level (same rules for all 64 A1 modules). `IMMERSION_RULES` is module-aware but only controls language balance %, not what grammar/letters are allowed. Nothing tells Gemini "this student only knows 6 letters and zero grammar."
-
-**Fix**: Add a `PEDAGOGICAL_CONSTRAINTS` placeholder — module-sequence-aware rules that tell Gemini exactly what the student knows at each point. Follows the `IMMERSION_RULES` pattern (dict + selector function).
+This is NOT a template architecture problem — the parameterized placeholder system works. The problem is that specific config values disagree with each other, and some template rules are hardcoded for B1+ without level-aware alternatives.
 
 ---
 
-## Design
+## Fix 1: Unify Item Count Configs (HIGHEST priority)
 
-### Bands (7 bands, A1 only — A2+ uses existing LEVEL_CONSTRAINTS)
+**Problem**: Three sources state different minimum items per activity:
 
-| Band | Modules | Key constraint |
-|------|---------|----------------|
-| `a1-m01` | M1 | 6 letters: А М Л У Н С. No grammar. |
-| `a1-m02` | M2 | 14 letters: +К И Р Б В Д І О. No grammar. |
-| `a1-m03` | M3 | 23 letters: +П Т Г Ґ Е З Ж Ш Х. No grammar. |
-| `a1-m04` | M4 | Full alphabet. No grammar. |
-| `a1-m05-10` | M5-10 | Full alphabet. No verbs. Gender/greetings/Це starting M7. |
-| `a1-m11-14` | M11-14 | Adjectives, plurals. Still no verbs. |
-| `a1-m15+` | M15+ | Verbs start. No imperatives until M47. Existing LEVEL_CONSTRAINTS handles rest. |
+| Source | A1 | A2 | Location |
+|--------|----|----|----------|
+| `LEVEL_CONFIG.min_items_per_activity` | 12 | 8 | `config.py:528,539` |
+| `ACTIVITY_CONFIGS.ITEMS_MIN` (→ prompt) | 12 | 12 | `pipeline_lib.py:359,366` |
+| `ACTIVITY_COMPLEXITY.min_items` (per-type) | 6-8 | 6-8 | `config.py:236-295` |
 
-### Constraint content per band
+Gemini targets 12, audit per-type checks pass at 6-8, but the fallback `min_items_per_activity` rejects types not in `ACTIVITY_COMPLEXITY` at 12. A2 was relaxed to 8 in LEVEL_CONFIG (Feb 2026 comment at line 539) but ACTIVITY_CONFIGS wasn't updated.
 
-Each band is a string containing:
-- **DECODABILITY** (M1-3): which letters are known, what words are decodable vs enrichment-only
-- **GRAMMAR BAN**: what grammatical forms are forbidden (imperatives, verb conjugation, cases)
-- **METALANGUAGE RULE**: all Ukrainian terms need English equivalents
+**Changes**:
+
+| File | Line | Before | After |
+|------|------|--------|-------|
+| `scripts/audit/config.py` | 528 | `'min_items_per_activity': 12` | `'min_items_per_activity': 6` |
+| `scripts/pipeline_lib.py` | 359 | `"ITEMS_MIN": "12"` | `"ITEMS_MIN": "6"` |
+| `scripts/pipeline_lib.py` | 366 | `"ITEMS_MIN": "12"` | `"ITEMS_MIN": "8"` |
+
+**Why 6 for A1**: Early A1 has ~10 decodable words. 8 items of the same 5 words teaches nothing. 6 diverse items > 12 repetitive ones. Per-type `ACTIVITY_COMPLEXITY` already uses 6-8 as floor.
+
+---
+
+## Fix 2: Level-Aware Structural Rules in phase-2 (HIGH priority)
+
+**Problem**: `phase-2-content.md` hardcodes B1+ structural expectations for ALL levels:
+- "80-100 words per H3 block" (line 6)
+- 4-part structure per concept: definition + how it works + examples + usage note (lines 114-119)
+- 5+ format variety for examples (lines 132-139)
+
+Impossible for early A1 (6-letter vocabulary, no grammar) and overkill for A2.
+
+**Changes**:
+
+**`scripts/pipeline_lib.py`** — Add `get_structural_rules(track, module_num) -> str`:
+
+| Level range | H3 words | Structure | Format variety |
+|-------------|----------|-----------|----------------|
+| A1 M1-M4 | 30-50 | Introduce + show + practice | No minimum (letter-focused) |
+| A1 M5-M14 | 40-60 | Introduce + examples + practice tip | 3+ types |
+| A1 M15+ | 60-80 | Definition + examples + usage note | 3+ types |
+| A2 | 60-80 | Full 4-part but 80 words not 100 | 4+ types |
+| B1+ | 80-100+ | Full 4-part (current rules unchanged) | 5+ types |
+
+Add to `write_placeholders`: `"STRUCTURAL_RULES"` and `"H3_WORD_RANGE"`.
+
+**`claude_extensions/phases/gemini/phase-2-content.md`**:
+- Line 6: Replace hardcoded "80-100+" with `{H3_WORD_RANGE}`
+- Lines 83-139 (Rules 1-4): Replace with `{STRUCTURAL_RULES}` placeholder
+- Lines 196-210 (expansion method): Replace with `{EXPANSION_METHOD}` placeholder
+- Rules 5-9 (callout variety, anti-robotic, etc.) stay unchanged — they're level-independent
+
+After deploy: `npm run claude:deploy`
+
+---
+
+## Fix 3: Level-Aware English Hints Detection (HIGH priority)
+
+**Problem**: `activity_validation.py:264-335` `check_english_hints_in_activities` flags `(lowercase word)` patterns as English hints. Threshold: >5 = critical. No level parameter usage. But A1/A2 activities are **required** to use English for instructions/explanations (phase-3:198-203).
+
+The function only checks cloze, fill-in, error-correction (not quiz/match-up). It already receives `level` and `module_num` params but never uses them.
+
+**Changes in `scripts/audit/checks/activity_validation.py`**:
+
+1. After line 271 — add level-aware threshold:
+```python
+base_level = level.split('-')[0].upper() if level else ''
+if base_level in ('A1', 'A2'):
+    critical_threshold = 15
+    severity_floor = 'info'
+else:
+    critical_threshold = 5
+    severity_floor = 'warning'
+```
+
+2. Line 323 — use level-aware threshold instead of hardcoded 5
+
+3. Expand scaffolding allowlist for A1/A2: `(example)`, `(hint)`, `(listen)`, `(repeat)`, `(choose)`, etc.
+
+---
+
+## Fix 4: Decodable Vocabulary Injection (HIGH priority)
+
+**Problem**: Gemini gets `PEDAGOGICAL_CONSTRAINTS` saying "only use 6 letters" but no actual word list. It invents words that violate the charset constraint, fails audit, enters fix loop.
+
+**Changes**:
+
+**`scripts/pipeline_lib.py`** — Add `get_decodable_vocabulary(track, module_num, plan) -> str`:
+
+- M1-M4: Returns curated word list (VESUM-verified, charset-validated using `rule_engine._DECODABILITY_SPECS`)
+- M5+, A2+: Returns empty string
+
+Word lists curated per module:
+- **M1** (АМЛУНС): мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+- **M2** (+ТОКИВРЕІ): банан, вода, молоко, кіно, рука, дім, він, вона, бік, рис, сир, дорога, робота, добро
+- **M3** (+ДПЗБГХЖШЧ): Full alphabet nearly complete — large word set, inject top-30 from plan's vocab_hints
+- **M4**: Full alphabet — no restriction, empty placeholder
+
+Each word verified with `mcp__rag__verify_word` and charset-checked against `rule_engine._DECODABILITY_SPECS[module].allowed` before inclusion.
+
+**`claude_extensions/phases/gemini/phase-2-content.md`** — Add `{DECODABLE_VOCABULARY}` after `{PEDAGOGICAL_CONSTRAINTS}`
+
+**`claude_extensions/phases/gemini/phase-3-activities.md`** — Add `{DECODABLE_VOCABULARY}` after line 25
+
+---
+
+## Implementation Order
+
+1. **Fix 1** (item counts) — 3 single-line changes, highest impact, zero risk
+2. **Fix 3** (English hints) — contained to one function, prevents false audit failures
+3. **Fix 4** (vocabulary injection) — new function + placeholder, prevents constraint guessing
+4. **Fix 2** (structural rules) — template change + new function, most complex; deploy via `npm run claude:deploy`
+
+Fixes 1+3 can be one commit. Fixes 4+2 can be a second commit.
 
 ---
 
 ## Files Modified
 
-| File | Change |
-|------|--------|
-| `scripts/pipeline_lib.py` | Add `PEDAGOGICAL_CONSTRAINTS` dict (~line 200), `get_pedagogical_constraints()` function (~line 365), add to `write_placeholders()`, add to `_critical_keys` |
-| `claude_extensions/phases/gemini/phase-2-content.md` | Add `{PEDAGOGICAL_CONSTRAINTS}` section |
-| Deploy via `npm run claude:deploy` | |
-
-### 1. `scripts/pipeline_lib.py` — Constants and function
-
-**Add after `LEVEL_CONSTRAINTS` (line 199):**
-
-```python
-PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
-    "a1-m01": (
-        "DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):\n"
-        "- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)\n"
-        "- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary "
-        "with immediate English translation: «Привіт!» (Hello!)\n"
-        "- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read\n\n"
-        "GRAMMAR BAN (no verbs exist yet in the student's knowledge):\n"
-        "- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED\n"
-        "- NO verb conjugation of any kind (present, past, future)\n"
-        "- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'\n"
-        "- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)\n\n"
-        "METALANGUAGE:\n"
-        "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'\n"
-        "- Section headings may be bilingual: '## Голосні — Vowels'\n"
-        "- NEVER write Ukrainian-only explanatory prose — the student cannot read it yet"
-    ),
-    "a1-m02": (
-        "DECODABILITY (M2 — 14 known letters: А М Л У Н С + К И Р Б В Д І О):\n"
-        "- Reading drills MUST use ONLY these 14 letters (e.g., банан, вода, молоко, кіно, рука, дім, бік, він)\n"
-        "- Still unknown: П, Т, Г, Ґ, Е, З, Ж, Ш, Х, Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф\n"
-        "- Words needing unknown letters require immediate English translation\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — ALL BANNED. Use English for instructions.\n"
-        "- NO verb conjugation of any kind\n"
-        "- Allowed: bare nouns, noun phrases using known letters\n\n"
-        "METALANGUAGE:\n"
-        "- All terminology English-first with Ukrainian in parentheses"
-    ),
-    "a1-m03": (
-        "DECODABILITY (M3 — 23 known letters: previous 14 + П Т Г Ґ Е З Ж Ш Х):\n"
-        "- Nearly all common text is readable now. Reading drills use these 23 letters.\n"
-        "- Still unknown: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф + digraphs ДЖ, ДЗ\n"
-        "- Words needing unknown letters require English translation\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — BANNED. English for instructions.\n"
-        "- NO verb conjugation\n"
-        "- Allowed: bare nouns, noun phrases\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m04": (
-        "DECODABILITY (M4 — full 33-letter alphabet now complete):\n"
-        "- No letter restrictions — all Ukrainian words are decodable after this module.\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — BANNED. English for instructions.\n"
-        "- NO verb conjugation\n"
-        "- Allowed: bare nouns, noun phrases, Це + noun (preview)\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m05-10": (
-        "SEQUENCE CONSTRAINTS (M5-10 — Phonology & First Grammar):\n"
-        "Full alphabet known. Modules teach: syllables (M5), stress (M6), gender (M7), "
-        "greetings (M8), Це/Я/Мене звати (M9), Що це? (M10).\n\n"
-        "GRAMMAR STATUS:\n"
-        "- AVAILABLE: bare nouns, gender classification, Це + noun, Я + noun, "
-        "memorized politeness phrases (Дякую, Будь ласка, Вибачте from M8)\n"
-        "- FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases except nominative\n"
-        "- Use English for all classroom instructions\n\n"
-        "METALANGUAGE: English-first, Ukrainian term in parentheses on first use"
-    ),
-    "a1-m11-14": (
-        "SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):\n"
-        "Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.\n"
-        "Learning: adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M14).\n\n"
-        "GRAMMAR STATUS:\n"
-        "- AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement (from M11), "
-        "Це/Я sentences, memorized phrases\n"
-        "- FORBIDDEN: verb conjugation (starts M15), imperatives (M47), "
-        "cases beyond nominative (accusative starts M25)\n"
-        "- Use English for classroom instructions\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m15+": (
-        "SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):\n"
-        "Present tense verbs start at M15. Past tense at M36. Future at M37.\n\n"
-        "KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) "
-        "are NOT taught until M47 (imperative-and-requests). "
-        "Before M47, use indirect requests or English for instructions.\n\n"
-        "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) "
-        "apply in addition to this constraint."
-    ),
-}
-
-
-def get_pedagogical_constraints(track: str, module_num: int) -> str:
-    """Module-sequence-aware pedagogical constraints for A1."""
-    base = track.split("-")[0]
-    if base != "a1":
-        return ""
-    if module_num == 1:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m01"]
-    elif module_num == 2:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m02"]
-    elif module_num == 3:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m03"]
-    elif module_num == 4:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m04"]
-    elif module_num <= 10:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m05-10"]
-    elif module_num <= 14:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m11-14"]
-    else:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m15+"]
-```
-
-### 2. `scripts/pipeline_lib.py` — `write_placeholders()` changes
-
-**Add to `_critical_keys` (line 1620):**
-```python
-_critical_keys = {"ITEM_MINIMUMS_TABLE", "ACTIVITY_MAX", "ACTIVITY_MIN",
-                  "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS"}
-```
-
-**Add to placeholders dict (after `LEVEL_CONSTRAINTS` line ~1651):**
-```python
-"PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num),
-```
-
-### 3. `claude_extensions/phases/gemini/phase-2-content.md` — Template
-
-**Add after the `{PRONUNCIATION_VIDEOS}` line (line ~38), before the `---` separator:**
-
-```markdown
-## Module Sequence Constraints (HARD FAIL if violated)
-
-{PEDAGOGICAL_CONSTRAINTS}
-
-> **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
-```
-
-When `{PEDAGOGICAL_CONSTRAINTS}` is empty (A2+), the section appears with no constraint text — harmless.
-
-### 4. Deploy: `npm run claude:deploy`
+| File | Fix | Change |
+|------|-----|--------|
+| `scripts/audit/config.py` | 1 | A1 `min_items_per_activity`: 12→6 |
+| `scripts/pipeline_lib.py` | 1,2,4 | ITEMS_MIN alignment, `get_structural_rules()`, `get_decodable_vocabulary()`, `write_placeholders` |
+| `scripts/audit/checks/activity_validation.py` | 3 | Level-aware thresholds in `check_english_hints_in_activities` |
+| `claude_extensions/phases/gemini/phase-2-content.md` | 2,4 | `{STRUCTURAL_RULES}`, `{H3_WORD_RANGE}`, `{EXPANSION_METHOD}`, `{DECODABLE_VOCABULARY}` |
+| `claude_extensions/phases/gemini/phase-3-activities.md` | 4 | `{DECODABLE_VOCABULARY}` |
 
 ---
 
 ## Verification
 
 ```bash
-# 1. Unit check — selector returns correct band
+# 1. Confirm item count alignment
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from pipeline_lib import get_pedagogical_constraints
-for m in [1, 2, 3, 4, 5, 10, 11, 14, 15, 47, 64]:
-    c = get_pedagogical_constraints('a1', m)
-    print(f'M{m:02d}: {c[:60]}...' if c else f'M{m:02d}: (empty)')
-# A2 should return empty
-print(f'A2: {repr(get_pedagogical_constraints(\"a2\", 1))}')
+from audit.config import LEVEL_CONFIG
+from pipeline_lib import ACTIVITY_CONFIGS
+for lvl in ['A1', 'A2']:
+    lc = LEVEL_CONFIG[lvl]['min_items_per_activity']
+    ac = ACTIVITY_CONFIGS[lvl.lower()]['ITEMS_MIN']
+    match = '✅' if str(lc) == ac else '❌'
+    print(f'{lvl}: LEVEL_CONFIG={lc}, ACTIVITY_CONFIGS={ac} {match}')
 "
 
-# 2. Run existing tests
-.venv/bin/python -m pytest tests/test_pipeline_v4.py -x -q
-
-# 3. Verify placeholder in YAML for M1
+# 2. Verify structural rules vary by level
 .venv/bin/python -c "
-import sys, yaml; sys.path.insert(0, 'scripts')
-from pipeline_lib import get_pedagogical_constraints
-text = get_pedagogical_constraints('a1', 1)
-assert 'А, М, Л, У, Н, С' in text
-assert 'Слухайте' in text
-assert 'BANNED' in text
-print('M1 constraints OK')
+import sys; sys.path.insert(0, 'scripts')
+from pipeline_lib import get_structural_rules
+for track, mod in [('a1', 1), ('a1', 10), ('a1', 20), ('a2', 1), ('b1-grammar', 1)]:
+    rules = get_structural_rules(track, mod)
+    print(f'{track} M{mod}: {rules[:60]}...')
 "
 
-# 4. After rebuild: verify no imperatives in M1 output
-# grep -i 'Слухайте\|Читайте\|Повторюйте\|Пишіть' curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
+# 3. Verify decodable vocabulary
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from pipeline_lib import get_decodable_vocabulary
+for mod in [1, 2, 3, 5]:
+    vocab = get_decodable_vocabulary('a1', mod, {})
+    print(f'M{mod}: {\"words found\" if vocab else \"empty (correct)\"}')
+"
+
+# 4. Existing tests pass
+.venv/bin/python -m pytest tests/test_pipeline_v4.py tests/test_rule_engine.py -x -q
+
+# 5. Deploy template changes
+npm run claude:deploy
+
+# 6. Rebuild M1 or M2 and compare fix-loop iterations (should be fewer)
 ```

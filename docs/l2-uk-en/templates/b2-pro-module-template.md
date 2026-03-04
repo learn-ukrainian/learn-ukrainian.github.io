@@ -80,7 +80,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: ESP
-  min_word_count: 3000
+  min_word_count: 4000
   required_callouts: []
   description: B2-PRO professional track modules for career-focused Ukrainian
 -->

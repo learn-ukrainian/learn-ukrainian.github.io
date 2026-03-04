@@ -15,7 +15,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: TTT
-  min_word_count: 1500
+  min_word_count: 4000
   required_callouts: []
   description: B1 grammar uses TTT (Test-Teach-Test) with guided discovery
 -->
@@ -26,7 +26,7 @@ TEMPLATE_METADATA:
 
 Before submitting a B1 grammar module, verify:
 
-- [ ] **Word count:** 1500+ words (core prose: explanations, examples, engagement boxes, reading passages — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 4000+ words per config.py (core prose — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 25+ items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Activities:** 8-10 activities (quality over quantity, core types required)
 - [ ] **Activity density:**
@@ -138,7 +138,7 @@ vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 
 ---
 
-### 3. Content Sections (1500+ words total)
+### 3. Content Sections (4000+ words total)
 
 **Structure for TTT pedagogy:**
 

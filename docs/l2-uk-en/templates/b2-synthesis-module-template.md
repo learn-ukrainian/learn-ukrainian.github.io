@@ -16,7 +16,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 2000
+  min_word_count: 4000
   required_callouts: []
   description: B2 synthesis modules integrate grammar, vocabulary, and skills
 -->
@@ -67,7 +67,7 @@ Before submitting a B2 Synthesis module, verify:
 
 - [ ] **Primary sources (≥3):** From different modules/eras for comparison
 - [ ] **100% Ukrainian immersion:** English only in vocabulary translations
-- [ ] **Word count:** 2000+ words (synthesis narrative)
+- [ ] **Word count:** 4000+ words per config.py (synthesis narrative)
 - [ ] **Activities:** 10+ with analysis focus
 - [ ] **NO DIALOGS:** Synthesis modules are analysis-centric
 

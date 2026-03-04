@@ -17,7 +17,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 3000
+  min_word_count: 5000
   required_callouts:
   - myth-buster
   - history-bite
@@ -69,7 +69,7 @@ Before submitting a B2 synthesis module, verify:
 - [ ] **Present connection:** Link to modern Ukraine (post-2014/2022)
 - [ ] **Decolonization lens:** Ukraine-centric perspective throughout
 - [ ] **Immersion:** 100% Ukrainian (English only in vocabulary translations)
-- [ ] **Word count:** 3000+ words total
+- [ ] **Word count:** 5000+ words per config.py
 - [ ] **Activities:** 10-12 activities (fewer than regular modules, more analytical)
 
 ---

@@ -9,7 +9,7 @@
 
 Before submitting your cultural module, verify:
 
-- [ ] **Word count:** 1500+ words
+- [ ] **Word count:** 4000+ words per config.py
 - [ ] **Vocabulary:** 25+ items in 5-column format with IPA (Слово | Вимова | English | PoS | Примітки)
 - [ ] **Activities:** 8-10 activities (quality over quantity, comprehension-focused)
 - [ ] **Activity items:** Quiz/match-up/fill-in 8+ items, cloze 12+ blanks
@@ -30,7 +30,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 1500
+  min_word_count: 4000
   required_callouts: []
   description: B1 cultural modules use CBI with regional focus
 -->
@@ -546,7 +546,7 @@ Before running the audit script, manually verify:
 
 ### Technical Gates:
 
-- [ ] **Word count:** 1500+ words (run `.venv/bin/python scripts/audit_module.py`)
+- [ ] **Word count:** 4000+ words per config.py (run `.venv/bin/python scripts/audit_module.py`)
 - [ ] **Vocabulary:** 25+ items in 5-column format with IPA
 - [ ] **Activities:** 8-10 activities (quality over quantity)
 - [ ] **Activity items:** Quiz/match-up/fill-in 8+ items each

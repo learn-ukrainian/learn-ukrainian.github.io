@@ -24,7 +24,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CBI
-  min_word_count: 1500
+  min_word_count: 4000
   required_callouts: []
   description: B1 vocabulary expansion uses CBI with thematic organization
 -->
@@ -35,7 +35,7 @@ TEMPLATE_METADATA:
 
 Before submitting a B1 vocabulary module, verify:
 
-- [ ] **Word count:** 1500+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 4000+ words per config.py (core prose — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 25-30 items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Thematic organization:** Vocabulary grouped by semantic field or function
 - [ ] **Key patterns:** 6-10 usage patterns with authentic examples
@@ -146,7 +146,7 @@ vocabulary_count: 25 # 25-30 for vocab modules
 
 ---
 
-### 3. Content Sections (1500+ words total)
+### 3. Content Sections (4000+ words total)
 
 **Structure for PPP pedagogy:**
 

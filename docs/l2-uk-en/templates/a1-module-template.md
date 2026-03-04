@@ -21,7 +21,7 @@ TEMPLATE_METADATA:
   - Vocabulary
   - External Resources
   pedagogy: PPP
-  min_word_count: 300
+  min_word_count: 1200
   required_callouts: []
   description: A1 uses PPP pedagogy with graduated immersion and Cyrillic focus
 -->
@@ -33,13 +33,12 @@ TEMPLATE_METADATA:
 Before submitting, verify:
 
 - [ ] Frontmatter complete (module, title, phase, pedagogy, objectives)
-- [ ] Word count meets target (M01-05: 300+, M06-10: 500+, M11-34: 750+)
-- [ ] **IPA included for all new vocabulary and key pronunciation examples**
+- [ ] Word count meets target (2000+ words per config.py)
 - [ ] **NO Latin transliteration used (forbidden)**
-- [ ] 8+ activities with 12+ items each
+- [ ] 8+ activities with 6+ items each
 - [ ] 4+ unique activity types
 - [ ] 3+ engagement boxes
-- [ ] Vocabulary table with IPA pronunciation
+- [ ] Vocabulary defined in vocabulary/{slug}.yaml
 - [ ] All activity answers are correct
 
 ---
@@ -182,7 +181,7 @@ Brief recap (50-75 words):
 
 **Activity Requirements:**
 
-- 12+ items per activity
+- 6+ items per activity
 - 4+ unique activity types
 - Clear instructions in English
 - All answers must be correct
@@ -261,13 +260,13 @@ items:
 
 ## Quality Targets
 
-| Metric           | M01-05 | M06-10 | M11-34 |
-| ---------------- | ------ | ------ | ------ |
-| Words            | 300+   | 500+   | 750+   |
-| Activities       | 8+     | 8+     | 8+     |
-| Items/activity   | 12+    | 12+    | 12+    |
-| Engagement boxes | 2+     | 3+     | 3+     |
-| Vocabulary       | 15+    | 20+    | 25+    |
+| Metric           | Target |
+| ---------------- | ------ |
+| Words            | 2000+  |
+| Activities       | 8+     |
+| Items/activity   | 6+     |
+| Engagement boxes | 3+     |
+| Vocabulary       | 15+    |
 
 ---
 

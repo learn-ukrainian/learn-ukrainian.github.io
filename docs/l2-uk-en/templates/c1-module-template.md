@@ -16,7 +16,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Immersion
-  min_word_count: 3000
+  min_word_count: 4000
   required_callouts: []
   description: C1 base template with academic immersion and analysis
 -->
@@ -29,7 +29,7 @@ Before submitting a C1 module, verify:
 
 ### Content Requirements
 
-- [ ] **Word count:** 3000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 4000+ words per config.py (core prose — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 35+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 500-800+ word university-level texts
 - [ ] **Comparative analysis:** Module compares 2+ texts/perspectives
@@ -129,7 +129,7 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 | Aspect | B2 | C1 |
 |--------|----|----|
 | **Philosophy** | "Reading to learn" | "Studying IN Ukrainian" |
-| **Word count** | 1750+ | 3000+ |
+| **Word count** | 4000+ | 4000+ |
 | **Vocabulary** | 30+ | 35+ |
 | **Activities** | 10+ | 12+ |
 | **Passages** | 300-500 words | 500-800+ words |
@@ -167,7 +167,7 @@ vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 
 ---
 
-### 3. Content Sections (3000+ words total)
+### 3. Content Sections (4000+ words total)
 
 **Structure for Academic/Comparative Analysis:**
 
@@ -445,7 +445,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 | Feature | B2 | C1 |
 |---------|----|----|
-| Word count | 1800+ | 3000+ |
+| Word count | 4000+ | 4000+ |
 | Vocabulary | 30+ | 35+ |
 | Activities | 10+ | 12+ |
 | Quiz words/question | 15-25 | 18-30 |
@@ -464,7 +464,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Academic register, research writing, formal argumentation
 **Pedagogy:** Academic analysis
 **Activities:** 12+ (heavy on academic writing, text analysis)
-**Word count:** 3000+
+**Word count:** 4000+
 **Passages:** Academic journal articles, textbook excerpts (500-800 words)
 
 **Example modules:**
@@ -478,7 +478,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Professional registers, workplace communication, social contexts
 **Pedagogy:** Professional simulation
 **Activities:** 12+ (professional writing, register transformation)
-**Word count:** 3000+
+**Word count:** 4000+
 
 **Example modules:**
 - M21-25: Official/bureaucratic register
@@ -490,7 +490,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Rhetorical devices, stylistic analysis, register shifting
 **Pedagogy:** Comparative stylistic analysis
 **Activities:** 12+ (stylistic identification, register transformation)
-**Word count:** 3000+
+**Word count:** 4000+
 **Checkpoint:** M55
 
 **Example modules:**
@@ -503,7 +503,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Traditional Ukrainian culture (music, art, beliefs, crafts)
 **Pedagogy:** Cultural analysis
 **Activities:** 10-12 (cultural comprehension, vocabulary) — content-heavy modules
-**Word count:** 3000+
+**Word count:** 4000+
 **Checkpoint:** M85
 
 **Example modules:**
@@ -519,7 +519,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Ukrainian literary canon (classics + contemporary)
 **Pedagogy:** Literary analysis, close reading
 **Activities:** 10-12 (text analysis, stylistic devices) — content-heavy modules
-**Word count:** 3000+
+**Word count:** 4000+
 **Passages:** Poetry, prose excerpts (500-800 words)
 **Checkpoint:** M105
 **Final Exam:** M106
@@ -562,7 +562,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Content
 
-- [ ] 3000+ words before activities
+- [ ] 4000+ words before activities
 - [ ] 35+ vocabulary items in 3-column format
 - [ ] 500-800+ word reading passages
 - [ ] Comparative analysis of 2+ texts

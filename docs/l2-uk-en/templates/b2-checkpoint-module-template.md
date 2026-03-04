@@ -15,7 +15,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: TTT
-  min_word_count: 1750
+  min_word_count: 4000
   required_callouts: []
   description: B2 checkpoints use skill-based structure with comprehensive testing
 -->
@@ -29,7 +29,7 @@ Before submitting a B2 checkpoint module, verify all items from `b2-module-templ
 ### Checkpoint-Specific Requirements
 
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
-- [ ] **Word count:** 1750+ words
+- [ ] **Word count:** 4000+ words per config.py
 - [ ] **Vocabulary:** 40-50 items (review vocabulary from ALL modules in phase)
 - [ ] **Activities:** 15+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase

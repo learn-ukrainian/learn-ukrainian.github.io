@@ -14,7 +14,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Native
-  min_word_count: 3000
+  min_word_count: 5000
   required_callouts: []
   description: C2 meta-skills modules teach language about language
 -->

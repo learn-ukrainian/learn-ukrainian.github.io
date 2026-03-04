@@ -9,7 +9,7 @@
 
 Before submitting your integration module, verify:
 
-- [ ] **Word count:** 1500+ words (M81-84), 1200+ (M85 Capstone)
+- [ ] **Word count:** 4000+ words per config.py
 - [ ] **Vocabulary:** 15-20 items in 5-column format with IPA (lower than regular modules - these are review/meta modules)
 - [ ] **Activities:** 8-10 activities for M81-84 (quality over quantity), 5-8 activities + 5 tasks for M85 Capstone
 - [ ] **Authentic materials:** 5+ authentic Ukrainian texts/resources (news, podcasts, interviews)
@@ -29,7 +29,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: TTT
-  min_word_count: 1500
+  min_word_count: 4000
   required_callouts: []
   description: B1 integration combines multiple grammar points
 -->
@@ -942,7 +942,7 @@ Before running the audit script, manually verify:
 - [ ] **Authentic materials** - 5+ real Ukrainian texts/resources
 - [ ] **Resources section** - Extensive links to Ukrainian materials
 - [ ] **B2 preview** - Explicit "Next Steps" section
-- [ ] **Word count:** 1500+ words (M81-84), 1200+ (M85)
+- [ ] **Word count:** 4000+ words per config.py
 - [ ] **Vocabulary:** 15-20 items (M81-84), 10 items (M85)
 
 ### Skills Modules (M81-82) Specific:

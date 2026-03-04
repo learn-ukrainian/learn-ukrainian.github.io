@@ -15,7 +15,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Immersion
-  min_word_count: 3000
+  min_word_count: 4000
   required_callouts: []
   description: C1 academic modules with research-level Ukrainian
 -->

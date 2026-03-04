@@ -12,7 +12,7 @@ TEMPLATE_METADATA:
   - Огляд
   - Підсумок
   pedagogy: TTT
-  min_word_count: 1200
+  min_word_count: 4000
   required_callouts: []
   description: B1 checkpoint uses TTT for comprehensive review and testing
 -->
@@ -26,7 +26,7 @@ Before submitting a B1 checkpoint module, verify all items from `b1-grammar-modu
 ### Checkpoint-Specific Requirements
 
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
-- [ ] **Word count:** 1200+ words (review content, not new teaching)
+- [ ] **Word count:** 4000+ words per config.py (review content, not new teaching)
 - [ ] **Vocabulary:** 30-40 items (review vocabulary from ALL modules in phase)
 - [ ] **Activities:** 10+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase

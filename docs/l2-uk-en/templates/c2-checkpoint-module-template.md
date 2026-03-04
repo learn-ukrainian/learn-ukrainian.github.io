@@ -14,7 +14,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Native
-  min_word_count: 2000
+  min_word_count: 4000
   required_callouts: []
   description: C2 checkpoints assess native-level proficiency
 -->
@@ -28,7 +28,7 @@ Before submitting a C2 checkpoint module, verify all items from `c2-module-templ
 ### Checkpoint-Specific Requirements
 
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
-- [ ] **Word count:** 2000+ words (review content, not new teaching)
+- [ ] **Word count:** 4000+ words per config.py (review content, not new teaching)
 - [ ] **Vocabulary:** 50-60 items (review vocabulary from ALL modules in phase)
 - [ ] **Activities:** 12+ comprehensive testing activities
 - [ ] **Integration:** Complete review of ALL modules in the phase

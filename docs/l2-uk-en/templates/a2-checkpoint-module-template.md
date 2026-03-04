@@ -19,7 +19,7 @@ TEMPLATE_METADATA:
   - Vocabulary
   - External Resources
   pedagogy: TTT
-  min_word_count: 800
+  min_word_count: 2500
   required_callouts: []
   description: A2 checkpoint focuses on Skill-based review (Model-Practice-Check)
 -->

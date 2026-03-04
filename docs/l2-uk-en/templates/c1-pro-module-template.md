@@ -81,7 +81,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: ESP+CLIL
-  min_word_count: 3000
+  min_word_count: 4000
   required_callouts: []
   description: C1-PRO professional mastery modules for executives, academics, specialists
 -->

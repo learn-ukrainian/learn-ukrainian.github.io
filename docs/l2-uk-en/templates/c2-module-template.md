@@ -55,7 +55,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Native
-  min_word_count: 3000
+  min_word_count: 5000
   required_callouts: []
   description: C2 base template for native-level mastery
 -->
@@ -68,7 +68,7 @@ Before submitting a C2 module, verify:
 
 ### Content Requirements
 
-- [ ] **Word count:** 3000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 5000+ words per config.py (core prose — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 40+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 600-1000+ word native-level texts
 - [ ] **Creative/productive tasks:** Original writing, translation, or transformation
@@ -163,7 +163,7 @@ vocabulary_count: 40  # Must match count in vocabulary/{slug}.yaml
 | Aspect | C1 | C2 |
 |--------|----|----|
 | **Philosophy** | "Studying IN Ukrainian" | "Creating WITH Ukrainian" |
-| **Word count** | 2000+ | 2200+ |
+| **Word count** | 4000+ | 5000+ |
 | **Vocabulary** | 35+ | 40+ |
 | **Activities** | 12+ | 3-9 (seminar) |
 | **Passages** | 500-800 words | 600-1000+ words |
@@ -203,7 +203,7 @@ vocabulary_count: 40  # Must match count in vocabulary/{slug}.yaml
 
 ---
 
-### 3. Content Sections (2200+ words total)
+### 3. Content Sections (5000+ words total)
 
 **Structure for Creative Production:**
 
@@ -559,7 +559,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 | Feature | C1 | C2 |
 |---------|----|----|
-| Word count | 2000+ | 2200+ |
+| Word count | 4000+ | 5000+ |
 | Vocabulary | 35+ | 40+ |
 | Activities | 12+ | 3-9 (seminar) |
 | Quiz words/question | 18-30 | 20-35 |
@@ -579,7 +579,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** All 7 functional styles, style transformation, euphonic mastery
 **Pedagogy:** Creative Production
 **Activities:** 3-9 (seminar: reading, essay, analysis)
-**Word count:** 2200+
+**Word count:** 5000+
 **Creative tasks:** Style transformation, register shifting, original writing
 
 **Example modules:**
@@ -593,7 +593,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Literary theory, narratology, poetics, translation, creative writing
 **Pedagogy:** Creative Production
 **Activities:** 3-9 (seminar: reading, essay, analysis)
-**Word count:** 2200+
+**Word count:** 5000+
 **Creative tasks:** Poetry, prose, translation (with Model Answers)
 
 **Example modules:**
@@ -607,7 +607,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Meta-skills for professional domains (universal templates, not jargon)
 **Pedagogy:** Professional simulation
 **Activities:** 3-9 (seminar: reading, essay, analysis)
-**Word count:** 2200+
+**Word count:** 5000+
 **Professional tasks:** Documents, reports, correspondence (with Model Answers)
 
 **Example modules:**
@@ -622,7 +622,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Focus:** Complete grammar review, rare/archaic forms, regional varieties, sociolinguistics, teaching Ukrainian, translation, capstone projects
 **Pedagogy:** Meta-Linguistic + Capstone
 **Activities:** 10-16 (meta-analysis, capstone work)
-**Word count:** 2200+
+**Word count:** 5000+
 
 **Example modules:**
 - M76-80: Complete grammar review
@@ -668,7 +668,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Content
 
-- [ ] 2200+ words before activities
+- [ ] 5000+ words before activities
 - [ ] 40+ vocabulary items in 3-column format
 - [ ] 600-1000+ word reading passages
 - [ ] Creative/productive tasks (original writing, translation, transformation)

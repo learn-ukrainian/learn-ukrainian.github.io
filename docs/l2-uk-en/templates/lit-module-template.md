@@ -17,7 +17,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Seminar
-  min_word_count: 4000
+  min_word_count: 5000
   required_callouts: []
   description: LIT modules use graduate-level seminar approach with literary analysis
 -->
@@ -72,7 +72,7 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 
 ### 1. The "Bulk Content" Strategy (Crucial for Word Count)
 
-- **Problem:** It is extremely difficult to generate 4000+ words of *pure analysis* from scratch without hallucinating.
+- **Problem:** It is extremely difficult to generate 5000+ words of *pure analysis* from scratch without hallucinating.
 - **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
 - **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
 - **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
@@ -127,7 +127,7 @@ Before submitting a LIT module, verify:
 
 ### Content Requirements
 
-- [ ] **Word count:** 2200+ words (core prose narrative).
+- [ ] **Word count:** 5000+ words (core prose narrative).
 - [ ] **Reading Hall (YAML):** Structured as `type: reading` activities with tasks and links.
 - [ ] **Analytical Workshop (YAML):** Structured as `type: essay` or `type: debate`.
 
@@ -157,7 +157,7 @@ Before submitting a LIT module, verify:
 | Aspect         | C1/C2 Core                  | LIT Track                        |
 | -------------- | --------------------------- | -------------------------------- |
 | **Philosophy** | General language mastery    | Literary/cultural specialization |
-| **Word count** | 2000-2200+                  | 2200+ (often 2500-3000)          |
+| **Word count** | 2000-2200+                  | 5000+ (core analysis + excerpts) |
 | **Vocabulary** | 35-40 general               | 30-40 literary/historical        |
 | **Structure**  | Grammar/vocab/activities    | Pure content + essays            |
 | **Activities** | 14-16 interactive           | 0 traditional (essay-based only) |
@@ -278,7 +278,7 @@ description: 'LIT-00X: English description for metadata'
 
 ### 4. Content Sections (Частини I-XX)
 
-**Structure:** 15-20 themed sections, 2200+ words total
+**Structure:** 15-20 themed sections, 5000+ words total
 
 ```markdown
 # Частина I: [Section Title] 📖/🕯️/👤/🎭 (optional emoji)
@@ -687,14 +687,14 @@ Common UkrLib author IDs (verify before using):
 
 ### 6. Complexity Scaling (C1/C2 Core → LIT)
 
-| Feature    | C1 Core                  | C2 Core                   | LIT Track                 |
-| ---------- | ------------------------ | ------------------------- | ------------------------- |
-| Word count | 2000+                    | 2200+                     | 2200-3000+                |
-| Vocabulary | 35+ general              | 40+ general               | 30-40 literary/historical |
-| Activities | 12+ interactive          | 3-9 (seminar)             | 3-9 (essays only)         |
-| Essays     | 1 (400+ words)           | 1-2 (various)             | 1-2 (300-500 words)       |
-| Texts      | Excerpts (500-800 words) | Excerpts (600-1000 words) | Full works (external)     |
-| Focus      | Language mastery         | Creative production       | Philological analysis     |
+| Feature    | C1 Core                  | C2 Core                   | LIT Track                     |
+| ---------- | ------------------------ | ------------------------- | ----------------------------- |
+| Word count | 2000+                    | 2200+                     | 5000+ (core + excerpts)       |
+| Vocabulary | 35+ general              | 40+ general               | 30-40 literary/historical     |
+| Activities | 12+ interactive          | 3-9 (seminar)             | 3-9 (essays only)             |
+| Essays     | 1 (400+ words)           | 1-2 (various)             | 1-2 (300-500 words)           |
+| Texts      | Excerpts (500-800 words) | Excerpts (600-1000 words) | Full works (external)         |
+| Focus      | Language mastery         | Creative production       | Philological analysis         |
 
 ---
 
@@ -712,31 +712,31 @@ Common UkrLib author IDs (verify before using):
 | LIT-004 | Vocabulary Study | Military/war vocabulary from *Eneida*                      |
 | LIT-005 | Literary Work    | *Natalka Poltavka* - sentimentalism, theater               |
 
-**Word count:** 2200-2500 per module
+**Word count:** 5000+ per module
 
 ### Phase LIT.2: Kvitka-Osnovianenko (M006-010)
 
 **Focus:** Sentimentalism, prose development, ethnography
 
-**Word count:** 2200-2500 per module
+**Word count:** 5000+ per module
 
 ### Phase LIT.3: Taras Shevchenko (M011-020)
 
 **Focus:** Romanticism, synthesis of folk and Church Slavonic, modern standard
 
-**Word count:** 2200-2800 per module (10 modules - major author)
+**Word count:** 5000+ per module (10 modules - major author)
 
 ### Phase LIT.4: Kulish & Kostomarov (M021-025)
 
 **Focus:** Europeanism, historical novels, language reform
 
-**Word count:** 2200-2500 per module
+**Word count:** 5000+ per module
 
 ### Phase LIT.5: Nechuy-Levytsky (M026-030)
 
 **Focus:** Realism, village life, conversational language
 
-**Word count:** 2200-2500 per module
+**Word count:** 5000+ per module
 
 ---
 
@@ -766,7 +766,7 @@ Common UkrLib author IDs (verify before using):
 
 ### Content
 
-- [ ] 2200+ words before vocabulary/resources
+- [ ] 5000+ words before vocabulary/resources
 - [ ] 30-40 vocabulary items in 3-column format
 - [ ] 15-20 content sections (Частини I-XX)
 - [ ] Biographical/historical/analytical depth

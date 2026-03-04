@@ -19,7 +19,7 @@ TEMPLATE_METADATA:
   - Vocabulary
   - External Resources
   pedagogy: TTT
-  min_word_count: 500
+  min_word_count: 1500
   required_callouts: []
   description: A1 checkpoint focuses on recognition and basic completion using Skill-based structure.
 -->

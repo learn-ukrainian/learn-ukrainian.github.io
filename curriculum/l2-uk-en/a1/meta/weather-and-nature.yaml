@@ -1,6 +1,6 @@
 slug: weather-and-nature
 title: Weather & Nature
-word_target: 2000
+word_target: 1200
 grammar:
   constraints:
     subordinate_clauses: true

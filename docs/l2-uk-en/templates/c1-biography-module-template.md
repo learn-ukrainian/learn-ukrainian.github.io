@@ -100,7 +100,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: Immersion
-  min_word_count: 4000
+  min_word_count: 5000
   required_callouts: []
   description: C1 biography modules focus on cultural figures
 -->

@@ -85,7 +85,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: CLIL
-  min_word_count: 3500
+  min_word_count: 5000
   required_callouts: []
   description: ISTORIO modules focus on historiographical analysis and primary sources
 -->

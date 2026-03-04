@@ -16,7 +16,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: varies
-  min_word_count: 1750
+  min_word_count: 4000
   required_callouts: []
   description: B2 base template - inherits common B2 standards
 -->
@@ -29,7 +29,7 @@ Before submitting a B2 module, verify:
 
 ### Content Requirements
 
-- [ ] **Word count:** 1750+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
+- [ ] **Word count:** 4000+ words per config.py (core prose — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 30+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 300-500+ word authentic-style reading passages
 - [ ] **Writing support:** ALL writing tasks include Model Answers
@@ -147,7 +147,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 ---
 
-### 3. Content Sections (1800+ words total)
+### 3. Content Sections (4000+ words total)
 
 **Structure depends on pedagogy:**
 
@@ -430,7 +430,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 | Feature | B1 | B2 |
 |---------|----|----|
-| Word count | 1500+ | 1800+ |
+| Word count | 4000+ | 4000+ |
 | Vocabulary | 25+ | 30+ |
 | Activities | 8-10 | 10-12 |
 | Quiz words/question | 12-20 | 15-25 |
@@ -450,7 +450,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Focus:** Passive voice, participles, register system
 **Pedagogy:** TTT (Test-Teach-Test)
 **Activities:** 10-12 (heavy on transformation, register identification)
-**Word count:** 1800+
+**Word count:** 4000+
 **Passages:** Academic/journalistic texts (300-500 words)
 
 **Example modules:**
@@ -463,7 +463,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Focus:** Numerals, word formation, pronouns
 **Pedagogy:** TTT
 **Activities:** 10-12
-**Word count:** 1800+
+**Word count:** 4000+
 
 **Example modules:**
 - M31-35: Complex numerals, collective numerals
@@ -474,7 +474,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Focus:** Idioms, proverbs, synonyms, antonyms, collocations
 **Pedagogy:** CBI (Narrative Arcs)
 **Activities:** 10-12 (collocation matching, idiom usage)
-**Word count:** 1800+
+**Word count:** 4000+
 **Passages:** Literary excerpts, journalistic pieces
 
 **Example modules:**
@@ -487,7 +487,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Focus:** Integration of grammar and register, practical communication skills
 **Pedagogy:** CBI (Content-Based Instruction)
 **Activities:** 12-14 (skills application, integrated practice)
-**Word count:** 1800+
+**Word count:** 4000+
 
 **Phase breakdown:**
 - M71-84: Integration modules (grammar review, register application)
@@ -499,7 +499,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Focus:** Integrated skills, final assessment
 **Pedagogy:** CBI + Skills integration
 **Activities:** 10-12 (multi-skill integration)
-**Word count:** 1800+
+**Word count:** 4000+
 
 **Example modules:**
 - M132-140: Reading comprehension, writing skills, listening
@@ -534,7 +534,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 ### Content
 
-- [ ] 1800+ words before activities
+- [ ] 4000+ words before activities
 - [ ] 30+ vocabulary items in 3-column format
 - [ ] 300-500+ word reading passages
 - [ ] Model Answers for ALL writing tasks

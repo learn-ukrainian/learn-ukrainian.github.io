@@ -15,7 +15,7 @@ TEMPLATE_METADATA:
   - Підсумок
   - Потрібно більше практики?
   pedagogy: TTT
-  min_word_count: 1750
+  min_word_count: 4000
   required_callouts: []
   description: B2 grammar uses TTT with register awareness and transformation activities
 -->
