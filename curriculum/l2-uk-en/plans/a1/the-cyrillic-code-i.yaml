@@ -47,7 +47,8 @@ content_outline:
   points:
   - 'Open syllables (end in vowel): МА МО МУ НА НО НУ ЛА ЛО ЛУ СА СО СУ.'
   - 'Closed syllables (end in consonant): АМ ОМ УМ АН ОН УН АС ОС УС АЛ ОЛ УЛ.'
-  - 'Blending syllables into words: ма+ма = мама, со+м = сом, со+сна = сосна, а+на+нас = ананас.'
+  - 'Blending into words: ма+ма = мама (two open syllables), со+сна = сосна (two syllables), а+на+нас = ананас (three syllables).
+    Single closed syllables read as a whole: сом, сон, нам, нас, сам.'
   - 'Word reading drill (all decodable from 7 letters): мама, сом, сон, оса, масло, сосна, ананас, насос, лама, смола, нам,
     нас, сам, мало, слон.'
   - 'Textbook phrases (from Bolshakova p.22): «У нас — ананас.» «У нас — сом.» «А у вас?»'
