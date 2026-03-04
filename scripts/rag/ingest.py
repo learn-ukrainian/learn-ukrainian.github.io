@@ -38,7 +38,6 @@ from rag.config import (
     IMAGE_COLLECTION,
     LITERARY_COLLECTION,
     LITERARY_DIR,
-    QDRANT_GRPC_PORT,
     QDRANT_HOST,
     QDRANT_REST_PORT,
     SIGLIP_DIM,
@@ -59,7 +58,6 @@ def create_text_collection(client, recreate: bool = False):
     """Create or verify the textbook_chunks collection."""
     from qdrant_client.models import (
         Distance,
-        NamedSparseVector,
         PayloadSchemaType,
         SparseIndexParams,
         SparseVectorParams,
@@ -163,9 +161,14 @@ def get_image_encoder():
     return _image_encoder
 
 
+def _chunk_id_to_point_id(identifier: str) -> int:
+    """Deterministic Qdrant point ID from any string identifier (chunk_id, image_id, etc.)."""
+    return int(hashlib.sha256(identifier.encode()).hexdigest()[:15], 16)
+
+
 def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
     """Embed and ingest text chunks from a JSONL file."""
-    from qdrant_client.models import NamedSparseVector, NamedVector, PointStruct, SparseVector
+    from qdrant_client.models import PointStruct, SparseVector
 
     jsonl_path = Path(jsonl_path)
     print(f"\n[ingest] Loading chunks from {jsonl_path.name}...")
@@ -217,7 +220,7 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
         }
 
         point = PointStruct(
-            id=int(hashlib.sha256(chunk["chunk_id"].encode()).hexdigest()[:15], 16),
+            id=_chunk_id_to_point_id(chunk["chunk_id"]),
             vector={
                 "dense": dense_vecs[i].tolist(),
                 "sparse": SparseVector(indices=indices, values=values),
@@ -367,7 +370,7 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
                     payload["position"] = ann["position"]
 
             point = PointStruct(
-                id=int(hashlib.sha256(rec["image_id"].encode()).hexdigest()[:15], 16),
+                id=_chunk_id_to_point_id(rec["image_id"]),
                 vector=vecs[i].tolist(),
                 payload=payload,
             )
@@ -433,6 +436,26 @@ def create_literary_collection(client, recreate: bool = False):
     print(f"[ingest] Collection '{LITERARY_COLLECTION}' created with indexes.")
 
 
+def _check_existing_points(client, collection_name: str, chunk_ids: list[str]) -> int:
+    """Check how many of the given chunk IDs already exist in Qdrant."""
+    point_ids = [_chunk_id_to_point_id(cid) for cid in chunk_ids]
+    existing = 0
+    # Check in batches of 100 to avoid oversized requests
+    for i in range(0, len(point_ids), 100):
+        batch = point_ids[i : i + 100]
+        try:
+            results = client.retrieve(
+                collection_name=collection_name,
+                ids=batch,
+                with_payload=False,
+                with_vectors=False,
+            )
+            existing += len(results)
+        except Exception as e:
+            print(f"  Warning: point check failed: {e}", file=sys.stderr)
+    return existing
+
+
 def ingest_literary_chunks(
     client, jsonl_path: Path, batch_size: int = 32, embeddings: dict | None = None,
 ):
@@ -455,6 +478,16 @@ def ingest_literary_chunks(
     if not chunks:
         print("  No chunks found, skipping.")
         return 0
+
+    # Resume support: check which chunks already exist by point ID
+    if embeddings is None:
+        chunk_ids = [c["chunk_id"] for c in chunks]
+        existing = _check_existing_points(client, LITERARY_COLLECTION, chunk_ids)
+        if existing >= len(chunks):
+            print(f"  Already ingested ({existing}/{len(chunks)} points), skipping.")
+            return 0
+        elif existing > 0:
+            print(f"  Partial ({existing}/{len(chunks)} points), re-ingesting...")
 
     if embeddings is None:
         print(f"  {len(chunks)} chunks to embed...")
@@ -494,7 +527,7 @@ def ingest_literary_chunks(
             payload["original_text"] = chunk["original_text"]
 
         point = PointStruct(
-            id=int(hashlib.sha256(chunk["chunk_id"].encode()).hexdigest()[:15], 16),
+            id=_chunk_id_to_point_id(chunk["chunk_id"]),
             vector={
                 "dense": dense_vecs[i].tolist(),
                 "sparse": SparseVector(indices=indices, values=values),
