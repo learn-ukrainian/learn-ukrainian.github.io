@@ -151,7 +151,15 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
 # GLOBAL CONSTRAINTS
 # =============================================================================
 
-OVERSHOOT_FACTOR = 1.5  # We write 1.5x the floor to ensure richness
+OVERSHOOT_FACTOR = 1.5  # Default for B1+; A1/A2 use 1.0 (no overshoot)
+
+
+def get_overshoot_factor(level: str) -> float:
+    """A1/A2 should hit the target, not overshoot. B1+ benefits from 1.5x."""
+    base = level.split('-')[0].upper() if level else ''
+    if base in ('A1', 'A2'):
+        return 1.0
+    return OVERSHOOT_FACTOR
 MAX_SENTENCE_LENGTH = 25  # Words
 MANDATORY_CALLOUT_DENSITY = 6 # Callouts per module
 

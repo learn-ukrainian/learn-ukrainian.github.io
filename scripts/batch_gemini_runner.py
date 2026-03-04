@@ -705,7 +705,7 @@ class BatchRunner:
             "{SCHEMA_PATH}": filtered_schema,
             "{REVIEW_PATH}": review_content,
             "{WORD_TARGET}": str(word_target),
-            "{OVERSHOOT_TARGET}": str(int(word_target * 1.5)),
+            "{OVERSHOOT_TARGET}": str(word_target if level.upper().startswith(('A1', 'A2')) else int(word_target * 1.5)),
             "{TOPIC_TITLE}": topic_title,
             "{TRACK}": self.track,
             "{LEVEL}": level,

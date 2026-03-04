@@ -354,16 +354,318 @@ def get_pedagogical_constraints(track: str, module_num: int) -> str:
         return PEDAGOGICAL_CONSTRAINTS["a1-m15+"]
 
 
+# ---------------------------------------------------------------------------
+# Decodable vocabulary for early A1 (VESUM-verified, charset-validated)
+# ---------------------------------------------------------------------------
+
+# Charsets must match rule_engine._DECODABILITY_SPECS
+_DECODABLE_CHARSETS: dict[int, str] = {
+    1: "АаМмЛлУуНнСс",
+    2: "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІі",
+    3: "АаМмЛлУуНнСсТтОоКкИиВвРрЕеІіДдПпЗзБбГгХхЖжШшЧч",
+}
+
+# All words below are VESUM-verified nouns/adjectives using only the module's charset
+_DECODABLE_WORDS: dict[int, list[str]] = {
+    1: [  # АМЛУНС (6 letters)
+        "мама", "сума", "луна", "мул", "нам", "нас", "сам", "ум", "масла", "мала",
+    ],
+    2: [  # +ТОКИВРЕІ (14 letters total)
+        "молоко", "кіно", "рука", "він", "вона", "рис", "сир", "кіт", "тато",
+        "місто", "ліс", "вікно", "стіл", "море", "метро", "око", "слово", "літо",
+        "масло", "ніс",
+    ],
+    3: [  # +ДПЗБГХЖШЧ (23 letters total) — large charset, use plan vocab_hints
+        # Placeholder: at 23 letters, most common words are decodable.
+        # The function merges plan vocab_hints filtered by charset.
+    ],
+}
+
+
+def _charset_filter(words: list[str], allowed: str) -> list[str]:
+    """Return only words whose characters are all in the allowed charset."""
+    allowed_set = set(allowed)
+    return [w for w in words if all(c in allowed_set for c in w)]
+
+
+def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
+    """Return decodable word list for early A1, empty string for others.
+
+    For M1-M2: curated VESUM-verified word list, charset-validated at runtime.
+    For M3: plan vocab_hints filtered by charset.
+    For M4+, A2+: empty string (no restrictions).
+    """
+    base = track.split("-")[0]
+    if base != "a1" or module_num >= 4:
+        return ""
+
+    charset = _DECODABLE_CHARSETS.get(module_num, "")
+    if not charset:
+        return ""
+
+    if module_num in (1, 2):
+        words = _charset_filter(_DECODABLE_WORDS.get(module_num, []), charset)
+    elif module_num == 3:
+        # Use plan's vocabulary_hints filtered by the 23-letter charset
+        vocab_hints = plan.get("vocabulary_hints", [])
+        hint_words = []
+        for hint in vocab_hints:
+            if isinstance(hint, str):
+                hint_words.append(hint.strip())
+            elif isinstance(hint, dict):
+                w = hint.get("word", hint.get("uk", ""))
+                if w:
+                    hint_words.append(w.strip())
+        words = _charset_filter(hint_words, charset)[:30]
+    else:
+        return ""
+
+    if not words:
+        return ""
+
+    upper_letters = sorted(set(c for c in charset if c.isupper()))
+    letter_list = ", ".join(upper_letters)
+
+    lines = [
+        f"DECODABLE VOCABULARY (M{module_num} — only letters: {letter_list}):",
+        f"Use ONLY these words in activities and reading drills. Any word with a letter",
+        f"outside this set will FAIL the decodability audit gate.",
+        "",
+        f"Available words: {', '.join(words)}",
+        "",
+        "If you need a word not on this list, check that ALL its letters are in the",
+        "allowed set above. Words with unknown letters need English translation.",
+    ]
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Level-aware structural rules for phase-2 content
+# ---------------------------------------------------------------------------
+
+
+def _get_writing_tone(track: str, module_num: int) -> str:
+    """Return level-appropriate tone/verbosity instruction for phase-2."""
+    base = track.split("-")[0]
+    if base == "a1" and module_num <= 4:
+        return (
+            "Be concise — students know nothing yet. Short, clear explanations. "
+            "Every H3 gets {H3_WORD_RANGE} words. The activities do the teaching, not the prose. "
+            "Do NOT pad with adjectives, motivational filler, or over-explained phonetics."
+        )
+    if base == "a1":
+        return (
+            "Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE} words. "
+            "Avoid verbose prose — students are beginners. Focus on practical examples over theory."
+        )
+    if base == "a2":
+        return (
+            "Write clear, practical prose. Every H3 gets {H3_WORD_RANGE} words. "
+            "Focus on examples and usage patterns. Avoid unnecessary theory or padding."
+        )
+    return (
+        "Every concept gets dedicated depth. Every H3 gets {H3_WORD_RANGE} words. "
+        "This is how you hit the target."
+    )
+
+
+def get_structural_rules(track: str, module_num: int) -> str:
+    """Return level-appropriate content structure rules for phase-2.
+
+    Early A1 cannot meet B1+ structural depth expectations (80-100 words per H3,
+    4-part concept blocks, 5+ format variety). This function returns rules
+    calibrated to the student's level.
+    """
+    base = track.split("-")[0]
+
+    if base == "a1" and module_num <= 4:
+        return (
+            "### Rule 1: Every Letter/Concept Gets Its Own Section\n\n"
+            "Each new letter or concept MUST get its own `### H3` subsection. "
+            "Letter modules are presentation-heavy (video embeds, stroke order, examples) "
+            "so depth comes from variety of examples, not paragraphs of explanation.\n\n"
+            "### Rule 2: Introduce → Show → Practice\n\n"
+            "Each H3 block follows this pattern:\n"
+            "1. **Introduce** the letter/concept (1-2 sentences)\n"
+            "2. **Show** it in words and context (examples, video embed)\n"
+            "3. **Practice tip** (what to listen for, what to try)\n\n"
+            "Minimum **30-50 words per H3 block**. Quality over quantity at this stage.\n\n"
+            "### Rule 3: Presentation Consistency\n\n"
+            "All letters in a group: SAME format, SAME depth (±30%), SAME example count (±1).\n\n"
+            "### Rule 4: Example Variety\n\n"
+            "No minimum format variety requirement for M1-M4 (letter-focused modules). "
+            "Use whatever format best teaches the letter: word lists, audio examples, "
+            "comparison pairs."
+        )
+    elif base == "a1" and module_num <= 14:
+        return (
+            "### Rule 1: Every Concept Gets Dedicated Depth\n\n"
+            "Each concept MUST get its own `### H3` subsection with dedicated depth. "
+            "Closely related items (e.g., masculine/feminine/neuter endings) MAY share one H3.\n\n"
+            "### Rule 2: Introduce → Examples → Practice Tip\n\n"
+            "Each H3 concept block MUST contain:\n"
+            "1. **Introduction/explanation** (1-2 sentences)\n"
+            "2. **2+ example words or phrases** in context\n"
+            "3. **Practice tip** — how to remember or use this\n\n"
+            "Minimum **40-60 words per H3 block**.\n\n"
+            "### Rule 3: Presentation Consistency\n\n"
+            "All items in a category: SAME format, SAME depth (±25%), SAME example count (±1).\n\n"
+            "### Rule 4: Example Variety\n\n"
+            "Use at least **3 different formats** across the module: "
+            "word lists, tables, inline examples, callout boxes."
+        )
+    elif base == "a1":  # M15+
+        return (
+            "### Rule 1: Every Concept Gets Dedicated Depth\n\n"
+            "Each concept MUST get its own `### H3` subsection. "
+            "Closely related items MAY share one H3 with equal coverage.\n\n"
+            "### Rule 2: Depth Over Compression\n\n"
+            "Each H3 concept block MUST contain:\n"
+            "1. **Definition/explanation** (1-2 sentences)\n"
+            "2. **How it works** (formation rules, patterns)\n"
+            "3. **2+ example sentences** in context\n"
+            "4. **Usage note** — when/why a speaker uses this form\n\n"
+            "Minimum **60-80 words per H3 block**.\n\n"
+            "### Rule 3: Presentation Consistency\n\n"
+            "All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).\n\n"
+            "### Rule 4: Example Variety\n\n"
+            "FORBIDDEN: 5+ consecutive examples in the same format. "
+            "Use at least **3 different formats**: standalone examples, comparison tables, "
+            "inline examples, mini-dialogues, callout boxes."
+        )
+    elif base == "a2":
+        return (
+            "### Rule 1: Every Concept Gets Dedicated Depth\n\n"
+            "Each concept MUST get its own `### H3` subsection. "
+            "Closely related items MAY share one H3 with equal coverage.\n\n"
+            "### Rule 2: Depth Over Compression\n\n"
+            "Each H3 concept block MUST contain ALL of these:\n"
+            "1. **Definition/explanation** (2+ sentences)\n"
+            "2. **How it works** (formation rules, patterns, grammatical function)\n"
+            "3. **2+ example sentences** in context (not isolated words)\n"
+            "4. **Usage note** — when/why a speaker uses this form\n\n"
+            "Minimum **60-80 words per H3 block**. A 20-word table row is NOT a lesson.\n\n"
+            "### Rule 3: Presentation Consistency\n\n"
+            "All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).\n\n"
+            "### Rule 4: Example Variety\n\n"
+            "FORBIDDEN: 5+ consecutive examples in the same format. Mix at least **4 different formats** "
+            "across sections: standalone examples, comparison tables, inline examples, "
+            "mini-dialogues, callout boxes."
+        )
+    else:
+        # B1+ — full structural rules (moved from hardcoded template)
+        return (
+            "### Rule 1: Every Concept Gets Dedicated Depth (CRITICAL — #1 word count lever)\n\n"
+            "When an H2 section teaches multiple items in a category, each item (or logical group "
+            "of closely related items) MUST get its own `### H3` subsection with dedicated depth.\n\n"
+            "**Grouping rule:** Closely related items that form a single system (e.g., "
+            "masculine/feminine/neuter endings of the same paradigm) MAY share one H3 — but that "
+            "H3 must then cover ALL items with equal depth. Independent concepts MUST get separate H3s.\n\n"
+            "**Count the items from the plan/outline.** Each concept without dedicated depth = ~100 missing words.\n\n"
+            "### Rule 2: Depth Over Compression\n\n"
+            "Each H3 concept block MUST contain ALL of these:\n\n"
+            "1. **Definition/explanation** (2+ sentences)\n"
+            "2. **How it works** (formation rules, patterns, grammatical function)\n"
+            "3. **2+ example sentences** in context (not isolated words)\n"
+            "4. **Usage note** — when/why a speaker uses this form\n\n"
+            "Minimum **80-100 words per H3 block**. A 20-word table row is NOT a lesson.\n\n"
+            "### Rule 3: Presentation Consistency\n\n"
+            "All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).\n\n"
+            "❌ Item A gets 150 words, Item B gets 40 words for equal-weight concepts\n"
+            "✅ All items follow identical pattern: definition → formation → examples → usage note\n\n"
+            "### Rule 4: Example Variety\n\n"
+            "FORBIDDEN: 5+ consecutive examples in the same format (bullet lists, `_Приклад:_` blocks, "
+            "`**Ukrainian.** (English.)` lines — any uniform pattern). Mix these formats across sections:\n"
+            "- Standalone examples with context (max 3-4 consecutive in one format)\n"
+            "- **Comparison tables** (paradigms, aspect pairs, case usage)\n"
+            "- Inline examples woven into prose\n"
+            "- **Mini-dialogues** showing real usage\n"
+            "- Callout boxes with examples\n\n"
+            "**Anti-batching rule**: If you notice 3+ sections each presenting examples as identical "
+            "bullet lists, STOP and vary the format. Use a table in one section, inline examples in "
+            "another, a dialogue in a third."
+        )
+
+
+def get_h3_word_range(track: str, module_num: int) -> str:
+    """Return the H3 word range string for the phase-2 template."""
+    base = track.split("-")[0]
+    if base == "a1" and module_num <= 4:
+        return "30-50"
+    elif base == "a1" and module_num <= 14:
+        return "40-60"
+    elif base == "a1":
+        return "60-80"
+    elif base == "a2":
+        return "60-80"
+    else:
+        return "80-100+"
+
+
+def get_expansion_method(track: str, module_num: int) -> str:
+    """Return level-appropriate expansion guidance for phase-2."""
+    base = track.split("-")[0]
+    if base == "a1" and module_num <= 4:
+        return (
+            "**Don't pad — add teaching value.** For EVERY letter you introduce:\n\n"
+            "1. **Show it** (uppercase + lowercase, with video embed)\n"
+            "2. **Give 2-3 example words** the student can decode\n"
+            "3. **Add a practice tip** (what to listen for, mouth position)\n"
+            "4. **Connect to something familiar** (English sound comparison)\n\n"
+            "**If a section is still under target:** Add more example words, "
+            "a `[!tip]` with pronunciation advice, or a comparison between similar-sounding letters."
+        )
+    elif base == "a1" and module_num <= 14:
+        return (
+            "**Don't just write more — write deeper.** For EVERY concept:\n\n"
+            "1. **Introduce it** (1-2 sentences)\n"
+            "2. **Give 2+ examples** with English translations\n"
+            "3. **Add a practice tip** or memory aid\n"
+            "4. **Connect to real life** (when would a learner encounter this?)\n\n"
+            "**If a section is still under target:** Add a `[!tip]` with a common mistake, "
+            "a comparison table, or more example words with translations."
+        )
+    elif base in ("a1", "a2"):
+        return (
+            "**Don't just write more — write deeper.** For EVERY concept:\n\n"
+            "1. **Define it** (1-2 sentences explaining what it is)\n"
+            "2. **Show how it works** (pattern, rule, formation)\n"
+            "3. **Give 2+ examples** in full sentences with context\n"
+            "4. **Add a comparison** (table, before/after, correct vs incorrect)\n"
+            "5. **Connect to real life** (when would a Ukrainian speaker use this?)\n\n"
+            "**If a section is still under target:** Add a `[!warning]` with a common mistake, "
+            "a `[!culture]` connecting to Ukrainian culture, or a mini-dialogue."
+        )
+    else:
+        # B1+ — full expansion method (moved from hardcoded template)
+        return (
+            "**Don't just write more — write deeper.** For EVERY concept you introduce:\n\n"
+            "1. **Define it** (2+ sentences explaining what it is)\n"
+            "2. **Show how it works** (pattern, rule, formation)\n"
+            "3. **Give 2+ examples** in full sentences with context\n"
+            "4. **Add a comparison** (table, before/after, correct vs incorrect)\n"
+            "5. **Connect to real life** (when would a Ukrainian speaker use this?)\n\n"
+            "**If a section is still under its Write Minimum after this, add:**\n"
+            "- A `[!warning]` with a common mistake and correct alternative\n"
+            "- A `[!culture]` or `[!quote]` connecting to Ukrainian culture\n"
+            "- A mini-dialogue showing the concept in conversation\n"
+            "- A comparison table or mermaid flowchart\n\n"
+            "**The math:** If your H2 teaches 5 concepts × 100 words each = 500 words. "
+            "Add an intro paragraph (50w) + 2 callouts (60w each) + a comparison table (80w) "
+            "= **750 words** for that section. This is how you hit big targets."
+        )
+
+
 ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
     "a1": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "8", "ACTIVITY_MAX": "15", "ITEMS_MIN": "6",
         "VOCAB_COUNT_TARGET": "20",
         "FORBIDDEN_ACTIVITY_TYPES": "cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, match-up, anagram, unjumble, quiz, true-false, classify, image-to-letter, watch-and-repeat",
     },
     "a2": {
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "10", "ACTIVITY_MAX": "15", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "25",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, comparative-study, authorial-intent",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, watch-and-repeat, classify, image-to-letter",
@@ -1336,69 +1638,216 @@ def _build_schema_hint(ctx: ModuleContext, audit_output: str) -> str:
         return ""
 
 
-def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool) -> str:
-    """Build a fix prompt from audit output."""
-    lines = audit_output.strip().split("\n")
-    tail = lines[-60:]
-    schema_lines = [ln for ln in lines if "YAML_SCHEMA_VIOLATION" in ln and ln not in tail]
-    if schema_lines:
-        tail = schema_lines + ["", "--- (tail of audit output) ---", ""] + tail
-    error_excerpt = "\n".join(tail)
-    fix_type = "content-only" if content_only else "full"
+def _format_deterministic_issues_for_fix(issues: list[dict]) -> str:
+    """Format deterministic issues as structured fix instructions."""
+    if not issues:
+        return ""
+    lines = ["\n## Specific Issues to Fix (from D.0 deterministic screen)\n"]
+    for i, iss in enumerate(issues, 1):
+        lines.append(f"### Issue {i}: [{iss.get('type', 'UNKNOWN')}] (severity: {iss.get('severity', '?')})")
+        if iss.get("location"):
+            lines.append(f"- **Where**: {iss['location']}")
+        if iss.get("text"):
+            lines.append(f"- **What**: {iss['text']}")
+        if iss.get("fix"):
+            lines.append(f"- **How to fix**: {iss['fix']}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def _extract_gate_failures(audit_output: str) -> list[dict]:
+    """Parse audit output to extract specific gate failures with values.
+
+    Returns list of dicts: {gate, status, current, required, detail}
+    """
+    failures = []
+    for line in audit_output.split("\n"):
+        # Match gate lines like: "Words        ❌ 1200/2000"
+        m = re.match(r"\s*([A-Za-z0-9_]+)\s+❌\s+(.*)", line)
+        if m:
+            gate = m.group(1).strip()
+            detail = m.group(2).strip()
+            failures.append({"gate": gate, "detail": detail})
+            continue
+        # Match YAML_SCHEMA_VIOLATION lines
+        if "YAML_SCHEMA_VIOLATION" in line:
+            failures.append({"gate": "YAML_SCHEMA", "detail": line.strip()})
+    return failures
+
+
+def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
+                      deterministic_issues: list[dict] | None = None) -> str:
+    """Build a surgical fix prompt with per-issue instructions.
+
+    Instead of dumping 60 lines of audit output, this extracts specific
+    failures and produces exact instructions Gemini can act on.
+    """
+    det_issues = deterministic_issues or []
+    gate_failures = _extract_gate_failures(audit_output)
+    schema_hint = _build_schema_hint(ctx, audit_output)
+
+    # Read content file once — reuse for line lookups and word count
+    content_text = ""
+    content_lines: list[str] = []
+    word_count = 0
+    if ctx.paths["md"].exists():
+        content_text = ctx.paths["md"].read_text("utf-8")
+        content_lines = content_text.split("\n")
+        word_count = len(content_text.split())
+
+    # Build per-issue fix instructions
+    fix_instructions: list[str] = []
+
+    # 1. Deterministic issues — inline the actual line content
+    for i, iss in enumerate(det_issues, 1):
+        issue_type = iss.get("type", "UNKNOWN")
+        lines_block: list[str] = [f"### Fix {i}: {issue_type}"]
+
+        # Try to find the actual line in content
+        location = iss.get("location", "")
+        matched_text = iss.get("text", "")
+        line_num = 0
+        loc_match = re.search(r"~?line\s*(\d+)", location, re.IGNORECASE)
+        if loc_match:
+            line_num = int(loc_match.group(1))
+
+        if issue_type == "LLM_FILLER":
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Line {line_num}:** `{actual_line}`")
+            elif matched_text:
+                lines_block.append(f"**Text:** `{matched_text}`")
+            lines_block.append(f"**Action:** Rephrase to remove \"{matched_text}\". "
+                             "Start the sentence with a concrete fact instead.")
+
+        elif issue_type == "RUSSIANISM":
+            fix_text = iss.get("fix", "")
+            lines_block.append(f"**Found:** `{matched_text}`")
+            if fix_text:
+                lines_block.append(f"**Replace with:** `{fix_text}` (preserve grammatical form)")
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+        elif issue_type in ("PEDAGOGICAL", "DECODABILITY"):
+            lines_block.append(f"**What:** {matched_text}")
+            fix_text = iss.get("fix", "")
+            if fix_text:
+                lines_block.append(f"**How to fix:** {fix_text}")
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+        else:
+            if matched_text:
+                lines_block.append(f"**What:** {matched_text}")
+            fix_text = iss.get("fix", "")
+            if fix_text:
+                lines_block.append(f"**How to fix:** {fix_text}")
+            if location:
+                lines_block.append(f"**Where:** {location}")
+
+        fix_instructions.append("\n".join(lines_block))
+
+    # 2. Gate failures — specific action per gate
+    for gf in gate_failures:
+        gate = gf["gate"]
+        detail = gf["detail"]
+        lines_block = [f"### Fix: Gate `{gate}` FAIL — {detail}"]
+
+        if gate.lower() in ("words", "word_count"):
+            lines_block.append("**Action:** Expand content in the shortest sections. "
+                             "Add examples, explanations, or practice scenarios.")
+        elif gate.lower() == "immersion":
+            lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
+                             "Convert some English explanations to Ukrainian with English glosses.")
+        elif gate.lower() in ("activities", "unique_types"):
+            lines_block.append("**Action:** Add more activities or diversify activity types "
+                             "in the activities YAML file.")
+        elif gate.lower() == "engagement":
+            lines_block.append("**Action:** Add engagement boxes: `[!tip]`, `[!note]`, "
+                             "`[!cultural]`, `[!myth-buster]`.")
+        elif gate == "YAML_SCHEMA":
+            lines_block.append(f"**Action:** Fix the YAML schema violation: {detail}")
+
+        fix_instructions.append("\n".join(lines_block))
+
+    # Always append any unparsed ❌ failures not already covered by gate_failures
+    # This catches LINT errors, TEMPLATE COMPLIANCE, PEDAGOGICAL VIOLATIONS, etc.
+    parsed_gates = {gf["gate"] for gf in gate_failures}
+    audit_lines = audit_output.strip().split("\n")
+    unparsed_fails = [
+        ln.strip() for ln in audit_lines
+        if ("❌" in ln or "VIOLATION" in ln) and not any(g in ln for g in parsed_gates)
+    ]
+    if unparsed_fails:
+        fix_instructions.append("### Other Audit Failures\n\n```\n" + "\n".join(unparsed_fails[-20:]) + "\n```")
+
+    if not fix_instructions:
+        # Last resort: dump condensed fail lines
+        fail_lines = [ln for ln in audit_lines if "❌" in ln or "FAIL" in ln or "VIOLATION" in ln]
+        fix_instructions.append("### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```")
+
+    # Pedagogical constraints (compact)
+    ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num)
+    ped_section = ""
+    if ped_constraints:
+        ped_section = f"\n## Constraints (do NOT violate while fixing)\n\n{ped_constraints}\n"
+
+    # Decodable vocabulary (compact)
+    decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
+    decodable_section = f"\n{decodable}\n" if decodable else ""
+
+    # Section-level fix for large modules
     section_fix = ""
-    affected_sections = []
-    if content_only and ctx.paths["md"].exists():
-        word_count = len(ctx.paths["md"].read_text(encoding="utf-8").split())
+    if content_text:
         if word_count >= 3000:
             affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"])
             if affected_sections:
                 section_list = ", ".join(f'"{s}"' for s in affected_sections)
                 section_fix = textwrap.dedent(f"""\
 
-                    ## Section-Level Fix (IMPORTANT)
+                    ## Large Module — Section-Level Output
 
-                    This is a large module ({word_count} words). To avoid token truncation,
-                    fix ONLY the following section(s): {section_list}
+                    This module is {word_count} words. Fix ONLY sections: {section_list}
 
-                    **Output format:** Output ONLY the fixed section(s) between delimiters:
-
+                    **Output format:**
                     ```
                     ===SECTION_FIX_START===
                     ## {{section title}}
                     {{fixed section content}}
                     ===SECTION_FIX_END===
                     ```
-
-                    Do NOT output the entire file. Only output the section(s) listed above.
                 """)
-    schema_hint = _build_schema_hint(ctx, audit_output)
+
+    # Build file list
+    file_list = f"- Content: `{ctx.paths['md']}`"
+    if not content_only:
+        if ctx.paths.get("activities"):
+            file_list += f"\n- Activities: `{ctx.paths['activities']}`"
+        if ctx.paths.get("vocabulary"):
+            file_list += f"\n- Vocabulary: `{ctx.paths['vocabulary']}`"
+
+    fixes_text = "\n\n".join(fix_instructions)
+    total_fixes = len(det_issues) + len(gate_failures)
+
     return textwrap.dedent(f"""\
-        # Fix Phase — {fix_type} audit failures
+        # Fix {total_fixes} issue(s) in `{ctx.slug}`
 
-        The following audit errors must be fixed for module `{ctx.slug}`:
-
-        ## Audit Output (last 60 lines)
-
-        ```
-        {error_excerpt}
-        ```
+        {fixes_text}
         {schema_hint}
+        {ped_section}
+        {decodable_section}
 
-        ## Files to Fix
+        ## Files
 
-        - Content: `{ctx.paths['md']}`
-        {"- Activities: `" + str(ctx.paths['activities']) + "`" if not content_only else ""}
-        {"- Vocabulary: `" + str(ctx.paths['vocabulary']) + "`" if not content_only else ""}
+        {file_list}
 
-        ## Instructions
+        ## Rules
 
-        1. Read the audit errors above carefully
-        2. Fix ONLY the issues mentioned — do not rewrite working content
-        3. Preserve section structure and word counts
-        4. After fixing, the audit must pass
-
-        **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
-        Fix only the specific violations listed above.
+        1. Fix ONLY the issues listed above — do not rewrite working content
+        2. Preserve section structure and word counts
+        3. Do NOT add or remove sections
         {section_fix}
     """)
 
@@ -1779,7 +2228,10 @@ def write_placeholders(ctx: ModuleContext) -> None:
         try:
             existing = yaml.safe_load(placeholders_path.read_text("utf-8")) or {}
             _critical_keys = {"ITEM_MINIMUMS_TABLE", "ACTIVITY_MAX", "ACTIVITY_MIN",
-                               "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS"}
+                               "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS",
+                               "DECODABLE_VOCABULARY", "STRUCTURAL_RULES",
+                               "H3_WORD_RANGE", "EXPANSION_METHOD",
+                               "WRITING_TONE_INSTRUCTION"}
             if _critical_keys <= set(existing.keys()):
                 log("Placeholders: Using existing")
                 return
@@ -1812,6 +2264,12 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "IMMERSION_RULE": ctx.immersion_rule,
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
         "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num),
+        "DECODABLE_VOCABULARY": get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan),
+        "STRUCTURAL_RULES": get_structural_rules(ctx.track, ctx.module_num),
+        "H3_WORD_RANGE": get_h3_word_range(ctx.track, ctx.module_num),
+        "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
+        "WRITING_TONE_INSTRUCTION": _get_writing_tone(ctx.track, ctx.module_num),
+        "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
         "INTRO_HOOK": (
             "Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
             else "Чому це важливо? — Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
@@ -2040,13 +2498,13 @@ def _check_archive_fits_outline(ctx: ModuleContext) -> tuple[bool, list[str], li
 
 def _build_section_budget_table(sections: list, word_target: int) -> str:
     """Build a markdown table of section word budgets."""
-    rows = ["| Section | Target | Write Minimum (1.5x) |", "|---------|--------|---------------------|"]
+    rows = ["| Section | Target |", "|---------|--------|"]
     for section in sections:
         title, words = _parse_section(section)
         if words <= 0:
             words = word_target // max(len(sections), 1)
-        rows.append(f"| {title} | {words} | {int(words * 1.5)} |")
-    rows.append(f"| **Total** | **{word_target}** | **{int(word_target * 1.5)}** |")
+        rows.append(f"| {title} | {words} |")
+    rows.append(f"| **Total** | **{word_target}** |")
     return "\n".join(rows)
 
 
@@ -2073,14 +2531,19 @@ def _build_phase2_expansion_prompt(
         sections.append((current_section, wc))
     section_report = "\n".join(f"- **{name}**: {wc} words" for name, wc in sections)
     research_path = ctx.paths.get("research", "")
-    overshoot = ctx.word_target if had_truncation else int(ctx.word_target * 1.5)
+    base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
+    # A1/A2: no overshoot, just hit the target. B1+: 1.5x.
+    if base_level in ('A1', 'A2') or had_truncation:
+        overshoot = ctx.word_target
+    else:
+        overshoot = int(ctx.word_target * 1.5)
     return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
 > **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
 
 ## Problem
 
-Your previous output was **{current_words} words** — far below the **{ctx.word_target} word minimum**.
+Your previous output was **{current_words} words** — below the **{ctx.word_target} word minimum**.
 You need to add approximately **{deficit} more words** of substantive content.
 
 ### Current section word counts:
@@ -2090,20 +2553,15 @@ You need to add approximately **{deficit} more words** of substantive content.
 
 Read the current content file at `{ctx.paths["md"]}` and the original prompt at `{ctx.orch_dir / "phase-2-prompt.md"}`.
 
-**Rewrite the ENTIRE module** with dramatically expanded content. Every H3 subsection needs:
-- 80-100+ words minimum (many of yours currently have 20-40)
-- 2+ full example sentences in context
-- Explanatory prose, not just headings and bullet points
-- Callout boxes, comparison tables, cultural connections
+**Rewrite the ENTIRE module** with expanded content. Every H3 subsection needs:
+- Substantive explanatory prose (not just headings and bullet points)
+- Example sentences in context
+- Callout boxes where appropriate
 
-**DO NOT just add filler.** Each section needs real depth:
-- Historical examples with dates and specifics
-- Primary source quotes (from research file)
-- Detailed explanations of concepts
-- Cultural context and connections
+**DO NOT add filler or padding.** Expand with real pedagogical content only.
 
 ## Critical Rules
-- Write at least **{overshoot} words** (1.5x target)
+- Write at least **{overshoot} words**
 - Use research file: `{research_path}`
 - Immersion: {ctx.immersion_rule}
 - Output between `===CONTENT_START===` and `===CONTENT_END===` delimiters
@@ -2180,6 +2638,152 @@ def _prefetch_sources_for_phase_B(ctx: ModuleContext) -> str:
     return "\n\n".join(results[:8])  # Cap at 8 excerpts
 
 
+def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
+    """Pre-fetch textbook/encyclopedia examples from RAG for content generation.
+
+    - A1/A2: searches bukvar (grade 1-2) for letter/syllable exercises
+    - B1+ core: searches ukrainska-mova for grammar explanations
+    - Seminar (HIST/BIO/ISTORIO/LIT/OES/RUTH): searches ESU encyclopedia for factual grounding
+    Returns formatted examples Gemini can use as reference material.
+    """
+    base = ctx.track.split("-")[0]
+    track_key = "lit" if ctx.track.startswith("lit-") else ctx.track
+    is_seminar = track_key in SEMINAR_TRACKS
+
+    # Build search terms from plan keywords and section titles
+    search_terms = []
+    plan_keywords = ctx.plan.get("keywords", [])
+    if plan_keywords:
+        search_terms.extend(plan_keywords[:3])
+    for section in ctx.content_outline[:3]:
+        section_name = section.get("section", "")
+        if section_name:
+            uk_part = section_name.split("—")[0].strip() if "—" in section_name else section_name
+            search_terms.append(uk_part)
+    if not search_terms:
+        topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
+        search_terms.append(topic)
+
+    search_terms = [t for t in search_terms if t.strip()][:4]
+    if not search_terms:
+        return ""
+
+    results = []
+    seen_chunks = set()
+
+    # --- Seminar tracks: search textbooks (history, literature) + ESU if available ---
+    if is_seminar:
+        try:
+            from rag.query import search_text as _st
+        except ImportError:
+            _st = None
+
+        # Search textbooks without subject filter — plan keywords naturally match
+        # history textbooks for HIST/ISTORIO, literature for LIT/OES/RUTH
+        if _st:
+            for term in search_terms:
+                try:
+                    hits = _st(term, limit=3)
+                except Exception:
+                    continue
+                for hit in hits:
+                    cid = hit.get("chunk_id", "")
+                    if cid in seen_chunks:
+                        continue
+                    seen_chunks.add(cid)
+                    source = hit.get("source", "")
+                    section = hit.get("section", "")
+                    text = hit.get("text", "")[:500]
+                    results.append(
+                        f"**{source}** — {section}:\n```\n{text}\n```"
+                    )
+
+        # Also try ESU encyclopedia if available
+        try:
+            from rag.query import search_esu
+            for term in search_terms[:2]:
+                try:
+                    hits = search_esu(term, limit=2)
+                except Exception:
+                    continue
+                for hit in hits:
+                    cid = hit.get("chunk_id", "")
+                    if cid in seen_chunks:
+                        continue
+                    seen_chunks.add(cid)
+                    title = hit.get("title", "")
+                    text = hit.get("text", "")[:500]
+                    results.append(
+                        f"**{title}** (ESU):\n```\n{text}\n```"
+                    )
+        except Exception:
+            pass  # ESU not available yet
+
+        if results:
+            header = (
+                "## Textbook & Encyclopedia Reference\n\n"
+                "These are excerpts from real Ukrainian school textbooks and encyclopedias. "
+                "Use them for **factual grounding** — verify dates, names, events, and literary analysis "
+                "against these authoritative sources. Do NOT invent historical details or attribute "
+                "incorrect quotes to authors.\n\n"
+            )
+            return header + "\n\n".join(results[:8])
+        return ""  # Literary sources still handled by _prefetch_sources_for_phase_B
+
+    # --- A1/A2: bukvar ---
+    try:
+        from rag.query import search_text
+    except ImportError:
+        return ""
+
+    if base in ("a1", "a2"):
+        subject = "bukvar"
+        grade = 1 if base == "a1" else 2
+        header = (
+            "## Textbook Reference Examples (from real Ukrainian буквар)\n\n"
+            "These are real exercises from Ukrainian 1st-grade primers. "
+            "Use them as **inspiration for style and difficulty level** — "
+            "notice how they use simple syllable combinations, short words, "
+            "and build progressively. Do NOT copy them verbatim, but match their "
+            "pedagogical approach and simplicity.\n\n"
+        )
+    else:
+        # --- B1+ core tracks: ukrainska-mova grammar ---
+        subject = "ukrainska-mova"
+        grade = None  # Search all grades — grammar concepts span multiple years
+        header = (
+            "## Textbook Reference (from real Ukrainian grammar textbooks)\n\n"
+            "These are explanations from Ukrainian school grammar textbooks. "
+            "Use them as **authoritative reference** for grammar rules, terminology, "
+            "and examples. Cross-check your explanations against these. "
+            "Adapt for adult learners but keep the grammatical accuracy.\n\n"
+        )
+
+    for term in search_terms:
+        try:
+            hits = search_text(term, grade=grade, subject=subject, limit=2)
+        except Exception:
+            continue
+        for hit in hits:
+            cid = hit.get("chunk_id", "")
+            if cid in seen_chunks:
+                continue
+            seen_chunks.add(cid)
+            author = hit.get("author", "")
+            grade = hit.get("grade", "")
+            section = hit.get("section_title", hit.get("section", ""))
+            text = hit.get("text", "")[:500]
+            label = f"Grade {grade}, {author}" if author else f"Grade {grade}"
+            results.append(
+                f"**{label}** — {section}:\n```\n{text}\n```"
+            )
+
+    if not results:
+        return ""
+
+    return header + "\n\n".join(results[:6])
+
+
 def phase_2_content(ctx: ModuleContext) -> bool:
     """Phase 2: Content (whole-module, single Gemini call)."""
     phase = "2"
@@ -2197,7 +2801,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     num_sections = len(sections)
     engagement_min = ctx.meta.get("engagement_min", 4)
     example_min = ctx.meta.get("example_min", 8)
-    overshoot = int(ctx.word_target * 1.5)
+    base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
+    if base_level in ('A1', 'A2'):
+        overshoot = ctx.word_target  # No overshoot for A1/A2 — concise prose, activities teach
+    else:
+        overshoot = int(ctx.word_target * 1.5)
 
     log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
@@ -2484,14 +3092,13 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     activity_config = get_activity_config(track, num)
     track_config = get_track_config(track)
 
-    word_target = plan.get("word_target", 0)
-    if not word_target:
-        try:
-            from audit.config import get_word_target as _get_wt
-            level_code, module_focus = track_to_level_focus(track)
-            word_target = _get_wt(level_code, num, module_focus)
-        except Exception:
-            word_target = 0
+    # config.py is the source of truth for word targets — plan/meta may have stale values
+    try:
+        from audit.config import get_word_target as _get_wt
+        level_code, module_focus = track_to_level_focus(track)
+        word_target = _get_wt(level_code, num, module_focus)
+    except Exception:
+        word_target = plan.get("word_target", 0)
     topic_title = plan.get("title", slug.replace("-", " ").title())
     content_outline = meta.get("content_outline", [])
 
@@ -2563,15 +3170,13 @@ def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
     except yaml.YAMLError as e:
         log(f"  bootstrap: WARNING — plan YAML parse error for {slug}, skipping bootstrap: {e}")
         return
-    wt = plan.get("word_target", 0)
-    if not wt:
-        try:
-            from audit.config import get_word_target as _get_wt
-            level_code, module_focus = track_to_level_focus(track)
-            mod_num = int(slug.split("-")[-1]) if slug[0].isdigit() else 1
-            wt = _get_wt(level_code, mod_num, module_focus)
-        except Exception:
-            wt = 0
+    try:
+        from audit.config import get_word_target as _get_wt
+        level_code, module_focus = track_to_level_focus(track)
+        mod_num = int(slug.split("-")[-1]) if slug[0].isdigit() else 1
+        wt = _get_wt(level_code, mod_num, module_focus)
+    except Exception:
+        wt = plan.get("word_target", 0)
     minimal_meta = {
         "slug": slug,
         "title": plan.get("title", slug.replace("-", " ").title()),

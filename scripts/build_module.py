@@ -1462,6 +1462,21 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             logger.warning("Auto-fix: euphony failed", exc_info=True)
             log(f"    Auto-fix: euphony failed: {e}")
 
+    # 1.5. Strip IPA / phonetic brackets from content (Gemini keeps adding them)
+    if content_path and content_path.exists():
+        try:
+            import re as _re
+            text = content_path.read_text("utf-8")
+            # Remove [syllable-breakdown] and [IPA] before (translation)
+            cleaned = _re.sub(r' \[[^\]\n]{2,40}\] \(', ' (', text)
+            if cleaned != text:
+                n_ipa = text.count('[') - cleaned.count('[')
+                content_path.write_text(cleaned, "utf-8")
+                total += n_ipa
+                log(f"    Auto-fix: stripped {n_ipa} IPA/phonetic bracket(s)")
+        except Exception as e:
+            logger.warning("Auto-fix: IPA strip failed: %s", e)
+
     # 2. YAML schema fixes (activities file)
     act_path = ctx.paths.get("activities")
     if act_path and act_path.exists():
@@ -2548,48 +2563,52 @@ class D1Result:
 
 
 # LLM filler phrases — absorbed from proofread.py's telltale list.
-# Case-insensitive regex patterns for common AI-generated padding.
-_LLM_FILLER_PATTERNS: list[re.Pattern] = [
-    re.compile(p, re.IGNORECASE) for p in [
-        r"\bIt'?s worth noting that\b",
-        r"\bThis is particularly important because\b",
-        r"\binterestingly\b",
-        r"\bOne of the key aspects\b",
-        r"\bLet'?s explore\b",
-        r"\bLet'?s dive in\b",
-        r"\bLet'?s take a closer look\b",
-        r"\bIn this lesson,? we will\b",
-        r"\bIt is important to note\b",
-        r"\bNumbers are everywhere\b",
-        r"\bLanguage is not just about\b",
-        r"\bAs we'?ve seen\b",
-        r"\bAs you can see\b",
-        r"\bIn conclusion\b",
-        r"\bTo summarize\b",
-        r"\bThis brings us to\b",
-    ]
+# Tuples of (pattern_str, always_flag). always_flag=True means flag even once.
+_LLM_FILLER_DEFS: list[tuple[str, bool]] = [
+    # English filler
+    (r"\bIt'?s worth noting that\b", False),
+    (r"\bThis is particularly important because\b", False),
+    (r"\binterestingly\b", False),
+    (r"\bOne of the key aspects\b", False),
+    (r"\bLet'?s explore\b", False),
+    (r"\bLet'?s dive in\b", False),
+    (r"\bLet'?s take a closer look\b", False),
+    (r"\bIn this lesson,? we will\b", True),   # Always flag — formulaic opener
+    (r"\bIn this module,? we will\b", True),   # Always flag — formulaic opener
+    (r"\bIt is important to note\b", False),
+    (r"\bNumbers are everywhere\b", False),
+    (r"\bLanguage is not just about\b", False),
+    (r"\bAs we'?ve seen\b", False),
+    (r"\bAs you can see\b", False),
+    (r"\bIn conclusion\b", False),
+    (r"\bTo summarize\b", False),
+    (r"\bThis brings us to\b", False),
+    # Ukrainian filler
+    (r"\bце не просто\b.*?\bа й\b", False),      # "це не просто X, а й Y"
+    (r"\bдавайте розглянемо\b", False),             # "let's consider"
+    (r"\bдавайте дізнаємося\b", False),             # "let's find out"
+    (r"\bцікаво,?\s+що\b", False),                  # "interestingly, that"
+    (r"\bварто зазначити,?\s+що\b", False),         # "it's worth noting that"
+    (r"\bдзеркало\s+культури\b", False),            # LLM-typical metaphor
+    (r"\bархітектура\s+мови\b", False),             # LLM-typical metaphor
+    (r"\bдвигун\s+прогресу\b", False),              # LLM-typical metaphor
 ]
-
-# Additional Ukrainian filler patterns (LLM-typical in Ukrainian content)
-_LLM_FILLER_PATTERNS_UK: list[re.Pattern] = [
-    re.compile(p, re.IGNORECASE) for p in [
-        r"\bце не просто\b.*\bа й\b",                # "це не просто X, а й Y"
-        r"\bдавайте розглянемо\b",                     # "let's consider"
-        r"\bдавайте дізнаємося\b",                     # "let's find out"
-        r"\bцікаво,?\s+що\b",                          # "interestingly, that"
-        r"\bварто зазначити,?\s+що\b",                 # "it's worth noting that"
-        r"\bдзеркало\s+культури\b",                    # LLM-typical metaphor
-        r"\bархітектура\s+мови\b",                     # LLM-typical metaphor
-        r"\bдвигун\s+прогресу\b",                      # LLM-typical metaphor
-    ]
+_LLM_FILLER_COMPILED: list[tuple[re.Pattern, bool]] = [
+    (re.compile(p, re.IGNORECASE), always) for p, always in _LLM_FILLER_DEFS
 ]
 
 
 def _scan_llm_filler(content: str) -> list[dict]:
-    """Scan content for LLM filler phrases.
+    """Scan content for LLM filler PATTERNS — repetition is the signal.
+
+    A single "It's worth noting" is natural. Three instances across sections
+    is LLM behavior. This function flags:
+    1. Any filler phrase that appears 2+ times (repetition = LLM)
+    2. Formulaic section openers ("In this lesson, we will...") — always flagged
+       because they're structurally LLM-generated
 
     Returns a list of issue dicts compatible with DScreenResult.deterministic_issues.
-    Only flags phrases found outside of blockquotes and callout boxes.
+    Only scans narrative zones (skips blockquotes, callouts, code blocks).
     """
     issues: list[dict] = []
 
@@ -2598,24 +2617,34 @@ def _scan_llm_filler(content: str) -> list[dict]:
     narrative_lines = []
     for i, line in enumerate(lines):
         stripped = line.strip()
-        # Skip blockquotes, callouts, code blocks, frontmatter
         if stripped.startswith(">") or stripped.startswith("```") or stripped.startswith("---"):
             continue
         narrative_lines.append((i + 1, line))
 
     narrative_text = "\n".join(line for _, line in narrative_lines)
 
-    for pattern in _LLM_FILLER_PATTERNS + _LLM_FILLER_PATTERNS_UK:
-        for m in pattern.finditer(narrative_text):
-            # Find approximate line number
+    # Collect all matches per pattern, then apply repetition threshold
+    for pattern, always in _LLM_FILLER_COMPILED:
+        matches = list(pattern.finditer(narrative_text))
+        # Only flag if 2+ occurrences (repetition) OR always-flag pattern
+        if len(matches) < 2 and not always:
+            continue
+        for m in matches:
             char_pos = m.start()
-            line_num = narrative_text[:char_pos].count("\n") + 1
+            # Map back to original file line number (narrative_lines is filtered)
+            narrative_idx = narrative_text[:char_pos].count("\n")
+            if narrative_idx < len(narrative_lines):
+                line_num = narrative_lines[narrative_idx][0]
+            else:
+                line_num = narrative_lines[-1][0] if narrative_lines else 1
+            count_note = f" ({len(matches)}x)" if len(matches) >= 2 else ""
             issues.append({
                 "type": "LLM_FILLER",
                 "severity": "MEDIUM",
                 "location": f"~line {line_num}",
-                "text": m.group()[:80],
-                "fix": "Rewrite into concrete, specific teaching content",
+                "text": m.group()[:80] + count_note,
+                "fix": "Rephrase — this phrase appears repeatedly (LLM pattern)" if len(matches) >= 2
+                       else "Rephrase — formulaic opener",
             })
 
     return issues
@@ -2971,11 +3000,18 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
         result.audit_output = "NO_CONTENT"
         result.metrics["COMPUTED_AUDIT_STATUS"] = "NO_CONTENT"
 
-    # 5. Russicism regex scan
+    # Read content text once for steps 5, 6, 7.5
+    content_text: str | None = None
     if content_path and content_path.exists():
         try:
-            from audit.checks.russicism_detection import check_russicisms
             content_text = content_path.read_text("utf-8")
+        except Exception as e:
+            logger.warning("D.0: Failed to read content file: %s", e)
+
+    # 5. Russicism regex scan
+    if content_text is not None:
+        try:
+            from audit.checks.russicism_detection import check_russicisms
             russicism_issues = check_russicisms(content_text, str(content_path))
             for r in russicism_issues:
                 result.deterministic_issues.append({
@@ -2988,15 +3024,37 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
             logger.warning("D.0: Russicism scan failed: %s", e)
 
     # 6. LLM filler scan
-    if content_path and content_path.exists():
+    if content_text is not None:
         try:
-            content_text = content_path.read_text("utf-8")
             filler_issues = _scan_llm_filler(content_text)
             result.deterministic_issues.extend(filler_issues)
         except Exception as e:
             logger.warning("D.0: LLM filler scan failed: %s", e)
 
-    # 7. Word verification (VESUM only — RAG/Qdrant adds latency for marginal value)
+    # 7. IPA / phonetic bracket scan — these are banned at all levels
+    if content_text is not None:
+        import re as _re
+        _IPA_PATTERNS = [
+            # Bracketed syllable breakdowns: [ma-ma], [a-na-nas], [sum-ka]
+            (_re.compile(r'\[([a-z]+-)+[a-z]+\]'), "syllable breakdown"),
+            # IPA transcriptions: [ˈmɑmɑ], [ɑnɑˈnɑs]
+            (_re.compile(r'\[[ɑɛɪɔʊəʃʒθðŋɾˈˌː\w\s]+\]'), "IPA transcription"),
+        ]
+        for pattern, desc in _IPA_PATTERNS:
+            matches = list(pattern.finditer(content_text))
+            if matches:
+                for m in matches[:5]:  # Cap at 5 per pattern
+                    # Find line number
+                    line_num = content_text[:m.start()].count('\n') + 1
+                    result.deterministic_issues.append({
+                        "type": "IPA_BANNED",
+                        "severity": "HIGH",
+                        "location": f"~line {line_num}",
+                        "text": f"Banned {desc}: {m.group()[:60]}",
+                        "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation.",
+                    })
+
+    # 8. Word verification (VESUM only — RAG/Qdrant adds latency for marginal value)
     if content_path and content_path.exists():
         try:
             from rag_batch_verify import verify_module as vesum_verify_module
@@ -3033,11 +3091,25 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
         except Exception as e:
             logger.warning("D.0: VESUM word verification failed: %s", e)
 
+    # 7.5 Rule engine (declarative pedagogical + decodability checks)
+    if content_text is not None:
+        try:
+            from audit.checks.rule_engine import run_rule_engine
+            level_code = ctx.track.split("-")[0].upper()
+            rule_issues = run_rule_engine(content_text, level_code, ctx.module_num, ctx.track)
+            result.deterministic_issues.extend(rule_issues)
+            if rule_issues:
+                log(f"  D.0: Rule engine: {len(rule_issues)} issue(s)")
+        except Exception as e:
+            logger.warning("D.0: Rule engine failed: %s", e)
+
     det_count = len(result.deterministic_issues)
     if det_count > 0:
+        n_rules = sum(1 for i in result.deterministic_issues if i["type"] in ("PEDAGOGICAL", "DECODABILITY"))
         log(f"  D.0: {det_count} deterministic issue(s) found "
             f"({sum(1 for i in result.deterministic_issues if i['type'] == 'RUSSIANISM')} Russianisms, "
-            f"{sum(1 for i in result.deterministic_issues if i['type'] == 'LLM_FILLER')} filler)")
+            f"{sum(1 for i in result.deterministic_issues if i['type'] == 'LLM_FILLER')} filler, "
+            f"{n_rules} rule-engine)")
 
     return result
 
@@ -3941,9 +4013,10 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     Runs content_only=False (full audit including activities).
     """
     phase = "validate"
-    # When review phase follows, skip the review gate in audit
-    # (MISSING_REVIEW is expected — review phase creates the review file)
-    _skip_review = getattr(ctx, "review", False) or getattr(ctx, "final_review", False)
+    # Always skip review gate during validate phase — review is a separate
+    # phase that runs after validate. MISSING_REVIEW is expected here.
+    # Without this, --rebuild without --review enters unfixable fix loops.
+    _skip_review = True
     if _is_phase_v4_complete(ctx, phase, state):
         log("  validate: SKIP (already complete)")
         return True
@@ -3980,6 +4053,17 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         else:
             log(f"  validate: {label} — audit FAIL (gate violations, no deterministic issues)")
 
+    # Issue types that are editorial polish — don't warrant a Gemini fix loop
+    # when all audit gates already pass. Russianisms and pedagogical issues
+    # still block because they're correctness errors.
+    _NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER"}
+
+    def _only_non_blocking(scr: DScreenResult) -> bool:
+        """True if all deterministic issues are non-blocking (editorial polish)."""
+        return all(
+            i["type"] in _NON_BLOCKING_ISSUE_TYPES for i in scr.deterministic_issues
+        )
+
     # Initial screen (content_only=False — full audit including activities)
     screen = _deterministic_screen(ctx, skip_review=_skip_review)
     _log_screen("Initial", screen)
@@ -3990,9 +4074,20 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         _update_pipeline_status(ctx, "draft")
         return True
 
+    # Pass with info note when audit gates pass but only non-blocking issues remain.
+    # Saves ~5 min of Gemini proofread+fix for editorial polish like filler phrases.
+    if screen.audit_passed and _only_non_blocking(screen):
+        n = len(screen.deterministic_issues)
+        log(f"  validate: PASS — audit gates pass, {n} non-blocking issue(s) (filler)")
+        _save_screen_result(ctx, screen)
+        _mark_phase_v4(ctx, state, phase, "complete", attempts=0,
+                       note=f"pass-with-{n}-filler-issues")
+        _update_pipeline_status(ctx, "draft")
+        return True
+
     # Gemini proofread (D.0.5 logic) — only when prose-related issues exist.
     # Skip proofread if only activity/schema/vocab issues (wasteful otherwise).
-    _PROSE_ISSUE_TYPES = {"RUSSIANISM", "LLM_FILLER"}
+    _PROSE_ISSUE_TYPES = {"RUSSIANISM", "LLM_FILLER", "PEDAGOGICAL", "DECODABILITY"}
     _PROSE_AUDIT_KEYWORDS = {"naturalness", "word_count", "immersion", "engagement", "euphony"}
     _has_prose_issues = any(
         i["type"] in _PROSE_ISSUE_TYPES for i in screen.deterministic_issues
@@ -4025,9 +4120,11 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         screen = _deterministic_screen(ctx, skip_review=_skip_review)
         _log_screen("Post-proofread", screen)
 
-        if screen.audit_passed and not screen.deterministic_issues:
+        if screen.audit_passed and (not screen.deterministic_issues or _only_non_blocking(screen)):
+            n = len(screen.deterministic_issues)
+            note = "proofread-fix" if n == 0 else f"proofread-fix-with-{n}-filler"
             _save_screen_result(ctx, screen)
-            _mark_phase_v4(ctx, state, phase, "complete", attempts=0, note="proofread-fix")
+            _mark_phase_v4(ctx, state, phase, "complete", attempts=0, note=note)
             _update_pipeline_status(ctx, "draft")
             return True
 
@@ -4039,8 +4136,9 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     for attempt in range(1, max_iters + 1):
         log(f"  validate: Fix attempt {attempt}/{max_iters}...")
 
-        # Build fix prompt
-        fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False)
+        # Build fix prompt (with structured issues + constraints)
+        fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False,
+                                       deterministic_issues=screen.deterministic_issues)
         fix_prompt_file = ctx.orch_dir / f"validate-fix{attempt}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
@@ -4076,9 +4174,16 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         # No-progress detection: if audit output is identical, the fix had no effect
         if attempt > 0 and screen.audit_output == prev_audit_output:
             log(f"  validate: WARNING — fix {attempt} made no progress (audit output identical)")
+            if screen.audit_passed:
+                log(f"  validate: Audit PASSES — exiting fix loop (remaining issues are non-fixable)")
+                _save_screen_result(ctx, screen)
+                _mark_phase_v4(ctx, state, phase, "complete", attempts=attempt,
+                               note=f"pass-with-{len(screen.deterministic_issues)}-info-issues")
+                _update_pipeline_status(ctx, "draft")
+                return True
         prev_audit_output = screen.audit_output
 
-        if screen.audit_passed and not screen.deterministic_issues:
+        if screen.audit_passed and (not screen.deterministic_issues or _only_non_blocking(screen)):
             _save_screen_result(ctx, screen)
             _mark_phase_v4(ctx, state, phase, "complete", attempts=attempt)
             _update_pipeline_status(ctx, "draft")
@@ -5864,7 +5969,9 @@ def _run_single_module(args: argparse.Namespace) -> int:
             elif getattr(ctx, "stop_before_v4", None) or getattr(ctx, "stop_after", None):
                 log(f"\nVERDICT: PARTIAL — stopped early ({_ver}) [{elapsed_str}]")
             else:
-                passed, output = run_verify(ctx.paths["md"], content_only=False)
+                # Skip review gate if review phase was not included in this run
+                _final_skip_review = not getattr(ctx, "review", False) and not getattr(ctx, "final_review", False)
+                passed, output = run_verify(ctx.paths["md"], content_only=False, skip_review=_final_skip_review)
                 if passed:
                     log(f"\nVERDICT: PASS — {ctx.slug} fully complete ({_ver}) [{elapsed_str}]")
                 else:

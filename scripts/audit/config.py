@@ -523,9 +523,9 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 # Level-specific configuration
 LEVEL_CONFIG = {
     'A1': {
-        'target_words': 2000,  # Feb 2026: raised from 750 — word targets are MINIMUMS
+        'target_words': 1200,  # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting
         'min_activities': 8,
-        'min_items_per_activity': 12,
+        'min_items_per_activity': 6,  # Mar 2026: aligned with ACTIVITY_COMPLEXITY per-type floors (6-8)
         'min_types_unique': 4,
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 3,
@@ -534,7 +534,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}
     },
     'A2': {
-        'target_words': 3000,  # Feb 2026: raised from 1000 — word targets are MINIMUMS
+        'target_words': 2000,  # Mar 2026: lowered from 3000 — prose should be concise at A2
         'min_activities': 10,
         'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
         'min_types_unique': 4,
@@ -545,7 +545,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'unjumble', 'fill-in'}
     },
     'A1-checkpoint': {
-        'target_words': 1500,  # Checkpoints: proportional to A1 base (2000)
+        'target_words': 1000,  # Mar 2026: proportional to A1 base (1200)
         'min_activities': 8,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
@@ -556,7 +556,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'match-up'}
     },
     'A2-checkpoint': {
-        'target_words': 2500,  # Checkpoints: proportional to A2 base (3000)
+        'target_words': 1500,  # Mar 2026: proportional to A2 base (2000)
         'min_activities': 10,
         'min_items_per_activity': 10,
         'min_types_unique': 4,

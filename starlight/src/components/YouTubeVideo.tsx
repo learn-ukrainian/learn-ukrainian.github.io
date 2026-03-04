@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 interface YouTubeVideoProps {
-  url: string;
+  url?: string;
+  id?: string;
   label?: string;
 }
 
@@ -10,9 +11,9 @@ function extractVideoId(url: string): string | null {
   return match ? match[1] : null;
 }
 
-export default function YouTubeVideo({ url, label }: YouTubeVideoProps) {
+export default function YouTubeVideo({ url, id, label }: YouTubeVideoProps) {
   const [playing, setPlaying] = useState(false);
-  const videoId = extractVideoId(url);
+  const videoId = id || (url ? extractVideoId(url) : null);
 
   if (!videoId) {
     return (

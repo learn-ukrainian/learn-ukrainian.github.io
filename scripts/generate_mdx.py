@@ -1635,6 +1635,10 @@ _YT_VID_ID_RE = re.compile(r'(?:v=|/embed/|youtu\.be/)([A-Za-z0-9_-]{11})')
 _YT_JINJA_RE = re.compile(
     r'\{%\s*youtubeVideo\s+"(https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[\w-]+[^"]*?)"\s*%\}'
 )
+# Also match {% youtubeVideo id="VIDEO_ID" %} variant (Gemini sometimes produces this)
+_YT_JINJA_ID_RE = re.compile(
+    r'\{%\s*youtubeVideo\s+id="([A-Za-z0-9_-]{11})"\s*%\}'
+)
 
 
 def _embed_youtube_video_links(body: str) -> str:
@@ -1668,6 +1672,14 @@ def _embed_youtube_video_links(body: str) -> str:
             f'\n\n<YouTubeVideo client:load url="{url}" label="Video" />\n\n'
         )
 
+    def _yt_jinja_id_replace(m: re.Match) -> str:
+        vid_id = m.group(1)
+        url = f"https://www.youtube.com/watch?v={vid_id}"
+        return (
+            f'\n\n<YouTubeVideo client:load url="{url}" label="Video" />\n\n'
+        )
+
+    body = _YT_JINJA_ID_RE.sub(_yt_jinja_id_replace, body)
     body = _YT_JINJA_RE.sub(_yt_jinja_replace, body)
     return _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
 

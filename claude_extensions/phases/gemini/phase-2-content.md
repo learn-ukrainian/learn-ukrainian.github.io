@@ -2,8 +2,8 @@
 
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
-> **Your #1 job: Write {OVERSHOOT_TARGET} words of rich, structured Ukrainian content.**
-> Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
+> **Your #1 job: Write approximately {WORD_TARGET} words of clear, well-structured Ukrainian content.**
+> {WRITING_TONE_INSTRUCTION}
 
 > **Output capacity: You can generate 65,000+ tokens per response.** A {WORD_TARGET}-word Ukrainian module is ~{WORD_TARGET_TOKENS}K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
 
@@ -28,7 +28,7 @@ These passages were retrieved from indexed primary sources (litopys.org.ua). Whe
 
 These resources were found during the discover phase. They include videos, blog articles, textbook references, and images where available.
 
-- **Videos**: Consider embedding relevant ones as `{% youtubeVideo %}` components where they add value
+- **Videos**: Consider embedding relevant ones as `<YouTubeVideo id="VIDEO_ID" />` JSX components where they add value
 - **Textbook references**: Use these as authoritative sources for grammar explanations and examples. Cross-reference your content against these real Ukrainian textbook explanations.
 - **Textbook images**: If high-quality images were found, consider referencing them in your lesson. Describe what they illustrate when relevant.
 - **Literary sources**: For seminar tracks, use these primary source excerpts as evidence and quotation material.
@@ -43,14 +43,17 @@ These resources were found during the discover phase. They include videos, blog 
 
 > **These constraints enforce what the student has actually learned so far.** Using letters, grammar forms, or vocabulary from future modules is a pedagogical error — the student literally cannot parse text with letters they haven't been taught. Violations will be caught in review.
 
+{DECODABLE_VOCABULARY}
+
+{TEXTBOOK_EXAMPLES}
+
 ---
 
 ## Your Task
 
 Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
-- **Total minimum**: {WORD_TARGET} words
-- **Write at least**: {OVERSHOOT_TARGET} words (1.5x — aim for depth, not padding)
+- **Target**: approximately {WORD_TARGET} words (this is both the minimum AND the approximate ceiling — do not dramatically overshoot)
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 4 different types
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
@@ -80,63 +83,7 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 **These rules determine whether your output passes or fails audit. Read each one.**
 
-### Rule 1: Every Concept Gets Dedicated Depth (CRITICAL — #1 word count lever)
-
-When an H2 section teaches multiple items in a category, each item (or logical group of closely related items) MUST get its own `### H3` subsection with dedicated depth.
-
-**Grouping rule:** Closely related items that form a single system (e.g., masculine/feminine/neuter endings of the same paradigm) MAY share one H3 — but that H3 must then cover ALL items with equal depth. Independent concepts MUST get separate H3s.
-
-**Count the items from the plan/outline.** Each concept without dedicated depth = ~100 missing words.
-
-```markdown
-❌ WRONG (compressed):
-## Частини мови
-Іменник та дієслово — найважливіші...
-(multiple concepts crammed into one paragraph)
-
-✅ RIGHT (each concept = dedicated depth):
-## Частини мови
-### Іменник
-{Definition, questions, 2+ examples, usage note — 80-100 words}
-### Дієслово
-{Same depth and pattern — 80-100 words}
-### Прикметник
-{Same depth and pattern — 80-100 words}
-
-✅ ALSO RIGHT (logical group with equal coverage):
-## Рід іменників
-### Закінчення за родами
-{Covers -а/-я (fem), consonant (masc), -о/-е (neut) as unified system — 200+ words}
-```
-
-### Rule 2: Depth Over Compression
-
-Each H3 concept block MUST contain ALL of these:
-
-1. **Definition/explanation** (2+ sentences)
-2. **How it works** (formation rules, patterns, grammatical function)
-3. **2+ example sentences** in context (not isolated words)
-4. **Usage note** — when/why a speaker uses this form
-
-Minimum **80-100 words per H3 block**. A 20-word table row is NOT a lesson.
-
-### Rule 3: Presentation Consistency
-
-All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).
-
-❌ Item A gets 150 words, Item B gets 40 words for equal-weight concepts
-✅ All items follow identical pattern: definition → formation → examples → usage note
-
-### Rule 4: Example Variety
-
-FORBIDDEN: 5+ consecutive examples in the same format (bullet lists, `_Приклад:_` blocks, `**Ukrainian.** (English.)` lines — any uniform pattern). Mix these formats across sections:
-- Standalone examples with context (max 3-4 consecutive in one format)
-- **Comparison tables** (paradigms, aspect pairs, case usage)
-- Inline examples woven into prose
-- **Mini-dialogues** showing real usage
-- Callout boxes with examples
-
-**Anti-batching rule**: If you notice 3+ sections each presenting examples as identical bullet lists, STOP and vary the format. Use a table in one section, inline examples in another, a dialogue in a third.
+{STRUCTURAL_RULES}
 
 ### Rule 5: Callout Type Variety
 
@@ -180,6 +127,20 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 - Use storytelling and real-world scenarios, not dry textbook listing
 - Each section should have its own narrative arc, not repeat the same skeleton
 
+### Rule 8b: No Repetitive Filler Patterns (HARD FAIL if detected)
+
+The audit auto-detects **repetitive LLM patterns** — the same transitional phrase used across multiple sections. A single "It's worth noting" is fine. Two or more instances across the module = automatic failure.
+
+**Always banned (even once):**
+- "In this lesson, we will..." / "In this module, we will..." — formulaic openers that signal auto-generated text
+
+**Flagged at 2+ occurrences (repetition = LLM pattern):**
+- "It's worth noting that..." / "Interestingly..." / "Let's explore..."
+- «Давайте розглянемо...» / «Варто зазначити, що...» / «Цікаво, що...»
+- Any phrase you catch yourself reusing across sections
+
+**Instead:** Vary your openers. Start each section differently — a fact, a question, a scenario, a Ukrainian phrase. If you notice you're repeating a pattern, stop and rephrase.
+
 ### Rule 9: Prefer Active Voice
 
 Ukrainian strongly prefers active constructions. Use passive only when:
@@ -191,23 +152,9 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 ---
 
-## How to Hit {OVERSHOOT_TARGET} Words (Expansion Method)
+## How to Hit {WORD_TARGET} Words (Expansion Method)
 
-**Don't just write more — write deeper.** For EVERY concept you introduce:
-
-1. **Define it** (2+ sentences explaining what it is)
-2. **Show how it works** (pattern, rule, formation)
-3. **Give 2+ examples** in full sentences with context
-4. **Add a comparison** (table, before/after, correct vs incorrect)
-5. **Connect to real life** (when would a Ukrainian speaker use this?)
-
-**If a section is still under its Write Minimum after this, add:**
-- A `[!warning]` with a common mistake and correct alternative
-- A `[!culture]` or `[!quote]` connecting to Ukrainian culture
-- A mini-dialogue showing the concept in conversation
-- A comparison table or mermaid flowchart
-
-**The math:** If your H2 teaches 5 concepts × 100 words each = 500 words. Add an intro paragraph (50w) + 2 callouts (60w each) + a comparison table (80w) = **750 words** for that section. This is how you hit big targets.
+{EXPANSION_METHOD}
 
 ---
 
@@ -318,14 +265,25 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 
 **Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
+**IPA and phonetic brackets are BANNED at ALL levels.** Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark (´) on the vowel.
+
 ```markdown
 ❌ WRONG (Latin transliteration):
 "Х sounds like 'kh' in Scottish 'loch'"
 "хліб (khlib)"
 
-✅ RIGHT (stress mark + English approximation):
+❌ WRONG (IPA / phonetic brackets):
+"мама [ˈmɑmɑ]"
+"ананас [a-na-nas]"
+"сумка [sum-ka]"
+
+✅ RIGHT (stress mark only):
+"**мА́ма** (mom)"
+"**ананА́с** (pineapple)"
+"**сУ́мка** (bag)"
+
+✅ RIGHT (English approximation for letter introduction):
 "**Х**, like the «ch» in Scottish «loch»"
-"**хлі́б** — like English «hleeb» but with a «ch» sound"
 ```
 
 ### Typography
@@ -423,10 +381,10 @@ Related: {connected slugs}
 ## {Section 1 from content_outline}
 
 ### {Concept 1}
-{80-100+ words: definition, how it works, examples, usage}
+{{H3_WORD_RANGE} words: clear explanation with examples}
 
 ### {Concept 2}
-{80-100+ words: same depth}
+{{H3_WORD_RANGE} words: same depth}
 
 {comparison table or callout}
 
@@ -485,7 +443,7 @@ Language scan: {CLEAN or list of fixes made}
 - Do NOT generate activities, exercises, or vocabulary tables (Phase 3 handles these)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than {WORD_TARGET} words total
+- Do NOT write fewer than {WORD_TARGET} words total. Do NOT write more than 150% of {WORD_TARGET} — excess prose is padding, not depth.
 - Do NOT request skills or delegate to Claude
 - Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
 - Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain

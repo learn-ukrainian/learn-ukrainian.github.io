@@ -78,6 +78,33 @@ def fetch(url: str) -> str:
     return ""  # unreachable
 
 
+# ── Dedup helpers ────────────────────────────────────────────────
+
+def _dedup_jsonl(path: Path) -> int:
+    """Deduplicate a JSONL file by 'id' field in-place. Returns unique count."""
+    seen: set[int] = set()
+    tmp = path.with_suffix(".tmp")
+    with open(path, encoding="utf-8") as fin, open(tmp, "w", encoding="utf-8") as fout:
+        for line in fin:
+            rec = json.loads(line)
+            if rec["id"] not in seen:
+                seen.add(rec["id"])
+                fout.write(line)
+    tmp.replace(path)
+    return len(seen)
+
+
+def _dedup_by_id(items: list[dict]) -> list[dict]:
+    """Deduplicate a list of dicts by 'id' field, preserving order."""
+    seen: set[int] = set()
+    result = []
+    for item in items:
+        if item["id"] not in seen:
+            seen.add(item["id"])
+            result.append(item)
+    return result
+
+
 # ── Phase 1: Discover article URLs ───────────────────────────────
 
 class LetterPageParser(HTMLParser):
@@ -207,8 +234,13 @@ def run_discover(letters: list[str] | None = None):
             except Exception as e:
                 print(f"  [error] Letter «{letter}»: {e}")
 
-    print(f"\n[discover] Total: {total} article URLs → {URLS_PATH}")
-    return total
+    # Deduplicate urls.jsonl by article ID (same article appears under multiple letters)
+    unique_count = _dedup_jsonl(URLS_PATH)
+    if unique_count < total:
+        print(f"\n[discover] Deduplicated: {total} → {unique_count} unique articles → {URLS_PATH}")
+    else:
+        print(f"\n[discover] Total: {total} article URLs → {URLS_PATH}")
+    return unique_count
 
 
 # ── Phase 2: Fetch articles ──────────────────────────────────────
@@ -378,7 +410,14 @@ def run_fetch(workers: int = 1):
     with open(URLS_PATH, encoding="utf-8") as f:
         for line in f:
             urls.append(json.loads(line))
-    print(f"[fetch] {len(urls)} URLs to fetch")
+
+    # Deduplicate URLs by article ID (same article appears under multiple letters)
+    unique_urls = _dedup_by_id(urls)
+    if len(urls) != len(unique_urls):
+        print(f"  Deduplicated: {len(urls)} → {len(unique_urls)} unique articles")
+    urls = unique_urls
+
+    print(f"[fetch] {len(urls)} articles to fetch")
 
     # Load already-fetched IDs for resumability
     fetched_ids: set[int] = set()

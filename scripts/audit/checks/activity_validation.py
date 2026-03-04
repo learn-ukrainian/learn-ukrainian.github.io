@@ -270,6 +270,16 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
     english_hint_pattern = r'\([a-z][a-z\s/]+\)'  # (word) or (multiple words)
     grammar_annotation_pattern = r'\([a-z]{2,4}\.\)'  # (nom.), (acc.), etc.
 
+    # Level-aware thresholds: A1/A2 activities legitimately use English
+    # for instructions/explanations (phase-3 requires it)
+    base_level = level.split('-')[0].upper() if level else ''
+    if base_level in ('A1', 'A2'):
+        critical_threshold = 15
+        severity_floor = 'info'
+    else:
+        critical_threshold = 5
+        severity_floor = 'warning'
+
     # Allowed hints for gender agreement testing (possessives)
     # These are needed to indicate WHICH possessive, when testing gender form
     gender_agreement_hints = {
@@ -277,6 +287,14 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
         '(your informal)', '(your formal)', '(your formal/plural)',
         '(my book)', '(his car)', '(her house)',  # Common examples
     }
+
+    # A1/A2 scaffolding hints — legitimate pedagogical English
+    a1_a2_scaffolding_hints = {
+        '(example)', '(hint)', '(listen)', '(repeat)', '(choose)',
+        '(say)', '(read)', '(write)', '(match)', '(correct)',
+        '(true)', '(false)', '(yes)', '(no)', '(answer)',
+        '(singular)', '(plural)', '(masculine)', '(feminine)', '(neuter)',
+    } if base_level in ('A1', 'A2') else set()
 
     for activity in yaml_activities:
         act_type = activity.type if hasattr(activity, 'type') else activity.get('type', '')
@@ -317,10 +335,12 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
                 continue  # Grammar annotation - OK
             if hint_lower in gender_agreement_hints:
                 continue  # Gender agreement hint - allowed
+            if hint_lower in a1_a2_scaffolding_hints:
+                continue  # A1/A2 scaffolding hint - allowed
             real_hints.append(hint)
 
         if real_hints:
-            severity = 'critical' if len(real_hints) > 5 else 'warning'
+            severity = 'critical' if len(real_hints) > critical_threshold else severity_floor
             violations.append({
                 'type': 'ENGLISH_HINTS_IN_ACTIVITY',
                 'severity': severity,
