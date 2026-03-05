@@ -4,12 +4,14 @@ sequence: 1
 slug: passive-voice-system
 version: '2.0'
 title: 'Пасивний стан: повна система'
+subtitle: 'Understanding Ukrainian Passive Constructions'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- 'Identify and correctly use пасивний стан: повна система'
-- Form and apply що таке пасивний стан?
+- 'Learner can identify and apply пасивний стан: повна система'
+- Learner can form and use що таке пасивний стан?
 sources:
 - name: Ukrainian State Standard 2024 - Passive Voice
   url: https://mon.gov.ua/
@@ -135,3 +137,10 @@ persona:
   role: Laboratory Scientist (Лаборант)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Passive voice strategies overview
+- Past passive participles (-ний/-тий)
+- -но/-то impersonal passive
+- Reflexive passive (-ся)
+- Third-person plural passive
+register: нейтральний

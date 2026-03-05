@@ -48,7 +48,7 @@ content_outline:
 focus: culture
 pedagogy: CBI
 objectives:
-- Learner understands the unique cultural identities of Podillia and Volyn
+- Learner can explain the unique cultural identities of Podillia and Volyn
 - Learner can describe regional embroidery and architecture
 - Learner can compare wedding traditions of Central-Western Ukraine
 grammar:
@@ -76,3 +76,22 @@ prerequisites:
 - ukrainian-house
 connects_to:
 - praktyka-1-narodna-kultura
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Між каньйонами та білими мазанками examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Озерний край та сакральна спадщина
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

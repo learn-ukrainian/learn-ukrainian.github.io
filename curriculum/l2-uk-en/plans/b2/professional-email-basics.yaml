@@ -13,7 +13,7 @@ objectives:
 - Learner can write professional emails with appropriate structure and tone
 - Learner can use formal register vocabulary in business correspondence
 - Learner can recognize and apply email conventions (subject lines, greetings, closings)
-- Learner understands cultural norms in Ukrainian business communication
+- Learner can apply cultural norms in Ukrainian business communication
 content_outline:
 - section: 'Вступ: Етика та культура ділового листування (Introduction: Ethics and Culture of Business Correspondence)'
   words: 600
@@ -66,10 +66,10 @@ content_outline:
     надання послуг)'
 vocabulary_hints:
   required:
-  - термін (term) — у визначений термін, термін дії, порушення термінів; висока частотність у діловій сфері
-  - поняття (concept) — ключове поняття, визначення поняття, підміна понять; вживання у професійних поясненнях
-  - процес (process) — робочий процес, оптимізація процесу, у процесі переговорів; опис діяльності
-  - метод (method) — метод розрахунку, ефективний метод, методи управління; опис підходів
+  - брати участь (to participate) — виправлення кальки «приймати участь»
+  - протягом (during) — виправлення кальки «на протязі» (протягом терміну дії)
+  - вживати заходів (to take measures) — виправлення кальки «приймати міри»
+  - синтез (synthesis) — логічне завершення аналізу
   - аналіз (analysis) — детальний аналіз, аналіз ринку, на основі аналізу; ключова компетенція рівня B2
   recommended:
   - брати участь (to participate) — виправлення кальки «приймати участь»
@@ -78,14 +78,23 @@ vocabulary_hints:
   - синтез (synthesis) — логічне завершення аналізу
   - дослідження (research) — обґрунтування пропозиції у листі
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Структура та оформлення листа with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Мовні особливості та професійна лексика
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Структура та оформлення листа for given scenario
 persona:
   voice: Professional Language Coach
   role: Administrative Assistant (Адміністративний асистент)

@@ -39,7 +39,7 @@ focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the legacy of Serge Lifar and his impact on world ballet.
-- Learner understands the distinction between folk dance (Hopak) and academic ballet.
+- Learner can explain the distinction between folk dance (Hopak) and academic ballet.
 - Learner can describe contemporary dance trends in Ukraine.
 grammar:
 - Movement vocabulary
@@ -66,3 +66,22 @@ prerequisites:
 - obrazotvorche-mystetstvo-2
 connects_to:
 - teatralne-mystetstvo-1
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Тріумф українства (The Triumph of Ukrainianness) — Серж Лифар examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Від традиції до сцени (From Tradition to Stage) — Спадщина Павла Вірського
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

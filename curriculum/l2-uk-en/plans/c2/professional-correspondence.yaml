@@ -4,6 +4,7 @@ sequence: 54
 slug: professional-correspondence
 version: '2.0'
 title: Професійна кореспонденція
+subtitle: Introduction — Culture and Evolution of Correspondence
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -97,16 +98,25 @@ vocabulary:
   - адресат (addressee)
   - відправник (sender)
   - вихідний номер (outgoing number)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match 2020 examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Специфіка ділової електронної комунікації
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -125,3 +135,9 @@ persona:
   role: Diplomat
 prerequisites:
 - c2-3-midpoint-checkpoint
+grammar:
+- Вступ — Культура та еволюція кореспонденції
+- 2020
+- Специфіка ділової електронної комунікації
+- Етика запитів та стратегії відповідей
+register: академічний

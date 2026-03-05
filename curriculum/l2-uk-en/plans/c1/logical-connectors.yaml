@@ -4,6 +4,7 @@ sequence: 5
 slug: logical-connectors
 version: '2.0'
 title: Логічні сполучники та зв'язки
+subtitle: Introduction — Role of Connectors in Text Structure
 content_outline:
 - section: Вступ — Роль сполучників у структурі тексту (Introduction — Role of Connectors
     in Text Structure)
@@ -109,6 +110,7 @@ activity_hints:
   focus: Fix inappropriate connector usage
   items: 10+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-04 (Analysis Vocabulary)
 - Complex sentence structures
@@ -129,10 +131,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use логічні сполучники та зв'язки
-- Form and apply роль сполучників у тексті
-- Distinguish between практика в аргументації
+- Learner can identify and produce correct Причинові та наслідкові сполучники forms
+- Learner can analyze Допустові та протиставні відношення in authentic texts
+- Learner can produce written text demonstrating mastery of Вступ — Роль сполучників у структурі тексту (Introduction — Role of Connectors
 persona:
   voice: Senior Specialist
   role: Логік
 word_target: 4000
+grammar:
+- Вступ — Роль сполучників у структурі тексту
+- Причинові та наслідкові сполучники
+- Допустові та протиставні відношення
+- Додаткові, підсилювальні та уточнювальні засоби
+register: літературний

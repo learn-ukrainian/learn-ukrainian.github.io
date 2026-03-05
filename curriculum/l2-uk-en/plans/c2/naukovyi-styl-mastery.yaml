@@ -4,6 +4,7 @@ sequence: 3
 slug: naukovyi-styl-mastery
 version: '2.0'
 title: Науковий стиль — Публікаційний рівень
+subtitle: 'Introduction: Academic Tradition and Standards'
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -106,16 +107,25 @@ vocabulary:
   - апробація (approbation)
   - публікаційний (publication-ready)
   - імпакт-фактор (impact factor)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Мовні особливості та подолання інтерференції examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Структура наукової публікації IMRAD
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -135,3 +145,9 @@ persona:
   role: Academic Publisher
 prerequisites:
 - milozvuchnist-complete
+grammar:
+- Академічна традиція та стандарти
+- Мовні особливості та подолання інтерференції
+- Структура наукової публікації IMRAD
+- Вторинні тексти та анотування
+register: академічний

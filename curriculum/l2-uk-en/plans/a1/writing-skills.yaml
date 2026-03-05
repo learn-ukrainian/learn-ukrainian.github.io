@@ -16,7 +16,7 @@ objectives:
 - Address an envelope in Ukrainian format
 content_outline:
 - section: Поштова листівка (Postcard)
-  words: 500
+  words: 300
   points:
   - 'Postcard structure: Привіт з Києва! (Greetings from Kyiv!) + 3-4 sentences about what you see/do + Бувай(те)! (Bye!)
     + Підпис (Signature). A fixed template for A1 writing.'
@@ -25,28 +25,29 @@ content_outline:
   - 'Greeting variations: Привіт з + Genitive (city name). Вітаю з + Genitive (holiday). Practising the з + Genitive construction
     in a natural writing context.'
 - section: Анкета (Form filling)
-  words: 400
+  words: 250
   points:
   - 'Common form fields: Прізвище (surname), Ім''я (first name), По батькові (patronymic), Дата народження (date of birth),
     Стать (gender), Адреса (address), Телефон (phone), Електронна пошта (email).'
   - 'How to fill them: Writing dates in Ukrainian format (day.month.year). Gender options: чоловіча/жіноча. Understanding
     what each field asks for and providing appropriate data.'
 - section: Про себе (About yourself)
-  words: 400
+  words: 250
   points:
   - 'Self-description paragraph template: Мене звати... (My name is...). Мені ... років (I am ... years old). Я з... (I am
     from...). Я працюю/вчуся... (I work/study...). Моє хобі... (My hobby...).'
   - 'Writing a brief self-introduction (30-50 words): Combining previously learned patterns into a coherent written paragraph.
     Focus on logical flow and sentence connection.'
 - section: Конверт та адреса (Envelope and address)
-  words: 350
+  words: 200
   points:
   - 'Ukrainian address format: Кому (To whom — Dative), Від кого (From whom — Genitive), Вулиця (Street), будинок (building
     number), квартира (apartment), місто (city), індекс (postal code).'
-  - 'Differences from English format: Ukrainian addresses go from specific to general (street → city → country), unlike English
-    general-to-specific. Reading and writing addresses correctly.'
+  - 'Differences from English format: Traditional Ukrainian postal format goes from general to specific (country → city → street
+    → building), the opposite of the English specific-to-general order (name → street → city → country). Modern Ukrainian practice
+    increasingly follows the Western order.'
 - section: Практика (Practice)
-  words: 350
+  words: 200
   points:
   - 'Write a postcard: Given a destination and a few visual prompts, compose a short postcard using the template structure.'
   - 'Fill a form: Complete a simulated Ukrainian registration form with personal information. Compose a brief self-introduction

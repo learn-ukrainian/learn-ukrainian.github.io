@@ -4,6 +4,7 @@ sequence: 49
 slug: professional-document-types
 version: '2.0'
 title: Типи професійних документів
+subtitle: Introduction and Classification
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -105,16 +106,25 @@ vocabulary:
   - підпис (signature)
   - печатка (seal)
   - реєстрація (registration)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Організаційно-розпорядча документація examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Інформаційні та договірні документи
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - group-sort
@@ -135,3 +145,9 @@ persona:
   role: Chief of Staff
 prerequisites:
 - reading-professional-texts-ii
+grammar:
+- Вступ та класифікація
+- Організаційно-розпорядча документація
+- Інформаційні та договірні документи
+- Особисті документи та цифровізація
+register: академічний

@@ -71,10 +71,10 @@ vocabulary_hints:
   required:
   - дослідження (research) — проводити ґрунтовне дослідження, результати дослідження, об'єкт дослідження; high frequency academic
     term
-  - термін (term) — науковий термін, тлумачення терміна; defines the building blocks of academic register
-  - поняття (concept) — ключове поняття, вводити поняття; used for theoretical frameworks
-  - метод (method) — метод аналізу, експериментальний метод; essential for describing research design
-  - процес (process) — процес дослідження, складний процес; describes ongoing scientific or technical activities
+  - аналіз (analysis) — глибокий аналіз, піддавати аналізу, на основі аналізу; high frequency in data description
+  - синтез (synthesis) — синтез результатів, теоретичний синтез; often contrasted with analysis in research methodology
+  - висновок (conclusion) — дійти висновку, зробити висновки, попередні висновки; crucial for summary sections
+  - експеримент (experiment) — ставити експеримент, у ході експерименту; used in empirical and natural sciences
   - гіпотеза (hypothesis) — висунути гіпотезу, підтвердити/спростувати гіпотезу; core component of the scientific method
   recommended:
   - аналіз (analysis) — глибокий аналіз, піддавати аналізу, на основі аналізу; high frequency in data description
@@ -84,14 +84,23 @@ vocabulary_hints:
   - рецензування (peer review) — процес рецензування, сліпе рецензування; specific to academic publishing and quality control
   - науковець (scientist/researcher) — молодий науковець, відомий науковець; modern preferred term over 'вчений'
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Academic register in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Academic register
+  items: 10
+- type: match-up
+  focus: Match Структура наукового дослідження та академічна етика examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Academic register
   items: 8
+- type: group-sort
+  focus: Classify examples by Наукова термінологія та академічний регістр
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Academic register correctly
 persona:
   voice: Professional Language Coach
   role: Lab Researcher (Лаборант-дослідник)
@@ -102,3 +111,4 @@ prerequisites:
 - tekhnolohii-ta-shi
 connects_to:
 - mystetstvo-i-literatura
+register: нейтральний

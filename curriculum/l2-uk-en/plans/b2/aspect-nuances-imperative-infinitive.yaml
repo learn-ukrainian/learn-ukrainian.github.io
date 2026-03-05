@@ -61,35 +61,35 @@ content_outline:
     (requests).'
 vocabulary_hints:
   required:
-  - термін (term) — термін виконання (deadline), у визначений термін (within a specified term), спливає термін (the term is
-    expiring); High frequency in official/technical contexts.
-  - поняття (concept) — ключове поняття (key concept), мати поняття (to have a clue), підміняти поняття (to substitute concepts);
-    Essential for B2 academic discussion.
-  - процес (process) — навчальний процес (learning process), творчий процес (creative process), у процесі (in progress), контролювати
-    процес (to control the process).
-  - метод (method) — ефективний метод (effective method), науковий метод (scientific method), метод спроб і помилок (trial
-    and error); Critical for describing research.
-  recommended:
-  - аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct an analysis), критичний аналіз (critical
-    analysis).
+  - аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct an analysis), критичний аналіз (critical analysis).
   - синтез (synthesis) — логічний синтез (logical synthesis), результати синтезу (results of synthesis).
-  - дослідження (research) — наукове дослідження (scientific research), результати дослідження (research results), проводити
-    дослідження (to conduct research).
-  - наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow an order), згідно з наказом (according
-    to the order); High frequency in military/official contexts.
-  - прохання (request) — велике прохання (big request), на прохання (at the request of), звертатися з проханням (to address
-    with a request).
-  - заборона (prohibition) — сувора заборона (strict prohibition), накласти заборону (to impose a ban), порушити заборону
-    (to violate a prohibition).
+  - дослідження (research) — наукове дослідження (scientific research), результати дослідження (research results), проводити дослідження (to conduct research).
+  - наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow an order), згідно з наказом (according to the order); High frequency in military/official contexts.
+  recommended:
+  - аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct an analysis), критичний аналіз (critical analysis).
+  - синтез (synthesis) — логічний синтез (logical synthesis), результати синтезу (results of synthesis).
+  - дослідження (research) — наукове дослідження (scientific research), результати дослідження (research results), проводити дослідження (to conduct research).
+  - наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow an order), згідно з наказом (according to the order); High frequency in military/official contexts.
+  - прохання (request) — велике прохання (big request), на прохання (at the request of), звертатися з проханням (to address with a request).
+  - заборона (prohibition) — сувора заборона (strict prohibition), накласти заборону (to impose a ban), порушити заборону (to violate a prohibition).
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Aspect in imperative mood in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Aspect in imperative mood
+  items: 10
+- type: match-up
+  focus: Match Граматика та морфологія наказу examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Aspect in imperative mood
   items: 8
+- type: group-sort
+  focus: Classify examples by Заборони, застереження та забобони
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Aspect in imperative mood correctly
 persona:
   voice: Professional Language Coach
   role: Military Instructor (Військовий інструктор)
@@ -103,3 +103,4 @@ prerequisites:
 - aspect-nuances-secondary-imperfectivization
 connects_to:
 - pluperfect-tense
+register: нейтральний

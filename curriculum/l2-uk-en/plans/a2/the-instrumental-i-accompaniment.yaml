@@ -25,7 +25,7 @@ sources:
   notes: Complete instrumental paradigm
 content_outline:
 - section: 'Вступ: Орудний відмінок та спільність дії (Introduction: The Instrumental Case and Joint Action)'
-  words: 500
+  words: 325
   points:
   - Introduction to the seventh case (орудний відмінок) and its alignment with Ukrainian State Standard §4.2.2.5.2, focusing
     specifically on 'спільність дії' (joint action/accompaniment).
@@ -33,7 +33,7 @@ content_outline:
   - 'Cultural Hook: ''Bread and Salt'' (Хліб-сіль). Detailed explanation of welcoming guests ''з хлібом-сіллю'' where bread
     symbolizes wealth/prosperity and salt symbolizes protection from evil, establishing a sacred bond of friendship.'
 - section: 'Презентація: Закінчення та правила евфонії (Presentation: Endings and Euphony Rules)'
-  words: 850
+  words: 575
   points:
   - Paradigm of Instrumental endings for nouns across all genders, emphasizing the transition from A1 Nominative forms to
     A2 Case forms.
@@ -44,7 +44,7 @@ content_outline:
   - 'Learner Error: Euphony default. Correcting the tendency to use ''з'' everywhere (e.g., ''з студентом'' vs. correct ''зі
     студентом'').'
 - section: Дієслова спілкування та прийменник 'З' (Social Verbs and the Preposition 'З')
-  words: 750
+  words: 500
   points:
   - 'Focus on high-frequency social verbs: розмовляти (to talk), гуляти (to walk), зустрічатися (to meet), спілкуватися (to
     communicate).'
@@ -53,7 +53,7 @@ content_outline:
   - 'Learner Error: Missing Preposition ''з''. Drill on the semantic error ''Я розмовляю мамою'' (implies using mother as
     a tool) vs. the correct ''Я розмовляю з мамою''.'
 - section: 'Практика: Разом та ієрархія дружби (Practice: ''Together'' and Friendship Hierarchy)'
-  words: 550
+  words: 375
   points:
   - Usage of the high-frequency collocation 'разом з' (together with) in social contexts like 'жити разом', 'працювати разом
     з нами'.
@@ -62,7 +62,7 @@ content_outline:
     in Ukrainian culture.'
   - 'Sentence formation practice focusing on everyday collocations: ''зустрічатися біля метро'', ''гуляти з собакою''.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 350
+  words: 225
   points:
   - 'Social interaction scenarios: planning a meeting, introducing a friend (''познайомитися з...''), and discussing household
     life (''жити разом з...'').'
@@ -123,3 +123,4 @@ grammar:
 - social interaction
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

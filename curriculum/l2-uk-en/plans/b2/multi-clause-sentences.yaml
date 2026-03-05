@@ -4,12 +4,14 @@ sequence: 18
 slug: multi-clause-sentences
 version: '2.0'
 title: Багатоскладні речення
+subtitle: 'Складнопідрядні та складносурядні речення'
 focus: grammar
+pedagogy: TTT
 phase: B2.2
 word_target: 4000
 objectives:
-- Identify and correctly use багатоскладні речення
-- Form and apply багатоскладні речення
+- Learner can identify and apply багатоскладні речення
+- Learner can form and use багатоскладні речення
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
   url: https://mon.gov.ua/
@@ -129,3 +131,9 @@ persona:
   role: Speechwriter (Спічрайтер)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Складносурядні речення (compound)
+- Складнопідрядні речення (complex)
+- Безсполучникові речення (asyndetic)
+- Multi-level subordination
+register: нейтральний

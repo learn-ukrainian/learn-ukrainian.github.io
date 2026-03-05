@@ -4,12 +4,14 @@ sequence: 21
 slug: stylistic-connectors
 version: '2.0'
 title: Стилістичні сполучники
+subtitle: 'Linking Ideas Across Registers'
 focus: grammar
+pedagogy: TTT
 phase: B2.2
 word_target: 4000
 objectives:
-- Identify and correctly use стилістичні сполучники
-- Form and apply сполучники як засіб зв'язку
+- Learner can identify and apply стилістичні сполучники
+- Learner can form and use сполучники як засіб зв'язку
 sources:
 - name: Ukrainian State Standard 2024 - Connectors
   url: https://mon.gov.ua/
@@ -122,3 +124,8 @@ persona:
   role: Columnist (Колумніст)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Formal connectors (отже, таким чином, натомість)
+- Register-specific linking words
+- Transition between paragraphs
+register: нейтральний

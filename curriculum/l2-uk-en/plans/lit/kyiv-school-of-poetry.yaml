@@ -4,6 +4,22 @@ sequence: 221
 slug: kyiv-school-of-poetry
 version: '2.0'
 word_target: 5000
+content_outline:
+- section: Вступ та контекст
+  words: 800
+  points: []
+- section: Аналіз ключових творів
+  words: 1200
+  points: []
+- section: Стилістика та мова автора
+  words: 1200
+  points: []
+- section: Деколонізаційна перспектива
+  words: 1000
+  points: []
+- section: Підсумок та спадщина
+  words: 800
+  points: []
 vocabulary_hints:
   required: []
   recommended: []

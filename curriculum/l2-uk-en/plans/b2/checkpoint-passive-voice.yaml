@@ -4,7 +4,9 @@ sequence: 10
 slug: checkpoint-passive-voice
 version: '2.0'
 title: Контрольний модуль B2.1a — Система пасивного стану
+subtitle: 'Review of Passive Voice and Participles'
 focus: checkpoint
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
@@ -127,3 +129,8 @@ persona:
   role: Auditor (Аудитор)
 module_type: checkpoint
 immersion: 100% Ukrainian
+grammar:
+- All passive voice strategies review
+- Participle formation and usage
+- Register-appropriate passive selection
+register: нейтральний

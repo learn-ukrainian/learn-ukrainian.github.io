@@ -4,6 +4,7 @@ sequence: 23
 slug: business-etiquette
 version: '2.0'
 title: Діловий етикет в Україні
+subtitle: 'Introduction: Business Culture'
 content_outline:
 - section: 'Вступ: Ділова культура (Introduction: Business Culture)'
   words: 500
@@ -88,6 +89,7 @@ activity_hints:
   focus: Fix etiquette mistakes
   items: 10+
 focus: communication
+pedagogy: PPP
 prerequisites:
 - c1-21 (CV & Resume Writing)
 - c1-22 (Job Interview)
@@ -108,10 +110,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.2 [Professional Communication]
 objectives:
-- Understand and apply діловий етикет в україні
-- Analyze and evaluate ділова культура україни
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Етикет звертань та субординація
+- Learner can produce professional texts in the domain of Діловий етикет в Україні
+- Learner can evaluate and correct register in Ділова культура contexts
 persona:
   voice: Senior Specialist
   role: Експерт з протоколу
 word_target: 4000
+grammar:
+- Ділова культура
+- Етикет звертань та субординація
+- Протокол зустрічей та невербальна комунікація
+- Гостинність та культура дарування
+register: літературний

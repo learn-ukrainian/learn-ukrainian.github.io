@@ -44,7 +44,7 @@ focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the legacy of Kyivan Rus architecture (Sophia).
-- Learner understands the uniqueness of Ukrainian Baroque (Mazepa style).
+- Learner can explain the uniqueness of Ukrainian Baroque (Mazepa style).
 - Learner analyzes the wooden churches of the Carpathians.
 grammar:
 - Architectural terminology
@@ -73,3 +73,22 @@ prerequisites:
 - teatralne-mystetstvo-2
 connects_to:
 - suchasna-muzyka
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Дерев'яна архітектура та конструктивізм examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Архітектурні легенди та сучасна відбудова
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

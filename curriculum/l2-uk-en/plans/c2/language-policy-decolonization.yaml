@@ -15,7 +15,7 @@ objectives:
   contexts
 - Learner can critically evaluate the sociolinguistic consequences of wartime language shift and its implications for national
   identity
-- Learner can construct a well-argued analytical essay on language policy using evidence from legal documents and sociological
+- Конструювати a well-argued analytical essay on language policy using evidence from legal documents and sociological
   data
 sources:
 - name: Масенко Л. Мова і суспільство
@@ -142,3 +142,9 @@ prerequisites:
 persona:
   voice: Senior Specialist
   role: Policy Analyst
+grammar:
+- Мовна політика як академічна дисципліна
+- від Валуєвського циркуляру до радянського мовного планування
+- Мовне законодавство незалежної України
+- Деколонізація мови
+register: академічний

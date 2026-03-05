@@ -11,10 +11,10 @@ phase: C2.4 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
 - Learner can navigate and query Ukrainian language corpora (ГРАК, Корпус текстів НАН) to extract authentic usage data
-- Learner can apply corpus-based methods (concordancing, collocation analysis, frequency profiling) to resolve grammatical
+- Застосовувати corpus-based methods (concordancing, collocation analysis, frequency profiling) to resolve grammatical
   and lexical doubts
 - Learner can critically compare textbook Ukrainian with corpus-attested natural usage and identify discrepancies
-- Learner can use NLP tools for Ukrainian (морфологічний аналізатор, синтаксичний парсер) to support advanced self-editing
+- Використовувати NLP tools for Ukrainian (морфологічний аналізатор, синтаксичний парсер) to support складні self-editing
   and language analysis
 sources:
 - name: ГРАК — Генеральний регіонально анотований корпус української мови
@@ -81,7 +81,7 @@ content_outline:
   - 'Self-editing with corpora: using corpus evidence to verify collocations, check preposition governance, and resolve grammatical
     doubts (e.g., case selection after specific verbs).'
   - 'Academic writing improvement: using frequency and collocation data to move from acceptable to natural Ukrainian in research
-    papers, essays, and professional documents.'
+    papers, essays, and професійні documents.'
   - 'Resolving prescriptive disputes: cases where corpus data supports or challenges normative recommendations; the role of
     empirical evidence in contemporary Ukrainian language standardization.'
 - section: 'Практикум: Корпусний запит (Workshop: Corpus Query Exercise)'
@@ -133,3 +133,9 @@ prerequisites:
 persona:
   voice: Senior Specialist
   role: Digital Linguist
+grammar:
+- Що таке мовний корпус
+- Українські мовні корпуси
+- Корпусні інструменти та методи
+- Частотність і автентичність
+register: академічний

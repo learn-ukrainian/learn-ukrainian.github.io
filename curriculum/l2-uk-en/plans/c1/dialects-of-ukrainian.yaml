@@ -4,6 +4,7 @@ sequence: 29
 slug: dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
+subtitle: 'Introduction: Concept of Dialect and Group'
 content_outline:
 - section: 'Вступ: Поняття діалекту та наріччя (Introduction: Concept of Dialect and Group)'
   words: 500
@@ -89,6 +90,7 @@ activity_hints:
   focus: Dialect facts and myths
   items: 12+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-27 (Global Context)
 - B2 register awareness
@@ -109,10 +111,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
-- Identify and correctly use діалекти та наріччя
-- Form and apply діалектологія
-- Distinguish between практичне завдання
+- Learner can identify and produce correct Три наріччя України forms
+- Learner can analyze Фонетичні та морфологічні риси in authentic texts
+- Learner can produce written text demonstrating mastery of Поняття діалекту та наріччя
 persona:
   voice: Senior Specialist
   role: Діалектолог
 word_target: 4000
+grammar:
+- Поняття діалекту та наріччя
+- Три наріччя України
+- Фонетичні та морфологічні риси
+- Лексичне багатство та регіоналізми
+register: літературний

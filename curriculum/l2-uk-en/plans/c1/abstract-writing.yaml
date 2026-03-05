@@ -4,6 +4,7 @@ sequence: 13
 slug: abstract-writing
 version: '2.0'
 title: Жанр — Анотація та реферат
+subtitle: Introduction — The Role of the Abstract
 content_outline:
 - section: Вступ — Роль анотації в науці (Introduction — The Role of the Abstract)
   words: 600
@@ -101,6 +102,7 @@ activity_hints:
   focus: Fix abstract style issues
   items: 10+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-12 (Research Article)
 - Academic style mastery
@@ -121,10 +123,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use жанр — анотація та реферат
-- Form and apply роль анотації
-- Distinguish between практика написання
+- Learner can identify and produce correct Типологія та структура анотації forms
+- Learner can analyze Стилістичні норми та безособовість in authentic texts
+- Learner can produce written text demonstrating mastery of Вступ — Роль анотації в науці
 persona:
   voice: Senior Specialist
   role: Секретар наукової ради
 word_target: 4000
+grammar:
+- Вступ — Роль анотації в науці
+- Типологія та структура анотації
+- Стилістичні норми та безособовість
+- Реферат як розширена форма та термінологія
+register: літературний

@@ -25,7 +25,7 @@ sources:
   notes: Logical connectors in Ukrainian prose
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - The transition from listing events to a cohesive narrative as mandated by State Standard §1.4.1.1.1 (simple sequences).
   - 'The ''Robot Style'' problem: why beginners overuse «і» (and) for every action and how sequencing words create natural
@@ -33,7 +33,7 @@ content_outline:
   - 'Cultural Hook: The Village Storyteller (Казкар) — an introduction to the communal art of oral tradition and the storyteller''s
     role as a cultural anchor.'
 - section: 'Презентація: Дорожні знаки часу (Presentation: Road Signs of Time)'
-  words: 700
+  words: 475
   points:
   - 'Visual Metaphor: The «Timeline Road» using «спочатку», «потім», and «нарешті» as the cars of a train connecting the story.'
   - 'Learner Error: Confusing the adverb «спочатку» (at first) with the prepositional phrase «з початку» (from the start)
@@ -41,21 +41,21 @@ content_outline:
   - 'Word Order Rule: Time markers as ''Theme'' — placing markers at the start of sentences (e.g., «Потім я пішов...») to
     avoid the common error of trailing them like English ''afterwards''.'
 - section: 'Презентація: Драма та несподіванки (Presentation: Drama and Surprises)'
-  words: 600
+  words: 400
   points:
   - 'The ''Plot Twist'' button: Using «раптом» and «несподівано» to break expectation and add drama to a narrative.'
   - 'Relative time markers for depth: «раніше», «недавно», «давно» and their roles in setting the backstory context.'
   - 'Narrative Registers: Fairytale opening formulas like «Жили-були...» (Once upon a time) and how they signal the start
     of a story.'
 - section: 'Практика: Сміхова культура (Practice: Laughter Culture)'
-  words: 600
+  words: 400
   points:
   - 'Cultural Hook: Ukrainian Laughter (Сміхова культура) — drilling the timing of «потім» and «раптом» using the ''Anekdot''
     format to land punchlines.'
   - 'Drill: Replacing ''Robot Style'' chains of «і» with varied sequencing connectors in a chaotic morning routine scenario.'
   - Minimal pair drills for «спочатку» vs «з початку» in context-dependent sentences.
 - section: Продукція та підсумок (Production and Summary)
-  words: 600
+  words: 400
   points:
   - 'Task: Telling a fishing story or travel adventure using at least five different sequencing markers with correct sentence-initial
     placement.'
@@ -92,3 +92,22 @@ prerequisites:
 - checkpoint-aspect-comparison
 connects_to:
 - because-and-although
+register: розмовний
+activity_hints:
+- type: match-up
+  focus: Match words to definitions
+  items: 12
+- type: fill-in
+  focus: Complete sentences with vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort by category
+  items: 10
+- type: quiz
+  focus: Choose correct word for context
+  items: 10
+- type: fill-in
+  focus: Use words in sentences
+  items: 6
+- type: essay-response
+  focus: Write using domain vocabulary

@@ -52,7 +52,7 @@ content_outline:
 focus: fine-arts
 pedagogy: CBI
 objectives:
-- Learner understands the role of Ukrainian composers in European Baroque and Classical eras
+- Learner can describe the role of Ukrainian composers in European Baroque and Classical eras
 - Learner can describe the significance of Berezovsky, Bortnyansky, and Vedel
 - Learner analyzes the birth of national opera with Gulak-Artemovsky
 grammar:
@@ -82,3 +82,22 @@ prerequisites:
 - ukrainian-avant-garde
 connects_to:
 - klasychna-muzyka-2-natsionalna-shkola
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Максим Березовський — «Український Моцарт» examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Дмитро Бортнянський та хорова спадщина
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

@@ -4,6 +4,7 @@ sequence: 3
 slug: research-verbs
 version: '2.0'
 title: Дієслова наукового дослідження
+subtitle: 'Introduction: Verbs as the Foundation of Scientific Style'
 content_outline:
 - section: 'Вступ: Дієслова як фундамент наукового стилю (Introduction: Verbs as the
     Foundation of Scientific Style)'
@@ -106,6 +107,7 @@ activity_hints:
 - type: essay-response
   focus: Write paragraph using 5+ research verbs
 focus: vocabulary
+pedagogy: PPP
 prerequisites:
 - c1-02 (Academic Style Markers)
 - Basic academic register awareness
@@ -126,10 +128,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Understand and apply дієслова наукового дослідження
-- Analyze and evaluate дієслова як інструмент науковця
-- Identify key concepts of практичне застосування
+- Learner can use specialized vocabulary related to Дієслова наукового дослідження in context
+- Learner can distinguish nuances between near-synonyms in Історико-культурний контекст наукової термінології (Historical and Cultural
+- Learner can produce text using 15+ domain-specific terms from Дієслова наукового дослідження
 persona:
   voice: Senior Specialist
   role: Методолог
 word_target: 4000
+grammar:
+- Дієслова як фундамент наукового стилю
+- Історико-культурний контекст наукової термінології
+- Дієслова дослідження та семантичні нюанси
+- Дієслова аргументації, презентації та висновку
+register: літературний

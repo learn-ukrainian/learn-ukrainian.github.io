@@ -80,3 +80,22 @@ prerequisites:
 - ukrainske-kino
 connects_to:
 - c1-final-checkpoint
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Identify target structures in context
+  items: 12
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 10
+- type: match-up
+  focus: Match Український бренд у світовому контексті examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix grammatical errors
+  items: 8
+- type: group-sort
+  focus: Classify by Синтез мистецтв
+  items: 12
+- type: essay-response
+  focus: Write using target structures correctly

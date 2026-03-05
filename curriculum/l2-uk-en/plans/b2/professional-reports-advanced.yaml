@@ -75,14 +75,23 @@ vocabulary_hints:
   - Дослідження (research) — обмеження дослідження, результати дослідження, польове дослідження
   - Показник (indicator) — ключовий показник ефективності (KPI), динаміка показників
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Сучасна аналітика with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Критичний аналіз та етика
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Сучасна аналітика for given scenario
 persona:
   voice: Professional Language Coach
   role: Data Scientist (Дата-сайєнтист)
@@ -90,3 +99,8 @@ prerequisites:
 - professional-reports-basics
 connects_to:
 - academic-writing
+grammar:
+- Report writing conventions
+- Analytical language patterns
+- Data presentation structures
+register: нейтральний

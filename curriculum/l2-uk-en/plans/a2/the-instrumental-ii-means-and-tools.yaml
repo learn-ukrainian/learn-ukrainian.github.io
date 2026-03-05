@@ -25,7 +25,7 @@ sources:
   notes: Transport modes vocabulary
 content_outline:
 - section: 'Вступ: Без прийменника «з» (Introduction: No Preposition ''Z'')'
-  words: 500
+  words: 325
   points:
   - 'Explicit focus on State Standard §4.2.2.5.1: Defining the Instrumental case as the primary marker for ''знаряддя і засіб
     дії'' (instruments and means of action) without prepositions.'
@@ -35,7 +35,7 @@ content_outline:
   - 'Conceptual hook: Think of the Instrumental case as ''becoming'' the tool or the extension of the hand, which is why no
     connecting word like ''with'' is needed in Ukrainian.'
 - section: Транспорт і рух (Transport and Movement)
-  words: 700
+  words: 475
   points:
   - 'Means of travel: Using the Instrumental to answer the question ''Чим?'' (By what means?). Key high-frequency examples:
     їхати автобусом, подорожувати поїздом, дістатися машиною.'
@@ -44,7 +44,7 @@ content_outline:
   - 'Cultural Hook: ''Нічний поїзд'' (The Night Train). Explain the cultural significance of the railway (Залізниця) as the
     backbone of Ukrainian travel, where the Instrumental case is used to describe the journey itself (їхати нічним поїздом).'
 - section: Інструменти та знаряддя (Tools and Instruments)
-  words: 700
+  words: 475
   points:
   - 'Everyday tools: Writing and creating. Focus on high-frequency school/office items: писати синьою ручкою, малювати олівцем,
     креслити олівцем.'
@@ -53,7 +53,7 @@ content_outline:
   - 'Kitchen context: Instrumental for eating and food prep. Use the cultural context of sharing meals on a train to introduce:
     різати ножем, їсти виделкою, тримати ложкою.'
 - section: Питання та відповіді (Questions and Answers)
-  words: 600
+  words: 400
   points:
   - 'Question patterns: Differentiating between ''Як?'' (How? - manner) and ''Чим?'' (With what? - instrument). Practice identifying
     which question a sentence answers.'
@@ -62,7 +62,7 @@ content_outline:
   - 'Common collocations review: Focus on ''дістатися + transport'' and ''користуватися + instrument'' (using the Instrumental
     case).'
 - section: Практика та підсумок (Practice and Summary)
-  words: 500
+  words: 325
   points:
   - 'Scenario-based production: Describing a commute or a creative process using at least three different instruments/means
     in the Instrumental case.'
@@ -125,3 +125,4 @@ grammar:
 - tools
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

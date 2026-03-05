@@ -8,7 +8,7 @@ subtitle: Review and Mastery Assessment
 focus: checkpoint
 pedagogy: TTT
 phase: A2.4 [Word Formation]
-word_target: 2000
+word_target: 1500
 objectives:
 - Demonstrate confidence in identifying root families
 - Deduce meaning using morphological clues
@@ -16,7 +16,7 @@ objectives:
 - Correct common word formation errors
 content_outline:
 - section: Огляд та місток до B1 (Overview and Bridge to B1)
-  words: 400
+  words: 200
   points:
   - Skills assessment focusing on A2 standards (§4.3.1 degrees of comparison and §4.3.2 aspect pairs) as a foundation for
     mastery
@@ -24,7 +24,7 @@ content_outline:
     for advanced grammar'
   - 'Word formation as the engine of the language: how morphological awareness accelerates vocabulary acquisition and autonomy'
 - section: Словотворчі префікси та дієслівний вид (Word-forming Prefixes and Verb Aspect)
-  words: 650
+  words: 325
   points:
   - 'Directional and aspectual prefixes: consolidating aspect pairs (робити – зробити, ділити – поділити) per Standard §4.3.2'
   - 'Learner error: avoiding Surzhyk and Russian calques (e.g., using correct спів- as in співробітник, but correcting wrong
@@ -33,7 +33,7 @@ content_outline:
     the concept of enemies'
   - 'Prefix substitution practice: identifying how changing a prefix alters the lexical meaning of common A2 verbs'
 - section: 'Суфіксальне багатство: -ння, -ість, -ач (Suffixal Richness: -ння, -ість, -ач)'
-  words: 650
+  words: 325
   points:
   - 'Standard §4.3.4: High productivity of -ння for verbal nouns (читання, навчання, життя); drill as the default ''action-to-noun''
     converter'
@@ -42,7 +42,7 @@ content_outline:
   - 'Abstract and Agent nouns: using -ість (радість, незалежність) for concepts and -ач (слухач, викладач) for active roles'
   - 'Productive patterns: creating new nouns from known A2 verbs and adjectives using specified suffix sets'
 - section: Ад’єктивні суфікси та родини коренів (Adjective Suffixes and Root Families)
-  words: 650
+  words: 325
   points:
   - 'Standard §4.3.6: Review of -ний and -ський suffixes for relational and national adjectives'
   - 'Learner error: confusion between -ний (general relation) and -овий (material/type) — stylistic and semantic distinctions'
@@ -51,7 +51,7 @@ content_outline:
   - 'Cultural hook: The creation of «мрія» (dream) by Mykhailo Starytsky — an example of conscious word formation shaping
     national identity'
 - section: 'Підсумковий практикум: «Паляниця» та помилки (Final Workshop: «Palianytsia» and Errors)'
-  words: 650
+  words: 325
   points:
   - 'Comprehensive word analysis: breaking down complex words into morphemes to deduce meaning without a dictionary'
   - 'The ''Паляниця'' shibboleth: analysis of the -иця suffix and how word formation creates unique cultural identifiers'

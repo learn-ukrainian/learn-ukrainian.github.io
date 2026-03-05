@@ -10,7 +10,7 @@ pedagogy: TTT
 phase: B1.3a [Complex Sentences]
 word_target: 4000
 objectives:
-- Learner understands який agreement patterns
+- Learner can explain який agreement patterns
 - Learner can use який in all seven cases
 - Learner can combine sentences using який
 - Learner can identify antecedent and relative clause role
@@ -83,8 +83,8 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- 'b1-29 (Підрядні означальні: який)'
-- 'b1-29 (Підрядні означальні: який)'
+- 'b1-30 (Підрядні означальні: де, куди, звідки)'
+- "b1-31 (Підрядні з'ясувальні: що, щоб)"
 prerequisites:
 - 'b1-17 (Контрольна точка: Опанування виду)'
 persona:

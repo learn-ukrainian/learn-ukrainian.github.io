@@ -4,6 +4,7 @@ sequence: 21
 slug: cv-resume-writing
 version: '2.0'
 title: Написання резюме та CV
+subtitle: 'Introduction: Resume vs CV and State Standards'
 content_outline:
 - section: 'Вступ: Резюме vs CV та державні стандарти (Introduction: Resume vs CV and State Standards)'
   words: 500
@@ -83,6 +84,7 @@ activity_hints:
 - type: essay-response
   focus: Write cover letter
 focus: style
+pedagogy: TTT
 prerequisites:
 - c1-01 to c1-20 (Complete C1.1)
 - Academic writing foundation
@@ -103,10 +105,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.2 [Professional Communication]
 objectives:
-- Understand and apply написання резюме та cv
-- Analyze and evaluate резюме vs cv
-- Identify key concepts of практичне завдання
+- Learner can identify stylistic features of Структура та оформлення українського CV
+- Learner can transform text between different registers related to Написання резюме та CV
+- Learner can produce text applying Резюме vs CV та державні стандарти principles
 persona:
   voice: Senior Specialist
   role: HR-директор
 word_target: 4000
+grammar:
+- Резюме vs CV та державні стандарти
+- Структура та оформлення українського CV
+- Дієслова дії та уникнення займенників
+- Професійна лексика та боротьба з англіцизмами
+register: літературний

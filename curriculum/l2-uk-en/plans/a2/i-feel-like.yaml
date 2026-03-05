@@ -25,14 +25,14 @@ sources:
   notes: Syntax of impersonal sentences for expressing feelings
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - 'The difference between ''Who I am'' and ''How I feel'' — explicit contrast table: ''Я холодний'' (I am a cold person)
     vs ''Мені холодно'' (I feel cold); focus on fixing the Nominative subject error.'
   - 'Grammatical foundation: The Dative logic according to State Standard §4.2.2.3 for subjective states and impersonal constructions
     (Мені не спиться, Нам весело).'
 - section: Презентація (Presentation)
-  words: 900
+  words: 625
   points:
   - 'Physical States: жарко, холодно, боляче — frequent adverbs; distinguish between personal traits and temporary states;
     warning on the sexual connotation of ''Я гарячий''.'
@@ -43,21 +43,21 @@ content_outline:
   - 'Semantic distinction: Радий (Situational gladness, gendered: радий/рада) vs Щасливий (Deep/permanent feeling) vs Мені
     весело (Adverbial state).'
 - section: Культурний контекст (Cultural Context)
-  words: 500
+  words: 325
   points:
   - Meteosensitivity (Метеозалежність) — explaining how complaints about 'magnetic storms' (магнітні бурі) serve as a social
     bonding mechanism in Ukraine.
   - 'Folk wisdom: Analysis of the proverb ''Ломить руки, або коліна – буде погоди переміна'' to illustrate the cultural connection
     between physical sensation and nature.'
 - section: Практика та вправи (Practice and Exercises)
-  words: 600
+  words: 400
   points:
   - 'Dative conversion drills: mapping Nominative to Dative (я→мені, ти→тобі, він→йому, вона→їй); correcting the common error
     ''Вона сумно'' to ''Їй сумно''.'
   - 'Adjective vs Adverb contrast: Drills to prevent ''Мені холодний'' (Adj) by contrasting it with correct ''Мені холодно''
     (Adv) for feeling/state.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 500
+  words: 325
   points:
   - 'Dialogue scenarios: comforting a friend who feels unwell or complaining about the weather; using ''мені...'' to express
     spontaneous physical needs or feelings.'
@@ -85,3 +85,26 @@ prerequisites:
 - i-think-that
 connects_to:
 - in-order-to
+grammar:
+- Вступ
+- Презентація
+- Культурний контекст
+register: розмовний
+activity_hints:
+- type: match-up
+  focus: Match words to definitions
+  items: 12
+- type: fill-in
+  focus: Complete sentences with vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort by category
+  items: 10
+- type: quiz
+  focus: Choose correct word for context
+  items: 10
+- type: fill-in
+  focus: Use words in sentences
+  items: 6
+- type: essay-response
+  focus: Write using domain vocabulary

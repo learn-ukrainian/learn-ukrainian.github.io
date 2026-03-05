@@ -57,10 +57,10 @@ content_outline:
   - 'Фінальна вправа на трансформацію: перетворення описових дієслівних речень на лаконічні наукові тези з використанням номіналізації.'
 vocabulary_hints:
   required:
-  - термін (term) — наукова одиниця
-  - поняття (concept) — абстрактна категорія
-  - процес (process) — послідовність дій; суфікс -ння
-  - метод (method) — спосіб дослідження
+  - аналіз (analysis) — розклад на складники
+  - синтез (synthesis) — поєднання частин у ціле
+  - дослідження (research) — науковий пошук; суфікс -ння
+  - якість (quality) — висока якість, контроль якості; суфікс -ість
   - значення (meaning/importance) — мати велике значення, надати значення; надзвичайно висока частотність
   - досягнення (achievement) — вагомі досягнення, наукові досягнення; суфікс -ння
   - розвиток (development) — сталий розвиток, сприяти розвитку; суфікс -ок
@@ -76,14 +76,23 @@ vocabulary_hints:
   - гідність (dignity) — людська гідність, почуття гідності, Революція Гідності
   - свідомість (consciousness) — національна свідомість; стан усвідомлення
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Суфікс -ння/-ення для позначення дії чи процесу in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Суфікс -ння/-ення для позначення дії чи процесу
+  items: 10
+- type: match-up
+  focus: Match Суфікс -ння examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Суфікс -ння/-ення для позначення дії чи процесу
   items: 8
+- type: group-sort
+  focus: Classify examples by Суфікс -ість
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Суфікс -ння/-ення для позначення дії чи процесу correctly
 persona:
   voice: Professional Language Coach
   role: Marketer (Маркетолог)

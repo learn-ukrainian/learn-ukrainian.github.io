@@ -6,6 +6,7 @@ version: '1.0'
 title: 'Кобзарі та бандура: Душа України'
 subtitle: 'Kobzari and Bandura: The Soul of Ukraine'
 focus: cultural
+pedagogy: CBI
 phase: C1.6 [Folk Culture & Traditions]
 word_target: 4000
 objectives:
@@ -79,3 +80,27 @@ prerequisites:
 - checkpoint-c1-5
 connects_to:
 - ritual-songs
+grammar:
+- Вступ
+- Братства та таємниці
+- Стилістика епічного жанру
+- Від старосвітської до академічної бандури
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Братства та таємниці examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Стилістика епічного жанру
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

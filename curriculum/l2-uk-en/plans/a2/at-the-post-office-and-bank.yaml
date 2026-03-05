@@ -25,7 +25,7 @@ sources:
   notes: Authentic postal service terminology
 content_outline:
 - section: 'Вступ: Світ послуг в Україні (Introduction: The World of Services in Ukraine)'
-  words: 500
+  words: 325
   points:
   - Introduction to the A2 thematic catalogue for services (State Standard §3.11), establishing the context for post office
     and bank interactions.
@@ -34,7 +34,7 @@ content_outline:
   - Linguistic focus on 'я б хотів/хотіла' (I would like) as the standard polite request formula, distinguishing it from the
     more direct 'я хочу'.
 - section: 'Укрпошта: Листи та патріотичні марки (Ukrposhta: Letters and Patriotic Stamps)'
-  words: 700
+  words: 475
   points:
   - 'Essential postal terminology: ''лист'' (letter), ''посилка'' (package), ''конверт'' (envelope), and ''адреса'' (address).'
   - 'Cultural Hook: The ''Russian warship, go...!'' stamp phenomenon; how philately became a symbol of Ukrainian resistance
@@ -43,7 +43,7 @@ content_outline:
     feminine inanimate change (-а to -у) to avoid the common error of leaving ''посилка'' or ''марка'' unchanged.'
   - Postal codes (індекси) and using numerals 100-1000 to express addresses and service prices in UAH.
 - section: Банківські операції та цифрова екосистема (Banking Operations and the Digital Ecosystem)
-  words: 700
+  words: 475
   points:
   - 'Key banking terms: ''рахунок'' (account), ''картка'' (card), ''валюта'' (currency), and ''готівка'' (cash).'
   - 'Critical Learner Error: Distinguishing Ukrainian ''рахунок'' (account/bill) from the Russian ''счет'' (surzhyk); emphasizing
@@ -52,14 +52,14 @@ content_outline:
     (transfer money) via mobile apps.'
   - The role of QR codes and instant transfers in daily Ukrainian life (Monobank context).
 - section: 'Граматичний практикум: Куди чи де? (Grammar Lab: Direction vs. Location)'
-  words: 600
+  words: 400
   points:
   - 'Resolving the common motion-based case confusion: ''іду на пошту / в банк'' (Accusative for direction) vs. ''я на пошті
     / у банку'' (Locative for location).'
   - Mastering numbers 100-1000 in currency exchange scenarios; understanding 'курс валют' (exchange rates) and 'обмін' (exchange).
   - 'Drilling the Accusative Case for services: ''відправити бандероль'', ''отримати переказ'', ''замовити картку''.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 500
+  words: 325
   points:
   - 'Roleplay Dialogue 1: At the post office sending a registered letter and purchasing limited-edition stamps using polite
     imperatives.'
@@ -121,3 +121,4 @@ grammar:
 - polite requests (я хочу...)
 module_type: vocabulary
 immersion: 50-60% Ukrainian
+register: розмовний

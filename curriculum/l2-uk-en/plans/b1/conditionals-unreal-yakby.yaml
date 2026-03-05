@@ -10,7 +10,7 @@ pedagogy: TTT
 phase: B1.3a [Complex Sentences]
 word_target: 4000
 objectives:
-- Learner understands unreal conditional constructions
+- Learner can explain unreal conditional constructions
 - Learner can form hypothetical sentences with якби
 - Learner can distinguish real and unreal conditionals
 - Learner can express wishes and hypotheticals
@@ -76,7 +76,7 @@ activity_hints:
 connects_to:
 - 'b1-36 (Умовні речення: змішані та складні умови)'
 prerequisites:
-- 'b1-35 (Умовні речення: нереальна умова (якби))'
+- 'b1-34 (Умовні речення: реальна умова (якщо))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Alternative History Author

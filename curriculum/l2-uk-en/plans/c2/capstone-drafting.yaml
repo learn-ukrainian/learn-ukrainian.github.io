@@ -4,14 +4,15 @@ sequence: 82
 slug: capstone-drafting
 version: '2.0'
 title: Дипломний проєкт — Написання чернетки
+subtitle: 'From Research to Text: Psychology of the Draft'
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
-- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
-- Продукувати тексти академічного та професійного рівня за тематикою модуля
-- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Аналізувати та класифікувати явища Вступ та обґрунтування актуальності у автентичних текстах
+- Продукувати тексти з коректним застосуванням Культурний код
+- Оцінювати стилістичну доречність мовних засобів у контексті Дипломний проєкт — Написання чернетки
 - 'Застосовувати знання з теми «Дихотомія Об’єкта і Предмета: Культурний код» у власній мовній практиці'
 sources:
 - name: Структура наукової роботи — Вимоги МОН
@@ -97,16 +98,25 @@ vocabulary:
   - теза (thesis statement)
   - антитеза (antithesis)
   - синтез (synthesis)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Вступ та обґрунтування актуальності examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Культурний код
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - match-up
@@ -124,3 +134,9 @@ persona:
   role: Dissertation Writer
 prerequisites:
 - capstone-research-project
+grammar:
+- Психологія чернетки
+- Вступ та обґрунтування актуальності
+- Культурний код
+- Авторське «Ми» проти «Литви води»
+register: академічний

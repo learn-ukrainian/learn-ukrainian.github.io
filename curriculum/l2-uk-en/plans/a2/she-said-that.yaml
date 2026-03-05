@@ -25,7 +25,7 @@ sources:
   notes: Rules for tense retention and pronoun shifts
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - The social function of reporting and the «На лавці» (On the bench) culture — introduce the culturally recognizable trope
     of grandmothers (бабусі) discussing neighbors as a natural context for reporting information.
@@ -34,7 +34,7 @@ content_outline:
   - 'Cultural anchor: introduce the proverb «Слово не горобець — вилетить не впіймаєш» (A word is not a sparrow—you can''t
     catch it once it has flown) to emphasize the weight of spoken words and gossip.'
 - section: 'Презентація: Твердження та Дієслова (Presentation: Statements and Verbs)'
-  words: 800
+  words: 525
   points:
   - 'The Three Pillars of Indirect Speech: Що (Statement), Чи (Question), Щоб (Command) — align with State Standard §4.4.2
     regarding complex sentences with these conjunctions.'
@@ -45,7 +45,7 @@ content_outline:
   - Pronoun Shifting (I -> He/She) — address the 'Pronoun Persistence' error where learners forget to shift perspective from
     «Я» to «Він/Вона» in the reported clause.
 - section: 'Презентація: Питання та Накази (Presentation: Questions and Commands)'
-  words: 800
+  words: 525
   points:
   - Reporting Yes/No Questions with *чи* — target the 'If vs Whether' error where learners use *якщо* (conditional) instead
     of the correct *чи* (whether).
@@ -56,7 +56,7 @@ content_outline:
   - Usage of *питати* (to ask) and *відповідати* (to answer) — introduce collocations such as *питати дозволу* (ask permission)
     and *відповідати на питання* (answer a question).
 - section: 'Практика: Трансформація та Робота над Помилками (Practice: Transformation and Error Correction)'
-  words: 600
+  words: 400
   points:
   - Direct to Indirect Transformation Drills — focused exercises converting simple statements and questions, specifically
     monitoring for 'Backshift' and 'Pronoun Persistence' errors.
@@ -65,7 +65,7 @@ content_outline:
   - Correcting Word Order — exercises focused on stripping question inversion from indirect questions to move toward natural
     declarative structures.
 - section: Продукція та Підсумок (Production and Summary)
-  words: 400
+  words: 275
   points:
   - Conversational 'Chain' Game — introduce the Ukrainian children's game «Зіпсований телефон» (Broken telephone) to demonstrate
     how reported speech can distort information while practicing the grammar.
@@ -101,3 +101,22 @@ prerequisites:
 - because-and-although
 connects_to:
 - i-think-that
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

@@ -16,14 +16,14 @@ objectives:
 - Read a simple menu
 content_outline:
 - section: Їжа (Food)
-  words: 500
+  words: 275
   points:
   - 'Basic food categories: хліб, м''ясо, риба, овочі, фрукти, каша, суп, борщ. Organized by food group for memorization.'
   - 'Gender of food nouns: masculine (хліб, суп, борщ, сир), feminine (каша, риба, картопля), neuter (м''ясо, яблуко, молоко).
     Gender awareness for adjective agreement.'
   - 'Collocations with adjectives: свіжий хліб, гаряча каша, смачний борщ, домашній суп. Building natural-sounding food descriptions.'
 - section: Напої (Drinks)
-  words: 400
+  words: 250
   points:
   - 'Common drinks vocabulary: вода, чай, кава, сік, молоко, компот. Gender and typical modifiers: гаряча кава, холодна вода,
     апельсиновий сік.'
@@ -32,14 +32,14 @@ content_outline:
   - 'Cultural note: Ukrainian tea culture (чай з медом, чай з лимоном) vs coffee culture (кава по-львівськи). Regional preferences
     across Ukraine.'
 - section: Паляниця (The Shibboleth Bread)
-  words: 300
+  words: 175
   points:
   - 'Cultural sidebar: Паляниця — the round wheat bread that became a linguistic shibboleth during 2022. The specific pronunciation
     of пал-я-ни-ця is difficult for Russian speakers to reproduce.'
   - 'Ukrainian bread traditions: хліб as sacred (never thrown away), the ''хліб-сіль'' (bread and salt) hospitality greeting.
     Connection to the proverb «Хліб — усьому голова».'
 - section: Мені подобається / Я не їм (Preferences)
-  words: 400
+  words: 250
   points:
   - 'Expressing food preferences: Мені подобається борщ (I like borscht). Я люблю каву з молоком (I love coffee with milk).
     Review of подобатися + Dative construction.'
@@ -48,7 +48,7 @@ content_outline:
   - 'Allergies and dietary needs: У мене алергія на горіхи (I have an allergy to nuts). Я не можу їсти глютен. Practical survival
     phrases for dietary restrictions.'
 - section: Практика (Practice)
-  words: 400
+  words: 250
   points:
   - 'Food vocabulary drills: Categorization (їжа vs напої), gender sorting, adjective matching. Building automatic recall
     of food terms.'

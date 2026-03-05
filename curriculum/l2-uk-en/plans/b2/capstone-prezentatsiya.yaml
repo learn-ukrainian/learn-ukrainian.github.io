@@ -64,14 +64,23 @@ vocabulary_hints:
   - красномовство (eloquence) — барокове красномовство, майстерність красномовства; Cultural/academic register
   - аналіз/синтез/дослідження (analysis/synthesis/research) — проводити глибокий аналіз; Standard academic B2 terms
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Rhetorical devices in speech in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Rhetorical devices in speech
+  items: 10
+- type: match-up
+  focus: Match Структура та логіка виступу examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Rhetorical devices in speech
   items: 8
+- type: group-sort
+  focus: Classify examples by Візуалізація та дизайн слайдів
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Rhetorical devices in speech correctly
 persona:
   voice: Professional Language Coach
   role: Conference Moderator (Модератор конференції)
@@ -82,3 +91,4 @@ prerequisites:
 - capstone-research
 connects_to:
 - b2-pidsumkovyy-ohlyad
+register: нейтральний

@@ -76,10 +76,10 @@ vocabulary_hints:
   - аналіз (analysis) — проводити аналіз, глибокий аналіз, порівняльний аналіз, на основі аналізу; High frequency
   - підсумок (summary/result) — підбивати підсумки (NOT підводити!), у підсумку, загальний підсумок
   - дослідження (research) — об'єкт дослідження, методи дослідження, результати дослідження; Formal academic/pro context
-  - термін (term) — професійна термінологія, у визначений термін
-  - поняття (concept) — ключове поняття, визначення поняття
-  - процес (process) — процес виконання, оптимізація процесу
-  - метод (method) — метод аналізу, інноваційні методи
+  - синтез (synthesis) — синтез отриманих даних
+  - згідно з (according to) — згідно з інструкцією, згідно з розпорядженням; Essential prepositional phrase (+ Instr)
+  - брати участь (to take part) — брати участь у проекті; Correction for common calque 'приймати'
+  - виконання (execution/fulfillment) — забезпечення виконання, термін виконання; Verbal noun from §4.2.6
   recommended:
   - синтез (synthesis) — синтез отриманих даних
   - згідно з (according to) — згідно з інструкцією, згідно з розпорядженням; Essential prepositional phrase (+ Instr)
@@ -87,14 +87,23 @@ vocabulary_hints:
   - виконання (execution/fulfillment) — забезпечення виконання, термін виконання; Verbal noun from §4.2.6
   - забезпечення (provision/ensuring) — програмне забезпечення, забезпечення якості; High-register verbal noun
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Структура та компоненти with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Аналіз та візуалізація даних
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Структура та компоненти for given scenario
 persona:
   voice: Professional Language Coach
   role: Junior Analyst (Молодший аналітик)
@@ -102,3 +111,8 @@ prerequisites:
 - professional-email-advanced
 connects_to:
 - professional-reports-advanced
+grammar:
+- Basic report structure
+- Formal description patterns
+- Summary and conclusion formulas
+register: нейтральний

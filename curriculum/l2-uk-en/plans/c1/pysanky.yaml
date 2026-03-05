@@ -72,3 +72,22 @@ prerequisites:
 - rehionalni-tantsi
 connects_to:
 - vyshyvanka
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Семантика та символіка орнаментів examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Технологія та регіональний поділ
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

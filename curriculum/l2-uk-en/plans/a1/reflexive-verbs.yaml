@@ -12,11 +12,11 @@ word_target: 1200
 objectives:
 - Learner can identify reflexive verbs ending in -ся
 - Learner can conjugate reflexive verbs in present tense
-- Learner understands difference between transitive and reflexive verbs
+- Learner can explain difference between transitive and reflexive verbs
 - Learner can use common reflexive verbs like дивитися, сміятися
 content_outline:
 - section: 'Вступ: Дзеркало дії (Introduction: Mirroring Action)'
-  words: 400
+  words: 250
   points:
   - Suffix -ся turns action back onto subject (мити → митися) — use the 'mirror' analogy to explain -ся (action reflecting
     back) per research notes.
@@ -27,7 +27,7 @@ content_outline:
   - 'Learner error: The ''Myself'' Redundancy — address the common mistake of saying ''Я мию себе'' instead of the natural
     ''Я миюся''.'
 - section: 'Презентація: Форми та відмінювання (Presentation: Forms and Conjugation)'
-  words: 600
+  words: 350
   points:
   - 'Phonetic Rule: Two forms based on the preceding sound — -ся (after consonants like ''миється'') and -сь (after vowels
     like ''миюсь'').'
@@ -38,17 +38,17 @@ content_outline:
   - 'Shibboleth Pronunciation: Mastering the long soft [ц'':а] for ''-ться'' is a critical phonetic marker of Ukrainian identity,
     distinct from the hard Russian [ца].'
 - section: Семантичні групи (Semantic Groups)
-  words: 500
+  words: 300
   points:
   - 'Type 1 — True Reflexive: Focus on daily routine (вмиватися, одягатися) — collocations: вмиватися холодною водою, одягатися
     стильно.'
   - 'Type 2 — Reciprocal: Actions between two people (зустрічатися, вітатися, цілуватися) — emphasize that -ся here means
     ''each other''.'
-  - 'Type 3 — Lexicalized: Verbs that are always reflexive (сміятися, подобатися) — Learner error: Wrong Preposition with
-    ''Laugh'' (using *сміятися над* instead of correct *сміятися з*).'
+  - 'Type 3 — Lexicalized: Verbs that are always reflexive (сміятися, подобатися) — both ''сміятися з когось'' and ''сміятися
+    над кимось'' are standard Ukrainian with slightly different nuances (з = laughing at/about, над = mocking/ridiculing).'
   - 'Agent Confusion: Explicitly contrast ''називати'' (to name something) with high-frequency ''називатися'' (to be called/identified).'
 - section: Практика та застосування (Practice and Application)
-  words: 500
+  words: 300
   points:
   - 'Transitive ↔ Reflexive Contrast: Drill pairs like ''мити тарілку'' (washing a plate) vs ''митися'' (washing oneself)
     to reinforce the ''mirror'' concept.'

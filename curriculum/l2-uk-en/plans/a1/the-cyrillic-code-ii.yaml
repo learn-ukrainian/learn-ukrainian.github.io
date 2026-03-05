@@ -16,13 +16,13 @@ objectives:
 - Learner can read real Ukrainian words using all 14 known letters
 content_outline:
 - section: Вступ — Introduction
-  words: 150
+  words: 125
   points:
   - 'Quick review: read 3 words from Code I (мама, сом, масло) as warm-up.'
   - This module adds 7 letters (3 голосні + 4 приголосні). After this module you know 14 letters and can read real Ukrainian
     words like молоко, місто, кіт.
 - section: Голосні — Vowels И, І, Е
-  words: 300
+  words: 275
   points:
   - 'И — uniquely Ukrainian vowel, no exact equivalent in English or most European languages. Key word: риба. Video link. Listen
     carefully to Anna''s pronunciation. Jaw relaxed, lower sound.'
@@ -33,7 +33,7 @@ content_outline:
     a smile). Minimal pair preview: they will appear constantly.'
   - 'All 6 basic vowels now known: А, О, У (Code I) + И, І, Е (this module). The 4 iotated vowels come in Code IV.'
 - section: Приголосні — Consonants К, Р, В, Т
-  words: 350
+  words: 300
   points:
   - 'К — key word: кіт. Video link. Additional: кіно, каша, кава.'
   - 'Р — key word: ракета. Video link. Р is the rolled/trilled r. Looks like Latin P but sounds completely different. THE key
@@ -42,14 +42,14 @@ content_outline:
   - 'Т — key word: тато. Video link. Т is a true friend — same sound as English T. Additional: стіл, місто, метро.'
   - 'Trap letters recap: Р looks like P (is /r/), В looks like B (is /v/). These two cause the most confusion for English speakers.'
 - section: Перші слова — First Real Words
-  words: 250
+  words: 225
   points:
   - With 14 letters you can now read real Ukrainian words, not just syllables.
   - 'Word drills (all decodable from 14 letters): кіт, тато, рис, сир, місто, море, метро, ліс, вікно, стіл, молоко, кіно,
     око, слово, літо, масло, ніс, він, вона.'
   - 'Reading exercise: short paragraph using only the 14 known letters.'
 - section: Практика — Practice
-  words: 200
+  words: 175
   points:
   - 'Minimal pair drills: И vs І in context — ми (we) vs мі- (in compounds), вік (age) vs вік (same — depends on context).'
   - 'Trap letter practice: Р vs P shape, В vs B shape — recognizing the sound, not the shape.'

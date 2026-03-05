@@ -51,10 +51,9 @@ content_outline:
 focus: grammar
 pedagogy: PPP
 objectives:
-- Distinguish between subordinate conjunctions and relative pronouns
-- Construct attributive clauses with correct який agreement
-- Use explanatory clauses with appropriate mood selection
-- Apply punctuation rules for complex-subordinate sentences
+- Learner can identify and produce correct Означальне підрядне forms
+- Learner can analyze З'ясувальне підрядне in authentic texts
+- Learner can produce written text demonstrating mastery of Структура складнопідрядного речення
 grammar:
 - Attributive subordinate clauses with який/що/де/коли
 - Explanatory subordinate clauses with що/щоб/чи
@@ -95,3 +94,4 @@ prerequisites:
 - skladnosuriadne-rechennia
 connects_to:
 - skladnopidriadne-obstavynne
+register: літературний

@@ -4,6 +4,7 @@ sequence: 14
 slug: literature-review
 version: '2.0'
 title: Жанр — Огляд літератури
+subtitle: 'Introduction: The Genre of Literature Review'
 content_outline:
 - section: 'Вступ: Жанр огляду літератури (Introduction: The Genre of Literature Review)'
   words: 500
@@ -102,6 +103,7 @@ activity_hints:
   focus: Classify sources by quality/relevance
   items: 12+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-07 (Citation & Reference)
 - c1-11 (Summary & Paraphrase)
@@ -123,10 +125,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use жанр — огляд літератури
-- Form and apply що таке огляд літератури?
-- Distinguish between практика огляду
+- Learner can identify and produce correct Інтелектуальна традиція та постаті forms
+- Learner can analyze Пошук та критичний відбір джерел in authentic texts
+- Learner can produce written text demonstrating mastery of Жанр огляду літератури
 persona:
   voice: Senior Specialist
   role: Бібліограф
 word_target: 4000
+grammar:
+- Жанр огляду літератури
+- Інтелектуальна традиція та постаті
+- Пошук та критичний відбір джерел
+- Мова наукового синтезу
+register: літературний

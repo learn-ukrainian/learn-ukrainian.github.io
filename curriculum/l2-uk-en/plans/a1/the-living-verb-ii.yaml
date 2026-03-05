@@ -16,7 +16,7 @@ objectives:
 - Learner can form basic sentences with action verbs
 content_outline:
 - section: 'Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)'
-  words: 400
+  words: 250
   points:
   - 'Introduction to Second Conjugation verbs (-ити): establishing this family as the second pillar of Ukrainian verbal action,
     focusing on ongoing and habitual meanings.'
@@ -25,7 +25,7 @@ content_outline:
   - 'Concept check: reviewing the difference between ''doing'' (imperfective) and ''completing'', anchoring the module in
     the learner''s existing understanding of present tense from Module 06.'
 - section: 'Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)'
-  words: 650
+  words: 375
   points:
   - 'Systematic introduction of endings: -ити → -ю, -иш, -ить, -имо, -ите, -ять. Side-by-side comparison with First Conjugation
     (читати vs говорити) to highlight the critical vowel difference (е/є vs и/і).'
@@ -38,7 +38,7 @@ content_outline:
   - Distinction between 'бачити' (to see - result/faculty) and 'дивитися' (to watch - process) to prevent semantic confusion
     in early sentence building.
 - section: 'Практика: Помилки та автоматизація (Practice: Errors and Automation)'
-  words: 500
+  words: 300
   points:
   - 'Contrastive drills to prevent Conjugation Mixing: identifying and correcting the habit of applying 1st conjugation endings
     to 2nd conjugation verbs (e.g., ''ти робиш'' vs incorrect ''ти робеш'').'
@@ -47,7 +47,7 @@ content_outline:
   - 'Sorting exercises: categorization of 1st and 2nd conjugation verbs to build structural intuition for vowel patterns in
     endings.'
 - section: Продукування та культурний контекст (Production and Cultural Context)
-  words: 450
+  words: 275
   points:
   - 'Contextual Production: describing daily routines and interests using high-frequency collocations such as ''робити домашнє
     завдання'', ''любити природу'', and ''говорити українською''.'
@@ -87,7 +87,6 @@ connects_to:
 - a1-21 (Past Tense)
 prerequisites:
 - a1-15 (The Living Verb I)
-- a1-18 (Questions and Negation)
 persona:
   voice: Patient Supportive Tutor
   role: Choreographer

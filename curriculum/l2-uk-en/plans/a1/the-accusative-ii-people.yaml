@@ -12,18 +12,18 @@ word_target: 1200
 objectives:
 - Learner can use accusative case for animate nouns (people/animals)
 - Learner can distinguish between animate and inanimate accusative
-- Learner understands when accusative = genitive
+- Learner can explain when accusative = genitive
 - Learner can talk about people as direct objects
 content_outline:
 - section: Розминка (Warm-up)
-  words: 300
+  words: 175
   points:
   - Введення метафори 'Живі слова' (Heart Words) проти 'Кам'яних слів' (Stone Words) для візуалізації категорії істот/неістот
   - Контраст між Accusative I (things) та Accusative II (people) — чому граматика змінюється, коли ми говоримо про живих істот
   - 'Посилання на Державний стандарт §4.2.1.1: компетенція розрізнення відмінкових форм для назв людей (син, тато, учитель,
     мама, сестра)'
 - section: Презентація (Presentation)
-  words: 650
+  words: 375
   points:
   - 'Логіка чоловічого роду: знахідний = родовий (Acc=Gen) — чоловічі назви істот ''жадібні'' до закінчень, щоб відрізнятися
     від об''єктів (бачу сина, тата, учителя)'
@@ -33,7 +33,7 @@ content_outline:
     (бачу кота, пса)'
   - Специфіка м'якої та мішаної груп для назв професій (учителя, лікаря) згідно з параграфом §4.2.1.1
 - section: Культурний контекст (Cultural Context)
-  words: 400
+  words: 250
   points:
   - Глибинне значення слова 'друг' в українській культурі — відмінність між близьким другом (soulmate) та просто знайомим
     (acquaintance)
@@ -41,7 +41,7 @@ content_outline:
     дорослими як знак тепла та близькості
   - 'Ввічливе звертання та запитання про людей в українському соціумі: використання назв професій та імен'
 - section: Типові помилки та практика (Common Errors and Practice)
-  words: 450
+  words: 275
   points:
   - 'Learner error: ''The Masculine Animate Trap'' — залишення назви істоти в називному відмінку (напр. ''Я бачу брат'' замість
     правильного ''Я бачу брата'')'
@@ -51,7 +51,7 @@ content_outline:
     маю кіт'' замість ''Я маю кота'')'
   - 'Трансформаційні вправи: перетворення речень з неістотами (бачу стіл) на речення з людьми (бачу студента)'
 - section: Вироблення навичок та підсумок (Production and Summary)
-  words: 200
+  words: 125
   points:
   - Опис своєї родини та друзів з використанням дієслів 'любити', 'знати', 'чекати' (Я люблю свою матусю і тата)
   - 'Діалог-знайомство: обговорення друзів та колег (Ти знаєш мого найкращого друга Андрія?)'

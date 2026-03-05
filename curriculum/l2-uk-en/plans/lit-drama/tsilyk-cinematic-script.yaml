@@ -1,6 +1,22 @@
 slug: tsilyk-cinematic-script
-level: c1
+level: LIT.DRAMA
 sequence: 12
 track: lit-drama
+content_outline:
+- section: Вступ та контекст
+  words: 800
+  points: []
+- section: Аналіз ключових творів
+  words: 1200
+  points: []
+- section: Стилістика та мова автора
+  words: 1200
+  points: []
+- section: Деколонізаційна перспектива
+  words: 1000
+  points: []
+- section: Підсумок та спадщина
+  words: 800
+  points: []
 word_target: 5000
 focus: Cross-medium storytelling, documentary filmmaking.

@@ -25,7 +25,7 @@ sources:
   notes: Rules for diminutive and intensive adjective suffixes
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - 'The power of the suffix: descriptiveness without ''very'' — introduce the ''Temperature Scale'' concept: Neutral (малий)
     → Warm (маленький) → Intense (малесенький)'
@@ -33,14 +33,14 @@ content_outline:
     рідненька матуся vs. рідна мати), not just physical smallness — reference State Standard §4.5.1 on 'emotional-expressive
     lexis'
 - section: 'Презентація 1: Пестливість та периферія (Presentation 1: Diminutives and Precision)'
-  words: 750
+  words: 500
   points:
   - 'Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision) — focus on high-frequency conversational forms like «гарненька
     дівчина», «тепленьке молоко» and emphatic precision like «малесенький котик», «чистесенька вода»'
   - 'The ''Register Mismatch'' Trap: Why context matters — explain the social error of using diminutives in formal settings
     (e.g., asking a boss for a «підписочок» instead of a «підпис») and how it affects perceived professionalism'
 - section: 'Презентація 2: Гіпербола та Відношення (Presentation 2: Hyperbole and Relationships)'
-  words: 750
+  words: 500
   points:
   - 'The Scale of Giants: -Енн- and -Езн- (Enormous and Intense) — cultural hook: explain Ukrainian hyperbole in storytelling
     and folk tales using «страшенний змій» or «здоровенний чоловік»'
@@ -49,14 +49,14 @@ content_outline:
   - 'The Universal Link: -Н-, -Ян-, and -Ов- (Materials and Groups) — reference State Standard §4.3.6 on noun-to-adjective
     derivation rules (осінь → осінній, дерево → дерев''яний)'
 - section: Практика та орфографія (Practice and Orthography)
-  words: 650
+  words: 425
   points:
   - 'Mastering the Consonant Mutation: The K/Ch/Ts + -ськ- = -ЦЬК- rule — intensive spelling drill to correct common learner
     errors like «пражський» (wrong) → «празький» (correct) and «козакський» (wrong) → «козацький» (correct)'
   - 'Emotional Transformation Drills: Re-writing neutral sentences into ''warm'' (diminutive) and ''intense'' (emphatic) versions
     to practice register control and suffix selection'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 450
+  words: 300
   points:
   - 'On the Market: Choosing between a «здоровенний кавун» (gigantic watermelon) and a «гарненький кавунчик» (nice little
     watermelon) — dialogue focusing on size vs. affection'
@@ -94,3 +94,26 @@ prerequisites:
 - action-verb-prefixes
 connects_to:
 - adjective-suffixes-types
+grammar:
+- Вступ
+- Пестливість та периферія
+- Гіпербола та Відношення
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

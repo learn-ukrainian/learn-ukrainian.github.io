@@ -11,9 +11,9 @@ phase: C2.3 [Professional Language]
 word_target: 5000
 objectives:
 - Learner can compose a bilingual abstract (Ukrainian + English) conforming to IMRAD structure and journal submission standards
-- Learner can apply Ukrainian citation standards (DSTU 8302:2015) and navigate Scopus/WoS requirements for Ukrainian-language
+- Застосовувати Ukrainian citation standards (DSTU 8302:2015) and navigate Scopus/WoS requirements for Ukrainian-language
   publications
-- Learner can write a constructive peer review and respond to reviewer comments using appropriate Ukrainian academic register
+- Писати a constructive peer review and respond to reviewer comments using appropriate Ukrainian academic register
 - Learner can prepare conference materials (тези доповіді, poster, oral presentation) in Ukrainian academic register
 sources:
 - name: ДСТУ 8302:2015 — Бібліографічне посилання
@@ -50,7 +50,7 @@ content_outline:
 - section: Цитування та бібліографія (Citation and Bibliography)
   words: 900
   points:
-  - 'Ukrainian citation standard ДСТУ 8302:2015: formatting rules for bibliographic references in Ukrainian academic texts;
+  - 'Ukrainian citation standard ДСТУ 8302:2015: formatting rules for bibliographic references in Ukrainian академічні тексти;
     differences from APA, MLA, and Chicago styles.'
   - 'Scopus and Web of Science requirements for Ukrainian journals: indexing criteria, language policies, and strategies for
     meeting international standards while publishing in Ukrainian.'
@@ -72,7 +72,7 @@ content_outline:
     the distinction between тези and a full paper.'
   - 'Oral presentation and poster sessions: language for structuring a наукова доповідь (scholarly presentation); visual communication
     norms for poster sessions; handling Q&A in Ukrainian academic register.'
-  - 'Networking in Ukrainian academic community: professional correspondence with colleagues, conference introductions, and
+  - 'Networking in Ukrainian academic community: професійні correspondence with colleagues, conference introductions, and
     collaborative project proposals using appropriate formality levels.'
 - section: Академічні бази даних та інструменти (Academic Databases and Tools)
   words: 600
@@ -129,3 +129,9 @@ prerequisites:
 persona:
   voice: Senior Specialist
   role: Research Mentor
+grammar:
+- Вступ — Академічне публікування в Україні
+- Структура наукової статті
+- Цитування та бібліографія
+- Рецензування
+register: академічний

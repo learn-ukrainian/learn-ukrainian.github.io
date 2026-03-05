@@ -4,12 +4,14 @@ sequence: 3
 slug: b2-impersonal-passive
 version: '2.0'
 title: Безособові конструкції на -но/-то
+subtitle: 'The -но/-то Construction in Depth'
 focus: grammar
+pedagogy: TTT
 phase: B2.1 [Voice & Participles]
 word_target: 4000
 objectives:
-- Identify and correctly use безособові конструкції на -но/-то
-- Form and apply безособовість в українській мові
+- Learner can identify and apply безособові конструкції на -но/-то
+- Learner can form and use безособовість в українській мові
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
   url: https://mon.gov.ua/
@@ -106,3 +108,9 @@ persona:
   role: Event Organizer (Організатор подій)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- -но/-то impersonal passive formation
+- Invariable predicate usage
+- Perfective aspect requirement
+- Agent expression with instrumental
+register: нейтральний

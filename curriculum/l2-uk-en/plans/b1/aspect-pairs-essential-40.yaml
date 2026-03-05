@@ -10,9 +10,9 @@ pedagogy: TTT
 phase: B1.1 Aspect
 word_target: 4000
 objectives:
-- Learner knows the 40 most essential aspect pairs
+- Learner can identify the 40 most essential aspect pairs
 - Learner can recognize and use both forms correctly
-- Learner understands common aspect formation patterns
+- Learner can explain common aspect formation patterns
 sources:
 - name: Ukrainian Frequency Dictionaries
   url: https://uk.wikipedia.org/wiki/Частотний_словник
@@ -108,7 +108,7 @@ activity_hints:
   items: 15+
 connects_to:
 - b1-13 (Work week - aspect in action)
-- b1-14 (Aspect integration practice)
+- b1-16 (Aspect integration practice)
 prerequisites:
 - b1-11 (Aspect in imperatives)
 - All aspect theory modules M06-11
@@ -120,3 +120,4 @@ grammar:
 - Imperfective-perfective correspondence
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

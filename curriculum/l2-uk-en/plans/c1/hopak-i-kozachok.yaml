@@ -52,9 +52,9 @@ content_outline:
 focus: history
 pedagogy: CBI
 objectives:
-- Analyze the historical origins of Hopak as a martial art and a dance
-- Distinguish between the ritual, social, and stage versions of Ukrainian dances
-- Understand the cultural significance of the Kozachok and its regional variations
+- Learner can analyze key concepts of Акробатика сили та бойовий вишкіл
+- Learner can describe and compare aspects of Гопак і козачок: Танці волі та сили
+- Learner can produce written analysis of Танець як генетичний код волі
 grammar:
 - Dynamic narrative registers
 - Terminology of movement
@@ -81,3 +81,22 @@ prerequisites:
 - kolyskovi-ta-dumy
 connects_to:
 - rehionalni-tantsi
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Акробатика сили та бойовий вишкіл examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Грація, темп та соціальна взаємодія
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

@@ -4,6 +4,7 @@ sequence: 16
 slug: text-coherence
 version: '2.0'
 title: Когерентність тексту — Бездоганний плин
+subtitle: 'Introduction: Coherence vs Cohesion'
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -96,16 +97,25 @@ vocabulary:
   - momentum (momentum)
   - секціонування (sectioning)
   - перехід (transition)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Тематична прогресія та актуальне членування examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Граматичні та лексичні засоби когезії
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -126,3 +136,9 @@ persona:
   role: Logic Auditor
 prerequisites:
 - individual-voice-ii
+grammar:
+- Когерентність vs когезія
+- Тематична прогресія та актуальне членування
+- Граматичні та лексичні засоби когезії
+- Риторична спадщина та художній плин
+register: академічний

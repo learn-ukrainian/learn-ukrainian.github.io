@@ -16,7 +16,7 @@ objectives:
 - Produce natural-sounding Ukrainian speech
 content_outline:
 - section: У/В чергування (U/V alternation)
-  words: 500
+  words: 300
   points:
   - 'Core rule: у after consonant, в after vowel. У мене є книга (after silence/consonant). Я в школі (after vowel я). Preventing
     consonant clusters for smooth phonetic flow.'
@@ -25,7 +25,7 @@ content_outline:
   - 'Practice pattern: Identifying correct form in context. Historical and phonological basis — Ukrainian euphony preserves
     vowel-consonant alternation for melodic speech.'
 - section: І/Й чергування (I/Y alternation)
-  words: 400
+  words: 250
   points:
   - 'Core rule: і after consonant, й after vowel. Батько і мати (і after consonant о). Андрій й Олена (й after vowel й/і).
     Preventing vowel hiatus for natural rhythm.'
@@ -34,23 +34,23 @@ content_outline:
   - 'Edge cases: After vowel at word boundary — й preferred. Та as alternative conjunction that avoids the і/й choice entirely.
     Communicative flexibility.'
 - section: З/Із/Зі чергування (Z/Iz/Zi alternation)
-  words: 400
+  words: 250
   points:
-  - 'Three-way rule: з before vowels and single consonants (з Києва, з другом). Із before consonant clusters (із Львова).
-    Зі before з, с, ш, щ (зі школи, зі мною).'
-  - 'Mnemonic: зі for sibilants (з/с/ш/щ), із for clusters, з everywhere else. Examples: з роботи, із стадіону, зі столу.
-    Building automatic selection.'
+  - 'Three-way rule per Pravopys §25: з before vowels and most consonants (з Києва, з другом). Із before свистячі/шиплячі
+    and consonant clusters (із золота, із Львова). Зі before з-/с-/ш-/щ- initial words (зі Львова, зі школи, зі мною).'
+  - 'Mnemonic: зі for з/с/ш/щ-initial words, із for sibilants and clusters, з everywhere else. Examples: з роботи, зі стадіону,
+    зі столу. Building automatic selection.'
   - 'Preposition vs prefix: з as preposition (з Києва) vs з- as prefix (зробити). Only the preposition follows euphony rules.
     The prefix is fixed.'
 - section: Інші правила евфонії (Other euphony rules)
-  words: 350
+  words: 200
   points:
   - 'Ці/Цей euphonic patterns: ці книги (these books) — demonstrative pronoun. Цей підручник (this textbook). No alternation,
     but awareness of similar-sounding pairs.'
   - 'Prefix/preposition doubling for smooth flow: удень/вдень, увечері/ввечері. Informal vs formal register preferences. Modern
     usage tends toward simplification.'
 - section: Практика (Practice)
-  words: 350
+  words: 200
   points:
   - 'Euphony correction drills: Given sentences with incorrect euphonic forms, identify and fix the errors. Building editorial
     awareness.'

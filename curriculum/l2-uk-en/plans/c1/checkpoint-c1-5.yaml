@@ -66,3 +66,27 @@ prerequisites:
 - review-c1-5
 connects_to:
 - kobzari-bandura
+grammar:
+- Стиль як генетичний код нації
+- Палітра функціональних стилів за Державним стандартом
+- Боротьба з канцеляритом та калькою
+- Регістри та стратегії ввічливості
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Comprehensive review
+  items: 15
+- type: fill-in
+  focus: Apply learned structures
+  items: 12
+- type: match-up
+  focus: Match Палітра функціональних стилів за Державним стандартом examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Боротьба з канцеляритом та калькою
+  items: 10
+- type: error-correction
+  focus: Cross-module error detection
+  items: 10
+- type: essay-response
+  focus: Integrative writing task

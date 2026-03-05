@@ -25,7 +25,7 @@ sources:
   notes: Declension of себе and contrast with -ся verbs
 content_outline:
 - section: 'Вступ: Навіщо «себе»? (Introduction: Why себе?)'
-  words: 400
+  words: 275
   points:
   - 'The gap in the pronoun table: себе has no Nominative form because the subject and the reflexive target cannot occupy
     the same slot — the subject already appears as я/ти/він etc.'
@@ -34,20 +34,20 @@ content_outline:
   - 'Contrast with English: English requires six different reflexive pronouns (myself, yourself, himself, herself, ourselves,
     yourselves) while Ukrainian needs only one — себе simplifies reflexive reference.'
 - section: Відмінювання «себе» (Declension of себе)
-  words: 600
+  words: 400
   points:
   - 'Complete declension table: Nom — (none); Gen/Acc — себе; Dat/Loc — собі; Inst — собою; no plural forms (same for singular
     and plural subjects).'
   - 'Genitive/Accusative себе: most frequent form — Я бачу себе в дзеркалі (I see myself in the mirror); Вона купила собі
     нову книгу (she bought herself a new book — note: direct obj = книгу, себе here is Dat).'
-  - 'Dative/Locative собі: Він думає про себе (he thinks about himself — Loc); Купи собі каву (buy yourself a coffee — Dat);
-    собі as beneficiary of the action.'
+  - 'Dative собі / Accusative після про: Він думає про себе (he thinks about himself — Acc after про); Купи собі каву (buy
+    yourself a coffee — Dat); собі as beneficiary of the action.'
   - 'Instrumental собою: Вона задоволена собою (she is satisfied with herself); Він говорить про себе, а не про інших (talks
     about himself, not others).'
   - 'Drill: fill in the correct form — Він не може контролювати ___ (себе); Вона написала листа ___ (собі); Ми задоволені
     ___ (собою).'
 - section: Дієслова з «себе» vs зворотні дієслова (себе vs Reflexive -ся Verbs)
-  words: 600
+  words: 400
   points:
   - 'Two ways to express reflexivity in Ukrainian: explicit себе (with a case-marked form) vs the -ся suffix baked into the
     verb.'
@@ -61,7 +61,7 @@ content_outline:
   - 'Comprehension check: which is natural? (а) Вона одягає себе vs (b) Вона одягається — answer: (b) is natural, (a) is overly
     emphatic; drill 10 pairs.'
 - section: Конструкція «собі» як підсилення (собі as Colloquial Intensifier)
-  words: 400
+  words: 275
   points:
   - 'Colloquial dative of interest: собі weakens or softens the action — Іди собі! (just go!, dismissive); Живе собі спокійно
     (lives peacefully, minding one''s own business).'
@@ -71,7 +71,7 @@ content_outline:
   - 'Register note: colloquial собі intensifier appears in informal speech and literature; learners should recognise it but
     produce it cautiously.'
 - section: 'Зв''язок з «свій»: себе + свій (Connection with свій)'
-  words: 500
+  words: 325
   points:
   - 'Functional distinction: свій expresses whose something belongs to (possession); себе expresses the target or recipient
     of an action (reflexive reference).'
@@ -83,7 +83,7 @@ content_outline:
     ___ роботою (своєю).'
   - 'Summary rule: if you can substitute "own" in English → свій; if you can substitute "myself/yourself/himself" → себе.'
 - section: Практика (Practice)
-  words: 500
+  words: 325
   points:
   - 'Case selection: supply the correct form of себе — Вона не чує ___ (себе); Він купив ___ каву (собі); Ми задоволені ___
     (собою); Думаю про ___ (себе/себе).'
@@ -95,7 +95,7 @@ content_outline:
 vocabulary_hints:
   required:
   - себе (Gen/Acc of reflexive pronoun) — Я бачу себе; core reflexive form
-  - собі (Dat/Loc of reflexive pronoun) — купи собі; думати про себе (Loc with prep)
+  - собі (Dat of reflexive pronoun) — купи собі; думати про себе (Acc after про)
   - собою (Inst of reflexive pronoun) — задоволений собою; бути собою (be oneself)
   - бачити себе (to see oneself) — Він бачить себе; high frequency reflexive verb phrase
   - знайти собі (to find oneself / get oneself) — Знайди собі роботу; Dat beneficiary
@@ -141,3 +141,4 @@ grammar:
 - себе vs свій functional distinction
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

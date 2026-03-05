@@ -48,10 +48,10 @@ content_outline:
   - Підсумок результатів, аналіз слабких місць та перехід до вивчення фразеології у фазі B2.2.
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, вживати термін, визначення терміна; термін придатності (expiration date)
-  - поняття (concept) — ключове поняття, підмінити поняття, розширити поняття, поняття про честь
-  - процес (process) — навчальний процес, творчий процес, процес формування, пришвидшити процес
-  - метод (method) — ефективний метод, науковий метод, метод дослідження, застосувати метод
+  - аналіз (analysis) — системний аналіз; проведення аналізу отриманих даних
+  - синтез (synthesis) — синтез ідей; поєднання аналізу та синтезу в науці
+  - дослідження (research) — проводити дослідження; об'єкт та суб'єкт дослідження
+  - обчислення (calculation) — складні математичні обчислення; метод Кравчука для обчислень
   recommended:
   - аналіз (analysis) — системний аналіз; проведення аналізу отриманих даних
   - синтез (synthesis) — синтез ідей; поєднання аналізу та синтезу в науці
@@ -59,14 +59,23 @@ vocabulary_hints:
   - обчислення (calculation) — складні математичні обчислення; метод Кравчука для обчислень
   - доведення (proof) — логічне доведення; математичне доведення теореми
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Integration of M31-M39"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 connects_to:
 - b2-54 (Synonymy Types and Rows)
 prerequisites:

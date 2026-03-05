@@ -16,7 +16,7 @@ objectives:
 - Learner can ask about schedules
 content_outline:
 - section: Вступ та підготовка (Warm-up & Preparation)
-  words: 450
+  words: 275
   points:
   - 'Визначення видів транспорту для міжміських подорожей: `поїзд`, `автобус`, `маршрутка`. Введення розрізнення між `вокзал`
     (major hub), `автовокзал` (large bus terminal) та `автостанція/зупинка` (smaller local stops), що є критичним для навігації
@@ -24,7 +24,7 @@ content_outline:
   - 'Введення конструкції `до` + Genitive для позначення напрямку руху до міст. Згідно з Державним стандартом А1, це подається
     як «лексикалізована граматика» (фіксовані формули: `до Києва`, `до Львова`, `до Одеси`) без глибокого вивчення відмінків.'
 - section: Каса та замовлення (Ticket Office & Ordering)
-  words: 650
+  words: 400
   points:
   - 'Формулювання запиту на купівлю квитка з використанням комунікативної інтенції «Дайте, будь ласка» або «Мені, будь ласка...».
     Акцент на типовій помилці: узгодженні роду `одна квиток` (неправильно) замість `один квиток` (правильно, чоловічий рід).'
@@ -33,14 +33,14 @@ content_outline:
   - 'Вибір класу вагона та місця: `Купе` (privacy) проти `Плацкарт` (social). Культурний гачок: «культура плацкарту» як відкритого
     соціального простору, де прийнято ділитися їжею (курка, яйця) та спілкуватися.'
 - section: Поїздка та комфорт (Train Life & Comfort)
-  words: 550
+  words: 325
   points:
   - 'Орієнтація на вокзалі: `На якій платформі?` та `В якому вагоні?`. Використання числівників (з модуля а1-17) для номерів
     колій та місць. Уточнення щодо `нижнього` та `верхнього` місця (lower/upper berth).'
   - 'Питання про розклад: `О котрій відправлення?` та `Коли прибуття?`. Культурний символ: традиція пиття чаю в легендарних
     склянках із металевими `підсклянниками`, які приносить `провідник` (conductor).'
 - section: Практика та підсумок (Practice & Summary)
-  words: 350
+  words: 200
   points:
   - 'Діалог-симуляція: Купівля квитка до Львова в касі. Контроль за вживанням прийменника `до` замість помилкового `в` для
     міст (напр. `їхати до Львова` замість `їхати в Львів`).'
@@ -60,7 +60,7 @@ vocabulary_hints:
   - 'вагон (carriage) — usage: в якому вагоні?'
   - 'провідник (conductor) — cultural hook: train staff member who serves tea.'
   - 'підсклянник (glass holder) — cultural hook: iconic silver-colored glass holder for tea.'
-  - 'плацкарт (platzkart) — cultural context: open dormitory-style sleeping carriage.'
+  - 'плацкарта (platzkart) — cultural context: open dormitory-style sleeping carriage.'
   - 'купе (compartment) — cultural context: 4-berth closed compartment.'
   - автостанція (bus station) — contrast with `автовокзал` (major hub) for smaller regional locations.
   - туди й назад (round trip) — fixed phrase chunk for ticket requests.

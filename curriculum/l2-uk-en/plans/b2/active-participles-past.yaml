@@ -4,12 +4,14 @@ sequence: 8
 slug: active-participles-past
 version: '2.0'
 title: Активні дієприкметники минулого часу (-лий)
+subtitle: 'Past Active Participles and Alternatives'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use активні дієприкметники минулого часу (-лий)
-- Form and apply минулі активні дієприкметники
+- Learner can identify and apply активні дієприкметники минулого часу (-лий)
+- Learner can form and use минулі активні дієприкметники
 sources:
 - name: Ukrainian State Standard 2024 - Participles
   url: https://mon.gov.ua/
@@ -119,3 +121,8 @@ persona:
   role: Historian (Історик)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Past active participles (-лий)
+- Lexicalized forms (колишній, минулий)
+- Relative clause alternatives
+register: нейтральний

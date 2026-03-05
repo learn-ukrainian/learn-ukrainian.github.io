@@ -4,6 +4,7 @@ sequence: 1
 slug: b2-review-bridge
 version: '2.0'
 title: Огляд B2 та міст до C1
+subtitle: 'Introduction: From B2 to C1'
 content_outline:
 - section: 'Вступ: Від B2 до C1 (Introduction: From B2 to C1)'
   words: 500
@@ -33,7 +34,7 @@ content_outline:
   - 'Активні дієприкметники: корекція помилок калькування суфіксів -уч/-юч (бажаючі
     → охочі, подорожуючі → подорожні) та їх заміна дієприкметниковими зворотами або
     підрядними реченнями.'
-  - Пасивні дієприкметники з суфіксами -ний/-抄 та їх функціонування в офіційно-діловому
+  - Пасивні дієприкметники з суфіксами -ний/-тий та їх функціонування в офіційно-діловому
     стилі.
   - 'Cultural hook: Роль Наукового товариства імені Шевченка (1873) та внесок Грушевського
     і Франка у формування української наукової термінології на основі живої народної
@@ -106,6 +107,7 @@ activity_hints:
   focus: Complete complex sentences with participles
   items: 10+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - B2 completion required
 - All 4 passive voice forms
@@ -128,9 +130,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use огляд b2 та міст до c1
-- Form and apply від b2 до c1
+- Learner can identify and produce correct Пасивний стан та деколонізація синтаксису forms
+- Learner can analyze Дієприкметники та наукова термінологія in authentic texts
+- Learner can produce written text demonstrating mastery of Від B2 до C1
 persona:
   voice: Senior Specialist
   role: Академічний куратор
 word_target: 4000
+grammar:
+- Від B2 до C1
+- Пасивний стан та деколонізація синтаксису
+- Дієприкметники та наукова термінологія
+- Складнопідрядні речення в академічному письмі
+register: літературний

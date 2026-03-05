@@ -79,3 +79,22 @@ prerequisites:
 - ukrainian-cuisine-traditions
 connects_to:
 - podillia-ta-volyn
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Архітектура та конструктивні елементи examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Інтер’єр та сакральна геометрія
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

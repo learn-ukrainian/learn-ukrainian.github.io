@@ -78,14 +78,23 @@ vocabulary_hints:
   - інфопростір (information space) — актуальний термін для опису середовища поширення інформації
   - епітет (epithet) — художнє означення, стилістичний засіб лексики (§4.4.1.2) для вираження авторської оцінки
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Факт проти думки with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Виявлення упередженості та маніпуляцій
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Факт проти думки for given scenario
 persona:
   voice: Professional Language Coach
   role: Literary Critic (Літературний критик)
@@ -96,3 +105,4 @@ prerequisites:
 - academic-writing
 connects_to:
 - news-analysis-basics
+register: нейтральний

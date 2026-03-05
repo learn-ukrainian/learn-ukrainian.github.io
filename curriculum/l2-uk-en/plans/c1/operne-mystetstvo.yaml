@@ -74,3 +74,22 @@ prerequisites:
 - klasychna-muzyka-3-modernizm-i-suchasnist
 connects_to:
 - vokalne-mystetstvo
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Соломія Крушельницька та світове визнання examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Оксана Линів та диригентська майстерність
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

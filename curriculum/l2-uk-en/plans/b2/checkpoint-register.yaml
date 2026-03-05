@@ -72,14 +72,23 @@ vocabulary_hints:
   - полеміка (polemics) — Historical and stylistic concept related to the XVII century cultural hook.
   - відповідно до (in accordance with) — Official style; requires Genitive case.
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Comprehensive B2 Grammar"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 connects_to:
 - b2-36 (Politics Government Vocabulary)
 prerequisites:
@@ -89,3 +98,4 @@ persona:
   role: Ghostwriter (Літературний негр)
 grammar:
 - Comprehensive B2 Grammar
+register: нейтральний

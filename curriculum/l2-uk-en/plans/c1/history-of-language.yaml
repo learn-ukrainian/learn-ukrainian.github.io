@@ -4,6 +4,7 @@ sequence: 31
 slug: history-of-language
 version: '2.0'
 title: 'Історія мови: Від Русі до сьогодення'
+subtitle: Origins and Old East Slavic Period
 content_outline:
 - section: Витоки та давньоруський період (Origins and Old East Slavic Period)
   words: 600
@@ -79,6 +80,7 @@ activity_hints:
   focus: Ukrainian language history facts
   items: 12+
 focus: history
+pedagogy: CBI
 prerequisites:
 - c1-28 (Dialects)
 - 'c1-30 (Суржик: Феномен змішування)'
@@ -106,3 +108,9 @@ persona:
   voice: Senior Specialist
   role: Історичний лінгвіст
 word_target: 4000
+grammar:
+- Витоки та давньоруський період
+- Середньоукраїнська доба та Козаччина
+- Епоха заборон та лінгвоциду
+- Відродження та кодифікація
+register: літературний

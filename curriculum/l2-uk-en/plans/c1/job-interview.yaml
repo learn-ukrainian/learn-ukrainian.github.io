@@ -4,6 +4,7 @@ sequence: 22
 slug: job-interview
 version: '2.0'
 title: 'Співбесіда: стратегії успіху'
+subtitle: Introduction — Market Analysis & Preparation
 content_outline:
 - section: Вступ — Аналіз ринку та підготовка (Introduction — Market Analysis & Preparation)
   words: 500
@@ -80,6 +81,7 @@ activity_hints:
 - type: essay-response
   focus: Self-presentation paragraph
 focus: communication
+pedagogy: PPP
 prerequisites:
 - c1-21 (CV & Resume Writing)
 - Formal dialogue skills
@@ -100,10 +102,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.2 [Professional Communication]
 objectives:
-- 'Understand and apply співбесіда: стратегії успіху'
-- Analyze and evaluate підготовка до співбесіди
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Етикет та культурні особливості комунікації
+- Learner can produce professional texts in the domain of Співбесіда: стратегії успіху
+- Learner can evaluate and correct register in Вступ — Аналіз ринку та підготовка contexts
 persona:
   voice: Senior Specialist
   role: Рекрутер
 word_target: 4000
+grammar:
+- Вступ — Аналіз ринку та підготовка
+- Етикет та культурні особливості комунікації
+- Ефективні відповіді та метод STAR
+- Мовна коректність та подолання кальок
+register: літературний

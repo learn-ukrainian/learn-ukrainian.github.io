@@ -74,14 +74,23 @@ vocabulary_hints:
   - дослідження (research) — ґрунтовне дослідження, об'єкт дослідження
   - брати участь (to participate) — Correct form; avoid the common error 'приймати участь'
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Академічна доброчесність та етика у 2026 році with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Структура есе та побудова тези
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Академічна доброчесність та етика у 2026 році for given scenario
 persona:
   voice: Professional Language Coach
   role: Thesis Advisor (Науковий керівник)
@@ -92,3 +101,4 @@ prerequisites:
 - professional-reports-advanced
 connects_to:
 - text-analysis
+register: нейтральний

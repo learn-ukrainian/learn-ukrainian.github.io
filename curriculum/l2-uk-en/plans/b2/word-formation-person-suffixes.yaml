@@ -51,11 +51,11 @@ content_outline:
   - 'Аналіз автентичних текстів: пошук назв осіб та визначення їхнього стилістичного забарвлення (науковий vs розмовний)'
 vocabulary_hints:
   required:
-  - термін (term) — наукова назва поняття; вживати термін
-  - поняття (concept) — абстрактна одиниця мислення; ключове поняття
-  - процес (process) — послідовна зміна станів; складний процес
-  - метод (method) — спосіб досягнення мети; метод дослідження
-  - 'лікар (doctor) — High frequency; лікар-хірург, сімейний лікар; важливо: твердий ''р'' в кінці'
+  - аналіз (analysis) — розчленування цілого на частини; провести аналіз
+  - синтез (synthesis) — поєднання частин у ціле; метод синтезу
+  - дослідження (research) — процес вивчення явища; наукове дослідження
+  - робітник (worker) — blue-collar; кваліфікований робітник, найманий робітник
+  - лікар (doctor) — High frequency; лікар-хірург, сімейний лікар; важливо: твердий 'р' в кінці
   - викладач (lecturer/teacher) — High frequency academic; викладач університету, старший викладач
   - письменник (writer) — відомий письменник, український письменник
   recommended:
@@ -68,14 +68,23 @@ vocabulary_hints:
   - каменяр (stonecutter) — Literary/Historical (Franko); дух каменярів, лупати скалу
   - школяр (schoolboy) — старанний школяр, молодший школяр
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Суфікс -ар/-яр для позначення професії чи діяльності in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Суфікс -ар/-яр для позначення професії чи діяльності
+  items: 10
+- type: match-up
+  focus: Match Від професії до національного символу examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Суфікс -ар/-яр для позначення професії чи діяльності
   items: 8
+- type: group-sort
+  focus: Classify examples by Виконавець дії та активний діяч
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Суфікс -ар/-яр для позначення професії чи діяльності correctly
 persona:
   voice: Professional Language Coach
   role: Recruiter (Рекрутер)

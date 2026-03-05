@@ -74,14 +74,23 @@ vocabulary_hints:
   - атрибуція (attribution) — точна атрибуція цитат
   - достовірність (reliability/authenticity) — перевіряти достовірність інформації
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Імерсивна розповідь with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Аналіз та критичне мислення
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Імерсивна розповідь for given scenario
 persona:
   voice: Professional Language Coach
   role: Fact-Checker (Фактчекер)
@@ -89,3 +98,8 @@ prerequisites:
 - text-analysis
 connects_to:
 - news-analysis-advanced
+grammar:
+- Media language analysis
+- Journalistic style markers
+- Headline grammar patterns
+register: нейтральний

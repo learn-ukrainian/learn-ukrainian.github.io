@@ -21,7 +21,7 @@ sources:
   notes: Focus on communicative root expansion
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - 'The Language of the Mind: Introduction to cognitive root families — alignment with State Standard §2 (Expressing thoughts/beliefs)
     and §4.5.1 (Synonyms).'
@@ -30,7 +30,7 @@ content_outline:
   - 'Motivation: Explaining how ''roots contain logic'' through the connection between ''listening'' and ''obedience'' as
     a cultural memory aid.'
 - section: Презентація (Presentation)
-  words: 900
+  words: 600
   points:
   - 'The дум- Family: Focus on ''думати'' (process) vs ''вважати'' (opinion). Key collocations: «на мою думку», «я думаю,
     що...», and «гарна думка».'
@@ -41,7 +41,7 @@ content_outline:
   - 'Prefix Logic: How «від-» changes «мов-» to «відмова» — literal meaning ''speaking away/back'' as a refusal.'
   - 'Secondary derivatives: Introduction to ''мова'' (language) as a central concept in the ''мов-'' family.'
 - section: Культурний контекст та лексичні нюанси (Cultural Context and Lexical Nuances)
-  words: 700
+  words: 475
   points:
   - 'The ''Mova'' vs ''Yazyk'' Distinction: Critical cultural rule — ''язик'' is ONLY the physical organ (body part), whereas
     ''мова'' is the language. Error alert: ''український язик'' sounds like a food item (beef tongue).'
@@ -50,7 +50,7 @@ content_outline:
   - 'Process vs. Result: Distinction between ''говорити'' (the process of speaking/ability) and ''казати'' (the content/delivery
     of a message), aligned with Standard §4.5.1.'
 - section: Практика та корекція помилок (Practice and Error Correction)
-  words: 600
+  words: 400
   points:
   - 'Root Family Sorting: Distinguishing semantic clusters of ''thought'' vs ''speech'' vs ''listening''. Drill for synonyms
     mentioned in research (казати, говорити, розповідати).'
@@ -59,7 +59,7 @@ content_outline:
   - '''Build the Thought'' Challenge: Deriving nouns from verbs (дум- → думка, мов- → розмова, від-мов- → відмова) to reinforce
     word-formation patterns.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 350
+  words: 225
   points:
   - 'A Deep Conversation: Dialogues discussing thoughts and opinions using cognitive verbs ''я думаю'', ''я вважаю'' and reaction
     phrases ''цікава думка''.'
@@ -95,3 +95,22 @@ prerequisites:
 - root-families-i
 connects_to:
 - wf-mastery
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

@@ -11,7 +11,7 @@ phase: B1.1 Aspect
 word_target: 4000
 objectives:
 - Learner can choose correct aspect for different command types
-- Learner understands when to use НДВ vs ДВ in imperatives
+- Learner can explain when to use НДВ vs ДВ in imperatives
 - Learner can form polite requests and direct commands
 sources:
 - name: Ukrainian State Standard 2024 - Imperative Mood
@@ -108,3 +108,4 @@ grammar:
 - Perfective vs Imperfective commands
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

@@ -57,7 +57,7 @@ focus: culture
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can describe the stages of traditional Ukrainian wedding and christening rituals
-- Learner understands the social and legal functions of folk rituals in the past
+- Learner can explain the social and legal functions of folk rituals in the past
 - Learner can analyze the symbolism of ritual objects like the korovay and rushnyk
 grammar:
 - Life-cycle ritual terminology
@@ -90,3 +90,22 @@ prerequisites:
 - vesna-ta-lito
 connects_to:
 - pomynalni-obriady
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Родильні обряди та таїнство хрещення examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Весілля — Від сватання до заручин
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

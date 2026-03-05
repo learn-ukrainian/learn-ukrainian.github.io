@@ -50,10 +50,9 @@ content_outline:
 focus: grammar
 pedagogy: CBI
 objectives:
-- Classify the main branches of linguistics and their objects of study
-- Distinguish between langue and parole with practical examples
-- Position Ukrainian within the Indo-European language family
-- Apply compound numeral declension in all seven cases
+- Learner can identify and produce correct Мова і мовлення forms
+- Learner can analyze Українська мова серед мов світу in authentic texts
+- Learner can produce written text demonstrating mastery of Мовознавство як наука
 grammar:
 - Branches of linguistics and metalinguistic terminology
 - Compound numeral declension in all cases
@@ -92,3 +91,4 @@ prerequisites:
 - global-context
 connects_to:
 - dialects-of-ukrainian
+register: літературний

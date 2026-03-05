@@ -4,6 +4,7 @@ sequence: 66
 slug: rare-archaic-forms
 version: '2.0'
 title: Рідкісні та архаїчні форми
+subtitle: 'Introduction: Linguistic Archaeology'
 focus: grammar
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -111,16 +112,25 @@ vocabulary:
   - стягнена форма (contracted form)
   - лексичний (lexical)
   - морфологічний (morphological)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Іменник та двоїна examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Давноминулий час
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - reading
@@ -142,3 +152,9 @@ persona:
   role: Paleographer
 prerequisites:
 - complete-grammar-review
+grammar:
+- Мовна археологія
+- Іменник та двоїна
+- Давноминулий час
+- Займенникові та прикметникові архаїзми
+register: академічний

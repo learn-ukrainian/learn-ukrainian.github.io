@@ -6,6 +6,7 @@ version: '1.0'
 title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
 subtitle: 'Intimate Register: Language of Close Relationships'
 focus: style
+pedagogy: TTT
 phase: C1.5 [Stylistics & Rhetoric]
 word_target: 4000
 objectives:
@@ -75,3 +76,27 @@ prerequisites:
 - high-formal-register
 connects_to:
 - slang-youth
+grammar:
+- Природа інтимно-ласкавого стилю
+- Суфіксальна магія
+- Франко та Українка
+- Лексичні пастки та синтаксис близькості
+register: літературний
+activity_hints:
+- type: match-up
+  focus: Match Суфіксальна магія examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Франко та Українка
+  items: 12
+- type: fill-in
+  focus: Rewrite in target register
+  items: 10
+- type: quiz
+  focus: Identify stylistic devices in context
+  items: 12
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 8
+- type: essay-response
+  focus: Produce text in specified style

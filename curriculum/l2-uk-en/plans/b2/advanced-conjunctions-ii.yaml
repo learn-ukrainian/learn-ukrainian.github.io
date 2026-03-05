@@ -67,14 +67,23 @@ vocabulary_hints:
   - термін (term) — у контексті часових рамок або професійної лексики
   - поняття (concept) — для абстрактного аналізу граматичних категорій
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Temporal conjunctions (щойно, поки, доки) in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Temporal conjunctions (щойно, поки, доки)
+  items: 10
+- type: match-up
+  focus: Match Від одночасності до межі examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Temporal conjunctions (щойно, поки, доки)
   items: 8
+- type: group-sort
+  focus: Classify examples by Реальність, гіпотеза та офіційність
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Temporal conjunctions (щойно, поки, доки) correctly
 persona:
   voice: Professional Language Coach
   role: Project Manager (Проєктний менеджер)

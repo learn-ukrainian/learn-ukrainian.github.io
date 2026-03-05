@@ -12,7 +12,7 @@ word_target: 2000
 objectives:
 - Learner can form -но/-то impersonal passives from perfective verb infinitives
 - Learner can distinguish -но/-то from passive participial adjectives
-- Learner understands that -но/-то is invariable (no gender/number/case)
+- Learner can explain that -но/-то is invariable (no gender/number/case)
 - Learner can read and understand common Ukrainian signs and notifications
 - Learner can use -но/-то in digital, commercial, and official contexts
 sources:
@@ -30,7 +30,7 @@ sources:
   notes: Examples of -но/-то in administrative and legal texts
 content_outline:
 - section: 'Вступ: Написи навколо нас (Introduction: Signs Around Us)'
-  words: 400
+  words: 275
   points:
   - 'Cultural hook: Ukrainian signs, labels, and notifications use -но/-то forms everywhere — "Магазин зачинено", "Вхід заборонено",
     "Зроблено в Україні"; motivation to read real-world Ukrainian.'
@@ -39,19 +39,19 @@ content_outline:
   - 'Key contrast established upfront: -но/-то forms report a state or completed action impersonally — no subject, no agent
     required.'
 - section: Утворення форм на -но/-то (Formation of -но/-то Forms)
-  words: 600
+  words: 400
   points:
   - 'Pattern 1 — verbs in -ати/-яти: зробити→зроблено, написати→написано, відкрити→відкрито, закрити→закрито; the -и- of the
     infinitive drops and -но is added.'
-  - 'Pattern 2 — verbs in -ити/-іти: побудувати→побудовано, підготувати→підготовано; the -и- changes and the suffix becomes
-    -ено.'
+  - 'Pattern 2 — verbs in -увати/-ювати: побудувати→побудовано, підготувати→підготовано; the -увати drops and -ано is added.
+    For verbs in -ити: зварити→зварено, попросити→попрошено; the -ити drops and -ено is added.'
   - 'Pattern 3 — verbs in -ти (roots ending in consonant): принести→принесено, знайти→знайдено, привезти→привезено.'
   - 'Formation from perfective verbs only: imperfective verbs do not typically form -но/-то impersonal passives; aspect is
     the gatekeeper.'
   - 'Spelling variants -то (older/rarer): зроблено (standard) vs. роблено (dialectal); forms like "зварено", "спечено" in
     recipes and folklore.'
 - section: -но/-то vs дієприкметник (-но/-то vs Passive Participle)
-  words: 600
+  words: 400
   points:
   - 'Critical distinction: -но/-то is INVARIABLE — no gender, no number, no case agreement ever; it is a verbal adverb/predicate,
     not an adjective.'
@@ -64,7 +64,7 @@ content_outline:
   - 'Learner error alert: *"Замовлена доставлена"* (wrong — two adjectives clashing) vs "Замовлення доставлено" (correct —
     impersonal passive reports completion).'
 - section: 'Національна ідентичність: "Зроблено в Україні" (National Identity)'
-  words: 500
+  words: 325
   points:
   - 'Cultural context: "Зроблено в Україні" as a brand and a statement of national pride; comparison with "Made in Ukraine"
     and what it signals post-2022.'
@@ -75,7 +75,7 @@ content_outline:
   - 'Patriotic and commercial applications: product certifications, film credits ("Знято в Україні"), newspaper bylines, app
     release notes.'
 - section: Читання вивісок та етикеток (Reading Signs and Labels)
-  words: 500
+  words: 325
   points:
   - 'Real-world sign vocabulary: "Оплату прийнято" (payment accepted), "Замовлення відправлено" (order shipped), "Доступ заборонено"
     (access denied), "Вихід закрито" (exit closed).'
@@ -86,7 +86,7 @@ content_outline:
   - 'Recipe and instruction context: "Нарізано дрібно", "Посолено за смаком", "Запечено до золотистої скоринки" — -но/-то
     in written instructions without a stated cook.'
 - section: Практика (Practice)
-  words: 400
+  words: 275
   points:
   - 'Transformation drill: given an active sentence "Вони зробили замовлення" → produce "Замовлення зроблено"; 15 items covering
     all three formation patterns.'
@@ -139,5 +139,7 @@ grammar:
 - invariable predicate vs participial adjective
 - perfective aspect as formation prerequisite
 - -но/-то in official and digital registers
+bridge_to: B1
 module_type: grammar
 immersion: 65-75% Ukrainian
+register: розмовний

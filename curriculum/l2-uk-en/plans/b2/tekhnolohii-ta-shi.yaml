@@ -62,14 +62,23 @@ vocabulary_hints:
   - IT-фахівець (IT professional) — фахівець з розробки; офіційний реєстр замість «IT-шник»
   - двофакторна автентифікація (2FA) — налаштувати автентифікацію; критичний термін для кібергігієни
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Technical register in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Technical register
+  items: 10
+- type: match-up
+  focus: Match Базова термінологія та культура мовлення examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Technical register
   items: 8
+- type: group-sort
+  focus: Classify examples by від теорії до практики
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Technical register correctly
 persona:
   voice: Professional Language Coach
   role: Software Engineer (Розробник ПЗ)
@@ -80,3 +89,4 @@ prerequisites:
 - checkpoint-communication
 connects_to:
 - nauka-i-doslidzhennia
+register: нейтральний

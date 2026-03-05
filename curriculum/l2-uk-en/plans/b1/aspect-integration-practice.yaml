@@ -47,8 +47,8 @@ content_outline:
 - section: Культурний контекст та типові помилки (Cultural Context and Common Errors)
   words: 800
   points:
-  - 'Integration of folk wisdom: ''Доки грім не гряне, рак не свисне'' — analyzing the use of доки with Perfective aspect
-    to signify a boundary event.'
+  - 'Integration of folk wisdom: ''Поки грім не вдарить, мужик не перехреститься'' — analyzing the use of поки/доки with Perfective
+    aspect to signify a boundary event.'
   - 'Correction of ''Future Tense Mixing'' error: drill to eliminate the common mistake of using буду with Perfective infinitives
     (e.g., ''я буду написати'' vs correct ''я напишу'').'
 - section: Практичне застосування та діалоги (Practice Application and Dialogues)
@@ -103,3 +103,4 @@ grammar:
 - Temporal connectors with aspect
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

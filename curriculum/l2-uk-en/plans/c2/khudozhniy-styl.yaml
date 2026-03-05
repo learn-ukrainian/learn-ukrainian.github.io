@@ -4,6 +4,7 @@ sequence: 6
 slug: khudozhniy-styl
 version: '2.0'
 title: Художній стиль — Літературна творчість
+subtitle: 'Introduction: Artistic Style as an Aesthetic Phenomenon'
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -111,16 +112,25 @@ vocabulary:
   - розв'язка (denouement)
   - персоніфікація (personification)
   - алегорія (allegory)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Мала проза та наратологія examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Художні засоби та образність
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -141,3 +151,9 @@ persona:
   role: Writer-in-Residence
 prerequisites:
 - publitsystychnyi-styl
+grammar:
+- Художній стиль як естетичний феномен
+- Мала проза та наратологія
+- Художні засоби та образність
+- Драматургія та Хронотоп
+register: академічний

@@ -4,14 +4,15 @@ sequence: 89
 slug: final-exam-integrated-skills
 version: '2.0'
 title: Фінальний екзамен — Інтегровані навички
+subtitle: Introduction — Exam Structure and Context
 focus: checkpoint
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
-word_target: 5000
+word_target: 4000
 objectives:
-- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
-- Продукувати тексти академічного та професійного рівня за тематикою модуля
-- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Аналізувати та класифікувати явища Аудіювання та Читання (Component I and II — Receptive Skills: Listening у автентичних текстах
+- Продукувати тексти з коректним застосуванням Компонент III — Продуктивне письмо та трансформація стилів
+- Оцінювати стилістичну доречність мовних засобів у контексті Фінальний екзамен — Інтегровані навички
 - Застосовувати знання з теми «Компонент III» у власній мовній практиці
 sources:
 - name: Ukrainian State Standard 2024 — C2 Assessment Criteria
@@ -28,7 +29,7 @@ sources:
   notes: Sample exam formats and tasks
 content_outline:
 - section: Вступ — Структура та контекст фінального екзамену (Introduction — Exam Structure and Context)
-  words: 750
+  words: 600
   points:
   - Огляд компонентів екзамену відповідно до Держстандарту 2024 (§1.1–1.4) та критеріїв вільного володіння другого ступеня
     (С2).
@@ -38,7 +39,7 @@ content_outline:
     засобів (§4.3.6).
 - section: 'Компонент I та II — Рецептивні навички: Аудіювання та Читання (Component I and II — Receptive Skills: Listening
     and Reading)'
-  words: 1000
+  words: 800
   points:
   - 'Слухання (§1.1): стратегії сприйняття швидкого мовлення в складних акустичних умовах, розуміння діалектів та ідіоматики
     в лекціях та медіа.'
@@ -46,7 +47,7 @@ content_outline:
     meaning).'
   - Типові пастки в тестових завданнях С2 та методи критичного оцінювання наукових і публіцистичних джерел.
 - section: Компонент III — Продуктивне письмо та трансформація стилів (Component III — Productive Writing and Style Transformation)
-  words: 1100
+  words: 900
   points:
   - Вимоги до створення складних структурованих текстів та вторинних текстів (анотація, реферат, рецензія) згідно з §4.3.8.
   - Трансформація текстів між функційними стилями (§4.3.7) та підтримка академічного дискурсу без стилістичних дисонансів.
@@ -54,14 +55,14 @@ content_outline:
   - 'Корекція типових помилок: розрізнення понять ''оцінювання'' (процес) та ''оцінка'' (результат) в академічному контексті.'
 - section: 'Компонент IV — Говоріння: Спонтанність та фразеологічне багатство (Component IV — Speaking: Spontaneity and Phraseological
     Richness)'
-  words: 900
+  words: 700
   points:
   - Спонтанний монолог та діалог (12–15 реплік) на абстрактні теми з використанням відтінків змісту та алюзій (§1.4).
   - Адаптація мовлення до різних аудиторій та використання модальних маркерів (hedging) для вираження складної аргументації.
   - 'Специфіка вживання дієслів ''складати'' vs ''здати'' екзамен: аспектні нюанси та стилістична доречність у формальному
     реєстрі.'
 - section: Пробний екзамен — Повна симуляція та оцінювання (Mock Exam — Full Simulation and Assessment)
-  words: 1250
+  words: 1000
   points:
   - Комплексна симуляція повного циклу екзамену (3-4 години) з інтеграцією всіх видів мовленнєвої діяльності згідно з вимогами
     Рівня С2.
@@ -104,16 +105,25 @@ vocabulary:
   - валідність (validity)
   - надійність (reliability)
   - зворотний вплив (washback effect)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Comprehensive review
+  items: 15
+- type: fill-in
+  focus: Apply structures from all covered modules
+  items: 12
+- type: match-up
+  focus: Match Аудіювання та Читання examples to categories
+  items: 12
+- type: error-correction
+  focus: Find errors across all topics
+  items: 10
+- type: group-sort
+  focus: Classify by Компонент III — Продуктивне письмо та трансформація стилів
+  items: 10
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Integrative production task
 activities:
   types_required:
   - essay-response
@@ -130,3 +140,9 @@ persona:
   role: Finalist
 prerequisites:
 - final-review-iii
+grammar:
+- Вступ — Структура та контекст фінального екзамену
+- Аудіювання та Читання
+- Компонент III — Продуктивне письмо та трансформація стилів
+- Спонтанність та фразеологічне багатство
+register: академічний

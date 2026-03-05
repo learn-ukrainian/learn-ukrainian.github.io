@@ -25,7 +25,7 @@ sources:
   notes: Complete preposition system
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - 'Introduce the ''Interior Designer'' persona: the mission is to organize a traditional Ukrainian ''khata'' (house) using
     precise spatial logic.'
@@ -34,7 +34,7 @@ content_outline:
   - 'Reference Ukrainian State Standard §4.2.2.4.2 and §4.2.2.6 to frame the learning goals: mastering Accusative for destinations
     and Locative/Instrumental for static positions.'
 - section: 'Презентація: В, На та Орудний відмінок (Presentation: V, Na and Instrumental)'
-  words: 900
+  words: 625
   points:
   - 'Contrast ''в/у'' vs ''на'' + Locative for static location. Explicitly address the ''В vs. На'' learner error: explain
     usage for surface/open spaces (на вулиці, на концерті) vs. enclosed spaces (в хаті).'
@@ -45,7 +45,7 @@ content_outline:
   - 'Highlight the hospitality hook: guests are seated ''на покутті'' (at the sacred corner) or ''за столом'' (at the table),
     illustrating the most honorable places in the home.'
 - section: 'Практика: Відмінки та Рух (Practice: Cases and Motion)'
-  words: 650
+  words: 425
   points:
   - 'Targeted drill: Locative for static position vs. Accusative for destination with ''в/у'' and ''на''. Focus on correcting
     the common learner error ''Я йду в школі'' (Incorrect) vs ''Я йду в школу'' (Correct).'
@@ -54,14 +54,14 @@ content_outline:
   - 'Case governance exercise for Genitive prepositions: fixing the common error ''біля магазин'' into the correct ''біля
     магазину'' through pattern recognition.'
 - section: 'Діалоги: Облаштування хати (Dialogues: Arranging the House)'
-  words: 650
+  words: 425
   points:
   - 'Persona Dialogue: ''Designing the Room''. Use prepositions to describe a traditional layout: ''Покуття знаходиться навпроти
     печі'', ''Ми ставимо ікони над столом''.'
   - 'Interactive Directions Scenario: Asking ''як дійти до...'' using ''навпроти'', ''біля'', ''вздовж'', and landmarks. Incorporate
     the Interior Designer''s eye for identifying landmarks like the university or theatre.'
 - section: Підсумок (Summary)
-  words: 350
+  words: 225
   points:
   - 'Final decision table recap: Preposition + Intention (static vs. motion) = Case selection. Consolidate Locative, Instrumental,
     and Genitive rules.'
@@ -123,3 +123,4 @@ grammar:
 - під/за/над + instrumental
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

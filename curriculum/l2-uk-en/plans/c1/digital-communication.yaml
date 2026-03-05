@@ -4,6 +4,7 @@ sequence: 24
 slug: digital-communication
 version: '2.0'
 title: Цифрова комунікація
+subtitle: 'Introduction: Registers and Channels of Digital Communication'
 content_outline:
 - section: 'Вступ: Регістри та канали цифрової комунікації (Introduction: Registers and Channels of Digital Communication)'
   words: 500
@@ -85,6 +86,7 @@ activity_hints:
   focus: Formal vs informal digital language
   items: 12+
 focus: communication
+pedagogy: PPP
 prerequisites:
 - c1-23 (Business Etiquette)
 - Academic writing skills
@@ -105,10 +107,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.2 [Professional Communication]
 objectives:
-- Understand and apply цифрова комунікація
-- Analyze and evaluate регістри цифрової комунікації
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Етикет та структура
+- Learner can produce professional texts in the domain of Цифрова комунікація
+- Learner can evaluate and correct register in Регістри та канали цифрової комунікації contexts
 persona:
   voice: Senior Specialist
   role: SMM-стратег
 word_target: 4000
+grammar:
+- Регістри та канали цифрової комунікації
+- Етикет та структура
+- Специфіка спілкування в месенджерах та робочих чатах
+- Відеоконференції та цифрова етика
+register: літературний

@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can recognize active present participles (-учий/-ючий)
 - Learner can recognize active past participles (-лий)
-- Learner understands stylistic markedness of participles
+- Learner can explain stylistic markedness of participles
 - Learner can avoid bureaucratic forms and russicisms
 content_outline:
 - section: 'Вступ: Природа дієприкметника (Introduction: The Nature of the Participle)'
@@ -91,7 +91,7 @@ activity_hints:
   focus: Choose participle or clause
   items: 10
 connects_to:
-- b1-45 (Past Passive Participles 1)
+- b1-46 (Past Passive Participles 1)
 prerequisites:
 - b1-51 (Дієприслівники доконаного виду)
 persona:

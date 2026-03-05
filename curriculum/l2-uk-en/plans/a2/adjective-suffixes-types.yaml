@@ -26,7 +26,7 @@ sources:
   notes: Rules for mutations like k->ts, h->z when adding -sk-
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - 'From Nouns to Identity: The magic of the material bridge — introduce core suffixes -ськ- and -н- aligned with State Standard
     §4.2.1.2 requirements for A2 communicative intentions (describing objects and origins)'
@@ -34,7 +34,7 @@ content_outline:
     the theme of traditional craftsmanship and collocations like «дерев''яний стіл», «дерев''яний будинок», and «дерев''яна
     ложка»'
 - section: 'Презентація: Матеріали та походження (Presentation: Materials and Origins)'
-  words: 850
+  words: 550
   points:
   - 'The Materialist Logic: Heuristic for choosing suffixes — use -ян- for natural or traditional materials (вовняний, дерев''яний,
     скляний) vs -ов- for standard/processed materials (металевий, пластиковий, дубовий)'
@@ -46,14 +46,14 @@ content_outline:
   - 'Suffix Selection Heuristics: Managing -ов- vs -ев- — explain dependency on hard/soft stems and stress (e.g., hard stem
     ''дуб'' -> дубовий vs soft stem ''поле'' -> польовий); highlight «домашній» as a very high-frequency soft-suffix example'
 - section: 'Культурний контекст: Традиційні вироби (Cultural Context: Traditional Crafts)'
-  words: 600
+  words: 400
   points:
   - 'Яворівська забавка (Yavoriv Toy): A wooden hook — explain the use of «осика» (aspen) in traditional wooden toys from
     the Lviv region, believed to drive away evil and decorated with «вербівка» patterns'
   - 'Гуцульський ліжник (Hutsul Lizhnyk): The warmth of wool — describe the heavy woolen blanket made of «овеча вовна» (sheep''s
     wool), famous for its therapeutic ''biting'' texture and role in weddings and ceremonies'
 - section: Практика та аналіз помилок (Practice and Error Analysis)
-  words: 700
+  words: 475
   points:
   - 'Material conversion drills: Focus on converting nouns to adjectives with correct suffix choices — скло -> скляний (скляна
     пляшка), залізо -> залізний (залізні двері), вовна -> вовняний'
@@ -62,7 +62,7 @@ content_outline:
   - 'Stress and Stem Sensitivity: Drills contrasting hard and soft stems for -ов-/-ев- selection (дубовий vs польовий) to
     minimize stress-dependent confusion'
 - section: Діалог та продукція (Dialogue and Production)
-  words: 400
+  words: 275
   points:
   - 'At the handicraft fair: Discussing wooden toys and woolen shawls — production task using materials vocabulary to describe
     artisanal items (яворівська забавка, гуцульський ліжник)'
@@ -91,3 +91,26 @@ prerequisites:
 - adjective-suffixes-qualities
 connects_to:
 - root-families-i
+grammar:
+- Вступ
+- Матеріали та походження
+- Традиційні вироби
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

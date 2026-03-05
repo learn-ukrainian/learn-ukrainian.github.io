@@ -16,14 +16,14 @@ objectives:
 - Describe a journey including duration and means
 content_outline:
 - section: Транспорт (Transport types)
-  words: 400
+  words: 250
   points:
   - 'Public transport: автобус (bus), тролейбус (trolleybus), маршрутка (minibus), метро (metro), трамвай (tram). Ukrainian
     cities and their transport systems.'
   - 'Long-distance transport: потяг (train), літак (airplane), таксі (taxi). Public vs private transport distinction. Choosing
     transport for different distances.'
 - section: Вокзал та аеропорт (Station and airport)
-  words: 500
+  words: 275
   points:
   - 'Station types: залізничний вокзал (train station), автовокзал (bus station), аеропорт (airport). Key locations inside:
     каса (ticket office), зал очікування (waiting hall), платформа (platform).'
@@ -32,14 +32,14 @@ content_outline:
   - 'Ticket vocabulary: квиток (ticket), купити квиток (buy a ticket), у один бік (one way), туди й назад (round trip). Connection
     to a1-56 (Buying Tickets).'
 - section: Напрямки (Directions)
-  words: 400
+  words: 250
   points:
   - 'Direction vocabulary: наліво (left), направо (right), прямо (straight), назад (back). Ordinal turns: перший поворот (first
     turn), другий поворот (second turn).'
   - 'Imperative directions: Поверніть наліво (Turn left). Ідіть прямо (Go straight). Asking: Як дістатися до...? (How to get
     to...?) + Genitive. Скажіть, будь ласка, де...? (Tell me please, where is...?)'
 - section: Подорожі (Journeys)
-  words: 400
+  words: 250
   points:
   - 'Destination: Я їду до Львова (I am going to Lviv). До + Genitive for destination cities. Connection to prepositions modules
     (a1-27, a1-28).'
@@ -48,7 +48,7 @@ content_outline:
   - 'Duration: Скільки часу їхати? (How long is the ride?). Я їду 3 години (I travel 3 hours). Connecting numbers and time
     with transport.'
 - section: Практика (Practice)
-  words: 300
+  words: 175
   points:
   - 'Direction-giving dialogues: asking and giving directions to specific locations in a city. Combining imperative forms
     with direction vocabulary.'

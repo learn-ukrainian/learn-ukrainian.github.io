@@ -27,7 +27,7 @@ sources:
   notes: Detailed semantics of spatial prefixes with motion stems
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - 'Beyond In and Out: The geometry of complex paths — introduce the ''GPS instructions'' metaphor: root is the engine, prefix
     is the steering wheel'
@@ -36,7 +36,7 @@ content_outline:
   - 'The logic of distance: How prefixes signal proximity — distinguishing ''near'' (під-) vs ''touch/arrival'' (до-) as a
     bridge to B1 word formation (§4.3.8)'
 - section: 'Геометрія руху: Пере-, Про-, Об- (Geometry of Motion: Crossing, Through, Around)'
-  words: 700
+  words: 475
   points:
   - 'The Bridge: Пере- (Across) vs Про- (Through) — visual: X -> Y vs -> | | ->; cultural hook: the ''black cat crossing the
     path'' (чорний кіт перейшов дорогу) superstition and rituals to ward off bad luck'
@@ -45,7 +45,7 @@ content_outline:
   - 'Vocabulary in Motion: Deep dive into ''пройти повз'' (pass by) and ''перейти на українську'' (switch to Ukrainian) as
     high-frequency Core A2 collocations'
 - section: 'Наближення та Прибуття: Під-, До-, За-, При- (Approach and Arrival: Approaching, Reaching, Popping in, Arriving)'
-  words: 800
+  words: 525
   points:
   - 'The Reach: До- (Getting there/Reach) vs Під- (Approaching) — grammatical harmony: State Standard §4.2.2.4 (В/У/НА for
     destination) vs ''ДО'' for proximity/approach (підійти до)'
@@ -54,7 +54,7 @@ content_outline:
   - 'Abstract Motion: High-value idioms derived from spatial logic: ''мені підходить'' (it suits me) and ''дійти згоди'' (reach
     agreement)'
 - section: Практика та Корекція (Practice and Correction)
-  words: 600
+  words: 400
   points:
   - 'Common Learner Errors: Explicitly correcting ''Preposition Mismatch'' (підійти в vs підійти до) and ''Coming vs Going''
     (прийшов vs пішов) confusion'
@@ -62,7 +62,7 @@ content_outline:
     instead of ''буду прийти''), aligning with State Standard §4.2.3.1'
   - 'Directional drills: Giving complex instructions in a Lviv/Kyiv context using ''пройти 5 кілометрів'' and ''перейти міст'''
 - section: Діалоги та Сценарії (Dialogues and Scenarios)
-  words: 500
+  words: 325
   points:
   - 'Travel stories: A journey through the mountains or a complex commute — integrate ''сонце зайшло'' (sun set) and ''час
     пройшов'' (time passed) for natural narrative flavor'
@@ -102,3 +102,22 @@ prerequisites:
 - basic-motion-prefixes
 connects_to:
 - action-verb-prefixes
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

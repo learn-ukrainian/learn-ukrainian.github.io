@@ -4,14 +4,15 @@ sequence: 90
 slug: c2-certification-preparation
 version: '2.0'
 title: Підготовка до сертифікації C2
+subtitle: 'Introduction: C2 Level and State Standard'
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
-- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
-- Продукувати тексти академічного та професійного рівня за тематикою модуля
-- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Аналізувати та класифікувати явища Огляд сертифікаційних систем та культурний контекст у автентичних текстах
+- Продукувати тексти з коректним застосуванням Лексичні тонкощі та уникнення помилок
+- Оцінювати стилістичну доречність мовних засобів у контексті Підготовка до сертифікації C2
 - 'Застосовувати знання з теми «Мовна компетенція: Лексичні тонкощі та уникнення помилок» у власній мовній практиці'
 sources:
 - name: Державний іспит з української мови — Вимоги
@@ -100,16 +101,25 @@ vocabulary:
   - апеляція (appeal)
   - перездача (retake)
   - термін дії (validity period)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Огляд сертифікаційних систем та культурний контекст examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Лексичні тонкощі та уникнення помилок
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -125,3 +135,9 @@ persona:
   role: Certification Candidate
 prerequisites:
 - final-exam-integrated-skills
+grammar:
+- Рівень C2 та державний стандарт
+- Огляд сертифікаційних систем та культурний контекст
+- Лексичні тонкощі та уникнення помилок
+- Стратегії підготовки та структура іспиту
+register: академічний

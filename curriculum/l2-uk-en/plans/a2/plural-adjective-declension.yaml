@@ -13,7 +13,7 @@ objectives:
 - Learner can form Nominative and Accusative plural adjectives for both hard and soft groups
 - Learner can produce Genitive, Dative, Instrumental, and Locative plural adjective endings
 - Learner can maintain noun-adjective agreement in plural across all 7 cases
-- Learner understands that plural collapses gender distinctions into a single form per case
+- Learner can explain that plural collapses gender distinctions into a single form per case
 sources:
 - name: Ukrainian State Standard 2024 - Adjective Morphology
   url: https://mon.gov.ua/
@@ -25,7 +25,7 @@ sources:
   notes: Full plural declension tables for hard and soft groups
 content_outline:
 - section: 'Вступ: Один прикметник — багато форм (Introduction: One Adjective, Many Forms)'
-  words: 350
+  words: 225
   points:
   - 'The core challenge: adjectives must agree with their noun in case, so every plural case form of the noun demands a matching
     plural adjective ending — один великий будинок → великі будинки → великих будинків.'
@@ -34,7 +34,7 @@ content_outline:
   - 'Good news: adjective plural endings follow a predictable hard/soft split with very few exceptions — mastering the pattern
     unlocks all adjectives at once.'
 - section: Називний та Знахідний множини (Nominative and Accusative Plural)
-  words: 500
+  words: 325
   points:
   - 'Nominative plural: hard-group adjectives take -і (великі, нові, старі); soft-group adjectives take -і as well (сині,
     ранні, середні) — both groups share -і in Ukrainian (unlike Russian -ые/-ие).'
@@ -45,7 +45,7 @@ content_outline:
   - 'Agreement drill: combine 8 adjectives × 3 noun genders in Nominative plural; then switch to Accusative identifying animate
     vs inanimate.'
 - section: Родовий та Давальний множини (Genitive and Dative Plural)
-  words: 600
+  words: 425
   points:
   - 'Genitive plural: hard group → -их (великих, нових, старих); soft group → -іх (синіх, ранніх); used after кілька, багато,
     немає + plural noun.'
@@ -57,7 +57,7 @@ content_outline:
     gender distinctions into one form.'
   - 'Common learner error: applying singular forms (великого, новій) where plural forms (великих, новим) are required.'
 - section: Орудний та Місцевий множини (Instrumental and Locative Plural)
-  words: 600
+  words: 400
   points:
   - 'Instrumental plural: hard group → -ими (великими, новими, старими); soft group → -іми (синіми, ранніми); used with з,
     між, перед + noun phrases.'
@@ -69,7 +69,7 @@ content_outline:
     вулицях, у нових кварталах) for comprehension.'
   - 'Instrumental plural practice: з новими друзями, між старими деревами, перед маленькими дітьми — sentence building drill.'
 - section: Повна зведена таблиця (Full Summary Table)
-  words: 450
+  words: 300
   points:
   - 'Complete adjective declension table: singular (m/f/n) + plural for all 7 cases, hard group (великий) and soft group (синій)
     side by side.'
@@ -79,7 +79,7 @@ content_outline:
     simpler than singular.'
   - 'Мnemonic for plural endings: Nom/Acc-inan → -і; Gen/Loc → -их/-іх; Dat → -им/-ім; Inst → -ими/-іми; Acc-anim = Gen.'
 - section: 'Практика: Опис і порівняння (Practice: Description and Comparison)'
-  words: 500
+  words: 325
   points:
   - 'Describe groups of people using all cases: нові студенти (Nom) → з новими студентами (Inst) → у нових студентів (Gen)
     → новим студентам (Dat).'
@@ -132,3 +132,4 @@ grammar:
 - animate vs inanimate Accusative plural
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

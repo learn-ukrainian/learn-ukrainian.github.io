@@ -4,12 +4,14 @@ sequence: 20
 slug: emphasis-and-inversion
 version: '2.0'
 title: Емфаза та інверсія
+subtitle: 'Word Order for Effect'
 focus: grammar
+pedagogy: TTT
 phase: B2.2
 word_target: 4000
 objectives:
-- Identify and correctly use емфаза та інверсія
-- Form and apply порядок слів в українській мові
+- Learner can identify and apply емфаза та інверсія
+- Learner can form and use порядок слів в українській мові
 sources:
 - name: Ukrainian State Standard 2024 - Word Order
   url: https://mon.gov.ua/
@@ -122,3 +124,8 @@ persona:
   role: Public Speaker (Оратор)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Word order variation for emphasis
+- Inversion patterns in Ukrainian
+- Rheme-theme structure
+register: нейтральний

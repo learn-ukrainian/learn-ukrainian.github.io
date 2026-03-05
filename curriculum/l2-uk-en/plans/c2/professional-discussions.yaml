@@ -4,6 +4,7 @@ sequence: 55
 slug: professional-discussions
 version: '2.0'
 title: Професійні дискусії
+subtitle: 'Introduction: Ethics and Professional Discourse Culture'
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -98,16 +99,25 @@ vocabulary:
   - опонент (opponent)
   - пропонент (proponent)
   - резюмування (summarizing)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Публічні дебати та мистецтво переконання examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Ділові переговори та інститут медіації
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -127,3 +137,9 @@ persona:
   role: Moderator
 prerequisites:
 - professional-correspondence
+grammar:
+- Етика та культура професійного дискурсу
+- Публічні дебати та мистецтво переконання
+- Ділові переговори та інститут медіації
+- Експертні консультації та пошук консенсусу
+register: академічний

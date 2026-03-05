@@ -14,7 +14,7 @@ objectives:
 - Learner can form past gerunds (-вши/-ши) from perfective verbs
 - Learner can distinguish simultaneous (present gerund) from prior (past gerund) actions
 - Learner can apply the subject-matching rule to avoid dangling gerunds
-- Learner knows that *-ючий* participial adjectives are non-standard and can replace them with relative clauses
+- Learner can identify that *-ючий* participial adjectives are non-standard and can replace them with relative clauses
 sources:
 - name: Ukrainian State Standard 2024 - Verbal Adverbs
   url: https://mon.gov.ua/
@@ -30,7 +30,7 @@ sources:
   notes: Why -ючий/-ачий modifiers are non-standard Ukrainian
 content_outline:
 - section: 'Вступ: Дві дії одночасно (Introduction: Two Actions at Once)'
-  words: 400
+  words: 275
   points:
   - 'Natural recognition context: "Читаючи книгу, він пив каву" — two simultaneous actions compressed into one elegant sentence;
     why gerunds make speech more sophisticated and natural-sounding.'
@@ -39,7 +39,7 @@ content_outline:
   - 'Two gerund families previewed: present gerunds (-ючи/-ачи) for simultaneous actions, past gerunds (-вши/-ши) for completed
     prior actions — the key temporal distinction.'
 - section: 'Дієприслівники теперішнього часу (Present Gerunds: -ючи/-ачи)'
-  words: 700
+  words: 450
   points:
   - 'Formation Rule 1 — Conjugation I verbs (-ати/-яти/-увати): replace the third-person plural ending -ють with -ючи: читають→читаючи,
     працюють→працюючи, слухають→слухаючи.'
@@ -52,7 +52,7 @@ content_outline:
   - 'Punctuation rule: when the gerundial phrase comes before the main clause, it is separated by a comma; when after, a comma
     is usually omitted.'
 - section: 'Дієприслівники минулого часу (Past Gerunds: -вши/-ши)'
-  words: 600
+  words: 400
   points:
   - 'Formation from perfective verbs: drop infinitive ending and add -вши (after vowel stem): прочитати→прочитавши, зробити→зробивши,
     написати→написавши.'
@@ -63,7 +63,7 @@ content_outline:
   - 'Cultural and literary example: proverb "Скінчивши діло — гуляй сміло" (When the work is done, play freely) — past gerund
     in folk wisdom.'
 - section: 'Золоте правило: Підмет має збігатися (Golden Rule: Subject Must Match)'
-  words: 500
+  words: 325
   points:
   - 'The dangling gerund rule: the implied subject of the gerund clause MUST be the same as the subject of the main clause
     — the most common learner error in gerund use.'
@@ -75,7 +75,7 @@ content_outline:
     verb?" — they must match.'
   - 'Dangling gerund fix strategies: rewrite as a subordinate clause with "коли" or "поки", or restructure so subject is explicit.'
 - section: Помилки та заборони (Errors and Restrictions)
-  words: 400
+  words: 275
   points:
   - 'BANNED in standard Ukrainian: active participial adjectives in -ючий/-ачий as noun modifiers (*"працююча людина"*) —
     these are Russianisms and direct calques from English "-ing" forms.'
@@ -86,7 +86,7 @@ content_outline:
   - 'Gerunds from reflexive verbs: -чись/-шись — дивитися→дивлячись, повернутися→повернувшись; the reflexive particle stays
     attached.'
 - section: Практика (Practice)
-  words: 400
+  words: 275
   points:
   - 'Combination drill: given two simple sentences, combine them into one using the correct gerund (present or past) — 15
     examples covering Conj I and Conj II verbs.'
@@ -137,5 +137,7 @@ grammar:
 - subject matching rule (anti-dangling)
 - active participle ban (-ючий is non-standard)
 - gerunds from reflexive verbs (-чись/-шись)
+bridge_to: B1
 module_type: grammar
 immersion: 65-75% Ukrainian
+register: розмовний

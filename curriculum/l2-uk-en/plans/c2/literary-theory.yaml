@@ -4,6 +4,7 @@ sequence: 27
 slug: literary-theory
 version: '2.0'
 title: Теорія літератури
+subtitle: 'Introduction: What is Literary Theory?'
 focus: literature
 pedagogy: TTT
 phase: C2.2 [Literature & Creative Writing]
@@ -45,7 +46,7 @@ content_outline:
   points:
   - 'Формалізм як широкий слов''янський науковий рух: внесок Харківської та Київської шкіл поруч із Празьким лінгвістичним
     гуртком.'
-  - 'Ключові поняття формалізму: прийом ''остранення'' (В. Шкловський), художня форма та літературність.'
+  - 'Ключові поняття формалізму: прийом ''очуднення'' (В. Шкловський), художня форма та літературність.'
   - 'Структуралізм (Ф. де Соссюр, Р. Барт): поняття знака (означуване та означник) та система бінарних опозицій.'
 - section: 'Постструктуралізм і деконструкція: Текст як дискурс (Poststructuralism and Deconstruction: Text as Discourse)'
   words: 850
@@ -87,7 +88,7 @@ vocabulary_hints:
   - методологія (methodology) — методологічна база, методологія дослідження; вчення про методи пізнання
   - парадигма (paradigm) — зміна парадигми, наукова п., літературознавча п.; панівна система поглядів
   recommended:
-  - остранення (defamiliarization) — прийом остранення, ефект о.; спосіб виведення сприйняття зі стану автоматизму
+  - очуднення (defamiliarization) — прийом остранення, ефект о.; спосіб виведення сприйняття зі стану автоматизму
   - знак (semiotic sign) — мовний знак, довільність знака, система знаків; єдність форми та змісту
   - означуване / означник (signified / signifier) — зв'язок означуваного і означника; компоненти мовного знака за Соссюром
   - бінарна опозиція (binary opposition) — система бінарних опозицій, розмивання опозиції; базова пара протилежностей
@@ -107,21 +108,30 @@ vocabulary:
   - методологія (methodology)
   - парадигма (paradigm)
   recommended:
-  - остранення (defamiliarization)
+  - очуднення (defamiliarization)
   - знак (sign)
   - означуване/означник (signified/signifier)
   - бінарна опозиція (binary opposition)
   - канон (canon)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
+- type: quiz
+  focus: Comprehension of cultural concepts
+  items: 12
+- type: match-up
+  focus: Match terms to concepts
+  items: 12
+- type: fill-in
+  focus: Match Від Арістотеля до Позитивізму examples to categories
+  items: 10
+- type: group-sort
+  focus: Classify by period or movement
+  items: 10
 - type: reading
-  focus: Поглиблений аналіз тексту
+  focus: Classify by Слов'янська наукова традиція
   items: 4
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Critical analysis essay
 activities:
   types_required:
   - essay-response
@@ -140,3 +150,9 @@ persona:
   role: University Professor
 prerequisites:
 - c2-1-checkpoint
+grammar:
+- Що таке теорія літератури?
+- Від Арістотеля до Позитивізму
+- 'Слов''янська наукова традиція'
+- Текст як дискурс
+register: академічний

@@ -4,6 +4,7 @@ sequence: 32
 slug: literary-translation-ii
 version: '2.0'
 title: Літературний переклад II — проза
+subtitle: 'Introduction: Specifics and Ethics of Prose Translation'
 focus: literature
 pedagogy: TTT
 phase: C2.2 [Literature & Creative Writing]
@@ -104,16 +105,25 @@ vocabulary:
   - експлікація (explicitation)
   - генералізація (generalization)
   - конкретизація (particularization)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
+- type: quiz
+  focus: Comprehension of cultural concepts
+  items: 12
+- type: match-up
+  focus: Match terms to concepts
+  items: 12
+- type: fill-in
+  focus: Match Відтворення авторського голосу та ідіолекту examples to categories
+  items: 10
+- type: group-sort
+  focus: Classify by period or movement
+  items: 10
 - type: reading
-  focus: Поглиблений аналіз тексту
+  focus: Classify by Соціолекти, діалоги та мовлення персонажів
   items: 4
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Critical analysis essay
 activities:
   types_required:
   - essay-response
@@ -132,3 +142,9 @@ persona:
   role: Fiction Translator
 prerequisites:
 - literary-translation-i
+grammar:
+- Вступ — Специфіка та етика перекладу прози
+- Відтворення авторського голосу та ідіолекту
+- Соціолекти, діалоги та мовлення персонажів
+- Стратегії перекладу реалій та культурна адаптація
+register: академічний

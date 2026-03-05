@@ -4,6 +4,7 @@ sequence: 27
 slug: global-context
 version: '2.0'
 title: 'Глобальний контекст: Україна, ЄС та НАТО'
+subtitle: Introduction — Ukraine in Global Context
 content_outline:
 - section: Вступ — Україна у світовому контексті (Introduction — Ukraine in Global Context)
   words: 500
@@ -100,6 +101,7 @@ activity_hints:
 - type: essay-response
   focus: Ukraine's European path
 focus: communication
+pedagogy: PPP
 prerequisites:
 - c1-25 (Political System)
 - c1-26 (Media Landscape)
@@ -120,10 +122,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.2 [Professional Communication]
 objectives:
-- 'Understand and apply глобальний контекст: україна, єс та нато'
-- Analyze and evaluate україна у світовому контексті
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Європейський Союз
+- Learner can produce professional texts in the domain of Глобальний контекст: Україна, ЄС та НАТО
+- Learner can evaluate and correct register in Вступ — Україна у світовому контексті contexts
 persona:
   voice: Senior Specialist
   role: Дипломатичний радник
 word_target: 4000
+grammar:
+- Вступ — Україна у світовому контексті
+- Європейський Союз
+- НАТО — Північноатлантичний Альянс
+- Міжнародні організації та норми дипломатії
+register: літературний

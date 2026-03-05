@@ -25,14 +25,14 @@ sources:
   notes: Detailed rules for 'коли', 'поки', and 'як тільки'
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - 'Life as a sequence of events: alignment with Ukrainian State Standard §1.4.1.1 regarding the creation of a narrative
     monologue as a simple sequence of events.'
   - 'The cultural concept of time and patience: Introduction of the proverb «Всьому свій час» (Everything has its time) to
     frame the importance of temporal logic.'
 - section: 'Презентація: Граматичні основи (Presentation: Grammatical Foundations)'
-  words: 800
+  words: 525
   points:
   - 'Simultaneity and Points in Time: Contrast between «коли» (point/when) and «поки» (process/while) using a visual timeline
     for clarity.'
@@ -43,7 +43,7 @@ content_outline:
   - 'Pedagogical Distinction: Explicitly contrast the structure of «перед» + Noun (prepositional phrase) vs «перед тим як»
     + Verb (time clause).'
 - section: 'Презентація: Складні випадки та культура (Presentation: Complex Cases and Culture)'
-  words: 700
+  words: 475
   points:
   - 'The ''Until Trap'': Explaining the double negative requirement in «поки не» clauses (e.g., «Я чекаю, поки ти не прийдеш»).'
   - 'Cultural Hook: The Ukrainian Christmas Eve (Свята Вечеря) tradition of waiting to eat «поки не зійде перша зірка» (until
@@ -51,14 +51,14 @@ content_outline:
   - 'Immediacy and Frequency: Usage of «щойно» (just/as soon as) and «як тільки» (as soon as) in spoken register, plus «кожного
     разу, коли...» for habits.'
 - section: Практика та корекція помилок (Practice and Error Correction)
-  words: 600
+  words: 400
   points:
   - 'Drill: Identifying and fixing the missing linker error (e.g., correcting «Перед я пішов» to «Перед тим як я пішов»).'
   - 'Transformation exercises: Converting simple prepositional phrases into complex time clauses using the research-based
     contrast patterns.'
   - 'Negative logic drills: Practicing the «поки не» structure to internalize the Ukrainian negation of the limit-action.'
 - section: Продукція та діалоги (Production and Dialogues)
-  words: 500
+  words: 325
   points:
   - 'Monologue production: Reporting a busy morning schedule or a trip itinerary, strictly following the State Standard requirement
     for sequencing.'
@@ -90,3 +90,22 @@ prerequisites:
 - which-one
 connects_to:
 - health-and-body
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

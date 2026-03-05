@@ -4,12 +4,14 @@ sequence: 7
 slug: active-participles-present
 version: '2.0'
 title: Активні дієприкметники теперішнього часу (-учий/-ючий)
+subtitle: 'Present Active Participles (-учий/-ючий)'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use активні дієприкметники теперішнього часу (-учий/-ючий)
-- Form and apply активні дієприкметники
+- Learner can identify and apply активні дієприкметники теперішнього часу (-учий/-ючий)
+- Learner can form and use активні дієприкметники
 sources:
 - name: Ukrainian State Standard 2024 - Active Participles
   url: https://mon.gov.ua/
@@ -126,3 +128,8 @@ persona:
   role: Old-School Grammarian (Граматист старої школи)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Present active participles (-учий/-ючий)
+- Bookish/restricted usage in Ukrainian
+- Relative clause alternatives
+register: нейтральний

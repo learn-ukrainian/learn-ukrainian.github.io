@@ -25,7 +25,7 @@ sources:
   notes: Complete aspect system overview
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - Concept of aspect (Process vs Result) — introduce the cultural hook 'Без труда нема плода' (Without labor there is no
     fruit) to illustrate that a result (fruit) is impossible without a process (labor).
@@ -34,7 +34,7 @@ content_outline:
   - 'Cultural Hook: The Borsch Ritual — contrast the long, symbolic process of cooking (варити - imperfective) with the finished
     culinary masterpiece (зварити - perfective), noting UNESCO''s 2022 recognition of Ukrainian borsch culture.'
 - section: 'Презентація: Видові пари (Presentation: Aspect Pairs)'
-  words: 750
+  words: 500
   points:
   - 'Classification of aspect pairs by formation: prefixation (писати/написати, робити/зробити, ділити/поділити), suffix/stem
     change (купувати/купити, забувати/забути), and suppletion (говорити/сказати, брати/взяти).'
@@ -43,7 +43,7 @@ content_outline:
   - 'Identification via time markers: teach context clues for imperfective (часто, щодня, довго, зараз) vs. perfective (уже,
     нарешті, раптом) to help learners choose the correct form.'
 - section: Нюанси та типові помилки (Nuances and Common Errors)
-  words: 700
+  words: 475
   points:
   - 'Learner error: English ''-ing'' mapping — address the tendency to assume all ''-ing'' forms are imperfective; explain
     cases where focus on completion requires the perfective aspect despite duration.'
@@ -52,7 +52,7 @@ content_outline:
   - 'Contextual shift: how the choice of aspect changes the perceived meaning of a sentence from a simple description of activity
     to a statement of achievement.'
 - section: Практика та вправи (Practice and Exercises)
-  words: 550
+  words: 375
   points:
   - 'Drill: Transformation of sentences from process to result using State Standard §4.3.2 verb pairs (e.g., ''Я писав тест''
     to ''Я написав тест'').'
@@ -61,7 +61,7 @@ content_outline:
   - 'Error correction activity: identifying and fixing ''Present Tense Perfective'' errors in simple A2-level diary entries
     or messages.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 500
+  words: 325
   points:
   - 'Dialogue: ''The Kitchen Check-in'' — a situational exchange using ''Did you finish?'' (Ти вже зробив...?) vs ''Are you
     still doing...?'' (Ти ще робиш...?) in the context of cooking or chores.'
@@ -131,3 +131,4 @@ grammar:
 - aspect usage rules
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

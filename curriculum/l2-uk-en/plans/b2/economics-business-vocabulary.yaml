@@ -51,10 +51,10 @@ vocabulary_hints:
   - рахунок (account) — відкрити ~, поточний ~, депозитний ~, поповнити ~; банківська термінологія
   - економіка (economy) — ринкова ~, цифрова ~, національна ~; зростає або падає
   - бізнес (business) — малий та середній ~, вести ~, ~-план; загальновживаний термін
-  - термін (term) — вживати ~, науковий ~, економічний ~; точність визначень
-  - поняття (concept) — ключове ~, абстрактне ~, сутність поняття
-  - процес (process) — виробничий ~, процес реформування, динамічний ~
-  - метод (method) — аналітичний ~, застосовувати ~, інноваційний ~
+  - Дія.Бізнес (Diia.Business) — унікальний державний цифровий сервіс для підприємців
+  - споживчий кошик (consumer basket) — набір товарів для оцінки рівня життя; стандарт §3.8
+  - брати участь (take part) — єдина нормативна форма для ділового спілкування
+  - згідно із законом (according to the law) — правильна конструкція; уникати 'по закону'
   recommended:
   - Дія.Бізнес (Diia.Business) — унікальний державний цифровий сервіс для підприємців
   - споживчий кошик (consumer basket) — набір товарів для оцінки рівня життя; стандарт §3.8
@@ -64,14 +64,23 @@ vocabulary_hints:
   - синтез (synthesis) — метод синтезу, теоретичний ~
   - дослідження (research) — ринкове ~, проводити ~, результати ~
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Economic terminology and register in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Economic terminology and register
+  items: 10
+- type: match-up
+  focus: Match Макроекономічні показники та державна політика examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Economic terminology and register
   items: 8
+- type: group-sort
+  focus: Classify examples by Бізнес-структури та цифровізація
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Economic terminology and register correctly
 persona:
   voice: Professional Language Coach
   role: Economist (Економіст)

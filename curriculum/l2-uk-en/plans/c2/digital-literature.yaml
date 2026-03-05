@@ -4,6 +4,7 @@ sequence: 37
 slug: digital-literature
 version: '2.0'
 title: Цифрова література
+subtitle: Introduction — Literature in the Digital Age
 focus: literature
 pedagogy: TTT
 phase: C2.2 [Literature & Creative Writing]
@@ -107,16 +108,25 @@ vocabulary:
   - дигіталізація (digitization)
   - інтерфейс (interface)
   - мультимедіа (multimedia)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
+- type: quiz
+  focus: Comprehension of cultural concepts
+  items: 12
+- type: match-up
+  focus: Match terms to concepts
+  items: 12
+- type: fill-in
+  focus: Match Генеалогія українського цифрового простору examples to categories
+  items: 10
+- type: group-sort
+  focus: Classify by period or movement
+  items: 10
 - type: reading
-  focus: Поглиблений аналіз тексту
+  focus: Classify by Новітні форми та провідні онлайн-платформи
   items: 4
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Critical analysis essay
 activities:
   types_required:
   - essay-response
@@ -135,3 +145,9 @@ persona:
   role: Cyber-Ethnographer
 prerequisites:
 - contemporary-literature
+grammar:
+- Вступ — Література в цифрову епоху
+- Генеалогія українського цифрового простору
+- Новітні форми та провідні онлайн-платформи
+- Соціальні медіа та авторський брендинг
+register: академічний

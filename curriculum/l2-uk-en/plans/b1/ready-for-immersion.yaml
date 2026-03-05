@@ -10,7 +10,7 @@ pedagogy: TTT
 phase: B1.0 Bridge
 word_target: 4000
 objectives:
-- Learner can read and understand grammar explanations in Ukrainian
+- Learner can read and follow grammar explanations in Ukrainian
 - Learner can answer questions about grammar rules in Ukrainian
 - Learner can demonstrate metalanguage mastery for full immersion
 - Learner can use negation and verb form terminology
@@ -127,3 +127,4 @@ grammar:
 - Comprehension test
 module_type: checkpoint
 immersion: 70-85% Ukrainian
+register: нейтральний

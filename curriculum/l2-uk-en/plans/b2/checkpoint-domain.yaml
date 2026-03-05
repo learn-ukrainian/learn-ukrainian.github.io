@@ -58,24 +58,31 @@ content_outline:
   - Підготовка до фази B2.2, що фокусується на глибинному вивченні фразеології та ідіоматики української мови.
 vocabulary_hints:
   required:
-  - термін (term) — юридичний термін, термін виконання, правовий термін; висока частотність у діловодстві та праві
-  - поняття (concept) — юридичне поняття, зміст поняття, визначення поняття; ключова лексема для академічного та офіційного
-    стилів
-  - процес (process) — судовий процес, законодавчий процес, кримінальний процес; фундаментальне поняття для юридичного домену
-  - метод (method) — метод аналізу, метод регулювання, науковий метод; використовується в адміністративному та науковому регістрах
+  - аналіз (analysis) — системний аналіз, порівняльний аналіз, критичний аналіз; базова лексема для звітності та досліджень
+  - синтез (synthesis) — синтез інформації, аналіз і синтез; вживається у висновках наукових та аналітичних праць
+  - дослідження (research) — результати дослідження, об'єкт дослідження; частотна лексема в офіційних та академічних документах
   recommended:
   - аналіз (analysis) — системний аналіз, порівняльний аналіз, критичний аналіз; базова лексема для звітності та досліджень
   - синтез (synthesis) — синтез інформації, аналіз і синтез; вживається у висновках наукових та аналітичних праць
   - дослідження (research) — результати дослідження, об'єкт дослідження; частотна лексема в офіційних та академічних документах
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Інтеграція M01-M29"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 connects_to:
 - b2-40 (Aspect Nuances Secondary Imperfectivization)
 prerequisites:

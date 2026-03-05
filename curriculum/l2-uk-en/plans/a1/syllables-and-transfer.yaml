@@ -34,8 +34,8 @@ content_outline:
   words: 400
   points:
   - 'Word division (переніс) rules for writing: why correct division matters in Ukrainian handwriting and printing.'
-  - 'Cannot split: a single letter from the rest of the word (*У-країна), the digraphs дж/дз when they represent one sound (бу-дзьок,
-    not *буд-зьок).'
+  - 'Cannot split: a single letter from the rest of the word (*У-країна), the digraphs дж/дз when they represent one sound (ґу-дзик,
+    not *ґуд-зик).'
   - 'Cannot separate: Ь from the preceding consonant (паль-ці, not *пал-ьці), the apostrophe group from the consonant before
     it (сім''я → сі-м''я, not *сім-''я).'
   - 'Can split: between two consonants (сіль-ський — ль is inseparable), between a vowel and a consonant (мо-ло-ко).'
@@ -59,7 +59,7 @@ vocabulary_hints:
   - 'бібліотека (library) — 5 syllables бі-блі-о-те-ка; collocations: у бібліотеці'
   - 'університет (university) — 5 syllables у-ні-вер-си-тет; collocations: навчатися в університеті'
   - склад (syllable) — metalinguistic term; essential for understanding lesson content
-  - переніс (word division/hyphenation) — metalinguistic term for the writing rule
+  - перенос (word division/hyphenation) — metalinguistic term for the writing rule
   - голосний (vowel) — metalinguistic term; every голосний creates a syllable
   - приголосний (consonant) — metalinguistic term; consonant clusters follow specific split rules
 activity_hints:

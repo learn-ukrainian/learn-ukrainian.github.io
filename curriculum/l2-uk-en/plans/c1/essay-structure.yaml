@@ -4,6 +4,7 @@ sequence: 8
 slug: essay-structure
 version: '2.0'
 title: Структура академічного есе
+subtitle: 'Introduction: Architecture and Tradition'
 content_outline:
 - section: 'Вступ: Архітектура та традиція (Introduction: Architecture and Tradition)'
   words: 600
@@ -96,6 +97,7 @@ activity_hints:
 - type: essay-response
   focus: Write body paragraph using TEEL
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-01 to c1-07 (Academic Foundation)
 - Logical connectors mastery
@@ -116,10 +118,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use структура академічного есе
-- Form and apply архітектура тексту
-- Distinguish between практика структурування
+- Learner can identify and produce correct Композиція та формулювання тези forms
+- Learner can analyze Анатомія абзацу — Модель TEEL in authentic texts
+- Learner can produce written text demonstrating mastery of Архітектура та традиція
 persona:
   voice: Senior Specialist
   role: Головний редактор
 word_target: 4000
+grammar:
+- Архітектура та традиція
+- Композиція та формулювання тези
+- Анатомія абзацу — Модель TEEL
+- Логіка та засоби зв’язності
+register: літературний

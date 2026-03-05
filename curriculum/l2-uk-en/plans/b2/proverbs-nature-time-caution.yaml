@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can recognize and interpret 16 core Ukrainian proverbs about nature, time, and caution
 - Learner can use proverbs appropriately to give advice about planning, risk, and patience
-- Learner understands the cultural values embedded in Ukrainian folk wisdom about natural cycles and prudence
+- Learner can explain the cultural values embedded in Ukrainian folk wisdom about natural cycles and prudence
 content_outline:
 - section: 'Вступ: Природа як джерело мудрості (Introduction: Nature as a Source of Wisdom)'
   words: 600
@@ -66,10 +66,10 @@ vocabulary_hints:
   - верба (willow) — сакральний символ; частотна у висловах про воду та Україну
   - брод (ford) — місце для переходу річки; ключовий образ у прислів'ях про ризик
   - згаяний (wasted/lost) — вживається переважно з часом («згаяний час»)
-  - термін (term) — для обговорення лінгвістичних аспектів фразеології
-  - поняття (concept) — абстрактна одиниця мудрості
-  - процес (process) — розвиток подій у часі
-  - метод (method) — спосіб досягнення результату через планування
+  - бузина (elderberry) — назва рослини; символ алогізму у відомій ідіомі
+  - калька (calque) — мовна помилка, спричинена дослівним перекладом
+  - суржик (surzhyk) — змішане мовлення, якого слід уникати у фразеології
+  - аналіз (analysis) — розгляд структури прислів'я
   recommended:
   - бузина (elderberry) — назва рослини; символ алогізму у відомій ідіомі
   - калька (calque) — мовна помилка, спричинена дослівним перекладом
@@ -78,14 +78,23 @@ vocabulary_hints:
   - синтез (synthesis) — поєднання знань у власному висловлюванні
   - дослідження (research) — пошук етимології народних висловів
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: match-up
+  focus: Match idioms to their meanings
+  items: 15
+- type: group-sort
+  focus: "Classify idioms by Прислів'я про стихії та цикли природи"
+  items: 12
+- type: fill-in
+  focus: Complete sentences with the correct idiom
+  items: 10
+- type: quiz
+  focus: Choose the correct meaning of each idiom
+  items: 12
+- type: error-correction
+  focus: Fix incorrect idiom usage
   items: 8
+- type: essay-response
+  focus: Use 5+ idioms in a coherent paragraph
 persona:
   voice: Professional Language Coach
   role: Agronomist (Агроном)

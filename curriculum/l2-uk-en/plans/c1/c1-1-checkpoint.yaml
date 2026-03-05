@@ -4,7 +4,9 @@ sequence: 20
 slug: c1-1-checkpoint
 version: '2.0'
 title: Контрольна точка — Академічна база
+subtitle: 'Introduction: C1.1 Academic Foundations'
 focus: checkpoint
+pedagogy: Assessment
 phase: C1.1 [Academic Writing & Research]
 objectives:
 - Демонструвати засвоєння академічного стилю мовлення
@@ -108,3 +110,27 @@ vocabulary_hints:
   - брати участь (to participate) — єдино правильний варіант замість помилкового «приймати участь»
 prerequisites:
 - practice-ii-article-critique
+grammar:
+- Академічні основи C1.1
+- Граматика та синтаксис наукового викладу
+- Академічний лексикон та стратегії хеджування
+- Наукове письмо та критичне рецензування
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Comprehensive review
+  items: 15
+- type: fill-in
+  focus: Apply learned structures
+  items: 12
+- type: match-up
+  focus: Match Граматика та синтаксис наукового викладу examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Академічний лексикон та стратегії хеджування
+  items: 10
+- type: error-correction
+  focus: Cross-module error detection
+  items: 10
+- type: essay-response
+  focus: Integrative writing task

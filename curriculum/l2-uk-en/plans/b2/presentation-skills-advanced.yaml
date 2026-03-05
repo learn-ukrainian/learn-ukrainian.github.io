@@ -92,14 +92,23 @@ vocabulary_hints:
   - синтез (synthesis) — синтез ідей та аргументів у фінальних висновках.
   - дослідження (research) — обґрунтування аргументів даними актуальних досліджень.
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Аналіз та адаптація до аудиторії with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Сторітелінг та риторика переконання
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Аналіз та адаптація до аудиторії for given scenario
 persona:
   voice: Professional Language Coach
   role: Startup Founder (Засновник стартапу)

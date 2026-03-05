@@ -4,7 +4,9 @@ sequence: 25
 slug: register-introduction
 version: '2.0'
 title: Функціональні стилі мови
+subtitle: 'What Is Register in Ukrainian?'
 focus: style
+pedagogy: CBI
 phase: B2.3
 word_target: 4000
 objectives:
@@ -118,3 +120,7 @@ persona:
   role: Actor (Актор)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Register classification (розмовний, офіційний, науковий, художній, публіцистичний)
+- Register markers identification
+register: нейтральний

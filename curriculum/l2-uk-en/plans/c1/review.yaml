@@ -4,6 +4,7 @@ sequence: 38
 slug: review
 version: '2.0'
 title: 'Огляд і повторення: Професійна комунікація'
+subtitle: Review of C1.2 - Summary
 content_outline:
 - section: Огляд C1.2 — Підсумок (Review of C1.2 - Summary)
   words: 500
@@ -83,6 +84,7 @@ activity_hints:
   focus: Fix professional communication errors
   items: 12+
 focus: review
+pedagogy: Assessment
 prerequisites:
 - c1-21 to c1-33 (Complete C1.2 content)
 - All professional and sociolinguistic skills
@@ -103,10 +105,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
-- 'Understand and apply огляд і повторення: професійна комунікація'
-- Analyze and evaluate підсумок
-- Identify key concepts of самооцінка
+- Learner can demonstrate integrated mastery of all covered topics
+- Learner can produce extended text combining structures from previous modules
+- Learner can identify and correct errors across all learned grammar areas
 persona:
   voice: Senior Specialist
   role: Ментор
 word_target: 4000
+grammar:
+- Огляд C1.2 — Підсумок
+- Професійна комунікація та бізнес-етикет
+- Політика, суспільство та медіаландшафт
+- від норми до суржику
+register: літературний

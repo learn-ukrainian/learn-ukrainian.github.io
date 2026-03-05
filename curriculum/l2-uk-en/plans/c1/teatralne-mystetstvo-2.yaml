@@ -48,7 +48,7 @@ focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the contemporary Ukrainian theater scene (Franko, Left Bank).
-- Learner understands the phenomenon of Dakh Daughters and experimental theater.
+- Learner can explain the phenomenon of Dakh Daughters and experimental theater.
 - Learner analyzes the role of theater during the war.
 grammar:
 - Theater criticism terminology
@@ -75,3 +75,22 @@ prerequisites:
 - teatralne-mystetstvo-1
 connects_to:
 - ukrainska-arkhitektura
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Культурний феномен — «Конотопська відьма» examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Експериментальна сцена — Dakh Daughters та фрік-кабаре
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

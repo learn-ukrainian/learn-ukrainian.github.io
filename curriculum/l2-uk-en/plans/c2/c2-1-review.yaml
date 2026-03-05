@@ -4,6 +4,7 @@ sequence: 25
 slug: c2-1-review
 version: '2.0'
 title: Повторення C2.1 — Консолідація стилістики
+subtitle: 'Introduction: Consolidation and Systematization'
 focus: integration
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -86,16 +87,25 @@ vocabulary:
   - компетенція (competence)
   - готовність (readiness)
   - ретроспекція (retrospection)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Сім граней мови examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Динаміка та трансформація стилів
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -114,3 +124,9 @@ persona:
   role: Manuscript Doctor
 prerequisites:
 - c2-1-practice-ii
+grammar:
+- Консолідація та систематизація
+- Сім граней мови
+- Динаміка та трансформація стилів
+- Евфонія та когерентність тексту
+register: академічний

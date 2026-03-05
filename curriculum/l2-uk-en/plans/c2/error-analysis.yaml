@@ -4,6 +4,7 @@ sequence: 71
 slug: error-analysis
 version: '2.0'
 title: Аналіз помилок
+subtitle: 'Introduction: Error as a Learning Tool'
 focus: grammar
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -102,16 +103,25 @@ vocabulary:
   - сполучуваність (collocability)
   - канцеляризм (officialese)
   - мовленнєвий (speech/spoken)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Кейс літери «Ґ» examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Канцелярит та інтерференція
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -132,3 +142,9 @@ persona:
   role: Senior Proofreader
 prerequisites:
 - corpus-linguistics
+grammar:
+- Помилка як інструмент навчання
+- Кейс літери «Ґ»
+- Канцелярит та інтерференція
+- Пуризм та подолання калькованих форм
+register: академічний

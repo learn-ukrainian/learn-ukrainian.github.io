@@ -13,10 +13,10 @@ objectives:
 - Learner can identify noun gender by word ending
 - Learner can categorize nouns into 4 declension families
 - 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
-- Learner knows common exceptions
+- Learner can identify common exceptions
 content_outline:
 - section: Вступ (Introduction)
-  words: 300
+  words: 175
   points:
   - 'Introduction to the Ukrainian three-gender system: Masculine, Feminine, and Neuter — stressing that gender is a linguistic
     category for all nouns, not just people.'
@@ -25,7 +25,7 @@ content_outline:
   - 'Visual Mnemonic Framework: Categorization logic using color codes — Blue for Masculine (Hard/Consonant), Red for Feminine
     (Open/A-ending), and Yellow for Neuter (Round/O-E-ending).'
 - section: Презентація правил (Presentation of Rules)
-  words: 500
+  words: 300
   points:
   - 'Pattern Recognition for Endings: Masculine (consonant: стіл, хліб, дім), Feminine (-а/-я: книга, кімната, земля), and
     Neuter (-о/-е: вікно, місто, море).'
@@ -36,7 +36,7 @@ content_outline:
   - 'Identity and Family Dialogue: High-frequency context using ''брат'' (M), ''сестра'' (F), ''мама'' (F), and ''тато'' (M)
     to demonstrate natural vs. grammatical gender.'
 - section: Практичні вправи (Practice Exercises)
-  words: 500
+  words: 300
   points:
   - 'Natural Gender Override Trap: The case of ''тато'' — explain that biological sex overrides the ''-o'' ending, making
     it Masculine (мій тато); contrast with ''місто'' (N).'
@@ -47,7 +47,7 @@ content_outline:
   - 'State Standard §4.2.1.1 Drill: Categorizing high-frequency nouns ''чоловік'' (man), ''жінка'' (woman), and ''місто''
     (city) into their respective gender buckets.'
 - section: Самостійна робота (Independent Work/Production)
-  words: 400
+  words: 250
   points:
   - 'The ''It'' Trap Correction: Targeted drill to stop learners from using neuter ''воно'' for all objects; reinforcing ''стіл
     = він'' and ''книга = вона''.'
@@ -56,7 +56,7 @@ content_outline:
   - 'Applying Agreement: Creating simple descriptive phrases for personal items and nature terms using ''мій/моя/моє'' and
     basic adjectives (новий, цікавий, великий).'
 - section: Культурний код та підсумок (Cultural Code and Summary)
-  words: 300
+  words: 175
   points:
   - 'Summary of gender prediction from endings: 95% predictability rule — reinforcement of the ''Soft Sign'' and ''Natural
     Gender'' exceptions.'
@@ -81,7 +81,7 @@ vocabulary_hints:
   - земля (earth) — рідна земля; чорна земля; feminine ending in -я
   - серце (heart) — добре серце; моє серце; high-frequency neuter
   - сонце (sun) — ясне сонце; cultural hook; neuter life-giver
-  - собака (dog) — мій собака (my dog); masculine gender trap for -a endings
+  - собака (dog) — моя собака (my dog); feminine despite some colloquial masculine usage
   - ім'я (name) — моє повне ім'я; гарне ім'я; neuter exception (Family 4)
   - артефакт (artifact) — S.T.A.L.K.E.R. hook; masculine consonant ending
   - зона (zone) — S.T.A.L.K.E.R. hook; feminine -a ending

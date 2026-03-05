@@ -65,14 +65,23 @@ vocabulary_hints:
   - капелан (chaplain) — військовий капелан; актуальна лексика воєнного часу
   - проща (pilgrimage) — іти на прощу, релігійна проща; синонім до 'паломництво'
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Використання релігійної та абстрактної лексики in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Використання релігійної та абстрактної лексики
+  items: 10
+- type: match-up
+  focus: "Match Православ'я та Церква в історичному контексті examples to categories"
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Використання релігійної та абстрактної лексики
   items: 8
+- type: group-sort
+  focus: Classify examples by Релігійні свята, традиції та мовна норма
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Використання релігійної та абстрактної лексики correctly
 persona:
   voice: Professional Language Coach
   role: Religious Scholar (Релігієзнавець)
@@ -83,3 +92,4 @@ prerequisites:
 - modern-diaspora
 connects_to:
 - capstone-research
+register: нейтральний

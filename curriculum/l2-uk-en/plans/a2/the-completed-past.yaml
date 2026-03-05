@@ -25,7 +25,7 @@ sources:
   notes: Past tense formation patterns
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - Welcome by the Museum Archivist persona; introduce the result-focused mindset through the Ukrainian proverbs «Діло майстра
     величає» (The deed glorifies the master) and «Кінець — справі вінець» (The end is the crown of the work) to highlight
@@ -33,28 +33,28 @@ content_outline:
   - Overview of Ukrainian State Standard §4.3.2 regarding aspectual pairs (робити – зробити) and §4.2.3.1 for past tense formation,
     setting the theoretical foundation for A2.2 proficiency.
 - section: Творення та граматична узгодженість (Formation and Grammatical Agreement)
-  words: 750
+  words: 500
   points:
   - Detailed presentation of perfective past formation using suffixes -в, -ла, -ло, -ли; focus on correcting the Common Learner
     Error of Gender/Number Agreement (e.g., preventing «Анна написав» in favor of correct «Анна написала»).
   - Explanation of the 'Zero Auxiliary' rule to combat the 'Double Past' error where English speakers attempt to use auxiliary
     verbs for completed actions; emphasize that aspect is built into the verb form itself.
 - section: Процес проти результату (Process vs. Result)
-  words: 800
+  words: 525
   points:
   - 'Analysis of ''Aspect Drift'' errors: contrasting «я писав листа» (process/unfinished) with «я написав листа» (result/finished);
     provide a visual decision tree logic for learners: ''Was I doing it?'' vs. ''Did I finish it?''.'
   - Drilling high-frequency perfective verbs (зробив, сказав, зрозумів) with result-oriented contexts; identify how these
     forms function as complete units of narrative meaning in the past.
 - section: Наративна послідовність у музеї (Narrative Sequencing in the Museum)
-  words: 600
+  words: 400
   points:
   - Instruction on the 'Chain of Events' narrative pattern; introduce essential sequencing markers «спочатку» (first), «потім»
     (then), and «нарешті» (finally) to link a series of perfective actions.
   - Applying narrative markers within the Archivist persona's stories; transforming linear lists of museum activities into
     a coherent story of a completed workday or historical event.
 - section: Практика та усунення помилок (Practice and Error Correction)
-  words: 400
+  words: 275
   points:
   - Situation-based aspect choice practice focusing on high-frequency collocations from research, such as «зробив вибір»,
     «сказав правду», and «знайшов рішення».
@@ -116,3 +116,4 @@ grammar:
 - result-focused actions
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

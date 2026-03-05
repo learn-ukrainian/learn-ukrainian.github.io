@@ -4,14 +4,15 @@ sequence: 83
 slug: capstone-revision
 version: '2.0'
 title: Дипломний проєкт — Редагування
+subtitle: Introduction — Editing as a Creative Stage
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
-- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
-- Продукувати тексти академічного та професійного рівня за тематикою модуля
-- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Аналізувати та класифікувати явища Культура наукової мови та мовна гігієна у автентичних текстах
+- Продукувати тексти з коректним застосуванням Змістове та структурне редагування
+- Оцінювати стилістичну доречність мовних засобів у контексті Дипломний проєкт — Редагування
 - Застосовувати знання з теми «Змістове та структурне редагування» у власній мовній практиці
 sources:
 - name: Редагування наукового тексту — Практичний посібник
@@ -101,16 +102,25 @@ vocabulary:
   - плеоназм (pleonasm)
   - пасивний стан (passive voice)
   - номіналізація (nominalization)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Культура наукової мови та мовна гігієна examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Змістове та структурне редагування
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - match-up
@@ -128,3 +138,9 @@ persona:
   role: Executive Editor
 prerequisites:
 - capstone-drafting
+grammar:
+- Вступ — Редагування як етап творення
+- Культура наукової мови та мовна гігієна
+- Змістове та структурне редагування
+- Практикум — Синтаксична динаміка та стилістична корекція
+register: академічний

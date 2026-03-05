@@ -4,6 +4,7 @@ sequence: 56
 slug: cross-domain-communication
 version: '2.0'
 title: Міжгалузева комунікація
+subtitle: Introduction — Importance of Cross-Industry Communication
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -107,16 +108,25 @@ vocabulary:
   - градація (gradation)
   - когнітивне навантаження (cognitive load)
   - інфографіка (infographic)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Методи спрощення та візуалізації examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Стратегії адаптації до авдиторії
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -136,3 +146,9 @@ persona:
   role: Conflict Mediator
 prerequisites:
 - professional-discussions
+grammar:
+- Вступ — Важливість міжгалузевої комунікації
+- Методи спрощення та візуалізації
+- Стратегії адаптації до авдиторії
+- Міждисциплінарна взаємодія та мовна культура
+register: академічний

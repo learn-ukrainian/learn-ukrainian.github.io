@@ -4,7 +4,9 @@ sequence: 26
 slug: register-formal-informal
 version: '2.0'
 title: Формальне та неформальне спілкування
+subtitle: 'Formal vs Informal Ukrainian'
 focus: style
+pedagogy: CBI
 phase: B2.3
 word_target: 4000
 objectives:
@@ -120,3 +122,8 @@ persona:
   role: Protocol Officer (Офіцер протоколу)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Formal vs informal register markers
+- Ти/Ви distinction in register
+- Lexical and syntactic register differences
+register: нейтральний

@@ -44,7 +44,7 @@ content_outline:
 focus: fine-arts
 pedagogy: CBI
 objectives:
-- Learner understands the impact of Soviet repression on Ukrainian art.
+- Learner can evaluate the impact of Soviet repression on Ukrainian art.
 - Learner can analyze the works of folk masters like Prymachenko and Bilokur.
 - Learner explores the contemporary art scene in Ukraine.
 grammar:
@@ -72,3 +72,22 @@ prerequisites:
 - obrazotvorche-mystetstvo-1
 connects_to:
 - balet-i-tanets
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Бойчукізм та школа монументалізму examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Шістдесятництво та візуальний спротив Алли Горської
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

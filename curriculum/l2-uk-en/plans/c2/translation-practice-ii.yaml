@@ -4,6 +4,7 @@ sequence: 78
 slug: translation-practice-ii
 version: '2.0'
 title: Практика перекладу II — Спеціалізований переклад
+subtitle: 'Introduction: The World of Specialized Translation'
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -41,7 +42,7 @@ content_outline:
     вигадування термінів.
   - 'Робота з галузевими терміносистемами: методи впорядкування та верифікації науково-технічної термінології в українському
     контексті.'
-  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+  - Практичне завдання: самостійний аналіз та продукування тексту з теми «Науково-технічний переклад та стандартизація».
 - section: Юридичний переклад та євроінтеграція (Legal Translation and Eurointegration)
   words: 1150
   points:
@@ -50,7 +51,7 @@ content_outline:
   - 'Learner error: Аналіз калькування (calques) юридичних термінів, наприклад, помилковий переклад «civil servant» як «цивільний
     слуга» замість нормативного «державний службовець».'
   - Особливості еквівалентності правових понять при перекладі міжнародних контрактів та сертифікованих документів.
-  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+  - Завдання на синтез: інтеграція навичок попередніх розділів у контексті «Юридичний переклад та євроінтеграція».
 - section: 'Медичний переклад: Точність та відповідальність (Medical Translation: Precision and Responsibility)'
   words: 850
   points:
@@ -104,16 +105,25 @@ vocabulary:
   - пам'ять перекладів (translation memory)
   - сертифікований переклад (certified translation)
   - апостиль (apostille)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Науково-технічний переклад та стандартизація examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Юридичний переклад та євроінтеграція
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - critical-analysis
@@ -131,3 +141,9 @@ persona:
   role: Technical Translator
 prerequisites:
 - translation-practice-i
+grammar:
+- Світ спеціалізованого перекладу
+- Науково-технічний переклад та стандартизація
+- Юридичний переклад та євроінтеграція
+- Точність та відповідальність
+register: академічний

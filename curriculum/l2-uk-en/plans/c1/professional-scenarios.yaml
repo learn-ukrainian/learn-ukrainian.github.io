@@ -4,6 +4,7 @@ sequence: 36
 slug: professional-scenarios
 version: '2.0'
 title: Професійні сценарії
+subtitle: Introduction
 content_outline:
 - section: Вступ (Introduction)
   words: 300
@@ -81,6 +82,7 @@ activity_hints:
   focus: Situation → appropriate response
   items: 12+
 focus: practice
+pedagogy: PPP
 prerequisites:
 - c1-21 to c1-31 (Complete C1.2 content)
 - All professional skills
@@ -101,9 +103,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
-- Understand and apply професійні сценарії
-- Analyze and evaluate інтеграція навичок
+- Learner can use appropriate language for Сценарій 1 — Працевлаштування
+- Learner can produce professional texts in the domain of Професійні сценарії
+- Learner can evaluate and correct register in Вступ contexts
 persona:
   voice: Senior Specialist
   role: Корпоративний тренер
 word_target: 4000
+grammar:
+- Вступ
+- Сценарій 1 — Працевлаштування
+- Сценарій 2 — Ділова комунікація та етикет
+- Сценарій 3 — Документація та листування
+register: літературний

@@ -25,7 +25,7 @@ sources:
   notes: Predicate instrumental with бути/стати
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - 'Concept of role vs identity — distinguish Present Tense Identity (Nom. - *Я лікар*) vs. Role/Function/Process (Instr.
     - *Я буду лікарем*) — focus: State Standard §4.2.2.5.1: ''Без прийменника: характеристика особи за професією чи статусом'''
@@ -34,7 +34,7 @@ content_outline:
   - The 'Nominative Trap' warning — explain L1 interference where learners say *Він хоче бути лікар* instead of the correct
     Instrumental *лікарем* (English 'to be a doctor' influence)
 - section: 'Презентація: Дієслова та відмінювання (Presentation: Verbs and Governing)'
-  words: 700
+  words: 475
   points:
   - '''бути'' + instrumental (Past/Future) — key high-frequency collocations: *був студентом*, *буде лікарем*; distinguish
     from Present Tense null-copula + Nominative'
@@ -45,7 +45,7 @@ content_outline:
   - 'Introduction of primary profession vocabulary: *лікар*, *вчитель*, *інженер*, *програміст*, *журналіст*, *юрист* with
     their instrumental forms'
 - section: 'Соціокультурний контекст: Фемінітиви та IT (Sociocultural Context: Femininitives and IT)'
-  words: 600
+  words: 400
   points:
   - 'The 2020 Grammar Reform: Official status of femininitives (*директорка*, *менеджерка*, *філологиня*) reflecting modern
     Ukrainian societal shifts towards gender equality'
@@ -54,7 +54,7 @@ content_outline:
   - 'Usage note: Consistent use of both masculine and feminine forms for all profession examples to reflect contemporary linguistic
     standards'
 - section: Практика та запобігання помилкам (Practice and Error Prevention)
-  words: 600
+  words: 400
   points:
   - Transformation drills (Present Identity to Past/Future Role) focusing on the shift from Nominative to Instrumental case
     endings
@@ -62,7 +62,7 @@ content_outline:
     хороший лікар* to *Вона хороша лікарка*)'
   - 'Correction of translation calques: Exercises specifically designed to root out the use of ''як'' after the verb *працювати*'
 - section: Діалоги та кар'єрні плани (Dialogues and Career Plans)
-  words: 600
+  words: 400
   points:
   - '''What do you do?'' conversations — modeling natural modern usage in IT and professional contexts (*працюю айтішником*,
     *став тестувальником*)'
@@ -123,3 +123,4 @@ grammar:
 - past tense of бути
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

@@ -55,24 +55,33 @@ vocabulary_hints:
   required:
   - термін (term/deadline) — встановити термін (set a deadline), кінцевий термін (deadline), технічний термін; уникати плутанини
     між значеннями 'час' та 'слово'
-  - поняття (concept) — ключове поняття, визначення поняття, підмінити поняття (substitute concepts), мати поняття (to have
+  - аналіз (analysis) — системний аналіз, проводити аналіз
     an idea)
-  - процес (process) — навчальний процес, виробничий процес, незворотний процес (irreversible process), керувати процесом
-  - метод (method) — науковий метод, метод дослідження, застосовувати метод, метод спроб і помилок (trial and error)
+  - синтез (synthesis) — творчий синтез, синтез знань
+  - дослідження (research) — фундаментальне дослідження, об'єкт дослідження
   recommended:
   - аналіз (analysis) — системний аналіз, проводити аналіз
   - синтез (synthesis) — творчий синтез, синтез знань
   - дослідження (research) — фундаментальне дослідження, об'єкт дослідження
   - реєстр (register) — офіційний реєстр, зміна регістра мовлення
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Review of Passive Voice"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 persona:
   voice: Professional Language Coach
   role: Consultant (Консультант)
@@ -84,3 +93,4 @@ prerequisites:
 - capstone-prezentatsiya
 connects_to:
 - b2-final-exam
+register: нейтральний

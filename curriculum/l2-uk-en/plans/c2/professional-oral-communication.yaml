@@ -4,6 +4,7 @@ sequence: 52
 slug: professional-oral-communication
 version: '2.0'
 title: Усна професійна комунікація
+subtitle: Introduction — Features of Oral Professional Communication
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -99,16 +100,25 @@ vocabulary:
   - протокол (minutes)
   - кворум (quorum)
   - постер (poster)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Професійна презентація та риторика examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Участь у нарадах та засіданнях
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -128,3 +138,9 @@ persona:
   role: Official Spokesperson
 prerequisites:
 - writing-professional-documents-ii
+grammar:
+- Вступ — Особливості усної професійної комунікації
+- Професійна презентація та риторика
+- Участь у нарадах та засіданнях
+- Конференційна комунікація та створення вторинних текстів
+register: академічний

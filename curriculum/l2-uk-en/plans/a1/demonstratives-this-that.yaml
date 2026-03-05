@@ -4,44 +4,44 @@ sequence: 21
 slug: demonstratives-this-that
 version: '2.0'
 title: Demonstratives
-subtitle: This and That
+subtitle: The Grammar of This and That
 focus: grammar
 pedagogy: PPP
 phase: A1.2 [Verbs & Sentences]
 word_target: 1200
 objectives:
-- Use цей/ця/це/ці correctly with nouns of matching gender
-- Use той/та/те/ті for distant reference with correct agreement
-- Distinguish demonstrative це from copula це
-- Apply gender and number agreement with demonstrative pronouns
+- Distinguish demonstrative це (цей стіл) from copula це (Це стіл)
+- Apply gender and number agreement systematically across all demonstrative forms
+- Resolve та ambiguity (demonstrative "that" f. vs conjunction "and")
+- Use proximity contrast (цей vs той) in spatial and textual contexts
 content_outline:
 - section: Цей/ця/це (This)
-  words: 500
+  words: 300
   points:
   - 'Узгодження за родом: цей (чол.), ця (жін.), це (серед.). Приклади: цей хлопець, ця дівчина, це місто. Парадигма подібна
     до присвійних займенників (мій/моя/моє).'
   - Різниця між «Це» як зв'язкою (Це кафе = This is a cafe) та «це» як вказівним займенником (Це кафе гарне = This cafe is
     nice). Критичний контраст для початківців (§4.2.2).
 - section: Ці (These)
-  words: 300
+  words: 175
   points:
   - 'Множинна форма для всіх родів: ці книги, ці студенти, ці міста. Порівняння з однинними формами: цей → ці, ця → ці, це
     → ці.'
   - 'Типова помилка: вживання однинної форми з множиною (*цей книги замість ці книги). Стратегія запобігання.'
 - section: Той/та/те/ті (That/Those)
-  words: 500
+  words: 300
   points:
   - 'Узгодження за родом: той (чол.), та (жін.), те (серед.), ті (множ.). Приклади: той будинок, та вулиця, те озеро, ті люди.'
   - 'Увага: збіг форми «та» (жін.) зі сполучником «та» (і/and). Контекстне розрізнення: Та дівчина та її подруга (That girl
     and her friend).'
 - section: Цей vs Той у контексті (This vs That in context)
-  words: 400
+  words: 250
   points:
   - 'Просторова дистанція: цей стілець (близько) vs той стілець (далеко). У магазині: Дайте мені цей торт (this cake here)
     vs Дайте мені той торт (that cake there).'
   - 'Текстуальна дистанція: посилання на щойно сказане (цей) та раніше згадане (той). Вживання в діалогах та описах.'
 - section: Практика (Practice)
-  words: 300
+  words: 175
   points:
   - Вправи на вибір правильного вказівного займенника відповідно до роду та числа іменника.
   - Класифікація за групами цей/ця/це/ці та той/та/те/ті. Контрастні вправи на просторову дистанцію.

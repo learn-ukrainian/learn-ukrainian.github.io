@@ -13,7 +13,7 @@ objectives:
 - Learner can structure a professional presentation with clear opening, body, and conclusion
 - Learner can use signposting language to guide the audience through presentation sections
 - Learner can apply basic delivery techniques including eye contact, pacing, and volume control
-- Learner understands how to create effective visual aids for Ukrainian-language presentations
+- Learner can create effective visual aids for Ukrainian-language presentations
 content_outline:
 - section: Вступ та психологія (Introduction & Psychology)
   words: 600
@@ -67,14 +67,23 @@ vocabulary_hints:
   - підсумовуючи (summarizing) — Formal participle for transition to the conclusion phase
   - аргументувати (to argue/provide evidence) — Professional verb for the body section of a presentation
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Риторична спадщина та структура with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Signposting
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Риторична спадщина та структура for given scenario
 persona:
   voice: Professional Language Coach
   role: Sales Representative (Торговий представник)

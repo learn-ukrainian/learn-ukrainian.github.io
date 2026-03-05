@@ -4,12 +4,14 @@ sequence: 16
 slug: parenthetical-expressions
 version: '2.0'
 title: Вставні слова та вирази
+subtitle: 'Вставні слова та конструкції'
 focus: grammar
+pedagogy: TTT
 phase: B2.2
 word_target: 4000
 objectives:
-- Identify and correctly use вставні слова та вирази
-- Form and apply вставні слова та вирази
+- Learner can identify and apply вставні слова та вирази
+- Learner can form and use вставні слова та вирази
 sources:
 - name: Ukrainian State Standard 2024 - Discourse Markers
   url: https://mon.gov.ua/
@@ -114,3 +116,8 @@ persona:
   role: Talk Show Host (Ведучий ток-шоу)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Вставні слова (по-перше, на жаль, безумовно)
+- Вставні конструкції
+- Punctuation with parentheticals
+register: нейтральний

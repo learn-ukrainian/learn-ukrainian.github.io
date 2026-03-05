@@ -25,7 +25,7 @@ sources:
   notes: Declension patterns for possessive pronouns
 content_outline:
 - section: 'Вступ: Світ через займенник «свій» (Introduction: The World through ''Sviy'')'
-  words: 500
+  words: 325
   points:
   - 'Alignment with State Standard §3 (930): Essential for A2 competency in describing one''s own family (своя сім’я), home
     (свій дім), city (своє місто), and country (рідна країна).'
@@ -34,7 +34,7 @@ content_outline:
   - 'Establishing the identity hook: using ''свій'' as the primary tool for defining one''s immediate personal environment
     and circle of belonging.'
 - section: 'Презентація: Правило «Суб’єкт = Власник» (Presentation: The Subject = Possessor Rule)'
-  words: 800
+  words: 550
   points:
   - 'The Core Logic: Subject-Possessor agreement — use a Mermaid flowchart to visualize the decision-tree for choosing ''свій''
     vs ''його/її/їхній'' in the 3rd person.'
@@ -45,7 +45,7 @@ content_outline:
   - '1st and 2nd Person Usage: Explain the optionality in ''Я люблю мою/свою маму'' while noting that ''свій'' is more common
     and sounds more natural in neutral speech.'
 - section: 'Культурний код: Свій — Чужий (Cultural Code: Own vs Stranger)'
-  words: 600
+  words: 400
   points:
   - 'The Fundamental Binary: Exploring ''Свій — Чужий'' as a worldview — how using ''свій'' correctly signals cultural integration
     into the ''inner circle'' and distinguishes the community from ''the stranger'' (чужий).'
@@ -54,7 +54,7 @@ content_outline:
   - 'Sociolinguistic register: How ''свої люди'' (one''s own kin/people) functions as a marker of trust and social capital
     in Ukrainian culture.'
 - section: 'Аналіз помилок: Уникнення тавтології та неясності (Error Analysis: Avoiding Tautology and Ambiguity)'
-  words: 600
+  words: 400
   points:
   - 'The Redundancy Trap (Tautology): Address the learner error of ''Я мию свої руки'' — explain that in Ukrainian, possessives
     for body parts and close family are often omitted when the subject is the possessor.'
@@ -63,7 +63,7 @@ content_outline:
   - 'Contrastive vocabulary: Distinguishing ''свій'' from ''власний'' (private/exclusive ownership) and ''особистий'' (personal/private
     life) with examples like ''власна думка'' vs ''своя думка''.'
 - section: Практичне застосування та підсумок (Practical Application and Summary)
-  words: 500
+  words: 325
   points:
   - 'Standard-Aligned Production: Guided writing task describing family, home, and city using ''свій'' to meet §3 (930) benchmarks.'
   - 'Interactive Resolution: Translation drills resolving English ambiguities (''He took his book'') into precise Ukrainian
@@ -126,3 +126,4 @@ grammar:
 - possessive agreement
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

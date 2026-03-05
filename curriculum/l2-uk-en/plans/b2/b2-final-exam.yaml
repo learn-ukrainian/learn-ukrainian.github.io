@@ -58,24 +58,31 @@ content_outline:
   - 'Підсумок рівня: інтерпретація результатів, рекомендації для переходу до академічного/професійного треку рівня C1.'
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, вживати термін, визначення терміна; висока частотність в академічному стилі
-  - поняття (concept) — базове поняття, розширити поняття, підмінити поняття; ключове слово для наукових та загальних дискусій
-  - процес (process) — навчальний процес, процес розвитку, керувати процесом; вживається у всіх стилях мовлення
-  - метод (method) — ефективний метод, метод дослідження, застосувати метод; важливо для наукового та професійного середовища
+  - аналіз (analysis) — глибокий аналіз, критичний аналіз, зробити аналіз; часто вживається в медіа та науці
+  - синтез (synthesis) — синтез мистецтв, хімічний синтез, аналіз і синтез; спеціалізована наукова лексика
+  - дослідження (research) — наукове дослідження, результати дослідження, проводити дослідження; базове слово для академічної готовності
   recommended:
   - аналіз (analysis) — глибокий аналіз, критичний аналіз, зробити аналіз; часто вживається в медіа та науці
   - синтез (synthesis) — синтез мистецтв, хімічний синтез, аналіз і синтез; спеціалізована наукова лексика
-  - дослідження (research) — наукове дослідження, результати дослідження, проводити дослідження; базове слово для академічної
-    готовності
+  - дослідження (research) — наукове дослідження, результати дослідження, проводити дослідження; базове слово для академічної готовності
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Integration of M85-93 Communication Skills"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 persona:
   voice: Professional Language Coach
   role: Head of Commission (Голова комісії)

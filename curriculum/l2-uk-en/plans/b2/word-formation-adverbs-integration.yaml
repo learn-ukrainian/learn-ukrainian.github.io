@@ -58,28 +58,31 @@ content_outline:
   - 'Продуктивне завдання: написання короткого есе у науковому регістрі з використанням засвоєних моделей словотвору'
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, крайній термін (deadline), термін придатності; ключовий іменник для офіційно-ділового
-    та наукового стилів
-  - поняття (concept) — базове поняття, абстрактне поняття, підмінювати поняття (to conflate concepts), мати зелене поняття
-    (to have no clue - idiom)
-  - процес (process) — навчальний процес, творчий процес, незворотний процес (irreversible process), у процесі (in the process
-    of)
-  - метод (method) — науковий метод, метод спроб і помилок (trial and error), ефективний метод, дедуктивний метод
-  recommended:
-  - аналіз (analysis) — глибокий аналіз, порівняльний аналіз, критичний аналіз, аналіз крові (blood test); фундаментальне
-    поняття наукового регістру
+  - аналіз (analysis) — глибокий аналіз, порівняльний аналіз, критичний аналіз, аналіз крові (blood test); фундаментальне поняття наукового регістру
   - синтез (synthesis) — хімічний синтез, синтез мистецтв, аналіз і синтез; логічна опозиція до терміна 'аналіз'
-  - дослідження (research) — проводити дослідження (conduct research), наукове дослідження, польове дослідження (field research),
-    об'єкт дослідження
+  - дослідження (research) — проводити дослідження (conduct research), наукове дослідження, польове дослідження (field research), об'єкт дослідження
+  recommended:
+  - аналіз (analysis) — глибокий аналіз, порівняльний аналіз, критичний аналіз, аналіз крові (blood test); фундаментальне поняття наукового регістру
+  - синтез (synthesis) — хімічний синтез, синтез мистецтв, аналіз і синтез; логічна опозиція до терміна 'аналіз'
+  - дослідження (research) — проводити дослідження (conduct research), наукове дослідження, польове дослідження (field research), об'єкт дослідження
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому) in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому)
+  items: 10
+- type: match-up
+  focus: Match моделі та акцентологія examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому)
   items: 8
+- type: group-sort
+  focus: Classify examples by прагматика суфіксів
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому) correctly
 persona:
   voice: Professional Language Coach
   role: Translator (Перекладач)

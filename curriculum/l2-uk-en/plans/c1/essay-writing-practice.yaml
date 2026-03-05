@@ -4,6 +4,7 @@ sequence: 18
 slug: essay-writing-practice
 version: '2.0'
 title: Практикум — Написання есе
+subtitle: Introduction — Skills Integration
 content_outline:
 - section: Вступ — Інтеграція навичок (Introduction — Skills Integration)
   words: 500
@@ -78,6 +79,7 @@ activity_hints:
   focus: Add evidence to argument
   items: 10+
 focus: practice
+pedagogy: PPP
 prerequisites:
 - c1-01 to c1-17 (Full C1.1 foundation)
 - All academic writing skills
@@ -98,10 +100,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Understand and apply практикум — написання есе
-- Analyze and evaluate інтеграція навичок
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Традиції та планування
+- Learner can produce professional texts in the domain of Практикум — Написання есе
+- Learner can evaluate and correct register in Вступ — Інтеграція навичок contexts
 persona:
   voice: Senior Specialist
   role: Тьютор з письма
 word_target: 4000
+grammar:
+- Вступ — Інтеграція навичок
+- Традиції та планування
+- Побудова аргументації
+- Робота над текстом та когерентність
+register: літературний

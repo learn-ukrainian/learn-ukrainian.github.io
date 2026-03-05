@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can form short passive participles using -но/-то
 - Learner can use impersonal passive constructions
-- Learner understands difference between full and short forms
+- Learner can explain difference between full and short forms
 - Learner can choose appropriate form for context
 content_outline:
 - section: 'Вступ: Оголошення навколо нас (Introduction: Announcements Around Us)'
@@ -91,7 +91,7 @@ activity_hints:
   focus: English to Ukrainian passive
   items: 10
 connects_to:
-- b1-47 (Passive Constructions)
+- b1-48 (Passive Constructions)
 prerequisites:
 - b1-45 (Past Passive Participles 1)
 persona:

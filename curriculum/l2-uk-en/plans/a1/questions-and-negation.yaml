@@ -13,10 +13,10 @@ objectives:
 - Learner can ask yes/no questions using 'чи'
 - Learner can form questions with question words (що, хто, де, коли)
 - Learner can make negative statements with 'не'
-- Learner understands frequency adverbs (завжди, часто, іноді, ніколи)
+- Learner can explain frequency adverbs (завжди, часто, іноді, ніколи)
 content_outline:
 - section: 'Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)'
-  words: 400
+  words: 250
   points:
   - 'The simplicity of Ukrainian syntax: unlike English, there is no auxiliary ''do/does''. This section explicitly addresses
     the ''Do Trap'' by comparing direct statement-to-question transformations.'
@@ -25,7 +25,7 @@ content_outline:
   - 'Visualizing the voice: using arrows (↗) to illustrate rising intonation in questions without ''чи'', contrasting with
     the falling tone (↘) of negative statements.'
 - section: 'Презентація: Питальні конструкції (Presentation: Interrogative Structures)'
-  words: 600
+  words: 325
   points:
   - Standard yes/no questions using the particle 'чи'. Contextualizing 'чи' as a marker of politeness, emphasis, or formal
     register in sentences like 'Чи ви розумієте?'.
@@ -36,7 +36,7 @@ content_outline:
   - 'Answering patterns: ''Так'' vs ''Ні''. Practice responding to ''чи''-questions with confirmation or negation using ''так''
     or ''ні'' + ''не'' + verb.'
 - section: 'Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)'
-  words: 400
+  words: 250
   points:
   - 'Sentence transformation drills: turning positive statements into negative ones and then into interrogative forms (e.g.,
     ''Ти знаєш'' -> ''Ти не знаєш'' -> ''Чи ти знаєш?'').'
@@ -45,7 +45,7 @@ content_outline:
   - 'Matching exercise: pairing question words (''хто'', ''що'', ''де'', ''куди'') with appropriate situational answers to
     build contextual syntactic intuition.'
 - section: 'Продукція: Комунікативні сценарії (Production: Communicative Scenarios)'
-  words: 400
+  words: 250
   points:
   - 'The Café Scenario: asking questions about the menu, availability, and prices (e.g., ''Де кава?'', ''Скільки це коштує?'',
     ''Чи є цукор?'').'
@@ -54,7 +54,7 @@ content_outline:
   - 'Negative responses and frequency: practicing ''Ні, я ніколи не...'' to integrate frequency adverbs like ''ніколи'', ''завжди'',
     and ''часто'' into negative statements.'
 - section: Культурний контекст та ALF (Cultural Context and ALF)
-  words: 200
+  words: 125
   points:
   - 'Register nuances: when to use the formal ''чи'' (standard/polite) versus intonation-only questions (conversational/casual)
     in various Ukrainian social settings.'

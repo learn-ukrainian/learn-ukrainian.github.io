@@ -4,6 +4,7 @@ sequence: 14
 slug: individual-voice-i
 version: '2.0'
 title: Індивідуальний голос I — Розвиток особистого стилю
+subtitle: Introduction — The Essence of Individual Voice
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -107,16 +108,25 @@ vocabulary:
   - унікальність (uniqueness)
   - свідомий (conscious)
   - несвідомий (unconscious)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Тональні регістри та інтелектуальна напруга examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Синтаксичний ритм та активні конструкції
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -135,3 +145,9 @@ persona:
   role: Opinion Columnist
 prerequisites:
 - syntactic-stylistics
+grammar:
+- Вступ — Сутність індивідуального голосу
+- Тональні регістри та інтелектуальна напруга
+- Синтаксичний ритм та активні конструкції
+- Лексичний fingerprint та термінологічна чистота
+register: академічний

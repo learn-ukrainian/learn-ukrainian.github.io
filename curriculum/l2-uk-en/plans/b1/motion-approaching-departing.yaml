@@ -100,7 +100,7 @@ activity_hints:
   items: 12+
 connects_to:
 - b1-21 (Motion - figurative uses)
-- b1-22 (Motion full prefix integration)
+- b1-24 (Motion full prefix integration)
 prerequisites:
 - b1-19 (Motion - starting & returning)
 persona:
@@ -111,3 +111,4 @@ grammar:
 - Approaching, departing, reaching patterns
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

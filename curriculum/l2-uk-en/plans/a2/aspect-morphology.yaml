@@ -25,7 +25,7 @@ sources:
   notes: Aspect formation patterns
 content_outline:
 - section: 'Вступ: Концепція видових пар (Introduction: The Aspectual Pair Concept)'
-  words: 450
+  words: 300
   points:
   - 'The ''Family'' Analogy: Introduce aspectual pairs not as separate words, but as a family relationship where one completes
     the other; use this to lower the cognitive load of learning prefixes.'
@@ -34,7 +34,7 @@ content_outline:
   - 'Alignment with State Standard §4.3.2: Transition from basic recognition to active formation of pairs like ''писати –
     написати'', focusing on the shift from process to completed action.'
 - section: Творення префіксами та правило правопису (Prefixal Formation and Spelling Rules)
-  words: 750
+  words: 500
   points:
   - 'Prefix Predictability: Focus on high-frequency prefixes (про-, на-, з-, по-) and their semantic hints: ''по-'' often
     indicates duration/completion (''поділити''), while ''з-'' often denotes a transformative result (''зробити'').'
@@ -43,7 +43,7 @@ content_outline:
   - 'Standard Prefixal Pairs: Detailed analysis of pairs mandated by the State Standard: робити–зробити, писати–написати,
     ділити–поділити.'
 - section: Творення суфіксами та суплетивні пари (Suffixal Formation and Suppletive Pairs)
-  words: 750
+  words: 500
   points:
   - 'Secondary Imperfectives: Explain the use of suffixes (-ва-, -ува-) to derive imperfectives, connecting to the ''Morning
     Rhythm'' cultural hook (daily routines like умиватися vs. вмитися).'
@@ -52,7 +52,7 @@ content_outline:
   - 'Irregular (Suppletive) Pairs: Presentation of high-frequency irregular roots from the State Standard, specifically ''виходити
     – вийти'' and ''забувати – забути''.'
 - section: 'Практика: Помилки та вибір аспекту (Practice: Errors and Aspect Choice)'
-  words: 600
+  words: 400
   points:
   - 'Process vs. Result Contrast: Drill to address the ''Process vs. Result Confusion'' (e.g., ''читав цю книгу'' vs ''прочитав
     цю книгу'' when the book is finished).'
@@ -61,7 +61,7 @@ content_outline:
   - 'Imperative Nuance: Practice the distinction between ''Читай!'' (general process/advice) and ''Прочитай!'' (specific task)
     to master politeness and urgency.'
 - section: Культурний контекст та діалоги (Cultural Context and Dialogues)
-  words: 450
+  words: 300
   points:
   - 'Hospitality Dialogue: Use the context of preparing (''приготувати'') a meal for a guest (''гість'') who just arrived
     (''приїхав/прийшов'') to ground aspect in social tradition.'
@@ -128,3 +128,4 @@ grammar:
 - suppletive pairs
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

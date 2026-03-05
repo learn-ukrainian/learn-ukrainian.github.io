@@ -10,7 +10,7 @@ pedagogy: Academic
 phase: C2.1 [Stylistics & Rhetoric]
 word_target: 5000
 objectives:
-- Learner can identify and name advanced rhetorical figures in authentic texts
+- Ідентифікувати та називати складні риторичні фігури в автентичних текстах
 - Learner can compose speeches using chiasmus, zeugma, and antimetabole
 - Learner can analyze the rhetorical structure of political and literary speeches
 - Learner can deploy rhetorical devices for maximum persuasive impact
@@ -22,7 +22,7 @@ content_outline:
     level.'
   - 'Historical context: The Kyiv-Mohyla Academy tradition and Baroque rhetoric (Feofan Prokopovych) as the foundation of
     Ukrainian academic oratory, blending European Latin models with local vitality.'
-  - 'Pedagogical distinction: Transitioning from C1 intuitive persuasion to C2 structural mastery of advanced compositional
+  - 'Pedagogical distinction: Transitioning from C1 intuitive persuasion to C2 structural mastery of складні compositional
     figures.'
 - section: Механіка складних риторичних фігур (Mechanics of Complex Rhetorical Figures)
   words: 1150
@@ -88,7 +88,7 @@ vocabulary_hints:
   - плеоназм (pleonasm) — мовна надмірність, якої слід уникати на користь риторичного повтору.
 activity_hints:
 - type: quiz
-  focus: Identify advanced rhetorical figures
+  focus: Identify складні риторичні фігури
   items: 15
 - type: fill-in
   focus: Complete sentences using specific figures
@@ -104,7 +104,7 @@ persona:
   voice: Senior Specialist
   role: Professor of Rhetoric
 grammar:
-- Advanced rhetorical figures (chiasmus, zeugma, oxymoron, antimetabole)
+- Advanced риторичні фігури (chiasmus, zeugma, oxymoron, antimetabole)
 - Asyndeton vs polysyndeton
 - Ring composition and peroration
 - Interaction of multiple figures in speech composition

@@ -4,6 +4,7 @@ sequence: 5
 slug: publitsystychnyi-styl
 version: '2.0'
 title: Публіцистичний стиль — Журналістика
+subtitle: 'Introduction: Publicistic Style as a Tool of Influence'
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -103,16 +104,25 @@ vocabulary:
   - медійний (media-related)
   - висвітлення (coverage)
   - маніпуляція (manipulation)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Жанри інформаційної журналістики та стандарти фактчекінгу examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by ефект присутності та етика діалогу
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -132,3 +142,9 @@ persona:
   role: Investigative Journalist
 prerequisites:
 - ofitsiynyi-styl-mastery
+grammar:
+- Публіцистичний стиль як інструмент впливу
+- Жанри інформаційної журналістики та стандарти фактчекінгу
+- ефект присутності та етика діалогу
+- Аналітична стаття та авторська колонка
+register: академічний

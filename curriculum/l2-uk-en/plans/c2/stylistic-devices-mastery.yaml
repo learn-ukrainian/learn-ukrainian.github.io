@@ -4,6 +4,7 @@ sequence: 17
 slug: stylistic-devices-mastery
 version: '2.0'
 title: Стилістичні засоби — Повне володіння
+subtitle: Introduction — Tropes & Figures in the Language System
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -117,16 +118,25 @@ vocabulary:
   - олюднення (anthropomorphization)
   - перифраз (periphrasis)
   - образність (imagery)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match від побутової мови до поетичного образу examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by магія суміжності
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -146,3 +156,9 @@ persona:
   role: Rhetorician
 prerequisites:
 - text-coherence
+grammar:
+- Вступ — Тропи та фігури в системі мови
+- від побутової мови до поетичного образу
+- магія суміжності
+- персоніфікація та алегорія
+register: академічний

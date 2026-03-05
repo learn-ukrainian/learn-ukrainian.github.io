@@ -4,6 +4,7 @@ sequence: 9
 slug: thesis-development
 version: '2.0'
 title: Розвиток наукової тези
+subtitle: 'Introduction: The Nature of a Scientific Thesis'
 content_outline:
 - section: 'Вступ: Природа наукової тези (Introduction: The Nature of a Scientific
     Thesis)'
@@ -94,6 +95,7 @@ activity_hints:
   focus: Strong vs weak theses
   items: 15+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-08 (Essay Structure)
 - Logical argumentation basics
@@ -114,10 +116,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use розвиток наукової тези
-- Form and apply що таке теза?
-- Distinguish between практика формулювання
+- Learner can identify and produce correct Теза vs Гіпотеза (Theoretical Foundation: Thesis forms
+- Learner can analyze Типологія та критерії сильної тези in authentic texts
+- Learner can produce written text demonstrating mastery of Природа наукової тези (Introduction: The Nature of a Scientific
 persona:
   voice: Senior Specialist
   role: Науковий керівник
 word_target: 4000
+grammar:
+- Природа наукової тези
+- Теза vs Гіпотеза
+- Типологія та критерії сильної тези
+- Практичний інструментарій та аналіз помилок
+register: літературний

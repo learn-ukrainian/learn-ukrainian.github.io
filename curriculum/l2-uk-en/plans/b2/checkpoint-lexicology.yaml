@@ -54,10 +54,10 @@ content_outline:
   - 'Підсумковий огляд шляху B2.1 + B2.2: перехід до поглибленої комунікації та спеціалізованих професійних тем'
 vocabulary_hints:
   required:
-  - термін (term) — вживання у науковому та офіційному регістрах
-  - поняття (concept) — ключова одиниця логічного мислення; розрізнення поняття та слова
-  - процес (process) — опис стадій та перебігу подій
-  - метод (method) — науковий інструментарій та способи аналізу
+  - аналіз (analysis) — розклад об'єкта на складові для вивчення
+  - синтез (synthesis) — об'єднання частин у ціле
+  - дослідження (research) — фундаментальна наукова діяльність
+  - симптом (symptom) — виявляти симптоми; тривожний симптом
   - діагноз (diagnosis) — ставити/встановити діагноз; висока частотність у медицині
   - гіпотеза (hypothesis) — висунути/підтвердити/спростувати гіпотезу
   - експеримент (experiment) — проводити експеримент; чистота експерименту
@@ -68,17 +68,26 @@ vocabulary_hints:
   - симптом (symptom) — виявляти симптоми; тривожний симптом
   - жанр (genre) — літературний або мистецький жанр (фентезі, кіно)
   - оскільки (since/as) — стилістично правильна заміна кальки 'так як'
-  - 'ефектний (spectacular) — паронім: той, що справляє сильне зовнішнє враження'
-  - 'ефективний (effective) — паронім: той, що приносить потрібний результат'
+  - ефектний (spectacular) — паронім: той, що справляє сильне зовнішнє враження
+  - ефективний (effective) — паронім: той, що приносить потрібний результат
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Review of M31-M69 grammar topics"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 connects_to:
 - b2-65 (Professional Email Basics)
 prerequisites:

@@ -8,7 +8,7 @@ subtitle: Level Completion
 focus: checkpoint
 pedagogy: TTT
 phase: A2.6 [Practical]
-word_target: 2000
+word_target: 1500
 objectives:
 - Learner can demonstrate A2 level proficiency
 - Learner can solve practical problems in Ukrainian
@@ -16,7 +16,7 @@ objectives:
 - Learner is ready for B1 level
 content_outline:
 - section: 'Вступ: Огляд іспиту (Overview / Огляд)'
-  words: 450
+  words: 225
   points:
   - Exam format overview referencing the modern Ukrainian 12-point grading system (where 12 is A+) vs the legacy 5-point Soviet
     scale still expected by some foreigners
@@ -24,7 +24,7 @@ content_outline:
   - 'Alignment with State Standard §3.7: demonstrate communicative competence in the ''learning'' domain, specifically actions
     related to gaining knowledge (вчити, вивчати, вчитися)'
 - section: 'Навичка 1: Майстерність відмінків (Case System Mastery)'
-  words: 700
+  words: 325
   points:
   - 'Advanced review of case government focusing on exam-related verbs: ''відповідати на питання'' (verb + Accusative) vs
     ''відповідати студенту/викладачу'' (verb + Dative)'
@@ -32,7 +32,7 @@ content_outline:
     and the verbal construction'
   - Drills on correct case usage for 'готуватися до іспиту' (Genitive) and 'цікавитися результатом' (Instrumental)
 - section: 'Навичка 2: Вид дієслова — Процес чи результат? (Verb Aspect)'
-  words: 700
+  words: 350
   points:
   - 'Explicit contrast between process (процес) and result (результат): ''я складав іспит'' (I was taking/trying) vs ''я склав
     іспит'' (I passed/completed)'
@@ -40,7 +40,7 @@ content_outline:
     is required for successful certification'
   - 'Sentence transformation drills: changing descriptions of study habits (imperfective) into exam results (perfective)'
 - section: 'Навичка 3: Навігація до екзаменаційного центру (Navigation)'
-  words: 550
+  words: 275
   points:
   - 'Practical application: ''Finding your way to the exam center'', integrating navigation vocabulary (ліворуч, праворуч,
     прямувати) with the academic theme'
@@ -48,10 +48,11 @@ content_outline:
     testing site
   - Giving and following directions within a university campus or school building context
 - section: 'Інтеграційне завдання: Культура іспитів (Integration Challenge)'
-  words: 600
+  words: 325
   points:
-  - Combined skills dialogue strictly enforcing the use of 'скласти іспит' (to pass/compose) instead of the Russism 'здати
-    іспит' (to hand over), presented as a badge of educated speech
+  - Combined skills dialogue practising 'скласти іспит' (to pass/compose) as the preferred formal form; note that 'здати іспит'
+    is also widely attested in Ukrainian (GRAC corpus) and is not a Russicism per se, but 'скласти' is considered more stylistically
+    precise
   - 'Cultural deep dive: The role of ZNO/NMT as a modern standard fighting corruption in the Ukrainian education system'
   - 'Final simulation: Receiving results and discussing ''висока оцінка'' vs ''провалити іспит'' using appropriate register'
 vocabulary_hints:
@@ -71,7 +72,7 @@ vocabulary_hints:
   - 'навички (skills) — usage: мовні навички, практичні навички'
   - 'досягнення (achievement) — usage: вагомі досягнення в навчанні'
   - 'сертифікат (certificate) — usage: отримати сертифікат А2'
-  - складати/скласти (to pass/compose) — critical distinction from Russism 'здавати'
+  - складати/скласти (to pass/compose) — preferred formal form; also 'здавати/здати' is standard Ukrainian (GRAC-attested)
 activity_hints:
 - type: quiz
   focus: Comprehensive A2 grammar test

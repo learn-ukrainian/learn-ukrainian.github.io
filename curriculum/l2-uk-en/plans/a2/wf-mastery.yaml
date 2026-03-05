@@ -16,7 +16,7 @@ objectives:
 - Learner can create new words using patterns
 content_outline:
 - section: 'Вступ: Українська як LEGO (Introduction: Ukrainian as LEGO)'
-  words: 500
+  words: 325
   points:
   - 'From analysis to synthesis — cultural hook: Ukrainian as a ''LEGO'' language (synthetic vs analytic); contrast with English
     phrasal verbs (e.g., instead of ''get up'' or ''get out'', we modify the word itself: встати, вийти)'
@@ -25,7 +25,7 @@ content_outline:
   - Pattern recognition — transition from memorizing isolated words to building them; alignment with State Standard §4.3.1-2
     (Aspectual Pairs & Comparisons)
 - section: 'Презентація: Архітектор слова (Presentation: The Word Architect)'
-  words: 750
+  words: 500
   points:
   - The Word Architect and Derivative Chain — use 'Word Math' equations (e.g., за + пис + ати = записати; праців + ник = працівник)
   - 'The 8 Super-Roots Review — focus on high-frequency roots like -ход- (motion: вихід, захід, перехід), -пис- (write: писати,
@@ -35,7 +35,7 @@ content_outline:
   - 'Anatomy of a Complex Word — demonstrate synthesis logic with examples like ''гідроелектростанція'' (19 letters: гідро
     + електро + станція); explain the ''LEGO'' efficiency of long words'
 - section: 'Практика: Логіка синтезу (Practice: Logic Synthesis)'
-  words: 800
+  words: 550
   points:
   - Reverse Engineering — identifying roots in complex words to guess meaning; focus on root recognition despite vowel changes
     (e.g., кінець/кінця/закінчити)
@@ -46,14 +46,14 @@ content_outline:
   - 'The Suffix Factory — practicing -ник (agent: працівник, керівник) and -ння (process: навчання, читання) to transform
     verbs into nouns'
 - section: 'Діалоги: Емоційна інженерія (Dialogues: Emotional Engineering)'
-  words: 600
+  words: 400
   points:
   - At the Linguistic Club conversation — discussing 'Emotional Engineering'; the cultural capacity for diminutives (e.g.,
     мама -> матуся, кіт -> котик) to add nuance
   - Synthesis in Action — dialogue using high-frequency derivatives of -ход- and -пис- to describe daily routines and bureaucratic
     tasks (signing documents, entering/exiting)
 - section: 'Підсумок: Матриця майстерності (Summary: Mastery Matrix)'
-  words: 350
+  words: 225
   points:
   - Confidence through Logic reflection — summarizing the 'Mastery Matrix' approach to vocabulary expansion
   - De-imperializing the dictionary — emphasizing Ukrainian's internal logic and creative potential as a distinct synthetic
@@ -106,7 +106,7 @@ activity_hints:
 connects_to:
 - 'a2-49 (Checkpoint: Word Formation)'
 prerequisites:
-- 'a2-48 (Майстерня слів: Велика гра)'
+- a2-47 (Adjective Suffixes — Qualities)
 persona:
   voice: Encouraging Cultural Guide
   role: Scrabble Champion

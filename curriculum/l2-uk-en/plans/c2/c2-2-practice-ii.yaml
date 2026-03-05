@@ -4,14 +4,15 @@ sequence: 41
 slug: c2-2-practice-ii
 version: '2.0'
 title: Практика C2.2 II — Творче портфоліо
+subtitle: 'Introduction: Portfolio as an Artistic Project'
 focus: practice
 pedagogy: TTT
 phase: C2.2 [Literature & Creative Writing]
 word_target: 5000
 objectives:
-- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
-- Продукувати тексти академічного та професійного рівня за тематикою модуля
-- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Аналізувати та класифікувати явища Поезія у автентичних текстах
+- Продукувати тексти з коректним застосуванням Проза
+- Оцінювати стилістичну доречність мовних засобів у контексті Практика C2.2 II — Творче портфоліо
 - Застосовувати знання з теми «Драматургія» у власній мовній практиці
 sources:
 - name: Літературний конкурс "Коронація слова"
@@ -40,7 +41,7 @@ content_outline:
   - 'Створення тематичного поетичного циклу: робота над естетичною єдністю за моделлю «Станіславського феномену» (Андрухович,
     Іздрик)'
   - 'Експериментальна поетика: від традиційних форм до візуальної поезії, де звук і ритм (М22) формують авторський стиль'
-  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+  - Практичне завдання: самостійний аналіз та продукування тексту з теми «Поезія».
 - section: 'Проза (Prose: Narrative Techniques and Artistic Detail)'
   words: 1200
   points:
@@ -50,7 +51,7 @@ content_outline:
     образів'
   - 'Корекція стилістичного дисонансу: витіснення канцеляризмів (напр. «здійснити написання») живою мовою та метафорикою художнього
     стилю (§4.3.1.1)'
-  - Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів
+  - Завдання на синтез: інтеграція навичок попередніх розділів у контексті «Проза».
 - section: 'Драматургія (Dramaturgy: Subtext and Dramatic Action)'
   words: 850
   points:
@@ -99,16 +100,25 @@ vocabulary:
   - сценічна ремарка (stage direction)
   - непряма характеризація (indirect characterization)
   - мистецький проєкт (artistic project)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Поезія examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Проза
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -126,3 +136,9 @@ persona:
   role: Anthologist
 prerequisites:
 - c2-2-practice-i
+grammar:
+- Вступ
+- Поезія
+- Проза
+- Драматургія
+register: академічний

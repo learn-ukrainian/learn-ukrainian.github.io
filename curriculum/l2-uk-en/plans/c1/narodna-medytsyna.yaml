@@ -44,7 +44,7 @@ content_outline:
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
-- Learner understands the social role of healers (знахарі) in traditional Ukrainian society
+- Learner can explain the social role of healers (знахарі) in traditional Ukrainian society
 - Learner can identify common medicinal plants and their symbolic meanings
 - Learner can analyze the structure of healing incantations (замовляння)
 grammar:
@@ -74,3 +74,22 @@ prerequisites:
 - narodna-mifolohiia
 connects_to:
 - kozatski-lehendy
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Identify target structures in context
+  items: 12
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 10
+- type: match-up
+  focus: Match Феномен мольфарства examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix grammatical errors
+  items: 8
+- type: group-sort
+  focus: Classify by Трави та символіка
+  items: 12
+- type: essay-response
+  focus: Write using target structures correctly

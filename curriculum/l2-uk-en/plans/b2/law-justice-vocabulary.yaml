@@ -57,8 +57,8 @@ vocabulary_hints:
   - адвокат (defense attorney) — надати правову допомогу, адвокатський запит; не плутати з «юрист»
   - позов (lawsuit/claim) — подати позов, цивільний позов; задовольнити або відхилити позов
   - свідок (witness) — давати свідчення, викликати свідка; свідок захисту/обвинувачення
-  - термін (term) — юридична точність та визначення понять
-  - процес (process) — судовий розгляд справи у часі
+  - вирок (verdict) — винести вирок, обвинувальний або виправдувальний вирок; оскаржити вирок
+  - згідно із законом (according to the law) — офіційна норма; уникати розмовного «по закону»
   recommended:
   - вирок (verdict) — винести вирок, обвинувальний або виправдувальний вирок; оскаржити вирок
   - згідно із законом (according to the law) — офіційна норма; уникати розмовного «по закону»
@@ -67,14 +67,23 @@ vocabulary_hints:
   - докази (evidence) — речові докази, сукупність доказів, збирати докази
   - аналіз (analysis) — детальне дослідження обставин справи
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify legal-terminology in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using legal-terminology
+  items: 10
+- type: match-up
+  focus: Match Судова система та європейська традиція examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in legal-terminology
   items: 8
+- type: group-sort
+  focus: Classify examples by Учасники процесу та мовленнєва культура
+  items: 12
+- type: essay-response
+  focus: Write paragraph using legal-terminology correctly
 persona:
   voice: Professional Language Coach
   role: Defense Attorney (Адвокат)
@@ -86,3 +95,4 @@ prerequisites:
 - politics-government-vocabulary
 connects_to:
 - economics-business-vocabulary
+register: нейтральний

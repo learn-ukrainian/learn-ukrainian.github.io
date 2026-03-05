@@ -107,7 +107,7 @@ activity_hints:
   items: 15+
 connects_to:
 - b1-24 (Motion practice & integration)
-- b1-25 (Checkpoint - motion verbs)
+- b1-27 (Checkpoint - motion verbs)
 prerequisites:
 - b1-22 (Motion full prefix integration)
 persona:
@@ -119,3 +119,4 @@ grammar:
 - Semantic patterns across verb categories
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

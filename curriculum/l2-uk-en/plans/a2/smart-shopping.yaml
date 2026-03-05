@@ -25,7 +25,7 @@ sources:
   notes: Social etiquette of bargaining in Ukraine
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - 'The philosophy of a ''Bazar'' vs a ''Supermarket'' — cultural hook: bargaining in Ukrainian markets is less about aggressive
     haggling and more about building rapport with a ''regular'' vendor (свій продавець) to secure ''friendly'' prices.'
@@ -33,7 +33,7 @@ content_outline:
     as superior to supermarket organic brands; introduction of traditional units like ''стакан'' (glass) for berries and ''пучок''
     (bunch) for herbs.'
 - section: Презентація (Presentation)
-  words: 800
+  words: 500
   points:
   - 'Core transaction vocabulary based on §3.9 of the State Standard: ''Ціна'' (вигідна, зі знижкою), ''Знижка'' (надати знижку,
     акційна ціна), ''Решта'' (дати решту, правильна решта), and ''Чек'' (касовий чек, видати чек, зберігати чек).'
@@ -44,7 +44,7 @@ content_outline:
   - 'Digital Shopping Essentials: high-frequency modern terms including ''кошик'' (cart), ''оформити замовлення'' (checkout),
     and ''доставка'' (delivery).'
 - section: Практика (Practice)
-  words: 700
+  words: 475
   points:
   - 'Grammar Drill: focus on phonetic stem changes (г+ш -> жч) to avoid common learner errors like *дорожший* (correct: дорожчий)
     and *ближший* (correct: ближчий).'
@@ -53,14 +53,14 @@ content_outline:
   - 'Comparative Particles Drill: practicing the correct use of ''ніж'' (than) and the preposition ''за'' + Accusative (дешевший
     за...) while explicitly avoiding the incorrect use of ''як'' for direct comparisons.'
 - section: Продукція (Production)
-  words: 700
+  words: 475
   points:
   - 'Role-play scenario: Market negotiation vs. Supermarket checkout. Contrast the dynamic negotiation of ''ринок'' (Чи можна
     дешевше?) with the standard fixed prices of ''магазин''.'
   - 'Refusal and decision-making etiquette: practicing polite phrases like ''Я ще подумаю'' and using comparative forms for
     quality decisions (кращий варіант, найкраща якість).'
 - section: Підсумок (Summary)
-  words: 400
+  words: 275
   points:
   - 'Review of communicative requirements for shopping as per State Standard §3.9: handling currency, units of volume, and
     consumer goods.'
@@ -95,3 +95,22 @@ prerequisites:
 - complete-imperative
 connects_to:
 - checkpoint-aspect-comparison
+register: розмовний
+activity_hints:
+- type: match-up
+  focus: Match words to definitions
+  items: 12
+- type: fill-in
+  focus: Complete sentences with vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort by category
+  items: 10
+- type: quiz
+  focus: Choose correct word for context
+  items: 10
+- type: fill-in
+  focus: Use words in sentences
+  items: 6
+- type: essay-response
+  focus: Write using domain vocabulary

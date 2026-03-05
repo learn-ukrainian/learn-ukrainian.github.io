@@ -2,7 +2,13 @@ module: a1-031
 level: A1
 sequence: 31
 slug: pronoun-declension
-version: '2.0'
+version: '2.1'
+scope_note: >
+  Dative pronoun forms (мені, тобі, йому) are taught as chunk-based preview,
+  not systematic case instruction. State Standard marks Dative as A2. The forms
+  are introduced here because "Мені подобається" (seq 19) already uses them and
+  learners need the full personal pronoun set for practical communication.
+  Full Dative case paradigm (nouns + verbs + prepositions) deferred to A2.
 title: Pronoun Declension
 subtitle: Me, You, Us
 focus: grammar
@@ -16,33 +22,33 @@ objectives:
 - Recognize the Genitive pronoun paradigm and form overlaps
 content_outline:
 - section: Знахідний відмінок (Accusative pronouns)
-  words: 500
+  words: 275
   points:
   - 'Форми особових займенників у Знахідному: мене, тебе, його, її, нас, вас, їх. Приклади: Він бачить мене. Я знаю тебе.
     Вона чує нас (§4.2.1.4).'
   - 'Займенники після прийменників: для мене, без тебе, про нього (префікс н- після прийменників для його/її/їх: нього, неї,
     них).'
 - section: Місцевий відмінок (Locative pronouns)
-  words: 400
+  words: 250
   points:
   - 'Форми у Місцевому: (на) мені, (на) тобі, (на) ньому, (на) ній, (на) нас, (на) вас, (на) них. Використання з прийменниками
     в/у, на.'
   - 'Префікс н- після прийменників для 3-ї особи: у нього, на ньому, у ній, на них. Без прийменника — без н-: його книга (не
     *нього книга). Критичне правило.'
 - section: Давальний відмінок (Dative pronouns)
-  words: 400
+  words: 250
   points:
   - 'Форми у Давальному: мені, тобі, йому/їй, нам, вам, їм. Приклади: Мені подобається. Дай мені. Скажи йому. Напиши їй.'
   - 'Зв''язок із раніше вивченою конструкцією «Мені подобається» (a1-19): тепер повна парадигма давального відмінка. Дієслова
     з давальним: давати, говорити, писати, допомагати.'
 - section: Родовий відмінок (Genitive pronouns)
-  words: 400
+  words: 250
   points:
   - 'Форми у Родовому: мене, тебе, його, її, нас, вас, їх. Приклади: У мене є. Немає тебе. Для мене. Без нас.'
   - 'Збіг форм: Знахідний = Родовий для більшості особових займенників (мене, тебе, нас, вас). Виняток: його/її/їх (однакові
     у всіх непрямих відмінках без прийменника).'
 - section: Практика (Practice)
-  words: 300
+  words: 175
   points:
   - 'Вправи на вибір правильної форми займенника залежно від відмінка: трансформаційні та контекстні завдання.'
   - Заповнення пропусків у реченнях із правильними формами. Особлива увага до префікса н- після прийменників.

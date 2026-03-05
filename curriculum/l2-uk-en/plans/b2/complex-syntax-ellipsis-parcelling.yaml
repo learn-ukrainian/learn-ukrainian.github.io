@@ -59,10 +59,10 @@ content_outline:
   - 'Рефлексія: вибір власного стилю — між класичною повнотою та експресивною фрагментарністю'
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, вживати термін; висока частотність у лінгвістичному аналізі
-  - поняття (concept) — базове поняття, розширити поняття; вживається для теоретичних визначень
-  - процес (process) — творчий процес, процес створення; описує динаміку формування речення
-  - метод (method) — метод аналізу, ефективний метод; стосується способів роботи з текстом
+  - аналіз (analysis) — метод розчленування речення на фрагменти
+  - синтез (synthesis) — процес відновлення цілісності еліптичного речення
+  - нагнітання (buildup/climax) — стилістичний ефект посилення емоції
+  - лаконічність (conciseness) — основна мета використання еліпсису
   - еліпсис (ellipsis) — стилістичний еліпсис, ефект еліпсису; спеціалізований термін для пропуску
   - парцеляція (parcelling) — явище парцеляції, застосовувати парцеляцію; термін для стилістичного розриву речення
   recommended:
@@ -72,14 +72,23 @@ vocabulary_hints:
   - лаконічність (conciseness) — основна мета використання еліпсису
   - динаміка (dynamics) — ефект, що досягається швидкою зміною неповних конструкцій
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Ellipsis (еліпсис/пропуск) - omission of understood words in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Ellipsis (еліпсис/пропуск) - omission of understood words
+  items: 10
+- type: match-up
+  focus: Match Мистецтво пропуску examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Ellipsis (еліпсис/пропуск) - omission of understood words
   items: 8
+- type: group-sort
+  focus: Classify examples by Ритм і фрагментація
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Ellipsis (еліпсис/пропуск) - omission of understood words correctly
 persona:
   voice: Professional Language Coach
   role: Creative Writer (Письменник-креативник)

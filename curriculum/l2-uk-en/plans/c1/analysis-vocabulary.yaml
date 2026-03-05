@@ -4,6 +4,7 @@ sequence: 4
 slug: analysis-vocabulary
 version: '2.0'
 title: Словник аналізу та критики
+subtitle: Introduction
 content_outline:
 - section: Вступ (Introduction)
   words: 500
@@ -119,6 +120,7 @@ activity_hints:
 - type: essay-response
   focus: Write critical paragraph using analysis vocabulary
 focus: vocabulary
+pedagogy: PPP
 prerequisites:
 - c1-02 (Academic Style Markers)
 - c1-03 (Research Verbs)
@@ -139,10 +141,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Understand and apply словник аналізу та критики
-- Analyze and evaluate мова критичного мислення
-- Identify key concepts of практика в академічному письмі
+- Learner can use specialized vocabulary related to Словник аналізу та критики in context
+- Learner can distinguish nuances between near-synonyms in Аналітична лексика та культурний контекст (Presentation:
+- Learner can produce text using 15+ domain-specific terms from Словник аналізу та критики
 persona:
   voice: Senior Specialist
   role: Рецензент
 word_target: 4000
+grammar:
+- Вступ
+- Аналітична лексика та культурний контекст
+- Прикметники та словосполучення
+- Виправлення типових помилок
+register: літературний

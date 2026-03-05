@@ -4,13 +4,15 @@ sequence: 6
 slug: passive-in-context
 version: '2.0'
 title: Пасив у контексті — вибір за регістром
+subtitle: 'Choosing the Right Passive Strategy'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use пасив у контексті — вибір за регістром
-- Form and apply регістр і пасив
-- Distinguish between інтегрована практика
+- Learner can identify and apply пасив у контексті — вибір за регістром
+- Learner can form and use регістр і пасив
+- Learner can distinguish between інтегрована практика
 sources:
 - name: Ukrainian State Standard 2024 - Register System
   url: https://mon.gov.ua/
@@ -118,3 +120,8 @@ persona:
   role: Press Secretary (Прес-секретар)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Passive voice strategy selection
+- Register-appropriate passive usage
+- Active-to-passive transformation
+register: нейтральний

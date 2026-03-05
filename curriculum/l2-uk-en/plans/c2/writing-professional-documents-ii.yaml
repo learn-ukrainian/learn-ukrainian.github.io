@@ -4,6 +4,7 @@ sequence: 51
 slug: writing-professional-documents-ii
 version: '2.0'
 title: Написання професійних документів II — Пропозиції та презентації
+subtitle: Introduction — Psychology and Ethics of Persuasion
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -104,16 +105,25 @@ vocabulary:
   - конкурентоспроможність (competitiveness)
   - етапність (phasing)
   - індикатор успіху (success indicator)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Анатомія успішної пропозиції examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Бізнес-планування та аналіз ризиків
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -133,3 +143,9 @@ persona:
   role: Proposal Lead
 prerequisites:
 - writing-professional-documents-i
+grammar:
+- Вступ — Психологія та етика переконання
+- Анатомія успішної пропозиції
+- Бізнес-планування та аналіз ризиків
+- Письмова презентація та візуальна комунікація
+register: академічний

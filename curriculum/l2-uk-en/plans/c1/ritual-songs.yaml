@@ -6,11 +6,12 @@ version: '1.0'
 title: 'Обрядові пісні: Коло життя'
 subtitle: 'Ritual Songs: The Circle of Life'
 focus: cultural
+pedagogy: CBI
 phase: C1.6 [Folk Culture & Traditions]
 word_target: 4000
 objectives:
 - Learner can distinguish between kolyadky, shchedrivky, and vesnyanky
-- Learner understands the pre-Christian roots of Ukrainian holidays
+- Learner can explain the pre-Christian roots of Ukrainian holidays
 - Learner can analyze the symbolism of ritual songs
 content_outline:
 - section: 'Вступ: Календарно-обрядовий цикл (Introduction: The Calendar-Ritual Cycle)'
@@ -81,3 +82,27 @@ prerequisites:
 - kobzari-bandura
 connects_to:
 - kolyskovi-ta-dumy
+grammar:
+- Календарно-обрядовий цикл
+- Колядки та Щедрівки
+- Закликання природи
+- Купала та Жнива
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Колядки та Щедрівки examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Закликання природи
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

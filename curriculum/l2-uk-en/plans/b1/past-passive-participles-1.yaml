@@ -13,7 +13,7 @@ objectives:
 - Learner can form past passive participles using -ний/-тий suffixes
 - Learner can agree participles with nouns in gender, number, and case
 - Learner can use passive participles attributively and predicatively
-- Learner understands suffix selection rules
+- Learner can explain suffix selection rules
 content_outline:
 - section: Вступ та вступний тест (Introduction and Entry Test)
   words: 500
@@ -89,7 +89,7 @@ activity_hints:
   focus: Fix agreement errors
   items: 10
 connects_to:
-- b1-46 (Past Passive Participles 2)
+- b1-47 (Past Passive Participles 2)
 prerequisites:
 - b1-45 (Активні дієприкметники та їхній стиль)
 persona:

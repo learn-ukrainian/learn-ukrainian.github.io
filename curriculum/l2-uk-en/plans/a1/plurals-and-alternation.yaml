@@ -16,7 +16,7 @@ objectives:
 - Identify uncountable nouns and plural-only nouns
 content_outline:
 - section: Множина іменників (Noun plurals)
-  words: 500
+  words: 275
   points:
   - 'Basic plural endings for masculine nouns: -и/-і (студент → студенти, хлопець → хлопці) — the most common and predictable
     pattern'
@@ -27,7 +27,7 @@ content_outline:
   - 'Irregular plurals that must be memorized: діти (children, from дитина), люди (people, from людина), очі (eyes, from око)
     — high-frequency exceptions'
 - section: Чергування (Alternation)
-  words: 400
+  words: 250
   points:
   - 'Vowel alternation і → о/е in stems: when adding plural endings, the і in the stem may revert to о or е — кіт → коти,
     піч → печі, ніж → ножі'
@@ -38,7 +38,7 @@ content_outline:
   - 'Pattern recognition strategy: if a word has і in the last syllable of the stem, check whether it alternates in the plural
     — most common with monosyllabic masculine nouns'
 - section: Множина прикметників (Adjective plurals)
-  words: 400
+  words: 250
   points:
   - 'Simplification: all three genders collapse into one plural form ending in -і/-ї — новий (m) / нова (f) / нове (n) → нові
     (plural for all genders)'
@@ -47,16 +47,16 @@ content_outline:
   - 'Practice forming noun phrases: combining plural adjectives with plural nouns in simple sentences — Це нові книги. Ті
     великі будинки старі.'
 - section: Винятки та особливості (Exceptions and special cases)
-  words: 300
+  words: 175
   points:
   - 'Uncountable nouns that have no plural: молоко (milk), цукор (sugar), вода (water in general sense), повітря (air) — these
     exist only in singular'
   - 'Plural-only nouns (pluralia tantum): гроші (money), двері (door), ножиці (scissors), окуляри (glasses) — these exist
     only in plural'
-  - 'Stress shifts in plural: some nouns change stress when pluralized — рукА → рУки, сестрА → сЕстри, нОга → нОги (review
+  - 'Stress shifts in plural: some nouns change stress when pluralized — рукА → рУки, сестрА → сЕстри, ногА → нОги (review
     from a1-06 stress mobility)'
 - section: Практика (Practice)
-  words: 400
+  words: 250
   points:
   - 'Plural formation drills: given singular nouns, produce the correct plural form with attention to ending changes and vowel
     alternation'

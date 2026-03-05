@@ -4,6 +4,7 @@ sequence: 16
 slug: advanced-punctuation
 version: '2.0'
 title: Поглиблена пунктуація
+subtitle: Introduction — Punctuation as a Tool
 content_outline:
 - section: Вступ — Пунктуація як інструмент (Introduction — Punctuation as a Tool)
   words: 400
@@ -85,6 +86,7 @@ activity_hints:
   focus: Classify punctuation functions
   items: 12+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-05 (Logical Connectors)
 - Complex sentence structures
@@ -106,10 +108,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use поглиблена пунктуація
-- Form and apply пунктуація як інструмент
-- Distinguish between практика редагування
+- Learner can identify and produce correct Складні речення та відокремлення forms
+- Learner can analyze смислова глибина in authentic texts
+- Learner can produce written text demonstrating mastery of Вступ — Пунктуація як інструмент
 persona:
   voice: Senior Specialist
   role: Коректор
 word_target: 4000
+grammar:
+- Вступ — Пунктуація як інструмент
+- Складні речення та відокремлення
+- смислова глибина
+- Цитування та допоміжні знаки
+register: літературний

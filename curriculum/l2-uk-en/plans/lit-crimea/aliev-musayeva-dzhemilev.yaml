@@ -1,6 +1,22 @@
 slug: aliev-musayeva-dzhemilev
-level: c1
+level: LIT.CRIMEA
 sequence: 11
 track: lit-crimea
+content_outline:
+- section: Вступ та контекст
+  words: 800
+  points: []
+- section: Аналіз ключових творів
+  words: 1200
+  points: []
+- section: Стилістика та мова автора
+  words: 1200
+  points: []
+- section: Деколонізаційна перспектива
+  words: 1000
+  points: []
+- section: Підсумок та спадщина
+  words: 800
+  points: []
 word_target: 5000
 focus: Biographical narrative, the Crimean Tatar national movement.

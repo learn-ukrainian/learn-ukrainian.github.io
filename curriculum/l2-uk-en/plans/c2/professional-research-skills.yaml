@@ -4,6 +4,7 @@ sequence: 57
 slug: professional-research-skills
 version: '2.0'
 title: Професійні дослідницькі навички
+subtitle: Introduction — Research Competencies
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -93,16 +94,25 @@ vocabulary:
   - надійність (reliability)
   - вибірка (sample)
   - кореляція (correlation)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Пошук та оцінка джерел examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Методологія та методи збору даних
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -122,3 +132,9 @@ persona:
   role: Research Librarian
 prerequisites:
 - cross-domain-communication
+grammar:
+- Вступ — Дослідницькі компетенції
+- Пошук та оцінка джерел
+- Методологія та методи збору даних
+- Аналіз та синтез інформації
+register: академічний

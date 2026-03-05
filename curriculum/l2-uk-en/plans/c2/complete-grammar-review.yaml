@@ -4,6 +4,7 @@ sequence: 65
 slug: complete-grammar-review
 version: '2.0'
 title: Повний огляд граматики
+subtitle: 'Introduction: Grammar as a Living System'
 focus: grammar
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -92,16 +93,25 @@ vocabulary:
   - прийменник (preposition)
   - частка (particle)
   - вигук (interjection)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Поглиблена морфологія іменних частин мови examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Дієслівна система та стилістика стану
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - group-sort
@@ -123,3 +133,9 @@ persona:
   role: Grammar Expert
 prerequisites:
 - c2-3-checkpoint
+grammar:
+- Граматика як жива система
+- Поглиблена морфологія іменних частин мови
+- Дієслівна система та стилістика стану
+- Синтаксичні норми та закони милозвучності
+register: академічний

@@ -79,3 +79,22 @@ prerequisites:
 - vyshyvanka
 connects_to:
 - narodna-mifolohiia
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Identify target structures in context
+  items: 12
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 10
+- type: match-up
+  focus: Match Технологія та центри examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix grammatical errors
+  items: 8
+- type: group-sort
+  focus: Classify by Від скрині до іконостаса
+  items: 12
+- type: essay-response
+  focus: Write using target structures correctly

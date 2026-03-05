@@ -16,31 +16,31 @@ objectives:
 - Choose the correct preposition based on semantic context
 content_outline:
 - section: Куди? з Acc (Direction with Acc)
-  words: 500
+  words: 300
   points:
   - 'Прийменник в/у + Знахідний для напрямку руху: Я іду в магазин, Я їду у Київ. Евфонічний вибір в/у залежно від фонетичного
     контексту (§4.2.3.2).'
   - 'Прийменник на + Знахідний для поверхонь та подій: Я іду на пошту, Я їду на концерт, Я кладу на стіл. Контраст в/у (enclosed
     space) vs на (open/surface/event).'
 - section: За + Acc (Behind/For)
-  words: 400
+  words: 250
   points:
   - 'За + Знахідний у значенні «за/for/in exchange»: Дякую за допомогу. Платити за квиток. Вибачте за запізнення.'
   - 'За + Знахідний у часовому значенні «через (проміжок часу)»: за годину (in an hour), за тиждень (in a week). За + Знахідний
     для напрямку «за»: зайти за будинок (go behind the building).'
 - section: Через + Acc (Through/Because of)
-  words: 350
+  words: 200
   points:
   - 'Просторове значення: через парк (through the park), через дорогу (across the road), через міст (across the bridge).'
   - 'Часове та причинне значення: через годину (in an hour), через дощ (because of rain), через роботу (because of work).
     Контраст із «за + Acc» у часовому значенні.'
 - section: Про + Acc (About)
-  words: 350
+  words: 200
   points:
   - 'Про + Знахідний у значенні «про/about»: розповідати про Україну, думати про маму, книга про історію, фільм про кохання.'
   - 'Типові дієслова з «про»: говорити про, думати про, читати про, знати про, забувати про. Конструкція «Про що?» як питання.'
 - section: Практика (Practice)
-  words: 400
+  words: 250
   points:
   - 'Вправи на вибір правильного прийменника залежно від контексту: напрямок (в/у/на), обмін/подяка (за), простір/причина
     (через), тема (про).'
@@ -51,7 +51,7 @@ vocabulary_hints:
   - пошта (post office) — іду на пошту, на пошті; на + Acc direction
   - концерт (concert) — їду на концерт; Event destination
   - допомога (help) — дякую за допомогу; За + Acc pattern
-  - годину (hour acc.) — за годину, через годину; Time expressions
+  - година (hour) — за годину, через годину; Time expressions
   - парк (park) — через парк, у парку; Spatial preposition context
   - через (through/because of) — через парк, через дощ; Preposition
   - про (about) — книга про історію, думати про; Preposition

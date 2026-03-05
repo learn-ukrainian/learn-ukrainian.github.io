@@ -4,6 +4,7 @@ sequence: 17
 slug: irregular-verbs-complete
 version: '2.0'
 title: Неправильні дієслова — повний огляд
+subtitle: 'Introduction: Etymology and Systematics'
 content_outline:
 - section: 'Вступ: Етимологія та системність (Introduction: Etymology and Systematics)'
   words: 500
@@ -103,6 +104,7 @@ activity_hints:
   focus: Fix incorrect verb forms
   items: 10+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - B2 verb conjugation basics
 - Aspect pairs understanding
@@ -123,10 +125,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use неправильні дієслова — повний огляд
-- Form and apply чому дієслова «неправильні»?
-- Distinguish between практика відмінювання
+- Learner can identify and produce correct Унікальні парадигми та державний стандарт forms
+- Learner can analyze Чергування голосних та приголосних in authentic texts
+- Learner can produce written text demonstrating mastery of Етимологія та системність
 persona:
   voice: Senior Specialist
   role: Лінгвіст-архіваріус
 word_target: 4000
+grammar:
+- Етимологія та системність
+- Унікальні парадигми та державний стандарт
+- Чергування голосних та приголосних
+- Суплетивні основи та дієслово «бути»
+register: літературний

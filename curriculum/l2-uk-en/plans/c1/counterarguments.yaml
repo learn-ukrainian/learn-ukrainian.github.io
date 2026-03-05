@@ -4,6 +4,7 @@ sequence: 10
 slug: counterarguments
 version: '2.0'
 title: Контраргументи та спростування
+subtitle: Introduction — The Art of Intellectual Discussion
 content_outline:
 - section: Вступ — Мистецтво інтелектуальної дискусії (Introduction — The Art of Intellectual
     Discussion)
@@ -101,6 +102,7 @@ activity_hints:
   focus: Classify refutation types
   items: 12+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-09 (Thesis Development)
 - Logical connectors mastery
@@ -121,10 +123,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use контраргументи та спростування
-- Form and apply сила контраргументу
-- Distinguish between практика дебатів
+- Learner can identify and produce correct від Вишенського до Хвильового (Tradition forms
+- Learner can analyze Мовні конструкції визнання та поступки (Linguistic Structures of Acknowledgment in authentic texts
+- Learner can produce written text demonstrating mastery of Вступ — Мистецтво інтелектуальної дискусії (Introduction — The Art of Intellectual
 persona:
   voice: Senior Specialist
   role: Адвокат
 word_target: 4000
+grammar:
+- Вступ — Мистецтво інтелектуальної дискусії
+- від Вишенського до Хвильового
+- Мовні конструкції визнання та поступки
+- Техніки спростування та логічні пастки
+register: літературний

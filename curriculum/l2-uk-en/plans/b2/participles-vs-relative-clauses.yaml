@@ -4,12 +4,14 @@ sequence: 9
 slug: participles-vs-relative-clauses
 version: '2.0'
 title: Дієприкметники проти підрядних речень
+subtitle: 'When to Use Який Instead'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use дієприкметники проти підрядних речень
-- Form and apply два способи вираження ознаки за дією
+- Learner can identify and apply дієприкметники проти підрядних речень
+- Learner can form and use два способи вираження ознаки за дією
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
   url: https://mon.gov.ua/
@@ -111,3 +113,8 @@ persona:
   role: Literary Editor (Літературний редактор)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Participle vs relative clause choice
+- Standard Ukrainian preference for який-clauses
+- Decolonization of participial calques
+register: нейтральний

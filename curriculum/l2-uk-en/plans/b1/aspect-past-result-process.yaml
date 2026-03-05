@@ -11,7 +11,7 @@ phase: B1.1 Aspect
 word_target: 4000
 objectives:
 - Learner can distinguish result from process in past tense
-- Learner understands duration markers with imperfective
+- Learner can explain duration markers with imperfective
 - Learner can select aspect based on speaker's focus (result vs activity)
 - Learner recognizes completion markers with perfective
 sources:
@@ -120,3 +120,4 @@ grammar:
 - Completed actions vs ongoing processes
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

@@ -10,7 +10,7 @@ pedagogy: TTT
 phase: B1.1 Aspect
 word_target: 4000
 objectives:
-- Learner understands why negation favors imperfective aspect
+- Learner can explain why negation favors imperfective aspect
 - Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
 - Learner can form negative imperatives with correct aspect
 - Learner recognizes exceptions to imperfective preference
@@ -124,3 +124,4 @@ grammar:
 - Negative imperatives - наказові форми
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

@@ -13,7 +13,7 @@ objectives:
 - Learner can identify and classify four types of one-member sentences
 - Learner can use one-member sentences for stylistic effect
 - Learner can transform two-member sentences into one-member structures
-- Learner understands the expressive functions of one-member sentences
+- Learner can describe the expressive functions of one-member sentences
 content_outline:
 - section: Природа односкладних речень (Nature of One-member Sentences)
   words: 700
@@ -57,23 +57,31 @@ content_outline:
     структур для стилістичного ефекту'
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, вживати термін; висока частотність в академічних текстах
-  - поняття (concept) — ключове поняття, абстрактне поняття; вживається для розкриття змісту теорій
-  - процес (process) — навчальний процес, творчий процес; акцент на тривалості дії
-  - метод (method) — науковий метод, метод аналізу; застосовується в контексті досліджень
+  - аналіз (analysis) — глибокий аналіз, провести аналіз; базовий термін для критичного мислення
+  - синтез (synthesis) — аналіз і синтез; часто вживається в наукових висновках
+  - дослідження (research) — результати дослідження, проводити дослідження; ключове слово для B2 регістра
   recommended:
   - аналіз (analysis) — глибокий аналіз, провести аналіз; базовий термін для критичного мислення
   - синтез (synthesis) — аналіз і синтез; часто вживається в наукових висновках
   - дослідження (research) — результати дослідження, проводити дослідження; ключове слово для B2 регістра
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify Означено-особові речення in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using Означено-особові речення
+  items: 10
+- type: match-up
+  focus: Match Означено-особові та неозначено-особові речення examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in Означено-особові речення
   items: 8
+- type: group-sort
+  focus: Classify examples by Безособові речення та категорія стану
+  items: 12
+- type: essay-response
+  focus: Write paragraph using Означено-особові речення correctly
 connects_to:
 - b2-15 (Homogeneous Members)
 prerequisites:
@@ -86,3 +94,4 @@ grammar:
 - Неозначено-особові речення
 - Безособові речення
 - Номінативні речення
+register: нейтральний

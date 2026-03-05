@@ -27,7 +27,7 @@ sources:
   notes: Historical context for Zone 2 (2-4) agreement patterns
 content_outline:
 - section: 'Вступ: Чому "дві книги" але "п''ять книг"? (Introduction)'
-  words: 400
+  words: 275
   points:
   - 'The puzzle of Ukrainian numeral agreement: three distinct agreement zones, not English-style singular/plural binary logic.'
   - 'Practical motivation: correct numeral agreement is essential for shopping (скільки це коштує?), travel (скільки зупинок?),
@@ -35,14 +35,14 @@ content_outline:
   - 'Preview of three agreement patterns — the mental model for the whole module: Zone 1 (один), Zone 2 (два–чотири), Zone
     3 (п''ять і більше).'
 - section: Один/одна/одне + називний (One + Nominative)
-  words: 400
+  words: 275
   points:
   - 'Gender agreement with одна/один/одне: один друг (m.), одна книга (f.), одне місто (n.); explicit drill to prevent *один
     книга* errors.'
   - 'Plural-only nouns with одні: одні двері, одні штани, одні окуляри — the special case where "one" uses plural form.'
   - 'Cardinal vs ordinal mini-review: один / перший, два / другий — setting up the oblique cases section later.'
 - section: Два/три/чотири + називний множини (2–4 + Nominative Plural)
-  words: 600
+  words: 400
   points:
   - 'Special gender form for два/дві: два квитки (m./n.) vs дві книги (f.); drilling the common learner error *два пляшки*
     → *дві пляшки*.'
@@ -52,7 +52,7 @@ content_outline:
   - 'Cultural hook: The ancient dual number (двоїна) — why 2–4 behave differently; historical traces visible in stress patterns
     (дві книги vs plural книги).'
 - section: П'ять і більше + родовий множини (5+ + Genitive Plural)
-  words: 700
+  words: 450
   points:
   - 'Zone 3 pattern: 5–20 and all multiples ending in 5–9 and 0 govern Genitive Plural: п''ять друзів, десять книг, двадцять
     міст.'
@@ -63,7 +63,7 @@ content_outline:
   - 'Large numbers: сто гривень, тисяча людей, мільйон доларів — same Genitive Plural logic scales up.'
   - 'The "last digit" rule for compound numerals: 21 follows Zone 1, 24 follows Zone 2, 25 follows Zone 3.'
 - section: Числівники у непрямих відмінках (Numerals in Oblique Cases)
-  words: 500
+  words: 325
   points:
   - 'Cardinal numerals decline too: два → двох (Gen/Acc), двом (Dat), двома (Instr); п''ять → п''яти/п''ятьох, п''яти/п''ятьом.'
   - 'Ordinal numerals decline like adjectives: першого (Gen), другому (Dat), третьому (Loc); full agreement with noun gender
@@ -73,7 +73,7 @@ content_outline:
   - 'Age expressions in Dative: мені двадцять один рік vs мені двадцять п''ять років — zone logic applies even when the numeral
     is not the subject.'
 - section: 'Практика: Скільки це коштує? (Practice: How Much Does It Cost?)'
-  words: 400
+  words: 275
   points:
   - 'Shopping dialogues: full numeral + noun agreement in context — один долар, дві гривні, п''ять євро, сто гривень.'
   - 'Time expressions with agreement: одна година, дві години, п''ять годин; двадцять хвилин, один день, три дні, сім днів.'
@@ -131,3 +131,4 @@ grammar:
 - один/одна/одне gender agreement
 module_type: grammar
 immersion: 60-75% Ukrainian
+register: розмовний

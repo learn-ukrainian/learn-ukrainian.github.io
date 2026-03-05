@@ -6,6 +6,7 @@ version: '1.0'
 title: Сленг та молодіжна мова
 subtitle: Slang & Youth Language
 focus: style
+pedagogy: TTT
 phase: C1.5 [Stylistics & Rhetoric]
 word_target: 4000
 objectives:
@@ -74,3 +75,27 @@ prerequisites:
 - intimate-register
 connects_to:
 - persuasive-speech
+grammar:
+- Сленг як соціальний інструмент
+- '''Укр-інгліш'''
+- Стилістичні засоби та літературний контекст
+- Регістри та комунікативні ситуації
+register: літературний
+activity_hints:
+- type: match-up
+  focus: Match 'Укр-інгліш' examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Стилістичні засоби та літературний контекст
+  items: 12
+- type: fill-in
+  focus: Rewrite in target register
+  items: 10
+- type: quiz
+  focus: Identify stylistic devices in context
+  items: 12
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 8
+- type: essay-response
+  focus: Produce text in specified style

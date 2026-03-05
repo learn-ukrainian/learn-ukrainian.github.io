@@ -11,8 +11,8 @@ phase: C2.2 [Literature & Creative Writing]
 word_target: 5000
 objectives:
 - Learner can analyze and produce creative nonfiction texts distinguishing between essayistic, memoirist, and reportage registers
-- Learner can apply Ukrainian literary nonfiction conventions from Khvylovyi through Zabuzhko to contemporary war reportage
-- Learner can construct memoir passages using techniques of fragmentation, temporal shifts, and controlled subjectivity
+- Застосовувати Ukrainian literary nonfiction conventions from Khvylovyi through Zabuzhko to contemporary war reportage
+- Конструювати memoir passages using techniques of fragmentation, temporal shifts, and controlled subjectivity
 - Learner can navigate ethical considerations of truth, consent, and representation in nonfiction writing
 sources:
 - name: Забужко О. Notre Dame d'Ukraine та інші есе
@@ -125,3 +125,9 @@ prerequisites:
 persona:
   voice: Senior Specialist
   role: Literary Editor
+grammar:
+- Вступ — Творча нефікція як жанр
+- Есеїстична традиція
+- Мемуарне письмо
+- Літературний репортаж
+register: академічний

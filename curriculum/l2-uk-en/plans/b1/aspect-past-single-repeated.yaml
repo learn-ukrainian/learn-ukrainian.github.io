@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can distinguish single from repeated past actions
 - Learner can select correct aspect based on time markers
-- Learner understands how frequency affects aspect choice
+- Learner can explain how frequency affects aspect choice
 - Learner can transform between single and habitual narratives
 sources:
 - name: Ukrainian State Standard 2024 - Past Tense Aspect
@@ -121,3 +121,4 @@ grammar:
 - Frequency adverbs and aspect
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

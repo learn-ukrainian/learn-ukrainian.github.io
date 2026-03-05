@@ -4,6 +4,7 @@ sequence: 9
 slug: epistolyarnyi-styl
 version: '2.0'
 title: Епістолярний стиль — Повна кореспонденція
+subtitle: Introduction — The Epistolary Phenomenon
 focus: stylistics
 pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
@@ -114,16 +115,25 @@ vocabulary:
   - нетикет (netiquette)
   - формула (formula)
   - етикет (etiquette)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Офіційно-ділові листи та Державний стандарт examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by еволюція нетикету
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - essay-response
@@ -142,3 +152,9 @@ persona:
   role: Biographer
 prerequisites:
 - relihiynyi-styl
+grammar:
+- Вступ — Феномен епістолярію
+- Офіційно-ділові листи та Державний стандарт
+- еволюція нетикету
+- 'Приватна кореспонденція та культурна пам''ять'
+register: академічний

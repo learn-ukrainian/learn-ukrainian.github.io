@@ -25,7 +25,7 @@ sources:
   notes: A2 level grammar complexity expectations
 content_outline:
 - section: 'Вступ: Роль адресата (Introduction: The Role of Recipient)'
-  words: 500
+  words: 325
   points:
   - Introduction to the Dative case (давальний відмінок) per State Standard §4.2.2.3, focusing on the person/object for whose
     benefit or harm an action occurs (recipient role)
@@ -34,7 +34,7 @@ content_outline:
     or «Дідусеві вісімдесят років»'
   - Overview of dative pronouns as the primary tool for expressing internal states, needs, and social interactions
 - section: 'Презентація: Форми та базові сполучення (Presentation: Forms and Basic Collocations)'
-  words: 700
+  words: 475
   points:
   - Full paradigm of personal pronouns in the Dative case (мені, тобі, йому, їй, нам, вам, їм) aligned with State Standard
     §4.2.1.4
@@ -43,7 +43,7 @@ content_outline:
   - Visual mapping of Nominative vs. Dative forms to prevent confusion between subject and recipient roles
   - 'Register note: using «Вам» for formal address in hospitality and professional contexts (e.g., «Що Вам запропонувати?»)'
 - section: 'Подобатися та Потрібно: Пастка інверсії (Likes and Needs: The Inversion Trap)'
-  words: 800
+  words: 550
   points:
   - Detailed breakdown of the «Мені подобається» construction (State Standard §4.2.2.1); addressing the 'I Like' Trap by contrasting
     English SVO (I like it) with Ukrainian Dative Inversion
@@ -53,7 +53,7 @@ content_outline:
   - 'Drills for indirect object alignment: explaining why «допомагати» (to help) and «дякувати» (to thank) require Dative
     (кому?), unlike English direct objects'
 - section: 'Стани та емоції: Світ відчуттів (States and Emotions: The World of Feelings)'
-  words: 500
+  words: 325
   points:
   - 'Impersonal constructions for physical states: «мені холодно» (I am cold), «йому жарко» (he is hot), «нам нудно» (we are
     bored)'
@@ -62,7 +62,7 @@ content_outline:
   - 'The logic of convenience and suitability: «мені зручно» (it''s comfortable for me) and «їй пасує» (it suits her/looks
     good on her)'
 - section: Культурний код та етикет (Cultural Code and Etiquette)
-  words: 500
+  words: 325
   points:
   - 'The etiquette of meeting: «Мені приємно» (It is pleasant to me) as the standard response to «Дуже радий познайомитися»'
   - 'The Threshold Taboo (Поріг): Cultural instruction on the phrase «Не через поріг!» (Not across the threshold!) regarding
@@ -129,3 +129,4 @@ grammar:
 - states
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

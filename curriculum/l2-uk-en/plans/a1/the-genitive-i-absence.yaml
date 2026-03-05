@@ -16,14 +16,14 @@ objectives:
 - Learner can use без + genitive (without)
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 250
   points:
   - 'Контраст конструкцій «є» (possession from a1-13) vs «немає» (absence) — State Standard §4.0: акцент на відтворенні готових
     моделей у ситуаціях «Покупки» (§3.8) та «Ресторан» (§3.9).'
   - 'Подолання Learner Error: розрізнення граматичного заперечення якості/стану «не» (Я не студент) та заперечення існування/наявності
     «немає» (У мене немає квитка).'
 - section: Презентація (Presentation)
-  words: 600
+  words: 350
   points:
   - 'Граматична основа: конструкція немає + родовий відмінок — State Standard §4.2.2.2: формування навички на базі сталих
     сполук «немає часу», «немає грошей» (Gen. pl. exception).'
@@ -32,7 +32,7 @@ content_outline:
   - 'Систематизація закінчень чоловічого роду: конкретні предмети на -а/-я (хліба, квитка) проти абстрактних та речовинних
     на -у/-ю (часу, цукру) — фокус на Learner Error 3.'
 - section: Практика (Practice)
-  words: 600
+  words: 350
   points:
   - 'Корекція типової помилки (Case Neglect): використання називного відмінка замість родового після «немає» — дрил на мінімальних
     парах «є квиток» vs «немає квитка».'
@@ -40,7 +40,7 @@ content_outline:
     жіночого (вода → води).'
   - 'Рольова гра «У ресторані/магазині»: замовлення напоїв «без цукру/молока» та ввічливі запити про наявність товарів.'
 - section: Культурний контекст (Cultural Context)
-  words: 400
+  words: 250
   points:
   - 'Культурний код: вживання фрази «Немає проблем!» як вияву гнучкості та ввічлива відмова через «немає» («На жаль, квитків
     немає») для пом''якшення прямого «Ні».'
@@ -60,7 +60,7 @@ vocabulary_hints:
   - 'проблема (problem) — Gen pl: проблем; used in the ubiquitous phrase «Немає проблем!»'
   - 'квиток (ticket) — Gen: квитка; concrete object (ending -а); Learner Error: common neglect of case after «без»'
   - 'ключ (key) — Gen: ключа; concrete object focus'
-  - 'телефон (phone) — Gen: телефону; abstract/device focus for ending -у'
+  - 'телефон (phone) — Gen: телефона (the device) / телефону (phone number, concept); demonstrates -а/-у semantic split'
   - 'газ (gas/sparkling) — Gen: газу; used in the essential collocation «без газу» for ordering water'
 activity_hints:
 - type: fill-in

@@ -11,7 +11,7 @@ phase: B1.1 Aspect
 word_target: 4000
 objectives:
 - Learner can form all three types of future constructions
-- Learner understands when to use compound vs synthetic imperfective future
+- Learner can explain when to use compound vs synthetic imperfective future
 - Learner can select appropriate aspect for future actions
 - Learner recognizes stylistic differences between future forms
 sources:
@@ -105,7 +105,7 @@ activity_hints:
   items: 12+
 connects_to:
 - b1-10 (Aspect in negation)
-- b1-11 (Aspect in imperatives)
+- b1-13 (Aspect in imperatives)
 prerequisites:
 - 'b1-08 (Вид дієслова: повна система)'
 - 'b1-09 (Вид у минулому: одного разу vs щодня)'
@@ -120,3 +120,4 @@ grammar:
 - Future aspect selection patterns
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

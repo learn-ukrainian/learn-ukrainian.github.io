@@ -4,6 +4,7 @@ sequence: 77
 slug: translation-practice-i
 version: '2.0'
 title: Практика перекладу I — Літературний переклад
+subtitle: Introduction
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -105,16 +106,25 @@ vocabulary:
   - перекладацький коментар (translator's note)
   - редакторська правка (editorial revision)
   - перевидання перекладу (retranslation)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Від Зерова до Лукаша examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Культурні коди та реалії
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - match-up
@@ -132,3 +142,9 @@ persona:
   role: Literary Translator
 prerequisites:
 - translation-theory-ii
+grammar:
+- Художній переклад як окремий вид мистецтва
+- Від Зерова до Лукаша
+- Культурні коди та реалії
+- Ритм, рима, сценічність
+register: академічний

@@ -53,7 +53,7 @@ focus: culture
 pedagogy: Immersion & Analysis
 objectives:
 - Learner can describe the cycle of winter holidays in Ukraine
-- Learner understands the symbolism of ritual foods and actions
+- Learner can explain the symbolism of ritual foods and actions
 - Learner can analyze the blend of pagan and Christian elements in winter rituals
 grammar:
 - Ethnographic terminology
@@ -86,3 +86,22 @@ prerequisites:
 - kazky-ta-prytchi
 connects_to:
 - vesna-ta-lito
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Cultural comprehension check
+  items: 12
+- type: match-up
+  focus: Match Святий вечір та Дідух examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 10
+- type: group-sort
+  focus: Classify by Новорічно-йорданська обрядовість
+  items: 10
+- type: reading
+  focus: Analyze cultural text
+  items: 4
+- type: essay-response
+  focus: Write cultural analysis essay

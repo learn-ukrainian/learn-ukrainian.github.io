@@ -4,6 +4,7 @@ sequence: 6
 slug: hedging-modality
 version: '2.0'
 title: Хеджінг та модальність
+subtitle: 'Introduction: Ethics and Academic Style'
 content_outline:
 - section: 'Вступ: Етика та науковий стиль (Introduction: Ethics and Academic Style)'
   words: 600
@@ -81,6 +82,7 @@ activity_hints:
   focus: Hedging expressions by strength
   items: 15+
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-05 (Logical Connectors)
 - Academic style awareness
@@ -101,10 +103,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use хеджінг та модальність
-- Form and apply навіщо пом'якшувати?
-- Distinguish between практика модуляції тону
+- Learner can identify and produce correct Вставні слова forms
+- Learner can analyze Модальні дієслова та припущення in authentic texts
+- Learner can produce written text demonstrating mastery of Етика та науковий стиль
 persona:
   voice: Senior Specialist
   role: Дипломат
 word_target: 4000
+grammar:
+- Етика та науковий стиль
+- Вставні слова
+- Модальні дієслова та припущення
+- Ми-авторське та епістолярій
+register: літературний

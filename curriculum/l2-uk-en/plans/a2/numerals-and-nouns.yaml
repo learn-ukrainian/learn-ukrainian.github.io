@@ -27,7 +27,7 @@ sources:
   notes: Context for the 2-4 agreement pattern
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - 'The concept of ''Zones'' in Ukrainian counting — introduction of the mental model: Zone 1 (1), Zone 2 (2-4), and Zone
     3 (5-20) to replace the binary English singular/plural logic.'
@@ -36,7 +36,7 @@ content_outline:
   - 'Cultural Hook: Kyivan Rus Currency — The ''Gryvnia'' (гривня) as a IX-XIII century unit of weight and currency, grounding
     modern counting drills in a millennium of history.'
 - section: 'Презентація: Зони 1 та 2 (Presentation: Zones 1 and 2)'
-  words: 750
+  words: 500
   points:
   - 'Zone 1: The ''One'' Rule — Focus on mandatory gender agreement (один долар, одна година, одне вікно); specific drill
     to prevent the error of using masculine for feminine nouns (e.g., ''один гривня'').'
@@ -47,7 +47,7 @@ content_outline:
   - 'Gendered ''Two'': Distinguishing between ''два'' (masc/neut) and ''дві'' (fem); correcting the common learner error of
     ''два пляшки'' to ''дві пляшки''.'
 - section: 'Презентація: Зона 3 та Складні Числівники (Presentation: Zone 3 and Compound Numerals)'
-  words: 750
+  words: 500
   points:
   - 'Zone 3: Five to Twenty (The Genitive Plural Zone) — Establishing the pattern for п''ять, десять, двадцять (п''ять гривень,
     десять євро); focus on the phonetics of soft endings.'
@@ -58,7 +58,7 @@ content_outline:
   - 'State Standard §4.2.2.2: Subject of Age — Using numerals to express age (Дідусеві вісімдесят років), focusing on the
     specific Genitive Plural forms required for ''years'' (років vs роки).'
 - section: Практика на Ринку (Market Practice)
-  words: 600
+  words: 400
   points:
   - 'Market Context (Ринок): Immersion drills for natural repetition of counting currency and products (яблука, пляшки, кілограми)
     in a transactional setting.'
@@ -67,7 +67,7 @@ content_outline:
   - 'The ''Euro'' Exception: Introducing ''євро'' as an indeclinable noun that remains constant regardless of the numeral
     (одне євро, десять євро), providing a cognitive break from complex agreement rules.'
 - section: Діалоги та Одушевленість (Dialogues and Animacy)
-  words: 450
+  words: 300
   points:
   - 'Animacy Distinction in Accusative: Introducing the shift for animate objects with numerals; ''Бачу два столи'' (inanimate
     = Nominative form) vs ''Бачу двох друзів'' (animate = Genitive-like form).'
@@ -110,3 +110,8 @@ prerequisites:
 - preferences-and-choices
 connects_to:
 - numeral-case-agreement
+grammar:
+- Вступ
+- Зони 1 та 2
+- Зона 3 та Складні Числівники
+register: розмовний

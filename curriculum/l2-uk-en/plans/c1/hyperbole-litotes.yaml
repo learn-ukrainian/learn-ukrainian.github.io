@@ -79,3 +79,22 @@ prerequisites:
 - irony-sarcasm
 connects_to:
 - euphemism-taboo
+register: літературний
+activity_hints:
+- type: match-up
+  focus: Match Сила, епос та традиція examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Стриманість, ввічливість та іронія
+  items: 12
+- type: fill-in
+  focus: Rewrite in target register
+  items: 10
+- type: quiz
+  focus: Identify stylistic devices in context
+  items: 12
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 8
+- type: essay-response
+  focus: Produce text in specified style

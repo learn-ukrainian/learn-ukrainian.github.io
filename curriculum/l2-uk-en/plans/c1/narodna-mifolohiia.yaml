@@ -54,7 +54,7 @@ content_outline:
 focus: vocabulary
 pedagogy: Immersion & Analysis
 objectives:
-- Learner understands the hierarchy and functions of supernatural beings in Ukrainian folklore
+- Learner can explain the hierarchy and functions of supernatural beings in Ukrainian folklore
 - Learner can analyze mythological motifs in classical literature
 - Learner can discuss the role of mythology in forming national identity
 grammar:
@@ -84,3 +84,22 @@ prerequisites:
 - honcharstvo-ta-rizbyarstvo
 connects_to:
 - narodna-medytsyna
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Identify target structures in context
+  items: 12
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 10
+- type: match-up
+  focus: Match Демонологія дому та природи examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix grammatical errors
+  items: 8
+- type: group-sort
+  focus: Classify by Демонічні та долеподібні істоти
+  items: 12
+- type: essay-response
+  focus: Write using target structures correctly

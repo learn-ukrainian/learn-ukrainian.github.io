@@ -25,14 +25,14 @@ sources:
   notes: Detailed rules for all persons in imperative
 content_outline:
 - section: 'Вступ: Воля та соціальний клей (Introduction: Willpower and Social Glue)'
-  words: 500
+  words: 325
   points:
   - Concept of willpower in language and why the imperative is not always a 'command' — contrast with English 'Please' dependency
   - 'Cultural hook: Wishes like «Нехай щастить!» or «Хай щастить!» function as social glue rather than commands, emphasizing
     shared hopes for success'
   - 'Introduction to the persona: Carpathian Rescue Lead using imperative for both safety and camaraderie'
 - section: 'Граматична база: Усі особи наказового способу (Grammar Base: All Persons of Imperative)'
-  words: 750
+  words: 500
   points:
   - Review of 2nd person (ти/ви) forms and introduction to the 'Let's' form (-мо/-імо suffix) — e.g., ході́мо, робі́мо
   - 'State Standard 2024 (§4.2.3.2) requirements: Formation of 3rd person singular and plural using particles хай / нехай'
@@ -41,22 +41,22 @@ content_outline:
   - 'Formation nuances: explaining why хай/нехай uses the regular 3rd person present/future form (хай він чита́є) unlike the
     special stems of the 2nd person'
 - section: Виклики та пастки для учня (Challenges and Learner Traps)
-  words: 600
+  words: 400
   points:
   - 'The ''Negative'' Trap: Explicitly correcting the assumption that ''нехай'' is the negative of ''хай'' — drill their interchangeability'
   - 'Implicit ''Let''s'': Correcting the common error where English speakers try to use the infinitive with a ''let''s'' equivalent
     instead of the -мо/-імо suffix'
-  - 'Negative Imperatives: Correct placement of ''не'' in 3rd person (хай не читає) and 1st person plural (нехай не ходімо
-    — note on stylistic rarity vs 2nd person ''не роби'')'
+  - 'Negative Imperatives: Correct placement of ''не'' in 3rd person (хай не читає) and 1st person plural (не ходімо);
+    note that нехай/хай is a 3rd-person particle and cannot combine with 1st-person -мо forms'
 - section: 'Культурний контекст: Ритуал тостів (Cultural Context: Ritual of Toasts)'
-  words: 600
+  words: 400
   points:
   - 'The ritual of «Будьмо!»: historical significance as a call to collective presence and survival, not just a drinking phrase'
   - 'The Third Toast Protocol: Tradition of dedicating the third toast «за любов» or «за жінок» — cultural note: men traditionally
     stand as a sign of respect'
   - 'Formulating wishes with the verb «бажати» (to wish) — practice with Genitive case: «бажаю щастя», «бажаю успіхів»'
 - section: 'Практичне застосування: Борщ та координація (Practical Application: Borscht and Coordination)'
-  words: 550
+  words: 375
   points:
   - 'Borscht recipe practice: contrasting 2nd person commands (додайте) with collective suggestions (додаймо) during the cooking
     process'
@@ -86,3 +86,26 @@ prerequisites:
 - if-i-were
 connects_to:
 - smart-shopping
+grammar:
+- Воля та соціальний клей
+- Усі особи наказового способу
+- Виклики та пастки для учня
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

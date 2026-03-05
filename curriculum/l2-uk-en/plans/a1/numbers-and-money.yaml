@@ -16,7 +16,7 @@ objectives:
 - Learner can use numbers with genitive plural forms
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 250
   points:
   - 'Державний стандарт (§3.8) та роль чисел у повсякденному житті: фокус на тематиці купівлі основних продуктів, одягу та
     засобів гігієни.'
@@ -24,7 +24,7 @@ content_outline:
     розкладом руху.'
   - Мотиваційний вступ через діалог про покупки, що активує знання з модуля a1-16 (Генітив I) у контексті запиту ціни.
 - section: Презентація (Presentation)
-  words: 600
+  words: 350
   points:
   - 'Числа 1-20: фокус на правильну вимову «п''ять» [pjat''] (пауза апострофа) та правильний наголос у числівниках 11-19 (одинАдцять,
     дванАдцять).'
@@ -33,7 +33,7 @@ content_outline:
     візуальних таблиць.'
   - 'Запитання про ціну та базові конструкції: «Скільки коштує?», «Скільки з мене?», «Яка ціна?».'
 - section: Практика (Practice)
-  words: 600
+  words: 350
   points:
   - 'Лічба та арифметика: інтерактивні вправи на додавання цін у кошику з використанням актуальних цін (хліб ~25 грн, молоко
     ~40 грн).'
@@ -43,7 +43,7 @@ content_outline:
   - 'Дрилі на закріплення правила 1-2-5: перетворення форм іменника залежно від випадкового числа (3 гривні -> 10 гривень
     -> 1 гривня).'
 - section: Культурний контекст (Cultural Context)
-  words: 400
+  words: 250
   points:
   - 'Історія гривні: походження назви від «гриви» (шийна прикраса або злиток із золота чи срібла часів Київської Русі).'
   - 'Символ гривні ₴: аналіз графіки (курсивна літера «г» з двома рисками) як символу стабільності за аналогією до € та ¥.'
@@ -85,8 +85,12 @@ activity_hints:
 connects_to:
 - a1-39 (Food and Drink)
 - a1-23 (What Time Is It)
+scope_note: >
+  The 1-2-5 number agreement rule (1 гривня, 2 гривні, 5 гривень) is taught as
+  lexical chunks at A1 before formal Genitive instruction in seq 32. Learners
+  memorize the patterns without full case analysis.
 prerequisites:
-- a1-32 (The Genitive I)
+- a1-21 (Demonstratives)
 persona:
   voice: Patient Supportive Tutor
   role: Bazaar Accountant

@@ -4,6 +4,7 @@ sequence: 19
 slug: practice-ii-article-critique
 version: '2.0'
 title: Практика II — Критика статті
+subtitle: 'Introduction: Traditions of Ukrainian Scientific Critique'
 content_outline:
 - section: 'Вступ: Традиції української наукової критики (Introduction: Traditions of Ukrainian Scientific Critique)'
   words: 500
@@ -90,6 +91,7 @@ activity_hints:
   focus: Classify comments as positive/negative/neutral
   items: 12+
 focus: practice
+pedagogy: PPP
 prerequisites:
 - c1-14 (Literature Review)
 - c1-18 (Essay Writing Practice)
@@ -109,10 +111,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Understand and apply практика ii — критика статті
-- Analyze and evaluate критичне читання
-- Identify key concepts of практичне завдання
+- Learner can use appropriate language for Дієслова оцінки
+- Learner can produce professional texts in the domain of Практика II — Критика статті
+- Learner can evaluate and correct register in Традиції української наукової критики contexts
 persona:
   voice: Senior Specialist
   role: Науковий опонент
 word_target: 4000
+grammar:
+- Традиції української наукової критики
+- Дієслова оцінки
+- Оцінка методології та аргументації
+- 'Об''єктивність та безособовий стиль'
+register: літературний

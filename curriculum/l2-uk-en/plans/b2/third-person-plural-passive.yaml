@@ -4,12 +4,14 @@ sequence: 5
 slug: third-person-plural-passive
 version: '2.0'
 title: Пасив третьою особою множини
+subtitle: 'They-Passives in Ukrainian'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use пасив третьою особою множини
-- Form and apply найрозмовніший пасив
+- Learner can identify and apply пасив третьою особою множини
+- Learner can form and use найрозмовніший пасив
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
   url: https://mon.gov.ua/
@@ -106,3 +108,8 @@ persona:
   role: Gossip Columnist (Світський оглядач)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Third-person plural passive (indefinite agent)
+- Register and usage contexts
+- Contrast with other passive strategies
+register: нейтральний

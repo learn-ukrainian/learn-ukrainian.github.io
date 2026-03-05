@@ -4,6 +4,7 @@ sequence: 37
 slug: case-studies
 version: '2.0'
 title: Практичні кейси
+subtitle: 'Introduction: Case Analysis Methodology'
 content_outline:
 - section: 'Вступ: Методологія аналізу кейсів (Introduction: Case Analysis Methodology)'
   words: 400
@@ -80,6 +81,7 @@ activity_hints:
   focus: Classify factors and causes
   items: 12+
 focus: practice
+pedagogy: PPP
 prerequisites:
 - c1-25 to c1-31 (Sociolinguistic knowledge)
 - c1-36 (Професійні сценарії)
@@ -100,9 +102,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
-- Understand and apply практичні кейси
-- Analyze and evaluate метод кейсів
+- Learner can use appropriate language for Мовна політика та «мовний закон»
+- Learner can produce professional texts in the domain of Практичні кейси
+- Learner can evaluate and correct register in Методологія аналізу кейсів contexts
 persona:
   voice: Senior Specialist
   role: Бізнес-консультант
 word_target: 4000
+grammar:
+- Методологія аналізу кейсів
+- Мовна політика та «мовний закон»
+- Медіааналіз та феномен «джинси»
+- Лінгвістична дилема — діалект чи суржик?
+register: літературний

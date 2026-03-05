@@ -4,6 +4,7 @@ sequence: 58
 slug: building-domain-expertise
 version: '2.0'
 title: Побудова галузевої експертизи
+subtitle: 'Introduction: Path to Expertise'
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -98,16 +99,25 @@ vocabulary:
   - тренд (trend)
   - візія (vision)
   - траєкторія (trajectory)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Стратегії опанування галузі examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Ресурси та EdTech-ландшафт
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - match-up
@@ -126,3 +136,9 @@ persona:
   role: Industry Expert
 prerequisites:
 - professional-research-skills
+grammar:
+- Шлях до експертизи
+- Стратегії опанування галузі
+- Ресурси та EdTech-ландшафт
+- Практика та наставництво
+register: академічний

@@ -4,7 +4,9 @@ sequence: 27
 slug: register-business-ukrainian
 version: '2.0'
 title: Ділова українська мова
+subtitle: 'Ukrainian for Business Communication'
 focus: style
+pedagogy: CBI
 phase: B2.3
 word_target: 4000
 objectives:
@@ -125,3 +127,8 @@ persona:
   role: HR Director (HR-директор)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Business correspondence conventions
+- Professional vocabulary
+- Formulaic expressions in business
+register: нейтральний

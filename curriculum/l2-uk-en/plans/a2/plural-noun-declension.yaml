@@ -25,7 +25,7 @@ sources:
   notes: Full plural declension tables for all genders
 content_outline:
 - section: 'Вступ: Множина — не тільки -и/-і (Introduction: Plural is More Than -и/-і)'
-  words: 400
+  words: 275
   points:
   - 'Motivation through real need: квитки на потяг (train tickets), список книг (book list), кількість людей (number of people)
     — plural case forms appear everywhere in daily Ukrainian life.'
@@ -34,7 +34,7 @@ content_outline:
   - 'Overview of the 7 plural cases: establish that Ukrainian changes noun endings not only for singular but for every case
     in the plural — a key step up from A1.'
 - section: Називний множини (Nominative Plural)
-  words: 400
+  words: 275
   points:
   - 'Core endings review: -и/-і for most nouns (книги, столи, міста); -а/-я for neuter nouns ending in -о/-е (вікна, поля);
     -і for soft-stem nouns (краї, гості).'
@@ -43,7 +43,7 @@ content_outline:
   - 'Irregular plurals that must be memorised: око → очі, вухо → вуха, дитина → діти, людина → люди, ім''я → імена, курча
     → курчата.'
 - section: Родовий множини (Genitive Plural)
-  words: 600
+  words: 375
   points:
   - 'Why Genitive plural matters: used after numbers 5+ (п''ять книг, десять днів), after negation (немає грошей, немає людей),
     in partitive contexts (склянка молока).'
@@ -55,7 +55,7 @@ content_outline:
     сестер, друзів.'
   - 'Common learner errors: using -ів for all nouns, forgetting stress shifts, confusing zero ending with nominative singular.'
 - section: Давальний, Знахідний, Орудний, Місцевий множини (Dative, Accusative, Instrumental, Locative Plural)
-  words: 600
+  words: 400
   points:
   - 'Dative plural: -ам/-ям for all genders (студентам, книгам, містам, полям); highly regular — good news for learners.'
   - 'Accusative plural: equals Nominative plural for inanimate nouns (читаю книги, бачу міста); equals Genitive plural for
@@ -65,7 +65,7 @@ content_outline:
   - 'Full paradigm table: noun ''студент'' (m), ''книга'' (f), ''місто'' (n) across all 7 cases in plural side by side.'
   - 'Animate vs inanimate distinction in Accusative plural: drill with люди/людей, друзі/друзів, книги/книги.'
 - section: Кличний множини та зведена таблиця (Vocative Plural and Full Summary)
-  words: 400
+  words: 275
   points:
   - 'Vocative plural: equals Nominative plural for all nouns — друзі! колеги! діти! панове! (only пан → панове is irregular
     in form).'
@@ -74,7 +74,7 @@ content_outline:
   - 'Pattern recognition summary: which cases are fully regular in plural (Dat, Inst, Loc) vs which require case-by-case learning
     (Nom, Gen).'
 - section: Практика (Practice)
-  words: 600
+  words: 400
   points:
   - 'Shopping list context: fill in Genitive plural for quantities — п''ять (книга), десять (квиток), три (день).'
   - 'Travel scenario: complete sentences with Accusative and Locative plural — бачу (місто pl), живу в (країна pl).'
@@ -132,3 +132,4 @@ grammar:
 - animate vs inanimate distinction in Accusative plural
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

@@ -4,6 +4,7 @@ sequence: 47
 slug: reading-professional-texts-i
 version: '2.0'
 title: Читання фахових текстів I — Стратегії розуміння
+subtitle: Introduction — Reading as an Active Process
 focus: grammar
 pedagogy: TTT
 phase: C2.3 [Professional Language]
@@ -108,16 +109,25 @@ vocabulary:
   - навігація (navigation)
   - анотація (annotation)
   - абстракт (abstract)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Структура фахових текстів та навігація examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Переглядове та пошукове читання
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - quiz
@@ -137,3 +147,9 @@ persona:
   role: Information Broker
 prerequisites:
 - terminology-acquisition-ii
+grammar:
+- Вступ — Читання як активний процес
+- Структура фахових текстів та навігація
+- Переглядове та пошукове читання
+- Робота з лексикою та контекстуальна інференція
+register: академічний

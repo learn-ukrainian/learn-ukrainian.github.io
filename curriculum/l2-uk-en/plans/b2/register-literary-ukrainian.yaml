@@ -55,23 +55,31 @@ content_outline:
   - 'Практичне застосування: трансформація нейтрального повідомлення про подію у художній опис із використанням фігур та тропів'
 vocabulary_hints:
   required:
-  - термін (term) — літературознавчий термін, визначення терміна; базовий інструмент аналізу
-  - поняття (concept) — ключове поняття, абстрактне поняття; вживається для опису ідейного змісту
-  - процес (process) — творчий процес, літературний процес; описує динаміку створення твору
-  - метод (method) — творчий метод, художній метод; вказує на спосіб відображення дійсності автором
+  - аналіз (analysis) — стилістичний аналіз, глибокий аналіз твору; дія по розбору художніх засобів
+  - синтез (synthesis) — гармонійний синтез, синтез мистецтв; поєднання елементів у цілісний образ
+  - дослідження (research) — літературне дослідження, результати дослідження; науковий підхід до тексту
   recommended:
   - аналіз (analysis) — стилістичний аналіз, глибокий аналіз твору; дія по розбору художніх засобів
   - синтез (synthesis) — гармонійний синтез, синтез мистецтв; поєднання елементів у цілісний образ
   - дослідження (research) — літературне дослідження, результати дослідження; науковий підхід до тексту
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify literary-register in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using literary-register
+  items: 10
+- type: match-up
+  focus: Match Історичні витоки та зачинателі examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in literary-register
   items: 8
+- type: group-sort
+  focus: Classify examples by Лексичні засоби та конотації
+  items: 12
+- type: essay-response
+  focus: Write paragraph using literary-register correctly
 persona:
   voice: Professional Language Coach
   role: Novelist (Письменник-романіст)
@@ -84,3 +92,4 @@ prerequisites:
 - register-official-legal
 connects_to:
 - register-media-journalistic
+register: нейтральний

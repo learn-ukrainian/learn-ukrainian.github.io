@@ -25,7 +25,7 @@ sources:
   notes: Declension rules for 'який' and its role in subordinate clauses
 content_outline:
 - section: 'Вступ: Опис за межами прикметників (Introduction: Description Beyond Adjectives)'
-  words: 450
+  words: 300
   points:
   - The power of complex sentences — moving from simple adjectives to describing people and things with full clauses; contextualizing
     the bridge between A2 and B1 syntax.
@@ -34,7 +34,7 @@ content_outline:
   - 'Introduction to the ''Mirror'' analogy: Visualizing «який» as a mirror that reflects the gender and number of the noun
     it follows (the antecedent).'
 - section: 'Презентація: Відмінювання та узгодження (Presentation: Agreement and Declension)'
-  words: 700
+  words: 475
   points:
   - 'Basic Agreement: «Який, Яка, Яке, Які» in the Nominative case — mastering the gender/number match with the antecedent;
     standard reference to adjective-like endings.'
@@ -45,7 +45,7 @@ content_outline:
   - 'Scaffolding strategy: Moving from Nominative subject clauses (e.g., «чоловік, який стоїть») to Accusative object clauses
     (e.g., «чоловік, якого я знаю»).'
 - section: Культурний контекст та вибір (Cultural Context and Selection)
-  words: 550
+  words: 375
   points:
   - 'The ''Selection'' Culture: Navigating a Ukrainian market (ринок) where the question «Який?» is constant for precision;
     exploring the nuance of selecting specific items.'
@@ -54,7 +54,7 @@ content_outline:
   - 'The logic of naming: Discussing the idiom «Як ви човен назвете, так він і попливе» (As you name the boat, so it shall
     float) regarding the importance of defining characteristics.'
 - section: Практика та типові помилки (Practice and Common Errors)
-  words: 850
+  words: 550
   points:
   - 'Differentiating «Хто» vs. «Який»: Correcting the common learner error of using «хто» for people (e.g., «Чоловік, хто
     живе тут» — incorrect) vs. the correct «Чоловік, який живе тут».'
@@ -65,7 +65,7 @@ content_outline:
   - 'Identifying the ''The Chameleon'' behavior: Drills to ensure learners don''t mismatch the case of the relative pronoun
     with the antecedent when the clause function differs.'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 450
+  words: 300
   points:
   - 'Witness Interview scenario: Providing detailed descriptions of people or lost items to an official using varied forms
     of «який».'
@@ -100,3 +100,22 @@ prerequisites:
 - in-order-to
 connects_to:
 - time-clauses
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

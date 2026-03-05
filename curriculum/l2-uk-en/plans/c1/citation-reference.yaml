@@ -4,6 +4,7 @@ sequence: 7
 slug: citation-reference
 version: '2.0'
 title: Цитація та посилання
+subtitle: Academic Integrity and Ethics
 content_outline:
 - section: Академічна доброчесність та етика (Academic Integrity and Ethics)
   words: 500
@@ -101,6 +102,7 @@ activity_hints:
 - type: essay-response
   focus: Integrate 3 citations into paragraph
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-06 (Hedging & Modality)
 - Academic register awareness
@@ -121,10 +123,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use цитація та посилання
-- Form and apply наукова чесність
-- Distinguish between практика цитування
+- Learner can identify and produce correct дієслова та терміни forms
+- Learner can analyze Синтаксичні структури посилань in authentic texts
+- Learner can produce written text demonstrating mastery of Академічна доброчесність та етика
 persona:
   voice: Senior Specialist
   role: Архіваріус
 word_target: 4000
+grammar:
+- Академічна доброчесність та етика
+- дієслова та терміни
+- Синтаксичні структури посилань
+- Техніки передачі чужого мовлення
+register: літературний

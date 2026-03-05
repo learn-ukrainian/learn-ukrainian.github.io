@@ -16,7 +16,7 @@ objectives:
 - Understand simple prohibitions
 content_outline:
 - section: Наказовий спосіб (Imperative mood)
-  words: 500
+  words: 300
   points:
   - 'Formation rule: 2nd person singular and plural. Remove -ти ending, add imperative suffix. Pattern depends on conjugation
     type and stem final consonant.'
@@ -25,7 +25,7 @@ content_outline:
   - 'Learner error: confusing imperative with infinitive. "Читати!" is a sign/rule (read!), "Читай!" is a personal command.
     Context determines which form to use.'
 - section: Вісім обов'язкових дієслів (Eight required verbs)
-  words: 500
+  words: 300
   points:
   - 'State Standard §4.2.4.2 required verbs: читай(те) (read!), пиши(те) (write!), скажи(те) (say/tell!), дай(те) (give!),
     іди(те) (go!), слухай(те) (listen!), дивись(те) (look!), стій(те) (stop!).'
@@ -34,7 +34,7 @@ content_outline:
   - 'Irregular stems: дати → дай (not *дайи), сказати → скажи (consonant mutation к→ж), стояти → стій (stem vowel change).
     These must be memorized as set forms.'
 - section: Ввічливе прохання (Polite requests)
-  words: 400
+  words: 250
   points:
   - 'Будь ласка as universal softener: Дайте, будь ласка (Please give). Position flexibility: beginning, middle, or end of
     sentence. Most common after the verb.'
@@ -42,14 +42,14 @@ content_outline:
   - 'Indirect request pattern: Чи не могли б ви...? (Could you...?). Preview of conditional mood. Чи не могли б ви повторити?
     (Could you repeat?). Most polite option available at A1.'
 - section: Заборони (Prohibitions)
-  words: 300
+  words: 175
   points:
   - 'Negative imperative: Не + imperative form. Не кури! (Do not smoke!). Не біжи! (Do not run!). Не чіпай! (Do not touch!).
     Same formation as positive, with не.'
   - 'Preview connection to a1-55 (Prohibitions and Signs): Distinction between personal prohibition (Не чіпай!) and public
     sign prohibition (Не торкатися! — infinitive form). Both mean "do not touch" but differ in register.'
 - section: Практика (Practice)
-  words: 300
+  words: 175
   points:
   - 'Command drills: Teacher gives situation, learner produces correct imperative form. Focus on the 8 required verbs in varied
     contexts.'
@@ -64,7 +64,7 @@ vocabulary_hints:
   - іти/іди (to go / go!) — Ідіть сюди; movement command
   - слухати/слухай (to listen / listen!) — Слухайте уважно; classroom command
   - дивитися/дивись (to look / look!) — Дивіться на дошку; classroom command
-  - стояти/стій (to stop / stop!) — Стійте! Не рухайтеся!; safety command
+  - стояти/стій (to stand / halt!) — Стійте! Не рухайтеся!; safety command
   recommended:
   - показати/покажи (to show / show!) — Покажіть, будь ласка; service context
   - допомогти/допоможи (to help / help!) — Допоможіть!; emergency context

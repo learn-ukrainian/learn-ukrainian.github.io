@@ -9,7 +9,7 @@ phase: BIO
 word_target: 5000
 objectives:
 - 'Analyze the life and legacy of агатангел кримський: поліглот і мученик науки'
-- Evaluate the contributions of людина тридцяти мов
+- Evaluate the contributions of людина шістдесяти мов
 - Trace the career and influence of повернення імені
 sources:
 - name: Агатангел Кримський (Wikipedia UA)
@@ -21,9 +21,9 @@ sources:
   type: reference
   notes: Academy founding documents and Krymsky's role
 content_outline:
-- section: Вступ — Людина тридцяти мов
+- section: Вступ — Людина шістдесяти мов
   points:
-  - Феноменальні мовні здібності (понад 30 мов)
+  - Феноменальні мовні здібності (понад 60 мов)
   - Один із засновників Української академії наук
   - Трагічна доля під час сталінських репресій
   words: 850
@@ -51,7 +51,7 @@ content_outline:
 - section: Переслідування та арешт (1928-1941)
   points:
   - Кампанія проти «буржуазного націоналізму»
-  - Арешт у 1930-х роках
+  - Арешт 20 липня 1941 року
   - Заслання до Казахстану
   - Смерть у засланні (1942)
   words: 850

@@ -10,8 +10,8 @@ pedagogy: TTT
 phase: B1.2 Motion
 word_target: 4000
 objectives:
-- Learner knows all 14 motion verb pairs
-- Learner understands unidirectional vs multidirectional
+- Learner can identify all 14 motion verb pairs
+- Learner can explain unidirectional vs multidirectional
 - Learner can choose correct motion verb for context
 sources:
 - name: Ukrainian State Standard 2024 - Motion Verbs
@@ -118,3 +118,4 @@ grammar:
 - Unidirectional vs multidirectional distinction
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

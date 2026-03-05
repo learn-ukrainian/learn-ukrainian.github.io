@@ -72,10 +72,10 @@ vocabulary_hints:
   - дебати (debates) — брати участь у дебатах, викликати на дебати; focus on political/formal registers
   - аргумент (argument) — вагомий аргумент, переконливий аргумент, наводити аргументи, спростовувати аргумент
   - думка (opinion) — на мою думку, поділяти думку, висловлювати думку; avoid Russian calc 'рахую'
-  - термін (term) — вживати термін, науковий термін
-  - поняття (concept) — ключове поняття, розкривати поняття
-  - процес (process) — тривалий процес, процес обговорення
-  - метод (method) — дієвий метод, метод переконання
+  - опонент (opponent) — шановний опоненте, позиція опонента; formal address in debate
+  - вважати (to consider/think) — correct alternative to calc 'рахувати'
+  - сперечатися (to argue/debate) — productive disagreement; distinguish from 'спорити'
+  - аналіз (analysis) — ґрунтовний аналіз фактів
   recommended:
   - опонент (opponent) — шановний опоненте, позиція опонента; formal address in debate
   - вважати (to consider/think) — correct alternative to calc 'рахувати'
@@ -86,14 +86,23 @@ vocabulary_hints:
   - безперечно (indisputably) — marker of high certainty
   - ймовірно (probably) — marker of medium certainty
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: fill-in
+  focus: Complete Висловлення та обґрунтування погляду with appropriate language
+  items: 10
+- type: quiz
+  focus: Choose the best response for each scenario
+  items: 12
+- type: match-up
+  focus: Match situations to appropriate language
+  items: 12
+- type: error-correction
+  focus: Fix inappropriate register in Етикет незгоди та культура дебатування
   items: 8
+- type: fill-in
+  focus: Complete professional text with correct forms
+  items: 8
+- type: essay-response
+  focus: Produce Висловлення та обґрунтування погляду for given scenario
 persona:
   voice: Professional Language Coach
   role: Politician (Політик)

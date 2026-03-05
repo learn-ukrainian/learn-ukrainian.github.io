@@ -8,7 +8,7 @@ subtitle: Complex Sentences & Health
 focus: checkpoint
 pedagogy: TTT
 phase: A2.2
-word_target: 2000
+word_target: 1500
 objectives:
 - Learner can build complex arguments using logical connectors
 - Learner can use relative clauses to define and describe
@@ -25,14 +25,14 @@ sources:
   notes: Synthesized logic for coordinating multiple subordinate clauses
 content_outline:
 - section: Вступ та цілі (Introduction and Objectives)
-  words: 400
+  words: 200
   points:
   - 'Mapping Level A2.2 proficiency: transitioning from simple reports to complex logical structures aligned with State Standard
     §4.4.2'
   - Defining competencies for health communication, pharmacy interactions, and describing physical states per State Standard
     §3.12
 - section: 'Синтаксис логіки: Причина та Мета (Syntax of Logic: Cause and Purpose)'
-  words: 750
+  words: 375
   points:
   - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через). Focus on register: correcting the overuse of ''тому що''
     in casual speech where ''бо'' is more natural'
@@ -41,7 +41,7 @@ content_outline:
   - 'Scaffolding causal and final clauses with specific medical contexts: explaining why one goes to the doctor or takes specific
     medicine'
 - section: Опис та послідовність дій (Description and Sequence of Actions)
-  words: 750
+  words: 375
   points:
   - 'The Relative Chameleon: Using ''який'' to define nouns. Targeted correction of ''який agreement'' errors (matching gender/case
     with the antecedent noun)'
@@ -49,7 +49,7 @@ content_outline:
     medicine after you eat'')'
   - 'Preparing for B1 syntax: how complex A2 structures pave the way for conditional ''якби'' sentences'
 - section: Медицина, тіло та народні методи (Medicine, Body and Folk Methods)
-  words: 700
+  words: 350
   points:
   - Integrating body parts (голова, живіт, горло, рука/нога) with pain expression using Accusative and Genitive cases
   - 'Pharmacy interactions: Correcting the literal translation of ''take medicine'' from ''брати'' to ''приймати ліки'' (formal)
@@ -57,7 +57,7 @@ content_outline:
   - 'Cultural Hook: Traditional Ukrainian treatments for colds—hot tea with raspberry (малина), viburnum (калина), and honey
     (мед) as natural antipyretics'
 - section: Практичне застосування та підсумок (Practical Application and Summary)
-  words: 400
+  words: 200
   points:
   - 'Integration Challenge: navigating a medical consultation by combining cause, purpose, and description skills'
   - 'Cultural Hook: Usage of the toast ''Будьмо!'' (Let us be!) in social health rituals, emphasizing its literal meaning
@@ -92,3 +92,19 @@ prerequisites:
 - health-and-body
 connects_to:
 - basic-motion-prefixes
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Review all covered topics
+  items: 15
+- type: fill-in
+  focus: Apply learned structures
+  items: 10
+- type: match-up
+  focus: Match concepts from modules
+  items: 10
+- type: error-correction
+  focus: Find errors across topics
+  items: 8
+- type: essay-response
+  focus: Integrative writing task

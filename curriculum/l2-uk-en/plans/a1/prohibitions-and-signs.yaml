@@ -16,7 +16,7 @@ objectives:
 - Navigate using street signs
 content_outline:
 - section: Заборони (Prohibitions)
-  words: 500
+  words: 275
   points:
   - 'Infinitive prohibitions on signs: Не курити! (No smoking!). Не входити! (Do not enter!). Не торкатися! (Do not touch!).
     Public signs use infinitive, not imperative — this is a register distinction.'
@@ -25,16 +25,16 @@ content_outline:
   - 'Sign vs personal command contrast: Не торкатися! (sign — infinitive, impersonal) vs Не чіпай! (personal command — imperative).
     Same meaning, different grammatical form and social context.'
 - section: Попередження (Warnings)
-  words: 400
+  words: 250
   points:
   - 'Warning exclamations: Увага! (Attention!). Обережно! (Careful!). Небезпечно! (Dangerous!). Short-form adjectives and
     adverbs used as standalone warnings.'
-  - 'Warning signs: Мокра підлога (Wet floor). Високa напруга (High voltage). Recognizing danger signs for personal safety.
+  - 'Warning signs: Мокра підлога (Wet floor). Висока напруга (High voltage). Recognizing danger signs for personal safety.
     Reading compound noun phrases on signs.'
   - 'Understanding urgency: Warning signs protect safety — these are high-priority vocabulary items. Learner should recognize
     them instantly without translation.'
 - section: Розклади та оголошення (Schedules and notices)
-  words: 400
+  words: 250
   points:
   - 'Reading schedules: години роботи (operating hours), вихідний (day off), перерва (break). Format: з 9:00 до 18:00 (from
     9:00 to 18:00). Genitive of time.'
@@ -43,14 +43,14 @@ content_outline:
   - 'Notices and announcements: Оголошення (Announcement). Акція (Sale/Promotion). Знижка (Discount). Practical reading for
     everyday life.'
 - section: На вулиці (On the street)
-  words: 400
+  words: 250
   points:
   - 'Street signs: вулиця (street), площа (square), провулок (lane). Reading address plates: вул. Хрещатик, пл. Незалежності.
     Abbreviations on signs.'
   - 'Traffic and transport signs: Стоп (Stop), Пішохідний перехід (Pedestrian crossing). Metro signs: Вхід (Entrance), Вихід
     (Exit), Перехід (Transfer). Urban navigation.'
 - section: Практика (Practice)
-  words: 300
+  words: 175
   points:
   - 'Sign reading drills: Identify the meaning and grammatical form (infinitive vs imperative vs noun phrase) of various Ukrainian
     signs.'
@@ -69,7 +69,7 @@ vocabulary_hints:
   - вихідний (day off) — Вихідний — неділя; schedule term
   - перерва (break) — Перерва з 13:00 до 14:00; schedule term
   recommended:
-  - небезпечно (dangerous) — Небезпечно! Високa напруга!; warning sign
+  - небезпечно (dangerous) — Небезпечно! Висока напруга!; warning sign
   - пішохідний (pedestrian) — пішохідний перехід; traffic sign
   - перехід (crossing/transfer) — підземний перехід; metro/street
   - зупинка (stop) — Зупинка автобуса; transport sign

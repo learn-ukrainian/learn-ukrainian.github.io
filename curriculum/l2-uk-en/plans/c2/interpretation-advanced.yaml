@@ -4,6 +4,7 @@ sequence: 79
 slug: interpretation-advanced
 version: '2.0'
 title: Поглиблений усний переклад
+subtitle: Introduction — Interpretation as a Profession
 focus: practice
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -105,16 +106,25 @@ vocabulary:
   - релейний переклад (relay interpretation)
   - ретур (retour/B language)
   - модель зусиль (effort model)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Методологія та когнітивні моделі examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Техніка послідовного перекладу та нотація
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - match-up
@@ -132,3 +142,9 @@ persona:
   role: Interpreter
 prerequisites:
 - translation-practice-ii
+grammar:
+- Вступ — Усний переклад як професія
+- Методологія та когнітивні моделі
+- Техніка послідовного перекладу та нотація
+- Синхронний переклад та професійне середовище
+register: академічний

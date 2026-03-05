@@ -25,14 +25,14 @@ sources:
   notes: Full preposition inventory with case government
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - 'Purpose and benefit concept — align with State Standard §4.2.2.2.2 (Genitive with prepositions for purpose: ''для здоров’я'')'
   - Transition from spatial (a2-07) to abstract logical prepositions (reason, purpose, topic)
   - 'Introduction to causality vs purpose: distinguishing why something happened (''тому що'', ''бо'') vs for what intent
     (''щоб'', ''для'') per §4.4.2'
 - section: 'Презентація: Причина та Мета (Presentation: Cause and Purpose)'
-  words: 800
+  words: 525
   points:
   - 'для vs без (Genitive) — high frequency collocations: для мене, для роботи, для здоров''я; без цукру, без проблем, без
     допомоги'
@@ -42,7 +42,7 @@ content_outline:
   - 'від vs з — source/origin logic: ''від'' for persons/entities, ''з'' for physical locations'
   - 'Logical connectors for sentence structure: using ''тому що'' and ''бо'' for reasons, and ''щоб'' for purpose/intent'
 - section: Культурний контекст та логічні пастки (Cultural Context and Logical Traps)
-  words: 400
+  words: 275
   points:
   - 'The ''Bread'' Distinction: ''піти по хліб'' (correct logical purpose) vs ''піти за хлібом'' (literally walking behind
     bread); emphasis on Ukrainian precision in prepositions'
@@ -51,7 +51,7 @@ content_outline:
   - 'Learner error: duration logic; avoid ''на протязі'' (literally ''in a draft of air'') and use correct ''протягом'' or
     ''упродовж'' for ''during'''
 - section: 'Практика: Час та Відносини (Practice: Time and Relationships)'
-  words: 800
+  words: 525
   points:
   - 'Time prepositions (о/об vs після) — focus on clock time logic using Locative: ''о 10 годині''; learner error: avoid ''в
     10 годині'''
@@ -60,7 +60,7 @@ content_outline:
   - 'Transformation drill: converting ''тому що'' (conjunction) into ''через'' + Genitive noun phrase (prepositional phrase)'
   - 'Case selection drill: matching ''крім'', ''замість'', ''щодо'' with correct Genitive endings in abstract contexts'
 - section: Діалоги та підсумок (Dialogues and Summary)
-  words: 600
+  words: 400
   points:
   - 'At the Pharmacy scenario: practical application of ''для здоров''я'', ''після їжі'', ''від кашлю'' (high frequency context)'
   - 'Planning a Trip scenario: logical navigation using ''через погоду'', ''завдяки плануванню'', ''протягом тижня'''
@@ -122,3 +122,4 @@ grammar:
 - other logical prepositions (про, без, крім)
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

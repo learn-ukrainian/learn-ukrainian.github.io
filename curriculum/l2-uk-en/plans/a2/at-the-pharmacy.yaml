@@ -16,7 +16,7 @@ objectives:
 - Learner can discuss side effects
 content_outline:
 - section: 'Вступ: Українські аптеки (Introduction: Ukrainian Pharmacies)'
-  words: 400
+  words: 275
   points:
   - 'Cultural hook: Identifying a «чергова аптека» (duty pharmacy) open 24/7, marked by the iconic green cross; explaining
     the infrastructure of Ukrainian pharmacies.'
@@ -24,10 +24,10 @@ content_outline:
     between «безрецептурні ліки» (OTC) and prescription-only meds.'
   - 'Learner error: Clarifying that «ліки» is pluralia tantum (always plural); correcting the common mistake of treating it
     as singular (e.g., «Ці ліки», not «Це ліки»).'
-  - 'Linguistic purity: Identifying and avoiding the Russianism «лікарство» in favor of the standard Ukrainian «ліки» (alignment
-    with State Standard §3.12).'
+  - 'Vocabulary note: «ліки» is the preferred standard Ukrainian form (pluralia tantum); «лікарство» is also in VESUM as standard
+    Ukrainian (not a Russicism) but «ліки» is more common and stylistically preferred.'
 - section: 'Пошук ліків: Симптоми та запити (Asking for Medicine: Symptoms and Requests)'
-  words: 750
+  words: 500
   points:
   - 'Grammar drill: Using «від» + Genitive case for ailments (State Standard §4.2.2.2); correcting the error of using «для»
     (e.g., «ліки від кашлю» vs incorrect «ліки для кашлю»).'
@@ -38,7 +38,7 @@ content_outline:
   - 'Vocabulary expansion: Categorizing common OTC meds: «жарознижувальні» (antipyretics), «знеболювальні» (painkillers),
     and «таблетки для розсмоктування» (lozenges).'
 - section: Інструкції та етикетки (Instructions and Labels)
-  words: 650
+  words: 425
   points:
   - 'Standard vs Colloquial usage: Defining the formal «приймати ліки» used in labels versus the colloquial «пити таблетки»
     found in daily speech.'
@@ -48,7 +48,7 @@ content_outline:
     leaflets.'
   - 'Warning signs: Recognizing storage instructions like «зберігати в недоступному для дітей місці» and expiry dates.'
 - section: Дозування та побічні ефекти (Dosage and Side Effects)
-  words: 700
+  words: 475
   points:
   - 'Precision in dosage: Phrases for frequency such as «раз на день», «двічі на добу», and the specific construction «приймати
     по одній таблетці».'
@@ -59,7 +59,7 @@ content_outline:
   - 'Medical forms: Vocabulary for different delivery methods: «капсула» (capsule), «сироп» (syrup), «мазь» (ointment), and
     «краплі» (drops).'
 - section: 'Практика: Діалог в аптеці (Practice: Pharmacy Dialogue)'
-  words: 500
+  words: 325
   points:
   - 'Roleplay: Buying medicine for a cold using the «від + Genitive» construction and asking about side effects.'
   - 'Authenticity check: A scenario where the learner asks for antibiotics and the pharmacist explains the requirement for
@@ -68,7 +68,7 @@ content_outline:
 vocabulary_hints:
   required:
   - 'аптека (pharmacy) — collocations: чергова аптека (24/7), купити в аптеці; high frequency'
-  - 'ліки (medicine) — always plural! Avoid Russianism ''лікарство''; collocations: ліки від застуди, приймати ліки'
+  - 'ліки (medicine) — always plural! «лікарство» is also standard but «ліки» preferred; collocations: ліки від застуди, приймати ліки'
   - 'таблетка (pill) — collocations: таблетка від голови, приймати по одній таблетці, таблетки для розсмоктування'
   - 'рецепт (prescription) — collocations: електронний рецепт (е-рецепт), ліки за рецептом, виписати рецепт'
   - 'біль (pain) — use with ''від'' for medicine: таблетки від болю; note gender (masculine)'

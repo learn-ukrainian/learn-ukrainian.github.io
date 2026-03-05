@@ -10,10 +10,10 @@ pedagogy: TTT
 phase: C2.1 [Stylistics & Rhetoric]
 word_target: 5000
 objectives:
-- Learner can construct and deliver a persuasive speech using deductive and inductive argumentation structures
+- Конструювати and deliver a persuasive speech using deductive and inductive argumentation structures
 - Learner can participate in structured debates using Ukrainian academic debate formats and conventions
 - Learner can identify and counter logical fallacies and emotional manipulation in opponent arguments
-- Learner can apply rhetorical ethics principles to distinguish persuasion from manipulation
+- Застосовувати rhetorical ethics principles to distinguish persuasion from manipulation
 sources:
 - name: Феофан Прокопович. Про риторичне мистецтво
   url: https://www.nbuv.gov.ua/
@@ -54,7 +54,7 @@ content_outline:
   - 'Prokopovych''s rules adapted for modern contexts: compositional principles from Baroque oratory applied to contemporary
     presentations, lectures, and public addresses (Standard §4.3.5-6).'
   - 'Speech planning and structure: exordium (вступ), narratio (виклад), argumentatio (доведення), peroratio (завершення);
-    adapting classical dispositio to Ukrainian professional communication.'
+    adapting classical dispositio to Ukrainian професійні communication.'
 - section: Формати дебатів (Debate Formats)
   words: 800
   points:
@@ -63,7 +63,7 @@ content_outline:
   - 'Parliamentary debate and public discussions: круглий стіл (roundtable), публічні слухання (public hearings), панельна
     дискусія (panel discussion) as Ukrainian-specific civic formats.'
   - 'Moderating and facilitating: language for managing turns, summarizing positions, and maintaining productive discourse
-    in Ukrainian professional settings.'
+    in Ukrainian професійні settings.'
 - section: Контраргументація (Counter-Argumentation)
   words: 800
   points:
@@ -122,9 +122,15 @@ activity_hints:
 connects_to:
 - c2-023 (C2.1 Practice I builds on rhetoric skills)
 - c2-015 (Individual Voice II — personal persuasion style)
-- c2-021 (Stylistic Devices Mastery — rhetorical figures as persuasion tools)
+- c2-021 (Stylistic Devices Mastery — риторичні фігури as persuasion tools)
 prerequisites:
 - c2-021 (Advanced Rhetoric)
 persona:
   voice: Senior Specialist
   role: Debate Coach
+grammar:
+- Вступ — Риторика як практична навичка
+- Структури аргументації
+- Побудова переконливого виступу
+- Формати дебатів
+register: академічний

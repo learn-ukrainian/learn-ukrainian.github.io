@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can recognize and interpret 16 core Ukrainian idioms with body parts and animals
 - Learner can use somatic and zoomorphic idioms appropriately in context
-- Learner understands the cultural symbolism of body parts and animals in Ukrainian phraseology
+- Learner can explain the cultural symbolism of body parts and animals in Ukrainian phraseology
 content_outline:
 - section: 'Вступ: Роль фразеологізмів у мовній компетенції (Introduction: Role of Phraseology)'
   words: 500
@@ -64,30 +64,39 @@ content_outline:
   - 'Пошук еквівалентів: Співвіднесення українських соматизмів з англійськими аналогами без втрати стилістичного забарвлення.'
 vocabulary_hints:
   required:
-  - термін (term) — мовознавче поняття
-  - поняття (concept) — абстрактна ідея
-  - процес (process) — послідовність дій
-  - метод (method) — спосіб досягнення мети
-  - 'морочити голову (to confuse/bother) — розмовне; колок.: «не мороч мені голову»'
+  - аналіз (analysis) — розклад на компоненти
+  - синтез (synthesis) — поєднання частин у ціле
+  - дослідження (research) — науковий пошук
+  - витрішки (gape) — вживається у фразеологізмі «продавати витрішки»
+  - морочити голову (to confuse/bother) — розмовне; колок.: «не мороч мені голову»
   - тримати язик за зубами (to keep a secret) — висока частотність; нейтральне
   - робити з мухи слона (to exaggerate) — загальновживане; частотне
   recommended:
   - аналіз (analysis) — розклад на компоненти
   - синтез (synthesis) — поєднання частин у ціле
   - дослідження (research) — науковий пошук
-  - 'собаку з''їв (to be an expert) — експресивне; колок.: «він у цьому справжню собаку з''їв»'
-  - 'як кіт наплакав (very little) — розмовне; колок.: «грошей як кіт наплакав»'
+  - собаку з'їв (to be an expert) — експресивне; колок.: «він у цьому справжню собаку з'їв»
+  - як кіт наплакав (very little) — розмовне; колок.: «грошей як кіт наплакав»
   - витрішки (gape) — вживається у фразеологізмі «продавати витрішки»
   - коровай (wedding bread) — культурний символ долі та добробуту
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: match-up
+  focus: Match idioms to their meanings
+  items: 15
+- type: group-sort
+  focus: Classify idioms by Коли тіло стає метафорою
+  items: 12
+- type: fill-in
+  focus: Complete sentences with the correct idiom
+  items: 10
+- type: quiz
+  focus: Choose the correct meaning of each idiom
+  items: 12
+- type: error-correction
+  focus: Fix incorrect idiom usage
   items: 8
+- type: essay-response
+  focus: Use 5+ idioms in a coherent paragraph
 connects_to:
 - b2-60 (Idioms Somatic)
 prerequisites:

@@ -4,12 +4,14 @@ sequence: 4
 slug: reflexive-passive
 version: '2.0'
 title: Зворотний пасив із -ся
+subtitle: 'Passive with -ся Verbs'
 focus: grammar
+pedagogy: TTT
 phase: B2.1
 word_target: 4000
 objectives:
-- Identify and correctly use зворотний пасив із -ся
-- Form and apply зворотний пасив
+- Learner can identify and apply зворотний пасив із -ся
+- Learner can form and use зворотний пасив
 sources:
 - name: Ukrainian State Standard 2024 - Reflexive Verbs
   url: https://mon.gov.ua/
@@ -73,7 +75,7 @@ vocabulary_hints:
   - 'досліджується (is being researched) — Academic/Scientific register; collocations: явище досліджується, тема досліджується
     вченими.'
   - зворотний (reflexive) — grammatical term for -ся verbs.
-  - процес (process) — key semantic concept for this passive type.
+  - розробляється (is being developed) — technical/inventive context; collocations: проєкт розробляється, гелікоптер розробляється.
   - науковець (scientist) — common agent in passive constructions.
   - експеримент (experiment) — frequent subject in scientific passive.
   recommended:
@@ -119,3 +121,9 @@ persona:
   role: Nature Documentary Narrator (Оповідач документального фільму)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Reflexive passive with -ся
+- Imperfective process passive
+- Agent expression limitations
+- Reflexive vs -но/-то distinction
+register: нейтральний

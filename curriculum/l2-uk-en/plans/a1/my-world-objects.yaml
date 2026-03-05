@@ -4,19 +4,19 @@ sequence: 10
 slug: my-world-objects
 version: '2.0'
 title: 'My World: Objects'
-subtitle: Pointing to Things with Demonstratives
+subtitle: Household Vocabulary with Demonstratives
 focus: grammar
 pedagogy: PPP
 phase: A1.1 [First Contact]
 word_target: 1200
 objectives:
-- Learner can use цей/ця/це/ці to point to objects near them
-- Learner can use той/та/те/ті to point to objects far from them
+- Learner can name 40 common household and everyday objects with correct gender
+- Learner can use цей/ця/це/ці and той/та/те/ті as tools to identify objects
 - Learner can match demonstrative gender with noun gender
-- Learner can name 40 common household and everyday objects
+- Learner can describe rooms and spaces using household vocabulary
 content_outline:
 - section: Вступ (Introduction)
-  words: 350
+  words: 200
   points:
   - Recap of a1-03 (Gender) and a1-04 (Identification) as the grammatical foundation for demonstrative specification.
   - Introduction of the proverb «В гостях добре, а вдома краще» (East or West, home is best) to anchor the home-centric vocabulary
@@ -24,7 +24,7 @@ content_outline:
   - Overview of State Standard §4.2.2 regarding the formation and usage of gendered and plural forms of the demonstrative
     pronouns 'цей' and 'той'.
 - section: Презентація (Presentation)
-  words: 650
+  words: 400
   points:
   - 'Visual scaffolding: Distinguishing ''Near'' (цей/ця/це/ці) via hand-touching icons vs. ''Far'' (той/та/те/ті) via finger-pointing
     icons.'
@@ -35,7 +35,7 @@ content_outline:
   - 'Gender agreement patterns: Demonstrating the rhyming sound association between demonstrative endings and noun endings
     (e.g., цЯ книгА, цЕ вікнО) to prevent mismatch.'
 - section: Практика (Practice)
-  words: 450
+  words: 275
   points:
   - 'Drill: Gender Matching. Correcting the common learner error ''цей книга'' using minimal pairs and phonological reinforcement
     of the feminine ''-а'' ending.'
@@ -44,14 +44,14 @@ content_outline:
   - 'Proximity mnemonic: Using the ''T'' for ''There/That'' association (той/та) to resolve proximity confusion between near
     and far objects during identification tasks.'
 - section: Культурний контекст (Cultural Insight)
-  words: 300
+  words: 175
   points:
   - 'The Traditional Ukrainian Home: Explaining the ''Покуття'' (Pokuttia/Red Corner) concept as a spiritual focal point for
     icons and rushnyky, even in modern layouts.'
   - 'Lexical distinctions in dwelling: Comparing the traditional rural ''хата'' with the modern urban ''квартира'' and the
     general concept of ''дім''.'
 - section: Продукція та підсумок (Production and Summary)
-  words: 250
+  words: 150
   points:
   - 'Persona Task: ''Interior Designer''. Navigating a living space, pointing to distant and near objects, and correctly specifying
     them with gender-matched demonstratives.'

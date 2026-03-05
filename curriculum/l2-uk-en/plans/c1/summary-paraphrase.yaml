@@ -4,6 +4,7 @@ sequence: 11
 slug: summary-paraphrase
 version: '2.0'
 title: Резюме та парафраз
+subtitle: 'Introduction: The Art of Retelling'
 content_outline:
 - section: 'Вступ: Мистецтво переказу (Introduction: The Art of Retelling)'
   words: 500
@@ -103,6 +104,7 @@ activity_hints:
 - type: essay-response
   focus: Summarize article in 100 words
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-07 (Citation & Reference)
 - c1-10 (Counterarguments)
@@ -123,10 +125,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use резюме та парафраз
-- Form and apply мистецтво переказу
-- Distinguish between практика переказу
+- Learner can identify and produce correct Техніки резюмування та анотування forms
+- Learner can analyze Парафраз та техніка іномовлення in authentic texts
+- Learner can produce written text demonstrating mastery of Мистецтво переказу
 persona:
   voice: Senior Specialist
   role: Референт
 word_target: 4000
+grammar:
+- Мистецтво переказу
+- Техніки резюмування та анотування
+- Парафраз та техніка іномовлення
+- Академічна доброчесність та уникнення плагіату
+register: літературний

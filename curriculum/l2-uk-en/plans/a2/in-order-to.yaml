@@ -25,7 +25,7 @@ sources:
   notes: Rules for mood and tense in purpose clauses
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - 'The logic of intentionality per State Standard §4.4.2: expressing purpose with «щоб»; example: «Ми вчимо українську мову,
     щоб розмовляти з друзями»'
@@ -33,7 +33,7 @@ content_outline:
   - 'Common Learner Error: Omitting the comma before «щоб» in purpose clauses; emphasis on strict punctuation rules in Ukrainian
     syntax'
 - section: 'Презентація: Логіка суб''єктів (Presentation: Subject Logic)'
-  words: 900
+  words: 600
   points:
   - 'Same Subject Logic: Щоб + Infinitive — Visual logic: ''Is the doer the same?'' → YES (Infinitive usage)'
   - 'Common Learner Error: The ''For To'' Calque — confusing «для» + infinitive with «щоб» + infinitive (e.g., *Я йду для
@@ -44,7 +44,7 @@ content_outline:
     читати* vs correct *Я хочу, щоб ти читав*)'
   - 'Purpose with Nouns: Для + Genitive — Reinforcing Genitive case usage (§4.2.2.2.2) and distinguishing from «щоб» clauses'
 - section: Культурний контекст та Реєстр (Cultural Context and Register)
-  words: 600
+  words: 400
   points:
   - 'The ''Щоб'' Toast Culture: Playful social usage of purpose grammar; feature the classic toast: «Щоб їлося і пилося, щоб
     хотілося і моглося!»'
@@ -53,13 +53,13 @@ content_outline:
   - 'Register Check (Formal): «Для того щоб» — usage in emphatic or official contexts, preparing learners for future C1 Stylistics'
   - 'Register Check (Informal): «Аби» — spoken usage implying ''just so that'' or ''if only'' (e.g., «аби не спізнитися»)'
 - section: Практичне застосування (Practical Application)
-  words: 650
+  words: 425
   points:
   - 'Subject-shifting drills: Moving from same-subject goals to different-subject wishes using a clear decision-tree flowchart'
   - 'Comma placement and punctuation mastery: exercises focused on fixing the common error of comma omission in complex sentences'
   - 'De-calquing workshop: identifying and correcting the ''для + infinitive'' error in sentence sets'
 - section: 'Комунікація: Цілі та плани (Communication: Goals and Plans)'
-  words: 400
+  words: 275
   points:
   - 'Planning a social event or career path: integrating high-frequency collocations like «Я хочу, щоб...» and «Для того,
     щоб...»'
@@ -89,3 +89,22 @@ prerequisites:
 - i-feel-like
 connects_to:
 - which-one
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

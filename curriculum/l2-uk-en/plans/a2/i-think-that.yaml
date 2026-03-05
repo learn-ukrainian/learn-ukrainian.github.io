@@ -25,7 +25,7 @@ sources:
   notes: Social norms for agreement and disagreement
 content_outline:
 - section: 'Вступ: Від фактів до поглядів (Introduction: From Facts to Perspectives)'
-  words: 400
+  words: 275
   points:
   - The transition from stating objective facts (A1) to expressing subjective perspectives (A2); referencing Ukrainian State
     Standard §2 (Каталог А) on expressing personal stances.
@@ -34,7 +34,7 @@ content_outline:
   - 'The ''No'' ambiguity: Exploring why a direct ''Ні'' is often avoided in favor of explanatory phrases like ''Мені здається,
     що це не зовсім так'' to prevent sounding harsh or confrontational.'
 - section: 'Презентація: Дієслова думки (Presentation: Thinking Verbs)'
-  words: 800
+  words: 525
   points:
   - 'The contrast between ''Думати'' (mental process: ''I am thinking about it'') and ''Вважати'' (firm opinion: ''I believe/consider
     it to be'').'
@@ -45,7 +45,7 @@ content_outline:
   - 'Gender-sensitive agreement: Teaching ''Я згоден'' (Masculine) vs ''Я згодна'' (Feminine) with specific drills to correct
     common mismatch errors (e.g., a woman saying ''Я згоден'').'
 - section: 'Граматика: Сполучник ''що'' та впевненість (Grammar: Conjunction ''що'' and Certainty)'
-  words: 600
+  words: 400
   points:
   - 'The ''Hard Comma'' Rule: Implementing State Standard §4.4.2 requirement for mandatory commas before ''що'' in complex
     sentences (Contrast: ''Я знаю, що ми праві'' vs English optional ''that'').'
@@ -54,7 +54,7 @@ content_outline:
   - 'Introductory structures: ''На мою думку'' and ''На мою особисту думку'' vs ''На думку експертів'' for citing external
     authority.'
 - section: 'Практика: Обґрунтування думки (Practice: Justifying Opinions)'
-  words: 700
+  words: 475
   points:
   - 'Elementary grounding drills: Practice expressing an opinion and providing a basic ''тому що'' (because) justification
     as mandated by the A2 communicative standard.'
@@ -63,7 +63,7 @@ content_outline:
   - 'Fact-to-Opinion conversion: Exercises changing ''Сьогодні холодно'' into ''Я вважаю, що сьогодні холодно'' or ''Мені
     здається, що сьогодні холодно'' to distinguish degrees of conviction.'
 - section: Діалоги та застосування (Dialogues and Application)
-  words: 500
+  words: 325
   points:
   - 'Scenario-based dialogue: Discussing a movie or work proposal using softeners to navigate disagreement without direct
     ''Ні''.'
@@ -73,7 +73,7 @@ content_outline:
 vocabulary_hints:
   required:
   - думати (to think) — про майбутнє, довго думати, думати над проблемою; high frequency, denotes mental process
-  - 'вважати (to consider/believe) — я вважає, що...; вважати правильним; вважати за потрібне; high frequency, denotes firm
+  - 'вважати (to consider/believe) — я вважаю, що...; вважати правильним; вважати за потрібне; high frequency, denotes firm
     opinion; note: never use ''рахувати'''
   - здаватися (to seem) — мені здається, що...; здається, дощ починається; medium frequency, denotes impression or soft stance
   - згоден / згодна (agree) — я цілком згоден, я не згоден, я згодна з вами; requires gender agreement
@@ -100,3 +100,22 @@ prerequisites:
 - she-said-that
 connects_to:
 - i-feel-like
+register: розмовний
+activity_hints:
+- type: match-up
+  focus: Match words to definitions
+  items: 12
+- type: fill-in
+  focus: Complete sentences with vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort by category
+  items: 10
+- type: quiz
+  focus: Choose correct word for context
+  items: 10
+- type: fill-in
+  focus: Use words in sentences
+  items: 6
+- type: essay-response
+  focus: Write using domain vocabulary

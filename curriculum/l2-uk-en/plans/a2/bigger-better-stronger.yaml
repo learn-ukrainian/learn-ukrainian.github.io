@@ -25,7 +25,7 @@ sources:
   notes: Complete comparison paradigms
 content_outline:
 - section: 'Вступ (Introduction: The Arena of Comparison)'
-  words: 500
+  words: 325
   points:
   - 'Introduction of the ''Sports Commentator'' persona: setting the stage for comparing athletes, landmarks, and daily items
     using Ukrainian comparatives.'
@@ -34,7 +34,7 @@ content_outline:
   - 'English vs Ukrainian comparative logic: explicitly addressing the common learner error of double comparatives like «більш
     кращий» (more better) and teaching the correct synthetic («кращий») or analytic («більш хороший») forms.'
 - section: 'Презентація: Творення ступенів (Presentation: Forming the Comparative)'
-  words: 800
+  words: 525
   points:
   - 'Regular formation using suffixes -іший and -ший: guided discovery of when to use each, aligned with State Standard §4.3.1
     requirements for A2.'
@@ -45,7 +45,7 @@ content_outline:
   - 'Phonetic focus: training the ''Sports Commentator'' voice to emphasize the doubled consonants or shifts in stressed syllables
     during rapid comparison.'
 - section: 'Структури порівняння: ніж vs за (Comparison Structures)'
-  words: 700
+  words: 475
   points:
   - 'Contrastive analysis of ''ніж'' (than) vs ''за'' (than): explaining that ''ніж'' is followed by the Nominative case while
     ''за'' requires the Accusative case.'
@@ -55,16 +55,16 @@ content_outline:
     to modify comparisons (e.g., ''набагато дорожчий'', ''трохи дешевший'').'
   - The dual comparative structure through the proverb «Чим старіший, тим мудріший» (The older, the wiser).
 - section: 'Практика: Рекорди України (Practice: Ukrainian Records)'
-  words: 600
+  words: 400
   points:
-  - 'Situational drills comparing Ukrainian landmarks: ''Київська телевежа'' (385m) is 60m taller (''вища'') than the Eiffel
+  - 'Situational drills comparing Ukrainian landmarks: ''Київська телевежа'' (380m) is 55m taller (''вища'') than the Eiffel
     Tower; ''Батьківщина-Мати'' (102m) vs other European monuments.'
   - 'Retail and quality comparison drills: using frequency-based collocations like ''більший розмір'' (larger size), ''краща
     якість'' (better quality), and ''дорожчий товар'' (more expensive item).'
   - 'Transformation drills: converting positive adjectives into comparative forms with a focus on stem-shifting words found
     in sports (e.g., ''швидкий→швидший'', ''дужий→дужчий'').'
 - section: Діалоги та Висновки (Dialogues and Summary)
-  words: 400
+  words: 275
   points:
   - 'Market commentary dialogue: comparing prices, quality, and quantity between different stalls using ''кращий спосіб''
     and ''менша кількість''.'
@@ -93,7 +93,7 @@ vocabulary_hints:
   - набагато (much/far) — intensifier for comparative adjectives
   - трохи (a little) — intensifier for comparative adjectives
   - значно (significantly) — formal/analytical intensifier
-  - швидший (faster) — high relevance for sports persona; note к→ш shift
+  - швидший (faster) — high relevance for sports persona; formed by adding -ший to швидк- (dropping -кий)
 activity_hints:
 - type: fill-in
   focus: Transform positive to comparative
@@ -128,3 +128,4 @@ grammar:
 - comparison structures (ніж, за)
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

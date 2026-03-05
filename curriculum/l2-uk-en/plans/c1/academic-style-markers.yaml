@@ -4,6 +4,7 @@ sequence: 2
 slug: academic-style-markers
 version: '2.0'
 title: Маркери академічного стилю
+subtitle: Introduction — What is Academic Style?
 content_outline:
 - section: Вступ — Що таке академічний стиль? (Introduction — What is Academic Style?)
   words: 450
@@ -99,6 +100,7 @@ activity_hints:
 - type: essay-response
   focus: Rewrite informal paragraph in academic style
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-01 (B2 Review & Bridge)
 - Functional styles recognition
@@ -119,10 +121,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use маркери академічного стилю
-- Form and apply що таке академічний стиль?
-- Distinguish between практика трансформації
+- Learner can identify and produce correct Безособовість та об'єктивність forms
+- Learner can analyze Номіналізація та термінотворення in authentic texts
+- Learner can produce written text demonstrating mastery of Вступ — Що таке академічний стиль?
 persona:
   voice: Senior Specialist
   role: Науковий редактор
 word_target: 4000
+grammar:
+- Вступ — Що таке академічний стиль?
+- 'Безособовість та об''єктивність'
+- Номіналізація та термінотворення
+- Пасивні конструкції та дієслівні форми
+register: літературний

@@ -65,8 +65,8 @@ vocabulary_hints:
   - 'джерело (source) — High frequency; collocations: надійне джерело, покликання на джерело'
   - 'теза (thesis) — Mid frequency; collocations: висувати тезу, головна теза дослідження'
   - 'аргумент (argument) — High frequency; collocations: вагомий аргумент, наводити аргументи'
-  - термін (term) — основна одиниця наукового тексту
-  - поняття (concept) — абстрактна одиниця знання
+  - плагіат (plagiarism) — використання чужих думок без посилання; питання академічної доброчесності
+  - висновок (conclusion) — High frequency; collocations: робити висновки, дійти висновку
   recommended:
   - плагіат (plagiarism) — використання чужих думок без посилання; питання академічної доброчесності
   - 'висновок (conclusion) — High frequency; collocations: робити висновки, дійти висновку'
@@ -75,14 +75,23 @@ vocabulary_hints:
   - покликання (citation/reference) — вказівка на джерело інформації
   - обґрунтування (justification) — доведення важливості обраної теми
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: Узагальнення всіх граматичних тем рівня B2"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 persona:
   voice: Professional Language Coach
   role: Research Fellow (Науковий співробітник)
@@ -93,3 +102,4 @@ prerequisites:
 - religion-in-ukraine
 connects_to:
 - capstone-prezentatsiya
+register: нейтральний

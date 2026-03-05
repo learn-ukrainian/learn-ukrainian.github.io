@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom, and character
 - Learner can use proverbs appropriately in context to express advice, commentary, or wisdom
-- Learner understands the cultural values embedded in Ukrainian folk wisdom
+- Learner can explain the cultural values embedded in Ukrainian folk wisdom
 content_outline:
 - section: 'Вступ: Народна мудрість як алгоритм успіху (Introduction: Folk Wisdom as an Algorithm for Success)'
   words: 600
@@ -59,21 +59,30 @@ vocabulary_hints:
   - мудрість (wisdom) — народна мудрість, житейська мудрість, перлина мудрості; Medium frequency.
   - характер (character) — загартовувати характер, мати характер (be strong-willed), риси характеру; High frequency.
   - плід (fruit/result) — пожинати плоди, плоди праці, заборонений плід; Medium frequency, often metaphorical.
-  - поняття (concept) — ключове поняття фразеології; Standard academic usage.
+  - дослідження (research) — ґрунтовне дослідження, об'єкт дослідження; High frequency in academic/publicistic styles.
   recommended:
   - дослідження (research) — ґрунтовне дослідження, об'єкт дослідження; High frequency in academic/publicistic styles.
   - аналіз (analysis) — проводити аналіз, системний аналіз; Essential for B2 critical tasks.
   - синтез (synthesis) — синтез знань; Used in summary sections.
   - процес (process) — робочий процес, творчий процес; High frequency.
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: match-up
+  focus: Match idioms to their meanings
+  items: 15
+- type: group-sort
+  focus: Classify idioms by Філософія праці та «Сродна праця»
+  items: 12
+- type: fill-in
+  focus: Complete sentences with the correct idiom
+  items: 10
+- type: quiz
+  focus: Choose the correct meaning of each idiom
+  items: 12
+- type: error-correction
+  focus: Fix incorrect idiom usage
   items: 8
+- type: essay-response
+  focus: Use 5+ idioms in a coherent paragraph
 persona:
   voice: Professional Language Coach
   role: Village Elder (Старійшина)

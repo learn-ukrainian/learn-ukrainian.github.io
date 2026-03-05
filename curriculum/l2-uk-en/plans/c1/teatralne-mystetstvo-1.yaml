@@ -51,7 +51,7 @@ focus: fine-arts
 pedagogy: CBI
 objectives:
 - Learner explores the origins of Ukrainian theater (Vertep, School Drama).
-- Learner understands the role of the Coryphaei Theater.
+- Learner can describe the role of the Coryphaei Theater.
 - Learner analyzes the revolutionary impact of Les Kurbas and Berezil.
 grammar:
 - Dramatic terminology
@@ -80,3 +80,22 @@ prerequisites:
 - balet-i-tanets
 connects_to:
 - teatralne-mystetstvo-2
+register: літературний
+activity_hints:
+- type: quiz
+  focus: Art terminology comprehension
+  items: 12
+- type: match-up
+  focus: Match Боротьба за професійну сцену examples to categories
+  items: 12
+- type: fill-in
+  focus: Complete descriptions of artistic works
+  items: 10
+- type: group-sort
+  focus: Classify by Театральний авангард та 'Березіль'
+  items: 10
+- type: reading
+  focus: Analyze arts-related text
+  items: 4
+- type: essay-response
+  focus: Write critical analysis of artistic work

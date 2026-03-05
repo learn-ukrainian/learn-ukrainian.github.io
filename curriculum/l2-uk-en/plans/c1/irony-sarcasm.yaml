@@ -50,9 +50,9 @@ content_outline:
 focus: style
 pedagogy: Immersion
 objectives:
-- Distinguish between verbal irony, situational irony, and sarcasm
-- Identify markers of irony in written and spoken texts
-- Use irony appropriately in different registers
+- Learner can identify stylistic features of Від «Енеїди» до Чорнобаївки
+- Learner can transform text between different registers related to Іронія та сарказм: Тонкощі змісту
+- Learner can produce text applying Природа непрямого значення principles
 grammar:
 - Verbal vs. situational irony
 - Markers of sarcasm (intonation, context)
@@ -80,3 +80,22 @@ prerequisites:
 - metaphor-simile
 connects_to:
 - hyperbole-litotes
+register: літературний
+activity_hints:
+- type: match-up
+  focus: Match Від «Енеїди» до Чорнобаївки examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Маркери та граматика
+  items: 12
+- type: fill-in
+  focus: Rewrite in target register
+  items: 10
+- type: quiz
+  focus: Identify stylistic devices in context
+  items: 12
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 8
+- type: essay-response
+  focus: Produce text in specified style

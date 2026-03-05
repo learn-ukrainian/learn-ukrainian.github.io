@@ -73,14 +73,23 @@ vocabulary_hints:
   - опозиція (opposition) — парламентська опозиція, перейти в опозицію
   - демократія (democracy) — крихка демократія, розбудова демократії
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
-- type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
+- type: quiz
+  focus: Identify political-terminology in sentences
+  items: 12
+- type: fill-in
+  focus: Complete sentences using political-terminology
+  items: 10
+- type: match-up
+  focus: Match Державні інституції та органи влади examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in political-terminology
   items: 8
+- type: group-sort
+  focus: Classify examples by Виборчий процес та демократичні механізми
+  items: 12
+- type: essay-response
+  focus: Write paragraph using political-terminology correctly
 persona:
   voice: Professional Language Coach
   role: Civil Servant (Держслужбовець)
@@ -92,3 +101,4 @@ prerequisites:
 - checkpoint-register
 connects_to:
 - law-justice-vocabulary
+register: нейтральний

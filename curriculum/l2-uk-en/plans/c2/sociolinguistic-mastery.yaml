@@ -4,6 +4,7 @@ sequence: 68
 slug: sociolinguistic-mastery
 version: '2.0'
 title: Соціолінгвістична майстерність
+subtitle: 'Introduction: Language and Society'
 focus: culture
 pedagogy: TTT
 phase: C2.4 [Meta-Skills & Capstone]
@@ -115,16 +116,25 @@ vocabulary:
   - мовні установки (language attitudes)
   - мовні права (language rights)
   - гендерлект (genderlect)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
-- type: reading
-  focus: Поглиблений аналіз тексту
-  items: 4
+- type: quiz
+  focus: Identify target structures in context
+  items: 15
+- type: fill-in
+  focus: Complete sentences with correct forms
+  items: 12
+- type: match-up
+  focus: Match Українська мовна ситуація examples to categories
+  items: 12
+- type: error-correction
+  focus: Find and fix errors in authentic texts
+  items: 10
+- type: group-sort
+  focus: Classify by Мовна політика та законодавство
+  items: 12
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Produce text using target structures
 activities:
   types_required:
   - reading
@@ -145,3 +155,9 @@ persona:
   role: Sociolinguist
 prerequisites:
 - regional-varieties
+grammar:
+- Мова і суспільство
+- Українська мовна ситуація
+- Мовна політика та законодавство
+- Мовний вибір та перемикання кодів
+register: академічний

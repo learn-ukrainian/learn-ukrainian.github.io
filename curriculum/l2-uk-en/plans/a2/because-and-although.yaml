@@ -25,14 +25,14 @@ sources:
   notes: Rules for causal and concessive clauses
 content_outline:
 - section: Вступ (Introduction)
-  words: 450
+  words: 300
   points:
   - Connecting simple ideas into complex logical structures — alignment with Ukrainian State Standard §4.4.2 (lines 1403-1416)
     for causal and adversarial sentences
   - 'Cultural anchor: Introducing the folk wisdom ''І трясця не бере без причини'' (Even the fever doesn''t strike without
     a reason) to illustrate that every result has a cause'
 - section: 'Презентація: Чому та Як (Presentation: Why and How)'
-  words: 800
+  words: 550
   points:
   - 'Register Hierarchy: Clearly distinguish between neutral ''тому що'', casual/spoken ''бо'', and formal/written ''оскільки''
     — provide examples for each context'
@@ -41,21 +41,21 @@ content_outline:
   - 'The Mandatory Comma: Addressing ''Comma Phobia'' by drilling the comma as an inseparable part of the conjunction ('',
     тому що'', '', бо'', '', оскільки'', '', але'')'
 - section: 'Презентація: Всупереч обставинам (Presentation: Despite the Circumstances)'
-  words: 650
+  words: 425
   points:
   - Concession with 'хоча' (although) vs contrast with 'але' (but) — building sentences with counter-expectations (e.g., 'Хоча
     це дорого, я це куплю')
   - 'Attribution Accuracy: Positive ''завдяки'' (thanks to) vs Negative/Neutral ''через'' (due to/because of) — warning against
     the sarcastic or illiterate use of ''завдяки'' for negative events'
 - section: 'Практика: Логічне обґрунтування (Practice: Logical Justification)'
-  words: 650
+  words: 425
   points:
   - 'Correction Drills: Identifying and fixing the use of ''через'' for positive outcomes (e.g., ''Я склав іспит через вчителя''
     -> ''Я склав іспит завдяки вчителю'')'
   - 'Argumentation practice: Re-phrasing casual explanations using ''бо'' into formal statements using ''оскільки'' for different
     social settings'
 - section: Продукція та Діалоги (Production and Dialogues)
-  words: 450
+  words: 300
   points:
   - 'Investigative Journalist Roleplay: Interviewing a partner about a surprising result or event, requiring the use of ''через
     затори'' vs ''завдяки зусиллям'''
@@ -82,3 +82,26 @@ prerequisites:
 - telling-stories
 connects_to:
 - she-said-that
+grammar:
+- Вступ
+- Чому та Як
+- Всупереч обставинам
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

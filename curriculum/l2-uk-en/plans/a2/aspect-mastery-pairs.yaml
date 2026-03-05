@@ -25,14 +25,14 @@ sources:
   notes: Complete aspect pair listings
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - 'Theoretical review vs Practical drilling: moving from simple recognition to automated high-frequency application. Alignment
     with State Standard §4.3.2 requirements for mastering fundamental pairs like робити/зробити, писати/написати, and виходити/вийти.'
   - 'Visual Decision Tree (Mermaid diagram): distinguishing between process/habit/general description (imperfective) and one-time
     result/sequential action (perfective) based on contextual triggers.'
 - section: Презентація (Presentation)
-  words: 700
+  words: 475
   points:
   - 'The Core 30 Pairs Formation Taxonomy: Prefixation (мити-помити), Suffixation (розповідати-розповісти), and Suppletive
     forms (брати-взяти). Instruction on §4.2.3.1 regarding compound future (буду писати) vs simple perfective future (напишу).'
@@ -41,7 +41,7 @@ content_outline:
   - 'Automation Rhythms: Grouping pairs by Tiers (1-3) to create auditory anchors and melodic patterns that facilitate faster
     recall during speech.'
 - section: Практика (Practice)
-  words: 700
+  words: 475
   points:
   - 'Rapid-fire choice drills based on temporal markers: identifying when keywords like ''часто'', ''довго'', and ''зараз''
     require imperfective, while ''раптом'', ''вже'', and ''завтра'' (as a result) require perfective.'
@@ -50,14 +50,14 @@ content_outline:
   - 'Correction of Process/Result Confusion: Addressing the learner error of using perfective for durations (e.g., *''Я купив
     молоко дві години'' instead of ''Я купував молоко дві години'').'
 - section: Діалоги (Dialogues)
-  words: 600
+  words: 400
   points:
   - 'Peer-review dialogues - Cultural Hook: The ''Toloka'' tradition. Scenario involving communal labor to build a ''khata-mazanka''
     (traditional house), focusing on the distinction between the ongoing effort and the completed structure.'
   - 'Authentic Ritual Integration: Discussing the practice of leaving grain overnight to check building site energy (вибирати/вибрати
     місце, залишати/залишити зерно), utilizing sequential perfective verbs to describe the ritual.'
 - section: Підсумок (Summary)
-  words: 500
+  words: 325
   points:
   - 'The ''Present-Perfective Trap'': Dedicated drill to eliminate the error of using perfective for current actions (e.g.,
     *''Я напишу зараз'' vs ''Я пишу''), clarifying that perfective prefixes in this context denote the future.'
@@ -121,3 +121,4 @@ grammar:
 - aspect in tenses review
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

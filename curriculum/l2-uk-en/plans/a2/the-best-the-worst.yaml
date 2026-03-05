@@ -25,7 +25,7 @@ sources:
   notes: Superlative formation and usage
 content_outline:
 - section: Вступ (Introduction)
-  words: 400
+  words: 275
   points:
   - Introduction to the concept of the superlative degree as the expression of an extreme quality, building directly on the
     comparative degree structures learned in module a2-18.
@@ -33,7 +33,7 @@ content_outline:
     більший → найбільший).'
   - 'Hook: Mention that Ukraine holds several world-class records which will be explored through the lens of superlative adjectives.'
 - section: Граматична презентація (Grammar Presentation)
-  words: 850
+  words: 575
   points:
   - 'Synthetic (Simple) form (§4.3.1): focus on the ''най-'' + comparative structure for regular adjectives (e.g., найсолодший,
     найважливіший).'
@@ -44,7 +44,7 @@ content_outline:
   - 'Adjective agreement check: Reinforce that superlative forms are still adjectives and must agree in gender, number, and
     case with the noun (e.g., найкраща ідея, найкращий план, найкраще місто).'
 - section: Типові помилки та підсилення (Common Errors and Intensifiers)
-  words: 600
+  words: 400
   points:
   - 'Learner error: Russian influence ''самий''. Explicitly debunk the use of ''самий великий'' in favor of ''найбільший''
     or ''найбільш великий''.'
@@ -55,7 +55,7 @@ content_outline:
   - 'Distinguishing ''дуже'' (very) from ''най-'' (the most): clarifying that ''найкращий'' is a unique rank, while ''дуже
     добрий'' is just a high degree.'
 - section: 'Культурний контекст: Рекорди України (Cultural Context: Ukrainian Records)'
-  words: 650
+  words: 425
   points:
   - 'World records quiz focusing on specific Ukrainian data: Станція «Арсенальна» у Києві — найглибша станція метро у світі
     (105,5 м).'
@@ -64,7 +64,7 @@ content_outline:
   - 'Technological superlatives: АН-225 «Мрія» — найбільший і найпотужніший транспортний літак у світі; emphasize its symbolic
     importance.'
 - section: Діалоги та практика (Dialogues and Practice)
-  words: 500
+  words: 325
   points:
   - 'Roleplay as a Restaurant Critic: Comparing three restaurants to find the ''найкращий сервіс'', ''найсмачніша їжа'', and
     ''найцікавіше меню''.'
@@ -76,8 +76,8 @@ vocabulary_hints:
   - 'найгірший (the worst) — High frequency; collocations: найгірший сценарій, найгірша погода, найгірший день'
   - 'найбільший (the biggest/largest) — High frequency (Top 500); collocations: найбільша країна, найбільша помилка, найбільше
     місто'
-  - 'найменший (the smallest) — High frequency; collocations: найменша дитина, найменша деталя, найменша ціна'
-  - найбільш (the most... [analytic]) — Required for compound superlatives; наиболее frequent in formal contexts
+  - 'найменший (the smallest) — High frequency; collocations: найменша дитина, найменша деталь, найменша ціна'
+  - найбільш (the most... [analytic]) — Required for compound superlatives; most frequent in formal contexts
   - 'найважливіший (the most important) — Medium-high frequency; collocations: найважливіше питання, найважливіший крок'
   recommended:
   - 'найвищий (the highest) — Used for records and levels; collocations: найвища гора, найвищий бал, найвищий рівень'
@@ -100,3 +100,22 @@ prerequisites:
 - bigger-better-stronger
 connects_to:
 - preferences-and-choices
+register: розмовний
+activity_hints:
+- type: quiz
+  focus: Identify correct forms
+  items: 10
+- type: fill-in
+  focus: Complete with correct grammar
+  items: 8
+- type: match-up
+  focus: Match forms to categories
+  items: 10
+- type: error-correction
+  focus: Find and fix errors
+  items: 6
+- type: group-sort
+  focus: Classify by grammatical feature
+  items: 8
+- type: essay-response
+  focus: Write using target structures

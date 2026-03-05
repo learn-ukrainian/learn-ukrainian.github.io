@@ -51,10 +51,10 @@ content_outline:
   - 'Підсумкова самооцінка: перевірка відповідності обраних засобів функціональному стилю'
 vocabulary_hints:
   required:
-  - термін (term) — науковий термін, вживати термін; висока частотність у науковому стилі
-  - поняття (concept) — базове поняття, ключове поняття, підміна понять; вживається у науковому та офіційному регістрах
-  - процес (process) — навчальний процес, творчий процес, незворотний процес; універсальне слово з високою частотністю
-  - метод (method) — науковий метод, метод дослідження; у розмовному стилі вживається як «дідівський метод»
+  - аналіз (analysis) — глибокий аналіз, порівняльний аналіз, зробити аналіз; ключове слово для публіцистики та науки
+  - синтез (synthesis) — логічне поєднання елементів; науковий регістр
+  - дослідження (research) — проводити дослідження; основа наукового стилю
+  - канцеляризм (officialese) — лексика офіційно-ділового стилю, якої слід уникати в інших регістрах
   recommended:
   - аналіз (analysis) — глибокий аналіз, порівняльний аналіз, зробити аналіз; ключове слово для публіцистики та науки
   - синтез (synthesis) — логічне поєднання елементів; науковий регістр
@@ -62,14 +62,23 @@ vocabulary_hints:
   - канцеляризм (officialese) — лексика офіційно-ділового стилю, якої слід уникати в інших регістрах
   - плеоназм (pleonasm) — надмірність слів, якої слід уникати для чистоти стилю (напр. «вільна вакансія»)
 activity_hints:
-- type: reading
-  focus: Аналіз тексту
-  items: 4
+- type: quiz
+  focus: "Review: register-transformation"
+  items: 15
+- type: fill-in
+  focus: "Comprehensive: apply learned structures"
+  items: 12
+- type: match-up
+  focus: Match concepts from covered modules
+  items: 12
+- type: group-sort
+  focus: Classify examples by module topic
+  items: 10
+- type: error-correction
+  focus: Find errors across all covered topics
+  items: 10
 - type: essay-response
-  focus: Практичне застосування
-- type: true-false
-  focus: Перевірка розуміння
-  items: 8
+  focus: Integrative writing task combining all topics
 persona:
   voice: Professional Language Coach
   role: Localization Specialist (Спеціаліст з локалізації)
@@ -81,3 +90,4 @@ prerequisites:
 - register-religious-ukrainian
 connects_to:
 - checkpoint-register
+register: нейтральний

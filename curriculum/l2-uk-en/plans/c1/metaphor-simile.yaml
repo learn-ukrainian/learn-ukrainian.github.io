@@ -49,9 +49,9 @@ content_outline:
 focus: style
 pedagogy: Immersion
 objectives:
-- Distinguish between direct and extended metaphors
-- Use simile markers correctly in context
-- Identify and analyze personification in literary texts
+- Learner can identify stylistic features of Граматика та Стилістика
+- Learner can transform text between different registers related to Метафора та порівняння: Образна мова
+- Learner can produce text applying Вступ — Образність та магія слова principles
 grammar:
 - Direct and extended metaphors
 - Simile markers (як, мов, наче, ніби)
@@ -79,3 +79,22 @@ prerequisites:
 - checkpoint-complex-sentences
 connects_to:
 - irony-sarcasm
+register: літературний
+activity_hints:
+- type: match-up
+  focus: Match Граматика та Стилістика examples to categories
+  items: 12
+- type: group-sort
+  focus: Classify by Глибина метафори — від слова до образу
+  items: 12
+- type: fill-in
+  focus: Rewrite in target register
+  items: 10
+- type: quiz
+  focus: Identify stylistic devices in context
+  items: 12
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 8
+- type: essay-response
+  focus: Produce text in specified style

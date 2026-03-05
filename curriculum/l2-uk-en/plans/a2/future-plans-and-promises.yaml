@@ -25,7 +25,7 @@ sources:
   notes: Future tense paradigms
 content_outline:
 - section: Вступ (Introduction)
-  words: 500
+  words: 325
   points:
   - 'Future tense overview aligned with State Standard §4.2.3.1: distinguishing between the compound form for imperfective
     verbs (process) and the simple form for perfective verbs (result).'
@@ -34,7 +34,7 @@ content_outline:
   - 'The concept of «тримати слово» (keeping one''s word) as a motivator for mastering aspectual precision: why choosing the
     right verb form is the key to being understood as reliable.'
 - section: 'Презентація: Доконаний вид (Presentation: Perfective Future)'
-  words: 700
+  words: 475
   points:
   - 'Formation of the Simple Future: conjugating perfective verbs (скажу, закричу, поборю) and explaining that the form itself
     signals future completion without auxiliary verbs.'
@@ -43,7 +43,7 @@ content_outline:
   - 'Semantic power of results: how the perfective future (e.g., «напишу», «прийду») functions as a firm promise or a guarantee
     of a finished action.'
 - section: 'Презентація: Недоконаний вид (Presentation: Imperfective Future)'
-  words: 600
+  words: 400
   points:
   - 'Formation of the Compound Future: Mastery of the «буду + infinitive» structure (буду боротися, буду читати) to emphasize
     duration and ongoing processes.'
@@ -52,7 +52,7 @@ content_outline:
   - 'Pedagogical warning against the ''Overuse of Буду'': Encouraging learners to move beyond the auxiliary shortcut and embrace
     perfective conjugations for specific promises.'
 - section: Практика та діалоги (Practice and Dialogues)
-  words: 700
+  words: 475
   points:
   - 'Situational exchange: Planning a weekend versus making a solemn promise, using high-frequency collocations like «піду
     в кіно» and «зроблю все можливе».'
@@ -61,7 +61,7 @@ content_outline:
   - 'Drill on commitment signals: Transforming process-oriented plans (буду писати) into result-oriented promises (напишу)
     based on different conversational contexts.'
 - section: Висновок та застосування (Conclusion and Application)
-  words: 500
+  words: 325
   points:
   - 'Summary of structural differences: ''I will do'' (result = one word: зроблю) vs ''I will be doing'' (process = two words:
     буду робити).'
@@ -126,3 +126,4 @@ grammar:
 - duration in future
 module_type: grammar
 immersion: 50-60% Ukrainian
+register: розмовний

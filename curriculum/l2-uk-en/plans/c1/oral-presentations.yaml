@@ -4,6 +4,7 @@ sequence: 15
 slug: oral-presentations
 version: '2.0'
 title: Доповідь та презентація
+subtitle: 'Introduction: History and Standards of Rhetoric'
 content_outline:
 - section: 'Вступ: Історія та стандарти риторики (Introduction: History and Standards of Rhetoric)'
   words: 500
@@ -71,6 +72,7 @@ activity_hints:
 - type: essay-response
   focus: Write presentation introduction
 focus: grammar
+pedagogy: TTT
 prerequisites:
 - c1-01 to c1-12 (Academic Foundation)
 - Academic register mastery
@@ -91,10 +93,16 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.1 [Academic Writing & Research]
 objectives:
-- Identify and correctly use доповідь та презентація
-- Form and apply мистецтво усної презентації
-- Distinguish between практика презентації
+- Learner can identify and produce correct Композиція та типи доповідей forms
+- Learner can analyze Мовні маркери та ораторський синтаксис in authentic texts
+- Learner can produce written text demonstrating mastery of Історія та стандарти риторики
 persona:
   voice: Senior Specialist
   role: Конференц-спікер
 word_target: 4000
+grammar:
+- Історія та стандарти риторики
+- Композиція та типи доповідей
+- Мовні маркери та ораторський синтаксис
+- Візуалізація та технічний супровід
+register: літературний

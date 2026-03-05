@@ -4,6 +4,7 @@ sequence: 30
 slug: translation-theory
 version: '2.0'
 title: Теорія перекладу
+subtitle: 'Introduction: Translation as Intercultural Mediation'
 focus: literature
 pedagogy: TTT
 phase: C2.2 [Literature & Creative Writing]
@@ -106,16 +107,25 @@ vocabulary:
   - локалізація (localization)
   - втрата (loss)
   - інтерпретація (interpretation)
-  forbidden: '[]'
+  forbidden: []
 activity_hints:
+- type: quiz
+  focus: Comprehension of cultural concepts
+  items: 12
+- type: match-up
+  focus: Match terms to concepts
+  items: 12
+- type: fill-in
+  focus: Match Історія та ідеологія українського перекладу examples to categories
+  items: 10
+- type: group-sort
+  focus: Classify by period or movement
+  items: 10
 - type: reading
-  focus: Поглиблений аналіз тексту
+  focus: Classify by Основні концепції та пастки перекладу
   items: 4
 - type: essay-response
-  focus: Критичне осмислення
-- type: discussion
-  focus: Дискусія та аргументація
-  items: 1
+  focus: Critical analysis essay
 activities:
   types_required:
   - essay-response
@@ -134,3 +144,9 @@ persona:
   role: Linguist
 prerequisites:
 - writing-literary-essays
+grammar:
+- Переклад як міжкультурна медіація
+- Історія та ідеологія українського перекладу
+- Основні концепції та пастки перекладу
+- Одомашнення vs. Очуження
+register: академічний

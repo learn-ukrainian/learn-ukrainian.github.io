@@ -4,7 +4,9 @@ sequence: 29
 slug: register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
+subtitle: 'Official and Legal Ukrainian'
 focus: style
+pedagogy: CBI
 phase: B2.3
 word_target: 4000
 objectives:
@@ -128,3 +130,8 @@ persona:
   role: Notary (Нотаріус)
 module_type: grammar
 immersion: 100% Ukrainian
+grammar:
+- Official document language
+- Legal terminology
+- Bureaucratic constructions
+register: нейтральний

@@ -12,7 +12,7 @@ word_target: 4000
 objectives:
 - Learner can recognize figurative uses of motion verbs
 - Learner can use common idiomatic expressions with motion verbs
-- Learner understands the metaphorical extensions of motion prefixes
+- Learner can explain the metaphorical extensions of motion prefixes
 sources:
 - name: Ukrainian State Standard 2024 - Figurative Language
   url: https://mon.gov.ua/
@@ -46,8 +46,8 @@ content_outline:
 - section: 'Аналіз помилок: Пастки переносних значень (Error Analysis: Figurative Traps)'
   words: 800
   points:
-  - 'Prefix Mismatch: розбір типової помилки «прийти до висновку» (arrival) та заміна на правильне «дійти до висновку» (reaching
-    a limit/result).'
+  - 'Prefix nuance: розбір різниці між «прийти до висновку» (widely used, standard) та «дійти висновку» (stylistically preferred,
+    emphasizes reaching a limit/result); both forms are standard Ukrainian.'
   - 'Пастка буквального перекладу: чому не можна казати «йти божевільним» (go crazy) і як правильно вживати «зійти з розуму»
     (off the track) або «збожеволіти».'
   - 'Вживання дієслів руху vs прямі дієслова: корекція помилки «ця проблема йде часто» на «ця проблема виникає часто», пояснення
@@ -130,3 +130,4 @@ grammar:
 - Abstract movement vocabulary
 module_type: grammar
 immersion: 100% Ukrainian
+register: нейтральний

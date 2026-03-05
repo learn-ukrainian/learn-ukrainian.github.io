@@ -2,7 +2,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: the-cyrillic-code-i
-version: '4.0'
+version: '4.1'
 title: The Cyrillic Code I
 subtitle: А О У М Л Н С — Your First 7 Letters
 focus: grammar
@@ -43,7 +43,7 @@ content_outline:
   - 'Н — FALSE FRIEND: looks like English H but sounds like N. Key word: нам. Video link.'
   - 'С — FALSE FRIEND: looks like English C but always /s/, never /k/. Key word: сом. Video link.'
 - section: Склади і слова — Syllables and Words
-  words: 300
+  words: 400
   points:
   - 'Open syllables (end in vowel): МА МО МУ НА НО НУ ЛА ЛО ЛУ СА СО СУ.'
   - 'Closed syllables (end in consonant): АМ ОМ УМ АН ОН УН АС ОС УС АЛ ОЛ УЛ.'
@@ -94,7 +94,7 @@ activity_hints:
   items: 12
 connects_to:
 - a1-02 (The Cyrillic Code II)
-prerequisites: '[]'
+prerequisites: []
 persona:
   voice: Patient Supportive Tutor
   role: Typography Artist
