@@ -3,41 +3,45 @@ title: Colors & Clothing
 word_target: 1200
 content_outline:
 - section: Вступ та культурний контекст (Introduction & Cultural Context)
-  words: 400
+  slug: introduction-cultural-context
+  words: 200
   points:
-  - 'Explicit English scaffolding: Use English to introduce the symbolic meaning of
-    colors in Ukrainian tradition, integrating the vocabulary (червоний - life/love,
-    чорний - fertile earth, білий - purity).'
-  - 'Cultural Hook: Explain the vyshyvanka as an ''оберіг'' (talisman), highlighting
-    how the embroidered patterns on collars and cuffs are traditionally meant to protect
-    the wearer''s energy zones.'
-- section: Презентація кольорів та граматика узгодження (Colors & Grammar of Agreement)
-  words: 500
+  - 'Introduce the cultural significance of colors in traditional Ukrainian embroidery
+    (vyshyvanka): червоний for life and love, чорний for the fertile earth, and білий
+    for purity.'
+  - Use simple English scaffolding to explain the concept, integrating the new Ukrainian
+    color vocabulary.
+- section: Кольори та узгодження (Colors & Agreement)
+  slug: colors-and-agreement
+  words: 350
   points:
-  - Present the core colors mandated by the standard (білий, чорний, червоний, синій,
-    зелений, жовтий).
-  - Provide a clear paradigm for Adjective-Noun agreement across masculine (-ий/ій),
-    feminine (-а/я), and neuter (-е/є) genders.
-  - Contrast correct and incorrect forms to preempt the 'червоний сорочка' error,
-    emphasizing that the adjective mirrors the noun.
-  - Briefly note invariant loan colors (бордо, беж, хакі) that do not change endings.
-- section: Одяг та дієслово «носити» (Clothing & the Verb 'To Wear')
-  words: 600
+  - 'Present the core color vocabulary: білий, чорний, червоний, синій, зелений, жовтий.'
+  - 'Reinforce M11 adjective agreement rules in the Nominative case: matching masculine
+    (-ий/ій), feminine (-а/я), and neuter (-е/є) endings to nouns.'
+  - Address the common English-speaker error of ignoring agreement, contrasting incorrect
+    ('червоний сорочка') with correct ('червона сорочка') forms.
+- section: Лексика одягу (Clothing Vocabulary)
+  slug: clothing-vocabulary
+  words: 350
   points:
-  - Introduce basic clothing vocabulary (сорочка, штани, сукня, куртка, светр), noting
-    the stylistic preference for 'сукня' as elegant/literary.
-  - Explain the verb 'носити' and introduce the Accusative case for direct objects
-    (§4.2.3.2.1).
-  - 'Provide focused practice on the feminine Accusative shift (-а/-я to -у/-ю), contrasting
-    Nominative vs. Accusative: ''Це червона сукня'' vs ''Я ношу червону сукню''.'
-  - Introduce Pluralia Tantum (штани, джинси, окуляри), explaining they take plural
-    adjectives and pronouns ('ці сині штани').
-- section: Практичне застосування та покупки (Practice & Shopping)
-  words: 500
+  - 'Introduce basic clothing nouns: сорочка, штани, сукня, куртка, светр.'
+  - Combine colors and clothing using only the Nominative case ('Це мій новий синій
+    светр', 'Ось червона сукня'), respecting the 'no cases beyond nominative' constraint.
+  - Introduce Pluralia Tantum words (штани, джинси, окуляри) as fixed vocabulary items
+    to preview M13 plural concepts.
+- section: Практичне застосування (Practice & Shopping)
+  slug: practice-shopping
+  words: 200
   points:
-  - Provide a situational mini-dialogue ('У магазині одягу') focused on asking for
-    size and price, revising numerals in context.
-  - 'Demonstrate key phrases: ''Мені подобається цей колір'', ''Ці штани мені підходять'',
-    ''Скільки коштує?''.'
-  - Scaffold a guided text demonstrating how to describe a favorite outfit, integrating
-    colors, clothing items, and the correct accusative forms.
+  - Provide a situational dialogue in a clothing store using simple Nominative phrases
+    ('Скільки коштує ця червона сукня?').
+  - 'Teach preference phrases without complex grammar: ''Мені подобається цей колір''.'
+  - Guided practice describing outfits in pictures using 'Це...' constructions.
+- section: Підсумок (Summary)
+  slug: summary
+  words: 100
+  points:
+  - Recap the color adjective endings for masculine, feminine, and neuter nouns.
+  - 'Self-check question 1: How do you say ''red dress'' in Ukrainian?'
+  - 'Self-check question 2: What gender is the word ''светр''?'
+  - 'Self-check question 3: Which colors symbolize life and earth in Ukrainian culture?'

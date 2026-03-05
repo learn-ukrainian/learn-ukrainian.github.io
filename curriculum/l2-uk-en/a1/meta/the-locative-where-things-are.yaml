@@ -2,43 +2,46 @@ slug: the-locative-where-things-are
 title: 'The Locative: Where Things Are'
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 400
+- section: Вступ (Introduction)
+  slug: vtsup-introduction
+  words: 250
   points:
-  - 'Explicitly state A1 immersion rule in intro: English is used to explain grammar
-    theory, while Ukrainian is used for examples and dialogues.'
-  - 'Introduce the core question «Де?» (Where?) as the functional trigger for Locative.
-    Provide high-frequency survival phrases: «Де ти?», «Де ви?», «Де це?», «Де туалет?».'
+  - Introduce the core question «Де?» (Where?) as the functional trigger for the Locative
+    case.
+  - 'Present high-frequency survival phrases: «Де ти?», «Де ви?», «Де це?», and «Де
+    туалет?».'
   - 'Cultural Hook: Explain the ''Shoes Off'' rule and «тапочки» (slippers) in English
     to establish the domestic spatial context («вдома», «у кімнаті»).'
-- section: Презентація
-  words: 800
+- section: Презентація (Presentation)
+  slug: prezentatsiya-presentation
+  words: 450
   points:
-  - Each concept gets its own H3. Define Container («у/в» - box) vs Surface/Activity
-    («на» - table/work) logic in English. Explicitly explain «на роботі» to prevent
-    the common `*в роботі` calque.
-  - 'Explain Euphony rules (милозвучність) in English: how to choose between «у» and
-    «в» to avoid consonant clusters, highlighting «У Львові».'
-  - Present standard Locative endings (-і/-ї) with simple tables for masculine, feminine,
-    and neuter regular nouns.
-  - Detail velar mutations (к→ц, г→з, х→с) with their own H3 using the 'Hand and Leg'
-    mnemonic in English («рука» → «у руці», «нога» → «на нозі», «вухо» → «у вусі»).
-- section: Практика
-  words: 400
+  - 'Preposition logic: Define Container («у/в» - in a room) vs Surface/Activity («на»
+    - on a table/at work) logic. Explicitly explain «на роботі» to prevent the common
+    ''*в роботі'' calque.'
+  - 'Euphony rules: Explain how to choose between «у» and «в» to avoid consonant clusters,
+    highlighting «У Львові».'
+  - Standard Locative endings (-і/-ї) with simple tables for regular masculine, feminine,
+    and neuter nouns.
+  - Velar mutations (к→ц, г→з, х→с) using the 'Hand and Leg' mnemonic («рука» → «у
+    руці», «нога» → «на нозі», «вухо» → «у вусі»).
+- section: Практика (Practice)
+  slug: praktyka-practice
+  words: 300
   points:
-  - 'Include an H3 for preposition logic drill: Provide English instructions to sort
-    vocabulary into ''Container'' (у/в) and ''Surface/Event'' (на) categories.'
-  - 'Include an H3 for mutation drills: Provide transformation examples targeting
-    common errors like `*на ногі`.'
-  - 'Provide a short dialogue distinguishing Static Location (Locative: «Я у парку»)
-    from Directional Motion (Accusative: `*Я в парк`).'
-- section: Виробництво та підсумок
-  words: 400
+  - 'Preposition logic drill: Provide English instructions to sort vocabulary into
+    ''Container'' (у/в) and ''Surface/Event'' (на) categories (avoiding imperative
+    forms).'
+  - 'Mutation drills: Transformation examples targeting common errors like ''*на ногі''.'
+  - 'Static vs. Directional contrast: Provide a short dialogue distinguishing Static
+    Location (Locative: «Я у парку») from Directional Motion (Accusative).'
+- section: Виробництво та підсумок (Production and Summary)
+  slug: vyrobnytstvo-ta-pidsumok
+  words: 200
   points:
-  - Present vocabulary for room descriptions («в кімнаті», «на столі») alongside a
-    mini-dialogue.
-  - Discuss Ukrainian housing types (Хрущовка, Сталінка, Новобудова) as authentic
-    context for describing where one lives.
-  - Provide a 'Kyiv City Guide' mini-production task where learners read about locations
-    («на вокзалі», «у школі», «на вулиці»).
-  - Conclude with a summary table of the Locative rules and prepositions.
+  - 'Describing your environment: Vocabulary for room and table («в кімнаті», «на
+    столі») alongside a mini-dialogue.'
+  - 'Kyiv City Guide Task: Describe the location of people and objects in a city map
+    context («на вокзалі», «у школі», «на вулиці»).'
+  - Summary table of the Locative rules and prepositions.
+  - 'Self-check questions: 3-4 simple questions to verify understanding.'

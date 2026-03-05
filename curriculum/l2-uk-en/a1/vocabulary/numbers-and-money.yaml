@@ -1,61 +1,66 @@
 items:
-- lemma: гривня
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: маяти
-  pos: verb
-- lemma: слово
-  pos: noun
-- lemma: долар
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: гривна
-  pos: noun
-- lemma: коштувати
-  pos: verb
-- lemma: число
-  pos: noun
-- lemma: добрий
-  pos: adj
-- lemma: скільки
-  pos: adv
-- lemma: давати
-  pos: verb
-- lemma: український
-  pos: adj
-- lemma: терти
-  pos: verb
-- lemma: використовувати
-  pos: verb
-- lemma: до
-  pos: noun
-- lemma: ціна
-  pos: noun
-- lemma: українська
-  pos: noun
-- lemma: кава
-  pos: noun
-- lemma: історія
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: він
-  pos: noun
-- lemma: наголос
-  pos: adv
-- lemma: як
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: символ
-  pos: noun
+  - lemma: "один"
+    translation: "one"
+    pos: "numeral"
+  - lemma: "два"
+    translation: "two"
+    pos: "numeral"
+  - lemma: "три"
+    translation: "three"
+    pos: "numeral"
+  - lemma: "чотири"
+    translation: "four"
+    pos: "numeral"
+  - lemma: "п'ять"
+    translation: "five"
+    pos: "numeral"
+  - lemma: "десять"
+    translation: "ten"
+    pos: "numeral"
+  - lemma: "одинадцять"
+    translation: "eleven"
+    pos: "numeral"
+  - lemma: "двадцять"
+    translation: "twenty"
+    pos: "numeral"
+  - lemma: "п'ятдесят"
+    translation: "fifty"
+    pos: "numeral"
+  - lemma: "сто"
+    translation: "one hundred"
+    pos: "numeral"
+  - lemma: "гривня"
+    translation: "hryvnia"
+    pos: "noun"
+    gender: "f"
+  - lemma: "копійка"
+    translation: "kopeck"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ціна"
+    translation: "price"
+    pos: "noun"
+    gender: "f"
+  - lemma: "здача"
+    translation: "change (money)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "скільки"
+    translation: "how much / how many"
+    pos: "adverb"
+  - lemma: "коштувати"
+    translation: "to cost"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "дорого"
+    translation: "expensive"
+    pos: "adverb"
+  - lemma: "дешево"
+    translation: "cheap"
+    pos: "adverb"
+  - lemma: "плюс"
+    translation: "plus"
+    pos: "noun"
+  - lemma: "мінус"
+    translation: "minus"
+    pos: "noun"

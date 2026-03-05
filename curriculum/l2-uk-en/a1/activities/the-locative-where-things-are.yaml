@@ -1,409 +1,257 @@
-- type: quiz
-  title: "Перевірка концепцій: Де?"
-  instruction: "Оберіть правильну відповідь на питання про граматику."
+- type: group-sort
+  title: "Container vs. Surface Logic"
+  instruction: "Sort the places into the correct preposition category based on static location rules."
+  groups:
+    - name: "Container / Building (в / у)"
+      items:
+        - "школа"
+        - "магазин"
+        - "кімната"
+        - "банк"
+        - "парк"
+    - name: "Surface / Open Area / Activity (на)"
+      items:
+        - "стіл"
+        - "робота"
+        - "вокзал"
+        - "вулиця"
+        - "підлога"
+
+- type: fill-in
+  title: "Choose the Preposition"
+  instruction: "Select the correct preposition for each location, paying attention to euphony (smooth sounds)."
   items:
-    - question: "Яке питання вимагає Місцевий відмінок?"
-      explanation: "Місцевий відмінок відповідає на питання «Де?» (Where?)."
+    - sentence: "Я зараз ___ школі."
+      answer: "у"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Вона ___ магазині."
+      answer: "в"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Кіт спить ___ столі."
+      answer: "на"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Ми сьогодні ___ роботі."
+      answer: "на"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Він живе ___ Львові."
+      answer: "у"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Люди гуляють ___ вулиці."
+      answer: "на"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Він зараз ___ парку."
+      answer: "у"
+      options: ["в", "у", "на", "за"]
+    - sentence: "Гроші лежать ___ банку."
+      answer: "у"
+      options: ["в", "у", "на", "за"]
+
+- type: fill-in
+  title: "Regular Locative Endings"
+  instruction: "Change the noun in parentheses to the correct Locative case ending."
+  items:
+    - sentence: "Книжка лежить на ___ (стіл)."
+      answer: "столі"
+      options: ["стіл", "столу", "столі", "стола"]
+    - sentence: "Вчитель працює у ___ (школа)."
+      answer: "школі"
+      options: ["школа", "школу", "школі", "школою"]
+    - sentence: "Ми сидимо в ___ (кімната)."
+      answer: "кімнаті"
+      options: ["кімната", "кімнату", "кімнаті", "кімнатою"]
+    - sentence: "Поїзд стоїть на ___ (вокзал)."
+      answer: "вокзалі"
+      options: ["вокзал", "вокзалу", "вокзалі", "вокзалом"]
+    - sentence: "Він зараз у ___ (парк)."
+      answer: "парку"
+      options: ["парк", "парку", "паркі", "парком"]
+    - sentence: "Вона працює в ___ (магазин)."
+      answer: "магазині"
+      options: ["магазин", "магазину", "магазині", "магазином"]
+    - sentence: "Я живу в ___ (місто)."
+      answer: "місті"
+      options: ["місто", "місту", "місті", "містом"]
+    - sentence: "Вони працюють у ___ (банк)."
+      answer: "банку"
+      options: ["банк", "банку", "банкі", "банком"]
+
+- type: fill-in
+  title: "Velar Mutations"
+  instruction: "Select the correct mutated Locative form for these specific nouns."
+  items:
+    - sentence: "Монета лежить у ___ (рука)."
+      answer: "руці"
+      options: ["рука", "руку", "руці", "рукі"]
+    - sentence: "Я стою на одній ___ (нога)."
+      answer: "нозі"
+      options: ["нога", "ногу", "нозі", "ногі"]
+    - sentence: "Ключі лежать на ___ (підлога)."
+      answer: "підлозі"
+      options: ["підлога", "підлогу", "підлозі", "підлогі"]
+    - sentence: "Він має сережку у ___ (вухо)."
+      answer: "вусі"
+      options: ["вухо", "вуху", "вусі", "вухі"]
+    - sentence: "Телефон у моїй ___ (рука)."
+      answer: "руці"
+      options: ["рука", "руку", "руці", "рукі"]
+    - sentence: "Кіт спить на ___ (підлога)."
+      answer: "підлозі"
+      options: ["підлога", "підлогу", "підлозі", "підлогі"]
+    - sentence: "Браслет у ___ (вухо)."
+      answer: "вусі"
+      options: ["вухо", "вуху", "вусі", "вухі"]
+    - sentence: "Птах сидить на ___ (нога)."
+      answer: "нозі"
+      options: ["нога", "ногу", "нозі", "ногі"]
+
+- type: quiz
+  title: "Grammar Rules Check"
+  instruction: "Choose the correct answer based on the Locative rules."
+  items:
+    - question: "Which question word triggers the use of the Locative case for a static position?"
       options:
         - text: "Де?"
           correct: true
-        - text: "Куди?"
-          correct: false
         - text: "Хто?"
           correct: false
         - text: "Що?"
           correct: false
-    - question: "Яке стандартне закінчення має Місцевий відмінок в А1?"
-      explanation: "Більшість іменників в А1 отримують закінчення -і."
+        - text: "Коли?"
+          correct: false
+    - question: "Which preposition is used for enclosed spaces, containers, and buildings?"
       options:
-        - text: "-і"
+        - text: "в / у"
           correct: true
-        - text: "-у"
+        - text: "на"
           correct: false
-        - text: "-а"
+        - text: "з"
           correct: false
-        - text: "-ом"
+        - text: "до"
           correct: false
-    - question: "Який прийменник означає «всередині» (контейнер)?"
-      explanation: "В або У використовується для предметів всередині чогось."
+    - question: "Which preposition is used for open spaces, flat surfaces, and activities like work?"
       options:
-        - text: "В / У"
+        - text: "на"
           correct: true
-        - text: "На"
+        - text: "в / у"
           correct: false
-        - text: "З"
+        - text: "про"
           correct: false
-        - text: "Про"
+        - text: "біля"
           correct: false
-    - question: "Який прийменник ми використовуємо зі словом «робота»?"
-      explanation: "Робота — це діяльність, тому ми використовуємо «на»."
+    - question: "Why do we sometimes use 'у' instead of 'в' (for example, у Львові)?"
       options:
-        - text: "На"
+        - text: "To avoid harsh consonant clusters."
           correct: true
-        - text: "У"
+        - text: "Because the noun is feminine."
           correct: false
-        - text: "В"
+        - text: "Because it is an open surface."
           correct: false
-        - text: "Біля"
+        - text: "It is just a random exception."
           correct: false
-    - question: "Як українською сказати «at home»?"
-      explanation: "Це фіксована фраза «вдома»."
+    - question: "Which of these pairs shows a correct consonant mutation in the Locative case?"
       options:
-        - text: "вдома"
+        - text: "рука becomes у руці"
           correct: true
-        - text: "на домі"
+        - text: "нога becomes на ногі"
           correct: false
-        - text: "у домі"
+        - text: "вухо becomes у вухі"
           correct: false
-        - text: "дім"
+        - text: "підлога becomes на підлогі"
           correct: false
-    - question: "Де знаходяться студенти під час уроку?"
-      explanation: "Школа — це будівля, тому «у школі»."
+    - question: "When talking about your workplace as an activity, which phrase is correct?"
       options:
-        - text: "у школі"
+        - text: "на роботі"
           correct: true
-        - text: "на школі"
+        - text: "у роботі"
           correct: false
-        - text: "школа"
+        - text: "в роботі"
           correct: false
-        - text: "школі"
+        - text: "робота"
           correct: false
-    - question: "Що ми робимо із закінченням -а у жіночому роді?"
-      explanation: "Ми змінюємо -а на -і (Кімната → У кімнаті)."
+    - question: "If you are walking TOWARD the park (directional motion), you use..."
       options:
-        - text: "Змінюємо на -і"
+        - text: "Accusative (Я йду в парк)"
           correct: true
-        - text: "Залишаємо -а"
+        - text: "Locative (Я йду у парку)"
           correct: false
-        - text: "Змінюємо на -у"
+        - text: "Nominative (Я йду парк)"
           correct: false
-        - text: "Видаляємо слово"
+        - text: "Locative (Я йду на парку)"
           correct: false
-    - question: "Що означає цей прийменник «На»?"
-      explanation: "«На» вказує на поверхню або подію."
+    - question: "If you are sitting inside the park (static location), you use..."
       options:
-        - text: "Поверхня або подія"
+        - text: "Locative (Я у парку)"
           correct: true
-        - text: "Всередині"
+        - text: "Accusative (Я у парк)"
           correct: false
-        - text: "Під"
+        - text: "Nominative (Я парк)"
           correct: false
-        - text: "Через"
+        - text: "Accusative (Я на парк)"
           correct: false
-
-- type: group-sort
-  title: "В/У чи На?"
-  instruction: "Розподіліть слова за прийменниками: що використовує «В/У» (контейнер), а що «На» (поверхня/подія)."
-  groups:
-    - name: "В / У (Всередині)"
-      items: ["магазин", "кімната", "банк", "школа", "парк", "сумка"]
-    - name: "На (Поверхня/Подія)"
-      items: ["стіл", "робота", "вулиця", "стіна", "вокзал", "вікно"]
-
-- type: fill-in
-  title: "Стандартне закінчення -і"
-  instruction: "Поставте слово у дужках у Місцевий відмінок, додавши закінчення -і."
-  items:
-    - sentence: "Телефон лежить на _____ (стіл)."
-      answer: "столі"
-      options: ["столі", "стіл", "столу", "стола"]
-      explanation: "Стіл → на столі."
-    - sentence: "Я зараз у _____ (кімната)."
-      answer: "кімнаті"
-      options: ["кімнаті", "кімната", "кімнату", "кімнати"]
-      explanation: "Кімната → у кімнаті."
-    - sentence: "Студенти вчаться у _____ (школа)."
-      answer: "школі"
-      options: ["школі", "школа", "школу", "школи"]
-      explanation: "Школа → у школі (закінчення -а замінюється на -і)."
-    - sentence: "Мій офіс у _____ (центр)."
-      answer: "центрі"
-      options: ["центрі", "центр", "центра", "центру"]
-      explanation: "Центр → у центрі."
-    - sentence: "Кішка сидить на _____ (вікно)."
-      answer: "вікні"
-      options: ["вікні", "вікно", "вікна", "вікну"]
-      explanation: "Вікно → на вікні."
-    - sentence: "Ми купуємо хліб у _____ (магазин)."
-      answer: "магазині"
-      options: ["магазині", "магазин", "магазина", "магазину"]
-      explanation: "Магазин → у магазині."
-    - sentence: "Ми живемо у _____ (село)."
-      answer: "селі"
-      options: ["селі", "село", "селу", "села"]
-      explanation: "Село → у селі."
-    - sentence: "Музика є у _____ (телефон)."
-      answer: "телефоні"
-      options: ["телефоні", "телефон", "телефону", "телефона"]
-      explanation: "Телефон → у телефоні."
-
-- type: fill-in
-  title: "Оберіть прийменник"
-  instruction: "Оберіть правильний прийменник: В/У або На."
-  items:
-    - sentence: "Тато зараз _____ роботі."
-      answer: "на"
-      options: ["на", "у", "в", "біля"]
-      explanation: "Робота — це діяльність, тому «на»."
-    - sentence: "Діти вчаться _____ школі."
-      answer: "у"
-      options: ["у", "на", "з", "під"]
-      explanation: "Школа — це будівля/інституція, тому «у»."
-    - sentence: "Комп'ютер стоїть _____ столі."
-      answer: "на"
-      options: ["на", "в", "у", "над"]
-      explanation: "Стіл — це поверхня, тому «на»."
-    - sentence: "Гроші лежать _____ банку."
-      answer: "у"
-      options: ["у", "на", "з", "про"]
-      explanation: "Банк — це установа/будівля, тому «у»."
-    - sentence: "Ми гуляємо _____ вулиці."
-      answer: "на"
-      options: ["на", "в", "у", "біля"]
-      explanation: "Вулиця — це відкритий простір, тому «на»."
-    - sentence: "Я живу _____ Києві."
-      answer: "у"
-      options: ["у", "на", "з", "від"]
-      explanation: "Міста — це контейнери, тому «у» (або «в»)."
-    - sentence: "Я чекаю _____ вокзалі."
-      answer: "на"
-      options: ["на", "у", "в", "біля"]
-      explanation: "Вокзал (станція) вимагає «на»."
-    - sentence: "Ти зараз _____ кімнаті?"
-      answer: "у"
-      options: ["у", "на", "з", "про"]
-      explanation: "Кімната — це контейнер, тому «у»."
-
-- type: match-up
-  title: "Місця та переклад"
-  instruction: "З'єднайте українські фрази з їх перекладом."
-  pairs:
-    - left: "вдома"
-      right: "at home"
-    - left: "на роботі"
-      right: "at work"
-    - left: "у школі"
-      right: "at school"
-    - left: "у магазині"
-      right: "in the store"
-    - left: "на вокзалі"
-      right: "at the station"
-    - left: "у банку"
-      right: "in the bank"
-    - left: "на вулиці"
-      right: "on the street"
-    - left: "у парку"
-      right: "in the park"
-
-- type: unjumble
-  title: "Складіть речення"
-  instruction: "Розставте слова у правильному порядку, щоб утворити речення."
-  items:
-    - words: ["Де", "твій", "телефон", "?"]
-      answer: "Де твій телефон?"
-    - words: ["Мій", "телефон", "на", "столі", "."]
-      answer: "Мій телефон на столі."
-    - words: ["Я", "зараз", "вдома", "."]
-      answer: "Я зараз вдома."
-    - words: ["Студенти", "сьогодні", "у", "школі", "."]
-      answer: "Студенти сьогодні у школі."
-    - words: ["Мама", "працює", "на", "роботі", "."]
-      answer: "Мама працює на роботі."
-    - words: ["Книга", "лежить", "у", "сумці", "."]
-      answer: "Книга лежить у сумці."
-
-- type: fill-in
-  title: "Чергування К → Ц"
-  instruction: "Змініть слова, використовуючи правило чергування (К змінюється на Ц)."
-  items:
-    - sentence: "Гроші лежать у _____ (сумка)."
-      answer: "сумці"
-      options: ["сумці", "сумка", "сумку", "сумки"]
-      explanation: "Сумка: К змінюється на Ц → у сумці."
-    - sentence: "Ліки продаються в _____ (аптека)."
-      answer: "аптеці"
-      options: ["аптеці", "аптека", "аптеку", "аптеки"]
-      explanation: "Аптека: К змінюється на Ц → в аптеці."
-    - sentence: "Ми читаємо книги у _____ (бібліотека)."
-      answer: "бібліотеці"
-      options: ["бібліотеці", "бібліотека", "бібліотеку", "бібліотеки"]
-      explanation: "Бібліотека: К змінюється на Ц → у бібліотеці."
-    - sentence: "Телефон у _____ (рука)."
-      answer: "руці"
-      options: ["руці", "рука", "руку", "руки"]
-      explanation: "Рука: К змінюється на Ц → у руці."
-    - sentence: "Риба плаває у _____ (річка)."
-      answer: "річці"
-      options: ["річці", "річка", "річку", "річки"]
-      explanation: "Річка: К змінюється на Ц → у річці."
-    - sentence: "Фотографія у _____ (книжка)."
-      answer: "книжці"
-      options: ["книжці", "книжка", "книжку", "книжки"]
-      explanation: "Книжка: К змінюється на Ц → у книжці."
-    - sentence: "Ми живемо в _____ (Америка)."
-      answer: "Америці"
-      options: ["Америці", "Америка", "Америку", "Америки"]
-      explanation: "Америка: К змінюється на Ц → в Америці."
-    - sentence: "Вода у _____ (пляшка)."
-      answer: "пляшці"
-      options: ["пляшці", "пляшка", "пляшку", "пляшки"]
-      explanation: "Пляшка: К змінюється на Ц → у пляшці."
-
-- type: fill-in
-  title: "Чергування Г → З та Х → С"
-  instruction: "Змініть слова, використовуючи правила чергування (Г→З, Х→С)."
-  items:
-    - sentence: "Кіт спить на _____ (нога)."
-      answer: "нозі"
-      options: ["нозі", "нога", "ногу", "ноги"]
-      explanation: "Нога: Г змінюється на З → на нозі."
-    - sentence: "Інформація є у _____ (книга)."
-      answer: "книзі"
-      options: ["книзі", "книга", "книгу", "книги"]
-      explanation: "Книга: Г змінюється на З → у книзі."
-    - sentence: "Ми зараз у _____ (Прага)."
-      answer: "Празі"
-      options: ["Празі", "Прага", "Прагу", "Праги"]
-      explanation: "Прага: Г змінюється на З → у Празі."
-    - sentence: "Навушник у _____ (вухо)."
-      answer: "вусі"
-      options: ["вусі", "вухо", "вуха", "вуху"]
-      explanation: "Вухо: Х змінюється на С → у вусі."
-    - sentence: "Килим лежить на _____ (підлога)."
-      answer: "підлозі"
-      options: ["підлозі", "підлога", "підлогу", "підлоги"]
-      explanation: "Підлога: Г змінюється на З → на підлозі."
-    - sentence: "Птах сидить на _____ (черепаха)."
-      answer: "черепасі"
-      options: ["черепасі", "черепаха", "черепаху", "черепахи"]
-      explanation: "Черепаха: Х змінюється на С → на черепасі."
-    - sentence: "Ми відпочиваємо на _____ (берег)."
-      answer: "березі"
-      options: ["березі", "берег", "берегу", "берега"]
-      explanation: "Берег: Г змінюється на З → на березі."
-    - sentence: "Аварія на _____ (дорога)."
-      answer: "дорозі"
-      options: ["дорозі", "дорога", "дорогу", "дороги"]
-      explanation: "Дорога: Г змінюється на З → на дорозі."
 
 - type: true-false
-  title: "Правда чи ні?"
-  instruction: "Визначте, чи правильне це твердження про граматику."
+  title: "True or False: Spatial Logic"
+  instruction: "Decide if the grammar statement is true or false."
   items:
-    - statement: "Ми кажемо «на школі», тому що це відкритий простір."
+    - statement: "The Locative case is used to show active motion toward a destination."
       correct: false
-      explanation: "Ні, школа — це будівля, тому ми кажемо «у школі»."
-    - statement: "«Вдома» означає «at home»."
+      explanation: "The Locative case only describes a static, fixed position (where you already are)."
+    - statement: "In Ukrainian, 'на роботі' is used because work is considered a social activity or event."
       correct: true
-      explanation: "Так, це правильний переклад."
-    - statement: "Ми кажемо «у парку», тому що парк має межі."
-      correct: true
-      explanation: "Так, парк розглядається як контейнер (простір з межами)."
-    - statement: "«На столі» означає «in the table»."
+      explanation: "We use 'на' for activities and events, not just physical surfaces."
+    - statement: "The word 'нога' becomes 'ногі' in the Locative case."
       correct: false
-      explanation: "Ні, «на столі» означає «on the table»."
-    - statement: "Ми використовуємо «на» для подій, як «на концерті»."
+      explanation: "The letter 'г' mutates to 'з', so it becomes 'нозі'."
+    - statement: "The word 'рука' becomes 'руці' in the Locative case."
       correct: true
-      explanation: "Так, для подій ми використовуємо прийменник «на»."
-    - statement: "Слово «вулиця» використовує прийменник «у»."
+      explanation: "The letter 'к' mutates to 'ц', so 'рука' becomes 'руці'."
+    - statement: "You should use 'в' before the word 'Львові' to say 'in Lviv'."
       correct: false
-      explanation: "Ні, ми кажемо «на вулиці» (на поверхні)."
-    - statement: "Ми кажемо «у банку», а не «в банку» для милозвучності після приголосного."
+      explanation: "You use 'у' to avoid a consonant cluster: 'у Львові'."
+    - statement: "The word 'банк' takes the ending 'у' in the Locative case ('у банку')."
       correct: true
-      explanation: "Так, щоб уникнути збігу приголосних."
-    - statement: "«На» використовується для міст (наприклад, На Одесі)."
+      explanation: "Bank is a common exception that takes 'у' instead of 'і'."
+    - statement: "When Ukrainians say they are waiting at the station, they use 'на вокзалі'."
+      correct: true
+      explanation: "Transit hubs and open areas use the preposition 'на'."
+    - statement: "If you are inside a room, you use the preposition 'на'."
       correct: false
-      explanation: "Ні, для міст ми використовуємо «У» або «В» (У/В Одесі)."
+      explanation: "For enclosed spaces and containers, you use 'в' or 'у' (у кімнаті)."
 
-- type: quiz
-  title: "Сценарії: Де ви?"
-  instruction: "Прочитайте ситуацію та оберіть правильне місце."
+- type: match-up
+  title: "Match the Phrases"
+  instruction: "Match the English phrase to its Ukrainian translation."
+  pairs:
+    - left: "Where is the toilet?"
+      right: "Де туалет?"
+    - left: "in the room"
+      right: "у кімнаті"
+    - left: "at work"
+      right: "на роботі"
+    - left: "on the table"
+      right: "на столі"
+    - left: "in the store"
+      right: "в магазині"
+    - left: "on the street"
+      right: "на вулиці"
+    - left: "in the school"
+      right: "у школі"
+    - left: "in the hand"
+      right: "у руці"
+
+- type: unjumble
+  title: "Build the Sentences"
+  instruction: "Put the words in the correct order to make a spatial sentence."
   items:
-    - question: "Ви купуєте хліб і молоко. Де ви?"
-      explanation: "Ви робите покупки у магазині."
-      options:
-        - text: "У магазині"
-          correct: true
-        - text: "На роботі"
-          correct: false
-        - text: "У школі"
-          correct: false
-        - text: "Вдома"
-          correct: false
-    - question: "Ви вчите українську мову з учителем. Де ви?"
-      explanation: "Навчання відбувається у школі."
-      options:
-        - text: "У школі"
-          correct: true
-        - text: "На вокзалі"
-          correct: false
-        - text: "У банку"
-          correct: false
-        - text: "На вулиці"
-          correct: false
-    - question: "Ви заробляєте гроші. Де ви?"
-      explanation: "Ви працюєте на роботі."
-      options:
-        - text: "На роботі"
-          correct: true
-        - text: "У парку"
-          correct: false
-        - text: "Вдома"
-          correct: false
-        - text: "У кімнаті"
-          correct: false
-    - question: "Ви чекаєте на потяг. Де ви?"
-      explanation: "Потяги прибувають на вокзал."
-      options:
-        - text: "На вокзалі"
-          correct: true
-        - text: "У банку"
-          correct: false
-        - text: "У магазині"
-          correct: false
-        - text: "На столі"
-          correct: false
-    - question: "Ви дивитесь телевізор на дивані. Де ви?"
-      explanation: "Це зазвичай відбувається вдома."
-      options:
-        - text: "Вдома"
-          correct: true
-        - text: "На роботі"
-          correct: false
-        - text: "На вулиці"
-          correct: false
-        - text: "У банку"
-          correct: false
-    - question: "Ви гуляєте і дивитесь на дерева. Де ви?"
-      explanation: "Дерева ростуть у парку."
-      options:
-        - text: "У парку"
-          correct: true
-        - text: "У кімнаті"
-          correct: false
-        - text: "На вокзалі"
-          correct: false
-        - text: "У банку"
-          correct: false
-    - question: "Ви дивитесь фільм у кінотеатрі. Де ви?"
-      explanation: "Кінотеатр — це будівля."
-      options:
-        - text: "У кінотеатрі"
-          correct: true
-        - text: "На кінотеатрі"
-          correct: false
-        - text: "На вулиці"
-          correct: false
-        - text: "Вдома"
-          correct: false
-    - question: "Ви стоїте на автобусній зупинці. Де ви?"
-      explanation: "Зупинка — це відкрите місце."
-      options:
-        - text: "На зупинці"
-          correct: true
-        - text: "У зупинці"
-          correct: false
-        - text: "Вдома"
-          correct: false
-        - text: "У банку"
-          correct: false
+    - words: ["Де", "зараз", "мій", "телефон?"]
+      answer: "Де зараз мій телефон?"
+    - words: ["Телефон", "лежить", "на", "столі."]
+      answer: "Телефон лежить на столі."
+    - words: ["Мій", "кіт", "спить", "у", "кімнаті."]
+      answer: "Мій кіт спить у кімнаті."
+    - words: ["Люди", "гуляють", "на", "вулиці."]
+      answer: "Люди гуляють на вулиці."
+    - words: ["Вчитель", "працює", "у", "школі."]
+      answer: "Вчитель працює у школі."
+    - words: ["Поїзд", "стоїть", "на", "вокзалі."]
+      answer: "Поїзд стоїть на вокзалі."

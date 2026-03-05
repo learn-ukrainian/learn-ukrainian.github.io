@@ -3,42 +3,44 @@ title: The Living Verb I
 word_target: 1200
 content_outline:
 - section: Вступ
-  words: 400
+  slug: introduction
+  words: 250
   points:
-  - Introduce the shift from 'this is' to 'I do' (building on A1-05 'My World - Objects').
-    Explain that English scaffolding will be used for all grammar concepts.
-  - 'Historical hook: Mention the ''Apostol'' (1574) by Ivan Fedorov, connecting the
-    verb ''читати'' to Ukraine''s deep literacy tradition.'
-  - 'State Standard alignment (§4.2.4.1): Frame the focus on indicative mood present
-    tense using high-frequency verbs (читати, працювати).'
-- section: Презентація
-  words: 700
+  - 'The shift from static descriptions to dynamic actions: moving from ''this is''
+    to ''I do''.'
+  - Introduce the target high-frequency verbs, such as читати and працювати, in simple
+    context.
+  - 'Cultural hook: Connect the verb читати to the 1574 ''Apostol'', highlighting
+    Ukraine''s deep-rooted literacy tradition.'
+- section: 'Презентація: The -ати Pattern'
+  slug: presentation-the-pattern
+  words: 350
   points:
-  - Provide a clear 'Stem + Ending' table (e.g., чит + аю) to visualize the First
-    Conjugation pattern (-ати → -аю, -аєш, -ає, -аємо, -аєте, -ають).
-  - 'Explain the Imperfective Aspect using English scaffolding: these verbs describe
-    ongoing/habitual actions (process vs. result).'
-  - 'Explain the Pro-drop feature: the ending itself contains the pronoun, making
-    ''Я/Ти'' optional and allowing for a natural Ukrainian rhythm.'
-  - Show the universal application of this pattern by comparing the conjugations of
-    'читати' and 'працювати' side-by-side.
-- section: Практика
-  words: 600
+  - 'Visualize the First Conjugation pattern (Class I): drop ''-ти'' and add the personal
+    endings (-ю, -єш, -є, -ємо, -єте, -ють) using clear tables.'
+  - 'Introduce the ''Pro-drop'' feature: explain that because the verb ending clearly
+    shows who is doing the action, pronouns like ''Я'' or ''Ми'' are often dropped
+    for a natural rhythm.'
+  - 'Explain the Imperfective Aspect simply using English scaffolding: these verbs
+    describe ongoing actions or habits (process vs. result).'
+- section: Практика та типові помилки
+  slug: practice-and-errors
+  words: 350
   points:
-  - 'Error Correction drill: Target ''Infinitive Abuse'' by having learners replace
-    ''Я читати'' with ''Я читаю''.'
-  - 'Error Correction drill: Target ''Pronoun Overuse'' with exercises that build
-    sentences without pronouns (''Читаю. Працюю. Знаю.'').'
-  - 'SVO Sentence Practice: Combine verbs with inanimate masculine/neuter objects
-    (журнал, радіо) where Nominative = Accusative to avoid early case confusion.'
-  - 'Contextual application: Create a short routine description using multiple target
-    verbs (e.g., ''працювати вдома, слухати радіо'').'
-- section: Культурний аспект та підсумок
-  words: 300
+  - 'Error Correction 1 (''Infinitive Abuse''): Drill the transition from the incorrect
+    ''Я читати'' to the correct ''Я читаю''.'
+  - 'Error Correction 2 (''Pronoun Overuse''): Practice forming and reading simple
+    sentences without the constant repetition of ''Я''.'
+  - 'Contextual SVO Sentences: Practice combining target verbs with inanimate masculine
+    or neuter objects (e.g., читаю журнал, слухаю радіо), where Nominative equals
+    Accusative, to avoid early case confusion.'
+- section: Підсумок
+  slug: summary
+  words: 250
   points:
-  - Analyze the proverb 'Птицю пізнати по пір'ю, а людину по мові' to emphasize the
-    cultural value of grammatical accuracy.
-  - Use the 'Master Key' metaphor to summarize how mastering this single conjugation
-    unlocks a vast portion of the Ukrainian language.
-  - Recap the transition from English instructional scaffolding into initial Ukrainian
-    action statements.
+  - 'The ''Master Key'' concept: summarize how mastering this single conjugation pattern
+    unlocks hundreds of everyday Ukrainian verbs.'
+  - Recap the essential conjugation table and the pro-drop rule.
+  - 'Self-check questions: 1. What ending corresponds to ''ми''? 2. Do you always
+    need to use the pronoun ''я''? 3. How do you form the stem of ''читати''? 4. How
+    would you say ''I am reading''?'

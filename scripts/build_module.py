@@ -2615,6 +2615,7 @@ _LLM_FILLER_DEFS: list[tuple[str, bool]] = [
     (r"\bLet'?s take a closer look\b", False),
     (r"\bIn this lesson,? we will\b", True),   # Always flag — formulaic opener
     (r"\bIn this module,? we will\b", True),   # Always flag — formulaic opener
+    (r"\bIn this (?:lesson|module|section),? we (?:will|are going to) (?:explore|learn|discover)\b", True),
     (r"\bIt is important to note\b", False),
     (r"\bNumbers are everywhere\b", False),
     (r"\bLanguage is not just about\b", False),
@@ -3080,8 +3081,11 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
             # IPA transcriptions: [ˈmɑmɑ], [ɑnɑˈnɑs]
             (_re.compile(r'\[[ɑɛɪɔʊəʃʒθðŋɾˈˌː\w\s]+\]'), "IPA transcription"),
         ]
+        # Whitelist: linguistic notation that uses brackets but isn't IPA
+        _IPA_WHITELIST = {"[Ø]"}  # zero copula / null morpheme notation
         for pattern, desc in _IPA_PATTERNS:
-            matches = list(pattern.finditer(content_text))
+            matches = [m for m in pattern.finditer(content_text)
+                       if m.group() not in _IPA_WHITELIST]
             if matches:
                 for m in matches[:5]:  # Cap at 5 per pattern
                     # Find line number
@@ -3143,13 +3147,35 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
         except Exception as e:
             logger.warning("D.0: Rule engine failed: %s", e)
 
+    # 9. Content quality pipeline checks (untranslated non-decodable, wall of text, etc.)
+    if content_text is not None:
+        try:
+            from audit.checks.content_quality_pipeline import run_content_quality_checks
+            level_code = ctx.track.split("-")[0].upper() if "-" in ctx.track else ctx.track.upper()
+            cq_issues = run_content_quality_checks(
+                content=content_text,
+                level_code=level_code,
+                module_num=ctx.module_num,
+                plan=getattr(ctx, "plan", None),
+                activities_path=ctx.paths.get("activities"),
+                vesum_not_found=result.vesum_not_found,
+            )
+            result.deterministic_issues.extend(cq_issues)
+            if cq_issues:
+                log(f"  D.0: Content quality: {len(cq_issues)} issue(s)")
+        except Exception as e:
+            logger.warning("D.0: Content quality checks failed: %s", e)
+
     det_count = len(result.deterministic_issues)
     if det_count > 0:
         n_rules = sum(1 for i in result.deterministic_issues if i["type"] in ("PEDAGOGICAL", "DECODABILITY"))
+        n_cq = sum(1 for i in result.deterministic_issues if i["type"] in (
+            "UNTRANSLATED_NON_DECODABLE", "WALL_OF_TEXT", "LOW_ENGAGEMENT",
+            "REPETITIVE_TRANSITIONS", "PLAN_SECTION_MISSING", "ACTIVITY_VESUM_FAIL"))
         log(f"  D.0: {det_count} deterministic issue(s) found "
             f"({sum(1 for i in result.deterministic_issues if i['type'] == 'RUSSIANISM')} Russianisms, "
             f"{sum(1 for i in result.deterministic_issues if i['type'] == 'LLM_FILLER')} filler, "
-            f"{n_rules} rule-engine)")
+            f"{n_rules} rule-engine, {n_cq} content-quality)")
 
     return result
 
@@ -4107,6 +4133,21 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     # Initial screen (content_only=False — full audit including activities)
     screen = _deterministic_screen(ctx, skip_review=_skip_review)
     _log_screen("Initial", screen)
+
+    # Plan auto-fix (remove VESUM-failed vocabulary_hints) — runs by default
+    if screen.vesum_not_found:
+        try:
+            from plan_autofix import auto_fix_plan
+            plan_path = ctx.paths.get("plan")
+            if plan_path and plan_path.exists():
+                n_plan_fixes, plan_changelog = auto_fix_plan(
+                    plan_path, screen.deterministic_issues, screen.vesum_not_found)
+                if n_plan_fixes:
+                    log(f"  validate: Plan auto-fix: {n_plan_fixes} fix(es)")
+                    for entry in plan_changelog:
+                        log(f"    {entry}")
+        except Exception as e:
+            logger.warning("validate: Plan auto-fix failed: %s", e)
 
     if screen.audit_passed and not screen.deterministic_issues:
         _save_screen_result(ctx, screen)
@@ -5091,6 +5132,21 @@ def phase_review_gemini_v4(ctx: ModuleContext, state: dict) -> bool:
     # 10. Run deterministic fixes
     _run_deterministic_fixes(ctx)
 
+    # 10.5 Plan auto-fix (remove VESUM-failed vocabulary_hints)
+    if screen and screen.vesum_not_found:
+        try:
+            from plan_autofix import auto_fix_plan
+            plan_path = ctx.paths.get("plan")
+            if plan_path and plan_path.exists():
+                n_plan_fixes, plan_changelog = auto_fix_plan(
+                    plan_path, screen.deterministic_issues, screen.vesum_not_found)
+                if n_plan_fixes:
+                    log(f"  review: Plan auto-fix: {n_plan_fixes} fix(es)")
+                    for entry in plan_changelog:
+                        log(f"    {entry}")
+        except Exception as e:
+            logger.warning("review: Plan auto-fix failed: %s", e)
+
     # 11. Post-review audit
     passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
 
@@ -5752,6 +5808,7 @@ def main() -> int:
             if start < 1 or end > total or start > end:
                 parser.error(f"Range {start}-{end} out of bounds (track has {total} modules)")
             nums = list(range(start, end + 1))
+            _ver = "v3" if args.use_v3 else "v4"
             print(f"Building {args.track} modules {start}-{end} ({len(nums)} modules, {_ver})", flush=True)
 
         passed_list, failed_list, skipped_list = [], [], []

@@ -4,9 +4,8 @@ description: "Adjective Agreement in Gender and Number"
 sidebar:
   order: 11
   label: "11. Describing Things - Adjectives"
-pipeline: v3
+pipeline: v4
 build_status: validated
-draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -48,387 +47,356 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 {/**/}
 
-> **Чому це важливо?**
-> Ukrainian adjectives breathe vibrant life into your sentences, allowing you to beautifully describe the complex world around you in precise detail. They act like a grammatical mirror, actively reflecting the exact gender and number of the noun they describe. Mastering this continuous reflection is a crucial key to sounding natural, precise, and expressive in everyday conversations. Without adjective agreement, speech remains robotic; with it, you unlock the poetic power of the Ukrainian language.
-
-## Вступ: Світ прикметників
-
-### Що таке узгодження слів-описів? (What is Adjective Agreement?)
-
-Ukrainian: Одне слово описує інше слово. Вони завжди працюють разом. Перше слово постійно змінює форму.
-English: One word describes another word. They always work together. The first word constantly changes form.
-Ukrainian: Це називається граматичним узгодженням. Слово-опис має той самий рід. Він також має те саме число.
-English: This is called grammatical agreement. The adjective has the same gender. It also has the same number.
-Ukrainian: В англійській описи статичні. Вони ніколи не змінюють форму. Ви кажете «a new car» або «a new house». Слово «new» завжди однакове. Але українська граматика дуже динамічна. Одне слово активно підлаштовується під інше слово. Цей процес гарантує ідеальну гармонію. Спочатку ви розпізнаєте головне слово. Потім ви змінюєте фінал опису. Це швидко стає природним ритмом.
-English: In English, descriptions are static. They never change form. You say «a new car» or «a new house». The word «new» is always the same. But Ukrainian grammar is very dynamic. One word actively adapts to another word. This process guarantees perfect harmony. First, you recognize the main word. Then you change the ending of the description. This quickly becomes a natural rhythm.
-
-### Фундаментальні питання (The Fundamental Questions)
-
-Ukrainian: Як запитати про новий предмет? Ми використовуємо чотири різні питання. Питання завжди залежить від роду слова.
-English: How do you ask about a new object? We use four different questions. The question always depends on the gender of the noun.
-Ukrainian: Для аналізу треба поставити правильне питання. Питальне слово також змінює свій фінал. Ми використовуємо чотири різні варіанти.
-English: For analysis, you need to ask the right question. The question word also changes its ending. We use four different options.
-Ukrainian: Яки́й це стіл? Стіл новий. Стіл великий. Стіл старий. Стіл малий.
-English: What kind of table is this? The table is new. The table is large. The table is old. The table is small.
-Ukrainian: Яка́ це книга? Книга цікава. Книга нова. Книга стара. Книга велика.
-English: What kind of book is this? The book is interesting. The book is new. The book is old. The book is large.
-Ukrainian: Яке́ це вікно? Вікно велике. Вікно мале. Вікно нове. Вікно старе.
-English: What kind of window is this? The window is large. The window is small. The window is new. The window is old.
-Ukrainian: Які́ це студенти? Студенти розумні. Вони нові. Ці студенти добрі. Вони веселі.
-English: What kind of students are these? The students are smart. They are new. These students are kind. They are cheerful.
-Ukrainian: Запам'ятайте ці чотири питальні слова. Вони дають правильний фінал для вашої відповіді. Питання використовує «який». Ваша відповідь має такі ж звуки. Ця структура створює надійну базу для речень.
-English: Remember these four question words. They give the correct ending for your answer. The question uses «який». Your answer has the same sounds. This structure creates a solid base for sentences.
-
-### Повернення до кодів роду (Return to the Gender Code)
-
-Ukrainian: Спочатку ми визначаємо рід. Це дуже важливий перший крок. Одне слово тут — це завжди головне слово.
-English: First we determine the gender. This is a very important first step. One word here is always the main word.
-Ukrainian: Спочатку треба знати рід головного слова. Повторімо «Код Роду» з минулих уроків. Це обов'язкова база для нашої роботи. Ви не можете правильно сформувати опис без аналізу головного слова.
-English: First you need to know the gender of the main word. Let's repeat the "Gender Code" from previous lessons. This is a mandatory base for our work. You cannot correctly form a description without analyzing the main word.
-You already know that masculine nouns usually end in a hard consonant sound. Feminine nouns almost always end in the distinct vowel letters «-а» or «-я». Neuter nouns typically end in «-о» or «-е». Whenever you want to describe a physical object, you must mentally scan its final letter.
-
-Ukrainian: Це студент. Це дім. Це театр.
-English: The words represent the masculine group.
-Ukrainian: Це студентка. Це квартира. Це вулиця.
-English: Here we see the feminine pattern clearly.
-Ukrainian: Це місто. Це море. Це вікно.
-English: And finally, these represent the neuter gender.
-Remember this golden rule as your supportive tutor: the noun acts as the boss in the sentence. The adjective is simply the loyal follower that adapts its shape to perfectly match the situation.
-
-### Культурний якір: Софійський собор (Cultural Hook: St. Sophia's Cathedral)
-
-Ukrainian: Софі́йський собор — це серце Києва. Це дуже стари́й і вели́кий собор. Він дуже га́рний. Собор відомий.
-English: St. Sophia's Cathedral is the heart of Kyiv. It is a very ancient and grand cathedral. It is very beautiful. The cathedral is famous.
-Ukrainian: Цей собор — пам'ятка нашої історії. Використовуйте правильні слова-описи для опису. Це важливо для спілкування. Місто старе.
-English: This cathedral is a monument of our history. Use correct adjectives for description. This is important for communication. The city is old.
-Built in the early eleventh century, St. Sophia's Cathedral stands as a magnificent, breathtaking testament to early Ukrainian history and architectural brilliance. It is a stunning, monumental structure that strictly requires rich, vivid descriptive vocabulary to truly capture its spiritual essence. When you stand in front of this cathedral, you naturally need descriptive words like "old," "grand," and "beautiful" to express your admiration for its golden domes and ancient mosaics.
-By consciously using masculine adjectives to describe this majestic masculine noun («собор»), you are actively engaging in authentic Ukrainian expression. You are connecting directly with the physical reality of Ukraine's capital city using the precise grammatical structures that native speakers use every single day.
-
-:::info[ℹ️ **The Dictionary Form**]
-When you look up any adjective in a Ukrainian dictionary, you will always find the masculine singular form listed as the primary entry. This is the default starting point. You must manually change this dictionary form to the feminine, neuter, or plural form depending entirely on the noun you want to describe in your actual sentence.
+:::note[🏺 Чому це важливо? — Why does this matter?]
+Up to now, you've learned to name things (a house, a book). Adjectives let you add details (a **big** house, an **interesting** book). In Ukrainian, adjectives change their endings to match the gender of the noun they describe — mastering this "agreement" is the key to sounding natural.
 :::
 
-## Презентація: Тверда група
+## Вступ: Світ прикметників (Introduction: The World of Adjectives)
 
-Ukrainian: Більшість слів для опису мають тверду основу. Це означає твердий фінальний звук. Далі ми додаємо закінчення. Звук сильний.
-English: Most words for description have a hard stem. This means a hard final sound. Then we add the ending. The sound is strong.
-Ukrainian: Більшість слів для опису належить до «Твердої групи». Тут основа слова має твердий фінальний звук. Детально розберімо ці важливі закінчення для всіх родів і множини.
-English: Most description words belong to the "Hard Group". Here the word stem has a hard final sound. Let's analyze in detail these important endings for all genders and plural.
+Привіт! Сьогодні тема: українські прикметники. Hello! Today's topic: Ukrainian adjectives. So far, you've focused on naming objects and people. But how do you explain that a house is not just a house, but a **large, old** house? How do you express that a book is **interesting** or a meal is **tasty**? To add these descriptive details, you need adjectives.
 
-### Чоловічий рід: Закінчення «-ий» (Masculine: Ending «-ий»)
+Українські прикметники дуже важливі. Ukrainian adjectives are very important. Як описати старий дім або нове місто? How do you describe an old house or a new city? In English, you use the exact same word «new» for everything you describe: a new car, a new house, a new window, or new friends. The adjective never changes. Український прикметник — це інша форма. In Ukrainian, however, the adjective must change its form to perfectly match the noun it is describing. We refer to this important rule as «adjective agreement» (узгодження прикметників). The adjective must agree with its noun in both gender and number. It acts like a mirror, reflecting the grammatical properties of the noun.
 
-Ukrainian: Чоловічий рід має свої чіткі правила. Такі слова тут закінчуються на «-ий». Це базова форма слова.
-English: Masculine gender has its clear rules. Such words here end in «-ий». This is the base form of the word.
-A hard stem adjective for a masculine noun takes the ending «-ий». This is the base dictionary form.
-Ukrainian: Це нови́й дім. Дім великий. Дім старий.
-English: This is a new home. The home is large. The home is old.
-Ukrainian: Мій брат — до́брий. Він дуже розумний. Брат високий.
-English: My brother is kind. He is very smart. The brother is tall.
-Ukrainian: Це вели́кий театр. Театр красивий. Театр новий.
-English: This is a large theater. The theater is beautiful. The theater is new.
-Ukrainian: Це ціка́вий урок. Урок новий. Урок довгий.
-English: This is an interesting lesson. The lesson is new. The lesson is long.
-Notice carefully how the descriptive adjective and the target noun work perfectly together as a unified grammatical team. The noun «дім» is masculine, so the adjective «новий» wears its corresponding masculine uniform. They lock together, making the structural integrity of the sentence incredibly stable.
+Який це дім? Яка це книга? Яке це місто?
+Which house is this? What kind of book is this? Which city is this?
 
-### Жіночий рід: Закінчення «-а» (Feminine: Ending «-а»)
+Ці слова-питання — ваші найкращі друзі. Вони дуже важливі. These foundational question words are your best tools for learning adjectives. «Який?» specifically asks about a masculine noun. «Яка?» asks about a feminine noun. «Яке?» is the question word for a neuter noun. Finally, «Які?» is used whenever you ask about plural nouns. Це дуже цікаво!
 
-Ukrainian: Жіночий рід звучить дуже відкрито. Слово отримує нове закінчення «-а». Це створює красиву гармонію.
-English: Feminine gender sounds very open. The word receives the new ending «-а». This creates a beautiful harmony.
-For a feminine noun, the adjective takes the ending «-а». This is an open, clear vowel sound.
-Ukrainian: Це нова́ книга. Книга цікава. Книга стара. Книга велика. Книга мала. Книга добра.
-English: This is a new book. The book is interesting. The book is old. The book is large. The book is small. The book is good.
-Ukrainian: Це вели́ка родина. Родина добра. Родина весела.
-English: This is a large family. The family is good. The family is cheerful.
-Ukrainian: Це га́рна дівчина. Дівчина розумна. Дівчина висока.
-English: This is a beautiful girl. The girl is smart. The girl is tall.
-Ukrainian: Це ціка́ва ідея. Ідея нова. Ідея гарна.
-English: This is an interesting idea. The idea is new. The idea is good.
-For instance, if you want to say «a new book», you seamlessly combine the adjective «нова́» with the feminine noun «книга». If you are describing a large family, you confidently say «вели́ка родина». When enthusiastically talking about an interesting idea, you use «ціка́ва ідея». The repetition of the «-а» sound creates natural harmony. Listen closely to the repetition of the final vowel sound in a phrase like «нова книга». This phonetic harmony is a signature feature of Ukrainian euphony. The words echo each other structurally, making the phrase highly pleasing to the ear.
+As you learned in previous lessons, every noun in Ukrainian has a grammatical gender: masculine, feminine, or neuter. Because the noun is the "boss" of the phrase, it commands the adjective to match its gender.
 
-### Середній рід: Закінчення «-е» (Neuter: Ending «-е»)
+:::note[🏺 Софійський собор]
+Софійський собор — старий.
+St. Sophia's Cathedral is ancient.
 
-Ukrainian: Середній рід також має своє закінчення. Ми використовуємо коротке закінчення «-е». Воно звучить дуже м'яко.
-English: Neuter gender also has its ending. The short ending «-е» is standard. It sounds very soft.
-Neuter nouns require the neuter ending «-е». Let us observe this in a short dialogue.
-Ukrainian: — Яке́ це вікно? Воно велике? Воно чисте?
-English: — What kind of window is this? Is it large? Is it clean?
-Ukrainian: — Це нове́ вікно. Воно дуже мале. Вікно гарне.
-English: — This is a new window. It is very small. The window is beautiful.
-Ukrainian: — А яке́ це місто? Місто гарне? Місто старе?
-English: — And what kind of city is this? Is the city beautiful? Is the city old?
-Ukrainian: — Це вели́ке місто. Воно старе. Воно красиве.
-English: — This is a large city. It is old. It is beautiful.
-Once again, you can very often hear a subtle, matching rhyme, as in the phrase «нове вікно» or «велике місто». This structural echoing heavily reinforces the grammatical connection.
+Він великий і дуже цікавий.
+It is grand and very interesting.
 
-### Множина: Закінчення «-і» (Plural: Ending «-і»)
+Це велике старе місце.
+It is a grand old place.
 
-Ukrainian: Для багатьох предметів ми використовуємо множину. Тут є тільки одне правило. Усі слова для опису закінчуються на «-і».
-English: For many objects we use the plural. Here there is only one rule. All words for description end in «-і».
-In the plural form, all hard stem adjectives take the ending «-і». You do not need separate plural endings for each gender.
-Ukrainian: Це нові́ будинки. Будинки великі. Будинки старі.
-English: Here are new houses. The houses are large. The houses are old.
-Ukrainian: Це вели́кі міста. Міста красиві. Міста нові.
-English: Look at these large cities. The cities are beautiful. The cities are new.
-Ukrainian: Вони га́рні люди. Люди добрі. Люди розумні.
-English: They are beautiful people. The people are kind. The people are smart.
-Ukrainian: Це нові́ друзі. Друзі розумні. Друзі веселі.
-English: They are new friends. The friends are smart. The friends are cheerful.
-The absolute simplicity of the plural ending «-і» provides a welcome grammatical relief for learners.
-
-:::warning[⚠️ **The Masculine Trap**]
-A very common and persistent learner error is automatically using the masculine dictionary form for everything, regardless of the noun's actual gender. Because you learn the word «новий» first, you might be tempted to say «новий машина». This sounds completely jarring to native speakers. You must always mentally scan the noun first. Because «машина» is clearly feminine, the adjective must definitively adapt to become «нова». Correct usage: «нова машина». Incorrect usage: «новий машина».
+When describing Kyiv's famous St. Sophia's Cathedral (**собор** — masculine), we use masculine adjectives like **старий** (ancient) and **великий** (grand). Because the noun is masculine, the adjectives must take the masculine **-ий** ending.
 :::
 
-### Позиція слово-описа: Атрибут чи присудок (Adjective Position: Attributive vs. Predicative)
+## Презентація: Тверда група (Presentation: Hard Stem Adjectives)
 
-Ukrainian: Опис може стояти першим. Він також може стояти другим. Фінал слова залишається такий самий.
-English: The description can stand first. It can also stand second. The end of the word remains the same.
+Зараз тема — найпопулярніша група. Now we will look closely at the most common category of adjectives in the Ukrainian language. We call these «Hard Stem» adjectives. You can easily recognize them when you look in a dictionary because they always end in the letters «-ий». Most of the descriptive words you will use in your everyday conversations belong to this exact group.
 
-Ukrainian: га́рна погода → Погода га́рна. Погода тепла.
-English: beautiful weather → The weather is beautiful. The weather is warm.
-Ukrainian: нове́ місто → Місто нове́. Місто гарне.
-English: a new city → The city is new. The city is beautiful.
-Ukrainian: смачни́й чай → Чай смачни́й. Чай солодкий.
-English: tasty tea → The tea is tasty. The tea is sweet.
-Notice clearly that the word «погода» is intrinsically feminine, so we consistently use the feminine form «гарна» whether it sits before the noun or after it. The gender agreement remains perfectly stable.
+Let us see exactly how the ending changes depending on the boss of the phrase — the noun. The adjective must adapt to fit the masculine, feminine, neuter, or plural form.
 
-### Розширення словника: Протилежності (Expanding Vocabulary: Opposites)
+| Gender / Number | Question Word | Hard Stem Ending | Example | Translation |
+| --- | --- | --- | --- | --- |
+| Masculine | Який? | **-ий** | новий дім | new house |
+| Feminine | Яка? | **-а** | нова книга | new book |
+| Neuter | Яке? | **-е** | нове вікно | new window |
+| Plural | Які? | **-і** | нові друзі | new friends |
 
-Ukrainian: Вчити слова парами дуже ефективно. Це допомагає пам'яті працювати краще. Ми вивчимо кілька важливих протилежностей.
-English: Learning words in pairs is very effective. It helps memory work better. Here are a few important opposites.
+Ось дуже корисний список нових слів. Here is a useful list of words that follow this reliable hard stem pattern:
+- **великий** — big, grand
+- **малий** — small
+- **добрий** — good, kind
+- **поганий** — bad
+- **червоний** — red
+- **смачний** — tasty
+- **старий** — old, ancient
+- **новий** — new
 
-| Чоловічий (m) | Жіночий (f) | Середній (n) | Множина (pl) | Переклад (Translation) |
-| ------------- | ----------- | ------------ | ------------ | ---------------------- |
-| вели́кий | вели́ка | вели́ке | вели́кі | big / grand |
-| мали́й | мала́ | мале́ | малі́ | small |
-| до́брий | добра́ | добре́ | добрі́ | good / kind |
-| пога́ний | пога́на | погане́ | погані́ | bad |
+Let's practice! Pay attention to the endings:
 
-Practice reading these opposing pairs aloud repeatedly. Notice exactly how the grammatical endings predictably and consistently shift across all four columns for every single word. This foundational table brilliantly represents the grammatical behavior of the vast majority of all adjectives you will ever use.
+Ось великий дім. Він дуже старий.
+Here is a big house. It is very old.
 
-## Презентація 2: М'яка група та Специфіка
+Це смачна піца. Вона дуже добра.
+This is a tasty pizza. It is very good.
 
-Ukrainian: Деякі слова для опису мають м'яку основу. Вони звучать дуже ніжно. Для них потрібні інші голосні літери.
-English: Some words for description have a soft stem. They sound very tender. They need different vowel letters.
-Ukrainian: Багато таких слів мають тверду основу. Але є також елегантна м'яка група. Ці слова мають м'який фінальний звук перед закінченням. Ця м'якість вимагає інших голосних звуків. Це допомагає зберегти природний ритм нашої мови.
+Там мале вікно. Воно абсолютно нове.
+There is a small window. It is absolutely new.
 
-### М'яка парадигма: Родина «синій» (The Soft Paradigm: The "Blue" Family)
+Це гарне місто. Воно велике і старе.
+This is a beautiful city. It is big and old.
 
-Ukrainian: Слово «синій» — це класичний приклад. Літера «н» звучить тут дуже м'яко. Тому ми використовуємо літеру «і».
-English: The word «синій» is a classic example. The letter «н» sounds very soft here. Therefore we use the letter «і».
-A classic example of a soft stem adjective is the word for blue. The endings use soft vowels to maintain phonetic harmony: «-ій», «-я», «-є».
-Ukrainian: Це си́ній зошит. Зошит новий. Зошит гарний.
-English: This is a blue notebook. The notebook is new. The notebook is beautiful.
-Ukrainian: Це си́ня ручка. Ручка гарна. Ручка нова.
-English: This is a blue pen. The pen is beautiful. The pen is new.
-Ukrainian: Це си́нє море. Море велике. Море тепле.
-English: This is a blue sea. The sea is large. The sea is warm.
-The phonetic difference between hard and soft is subtle but absolutely crucial for authentic, native-like pronunciation. Compare the masculine hard ending «-ий» directly with the soft ending «-ій». The soft version naturally brings the tongue much higher in the mouth, creating a sharper, more precise sound.
+:::note[📝 Читання]
+<div className="conversation">
 
-:::tip[💡 **Unique Ukrainian Orthography**]
-When writing out soft stem adjectives, learners sometimes make the very common orthographic error of mistakenly writing «синий» instead of the correct form «синій». This happens due to phonetic confusion. You must always remember that the soft consonant absolutely requires the letter «і» directly before the «й». This specific spelling rule is a distinctive feature of Ukrainian orthography. Do not mix hard vowels with soft consonant stems.
+— Який це дім?
+
+— Це новий і великий дім. Він дуже гарний.
+
+— А яка це книга?
+
+— Це стара книга, але вона дуже цікава.
+
+— Ця піца дуже смачна!
+
+— Яке це місто?
+
+— Це старе місто. Воно дуже гарне!
+
+</div>
 :::
 
-### Мнемонічний якір: Синя лінія (Mnemonic Anchor: The Blue Line)
+У вас є два варіанти. You have two options for adjective placement. Перший варіант: прикметник плюс іменник. The first option is the «attributive» position, where the adjective sits directly before the noun. For example, «гарна погода» simply means «beautiful weather».
 
-Ukrainian: У Києві є відома си́ня лінія метро. Це дуже стара́ і довга лінія. Ця станція — дуже га́рна.
-English: There is a famous blue metro line in Kyiv. It is a very old and long line. This station is very beautiful.
-Ukrainian: Це чудовий спосіб запам'ятати правило. Використовуйте реальні місця для вивчення мови.
-English: This is a great way to remember the rule. Use real places for learning the language.
-The legendary Kyiv Metro is famously deep, historically significant, and highly efficient. It is composed of three primary intersecting lines, one of which is the universally known Blue Line. This physical reality serves as an absolutely perfect, highly practical mnemonic anchor for your daily vocabulary retention. Whenever you struggle to recall the exact feminine soft ending, simply picture a visual map of the Kyiv Metro and confidently think of the specific phrase «синя лінія». Because the word «лінія» is a feminine noun ending in a soft vowel, it perfectly and naturally matches the soft feminine adjective «синя». Connecting abstract grammar to physical geography makes the phonetic rules permanent.
+Другий варіант: іменник плюс прикметник. The second option is the «predicative» position. In this case, you place the adjective after the noun to make a complete statement.
 
-### Інші слова м'якої групи (Other Soft Group Words)
+Погода гарна.
+The weather is beautiful.
 
-Ukrainian: Існують також інші слова цієї групи. Багато з них пов'язані із часом. Це робить мову дуже поетичною.
-English: There are also other words of this group. Many of them are connected with time. This makes the language very poetic.
-While vocabulary words denoting colors like «синій» are the most overwhelmingly common everyday examples, you will certainly encounter other important adjectives that strictly follow this exact same soft pattern. Several of these refer specifically to periods of time, relative location, or seasons.
-For instance, to say "early morning," you write «ра́нній ранок». To describe a "late night," you use «пі́зня ніч». An "evening newspaper" becomes a «вечі́рня газета». You can even describe "spring rain" using «весня́ний дощ». Notice very clearly how all of these different conceptual words rigidly maintain the distinct soft endings («-ій», «-я», «-є»). They behave grammatically exactly like «синій».
+Дім новий.
+The house is new.
 
-### Узгодження у множині: Універсальне правило (Plural Consistency: The Universal Rule)
+Вікно чисте.
+The window is clean.
 
-Ukrainian: У множині правило стає дуже простим. Для всіх родів ми маємо одне закінчення. Це закінчення — літера «-і».
-English: In the plural the rule becomes very simple. For all genders we have one ending. This ending is the letter «-і».
-Ukrainian: Множина — це дуже проста частина нашої системи. Один об'єкт вимагає чоловічого, жіночого або середнього роду. Але множина має одне універсальне закінчення. Майже всі слова-описи у множині закінчуються на «-і». Це дуже спрощує ваше спілкування.
-English: One of the most beautiful, elegant, and highly forgiving aspects of the Ukrainian adjective system is exactly how it handles the plural form in the Nominative case. Unlike the various singular forms, which strictly demand adherence to masculine, feminine, or neuter categories, the plural adjective form collapses beautifully into a single, universal ending. Regardless of the noun's original grammatical gender, almost all adjectives in the plural take the exact same ending «-і». This drastically simplifies your cognitive load when speaking.
-Ukrainian: Це нові́ студенти. Студенти добрі. Студенти розумні.
-English: These are new students. (Originally masculine). The students are good. The students are smart.
-Ukrainian: Це нові́ книги. Книги цікаві. Книги старі.
-English: Notice the new books. (Originally feminine). The books are interesting. The books are old.
-Ukrainian: Це га́рні дні. Дні дуже довгі. Дні теплі.
-English: Such beautiful days. The days are very long. The days are warm.
-Ukrainian: Це га́рні дівчата. Дівчата розумні. Вони веселі. Студенти добрі. Вони високі. Ці студенти розумні. Дні довгі. Вони теплі. Ці дні гарні.
-English: What beautiful girls. The girls are smart. They are cheerful. The students are kind. They are tall. These students are smart. The days are long. They are warm. These days are beautiful.
-Notice carefully that the adjective «нові» remains exactly the same. You absolutely do not need to juggle three different plural endings in your head.
+Notice an important detail here: we do not use the word «is» (є) in these simple present-tense sentences. You simply state the noun and follow it immediately with the adjective. The gender ending still must match perfectly! The word «погода» is a feminine noun, so the adjective «гарна» must end in «-а», no matter where it sits in the sentence structure.
 
-:::warning[⚠️ **Number Disagreement**]
-A highly frequent and noticeable mistake is matching the grammatical gender perfectly but entirely forgetting to match the number. If you are describing plural nouns, you absolutely cannot use a singular adjective. You cannot, under any circumstances, say «гарна друзі» (which wrongly combines a feminine singular adjective with a plural noun). You must definitively shift the descriptive adjective to the universal plural ending: «гарні друзі».
+:::warning[⚠️ Словникова пастка (The Dictionary Trap)]
+Це дуже часта помилка! A very frequent mistake for English speakers is attempting to use the dictionary form (the masculine form) for every single noun. You might look up the word «new» and find «новий».
+
+❌ WRONG: новий машина (Masculine adjective + Feminine noun)
+✅ RIGHT: нова машина (Feminine adjective + Feminine noun)
+
+Always check the noun's gender in your mind before you attach the adjective!
 :::
 
-## Практика та Культурний контекст
+А тепер антоніми. Let's look at antonyms.
 
-Ukrainian: Тепер ми переходимо до живої практики. Ми використаємо наші знання в реальних ситуаціях. Ми будемо говорити впевнено.
-English: Now we transition to live practice. Real situations help apply our knowledge. This builds your confidence.
+Це цікавий фільм, а це поганий фільм.
+This is an interesting film, and this is a bad film.
 
-### Культурний портрет: Мавка (Cultural Portrait: Mavka)
+Тут дорогий телефон, а там дешевий телефон.
+Here is an expensive phone, and there is a cheap phone.
 
-Ukrainian: Ма́вка — це дуже відома лісова́ дівчина. Вона дуже молода́ і га́рна. Її історія надзвичайно ціка́ва.
-English: Mavka is a very famous forest girl. She is very young and beautiful. Her story is extremely interesting.
-Ukrainian: Це класичний персонаж нашої літератури. Леся Українка описала її у своїй п'єсі. Вона любить зеле́ний ліс.
-English: This is a classic character of our literature. Lesya Ukrainka described her in her play. She loves the green forest.
-To effectively practice our feminine adjectives, we consciously turn to one of the most famous and universally beloved figures in all of Ukrainian folklore and classic literature. Mavka is a mystical forest spirit, the central, defining character in Lesya Ukrainka's renowned poetic masterpiece "The Forest Song" (Лісова пісня). She profoundly represents the pure soul of nature and its eternal, untamed beauty. By reading the Ukrainian sentences above, you are actively processing feminine adjective endings («молода», «гарна», «цікава») firmly anchored to the feminine nouns «дівчина» and «історія». Concurrently, the descriptive adjective «зелений» correctly modifies the masculine noun «ліс». This is exactly how grammar serves the high art of cultural storytelling.
+Ось великий стіл, а там малий стіл.
+Here is a big table, and there is a small table.
 
-### Рольова гра: Агент з нерухомості (Roleplay: Real Estate Agent)
+:::note[📝 Читання]
+<div className="conversation">
 
-Ukrainian: Ви працюєте агентом з нерухомості. Ви показуєте клієнту нову квартиру в місті. Використовуйте красиві слова для переконання. Квартира нова.
-English: You work as a real estate agent. You are showing a client a new apartment in the city. Use beautiful words for persuasion. The apartment is new.
+— Який це фільм?
 
-Ukrainian: — Добрий день! Це нова́ квартира.
-English: — Good day! This is a new apartment.
-Ukrainian: — Вона дуже вели́ка й га́рна. Вона світла.
-English: — It is very large and beautiful. It is bright.
-Ukrainian: — Тут є вели́ке вікно і нове́ ліжко. Ліжко зручне.
-English: — There is a large window and a new bed here. The bed is comfortable.
-Ukrainian: — А там стоїть стари́й, але дороги́й дім. Дім високий.
-English: — And over there stands an old, but expensive house. The house is tall.
+— Це поганий і старий фільм.
 
-:::note[🏺 **Describing Homes in Ukraine**]
-In modern Ukrainian real estate, the descriptive word «старий» (old) is absolutely not always considered a negative descriptor. When confidently applied to historical buildings located in city centers, especially in magnificent cities like Kyiv or Lviv, a «старий дім» very often implies incredibly high ceilings, structurally thick walls, and highly desirable classic architecture. Conversely, a «нова квартира» represents highly sought-after modern development. Both scenarios require incredibly strong adjectives.
+— А цей телефон?
+
+— Це новий і дорогий телефон. Він дуже гарний.
+
+</div>
 :::
 
-### Опис предметів: Дешевий чи дорогий (Describing Objects: Cheap or Expensive)
+## Презентація: М'яка група і Множина (Presentation: Soft Stem and Plurals)
 
-Ukrainian: На українському базарі часто торгуються. Важливо знати слова для оцінки товару. Це частина щоденної культури покупок.
-English: At a Ukrainian market people often haggle. It is important to know words for evaluating goods. This is part of the daily culture of shopping.
-Ukrainian: У щоденному житті ми часто робимо покупки. Ми оцінюємо різні об'єкти за ціною та якістю. Слова «дорогий» і «дешевий» дуже важливі. Ми часто використовуємо їх у магазинах і на ринках. Проаналізуймо типовий діалог. Ми будемо порівнювати різні речі.
-English: In standard daily life, especially when actively shopping in traditional open-air markets or browsing in modern stores, you will constantly need to realistically evaluate various objects based heavily on price and perceived quality. The specific adjectives "expensive" and "cheap" are absolutely essential functional tools for navigating these commercial environments. Let us safely analyze a typical conversational exchange actively comparing items.
-Ukrainian: — Ця черво́на сумка дорога́? Вона дуже красива.
-English: — Is this red bag expensive? It is very beautiful.
-Ukrainian: — Ні, вона дуже деше́ва. Сумка нова.
-English: — No, it is very cheap. The bag is new.
-Ukrainian: — А цей си́ній зошит дороги́й?
-English: — And is this blue notebook expensive?
-Ukrainian: — Так, він дійсно дороги́й. Зошит великий.
-English: — Yes, it is really expensive. The notebook is large.
-Notice precisely how «дорога» directly modifies the feminine noun «сумка», while «дорогий» directly modifies the masculine noun «зошит». Thoroughly mastering these basic evaluations gives you immense functional confidence.
+Друга група — це м'яка група. The second group is the soft stem group. It is much smaller, but it contains some extremely important vocabulary. Instead of ending in the hard «-ий» in their default dictionary form, these adjectives end in the soft «-ій».
 
-### Фінальний синтез: Патерн «Який?» (Final Synthesis: The "What Kind?" Pattern)
+Найпопулярніше слово тут — «синій». The most famous and frequently used example for this category is the color blue — «синій». Because the root stem of the word is soft, all the subsequent endings soften up slightly to match. The hard letter «а» turns into the soft «я», and the hard letter «е» turns into the soft «є».
 
-Ukrainian: Час підбити підсумки нашої роботи. Цей простий алгоритм працює завжди без винятків. Просто дотримуйтесь цих чотирьох кроків.
-English: It is time to summarize our work. This simple algorithm always works without exceptions. Just follow these four steps.
-Ukrainian: Ми завершуємо нашу презентацію. Синтезуймо всю систему в один патерн. Цей патерн базується на фундаментальних питаннях. Ваш мозок повинен працювати за такою логікою:
-English: As we definitively conclude this comprehensive presentation, let us formally synthesize the entire grammatical system into a single, highly cohesive pattern strictly based on the fundamental questions we initially learned. Your brain should rapidly follow this exact logical loop:
-1. The noun is masculine («дім»). The specific question is «яки́й?». The correct ending is «-ий» or «-ій». Example phrase: нови́й дім.
-2. The noun is feminine («книга»). The specific question is «яка́?». The correct ending is «-а» or «-я». Example phrase: нова́ книга.
-3. The noun is neuter («місто»). The specific question is «яке́?». The correct ending is «-е» or «-є». Example phrase: нове́ місто.
-4. The noun is plural («студенти»). The specific question is «які́?». The correct universal ending is «-і». Example phrase: нові́ студенти.
-This underlying structural logic remains completely unbroken. By deeply internalizing this specific question-and-answer mechanism, you have successfully unlocked one of the most structurally powerful and expansively useful systems in the entire Ukrainian language.
+Let us examine the complete pattern for the soft stem group:
+- **Masculine (Який?)**: -ій (синій зошит — blue notebook)
+- **Feminine (Яка?)**: -я (синя ручка — blue pen)
+- **Neuter (Яке?)**: -є (синє море — blue sea)
+- **Plural (Які?)**: -і (сині дні — blue days)
+
+:::tip[💡 The Blue Line Mnemonic]
+If you visit the city of Kyiv and use the Metro system, you will quickly learn the practical phrase «синя лінія» (the Blue Line). Since the word «лінія» is a feminine noun, the soft adjective «синій» naturally changes to «синя». This real-world example serves as a perfect memory hook for mastering the soft feminine ending «-я».
+:::
+
+Це часта орфографічна помилка. A very common orthographic mistake happens when learners try to write these specific words. Because the hard and soft endings can sound somewhat similar, you might be tempted to write the incorrect form «синий». Це неправильно. Ви повинні пам'ятати це правило. You must remember that soft stem adjectives must maintain their softness in writing. Always write «синій» when describing masculine nouns.
+
+Тепер множина. Це дуже просто! Now let's talk about the plural. This is actually the easiest part of Ukrainian adjective agreement!
+
+Тут усі прикметники — це закінчення «-і». In the plural all adjectives take the exact same ending: «-і». It simply does not matter if the original noun was masculine, feminine, or neuter in its singular form. Багато предметів — це закінчення «-і». If there is more than one item, the corresponding adjective ends in «-і». We see this reliable consistency across both the hard and the soft adjective groups.
+
+Нові будинки — великі.
+The new houses are big.
+
+Гарні дівчата — тут.
+The beautiful girls are here.
+
+Сині вікна — чисті.
+The blue windows are clean.
+
+Старі книги — там.
+The old books are there.
+
+:::note[📝 Читання]
+<div className="conversation">
+
+— Привіт! Це мій новий телефон.
+
+— О, він такий великий! Він дорогий?
+
+— Ні, він дешевий, але дуже добрий.
+
+— А де твої нові друзі?
+
+— Мої друзі тут. Вони дуже цікаві люди.
+
+— Які гарні дні!
+
+</div>
+:::
+
+У множині завжди є закінчення **-і**. Це дуже важливо. This makes plural adjectives very straightforward: you only need to memorize the **-і** ending. Just remember to actually use it when talking about multiple objects, instead of defaulting to the singular form!
+
+## Практика та Підсумок (Practice and Summary)
+
+Час для практики! Let's practice with a cultural example. In traditional Ukrainian folklore, **Мавка** is a famous spirit of the forest. Because she is female, any adjectives describing her must take the feminine endings.
+
+Мавка — молода й гарна.
+Mavka is young and beautiful.
+
+Вона дуже цікава.
+She is very interesting.
+
+Її сукня — зелена.
+Her dress is green.
+
+Усі прикметники тут — це закінчення -а. Notice how every adjective ends in **-а**, matching the feminine nouns **Мавка** and **сукня** (dress).
+
+А тепер практична ситуація: квартира і будинок. Now let's look at a practical scenario: describing properties like an apartment (**квартира** — feminine) and a house (**будинок** — masculine).
+
+Це нова квартира.
+This is a new apartment.
+
+Тут великий балкон.
+Here is a large balcony.
+
+Цей старий будинок — дуже дорогий.
+This old house is very expensive.
+
+The word **квартира** is a feminine noun, so we use the feminine adjective **нова**. The words **балкон** and **будинок** are masculine nouns, so they take the masculine adjectives **великий**, **старий**, and **дорогий**.
+
+Reading practice: A dialogue about a new house:
+
+:::note[📝 Читання]
+<div className="conversation">
+
+— Привіт, Анно! Це твоя нова квартира?
+
+— Привіт! Так, це моя нова квартира. Вона велика і гарна.
+
+— А де твій новий стіл?
+
+— Ось мій новий стіл. Він великий і старий, але дуже добрий.
+
+— А це чисте вікно?
+
+— Так, це нове і чисте вікно.
+
+— Твоя квартира дуже гарна.
+
+— Дякую!
+
+</div>
+:::
+
+Цей діалог використовує всі три роди. This conversation uses all three genders. Notice how the adjectives naturally shift from **нова** to **новий** to **нове** depending on the noun.
+
+Це був дуже добрий урок! Ви великі молодці. Тепер ви знаєте нові слова і правила. This was a very good lesson! You did a great job. Now you know new words and rules.
 
 ---
 
-## 📋 Підсумок
+## 📋 Summary
 
-English: In this foundational module, we have successfully unlocked the absolute core mechanics of precisely describing the physical and abstract world around us in Ukrainian. We systematically learned that Ukrainian descriptive adjectives do not exist in grammatical isolation; rather, they are highly dynamic, flexible words that constantly transform their endings to perfectly mirror the specific gender and number of the exact nouns they describe. We extensively explored the highly prevalent Hard Stem group, thoroughly mastering the essential masculine ending «-ий», the feminine «-а», the neuter «-е», and the incredibly useful universal plural «-і». We subsequently navigated the elegant phonetic variations of the Soft Stem group, effectively anchored by the highly common and recognizable word «синій».
-Crucially, we actively corrected the very common learner pitfall of incorrectly relying solely on the masculine dictionary form, strongly emphasizing the rule that the target noun always permanently dictates the final shape of the descriptive adjective. Through the culturally rich architectural lens of St. Sophia's Cathedral, the beautiful literary folklore of Mavka, and practical real estate scenarios, we practically applied these core grammar rules to authentic, rich Ukrainian contexts, conclusively proving that correct adjective endings are absolutely essential for accurate and beautiful storytelling.
+Ukrainian adjectives must always agree with their nouns in both gender and number. This means you must ask the right question to find the right ending:
 
-**Перевірте себе (Self-Check):**
-*Знайдіть правильну пару. Match the adjectives to the correct nouns based strictly on gender agreement:*
-1. Нови́й  __ A. вікно (Neuter)
-2. Га́рна  __ B. дівчина (Feminine)
-3. Вели́ке __ C. дім (Masculine)
-4. Нові́  __ D. друзі (Plural)
-*(Answers: 1-C, 2-B, 3-A, 4-D)*
+- **Який?** (Masculine) takes endings like **-ий** or **-ій**.
+- **Яка?** (Feminine) takes endings like **-а** or **-я**.
+- **Яке?** (Neuter) takes endings like **-е** or **-є**.
+- **Які?** (Plural / Множина) always takes the ending **-і**.
 
-**Питання для перевірки (Questions):**
-5. What specific question word must you accurately use to ask «what kind of» about a strictly feminine noun?
-6. If the target noun «вікно» is neuter, what specific grammatical ending must the hard stem adjective «новий» immediately take?
-7. Why is it grammatically jarring and incorrect to say the specific phrase «новий машина»? How exactly do you fix this beginner error?
-8. What is the single, highly forgiving universal ending for almost all Ukrainian adjectives in their plural form?
-9. Which specific metro line in the city of Kyiv helps you permanently remember the soft stem feminine ending?
-10. In a definitive, short statement like «Місто велике», does the adjective legally change its ending merely because it comes after the noun instead of before it?
+Головне правило: So, remember:
+- Чоловічий рід — який? (Masculine)
+- Жіночий рід — яка? (Feminine)
+- Середній рід — яке? (Neuter)
+- Множина — які? (Plural)
+
+You explored the reliable Hard Stem group with words like «новий» and «великий», and you discovered the Soft Stem group anchored by the word «синій». You also learned to avoid the common mistake of relying only on the dictionary form, recognizing that every adjective must adapt to its noun boss.
+
+**Self-Check Questions:**
+1. What is the correct feminine ending for a hard stem adjective like «новий»?
+2. Translate the phrase: «new book» into Ukrainian.
+3. Translate the phrase: «old houses» into Ukrainian.
+4. Which question word do you use when asking about a neuter noun?
+
+Take a moment to review these questions. Your ability to describe objects, places, and people will make your Ukrainian much more colorful and expressive!
 
 </TabItem>
 <TabItem label="Vocabulary">
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| цей |  |  | adj |  |  |
-| це |  |  | noun |  |  |
-| новий |  |  | adj |  |  |
-| слово |  |  | noun |  |  |
-| дуже |  |  | adv |  |  |
-| дужий |  |  | adj |  |  |
-| книга |  |  | noun |  |  |
-| ми |  |  | noun |  |  |
-| місто |  |  | noun |  |  |
-| мати |  |  | verb |  |  |
-| вони |  |  | noun |  |  |
-| старий |  |  | adj |  |  |
-| вікно |  |  | noun |  |  |
-| веліти |  |  | verb |  |  |
-| вести |  |  | verb |  |  |
-| опис |  |  | noun |  |  |
-| маяти |  |  | verb |  |  |
-| рід |  |  | noun |  |  |
-| великий |  |  | adj |  |  |
-| студент |  |  | noun |  |  |
-| га |  |  | noun |  |  |
-| використовувати |  |  | verb |  |  |
-| який |  |  | adj |  |  |
-| добрий |  |  | adj |  |  |
-| дім |  |  | noun |  |  |
-| вона |  |  | noun |  |  |
-| закінчення |  |  | noun |  |  |
-| гарний |  |  | adj |  |  |
-| нове |  |  | noun |  |  |
-| розумний |  |  | adj |  |  |
+| новий |  | new | adjective |  |  |
+| старий |  | old, ancient | adjective |  |  |
+| гарний |  | beautiful, nice | adjective |  |  |
+| великий |  | big, grand | adjective |  |  |
+| малий |  | small | adjective |  |  |
+| добрий |  | good, kind | adjective |  |  |
+| поганий |  | bad | adjective |  |  |
+| цікавий |  | interesting | adjective |  |  |
+| синій |  | blue | adjective |  |  |
+| черীবний |  | red | adjective |  |  |
+| молодий |  | young | adjective |  |  |
+| дорогий |  | expensive | adjective |  |  |
+| дешевий |  | cheap | adjective |  |  |
+| смачний |  | tasty | adjective |  |  |
+| зелений |  | green | adjective |  |  |
+| дім |  | house | noun | ч |  |
+| книга |  | book | noun | ж |  |
+| вікно |  | window | noun | с |  |
+| погода |  | weather | noun | ж |  |
+| собор |  | cathedral | noun | ч |  |
+| множина |  | plural | noun | ж |  |
+| іменник |  | noun | noun | ч |  |
+| прикметник |  | adjective | noun | ч |  |
 
 </TabItem>
 <TabItem label="Activities">
 
-### Рід іменників: Він, Вона чи Воно?
+### Match the Opposites
 
-<GroupSort client:load groups={JSON.parse(`{"Він (Чоловічий)": ["стіл", "телефон", "дім", "парк", "чоловік"], "Вона (Жіночий)": ["книга", "кімната", "ручка", "кухня", "квартира"], "Воно (Середній)": ["вікно", "море", "місто", "авто", "крісло"]}`)} />
+<MatchUp client:load pairs={JSON.parse(`[{"left": "великий", "right": "big"}, {"left": "малий", "right": "small"}, {"left": "новий", "right": "new"}, {"left": "старий", "right": "old"}, {"left": "добрий", "right": "good"}, {"left": "поганий", "right": "bad"}, {"left": "гарний", "right": "beautiful"}, {"left": "цікавий", "right": "interesting"}]`)} />
 
-### Антоніми: знайдіть протилежне
+### Sort by Gender Ending (Hard Stem)
 
-<MatchUp client:load pairs={JSON.parse(`[{"left": "великий", "right": "малий"}, {"left": "новий", "right": "старий"}, {"left": "добрий", "right": "поганий"}, {"left": "дорогий", "right": "дешевий"}, {"left": "чорний", "right": "білий"}, {"left": "день", "right": "ніч"}, {"left": "світлий", "right": "темний"}, {"left": "чистий", "right": "брудний"}, {"left": "цікавий", "right": "нудний"}]`)} />
+<GroupSort client:load groups={JSON.parse(`{"Masculine (-ий)": ["новий", "великий", "старий"], "Feminine (-а)": ["нова", "стара", "добра"], "Neuter (-е)": ["нове", "мале", "гарне"], "Plural (-і)": ["нові", "добрі", "малі"]}`)} />
 
-### Питання: Який, Яка, Яке, Які?
+### Choose the Correct Adjective Form
 
-<Quiz client:load questions={JSON.parse(`[{"question": "Скажіть, будь ласка, ... це будинок?", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Будинок — це «він» (чоловічий рід), тому «Який?»."}, {"question": "Подивіться на фото. ... це кімната?", "options": [{"text": "Яка", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яке", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Кімната — це «вона» (жіночий рід), тому «Яка?»."}, {"question": "Як ви думаєте, ... це вікно?", "options": [{"text": "Яке", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Вікно — це «воно» (середній рід), тому «Яке?»."}, {"question": "Це мої нові друзі. ... вони?", "options": [{"text": "Які", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}], "explanation": "Друзі — це «вони» (множина), тому «Які?»."}, {"question": "Це наше місто. Скажіть, ... воно?", "options": [{"text": "Яке", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Місто — це «воно» (середній рід)."}, {"question": "Це ваша школа. Скажіть, ... вона?", "options": [{"text": "Яка", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яке", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Школа — це «вона» (жіночий рід)."}, {"question": "Це новий студент. Скажіть, ... він?", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}, {"text": "Які", "correct": false}], "explanation": "Студент — це «він» (чоловічий рід)."}, {"question": "Це цікаві книги. Скажіть, ... вони?", "options": [{"text": "Які", "correct": true}, {"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}], "explanation": "Книги — це «вони» (множина)."}]`)} />
+<Quiz client:load questions={JSON.parse(`[{"question": "Fill in the blank: Це _____ дім.", "options": [{"text": "новий", "correct": true}, {"text": "нова", "correct": false}, {"text": "нове", "correct": false}, {"text": "нові", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Це _____ книга.", "options": [{"text": "цікава", "correct": true}, {"text": "цікавий", "correct": false}, {"text": "цікаве", "correct": false}, {"text": "цікаві", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Це _____ вікно.", "options": [{"text": "мале", "correct": true}, {"text": "малий", "correct": false}, {"text": "мала", "correct": false}, {"text": "малі", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Погода _____.", "options": [{"text": "гарна", "correct": true}, {"text": "гарний", "correct": false}, {"text": "гарне", "correct": false}, {"text": "гарні", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Це _____ друзі.", "options": [{"text": "добрі", "correct": true}, {"text": "добрий", "correct": false}, {"text": "добра", "correct": false}, {"text": "добре", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Це _____ лінія.", "options": [{"text": "синя", "correct": true}, {"text": "синій", "correct": false}, {"text": "синє", "correct": false}, {"text": "сині", "correct": false}], "explanation": "The noun \\"лінія\\" is feminine. Because \\"синій\\" is a soft stem adjective, the feminine ending is \\"-я\\"."}, {"question": "Fill in the blank: Мавка дуже _____.", "options": [{"text": "молода", "correct": true}, {"text": "молодий", "correct": false}, {"text": "молоде", "correct": false}, {"text": "молоді", "correct": false}], "explanation": ""}, {"question": "Fill in the blank: Це _____ піца.", "options": [{"text": "смачна", "correct": true}, {"text": "смачний", "correct": false}, {"text": "смачне", "correct": false}, {"text": "смачні", "correct": false}], "explanation": ""}]`)} />
 
-### Закінчення прикметників
+### True or False: Adjective Rules
 
-<GroupSort client:load groups={JSON.parse(`{"Він (-ий/-ій)": ["новий", "старий", "синій", "гарний", "великий"], "Вона (-а/-я)": ["нова", "стара", "синя", "гарна", "велика"], "Воно (-е/-є)": ["нове", "старе", "синє", "гарне", "велике"], "Вони (-і)": ["нові", "старі", "сині", "гарні", "великі"]}`)} />
+<TrueFalse client:load items={JSON.parse(`[{"statement": "The adjective \\"новий\\" is the masculine form.", "isTrue": true, "explanation": "Hard stem dictionary forms like \\"новий\\" are masculine."}, {"statement": "The question word \\"Яка?\\" is used for neuter nouns.", "isTrue": false, "explanation": "\\"Яка?\\" is used for feminine nouns. \\"Яке?\\" is for neuter nouns."}, {"statement": "Plural adjectives always end in \\"-і\\", regardless of gender.", "isTrue": true, "explanation": "Plurals are simple: all genders take the \\"-і\\" ending."}, {"statement": "The word \\"синій\\" is a hard stem adjective.", "isTrue": false, "explanation": "It is a soft stem adjective. That is why it uses soft endings like \\"-я\\" and \\"-є\\"."}, {"statement": "When using \\"новий\\" with a feminine noun, you must use the dictionary form.", "isTrue": false, "explanation": "You must change the ending to match the feminine gender: \\"нова\\"."}, {"statement": "In Ukrainian, you must use the word \\"є\\" (is) in present tense descriptions like \\"The house is new\\".", "isTrue": false, "explanation": "You simply state the noun and the adjective: \\"Дім новий\\"."}, {"statement": "The question word \\"Який?\\" asks about a masculine noun.", "isTrue": true, "explanation": "Yes, \\"Який?\\" matches the masculine \\"-ий\\" ending."}, {"statement": "The feminine form of the soft stem adjective \\"синій\\" is \\"сина\\".", "isTrue": false, "explanation": "Because it is a soft stem, the feminine ending is \\"-я\\" (синя)."}]`)} />
 
-### Узгодження: Тверда група
+### Complete the Sentences
 
-<FillIn client:load items={JSON.parse(`[{"sentence": "Це ... (новий) ресторан.", "answer": "новий", "options": ["новий", "нова", "нове", "нові"]}, {"sentence": "Це ... (новий) школа.", "answer": "нова", "options": ["нова", "новий", "нове", "нові"]}, {"sentence": "Це ... (новий) авто.", "answer": "нове", "options": ["нове", "новий", "нова", "нові"]}, {"sentence": "Це ... (гарний) дівчина.", "answer": "гарна", "options": ["гарна", "гарний", "гарне", "гарні"]}, {"sentence": "Це ... (гарний) день.", "answer": "гарний", "options": ["гарний", "гарна", "гарне", "гарні"]}, {"sentence": "Це ... (старий) місто.", "answer": "старе", "options": ["старе", "старий", "стара", "старі"]}, {"sentence": "Це ... (великий) кімната.", "answer": "велика", "options": ["велика", "великий", "велике", "великі"]}, {"sentence": "Це ... (малий) дім.", "answer": "малий", "options": ["малий", "мала", "мале", "малі"]}]`)} />
+<FillIn client:load items={JSON.parse(`[{"sentence": "Це _____ дім.", "answer": "старий", "options": ["старий", "стара", "старе", "старі"]}, {"sentence": "Це дуже _____ книга.", "answer": "цікава", "options": ["цікавий", "цікава", "цікаве", "цікаві"]}, {"sentence": "Це _____ вікно.", "answer": "нове", "options": ["новий", "нова", "нове", "нові"]}, {"sentence": "Ці будинки дуже _____.", "answer": "великі", "options": ["великий", "велика", "велике", "великі"]}, {"sentence": "Київ — це _____ місто.", "answer": "велике", "options": ["великий", "велика", "велике", "великі"]}, {"sentence": "Моя сукня _____.", "answer": "зелена", "options": ["зелений", "зелена", "зелене", "зелені"]}, {"sentence": "Він дуже _____ чоловік.", "answer": "добрий", "options": ["добрий", "добра", "добре", "добрі"]}, {"sentence": "Це _____ телефон.", "answer": "дорогий", "options": ["дорогий", "дорога", "дороге", "дорогі"]}]`)} />
 
-### Узгодження: М'яка група (синій)
+### Match the Question to the Adjective
 
-<FillIn client:load items={JSON.parse(`[{"sentence": "Це ... (синій) олівець.", "answer": "синій", "options": ["синій", "синя", "синє", "сині"]}, {"sentence": "Це ... (синій) ручка.", "answer": "синя", "options": ["синя", "синій", "синє", "сині"]}, {"sentence": "Це ... (синій) море.", "answer": "синє", "options": ["синє", "синій", "синя", "сині"]}, {"sentence": "Це ... (синій) квіти.", "answer": "сині", "options": ["сині", "синій", "синя", "синє"]}, {"sentence": "Це ... (синій) небо.", "answer": "синє", "options": ["синє", "синій", "синя", "сині"]}, {"sentence": "Це ... (синій) автобус.", "answer": "синій", "options": ["синій", "синя", "синє", "сині"]}, {"sentence": "Це ... (вечірній) сонце.", "answer": "вечірнє", "options": ["вечірнє", "вечірня", "вечірній", "вечірні"]}, {"sentence": "Це ... (давній) місто.", "answer": "давнє", "options": ["давнє", "давня", "давній", "давні"]}]`)} />
+<MatchUp client:load pairs={JSON.parse(`[{"left": "Який дім?", "right": "новий"}, {"left": "Яка книга?", "right": "цікава"}, {"left": "Яке вікно?", "right": "велике"}, {"left": "Які друзі?", "right": "добрі"}, {"left": "Яка погода?", "right": "гарна"}, {"left": "Який телефон?", "right": "дорогий"}, {"left": "Яке місто?", "right": "старе"}, {"left": "Які вікна?", "right": "чисті"}]`)} />
 
-### Складіть речення: Опис (Стандартна позиція)
+### Build the Sentence
 
-<Unjumble client:load items={JSON.parse(`[{"jumbled": "Це / новий / телефон", "answer": "Це новий телефон"}, {"jumbled": "Вона / гарна / дівчина", "answer": "Вона гарна дівчина"}, {"jumbled": "Тут / велике / вікно", "answer": "Тут велике вікно"}, {"jumbled": "Це / цікава / книга", "answer": "Це цікава книга"}, {"jumbled": "Ми / добрі / люди", "answer": "Ми добрі люди"}, {"jumbled": "Там / старий / дім", "answer": "Там старий дім"}]`)} />
+<Unjumble client:load items={JSON.parse(`[{"jumbled": "Це / великий / дім.", "answer": "Це великий дім."}, {"jumbled": "Вона / дуже / добра.", "answer": "Вона дуже добра."}, {"jumbled": "Це / мале / вікно.", "answer": "Це мале вікно."}, {"jumbled": "Погода / дуже / гарна.", "answer": "Погода дуже гарна."}, {"jumbled": "Це / дорогий / телефон.", "answer": "Це дорогий телефон."}, {"jumbled": "Мавка / молода / й / гарна.", "answer": "Мавка молода й гарна."}, {"jumbled": "Це / нова / квартира.", "answer": "Це нова квартира."}, {"jumbled": "Дім / дуже / старий.", "answer": "Дім дуже старий."}]`)} />
 
-### Складіть речення: Характеристика (Позиція після)
+### Vocabulary: Meanings
 
-<Unjumble client:load items={JSON.parse(`[{"jumbled": "Цей / телефон / новий", "answer": "Цей телефон новий"}, {"jumbled": "Ця / квартира / велика", "answer": "Ця квартира велика"}, {"jumbled": "Цей / фільм / цікавий", "answer": "Цей фільм цікавий"}, {"jumbled": "Ця / книга / стара", "answer": "Ця книга стара"}, {"jumbled": "Погода / сьогодні / погана", "answer": "Погода сьогодні погана"}, {"jumbled": "Цей / ресторан / дорогий", "answer": "Цей ресторан дорогий"}]`)} />
-
-### Словниковий запас: Переклад
-
-<MatchUp client:load pairs={JSON.parse(`[{"left": "новий", "right": "new"}, {"left": "старий", "right": "old"}, {"left": "гарний", "right": "beautiful/nice"}, {"left": "великий", "right": "big"}, {"left": "малий", "right": "small"}, {"left": "добрий", "right": "good/kind"}, {"left": "поганий", "right": "bad"}, {"left": "цікавий", "right": "interesting"}, {"left": "дорогий", "right": "expensive"}, {"left": "дешевий", "right": "cheap"}, {"left": "смачний", "right": "tasty"}, {"left": "молодий", "right": "young"}]`)} />
-
-### Діалог: У пошуках квартири
-
-<FillIn client:load items={JSON.parse(`[{"sentence": "Це наша ... (новий) квартира.", "answer": "нова", "options": ["нова", "новий", "нове", "нові"]}, {"sentence": "Вона дуже ... (великий).", "answer": "велика", "options": ["велика", "великий", "велике", "великі"]}, {"sentence": "Тут є ... (великий) вікно.", "answer": "велике", "options": ["велике", "великий", "велика", "великі"]}, {"sentence": "А кухня ... (малий), але зручна.", "answer": "мала", "options": ["мала", "малий", "мале", "малі"]}, {"sentence": "Ціна теж ... (гарний).", "answer": "гарна", "options": ["гарна", "гарний", "гарне", "гарні"]}, {"sentence": "Це ... (добрий) варіант.", "answer": "добрий", "options": ["добрий", "добра", "добре", "добрі"]}, {"sentence": "А район ... (старий)?", "answer": "старий", "options": ["старий", "стара", "старе", "старі"]}, {"sentence": "Він дуже ... (чистий).", "answer": "чистий", "options": ["чистий", "чиста", "чисте", "чисті"]}]`)} />
+<Quiz client:load questions={JSON.parse(`[{"question": "What is the correct English translation for \\"старий\\"?", "options": [{"text": "old", "correct": true}, {"text": "new", "correct": false}, {"text": "big", "correct": false}, {"text": "small", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"смачний\\"?", "options": [{"text": "tasty", "correct": true}, {"text": "bad", "correct": false}, {"text": "beautiful", "correct": false}, {"text": "interesting", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"дорогий\\"?", "options": [{"text": "expensive", "correct": true}, {"text": "cheap", "correct": false}, {"text": "good", "correct": false}, {"text": "red", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"дешевий\\"?", "options": [{"text": "cheap", "correct": true}, {"text": "expensive", "correct": false}, {"text": "young", "correct": false}, {"text": "blue", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"молодий\\"?", "options": [{"text": "young", "correct": true}, {"text": "old", "correct": false}, {"text": "small", "correct": false}, {"text": "tasty", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"поганий\\"?", "options": [{"text": "bad", "correct": true}, {"text": "good", "correct": false}, {"text": "new", "correct": false}, {"text": "grand", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"червоний\\"?", "options": [{"text": "red", "correct": true}, {"text": "blue", "correct": false}, {"text": "green", "correct": false}, {"text": "yellow", "correct": false}], "explanation": ""}, {"question": "What is the correct English translation for \\"цікавий\\"?", "options": [{"text": "interesting", "correct": true}, {"text": "boring", "correct": false}, {"text": "beautiful", "correct": false}, {"text": "tasty", "correct": false}], "explanation": ""}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
 
-*No external resources for this module.*
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [Kyiv tour + Participle in Ukrainian](https://www.ukrainianlessons.com/episode108/)
+
+**📖 Articles:**
+- [Dobra Forma: Adjectives (Gender and Number in Nominative)](https://opentext.ku.edu/dobraforma/chapter/16-1/) — dobraforma
+- [Talk Ukrainian: Adjectives](https://talkukrainian.com/adjectives/) — talkukrainian
+- [Talk Ukrainian: Noun Genders and Adjective Agreement](https://talkukrainian.com/noun-genders/) — talkukrainian
+:::
 
 </TabItem>
 </Tabs>

@@ -1,7 +1,7 @@
 # l2-uk-direct B1 Curriculum Plan (45 modules)
 
-> Last updated: 2026-02-27
-> Prerequisite: A2 (38 modules — `A2-CURRICULUM.md`)
+> Last updated: 2026-03-05
+> Prerequisite: A2 (42 modules — `A2-CURRICULUM.md`)
 > State Standard reference: B1 §§1–4 (lines 1434–2450)
 > Textbook content library: ALL grades (see `ARCHITECTURE.md` §10 for Approach C)
 > Research notes: `textbook-reading-notes/` (all grade notes)

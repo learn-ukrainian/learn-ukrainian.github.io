@@ -2,47 +2,45 @@ slug: checkpoint-sentences
 title: 'Checkpoint: Sentences'
 word_target: 1200
 content_outline:
-- section: Огляд
+- slug: overview
+  words: 150
+  points:
+  - 'Welcome to the Checkpoint: set a supportive, ''Safe Harbor'' tone emphasizing
+    review over testing.'
+  - 'State the goals: reviewing present tense verbs, question words, preferences,
+    and pronouns before moving to the Accusative case.'
+  section: Огляд (Overview)
+- slug: skill-1-verbs
+  words: 350
+  points:
+  - Review Class I (-ати) and Class II (-ити) verb paradigms using core vocabulary
+    like читати, писати, говорити.
+  - Focus on the 3rd person plural distinction (-уть/-ють vs -ать/-ять) to address
+    the most common beginner conjugation error.
+  - Briefly recap reflexive verbs (-ся/-сь) with simple, practical examples.
+  section: 'Навичка 1: Дієслова (Verbs)'
+- slug: skill-2-questions-negation
   words: 300
   points:
-  - 'English scaffolding note: Maintain 30-40% immersion. Use English to clearly explain
-    the goals of this checkpoint and review expectations.'
-  - 'Introduce the checkpoint structure: assessing verbs, questions, preferences,
-    and pronouns before moving to the Accusative case.'
-  - Set a supportive, encouraging tone ('Safe Harbor' approach) to reduce testing
-    anxiety.
-- section: 'Навичка 1: Дієслова'
-  words: 500
+  - 'Recap essential question words: Хто, Що, Де, Куди, Звідки via short context sentences.'
+  - Explain how to form Yes/No questions using 'Чи' and basic intonation without changing
+    word order.
+  - Review simple negation placement ('не') and connecting ideas using 'тому що' and
+    'бо'.
+  section: 'Навичка 2: Питання та заперечення (Questions & Negation)'
+- slug: skill-3-preferences-pronouns
+  words: 300
   points:
-  - 'H3: Class I Verbs (-ати). Provide a clear paradigm table and 3-4 example sentences
-    with English translations.'
-  - 'H3: Class II Verbs (-ити). Provide a clear paradigm table and contrast with Class
-    I, specifically highlighting the 3rd person plural (-ать/-ять vs -уть/-ють).'
-  - 'H3: Reflexive Verbs (-ся/-сь). Explain the rule for attaching to vowels vs consonants,
-    with 3 examples.'
-- section: 'Навичка 2: Питання та заперечення'
-  words: 400
+  - 'Contrast the three preference structures: ''Мені подобається'' (Dative), ''Я
+    люблю'' (Accusative), and ''Я хочу'' (Infinitive), including the cultural nuance
+    of ''люблю''.'
+  - Review possessive pronouns (мій, твій) and demonstrative pronouns (цей, той),
+    emphasizing gender and number agreement.
+  section: 'Навичка 3: Уподобання та займенники (Preferences & Pronouns)'
+- slug: summary
+  words: 100
   points:
-  - 'H3: Question Words. Create a quick reference list of Хто/Що/Де/Куди/Звідки with
-    mini-dialogue examples.'
-  - 'H3: Yes/No Questions with ''Чи''. Explain how to form these questions using intonation
-    and ''Чи'' without changing word order.'
-  - 'H3: Negation and Reasons. Explain ''не'' placement and how to connect sentences
-    using ''тому що'' / ''бо''.'
-- section: 'Навичка 3: Уподобання та присвійні'
-  words: 400
-  points:
-  - 'H3: Expressing Preferences. Contrast ''Мені подобається'' (Dative) vs ''Я люблю''
-    (Accusative) vs ''Я хочу'' (Infinitive). Include cultural context on usage.'
-  - 'H3: Possessive Pronouns. Provide a summary table for мій/твій (masculine, feminine,
-    neuter, plural) with examples.'
-  - 'H3: Demonstrative Pronouns. Provide a summary table for цей/той with examples
-    showing gender/number agreement.'
-- section: Інтеграційне завдання
-  words: 400
-  points:
-  - Present a realistic, combined communicative dialogue (e.g., ordering in a cafe
-    or meeting a friend) that uses verbs, questions, preferences, and pronouns.
-  - Include a 'Self-Check' checklist for learners to evaluate their confidence on
-    the 3 core skills.
-  - Provide a clear transition statement preparing the learner for A1.3 (Cases & Navigation).
+  - A brief, realistic mini-dialogue integrating verbs, questions, and preferences.
+  - 3-4 simple self-check questions for learners to verify their confidence before
+    advancing to A1.3.
+  section: Підсумок (Summary)

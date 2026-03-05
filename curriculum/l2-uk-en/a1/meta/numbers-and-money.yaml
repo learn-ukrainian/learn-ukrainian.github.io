@@ -2,45 +2,46 @@ slug: numbers-and-money
 title: Numbers & Money
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 300
+- section: 'Вступ: Навіщо потрібні числа та гроші?'
+  slug: vtsup-numbers-money
+  words: 200
   points:
   - 'English Scaffolding: Briefly introduce the goal of counting to 100 and handling
-    money, using English to ensure clarity (A1 immersion target < 50%).'
-  - 'Relevance: Explain how numbers unlock daily independence (prices, bus routes,
-    addresses).'
-  - 'Motivational Hook: A short, simple Ukrainian dialogue asking for a price to activate
-    prior knowledge.'
-- section: Презентація
-  words: 800
+    money, using English for clarity.'
+  - 'Relevance: Explain how numbers unlock daily independence for shopping, prices,
+    and bus routes.'
+  - 'Motivational Hook: A short dialogue asking for a price (''Скільки коштує?'')
+    to activate prior knowledge.'
+- section: 'Презентація: Від нуля до ста'
+  slug: presentation-counting
+  words: 450
   points:
   - 'H3: Numbers 0-10. Focus on phonetics, especially the apostrophe pause in «п''ять»
-    [pjat''] and the soft «с» in «сім».'
+    and soft consonants.'
   - 'H3: Numbers 11-19. Explain the «-надцять» suffix and explicitly highlight the
     stress shift (e.g., одинАдцять).'
-  - 'H3: Tens 20-100. Show the construction logic. Include a warning about the absence
-    of the soft sign in 50-80 (п''ятдесят, шістдесят).'
-  - 'H3: The 1-2-5 Rule. Visual table mapping numbers to cases: 1 (Nom Sg), 2-4 (Nom
-    Pl), 5+ (Gen Pl).'
-  - 'H3: Currency & Gender. Apply the rule to «гривня». Explicitly contrast «два»
-    (masculine/neuter) vs. «дві» (feminine), emphasizing «дві гривні».'
-- section: Практика
-  words: 600
+  - 'H3: Tens 20-100. Show construction logic. Warn against using the soft sign in
+    50-80 (п''ятдесят, шістдесят).'
+  - 'H3: The 1-2-5 Rule. Visual table mapping numbers to cases (1 Nom Sg, 2-4 Nom
+    Pl, 5+ Gen Pl).'
+  - 'H3: Currency & Gender. Apply the rule to «гривня». Contrast «два» (masculine/neuter)
+    vs. «дві» (feminine), emphasizing «дві гривні».'
+- section: 'Практика та Культура: Рахуємо гроші'
+  slug: practice-culture-shopping
+  words: 400
   points:
-  - 'H3: Useful Phrases. Introduce and break down «Скільки коштує?» and «Скільки з
-    мене?».'
-  - 'H3: Simple Math. Introduce плюс, мінус, дорівнює for basic arithmetic practice
-    with prices.'
+  - 'H3: Useful Phrases. Break down «Скільки коштує?» and «Скільки з мене?».'
   - 'H3: At the Bazaar. A realistic roleplay dialogue buying coffee and snacks, incorporating
     «Це дуже дорого!» and «У вас є здача?».'
-  - 'Guided drill examples: Step-by-step transformation of phrases (e.g., 3 гривні
-    -> 10 гривень).'
-- section: Культурний контекст
-  words: 300
+  - 'H3: Cultural Insight. Discuss the 11th-century origins of the word «гривня» from
+    Kyivan Rus neck ornaments and the proverb «Копійка гривню береже».'
+  - 'H3: Simple Math. Arithmetic practice using плюс, мінус, дорівнює with prices,
+    applying the 1-2-5 rule.'
+- section: 'Підсумок'
+  slug: summary-numbers
+  words: 150
   points:
-  - 'H3: The Ancient Hryvnia. Discuss the 11th-century origins of the word from Kyivan
-    Rus neck ornaments.'
-  - 'H3: The Symbol of Stability. Explain the ₴ symbol''s design (cursive г + two
-    lines).'
-  - 'H3: Folk Wisdom. Introduce the proverb «Копійка гривню береже» with its English
-    equivalent and meaning.'
+  - Recap of the 1-2-5 rule with 'гривня' and key pronunciation warnings.
+  - 'Self-check question 1: How do you say ''2 hryvnias'' vs ''5 hryvnias''?'
+  - 'Self-check question 2: Where does the stress fall in the number ''11''?'
+  - 'Self-check question 3: How do you correctly ask ''How much does it cost?'''

@@ -35,8 +35,11 @@ ALL_ACTIVITY_TYPES = {
     "true_false", "build_sentence", "match_sound", "pattern_drill",
     "riddle", "tongue_twister", "reading", "proverb_drill",
 }
-VALID_MODULE_TYPES = {"script_foundation", "vocabulary", "grammar", "checkpoint", "communicative"}
-VALID_LEVELS = {"a1", "a2"}
+VALID_MODULE_TYPES = {"script_foundation", "vocabulary", "grammar", "checkpoint", "communicative", "reading", "writing", "practice", "review"}
+VALID_LEVELS = {"a1", "a2", "b1", "b2"}
+
+# Full Ukrainian alphabet (33 uppercase letters)
+UKRAINIAN_ALPHABET = set("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
 
 YOUTUBE_RE = re.compile(
     r"^https://www\.youtube\.com/watch\?v=[A-Za-z0-9_-]{11}$"
@@ -306,22 +309,40 @@ def _dispatch_activity_check(
             result.error(f"{ctx}: tongue_twister missing 'text'")
 
     elif act_type == "reading":
-        if not act.get("text"):
-            result.error(f"{ctx}: reading missing 'text'")
+        has_text = bool(act.get("text"))
+        has_items = bool(act.get("items")) or bool(act.get("sentences"))
+        if not has_text and not has_items:
+            result.error(f"{ctx}: reading missing 'text' or 'items'")
         text = act.get("text", "")
         if text and LATIN_RE.search(text):
             result.warn(f"{ctx}: reading text may contain non-Ukrainian characters")
+        if has_items:
+            for item in (act.get("items") or act.get("sentences") or []):
+                item_text = item.get("text", "") if isinstance(item, dict) else ""
+                if item_text and LATIN_RE.search(item_text):
+                    result.warn(f"{ctx}: reading item may contain non-Ukrainian characters")
         questions = act.get("questions", [])
-        if not questions and not act.get("true_false_items"):
+        if not questions and not act.get("true_false_items") and not has_items:
             result.warn(f"{ctx}: reading has no comprehension questions or true_false_items")
 
     elif act_type == "proverb_drill":
-        if not act.get("proverb"):
-            result.error(f"{ctx}: proverb_drill missing 'proverb'")
+        # Two valid formats: (1) proverb + activity, (2) items with proverb/answer pairs
+        if not act.get("proverb") and not act.get("items"):
+            result.error(f"{ctx}: proverb_drill missing 'proverb' or 'items'")
 
 
 # ── File-level validator ──────────────────────────────────────────────────────
-def validate_file(yaml_path: Path) -> ValidationResult:
+def count_vocab_items(data: dict) -> int:
+    """Count total vocabulary items in a module."""
+    vocab = data.get("vocabulary", [])
+    if not vocab:
+        return 0
+    if isinstance(vocab[0], dict) and "items" in vocab[0]:
+        return sum(len(g.get("items", [])) for g in vocab)
+    return len(vocab)
+
+
+def validate_file(yaml_path: Path, vocab_target: int = 0) -> ValidationResult:
     result = ValidationResult(yaml_path)
 
     if not yaml_path.exists():
@@ -344,12 +365,48 @@ def validate_file(yaml_path: Path) -> ValidationResult:
     module_type = data.get("type")
     if module_type == "script_foundation":
         check_letters(data, result)
-    if module_type in ("vocabulary", "grammar", "communicative"):
+    if module_type in ("vocabulary", "grammar", "communicative", "reading", "writing"):
         check_vocabulary(data, result)
 
     check_activities(data, result)
 
+    # Vocabulary target check
+    if vocab_target > 0:
+        actual = count_vocab_items(data)
+        if actual < vocab_target:
+            result.warn(f"Vocabulary below target: {actual}/{vocab_target} words")
+        else:
+            result.info(f"Vocabulary meets target: {actual}/{vocab_target} words")
+
     return result
+
+
+# ── Alphabet completeness check ──────────────────────────────────────────────
+def check_alphabet_completeness(level: str = "a1") -> tuple[set[str], set[str]]:
+    """Check that all script_foundation modules together cover the full alphabet.
+
+    Returns (taught, missing) where both are sets of uppercase letters.
+    """
+    if not MANIFEST_PATH.exists():
+        return set(), UKRAINIAN_ALPHABET
+
+    with open(MANIFEST_PATH, encoding="utf-8") as f:
+        manifest = yaml.safe_load(f)
+
+    taught: set[str] = set()
+    for slug in manifest.get("levels", {}).get(level, {}).get("sequence", []):
+        p = REPO_ROOT / f"curriculum/l2-uk-direct/{level}/{slug}.yaml"
+        if not p.exists():
+            continue
+        with open(p, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        if data.get("type") != "script_foundation":
+            continue
+        for letter in data.get("letters", []):
+            taught.add(letter.get("upper", ""))
+    taught.discard("")
+    missing = UKRAINIAN_ALPHABET - taught
+    return taught, missing
 
 
 # ── Manifest helpers ──────────────────────────────────────────────────────────
@@ -408,6 +465,16 @@ def main() -> None:
     total = len(results)
     print(f"\n{'─' * 62}")
     print(f"Results: {passed}/{total} passed")
+
+    # Alphabet completeness check when validating a full level
+    if args.all or args.level:
+        level = args.level or "a1"
+        taught, missing = check_alphabet_completeness(level)
+        if missing:
+            print(f"\n  ✗ ALPHABET INCOMPLETE ({level}): {len(missing)} letters missing: {sorted(missing)}")
+            sys.exit(1)
+        else:
+            print(f"\n  ✅ Alphabet complete ({level}): all {len(taught)} letters covered")
 
     if passed < total:
         sys.exit(1)

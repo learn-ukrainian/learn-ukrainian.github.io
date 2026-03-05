@@ -1,0 +1,142 @@
+discovered_at: '2026-03-05T06:35:46.872500+00:00'
+query_keywords:
+- 'Checkpoint: Sentences'
+- Огляд
+- Overview
+- 'Навичка 1: Дієслова'
+- 'Skill 1: Verbs'
+- 'Навичка 2: Питання та заперечення'
+- 'Skill 2: Questions & Negation'
+- 'Навичка 3: Уподобання та присвійні'
+- 'Skill 3: Preferences & Possessives'
+- Інтеграційне завдання
+- Integration Task
+- Demonstrate verb conjugation fluency for I and II conjugation
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu10/
+  title: 7 helpful Ukrainian words to link sentences
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 10
+- url: https://www.ukrainianlessons.com/ukrainian-history/
+  title: Ukrainian History — Brief Overview
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - history
+  - culture
+  - overview
+- url: https://www.ukrainianlessons.com/episode116/
+  title: Easter in Ukraine + Complex sentences with Adverbial Clauses
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 116
+- url: https://www.ukrainianlessons.com/episode117/
+  title: May picnic in Ukraine + Complex Sentences with Attributive Clauses
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - vocabulary
+  - family
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 117
+- url: https://www.ukrainianlessons.com/fmu32/
+  title: 'Grammar point: Conditional sentences in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 32
+rag_chunks:
+- score: 0.1111111119389534
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0113
+  text: "310.1. Розглянь малюнки. Опиши їх за допомогою дієслів.\n2. Склади та запиши\
+    \ за кожним малюнком три речення, вико­\nристовуючи дієслова у формі одного часу.\
+    \ У дужках після \nкожного дієслова познач час, особу, число та рід, якщо є.\n\
+    311.1. Складіть діалог Дієслова та допитливої дитини, яка \nвперше почула про\
+    \ цю частину мови. Як ви гадаєте, \nпро що вони можуть розмовляти? За потреби\
+    \ викори­\nстай зміст підручника на с. 143.\nОбговоріть із сусідом І сусідкою\
+    \ по парті, які теми з розділу \n«Дієслово» були"
+  section_title: Сторінка 115
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0136
+  text: "Підсумкові тести  \n129\nПідсумкові тести\nВиконайте тестові завдання.\n\
+    1   Дієприслівниками є  обидва слова в  рядку\nА  зрозумілий, розуміючи\nБ  здивувавшись,\
+    \ здивовано\nВ  говоривши, говорячи\nГ  думали, думаючи\n2   Серед ознак дієприслівника\
+    \ НЕМАЄ такої\nА  виду\nБ  часу\nВ  роду\nГ  властивости мати залежні слова\n\
+    3   Дієприслівниковий зворот є  в усіх реченнях, ОКРІМ\nА  Впорядковуючи свої\
+    \ речі, спробуйте насолодитися про-\nцесом.\nБ  Робіть це, уявляючи результат.\n\
+    В  Позбавившись зайвого, ви можете «пер"
+  section_title: Сторінка 132
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0029
+  text: "Розділ 1  ДІЄСЛОВО\n22\nВправа 15\n1   Із запропонованих слів випишіть діє\
+    \ слова \nПеремогти, перемога, непереможний, переможець; роз­\nважливий, розважити,\
+    \ розвага, розважальний; навчальний, \nнавчаюся, навчання, наука; пам’ятка, запам’ятовувальний,\
+    \ \nзапам’ятай, пам’ятний; популярність, популяризують, попу­\nлярний; дія, дієвий,\
+    \ діють, діяч; повторення, повторювати, \nповторюваний, повтор; практика, практичний,\
+    \ практикант, \nпрактикувати.\n2   Поясніть, за яким критерієм вирізняли діє слова\
+    \ з-поміж інших"
+  section_title: Сторінка 25
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0007
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

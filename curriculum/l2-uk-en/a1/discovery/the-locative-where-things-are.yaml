@@ -1,0 +1,154 @@
+discovered_at: '2026-03-05T07:53:00.263189+00:00'
+query_keywords:
+- 'The Locative: Where Things Are'
+- Виробництво та підсумок
+- '''Where is X?'' using locative case'
+- between в/у and на prepositions
+- locations of people and objects
+- common places in Ukrainian
+- Locative case endings
+- Prepositions в/у and на
+- Location expressions
+- grammar
+- де
+- в
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/episode2/
+  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - pronouns
+  - phrases
+  - greetings
+  - goodbyes
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 2
+- url: https://www.ukrainianlessons.com/episode7/
+  title: More about your family in Ukrainian + Possessive Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - pronouns
+  - vocabulary
+  - family
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 7
+- url: https://www.ukrainianlessons.com/episode14/
+  title: Likes and dislikes — common verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - verbs
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 14
+- url: https://www.ukrainianlessons.com/episode22/
+  title: Are you going to the party? — First verb conjugation in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 22
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0180
+  text: "175\nФонетика. Графіка. Орфоепія. Орфографія.  Милозвучність української\
+    \ мови\nУ\nВ\nна початку речення або після \nрозділового знака перед \nприголосним\
+    \ (не  обов’язково):\nу дитинстві\nна початку речення або \nпісля розділового\
+    \ знака \nперед голосним:\nв Україні\nперед в, ф та  буквосполучен-\nнями св,\
+    \ хв, тв, льв незалежно \nвід кінцевого звука попередньо-\nго слова:\nу Львові\n\
+    Запам’ятати буквосполучення \nлегко у  фразі: Відомий філо-\nсоф-львів’янин хвалив\
+    \ свій \nтвір.\nпісля голосного перед \nприголосним (окрі"
+  section_title: Сторінка 175
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0114
+  text: "і.\n314. Допиши словосполучення, вставляючи відповідні прислівники. \nЗа\
+    \ потреби користуйся словами для довідки.\nМалює (як?)... , фарбує (коли?)...\
+    \ , іде ... (куди?), знайшли \n(де?), ішла (як?)..., виграла (коли?)..., грають\
+    \ (як?)....\nСлова для довідки: навмання, гарно, вчора, угору, вранці, \nзавзято.\n\
+    внизу,\n315. 1. Вправа «Квест»*. Розгадай слова.\n234 7\n2. До якої частини мови\
+    \ належать слова-відгадки?\n3. Досліди, чи є закінчення у прислівників.\nКрок\
+    \ 1. Спробуй визначити закінчення в словах-відгад"
+  section_title: Сторінка 116
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0073
+  text: "І У називному відмінку іменники вживаються без при- \nі йменників, у місцевому\
+    \ — тільки з прийменниками, \n1 \nа в усіх інших відмінках можуть уживатися з\
+    \ приймен- \n« никами або без них. Наприклад: (біля) озер (Р. в.), і \nі (із)\
+    \ синами (Ор. в.). \nі\n163. Прочитайте іменники.\nВерби, будинки, сонце, канали,\
+    \ дуб, пенал, степ, поля, \nкомп’ютер, телефон.\n•  Визначте рід і число іменників.\
+    \ Провідміняйте іменники, що \nвжиті в множині.\n164. Прочитайте текст, уставляючи\
+    \ слова з довідки. Перекажіть.\nБув зимов"
+  section_title: Сторінка 74
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0076
+  text: "§ 12. Антонімічні префікси й суфікси  \n69\n2. Складіть зі словами речення\
+    \ (усно).\n3. Поясніть значення антонімічних префіксів і  суфіксів.\nВправа 125\n\
+    1. Утворіть слова, додаючи до поданих слів запропоновані в дужках пре-\nфікси\
+    \ та суфікси.\nСипати (з-, роз-), нести (за-, ви-), вести (при-, від-), ві-\n\
+    тамін (анти-, про-).\nКіт (-ик, -ищ-), розумний (-еньк-, -юч-), нога (-к-, -ищ-),\
+    \ \nскладно (-уват-, -езн-), глибокий (-еньк-, -енн-).\n2. Чи є  антонімами слова\
+    \ першого рядка? А  другого? Поясніть думку."
+  section_title: Сторінка 69
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0188
+  text: "§ 30  Особливості вживання прийменників  \n181\nВправа 258\n \nВідредагуйте\
+    \ подані словосполучення, де це потрібно, запишіть виправ-\nлені варіанти  \n\
+    1) По останній інформації, зошит по математиці, зробити \nпо проханню, звернутися\
+    \ по справі, по всіх питаннях, видно \nпо очах, заходити по черзі, відпочивати\
+    \ по перше вересня, \nзаходи по покращенню.\n2) При сприянні уряду, при участі\
+    \ батьків, при збері-\nганні, при швидкості, при появі сумнівів, при виникненні\
+    \ не-\nбезпеки, говорити при сторонніх.\nВправа 25"
+  section_title: Сторінка 184
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,0 +1,135 @@
+discovered_at: '2026-03-05T03:10:35.969260+00:00'
+query_keywords:
+- Plurals and Alternation
+- Множина іменників
+- Noun plurals
+- Чергування
+- Alternation
+- Множина прикметників
+- Adjective plurals
+- Винятки та особливості
+- Exceptions and special cases
+- Form plurals for common masculine, feminine, and neuter nouns
+- Recognize vowel alternation patterns (і → о/е) in plural formation
+- Make adjectives agree with plural nouns using the -і/-ї ending
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://talkukrainian.com/plurals/
+  title: 'Talk Ukrainian: Plurals'
+  source: talkukrainian
+  relevance_score: 0.30000000000000004
+  topics:
+  - plural
+  - nouns
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/2-3/
+  title: 'Dobra Forma: Plural Nouns with Stem Changes'
+  source: dobraforma
+  relevance_score: 0.3
+  topics:
+  - plural
+  - nouns
+  - grammar
+  - alternation
+- url: https://opentext.ku.edu/dobraforma/chapter/4-3/
+  title: 'Dobra Forma: Locative Case (Consonant Mutations)'
+  source: dobraforma
+  relevance_score: 0.3
+  topics:
+  - locative
+  - cases
+  - grammar
+  - alternation
+- url: https://opentext.ku.edu/dobraforma/chapter/9-2/
+  title: 'Dobra Forma: Instrumental Case (Other Singular Endings and Stem Changes)'
+  source: dobraforma
+  relevance_score: 0.3
+  topics:
+  - instrumental
+  - cases
+  - grammar
+  - alternation
+- url: https://www.ukrainianlessons.com/episode94/
+  title: At the pizzeria + Sound changes between imperfective and perfective verbs
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - grammar
+  - verbs
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 94
+rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
+  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
+    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
+  section_title: Сторінка 190
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0114
+  text: "116\nДосліди, чи всі іменни-\nки можуть мати фор-\nму однини і множини.\n\
+    Я — дослідник\nЯ — дослідниця\nСпостерігаю за іменниками, які вживаються тільки\
+    \  \nв однині або тільки у множині\n6   \aПрочитай слова і порівняй їх. \n\t\n\
+      \aВизначте число виділених іменників. Зробіть висновок, у якій \nчисловій формі\
+    \ вживаються ці іменники.\nдружба\nптаство\nдітвора\nсани\nокуляри\nдвері\nПоясни,\
+    \ що спільне є між цими словами, а що — відмінне.\nЧи можна утворити форму множини\
+    \ від іменників у лівому \nстовпчику?\nЧи можна утвор"
+  section_title: Сторінка 116
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0281
+  text: "Більшість повних прикметників мають стягнені форми закін-\nчення: добра —\
+    \ добре. Але в поетичній мові вживаються і повні \nнестягнені форми називного\
+    \ й знахідного відмінків однини жіно-\nчого і середнього роду та жіночого роду\
+    \ називного й знахідного \nвідмінків множини: веселая, веселеє, веселії, веселую."
+  section_title: Сторінка 156
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0078
+  text: "§ 32.\t\nЧисло іменників\nA főnév száma\nБільшість іменників може вживатися\
+    \ в  однині \nй у множині.\nІменник у формі однини вживається для позначення \n\
+    одного предмета, іменник у формі множини — для по-\nзначення двох і більше предметів.\n\
+    Актор — актори, стіл — столи, корова — коро́ви\nЗакінчення іменників у множині:\n\
+    чоловічий рід\n -и, -і: стіл — столи; стілець — стільці\nжіночий рід\n-а, -я,\
+    \  -и, -і: мама — мами, вишня — вишні, ніч — ночі\nсередній рід\n-о, -е, -а, -я:\
+    \ село — села, море — моря\n180\t Відскану"
+  section_title: Сторінка 80
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

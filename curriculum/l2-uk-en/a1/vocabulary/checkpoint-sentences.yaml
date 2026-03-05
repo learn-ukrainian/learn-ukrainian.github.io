@@ -1,61 +1,34 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: ти
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: говорити
-  pos: verb
-- lemma: хотіти
-  pos: verb
-- lemma: той
-  pos: adj
-- lemma: хтіти
-  pos: verb
-- lemma: мій
-  pos: adj
-- lemma: подобатися
-  pos: verb
-- lemma: він
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: вони
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: книга
-  pos: noun
-- lemma: що
-  pos: noun
-- lemma: твій
-  pos: adj
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: я
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: де
-  pos: adv
-- lemma: кава
-  pos: noun
-- lemma: любити
-  pos: verb
-- lemma: сей
-  pos: adj
-- lemma: хто
-  pos: noun
-- lemma: те
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: писати
-  pos: verb
-- lemma: сміти
-  pos: verb
-- lemma: куди
-  pos: adv
+  - lemma: 'читати'
+    translation: 'to read'
+    pos: 'verb'
+  - lemma: 'писати'
+    translation: 'to write'
+    pos: 'verb'
+  - lemma: 'говорити'
+    translation: 'to speak'
+    pos: 'verb'
+  - lemma: 'подобатися'
+    translation: 'to like'
+    pos: 'verb'
+  - lemma: 'хотіти'
+    translation: 'to want'
+    pos: 'verb'
+  - lemma: 'мій'
+    translation: 'my (m.)'
+    pos: 'pronoun'
+  - lemma: 'твій'
+    translation: 'your (m.)'
+    pos: 'pronoun'
+  - lemma: 'розуміти'
+    translation: 'to understand'
+    pos: 'verb'
+  - lemma: 'працювати'
+    translation: 'to work'
+    pos: 'verb'
+  - lemma: 'знати'
+    translation: 'to know'
+    pos: 'verb'
+  - lemma: 'мати'
+    translation: 'to have'
+    pos: 'verb'

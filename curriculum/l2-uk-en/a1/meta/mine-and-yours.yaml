@@ -2,45 +2,46 @@ slug: mine-and-yours
 title: Mine and Yours
 word_target: 1200
 content_outline:
-- section: 'Вступ: Чия це річ?'
-  words: 400
+- slug: introduction-whose-is-this
+  words: 200
   points:
-  - 'Note: 25-35% immersion. Provide English scaffolding for complex grammar explanations,
-    specifically the concept of gender agreement.'
-  - Створити контекст «Бюро знахідок» (Lost and Found) з використанням побутових предметів
-    (телефон, ключі, паспорт) для введення питань «Чий? Чия? Чиє? Чиї?».
-  - 'Пояснити ключову відмінність від англійської: в українській мові присвійний займенник
-    узгоджується з граматичним родом предмета (possessed object), а не з тим, кому
-    він належить (owner).'
-- section: 'Презентація: Система форм та узгодження'
-  words: 650
+  - Introduce the concept of possession using everyday objects (phone, bag, passport).
+  - 'Present the core question words: Чий? Чия? Чиє? Чиї? (Whose?).'
+  - 'Explain the fundamental difference from English: Ukrainian possessive pronouns
+    agree with the object possessed, not the owner.'
+  section: 'Introduction: Whose is this?'
+- slug: variable-possessives
+  words: 350
   points:
-  - Представити змінювані форми (мій, твій, наш, ваш) за допомогою чітких таблиць.
-    Показати узгодження для чоловічого, жіночого, середнього роду та множини з 2-3
-    прикладами на кожну форму.
-  - Пояснити незмінювані форми (його, її) — підкреслити, що вони залишаються стабільними
-    незалежно від роду предмета, що є полегшенням для початківців.
-  - 'Деколонізаційний акцент: ввести займенник «їхній» як літературний стандарт. Чітко
-    розмежувати його з помилковим незмінним «їх», наводячи приклади правильного узгодження
-    (їхній дім, їхня машина).'
-  - 'Ввести базову концепцію рефлексивного займенника «свій»: пояснити контраст між
-    «його/її» (чужа річ) та «свій» (власна річ) для уникнення типових помилок.'
-- section: 'Культурний контекст: Етикет та еволюція стосунків'
-  words: 400
+  - 'Introduce the variable possessive pronouns: мій (my), твій (your informal), наш
+    (our), ваш (your formal/plural).'
+  - Demonstrate gender and number agreement (masculine, feminine, neuter, plural)
+    using clear tables.
+  - Provide simple examples matching pronouns to A1 vocabulary (e.g., мій телефон,
+    моя адреса, моє місто).
+  section: 'Variable Possessives: Мій, Твій, Наш, Ваш'
+- slug: invariable-possessives-and-sviy
+  words: 250
   points:
-  - 'Описати соціальну дистанцію: суворе розрізнення ситуацій для використання «твій»
-    (родина, друзі) та «ваш» (незнайомці, старші, офіційні особи).'
-  - Розповісти про ритуал «переходу на ти» як важливу віху в українській комунікації.
-  - Згадати правило етикету щодо написання «Ваш» з великої літери в листах як вияв
-    поваги.
-  - Розібрати стратегії подолання 'Gender Mismatch' (напр., *мій мама*) з фокусом
-    на аналізі закінчень іменників.
-- section: Практика та продукція
-  words: 550
+  - 'Introduce the third-person invariable pronouns: його (his/its) and її (her),
+    explaining they do not change based on the object''s gender.'
+  - Introduce їхній (their) as the standard form, distinguishing it from the incorrect
+    use of 'їх'.
+  - Briefly introduce the reflexive possessive 'свій' (one's own) to contrast with
+    'його/її' and prevent common errors.
+  section: Invariable Possessives and Свій
+- slug: cultural-context-tviy-vs-vash
+  words: 150
   points:
-  - 'Надати керовану практику: 3-4 міні-діалоги на заміну іменників займенниками в
-    контексті повсякдення.'
-  - Додати вправи на відпрацювання узгодження (наприклад, підбір правильної форми
-    займенника до слів 'рюкзак', 'адреса', 'місто').
-  - 'Створити продуктивний етап: сценарій/рольова гра ''Чия це сумка?'', спрямована
-    на автоматизацію використання питальних (чий/чия/чиє) та присвійних займенників.'
+  - Explain the social distance and etiquette behind choosing between 'твій' and 'ваш'.
+  - Describe the cultural milestone of 'перехід на ти' (switching to informal 'you')
+    in Ukrainian relationships.
+  section: 'Cultural Context: Твій vs. Ваш'
+- slug: summary-and-self-check
+  words: 250
+  points:
+  - Recap the main rules of gender agreement for possessive pronouns.
+  - Provide a brief practice scenario (e.g., a short Lost and Found dialogue).
+  - Include 3-4 self-check questions (e.g., How do you say 'my bag'? When do you use
+    'ваш' instead of 'твій'?).
+  section: Summary and Self-Check

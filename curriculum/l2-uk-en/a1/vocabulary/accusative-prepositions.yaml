@@ -1,61 +1,76 @@
 items:
-- lemma: ми
-  pos: noun
-- lemma: за
-  pos: adv
-- lemma: йти
-  pos: verb
-- lemma: цей
-  pos: adj
-- lemma: говорити
-  pos: verb
-- lemma: іти
-  pos: verb
-- lemma: це
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: він
-  pos: noun
-- lemma: парк
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: прийменник
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: платити
-  pos: verb
-- lemma: дякувати
-  pos: verb
-- lemma: той
-  pos: adj
-- lemma: місто
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: вони
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: там
-  pos: adv
-- lemma: площа
-  pos: noun
-- lemma: фільм
-  pos: noun
-- lemma: любити
-  pos: verb
-- lemma: великий
-  pos: adj
-- lemma: робот
-  pos: noun
-- lemma: робота
-  pos: noun
-- lemma: лист
-  pos: noun
-- lemma: текст
-  pos: noun
+  - lemma: "в"
+    translation: "to, into"
+    pos: "preposition"
+  - lemma: "на"
+    translation: "to, onto"
+    pos: "preposition"
+  - lemma: "через"
+    translation: "through, across"
+    pos: "preposition"
+  - lemma: "про"
+    translation: "about"
+    pos: "preposition"
+  - lemma: "за"
+    translation: "for (exchange, thanks)"
+    pos: "preposition"
+  - lemma: "готель"
+    translation: "hotel"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вокзал"
+    translation: "train station"
+    pos: "noun"
+    gender: "m"
+  - lemma: "місто"
+    translation: "city"
+    pos: "noun"
+    gender: "n"
+  - lemma: "країна"
+    translation: "country"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вулиця"
+    translation: "street"
+    pos: "noun"
+    gender: "f"
+  - lemma: "міст"
+    translation: "bridge"
+    pos: "noun"
+    gender: "m"
+  - lemma: "парк"
+    translation: "park"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ліс"
+    translation: "forest"
+    pos: "noun"
+    gender: "m"
+  - lemma: "море"
+    translation: "sea"
+    pos: "noun"
+    gender: "n"
+  - lemma: "екскурсія"
+    translation: "excursion, tour"
+    pos: "noun"
+    gender: "f"
+  - lemma: "квиток"
+    translation: "ticket"
+    pos: "noun"
+    gender: "m"
+  - lemma: "іти"
+    translation: "to go, to walk"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "їхати"
+    translation: "to go, to travel (by vehicle)"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "читати"
+    translation: "to read"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "дякувати"
+    translation: "to thank"
+    pos: "verb"
+    aspect: "impf"

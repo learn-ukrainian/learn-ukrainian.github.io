@@ -1,34 +1,38 @@
-# Дослідження: Reflexive Verbs (-ся)
+## Research Notes
 
-## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться); ... утворення форм минулого часу дієслова: ... сміявся, сміялася, сміялося, сміялися;"
-Alignment: This module perfectly addresses the A1 requirement to teach the indicative present and past tense conjugation of reflexive verbs, specifically citing "дивитися" and "сміятися" as required by the standard.
+**Textbook Approach:**
+Beginner Ukrainian textbooks typically introduce reflexive verbs (`-ся`/`-сь`) after basic present tense conjugations (Class I and II). The pedagogical focus is on the "mirror" analogy—the action reflecting back on the subject. Textbooks heavily tie this grammatical concept to "Daily Routine" vocabulary (вмиватися, одягатися) and basic identification (називатися).
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| дивитися | High (Top 100) | дивитися телевізор, дивитися у вікно |
-| сміятися | Medium-High | сміятися голосно, сміятися з жарту |
-| вмиватися | Medium (Routine) | вмиватися холодною водою, вмиватися вранці |
-| одягатися | Medium (Routine) | одягатися тепло, швидко одягатися |
-| називатися | High (Identification)| як це називається? |
-| вчитися | High (Academic) | вчитися в школі, вчитися добре |
-| займатися | Medium-High | займатися спортом, займатися йогою |
-| повертатися| High (Motion) | повертатися додому |
+**Common Errors:**
+1. **The "Myself" Redundancy:** English speakers often try to translate "I wash myself" literally as "Я мию себе" instead of using the proper reflexive verb "Я миюся".
+2. **Incorrect Prepositions:** With verbs like `сміятися`, learners often use the Russian-influenced `над` (сміятися над) instead of the correct Ukrainian `сміятися з` (to laugh at).
 
-## Cultural Hooks
-1. The "Apology" Logic: The reflexive form "Вибачаюсь" implies "I excuse myself," which culturally misses the point of asking the other person for forgiveness. The correct form is the imperative "Вибачте" (Excuse me). This neatly illustrates how deeply semantic the "-ся" suffix is in Ukrainian.
-2. The Shibboleth Pronunciation: The ending "-ться" is pronounced as a long, soft [ц':а]. This softness is a distinct, beautiful marker of Ukrainian phonetics and emphasizes the melodic nature of the language.
+**Cultural Hook:**
+The "Apology" Logic: The word `вибачаюсь` literally translates to "I excuse myself," which culturally implies absolving oneself of guilt. It is considered slightly rude or informal compared to the correct `вибачте` (Excuse me / Forgive me), which directs the request to the other person.
 
-## Common Learner Errors
-1. The "Myself" Redundancy: Translating directly from English, learners often say "Я мию себе" (I wash myself) instead of using the natural reflexive verb "Я миюся".
-2. Wrong Preposition with Laugh: Learners often use *сміятися над* (a direct copy from Russian/other languages) instead of the correct standard Ukrainian *сміятися з* (to laugh from/at).
+**Cross-References:**
+This module builds directly on basic verb conjugations from `a1-16 (The Living Verb II)` and lays the essential vocabulary groundwork for `a1-38 (My Daily Routine)`.
 
-## Cross-References
-- Builds on: a1-16 (The Living Verb II)
-- Prepares for: a1-10 (Checkpoint - First Contact), a1-38 (My Daily Routine)
+## Resource Discovery
 
-## Notes for Content Writing
-- Decolonized framing: Present the [ц':а] pronunciation positively as a core feature of Ukrainian identity, without making comparisons to Russian. 
-- Ensure English scaffolding explicitly introduces the "mirroring" concept in the intro, as immersion is low in A1 grammar explanations.
-- Verify that examples avoid any Russianisms and use standard Ukrainian collocations exclusively.
+
+### Blog Articles
+- [Likes and dislikes — common verbs in Ukrainian](https://www.ukrainianlessons.com/episode14/) (ukrainianlessons.com)
+- [Going to the movies in Ukraine — Perfective verbs in Ukrainian](https://www.ukrainianlessons.com/episode34/) (ukrainianlessons.com)
+- [On a date in Ukrainian + Reflexive verbs](https://www.ukrainianlessons.com/episode109/) (ukrainianlessons.com)
+- [Dobra Forma: Present Tense of -ся Verbs (First Conjugation)](https://opentext.ku.edu/dobraforma/chapter/23-1/) (dobraforma)
+- [Dobra Forma: Present Tense of -ся Verbs (Second Conjugation)](https://opentext.ku.edu/dobraforma/chapter/23-2/) (dobraforma)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 190: Змінювання дієслів минулого часу
+за родами (в однині) й числами........................................
+- Grade 10, Сторінка 176: Дієслова із суфіксом -ся(-сь), які 
+виражають зворотну дію, нази-
+ваються зворотними: навчатися, 
+за...
+- Grade 6, Сторінка 5: . . . . . . . . . . . . . . . . . . . 256
+Присвійні займенники . . . . . . . . . . . . . . . . . . ....
+- Grade 10, Сторінка 270: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ...
+- Grade 11, Сторінка 221: . . . . . . . 33
+§ 8 
+Дієслово. Дієслівні форми  . . . . . . . . . . . . . . . . . . . . . . . . . ....

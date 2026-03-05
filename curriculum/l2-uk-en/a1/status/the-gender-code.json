@@ -2,10 +2,10 @@
   "module": "the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-05T22:12:54.075332Z",
+  "last_audit": "2026-03-05T22:55:52.794614Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-05T22:10:47.175062Z",
+    "md": "2026-03-05T22:55:11.874805Z",
     "meta": "2026-03-05T21:59:56.082862Z",
     "activities": "2026-03-05T22:00:58.636533Z",
     "vocabulary": "2026-03-05T22:10:33.983098Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2536/1200 (raw: 2783)"
+      "message": "2861/1200 (raw: 3113)"
     },
     "activities": {
       "status": "pass",

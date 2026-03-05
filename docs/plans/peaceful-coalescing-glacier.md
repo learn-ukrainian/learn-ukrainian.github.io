@@ -1,181 +1,237 @@
-# Fix Prompt/Audit Friction for A1 and A2 Modules
+# Rewrite A1 M1-M6 Plans + Fix A1/A2 Plan Issues
 
 ## Context
 
-Building A1 and A2 modules is slow and expensive because Gemini produces content that can't pass audit gates, triggering fix loops that often exhaust their 2-iteration cap. Root cause: **three layers of config contradictions** between what the prompt tells Gemini to do, what the schema validates, and what the audit expects.
+The A1 Cyrillic Code plans (M1-M4) were written without consulting Ukrainian textbooks. Result: garbage vocabulary (мул = "mule", луна = "echo"), fake phrases ("Нас сам"), letter groupings that don't match the code's decodability charsets, and section word budgets that sum to 2000 when the target is 1200.
 
-This is NOT a template architecture problem — the parameterized placeholder system works. The problem is that specific config values disagree with each other, and some template rules are hardcoded for B1+ without level-aware alternatives.
+Textbook research (Bolshakova 2018, Zaharijchuk NUS 2025) shows both bukvars introduce О as letter #1 or #2 because it unlocks high-frequency words (сом, сон, молоко, масло, слово). Our M1 omits О, leaving only ~5 useful words.
 
----
+Additionally: M5 "Syllables and Transfer" has a confusing English title ("transfer" = переніс/hyphenation), and M6 "Stress and Intonation" is decent but needs section budget fixes.
 
-## Fix 1: Unify Item Count Configs (HIGHEST priority)
-
-**Problem**: Three sources state different minimum items per activity:
-
-| Source | A1 | A2 | Location |
-|--------|----|----|----------|
-| `LEVEL_CONFIG.min_items_per_activity` | 12 | 8 | `config.py:528,539` |
-| `ACTIVITY_CONFIGS.ITEMS_MIN` (→ prompt) | 12 | 12 | `pipeline_lib.py:359,366` |
-| `ACTIVITY_COMPLEXITY.min_items` (per-type) | 6-8 | 6-8 | `config.py:236-295` |
-
-Gemini targets 12, audit per-type checks pass at 6-8, but the fallback `min_items_per_activity` rejects types not in `ACTIVITY_COMPLEXITY` at 12. A2 was relaxed to 8 in LEVEL_CONFIG (Feb 2026 comment at line 539) but ACTIVITY_CONFIGS wasn't updated.
-
-**Changes**:
-
-| File | Line | Before | After |
-|------|------|--------|-------|
-| `scripts/audit/config.py` | 528 | `'min_items_per_activity': 12` | `'min_items_per_activity': 6` |
-| `scripts/pipeline_lib.py` | 359 | `"ITEMS_MIN": "12"` | `"ITEMS_MIN": "6"` |
-| `scripts/pipeline_lib.py` | 366 | `"ITEMS_MIN": "12"` | `"ITEMS_MIN": "8"` |
-
-**Why 6 for A1**: Early A1 has ~10 decodable words. 8 items of the same 5 words teaches nothing. 6 diverse items > 12 repetitive ones. Per-type `ACTIVITY_COMPLEXITY` already uses 6-8 as floor.
+**Separate issues found during A1 plan screening** need fixing in other plan files too.
 
 ---
 
-## Fix 2: Level-Aware Structural Rules in phase-2 (HIGH priority)
+## Part 1: Rewrite M1-M4 Plans (Letter Groupings from Textbooks)
 
-**Problem**: `phase-2-content.md` hardcodes B1+ structural expectations for ALL levels:
-- "80-100 words per H3 block" (line 6)
-- 4-part structure per concept: definition + how it works + examples + usage note (lines 114-119)
-- 5+ format variety for examples (lines 132-139)
+### New Letter Groupings
 
-Impossible for early A1 (6-letter vocabulary, no grammar) and overkill for A2.
+Based on both bukvars + aligning with the **existing code charsets** in `_DECODABLE_CHARSETS`:
 
-**Changes**:
+| Module | Letters (new) | Cumulative | Source |
+|--------|--------------|------------|--------|
+| **M1** | А О У М Л Н С | 7 | Bolshakova p.12-22: А О М Л У Н С. Zaharijchuk: О А У first. Adding О unlocks сом, сон, масло, молоко, слово |
+| **M2** | К И І Р В Т Е | 14 | Matches `_DECODABLE_CHARSETS[2]` exactly. Bolshakova p.26-38. |
+| **M3** | Б Д П З Г Х Ж Ш Ч | 23 | Matches `_DECODABLE_CHARSETS[3]` exactly (minus Ґ, which moves to M4 — too rare for its own slot). |
+| **M4** | Й Щ Я Ю Є Ь Ї Ц Ф Ґ + ДЖ ДЗ + ' | 33 | All remaining letters, digraphs, apostrophe, soft sign |
 
-**`scripts/pipeline_lib.py`** — Add `get_structural_rules(track, module_num) -> str`:
+**Key changes from current plans:**
+- М1: +О (was АМЛУНС, now АОУМЛНС). Unlocks ~20 more words
+- M2: Т and Е move here (were in M3 plan). Б and Д move to M3. **Matches code.**
+- M3: +Ч (was in M4 plan), +Б +Д (were in M2 plan), -Ґ (moves to M4). **Matches code.**
+- M4: +Ґ (was in M3 plan), -Ч (moves to M3)
 
-| Level range | H3 words | Structure | Format variety |
-|-------------|----------|-----------|----------------|
-| A1 M1-M4 | 30-50 | Introduce + show + practice | No minimum (letter-focused) |
-| A1 M5-M14 | 40-60 | Introduce + examples + practice tip | 3+ types |
-| A1 M15+ | 60-80 | Definition + examples + usage note | 3+ types |
-| A2 | 60-80 | Full 4-part but 80 words not 100 | 4+ types |
-| B1+ | 80-100+ | Full 4-part (current rules unchanged) | 5+ types |
+### M1 New Vocabulary (textbook-sourced)
 
-Add to `write_placeholders`: `"STRUCTURAL_RULES"` and `"H3_WORD_RANGE"`.
+From Bolshakova p.21-22, words used with А О У М Л Н С:
 
-**`claude_extensions/phases/gemini/phase-2-content.md`**:
-- Line 6: Replace hardcoded "80-100+" with `{H3_WORD_RANGE}`
-- Lines 83-139 (Rules 1-4): Replace with `{STRUCTURAL_RULES}` placeholder
-- Lines 196-210 (expansion method): Replace with `{EXPANSION_METHOD}` placeholder
-- Rules 5-9 (callout variety, anti-robotic, etc.) stay unchanged — they're level-independent
+| Word | Meaning | IPM | Source |
+|------|---------|-----|--------|
+| мама | mom | 46.4 | Both bukvars, universal |
+| сом | catfish | 7.0 | Bolshakova p.22 |
+| сон | dream/sleep | 65.7 | Bolshakova p.22 |
+| оса | wasp | 2.7 | Bolshakova p.22 |
+| сосна | pine tree | 5.3 | Bolshakova p.22 |
+| насос | pump | 1.5 | Bolshakova p.22 |
+| лама | llama | — | Bolshakova p.21 |
+| масло | butter/oil | 14.2 | Bolshakova p.15 |
+| слон | elephant | 5.8 | Bolshakova p.30 (preview) |
+| нам | to us | common | Both bukvars |
+| нас | us | common | Both bukvars |
+| сам | self | common | Both bukvars |
+| мало | little/few | common | Bolshakova p.14 |
+| ананас | pineapple | — | Bolshakova p.22 |
+| смола | resin | 3.4 | Bolshakova p.22 |
 
-After deploy: `npm run claude:deploy`
+**Phrases possible with О**: "У нас — ананас." "У нас — сом." "А у вас?" (from Bolshakova p.22 — actual textbook phrases!)
 
----
+### M1 Section Structure
 
-## Fix 3: Level-Aware English Hints Detection (HIGH priority)
-
-**Problem**: `activity_validation.py:264-335` `check_english_hints_in_activities` flags `(lowercase word)` patterns as English hints. Threshold: >5 = critical. No level parameter usage. But A1/A2 activities are **required** to use English for instructions/explanations (phase-3:198-203).
-
-The function only checks cloze, fill-in, error-correction (not quiz/match-up). It already receives `level` and `module_num` params but never uses them.
-
-**Changes in `scripts/audit/checks/activity_validation.py`**:
-
-1. After line 271 — add level-aware threshold:
-```python
-base_level = level.split('-')[0].upper() if level else ''
-if base_level in ('A1', 'A2'):
-    critical_threshold = 15
-    severity_floor = 'info'
-else:
-    critical_threshold = 5
-    severity_floor = 'warning'
+```yaml
+content_outline:
+- section: Вступ — Introduction
+  words: 200
+  points:
+  - English scaffolding: Ukrainian has 33 letters, highly phonetic
+  - Cultural hook: Cyrillic from students of Cyril & Methodius in First Bulgarian Empire
+  - This module: 7 letters (3 vowels А О У + 4 consonants М Л Н С)
+- section: Голосні — Vowels А, О, У
+  words: 250
+  points:
+  - А — sounds like 'a' in 'father'. Key word: ананас. Anna Ohoiko video.
+  - О — sounds like 'o' in 'more'. Key word: око. Video. Ukrainian О never reduces (unlike Russian).
+  - У — sounds like 'oo' in 'moon'. Key word: Україна. Video.
+  - Golden Rule: Ukrainian vowels stay pure in any position.
+- section: Приголосні — Consonants М, Л, Н, С
+  words: 250
+  points:
+  - М — like English M. Key word: мама. Video.
+  - Л — looks like a tent (Λ). Key word: лимон (preview). Video.
+  - Н — FALSE FRIEND: looks like H but sounds like N. Key word: нам. Video.
+  - С — FALSE FRIEND: looks like C but always /s/. Key word: сом. Video.
+- section: Склади і слова — Syllables and Words
+  words: 300
+  points:
+  - Open syllables: МА МО МУ НА НО НУ ЛА ЛО ЛУ СА СО СУ
+  - Closed syllables: АМ ОМ УМ АН ОН УН АС ОС УС АЛ ОЛ УЛ
+  - Blending into words: ма+ма = мама, со+м = сом, со+сна = сосна
+  - Word reading drill: мама, сом, сон, оса, масло, сосна, ананас, насос, лама, смола
+- section: Підсумок — Summary
+  words: 100
+  points:
+  - Progress: 7 of 33 letters (3 vowels + 4 consonants)
+  - Self-check: Can you read мама? сом? масло? What sound does Н make?
+  - Next: Cyrillic Code II adds 7 more letters
 ```
 
-2. Line 323 — use level-aware threshold instead of hardcoded 5
+**word_target: 1200** (sum of sections: 1100, within ±10%)
 
-3. Expand scaffolding allowlist for A1/A2: `(example)`, `(hint)`, `(listen)`, `(repeat)`, `(choose)`, etc.
+### M2-M4 Plan Outlines
 
----
+**M2** — "К И І Р В Т Е — Now You Can Read Words"
+- 3 new vowels (И, І, Е) + 4 new consonants (К, Р, В, Т)
+- Key vocab: кіт, вік, рис, сир, тато, місто, море, метро, ліс, вікно, літо, стіл, молоко, кіно, око, слово
+- False friend: Р looks like P but is /r/. В looks like B but is /v/.
+- Section structure: Intro → Vowels И,І,Е → Consonants К,Р,В,Т → Word drills → Reading practice → Summary
+- word_target: 1200
 
-## Fix 4: Decodable Vocabulary Injection (HIGH priority)
+**M3** — "Б Д П З Г Х Ж Ш Ч — Voiced and Voiceless Pairs"
+- 9 new consonants, introduces voiced/voiceless concept
+- Key vocab: хліб, парк, школа, будинок, газета, пошта, шапка, живот, чай (preview)
+- Voiced/voiceless pairs: Б/П, Д/Т, Г/Х, З/С, Ж/Ш
+- Section structure: Intro → Letters Б,Д,П → Letters З,Г,Х → Letters Ж,Ш,Ч → Voiced/voiceless drill → Summary
+- word_target: 1200
 
-**Problem**: Gemini gets `PEDAGOGICAL_CONSTRAINTS` saying "only use 6 letters" but no actual word list. It invents words that violate the charset constraint, fails audit, enters fix loop.
-
-**Changes**:
-
-**`scripts/pipeline_lib.py`** — Add `get_decodable_vocabulary(track, module_num, plan) -> str`:
-
-- M1-M4: Returns curated word list (VESUM-verified, charset-validated using `rule_engine._DECODABILITY_SPECS`)
-- M5+, A2+: Returns empty string
-
-Word lists curated per module:
-- **M1** (АМЛУНС): мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
-- **M2** (+ТОКИВРЕІ): банан, вода, молоко, кіно, рука, дім, він, вона, бік, рис, сир, дорога, робота, добро
-- **M3** (+ДПЗБГХЖШЧ): Full alphabet nearly complete — large word set, inject top-30 from plan's vocab_hints
-- **M4**: Full alphabet — no restriction, empty placeholder
-
-Each word verified with `mcp__rag__verify_word` and charset-checked against `rule_engine._DECODABILITY_SPECS[module].allowed` before inclusion.
-
-**`claude_extensions/phases/gemini/phase-2-content.md`** — Add `{DECODABLE_VOCABULARY}` after `{PEDAGOGICAL_CONSTRAINTS}`
-
-**`claude_extensions/phases/gemini/phase-3-activities.md`** — Add `{DECODABLE_VOCABULARY}` after line 25
+**M4** — "The Full Alphabet — Й Щ Я Ю Є Ь Ї Ц Ф Ґ"
+- Remaining 10 characters + digraphs ДЖ/ДЗ + apostrophe + soft sign
+- Key vocab: чай, яблуко, їжа, день, сім'я, Львів, Європа, центр, щастя, м'яч, ґанок
+- Iotated vowels: Я Ю Є Ї — dual function (beginning of syllable vs after consonant)
+- Section structure: Intro → Affricates Ц,Щ,Ф → Iotated vowels Я,Ю,Є,Ї,Й → Soft sign & apostrophe → Digraphs ДЖ,ДЗ + Ґ → Full alphabet summary
+- word_target: 1200
 
 ---
 
-## Implementation Order
+## Part 2: Rewrite M5-M6 Plans
 
-1. **Fix 1** (item counts) — 3 single-line changes, highest impact, zero risk
-2. **Fix 3** (English hints) — contained to one function, prevents false audit failures
-3. **Fix 4** (vocabulary injection) — new function + placeholder, prevents constraint guessing
-4. **Fix 2** (structural rules) — template change + new function, most complex; deploy via `npm run claude:deploy`
+### M5: "Syllables and Word Division" (was "Syllables and Transfer")
 
-Fixes 1+3 can be one commit. Fixes 4+2 can be a second commit.
+"Transfer" is a literal translation of "переніс" that means nothing in English. Rename to "Syllables and Word Division."
+
+Current problems:
+- Section budgets sum to 2000 vs target 1200
+- "Наголос і склади" section overlaps with M6 (stress) — remove, that's M6's job
+
+New structure:
+```
+- Що таке склад? (300w) — vowel = syllable core, counting syllables
+- Типи складів (300w) — open vs closed, consonant clusters, maximal onset
+- Правила переносу (400w) — word division rules for writing, cannot-split rules, дж/дз, ь, apostrophe
+- Практика (200w) — drills
+Total: 1200
+```
+
+### M6: "Stress and Intonation" — keep title, fix budgets
+
+Current problems:
+- Section budgets sum to 2000 vs target 1200
+
+New structure:
+```
+- Наголос (350w) — free/mobile stress, stress changes meaning (замок/замок)
+- Типові наголоси (250w) — first/last/penultimate patterns
+- Рухомий наголос (250w) — stress shifts in declension/conjugation (awareness only)
+- Інтонація (250w) — declarative, interrogative, exclamatory
+- Практика (100w) — drills
+Total: 1200
+```
+
+---
+
+## Part 3: Fix Other A1 Plan Issues
+
+| File | Fix |
+|------|-----|
+| `plans/a1/buying-tickets.yaml` | `підстаканник` → `підсклянник` (Russianism, not in VESUM) |
+| `plans/a1/the-genitive-i-absence.yaml` | `молоко` labeled "feminine" → "neuter" |
+| `plans/a1/at-the-market.yaml` | Swap `здача`/`решта` priority — решта is 23x more frequent |
+| `plans/a1/at-the-store.yaml` | Remove claim that `покупка` is Russian — it IS Ukrainian (in VESUM) |
+
+---
+
+## Part 4: Code Changes (align with new plans)
+
+| File | Change |
+|------|--------|
+| `scripts/pipeline_lib.py` `_DECODABLE_CHARSETS[1]` | Add Оо: `"АаОоУуМмЛлНнСс"` (was `"АаМмЛлУуНнСс"`) |
+| `scripts/pipeline_lib.py` `_DECODABLE_WORDS[1]` | New list from textbooks: мама, сом, сон, оса, масло, сосна, насос, лама, смола, ананас, нам, нас, сам, мало |
+| `scripts/pipeline_lib.py` `PEDAGOGICAL_CONSTRAINTS["a1-m01"]` | Update letter list to include О |
+| `scripts/audit/checks/rule_engine.py` `_DECODABILITY_SPECS` | Add Оо to module 1 charset |
+| `scripts/pipeline_lib.py` `_DECODABLE_WORDS[2]` | Review against new M2 charset (Т,Е now in M2; Б,Д now in M3) |
+
+---
+
+## Part 5: Deferred — GH Issue for A2 + Remaining Levels
+
+Create a GH issue to review A2, B1+, and seminar plan files in a future session. Not blocking this implementation.
 
 ---
 
 ## Files Modified
 
-| File | Fix | Change |
-|------|-----|--------|
-| `scripts/audit/config.py` | 1 | A1 `min_items_per_activity`: 12→6 |
-| `scripts/pipeline_lib.py` | 1,2,4 | ITEMS_MIN alignment, `get_structural_rules()`, `get_decodable_vocabulary()`, `write_placeholders` |
-| `scripts/audit/checks/activity_validation.py` | 3 | Level-aware thresholds in `check_english_hints_in_activities` |
-| `claude_extensions/phases/gemini/phase-2-content.md` | 2,4 | `{STRUCTURAL_RULES}`, `{H3_WORD_RANGE}`, `{EXPANSION_METHOD}`, `{DECODABLE_VOCABULARY}` |
-| `claude_extensions/phases/gemini/phase-3-activities.md` | 4 | `{DECODABLE_VOCABULARY}` |
+| File | What |
+|------|------|
+| `curriculum/l2-uk-en/plans/a1/the-cyrillic-code-i.yaml` | Full rewrite |
+| `curriculum/l2-uk-en/plans/a1/the-cyrillic-code-ii.yaml` | Full rewrite |
+| `curriculum/l2-uk-en/plans/a1/the-cyrillic-code-iii.yaml` | Full rewrite |
+| `curriculum/l2-uk-en/plans/a1/the-cyrillic-code-iv.yaml` | Full rewrite |
+| `curriculum/l2-uk-en/plans/a1/syllables-and-transfer.yaml` | Rewrite (rename + fix budgets) |
+| `curriculum/l2-uk-en/plans/a1/stress-and-intonation.yaml` | Fix section budgets |
+| `curriculum/l2-uk-en/plans/a1/buying-tickets.yaml` | підстаканник → підсклянник |
+| `curriculum/l2-uk-en/plans/a1/the-genitive-i-absence.yaml` | молоко gender fix |
+| `curriculum/l2-uk-en/plans/a1/at-the-market.yaml` | здача → решта priority |
+| `curriculum/l2-uk-en/plans/a1/at-the-store.yaml` | Remove false покупка claim |
+| `scripts/pipeline_lib.py` | M1 charset + word list + constraints |
+| `scripts/audit/checks/rule_engine.py` | M1 charset |
+| Meta + orchestration files for M1 | Propagate changes |
 
 ---
 
 ## Verification
 
 ```bash
-# 1. Confirm item count alignment
+# 1. Validate all plans parse correctly
+.venv/bin/python scripts/validate_plans.py a1
+
+# 2. Verify decodability charsets match plans
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from audit.config import LEVEL_CONFIG
-from pipeline_lib import ACTIVITY_CONFIGS
-for lvl in ['A1', 'A2']:
-    lc = LEVEL_CONFIG[lvl]['min_items_per_activity']
-    ac = ACTIVITY_CONFIGS[lvl.lower()]['ITEMS_MIN']
-    match = '✅' if str(lc) == ac else '❌'
-    print(f'{lvl}: LEVEL_CONFIG={lc}, ACTIVITY_CONFIGS={ac} {match}')
+from pipeline_lib import _DECODABLE_CHARSETS, _DECODABLE_WORDS, _charset_filter
+for m in [1,2,3]:
+    charset = _DECODABLE_CHARSETS[m]
+    words = _DECODABLE_WORDS.get(m, [])
+    filtered = _charset_filter(words, charset)
+    print(f'M{m}: {len(filtered)} words pass charset ({len(words)} total)')
+    if filtered != words:
+        rejected = set(words) - set(filtered)
+        print(f'  REJECTED: {rejected}')
 "
 
-# 2. Verify structural rules vary by level
-.venv/bin/python -c "
-import sys; sys.path.insert(0, 'scripts')
-from pipeline_lib import get_structural_rules
-for track, mod in [('a1', 1), ('a1', 10), ('a1', 20), ('a2', 1), ('b1-grammar', 1)]:
-    rules = get_structural_rules(track, mod)
-    print(f'{track} M{mod}: {rules[:60]}...')
-"
+# 3. VESUM-verify all M1 vocabulary
+# (use mcp__rag__verify_word for each word in the new list)
 
-# 3. Verify decodable vocabulary
-.venv/bin/python -c "
-import sys; sys.path.insert(0, 'scripts')
-from pipeline_lib import get_decodable_vocabulary
-for mod in [1, 2, 3, 5]:
-    vocab = get_decodable_vocabulary('a1', mod, {})
-    print(f'M{mod}: {\"words found\" if vocab else \"empty (correct)\"}')
-"
-
-# 4. Existing tests pass
+# 4. Run existing tests
 .venv/bin/python -m pytest tests/test_pipeline_v4.py tests/test_rule_engine.py -x -q
 
-# 5. Deploy template changes
-npm run claude:deploy
-
-# 6. Rebuild M1 or M2 and compare fix-loop iterations (should be fewer)
+# 5. Rebuild M1 with new plan
+.venv/bin/python scripts/build_module.py a1 1 --rebuild
 ```

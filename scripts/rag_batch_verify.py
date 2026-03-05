@@ -377,6 +377,18 @@ def verify_module(md_path: Path, use_rag: bool = True,
     clean_words = list(all_words.keys())
     vesum_results = vesum_batch_lookup(clean_words)
 
+    # 2.5. Retry hyphenated words with hyphens stripped (syllable breakdowns)
+    # Words like "мо-ло-ко", "ав-то-бус" are pedagogically correct syllable
+    # divisions but fail VESUM. Dehyphenate and re-lookup.
+    hyphenated_misses = [w for w in clean_words if "-" in w and not vesum_results.get(w)]
+    if hyphenated_misses:
+        dehyphenated = [w.replace("-", "") for w in hyphenated_misses]
+        dehyph_results = vesum_batch_lookup(dehyphenated)
+        for orig_w, dehyph_w in zip(hyphenated_misses, dehyphenated):
+            if dehyph_results.get(dehyph_w):
+                # Mark the hyphenated form as found via its dehyphenated form
+                vesum_results[orig_w] = dehyph_results[dehyph_w]
+
     # 3. Identify VESUM misses
     vesum_misses = [w for w in clean_words if not vesum_results.get(w)]
 

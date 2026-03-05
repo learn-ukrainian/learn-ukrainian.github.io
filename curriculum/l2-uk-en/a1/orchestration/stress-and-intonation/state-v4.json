@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "stress-and-intonation",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T20:13:44Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T20:13:54Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T20:15:51Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T20:18:25Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-05T20:30:16Z",
+      "attempts": 3
+    }
+  }
+}

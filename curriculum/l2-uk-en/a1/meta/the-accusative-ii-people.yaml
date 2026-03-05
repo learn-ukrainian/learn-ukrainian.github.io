@@ -2,53 +2,55 @@ slug: the-accusative-ii-people
 title: 'The Accusative II: People'
 word_target: 1200
 content_outline:
-- section: Розминка
-  words: 300
+- section: Розминка (Warm-up)
+  slug: warm-up
+  words: 200
   points:
-  - 'Explicit English scaffolding for A1 context: introduce the grammatical concept
-    using the ''Heart Words'' (Animate) vs ''Stone Words'' (Inanimate) metaphor.'
-  - Provide a clear contrast between Accusative I (things) and Accusative II (people)
-    to explain why grammar changes for living beings.
-  - Link to the State Standard §4.2.1.1 competency of distinguishing case forms for
-    names of people (син, тато, учитель, мама, сестра).
-- section: Презентація
-  words: 650
+  - Introduce the grammatical concept using the 'Heart Words' (Animate) vs 'Stone
+    Words' (Inanimate) metaphor.
+  - Contrast Accusative I (things) and Accusative II (people) to explain why grammar
+    changes for living beings.
+  - Link to the State Standard competency of distinguishing case forms for names of
+    people.
+- section: Презентація (Presentation)
+  slug: presentation
+  words: 450
   points:
-  - 'Explain the logic of masculine animate nouns: Accusative = Genitive. Describe
-    how masculine animate nouns are ''greedy'' for endings to stand out from objects
-    (бачу сина, тата, учителя).'
+  - 'Explain the logic of masculine animate nouns: Accusative = Genitive. They are
+    ''greedy'' for endings to stand out from objects (бачу сина, тата, учителя).'
   - Provide a visual table showing the transition of masculine nouns to their Acc=Gen
     forms.
   - 'Explain the logic of feminine animate nouns: they maintain the standard -у/-ю
     ending, ignoring the Acc=Gen rule (бачу маму, сестру).'
   - Clarify that animals (кіт, пес) are grammatically animate and require Acc=Gen
     endings (бачу кота, пса).
-  - Highlight specific forms for soft and mixed groups in professions (учителя, лікаря)
-    as per State Standard §4.2.1.1.
-- section: Культурний контекст
-  words: 400
+- section: Культурний контекст (Cultural Context)
+  slug: cultural-context
+  words: 200
   points:
   - Discuss the deep cultural meaning of 'друг' in Ukrainian society compared to a
     casual acquaintance.
   - Explain the expressive role of diminutives (матуся, татусь, братик, сестричка)
     and how they are used by adults as a sign of warmth.
-  - Introduce polite forms of address and how to ask about people in Ukrainian society
-    using names and professions.
-- section: Типові помилки та практика
-  words: 450
+- section: Практика та типові помилки (Practice and Common Errors)
+  slug: practice
+  words: 250
   points:
-  - Address 'The Masculine Animate Trap' where learners leave animate nouns in the
-    nominative case.
+  - Address 'The Masculine Animate Trap' where learners leave masculine animate nouns
+    in the nominative case.
   - Address 'Feminine Overthinking' where learners mistakenly apply Acc=Gen to feminine
     nouns.
   - Address 'Animal Animacy Confusion' where learners treat animals as inanimate.
   - 'Include transformational exercises: changing sentences with inanimate objects
-    (бачу стіл) to sentences with people (бачу студента).'
-- section: Вироблення навичок та підсумок
-  words: 200
+    (бачу стіл) to sentences with people (бачу студента), using English instructions
+    only.'
+- section: Підсумок (Summary)
+  slug: summary
+  words: 100
   points:
-  - Provide practice describing family and friends using verbs like 'любити', 'знати',
-    'чекати' (Я люблю свою матусю і тата).
-  - Model a getting-to-know-you dialogue discussing friends and colleagues.
   - 'Create a summary checklist: when Accusative equals Genitive, and when it does
     not.'
+  - 'Self-check question 1: How do we say ''I see a brother''? (Я бачу брата)'
+  - 'Self-check question 2: How do we say ''I see a sister''? (Я бачу сестру)'
+  - 'Self-check question 3: Are animals considered animate or inanimate in Ukrainian
+    grammar?'

@@ -1,440 +1,284 @@
 <!-- SCOPE
-Covers: Forming plurals for masculine, feminine, and neuter nouns; vowel alternation (і → о/е); plural adjective agreement; uncountable and plural-only nouns.
+Covers: Noun and adjective plurals, vowel alternation, uncountable and plural-only nouns
 Not covered:
-  - Genitive plural endings → a2-genitive-plural
-  - Dative and Locative plural endings → a2-cases-plural
-Related: a1-12, a1-14
+  - Cases beyond nominative → M25
 -->
 
 # Plurals and Alternation
 
-> **Чому це важливо?**
+> [!note]
+> **Чому це важливо? — Why does this matter?**
 >
-> In Ukrainian, making a word plural is about recognizing its gender and its final sound. We will build on what you already know about masculine, feminine, and neuter nouns. This lesson connects the grammar rules to the natural rhythm of the language.
+> У реальному житті (in real life) є багато речей (there are many things). Learning how to talk about multiple things unlocks your ability to describe the world around you. You will finally be able to say «ці великі міста» (these big cities) instead of just pointing at a map!
 
 ## Множина іменників
 
-Ми часто говоримо про багато предметів.
-Ми вивчаємо нові закінчення.
-Це дуже важлива граматична тема.
+Welcome to the world of plurals! Множина (plural) — це важливо (is important). In Ukrainian, there are three groups. Тут є три групи.
 
-We often talk about many objects.
-We are learning new endings.
-This is a very important grammatical topic.
+Чоловічий рід (masculine gender), жіночий рід (feminine gender), середній рід (neuter gender) — це різні закінчення (different endings). This makes the transition to speaking about multiple objects smooth and logical.
 
-Ukrainian categorizes plurals strictly by the noun's gender and final letter. When you look at a singular noun, you must first identify whether it is masculine, feminine, or neuter. Once you establish the gender, you simply apply a specific, predictable ending.
+First, чоловічий рід (the masculine gender). For most masculine words, we simply add the letter **и** to the end. When a word has a soft sound, we add the soft version — літера **і** (the letter i).
 
-### Чоловічий рід
-Чоловічий рід зазвичай має приголосний звук.
-Ми додаємо закінчення наприкінці слова.
-Це одне з найпростіших правил.
+| Singular | Plural (Множина) |
+|---|---|
+| **студе́нт** | **студе́нти** |
+| **брат** | **брати́** |
+| **хло́пець** | **хло́пці** |
 
-The masculine gender usually has a consonant sound.
-We add an ending at the end of the word.
-This is one of the simplest rules.
+Це нові студенти.
+These are new students.
 
-Masculine nouns usually end in a hard consonant. To form the plural for these words, we simply append the vowel **-и**. If the masculine noun ends in a soft sign (ь) or the letter **й**, we replace that final marker with the soft vowel **-і**. 
+Де старі студенти?
+Where are the old students?
 
-**Українською:** Це новий студе́нт. Тут є молоді студе́нти.
-**English:** This is a new student. There are young students here.
+Тут гарні студенти.
+Here are good students.
 
-**Українською:** Це мій словни́к. Це мої словники́.
-**English:** This is my dictionary. These are my dictionaries.
+Тепер жіночий рід (Now, feminine gender). Feminine words usually end with the letter **а** or the letter **я**. To make them plural, we drop that final vowel and replace it. Закінчення такі самі. The endings are the same.
 
-**Українською:** Він добрий хло́пець. Вони добрі хло́пці.
-**English:** He is a kind boy. They are kind boys.
+| Singular | Plural (Множина) |
+|---|---|
+| **кни́га** | **кни́ги** |
+| **сестра́** | **се́стри** |
+| **земля́** | **зе́млі** |
 
-**Usage note:** You will hear the **-и** ending constantly in everyday speech. Always check if the final consonant is hard or soft before choosing between **-и** and **-і**.
+Це цікаві книги.
+These are interesting books.
 
-### Жіночий рід
-Жіночий рід закінчується на голосний звук.
-Ми змінюємо останню літеру слова.
-Слово зберігає свій ритм.
+Де старі книги?
+Where are the old books?
 
-The feminine gender ends in a vowel sound.
-We change the last letter of the word.
-The word keeps its rhythm.
+Тут нові книги.
+Here are new books.
 
-Feminine nouns usually end in the vowels **-а** or **-я**. To make them plural, we drop this final vowel and replace it. The ending **-а** becomes **-и**. The softer ending **-я** becomes **-і**. The syllable count remains exactly the same.
+> [!tip]
+> Це правило дуже просте.
+> This rule is very simple.
+> 
+> Чоловічий рід і жіночий рід — це одне правило (one rule)! Whether a word was masculine (**студе́нт**) or feminine (**сестра́**), its plural will end in **-и** or **-і**.
 
-**Українською:** Де моя кни́га? Де мої кни́ги?
-**English:** Where is my book? Where are my books?
+Нарешті, середній рід (Finally, neuter gender). Neuter words usually end with the letter **о** or the letter **е**. У множині they swap these letters for the letter **а** or the letter **я**. In the plural, they swap these letters. Це може здаватися дивним. This might feel strange because these look like feminine singular endings. Контекст (context) will always help you understand.
 
-**Українською:** Це велика пробле́ма. Це великі пробле́ми.
-**English:** This is a big problem. These are big problems.
+| Singular | Plural (Множина) |
+|---|---|
+| **мі́сто** | **міста́** |
+| **мо́ре** | **моря́** |
+| **вікно́** | **ві́кна** |
 
-**Українською:** Це наша земля́. Це наші зе́млі.
-**English:** This is our land. These are our lands.
+Тут великі міста.
+There are big cities here.
 
-**Usage note:** Dropping the feminine marker **-а** and replacing it completely is a fundamental rule. Do not attempt to add the plural ending to the existing vowel.
+Де старі міста?
+Where are the old cities?
 
-### Середній рід
-Середній рід має свій особливий характер.
-Ми використовуємо інші голосні звуки.
-Будьте дуже уважні із цими словами.
+Це нові міста.
+These are new cities.
 
-The neuter gender has its own special character.
-We use different vowel sounds.
-Be very careful with these words.
+Це великі вікна.
+These are big windows.
 
-Neuter nouns typically end in **-о** or **-е**. In the plural, these vowels change to **-а** and **-я**, respectively. This is a crucial rule because learners often try to use **-и** for absolutely everything.
+Де нові вікна?
+Where are the new windows?
 
-**Українською:** Це старе мі́сто. Це старі міста́.
-**English:** This is an old city. These are old cities.
+Звичайно, є винятки (Of course, there are exceptions). Some very important words have an irregular form. Ці слова дуже важливі. These words are very important, so it is best to memorize them right away. 
 
-**Українською:** Там є глибоке мо́ре. Там є глибокі моря́.
-**English:** There is a deep sea there. There are deep seas there.
+For example, the words for «child», «person», and «eye» change their stems completely in the plural.
 
-**Українською:** Я бачу нове вікно́. Я бачу нові ві́кна.
-**English:** I see a new window. I see new windows.
+| Singular | Plural (Множина) |
+|---|---|
+| **дити́на** | **ді́ти** |
+| **люди́на** | **лю́ди** |
+| **о́ко** | **о́чі** |
 
-> [!warning] Обережно з закінченнями!
-> English speakers frequently default to adding **-и** to neuter nouns, producing incorrect forms like «місти» or «вікни». You must consciously train yourself to swap **-о** and **-е** for **-а** and **-я**.
+Це мої діти.
+These are my children.
 
-**Usage note:** A common challenge is that the **-а** ending for neuter plurals looks identical to a singular feminine word. The context of the sentence will clarify the meaning.
+Де ваші діти?
+Where are your children?
 
-### Неправильні форми
-Деякі слова мають особливі форми.
-Ми використовуємо їх щодня.
-Ви повинні запам'ятати ці слова.
+Тут добрі люди.
+Good people are here.
 
-Some words have special forms.
-We use them every day.
-You must memorize these words.
+Де нові люди?
+Where are the new people?
 
-Some high-frequency words have irregular plurals. You must memorize these exceptions immediately because they appear in almost every daily conversation. Attempting to apply standard rules to these words will result in incorrect forms.
+Because these words refer to people and body parts, you will use them daily. Important note: Notice that **люди́на** (person) becomes **лю́ди** (people) — dropping the **-ин-** suffix entirely.
 
-**Українською:** Це маленька дити́на. Це малі ді́ти.
-**English:** This is a small child. These are small children.
+## Чергування (Vowel Alternation)
 
-**Українською:** Він добра люди́на. Вони добрі лю́ди.
-**English:** He is a good person. They are good people.
+Українська мова дуже мелодійна. To keep this flow, internal vowels sometimes change when a word grows longer. Цей процес — це чергування. Слова — це як музика. Новий склад (syllable) — нова музика. 
 
-**Українською:** У неї гарне о́ко. У неї гарні о́чі.
-**English:** She has a beautiful eye. She has beautiful eyes.
+Коли у нас є коротке слово with the letter **і** in a closed syllable (ending in a consonant), that vowel often changes when you make the word plural. Adding a plural ending opens up the syllable, and the **і** turns back into an **о** or an **е**. Це дуже цікавий процес. Зміна робить мову швидшою.
 
-> [!fact] Історичні слова
-> The words for «child» (**дитина**) and «person» (**людина**) use entirely different stems for their plurals (**діти**, **люди**). This phenomenon is common in ancient Slavic roots.
+Подивімося на приклад. The word for cat (**кіт**) is a perfect illustration. Один кіт, але багато котів.
 
-**Usage note:** Treat the transition from «людина» to «люди» or «дитина» to «діти» as learning entirely new vocabulary. Simply link the concepts in your mind.
+| Singular | Plural (Множина) |
+|---|---|
+| **кіт** | **коти́** |
+| **рік** | **роки́** |
+| **ніж** | **ножі́** |
 
-## Чергування
+Тут руді коти.
+There are ginger cats here.
 
-Іноді голосні звуки змінюються.
-Це робить мову дуже мелодійною.
-Ми називаємо це чергуванням.
+У нас є нові ножі.
+We have new knives.
 
-Sometimes vowel sounds change.
-This makes the language very melodic.
-We call this alternation.
+Це гарні роки.
+These are good years.
 
-Vowel alternation is a foundational rhythmic feature of Ukrainian. When adding plural endings, a vowel inside the root of the word might change. The letter **і** often reverts to **о** or **е**. The vowel **і** loves closed syllables (ending in a consonant). When we add a plural ending, the syllable opens up, and the original vowel returns.
+The same rule applies to the vowel **е**, which appears in many feminine words ending in a soft consonant. Слово «піч» — чудовий приклад. We use ovens for food.
 
-### Чергування «і» на «о»
-Літера «і» часто стає літерою «о».
-Це відбувається у коротких словах.
-Склад слова стає відкритим.
+| Singular | Plural (Множина) |
+|---|---|
+| **піч** | **пе́чі** |
+| **річ** | **ре́чі** |
+| **ніч** | **но́чі** |
 
-The letter «і» often becomes the letter «о».
-This happens in short words.
-The syllable of the word becomes open.
+Де мої речі?
+Where are my things?
 
-The most common alternation pattern is **і** changing to **о**. This happens frequently in masculine nouns that have a single syllable. When we add the plural ending, the historical **о** reappears. 
+Це темні ночі.
+These are dark nights.
 
-— Де твій кі́т? (Where is your cat?)
-— Мої коти́ сплять. (My cats are sleeping.)
+Тут довгі ночі.
+Here are long nights.
 
-— Це один рі́к? (Is this one year?)
-— Ні, це два ро́ки. (No, these are two years.)
+Де гарні речі?
+Where are the beautiful things?
 
-— У тебе є ні́ж? (Do you have a knife?)
-— Так, ось ножі́. (Yes, here are the knives.)
+> [!warning]
+> Увага!
+> Attention!
+> 
+> Don't just add a plural ending to the base word. Форма «кіти» або «ріки» неправильна! Always watch out for the **і** in short, one-syllable nouns. Тут є коротке слово і літера «і»? Time to pause and think.
 
-> [!myth-buster] Це не просто виняток
-> The letter **і** only appears in closed syllables to protect the rhythm. Once you see it as a natural mechanism of pronunciation, it becomes much easier to master.
-
-**Usage note:** This alternation makes the language flow more smoothly. It is a natural, rhythmic breathing of the word.
-
-### Чергування «і» на «е»
-Іноді ми бачимо іншу зміну.
-Літера «і» змінюється на літеру «е».
-Правило залишається таким самим.
-
-Sometimes we see a different change.
-The letter «і» changes to the letter «е».
-The rule remains the same.
-
-A parallel pattern happens when **і** changes to **е**. This also occurs when a closed syllable becomes open in the plural form. It follows the exact same logical rhythm.
-
-**Українською:** Тут є тепла пі́ч. Тут є теплі пе́чі.
-**English:** There is a warm oven here. There are warm ovens here.
-
-**Українською:** Це мій па́лець. Це мої па́льці.
-**English:** This is my finger. These are my fingers.
-
-**Українською:** Це великий камінь. Це великі камені.
-**English:** This is a big stone. These are big stones.
-
-**Usage note:** When you encounter short nouns with an **і** in the final syllable, always check the plural form. The shift to **е** creates a softer sound transition.
-
-### Зміна приголосних
-Приголосні звуки також можуть змінюватися.
-Вони стають більш м'якими.
-Це важливий крок для майбутнього.
-
-Consonant sounds can also change.
-They become softer.
-This is an important step for the future.
-
-Before the vowel **-і**, the hard consonants **к**, **г**, and **х** often soften and transform into **ц**, **з**, and **с**. The language naturally softens hard sounds before sharp vowels.
-
-**Українською:** Це моя рука́. У моїй руці́ є яблуко.
-**English:** This is my hand. In my hand is an apple.
-
-**Українською:** Це моя нога́. На моїй нозі́ є черевик.
-**English:** This is my leg. On my leg is a shoe.
-
-**Usage note:** Notice how the **к** becomes a **ц** when it meets the **-і** ending. This prevents a harsh phonetic clash. 
-
-> [!tip] Як розпізнати чергування?
-> If a monosyllabic masculine noun has the vowel **і** in the root, always check if it reverts to **о** or **е** in the plural. Words like **кіт** (cat) and **рік** (year) are your anchor examples.
+Як знати, коли "і" змінюється? As a beginner, you do not need to memorize historical rules. Найкраща стратегія — вчити форму множини разом зі словом. If you see a short, single-syllable word with an **і** inside, suspect that a vowel shift might happen when making it plural. Практика — це ключ до успіху.
 
 ## Множина прикметників
 
-Прикметники завжди працюють разом з іменниками.
-Ці слова стають простішими.
-Тут є тільки одне закінчення.
+У нас є гарні новини! Adjectives in the plural are incredibly simple! Ви пам'ятаєте однину? Множина буде дуже легкою.
 
-Adjectives always work together with nouns.
-These words become simpler.
-Here is only one ending.
+В однині adjectives must carefully match the gender of the noun. You have to choose between three different endings. У множині all of those gender differences completely disappear. The three categories collapse into one single plural form. Це значно полегшує спілкування.
 
-Adjective agreement in the plural is incredibly straightforward. While singular adjectives must change their endings to perfectly match masculine, feminine, or neuter nouns, the plural system simplifies everything. 
+You can now use every color, size, or quality you've learned to describe multiple objects, simply by swapping the singular ending for the universal plural ending. Ви можете описувати багато речей одночасно.
 
-### Одне закінчення для всіх
-Рід більше не має значення.
-Всі ці прикметники отримують однакове закінчення.
-Це дуже полегшує наше завдання.
+Закінчення для всіх прикметників — це літера **-і**. Запам'ятати одне закінчення набагато легше, ніж три різні.
 
-Gender no longer matters.
-All these adjectives receive the same ending.
-This makes our task much easier.
+| Singular | Plural (Множина) |
+|---|---|
+| **нови́й** | **нові́** |
+| **нова́** | **нові́** |
+| **нове́** | **нові́** |
 
-All three genders collapse into a single plural form ending in **-і**. You do not need to memorize separate plural endings for masculine, feminine, and neuter adjectives. 
+When an adjective has a soft stem, it also takes **-і** in the plural, replacing the soft singular endings (**-ій**, **-я**, **-є**). М'які прикметники — це також просте закінчення.
 
-**Українською:** Це новий студе́нт. Вони нові студе́нти.
-**English:** This is a new student. They are new students.
+| Singular | Plural (Множина) |
+|---|---|
+| **си́ній** | **си́ні** |
+| **си́ня** | **си́ні** |
+| **си́нє** | **си́ні** |
 
-**Українською:** Це нова кни́га. Це нові кни́ги.
-**English:** This is a new book. These are new books.
+Let's make phrases. Notice how the adjective simply takes the plural ending. Це дуже легко! You take a plural noun and add an adjective with the ending **-і**.
 
-**Українською:** Це нове мі́сто. Це нові міста́.
-**English:** This is a new city. These are new cities.
+Це нові книги.
+These are new books.
 
-> [!observe] Спрощення системи
-> While you must analyze gender for singular adjectives, the plural adjective acts as a universal key. The **-і** ending works perfectly for all of them. 
+Ті великі міста.
+Those big cities.
 
-### Тверда і м'яка група
-Ми маємо дві групи прикметників.
-Вони виглядають трохи по-різному.
-Але їхнє звучання дуже схоже.
+Вони молоді студенти.
+They are young students.
 
-We have two groups of adjectives.
-They look a little different.
-But their sound is very similar.
+Мої старі речі тут.
+My old things are here.
 
-Adjectives fall into two categories: hard stem and soft stem. Hard stem adjectives end in **-ий** in the singular and naturally change to **-і** in the plural. Soft stem adjectives end in **-ій** in the singular and also change to **-і**.
+Ваші нові речі там.
+Your new things are there.
 
-| Група (Group) | Один (One) | Багато (Many) | Приклад (Example) |
-|---------------|-------------------|------------------|-------------------|
-| Тверда (Hard) | старий (old) | старі | старі будинки |
-| Тверда (Hard) | новий (new) | нові | нові книги |
-| М'яка (Soft) | синій (blue) | сині | сині зошити |
-| М'яка (Soft) | останній (last) | останні | останні дні |
+Де мої нові книги?
+Where are my new books?
 
-**Usage note:** The visual pattern difference is minimal. The pronunciation merges into a clear, bright **-і** sound at the end of the word for both groups. 
+> [!tip]
+> Українська мова дуже логічна.
+> The Ukrainian language is very logical.
+>
+> By dropping gender in the plural, the language saves you a lot of mental energy. We only need to know the plural! This makes the grammar very pleasant to learn.
 
-### Узгодження прикметників
-Ми будуємо красиві довгі речення.
-Слова завжди стоять у правильній формі.
-Це показує ваш рівень знань.
-
-We build beautiful long sentences.
-The words always stand in the correct form.
-This shows your level of knowledge.
-
-When building noun phrases, the adjective must always agree with the noun in number. This means combining plural adjectives with plural nouns.
-
-**Українською:** Я маю великі зеле́ні су́мки.
-**English:** I have large green bags.
-
-**Українською:** Тут працюють молоді́ студе́нти.
-**English:** Young students work here.
-
-**Українською:** Ми читаємо цікаві кни́ги.
-**English:** We are reading interesting books.
-
-**Usage note:** Practice reading these paired phrases out loud. The matching endings create a rhythmic rhyme that sounds distinctly natural. 
+To build plural phrases, just find the plural noun form and attach the universal **-і** to your adjective. Daily practice with this rule brings great results.
 
 ## Винятки та особливості
 
-Не всі слова можна порахувати.
-Деякі речі є неподільними.
-Ми маємо вивчити ці винятки.
+Just like in English, some words do not play by the regular plural rules. По-перше, we have uncountable words. These are things you cannot easily count one by one. Вони не мають множини. They only exist in the singular form.
 
-Not all words can be counted.
-Some things are indivisible.
-We must learn these exceptions.
+| Word | Translation |
+|---|---|
+| **молоко́** | milk |
+| **цу́кор** | sugar |
+| **вода́** | water |
 
-Some nouns break the standard singular-plural binary, demanding a slightly different perspective on reality.
+Це свіже молоко.
+This is fresh milk.
 
-### Незліченні іменники
-Ми не можемо порахувати ці предмети.
-Вони завжди мають базову форму.
-Це часто вода або їжа.
+Тут чиста вода.
+Here is clean water.
 
-We cannot count these objects.
-They always have a basic form.
-This is often water or food.
+Де білий цукор?
+Where is the white sugar?
 
-Uncountable nouns represent concepts, materials, liquids, or abstract substances that cannot be counted as discrete units. These words generally exist only in the singular form. You cannot simply attach a plural ending to them.
+З іншого боку, some words only exist in the plural form. English does this too with words like «scissors» or «pants». Ukrainian shares this concept, but applies it to some surprising words. Слово "гроші" — найважливіше.
 
-**Українською:** Я п'ю холодне молоко́.
-**English:** I am drinking cold milk.
+| Word | Translation |
+|---|---|
+| **гро́ші** | money |
+| **две́рі** | door |
+| **но́жиці** | scissors |
 
-**Українською:** Вона додає цу́кор.
-**English:** She adds sugar.
+Де мої гроші?
+Where is my money?
 
-**Українською:** Тут є чиста вода́.
-**English:** There is clean water here.
+Це нові двері.
+These are new doors.
 
-**Usage note:** Attempting to make uncountable nouns plural is a common learner error. Treat these words as permanent singulars. 
+Тут гострі ножиці.
+Here are sharp scissors.
 
-### Тільки множина
-Деякі слова завжди мають форму для багатьох предметів.
-Вони не мають базової форми.
-Це може бути незвично для вас.
+> [!note]
+> Гроші — це завжди множина.
+> Money is always plural.
+> 
+> Unlike in English where "money" is singular, in Ukrainian **гроші** is always plural. We use plural adjectives: великі гроші.
 
-Some words always have a form for many objects.
-They do not have a basic form.
-This might be unusual for you.
+You will encounter these uncountable and plural-only words constantly. Whether you are ordering a coffee with milk (**молоко** is uncountable) or asking for your change (**гроші** is plural-only), pay attention to how they interact with adjectives.
 
-Plural-only nouns are everyday concepts treated as inherently plural. These words have no functional singular form and always require plural adjectives and verbs.
+Finally, pay attention to the stress. Sometimes, making a word plural causes the stress to jump to a different syllable. Always listen closely to how native speakers pronounce these common words.
 
-**Українською:** Де мої гро́ші?
-**English:** Where is my money?
+## Підсумок і практика
 
-**Українською:** Зачиніть ці две́рі.
-**English:** Close these doors.
+To form plurals, you must first know the gender of the singular noun. While adjectives collapse into a single universal **-і** ending, nouns have specific endings depending on their gender and whether their stem is hard or soft. Form the plural noun first, and then attach a matching adjective. Practice by describing multiple objects around your room!
 
-**Українською:** Я шукаю но́жиці.
-**English:** I am looking for scissors.
+Ось таблиця закінчень:
 
-**Українською:** Де мої окуля́ри?
-**English:** Where are my glasses?
+| Singular ending | Plural ending |
+|---|---|
+| consonant | **и** / **і** |
+| **а** / **я** | **и** / **і** |
+| **о** / **е** | **а** / **я** |
 
-> [!context] Різне сприйняття світу
-> Why is **гроші** (money) plural? Historically, wealth was counted in individual coins. Understanding this history helps you remember the grammar intuitively.
+Now, test your knowledge with these questions.
 
-> [!quote] Народна мудрість
-> «Гроші рахунок люблять.»
-> (Money loves counting.)
-> This proverb demonstrates how the plural noun **гроші** takes a plural verb form.
+Перевірте свої знання.
+Check your knowledge.
 
-### Зміна наголосу
-Слова можуть змінювати свій наголос.
-Це допомагає розуміти співрозмовника.
-Слухайте уважно ці слова.
+Як сказати «студент» у множині?
+How do you say the word for student in the plural form?
 
-Words can change their stress.
-This helps to understand the speaker.
-Listen carefully to these words.
+Що відбувається з голосним у слові «кіт»?
+What happens to the vowel in the word for cat?
 
-When some nouns become plural, the stressed syllable shifts to an entirely different vowel. This change can alter the phonetic rhythm of the word significantly.
+Прикметники (множина) — яке закінчення?
+What ending do all adjectives have in the plural form?
 
-**Українською:** Це моя рука́. Це мої ру́ки.
-**English:** This is my hand. These are my hands.
-
-**Українською:** Вона моя сестра́. Вони мої се́стри.
-**English:** She is my sister. They are my sisters.
-
-**Українською:** Це довга нога́. Це довгі но́ги.
-**English:** This is a long leg. These are long legs.
-
-**Usage note:** The stress often jumps from the ending to the root in the plural. This jump helps listeners immediately recognize that the word has changed.
-
-## Практика
-
-Тепер час перевірити ваші знання.
-Виконуйте ці завдання дуже повільно.
-Читайте кожне слово вголос.
-
-Now it is time to check your knowledge.
-Do these exercises very slowly.
-Read every word out loud.
-
-Work through these self-check exercises to lock in the patterns for masculine, feminine, and neuter plurals. Pay special attention to the vowel alternations.
-
-**Вправа 1: Знайдіть пару (Matching)**
-Знайдіть правильну форму для кожного слова.
-Пам'ятайте про винятки.
-*(Find the correct form for each word. Remember about the exceptions.)*
-
-1. місто — {міста}
-2. студент — {студенти}
-3. дитина — {діти}
-4. книга — {книги}
-5. людина — {люди}
-6. вікно — {вікна}
-
-**Вправа 2: Чергування голосних (Fill-in-the-blank)**
-Вставте правильну літеру у слово.
-Зверніть увагу на відкриті склади.
-*(Insert the correct letter into the word. Pay attention to the open syllables.)*
-
-1. У мене є великий кіт. Там сидять два руді к_ти. {о}
-2. Це мій новий рік. Минули довгі р_ки. {о}
-3. На столі лежить гострий ніж. Тут є нові н_жі. {о}
-4. Це мій палець. У людини є пальц_. {і}
-5. Тут стоїть тепла піч. У будинку є великі п_чі. {е}
-
-**Вправа 3: Читання фраз (Reading)**
-Прочитайте ці короткі речення.
-Перекладіть їх англійською мовою.
-*(Read these short sentences. Translate them into English.)*
-
-1. Це великі зелені міста.
-2. Там працюють молоді студенти.
-3. Мої нові книги лежать тут.
-4. Наші діти дуже добрі.
-
-**Правильні відповіді (Model Answers):**
-Вправа 1: 1. міста, 2. студенти, 3. діти, 4. книги, 5. люди, 6. вікна.
-Вправа 2: 1. коти (о), 2. роки (о), 3. ножі (о), 4. пальці (і), 5. печі (е).
-Вправа 3: 1. These are large green cities. 2. Young students work there. 3. My new books lie here. 4. Our children are very kind.
-
----
-
-# Підсумок
-
-Ми вивчили дуже багато правил сьогодні.
-Ви знаєте, як будувати слова.
-Це великий крок уперед.
-
-We have learned a great deal of rules today.
-You know how to build the words.
-This is a big step forward.
-
-In this module, you have learned how to form plurals for masculine, feminine, and neuter nouns. You have seen how adjectives simplify, adopting a single **-і** ending across all genders. You also explored vowel alternation, where **і** shifts to **о** or **е**. Finally, you discovered that some words operate under entirely different logic, remaining permanently plural or singular.
-
-**Перевірте себе:**
-1. What plural ending do we add to most masculine nouns that end in a hard consonant?
-2. How does the ending change for a feminine noun that ends in **-а**?
-3. Why is it incorrect to add **-и** to form the plural of a neuter noun like **місто**?
-4. When you see a monosyllabic masculine word with the vowel **і** (like **кіт**), what often happens to that vowel in the plural?
-5. How does the adjective plural system simplify compared to the singular system?
-6. Can you name two Ukrainian words that exist only in the plural form?
-
-You are now fully prepared for the Checkpoint. You can confidently describe multiple objects, groups of people, and complex scenes.
+Practice combining your new plural words with adjectives. Describe everything around you!
 
 ---

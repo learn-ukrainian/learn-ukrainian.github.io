@@ -1,61 +1,82 @@
 items:
-- lemma: ми
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: любити
-  pos: verb
-- lemma: говорити
-  pos: verb
-- lemma: робити
-  pos: verb
-- lemma: пити
-  pos: verb
-- lemma: чай
-  pos: noun
-- lemma: сидіти
-  pos: verb
-- lemma: вони
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: бачити
-  pos: verb
-- lemma: їсти
-  pos: verb
-- lemma: він
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: дивитися
-  pos: verb
-- lemma: кава
-  pos: noun
-- lemma: вчити
-  pos: verb
-- lemma: тут
-  pos: adv
-- lemma: людина
-  pos: noun
-- lemma: ходити
-  pos: verb
-- lemma: вона
-  pos: noun
-- lemma: спати
-  pos: verb
-- lemma: теж
-  pos: adv
-- lemma: наш
-  pos: adj
-- lemma: так
-  pos: adv
-- lemma: парк
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: часто
-  pos: adv
+  - lemma: "говорити"
+    translation: "to speak"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "робити"
+    translation: "to do / to make"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "бачити"
+    translation: "to see"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "любити"
+    translation: "to love"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "їсти"
+    translation: "to eat"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "пити"
+    translation: "to drink"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "ходити"
+    translation: "to walk / to go"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "просити"
+    translation: "to ask for"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "сидіти"
+    translation: "to sit"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "стояти"
+    translation: "to stand"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "платити"
+    translation: "to pay"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "вчити"
+    translation: "to teach / to learn"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "дивитися"
+    translation: "to watch"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "гість"
+    translation: "guest"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мова"
+    translation: "language"
+    pos: "noun"
+    gender: "f"
+  - lemma: "смачно"
+    translation: "deliciously"
+    pos: "adverb"
+  - lemma: "багато"
+    translation: "a lot"
+    pos: "adverb"
+  - lemma: "завжди"
+    translation: "always"
+    pos: "adverb"
+  - lemma: "дієслово"
+    translation: "verb"
+    pos: "noun"
+    gender: "n"

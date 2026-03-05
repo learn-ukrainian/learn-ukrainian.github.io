@@ -6,11 +6,16 @@ title: "Абетка — повний набір"
 subtitle: "Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + апостроф"
 standard_ref: "§4.1.1 — alphabet, §4.1.2 — apostrophe, §4.1.4 — vowels/consonants"
 textbook_ref: "Bolshakova 2018 Part 1, pp.60-76"
+teaching_notes: >
+  Фінальна порція: Ч Щ Я Ю Є Ь Ї Ц Ф + апостроф, ДЖ, ДЗ. Йотовані: Я=[йа], Ю=[йу],
+  Є=[йе], Ї=[йі] — на початку слова або після голосної/апострофа. Після приголосної
+  пом'якшують: ля, ню, те. М'який знак (Ь) не має звуку — лише пом'якшує: сіль, день.
+  Апостроф розділяє: м'яч [мйач], п'ять [пйать]. ДЖ/ДЗ — один звук, не два: джерело, дзвін.
 
 playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
 playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
 
-# After abetka-1+2+3: А М Л У Н С К И Р Б В Д І П Т Г Ґ Е З Ж Ш Х (22 letters)
+# After abetka-1+2+3: А О М Л У Н С К И Р Б В Д І П Т Г Ґ Е З Ж Ш Х (23 letters)
 # This module: Й Ч Щ Я Ю Є Ь Ї Ц Ф + digraphs ДЖ/ДЗ + apostrophe
 # After this module: FULL ALPHABET — learner can read any Ukrainian text
 letters:
@@ -225,3 +230,99 @@ activities:
         answer: С
         distractors: [З, Ц]
         note: "сіль — С, не Ь. Ь ніколи не починає слово."
+
+  - type: reading
+    title: "Читаємо нові букви"
+    instruction: "Прочитай речення вголос. Зверни увагу на нові букви."
+    source: "Bolshakova 2018 pp.60-76; adapted"
+    sentences:
+      - text: "Йосип п'є чай з цукром."
+        focus: [Й, Ч, Ц, апостроф]
+      - text: "Щука живе в річці."
+        focus: [Щ]
+      - text: "Яблуко червоне і смачне."
+        focus: [Я]
+      - text: "Юля варить юшку."
+        focus: [Ю]
+      - text: "Єнот миє яблуко."
+        focus: [Є, Я]
+        note: "Bolshakova p.70 — Єнот миє яблуко."
+      - text: "Сіль і цукор стоять на столі."
+        focus: [Ь, Ц]
+      - text: "Їжак несе яблуко."
+        focus: [Ї, Я]
+      - text: "У цирку клоун показує фокуси."
+        focus: [Ц, Ф]
+        note: "Bolshakova p.74 — У цирку виступають циркачі."
+      - text: "Джерело дзюрчить у лісі."
+        focus: [ДЖ, ДЗ]
+      - text: "Дзвін дзвенить над селом."
+        focus: [ДЗ]
+      - text: "Хлопчик кидає м'яч у ворота."
+        focus: [Ч, апостроф]
+      - text: "Бджола сідає на квітку."
+        focus: [ДЖ]
+
+# Vocabulary — words showcasing the new letters (Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ/ДЗ + apostrophe)
+# All words verified via VESUM
+vocabulary:
+  - word: чай
+    emoji: "\U0001F375"
+    letter_focus: Ч
+    sentence: "Йосип п'є гарячий чай."
+  - word: щука
+    emoji: "\U0001F41F"
+    letter_focus: Щ
+    sentence: "Щука — велика хижа риба."
+  - word: яблуко
+    emoji: "\U0001F34E"
+    letter_focus: Я
+    sentence: "На дереві росте червоне яблуко."
+  - word: юшка
+    emoji: "\U0001F372"
+    letter_focus: Ю
+    sentence: "Мама варить смачну юшку з риби."
+  - word: єнот
+    emoji: "\U0001F99D"
+    letter_focus: Є
+    sentence: "Єнот миє їжу перед тим, як їсти."
+  - word: сіль
+    emoji: "\U0001F9C2"
+    letter_focus: Ь
+    sentence: "Додай трохи солі в юшку."
+  - word: їжак
+    emoji: "\U0001F994"
+    letter_focus: Ї
+    sentence: "Їжак ховається під кущем."
+  - word: цирк
+    emoji: "\U0001F3AA"
+    letter_focus: Ц
+    sentence: "Діти дуже люблять цирк."
+  - word: фарба
+    emoji: "\U0001F3A8"
+    letter_focus: Ф
+    sentence: "Юля малює картину яскравою фарбою."
+  - word: дощ
+    emoji: "\U0001F327"
+    letter_focus: Щ
+    sentence: "Надворі йде сильний дощ."
+  - word: м'яч
+    emoji: "\u26BD"
+    letter_focus: апостроф
+    sentence: "Хлопчик кидає м'яч далеко."
+  - word: джерело
+    emoji: "\u26F2"
+    letter_focus: ДЖ
+    sentence: "Джерело б'є з-під каменя."
+  - word: дзвін
+    emoji: "\U0001F514"
+    letter_focus: ДЗ
+    sentence: "Дзвін дзвенить кожної неділі."
+  - word: ключ
+    emoji: "\U0001F511"
+    letter_focus: Ч
+    sentence: "Де мій ключ від дверей?"
+  - word: день
+    emoji: "\u2600"
+    letter_focus: Ь
+    sentence: "Який гарний сонячний день!"

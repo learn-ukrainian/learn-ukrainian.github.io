@@ -1,61 +1,77 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: година
-  pos: noun
-- lemma: зараз
-  pos: adv
-- lemma: зараза
-  pos: noun
-- lemma: день
-  pos: noun
-- lemma: час
-  pos: noun
-- lemma: мій
-  pos: adj
-- lemma: мати
-  pos: verb
-- lemma: до
-  pos: noun
-- lemma: йти
-  pos: verb
-- lemma: робот
-  pos: noun
-- lemma: робота
-  pos: noun
-- lemma: працювати
-  pos: verb
-- lemma: він
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: котрий
-  pos: adj
-- lemma: маяти
-  pos: verb
-- lemma: той
-  pos: adj
-- lemma: вони
-  pos: noun
-- lemma: знати
-  pos: verb
-- lemma: розклад
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: раз
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: любити
-  pos: verb
-- lemma: тепло
-  pos: adv
-- lemma: відпочивати
-  pos: verb
-- lemma: книга
-  pos: noun
+  - lemma: "година"
+    translation: "hour"
+    pos: "noun"
+    gender: "f"
+  - lemma: "хвилина"
+    translation: "minute"
+    pos: "noun"
+    gender: "f"
+  - lemma: "день"
+    translation: "day"
+    pos: "noun"
+    gender: "m"
+  - lemma: "тиждень"
+    translation: "week"
+    pos: "noun"
+    gender: "m"
+  - lemma: "місяць"
+    translation: "month"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рік"
+    translation: "year"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ранок"
+    translation: "morning"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вечір"
+    translation: "evening"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вчасно"
+    translation: "on time"
+    pos: "adverb"
+  - lemma: "понеділок"
+    translation: "Monday"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вівторок"
+    translation: "Tuesday"
+    pos: "noun"
+    gender: "m"
+  - lemma: "середа"
+    translation: "Wednesday"
+    pos: "noun"
+    gender: "f"
+  - lemma: "четвер"
+    translation: "Thursday"
+    pos: "noun"
+    gender: "m"
+  - lemma: "п'ятниця"
+    translation: "Friday"
+    pos: "noun"
+    gender: "f"
+  - lemma: "субота"
+    translation: "Saturday"
+    pos: "noun"
+    gender: "f"
+  - lemma: "неділя"
+    translation: "Sunday"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зараз"
+    translation: "now"
+    pos: "adverb"
+  - lemma: "пізно"
+    translation: "late"
+    pos: "adverb"
+  - lemma: "рано"
+    translation: "early"
+    pos: "adverb"
+  - lemma: "січень"
+    translation: "January"
+    pos: "noun"
+    gender: "m"

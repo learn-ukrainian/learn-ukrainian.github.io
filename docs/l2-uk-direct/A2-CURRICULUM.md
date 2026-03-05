@@ -1,7 +1,7 @@
-# l2-uk-direct A2 Curriculum Plan (40 modules)
+# l2-uk-direct A2 Curriculum Plan (42 modules)
 
-> Last updated: 2026-02-27
-> Prerequisite: A1 (44 modules — `CURRICULUM-PLAN.md`)
+> Last updated: 2026-03-05
+> Prerequisite: A1 (47 modules — `CURRICULUM-PLAN.md`)
 > State Standard reference: A2 §§1–4 (lines 749–1432)
 > Textbook content library: ALL grades (see `ARCHITECTURE.md` §10 for Approach C)
 > Research notes: `textbook-reading-notes/` (all grade notes)

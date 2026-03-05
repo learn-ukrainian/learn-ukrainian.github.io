@@ -3,55 +3,45 @@ title: Plurals and Alternation
 word_target: 1200
 content_outline:
 - section: Множина іменників
-  words: 500
-  points:
-  - 'Introductory English scaffolding: explain that Ukrainian categorizes plurals
-    strictly by the noun''s gender and final letter.'
-  - 'H3 for Masculine nouns (-и/-і endings): Provide the rule and clear examples (студент
-    → студенти, хлопець → хлопці).'
-  - 'H3 for Feminine nouns (-и/-і replacing -а/-я): Explain the vowel replacement
-    rule with examples (книга → книги, земля → землі).'
-  - 'H3 for Neuter nouns (-а/-я replacing -о/-е): Highlight this distinct pattern
-    (місто → міста, море → моря) and explicitly warn against using -и.'
-  - 'H3 for Irregular plurals: Present high-frequency exceptions (діти, люди, очі)
-    that require immediate memorization, explaining them as common core vocabulary.'
-- section: Чергування
-  words: 450
-  points:
-  - 'English scaffolding: Introduce vowel alternation (і → о/е) as a rhythmic feature
-    related to closed and open syllables, rather than an arbitrary exception.'
-  - 'H3 for the ''і → о'' pattern: Provide clear breakdown and examples (кіт → коти,
-    рік → роки).'
-  - 'H3 for the ''і → е'' pattern: Provide clear breakdown and examples (піч → печі,
-    палець → пальці).'
-  - 'Learner Strategy Box: Teach a simple rule of thumb — if a monosyllabic masculine
-    noun has ''і'', always check if it reverts to ''о'' or ''е'' in the plural.'
-- section: Множина прикметників
-  words: 400
-  points:
-  - 'H3 for The Simplification: Celebrate that all three genders (m, f, n) collapse
-    into a single plural form ending in -і/-ї.'
-  - 'H3 for Hard vs. Soft stems: Show the visual pattern difference without overcomplicating
-    (новий → нові, синій → сині).'
-  - 'H3 for Building Noun Phrases: Guided practice combining plural adjectives with
-    plural nouns (нові книги, великі міста), integrating vocabulary from a1-12.'
-- section: Винятки та особливості
+  slug: noun-plurals
   words: 350
   points:
-  - 'H3 for Uncountable nouns: Explain concepts that exist only in singular (молоко,
-    цукор, вода, повітря).'
-  - 'H3 for Plural-only nouns (Pluralia tantum): Contrast Ukrainian and English usage
-    with examples like гроші (money) and двері (door).'
-  - 'H3 for Stress Shifts: Briefly revisit the concept of stress mobility, showing
-    how stress can jump when a word becomes plural (рукА → рУки).'
-- section: Практика
+  - 'Introduction to Ukrainian plurals: categorizing by gender.'
+  - 'Masculine nouns: adding -и or -і to consonants (студент → студенти, хлопець →
+    хлопці).'
+  - 'Feminine nouns: replacing -а/-я with -и/-і (книга → книги, земля → землі).'
+  - 'Neuter nouns: replacing -о/-е with -а/-я (місто → міста, море → моря).'
+  - 'Common irregular plurals to memorize immediately: діти (children), люди (people),
+    очі (eyes).'
+- section: Чергування (Vowel Alternation)
+  slug: vowel-alternation
   words: 300
   points:
-  - 'Self-check 1: Matching exercises to pair singular nouns with their correct plurals
-    across all genders.'
-  - 'Self-check 2: Fill-in-the-blank sentences focusing specifically on identifying
-    the correct vowel alternation (і → о/е).'
-  - 'Self-check 3: Reading comprehension using short, simple sentences with plural
-    noun phrases.'
-  - Provide clear model answers and encouraging English feedback, reminding them they
-    are ready for the Checkpoint.
+  - 'The ''fleeting і'' concept: why the vowel changes when the syllable opens.'
+  - The і → о shift with examples (кіт → коти, рік → роки).
+  - The і → е shift with examples (піч → печі, палець → пальці).
+  - 'Strategy for learners: checking monosyllabic masculine nouns for stem changes.'
+- section: Множина прикметників
+  slug: plural-adjectives
+  words: 250
+  points:
+  - 'The great simplification: masculine, feminine, and neuter adjectives all share
+    the same plural ending.'
+  - Hard vs. soft stems in plural adjectives (новий/нова/нове → нові; синій/синя/синє
+    → сині).
+  - 'Matching plural adjectives with plural nouns: Це нові книги. Ті великі міста.'
+- section: Винятки та особливості
+  slug: special-cases
+  words: 150
+  points:
+  - Uncountable nouns that exist only in the singular (молоко, цукор, вода).
+  - Plural-only nouns (pluralia tantum) like гроші (money) and двері (door).
+  - A brief note on stress shifts in plural forms (рукА → рУки).
+- section: Підсумок і практика
+  slug: summary-practice
+  words: 150
+  points:
+  - Summary table of plural endings by gender.
+  - 'Self-check question 1: Pluralize a mix of masculine, feminine, and neuter nouns.'
+  - 'Self-check question 2: Apply the і → о/е alternation rule to a given noun.'
+  - 'Self-check question 3: Combine an adjective and noun in the plural.'

@@ -230,6 +230,10 @@ async function loadReviews() {
     const rows = tracks.map(([id, t]) => {
       const passRateStr = t.pass_rate !== null ? `${Math.round(t.pass_rate * 100)}%` : '—';
       const highlight = t.has_review === 0 && t.total_built > 0 ? 'style="color:var(--red)"' : '';
+      const pr = t.plan_reviewed || 0;
+      const pp = t.plan_pass || 0;
+      const pnf = t.plan_needs_fixes || 0;
+      const pf = t.plan_fail || 0;
       return `<tr>
         <td style="font-weight:600">${id}</td>
         <td>${t.total_built}</td>
@@ -238,6 +242,10 @@ async function loadReviews() {
         <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
         <td style="color:${t.pass_rate === null ? 'var(--text3)' : t.pass_rate >= 0.9 ? 'var(--green)' : 'var(--red)'}">${passRateStr}</td>
         <td style="color:${t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${t.total_issues_found}</td>
+        <td>${pr}</td>
+        <td style="color:${pp > 0 ? 'var(--green)' : 'var(--text3)'}">${pp}</td>
+        <td style="color:${pnf > 0 ? 'var(--orange)' : 'var(--text3)'}">${pnf}</td>
+        <td style="color:${pf > 0 ? 'var(--red)' : 'var(--text3)'}">${pf}</td>
       </tr>`;
     }).join('');
 
@@ -246,11 +254,12 @@ async function loadReviews() {
         <thead><tr>
           <th>Track</th><th>Built</th><th>Reviewed</th><th>Final Review</th>
           <th>Avg Score</th><th>Pass Rate</th><th>Issues Found</th>
+          <th>Plan Rev'd</th><th>Plan Pass</th><th>Plan NF</th><th>Plan Fail</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
       <div style="margin-top:12px;font-size:11px;color:var(--text3)">
-        Red "reviewed" = zero reviews on built modules. Pass rate = PASS status in review file.
+        Red "reviewed" = zero reviews on built modules. Pass rate = PASS status in review file. Plan NF = NEEDS FIXES.
       </div>`;
   } catch(e) {
     document.getElementById('reviews-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;

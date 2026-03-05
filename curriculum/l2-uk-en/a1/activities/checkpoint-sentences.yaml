@@ -1,489 +1,384 @@
 - type: quiz
-  title: Дієвідмінювання дієслів I та II дієвідміни
-  instruction: Оберіть правильну форму дієслова для кожного займенника.
+  title: 'Choose the Correct Verb Form'
+  instruction: 'Select the correct ending for each pronoun.'
   items:
-    - question: Яку форму має дієслово читати для займенника першої особи я?
-      explanation: Дієслово читати належить до першої дієвідміни, тому використовуємо закінчення -ю.
+    - question: 'Як сказати "I read" українською?'
       options:
-        - text: читаю
+        - text: 'я читає'
+          correct: false
+        - text: 'я читаю'
           correct: true
-        - text: читаєш
+        - text: 'я читаємо'
           correct: false
-        - text: читає
+        - text: 'я читають'
           correct: false
-        - text: читають
-          correct: false
-    - question: Яке правильне закінчення має дієслово говорити для займенника вони?
-      explanation: Дієслова другої дієвідміни у множині мають закінчення -ать або -ять.
+    - question: 'Як сказати "you (informal) work"?'
       options:
-        - text: говорять
+        - text: 'ти працюєш'
           correct: true
-        - text: говоруть
+        - text: 'ти працює'
           correct: false
-        - text: говоріть
+        - text: 'ти працюю'
           correct: false
-        - text: говоримо
+        - text: 'ти працюють'
           correct: false
-    - question: Яку форму має дієслово писати для займенника множини ми?
-      explanation: Для займенника ми використовуємо закінчення -емо або -ємо.
+    - question: 'Як правильно сказати "we speak" українською мовою?'
       options:
-        - text: пишемо
+        - text: 'ми говориш'
+          correct: false
+        - text: 'ми говорить'
+          correct: false
+        - text: 'ми говоримо'
           correct: true
-        - text: пишете
+        - text: 'ми говорять'
           correct: false
-        - text: пишуть
-          correct: false
-        - text: пишу
-          correct: false
-    - question: Як правильно перекласти фразу англійською He reads на українську мову?
-      explanation: Займенник він вимагає закінчення третьої особи однини -є.
+    - question: 'Як правильно сказати "they know" українською мовою?'
       options:
-        - text: Він читає
+        - text: 'вони знає'
+          correct: false
+        - text: 'вони знаємо'
+          correct: false
+        - text: 'вони знають'
           correct: true
-        - text: Він читаю
+        - text: 'вони знаю'
           correct: false
-        - text: Він читають
-          correct: false
-        - text: Він читаєш
-          correct: false
-    - question: Яке правильне закінчення має дієслово працювати для займенника ви?
-      explanation: Займенник ви завжди вимагає закінчення -ете або -єте.
+    - question: 'Як правильно сказати "she lives" українською мовою?'
       options:
-        - text: працюєте
+        - text: 'вона живеш'
+          correct: false
+        - text: 'вона живуть'
+          correct: false
+        - text: 'вона живу'
+          correct: false
+        - text: 'вона живе'
           correct: true
-        - text: працюємо
-          correct: false
-        - text: працюють
-          correct: false
-        - text: працюєш
-          correct: false
-    - question: Який правильний переклад для короткої фрази They speak українською мовою?
-      explanation: Для займенника вони дієслово говорити має форму говорять.
+    - question: 'Як правильно сказати "he understands" українською мовою?'
       options:
-        - text: Вони говорять
+        - text: 'він розуміє'
           correct: true
-        - text: Вони говоруть
+        - text: 'він розуміють'
           correct: false
-        - text: Вони говорите
+        - text: 'він розумію'
           correct: false
-        - text: Вони говоримо
+        - text: 'він розумієш'
           correct: false
-    - question: Яку форму має дієслово розуміти для займенника другої особи ти?
-      explanation: Для займенника ти ми завжди використовуємо закінчення -ш.
+    - question: 'Як сказати "you (plural/formal) write"?'
       options:
-        - text: розумієш
+        - text: 'ви пишете'
           correct: true
-        - text: розуміє
+        - text: 'ви пишемо'
           correct: false
-        - text: розумію
+        - text: 'ви пишуть'
           correct: false
-        - text: розуміють
+        - text: 'ви пишу'
           correct: false
-    - question: Як правильно перекласти коротке речення I write українською мовою?
-      explanation: Займенник я вимагає закінчення першої особи однини -у або -ю.
+    - question: 'Як правильно сказати "I have" українською мовою?'
       options:
-        - text: Я пишу
+        - text: 'я має'
+          correct: false
+        - text: 'я маєш'
+          correct: false
+        - text: 'я маю'
           correct: true
-        - text: Я пишеш
+        - text: 'я мають'
           correct: false
-        - text: Я пише
-          correct: false
-        - text: Я пишемо
-          correct: false
-
-- type: fill-in
-  title: Використання зворотних дієслів
-  instruction: Оберіть правильну частку для зворотного дієслова.
-  items:
-    - sentence: Я смію____ дуже голосно щодня.
-      answer: сь
-      options:
-        - сь
-        - ся
-        - ти
-        - мо
-      explanation: Після голосного звука завжди пишемо -сь.
-    - sentence: Ти часто смієш____ на уроці української мови?
-      answer: ся
-      options:
-        - ся
-        - сь
-        - те
-        - ть
-      explanation: Після приголосного звука завжди пишемо -ся.
-    - sentence: Вона завжди смієть____ під час перегляду комедій.
-      answer: ся
-      options:
-        - ся
-        - сь
-        - мо
-        - ю
-      explanation: Після приголосного звука ми додаємо -ся.
-    - sentence: Ми часто зустрічаємо____ в кафе біля університету.
-      answer: сь
-      options:
-        - сь
-        - ся
-        - те
-        - ть
-      explanation: Після голосного звука ми додаємо -сь.
-    - sentence: Ви зустрічаєте____ з друзями кожні вихідні чи ні?
-      answer: сь
-      options:
-        - сь
-        - ся
-        - мо
-        - ю
-      explanation: Після голосного звука ми додаємо -сь.
-    - sentence: Вони зустрічають____ в центральному парку після довгої роботи.
-      answer: ся
-      options:
-        - ся
-        - сь
-        - ти
-        - мо
-      explanation: Після приголосного звука ми додаємо -ся.
 
 - type: match-up
-  title: Питальні слова та переклад
-  instruction: З'єднайте українське питання з англійським перекладом.
+  title: 'Match the Question Words'
+  instruction: 'Connect the Ukrainian question words with their English meanings.'
   pairs:
-    - left: Хто це говорить?
-      right: Who is speaking?
-    - left: Що ти хочеш?
-      right: What do you want?
-    - left: Де ти працюєш?
-      right: Where do you work?
-    - left: Куди ти йдеш?
-      right: Where are you going?
-    - left: Звідки ти?
-      right: Where are you from?
-    - left: Чи ти читаєш?
-      right: Are you reading?
+    - left: 'хто'
+      right: 'who'
+    - left: 'що'
+      right: 'what'
+    - left: 'де'
+      right: 'where'
+    - left: 'куди'
+      right: 'where to'
+    - left: 'звідки'
+      right: 'from where'
+    - left: 'чому'
+      right: 'why'
+    - left: 'коли'
+      right: 'when'
+    - left: 'як'
+      right: 'how'
 
-- type: quiz
-  title: Вираження власних вподобань
-  instruction: Оберіть правильний варіант для вираження вподобань або бажань.
+- type: fill-in
+  title: 'Complete the Sentences'
+  instruction: 'Choose the correct pronoun to complete the sentence.'
   items:
-    - question: Яке дієслово найкраще підходить для вираження сильної емоційної прив'язаності?
-      explanation: Дієслово люблю використовується для сильних почуттів або довготривалих хобі.
+    - sentence: '_____ читаю цікаву книгу.'
+      answer: 'я'
       options:
-        - text: Я люблю
-          correct: true
-        - text: Мені подобається
-          correct: false
-        - text: Я хочу
-          correct: false
-        - text: Я читаю
-          correct: false
-    - question: Як правильно сказати українською мовою фразу I like coffee?
-      explanation: Для загальних вподобань використовуємо конструкцію Мені подобається.
+        - 'я'
+        - 'ти'
+        - 'він'
+        - 'ми'
+    - sentence: '_____ добре знаєш це слово.'
+      answer: 'ти'
       options:
-        - text: Мені подобається кава
-          correct: true
-        - text: Я подобаю каву
-          correct: false
-        - text: Мені подобає каву
-          correct: false
-        - text: Кава любить мене
-          correct: false
-    - question: Яку конструкцію ми використовуємо для вираження швидкого або негайного бажання?
-      explanation: Дієслово хочу ідеально підходить для безпосередніх потреб.
+        - 'я'
+        - 'ти'
+        - 'вона'
+        - 'ви'
+    - sentence: '_____ працює вдома сьогодні.'
+      answer: 'він'
       options:
-        - text: Я хочу
-          correct: true
-        - text: Я люблю
-          correct: false
-        - text: Мені подобається
-          correct: false
-        - text: Я говорю
-          correct: false
-    - question: Як правильно перекласти просте речення He wants to eat українською мовою?
-      explanation: Дієслово хочу часто використовується разом з інфінітивом іншого дієслова.
+        - 'я'
+        - 'ти'
+        - 'він'
+        - 'ми'
+    - sentence: '_____ часто читаємо разом.'
+      answer: 'ми'
       options:
-        - text: Він хоче їсти
-          correct: true
-        - text: Йому подобається їсти
-          correct: false
-        - text: Він любить їсти
-          correct: false
-        - text: Йому хочеться їсти
-          correct: false
-    - question: Яку форму має займенник я у конструкції зі словом подобається?
-      explanation: Конструкція подобається завжди вимагає використання давального відмінка займенника.
+        - 'я'
+        - 'він'
+        - 'ми'
+        - 'вони'
+    - sentence: '_____ розумієте ці слова.'
+      answer: 'ви'
       options:
-        - text: Мені
-          correct: true
-        - text: Я
-          correct: false
-        - text: Мене
-          correct: false
-        - text: Мною
-          correct: false
-    - question: Як правильно сказати українською мовою англійську фразу She loves to read?
-      explanation: Для сильної прив'язаності до дії ми використовуємо дієслово любити.
+        - 'ти'
+        - 'він'
+        - 'ми'
+        - 'ви'
+    - sentence: '_____ працюють прямо зараз.'
+      answer: 'вони'
       options:
-        - text: Вона любить читати
-          correct: true
-        - text: Їй подобається читати
-          correct: false
-        - text: Вона хоче читати
-          correct: false
-        - text: Їй любить читати
-          correct: false
+        - 'я'
+        - 'він'
+        - 'ми'
+        - 'вони'
+    - sentence: 'Вона зараз не _____.'
+      answer: 'працює'
+      options:
+        - 'працюю'
+        - 'працюєш'
+        - 'працює'
+        - 'працюємо'
+    - sentence: 'Ми зовсім не _____ часу.'
+      answer: 'маємо'
+      options:
+        - 'маю'
+        - 'маєш'
+        - 'має'
+        - 'маємо'
+
+- type: true-false
+  title: 'Grammar Check: Correct or Incorrect?'
+  instruction: 'Decide if the Ukrainian sentences are grammatically correct.'
+  items:
+    - statement: 'Я не працюю сьогодні.'
+      correct: true
+      explanation: 'Correct. The negative particle "не" is used correctly.'
+    - statement: 'Вони читаю нову книгу.'
+      correct: false
+      explanation: 'False. The correct form for "they" is "вони читають".'
+    - statement: 'Ми працюють разом.'
+      correct: false
+      explanation: 'False. The correct form for "we" is "ми працюємо".'
+    - statement: 'Де ти живеш?'
+      correct: true
+      explanation: 'Correct. The question word and verb form are correct.'
+    - statement: 'Він не розумію вас.'
+      correct: false
+      explanation: 'False. The correct form for "he" is "він не розуміє".'
+    - statement: 'Мені подобається кава.'
+      correct: true
+      explanation: 'Correct. The dative construction is used correctly.'
+    - statement: 'Це мій сестра.'
+      correct: false
+      explanation: 'False. "Сестра" is feminine, so it should be "моя сестра".'
+    - statement: 'Хто це? Це мій брат.'
+      correct: true
+      explanation: 'Correct. "Хто" is used correctly for people.'
+
+- type: unjumble
+  title: 'Build the Sentence'
+  instruction: 'Put the words in the correct order.'
+  items:
+    - words:
+        - 'я'
+        - 'добре'
+        - 'розумію'
+        - 'це'
+      answer: 'я добре розумію це'
+    - words:
+        - 'вона'
+        - 'зараз'
+        - 'не'
+        - 'працює'
+      answer: 'вона зараз не працює'
+    - words:
+        - 'ми'
+        - 'часто'
+        - 'читаємо'
+        - 'разом'
+      answer: 'ми часто читаємо разом'
+    - words:
+        - 'де'
+        - 'ти'
+        - 'живеш'
+        - 'зараз'
+      answer: 'де ти живеш зараз'
+    - words:
+        - 'я'
+        - 'маю'
+        - 'старшого'
+        - 'брата'
+      answer: 'я маю старшого брата'
+    - words:
+        - 'вони'
+        - 'знають'
+        - 'українську'
+        - 'мову'
+      answer: 'вони знають українську мову'
+    - words:
+        - 'що'
+        - 'це'
+        - 'таке'
+      answer: 'що це таке'
+    - words:
+        - 'це'
+        - 'мій'
+        - 'новий'
+        - 'дім'
+      answer: 'це мій новий дім'
 
 - type: group-sort
-  title: Роди займенників та іменників
-  instruction: Розподіліть словосполучення за їхнім граматичним родом або числом.
+  title: 'Sort the Vocabulary'
+  instruction: 'Sort the words into verbs, pronouns, and question words.'
   groups:
-    - name: Чоловічий рід
+    - name: 'Verbs (Дії)'
       items:
-        - мій телефон
-        - твій друг
-        - цей стілець
-        - той будинок
-    - name: Жіночий рід
+        - 'читаю'
+        - 'працюємо'
+        - 'розуміє'
+        - 'знають'
+    - name: 'Pronouns (Займенники)'
       items:
-        - моя робота
-        - твоя книга
-        - ця вулиця
-        - та кава
-    - name: Середній рід та множина
+        - 'я'
+        - 'ми'
+        - 'мій'
+        - 'цей'
+    - name: 'Question Words (Питання)'
       items:
-        - моє місто
-        - ці студенти
-        - мої друзі
-        - те вікно
-
-- type: unjumble
-  title: Побудова правильних речень
-  instruction: Розташуйте слова у правильному порядку, щоб утворити речення.
-  items:
-    - words:
-        - Я
-        - не
-        - хочу
-        - пити
-        - каву
-      answer: Я не хочу пити каву
-    - words:
-        - Де
-        - знаходиться
-        - це
-        - нове
-        - кафе
-      answer: Де знаходиться це нове кафе
-    - words:
-        - Чи
-        - вони
-        - працюють
-        - тут
-        - зараз
-      answer: Чи вони працюють тут зараз
-    - words:
-        - Мені
-        - подобається
-        - ця
-        - цікава
-        - книга
-      answer: Мені подобається ця цікава книга
-    - words:
-        - Ми
-        - не
-        - говоримо
-        - про
-        - це
-      answer: Ми не говоримо про це
-    - words:
-        - Твоя
-        - нова
-        - книга
-        - лежить
-        - там
-      answer: Твоя нова книга лежить там
-
-- type: fill-in
-  title: Використання вказівних займенників
-  instruction: Оберіть правильний вказівний займенник, який узгоджується з іменником.
-  items:
-    - sentence: Мені дуже подобається ________ вулиця.
-      answer: ця
-      options:
-        - ця
-        - цей
-        - це
-        - ці
-      explanation: Слово вулиця жіночого роду, тому потрібен займенник ця.
-    - sentence: Я думаю, що ________ стілець дуже зручний для роботи.
-      answer: цей
-      options:
-        - цей
-        - ця
-        - це
-        - ці
-      explanation: Слово стілець чоловічого роду, тому використовуємо цей.
-    - sentence: Я хочу купити ________ смачний шоколадний торт.
-      answer: цей
-      options:
-        - цей
-        - ця
-        - це
-        - ці
-      explanation: Слово торт чоловічого роду, тому потрібен займенник цей.
-    - sentence: ________ студенти зараз читають нову цікаву книгу.
-      answer: ці
-      options:
-        - ці
-        - цей
-        - ця
-        - це
-      explanation: Слово студенти стоїть у множині, тому використовуємо ці.
-    - sentence: А ________ місто дуже велике і неймовірно красиве.
-      answer: це
-      options:
-        - це
-        - цей
-        - ця
-        - ці
-      explanation: Слово місто середнього роду, тому потрібен займенник це.
-    - sentence: ________ кава вже холодна, я хочу замовити гарячу.
-      answer: ця
-      options:
-        - ця
-        - цей
-        - це
-        - ці
-      explanation: Слово кава жіночого роду, тому використовуємо ця.
-
-- type: match-up
-  title: Логічні зв'язки у реченнях
-  instruction: З'єднайте початок речення з відповідним закінченням, щоб пояснити причину.
-  pairs:
-    - left: Я п'ю каву
-      right: тому що я хочу спати
-    - left: Він не йде в кіно
-      right: бо він зараз працює
-    - left: Мені подобається ця книга
-      right: тому що вона дуже цікава
-    - left: Ми не говоримо українською
-      right: бо ми ще вчимося
-    - left: Я йду додому
-      right: тому що вже пізно
-    - left: Вона хоче їсти
-      right: бо вона дуже голодна
+        - 'хто'
+        - 'що'
+        - 'де'
+        - 'куди'
 
 - type: quiz
-  title: Підсумкова перевірка граматики
-  instruction: Оберіть правильну відповідь на кожне граматичне запитання.
+  title: 'Possessives and Demonstratives'
+  instruction: 'Choose the correct pronoun.'
   items:
-    - question: Яке питальне слово ми використовуємо, щоб запитати про напрямок руху?
-      explanation: Слово куди використовується виключно для вказівки на напрямок.
+    - question: 'Яке слово означає "my" (чоловічий рід)?'
       options:
-        - text: куди
+        - text: 'моя'
+          correct: false
+        - text: 'мій'
           correct: true
-        - text: де
+        - text: 'моє'
           correct: false
-        - text: звідки
+        - text: 'мої'
           correct: false
-        - text: що
-          correct: false
-    - question: Як правильно утворити заперечне речення з дієсловом в українській мові?
-      explanation: Частка не завжди ставиться безпосередньо перед дієсловом.
+      explanation: '"Мій" is the masculine form.'
+    - question: 'Яке слово означає "this" (чоловічий рід)?'
       options:
-        - text: Додати частку не перед дієсловом
+        - text: 'цей'
           correct: true
-        - text: Додати частку ні після дієслова
+        - text: 'ця'
           correct: false
-        - text: Змінити закінчення дієслова
+        - text: 'це'
           correct: false
-        - text: Додати слово немає в кінці
+        - text: 'ці'
           correct: false
-    - question: Який займенник потрібно використати для слова робота?
-      explanation: Для іменників жіночого роду ми використовуємо форму моя.
+      explanation: '"Цей" is the masculine form.'
+    - question: 'Яке слово означає "your" (чоловічий рід)?'
       options:
-        - text: моя
+        - text: 'твій'
           correct: true
-        - text: мій
+        - text: 'твоя'
           correct: false
-        - text: моє
+        - text: 'твоє'
           correct: false
-        - text: мої
+        - text: 'твої'
           correct: false
-    - question: Як ми перекладаємо на українську мову англійське питальне слово where?
-      explanation: Англійське where як місцезнаходження перекладається як де.
+      explanation: '"Твій" is the masculine form.'
+    - question: 'Яке слово означає "that" (чоловічий рід)?'
       options:
-        - text: де
+        - text: 'той'
           correct: true
-        - text: куди
+        - text: 'та'
           correct: false
-        - text: звідки
+        - text: 'те'
           correct: false
-        - text: хто
+        - text: 'ті'
           correct: false
-    - question: Яке закінчення має дієслово писати для займенника вони?
-      explanation: Дієслово писати належить до першої дієвідміни, тому у множині має закінчення уть.
+      explanation: '"Той" is the masculine form.'
+    - question: 'Як сказати "Who is this?"'
       options:
-        - text: пишуть
+        - text: 'Що це?'
+          correct: false
+        - text: 'Хто це?'
           correct: true
-        - text: писать
+        - text: 'Де це?'
           correct: false
-        - text: пишете
+        - text: 'Коли це?'
           correct: false
-        - text: пишемо
-          correct: false
-    - question: Яке з цих коротких слів ми використовуємо для пояснення причини в розмовній мові?
-      explanation: Слово бо є розмовним синонімом до фрази тому що.
+      explanation: '"Хто" means who.'
+    - question: 'Як сказати "What is this?"'
       options:
-        - text: бо
+        - text: 'Що це?'
           correct: true
-        - text: але
+        - text: 'Хто це?'
           correct: false
-        - text: і
+        - text: 'Як це?'
           correct: false
-        - text: та
+        - text: 'Чому це?'
           correct: false
+      explanation: '"Що" means what.'
+    - question: 'Яке українське слово означає займенник "he"?'
+      options:
+        - text: 'вона'
+          correct: false
+        - text: 'воно'
+          correct: false
+        - text: 'ми'
+          correct: false
+        - text: 'він'
+          correct: true
+      explanation: '"Він" means he.'
+    - question: 'Яке українське слово означає займенник "they"?'
+      options:
+        - text: 'ми'
+          correct: false
+        - text: 'ви'
+          correct: false
+        - text: 'вони'
+          correct: true
+        - text: 'ти'
+          correct: false
+      explanation: '"Вони" means they.'
 
-- type: unjumble
-  title: Зберіть діалогові речення
-  instruction: Розташуйте слова у правильному порядку, щоб утворити природні розмовні фрази.
-  items:
-    - words:
-        - Я
-        - п'ю
-        - каву
-        - бо
-        - хочу
-        - спати
-      answer: Я п'ю каву бо хочу спати
-    - words:
-        - Це
-        - мій
-        - телефон
-        - а
-        - це
-        - друг
-      answer: Це мій телефон а це друг
-    - words:
-        - Цей
-        - стілець
-        - зручний
-        - але
-        - той
-        - кращий
-      answer: Цей стілець зручний але той кращий
-    - words:
-        - Ти
-        - читаєш
-        - зараз
-        - дуже
-        - цікаву
-        - книгу
-      answer: Ти читаєш зараз дуже цікаву книгу
-    - words:
-        - Вони
-        - зустрічаються
-        - в
-        - кафе
-        - після
-        - роботи
-      answer: Вони зустрічаються в кафе після роботи
+- type: match-up
+  title: 'Match the Phrases'
+  instruction: 'Match the Ukrainian phrases with their English equivalents.'
+  pairs:
+    - left: 'Я не знаю'
+      right: 'I do not know'
+    - left: 'Він не працює'
+      right: 'He is not working'
+    - left: 'Мені подобається'
+      right: 'I like it'
+    - left: 'Я хочу'
+      right: 'I want'
+    - left: 'Де ти живеш?'
+      right: 'Where do you live?'
+    - left: 'Що ти робиш?'
+      right: 'What are you doing?'
+    - left: 'Ми маємо час'
+      right: 'We have time'
+    - left: 'Я розумію вас'
+      right: 'I understand you'

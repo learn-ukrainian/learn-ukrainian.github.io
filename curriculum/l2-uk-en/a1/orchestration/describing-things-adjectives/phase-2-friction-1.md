@@ -1,6 +1,6 @@
-**Phase**: Phase 2: Content
-**Step**: Expanding content to hit the 3000-word target while strictly adhering to the "no mixed languages within a sentence" rule.
+**Phase**: Beginner Content
+**Step**: Writing content prose
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Systematically utilized a "Ukrainian sentence block followed by English translation block" structure for introductions and observations within each H3, ensuring 100% compliance with language separation while organically generating necessary word depth.
+**Self-Correction**: Adjusted inline translation formatting to strictly separate Ukrainian and English sentences without mixing them inside a single sentence to comply with A1 immersion constraints. Replaced all English straight quotes with angular quotes to avoid stylistic audit failure.
 **Proposed Tooling Fix**: N/A

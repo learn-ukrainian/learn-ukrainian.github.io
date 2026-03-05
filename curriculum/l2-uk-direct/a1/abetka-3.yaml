@@ -6,12 +6,17 @@ title: "Абетка — ширший світ"
 subtitle: "П Т Г Ґ Е З Ж Ш Х — майже все можна прочитати"
 standard_ref: "§4.1.1 — alphabet, §4.1.4 — vowels/consonants"
 textbook_ref: "Bolshakova 2018 Part 1, pp.42-58"
+teaching_notes: >
+  Третя порція: П Т Г Ґ Е З Ж Ш Х (9 літер, 23 загалом). Ґ — унікальна українська
+  літера (ґанок, ґудзик). Шиплячі Ж Ш — тверді в українській (на відміну від російської).
+  З+Ж і З+Ш — НЕ зливаються. Г — фрикативний [ɦ], не [ɡ]. Тренуйте пари: Г/Ґ,
+  З/Ж, С/Ш. Учні вже можуть читати зв'язні тексти з простих речень.
 
 playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
 playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
 
-# After abetka-1+2: А М Л У Н С К И Р Б В Д І (13 letters)
-# After this module: + П Т Г Ґ Е З Ж Ш Х = 22 letters total
+# After abetka-1+2: А О М Л У Н С К И Р Б В Д І (14 letters)
+# After this module: + П Т Г Ґ Е З Ж Ш Х = 23 letters total
 # Nearly all common Ukrainian text is now readable
 letters:
   - upper: П
@@ -174,3 +179,105 @@ activities:
       - emoji: "\U0001F35E"
         answer: Х
         distractors: [Г, К]
+
+  - type: reading
+    title: "Прочитай"
+    instruction: "Прочитай склади і слова вголос."
+    items:
+      - text: "па — по — пу — пе — пи — пі"
+      - text: "та — то — ту — те — ти — ті"
+      - text: "га — го — гу — ге — ги — гі"
+      - text: "за — зо — зу — зе — зи — зі"
+      - text: "жа — жо — жу — же — жи — жі"
+      - text: "ша — шо — шу — ше — ши — ші"
+      - text: "ха — хо — ху — хе — хи — хі"
+      - text: "хата — гора — жаба — шапка"
+      - text: "тигр — жук — книга — берег"
+      - text: "горох — каша — зерно — перо"
+
+  - type: reading
+    title: "Прочитай текст"
+    instruction: "Прочитай текст вголос. Всі букви тобі вже знайомі!"
+    items:
+      - text: "Тут хата. На хаті — дах. Коло хати — гора."
+      - text: "Жаба тут. Жук там. Мишка в норі."
+      - text: "Тато мав книгу. В книзі — тигр і зебра."
+      - text: "На городі — горох. Каша з горохом — тепло і добре."
+
+# Vocabulary — decodable words using 23 letters (А О М Л У Н С К И Р Б В Д І П Т Г Ґ Е З Ж Ш Х)
+# All words verified in VESUM
+vocabulary:
+  - word: хата
+    emoji: "\U0001F3E0"
+    meaning: "house, hut"
+    sentence: "Тут хата. На хаті — дах."
+
+  - word: жаба
+    emoji: "\U0001F438"
+    meaning: "frog"
+    sentence: "Жаба на березі."
+
+  - word: гора
+    emoji: "\u26F0\uFE0F"
+    meaning: "mountain"
+    sentence: "Там гора. Гора висока."
+
+  - word: шапка
+    emoji: "\U0001F9E2"
+    meaning: "hat, cap"
+    sentence: "Шапка на голові."
+
+  - word: жук
+    emoji: "\U0001FAB2"
+    meaning: "beetle"
+    sentence: "Жук тут. Жук на листку."
+
+  - word: тигр
+    emoji: "\U0001F42F"
+    meaning: "tiger"
+    sentence: "Тигр — в книзі."
+
+  - word: книга
+    emoji: "\U0001F4D6"
+    meaning: "book"
+    sentence: "Книга на столі."
+
+  - word: берег
+    emoji: "\U0001F3D6\uFE0F"
+    meaning: "shore, bank"
+    sentence: "Жаба на березі."
+
+  - word: горох
+    emoji: "\U0001FAD8"
+    meaning: "peas"
+    sentence: "Горох на городі."
+
+  - word: каша
+    emoji: "\U0001F35A"
+    meaning: "porridge"
+    sentence: "Каша з горохом."
+
+  - word: зерно
+    emoji: "\U0001F33E"
+    meaning: "grain"
+    sentence: "Зерно на полі."
+
+  - word: перо
+    emoji: "\U0001FAB6"
+    meaning: "feather"
+    sentence: "Перо на столі."
+
+  - word: дах
+    emoji: "\U0001F3E0"
+    meaning: "roof"
+    sentence: "На хаті — дах."
+
+  - word: жито
+    emoji: "\U0001F33E"
+    meaning: "rye"
+    sentence: "Жито на полі."
+
+  - word: ґанок
+    emoji: "\U0001F6AA"
+    meaning: "porch"
+    sentence: "На ґанку — ґава."

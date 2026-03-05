@@ -1,0 +1,141 @@
+discovered_at: '2026-03-05T04:10:43.536603+00:00'
+query_keywords:
+- The Living Verb II
+- Тріада гостинності
+- The Triad of Hospitality
+- Моделі та мутації
+- Paradigms and Mutations
+- Помилки та автоматизація
+- Errors and Automation
+- Продукування та культурний контекст
+- Production and Cultural Context
+- Second Conjugation verbs (-ити) in present tense
+- between First and Second Conjugation
+- common irregular verbs (їсти, пити)
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics: []
+- url: https://www.ukrainianlessons.com/episode22/
+  title: Are you going to the party? — First verb conjugation in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 22
+- url: https://www.ukrainianlessons.com/episode91/
+  title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - grammar
+  - verbs
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 91
+- url: https://www.ukrainianlessons.com/fmu57/
+  title: 'Grammar Point: Verb conjugations in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 57
+rag_chunks:
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
+  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
+    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
+  section_title: Сторінка 190
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0012
+  text: '. . . . . . . . . . . . . . . . . . . 256
+
+    Присвійні займенники . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 259
+
+    Зворотний займенник себе. . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . 262
+
+    Питальні й  відносні займенники . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 264
+
+    Заперечні й  неозначені займенники . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . '
+  section_title: Сторінка 5
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0229
+  text: '2. Взірець, життєрадісність, рівновага, при5язнь, байдужість, бездіяль-
+
+    ність, посередник, вкладення.'
+  section_title: Сторінка 163
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0233
+  text: ". . . . . . . 26\n§ 14–15. Написання  іншомовних  слів . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 28\n§ 16. Розвиток мовлення. Обмін  думками  на\
+    \ тему,  пов’язану   \nіз  ціннісними орієнтирами  . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 31\n§ 17. Активна  і  пасивна  лексика .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 32\n§ 18. Загальновживані\
+    \  та  стилістично  забарвлені  слова . . . . . . . . 34\n§ 19–20. Діалектні \
+    \ й  просторічні слова . . . . . . . . . . . . . . "
+  section_title: Сторінка 220
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0061
+  text: "Так \nви дізнаєтесь, про що йтиметься в цьому параграфі. 22   24   22   20\
+    \   12   16   31   22   23   3   19\nФорма взаємодії людей,\nоб’єднаних спільними\
+    \ \nінтересами \nФорма взаємодії людей,\nякі народились в одній \nкраїні\nФорма\
+    \ взаємодії людей,\nякі живуть в одному \nвідрізку часу\nВождь\nРада\nМатріархат\n\
+    Рід\nСтарійшини\nСім’я\nПатріархат\nГромада\nПлем’я\nПле’мя\nПлем’я\nПлем’я\n\
+    Плем’я\nПлем’я\nПлем’я\nПлем’я\nПлем’я\nПлем’я\nВождь\nСусіди\nСусіди\nСусіди\n\
+    Сусіди\nСусіди\nСусіди\nСусіди\nСусіди\nСусіди\nСусіди\nРід\nВождь\nВождь"
+  section_title: Сторінка 60
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

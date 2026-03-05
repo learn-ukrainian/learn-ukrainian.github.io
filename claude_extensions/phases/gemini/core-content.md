@@ -44,8 +44,9 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 - **Target**: approximately {WORD_TARGET} words
 - **Immersion**: {IMMERSION_RULE}
-- **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 4 different types
+- **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 4 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes FAILS validation.
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
+- **Structure**: Write ALL sections from the outline. Do not skip any section. Missing sections fail validation.
 
 ## Audit Gates
 
@@ -54,7 +55,7 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 - **Russianisms**: banned words (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
 - **Euphony**: і/й, у/в, з/із alternation
-- **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types
+- **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types (hard fail if below minimum)
 - **Duplicate headers**: no two H2s sharing the same keyword
 
 ---

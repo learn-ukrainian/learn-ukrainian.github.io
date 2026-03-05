@@ -1,31 +1,43 @@
-# Дослідження: The Locative: Where Things Are
+## Research Notes
 
-## State Standard Reference
-§4.2.3.3: "у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі;"
-Alignment: This module precisely fulfills the standard by focusing on prepositions "у/в" and "на" to denote location, contrasting containers versus surfaces, and teaching the required morphological endings for nouns in the Locative case answering the question "Де?".
+Textbooks typically introduce the Locative case as the first or second oblique case, immediately following the Accusative. The focus is strictly on the static location question "Де?" (Where?) using the prepositions "в/у" (in) and "на" (on/at). The initial presentation covers the standard endings (-і / -ї) for regular nouns. Subsequently, velar consonant mutations (к→ц, г→з, х→с) are introduced, often using anatomical mnemonics like "рука - у руці".
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| де | Top 50 | Де ти? Де ви? Де це? Де туалет? |
-| в/у | Top 10 | у кімнаті, у школі, у парку, у банку |
-| на | Top 10 | на столі, на роботі, на вулиці, на вокзалі |
-| робота | High | на роботі |
-| стіл | High | на столі |
+Common errors for English speakers include:
+1. Ignoring consonant mutations (e.g., saying "*на ногі" instead of the correct "на нозі").
+2. Calquing English prepositional logic for activities or events, such as using "*в роботі" (in work) instead of the correct "на роботі" (at work).
+3. Confusing static location (Locative) with directional motion (Accusative). English uses "in" for both static placement and direction, leading to errors like using the Accusative case for static placement.
 
-## Cultural Hooks
-1. The "Shoes Off" Rule: Taking off street shoes and wearing "тапочки" (slippers) is a mandatory ritual in Ukrainian homes, defining the boundary of the domestic space ("вдома", "у кімнаті").
-2. Housing Types: Urban landscapes in Ukraine are often defined by housing eras ("Хрущовка", "Сталінка", "Новобудова"), providing authentic context for describing where one lives.
+Cultural hook: The Ukrainian domestic environment has a strict spatial boundary marked by the "Shoes Off" rule. When entering a home ("вдома"), one must remove street shoes and wear "тапочки" (slippers). This makes spatial vocabulary like "у кімнаті" (in the room) or "на підлозі" (on the floor) highly relevant and culturally anchored.
 
-## Common Learner Errors
-1. Preposition Calquing: Translating "at work" as `*в роботі` instead of the correct `на роботі`. Ukrainian treats work as an event/activity, requiring "на".
-2. Ignoring Velar Mutations: Creating forms like `*на ногі` instead of `на нозі`. The к→ц, г→з, х→с mutation is highly irregular for English speakers.
-3. Case Confusion (Location vs Direction): Saying `*Я в парк` (Accusative motion) instead of `Я у парку` (Locative static).
+This module builds on the spatial concepts introduced in A1-26 (The Accusative II) by establishing the static Locative counterpart to the directional Accusative. It prepares learners for M29 (Around the City), which will heavily rely on the Locative case for urban navigation.
 
-## Cross-References
-- Builds on: a1-26 (The Accusative II)
-- Prepares for: a1-20 (Mine and Yours), a1-29 (Around the City)
+## Resource Discovery
 
-## Notes for Content Writing
-- Highlight the euphony rule (милозвучність) regarding "у" vs "в" as a unique, melodic feature of the Ukrainian language, rather than comparing it to Russian. Emphasize examples like "У Львові" to prevent consonant clusters.
-- Use the simple English mnemonic "Hand and Leg" (рука → у руці, нога → на нозі, вухо → у вусі) to make velar mutations memorable.
+
+### Blog Articles
+- [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) (ukrainianlessons.com)
+- [Formal Greetings and Saying Goodbye in Ukrainian + Pronouns](https://www.ukrainianlessons.com/episode2/) (ukrainianlessons.com)
+- [More about your family in Ukrainian + Possessive Pronouns](https://www.ukrainianlessons.com/episode7/) (ukrainianlessons.com)
+- [Likes and dislikes — common verbs in Ukrainian](https://www.ukrainianlessons.com/episode14/) (ukrainianlessons.com)
+- [Are you going to the party? — First verb conjugation in Ukrainian](https://www.ukrainianlessons.com/episode22/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 5, Сторінка 175: 175
+Фонетика. Графіка. Орфоепія. Орфографія.  Милозвучність української мови
+У
+В
+на початку речення ...
+- Grade 4, Сторінка 116: і.
+314. Допиши словосполучення, вставляючи відповідні прислівники. 
+За потреби користуйся словами дл...
+- Grade 4, Сторінка 74: І У називному відмінку іменники вживаються без при- 
+і йменників, у місцевому — тільки з прийменника...
+- Grade 6, Сторінка 69: § 12. Антонімічні префікси й суфікси  
+69
+2. Складіть зі словами речення (усно).
+3. Поясніть значенн...
+- Grade 7, Сторінка 184: § 30  Особливості вживання прийменників  
+181
+Вправа 258
+ 
+Відредагуйте подані словосполучення, де ц...

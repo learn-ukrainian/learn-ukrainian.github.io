@@ -1,35 +1,45 @@
-# Дослідження: Plurals and Alternation
+## Research Notes
 
-## State Standard Reference
-§4.2.1.1: "утворення форм множини в називному відмінку (закінчення -и, -і (ї)): інститут – інститути, лікар – лікарі, музей – музеї; чергування голосних звуків у формах однини / множини: рік – роки, ніж – ножі, палець – пальці, будинок – будинки, річ – речі;"
-§4.2.1.2: "узгодження прикметників з іменниками в роді й числі: ... іноземні студенти, зелені сумки, великі вікна, останні запитання;"
-Alignment: This module directly addresses the A1 requirement to form nominative plurals for nouns and adjectives, and explicitly covers the required vowel alternations (і → о/е) in plurals.
+Textbook approach: Ukrainian textbooks for beginners logically sequence nominative plurals by noun gender, as the ending depends on the base gender. Standard progression: masculine adds `-и`/`-і`, feminine replaces `-а`/`-я` with `-и`/`-і`, and neuter replaces `-о`/`-е` with `-а`/`-я`. Adjective agreement is introduced as a major simplification, because the distinct gender forms (masculine, feminine, neuter) collapse into a single `-і` or `-ї` plural ending. The vowel alternation (`і` → `о`/`е`), often referred to as the "fleeting vowel," is taught practically through high-frequency words (*кіт* → *коти*) before formal phonetic rules.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| студент/студенти | Top 500 | нові студенти, молоді студенти |
-| книга/книги | Top 200 | цікаві книги, старі книги |
-| місто/міста | Top 100 | великі міста, нові міста |
-| діти | Top 100 | маленькі діти, наші діти |
-| люди | Top 50 | добрі люди, молоді люди |
-| гроші | Top 300 | багато грошей, заробляти гроші |
-| двері | Top 500 | відкрити двері, зачинити двері |
+Common errors:
+1. Treating neuter nouns like masculine/feminine nouns by applying `-и`/`-і` (e.g., saying *місти* instead of the correct *міста*).
+2. Forgetting the `і` → `о`/`е` vowel alternation and keeping the "і" in the plural stem (e.g., *кіти* instead of *коти*).
+3. Pluralizing uncountable nouns like *молоко* or *цукор*.
 
-## Cultural Hooks
-1. **Pluralia Tantum Disconnect**: Ukrainian treats several everyday concepts as inherently plural that English treats as singular (e.g., "гроші" / money, "двері" / door). This reflects a different historical conceptualization of these objects as composite or dual items.
-2. **Suppletion in Core Vocabulary**: The transition from "людина" (person) to "люди" (people) or "дитина" (child) to "діти" (children) uses entirely different stems, a feature common in ancient Slavic roots but particularly prominent in everyday Ukrainian usage.
+Cultural hook: Ukrainian shares the "pluralia tantum" (plural-only nouns) concept with English (like *ножиці* - scissors, *окуляри* - glasses), but interestingly applies it to *двері* (door) and *гроші* (money), treating them grammatically as multiple items.
 
-## Common Learner Errors
-1. **Neuter plural mismatch** → Applying the masculine/feminine "-и" or "-і" to neuter nouns (e.g., saying *місти* instead of correct *міста*) because -и/-і feels like the "universal" plural marker.
-2. **Ignoring vowel alternation** → Keeping the 'і' in the plural stem for closed-syllable masculine nouns (e.g., *кіти* instead of correct *коти*; *ріки* instead of correct *роки*).
-3. **Pluralizing uncountable nouns** → Attempting to make uncountable nouns plural (e.g., *молока*, *цукри*) based on English logic or over-application of grammar rules.
+Cross-references: This module relies on noun genders (M04) and adjective agreement (M11-M12), preparing the learner for the Checkpoint (M14) and later noun cases.
 
-## Cross-References
-- Builds on: a1-12 (Colors and Clothing) - reusing adjectives for agreement practice.
-- Prepares for: a1-14 (Checkpoint First Contact) - fundamental skill needed to pass the milestone.
+## Resource Discovery
 
-## Notes for Content Writing
-- **Decolonized Framing**: Present the vowel alternation (і → о/е) not as a frustrating exception, but as a beautiful rhythmic feature of Ukrainian ("відкритий/закритий склад" / open/closed syllable rule). Describe it as a natural, flowing evolution of sounds in the language.
-- Ensure all English explanations strictly follow the A1 10-50% immersion rule, providing clear scaffolding for grammatical concepts before offering Ukrainian examples.
-- Emphasize that adjective plurals collapse into one ending (-і/-ї) for all genders, framing it as a "simplification" to boost learner confidence.
+
+### Blog Articles
+- [Talk Ukrainian: Plurals](https://talkukrainian.com/plurals/) (talkukrainian)
+- [Dobra Forma: Plural Nouns with Stem Changes](https://opentext.ku.edu/dobraforma/chapter/2-3/) (dobraforma)
+- [Dobra Forma: Locative Case (Consonant Mutations)](https://opentext.ku.edu/dobraforma/chapter/4-3/) (dobraforma)
+- [Dobra Forma: Instrumental Case (Other Singular Endings and Stem Changes)](https://opentext.ku.edu/dobraforma/chapter/9-2/) (dobraforma)
+- [At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian](https://www.ukrainianlessons.com/episode94/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 190: Змінювання дієслів минулого часу
+за родами (в однині) й числами........................................
+- Grade 3, Сторінка 116: 116
+Досліди, чи всі іменни-
+ки можуть мати фор-
+му однини і множини.
+Я — дослідник
+Я — дослідниця
+Сп...
+- Grade 4, Сторінка 38: 38
+73. 
+1. Розгляньте таблицю. Зверніть увагу на назви від-
+мінків. На які питання відповідає кожен ...
+- Grade 10, Сторінка 156: Більшість повних прикметників мають стягнені форми закін-
+чення: добра — добре. Але в поетичній мові...
+- Grade 6, Сторінка 80: § 32.	
+Число іменників
+A főnév száma
+Більшість іменників може вживатися в  однині 
+й у множині.
+Імен...

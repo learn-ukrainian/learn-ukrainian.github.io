@@ -1,0 +1,111 @@
+discovered_at: '2026-03-05T21:57:25.287661+00:00'
+query_keywords:
+- Yesterday - Past Tense
+- Що було вчора?
+- What Happened Yesterday?
+- Основи минулого часу
+- 'Grammar: Past Tense Formation'
+- Складні випадки та практика
+- Irregular Verbs and Practice
+- Мій день
+- Summary and Production
+- past tense using L-participle
+- correct gender ending (-в/-ла/-ло/-ли)
+- past events using time expressions
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/grammar-past-tense/
+  title: Past Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/grammar-future/
+  title: Future Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/26/
+  title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/27/
+  title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/28/
+  title: ULP 1-28 Making plans for the weekend – Future tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0109
+  text: "( ЗМІНЮВАННЯ ДІЄСЛІВ У МИНУЛОМУ ЧАСІ\nа\nЗ-—-*\n300. 1. Пригадай, яку дію\
+    \ називають дієслова минулого часу \nта на які питання відповідають.\n2. Досліди,\
+    \ як змінюються дієслова минулого часу.\nКрок 1. Розкажи за схемою, як змінюються\
+    \ дієслова.\n( ч- Р- ) \nщо робив? \nщо зробив?\nДієслова минулого часу\n______\
+    \ V\n____________ (число) \n( однина ; < -—-------- —\n—— + '\n(ж. Р- ) \nщо робила?\
+    \ \nщо зробила?\n( с- Р- ) \nщо робило? \nщо зробило?\n( множина ) \nщо робили?\
+    \ \nщо зробили? \nписали, написали\nписав, написав пис"
+  section_title: Сторінка 111
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
+  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
+    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
+  section_title: Сторінка 190
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0205
+  text: "Форми дієслів минулого часу творяться від основи інфі-\nнітива за допомого\
+    \ суфіксів -в-: сказав; -л-: сказала; сказало.\nЯкщо основа інфінітива закінчується\
+    \ на приголосний, то \nдієслова у формі чоловічого роду минулого часу утворюються\
+    \ \nбез суфікса -в-: бігти — біг (бігла, бігло, бігли).\nДієслова минуло часу\
+    \ змінюються за числами, а в од-\nнині  — і  за родами (писав, писала, писало).\
+    \ За особами \nдієслова минулого часу не змінюються. \nЧисло й рід у дієсловах\
+    \ минулого часу розрізняють за \nзакінчення"
+  section_title: Сторінка 207
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0101
+  text: "284. 1. Досліди, які часові форми можуть мати дієслова.\nКрок 1. Прочитай\
+    \ дієслова.\nйде \nйшов \nйтиме\nзакриває \nзакриватиме \nзакривала\nсяє \nсяятиме\
+    \ \nсяяв\nКрок 2. Виконай завдання на вибір.\nВипиши дієслова, які називають дію,\
+    \ що вже відбулася.\nВипиши дієслова, які називають дію, що відбувається в даний\
+    \ \nмомент.\nВипиши дієслова, які називають дію, що має відбутися. \nКрокЗ. Зроби\
+    \ висновок та порівняй його з правилом.\nПригадай! Дієслова можуть називати дії\
+    \ в минулому, тепе- | \nрішньому та майбутньому "
+  section_title: Сторінка 103
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0047
+  text: "Розділ 1  ДІЄСЛОВО\n40\nВправа 51\n1   Назвіть усі можливі часові форми поданих\
+    \ дієслів \nСкласти, складати, порівняти, порівнювати, почати, роз­\nпочати.\n\
+    2   Чи від усіх діє слів вдалося утворити форми теперішнього часу? Чому?\nМинулий\
+    \ час\nДіє слова у формі минулого часу позначають дію, що \nвідбувалася або відбулася\
+    \ до моменту мовлення про неї: до­\nпоміг, розв’язала, здалося, відчули.\nФорму\
+    \ минулого часу мають діє слова доконаного й не-\nдоконаного виду: робив і зробив,\
+    \ грав і зіграв.\nДіє слова в мину"
+  section_title: Сторінка 43
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

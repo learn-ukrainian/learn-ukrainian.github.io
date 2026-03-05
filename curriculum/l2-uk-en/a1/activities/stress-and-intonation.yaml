@@ -1,367 +1,297 @@
 - type: quiz
-  title: "Правила наголосу та інтонації"
-  instruction: "Оберіть правильну відповідь на запитання."
+  title: Check Your Understanding
+  instruction: Let's review what we've learned about the rhythm of Ukrainian.
   items:
-    - question: "Яке твердження про український наголос є правильним?"
-      options:
-        - text: "Він може падати на будь-який склад."
-          correct: true
-        - text: "Він завжди падає на перший склад."
-          correct: false
-        - text: "Він завжди падає на останній склад."
-          correct: false
-        - text: "Він залежить від закінчення слова."
-          correct: false
-      explanation: "Український наголос є вільним і може падати на будь-який склад."
-    - question: "Що означає слово замок, якщо наголос на першому складі?"
-      options:
-        - text: "велика історична будівля"
-          correct: true
-        - text: "пристрій для закриття дверей"
-          correct: false
-        - text: "місце для навчання"
-          correct: false
-        - text: "гарячий напій"
-          correct: false
-      explanation: "Слово замок із наголосом на першому складі означає історичну будівлю."
-    - question: "Як змінюється інтонація у питаннях без питального слова?"
-      options:
-        - text: "Голос різко підіймається в кінці."
-          correct: true
-        - text: "Голос опускається в кінці."
-          correct: false
-        - text: "Голос залишається рівним."
-          correct: false
-        - text: "Голос різко опускається на початку."
-          correct: false
-      explanation: "У питаннях типу Це школа? голос різко йде вгору в кінці речення."
-    - question: "Яку інтонацію ми використовуємо для звичайного факту?"
-      options:
-        - text: "Голос опускається в кінці речення."
-          correct: true
-        - text: "Голос підіймається в кінці речення."
-          correct: false
-        - text: "Голос залишається дуже високим."
-          correct: false
-        - text: "Голос різко стрибає на кожному слові."
-          correct: false
-      explanation: "Розповідна інтонація закінчується падінням голосу в кінці фрази."
-    - question: "Що відбувається з наголосом у слові рука у множині?"
-      options:
-        - text: "Він переходить на перший склад."
-          correct: true
-        - text: "Він залишається на останньому складі."
-          correct: false
-        - text: "Він зникає зовсім."
-          correct: false
-        - text: "Він переходить на другий склад."
-          correct: false
-      explanation: "Слово рука змінюється на руки з рухомим наголосом на першому складі."
-    - question: "Яке з цих слів завжди має наголос на останньому складі?"
-      options:
-        - text: "молоко"
-          correct: true
-        - text: "мама"
-          correct: false
-        - text: "добрий"
-          correct: false
-        - text: "кава"
-          correct: false
-      explanation: "Слово молоко завжди має наголос на останньому звуці О."
-
+  - question: Which of these words means 'castle' in English?
+    explanation: за́мок with stress on the first syllable means castle.
+    options:
+    - text: за́мок
+      correct: true
+    - text: замо́к
+      correct: false
+    - text: му́ка
+      correct: false
+    - text: мука́
+      correct: false
+  - question: Which of these words means 'water' in English?
+    explanation: The word is вода́, with stress on the last syllable.
+    options:
+    - text: вода́
+      correct: true
+    - text: во́да
+      correct: false
+    - text: далеко́
+      correct: false
+    - text: рука́
+      correct: false
+  - question: Where is the stress in the word for 'milk' (молоко)?
+    explanation: 'The stress falls on the final syllable: молоко́.'
+    options:
+    - text: On the first syllable
+      correct: false
+    - text: On the second syllable
+      correct: false
+    - text: On the third syllable
+      correct: true
+    - text: It has no stress
+      correct: false
+  - question: In Ukrainian, what are the rules for word stress?
+    explanation: Ukrainian stress is free, meaning it can fall on any syllable.
+    options:
+    - text: Always on the first syllable
+      correct: false
+    - text: Always on the last syllable
+      correct: false
+    - text: Always on the second-to-last syllable
+      correct: false
+    - text: It is free and can fall anywhere
+      correct: true
+  - question: What does 'mobile stress' mean?
+    explanation: Mobile stress means the stressed syllable can move when the word
+      changes its grammatical form.
+    options:
+    - text: Stress moves when you speak faster
+      correct: false
+    - text: Stress shifts when the word form changes
+      correct: true
+    - text: Stress moves depending on your mood
+      correct: false
+    - text: Stress is only used in songs
+      correct: false
+  - question: Which mark is used in textbooks to show stress?
+    explanation: We use the acute accent (´) above the stressed vowel.
+    options:
+    - text: ´ (acute accent)
+      correct: true
+    - text: . (period)
+      correct: false
+    - text: '? (question mark)'
+      correct: false
+    - text: '! (exclamation mark)'
+      correct: false
+  - question: How do you show a Yes/No question using intonation?
+    explanation: For a Yes/No question, your pitch must rise sharply at the end of
+      the sentence.
+    options:
+    - text: Pitch falls at the end
+      correct: false
+    - text: Pitch rises sharply at the end
+      correct: true
+    - text: Voice gets much louder
+      correct: false
+    - text: Pitch stays completely flat
+      correct: false
+  - question: Which word has stress on the first syllable?
+    explanation: The word ма́ма stresses the first syllable.
+    options:
+    - text: ма́ма
+      correct: true
+    - text: молоко́
+      correct: false
+    - text: вода́
+      correct: false
+    - text: замо́к
+      correct: false
+- type: true-false
+  title: Fact or Fiction?
+  instruction: Decide if these statements about Ukrainian stress and intonation are
+    true or false.
+  items:
+  - statement: Ukrainian stress always falls on the second-to-last syllable.
+    correct: false
+    explanation: Unlike Polish, Ukrainian stress is free and can fall on any syllable.
+  - statement: Stress can completely change the meaning of a Ukrainian word.
+    correct: true
+    explanation: Yes, for example, за́мок (castle) and замо́к (lock) mean different
+      things depending on the stress.
+  - statement: The word замо́к with stress on the last syllable means 'castle'.
+    correct: false
+    explanation: замо́к means lock. The word for castle is за́мок.
+  - statement: In the word молоко́, the stress is on the last syllable.
+    correct: true
+    explanation: Yes, молоко́ puts the emphasis on the final 'o'.
+  - statement: '''Mobile stress'' means you can choose to put the stress wherever
+      you want.'
+    correct: false
+    explanation: Mobile stress means the stress shifts automatically when the word
+      changes grammatical form (like singular to plural).
+  - statement: To make a simple statement like 'Це кафе.', your pitch should fall
+      at the end.
+    correct: true
+    explanation: A falling pitch signals that you are making a declarative statement.
+  - statement: You must add extra question words to ask a Yes/No question in Ukrainian.
+    correct: false
+    explanation: You can ask a Yes/No question simply by making your pitch rise sharply
+      at the end of the sentence.
+  - statement: The word до́брий has stress on the first syllable.
+    correct: true
+    explanation: 'Yes, you hit the first syllable hard: до́брий.'
 - type: match-up
-  title: "Словник: знайдіть переклад"
-  instruction: "З'єднайте українські слова з їхнім перекладом."
+  title: Match the Meaning
+  instruction: Find the correct English meaning for each Ukrainian word.
   pairs:
-    - left: "питання"
-      right: "question"
-    - left: "відповідь"
-      right: "answer"
-    - left: "молоко"
-      right: "milk"
-    - left: "замок (історичний)"
-      right: "castle"
-    - left: "замок (на дверях)"
-      right: "lock"
-    - left: "наголос"
-      right: "stress"
-
+  - left: за́мок
+    right: castle
+  - left: замо́к
+    right: lock
+  - left: вода́
+    right: water
+  - left: молоко́
+    right: milk
+  - left: ма́ма
+    right: mom
+  - left: шко́ла
+    right: school
+  - left: ка́ва
+    right: coffee
+  - left: ха́та
+    right: house
+- type: fill-in
+  title: Complete the Sentence
+  instruction: Choose the right word to complete these everyday phrases.
+  items:
+  - sentence: Це кава. Це молоко. Це ___.
+    answer: вода
+    options:
+    - вода
+    - замок
+    - тато
+    - дорога
+  - sentence: Це школа. Це кафе. Це ___.
+    answer: хата
+    options:
+    - хата
+    - вода
+    - мама
+    - рука
+  - sentence: Добрий день! Це мама. Це ___.
+    answer: тато
+    options:
+    - тато
+    - кава
+    - молоко
+    - замо́к
+  - sentence: Це книжка. Це ___.
+    answer: школа
+    options:
+    - школа
+    - молоко
+    - вода
+    - рука
+  - sentence: Це за́мок. Це ___.
+    answer: замо́к
+    options:
+    - замо́к
+    - мама
+    - вода
+    - кава
+  - sentence: ___ день!
+    answer: Добрий
+    options:
+    - Добрий
+    - Школа
+    - Вода
+    - Тато
+  - sentence: Це хата. Хата ___.
+    answer: далеко
+    options:
+    - далеко
+    - молоко
+    - кава
+    - тато
+  - sentence: Це вода. Це кава. Це ___.
+    answer: молоко
+    options:
+    - молоко
+    - школа
+    - замок
+    - тато
+- type: anagram
+  title: Unscramble the Word
+  instruction: Put the letters in the correct order to form a Ukrainian word.
+  items:
+  - scrambled: а д о в
+    answer: вода
+  - scrambled: а м а м
+    answer: мама
+  - scrambled: о т а т
+    answer: тато
+  - scrambled: а в а к
+    answer: кава
+  - scrambled: а т а х
+    answer: хата
+  - scrambled: е ф а к
+    answer: кафе
+  - scrambled: у к а р
+    answer: рука
+  - scrambled: о к ш а л
+    answer: школа
 - type: group-sort
-  title: "Де знаходиться наголос?"
-  instruction: "Розподіліть слова за місцем наголосу."
+  title: Sort by Rhythm
+  instruction: Listen to the music of the words! Sort them by where the stress falls.
   groups:
-    - name: "Перший склад"
-      items:
-        - "мама"
-        - "тато"
-        - "кава"
-        - "добрий"
-    - name: "Передостанній склад"
-      items:
-        - "школа"
-        - "дорога"
-        - "питання"
-        - "книга"
-    - name: "Останній склад"
-      items:
-        - "молоко"
-        - "далеко"
-        - "вода"
-        - "вікно"
-
-- type: anagram
-  title: "Розшифруйте слова"
-  instruction: "Переставте літери, щоб утворити слово."
-  items:
-    - scrambled: "в о д а"
-      answer: "вода"
-    - scrambled: "м о л о к о"
-      answer: "молоко"
-    - scrambled: "ш к о л а"
-      answer: "школа"
-    - scrambled: "к а в а"
-      answer: "кава"
-    - scrambled: "р у к а"
-      answer: "рука"
-    - scrambled: "м і с т о"
-      answer: "місто"
-
-- type: fill-in
-  title: "Заповніть пропуски словами"
-  instruction: "Оберіть правильне слово для кожного речення."
-  items:
-    - sentence: "Це старий історичний _____."
-      answer: "замок"
-      options:
-        - "замок"
-        - "вода"
-        - "кава"
-        - "школа"
-    - sentence: "Я п'ю холодне _____."
-      answer: "молоко"
-      options:
-        - "молоко"
-        - "питання"
-        - "замок"
-        - "рука"
-    - sentence: "Де смачна _____?"
-      answer: "кава"
-      options:
-        - "кава"
-        - "місто"
-        - "дорога"
-        - "наголос"
-    - sentence: "Це дуже гарне _____."
-      answer: "питання"
-      options:
-        - "питання"
-        - "відповідь"
-        - "рука"
-        - "вода"
-    - sentence: "Це моя права _____."
-      answer: "рука"
-      options:
-        - "рука"
-        - "руки"
-        - "молоко"
-        - "кава"
-    - sentence: "У мене чисті _____."
-      answer: "руки"
-      options:
-        - "руки"
-        - "рука"
-        - "вода"
-        - "школа"
-
-- type: unjumble
-  title: "Складіть речення"
-  instruction: "Поставте слова у правильному порядку."
-  items:
-    - words:
-        - "це"
-        - "дуже"
-        - "добрий"
-        - "день"
-      answer: "Це дуже добрий день"
-    - words:
-        - "я"
-        - "п'ю"
-        - "холодне"
-        - "молоко"
-      answer: "Я п'ю холодне молоко"
-    - words:
-        - "моя"
-        - "школа"
-        - "дуже"
-        - "далеко"
-      answer: "Моя школа дуже далеко"
-    - words:
-        - "це"
-        - "моя"
-        - "права"
-        - "рука"
-      answer: "Це моя права рука"
-    - words:
-        - "я"
-        - "зараз"
-        - "пишу"
-        - "текст"
-      answer: "Я зараз пишу текст"
-    - words:
-        - "що"
-        - "ти"
-        - "зараз"
-        - "пишеш"
-      answer: "Що ти зараз пишеш"
-
-- type: quiz
-  title: "Як змінюється наголос?"
-  instruction: "Оберіть правильну відповідь про рухомий наголос."
-  items:
-    - question: "Яка форма слова рука використовується у множині?"
-      options:
-        - text: "руки (наголос на перший склад)"
-          correct: true
-        - text: "руки (наголос на останній склад)"
-          correct: false
-        - text: "рука (наголос на перший склад)"
-          correct: false
-        - text: "рука (наголос на останній склад)"
-          correct: false
-      explanation: "У множині наголос переходить на перший склад: руки."
-    - question: "Як правильно перекласти I write українською мовою?"
-      options:
-        - text: "я пишу (наголос на останній склад)"
-          correct: true
-        - text: "я пишу (наголос на перший склад)"
-          correct: false
-        - text: "я писати"
-          correct: false
-        - text: "я пишеш"
-          correct: false
-      explanation: "У цій формі дієслова наголос падає на останній склад: пишу."
-    - question: "Як правильно перекласти you write українською мовою?"
-      options:
-        - text: "ти пишеш (наголос на перший склад)"
-          correct: true
-        - text: "ти пишеш (наголос на останній склад)"
-          correct: false
-        - text: "ти пишу"
-          correct: false
-        - text: "ти писати"
-          correct: false
-      explanation: "У цій формі наголос повертається на корінь: пишеш."
-    - question: "На який склад падає наголос у слові далеко?"
-      options:
-        - text: "на останній"
-          correct: true
-        - text: "на перший"
-          correct: false
-        - text: "на другий"
-          correct: false
-        - text: "на передостанній"
-          correct: false
-      explanation: "Слово далеко має наголос на останньому складі."
-    - question: "На який склад падає наголос у слові відповідь?"
-      options:
-        - text: "на перший"
-          correct: true
-        - text: "на другий"
-          correct: false
-        - text: "на третій"
-          correct: false
-        - text: "на останній"
-          correct: false
-      explanation: "У слові відповідь наголошується найперший склад."
-    - question: "Що демонструє пара слів замок і замок?"
-      options:
-        - text: "зміну значення через наголос"
-          correct: true
-        - text: "зміну значення через букву"
-          correct: false
-        - text: "однакове значення"
-          correct: false
-        - text: "правила пунктуації"
-          correct: false
-      explanation: "Зміна наголосу повністю змінює значення цих слів (мінімальна пара)."
-
+  - name: First Syllable Stress
+    items:
+    - ма́ма
+    - та́то
+    - ка́ва
+    - ха́та
+    - до́брий
+  - name: Last Syllable Stress
+    items:
+    - вода́
+    - молоко́
+    - замо́к
+    - кафе́
+    - далеко́
 - type: match-up
-  title: "Яка інтонація?"
-  instruction: "З'єднайте тип речення з правильною мелодією."
+  title: Vocabulary Match
+  instruction: Match the Ukrainian words to their English translations.
   pairs:
-    - left: "Де школа?"
-      right: "Голос підіймається на слові де, потім опускається"
-    - left: "Це школа."
-      right: "Голос опускається в кінці речення"
-    - left: "Це школа?"
-      right: "Голос різко підіймається в кінці речення"
-    - left: "Це школа!"
-      right: "Голос різко підіймається з сильною емоцією"
-    - left: "Я п'ю молоко."
-      right: "Спокійна розповідна мелодія з падінням в кінці"
-    - left: "Це дуже добре!"
-      right: "Енергійна оклична мелодія"
-
-- type: fill-in
-  title: "Лінгвістичні терміни"
-  instruction: "Доповніть речення правильним терміном."
+  - left: на́голос
+    right: stress / accent
+  - left: інтона́ція
+    right: intonation
+  - left: пита́ння
+    right: question
+  - left: ві́дповідь
+    right: answer
+  - left: до́брий
+    right: good
+  - left: далеко́
+    right: far
+  - left: писа́ти
+    right: to write
+  - left: доро́га
+    right: road
+- type: true-false
+  title: Vocabulary and Concepts
+  instruction: Is the statement true or false?
   items:
-    - sentence: "В українській мові _____ є вільним і рухомим."
-      answer: "наголос"
-      options:
-        - "наголос"
-        - "замок"
-        - "словник"
-        - "питання"
-    - sentence: "Мелодія всього речення називається _____."
-      answer: "інтонація"
-      options:
-        - "інтонація"
-        - "відповідь"
-        - "дорога"
-        - "вода"
-    - sentence: "У словниках наголос позначається знаком над _____."
-      answer: "голосною"
-      options:
-        - "голосною"
-        - "приголосною"
-        - "літерою"
-        - "крапкою"
-    - sentence: "Коли ми формуємо множину слова рука, наголос переходить на _____ склад."
-      answer: "перший"
-      options:
-        - "перший"
-        - "останній"
-        - "другий"
-        - "третій"
-    - sentence: "Слова замок і замок — це мінімальні _____."
-      answer: "пари"
-      options:
-        - "пари"
-        - "групи"
-        - "слова"
-        - "літери"
-    - sentence: "Для звичайного факту використовується розповідна _____."
-      answer: "інтонація"
-      options:
-        - "інтонація"
-        - "рука"
-        - "школа"
-        - "відповідь"
-
-- type: anagram
-  title: "Розшифруйте додаткові слова"
-  instruction: "Переставте літери, щоб знайти знайомі слова."
-  items:
-    - scrambled: "п и т а н н я"
-      answer: "питання"
-    - scrambled: "д о р о г а"
-      answer: "дорога"
-    - scrambled: "д о б р и й"
-      answer: "добрий"
-    - scrambled: "д а л е к о"
-      answer: "далеко"
-    - scrambled: "т а т о"
-      answer: "тато"
-    - scrambled: "м а м а"
-      answer: "мама"
+  - statement: The word на́голос means 'intonation' in English.
+    correct: false
+    explanation: на́голос means 'stress' or 'accent'. інтона́ція means 'intonation'.
+  - statement: The word пита́ння means 'question'.
+    correct: true
+    explanation: Yes, пита́ння is the Ukrainian word for question.
+  - statement: The word for 'road' is доро́га.
+    correct: true
+    explanation: 'Yes, and its stress is on the second-to-last syllable: доро́га.'
+  - statement: The word писа́ти means 'to read'.
+    correct: false
+    explanation: писа́ти means 'to write'.
+  - statement: The acute accent (´) is used in textbooks to show stress.
+    correct: true
+    explanation: Yes, it helps you know exactly which syllable to emphasize.
+  - statement: Ukrainian intonation cannot change the meaning of a sentence.
+    correct: false
+    explanation: Intonation is crucial! It can turn a statement into a question or
+      an exclamation.
+  - statement: The word ві́дповідь means 'answer'.
+    correct: true
+    explanation: Yes, ві́дповідь is the Ukrainian word for answer.
+  - statement: You should always try to guess the stress of a new word based on its
+      spelling.
+    correct: false
+    explanation: Never guess! Ukrainian stress is free, so you must memorize it with
+      every new word.

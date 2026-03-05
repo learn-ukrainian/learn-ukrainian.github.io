@@ -1,31 +1,59 @@
-# Дослідження: Demonstratives
+## Research Notes
 
-## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це; утворення форм множини присвійних і вказівних займенників: ... ті, ці."
-Alignment: This module strictly fulfills the A1 morphological requirement to introduce and accurately use demonstrative pronouns in singular and plural forms with correct gender agreement.
+**1. Textbook approach:**
+Ukrainian textbooks for beginners strategically introduce demonstrative pronouns (вказівні займенники) immediately following possessive pronouns. This is because words like *цей/ця/це* share the exact same adjectival gender agreement logic as *мій/моя/моє*. Textbooks initially focus strictly on spatial contrast—"here" (близько) versus "there" (далеко)—using concrete, highly visual vocabulary (e.g., pointing at a table, a window, a book).
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| цей | Very High (Top 50) | цей день (this day), цей чоловік (this man) |
-| ця | Very High (Top 100)| ця країна (this country), ця дівчина (this girl) |
-| це | Very High (Top 10) | це місто (this city), це питання (this question) |
-| той | High (Top 100) | той час (that time), той будинок (that house) |
+**2. Common errors for English speakers:**
+*   **Overusing "це" as a universal modifier:** English speakers often treat "це" like the invariable English "this," saying incorrectly *це книга* instead of *ця книга*, failing to match the feminine gender.
+*   **Plural mismatch:** Using singular demonstratives with plural nouns (e.g., saying *це студенти* or *цей студенти* instead of *ці студенти*).
+*   **The Copula Confusion:** Conflating the invariable identity marker "Це" ("This is...", e.g., *Це брат* = This is a brother) with the specific neuter demonstrative modifier "це" (*це вікно* = this window). This is the most critical hurdle at A1.
 
-## Cultural Hooks
-1. **The Ukrainian "Базар" (Market):** Navigating a traditional Ukrainian market relies heavily on spatial demonstratives. Pointing and saying «цей» (this one here) versus «той» (that one over there) is a fundamental, high-frequency daily survival skill for buying fresh produce.
-2. **Literary Resonance:** The word «той» frequently appears in Ukrainian folklore and literature to denote something distant, epic, or mysterious, such as the mythical creature «Той, що греблі рве» (The one who tears the dams) in Lesia Ukrainka's classic play "The Forest Song" (Лісова пісня). 
+**3. Cultural hook:**
+The Ukrainian *базар* (market) or local bakery is the ideal authentic environment for teaching this. Pointing at pastries or vegetables and distinguishing between "this one here" and "that one there" is an essential, highly practical survival skill in Ukraine. 
 
-## Common Learner Errors
-1. **Plural Disagreement:** *цей книги → ці книги. Learners often forget to pluralize the demonstrative when the noun is plural.
-2. **Copula "Це" vs. Demonstrative "це":** Confusing the invariable copula (Це кафе = This is a cafe) with the agreeing demonstrative pronoun (Це кафе гарне = This cafe is nice).
-3. **The "Та" Collision:** Confusing the feminine demonstrative «та» with the synonymous conjunction «та» (meaning 'and'). Example: «Та дівчина та хлопець» (That girl and the boy).
+**4. Cross-references:**
+This module heavily relies on the gender identification skills and noun agreement concepts solidified in **A1-20 (Mine and Yours)**. Furthermore, it acts as a direct prerequisite for **A1-22 (Numbers and Money)**, setting the stage for the learner to ask "How much is this?" or "I want that one."
 
-## Cross-References
-- Builds on: a1-20 (Mine and Yours) — leverages the established concept of gender agreement from possessive pronouns.
-- Prepares for: a1-22 (Numbers and Money) — essential for asking prices (Скільки коштує цей...).
+## Resource Discovery
 
-## Notes for Content Writing
-- **Decolonized Framing:** Frame the Ukrainian demonstrative system as an independent, rhythmic structure. Emphasize the distinct Ukrainian vowel sounds (ця, це, ці). Do not use Russian grammar as a reference point.
-- Ensure strict English scaffolding for all grammar explanations, as this is an A1 module. 
-- Use clear visual formatting (tables, bold text) to distinguish between the 'this' group and the 'that' group.
+### Videos
+- [УРОК 32. ВКАЗІВНІ ЗАЙМЕННИКИ THIS THAT THESE THOSE ПОЯСНЕННЯ УКРАЇНСЬКОЮ](https://www.youtube.com/watch?v=Ng0Lt33xBIk) (Learn Ukrainian Language) — The video directly addresses Ukrainian demonstrative pronouns 'цей, ця, це, ці' and explains their usage, including gender agreement, by contrasting them with English equivalents. This aligns perfectly with the module's core topic and initial sections.
+
+### Blog Articles
+- [This and That in Ukrainian — Demonstrative Pronouns](https://www.ukrainianlessons.com/pronouns-this-that/) (ukrainianlessons.com)
+- [7 helpful Ukrainian words to link sentences](https://www.ukrainianlessons.com/fmu10/) (ukrainianlessons.com)
+- [How to explain that you don’t speak Ukrainian very well (yet)](https://www.ukrainianlessons.com/fmu1/) (ukrainianlessons.com)
+- [Useful phrases for learning Ukrainian](https://www.ukrainianlessons.com/fmu2/) (ukrainianlessons.com)
+- [How to talk to an Uber / taxi driver in Ukrainian?](https://www.ukrainianlessons.com/fmu3/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 3, Сторінка 3: ТЕКСТ
+У розділі ти будеш вивчати:
+Дізнаєшся про:
+РОЗПОВІДЬ
+ОПИС
+МІРКУВАННЯ
+ЕСЕ
+про щось розповідає
+о...
+- Grade 1, Сторінка 60: 58
+Бачу В, в (ве).  Чую [в].
+в і н о *
+* * и в и
+в и * н і
+[  = •  | –  • – ]  
+[ –   –•| – •]  
+ви-...
+- Grade 11, Сторінка 60: 60
+ 
+ 
+ІІ   Один учень (учениця) має скласти доведення певного твердження, 
+а другий (друга) — його...
+- Grade 9, Сторінка 257: ПОРІВНЯЙМО:
+1. Цей будинок не старий
+е
+(
+й не є старий). 2. Цей будинок нестарий (є нестарий, тобто ...
+- Grade 6, Сторінка 273: § 54. Розряди займенників за значенням та особливості відмінювання   
+273
+Відмінювання вказівних зай...

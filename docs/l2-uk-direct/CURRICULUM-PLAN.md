@@ -1,10 +1,10 @@
 # l2-uk-direct Curriculum Plan
 
-> Last updated: 2026-02-27
+> Last updated: 2026-03-05
 > State standard reference: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
 > Gap analysis: `docs/l2-uk-direct/A1-GAP-ANALYSIS.md`
 > Research notes: `docs/l2-uk-direct/textbook-reading-notes/` (6 textbooks + cross-reference synthesis)
-> Companion plans: [A2-CURRICULUM.md](A2-CURRICULUM.md) (40 modules) | [B1-CURRICULUM.md](B1-CURRICULUM.md) (45 modules) | [B2-CURRICULUM.md](B2-CURRICULUM.md) (46 modules)
+> Companion plans: [A2-CURRICULUM.md](A2-CURRICULUM.md) (42 modules) | [B1-CURRICULUM.md](B1-CURRICULUM.md) (45 modules) | [B2-CURRICULUM.md](B2-CURRICULUM.md) (46 modules)
 > GH Issues: Infrastructure [#661](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/661) | Content [#662](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/662) | Textbooks [#663](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/663) | Scripts [#664](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/664)
 
 ---
@@ -55,19 +55,20 @@
 ---
 
 #### Module 1: `abetka-1`
-**Focus**: А М Л У Н С — first vowel + first consonants → syllables
+**Focus**: А О М Л У Н С — перші голосні і перші приголосні
 **Type**: `script_foundation`
 **Status**: ✅ Draft (abetka-1.yaml complete)
 **State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
+**Textbook**: Bolshakova 2018, pp.12-22
 
-**Letters** (6): А, М, Л, У, Н, С
-**Key goal**: Learn 2 vowels + 4 high-frequency consonants. Form first syllables: МА, МУ, НА, НУ, ЛА, ЛУ, СА, СУ.
-**Mascot video**: Черепаха Аха (Операція Черепаха)
+**Letters** (7): А, О, М, Л, У, Н, С
+**Key goal**: Learn 3 vowels (А, О, У) + 4 high-frequency consonants (М, Л, Н, С). О is the most frequent Ukrainian vowel (Bolshakova introduces it on p.13, second after А). Form first syllables: МА, МО, МУ, НА, НО, НУ, ЛА, ЛО, ЛУ, СА, СО, СУ.
+**Mascot video**: Черепаха Аха (Малятко ТВ)
 
 **Activities** (pre-literacy only):
-1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (6 videos)
-2. `classify` — vowels (А, У) vs consonants (М, Л, Н, С)
-3. `image_to_letter` — emoji → first letter from {А, М, Л, У, Н, С}
+1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (7 videos)
+2. `classify` — vowels (А, О, У) vs consonants (М, Л, Н, С)
+3. `image_to_letter` — emoji → first letter from {А, О, М, Л, У, Н, С}
 
 ---
 
@@ -77,13 +78,14 @@
 **Status**: ✅ Draft (abetka-2.yaml complete)
 **State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
 
-**Letters** (7): К, И, Р, Б, В, Д, І (13 total after this module)
-**Key goal**: With 13 letters, learner reads real words: МАМА, БАНАН, РУКА, ВОДА, МОЛОКО, СИЛА, КІНО.
+**Letters** (7): К, И, Р, Б, В, Д, І (14 total after this module)
+**Textbook**: Bolshakova 2018, pp.26-40
+**Key goal**: With 14 letters, learner reads real words: МАМА, БАНАН, РУКА, ВОДА, МОЛОКО, СИЛА, КІНО.
 
 **Activities** (pre-literacy only):
 1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (7 videos)
-2. `classify` — vowels (А, У, И, І) vs consonants (М, Л, Н, С, К, Р, Б, В, Д)
-3. `image_to_letter` — emoji → first letter from 13-letter set
+2. `classify` — vowels (А, О, У, И, І) vs consonants (М, Л, Н, С, К, Р, Б, В, Д)
+3. `image_to_letter` — emoji → first letter from 14-letter set
 
 ---
 
@@ -93,13 +95,14 @@
 **Status**: ✅ Draft (abetka-3.yaml complete)
 **State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
 
-**Letters** (9): П, Т, Г, Ґ, Е, З, Ж, Ш, Х (22 total after this module)
+**Letters** (9): П, Т, Г, Ґ, Е, З, Ж, Ш, Х (23 total after this module)
+**Textbook**: Bolshakova 2018, pp.42-58
 **Key goal**: Voiced/voiceless pairs (Г/Х, Ж/Ш, З/С). Nearly all common Ukrainian text is now readable.
 
 **Activities** (pre-literacy only):
 1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (9 videos)
 2. `classify` — vowel vs consonant; voiced vs voiceless
-3. `image_to_letter` — emoji → first letter from 22-letter set
+3. `image_to_letter` — emoji → first letter from 23-letter set
 
 ---
 
@@ -2013,7 +2016,7 @@ Greeting expressions:
 
 ---
 
-## A2 — 38 Modules (1–38)
+## A2 — 40 Modules (1–40)
 
 **Full plan**: [A2-CURRICULUM.md](A2-CURRICULUM.md)
 **Textbook sources**: Grade 3 (Vashulenko 2020) + Grade 4 (Kravtsova/Savchenko 2021)
@@ -2032,7 +2035,7 @@ A2 covers:
 
 Vocabulary target: 1800 cumulative (+1050 new from A1).
 
-## B1 — 42 Modules (1–42)
+## B1 — 45 Modules (1–45)
 
 **Full plan**: [B1-CURRICULUM.md](B1-CURRICULUM.md)
 **Textbook sources**: Grade 5 (Avramenko 2022) + Grade 6 (Avramenko/Тищенко 2023)
@@ -2050,6 +2053,24 @@ B1 covers:
 - **Writing** (заява, autobiography, retelling, reviews)
 
 Vocabulary target: 3300 cumulative (+1500 new from A2).
+
+## B2 — 46 Modules (1–46)
+
+**Full plan**: [B2-CURRICULUM.md](B2-CURRICULUM.md)
+**Textbook sources**: Grade 7 (Авраменко 2023) + Grade 8 (Авраменко 2024)
+
+B2 covers:
+- **Advanced syntax** (складнопідрядні, безособові, вставні конструкції)
+- **Active/passive participles** (дієприкметники) and adverbial participles (дієприслівники)
+- **Advanced morphology** (іменники IV відміни, невідмінювані, прикметники вищого/найвищого ступеня)
+- **Stylistics** (публіцистичний, офіційно-діловий, науковий стилі)
+- **Orthography edge cases** (не-/ні-, складні слова, кличний відмінок формальний)
+- **Text-level competence** (есе, рецензія, діловий лист, протокол)
+- **Discourse and cohesion** (засоби зв'язку, абзацування, аргументація)
+- **Register mastery** (formal/informal switching, суржик elimination)
+- **Media literacy** (аналіз медіатекстів, маніпулятивні прийоми)
+
+Vocabulary target: 5000 cumulative (+1700 new from B1).
 
 ---
 

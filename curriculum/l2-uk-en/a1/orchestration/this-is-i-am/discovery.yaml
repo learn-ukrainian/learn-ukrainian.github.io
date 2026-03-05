@@ -1,0 +1,149 @@
+discovered_at: '2026-03-05T20:59:58.697682+00:00'
+query_keywords:
+- This Is / I Am
+- Хто це? Що це?
+- Who is this? What is this?
+- Особові займенники
+- Personal Pronouns
+- 'Граматика: Секрет нульової зв''язки'
+- 'Grammar: The Zero Copula Secret'
+- Робота над помилками та практика
+- Error Correction and Practice
+- 'Продакшн: Хто я і Хто ви?'
+- Who am I and Who are you?
+- personal pronouns (я, ти, він, вона, etc.)
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=HgFOY1UkCXw
+  channel: Learn Ukrainian Language
+  title: Top 5 wichtigsten W-Fragen für Deutschanfänger | Deutsch lernen A1 @hallodeutschschule
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/fmu1/
+  title: How to explain that you don’t speak Ukrainian very well (yet)
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 1
+- url: https://www.ukrainianlessons.com/fmu2/
+  title: Useful phrases for learning Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 2
+- url: https://www.ukrainianlessons.com/fmu3/
+  title: How to talk to an Uber / taxi driver in Ukrainian?
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 3
+- url: https://www.ukrainianlessons.com/fmu4/
+  title: Vocabulary booster! Transport in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 4
+- url: https://www.ukrainianlessons.com/fmu5/
+  title: How to talk about transport in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - grammar
+  - cases
+  - instrumental
+  - vocabulary
+  - travel
+  - phrases
+  - culture
+  - lviv
+  - review
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 5
+rag_chunks:
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0086
+  text: "1\n( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ\n241. Зіскануй ОЯ-код та переглянь відеоролик\
+    \ про \nзайменники. Що нового ти дізнався / дізнала­\nся?\n242.1. Розглянь малюнки.\
+    \ Добери до них займенники.\nз—-**\n2. Досліди дібрані займенники.\nКрок 1. Вибери\
+    \ правильне твердження.\nо Займенники називають особу.\nо Займенники вказують\
+    \ на особу, але не називають її. \nКрок 2. Зроби висновок та порівняй із правилом.\n\
+    Займенник — це частина мови, яка вказує на предмет, але \nне називає його. Займенники\
+    \ я, ти, ми, він, вона, вон"
+  section_title: Сторінка 88
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0043
+  text: "ч ч\n>\n✓\n✓\nСлова — назви\n(предметів, ознак, дій, чисел)\nУ розділі ти\
+    \ дізнаєшся про:\n/\n< ч ч\nСЛОВА - НАЗВИ ПРЕДМЕТІВ \n(ІМЕННИКИ)\nхто? що?\nСЛОВА\
+    \ - НАЗВИ ОЗНАК \n\\\nПРЕДМЕТІВ (ПРИКМЕТНИКИ)\nякий? яка? \nяке? які?\nСЛОВА -\
+    \ НАЗВИ ДІЙ ПРЕДМЕТІВ \\ \n(ДІЄСЛОВА)\nщо робить? \nщо роблять?\nСЛОВА - НАЗВИ\
+    \ ЧИСЕЛ \n\\\n(ЧИСЛІВНИКИ)\nскільки?\nСЛУЖБОВІ СЛОВА\nі, та, у, до, під, \nза,\
+    \ над, від"
+  section_title: Сторінка 45
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0021
+  text: "21\nХто це?\nСлова — назви живих предметів\n\t Який у тебе сьогодні настрій?\
+    \ Вибери.\n [ –    –|–  ] \n [ =    –|–   ] \n [ –  |–  |– ] \n [ =  |–   – ]\
+    \ \nЩо?\nХто?"
+  section_title: Сторінка 23
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0104
+  text: "106\n225. Спиши слова. Поміркуй, якими особовими займен-\nниками їх можна\
+    \ замінити.\n226. Розгляньте таблицю. Зверніть увагу, що особові \nзайменники\
+    \ поділяють на три групи залежно від того, \nна яку особу чи яких осіб вони вказують.\n\
+    ЗНАЧЕННЯ ОСОБОВИХ ЗАЙМЕННИКІВ\nОсоба\nЧисло\nЗайменники  \nвказують на\nоднина\n\
+    множина\n1-ша\nя\nособу, яка говорить про себе\nми\nдвох і більше осіб, зокрема\
+    \ й \nтого, хто про себе говорить\n2-га\nти\nособу, до якої звертаються \nви\n\
+    особу (якщо це форма ввіч-\nливості) або осіб, до яки"
+  section_title: Сторінка 106
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

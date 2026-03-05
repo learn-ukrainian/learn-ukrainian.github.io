@@ -57,8 +57,9 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 - **Target**: approximately {WORD_TARGET} words (this is both the minimum AND the approximate ceiling — do not dramatically overshoot)
 - **Immersion**: {IMMERSION_RULE}
-- **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 4 different types
+- **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 4 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes FAILS validation.
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
+- **Structure**: Write ALL sections from the outline. Do not skip any section. Missing sections fail validation.
 
 ## Downstream Audit Gates (your content will be checked for)
 
@@ -68,7 +69,7 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 - **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
 - **Euphony**: і/й, у/в, з/із alternation (auto-fixable but better to write correctly)
-- **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types ([!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note])
+- **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types (hard fail if below minimum) — [!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note]
 - **Duplicate headers**: no two H2s sharing the same keyword (e.g., two headers containing «спадщина»)
 
 ---

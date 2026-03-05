@@ -1,33 +1,39 @@
-# Дослідження: The Living Verb II
+## Research Notes
 
-## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... сидіти (сиджу, сидиш, сидить, сидимо, сидите, сидять), дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться);"
-Alignment: Addresses the core requirement to master Second Conjugation present tense, explicitly demonstrating the consonant mutations (д→дж) and the labial L (в→вл) required by the standard.
+**Textbook Approach**
+Ukrainian textbooks typically introduce Class II (-ити) verbs immediately following Class I (-ати) verbs to establish the core bipartite verb system. They prioritize high-frequency regular verbs like *говорити* and *вчити* before immediately introducing the 1st person singular consonant mutations (labial + *л*, *д* → *дж*, *с* → *ш*, *т* → *ч*). These mutations are taught early because verbs like *робити*, *любити*, and *ходити* are essential for basic communication.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| говорити (to speak) | Top 100 | говорити українською, говорити правду |
-| робити (to do/make) | Top 50 | робити домашнє завдання, що ти робиш? |
-| любити (to love) | High Frequency | любити каву, я тебе люблю |
-| бачити (to see) | Top 200 | радий бачити, бачити на власні очі |
-| їсти (to eat) | High Frequency | хотіти їсти, смачно їсти |
-| пити (to drink) | High Frequency | пити воду, пити каву |
+**Common Errors for English Speakers**
+1. **Conjugation Mixing**: Incorrectly applying Class I vowels to Class II verbs (e.g., saying *ти робеш* instead of the correct *ти робиш*).
+2. **Mutation Omission**: Failing to apply the consonant change in the *я* form, leading to errors like *я ходю* (instead of *я ходжу*) or *я любю* (instead of *я люблю*).
+3. **Over-regularizing Irregulars**: Treating *їсти* as a regular verb and producing forms like *я їджу* or *я їстю* instead of *я їм*.
 
-## Cultural Hooks
-1. **The Hospitality Triad:** In Ukrainian culture, connection is forged via feeding and speaking. Refusing to eat (не їсти) or drink (не пити) when offered is culturally perceived as a rejection of a host's goodwill.
-2. **The Etymology of Love:** The root of «любити» (to love) comes from the PIE root *lewdh-, the exact same root that forms the word «люди» (people), showing that in the Ukrainian linguistic worldview, love is intrinsically tied to community and humanity.
+**Cultural Hook**
+The "Triad of Hospitality": *їсти* (to eat), *пити* (to drink), and *говорити* (to speak). In Ukrainian culture, hospitality is a cornerstone of social interaction. Refusing food or drink is often seen as rejecting goodwill. Additionally, there is a beautiful etymological link between the verb *любити* (to love) and the noun *люди* (people), originating from a Proto-Indo-European root that connects love intrinsically with community and belonging.
 
-## Common Learner Errors
-1. **Conjugation Mixing** → `ти робеш` (Incorrect) vs `ти робиш` (Correct) — Overgeneralizing the -е/є pattern learned in Class I verbs to Class II verbs.
-2. **Missing I-Form Mutations** → `я сидю / ходю` (Incorrect) vs `я сиджу / ходжу` (Correct) — Failing to apply the dental softening (д→дж) or labial L bridge in the first person singular.
-3. **Over-regularizing Irregulars** → `я їджу / їстю` (Incorrect) vs `я їм` (Correct) — Applying standard verb endings to the highly irregular verb «їсти».
+**Cross-References**
+- **Builds on**: M15 (The Living Verb I), M18 (Questions and Negation)
+- **Prepares for**: M17 (Reflexive Verbs), M21 (Past Tense)
+- **Constraint Reminder**: Imperative forms (like *Їж!*, *Пий!*) are restricted until M47. Indirect phrasing or English instructions must be used for practice setups.
 
-## Cross-References
-- Builds on: a1-15 (The Living Verb I), a1-18 (Questions and Negation)
-- Prepares for: a1-17 (Reflexive Verbs), a1-21 (Past Tense)
+## Resource Discovery
 
-## Notes for Content Writing
-- Frame Ukrainian grammar organically: do not use Russian as a comparative baseline.
-- Explain mutations phonetically: the "Labial L" (роблю) is just a physical bridge to comfortably transition from a lip sound (б, п, в, м) to the palatalized "ю". It makes the word physically easier to say.
-- Include English scaffolding for all grammatical explanations as per the A1 10-50% immersion band.
+
+### Blog Articles
+- [Verb Aspect in Ukrainian](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) (ukrainianlessons.com)
+- [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) (ukrainianlessons.com)
+- [Are you going to the party? — First verb conjugation in Ukrainian](https://www.ukrainianlessons.com/episode22/) (ukrainianlessons.com)
+- [Asking for advice in Ukrainian + Using imperfective and perfective verb aspects in Ukrainian](https://www.ukrainianlessons.com/episode91/) (ukrainianlessons.com)
+- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 190: Змінювання дієслів минулого часу
+за родами (в однині) й числами........................................
+- Grade 6, Сторінка 5: . . . . . . . . . . . . . . . . . . . 256
+Присвійні займенники . . . . . . . . . . . . . . . . . . ....
+- Grade 11, Сторінка 163: 2. Взірець, життєрадісність, рівновага, при5язнь, байдужість, бездіяль-
+ність, посередник, вкладення...
+- Grade 6, Сторінка 220: . . . . . . . 26
+§ 14–15. Написання  іншомовних  слів . . . . . . . . . . . . . . . . . . . . . . . ...
+- Grade 6, Сторінка 60: Так 
+ви дізнаєтесь, про що йтиметься в цьому параграфі. 22   24   22   20   12   16   31   22   23  ...

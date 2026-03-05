@@ -1,544 +1,373 @@
-- groups:
-  - items:
-    - читати
-    - слухати
-    - думати
-    - знати
-    - мати
-    - питати
-    name: Перша дієвідміна (-ати)
-  - items:
-    - говорити
-    - робити
-    - любити
-    - ходити
-    - бачити
-    - вчити
-    - платити
-    - сидіти
-    name: Друга дієвідміна (-ити)
-  instruction: Розподіліть дієслова за групами відповідно до їхнього закінчення в
-    інфінітиві (-ати чи -ити).
-  title: Тип 1 чи Тип 2?
-  type: group-sort
-- instruction: З’єднайте інфінітив з правильною формою "Я" (I).
+- type: fill-in
+  title: "Conjugate the Verbs"
+  instruction: "Choose the correct verb form for each sentence."
+  items:
+    - sentence: "Я _____ українську мову."
+      answer: "вчу"
+      options:
+        - "вчу"
+        - "вчиш"
+        - "вчить"
+        - "вчимо"
+      explanation: "For the pronoun я, the ending after ч is -у."
+    - sentence: "Ти _____ каву?"
+      answer: "п'єш"
+      options:
+        - "п'ю"
+        - "п'єш"
+        - "п'є"
+        - "п'ємо"
+      explanation: "For the pronoun ти, the ending is -єш."
+    - sentence: "Він _____ дуже багато."
+      answer: "говорить"
+      options:
+        - "говорю"
+        - "говориш"
+        - "говорить"
+        - "говорять"
+      explanation: "For the pronoun він, the ending is -ить."
+    - sentence: "Ми _____ вдома."
+      answer: "сидимо"
+      options:
+        - "сиджу"
+        - "сидиш"
+        - "сидить"
+        - "сидимо"
+      explanation: "For the pronoun ми, the ending is -имо."
+    - sentence: "Ви _____ тут?"
+      answer: "стоїте"
+      options:
+        - "стою"
+        - "стоїш"
+        - "стоїть"
+        - "стоїте"
+      explanation: "For the pronoun ви, the ending is -їте."
+    - sentence: "Вони _____ текст."
+      answer: "бачать"
+      options:
+        - "бачу"
+        - "бачиш"
+        - "бачить"
+        - "бачать"
+      explanation: "For the pronoun вони, the ending after ч is -ать."
+    - sentence: "Я _____ тебе."
+      answer: "люблю"
+      options:
+        - "люблю"
+        - "любиш"
+        - "любить"
+        - "люблять"
+      explanation: "For the pronoun я, we add an л before the -ю."
+    - sentence: "Ти _____ домашнє завдання."
+      answer: "робиш"
+      options:
+        - "роблю"
+        - "робиш"
+        - "робить"
+        - "роблять"
+      explanation: "For the pronoun ти, the ending is -иш."
+    - sentence: "Вона _____ смачно."
+      answer: "їсть"
+      options:
+        - "їм"
+        - "їси"
+        - "їсть"
+        - "їдять"
+      explanation: "For the pronoun вона, the irregular form is їсть."
+
+- type: match-up
+  title: "Vocabulary Match"
+  instruction: "Match the Ukrainian verbs with their English meanings."
   pairs:
-  - left: говорити
-    right: я говорю
-  - left: робити
-    right: я роблю
-  - left: любити
-    right: я люблю
-  - left: сидіти
-    right: я сиджу
-  - left: ходити
-    right: я ходжу
-  - left: платити
-    right: я плачу
-  - left: бачити
-    right: я бачу
-  - left: вчити
-    right: я вчу
-  - left: спати
-    right: я сплю
-  - left: пити
-    right: я п'ю
-  title: Я і моя дія
-  type: match-up
-- instruction: Оберіть правильну відповідь на запитання про граматику.
+    - left: "говорити"
+      right: "to speak"
+    - left: "робити"
+      right: "to do"
+    - left: "бачити"
+      right: "to see"
+    - left: "любити"
+      right: "to love"
+    - left: "їсти"
+      right: "to eat"
+    - left: "пити"
+      right: "to drink"
+    - left: "ходити"
+      right: "to walk"
+    - left: "вчити"
+      right: "to learn"
+    - left: "просити"
+      right: "to ask for"
+    - left: "сидіти"
+      right: "to sit"
+
+- type: quiz
+  title: "The I Form Mutations"
+  instruction: "Select the correct я form for each verb."
   items:
-  - explanation: 'Друга дієвідміна використовує літеру "и" (або "і/ї"), наприклад:
-      робиш, робить.'
-    options:
-    - correct: true
-      text: и
-    - correct: false
-      text: е
-    - correct: false
-      text: є
-    - correct: false
-      text: у
-    question: Яка літера є маркером другої дієвідміни у закінченнях?
-  - explanation: У другій дієвідміні "вони" мають закінчення -ять (або -ать), на відміну
-      від -ють у першій.
-    options:
-    - correct: true
-      text: -ять
-    - correct: false
-      text: -ють
-    - correct: false
-      text: -емо
-    - correct: false
-      text: -йте
-    question: Яке закінчення мають дієслова другої дієвідміни для займенника "вони"?
-  - explanation: Літера "л" додається для милозвучності після губних приголосних (б,
-      п, в, м, ф).
-    options:
-    - correct: true
-      text: Для зручної вимови
-    - correct: false
-      text: Це помилка
-    - correct: false
-      text: Так історично склалося
-    - correct: false
-      text: Це випадковість
-    question: Чому у слові "роблю" з’являється літера "л"?
-  - explanation: 'Дієслово "ходити" має чергування д → дж у формі "я": ходжу.'
-    options:
-    - correct: true
-      text: д змінюється на дж
-    - correct: false
-      text: д змінюється на ж
-    - correct: false
-      text: д не змінюється
-    - correct: false
-      text: д зникає
-    question: Як змінюється приголосний у слові "ходити" для форми "я"?
-  - explanation: Слово "їсти" є архаїчним і має унікальні закінчення, воно не належить
-      до типових груп.
-    options:
-    - correct: true
-      text: Це виняток з унікальними закінченнями
-    - correct: false
-      text: До першої (-ати)
-    - correct: false
-      text: До другої (-ити)
-    - correct: false
-      text: Це не дієслово
-    question: До якої дієвідміни належить слово "їсти"?
-  - explanation: Бачити закінчується на -ити і належить до другої дієвідміни.
-    options:
-    - correct: true
-      text: бачити
-    - correct: false
-      text: читати
-    - correct: false
-      text: співати
-    - correct: false
-      text: мати
-    question: Яке з цих слів належить до другої дієвідміни?
-  - explanation: Для форми "ми" у другій дієвідміні характерне закінчення -имо (наприклад,
-      робимо).
-    options:
-    - correct: true
-      text: -имо
-    - correct: false
-      text: -емо
-    - correct: false
-      text: -ють
-    - correct: false
-      text: -уть
-    question: Яке закінчення має форма "ми" у другій дієвідміні?
-  - explanation: У другій дієвідміні форма "ти" завжди має закінчення -иш.
-    options:
-    - correct: true
-      text: -иш
-    - correct: false
-      text: -еш
-    - correct: false
-      text: -єш
-    - correct: false
-      text: -ить
-    question: Яке закінчення має форма "ти" у другій дієвідміні?
-  title: Правила другої дієвідміни
-  type: quiz
-- instruction: Оберіть правильну форму дієслова для кожного речення.
+    - question: "What is the correct я form for робити (to do)?"
+      options:
+        - text: "роблю"
+          correct: true
+        - text: "робю"
+          correct: false
+        - text: "робу"
+          correct: false
+        - text: "робиш"
+          correct: false
+      explanation: "Verbs ending in -бити add an л in the я form."
+    - question: "What is the correct я form for ходити (to walk)?"
+      options:
+        - text: "ходжу"
+          correct: true
+        - text: "ходю"
+          correct: false
+        - text: "ходу"
+          correct: false
+        - text: "ходиш"
+          correct: false
+      explanation: "The д mutates to дж in the я form."
+    - question: "What is the correct я form for просити (to ask for)?"
+      options:
+        - text: "прошу"
+          correct: true
+        - text: "просю"
+          correct: false
+        - text: "просу"
+          correct: false
+        - text: "просиш"
+          correct: false
+      explanation: "The с mutates to ш in the я form."
+    - question: "What is the correct я form for платити (to pay)?"
+      options:
+        - text: "плачу"
+          correct: true
+        - text: "платю"
+          correct: false
+        - text: "плату"
+          correct: false
+        - text: "платиш"
+          correct: false
+      explanation: "The т mutates to ч in the я form."
+    - question: "What is the correct я form for їсти (to eat)?"
+      options:
+        - text: "їм"
+          correct: true
+        - text: "їджу"
+          correct: false
+        - text: "їстю"
+          correct: false
+        - text: "їсту"
+          correct: false
+      explanation: "The verb їсти is completely irregular."
+    - question: "What is the correct я form for пити (to drink)?"
+      options:
+        - text: "п'ю"
+          correct: true
+        - text: "пю"
+          correct: false
+        - text: "пию"
+          correct: false
+        - text: "пу"
+          correct: false
+      explanation: "Пити takes an apostrophe before the ю."
+    - question: "What is the correct я form for любити (to love)?"
+      options:
+        - text: "люблю"
+          correct: true
+        - text: "любю"
+          correct: false
+        - text: "любу"
+          correct: false
+        - text: "любити"
+          correct: false
+      explanation: "Like робити, it adds an л because the stem ends in б."
+    - question: "What is the correct я form for сидіти (to sit)?"
+      options:
+        - text: "сиджу"
+          correct: true
+        - text: "сидю"
+          correct: false
+        - text: "сиду"
+          correct: false
+        - text: "сидіти"
+          correct: false
+      explanation: "The д mutates to дж in the я form."
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide if these statements about Class II verbs are true or false."
   items:
-  - answer: говориш
-    explanation: Для "ти" у другій дієвідміні закінчення -иш.
-    options:
-    - говориш
-    - говорить
-    - говорю
-    - говорять
-    sentence: Ти ___ дуже добре і швидко.
-  - answer: робимо
-    explanation: Для "ми" закінчення -имо.
-    options:
-    - робимо
-    - робить
-    - робите
-    - роблю
-    sentence: Ми ___ домашнє завдання разом.
-  - answer: бачать
-    explanation: Для "вони" закінчення -ять (або -ать після шиплячих).
-    options:
-    - бачать
-    - бачить
-    - бачимо
-    - бачиш
-    sentence: Вони ___ красиву картину в музеї.
-  - answer: ходите
-    explanation: Для "ви" закінчення -ите.
-    options:
-    - ходите
-    - ходиш
-    - ходимо
-    - ходить
-    sentence: Ви часто ___ в цей парк?
-  - answer: любить
-    explanation: Для "він" закінчення -ить.
-    options:
-    - любить
-    - люблю
-    - люблять
-    - любиш
-    sentence: Він ___ читати цікаві книги.
-  - answer: говорю
-    explanation: Для "я" закінчення -ю.
-    options:
-    - говорю
-    - говорить
-    - говориш
-    - говорять
-    sentence: Я ___ українською мовою.
-  - answer: плачу
-    explanation: Дієслово "платити" має зміну т → ч у формі "я".
-    options:
-    - плачу
-    - плату
-    - платиш
-    - платять
-    sentence: Я ___ за каву карткою.
-  - answer: спить
-    explanation: Для "вона" (дитина) закінчення -ить.
-    options:
-    - спить
-    - сплю
-    - спиш
-    - сплять
-    sentence: Дитина вже тихо ___.
-  - answer: сидимо
-    explanation: Для "ми" закінчення -имо.
-    options:
-    - сидимо
-    - сидите
-    - сиджу
-    - сидять
-    sentence: Ми ___ вдома і п'ємо чай.
-  - answer: вчиш
-    explanation: Для "ти" закінчення -иш.
-    options:
-    - вчиш
-    - вчу
-    - вчить
-    - вчать
-    sentence: Ти ___ українську мову?
-  title: Правильні закінчення
-  type: fill-in
-- instruction: З’єднайте інфінітив з його формою для "я" (зверніть увагу на зміни
-    звуків).
+    - statement: "Class II verbs usually use the vowel и in their endings."
+      correct: true
+      explanation: "Yes, и and і are the signature vowels of Class II verbs."
+    - statement: "The verb говорити uses е in its endings."
+      correct: false
+      explanation: "No, говорити is a Class II verb, so it uses и."
+    - statement: "Consonant mutations in Class II verbs happen in all forms."
+      correct: false
+      explanation: "No, they only happen in the я (I) form."
+    - statement: "The correct form for I do is я робю."
+      correct: false
+      explanation: "False. You must add л, so it is я роблю."
+    - statement: "The verb їсти (to eat) follows the regular Class II pattern."
+      correct: false
+      explanation: "No, їсти is completely irregular."
+    - statement: "We use бачити to talk about the physical ability to see."
+      correct: true
+      explanation: "Yes, бачити means to see, while дивитися means to actively watch."
+    - statement: "The verb ходити changes д to дж in the я form."
+      correct: true
+      explanation: "Yes, я ходжу is the correct form."
+    - statement: "The вони (they) ending for Class II verbs is always -уть."
+      correct: false
+      explanation: "No, Class II verbs use -ять or -ать."
+
+- type: fill-in
+  title: "Everyday Actions"
+  instruction: "Complete the sentences with the correct verb form."
+  items:
+    - sentence: "Що ти _____?"
+      answer: "робиш"
+      options:
+        - "роблю"
+        - "робиш"
+        - "робить"
+        - "робити"
+      explanation: "The ти form of робити."
+    - sentence: "Я _____ воду."
+      answer: "п'ю"
+      options:
+        - "п'ю"
+        - "п'єш"
+        - "пию"
+        - "п'є"
+      explanation: "The я form of пити."
+    - sentence: "Вона _____ каву."
+      answer: "п'є"
+      options:
+        - "п'ю"
+        - "п'єш"
+        - "п'є"
+        - "п'ємо"
+      explanation: "The вона form of пити."
+    - sentence: "Ми дуже смачно _____."
+      answer: "їмо"
+      options:
+        - "їм"
+        - "їси"
+        - "їмо"
+        - "їдять"
+      explanation: "The ми form of їсти."
+    - sentence: "Ви _____ українською?"
+      answer: "говорите"
+      options:
+        - "говорю"
+        - "говориш"
+        - "говорить"
+        - "говорите"
+      explanation: "The ви form of говорити."
+    - sentence: "Вони _____ вдома."
+      answer: "сидять"
+      options:
+        - "сиджу"
+        - "сидиш"
+        - "сидить"
+        - "сидять"
+      explanation: "The вони form of сидіти."
+    - sentence: "Я _____ тебе."
+      answer: "бачу"
+      options:
+        - "бачу"
+        - "бачиш"
+        - "бачить"
+        - "бачать"
+      explanation: "The я form of бачити."
+    - sentence: "Ти _____ текст."
+      answer: "бачиш"
+      options:
+        - "бачу"
+        - "бачиш"
+        - "бачить"
+        - "бачать"
+      explanation: "The ти form of бачити."
+
+- type: group-sort
+  title: "Sort the Verb Categories"
+  instruction: "Sort the infinitives by their я form behavior."
+  groups:
+    - name: "Adds л (Labial Mutation)"
+      items:
+        - "робити"
+        - "любити"
+    - name: "Changes sound (Dental/Sibilant Mutation)"
+      items:
+        - "ходити"
+        - "сидіти"
+        - "просити"
+        - "платити"
+    - name: "Completely Irregular"
+      items:
+        - "їсти"
+        - "пити"
+
+- type: unjumble
+  title: "Build the Sentences"
+  instruction: "Put the words in the correct order."
+  items:
+    - words:
+        - "Я"
+        - "роблю"
+        - "домашнє"
+        - "завдання"
+      answer: "Я роблю домашнє завдання."
+    - words:
+        - "Ти"
+        - "багато"
+        - "говориш"
+        - "завжди"
+      answer: "Ти завжди багато говориш."
+    - words:
+        - "Ми"
+        - "смачно"
+        - "їмо"
+      answer: "Ми смачно їмо."
+    - words:
+        - "Вона"
+        - "любить"
+        - "пити"
+        - "воду"
+      answer: "Вона любить пити воду."
+    - words:
+        - "Вони"
+        - "завжди"
+        - "вчать"
+        - "слова"
+      answer: "Вони завжди вчать слова."
+    - words:
+        - "Я"
+        - "сиджу"
+        - "тут"
+      answer: "Я сиджу тут."
+
+- type: match-up
+  title: "Subject to Verb Match"
+  instruction: "Match the subject pronoun to the correct verb form for ходити and сидіти."
   pairs:
-  - left: робити
-    right: роблю
-  - left: любити
-    right: люблю
-  - left: спати
-    right: сплю
-  - left: сидіти
-    right: сиджу
-  - left: ходити
-    right: ходжу
-  - left: бачити
-    right: бачу
-  - left: платити
-    right: плачу
-  - left: вчити
-    right: вчу
-  - left: пити
-    right: п'ю
-  - left: говорити
-    right: говорю
-  title: 'Знайди пару: Я роблю...'
-  type: match-up
-- instruction: Оберіть правильну форму дієслів "їсти" або "пити".
-  items:
-  - answer: п'ю
-    explanation: Форма "я" для "пити" — п’ю.
-    options:
-    - п'ю
-    - п'єш
-    - п'є
-    - п'ють
-    sentence: Зранку я завжди ___ чорну каву.
-  - answer: їси
-    explanation: Унікальна форма "ти" для "їсти" — їси.
-    options:
-    - їси
-    - їм
-    - їсть
-    - їдять
-    sentence: Ти ___ смачне червоне яблуко.
-  - answer: п'ємо
-    explanation: Форма "ми" для "пити" — п’ємо.
-    options:
-    - п'ємо
-    - п'єте
-    - п'ють
-    - п'є
-    sentence: Ми ___ гарячий чай з лимоном.
-  - answer: їдять
-    explanation: Форма "вони" для "їсти" — їдять.
-    options:
-    - їдять
-    - їмо
-    - їсте
-    - їсть
-    sentence: Вони ___ смачну італійську піцу.
-  - answer: п'є
-    explanation: Форма "він" для "пити" — п’є.
-    options:
-    - п'є
-    - п'єш
-    - п'ють
-    - п'ю
-    sentence: Він ___ холодну воду.
-  - answer: їм
-    explanation: Коротка форма "я" для "їсти" — їм.
-    options:
-    - їм
-    - їси
-    - їсть
-    - їдять
-    sentence: Я ___ суп на обід.
-  - answer: їсте
-    explanation: Форма "ви" для "їсти" — їсте.
-    options:
-    - їсте
-    - їси
-    - їмо
-    - їдять
-    sentence: Ви ___ свіжий салат?
-  - answer: п'єш
-    explanation: Форма "ти" для "пити" — п'єш.
-    options:
-    - п'єш
-    - п'ю
-    - п'єте
-    - п'ють
-    sentence: Ти ___ зелений чай чи чорний?
-  - answer: п'ють
-    explanation: Форма "вони" для "пити" — п'ють.
-    options:
-    - п'ють
-    - п'ємо
-    - п'є
-    - п'єш
-    sentence: Діти ___ яблучний сік.
-  - answer: їмо
-    explanation: Форма "ми" для "їсти" — їмо.
-    options:
-    - їмо
-    - їм
-    - їдять
-    - їси
-    sentence: Ми ___ борщ із пампушками.
-  title: Їсти чи Пити?
-  type: fill-in
-- groups:
-  - items:
-    - говорити
-    - вчити
-    - бачити
-    - читати
-    - думати
-    - мати
-    name: Без змін
-  - items:
-    - робити
-    - любити
-    - спати
-    name: З'являється Л
-  - items:
-    - ходити
-    - сидіти
-    - платити
-    name: Змінюється приголосний
-  instruction: Розподіліть дієслова за тим, як змінюється їхня основа у формі "Я"
-    (I).
-  title: Яка зміна в "Я"?
-  type: group-sort
-- instruction: Визначте, чи є твердження граматично правильним.
-  items:
-  - correct: false
-    explanation: '"Читати" — це перша дієвідміна (-ати).'
-    statement: Дієслово "читати" належить до другої дієвідміни (-ити).
-  - correct: true
-    explanation: Так, це явище називається "губний л".
-    statement: Форма "я роблю" має літеру "л" для милозвучності.
-  - correct: false
-    explanation: 'Неправильно. У другій дієвідміні пишемо -иш: "ти робиш".'
-    statement: Правильно казати "ти робеш".
-  - correct: true
-    explanation: Це правильна архаїчна форма.
-    statement: Дієслово "їсти" має форму "я їм".
-  - correct: false
-    explanation: Неправильно. Правильна форма — "говорять".
-    statement: Форма "вони" для слова "говорити" — "говорють".
-  - correct: true
-    explanation: Так, бо інфінітив закінчується на -ити.
-    statement: Дієслово "бачити" належить до другої дієвідміни.
-  - correct: false
-    explanation: Ні, "спати" належить до другої дієвідміни, хоч і закінчується на
-      -ати.
-    statement: Дієслово "спати" належить до першої дієвідміни, бо закінчується на
-      -ати.
-  - correct: true
-    explanation: Правильно, "ми їмо".
-    statement: '"Ми їмо" — це правильна форма.'
-  - correct: false
-    explanation: Ні, правильна форма — "ти п'єш", з апострофом.
-    statement: Форма "ти" для слова "пити" — "пиєш" (без апострофа).
-  - correct: true
-    explanation: Так, відбувається зміна т → ч.
-    statement: Слово "платити" у формі "я" звучить як "я плачу".
-  title: Правда чи ні?
-  type: true-false
-- instruction: Складіть речення з поданих слів.
-  items:
-  - words:
-    - Я
-    - завжди
-    - говорю
-    - правду.
-    answer: Я завжди говорю правду.
-  - words:
-    - Ти
-    - щодня
-    - робиш
-    - завдання.
-    answer: Ти щодня робиш завдання.
-  - words:
-    - Ми
-    - сидимо
-    - у
-    - парку.
-    answer: Ми сидимо у парку.
-  - words:
-    - Вона
-    - любить
-    - пити
-    - каву.
-    answer: Вона любить пити каву.
-  - words:
-    - Вони
-    - вчаться
-    - дуже
-    - добре.
-    answer: Вони вчаться дуже добре.
-  - words:
-    - Я
-    - часто
-    - ходжу
-    - туди.
-    answer: Я часто ходжу туди.
-  - words:
-    - Він
-    - платить
-    - за
-    - чай.
-    answer: Він платить за чай.
-  - words:
-    - Ти
-    - смачно
-    - їси
-    - борщ.
-    answer: Ти смачно їси борщ.
-  - words:
-    - Я
-    - бачу
-    - свого
-    - друга.
-    answer: Я бачу свого друга.
-  - words:
-    - Ми
-    - дивимося
-    - нове
-    - кіно.
-    answer: Ми дивимося нове кіно.
-  title: Нові слова
-  type: unjumble
-- instruction: Оберіть правильне слово для контексту.
-  items:
-  - answer: роблю
-    explanation: Робити зарядку — to do exercises.
-    options:
-    - роблю
-    - робиш
-    - робить
-    - роблять
-    sentence: Я ___ зарядку кожного ранку.
-  - answer: говоримо
-    explanation: Говорити про фільм — to speak about a movie.
-    options:
-    - говоримо
-    - говорите
-    - говорять
-    - говорить
-    sentence: Ми ___ з другом про фільм.
-  - answer: бачиш
-    explanation: Бачити когось — to see someone.
-    options:
-    - бачиш
-    - бачать
-    - бачить
-    - бачу
-    sentence: Ти ___ мене?
-  - answer: ходять
-    explanation: Ходити в парку — to walk in the park.
-    options:
-    - ходять
-    - ходиш
-    - ходить
-    - ходимо
-    sentence: Вони ___ у парку.
-  - answer: любите
-    explanation: Любити музику — to love music.
-    options:
-    - любите
-    - любиш
-    - люблять
-    - любимо
-    sentence: Ви ___ українську музику?
-  - answer: сидить
-    explanation: Сидіти на стільці — to sit on a chair.
-    options:
-    - сидить
-    - сиджу
-    - сидять
-    - сидиш
-    sentence: Він ___ на стільці.
-  - answer: спить
-    explanation: Спати на дивані - to sleep on the sofa.
-    options:
-    - спить
-    - сплять
-    - сплю
-    - спиш
-    sentence: Кіт солодко ___ на дивані.
-  - answer: платимо
-    explanation: Платити в ресторані - to pay in a restaurant.
-    options:
-    - платимо
-    - плачу
-    - платите
-    - платять
-    sentence: Ми ___ за вечерю в ресторані.
-  - answer: вчиш
-    explanation: Вчити мову - to learn a language.
-    options:
-    - вчиш
-    - вчу
-    - вчить
-    - вчать
-    sentence: Що ти зараз ___?
-  - answer: п'ють
-    explanation: Пити сік - to drink juice.
-    options:
-    - п'ють
-    - п'є
-    - п'єш
-    - п'ю
-    sentence: Діти ___ смачний сік.
-  title: 'Контекст: Що ми робимо?'
-  type: fill-in
+    - left: "Я (ходити)"
+      right: "ходжу"
+    - left: "Ти (ходити)"
+      right: "ходиш"
+    - left: "Він (ходити)"
+      right: "ходить"
+    - left: "Ми (ходити)"
+      right: "ходимо"
+    - left: "Ви (ходити)"
+      right: "ходите"
+    - left: "Я (сидіти)"
+      right: "сиджу"
+    - left: "Ти (сидіти)"
+      right: "сидиш"
+    - left: "Вона (сидіти)"
+      right: "сидить"
+    - left: "Вони (сидіти)"
+      right: "сидять"

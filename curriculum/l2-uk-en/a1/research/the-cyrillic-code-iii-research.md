@@ -1,32 +1,79 @@
 # Дослідження: The Cyrillic Code III
 
 ## State Standard Reference
-§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери..."
-§4.1.4: "...голосні та приголосні звуки... звуки [дж], [дз]: джинси, дзеркало."
-Alignment: This module directly addresses the A1 requirement to recognize the Ukrainian alphabet and properly pronounce its core vowels, consonants, and specific affricates (дж, дз).
+§4.1.4: "Vowel and consonant sounds" and §4.1.1 "Ukrainian alphabet"
+Alignment: Foundational literacy prerequisite establishing the consonant system, specifically introducing voiced/voiceless pairs and bringing the learner's known alphabet to 23 of 33 letters.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| хліб | ~300 (High) | хліб-сіль, свіжий хліб |
-| транспорт | ~950 (Medium) | громадський транспорт |
-| пошта | ~1100 (Medium) | на пошту, електронна пошта |
-| ресторан | ~1400 (Medium) | у ресторані, піти в ресторан |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| хліб | Cultural staple, high frequency, demonstrates Х | білий хліб, свіжий хліб |
+| школа | Top 200 word, highly recognizable, demonstrates Ш | нова школа |
+| будинок | Core vocabulary for places/homes, demonstrates Б and Д | великий будинок |
+| парк | Internationalism, builds confidence, demonstrates П | міський парк |
 
 ## Cultural Hooks
-1. **Хліб (Bread) as a Sacred Symbol**: In Ukrainian culture, bread is more than food—it is treated with reverence and often referred to as "holy" (святий). The tradition of welcoming guests with bread and salt (хліб-сіль) on an embroidered towel (рушник) represents the highest sign of respect and hospitality.
-2. **The Letter Ф is a "Foreigner"**: The letter Ф is almost exclusively found in loanwords (факт, фото, футбол). Native Ukrainian words naturally avoid this sound, often historically replacing it with ХВ or Т (e.g., Пилип instead of Philip).
+1. "Хліб-сіль" (Bread and salt) is a traditional Slavic welcoming ceremony, symbolizing hospitality and friendship. "Хліб" is perfectly introduced here alongside the letter Х.
 
 ## Common Learner Errors
-1. **Mispronouncing Cyrillic Р as /p/** → *Correct form*: Trilled /r/. *Why it happens*: Visual interference from the Latin alphabet.
-2. **Treating Дж and Дз as separate sounds** → *Correct form*: Single affricates /dʒ/ and /dz/. *Why it happens*: Learners read left-to-right sequentially (D + Zh) rather than recognizing the digraph as a single phonetic unit, missing a uniquely Ukrainian phonetic feature.
-3. **Reducing unstressed О to /a/** → *Correct form*: Retaining a clear /o/ sound even when unstressed (e.g., молоко). *Why it happens*: Applying Russian phonological rules (akanye) to Ukrainian, which strictly preserves the /o/ quality.
+1. Visual Trap: Confusing the new letter П (looks like a platform, sounds like /p/) with the previously learned letter Р (sounds like /r/). → Minimal pair visual practice is essential to break this habit early.
+2. English interference on Г: Pronouncing the Ukrainian Г as a hard English 'g' (like in "go"). → Emphasize that it is a soft, throaty glottal fricative (/ɦ/), and explicit articulatory instruction is needed.
+3. Voicing errors: Struggling to differentiate sibilant pairs like Ж /zh/ and Ш /sh/ since the voiced equivalent /zh/ does not have its own distinct single letter in the English alphabet.
 
 ## Cross-References
-- Builds on: a1-01 (The Cyrillic Code I), a1-02 (The Cyrillic Code II)
+- Builds on: a1-02 (The Cyrillic Code II)
 - Prepares for: a1-04 (The Cyrillic Code IV)
 
 ## Notes for Content Writing
-- Use English scaffolding for the grammar and phonetic explanations, as this is an A1 module.
-- Introduce the "middle block" of the alphabet not just as new letters, but as building blocks for high-frequency internationalisms to boost early reading confidence.
-- Frame Дж and Дз positively as beautiful, distinct features of the Ukrainian language. Do not contrast them with Russian.
+- DECODABILITY constraint: You can only use the 23 known letters for reading practice. Any words containing unknown letters (Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ) must have an English translation.
+- GRAMMAR BAN: No verbs or verb conjugations are allowed yet. Keep examples restricted to bare nouns and simple noun phrases.
+- Metalanguage: Keep instructions in English, with Ukrainian terms in parentheses.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
+- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
+- [Talk Ukrainian: Ukrainian alphabet with pronunciation](https://talkukrainian.com/ukrainian-alphabet/) (talkukrainian)
+- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode200/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 5: * 
+6. Розглянь таблиці. Пригадай, за допомогою чого утворю­
+ються дзвінкі приголосні. Що ми чуємо, к...
+- Grade 3, Сторінка 39: 39
+108.	 1.	 Пригадай дзвінкі приголосні звуки.
+[б]
+[д]
+[д´]
+[з]
+[з´]
+[ж]
+[дж]
+[дз]
+[дз´]
+[г]
+[ґ]
+[в...
+- Grade 1, Сторінка 79: . . . . . . . . . . . . . . . . . . . . . . . . 60
+П п . . . . . . . . . . . . . . . . . . . . . . ....
+- Grade 2, Сторінка 3: ЗВУКИ І БУКВИ
+к
+і
+<
+ЗВУКИ
+СКЛАД^
+У розділі ти будеш вивчати:
+БУКВИ
+НАГОЛОС
+Дізнаєшся про:
+к
+1
+г
+л
+І
+...
+- Grade 5, Сторінка 4: . . . . . 133
+Звукове значення букв я, ю, є, ї та  щ. Звуки  [дж], [дз] . . . . . . . . . . 137
+Вимо...

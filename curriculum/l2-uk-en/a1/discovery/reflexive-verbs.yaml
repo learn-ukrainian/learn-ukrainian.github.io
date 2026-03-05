@@ -1,0 +1,143 @@
+discovered_at: '2026-03-05T04:35:40.519441+00:00'
+query_keywords:
+- Reflexive Verbs (-ся)
+- Дзеркало дії
+- Mirroring Action
+- Форми та відмінювання
+- Forms and Conjugation
+- Семантичні групи
+- Semantic Groups
+- Практика та застосування
+- Practice and Application
+- reflexive verbs ending in -ся
+- reflexive verbs in present tense
+- Learner understands difference between transitive and reflexive verbs
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode14/
+  title: Likes and dislikes — common verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - verbs
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 14
+- url: https://www.ukrainianlessons.com/episode34/
+  title: Going to the movies in Ukraine — Perfective verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - verbs
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 34
+- url: https://www.ukrainianlessons.com/episode109/
+  title: On a date in Ukrainian + Reflexive verbs
+  source: ukrainianlessons.com
+  relevance_score: 0.7000000000000001
+  topics:
+  - grammar
+  - verbs
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 109
+- url: https://opentext.ku.edu/dobraforma/chapter/23-1/
+  title: 'Dobra Forma: Present Tense of -ся Verbs (First Conjugation)'
+  source: dobraforma
+  relevance_score: 0.7
+  topics:
+  - reflexive
+  - verbs
+  - conjugation
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/23-2/
+  title: 'Dobra Forma: Present Tense of -ся Verbs (Second Conjugation)'
+  source: dobraforma
+  relevance_score: 0.7
+  topics:
+  - reflexive
+  - verbs
+  - conjugation
+  - grammar
+rag_chunks:
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
+  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
+    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
+  section_title: Сторінка 190
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0315
+  text: "Дієслова із суфіксом -ся(-сь), які \nвиражають зворотну дію, нази-\nваються\
+    \ зворотними: навчатися, \nзакохатися. Сучасний дієслівний суфікс \n-ся(-сь) —\
+    \ це давня коротка фор-\nма зворотного займенника себе \nв Зн. в. однини: Я не\
+    \ боюся. — \nЯ ся не бою (діал.). Уживається -ся(-сь) після інфі-\nнітивного суфікса\
+    \ -ти(-ть) або \nзакінчення в особових формах \nдієслова: вмивати — вмивати-\n\
+    ся, взувати — взуватися."
+  section_title: Сторінка 176
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0012
+  text: '. . . . . . . . . . . . . . . . . . . 256
+
+    Присвійні займенники . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 259
+
+    Зворотний займенник себе. . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . 262
+
+    Питальні й  відносні займенники . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 264
+
+    Заперечні й  неозначені займенники . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . '
+  section_title: Сторінка 5
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0493
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . 176
+
+    § 71 Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів I та
+    II дієвідміни . . . . . . . . . . . . . . . . . . . . . . . . . . 178'
+  section_title: Сторінка 270
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0325
+  text: ". . . . . . . 33\n§ 8 \nДієслово. Дієслівні форми  . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 37\n§ 9 \nПаралельні форми вираження наказового  способу\
+    \ дієслів І та ІІ особи множини . . . . . 46\n§ 10 \nСкладні ви5падки словозміни\
+    \ дієслів дати, їсти, відповісти, бути . . . . . . . . . . . . . . . . . . . .\
+    \ 49\n§ 11 \nАктивні й пасивні дієприкметники . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 221
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

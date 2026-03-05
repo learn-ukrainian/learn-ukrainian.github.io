@@ -1,61 +1,67 @@
 items:
-- lemma: бути
-  pos: verb
-- lemma: вона
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: він
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: булий
-  pos: adj
-- lemma: ми
-  pos: noun
-- lemma: робити
-  pos: verb
-- lemma: дивитися
-  pos: verb
-- lemma: вчора
-  pos: adv
-- lemma: вони
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: працювати
-  pos: verb
-- lemma: пити
-  pos: verb
-- lemma: говорити
-  pos: verb
-- lemma: їсти
-  pos: verb
-- lemma: там
-  pos: adv
-- lemma: писати
-  pos: verb
-- lemma: відпочивати
-  pos: verb
-- lemma: минулий
-  pos: adj
-- lemma: книга
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: минуле
-  pos: noun
-- lemma: потім
-  pos: adv
-- lemma: іти
-  pos: verb
-- lemma: хотіти
-  pos: verb
-- lemma: день
-  pos: noun
+  - lemma: 'вчора'
+    translation: 'yesterday'
+    pos: 'adverb'
+  - lemma: 'бути'
+    translation: 'to be'
+    pos: 'verb'
+  - lemma: 'робити'
+    translation: 'to do, to make'
+    pos: 'verb'
+  - lemma: 'їсти'
+    translation: 'to eat'
+    pos: 'verb'
+  - lemma: 'пити'
+    translation: 'to drink'
+    pos: 'verb'
+  - lemma: 'читати'
+    translation: 'to read'
+    pos: 'verb'
+  - lemma: 'дивитися'
+    translation: 'to watch, to look'
+    pos: 'verb'
+  - lemma: 'ходити'
+    translation: 'to go (on foot, habitual)'
+    pos: 'verb'
+  - lemma: 'йти'
+    translation: 'to go (on foot, one direction)'
+    pos: 'verb'
+  - lemma: 'минулий'
+    translation: 'last, past'
+    pos: 'adjective'
+  - lemma: 'раніше'
+    translation: 'earlier'
+    pos: 'adverb'
+  - lemma: 'тиждень'
+    translation: 'week'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'місяць'
+    translation: 'month'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'рік'
+    translation: 'year'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'спати'
+    translation: 'to sleep'
+    pos: 'verb'
+  - lemma: 'працювати'
+    translation: 'to work'
+    pos: 'verb'
+  - lemma: 'ранок'
+    translation: 'morning'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'вечір'
+    translation: 'evening'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'робота'
+    translation: 'work'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'вдома'
+    translation: 'at home'
+    pos: 'adverb'

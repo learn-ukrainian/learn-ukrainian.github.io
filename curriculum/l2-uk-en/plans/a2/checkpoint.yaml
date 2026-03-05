@@ -8,7 +8,7 @@ subtitle: Complex Sentences & Health
 focus: checkpoint
 pedagogy: TTT
 phase: A2.2
-word_target: 1500
+word_target: 2000
 objectives:
 - Learner can build complex arguments using logical connectors
 - Learner can use relative clauses to define and describe
@@ -18,65 +18,76 @@ sources:
 - name: Ukrainian State Standard 2024 - A2.2 Assessment
   url: https://mon.gov.ua/
   type: reference
-  notes: Proficiency benchmarks for complex sentences and health communication at A2.2
+  notes: Proficiency benchmarks for complex sentences and health communication at
+    A2.2
 - name: Review of Ukrainian Syntax for A2
   url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
   type: reference
   notes: Synthesized logic for coordinating multiple subordinate clauses
 content_outline:
 - section: Вступ та цілі (Introduction and Objectives)
-  words: 200
+  words: 267
   points:
-  - 'Mapping Level A2.2 proficiency: transitioning from simple reports to complex logical structures aligned with State Standard
-    §4.4.2'
-  - Defining competencies for health communication, pharmacy interactions, and describing physical states per State Standard
-    §3.12
+  - 'Mapping Level A2.2 proficiency: transitioning from simple reports to complex
+    logical structures aligned with State Standard §4.4.2'
+  - Defining competencies for health communication, pharmacy interactions, and describing
+    physical states per State Standard §3.12
 - section: 'Синтаксис логіки: Причина та Мета (Syntax of Logic: Cause and Purpose)'
-  words: 375
+  words: 500
   points:
-  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через). Focus on register: correcting the overuse of ''тому що''
-    in casual speech where ''бо'' is more natural'
-  - 'The Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past). Critical drill for the ''щоб'' (in order to) vs ''що
-    б'' (what would) learner error'
-  - 'Scaffolding causal and final clauses with specific medical contexts: explaining why one goes to the doctor or takes specific
-    medicine'
+  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через). Focus on register:
+    correcting the overuse of ''тому що'' in casual speech where ''бо'' is more natural'
+  - 'The Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past). Critical drill
+    for the ''щоб'' (in order to) vs ''що б'' (what would) learner error'
+  - 'Scaffolding causal and final clauses with specific medical contexts: explaining
+    why one goes to the doctor or takes specific medicine'
 - section: Опис та послідовність дій (Description and Sequence of Actions)
-  words: 375
+  words: 500
   points:
-  - 'The Relative Chameleon: Using ''який'' to define nouns. Targeted correction of ''який agreement'' errors (matching gender/case
-    with the antecedent noun)'
-  - 'Time Coordination: Integrating ''коли'', ''поки'', and ''після того як'' to sequence health-related events (e.g., ''Take
-    medicine after you eat'')'
-  - 'Preparing for B1 syntax: how complex A2 structures pave the way for conditional ''якби'' sentences'
+  - 'The Relative Chameleon: Using ''який'' to define nouns. Targeted correction of
+    ''який agreement'' errors (matching gender/case with the antecedent noun)'
+  - 'Time Coordination: Integrating ''коли'', ''поки'', and ''після того як'' to sequence
+    health-related events (e.g., ''Take medicine after you eat'')'
+  - 'Preparing for B1 syntax: how complex A2 structures pave the way for conditional
+    ''якби'' sentences'
 - section: Медицина, тіло та народні методи (Medicine, Body and Folk Methods)
-  words: 350
+  words: 467
   points:
-  - Integrating body parts (голова, живіт, горло, рука/нога) with pain expression using Accusative and Genitive cases
-  - 'Pharmacy interactions: Correcting the literal translation of ''take medicine'' from ''брати'' to ''приймати ліки'' (formal)
-    or ''пити ліки'' (colloquial)'
-  - 'Cultural Hook: Traditional Ukrainian treatments for colds—hot tea with raspberry (малина), viburnum (калина), and honey
-    (мед) as natural antipyretics'
+  - Integrating body parts (голова, живіт, горло, рука/нога) with pain expression
+    using Accusative and Genitive cases
+  - 'Pharmacy interactions: Correcting the literal translation of ''take medicine''
+    from ''брати'' to ''приймати ліки'' (formal) or ''пити ліки'' (colloquial)'
+  - 'Cultural Hook: Traditional Ukrainian treatments for colds—hot tea with raspberry
+    (малина), viburnum (калина), and honey (мед) as natural antipyretics'
 - section: Практичне застосування та підсумок (Practical Application and Summary)
-  words: 200
+  words: 266
   points:
-  - 'Integration Challenge: navigating a medical consultation by combining cause, purpose, and description skills'
-  - 'Cultural Hook: Usage of the toast ''Будьмо!'' (Let us be!) in social health rituals, emphasizing its literal meaning
-    of being healthy and alive'
+  - 'Integration Challenge: navigating a medical consultation by combining cause,
+    purpose, and description skills'
+  - 'Cultural Hook: Usage of the toast ''Будьмо!'' (Let us be!) in social health rituals,
+    emphasizing its literal meaning of being healthy and alive'
 vocabulary_hints:
   required:
-  - голова (head) — болить голова (headache), мити голову (wash hair); high-frequency body part
-  - горло (throat) — червоне горло (red/sore throat), болить горло (sore throat); high frequency for illness
-  - температура (temperature/fever) — висока температура (high fever), міряти температуру (take temperature)
-  - ліки (medicine) — приймати ліки (formal/correct), пити ліки (colloquial); avoid literal 'take' translations
-  - лікар (doctor) — йти до лікаря (go to the doctor), записатися до лікаря (make an appointment)
+  - голова (head) — болить голова (headache), мити голову (wash hair); high-frequency
+    body part
+  - горло (throat) — червоне горло (red/sore throat), болить горло (sore throat);
+    high frequency for illness
+  - температура (temperature/fever) — висока температура (high fever), міряти температуру
+    (take temperature)
+  - ліки (medicine) — приймати ліки (formal/correct), пити ліки (colloquial); avoid
+    literal 'take' translations
+  - лікар (doctor) — йти до лікаря (go to the doctor), записатися до лікаря (make
+    an appointment)
   - живіт (stomach/belly) — болить живіт (stomach ache); essential for pain description
   - застуда (cold) — мати застуду (have a cold), лікувати застуду (treat a cold)
   recommended:
-  - рука/нога (arm/hand / leg/foot) — зламати руку (break an arm), права нога (right leg)
+  - рука/нога (arm/hand / leg/foot) — зламати руку (break an arm), права нога (right
+    leg)
   - малина (raspberry) — малина з чаєм; used in traditional cold treatments
   - калина (viburnum) — чай з калиною; traditional natural medicine
   - мед (honey) — додавати мед у чай; natural antipyretic
-  - 'щоб (in order to) — conjunction of purpose; learner error: distinguish from ''що б'''
+  - 'щоб (in order to) — conjunction of purpose; learner error: distinguish from ''що
+    б'''
   - бо (because) — natural/casual register; contrast with formal 'тому що'
 persona:
   voice: Encouraging Cultural Guide

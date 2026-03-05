@@ -36,21 +36,22 @@ Read the level quick-ref for constraints:
 
 Research **{TOPIC_TITLE}** for the **{LEVEL}** track.
 
-Beginner research is focused and practical — no literary analysis, no decolonization framing, no frequency studies.
+Beginner research is focused and practical — no literary analysis, no decolonization framing.
 
 ### What to research:
 
-1. **Textbook approach**: How do Ukrainian textbooks for beginners introduce this topic? What order, what examples?
-2. **Common errors**: 2-3 mistakes English speakers make with this topic
-3. **Cultural hook**: 1 verified cultural fact or fun connection (keep it simple and age-appropriate)
-4. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
+1. **State Standard**: Briefly check `docs/l2-uk-en/state-standard-2024-mapping.yaml` for the relevant {LEVEL} entry. Quote the §reference if one exists. If no mapping applies (e.g., letter-introduction modules), write "No specific § — foundational literacy prerequisite."
+2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 3 rows.
+3. **Common errors**: 2-3 mistakes English speakers make with this topic (numbered list)
+4. **Cultural hook**: 1-2 verified cultural facts or fun connections (numbered list, keep it simple)
+5. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
+6. **Notes**: Any observations useful for the content writer
 
 ### What NOT to research:
 
-- State Standard mapping (not useful for letter/syllable modules)
-- Vocabulary frequency analysis (word list is provided in constraints)
 - Decolonization framing (irrelevant for alphabet and basic vocabulary)
 - Literary or historical sources
+- Deep frequency analysis (a brief table is enough)
 
 ---
 
@@ -73,11 +74,36 @@ Generate a `content_outline` for this module. The outline defines H2/H3 structur
 
 ```
 ===RESEARCH_START===
-## Research Notes
 
-[Your research findings — 200-400 words max]
+# Дослідження: {TOPIC_TITLE}
+
+## State Standard Reference
+§{section_number}: "{quoted requirement}" (or "No specific § — foundational literacy prerequisite" for alphabet modules)
+Alignment: {how this module addresses the standard}
+
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| ...  | ...   | ...              |
+
+## Cultural Hooks
+1. {Verified fact — keep simple and age-appropriate}
+
+## Common Learner Errors
+1. {Error pattern} → {Correct form} — {Why it happens}
+2. ...
+
+## Cross-References
+- Builds on: {module slugs or "first module"}
+- Prepares for: {module slugs}
+
+## Notes for Content Writing
+- {Any observations for the content writer}
+
 ===RESEARCH_END===
 ```
+
+**Research word cap**: 400-800 words. Keep it dense: facts, tables, examples — not prose.
 
 ```
 ===META_OUTLINE_START===
@@ -101,4 +127,4 @@ content_outline:
 - Do NOT write lesson content — only research notes and meta outline
 - Do NOT invent vocabulary outside the plan's vocabulary_hints
 - Do NOT fabricate cultural facts — if unsure, omit
-- Keep research concise — beginner modules need less research, not more
+- Keep research focused — beginner modules need structured research, not lengthy prose

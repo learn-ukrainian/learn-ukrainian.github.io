@@ -19,32 +19,22 @@ PERSONA_VOICE: Patient Supportive Tutor
 PERSONA_ROLE: Typography Artist
 IMMERSION_RULE: 'TARGET: 5-15% Ukrainian, 85-95% English. ALL explanatory prose in
   English. ALL grammar explanations in English. ALL callout text in English. Ukrainian
-  appears ONLY in: (1) example words/phrases in bold with [IPA] and (English translation),
-  (2) vocabulary items. If you write a paragraph, it MUST be in English. Ukrainian
-  sentences max 10 words.'
-LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
+  appears ONLY in: (1) example words/phrases in bold with stress mark and (English
+  translation), (2) vocabulary items. If you write a paragraph, it MUST be in English.
+  Ukrainian sentences max 10 words.'
+LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10 words\
+  \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
+  \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
+  \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
+  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
+  \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
+  \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
+  \ M13), Genitive (basics), Vocative"
+PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 7 known letters: А, О, У, М, Л, Н, С):
 
-  - Max 10 words per Ukrainian sentence (STRICT — count every word)
-
-  - ONLY 1 clause per sentence (no compound sentences)
-
-  - Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам, їм, -ові/-еві endings)
-
-  - Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)
-
-  - NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб,
-  поки are ALL BANNED
-
-  - Only imperfective aspect verbs
-
-  - No participles
-
-  - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
-  Vocative'
-PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
-
-  - Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна,
-  мул, нам)
+  - Words in reading drills MUST use ONLY these 7 letters (e.g., мама, сом, сон, масло,
+  ананас)
 
   - Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary
   with immediate English translation: «Привіт!» (Hello!)
@@ -62,7 +52,7 @@ PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 6 known letters: А, М, Л, У, 
   - Classroom instructions MUST be in English: ''Listen carefully'', ''Read aloud'',
   ''Repeat after the video''
 
-  - Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+  - Allowed Ukrainian structures: bare nouns only (мама, сом, масло)
 
 
   METALANGUAGE:
@@ -75,14 +65,20 @@ PEDAGOGICAL_CONSTRAINTS: 'DECODABILITY (M1 — 6 known letters: А, М, Л, У, 
 
   - NEVER write Ukrainian-only section headers or explanatory prose — the student
   cannot read it yet'
-DECODABLE_VOCABULARY: 'DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
+DECODABLE_VOCABULARY: 'DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, О, С,
+  У):
 
-  Use ONLY these words in activities and reading drills. Any word with a letter
+  Use ONLY these words in activities, reading drills, AND prose examples.
 
-  outside this set will FAIL the decodability audit gate.
+  Any word with a letter outside this set will FAIL the decodability audit gate.
+
+  Video key words from the plan''s pronunciation_videos section are exempt
+
+  (they are heard, not read), but must NOT appear in prose reading examples.
 
 
-  Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+  Available words: мама, сом, сон, оса, масло, сосна, насос, лама, смола, ананас,
+  нам, нас, сам, мало, слон
 
 
   If you need a word not on this list, check that ALL its letters are in the
@@ -144,40 +140,21 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
   \ for style and difficulty level** — notice how they use simple syllable combinations,\
   \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 96:\n\
-  ```\n94\nБачу Д, д (де). Чую [д], [д'].\nд р і * д\nд * т е л\nдро-ва\nдве-рі\n\
-  до-ріж-ка схо-ди\nве-ран-да\nл е * і д *\n [ –    =  • –  – ]\n [ = • |  –•  – ]\n\
-  \ [ – • |  =•  =  ]\nа\nо\nу\nи\nі\nД\nда\nдо\nду\nди\nді\nа\nо\nу\nи\nі\nад\nод\n\
-  уд\nид\nід\nД\nбу-ди-нок\nпід-ві-кон-ня\nдах\nди-мар\nД д\n```\n\n**Grade 1, zaharijchuk**\
-  \ — Сторінка 113:\n```\n111\n\t Запиши слова, добираючи до кожного відпо-\nвідну\
-  \ схему.\n   півень          ялинка               джміль\n[ – =  = ]           \
-  \ [ =  |–  = ]            [ =  |–  – |–  ]\n\t Розглянь малюнки.\n\t Запиши слова\
-  \ — назви намальованих пред-\nметів за групами: овочі та шкільне приладдя.\n\t\
-  \ Розглянь малюнки.\n\t Запиши слова — назви намальованих пред-\nметів, які відповідають\
-  \ на питання хто?\n\t Прочитай текст.\nВЕСНА\nНастала весна. Прилетіли птахи. На\
-  \ \nберезі шпаки.\n\t Випиши речення, яке відповідає схемі.\n    \n```\n\n**Grade\
-  \ 1, bolshakova** — Сторінка 24:\n```\n24\nЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ\nТи вимовляєш\
-  \ різні звуки: голосні і приголосні. \nГолосні звуки утворюються за допомогою голосу.\n\
-  Голосні почуєш в пісні,\nІ у темному у лісі, \nІ коли дивуєшся,\nІ коли милуєшся.\n\
-  Легко вимовляються, \nВесело співаються! \nПрочитай. Назви букви, які позначають\
-  \ голосні звуки.\nал – ам – ан \nла – ма – на \nул – ум – ун\nол – ом – он \nло\
-  \ – мо – но \nлу – му – ну\n \nПриголосні звуки утворюються \nза допомогою голосу\
-  \ і шуму.\nПриголосні деренчать\nІ тихенько шелестять, \nГолосно свистя\n```\n\n\
-  **Grade 1, zaharijchuk** — Сторінка 78:\n```\n76\nЗа мотивами казки Е. Мозера\n\
-  Повторюємо разом\nПриголосні звуки: \nтверді та глухі\n\t Прочитай імена головних\
-  \ героїнь, чітко ви-\nмовляючи перші звуки.\nЗося, Сюзі.\n\t Чи вони справжні подруги?\
-  \ Як одна з них до-\nпомогла іншій? Знайди та прочитай про це. \n\t Який із цих\
-  \ звуків вимовляємо дзвінко, з го-\nлосом? А який — тільки із шумом? \n\t Перепиши\
-  \ виділене блакитним кольором ре-\nчення. Підкресли букви, які позначають при-\n\
-  голосні звуки. Вимов їх. \n— Так, але я \nсама не зможу.\n— Дякую. Ти \nсправжня\
-  \ моя \n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n```\n. . . . . . . . . .\
-  \ . . . . . . . . 44\nТ т . . . . . . . . . . . . . . . . . . . . . . . . . . .\
-  \ 45\nТверді і пом’якшені  \nприголосні звуки . . . . . . . . . . . . . . 45\nГ\
-  \ г . . . . . . . . . . . . . . . . . . . . . . . . . . . 46\nГ г . . . . . . .\
-  \ . . . . . . . . . . . . . . . . . . . . 47\nТверді і пом’якшені  \nприголосні\
-  \ звуки . . . . . . . . . . . . . . 47\nҐ ґ . . . . . . . . . . . . . . . . . .\
-  \ . . . . . . . . . 48\nҐ ґ . . . . . . . . . . . . . . . . . . . . . . . . . .\
-  \ . 49\nЕ е  . . . . . .\n```"
+  \ pedagogical approach and simplicity.\n\n**Grade 1, bolshakova** — Сторінка 31:\n\
+  ```\n31\nк а з|к и\nЩо відбувається? У назвах яких предметів є звук [и]?\nПрочитай\
+  \ або послухай слова. Визнач місце букви и \nв цих словах. Яких предметів немає\
+  \ на малюнку? \nЯк ці чарівні предмети використовуються в казках? Які \nще чарівні\
+  \ предмети ти знаєш?\n \nТекст. Заголовок. Театралізуємо\nЗа-ду-ма-ли-ся чарівні\
+  \ предмети: який із них \nнайбільш корисний? «Я, — сказав чарівний ки-\nлим, — можу\
+  \ швидко долетіти куди завгодно». \n«Я, — сказала чарівна торбинка, — усіх нагодую\
+  \ \nв будь-який час». «Я, — сказала\n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n\
+  ```\n79\nЗміСТ\nАбетка  . . . . . . . . . . . . . . . . . . . . . . . . 4\nАбетка\
+  \  . . . . . . . . . . . . . . . . . . . . . . . . 5\nC c . . . . . . . . . . .\
+  \ . . . . . . . . . . . . . . . . 6\nC c . . . . . . . . . . . . . . . . . . . .\
+  \ . . . . . . . 7\nО о . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+  О о . . . . . . . . . . . . . . . . . . . . . . . . . . . 9\nА а  . . . . . . .\
+  \ . . . . . . . . . . . . . . . . . . . 10\nА а  . . . . . . . . . . . . . . . .\
+  \ . . . . . . . . . . 11\nБ б . . . . . .\n```"
 INTRO_HOOK: Why does this matter?
 SUMMARY_HEADING: Summary
 SELF_CHECK_HEADING: 'Check yourself:'
@@ -729,40 +706,280 @@ SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
   | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 
   | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
-VIDEO_DISCOVERY: '(No video discoveries available)
-
-  ### Research Videos
-
-  *These videos were found during the research phase. Embed each one next to its corresponding
-  letter/topic section using a markdown link.*
+VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items)
 
 
-  - Anna Ohoiko — Ukrainian Lessons — https://www.youtube.com/watch?v=ksXIXj7CXwc'
+  **Required** (MUST appear in vocabulary YAML):
+
+  - мама (mom) — first word readable from known letters; universal; Bolshakova p.12
+
+  - сом (catfish) — noun, decodable; Bolshakova p.22
+
+  - сон (dream/sleep) — noun, decodable; Bolshakova p.22
+
+  - масло (butter/oil) — noun, decodable; Bolshakova p.15
+
+  - ананас (pineapple) — noun, decodable; Bolshakova p.22; Anna''s key word for А
+
+  - нам (to us) — pronoun, decodable; both bukvars
+
+  - нас (us) — pronoun, decodable; both bukvars
+
+  - сам (self/alone) — adjective, decodable; both bukvars
+
+
+  **Recommended** (include if space allows):
+
+  - оса (wasp) — noun, decodable; Bolshakova p.22
+
+  - сосна (pine tree) — noun, decodable; Bolshakova p.22
+
+  - насос (pump) — noun, decodable; Bolshakova p.22
+
+  - лама (llama) — noun, decodable; Bolshakova p.21
+
+  - смола (resin) — noun, decodable; Bolshakova p.22
+
+  - слон (elephant) — noun, decodable; Bolshakova p.30 (preview)
+
+  - мало (little/few) — adverb, decodable; Bolshakova p.14
+
+
+  Do NOT add vocabulary items beyond this list unless they are decodable from the
+  module''s letter set and appear in the lesson content.'
+VIDEO_DISCOVERY: (No video discoveries available)
 PRONUNCIATION_VIDEOS: '### Per-Letter Pronunciation Videos (from plan — MANDATORY
   embeds)
 
   *Credit: Anna Ohoiko — Ukrainian Lessons*
 
 
-  - **Overview**: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - **Overview**: [Anna Ohoiko — Ukrainian Lessons — Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc)
 
   - **Full Playlist**: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  (link only, do not embed)
 
 
-  **Each letter below MUST get its video embedded in the corresponding H3 section:**
+  **Each letter below MUST get its video embedded in the corresponding H3 section.
+  Use this EXACT markdown link format:**
 
 
-  - **Літера А**: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  - **Літера А**: [Anna Ohoiko — Ukrainian Lessons — А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
 
-  - **Літера М**: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  - **Літера О**: [Anna Ohoiko — Ukrainian Lessons — О](https://www.youtube.com/watch?v=QT3c1TiZZgk)
 
-  - **Літера Л**: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  - **Літера У**: [Anna Ohoiko — Ukrainian Lessons — У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
 
-  - **Літера У**: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  - **Літера М**: [Anna Ohoiko — Ukrainian Lessons — М](https://www.youtube.com/watch?v=Ez95H4ibuJo)
 
-  - **Літера Н**: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  - **Літера Л**: [Anna Ohoiko — Ukrainian Lessons — Л](https://www.youtube.com/watch?v=v6-3Xg52Buk)
 
-  - **Літера С**: https://www.youtube.com/watch?v=7UsFBgSL91E'
+  - **Літера Н**: [Anna Ohoiko — Ukrainian Lessons — Н](https://www.youtube.com/watch?v=vNUfiKHPYaU)
+
+  - **Літера С**: [Anna Ohoiko — Ukrainian Lessons — С](https://www.youtube.com/watch?v=7UsFBgSL91E)'
+SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
+
+
+  ### Russianisms (HARD FAIL if found)
+
+
+  Scan your ENTIRE output for these. They cause automatic audit failure:
+
+
+  | Russicism | Correct Ukrainian |
+
+  |-----------|-------------------|
+
+  | кушати | їсти |
+
+  | приймати участь | брати участь |
+
+  | получати | отримувати |
+
+  | самий кращий | найкращий |
+
+  | відноситися | стосуватися |
+
+  | слідуючий | наступний |
+
+  | любий (= будь-який) | будь-який |
+
+  | на то, що | на те, що |
+
+  | красивий | гарний |
+
+  | прекрасне / прекрасний | чудовий / чудове |
+
+
+  Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
+  text.
+
+
+  ### Euphony / Милозвучність (WARNING if violated)
+
+
+  Ukrainian prose must follow euphony rules:
+
+
+  | Rule | Avoid (Bad) | Use (Good) |
+
+  |------|-------------|------------|
+
+  | і → й between vowels | вона і Олена | вона й Олена |
+
+  | й → і after consonant | він й Олена | він і Олена |
+
+  | у → в before vowel | у Одесі | в Одесі |
+
+  | в → у before в, ф | в вікні | у вікні |
+
+  | в → у before consonant cluster | в зграї | у зграї |
+
+  | з → із/зі before з, с, ш, ч | з зброєю | із зброєю (або зі) |
+
+  | Vary conjunctions | він і вона і Іван | він і вона та Іван |
+
+
+  Key: й can ONLY follow a vowel. After a consonant, always use і — even before a
+  vowel.
+
+
+  ### Stress Mark Typography
+
+
+  Use lowercase letters with a combining acute accent (´) on the stressed vowel:
+
+  - Correct: ма́ма, анана́с, оса́, сосна́
+
+  - Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
+
+
+  ### Non-Decodable Ukrainian in Beginner Modules (M1-M6)
+
+
+  In Cyrillic primer modules, the learner can only read letters taught so far. Any
+  Ukrainian phrase using letters outside the cumulative charset MUST include an English
+  translation in parentheses immediately after. No exceptions — the learner literally
+  cannot read it otherwise.
+
+
+  - Correct: "Все буде добре (Everything will be fine)."
+
+  - Wrong: "Все буде добре." (no translation — learner cannot read Б or Д at M2)
+
+
+  ### IPA and Latin Transliteration (BANNED at ALL levels)
+
+
+  Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like
+  `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark
+  (´) on the vowel.
+
+
+  Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
+
+
+  ```markdown
+
+  ❌ WRONG: "мама [ˈmɑmɑ]" or "хліб (khlib)"
+
+  ✅ RIGHT: "**ма́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
+
+  ```
+
+
+  ### Typography
+
+
+  - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
+
+  - Use ONLY vocabulary from the plan''s `vocabulary_hints` — do NOT invent new terms
+
+
+  ### No Word Salad (HARD FAIL)
+
+
+  Every paragraph must have ONE clear point and logical flow between sentences. Do
+  NOT string together unrelated observations.
+
+
+  ### LLM Writing Patterns to Avoid
+
+
+  1. **"Це не просто X, а Y"** — max ONE in entire module
+
+  2. **Grandiose openers** — don''t inflate every topic
+
+  3. **Purple prose** — no "багатогранний діамант", "хірургічного аналізу"
+
+  4. **Duplicate greetings** — "Ласкаво просимо" ONCE (intro only)
+
+  5. **Stacked identical callouts** — same title max twice, vary types
+
+  6. **"In this lesson, we will..."** — ALWAYS banned (formulaic opener)
+
+  7. **Repetitive transitions** — "It''s worth noting...", «Варто зазначити...», «Давайте
+  розглянемо...» flagged at 2+ occurrences
+
+
+  ### Anti-Robotic Writing
+
+
+  - No 3+ sentences starting with the same phrase
+
+  - Vary sentence openers across sections
+
+  - No mechanical transitions («Далі ми побачимо...», «Тепер розглянемо...»)
+
+  - Each section should have its own narrative arc
+
+
+  ### Active Voice Preference
+
+
+  Ukrainian strongly prefers active constructions. Use passive only when the agent
+  is truly unknown.
+
+
+  Avoid: «Це може бути використано...», «Правило застосовується...»
+
+  Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
+
+  '
+SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do NOT\
+  \ use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when\
+  \ combined with colons.\n\n```yaml\n❌ WRONG (guillemets + colon = YAML parse error):\n\
+  \  title: «Знайдіть пару: термін та його значення»\n  explanation: Термін «доконати»\
+  \ означає: завершити дію.\n\n✅ RIGHT (plain strings, quote with single quotes if\
+  \ value contains colon):\n  title: 'Знайдіть пару: термін та його значення'\n  explanation:\
+  \ Термін доконати означає завершити дію.\n```\n\n**Rules:**\n1. **Never use `«»`\
+  \ in YAML** — use plain text or single/double quotes\n2. **Quote any value containing\
+  \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
+  \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
+  \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
+  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
+  \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
+  \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
+  \ — include all required items\n3. **Each entry needs**: `lemma` (NOT `term`), `translation`,\
+  \ `pos`\n4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs),\
+  \ `notes`, `usage`, `example`\n5. **NO `ipa` field**\n6. **Count target**: {VOCAB_COUNT_TARGET}\
+  \ items\n\n## Output Delimiters\n\n> **Content outside delimiters is automatically\
+  \ discarded by the extraction pipeline.**\n\nActivities block (BARE LIST — no wrapper):\n\
+  ```\n===ACTIVITIES_START===\n- type: quiz\n  title: \"...\"\n  items:\n    ...\n\
+  ===ACTIVITIES_END===\n```\n\nVocabulary block (OBJECT with `items:` wrapper):\n\
+  ```\n===VOCABULARY_START===\nitems:\n  - lemma: \"слово\"\n    translation: \"word\"\
+  \n    pos: \"noun\"\n===VOCABULARY_END===\n```\n\n## Friction Report (MANDATORY)\n\
+  \n```\n===FRICTION_START===\n**Phase**: Phase 3: Activities + Vocabulary\n**Step**:\
+  \ {what you were doing when friction occurred, or \"Full YAML generation\"}\n**Friction\
+  \ Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...\n**Raw Error**:\
+  \ {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"\
+  }\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\
+  ```\n\n## Boundaries\n\n- Do NOT modify lesson content — only generate activities\
+  \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
+  - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
+  \ skills or delegate to Claude\n"
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'

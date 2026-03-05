@@ -1,464 +1,289 @@
+- type: watch-and-repeat
+  title: "Listen and Repeat: New Letters"
+  instruction: "Watch the videos and practice pronouncing the 9 new letters."
+  items:
+    - letter: "Б"
+      word: "банан"
+      video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+    - letter: "Д"
+      word: "дім"
+      video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+    - letter: "П"
+      word: "павук"
+      video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
+    - letter: "З"
+      word: "зебра"
+      video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+    - letter: "Г"
+      word: "гора"
+      video: "https://www.youtube.com/watch?v=gVnclpSI0DU"
+    - letter: "Х"
+      word: "хліб"
+      video: "https://www.youtube.com/watch?v=vpr58zJSJKc"
+    - letter: "Ж"
+      word: "жук"
+      video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
+    - letter: "Ш"
+      word: "шапка"
+      video: "https://www.youtube.com/watch?v=1D-6MIw3OXY"
+    - letter: "Ч"
+      word: "черепаха"
+      video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
+
+- type: classify
+  title: "Vowels vs Consonants"
+  instruction: "Sort the letters into vowels and consonants."
+  categories:
+    - label: "Голосні (Vowels)"
+      symbol_hint: "vowel"
+      items:
+        - "А"
+        - "О"
+        - "У"
+        - "Е"
+        - "И"
+        - "І"
+    - label: "Приголосні (Consonants)"
+      symbol_hint: "consonant"
+      items:
+        - "Б"
+        - "Д"
+        - "П"
+        - "З"
+        - "Г"
+        - "Х"
+        - "Ж"
+        - "Ш"
+        - "Ч"
+
 - type: group-sort
-  title: "Голосні чи приголосні?"
-  instruction: "Розподіліть літери на дві групи: голосні (vowels) та приголосні (consonants)."
+  title: "Voiced or Voiceless?"
+  instruction: "Sort these consonants into voiced (throat vibrates) and voiceless (only air) pairs."
   groups:
-    - name: "Голосні"
-      items: ["О", "И", "А", "Е", "І", "У"]
-    - name: "Приголосні"
-      items: ["П", "Р", "С", "Т", "Ф", "Х", "М", "Д"]
+    - name: "Дзвінкі (Voiced)"
+      items:
+        - "Б"
+        - "Д"
+        - "З"
+        - "Ж"
+        - "Г"
+    - name: "Глухі (Voiceless)"
+      items:
+        - "П"
+        - "Т"
+        - "С"
+        - "Ш"
+        - "Х"
+
+- type: image-to-letter
+  title: "First Letter Match"
+  instruction: "Select the letter that starts the Ukrainian word for each image."
+  items:
+    - emoji: "🍌"
+      answer: "Б"
+      distractors:
+        - "П"
+        - "В"
+      note: "банан starts with Б"
+    - emoji: "🏠"
+      answer: "Д"
+      distractors:
+        - "Т"
+        - "П"
+      note: "дім starts with Д"
+    - emoji: "🕷️"
+      answer: "П"
+      distractors:
+        - "Р"
+        - "Б"
+      note: "павук starts with П"
+    - emoji: "🦓"
+      answer: "З"
+      distractors:
+        - "С"
+        - "Е"
+      note: "зебра starts with З"
+    - emoji: "🍞"
+      answer: "Х"
+      distractors:
+        - "Г"
+        - "К"
+      note: "хліб starts with Х"
+    - emoji: "🪲"
+      answer: "Ж"
+      distractors:
+        - "Ш"
+        - "З"
+      note: "жук starts with Ж"
+    - emoji: "🐢"
+      answer: "Ч"
+      distractors:
+        - "Ш"
+        - "Т"
+      note: "черепаха starts with Ч"
 
 - type: match-up
-  title: "Знайдіть пару: літера та звук"
-  instruction: "Match the Ukrainian letter or digraph to its English sound description."
+  title: "Vocabulary Match"
+  instruction: "Match the Ukrainian words to their English translations."
   pairs:
-    - left: "О"
-      right: "o in more"
-    - left: "П"
-      right: "p in spot"
-    - left: "Р"
-      right: "rolled r"
-    - left: "С"
-      right: "s in sun"
-    - left: "Т"
-      right: "t in top"
-    - left: "Ф"
-      right: "f in fun"
-    - left: "Х"
-      right: "breathy h"
-    - left: "Дж"
-      right: "j in jungle"
-    - left: "Дз"
-      right: "dz in adze"
-    - left: "М"
-      right: "m in map"
-    - left: "Д"
-      right: "d in dog"
-    - left: "Г"
-      right: "soft h"
-
-- type: quiz
-  title: "Перевірка літер: оберіть правильний варіант"
-  instruction: "Choose the correct letter or word based on the description."
-  items:
-    - question: "Яка літера виглядає як англійська P, але звучить як R?"
-      explanation: "Літера Р є 'фальшивим другом' і читається як R."
-      options:
-        - text: "Р"
-          correct: true
-        - text: "П"
-          correct: false
-        - text: "С"
-          correct: false
-        - text: "Т"
-          correct: false
-    - question: "Яка українська літера завжди звучить як S у слові snake?"
-      explanation: "Літера С завжди позначає звук S і ніколи не читається як K."
-      options:
-        - text: "С"
-          correct: true
-        - text: "К"
-          correct: false
-        - text: "О"
-          correct: false
-        - text: "П"
-          correct: false
-    - question: "Яка літера позначає глибокий звук, як у шотландському слові loch?"
-      explanation: "Літера Х позначає цей характерний горловий звук."
-      options:
-        - text: "Х"
-          correct: true
-        - text: "Г"
-          correct: false
-        - text: "К"
-          correct: false
-        - text: "Ф"
-          correct: false
-    - question: "Який український диграф звучить подібно до J у слові jungle?"
-      explanation: "Диграф Дж позначає один злитий звук, як англійська J."
-      options:
-        - text: "Дж"
-          correct: true
-        - text: "Дз"
-          correct: false
-        - text: "Жд"
-          correct: false
-        - text: "Зд"
-          correct: false
-    - question: "Яка літера найчастіше зустрічається в іноземних словах, таких як фото?"
-      explanation: "Літера Ф зазвичай використовується у запозиченнях з інших мов."
-      options:
-        - text: "Ф"
-          correct: true
-        - text: "Х"
-          correct: false
-        - text: "П"
-          correct: false
-        - text: "Т"
-          correct: false
-    - question: "Який диграф позначає звук, подібний до dz у слові adze?"
-      explanation: "Диграф Дз читається як один злитий звук."
-      options:
-        - text: "Дз"
-          correct: true
-        - text: "Дж"
-          correct: false
-        - text: "Сз"
-          correct: false
-        - text: "Зс"
-          correct: false
-    - question: "Яка українська літера виглядає як стіл і позначає звук P?"
-      explanation: "Літера П має прямий верх, як у стола або платформи."
-      options:
-        - text: "П"
-          correct: true
-        - text: "Р"
-          correct: false
-        - text: "Т"
-          correct: false
-        - text: "М"
-          correct: false
-    - question: "Яка літера виглядає і звучить так само, як англійська T?"
-      explanation: "Літера Т є дуже надійним другом і читається як T."
-      options:
-        - text: "Т"
-          correct: true
-        - text: "П"
-          correct: false
-        - text: "Г"
-          correct: false
-        - text: "Р"
-          correct: false
-    - question: "Яка голосна літера не змінює свого звучання навіть без наголосу?"
-      explanation: "Літера О завжди залишається чистим звуком О."
-      options:
-        - text: "О"
-          correct: true
-        - text: "А"
-          correct: false
-        - text: "Е"
-          correct: false
-        - text: "И"
-          correct: false
-    - question: "Яке з цих слів починається з літери, що позначає звук R?"
-      explanation: "Слово ресторан починається з літери Р."
-      options:
-        - text: "ресторан"
-          correct: true
-        - text: "порт"
-          correct: false
-        - text: "пошта"
-          correct: false
-        - text: "парк"
-          correct: false
-    - question: "Яке з цих слів містить диграф, що позначає звук J?"
-      explanation: "Слово джерело містить диграф Дж."
-      options:
-        - text: "джерело"
-          correct: true
-        - text: "дзвінок"
-          correct: false
-        - text: "суп"
-          correct: false
-        - text: "тест"
-          correct: false
-    - question: "Яке з цих слів є інтернаціональним і має літеру Ф?"
-      explanation: "Слово факт містить літеру Ф."
-      options:
-        - text: "факт"
-          correct: true
-        - text: "порт"
-          correct: false
-        - text: "стоп"
-          correct: false
-        - text: "суп"
-          correct: false
-
-- type: anagram
-  title: "Розшифруйте інтернаціональні слова"
-  instruction: "Rearrange the letters to form the correct Ukrainian word."
-  items:
-    - scrambled: "о р н т р е а с"
-      answer: "ресторан"
-    - scrambled: "с р т р а п н т о"
-      answer: "транспорт"
-    - scrambled: "т ф о о"
-      answer: "фото"
-    - scrambled: "п с о т"
-      answer: "стоп"
-    - scrambled: "т о р п"
-      answer: "порт"
-    - scrambled: "к т а ф"
-      answer: "факт"
-    - scrambled: "п у с"
-      answer: "суп"
-    - scrambled: "к а р п"
-      answer: "парк"
-    - scrambled: "п о р п с а т"
-      answer: "паспорт"
-    - scrambled: "о р і д а"
-      answer: "радіо"
-    - scrambled: "с т е т"
-      answer: "тест"
-    - scrambled: "б у л т ф о"
-      answer: "футбол"
-
-- type: match-up
-  title: "Знайдіть пару: слово та переклад"
-  instruction: "Match the Ukrainian word to its English translation."
-  pairs:
+    - left: "школа"
+      right: "school"
+    - left: "газета"
+      right: "newspaper"
+    - left: "будинок"
+      right: "building"
     - left: "пошта"
       right: "post office"
-    - left: "хліб"
-      right: "bread"
-    - left: "робота"
-      right: "work"
-    - left: "джерело"
-      right: "spring"
-    - left: "дзвінок"
-      right: "bell"
-    - left: "хата"
-      right: "house"
-    - left: "текст"
-      right: "text"
-    - left: "хор"
-      right: "choir"
-    - left: "джаз"
-      right: "jazz"
-    - left: "фонтан"
-      right: "fountain"
-    - left: "сорт"
-      right: "sort"
-    - left: "кукурудза"
-      right: "corn"
-
-- type: fill-in
-  title: "Вставте пропущену літеру"
-  instruction: "Choose the correct missing letter or digraph for each word."
-  items:
-    - sentence: "Ми йдемо на _ошту."
-      answer: "п"
-      options: ["п", "р", "т", "с"]
-      explanation: "Слово 'пошта' починається з літери П."
-    - sentence: "Це мій _ліб."
-      answer: "х"
-      options: ["х", "ф", "с", "т"]
-      explanation: "Слово 'хліб' починається з літери Х."
-    - sentence: "Де громадський _ранспорт?"
-      answer: "т"
-      options: ["т", "п", "р", "г"]
-      explanation: "Слово 'транспорт' починається з літери Т."
-    - sentence: "Там є _есторан."
-      answer: "р"
-      options: ["р", "п", "с", "ф"]
-      explanation: "Слово 'ресторан' починається з літери Р."
-    - sentence: "Я чую _вінок."
-      answer: "дз"
-      options: ["дз", "дж", "з", "д"]
-      explanation: "Слово 'дзвінок' має диграф Дз."
-    - sentence: "Там є _ерело."
-      answer: "дж"
-      options: ["дж", "дз", "ж", "д"]
-      explanation: "Слово 'джерело' має диграф Дж."
-    - sentence: "Це нове _ото."
-      answer: "ф"
-      options: ["ф", "х", "п", "т"]
-      explanation: "Слово 'фото' починається з літери Ф."
-    - sentence: "Я їм _уп."
-      answer: "с"
-      options: ["с", "р", "п", "т"]
-      explanation: "Слово 'суп' починається з літери С."
-    - sentence: "Він грає у _утбол."
-      answer: "ф"
-      options: ["ф", "х", "п", "т"]
-      explanation: "Слово 'футбол' починається з літери Ф."
-    - sentence: "Це цікавий _акт."
-      answer: "ф"
-      options: ["ф", "х", "п", "т"]
-      explanation: "Слово 'факт' починається з літери Ф."
-    - sentence: "Це старе _адіо."
-      answer: "р"
-      options: ["р", "п", "с", "т"]
-      explanation: "Слово 'радіо' починається з літери Р."
-    - sentence: "Моя _обота цікава."
-      answer: "р"
-      options: ["р", "п", "с", "т"]
-      explanation: "Слово 'робота' починається з літери Р."
-
-- type: anagram
-  title: "Розшифруйте українські слова"
-  instruction: "Rearrange the letters to form everyday vocabulary."
-  items:
-    - scrambled: "б і х л"
-      answer: "хліб"
-    - scrambled: "ш т о п а"
-      answer: "пошта"
-    - scrambled: "б о т р о а"
-      answer: "робота"
-    - scrambled: "а т х а"
-      answer: "хата"
-    - scrambled: "ж а д з"
-      answer: "джаз"
-    - scrambled: "о р с т"
-      answer: "сорт"
-    - scrambled: "с т е т к"
-      answer: "текст"
-    - scrambled: "р о х"
-      answer: "хор"
-    - scrambled: "л е ж е д о р"
-      answer: "джерело"
-    - scrambled: "н о з і д в к"
-      answer: "дзвінок"
-    - scrambled: "н т н ф а о"
-      answer: "фонтан"
-    - scrambled: "р п а е о"
-      answer: "опера"
-
-- type: group-sort
-  title: "Знайдіть першу літеру"
-  instruction: "Розподіліть слова за їхньою першою літерою."
-  groups:
-    - name: "Починаються на П"
-      items: ["пошта", "порт", "парк", "паспорт"]
-    - name: "Починаються на Р"
-      items: ["ресторан", "радіо", "робота"]
-    - name: "Починаються на Ф"
-      items: ["фото", "факт", "фонтан", "футбол"]
-    - name: "Починаються на Т"
-      items: ["транспорт", "тест", "текст"]
+    - left: "зуб"
+      right: "tooth"
+    - left: "чай"
+      right: "tea"
+    - left: "брат"
+      right: "brother"
+    - left: "гора"
+      right: "mountain"
+    - left: "друг"
+      right: "friend"
 
 - type: quiz
-  title: "Перевірка знань: правила читання"
-  instruction: "Choose the correct answer based on the lesson."
+  title: "Letter and Sound Check"
+  instruction: "Choose the correct answer for each question."
   items:
-    - question: "Яку літеру ви бачите на самому початку слова пошта?"
-      explanation: "Слово пошта починається з літери П (пе)."
+    - question: "Which letter looks like a platform or doorway and makes the /p/ sound?"
+      explanation: "П is the letter for the /p/ sound. Do not confuse it with Р (/r/)."
       options:
         - text: "П"
           correct: true
         - text: "Р"
           correct: false
-        - text: "Т"
+        - text: "Л"
           correct: false
-        - text: "Х"
+        - text: "Д"
           correct: false
-    - question: "Яка літера є другою у слові транспорт?"
-      explanation: "Після Т йде літера Р (ер)."
+    - question: "Which letter makes the voiced /z/ sound and looks like the number 3?"
+      explanation: "З looks like 3 and sounds like English Z."
       options:
-        - text: "Р"
+        - text: "З"
           correct: true
-        - text: "П"
+        - text: "Е"
           correct: false
-        - text: "О"
+        - text: "В"
           correct: false
         - text: "С"
           correct: false
-    - question: "Як правильно читати літеру О в українській мові, якщо вона без наголосу?"
-      explanation: "Літера О завжди залишається чітким звуком О, навіть без наголосу."
-      options:
-        - text: "завжди як чіткий звук О"
-          correct: true
-        - text: "як звук А"
-          correct: false
-        - text: "як дуже короткий звук У"
-          correct: false
-        - text: "вона взагалі не читається"
-          correct: false
-    - question: "Яка з цих літер є 'фальшивим другом' і звучить як англійська R?"
-      explanation: "Літера Р виглядає як P, але звучить як R."
-      options:
-        - text: "Р"
-          correct: true
-        - text: "П"
-          correct: false
-        - text: "С"
-          correct: false
-        - text: "Ф"
-          correct: false
-    - question: "Який диграф використовується у слові джерело?"
-      explanation: "Слово джерело містить диграф Дж."
-      options:
-        - text: "Дж"
-          correct: true
-        - text: "Дз"
-          correct: false
-        - text: "Жд"
-          correct: false
-        - text: "Зд"
-          correct: false
-    - question: "Який диграф присутній у слові дзвінок?"
-      explanation: "Слово дзвінок має диграф Дз."
-      options:
-        - text: "Дз"
-          correct: true
-        - text: "Дж"
-          correct: false
-        - text: "Тс"
-          correct: false
-        - text: "Сз"
-          correct: false
-    - question: "Яка літера найчастіше зустрічається в інтернаціональних запозичених словах, таких як факт?"
-      explanation: "Літера Ф не є типовою для питомих українських слів і часто зустрічається в запозиченнях."
-      options:
-        - text: "Ф"
-          correct: true
-        - text: "Х"
-          correct: false
-        - text: "О"
-          correct: false
-        - text: "П"
-          correct: false
-    - question: "Яка літера нагадує за формою стіл або платформу?"
-      explanation: "Літера П має плаский верх і нагадує платформу."
+    - question: "What is the voiceless partner to the letter Б?"
+      explanation: "Б and П form a voiced/voiceless pair."
       options:
         - text: "П"
           correct: true
-        - text: "Т"
+        - text: "В"
           correct: false
-        - text: "Г"
+        - text: "Д"
           correct: false
         - text: "М"
           correct: false
-    - question: "Яка літера вимовляється подібно до ch у шотландському слові loch?"
-      explanation: "Літера Х утворює глибокий звук у горлі."
+    - question: "Which letter is pronounced deep in the throat, similar to the end of Scottish 'loch'?"
+      explanation: "Х is pronounced with friction in the back of the throat."
       options:
         - text: "Х"
           correct: true
-        - text: "С"
+        - text: "Г"
           correct: false
-        - text: "Ф"
+        - text: "К"
           correct: false
-        - text: "Р"
+        - text: "Ж"
           correct: false
-    - question: "Яке з цих слів містить українську літеру С (яка читається як S)?"
-      explanation: "У слові ресторан є літера С."
+    - question: "Which letter sounds like the English 'sh' in 'ship'?"
+      explanation: "Ш makes the /sh/ sound."
       options:
-        - text: "ресторан"
+        - text: "Ш"
           correct: true
-        - text: "порт"
+        - text: "Ж"
           correct: false
-        - text: "фото"
+        - text: "Щ"
           correct: false
-        - text: "хліб"
+        - text: "Ч"
           correct: false
-    - question: "Яке українське слово означає bread і починається з літери Х?"
-      explanation: "Хліб — це традиційне українське слово для bread."
+    - question: "Which letter makes the English 'ch' sound as in 'church'?"
+      explanation: "Ч looks like the number 4 and makes the /ch/ sound."
       options:
-        - text: "хліб"
+        - text: "Ч"
           correct: true
-        - text: "суп"
+        - text: "У"
           correct: false
-        - text: "пошта"
+        - text: "Ц"
           correct: false
-        - text: "хата"
+        - text: "Ш"
           correct: false
-    - question: "У якому слові ми можемо знайти дві літери Т?"
-      explanation: "Слово транспорт має літеру Т на початку та в кінці."
+    - question: "How does the Ukrainian letter Г sound?"
+      explanation: "Г is a soft, throaty sound, not a hard 'g'."
       options:
-        - text: "транспорт"
+        - text: "Soft and throaty, like a heavy 'h'"
           correct: true
-        - text: "ресторан"
+        - text: "Hard, like in 'go'"
           correct: false
-        - text: "факти"
+        - text: "Like English 'j'"
           correct: false
-        - text: "спорт"
+        - text: "Silent"
           correct: false
+    - question: "Which of these pairs represents voiced and voiceless partners?"
+      explanation: "Ж is voiced, and its partner Ш is voiceless."
+      options:
+        - text: "Ж and Ш"
+          correct: true
+        - text: "Б and Д"
+          correct: false
+        - text: "З and Х"
+          correct: false
+        - text: "П and Т"
+          correct: false
+
+- type: true-false
+  title: "True or False: Voiced & Voiceless"
+  instruction: "Determine if each statement is true or false."
+  items:
+    - statement: "The Ukrainian letter Д makes the /d/ sound."
+      correct: true
+      explanation: "Yes, Д sounds like English D, but with the tongue on the teeth."
+    - statement: "The letter П makes an /r/ sound."
+      correct: false
+      explanation: "П makes the /p/ sound. Р makes the rolled /r/ sound."
+    - statement: "You use your vocal cords (throat vibrates) when saying voiced consonants."
+      correct: true
+      explanation: "Voiced consonants like Б, З, and Ж cause vibration in the throat."
+    - statement: "The letter Г is pronounced like the hard English G in 'good'."
+      correct: false
+      explanation: "Г is a soft, continuous glottal sound. The hard G in Ukrainian is a different letter."
+    - statement: "The letter Ж sounds like the middle of the English word 'measure'."
+      correct: true
+      explanation: "Ж is a voiced sibilant without a single English letter equivalent."
+    - statement: "Ш and Ж are a voiced/voiceless pair."
+      correct: true
+      explanation: "Ж is voiced, and its partner Ш is voiceless."
+    - statement: "The letter Ч looks like the number 4 and sounds like 'sh'."
+      correct: false
+      explanation: "Ч sounds like English 'ch', not 'sh'. Ш makes the 'sh' sound."
+    - statement: "The word 'зуб' starts with a voiced consonant, while 'суп' starts with a voiceless one."
+      correct: true
+      explanation: "З is voiced, and С is voiceless."
+
+- type: anagram
+  title: "Unscramble the Words"
+  instruction: "Rearrange the space-separated letters to form a Ukrainian word you learned today."
+  items:
+    - scrambled: "а б н а н"
+      answer: "банан"
+    - scrambled: "к а р п"
+      answer: "парк"
+    - scrambled: "м і д"
+      answer: "дім"
+    - scrambled: "б з у"
+      answer: "зуб"
+    - scrambled: "к у ж"
+      answer: "жук"
+    - scrambled: "к о ш а л"
+      answer: "школа"
+    - scrambled: "п у с"
+      answer: "суп"
+    - scrambled: "б л і х"
+      answer: "хліб"

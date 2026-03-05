@@ -1,0 +1,92 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "2375",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "197.9",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "4",
+    "COMPUTED_IMMERSION_PERCENT": "17.6",
+    "COMPUTED_IMMERSION_TARGET": "15-35%",
+    "COMPUTED_RICHNESS_SCORE": "51",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/4, cultural: 0/3, collocations: 0/20, register_notes: 1/5",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/greetings-and-politeness.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/greetings-and-politeness-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/greetings-and-politeness.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M08 — Greetings and Politeness\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/greetings-and-politeness.md | Target: 1200 words\n  📋 Required activity types from meta: anagram, fill-in, match-up, quiz\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Basic Greetings (Вітання)              517 /  250  ✅ (+267)\n     Formal vs. Informal: 'Ти' and 'Ви'     433 /  250  ✅ (+183)\n     Politeness Magic Words (Ввічливість)   446 /  250  ✅ (+196)\n     Introductions (Знайомство)             545 /  250  ✅ (+295)\n     Summary and Self-Check                 355 /  200  ✅ (+155)\n     ─────────────────────────────────────────────────────────────\n     TOTAL                                 2296 / 1200  ✅ (+1096)\n  📋 Found YAML activities file (8 activities)\n  > Basic Greetings & Politeness: 8 items (min 8)\n  > English to Ukrainian Match: 8 items (min 8)\n  > Situations: True or False: 8 items (min 8)\n  > Spelling Check: 8 items (min 8)\n  > Sort the Phrases: 9 items (min 6)\n  > Complete the Conversation: 8 items (min 8)\n  > Match to the Situation: 8 items (min 8)\n  > Culture and Meaning: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2375/1200 (raw: 2490)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 17.6% (target 15-35% (M08))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/greetings-and-politeness-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/greetings-and-politeness.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: greetings-and-politeness.md\n  VESUM misses: 5 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 15044.13it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 83 | VESUM: 78 (94.0%) | RAG: 5 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/greetings-and-politeness-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 78/83 (94%) verified\n⚠️ VESUM not found (5): Анна, Марія, Оксана, Олена, Іван",
+  "h2_sections": "1. Basic Greetings (Вітання)\n2. Formal vs. Informal: 'Ти' and 'Ви'\n3. Politeness Magic Words (Ввічливість)\n4. Introductions (Знайомство)\n5. Summary and Self-Check",
+  "vesum_stats": {
+    "total": 83,
+    "vesum_hits": 78,
+    "rag_hits": 0,
+    "not_found": 5,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 75,
+        "vesum_hits": 70,
+        "not_found": 5
+      },
+      "activities": {
+        "total": 8,
+        "vesum_hits": 8,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "Анна",
+      "clean": "анна",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Марія",
+      "clean": "марія",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Оксана",
+      "clean": "оксана",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Олена",
+      "clean": "олена",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Іван",
+      "clean": "іван",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "47a046611a0c5c3b"
+}

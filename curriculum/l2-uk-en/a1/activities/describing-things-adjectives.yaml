@@ -1,313 +1,343 @@
-- type: group-sort
-  title: "Рід іменників: Він, Вона чи Воно?"
-  instruction: "Розподіліть іменники за родами, щоб підготуватися до узгодження прикметників."
-  groups:
-    - name: "Він (Чоловічий)"
-      items: ["стіл", "телефон", "дім", "парк", "чоловік"]
-    - name: "Вона (Жіночий)"
-      items: ["книга", "кімната", "ручка", "кухня", "квартира"]
-    - name: "Воно (Середній)"
-      items: ["вікно", "море", "місто", "авто", "крісло"]
-
 - type: match-up
-  title: "Антоніми: знайдіть протилежне"
-  instruction: "З'єднайте слова з протилежним значенням."
+  title: Match the Translations
+  instruction: Match the Ukrainian adjectives to their English meanings.
   pairs:
-    - left: "великий"
-      right: "малий"
-    - left: "новий"
-      right: "старий"
-    - left: "добрий"
-      right: "поганий"
-    - left: "дорогий"
-      right: "дешевий"
-    - left: "чорний"
-      right: "білий"
-    - left: "день"
-      right: "ніч"
-    - left: "світлий"
-      right: "темний"
-    - left: "чистий"
-      right: "брудний"
-    - left: "цікавий"
-      right: "нудний"
+    - left: новий
+      right: new
+    - left: старий
+      right: old
+    - left: великий
+      right: big
+    - left: малий
+      right: small
+    - left: добрий
+      right: good
+    - left: поганий
+      right: bad
+    - left: дорогий
+      right: expensive
+    - left: дешевий
+      right: cheap
+
+- type: group-sort
+  title: Sort by Gender
+  instruction: Group the adjectives by their correct gender endings.
+  groups:
+    - name: Masculine
+      items:
+        - новий
+        - великий
+        - синій
+        - старий
+    - name: Feminine
+      items:
+        - нова
+        - велика
+        - синя
+        - стара
+    - name: Neuter
+      items:
+        - нове
+        - велике
+        - синє
+        - старе
 
 - type: quiz
-  title: "Питання: Який, Яка, Яке, Які?"
-  instruction: "Оберіть правильне питальне слово для кожного іменника."
+  title: Choose the Correct Adjective
+  instruction: Select the adjective that matches the noun's gender.
   items:
-    - question: "Скажіть, будь ласка, ... це будинок?"
-      explanation: "Будинок — це «він» (чоловічий рід), тому «Який?»."
+    - question: Який це будинок?
+      explanation: Будинок is masculine, so the adjective must end in -ий.
       options:
-        - text: "Який"
+        - text: новий
           correct: true
-        - text: "Яка"
+        - text: нова
           correct: false
-        - text: "Яке"
+        - text: нове
           correct: false
-        - text: "Які"
+        - text: нові
           correct: false
-    - question: "Подивіться на фото. ... це кімната?"
-      explanation: "Кімната — це «вона» (жіночий рід), тому «Яка?»."
+    - question: Яка це книга?
+      explanation: Книга is feminine, so the adjective must end in -а.
       options:
-        - text: "Яка"
+        - text: цікава
           correct: true
-        - text: "Який"
+        - text: цікавий
           correct: false
-        - text: "Яке"
+        - text: цікаве
           correct: false
-        - text: "Які"
+        - text: цікаві
           correct: false
-    - question: "Як ви думаєте, ... це вікно?"
-      explanation: "Вікно — це «воно» (середній рід), тому «Яке?»."
+    - question: Яке це вікно?
+      explanation: Вікно is neuter, so the adjective must end in -е.
       options:
-        - text: "Яке"
+        - text: мале
           correct: true
-        - text: "Який"
+        - text: малий
           correct: false
-        - text: "Яка"
+        - text: мала
           correct: false
-        - text: "Які"
+        - text: малі
           correct: false
-    - question: "Це мої нові друзі. ... вони?"
-      explanation: "Друзі — це «вони» (множина), тому «Які?»."
+    - question: Які це олівці?
+      explanation: Олівці is plural, so the adjective must end in -і.
       options:
-        - text: "Які"
+        - text: сині
           correct: true
-        - text: "Який"
+        - text: синій
           correct: false
-        - text: "Яка"
+        - text: синя
           correct: false
-        - text: "Яке"
+        - text: синє
           correct: false
-    - question: "Це наше місто. Скажіть, ... воно?"
-      explanation: "Місто — це «воно» (середній рід)."
+    - question: Це ___ погода.
+      explanation: Погода is feminine.
       options:
-        - text: "Яке"
+        - text: гарна
           correct: true
-        - text: "Який"
+        - text: гарний
           correct: false
-        - text: "Яка"
+        - text: гарне
           correct: false
-        - text: "Які"
+        - text: гарні
           correct: false
-    - question: "Це ваша школа. Скажіть, ... вона?"
-      explanation: "Школа — це «вона» (жіночий рід)."
+    - question: Це ___ борщ.
+      explanation: Борщ is masculine.
       options:
-        - text: "Яка"
+        - text: смачний
           correct: true
-        - text: "Який"
+        - text: смачна
           correct: false
-        - text: "Яке"
+        - text: смачне
           correct: false
-        - text: "Які"
+        - text: смачні
           correct: false
-    - question: "Це новий студент. Скажіть, ... він?"
-      explanation: "Студент — це «він» (чоловічий рід)."
+    - question: Це ___ лінія.
+      explanation: Лінія is feminine, and синя is a soft stem adjective.
       options:
-        - text: "Який"
+        - text: синя
           correct: true
-        - text: "Яка"
+        - text: синій
           correct: false
-        - text: "Яке"
+        - text: синє
           correct: false
-        - text: "Які"
+        - text: сині
           correct: false
-    - question: "Це цікаві книги. Скажіть, ... вони?"
-      explanation: "Книги — це «вони» (множина)."
+    - question: Це ___ собор.
+      explanation: Собор is masculine.
       options:
-        - text: "Які"
+        - text: старий
           correct: true
-        - text: "Який"
+        - text: стара
           correct: false
-        - text: "Яка"
+        - text: старе
           correct: false
-        - text: "Яке"
+        - text: старі
           correct: false
-
-- type: group-sort
-  title: "Закінчення прикметників"
-  instruction: "Розподіліть прикметники за групами (рід та число)."
-  groups:
-    - name: "Він (-ий/-ій)"
-      items: ["новий", "старий", "синій", "гарний", "великий"]
-    - name: "Вона (-а/-я)"
-      items: ["нова", "стара", "синя", "гарна", "велика"]
-    - name: "Воно (-е/-є)"
-      items: ["нове", "старе", "синє", "гарне", "велике"]
-    - name: "Вони (-і)"
-      items: ["нові", "старі", "сині", "гарні", "великі"]
 
 - type: fill-in
-  title: "Узгодження: Тверда група"
-  instruction: "Оберіть правильну форму прикметника."
+  title: Complete the Description
+  instruction: Choose the noun that matches the adjective's gender.
   items:
-    - sentence: "Це ... (новий) ресторан."
-      answer: "новий"
-      options: ["новий", "нова", "нове", "нові"]
-      explanation: "Ресторан (він) — новий."
-    - sentence: "Це ... (новий) школа."
-      answer: "нова"
-      options: ["нова", "новий", "нове", "нові"]
-      explanation: "Школа (вона) — нова."
-    - sentence: "Це ... (новий) авто."
-      answer: "нове"
-      options: ["нове", "новий", "нова", "нові"]
-      explanation: "Авто (воно) — нове."
-    - sentence: "Це ... (гарний) дівчина."
-      answer: "гарна"
-      options: ["гарна", "гарний", "гарне", "гарні"]
-      explanation: "Дівчина (вона) — гарна."
-    - sentence: "Це ... (гарний) день."
-      answer: "гарний"
-      options: ["гарний", "гарна", "гарне", "гарні"]
-      explanation: "День (він) — гарний."
-    - sentence: "Це ... (старий) місто."
-      answer: "старе"
-      options: ["старе", "старий", "стара", "старі"]
-      explanation: "Місто (воно) — старе."
-    - sentence: "Це ... (великий) кімната."
-      answer: "велика"
-      options: ["велика", "великий", "велике", "великі"]
-      explanation: "Кімната (вона) — велика."
-    - sentence: "Це ... (малий) дім."
-      answer: "малий"
-      options: ["малий", "мала", "мале", "малі"]
-      explanation: "Дім (він) — малий."
+    - sentence: Це велика ___.
+      answer: квартира
+      options:
+        - квартира
+        - будинок
+        - вікно
+        - олівці
+    - sentence: Це новий ___.
+      answer: будинок
+      options:
+        - будинок
+        - книга
+        - вікно
+        - друзі
+    - sentence: Погода дуже ___.
+      answer: гарна
+      options:
+        - гарна
+        - гарний
+        - гарне
+        - гарні
+    - sentence: Борщ ___.
+      answer: смачний
+      options:
+        - смачний
+        - смачна
+        - смачне
+        - смачні
+    - sentence: Це синя ___.
+      answer: лінія
+      options:
+        - лінія
+        - олівець
+        - море
+        - дні
+    - sentence: Це дуже дорога ___.
+      answer: квартира
+      options:
+        - квартира
+        - будинок
+        - вікно
+        - олівці
+    - sentence: Це мале ___.
+      answer: вікно
+      options:
+        - вікно
+        - будинок
+        - книга
+        - дні
+    - sentence: У мене нові ___.
+      answer: друзі
+      options:
+        - друзі
+        - друг
+        - подруга
+        - квартира
 
-- type: fill-in
-  title: "Узгодження: М'яка група (синій)"
-  instruction: "Оберіть правильну форму прикметника «синій»."
+- type: true-false
+  title: True or False?
+  instruction: Decide if the statement about adjectives is true or false.
   items:
-    - sentence: "Це ... (синій) олівець."
-      answer: "синій"
-      options: ["синій", "синя", "синє", "сині"]
-      explanation: "Олівець (він) — синій."
-    - sentence: "Це ... (синій) ручка."
-      answer: "синя"
-      options: ["синя", "синій", "синє", "сині"]
-      explanation: "Ручка (вона) — синя."
-    - sentence: "Це ... (синій) море."
-      answer: "синє"
-      options: ["синє", "синій", "синя", "сині"]
-      explanation: "Море (воно) — синє."
-    - sentence: "Це ... (синій) квіти."
-      answer: "сині"
-      options: ["сині", "синій", "синя", "синє"]
-      explanation: "Квіти (вони) — сині."
-    - sentence: "Це ... (синій) небо."
-      answer: "синє"
-      options: ["синє", "синій", "синя", "сині"]
-      explanation: "Небо (воно) — синє."
-    - sentence: "Це ... (синій) автобус."
-      answer: "синій"
-      options: ["синій", "синя", "синє", "сині"]
-      explanation: "Автобус (він) — синій."
-    - sentence: "Це ... (вечірній) сонце."
-      answer: "вечірнє"
-      options: ["вечірнє", "вечірня", "вечірній", "вечірні"]
-      explanation: "Сонце (воно) — вечірнє."
-    - sentence: "Це ... (давній) місто."
-      answer: "давнє"
-      options: ["давнє", "давня", "давній", "давні"]
-      explanation: "Місто (воно) — давнє."
+    - statement: The word новий is used for masculine words.
+      correct: true
+      explanation: Yes, -ий is the masculine ending for hard stem adjectives.
+    - statement: The word стара is used for neuter words.
+      correct: false
+      explanation: No, стара is feminine. The neuter form is старе.
+    - statement: Plural adjectives consistently end in -і.
+      correct: true
+      explanation: Yes, plural adjectives always take the -і ending regardless of gender.
+    - statement: The word великий means small.
+      correct: false
+      explanation: No, великий means big. The word for small is малий.
+    - statement: The word синій is an example of a soft stem adjective.
+      correct: true
+      explanation: Yes, it takes the soft endings -ій, -я, -є, -і.
+    - statement: Adjectives in Ukrainian never change their endings.
+      correct: false
+      explanation: False! They must always agree with the word's gender and number.
+    - statement: The word гарні is a plural form.
+      correct: true
+      explanation: Yes, the -і ending indicates it is plural.
+    - statement: The word смачний is used to describe good weather.
+      correct: false
+      explanation: No, смачний means tasty and is used for food.
 
 - type: unjumble
-  title: "Складіть речення: Опис (Стандартна позиція)"
-  instruction: "Складіть речення, де прикметник стоїть перед іменником."
+  title: Order the Words
+  instruction: Put the words in the correct order to form a sentence.
   items:
-    - words: ["Це", "новий", "телефон"]
-      answer: "Це новий телефон"
-    - words: ["Вона", "гарна", "дівчина"]
-      answer: "Вона гарна дівчина"
-    - words: ["Тут", "велике", "вікно"]
-      answer: "Тут велике вікно"
-    - words: ["Це", "цікава", "книга"]
-      answer: "Це цікава книга"
-    - words: ["Ми", "добрі", "люди"]
-      answer: "Ми добрі люди"
-    - words: ["Там", "старий", "дім"]
-      answer: "Там старий дім"
-
-- type: unjumble
-  title: "Складіть речення: Характеристика (Позиція після)"
-  instruction: "Складіть речення, де прикметник стоїть після іменника (описує якість)."
-  items:
-    - words: ["Цей", "телефон", "новий"]
-      answer: "Цей телефон новий"
-    - words: ["Ця", "квартира", "велика"]
-      answer: "Ця квартира велика"
-    - words: ["Цей", "фільм", "цікавий"]
-      answer: "Цей фільм цікавий"
-    - words: ["Ця", "книга", "стара"]
-      answer: "Ця книга стара"
-    - words: ["Погода", "сьогодні", "погана"]
-      answer: "Погода сьогодні погана"
-    - words: ["Цей", "ресторан", "дорогий"]
-      answer: "Цей ресторан дорогий"
+    - words:
+        - Це
+        - новий
+        - будинок
+      answer: Це новий будинок
+    - words:
+        - Собор
+        - дуже
+        - старий
+      answer: Собор дуже старий
+    - words:
+        - Це
+        - гарна
+        - погода
+      answer: Це гарна погода
+    - words:
+        - Квартира
+        - дуже
+        - дорога
+      answer: Квартира дуже дорога
+    - words:
+        - Це
+        - велике
+        - вікно
+      answer: Це велике вікно
+    - words:
+        - Борщ
+        - дуже
+        - смачний
+      answer: Борщ дуже смачний
 
 - type: match-up
-  title: "Словниковий запас: Переклад"
-  instruction: "З'єднайте українське слово з його перекладом."
+  title: Question Words
+  instruction: Match the question word with the type of word it asks about, or match the adjective to its translation.
   pairs:
-    - left: "новий"
-      right: "new"
-    - left: "старий"
-      right: "old"
-    - left: "гарний"
-      right: "beautiful/nice"
-    - left: "великий"
-      right: "big"
-    - left: "малий"
-      right: "small"
-    - left: "добрий"
-      right: "good/kind"
-    - left: "поганий"
-      right: "bad"
-    - left: "цікавий"
-      right: "interesting"
-    - left: "дорогий"
-      right: "expensive"
-    - left: "дешевий"
-      right: "cheap"
-    - left: "смачний"
-      right: "tasty"
-    - left: "молодий"
-      right: "young"
+    - left: Який
+      right: For a masculine word
+    - left: Яка
+      right: For a feminine word
+    - left: Яке
+      right: For a neuter word
+    - left: Які
+      right: For plural words
+    - left: цікавий
+      right: interesting
+    - left: синій
+      right: blue
+    - left: червоний
+      right: red
+    - left: зелений
+      right: green
 
 - type: fill-in
-  title: "Діалог: У пошуках квартири"
-  instruction: "Доповніть діалог правильними словами."
+  title: Change the Gender
+  instruction: Complete the sequence with the correct adjective form.
   items:
-    - sentence: "Це наша ... (новий) квартира."
-      answer: "нова"
-      options: ["нова", "новий", "нове", "нові"]
-      explanation: "Квартира — вона."
-    - sentence: "Вона дуже ... (великий)."
-      answer: "велика"
-      options: ["велика", "великий", "велике", "великі"]
-      explanation: "Вона (квартира) — велика."
-    - sentence: "Тут є ... (великий) вікно."
-      answer: "велике"
-      options: ["велике", "великий", "велика", "великі"]
-      explanation: "Вікно — воно."
-    - sentence: "А кухня ... (малий), але зручна."
-      answer: "мала"
-      options: ["мала", "малий", "мале", "малі"]
-      explanation: "Кухня — вона."
-    - sentence: "Ціна теж ... (гарний)."
-      answer: "гарна"
-      options: ["гарна", "гарний", "гарне", "гарні"]
-      explanation: "Ціна — вона."
-    - sentence: "Це ... (добрий) варіант."
-      answer: "добрий"
-      options: ["добрий", "добра", "добре", "добрі"]
-      explanation: "Варіант (він) — добрий."
-    - sentence: "А район ... (старий)?"
-      answer: "старий"
-      options: ["старий", "стара", "старе", "старі"]
-      explanation: "Район (він) — старий."
-    - sentence: "Він дуже ... (чистий)."
-      answer: "чистий"
-      options: ["чистий", "чиста", "чисте", "чисті"]
-      explanation: "Район (він) — чистий."
+    - sentence: 'Masculine: новий. Feminine: ___.'
+      answer: нова
+      options:
+        - нова
+        - нове
+        - нові
+        - новий
+    - sentence: 'Masculine: старий. Neuter: ___.'
+      answer: старе
+      options:
+        - старе
+        - стара
+        - старі
+        - старий
+    - sentence: 'Feminine: велика. Plural: ___.'
+      answer: великі
+      options:
+        - великі
+        - велике
+        - великий
+        - велика
+    - sentence: 'Masculine: малий. Feminine: ___.'
+      answer: мала
+      options:
+        - мала
+        - мале
+        - малі
+        - малий
+    - sentence: 'Masculine: добрий. Plural: ___.'
+      answer: добрі
+      options:
+        - добрі
+        - добра
+        - добре
+        - добрий
+    - sentence: 'Masculine: поганий. Neuter: ___.'
+      answer: погане
+      options:
+        - погане
+        - погана
+        - погані
+        - поганий
+    - sentence: 'Masculine: синій. Feminine: ___.'
+      answer: синя
+      options:
+        - синя
+        - синє
+        - сині
+        - синій
+    - sentence: 'Feminine: синя. Plural: ___.'
+      answer: сині
+      options:
+        - сині
+        - синє
+        - синій
+        - синя

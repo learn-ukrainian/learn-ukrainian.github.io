@@ -1,462 +1,233 @@
-- type: fill-in
-  title: "Оберіть правильний прийменник"
-  instruction: "Select the correct preposition of direction or time."
-  items:
-    - sentence: "Я іду _____ магазин."
-      answer: "в"
-      options:
-        - "в"
-        - "на"
-        - "за"
-        - "про"
-    - sentence: "Ми їдемо _____ пошту."
-      answer: "на"
-      options:
-        - "на"
-        - "в"
-        - "через"
-        - "у"
-    - sentence: "Дякую _____ допомогу!"
-      answer: "за"
-      options:
-        - "за"
-        - "через"
-        - "на"
-        - "про"
-    - sentence: "Концерт почнеться _____ годину."
-      answer: "через"
-      options:
-        - "через"
-        - "за"
-        - "в"
-        - "на"
-    - sentence: "Він прочитав книгу _____ тиждень."
-      answer: "за"
-      options:
-        - "за"
-        - "через"
-        - "про"
-        - "на"
-    - sentence: "Це цікава книга _____ історію України."
-      answer: "про"
-      options:
-        - "про"
-        - "за"
-        - "на"
-        - "через"
-    - sentence: "Студенти йдуть _____ стадіон."
-      answer: "на"
-      options:
-        - "на"
-        - "в"
-        - "про"
-        - "у"
-    - sentence: "Ми гуляємо _____ парк."
-      answer: "через"
-      options:
-        - "через"
-        - "за"
-        - "про"
-        - "на"
-    - sentence: "Вона їде _____ Київ."
-      answer: "у"
-      options:
-        - "у"
-        - "на"
-        - "про"
-        - "через"
-    - sentence: "Про _____ ти думаєш?"
-      answer: "що"
-      options:
-        - "що"
-        - "хто"
-        - "кого"
-        - "де"
-
-- type: quiz
-  title: "Перевірте знання: Прийменники"
-  instruction: "Choose the best answer for each question about prepositions."
-  items:
-    - question: "Який прийменник ми використовуємо для закритих приміщень?"
-      explanation: "Для закритих приміщень (наприклад, магазин чи кімната) використовують в або у."
-      options:
-        - text: "в або у"
-          correct: true
-        - text: "на або за"
-          correct: false
-        - text: "про або через"
-          correct: false
-        - text: "за або через"
-          correct: false
-    - question: "Як правильно сказати, що ви йдете на відкриту територію?"
-      explanation: "Для відкритих поверхонь, таких як площа чи стадіон, використовують на."
-      options:
-        - text: "Я йду на площу."
-          correct: true
-        - text: "Я йду в площу."
-          correct: false
-        - text: "Я йду за площу."
-          correct: false
-        - text: "Я йду через площу."
-          correct: false
-    - question: "Як правильно подякувати за щось українською мовою?"
-      explanation: "Ми завжди говоримо «дякую за» плюс Знахідний відмінок."
-      options:
-        - text: "Дякую за каву."
-          correct: true
-        - text: "Дякую для кави."
-          correct: false
-        - text: "Дякую про каву."
-          correct: false
-        - text: "Дякую на каву."
-          correct: false
-    - question: "Що означає фраза «я зроблю це за годину»?"
-      explanation: "За годину означає тривалість часу, необхідного для завершення дії."
-      options:
-        - text: "Це займе одну годину."
-          correct: true
-        - text: "Я почну через одну годину."
-          correct: false
-        - text: "Я робив це годину тому."
-          correct: false
-        - text: "Я чекав одну годину."
-          correct: false
-    - question: "Що означає фраза «концерт почнеться через годину»?"
-      explanation: "Через годину означає, що подія відбудеться після того, як пройде година."
-      options:
-        - text: "Треба чекати одну годину."
-          correct: true
-        - text: "Концерт триває годину."
-          correct: false
-        - text: "Концерт був годину тому."
-          correct: false
-        - text: "Я граю на концерті."
-          correct: false
-    - question: "Який прийменник використовуємо для теми розмови?"
-      explanation: "Щоб сказати, про що розмова, книга чи фільм, ми використовуємо про."
-      options:
-        - text: "Ми говоримо про роботу."
-          correct: true
-        - text: "Ми говоримо за роботу."
-          correct: false
-        - text: "Ми говоримо на роботу."
-          correct: false
-        - text: "Ми говоримо в роботу."
-          correct: false
-    - question: "Як правильно запитати, куди саме людина йде?"
-      explanation: "Куди питає про напрямок руху."
-      options:
-        - text: "Куди ти йдеш?"
-          correct: true
-        - text: "Де ти йдеш?"
-          correct: false
-        - text: "Звідки ти йдеш?"
-          correct: false
-        - text: "Чому ти йдеш?"
-          correct: false
-    - question: "Чому ми кажемо «у Київ», а не «в Київ» після слова «їду»?"
-      explanation: "Так звучить краще для нашої мови, щоб не було двох приголосних поруч."
-      options:
-        - text: "Для кращого звучання."
-          correct: true
-        - text: "Тому що Київ це велике місто."
-          correct: false
-        - text: "Тому що це правило для міст."
-          correct: false
-        - text: "Тому що це великий виняток."
-          correct: false
-    - question: "Яке речення вказує на перешкоду або причину із прийменником «через»?"
-      explanation: "Через дощ показує причину, чому щось не відбулося або змінилося."
-      options:
-        - text: "Ми не йдемо через дощ."
-          correct: true
-        - text: "Ми не йдемо про дощ."
-          correct: false
-        - text: "Ми не йдемо в дощ."
-          correct: false
-        - text: "Ми не йдемо за дощ."
-          correct: false
-    - question: "Який прийменник традиційно використовується зі словом «пошта»?"
-      explanation: "Традиційно ми кажемо на пошту, а не в пошту."
-      options:
-        - text: "на"
-          correct: true
-        - text: "в"
-          correct: false
-        - text: "у"
-          correct: false
-        - text: "через"
-          correct: false
-
 - type: match-up
-  title: "Знайдіть відповідники: Прийменники та контекст"
-  instruction: "Match the phrase with its logical continuation."
+  title: "Match the Destination"
+  instruction: "Match the Ukrainian phrase to its English meaning."
   pairs:
-    - left: "Я йду в"
-      right: "магазин"
-    - left: "Ми їдемо на"
-      right: "концерт"
-    - left: "Дякую вам за"
-      right: "допомогу"
-    - left: "Ми зустрінемося через"
-      right: "тиждень"
-    - left: "Я прочитав книгу за"
-      right: "один вечір"
-    - left: "Студенти говорять про"
-      right: "історію"
-    - left: "Вони йдуть через"
-      right: "новий міст"
-    - left: "Я спізнився через"
-      right: "затори"
-    - left: "Ми йдемо на"
-      right: "стадіон"
-    - left: "Сонце сідає за"
-      right: "гору"
+    - left: "в готель"
+      right: "to the hotel"
+    - left: "на вокзал"
+      right: "to the train station"
+    - left: "через міст"
+      right: "across the bridge"
+    - left: "про країну"
+      right: "about the country"
+    - left: "за квиток"
+      right: "for the ticket"
+    - left: "на море"
+      right: "to the sea"
+    - left: "в місто"
+      right: "to the city"
+    - left: "через ліс"
+      right: "through the forest"
 
-- type: unjumble
-  title: "Складіть речення: Напрямок і час"
-  instruction: "Put the words in the correct order to form a sentence."
+- type: fill-in
+  title: "Choose the Right Preposition"
+  instruction: "Select the correct preposition for each sentence."
   items:
-    - words:
-        - "я"
-        - "магазин"
-        - "в"
-        - "іду"
-      answer: "Я іду в магазин."
-    - words:
-        - "на"
-        - "пошту"
-        - "він"
-        - "іде"
-      answer: "Він іде на пошту."
-    - words:
-        - "допомогу"
-        - "за"
-        - "дякую"
-        - "вам"
-      answer: "Дякую вам за допомогу."
-    - words:
-        - "про"
-        - "фільм"
-        - "це"
-        - "кохання"
-      answer: "Це фільм про кохання."
-    - words:
-        - "годину"
-        - "через"
-        - "почнеться"
-        - "концерт"
-      answer: "Концерт почнеться через годину."
-    - words:
-        - "парк"
-        - "ми"
-        - "через"
-        - "йдемо"
-      answer: "Ми йдемо через парк."
-
-- type: true-false
-  title: "Правда чи неправда"
-  instruction: "Determine if the statement about prepositions is true or false."
-  items:
-    - statement: "Для закритих просторів ми використовуємо прийменник на."
-      correct: false
-      explanation: "Для закритих просторів ми використовуємо в або у."
-    - statement: "Ми говоримо дякую за, щоб висловити подяку."
-      correct: true
-      explanation: "Так, це правильна форма для вираження вдячності."
-    - statement: "Фраза через годину означає тривалість роботи."
-      correct: false
-      explanation: "Через годину означає час очікування. Тривалість це за годину."
-    - statement: "Слово пошта традиційно використовується з прийменником на."
-      correct: true
-      explanation: "Історично склалося так, що ми кажемо на пошту."
-    - statement: "Прийменник про використовується для вказування напрямку."
-      correct: false
-      explanation: "Прийменник про використовується для теми розмови."
-    - statement: "Фраза ми їдемо через міст означає рух крізь простір."
-      correct: true
-      explanation: "Так, через показує перетин або рух крізь перешкоду."
+    - sentence: "Я їду ___ місто."
+      answer: "в"
+      options: ["в", "на", "про", "через"]
+    - sentence: "Ми йдемо ___ вокзал."
+      answer: "на"
+      options: ["у", "на", "за", "про"]
+    - sentence: "Вона читає ___ країну."
+      answer: "про"
+      options: ["через", "на", "про", "у"]
+    - sentence: "Вони йдуть ___ міст."
+      answer: "через"
+      options: ["через", "за", "про", "в"]
+    - sentence: "Я дякую ___ екскурсію."
+      answer: "за"
+      options: ["за", "на", "через", "в"]
+    - sentence: "Вони їдуть ___ море."
+      answer: "на"
+      options: ["на", "в", "про", "через"]
+    - sentence: "Він іде ___ готель."
+      answer: "в"
+      options: ["на", "в", "за", "про"]
+    - sentence: "Ми їдемо ___ ліс."
+      answer: "через"
+      options: ["через", "на", "про", "за"]
 
 - type: group-sort
-  title: "Розподіліть за групами: в або на?"
-  instruction: "Sort the destinations into the correct preposition category."
+  title: "Where are we going? (В vs НА)"
+  instruction: "Sort the destinations based on which preposition they take."
   groups:
-    - name: "в або у (Enclosed Space)"
-      items:
-        - "магазин"
-        - "кімнату"
-        - "офіс"
-        - "школу"
-        - "парк"
-    - name: "на (Open Surface / Event)"
-      items:
-        - "пошту"
-        - "концерт"
-        - "стадіон"
-        - "площу"
-        - "пляж"
-
-- type: fill-in
-  title: "Доповніть діалог"
-  instruction: "Choose the right preposition to complete the dialogue."
-  items:
-    - sentence: "Привіт! Куди ти ідеш? — Я іду _____ магазин."
-      answer: "в"
-      options:
-        - "в"
-        - "на"
-        - "за"
-        - "через"
-    - sentence: "А ти? — Я іду _____ пошту."
-      answer: "на"
-      options:
-        - "на"
-        - "в"
-        - "про"
-        - "через"
-    - sentence: "Що ти робиш у неділю? — Я їду _____ острів."
-      answer: "на"
-      options:
-        - "на"
-        - "у"
-        - "про"
-        - "через"
-    - sentence: "О, я читав _____ цей фестиваль!"
-      answer: "про"
-      options:
-        - "про"
-        - "за"
-        - "на"
-        - "в"
-    - sentence: "Ми їдемо _____ новий міст."
-      answer: "через"
-      options:
-        - "через"
-        - "за"
-        - "про"
-        - "на"
-    - sentence: "Побачимося _____ тиждень!"
-      answer: "через"
-      options:
-        - "через"
-        - "за"
-        - "на"
-        - "в"
-
-- type: unjumble
-  title: "Складіть речення: Плани на вихідні"
-  instruction: "Reorder the words to build correct sentences."
-  items:
-    - words:
-        - "ми"
-        - "стадіон"
-        - "на"
-        - "ідемо"
-      answer: "Ми ідемо на стадіон."
-    - words:
-        - "острів"
-        - "на"
-        - "їду"
-        - "я"
-      answer: "Я їду на острів."
-    - words:
-        - "книгу"
-        - "прочитав"
-        - "тиждень"
-        - "він"
-        - "за"
-      answer: "Він прочитав книгу за тиждень."
-    - words:
-        - "що"
-        - "про"
-        - "думаєш"
-        - "ти"
-      answer: "Про що ти думаєш?"
+    - name: "Use В (Inside / Enclosed)"
+      items: ["готель", "парк", "місто", "ліс"]
+    - name: "Use НА (Open space / Transport)"
+      items: ["вокзал", "море", "екскурсію", "вулицю"]
 
 - type: quiz
-  title: "Швидкий тест: Прийменники"
-  instruction: "Choose the correct preposition."
+  title: "Travel Agent Check"
+  instruction: "Choose the correct answer for each question."
   items:
-    - question: "До якої частини мови належить слово «через»?"
-      explanation: "Слово через це прийменник."
+    - question: "Which preposition would you use when going TO a closed building like a hotel (готель)?"
+      explanation: "We use в for enclosed spaces."
       options:
-        - text: "прийменник"
+        - text: "в"
           correct: true
-        - text: "іменник"
+        - text: "на"
           correct: false
-        - text: "дієслово"
+        - text: "через"
           correct: false
-        - text: "прикметник"
-          correct: false
-    - question: "Який прийменник використовуємо у фразі «фільм ... кохання»?"
-      explanation: "Щоб вказати тему, використовуємо про."
-      options:
         - text: "про"
-          correct: true
-        - text: "через"
           correct: false
-        - text: "на"
-          correct: false
-        - text: "в"
-          correct: false
-    - question: "Як сказати англійською «я зроблю це за годину»?"
-      explanation: "Це означає in an hour, мається на увазі час, потрібний для завершення."
-      options:
-        - text: "in an hour (duration)"
-          correct: true
-        - text: "for an hour"
-          correct: false
-        - text: "about an hour"
-          correct: false
-        - text: "behind an hour"
-          correct: false
-    - question: "Яке запитання підходить до відповіді «Я йду на концерт»?"
-      explanation: "Ми питаємо куди, щоб дізнатися напрямок."
-      options:
-        - text: "Куди ти йдеш?"
-          correct: true
-        - text: "Де ти йдеш?"
-          correct: false
-        - text: "Звідки ти йдеш?"
-          correct: false
-        - text: "Хто йде?"
-          correct: false
-    - question: "Чому ми кажемо «ми йдемо через міст»?"
-      explanation: "Прийменник через вказує на рух крізь простір або перетин перешкоди."
-      options:
-        - text: "Це рух через простір."
-          correct: true
-        - text: "Це час очікування."
-          correct: false
-        - text: "Це подяка."
-          correct: false
-        - text: "Це закрите приміщення."
-          correct: false
-    - question: "Який прийменник традиційно використовують зі словом «пошта»?"
-      explanation: "Традиційно ми кажемо на пошту."
+    - question: "If a tourist is going TO the train station (вокзал), which preposition is correct?"
+      explanation: "Transportation hubs typically take на."
       options:
         - text: "на"
           correct: true
         - text: "в"
-          correct: false
-        - text: "через"
           correct: false
         - text: "за"
           correct: false
+        - text: "через"
+          correct: false
+    - question: "How do you say 'through the park' in Ukrainian?"
+      explanation: "Через means through or across."
+      options:
+        - text: "через парк"
+          correct: true
+        - text: "в парк"
+          correct: false
+        - text: "на парк"
+          correct: false
+        - text: "про парк"
+          correct: false
+    - question: "Which phrase means 'about the city'?"
+      explanation: "Про means about."
+      options:
+        - text: "про місто"
+          correct: true
+        - text: "за місто"
+          correct: false
+        - text: "через місто"
+          correct: false
+        - text: "в місто"
+          correct: false
+    - question: "Which preposition is used for exchanging something, like paying 'for a ticket'?"
+      explanation: "За is used for exchange or thanking (for something)."
+      options:
+        - text: "за"
+          correct: true
+        - text: "про"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "через"
+          correct: false
+    - question: "What is the correct way to say 'to the sea'?"
+      explanation: "We use на with море (sea)."
+      options:
+        - text: "на море"
+          correct: true
+        - text: "в море"
+          correct: false
+        - text: "за море"
+          correct: false
+        - text: "через море"
+          correct: false
+    - question: "Choose the correct translation for 'across the street'."
+      explanation: "Через means across. Вулиця becomes вулицю in the accusative case."
+      options:
+        - text: "через вулицю"
+          correct: true
+        - text: "на вулицю"
+          correct: false
+        - text: "в вулицю"
+          correct: false
+        - text: "про вулицю"
+          correct: false
+    - question: "Which form is the accusative of країна?"
+      explanation: "Feminine nouns ending in -а change to -у in the accusative."
+      options:
+        - text: "країну"
+          correct: true
+        - text: "країна"
+          correct: false
+        - text: "країні"
+          correct: false
+        - text: "країною"
+          correct: false
+
+- type: true-false
+  title: "Travel Facts Check"
+  instruction: "Decide if the statement is true or false."
+  items:
+    - statement: "We use the preposition НА with the word готель (hotel)."
+      correct: false
+      explanation: "Готель is a building, so we use В (в готель)."
+    - statement: "The preposition ПРО translates to 'about' in English."
+      correct: true
+      explanation: "Про means about, for example, читати про країну (to read about the country)."
+    - statement: "Feminine nouns ending in -а change to -у in the accusative case."
+      correct: true
+      explanation: "Yes, for example: країна becomes країну, вулиця becomes вулицю."
+    - statement: "Inanimate masculine nouns change their endings in the accusative case."
+      correct: false
+      explanation: "Inanimate masculine nouns (like парк, вокзал) do not change in the accusative case."
+    - statement: "To say 'through the forest', you say 'через ліс'."
+      correct: true
+      explanation: "Через means through, and ліс is an inanimate masculine noun, so it doesn't change."
+    - statement: "We use the preposition В with the word вокзал (train station)."
+      correct: false
+      explanation: "For transportation hubs like вокзал, we use НА (на вокзал)."
+    - statement: "The preposition ЗА is used when thanking someone FOR something."
+      correct: true
+      explanation: "Yes! For example: дякую за квиток (thank you for the ticket)."
+    - statement: "Neuter nouns like місто and море change their endings in the accusative case."
+      correct: false
+      explanation: "Neuter nouns do not change in the accusative case."
+
+- type: unjumble
+  title: "Build the Travel Sentence"
+  instruction: "Put the words in the correct order to form a sentence."
+  items:
+    - sentence: "Я їду в готель."
+    - sentence: "Ми йдемо на вокзал."
+    - sentence: "Вона читає про країну."
+    - sentence: "Вони йдуть через парк."
+    - sentence: "Я дякую за екскурсію."
+    - sentence: "Він їде на море."
+
+- type: anagram
+  title: "Unscramble the Travel Words"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "г о т е л ь"
+      answer: "готель"
+    - scrambled: "в о к з а л"
+      answer: "вокзал"
+    - scrambled: "м і с т о"
+      answer: "місто"
+    - scrambled: "п а р к"
+      answer: "парк"
+    - scrambled: "м о р е"
+      answer: "море"
+    - scrambled: "к в и т о к"
+      answer: "квиток"
+    - scrambled: "м і с т"
+      answer: "міст"
+    - scrambled: "л і с"
+      answer: "ліс"
 
 - type: match-up
-  title: "Знайдіть пару: Англійський еквівалент"
-  instruction: "Match the Ukrainian phrase with its English meaning."
+  title: "Accusative Case Changes (Feminine)"
+  instruction: "Match the dictionary form to its accusative form."
   pairs:
-    - left: "через парк"
-      right: "through the park"
-    - left: "за тиждень"
-      right: "in a week (duration)"
-    - left: "через тиждень"
-      right: "in a week (waiting time)"
-    - left: "про історію"
-      right: "about history"
-    - left: "на пошту"
-      right: "to the post office"
-    - left: "в магазин"
-      right: "to the shop"
+    - left: "країна"
+      right: "країну"
+    - left: "вулиця"
+      right: "вулицю"
+    - left: "екскурсія"
+      right: "екскурсію"
+    - left: "кава"
+      right: "каву"
+    - left: "вода"
+      right: "воду"
+    - left: "мама"
+      right: "маму"
+    - left: "сестра"
+      right: "сестру"
+    - left: "аптека"
+      right: "аптеку"

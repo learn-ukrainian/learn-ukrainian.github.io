@@ -1,61 +1,64 @@
 items:
-- lemma: мій
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: наш
-  pos: adj
-- lemma: твій
-  pos: adj
-- lemma: ваш
-  pos: adj
-- lemma: вона
-  pos: noun
-- lemma: чий
-  pos: adj
-- lemma: він
-  pos: noun
-- lemma: воно
-  pos: noun
-- lemma: її
-  pos: adj
-- lemma: їхній
-  pos: adj
-- lemma: йога
-  pos: noun
-- lemma: його
-  pos: adj
-- lemma: телефон
-  pos: noun
-- lemma: сумка
-  pos: noun
-- lemma: кава
-  pos: noun
-- lemma: свій
-  pos: adj
-- lemma: паспорт
-  pos: noun
-- lemma: дім
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: вони
-  pos: noun
-- lemma: книга
-  pos: noun
-- lemma: друг
-  pos: noun
-- lemma: вікно
-  pos: noun
-- lemma: річ
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: місто
-  pos: noun
-- lemma: змінюватися
-  pos: verb
-- lemma: мама
-  pos: noun
+  - lemma: "мій"
+    translation: "my (masculine)"
+    pos: "pronoun"
+  - lemma: "моя"
+    translation: "my (feminine)"
+    pos: "pronoun"
+  - lemma: "моє"
+    translation: "my (neuter)"
+    pos: "pronoun"
+  - lemma: "твій"
+    translation: "your (informal, masculine)"
+    pos: "pronoun"
+  - lemma: "твоя"
+    translation: "your (informal, feminine)"
+    pos: "pronoun"
+  - lemma: "наш"
+    translation: "our (masculine)"
+    pos: "pronoun"
+  - lemma: "наша"
+    translation: "our (feminine)"
+    pos: "pronoun"
+  - lemma: "ваш"
+    translation: "your (formal/plural, masculine)"
+    pos: "pronoun"
+  - lemma: "ваша"
+    translation: "your (formal/plural, feminine)"
+    pos: "pronoun"
+  - lemma: "його"
+    translation: "his / its"
+    pos: "pronoun"
+  - lemma: "її"
+    translation: "her"
+    pos: "pronoun"
+  - lemma: "їхній"
+    translation: "their"
+    pos: "pronoun"
+  - lemma: "чий"
+    translation: "whose (masculine)"
+    pos: "pronoun"
+  - lemma: "чия"
+    translation: "whose (feminine)"
+    pos: "pronoun"
+  - lemma: "чиє"
+    translation: "whose (neuter)"
+    pos: "pronoun"
+  - lemma: "чиї"
+    translation: "whose (plural)"
+    pos: "pronoun"
+  - lemma: "свій"
+    translation: "one's own"
+    pos: "pronoun"
+  - lemma: "річ"
+    translation: "thing"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сумка"
+    translation: "bag"
+    pos: "noun"
+    gender: "f"
+  - lemma: "паспорт"
+    translation: "passport"
+    pos: "noun"
+    gender: "m"

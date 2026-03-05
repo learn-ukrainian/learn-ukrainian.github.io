@@ -31,11 +31,14 @@ MANIFEST_PATH = REPO_ROOT / "curriculum/l2-uk-direct/manifest.yaml"
 STATUS_EMOJI = {
     "published": "🟢",
     "ready":     "🟡",
+    "reviewed":  "🟠",
+    "validated": "🔶",
+    "enriched":  "🔷",
     "draft":     "🔵",
     "MISSING":   "⬜",
 }
 
-STATUS_ORDER = ["published", "ready", "draft", "MISSING"]
+STATUS_ORDER = ["published", "ready", "reviewed", "validated", "enriched", "draft", "MISSING"]
 
 
 def emoji_for(status: str) -> str:

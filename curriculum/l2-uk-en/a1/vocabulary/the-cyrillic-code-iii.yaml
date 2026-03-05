@@ -1,61 +1,62 @@
 items:
-- lemma: це
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: літера
-  pos: noun
-- lemma: той
-  pos: adj
-- lemma: ми
-  pos: noun
-- lemma: хліб
-  pos: noun
-- lemma: мій
-  pos: adj
-- lemma: читати
-  pos: verb
-- lemma: вголос
-  pos: adv
-- lemma: стоп
-  pos: noun
-- lemma: стопа
-  pos: noun
-- lemma: факт
-  pos: noun
-- lemma: приклад
-  pos: noun
-- lemma: прикласти
-  pos: verb
-- lemma: порт
-  pos: noun
-- lemma: па
-  pos: noun
-- lemma: суп
-  pos: noun
-- lemma: тест
-  pos: noun
-- lemma: джерело
-  pos: noun
-- lemma: сей
-  pos: adj
-- lemma: новий
-  pos: adj
-- lemma: пер
-  pos: noun
-- lemma: перо
-  pos: noun
-- lemma: співати
-  pos: verb
-- lemma: кіно
-  pos: noun
-- lemma: зеро
-  pos: noun
-- lemma: парк
-  pos: noun
-- lemma: йти
-  pos: verb
-- lemma: спорт
-  pos: noun
-- lemma: тут
-  pos: adv
+  - lemma: "хліб"
+    translation: "bread"
+    pos: "noun"
+    notes: "Demonstrates Х"
+  - lemma: "парк"
+    translation: "park"
+    pos: "noun"
+  - lemma: "школа"
+    translation: "school"
+    pos: "noun"
+  - lemma: "газета"
+    translation: "newspaper"
+    pos: "noun"
+  - lemma: "будинок"
+    translation: "building"
+    pos: "noun"
+  - lemma: "шапка"
+    translation: "hat"
+    pos: "noun"
+  - lemma: "банан"
+    translation: "banana"
+    pos: "noun"
+  - lemma: "дім"
+    translation: "house/home"
+    pos: "noun"
+  - lemma: "пошта"
+    translation: "post office"
+    pos: "noun"
+  - lemma: "зуб"
+    translation: "tooth"
+    pos: "noun"
+  - lemma: "транспорт"
+    translation: "transport"
+    pos: "noun"
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+  - lemma: "павук"
+    translation: "spider"
+    pos: "noun"
+  - lemma: "брат"
+    translation: "brother"
+    pos: "noun"
+  - lemma: "добре"
+    translation: "good"
+    pos: "adverb"
+  - lemma: "друг"
+    translation: "friend"
+    pos: "noun"
+  - lemma: "зебра"
+    translation: "zebra"
+    pos: "noun"
+  - lemma: "гора"
+    translation: "mountain"
+    pos: "noun"
+  - lemma: "жук"
+    translation: "beetle"
+    pos: "noun"
+  - lemma: "черепаха"
+    translation: "turtle"
+    pos: "noun"

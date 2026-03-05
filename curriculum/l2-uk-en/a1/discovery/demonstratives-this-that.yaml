@@ -1,0 +1,152 @@
+discovered_at: '2026-03-05T05:42:34.740204+00:00'
+query_keywords:
+- Demonstratives
+- Цей/ця/це
+- This
+- Ці
+- These
+- Той/та/те/ті
+- That/Those
+- Цей vs Той у контексті
+- This vs That in context
+- Use цей/ця/це/ці correctly with nouns of matching gender
+- Use той/та/те/ті for distant reference with correct agreement
+- Distinguish demonstrative це from copula це
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Ng0Lt33xBIk
+  channel: Learn Ukrainian Language
+  title: УРОК 32. ВКАЗІВНІ ЗАЙМЕННИКИ THIS THAT THESE THOSE ПОЯСНЕННЯ УКРАЇНСЬКОЮ
+  relevance_score: 0.9
+  relevance_note: The video directly addresses Ukrainian demonstrative pronouns 'цей,
+    ця, це, ці' and explains their usage, including gender agreement, by contrasting
+    them with English equivalents. This aligns perfectly with the module's core topic
+    and initial sections.
+  transcript_excerpt: ось в українській мові У нас є такі займенники як цей ця це
+    це або у множині ці в англійській мові якщо ми хочемо сказати в однині це і ця
+    це ми будемо з вами використовувати ось такий вказівний займенник як десь.
+  embed_suggestion: 'After section Ці: The Universal ''These'' — The video provides
+    a detailed explanation of ''цей, ця, це, ці'' and their agreement, which complements
+    the initial sections before delving into ''той'' and the ''цей vs той'' distinction.'
+blogs:
+- url: https://www.ukrainianlessons.com/pronouns-this-that/
+  title: This and That in Ukrainian — Demonstrative Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.6000000000000001
+  topics:
+  - demonstratives
+  - pronouns
+  - grammar
+- url: https://www.ukrainianlessons.com/fmu10/
+  title: 7 helpful Ukrainian words to link sentences
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 10
+- url: https://www.ukrainianlessons.com/fmu1/
+  title: How to explain that you don’t speak Ukrainian very well (yet)
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 1
+- url: https://www.ukrainianlessons.com/fmu2/
+  title: Useful phrases for learning Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 2
+- url: https://www.ukrainianlessons.com/fmu3/
+  title: How to talk to an Uber / taxi driver in Ukrainian?
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 3
+rag_chunks:
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
+  text: "58\nБачу В, в (ве).  Чую [в].\nв і н о *\n* * и в и\nв и * н і\n[  = •  |\
+    \ –  • – ]  \n[ –   –•| – •]  \nви-\nа\nо\nу\nи\nі\nВ\nва\nво\nву\nви\nві\nа\n\
+    о\nу\nи\nі\nав\nов\nув\nив\nів\nВ\n-во\nва-\nві-\nво-ни\n\t\n  він \t\n      \
+    \        во-на \t\n\t\n  во-но\nни\nва\nва\nми\nвав\nвов\nвув\nвив\nвів\nмо\n\
+    ва\nви\nно\nви\nви\nна\nни\nВ в"
+  section_title: Сторінка 60
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0085
+  text: "60\n \n \nІІ   \aОдин учень (учениця) має скласти доведення певного твердження,\
+    \ \nа другий (друга) — його спростування. Пам’ятайте, що при ствер-\nдженні доводиться\
+    \ істинність, правдивість тези. (Це твердження \nсправедливе. Можна навести такі\
+    \ докази: … . Отже, це твердження \nправильне...). При спростуванні твердження\
+    \ слід указати на хибність \nабо недостатність доказів опонента, аргументувати\
+    \ свою думку (Тут \nговорили, що…, але це не так, адже…). Теми дискусії\n\t\t\n\
+    \ \aОдин старий друг кращий за нових двох"
+  section_title: Сторінка 60
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0381
+  text: 'ПОРІВНЯЙМО:
+
+    1. Цей будинок не старий
+
+    е
+
+    (
+
+    й не є старий). 2. Цей будинок нестарий (є нестарий, тобто відносно недавно збудований).'
+  section_title: Сторінка 257
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0280
+  text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n273\n\
+    Відмінювання вказівних займенників\nН.\nтой\nта\nте\nті\nР.\nтого\nтієї, тої\n\
+    того\nтих\nД.\nтому\nтій\nтому\nтим\nЗн.\nтой, того\nту\nтой, того\nті, тих\n\
+    Ор.\nтим\nтією, тою\nтим\nтими\nМ.\n(на) то́му, \n(на)  тім\n(на) тій\n(на) то́му,\
+    \ \n(на)  тім\n(на) тих\nЗверніть увагу! У  непрямих відмінках займенни-\nків\
+    \ той, цей наголос змінюється: якщо ці займенники \nвжиті з прийменником, тоді\
+    \ наголос у них падає на ос-\nнову (в то́му дописі, із  цьо́го акаунту); "
+  section_title: Сторінка 273
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

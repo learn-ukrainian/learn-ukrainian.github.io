@@ -4,6 +4,528 @@ description: "Hello and Thank You"
 sidebar:
   order: 8
   label: "08. Greetings and Politeness"
+pipeline: v4
+build_status: validated
 ---
 
-> 🚧 **Цей модуль ще в розробці.** / **This module is under development.**
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+{/**/}
+
+> **Чому це важливо? — Why does this matter?**
+>
+> Learning how to greet people correctly is the foundation of speaking any language. In Ukrainian, the way you say hello immediately establishes the social dynamic and level of respect between you and the other person. Mastering these simple, everyday phrases shows your appreciation for the culture and opens doors to warm, polite conversations.
+
+## Basic Greetings (Вітання)
+
+### The Casual Hello
+
+The easiest way to start a conversation with someone you know well is by using our universal casual greeting. The word is **приві́т** (hello). You can use this word at any time of the day or night. However, it is very important to remember that **приві́т** (hello) is strictly reserved for people you are close with, such as your friends, your family members, and people of your own age. You can also use it when speaking to children. It creates a warm, friendly atmosphere right away.
+
+<div className="conversation">
+
+— Приві́т! Як спра́ви? (Hello! How are things?)
+
+— Приві́т! Добре. А ти? (Hello! Good. And you?)
+
+— Також добре. (Also good.)
+
+— Привітик! (Hi there!)
+
+— Радий тебе бачити! (Glad to see you!)
+
+— Як життя? (How is life?)
+
+— Все чудово! (Everything is great!)
+
+— Приві́т, Анна! (Hello, Anna!)
+
+— Приві́т, Іван! Як ти? (Hello, Ivan! How are you?)
+
+— Добре! (Good!)
+
+— Дуже добре! (Very good!)
+
+</div>
+
+### Polite and Professional
+
+When you are speaking to a stranger, a store clerk, an elder, or a professional colleague, you must switch to our formal greetings. Just like in English, these polite phrases change depending on the time of the day.
+
+If it is morning time, until about noon, you should say **до́брий ра́нок** (good morning). Once the clock passes midday and throughout the afternoon until about six o'clock, the correct phrase is **до́брий день** (good afternoon). When evening arrives, you transition to **до́брий ве́чір** (good evening).
+
+<div className="conversation">
+
+— До́брий ра́нок! (Good morning!)
+
+— До́брий ра́нок! Як справи? (Good morning! How are things?)
+
+— До́брий день! Як ваші справи? (Good afternoon! How are things with you?)
+
+— До́брий день! Добре, дякую. (Good afternoon! Good, thank you.)
+
+— До́брий ве́чір! (Good evening!)
+
+— До́брий ве́чір! Дуже приємно. (Good evening! Very pleasant.)
+
+— Добрий день! Радий вас бачити. (Good afternoon! Glad to see you.)
+
+</div>
+
+:::tip[💡 Tip]
+**Золоте правило (The Golden Default)**
+If you are ever unsure what time it is, or if you simply forget the morning and evening phrases, stick to **до́брий день** (good afternoon). It is the safest, most common default greeting used throughout the entire daytime.
+:::
+
+### Saying Goodbye
+
+When it is time to part ways, you also have formal and informal options to choose from. The most common formal farewell is **до поба́чення** (goodbye). This phrase literally translates to «until seeing», implying that you will see the person again.
+
+<div className="conversation">
+
+— До поба́чення! (Goodbye!)
+
+— До поба́чення! На все добре! (Goodbye! All the best!)
+
+— На все до́бре! (All the best!)
+
+— Гарного дня! (Have a good day!)
+
+— До поба́чення! Гарного дня! (Goodbye! Have a good day!)
+
+</div>
+
+If you are saying goodbye to a friend after a casual hangout, you can simply say **бува́й** (bye). Another wonderful, universally polite phrase you can use in almost any situation is **на все до́бре** (all the best). It leaves a warm and positive impression on anyone you speak with.
+
+<div className="conversation">
+
+— Бува́й! (Bye!)
+
+— Приві́т! Бува́й! (Hello! Bye!)
+
+— Бува́й, Іван! (Bye, Ivan!)
+
+— До зустрічі! (See you later!)
+
+— Па-па! (Bye-bye!)
+
+— Па-па, Анна! На все добре! (Bye-bye, Anna! All the best!)
+
+</div>
+
+## Formal vs. Informal: 'Ти' and 'Ви'
+
+### Two Ways to Say You
+
+Now that you know how to say hello, we need to discuss a vital cultural rule. In Ukrainian, there are two different words for the English pronoun «you». Choosing the correct one is absolutely essential for being polite and showing the right level of respect.
+
+The first word is **ти** (you). This is the singular, informal version of the pronoun. You use **ти** (you) when you are talking to exactly one person who is a close friend, a family member, a child, or a classmate of the same age. It represents a close, comfortable social distance.
+
+<div className="conversation">
+
+— Як ти? (How are you? - informal)
+
+— Ти добре? (Are you okay? - informal)
+
+— Що ти робиш? (What are you doing? - informal)
+
+— Де ти? (Where are you? - informal)
+
+— Ти тут? (Are you here? - informal)
+
+— Анна, де ти? (Anna, where are you? - informal)
+
+</div>
+
+The second word is **ви** (you). This is the formal version of the pronoun. You use **ви** (you) when you are talking to a stranger, a teacher, a boss, or someone older than you. It shows respect and maintains a polite, professional distance. Importantly, **ви** (you) is also the plural form. Any time you are addressing a group of two or more people, you must use **ви** (you), regardless of how well you know them.
+
+<div className="conversation">
+
+— Як ви? (How are you? - formal)
+
+— Ви добре? (Are you okay? - formal)
+
+— Що ви робите? (What are you doing? - formal/plural)
+
+— Де ви? (Where are you? - formal/plural)
+
+— Ви тут? (Are you here? - formal/plural)
+
+— Іван, Анна, де ви? (Ivan, Anna, where are you? - plural)
+
+</div>
+
+### The Golden Rule of Respect
+
+:::note[🏺 Culture]
+**Правило поваги (The Respect Rule)**
+The distinction between **ти** (you) and **ви** (you) is strictly observed in Ukraine. Using the informal **ти** (you) with a stranger or an elder is not just a grammar mistake; it is considered deeply disrespectful. Always err on the side of caution!
+:::
+
+As a beginner, your safety rule is to always start conversations by using **ви** (you). Wait patiently for the other person to invite you to use the casual form. When a Ukrainian person feels comfortable enough to drop the formality, they might smile and ask: «Дава́й на ти?» (Shall we switch to ти?). Until you hear that magical phrase, keep things formal.
+
+### Matching Greetings and Pronouns
+
+Because these pronouns represent different levels of respect, our greetings must match them perfectly. You cannot mix formal and informal words. The polite greeting **до́брий день** (good afternoon) always pairs with the formal pronoun **ви** (you). On the other hand, the casual greeting **приві́т** (hello) always pairs with the casual pronoun **ти** (you). Keeping these pairs matched will help you sound natural from day one.
+
+## Politeness Magic Words (Ввічливість)
+
+### Giving Thanks
+
+Ukrainians highly value politeness in society. Beyond saying hello and goodbye, you will need a few extra phrases to navigate daily life gracefully, whether you are ordering coffee or accidentally bumping into someone on the street.
+
+The most important word of gratitude is our universal way to say thank you: **дя́кую** (thank you). You will hear this word everywhere, from grocery stores to professional offices. If you want to show even deeper appreciation, for example, when someone gives you a thoughtful gift or goes out of their way to help you, you can use powerful intensifiers. You can say **ду́же дя́кую** (thank you very much) or the very warm, heartfelt phrase **щи́ро дя́кую** (sincerely thank you).
+
+<div className="conversation">
+
+— Дя́кую! (Thank you!)
+
+— Ду́же дя́кую! (Thank you very much!)
+
+— Щи́ро дя́кую! (Sincerely thank you!)
+
+— Дякую за допомогу! (Thank you for the help!)
+
+— Величезне дякую! (Huge thank you!)
+
+— Дякую, Анна! (Thank you, Anna!)
+
+— Дуже дякую, Іван! (Thank you very much, Ivan!)
+
+</div>
+
+### The Magic of Please
+
+Next is perhaps the most useful and versatile phrase in the entire Ukrainian language. The phrase is **будь ла́ска** (please / you are welcome).
+
+:::tip[💡 Tip]
+**Універсальна фраза (The Double Duty Phrase)**
+The phrase **будь ла́ска** (please / you are welcome) is incredibly versatile! It functions as both «please» when you are asking for something, and «you are welcome» when someone thanks you.
+
+<div className="conversation">
+
+— Ка́ву, будь ла́ска. (Coffee, please.)
+
+— Чай, будь ла́ска. (Tea, please.)
+
+— Воду, будь ла́ска. (Water, please.)
+
+— Сік, будь ла́ска. (Juice, please.)
+
+— Дя́кую! (Thank you!)
+
+— Будь ла́ска! (You are welcome!)
+
+— Дуже дякую! (Thank you very much!)
+
+— Будь ласка! (You are welcome!)
+
+</div>
+:::
+
+### Saying Excuse Me
+
+Finally, let us look at how to say sorry. If you need to get someone's attention politely on a crowded bus, or if you cause a minor inconvenience, you should use the formal word **ви́бачте** (excuse me). If you are speaking to a close friend, you can use the shorter, casual form **ви́бач** (excuse me).
+
+<div className="conversation">
+
+— Ви́бачте! (Excuse me! / I am sorry! - formal)
+
+— Ви́бач! (Excuse me! / I am sorry! - informal)
+
+— Вибачте, де метро? (Excuse me, where is the metro?)
+
+— Вибачте, де банк? (Excuse me, where is the bank?)
+
+— Вибачте, де парк? (Excuse me, where is the park?)
+
+</div>
+
+For a more formal and sincere statement, such as when you have genuinely inconvenienced someone or made a larger mistake, you can use the word **перепро́шую** (I beg your pardon). It carries a bit more weight and sincerity than a simple excuse me, showing that you truly regret the error.
+
+<div className="conversation">
+
+— Перепро́шую! (I beg your pardon!)
+
+— Перепро́шую, ви́бачте. (I beg your pardon, excuse me.)
+
+— Дуже перепрошую! (I sincerely apologize!)
+
+</div>
+
+## Introductions (Знайомство)
+
+### Asking for a Name
+
+Once you have greeted someone politely, the next natural step is to introduce yourself. Asking for someone's name and offering your own relies on fixed expressions. You do not need to worry about the grammar behind these phrases right now; simply memorize them as full, complete chunks of language.
+
+Just like with our basic greetings, we have a formal and an informal way to ask for a name. In Ukrainian, both phrases literally translate to «how do they call you?».
+
+If you are speaking to a stranger, a professional, or someone older, you ask the formal question:
+<div className="conversation">
+
+— Як вас зва́ти? (How are you called? - formal)
+
+— Добрий день, як вас звати? (Good afternoon, what is your name?)
+
+— Добрий ранок, як вас звати? (Good morning, what is your name?)
+
+</div>
+
+If you are speaking to a child, a close friend, or a peer in a casual setting, you ask the informal version:
+<div className="conversation">
+
+— Як те́бе зва́ти? (Could you tell me your name? - informal)
+
+— Привіт, як тебе звати? (Hello, could you tell me your name?)
+
+— Привіт! Як тебе звати? (Hello! What is your name?)
+
+</div>
+
+### Responding Correctly
+
+:::warning[⚠️ Warning]
+**Увага: переклад (Attention: translation)**
+English speakers often try to translate the phrase «My name is» word-for-word into Ukrainian. Please do not do this! It sounds very unnatural. Instead, we respond using the set formula **мене́ зва́ти...** (My name is...). It literally means «they call me...». All you need to do is add your own name to the end of the phrase.
+:::
+
+<div className="conversation">
+
+— Мене́ зва́ти Марі́я. (My name is Mariia.)
+
+— Мене́ зва́ти Іва́н. А вас? (My name is Ivan. And you?)
+
+— Мене звати Анна. (My name is Anna.)
+
+— Мене звати Максим. А тебе? (My name is Maksym. And you?)
+
+— Мене звати Оксана. (My name is Oksana.)
+
+</div>
+
+After exchanging names, it is always polite to express your pleasure at meeting the other person. You can use the phrase **ду́же приє́мно** (pleased to meet you), which literally means «very pleasant».
+
+<div className="conversation">
+
+— Ду́же приє́мно! (Pleased to meet you!)
+
+— Дуже приємно познайомитися! (Very pleased to meet you!)
+
+— Мене звати Іван. Дуже приємно! (My name is Ivan. Pleased to meet you!)
+
+</div>
+
+### Real-World Dialogues
+
+Let us look at three simple mini-dialogues to see how greetings, pronouns, and introductions come together in the real world.
+
+**Meeting a Teacher (Formal)**
+<div className="conversation">
+
+— До́брий день! (Good afternoon!)
+
+— До́брий день! Як вас зва́ти? (Good afternoon! How are you called?)
+
+— Мене́ зва́ти Марі́я. (My name is Mariia.)
+
+— Ду́же приє́мно. (Pleased to meet you.)
+
+— До поба́чення! (Goodbye!)
+
+</div>
+
+**Meeting a Classmate (Informal)**
+<div className="conversation">
+
+— Приві́т! Як те́бе зва́ти? (Hello! What's your name?)
+
+— Приві́т! Мене́ зва́ти Іва́н. А тебе? (Hello! My name is Ivan. And you?)
+
+— Мене звати Максим. (My name is Maksym.)
+
+— Ду́же приє́мно! (Pleased to meet you!)
+
+— Бува́й! (Bye!)
+
+</div>
+
+**Meeting a Colleague (Formal)**
+<div className="conversation">
+
+— Добрий ранок! (Good morning!)
+
+— Добрий ранок! Як вас звати? (Good morning! Please tell me your name.)
+
+— Мене звати Олена. А вас? (My name is Olena. And you?)
+
+— Мене звати Максим. Дуже приємно! (My name is Maksym. Pleased to meet you!)
+
+— На все добре! (All the best!)
+
+</div>
+
+These interactions are the basic building blocks of forming friendships and showing respect in Ukraine. Practice reading them aloud until they feel completely natural.
+
+---
+
+## 📋 Summary and Self-Check
+
+You have learned the most important foundational phrases for opening and closing a conversation politely in Ukrainian. You now know that **приві́т** (hello) and **бува́й** (bye) are strictly for close friends and family, using the informal pronoun **ти** (you). For strangers, teachers, and elders, you must show respect by using the formal pronoun **ви** (you) alongside time-based greetings like **до́брий ра́нок** (good morning) or the universally safe **до́брий день** (good afternoon).
+
+You also discovered that **дя́кую** (thank you) and **ви́бачте** (excuse me) are your magical keys to daily politeness, while **будь ла́ска** (please / you are welcome) works double duty in a conversation. Finally, you learned the fixed formulas for self-introductions: asking «Як вас зва́ти?» (What is your name?) and answering confidently with «Мене́ зва́ти...» (My name is...), followed by a polite «Ду́же приє́мно» (Pleased to meet you).
+
+**Review Vocabulary (Вітання та Ввічливість)**
+<div className="conversation">
+
+— Приві́т! (Hello!)
+
+— Бува́й! (Bye!)
+
+— До́брий ра́нок! (Good morning!)
+
+— До́брий день! (Good afternoon!)
+
+— До́брий ве́чір! (Good evening!)
+
+— До поба́чення! (Goodbye!)
+
+— Дя́кую! (Thank you!)
+
+— Ду́же дя́кую! (Thank you very much!)
+
+— Будь ла́ска! (You are welcome!)
+
+— Ви́бачте! (Excuse me!)
+
+— Перепро́шую! (I beg your pardon!)
+
+— Як вас зва́ти? (How are you called?)
+
+— Як те́бе зва́ти? (Could you tell me your name? - informal)
+
+— Мене́ зва́ти... (My name is...)
+
+— Ду́же приє́мно! (Pleased to meet you!)
+
+</div>
+
+**Питання для самоперевірки (Self-Check Questions)**
+1. It is 3:00 PM and you are walking into a small local shop. Яке вітання ви використаєте? (Which greeting should you use to speak to the shop assistant?)
+2. You want to express deep gratitude to a stranger who helped you find your way. Як сказати «thank you very much» українською? (How do you say «thank you very much» in Ukrainian?)
+3. How would you respectfully ask a new colleague «What is their name» at the office? (Як формально запитати ім'я?)
+4. When someone says «Дя́кую!» (Thank you!) to you, what versatile phrase can you use to reply «you are welcome»? (Що відповісти на «Дя́кую»?)
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| Добрий день |  | Good afternoon / Good day | phrase |  |  |
+| Добрий ранок |  | Good morning | phrase |  |  |
+| Добрий вечір |  | Good evening | phrase |  |  |
+| Привіт |  | Hi / Hello | interjection |  |  |
+| До побачення |  | Goodbye | phrase |  |  |
+| Па-па |  | Bye-bye | interjection |  |  |
+| Дякую |  | Thank you | verb |  |  |
+| Будь ласка |  | Please / You're welcome | phrase |  |  |
+| Вибачте |  | Sorry / Excuse me | verb |  |  |
+| Перепрошую |  | Excuse me / I apologize | verb |  |  |
+| Так |  | Yes | particle |  |  |
+| Ні |  | No | particle |  |  |
+| Як справи? |  | How are you? | phrase |  |  |
+| Добре |  | Good / Well | adverb |  |  |
+| Погано |  | Bad / Badly | adverb |  |  |
+| Нормально |  | Normal / Fine | adverb |  |  |
+| Чудово |  | Great / Wonderful | adverb |  |  |
+| Смачного |  | Enjoy your meal / Bon appetit | phrase |  |  |
+| На здоров'я |  | You're welcome (after a meal) / Cheers | phrase |  |  |
+| Добраніч |  | Good night | phrase |  |  |
+
+</TabItem>
+<TabItem label="Activities">
+
+### Basic Greetings & Politeness
+
+<Quiz client:load questions={JSON.parse(`[{"question": "How do you say 'Thank you'?", "options": [{"text": "Дякую", "correct": true}, {"text": "Будь ласка", "correct": false}, {"text": "Вибачте", "correct": false}, {"text": "Так", "correct": false}], "explanation": "Дякую is the standard way to say thank you."}, {"question": "How do you say 'Please' or 'You're welcome'?", "options": [{"text": "Будь ласка", "correct": true}, {"text": "Добре", "correct": false}, {"text": "Ні", "correct": false}, {"text": "Привіт", "correct": false}], "explanation": "Будь ласка serves as both please and you're welcome."}, {"question": "What is the formal way to say 'Hello' during the day?", "options": [{"text": "Добрий день", "correct": true}, {"text": "Добрий вечір", "correct": false}, {"text": "Добрий ранок", "correct": false}, {"text": "Добраніч", "correct": false}], "explanation": "Добрий день is used during the daytime to say hello."}, {"question": "How do you apologize (say 'Sorry')?", "options": [{"text": "Вибачте", "correct": true}, {"text": "Па-па", "correct": false}, {"text": "Чудово", "correct": false}, {"text": "Нормально", "correct": false}], "explanation": "Вибачте is used to apologize or get someone's attention."}, {"question": "How do you say 'Yes'?", "options": [{"text": "Так", "correct": true}, {"text": "Ні", "correct": false}, {"text": "Добре", "correct": false}, {"text": "Погано", "correct": false}], "explanation": "Так means yes."}, {"question": "How do you say 'No'?", "options": [{"text": "Ні", "correct": true}, {"text": "Так", "correct": false}, {"text": "Дякую", "correct": false}, {"text": "Вибачте", "correct": false}], "explanation": "Ні means no."}, {"question": "What is the informal way to say 'Hello' to a friend?", "options": [{"text": "Привіт", "correct": true}, {"text": "Добрий день", "correct": false}, {"text": "До побачення", "correct": false}, {"text": "Перепрошую", "correct": false}], "explanation": "Привіт is an informal greeting used with friends and family."}, {"question": "How do you say 'Goodbye'?", "options": [{"text": "До побачення", "correct": true}, {"text": "Па-па", "correct": false}, {"text": "Смачного", "correct": false}, {"text": "Як справи?", "correct": false}], "explanation": "До побачення is the standard formal way to say goodbye."}]`)} />
+
+### English to Ukrainian Match
+
+<MatchUp client:load pairs={JSON.parse(`[{"left": "Good morning", "right": "Добрий ранок"}, {"left": "Good evening", "right": "Добрий вечір"}, {"left": "How are you?", "right": "Як справи?"}, {"left": "Good / Fine", "right": "Добре"}, {"left": "Bad", "right": "Погано"}, {"left": "Excuse me", "right": "Перепрошую"}, {"left": "Bye-bye", "right": "Па-па"}, {"left": "Good night", "right": "Добраніч"}]`)} />
+
+### Situations: True or False
+
+<TrueFalse client:load items={JSON.parse(`[{"statement": "You say 'Привіт' to your boss at a formal meeting.", "isTrue": false, "explanation": "Привіт is informal. You should use Добрий день with a boss."}, {"statement": "'Добрий ранок' is used in the morning.", "isTrue": true, "explanation": "Добрий ранок literally means Good morning."}, {"statement": "'Па-па' is a formal way to say goodbye.", "isTrue": false, "explanation": "Па-па is very informal, like bye-bye in English."}, {"statement": "You can say 'Будь ласка' when handing someone a cup of coffee.", "isTrue": true, "explanation": "Будь ласка can mean Here you go when offering something."}, {"statement": "'Дякую' means 'Sorry'.", "isTrue": false, "explanation": "Дякую means Thank you. Sorry is Вибачте."}, {"statement": "'Добре' is a positive answer to 'Як справи?'.", "isTrue": true, "explanation": "Добре means good or fine, which is a great response."}, {"statement": "'Вибачте' is used when you accidentally step on someone's foot.", "isTrue": true, "explanation": "Вибачте is the standard way to apologize."}, {"statement": "'Добрий вечір' is used when going to sleep.", "isTrue": false, "explanation": "Добрий вечір is Good evening. Good night is Добраніч."}]`)} />
+
+### Spelling Check
+
+<Anagram client:load items={JSON.parse(`[{"scrambled": "Д Я К У Ю", "answer": "ДЯКУЮ", "hint": ""}, {"scrambled": "П Р И В І Т", "answer": "ПРИВІТ", "hint": ""}, {"scrambled": "В И Б А Ч Т Е", "answer": "ВИБАЧТЕ", "hint": ""}, {"scrambled": "Д О Б Р Е", "answer": "ДОБРЕ", "hint": ""}, {"scrambled": "П О Г А Н О", "answer": "ПОГАНО", "hint": ""}, {"scrambled": "Р А Н О К", "answer": "РАНОК", "hint": ""}, {"scrambled": "В Е Ч І Р", "answer": "ВЕЧІР", "hint": ""}, {"scrambled": "Д Е Н Ь", "answer": "ДЕНЬ", "hint": ""}]`)} />
+
+### Sort the Phrases
+
+<GroupSort client:load groups={JSON.parse(`{"Greetings": ["Привіт", "Добрий день", "Добрий ранок"], "Farewells": ["До побачення", "Па-па", "Добраніч"], "Politeness Words": ["Дякую", "Будь ласка", "Вибачте"]}`)} />
+
+### Complete the Conversation
+
+<FillIn client:load items={JSON.parse(`[{"sentence": "- Добрий день! - Добрий ___!", "answer": "день", "options": ["день", "ранок", "вечір", "привіт"]}, {"sentence": "- Як справи? - Дякую, ___!", "answer": "добре", "options": ["добре", "так", "ні", "привіт"]}, {"sentence": "- Кава, ___ ласка.", "answer": "будь", "options": ["будь", "день", "як", "дякую"]}, {"sentence": "- ___, де метро?", "answer": "Вибачте", "options": ["Вибачте", "Дякую", "Добре", "Привіт"]}, {"sentence": "- Смачного! - ___!", "answer": "Дякую", "options": ["Дякую", "Погано", "Так", "Ні"]}, {"sentence": "- До ___!", "answer": "побачення", "options": ["побачення", "ранок", "вечір", "день"]}, {"sentence": "- Привіт! Як ___?", "answer": "справи", "options": ["справи", "день", "ранок", "вечір"]}, {"sentence": "- Ти студент? - ___, я студент.", "answer": "Так", "options": ["Так", "Ні", "Добре", "Погано"]}]`)} />
+
+### Match to the Situation
+
+<MatchUp client:load pairs={JSON.parse(`[{"left": "You accidentally step on someone's foot", "right": "Вибачте"}, {"left": "You receive a gift", "right": "Дякую"}, {"left": "You hand a coffee to your friend", "right": "Будь ласка"}, {"left": "You meet a close friend", "right": "Привіт"}, {"left": "You are leaving a cafe", "right": "До побачення"}, {"left": "You want to say 'yes'", "right": "Так"}, {"left": "You want to say 'no'", "right": "Ні"}, {"left": "Someone asks how you are doing", "right": "Добре"}]`)} />
+
+### Culture and Meaning
+
+<TrueFalse client:load items={JSON.parse(`[{"statement": "'Привіт' is primarily used with friends and family.", "isTrue": true, "explanation": "It is an informal greeting, similar to 'Hi' in English."}, {"statement": "'Добраніч' is the greeting you use when arriving at a party at night.", "isTrue": false, "explanation": "Добраніч means 'Good night' and is only used when parting or going to sleep."}, {"statement": "'Будь ласка' can mean both 'Please' and 'You're welcome'.", "isTrue": true, "explanation": "It is a very versatile politeness phrase in Ukrainian."}, {"statement": "'Добрий день' literally translates to 'Good day'.", "isTrue": true, "explanation": "It is the most common daytime greeting."}, {"statement": "You say 'Смачного' to someone before they start eating.", "isTrue": true, "explanation": "It is the Ukrainian equivalent of 'Bon appetit'."}, {"statement": "'Па-па' means exactly the same thing as 'Добрий день'.", "isTrue": false, "explanation": "Па-па is 'Bye-bye', while Добрий день is 'Good day' (hello)."}, {"statement": "'Так' and 'Ні' are the Ukrainian words for 'Yes' and 'No'.", "isTrue": true, "explanation": "These are the essential words for agreeing or disagreeing."}, {"statement": "'Перепрошую' is another polite way to say excuse me.", "isTrue": true, "explanation": "It is often used to politely get someone's attention or pass by them."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [Birthday presents + Imperative mood in Ukrainian](https://www.ukrainianlessons.com/episode111/)
+- [Formal Greetings and Saying Goodbye in Ukrainian + Pronouns](https://www.ukrainianlessons.com/episode2/)
+- [Informal Greetings in Ukrainian](https://www.ukrainianlessons.com/episode1/)
+- [Ukrainian Holiday Greetings](https://www.ukrainianlessons.com/episode63/)
+
+**📖 Articles:**
+- [Talk Ukrainian: Greetings in Ukrainian](https://talkukrainian.com/greetings/) — talkukrainian
+:::
+
+</TabItem>
+</Tabs>

@@ -1,14 +1,14 @@
 # A1 Gap Analysis: Current Plan vs State Standard 2024
 
 > Date: 2026-02-26
-> Original plan: 25 modules → expanded to 41 modules (this analysis) → further expanded to **44 modules** (compression splits, 2026-02-26)
+> Original plan: 25 modules → expanded to 41 modules (this analysis) → further expanded to **47 modules** (compression splits + Phase 8/9 additions)
 > Reference: `UKRAINIAN-STATE-STANDARD-2024.txt` lines 221–747
 >
 > **Note**: After this gap analysis produced a 41-module plan, a compression analysis identified 3 HIGH-risk modules that packed too many unrelated grammar concepts. These were split:
 > - `rechennia` → `rechennia` + `spoluchnyky` (SVO/negation separated from connectors/Чи-questions)
 > - `den` → `den` + `mynule` (daily routine+reflexive separated from past tense)
 > - `nakazy-prohannia` → `nakazy` + `zaborony-dokonane` (imperative+requests separated from prohibitions+perfective future)
-> See `CURRICULUM-PLAN.md` for the current 44-module sequence.
+> See `CURRICULUM-PLAN.md` for the current 47-module sequence.
 
 ---
 

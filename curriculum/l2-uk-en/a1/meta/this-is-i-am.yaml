@@ -2,50 +2,47 @@ slug: this-is-i-am
 title: This Is / I Am
 word_target: 1200
 content_outline:
-- section: 'Вступ: Хто це? Що це?'
-  words: 400
+- section: 'Вступ: Хто це? Що це? (Introduction: Who/What is this?)'
+  slug: intro-who-what
+  words: 250
   points:
-  - Provide English scaffolding to explain the concept of simple identification (State
-    Standard §4.2.3.1).
-  - Introduce the demonstrative pronoun 'це'. Show its versatility for both people
-    and objects.
-  - Contrast 'Хто це?' (Who is this?) for living beings and 'Що це?' (What is this?)
-    for inanimate objects with 3-4 clear examples for each (e.g., Це мама. Це підручник).
-  - Include IPA pronunciation for 'хто' and 'що' on their first occurrence.
-- section: 'Презентація: Особові займенники'
-  words: 600
+  - Introduce the demonstrative pronoun 'це' for pointing out people and objects.
+  - Contrast 'Хто це?' (living beings) and 'Що це?' (inanimate objects) with clear,
+    simple examples.
+  - Provide English translations and IPA pronunciation for 'хто' and 'що' on their
+    first occurrence.
+- section: 'Презентація: Займенники (Personal Pronouns)'
+  slug: presentation-pronouns
+  words: 350
   points:
-  - Present all 8 personal pronouns (я, ти, він, вона, воно, ми, ви, вони) in a clean,
-    structured table with English translations.
-  - 'Explain the ''Ви Safety Net'' in English: clearly state that ''Ви'' is mandatory
-    for strangers and elders in Ukrainian culture to show respect.'
-  - Include a cultural callout box about 'Bruderschaft' and the famous phrase 'Ми
-    з вами на брудершафт не пили!' to explain the formal-to-informal transition.
-  - Give short example sentences for each pronoun to establish context.
-- section: 'Граматика: Секрет нульової зв''язки'
-  words: 400
+  - Present all 8 personal pronouns (я, ти, він, вона, воно, ми, ви, вони) in a structured,
+    easy-to-read table.
+  - 'Explain the ''Ви Safety Net'': why ''Ви'' is the mandatory default for strangers
+    and elders to show respect.'
+  - 'Cultural Hook: Explain the social transition from formal ''Ви'' to informal ''ти''.'
+- section: 'Граматика: Секрет нульової зв''язки (The Zero Copula Secret)'
+  slug: grammar-zero-copula
+  words: 300
   points:
-  - 'Explicitly explain the ''Zero Copula'' rule using English scaffolding: Ukrainian
-    connects subjects and predicates directly in the present tense without ''am/is/are''.'
-  - Create a visual mapping or table showing English 'I [am] a student' vs. Ukrainian
-    'Я [Ø] студент'.
+  - 'Explain the ''Zero Copula'' rule: Ukrainian connects subjects and predicates
+    directly in the present tense without ''am/is/are''.'
+  - 'Visual mapping: Contrast English ''I [am] a student'' with Ukrainian ''Я [Ø]
+    студент''.'
   - 'Address the ''Phantom Is'' error: explicitly warn learners not to insert ''є''
     into these simple identity sentences.'
-- section: Робота над помилками та практика
-  words: 300
+- section: 'Робота над помилками: Пастка «Воно» (The ''It'' Trap)'
+  slug: error-it-trap
+  words: 150
   points:
-  - 'Address the ''It Trap'': remind learners of the gender rules from a1-07, emphasizing
-    that ''він'' and ''вона'' are used for inanimate objects, while ''воно'' is strictly
-    for neuter nouns.'
-  - Provide a mini-drill replacing nouns with correct gendered pronouns (e.g., Стіл
-    -> він, Книга -> вона).
-  - 'Show transformation examples: how to go from ''Це Іван'' to ''Він студент''.'
-- section: 'Продакшн: Хто я і Хто ви?'
-  words: 300
+  - 'Address the ''It Trap'': remind learners that ''він'' and ''вона'' are used for
+    inanimate objects based on their grammatical gender from A1-07.'
+  - Include a mini-drill demonstrating how to replace nouns with the correct gendered
+    pronouns (e.g., Стіл -> він, Книга -> вона).
+- section: Підсумок та самоперевірка (Summary & Self-Check)
+  slug: summary-self-check
+  words: 150
   points:
-  - 'Model a simple self-introduction paragraph (Name, role, nationality): e.g., ''Я
-    Джон. Я студент. Я американець''.'
-  - 'Provide two short mini-dialogues demonstrating register: one formal meeting (''Ви'')
-    and one informal meeting (''ти'').'
-  - Conclude with a brief summary list reinforcing the zero copula and the T-V register
-    distinction.
+  - Model a simple self-introduction using zero copula patterns (Name, role, nationality).
+  - Briefly summarize the zero copula concept and the T-V register distinction.
+  - Include 3-4 self-check questions to verify learner understanding before moving
+    to activities.

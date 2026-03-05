@@ -1,0 +1,152 @@
+discovered_at: '2026-03-05T06:57:57.723986+00:00'
+query_keywords:
+- 'The Accusative I: Things'
+- Знахідний відмінок
+- Accusative Case
+- Практика та запобігання помилкам
+- Practice and Error Prevention
+- Виробництво та культура
+- Production and Culture
+- accusative case for inanimate nouns
+- accusative after verbs like бачити, брати, мати
+- between nominative and accusative forms
+- Learner understands when accusative is required
+- Accusative case (inanimate)
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/episode32/
+  title: Shopping for clothes — Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
+- url: https://www.ukrainianlessons.com/episode33/
+  title: Talking about books in Ukrainian — Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7000000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
+- url: https://www.ukrainianlessons.com/accusativecase/
+  title: Accusative Case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6000000000000001
+  topics:
+  - accusative
+  - cases
+  - grammar
+rag_chunks:
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064
+  text: "66\n2. Пригадай назви відмінків іменників і їхні питання. Перевір\nсебе за\
+    \ таблицею на с. 38. Познач відмінок іменників\nу  записаних  словосполученнях.\n\
+    2\n3. Розглянь таблицю відмінювання прикметників.\n3\nВід-\nмінок\nЧоловічий\n\
+    рід\nЖіночий\nрід\nСередній\nрід\nН.\nР.\nД.\nЗн.\nОр.\nМ.\n(який?) добрий\n(якого?)\
+    \ доброго\n(якому?) доброму\nяк Н. або Р.\n(яким?) добрим\n(на якому?) \nна доброму\n\
+    на добрім\n(яка?) добра\n(якої?) доброї\n(якій?) добрій\n(яку?) добру\n(якою?)\
+    \ доброю\n(на якій?) \nна добрій\n(яке?) добре\n(якого?) доб"
+  section_title: Сторінка 66
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0194
+  text: "186\n1.\tПрочитайте словосполучення та виконайте завдання. \nнікого не оминути\t\
+    \nмою увагу\nчимсь зайнятий\t\nнабрати всього\nу тій бібліотеці \t\nпишатися нею\n\
+    А.\t Визначте відмінки виділених займенників.\nБ.\t Відновіть початкову форму\
+    \ займенників.\nВідмінювання заперечних і неозначених займенників \nЗаперечні\
+    \ та неозначені займенники, утворені додаванням часток аби-, \nде-, ні-, -сь,\
+    \ -будь, -небудь, будь-, казна-, хтозна- до питальних займен­\nників, змінюємо\
+    \ за родами, числами й відмінками (як питальні).\nН. "
+  section_title: Сторінка 186
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0212
+  text: "§ 42. Відмінювання прикметників  \n205\n4. Перш ніж когось засуджувати, спробуй\
+    \ виявити \nпричини … вчинку, поведінки. \n5. Виявляй ініціативу, бери … участь\
+    \ у  колективних \nсправах.\nДовідка: позитивний, негативний, щирий, слабший,\
+    \ \nпривітний, активний.\n2. Чи згодні ви з  рекомендаціями? Поміркуйте, які пункти\
+    \ варто додати.\n3. Чи існують у  вашому класі подібні правила?\nПроєкт!\nУзагальніть\
+    \ досвід, створіть «Кодекс поведінки в класі».\nВправа 407\nОзнайомтеся зі схемою\
+    \ та зразками розбору прикметника я"
+  section_title: Сторінка 205
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

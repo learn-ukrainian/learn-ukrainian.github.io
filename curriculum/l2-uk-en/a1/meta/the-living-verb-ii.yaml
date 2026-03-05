@@ -2,41 +2,50 @@ slug: the-living-verb-ii
 title: The Living Verb II
 word_target: 1200
 content_outline:
-- section: 'Вступ: Тріада гостинності'
-  words: 400
+- section: 'Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)'
+  slug: introduction-triad-of-hospitality
+  words: 200
   points:
-  - Define the Second Conjugation (-ити) as the second pillar of Ukrainian verbal
-    action, focusing on ongoing and habitual meanings.
-  - 'Establish the Cultural Motivator: The ''Triad of Hospitality'' (їсти, пити, говорити)
-    forming the core of Ukrainian social interaction.'
-  - 'ENGLISH POLICY: Provide explicit English scaffolding to anchor the module, reviewing
-    the difference between Class I and Class II verbs.'
-- section: 'Презентація: Моделі та мутації'
-  words: 650
+  - Introduce Second Conjugation (Class II) verbs ending in -ити.
+  - 'Connect to the cultural ''Triad of Hospitality'': їсти (to eat), пити (to drink),
+    говорити (to speak).'
+  - Briefly contrast with Class I (-ати) verbs learned previously.
+- section: 'Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)'
+  slug: presentation-paradigms-and-endings
+  words: 250
   points:
-  - 'Compare paradigms visually: Class I (-ати, vowel е/є) versus Class II (-ити,
-    vowel и/і), using ''читати'' vs ''говорити''.'
-  - Explain consonant mutation for the 'Я' form using 'сидіти' (я сиджу), directly
-    addressing State Standard §4.2.4.1.
-  - Frame the 'Labial L' ('робити' → 'я роблю', 'любити' → 'я люблю') as a natural
-    physical bridge for lip consonants before 'ю'.
-  - Introduce the irregulars 'їсти' (я їм) and 'пити' (я п'ю), contrasting 'бачити'
-    (faculty) with 'дивитися' (process) to prevent early semantic confusion.
-- section: 'Практика: Помилки та автоматизація'
-  words: 500
+  - 'Introduce regular endings: -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать.'
+  - 'Compare visually: Class I (читати - є/е) vs. Class II (говорити - и/і).'
+  - Provide full conjugation tables for 'говорити' and 'вчити'.
+- section: 'Презентація: Мутації приголосних (Presentation: Consonant Mutations)'
+  slug: presentation-consonant-mutations
+  words: 350
   points:
-  - Detail contrastive drills to prevent Conjugation Mixing, explicitly warning against
-    the common error 'ти робеш' instead of 'ти робиш'.
-  - Focus on Mutation Mastery with intensive 'Я'-form drills for verbs like 'ходити'
-    (ходжу) to eliminate omission errors like 'я ходю'.
-  - Include structural sorting exercises to build learner intuition for vowel patterns
-    in endings.
-- section: Продукування та культурний контекст
-  words: 450
+  - Explain that mutations only happen in the 'я' (I) form for these verbs.
+  - 'Labial + L: ''робити'' (я роблю), ''любити'' (я люблю). Connect ''любити'' to
+    ''люди''.'
+  - 'Dental changes: ''ходити'' (я ходжу), ''сидіти'' (я сиджу).'
+  - 'Sibilant changes: ''просити'' (я прошу), ''платити'' (я плачу).'
+- section: 'Презентація: Неправильні дієслова (Presentation: Irregular Verbs)'
+  slug: presentation-irregular-verbs
+  words: 150
   points:
-  - Guide contextual sentence production using high-frequency collocations ('робити
-    домашнє завдання', 'любити природу', 'говорити українською').
-  - 'Deep Culture: Explain the etymology of ''любити'' and its connection to ''люди''
-    (people) and human belonging.'
-  - 'Discuss the social ethics of hospitality: the cultural weight of ''їсти'' and
-    ''пити'' in hosting, and how refusing a meal is perceived.'
+  - Explicitly teach the conjugation of 'їсти' (я їм, ти їси...) and 'пити' (я п'ю,
+    ти п'єш...).
+  - Clarify the difference between 'бачити' (to see - faculty) and 'дивитися' (to
+    watch - process).
+- section: 'Практика: Типові помилки (Practice: Common Errors)'
+  slug: practice-common-errors
+  words: 150
+  points:
+  - Contrastive examples to prevent Conjugation Mixing (e.g., 'робиш', NOT 'робеш').
+  - Focus on 'Я'-form drills to eliminate omission errors (e.g., 'ходжу', NOT 'ходю';
+    'їм', NOT 'їджу').
+- section: Підсумок (Summary)
+  slug: summary
+  words: 100
+  points:
+  - Recap the key vowel difference between Class I and Class II verbs.
+  - 'Self-check question 1: How do you say ''I love'' and ''I do'' in Ukrainian?'
+  - 'Self-check question 2: What is the ''я'' form of ''ходити''?'
+  - 'Self-check question 3: How do you conjugate the verb ''їсти''?'

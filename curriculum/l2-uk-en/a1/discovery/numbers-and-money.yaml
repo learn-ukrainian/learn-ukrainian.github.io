@@ -1,0 +1,147 @@
+discovered_at: '2026-03-05T06:04:25.844707+00:00'
+query_keywords:
+- Numbers & Money
+- Культурний контекст
+- Cultural Context
+- from 0-100 in Ukrainian
+- '''How much does it cost?'''
+- basic shopping transactions
+- numbers with genitive plural forms
+- Cardinals 0-100
+- Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)
+- Genitive plural with numbers
+- grammar
+- один
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode67/
+  title: Telling time in Ukrainian + Ordinal numbers & Locative case
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics:
+  - grammar
+  - cases
+  - locative
+  - numbers
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 67
+- url: https://www.ukrainianlessons.com/ukrainian-currency/
+  title: Ukrainian Currency — Hryvnia
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics:
+  - money
+  - currency
+  - numbers
+  - vocabulary
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/episode5/
+  title: Numbers 1-20 in Ukrainian + Pronunciation Trainer
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - numbers
+  - pronunciation
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 5
+- url: https://www.ukrainianlessons.com/nouns-after-numbers/
+  title: Nouns After Numbers in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7
+  topics:
+  - numbers
+  - nouns
+  - cases
+  - grammar
+rag_chunks:
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0122
+  text: "124\n1. Яку інформацію містить кожна купюра?\n2. Чим купюри відрізняються,\
+    \ а що в них подібне?\n3. Чиї портрети зображають на купюрах? Чому?\n4. Чи можна\
+    \ в наш час обійтися без купюр? \n5. Поясніть, як розумієте вислови: «розрахунок\n\
+    готівкою», «безготівковий розрахунок». \n5. Прочитай \nінформацію \nРодзинки,\
+    \ \nщоб \nперевірити,\nчи  правильно  ви  міркували. \nГотівка — це гроші. Розрахуватися\
+    \ готівкою — \nозначає заплатити за товар чи послуги грошима. \nБезготівковий\
+    \ розрахунок здійснюється шляхом пе-\nрерах"
+  section_title: Сторінка 124
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-golub-2022_s0166
+  text: "167\nгерб, тризуб. Ці гроші згодом стали називати гривнями. \nТож наші сучасні\
+    \ гривні мають довгу й цікаву історію! \n(З інтернету).\n \nІІ   Порівняйте тексти\
+    \ — уміщений у підручнику і записаний \nвами. Назвіть їхні спільні ознаки. Чим\
+    \ різняться тексти?\nПригадуємо:\n1   Що таке текст?\n2   Що таке тема тексту?\n\
+    Шукаємо відповіді на запитання:\n1   Що таке первинні і вторинні тексти?\n2  \
+    \ Чим відрізняються первинні і вторинні тексти?\n3   У яких життєвих ситуаціях\
+    \ створюють первинні тексти?\nВідповідно до за"
+  section_title: Сторінка 167
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-golub-2022_s0031
+  text: "32\n70\n  Доберіть і запишіть п’ять запитань, у відповідях на які має бути\
+    \ \nслово іншомовного походження з апострофом.\nЗразок.  У назві грошової одиниці\
+    \ якої країни пишемо апо-\nстроф? (К’ят — грошова одиниця М’янми.)\nЯких емоцій\
+    \ було на уроці найбільше? Наскільки корисною \nбула інформація, яку ви дізналися?\
+    \ Що ви можете зараху-\nвати до переліку своїх досягнень? Які слова ви для себе\
+    \ від-\nкрили сьогодні?\n71\n  І   Складіть і запишіть діалог про ваше ставлення\
+    \ до вивчення \nмов. Обов’язково використай"
+  section_title: Сторінка 32
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0141
+  text: "Вартість квитка:\nдля дорослих — 150 гривень; для дітей — 70 гривень.\nЗапрошуємо\
+    \ всіх охочих.\nА екскурсія буде у вихідний день\nБ екскурсія буде ввечері\nВ\
+    \ під час екскурсії туристи будуть їздити автобусом\nОГОЛОШЕННЯ!\n«Комп’ютерний\
+    \ сервіс» займається ремонтом комп’юте-\nрів та принтерів. Наші працівники приїдуть\
+    \ до вас до-\nдому за 15–20 хвилин після вашого дзвінка. Наш сервіс \nшвидкий\
+    \ та зручний.\nТелефон: 09-15-48\nА якщо у вас не працює комп’ютер, ви маєте приїхати\
+    \ \nу сервіс\nБ якщо у вас не працює к"
+  section_title: Сторінка 143
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

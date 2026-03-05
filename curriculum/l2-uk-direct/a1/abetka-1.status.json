@@ -2,9 +2,15 @@
   "module": "abetka-1",
   "track": "l2-uk-direct",
   "level": "a1",
-  "status": "draft",
+  "status": "ready",
   "images_sourced": 0,
   "images_total": 6,
   "last_updated": "2026-03-01",
-  "notes": "Module 1 — А М Л У Н С. Pre-literacy activities only. Anna Ohoiko videos."
+  "notes": "Module 1 — А М Л У Н С. Pre-literacy activities only. Anna Ohoiko videos.",
+  "phases": {
+    "mdx": {
+      "status": "complete",
+      "ts": "2026-03-05T19:26:38Z"
+    }
+  }
 }

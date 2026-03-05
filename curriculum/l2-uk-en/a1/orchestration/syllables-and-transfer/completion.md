@@ -2,9 +2,9 @@ PASS: pipeline a1 5
 
   Module:   syllables-and-transfer
   Track:    a1
-  Mode:     v3
-  Words:    4114 (target: 2000)
+  Mode:     v4
+  Words:    1746 (target: 1200)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T13:29:33Z
+  Date:     2026-03-05T20:08:27Z

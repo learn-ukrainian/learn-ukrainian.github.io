@@ -1,61 +1,72 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: слово
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: ви
-  pos: noun
-- lemma: маяти
-  pos: verb
-- lemma: бачити
-  pos: verb
-- lemma: ми
-  pos: noun
-- lemma: новий
-  pos: adj
-- lemma: закінчення
-  pos: noun
-- lemma: кава
-  pos: noun
-- lemma: дія
-  pos: noun
-- lemma: купувати
-  pos: verb
-- lemma: хліб
-  pos: noun
-- lemma: брати
-  pos: verb
-- lemma: пакет
-  pos: noun
-- lemma: знахідний
-  pos: adj
-- lemma: вони
-  pos: noun
-- lemma: хотіти
-  pos: verb
-- lemma: хтіти
-  pos: verb
-- lemma: як
-  pos: adv
-- lemma: стіл
-  pos: noun
-- lemma: кожний
-  pos: adj
-- lemma: великий
-  pos: adj
-- lemma: рід
-  pos: noun
-- lemma: абсолютно
-  pos: adv
-- lemma: смачний
-  pos: adj
-- lemma: свіжий
-  pos: adj
+  - lemma: "бачити"
+    translation: "to see"
+    pos: "verb"
+  - lemma: "чути"
+    translation: "to hear"
+    pos: "verb"
+  - lemma: "брати"
+    translation: "to take"
+    pos: "verb"
+  - lemma: "мати"
+    translation: "to have"
+    pos: "verb"
+  - lemma: "хотіти"
+    translation: "to want"
+    pos: "verb"
+  - lemma: "купувати"
+    translation: "to buy"
+    pos: "verb"
+  - lemma: "шукати"
+    translation: "to look for"
+    pos: "verb"
+  - lemma: "знаходити"
+    translation: "to find"
+    pos: "verb"
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+  - lemma: "хліб"
+    translation: "bread"
+    pos: "noun"
+    gender: "m"
+  - lemma: "гречка"
+    translation: "buckwheat"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пакет"
+    translation: "bag, packet"
+    pos: "noun"
+    gender: "m"
+  - lemma: "проблема"
+    translation: "problem"
+    pos: "noun"
+    gender: "f"
+  - lemma: "можливість"
+    translation: "opportunity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стіл"
+    translation: "table"
+    pos: "noun"
+    gender: "m"
+  - lemma: "час"
+    translation: "time"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вікно"
+    translation: "window"
+    pos: "noun"
+    gender: "n"
+  - lemma: "продукти"
+    translation: "groceries"
+    pos: "noun"
+  - lemma: "одяг"
+    translation: "clothes"
+    pos: "noun"
+    gender: "m"

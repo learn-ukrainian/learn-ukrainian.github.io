@@ -1,9 +1,9 @@
 # RAG Verification: my-world-objects
 
-**Date:** 2026-03-02 21:05 UTC | **Words checked:** 327 | **VESUM coverage:** 327/327 (100.0%)
+**Date:** 2026-03-05 21:23 UTC | **Words checked:** 52 | **VESUM coverage:** 52/52 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 327
+- ✅ Verified (VESUM): 52
 - ⚠️ Partial (RAG only): 0
 - ❌ Not found: 0
 
@@ -11,5 +11,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 216 | 216 | 0 |
-| Activities (.yaml) | 111 | 111 | 0 |
+| Prose (.md) | 47 | 47 | 0 |
+| Activities (.yaml) | 5 | 5 | 0 |

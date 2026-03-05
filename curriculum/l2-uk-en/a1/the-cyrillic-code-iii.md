@@ -1,211 +1,118 @@
 <!-- SCOPE
-Covers: The middle block of the Cyrillic alphabet (О, П, Р, С, Т, Ф, Х), uniquely Ukrainian digraphs (Дж, Дз), decoding internationalisms, and essential everyday vocabulary.
+Covers: Recognizing and pronouncing 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч), distinguishing voiced and voiceless consonant pairs.
 Not covered:
-  - Vowel reduction and palatalization rules → a1-04
-Related: a1-01, a1-02, a1-04
+  - The final 10 letters and special symbols → a1-04 (The Cyrillic Code IV)
 -->
 
 # The Cyrillic Code III
 
-> **Чому це важливо?**
+> **Why does this matter?**
 >
-> You are now entering the heart of the Ukrainian alphabet. By mastering this specific group of letters, you will cross a critical threshold. This block contains the exact letters you need to read hundreds of recognizable, international words. Unlocking these letters means unlocking the ability to navigate a Ukrainian city, read menus, and confidently pronounce essential daily vocabulary.
+> Mastering these nine letters pushes you past the tipping point of the Ukrainian alphabet. You will now be able to read and decode the vast majority of street signs, menus, and basic texts, making the language feel instantly more accessible.
 
-## Вступ (Review & New Set)
+## Вступ — Introduction
 
-Welcome back to the third stage of your journey into the beautiful Ukrainian alphabet! You have already made fantastic progress. If you have completed the first two modules, you have successfully conquered fifteen essential letters. That is no small feat! You have learned the core vowels, the reliable consonant friends, and you have even navigated some of the trickiest visual traps the Cyrillic script has to offer. 
+Hello (привіт)! Welcome back! Let us start by warming up with a few words you already know from our previous lessons. Practice (практика)! Try reading **молоко́** (milk), **кіт** (cat), and **мі́сто** (city). Great (чудово)!
 
-Before we dive into our exciting new set of letters, let us take a moment to pause, breathe, and activate your prior knowledge. Learning an alphabet is like building a strong architectural foundation; we must ensure the base is solid before adding the next floor. 
+Today, we add nine new consonants (приголосні) to your toolkit: Б, Д, П, З, Г, Х, Ж, Ш, and Ч. New letters, new sounds (нові букви, нові звуки)! By the end of this module, you will know twenty-three letters. This milestone unlocks your ability to read nearly all common Ukrainian text you will encounter on streets, menus, and signs.
 
-Let us do a quick diagnostic mini-drill. Look at the following letters and see if you can instantly recall their English sound equivalents:
+The key concept we explore today is the relationship between consonant sounds (приголосні звуки). Ukrainian consonants often come in matched sets called «voiced» (дзвінкі) and «voiceless» (глухі) pairs. One letter in the pair uses your vocal cords to make a vibrating sound, while its partner relies only on a puff of air. Understanding this relationship makes pronunciation much easier and helps you predict how words sound. Good (добре)?
 
-1. **М** — Do you remember this one? It is exactly like the English "M".
-2. **Д** — The sturdy base. It sounds like "D".
-3. **И** — The distinctive Ukrainian vowel. It sounds somewhat like the "i" in the English word "bill".
-4. **Г** — The soft, gentle, voiced "H" sound.
-5. **Л** — The graceful "L" sound.
+## Приголосні — Consonants Б, Д, П
 
-If you recalled these easily, you are in excellent shape. However, we must also revisit our famous "False Friends" — the letters that look like English letters but behave completely differently. In earlier lessons, we highlighted letters like **В** (which sounds like "V", not "B") and **Н** (which sounds like "N", not "H"). We also briefly met the letter **С**, which looks like a "C" but always acts like a "Snake" and hisses as an "S". 
+Let us meet our first group of new letters. These three are fundamental building blocks.
 
-In this module, we are introducing the middle block of the alphabet: **О, П, Р, С, Т, Ф, Х**. We are also introducing two uniquely Ukrainian digraphs: **Дж** and **Дз**. This set acts as a magnificent bridge. Right now, you might feel like you are reading isolated syllables. By the end of this lesson, you will be reading full, recognizable words that you can use immediately in the real world. 
+Here is a new letter (ось нова буква): **Б**. This letter sounds exactly like the English «b». This is a voiced sound (це дзвінкий звук), meaning your throat vibrates when you say it. Watch the video below to hear how it sounds.
+[Anna Ohoiko — Ukrainian Lessons — Б](https://www.youtube.com/watch?v=V1hxBE_JbGg)
 
-> [!warning] **The Ultimate False Friend Approaches**
-> Among our new letters today is the Cyrillic **Р**. It looks exactly like an English "P", but it produces a rolling, roaring "R" sound. Prepare yourself mentally for this one; it requires a bit of rewiring in your brain, but we will tackle it step by step together!
+You will see Б in international words like **бана́н** (banana) and native words like **буди́нок** (building) and **брат** (brother). Brother and sister (брат і сестра).
 
-## Нові літери (New Letters О–Х)
+Our second letter is **Д**. It looks a bit like a little house with legs, and conveniently, the word for house starts with it: **дім** (house/home). A big house (великий дім).
+[Anna Ohoiko — Ukrainian Lessons — Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
 
-Зараз ми вивчимо сім нових літер. We will now look closely at seven new letters. For each one, we will explore its shape, its sound, and practical examples.
+The letter Д sounds like the English «d», but you place your tongue against your upper teeth instead of the roof of your mouth. Try saying **до́бре** (good), **друг** (friend), and **вода́** (water). Water and milk (вода і молоко).
 
-### Літера О
-Літера **О** looks and sounds similar to the English "O" in "more", but shorter.
-Увага! Attention! In Ukrainian, vowels retain their pure sound regardless of stress. Never reduce an unstressed **О** to an "a" or "uh". 
+To complete this trio, we have **П**. This is the voiceless partner to Б. This is a voiceless sound (це глухий звук).
+[Anna Ohoiko — Ukrainian Lessons — П](https://www.youtube.com/watch?v=JksSjjxyW5Y)
 
-Приклади:
-* **о́пера** (opera) — Співачка співає в о́пері. The singer sings in the opera.
-* **олімпіа́да** (olympiad) — Це спортивна олімпіа́да. This is a sports olympiad.
-* **кіно́** (cinema) — Я люблю кіно́. I love cinema.
-* **о́зеро** (lake) — Це велике о́зеро. This is a large lake.
+It sounds like the English «p», but you say it without that extra puff of air you usually use in English. A great example is **паву́к** (spider). A big spider (великий павук).
 
-### Літера П
-Літера **П** looks like a table or the Greek Pi. It makes a clean /p/ sound like in "spot", with less aspiration than in English.
+> [!warning]
+> Watch out for the ultimate visual trap! The new letter **П** looks like a platform or a doorway. It makes the «p» sound. Do not confuse it with the letter **Р** that we learned earlier, which looks like an English P but makes a rolled «r» sound. Notice the difference: **па́лка** (stick) starts with a «p» sound, while **раке́та** (rocket) starts with an «r» sound.
 
-Читайте вголос:
-* **порт** (port) — Це морськи́й порт. This is a sea port.
-* **парк** (park) — Ми йдемо́ в парк. We are going to the park.
-* **па́спорт** (passport) — Мій па́спорт тут. My passport is here.
-* **план** (plan) — У нас є хороший план. We have a good plan.
+## Приголосні — Consonants З, Г, Х
 
-### Літера Р
-Обережно! Be careful! Літера **Р** looks like an English "P", but it is the "Roaring Engine". It produces a rolled or trilled /r/ sound.
+Now we move to a group of sounds that require a little more attention to how you move air through your throat. New sounds (нові звуки)!
 
-Читайте вголос:
-* **рестора́н** (restaurant) — Ми вечеряємо у рестора́ні. We are having dinner in a restaurant.
-* **ра́діо** (radio) — Це старе́ ра́діо. This is an old radio.
-* **робо́та** (work/job) — Моя́ робо́та ціка́ва. My work is interesting.
-* **ра́нок** (morning) — Це добрий ра́нок. This is a good morning.
+We begin with **З**. This letter looks like the number three and sounds exactly like the English «z».
+[Anna Ohoiko — Ukrainian Lessons — З](https://www.youtube.com/watch?v=BhASNxitC1A)
 
-> [!tip] **Trilling Practice**
-> If you cannot roll your "r", start by pronouncing it as a quick English "d" or flapped "t" like in "butter". Practice saying "T-d-a" rapidly.
+It is the voiced partner to the hissing letter С that you already know. You can hear it clearly in the word **зе́бра** (zebra) and **зуб** (tooth). A white zebra (біла зебра), a white tooth (білий зуб).
 
-### Літера С
-Літера **С** looks like an English "C", but it is the "Snake" letter. It always makes a voiceless /s/ sound like in "sun". It never makes a "k" sound.
+Moving on, we have **Г**. Pay close attention here, as this is a very special Ukrainian sound. This letter is important (ця буква важлива).
+[Anna Ohoiko — Ukrainian Lessons — Г](https://www.youtube.com/watch?v=gVnclpSI0DU)
 
-Приклади:
-* **стоп** (stop) — Стоп, будь ла́ска! Stop, please!
-* **сорт** (sort/variety) — Це нови́й сорт яблук. This is a new sort of apples.
-* **суп** (soup) — Я їм гарячий суп. I am eating hot soup.
-* **сік** (juice) — Я п'ю яблучний сік. I drink apple juice.
+The letter Г does not sound like a hard English «g» as in «go». Instead, it is a soft, continuous sound made deep in your throat. Think of it as a heavy, vibrating «h». You will find it in words like **гора́** (mountain) and **газе́та** (newspaper).
 
-### Літера Т
-Літера **Т** looks and sounds exactly like the English "T", but with slightly less aspiration. Your tongue should tap the back of your upper teeth.
+> [!tip]
+> Do not worry if you cannot find a hard English «g» sound yet! Ukrainian has a separate letter for that hard sound, which we will introduce in the next lesson.
 
-Читайте вголос:
-* **тра́нспорт** (transport) — Де громадськи́й тра́нспорт? Where is the public transport?
-* **тест** (test) — Це ле́гкий тест. This is an easy test.
-* **текст** (text) — Я чита́ю український текст. I am reading a Ukrainian text.
-* **торт** (cake) — Це солодкий торт. This is a sweet cake.
+The voiceless partner to Г is the letter **Х**. It looks like an English X but sounds completely different. This is an interesting letter (це цікава буква).
+[Anna Ohoiko — Ukrainian Lessons — Х](https://www.youtube.com/watch?v=vpr58zJSJKc)
 
-### Літера Ф
-Літера **Ф** looks like a circle with a vertical line. It produces an /f/ sound like in "fact". This sound is not historically native, so **Ф** is mostly found in borrowed words.
+To pronounce Х correctly, you need to create friction in the back of your throat. It sounds like the end of the Scottish word «loch» or the German name «Bach».
 
-Приклади:
-* **фо́то** (photo) — Це моє́ старе фо́то. This is my old photo.
-* **факт** (fact) — Це ціка́вий факт. This is an interesting fact.
-* **фонта́н** (fountain) — Ми стоїмо бі́ля фонта́ну. We are standing near the fountain.
-* **футбо́л** (football) — Він гра́є у футбо́л. He plays football.
+> [!culture]
+> One of the most important words starting with this letter is **хліб** (bread). In traditional Ukrainian culture (українська культура), guests are welcomed with a ceremony involving bread and salt, known as «хліб-сіль». It symbolizes deep hospitality and friendship. The taste of bread (смак хліба).
 
-> [!culture] **The Rare Foreigner**
-> Historically, older texts substituted **Ф** with "ХВ" or "П". For example, "Philip" became "Пилип" (Pylyp). Today, **Ф** is fully integrated.
+## Дзвінкі та глухі — Voiced and Voiceless Pairs
 
-### Літера Х
-Літера **Х** looks like an English "X". It represents a voiceless velar fricative, similar to "ch" in the Scottish "loch" or German "Bach". It is a breathy, textured sound from the back of the throat.
+We mentioned that many consonants come in pairs. Let us try a physical test to understand this perfectly. Place your hand gently on the front of your throat. Now say the letter З out loud. You will feel a strong vibration. That means it is a «voiced» (дзвінкий) consonant. Now say the letter С. You will feel only air passing through, with no vibration. That means it is a «voiceless» (глухий) consonant.
 
-Запам'ятайте:
-* **хліб** (bread) — Я купу́ю сві́жий чорний хліб. I buy fresh black bread.
-* **ха́та** (traditional house) — Це моя́ рідна ха́та. This is my native house.
-* **хор** (choir) — Український хор гарно співа́є. The Ukrainian choir sings beautifully.
-* **хо́лод** (cold) — Надворі сильний хо́лод. There is strong cold outside.
+With this in mind, let us meet three new letters that also form pairs. Three new letters (три нові букви)!
 
-> [!fact] **Bread and Hospitality**
-> In Ukrainian culture, **хліб** (bread) is highly revered. The traditional welcoming gesture is offering bread and salt («хліб-сіль») on an embroidered cloth («рушни́к»).
+First is **Ж**. This letter looks like a beetle, and appropriately, the word for beetle is **жук** (beetle).
+[Anna Ohoiko — Ukrainian Lessons — Ж](https://www.youtube.com/watch?v=dIrGVcqPwqM)
 
-## Диграфи (Digraphs)
+It is a voiced sound. English does not have a single letter for it, but it sounds like the middle of the word «measure» or «vision». Round your lips and raise your tongue to say it. A big beetle (великий жук).
 
-Now that we have covered the single letters, we must introduce a brilliant and uniquely Ukrainian phonetic concept: digraphs. 
+Its voiceless partner is **Ш**.
+[Anna Ohoiko — Ukrainian Lessons — Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
 
-In simple terms, a digraph is a pair of letters that work together as a team to create one single, indivisible sound. You already know digraphs in English! Think of "sh" in "shoe" or "ch" in "chair". You do not read them as "s-h" or "c-h"; you read them as one sound. 
+This sounds exactly like the English «sh» in «ship». Keep your tongue pulled back slightly and push the air out. A very useful word here is **ша́пка** (hat), specifically a winter hat. A new hat (нова шапка).
 
-Ukrainian features two very important digraphs that are central to the language's specific phonetic character. These distinct sounds set Ukrainian apart and add to its melodic rhythm.
+Finally, we introduce **Ч**.
+[Anna Ohoiko — Ukrainian Lessons — Ч](https://www.youtube.com/watch?v=UsJkbdsY2RA)
 
-### Звук Дж
-The first digraph is **Дж**. It is composed of the letter **Д** (D) and the letter **Ж** (Zh). However, when they sit together like this, they merge completely into the voiced postalveolar affricate sound /dʒ/. 
+This looks like the number four. It is a voiceless sound similar to the English «ch» in «church». You will see it in the word **черепа́ха** (turtle). An old turtle (стара черепаха).
 
-If you are an English speaker, you are in luck! This is exactly the same sound as the "j" in the English word "jungle", "jump", or "jazz". You must resist the urge to separate them. Do not say "D... Zh". Say a crisp, unified "J".
+> [!note]
+> You now know the most important pairs! The vibrating and quiet pairs are: Б and П, Д and Т, Г and Х, Ж and Ш, З and С. Voiced and voiceless sounds (дзвінкі та глухі звуки). Remembering these pairs makes spelling and speaking much more predictable.
 
-Let us look at some beautiful Ukrainian words featuring this digraph:
-* **джерело́** (spring/source) — A wonderful native word. In context: «Там є джерело́.» (There is a spring there.)
-* **бджола́** (bee) — Listen to the buzzing sound. Try reading: «Бджола́ літа́є.» (The bee is flying.)
-* **джаз** (jazz) — An easy internationalism. For example: «Я слу́хаю джаз.» (I listen to jazz.)
+## Практика читання — Reading Practice
 
-*Usage note:* The digraph **Дж** is always treated as a single sound when it occurs within the root of a word. Recognizing it instantly will make reading much smoother.
+You now possess the keys to read a massive amount of real Ukrainian text. Let us put your new knowledge into practice right away.
 
-### Звук Дз
-Our second digraph is **Дз**. This one pairs the letter **Д** (D) with the letter **З** (Z). Together, they form the voiced alveolar affricate /dz/. 
+We start with international words. Because they sound familiar, they build your confidence instantly. Try reading these out loud: **банк** (bank), **парк** (park), and **тра́нспорт** (transport). New words (нові слова): a big bank (великий банк), an old park (старий парк). Notice how previously learned letters like А, Н, and К interact with our new additions. Read them slowly at first, then try to speed up slightly. Sounding them out is the best way to train your brain.
 
-Unlike **Дж**, there is no common, single-letter equivalent for this in English. However, you can find the exact sound at the end of English words like "ads", "kids", or "adze". The key is to blend the "d" and the "z" so tightly together that they explode off your tongue simultaneously. It should sound like a buzzing, vibrating strike. 
+Now, let us practice distinguishing those pairs we just learned. Read the words in each pair carefully, feeling the difference in your throat.
+First pair: **зуб** (tooth) versus **суп** (soup). My tooth (мій зуб), tasty soup (смачний суп). The first uses the voiced З, and the second uses the voiceless С.
+Second pair: **жар** (heat) versus **шар** (layer). Notice how Ж vibrates while Ш does not.
 
-Let us practice with these examples:
-* **дзвіно́к** (bell/call) — Collocation: «телефон́ний дзвіно́к» (telephone call). Usage: «Я чу́ю дзвіно́к.» (I hear a bell.)
-* **дзер́кало** (mirror) — Look at this sentence: «Це вели́ке дзер́кало.» (This is a large mirror.)
-* **кукуру́дза** (corn) — Or in context: «Це смачна́ кукуру́дза.» (This is tasty corn.)
-
-> [!note] **Patient Tutor Tip**
-> The biggest mistake learners make is trying to split these digraphs into two separate syllables. When reading a word like "дзеркало", your brain might try to process "д-з-е-р...". Train your eyes to spot **Дж** and **Дз** as single blocks. Treat them as if they are entirely new, individual letters of the alphabet. 
-
-## Практика читання (Reading Practice)
-
-We have learned the theory, and now it is time for the most rewarding part: applying your new knowledge! You now possess a toolkit of 22 letters. With these 22 letters, a vast amount of vocabulary is suddenly accessible to you. 
-
-Let us build your reading reflexes step by step. We will start small and expand into full, meaningful words. Read the following syllables aloud, paying special attention to the vowels and the False Friends.
-
-**Decoding Syllables:**
-* **по**, **па**, **пу**, **пі** (Remember, П is /p/)
-* **ро**, **ра**, **ру**, **рі** (Remember, Р is the rolling /r/)
-* **со**, **са**, **су**, **сі** (Remember, С is the hissing /s/)
-* **то**, **та**, **ту**, **ті**
-* **хо**, **ха**, **ху**, **хі** (Remember the breathy /kh/ sound)
-
-Excellent! Now, let us combine these building blocks into full words. We will categorize them to help your brain create logical connections.
-
-### Інтернаціональні слова
-One of the greatest confidence boosters in learning Cyrillic is decoding a word and instantly realizing you already know what it means. These international words are heavily built upon the letters we learned today. 
-
-Read each word slowly, sound by sound, then read it again at a normal speaking pace.
-
-1. **рестора́н** (restaurant) — Watch out for the **р** and the **с**. 
-2. **тра́нспорт** (transport) — A great word for practicing the **тр** and **рт** consonant clusters.
-3. **порт** (port) — Simple, clean, and direct. Contrast the **п** at the beginning and the **р** in the middle.
-4. **фо́то** (photo) — A perfect example of our "foreigner" letter **ф**.
-5. **факт** (fact) — Another quick and easy **ф** word.
-6. **суп** (soup) — A daily staple using **с** and **п**.
-7. **тест** (test) — Anchored by the reliable **т**.
-
-### Щоденна лексика
-Now let us read some high-frequency everyday Ukrainian vocabulary. These are words you will see on signs, in shops, and hear in daily conversations. 
-
-1. **по́шта** (post office) — Collocation: «на по́шті» (at the post office). When you walk down a street in Ukraine, you will frequently see this sign.
-2. **хліб** (bread) — The cultural staple. Collocation: «бі́лий хліб» (white bread). Remember the breathy **х**!
-3. **стоп** (stop) — You will see this painted in white on red traffic signs everywhere. 
-4. **джерело́** (spring/source) — Practice the **дж** digraph here as a single sound unit. 
-5. **дзвіно́к** (bell/call) — Practice the vibrating **дз** digraph here.
-
-> [!myth-buster] **Decoding Takes Time**
-> It is a common misconception that adults should be able to read a new alphabet fluently within a week. That is simply not true! Right now, your brain is doing heavy computational lifting to decode symbols that contradict your native language habits (like seeing P and saying /r/). Be patient with yourself. Read slowly, point at the letters with your finger if you must, and celebrate every correctly decoded word. 
-
-To further cement your skills, auditory practice is essential. We highly recommend checking out Anna Ohoiko's exceptional pronunciation video playlist online (search for the series ending in PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV). Listening to a native speaker pronounce these specific consonants and repeating them aloud in the privacy of your home is the best way to build muscle memory in your tongue and lips.
+Finally, let us read some incredibly useful everyday vocabulary. You will need these words constantly when navigating a Ukrainian city. City and street (місто і вулиця).
+Try reading **шко́ла** (school), which uses our new letter Ш. A new school (нова школа). Next, read **по́шта** (post office), which combines both П and Ш. City post office (міська пошта). And lastly, practice the new letter Ч by reading **чай** (tea). Hot tea (гарячий чай). You are reading real Ukrainian words using twenty-three different letters! Excellent work (чудова робота)!
 
 ---
 
-# Підсумок
+## Підсумок — Summary
 
-Congratulations! You have successfully crossed the bridge. By mastering the middle block of letters (**О, П, Р, С, Т, Ф, Х**) and the uniquely Ukrainian digraphs (**Дж, Дз**), you have vastly expanded your ability to interact with the written language. 
+Congratulations on reaching this fantastic milestone! You now know twenty-three of the thirty-three letters in the Ukrainian alphabet. You can confidently read most common text, signs, and menus. New words, new sounds, new letters (нові слова, нові звуки, нові букви)! You have also mastered the core concept of voiced (дзвінкі) and voiceless (глухі) letter pairs.
 
-Let us bring everything together with a concluding read-aloud paragraph. This short text contains many of the letters and concepts you have learned. Take a deep breath, read it slowly, and enjoy the feeling of deciphering a new language!
+Take a moment to check your understanding:
+1. Can you feel the difference in your throat when you say the letter Б compared to the letter П?
+2. What is the crucial visual difference between the new letter П and the rolled sound letter Р?
+3. How do you correctly pronounce the soft sound Г compared to the throat friction of Х?
 
-**Прочитайте вголос (Read aloud):**
-«Це факт. Там є рестора́н. Це мій хліб. Тут є тра́нспорт. Ми йдемо́ на по́шту. Це нове́ фо́то. Стоп!»
-
-*(Translation: It is a fact. There is a restaurant there. This is my bread. Here is transport. We are going to the post office. This is a new photo. Stop!)*
-
-**Перевірте себе (Self-Assessment Checklist):**
-Before moving on to the next module, ask yourself these questions:
-1. Am I able to clearly distinguish between the letter **П** and the letter **Р** when reading?
-2. Do I remember to produce a pure /o/ sound for the letter **О**, even when it is not stressed?
-3. Is it easy for me to recognize **Дж** and **Дз** as single phonetic sounds rather than separate letters?
-4. Am I comfortable reading international words like «рестора́н» and «тра́нспорт»?
-5. Do I know the cultural significance of the word «хліб»?
-
-**Visual Progress Marker:**
-You have now officially mastered **22 out of 33** letters in the Ukrainian alphabet. You are over two-thirds of the way there! The Cyrillic code is no longer a mystery to you; it is becoming a familiar tool. Keep up the phenomenal work, and we will see you in the next lesson to conquer the final set of letters!
+In the next lesson, we will complete the entire alphabet. We will introduce the final ten characters, including special symbols, completing your journey into the Cyrillic code. See you later (до зустрічі)!
 
 ---

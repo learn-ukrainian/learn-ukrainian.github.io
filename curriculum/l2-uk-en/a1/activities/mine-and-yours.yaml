@@ -1,397 +1,396 @@
 - type: match-up
-  title: 'Переклад займенників'
-  instruction: 'З’єднайте український займенник з його англійським перекладом.'
+  title: "Match the Word to Its Meaning"
+  instruction: "Match the Ukrainian possessive word to its English translation."
   pairs:
-    - left: 'мій'
-      right: 'my (masculine)'
-    - left: 'моя'
-      right: 'my (feminine)'
-    - left: 'наше'
-      right: 'our (neuter)'
-    - left: 'його'
-      right: 'his'
-    - left: 'її'
-      right: 'her'
-    - left: 'їхні'
-      right: 'their (plural)'
-    - left: 'твоя'
-      right: 'your (feminine)'
-    - left: 'твої'
-      right: 'your (plural)'
-
-- type: group-sort
-  title: 'Він, Вона, Воно чи Вони?'
-  instruction: 'Розподіліть слова за родами (He, She, It) або множиною (They).'
-  groups:
-    - name: 'Він (Masculine)'
-      items: ["паспорт", "брат", "телефон", "стіл"]
-    - name: 'Вона (Feminine)'
-      items: ["книга", "сумка", "кава", "шафа"]
-    - name: 'Воно (Neuter)'
-      items: ["яблуко", "вікно", "море", "ліжко"]
-    - name: 'Вони (Plural)'
-      items: ["ключі", "окуляри", "батьки", "черевики"]
-
-- type: quiz
-  title: 'Правильна форма для предмета'
-  instruction: 'Оберіть правильний займенник, який узгоджується зі словом.'
-  items:
-    - question: 'Яке слово правильно описує іменник «книга»?'
-      explanation: 'Книга — це вона (жіночий рід), тому «моя».'
-      options:
-        - text: "моя"
-          correct: true
-        - text: "мій"
-          correct: false
-        - text: "моє"
-          correct: false
-        - text: "мої"
-          correct: false
-    - question: 'Яка форма «твій» правильна для іменника «телефон»?'
-      explanation: 'Телефон — це він (чоловічий рід), тому «твій».'
-      options:
-        - text: "твій"
-          correct: true
-        - text: "твоя"
-          correct: false
-        - text: "твоє"
-          correct: false
-        - text: "твої"
-          correct: false
-    - question: 'Яке слово правильно описує іменник «вікно»?'
-      explanation: 'Вікно — це воно (середній рід), тому «наше».'
-      options:
-        - text: "наше"
-          correct: true
-        - text: "наш"
-          correct: false
-        - text: "наша"
-          correct: false
-        - text: "наші"
-          correct: false
-    - question: 'Яке слово правильно описує іменник «окуляри»?'
-      explanation: 'Окуляри — це вони (множина), тому «ваші».'
-      options:
-        - text: "ваші"
-          correct: true
-        - text: "ваш"
-          correct: false
-        - text: "ваша"
-          correct: false
-        - text: "ваше"
-          correct: false
-    - question: 'Яка форма «твій» правильна для слова «паспорт»?'
-      explanation: 'Паспорт — це він, тому «твій».'
-      options:
-        - text: "твій"
-          correct: true
-        - text: "твоя"
-          correct: false
-        - text: "твоє"
-          correct: false
-        - text: "твої"
-          correct: false
-    - question: 'Яка форма «наш» правильна для слова «кава»?'
-      explanation: 'Кава — це вона, тому «наша».'
-      options:
-        - text: "наша"
-          correct: true
-        - text: "наш"
-          correct: false
-        - text: "наше"
-          correct: false
-        - text: "наші"
-          correct: false
-    - question: 'Яка форма «мій» правильна для слова «подруга»?'
-      explanation: 'Подруга — це вона, тому «моя».'
-      options:
-        - text: "моя"
-          correct: true
-        - text: "мій"
-          correct: false
-        - text: "моє"
-          correct: false
-        - text: "мої"
-          correct: false
-    - question: 'Яка форма «твій» правильна для слова «місто»?'
-      explanation: 'Місто — це воно, тому «твоє».'
-      options:
-        - text: "твоє"
-          correct: true
-        - text: "твій"
-          correct: false
-        - text: "твоя"
-          correct: false
-        - text: "твої"
-          correct: false
+    - left: "мій"
+      right: "my (for a masculine word)"
+    - left: "моя"
+      right: "my (for a feminine word)"
+    - left: "моє"
+      right: "my (for a neuter word)"
+    - left: "його"
+      right: "his / its"
+    - left: "її"
+      right: "her"
+    - left: "наш"
+      right: "our (for a masculine word)"
+    - left: "ваш"
+      right: "your formal (for a masculine word)"
+    - left: "їхній"
+      right: "their"
 
 - type: fill-in
-  title: 'Мій, моя, моє чи мої?'
-  instruction: 'Доповніть речення правильною формою слова «мій».'
+  title: "Choose the Correct My or Your"
+  instruction: "Complete the sentence with the correct possessive word based on the object."
   items:
-    - sentence: "Це ___ паспорт."
+    - sentence: "Це [blank] паспорт. (my)"
       answer: "мій"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Паспорт — чоловічий рід."
-    - sentence: "Це ___ кава."
-      answer: "моя"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Кава — жіночий рід."
-    - sentence: "Це ___ місто."
+      options:
+        - "мій"
+        - "моя"
+        - "моє"
+        - "мої"
+      explanation: "Паспорт is masculine, so we use мій."
+    - sentence: "Де [blank] сумка? (your informal)"
+      answer: "твоя"
+      options:
+        - "твій"
+        - "твоя"
+        - "твоє"
+        - "твої"
+      explanation: "Сумка is feminine, so we use твоя."
+    - sentence: "Це [blank] місто. (my)"
       answer: "моє"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Місто — середній рід."
-    - sentence: "Це ___ друзі."
-      answer: "мої"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Друзі — множина."
-    - sentence: "Це ___ брат."
-      answer: "мій"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Брат — чоловічий рід."
-    - sentence: "Це ___ рука."
-      answer: "моя"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Рука — жіночий рід."
-    - sentence: "Це ___ сестра."
-      answer: "моя"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Сестра — жіночий рід."
-    - sentence: "Це ___ вікно."
-      answer: "моє"
-      options: ["мій", "моя", "моє", "мої"]
-      explanation: "Вікно — середній рід."
-
-- type: match-up
-  title: 'Запитання та відповіді'
-  instruction: 'Доберіть правильне питання до відповіді.'
-  pairs:
-    - left: 'Чий це паспорт?'
-      right: 'Це мій паспорт.'
-    - left: 'Чия це сумка?'
-      right: 'Це моя сумка.'
-    - left: 'Чиє це фото?'
-      right: 'Це моє фото.'
-    - left: 'Чиї це ключі?'
-      right: 'Це мої ключі.'
-    - left: 'Чий це телефон?'
-      right: 'Це твій телефон.'
-    - left: 'Чия це кава?'
-      right: 'Це наша кава.'
-    - left: 'Чиє це яблуко?'
-      right: 'Це моє яблуко.'
-    - left: 'Чиї це речі?'
-      right: 'Це мої речі.'
-
-- type: unjumble
-  title: 'Побудуйте речення'
-  instruction: 'Розставте слова у правильному порядку.'
-  items:
-    - words: ["Це", "мій", "паспорт"]
-      answer: "Це мій паспорт"
-    - words: ["Чия", "це", "сумка", "?"]
-      answer: "Чия це сумка?"
-    - words: ["Це", "наше", "місто"]
-      answer: "Це наше місто"
-    - words: ["Де", "твій", "телефон", "?"]
-      answer: "Де твій телефон?"
-    - words: ["Це", "її", "брат"]
-      answer: "Це її брат"
-    - words: ["Це", "його", "ключі"]
-      answer: "Це його ключі"
+      options:
+        - "мій"
+        - "моя"
+        - "моє"
+        - "мої"
+      explanation: "Місто is neuter, so we use моє."
+    - sentence: "Тут лежить [blank] телефон. (your informal)"
+      answer: "твій"
+      options:
+        - "твій"
+        - "твоя"
+        - "твоє"
+        - "твої"
+      explanation: "Телефон is masculine, so we use твій."
+    - sentence: "[blank] країна дуже гарна. (our)"
+      answer: "Наша"
+      options:
+        - "Наш"
+        - "Наша"
+        - "Наше"
+        - "Наші"
+      explanation: "Країна is feminine, so we use Наша."
+    - sentence: "Це [blank] квиток? (your formal)"
+      answer: "ваш"
+      options:
+        - "ваш"
+        - "ваша"
+        - "ваше"
+        - "ваші"
+      explanation: "Квиток is masculine, so we use ваш."
+    - sentence: "[blank] адреса тут. (my)"
+      answer: "Моя"
+      options:
+        - "Мій"
+        - "Моя"
+        - "Моє"
+        - "Мої"
+      explanation: "Адреса is feminine, so we use Моя."
+    - sentence: "Це [blank] рішення. (our)"
+      answer: "наше"
+      options:
+        - "наш"
+        - "наша"
+        - "наше"
+        - "наші"
+      explanation: "Рішення is neuter, so we use наше."
 
 - type: fill-in
-  title: 'Його, її чи їхній?'
-  instruction: 'Оберіть правильний займенник для перекладу англійського слова в дужках.'
+  title: "Asking Whose?"
+  instruction: "Choose the correct form of the question word 'whose'."
   items:
-    - sentence: "(His) ___ паспорт тут."
-      answer: "Його"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "His = Його (незмінна форма)."
-    - sentence: "(Her) ___ мама вдома."
-      answer: "Її"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "Her = Її (незмінна форма)."
-    - sentence: "(Their) ___ син студент."
-      answer: "Їхній"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "Their = Їхній (змінюється як прикметник)."
-    - sentence: "(His) ___ сестра лікар."
-      answer: "Його"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "His = Його."
-    - sentence: "(Her) Це ___ вікно."
-      answer: "Її"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "Her = Її."
-    - sentence: "(Their) ___ друзі тут."
-      answer: "Їхні"
-      options: ["Його", "Її", "Їхній", "Їхні"]
-      explanation: "Their (plural nouns) = Їхні."
-    - sentence: "(Their) Це ___ рішення."
-      answer: "Їхнє"
-      options: ["Його", "Її", "Їхній", "Їхнє"]
-      explanation: "Рішення — воно, тому Їхнє."
-    - sentence: "(His) ___ друг тут."
-      answer: "Його"
-      options: ["Його", "Її", "Їхній", "Свій"]
-      explanation: "His = Його."
-
-- type: quiz
-  title: 'Соціальна дистанція'
-  instruction: 'Оберіть правильну форму звертання для кожної ситуації.'
-  items:
-    - question: 'Ви розмовляєте з директором школи. Яке слово краще використати?'
-      explanation: 'З офіційними особами ми використовуємо ввічливу форму «Ваш».'
+    - sentence: "[blank] це телефон?"
+      answer: "Чий"
       options:
-        - text: "Ваш"
-          correct: true
-        - text: "Твій"
-          correct: false
-        - text: "Його"
-          correct: false
-        - text: "Наш"
-          correct: false
-    - question: 'Ви розмовляєте зі своєю мамою. Яке слово ви використаєте?'
-      explanation: 'З рідними ми використовуємо дружню форму «Твій».'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Телефон is masculine, so the question must be Чий."
+    - sentence: "[blank] це сумка?"
+      answer: "Чия"
       options:
-        - text: "Твій"
-          correct: true
-        - text: "Ваш"
-          correct: false
-        - text: "Їхній"
-          correct: false
-        - text: "Її"
-          correct: false
-    - question: 'Ви звертаєтеся до незнайомої людини на вулиці.'
-      explanation: 'До незнайомців ми звертаємося на «Ви» (Ваш).'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Сумка is feminine, so the question must be Чия."
+    - sentence: "[blank] це місце?"
+      answer: "Чиє"
       options:
-        - text: "Ваш"
-          correct: true
-        - text: "Твій"
-          correct: false
-        - text: "Мій"
-          correct: false
-        - text: "Свій"
-          correct: false
-    - question: 'Ви розмовляєте з другом в університеті.'
-      explanation: 'З друзями ми використовуємо «Твій».'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Місце is neuter, so the question must be Чиє."
+    - sentence: "[blank] це паспорт?"
+      answer: "Чий"
       options:
-        - text: "Твій"
-          correct: true
-        - text: "Ваш"
-          correct: false
-        - text: "Наш"
-          correct: false
-        - text: "Їхній"
-          correct: false
-    - question: 'Як ми пишемо слово «Ваш» у листі до поважної особи?'
-      explanation: 'У листах до однієї особи «Ваш» пишеться з великої літери.'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Паспорт is masculine, so we ask Чий."
+    - sentence: "[blank] це кімната?"
+      answer: "Чия"
       options:
-        - text: "З великої літери"
-          correct: true
-        - text: "З маленької літери"
-          correct: false
-        - text: "Всіма великими літерами"
-          correct: false
-        - text: "Латиницею"
-          correct: false
-    - question: 'Чи змінюється слово «Ваш» за родами?'
-      explanation: 'Так, Ваш, Ваша, Ваше, Ваші.'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Кімната is feminine, so we ask Чия."
+    - sentence: "[blank] це рішення?"
+      answer: "Чиє"
       options:
-        - text: "Так"
-          correct: true
-        - text: "Ні"
-          correct: false
-        - text: "Тільки у множині"
-          correct: false
-        - text: "Тільки в родовому відмінку"
-          correct: false
-    - question: 'Ви звертаєтеся до дитини на майданчику.'
-      explanation: 'З дітьми ми використовуємо «Твій».'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Рішення is neuter, so we ask Чиє."
+    - sentence: "[blank] це ключі?"
+      answer: "Чиї"
       options:
-        - text: "Твій"
-          correct: true
-        - text: "Ваш"
-          correct: false
-        - text: "Його"
-          correct: false
-        - text: "Її"
-          correct: false
-    - question: 'Уявіть, що ви пишете лист своєму найкращому другу.'
-      explanation: 'У листі до друга «ти» (Твій) пишеться з маленької літери, це неформально.'
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Ключі is plural, so we use Чиї."
+    - sentence: "[blank] це речі?"
+      answer: "Чиї"
       options:
-        - text: "Твій (з маленької)"
-          correct: true
-        - text: "Ваш (з великої)"
-          correct: false
-        - text: "Ви (з великої)"
-          correct: false
-        - text: "Вони"
-          correct: false
+        - "Чий"
+        - "Чия"
+        - "Чиє"
+        - "Чиї"
+      explanation: "Речі is plural, so we ask Чиї."
 
 - type: true-false
-  title: 'Правда чи ні?'
-  instruction: 'Визначте, чи є твердження правильним.'
+  title: "True or False Rules of Possession"
+  instruction: "Decide if the rule about Ukrainian possession is true or false."
   items:
-    - statement: "Слово «його» ніколи не змінюється."
-      correct: true
-      explanation: "Правильно, «його» та «її» — це незмінювані форми."
-    - statement: "Слово «книга» — це «він» (чоловічий рід)."
+    - statement: "The word for 'my' changes its shape to match the gender of the owner."
       correct: false
-      explanation: "Книга закінчується на -а, це «вона» (жіночий рід)."
-    - statement: "«Чий» — це питання для чоловічого роду."
+      explanation: "Possessive words must agree with the object possessed, not the owner."
+    - statement: "The words його (his) and її (her) never change their form."
       correct: true
-      explanation: "Так: Чий паспорт? Чий телефон?"
-    - statement: "Ми використовуємо «твій» з незнайомцями."
+      explanation: "They are invariable and stay the same regardless of what object is owned."
+    - statement: "You should use 'твоя' when speaking formally to a stranger."
       correct: false
-      explanation: "З незнайомцями ми використовуємо ввічливу форму «Ваш»."
-    - statement: "«Їхній» змінюється як прикметник (їхній, їхня, їхнє)."
+      explanation: "You use 'ваш' or 'ваша' for strangers and formal situations. 'Твоя' is informal."
+    - statement: "The Ukrainian word for 'whose' changes depending on the object's gender."
       correct: true
-      explanation: "Це літературна норма української мови."
-    - statement: "«Моє» вживається зі словами чоловічого роду."
+      explanation: "Yes, it changes to чий, чия, чиє, or чиї."
+    - statement: "If a man owns a bag (сумка), he must say 'мій сумка' because he is a man."
       correct: false
-      explanation: "«Моє» — для середнього роду (моє вікно, моє море)."
-    - statement: "Слово «наш» змінюється як «мій»."
+      explanation: "The pronoun must match the object. Сумка is feminine, so it must be 'моя сумка'."
+    - statement: "Using 'їх' to mean 'their' is standard and correct in Ukrainian."
+      correct: false
+      explanation: "'Їхній' is the correct standard word. Using 'їх' as a possessive is incorrect."
+    - statement: "You use 'свій' when the person doing the action owns the object they are interacting with."
       correct: true
-      explanation: "Так, наш, наша, наше, наші."
-    - statement: "«Ваш» завжди пишеться з великої літери."
-      correct: false
-      explanation: "Тільки при звертанні до однієї поважної особи в листі."
+      explanation: "'Свій' is the reflexive possessive that means 'one's own'."
+    - statement: "The transition from 'ваш' to 'твій' is an important step in building a closer relationship."
+      correct: true
+      explanation: "This shift is called 'перехід на ти' and marks moving to a warmer relationship."
+
+- type: quiz
+  title: "Choose the Right Pronoun"
+  instruction: "Select the correct Ukrainian translation for the situation."
+  items:
+    - question: "How do you say 'his car' in Ukrainian?"
+      explanation: "Його is invariable and always means his."
+      options:
+        - text: "його машина"
+          correct: true
+        - text: "її машина"
+          correct: false
+        - text: "свій машина"
+          correct: false
+        - text: "чия машина"
+          correct: false
+    - question: "You want to ask 'Whose bag is this?'. What is correct?"
+      explanation: "Bag (сумка) is feminine, so we need the feminine question word."
+      options:
+        - text: "Чия це сумка?"
+          correct: true
+        - text: "Чий це сумка?"
+          correct: false
+        - text: "Чиє це сумка?"
+          correct: false
+        - text: "Чиї це сумка?"
+          correct: false
+    - question: "How do you politely ask a stranger 'Is this your ticket?'"
+      explanation: "For strangers, use formal 'ваш'. Ticket (квиток) is masculine."
+      options:
+        - text: "Це ваш квиток?"
+          correct: true
+        - text: "Це твій квиток?"
+          correct: false
+        - text: "Це наша квиток?"
+          correct: false
+        - text: "Це ваша квиток?"
+          correct: false
+    - question: "A woman says 'This is my passport'. How does she say it?"
+      explanation: "Passport (паспорт) is masculine, so the pronoun must be masculine, even if a woman is speaking."
+      options:
+        - text: "Це мій паспорт."
+          correct: true
+        - text: "Це моя паспорт."
+          correct: false
+        - text: "Це моє паспорт."
+          correct: false
+        - text: "Це його паспорт."
+          correct: false
+    - question: "How do you say 'their house' using the standard literary word?"
+      explanation: "The correct standard word for their is їхній."
+      options:
+        - text: "їхній будинок"
+          correct: true
+        - text: "їх будинок"
+          correct: false
+        - text: "ваш будинок"
+          correct: false
+        - text: "свій будинок"
+          correct: false
+    - question: "He is reading his own book. Which word is best for 'his own'?"
+      explanation: "When the subject owns the object, we use a form of свій."
+      options:
+        - text: "свою"
+          correct: true
+        - text: "його"
+          correct: false
+        - text: "її"
+          correct: false
+        - text: "мою"
+          correct: false
+    - question: "How do you say 'her work'?"
+      explanation: "The word її is invariable and means her."
+      options:
+        - text: "її робота"
+          correct: true
+        - text: "його робота"
+          correct: false
+        - text: "свій робота"
+          correct: false
+        - text: "їхня робота"
+          correct: false
+    - question: "You are talking to your best friend about their phone. What do you use?"
+      explanation: "With close friends, use the informal твій. Phone (телефон) is masculine."
+      options:
+        - text: "твій телефон"
+          correct: true
+        - text: "ваш телефон"
+          correct: false
+        - text: "мій телефон"
+          correct: false
+        - text: "твоя телефон"
+          correct: false
+
+- type: group-sort
+  title: "Sort by Gender"
+  instruction: "Sort the possessive words into the correct gender category."
+  groups:
+    - name: "Masculine Words"
+      items:
+        - "мій"
+        - "твій"
+        - "наш"
+        - "ваш"
+        - "чий"
+    - name: "Feminine Words"
+      items:
+        - "моя"
+        - "твоя"
+        - "наша"
+        - "ваша"
+        - "чия"
+    - name: "Neuter Words"
+      items:
+        - "моє"
+        - "твоє"
+        - "наше"
+        - "ваше"
+        - "чиє"
 
 - type: fill-in
-  title: 'Змішана практика'
-  instruction: 'Вставте пропущене слово, узгоджуючи його з іменником.'
+  title: "His Her and Their"
+  instruction: "Complete the sentence with the correct third-person possessive word."
   items:
-    - sentence: "(Our) Це ___ країна."
-      answer: "Наша"
-      options: ["Наша", "Наш", "Наше", "Наші"]
-      explanation: "Країна — вона, тому наша."
-    - sentence: "(Your formal) ___ квиток, будь ласка."
-      answer: "Ваш"
-      options: ["Ваш", "Ваша", "Ваше", "Ваші"]
-      explanation: "Квиток — він, тому Ваш."
-    - sentence: "(My) Це ___ яблуко."
-      answer: "Моє"
-      options: ["Моє", "Мій", "Моя", "Мої"]
-      explanation: "Яблуко — воно, тому моє."
-    - sentence: "(Your informal) ___ брат тут?"
-      answer: "Твій"
-      options: ["Твій", "Твоя", "Твоє", "Твої"]
-      explanation: "Брат — він, тому твій."
-    - sentence: "(Our) Це ___ місто."
-      answer: "Наше"
-      options: ["Наше", "Наш", "Наша", "Наші"]
-      explanation: "Місто — воно, тому наше."
-    - sentence: "(Your plural) ___ діти у школі."
-      answer: "Ваші"
-      options: ["Ваші", "Ваш", "Ваша", "Ваше"]
-      explanation: "Діти — вони, тому Ваші."
-    - sentence: "(Your plural) ___ батьки вдома."
-      answer: "Ваші"
-      options: ["Ваші", "Ваш", "Ваша", "Ваше"]
-      explanation: "Батьки — вони, тому Ваші."
-    - sentence: "(Our) Де ___ море?"
-      answer: "Наше"
-      options: ["Наше", "Наш", "Наша", "Наші"]
-      explanation: "Море — воно, тому наше."
+    - sentence: "[blank] машина нова. (His)"
+      answer: "Його"
+      options:
+        - "Його"
+        - "Її"
+        - "Їхня"
+        - "Своя"
+      explanation: "Його means his."
+    - sentence: "[blank] робота дуже цікава. (Her)"
+      answer: "Її"
+      options:
+        - "Його"
+        - "Її"
+        - "Їхня"
+        - "Своя"
+      explanation: "Її means her."
+    - sentence: "Це [blank] дім. (Their)"
+      answer: "їхній"
+      options:
+        - "їхній"
+        - "їх"
+        - "його"
+        - "її"
+      explanation: "Їхній is the standard word for their."
+    - sentence: "Я бачу [blank] телефон. (his)"
+      answer: "його"
+      options:
+        - "його"
+        - "її"
+        - "їхній"
+        - "свій"
+      explanation: "Його means his."
+    - sentence: "Де лежить [blank] паспорт? (her)"
+      answer: "її"
+      options:
+        - "його"
+        - "її"
+        - "їхній"
+        - "ваш"
+      explanation: "Її means her."
+    - sentence: "[blank] сім'я живе там. (Their)"
+      answer: "Їхня"
+      options:
+        - "Його"
+        - "Її"
+        - "Їхня"
+        - "Наша"
+      explanation: "Сім'я is feminine, so їхній becomes їхня."
+    - sentence: "Це [blank] друг. (his)"
+      answer: "його"
+      options:
+        - "його"
+        - "її"
+        - "їхній"
+        - "свій"
+      explanation: "Його means his."
+    - sentence: "[blank] рішення дуже гарне. (Their)"
+      answer: "Їхнє"
+      options:
+        - "Його"
+        - "Її"
+        - "Їхнє"
+        - "Їхній"
+      explanation: "Рішення is neuter, so їхній becomes їхнє."
+
+- type: match-up
+  title: "The Magic Word Свій"
+  instruction: "Match the Ukrainian sentence to its English meaning."
+  pairs:
+    - left: "Він читає свою книгу."
+      right: "He is reading his own book."
+    - left: "Він читає його книгу."
+      right: "He is reading someone else's book."
+    - left: "Вона любить свій дім."
+      right: "She loves her own house."
+    - left: "Вона любить її дім."
+      right: "She loves some other woman's house."
+    - left: "Я бачу свій телефон."
+      right: "I see my own phone."
+    - left: "Ти знаєш своє місце."
+      right: "You know your own place."
+    - left: "Ми маємо свій план."
+      right: "We have our own plan."
+    - left: "Вони роблять свою справу."
+      right: "They do their own business."

@@ -2,54 +2,52 @@ slug: demonstratives-this-that
 title: Demonstratives
 word_target: 1200
 content_outline:
-- section: Цей/ця/це (This)
-  words: 500
+- section: 'Цей, Ця, Це: ''This'' in Ukrainian'
+  slug: this-singular
+  words: 350
   points:
-  - Provide English scaffolding to explain the concept of demonstrative pronouns and
-    their mandatory gender agreement with nouns in Ukrainian.
-  - Create an H3 for the masculine 'цей', an H3 for the feminine 'ця', and an H3 for
-    the neuter 'це', each with a clear definition, 3+ simple examples (e.g., цей хлопець,
-    ця дівчина, це місто), and English translations.
-  - Dedicate a specific H3 to the critical difference between the invariable copula
-    'Це' (This is a cafe) and the demonstrative 'це' (This cafe is nice), using visual
-    contrast and explicit warnings to prevent confusion.
-- section: Ці (These)
-  words: 300
+  - Provide English scaffolding to explain that demonstrative pronouns must agree
+    in gender with the noun they modify, linking back to the logic learned with possessives.
+  - 'Present the three singular forms for ''this'' (proximity: близько): masculine
+    ''цей'', feminine ''ця'', neuter ''це''. Provide 3+ simple examples for each (e.g.,
+    цей будинок, ця вулиця, це місто) with English translations.'
+  - 'CRITICAL DISTINCTION: Dedicate a subsection to contrast the invariable copula
+    ''Це'' (This is a cafe) and the neuter demonstrative ''це'' (This cafe is nice).
+    Use visual contrast to prevent confusion.'
+- section: 'Ці: The Universal ''These'''
+  slug: these-plural
+  words: 150
   points:
-  - Create an H3 to introduce 'ці' as the universal plural form for all genders, emphasizing
-    its simplicity compared to singular forms.
-  - 'Include a markdown table demonstrating the singular-to-plural transformation
-    for all genders: цей → ці, ця → ці, це → ці, with noun examples.'
-  - Include an explicit 'Common Learner Error' warning about using singular demonstratives
-    with plural nouns (e.g., *цей книги замість ці книги).
-- section: Той/та/те/ті (That/Those)
-  words: 500
+  - Introduce 'ці' as the single plural form for 'these' across all genders, emphasizing
+    its simplicity.
+  - 'Provide a clear table demonstrating the singular-to-plural transformation: цей
+    → ці, ця → ці, це → ці.'
+  - Include a 'Common Learner Error' warning about using singular 'це' with plural
+    nouns (*це люди instead of ці люди).
+- section: 'Той, Та, Те, Ті: ''That'' and ''Those'''
+  slug: that-those
+  words: 350
   points:
-  - 'Provide English scaffolding to explain spatial distance (''that'' over there,
-    away from the speaker) and introduce the four distant forms: той, та, те, ті.'
-  - Create an H3 for the singular forms (той, та, те) with gender agreement examples,
-    and a separate H3 for the plural form (ті) with examples (той будинок, та вулиця,
-    те озеро, ті люди).
-  - Create an H3 to explain the contextual difference between the feminine demonstrative
-    'та' (that girl) and the conjunction 'та' (and), using clear contrasting sentences
-    (e.g., Та дівчина та її подруга).
-- section: Цей vs Той у контексті (This vs That in context)
-  words: 400
+  - Use English scaffolding to introduce spatial distance (далеко / far from speaker)
+    and the corresponding forms for 'that/those'.
+  - Present the singular forms (той, та, те) with gender agreement examples, and a
+    separate section for the plural form (ті).
+  - 'Contextual warning: Explicitly distinguish the feminine demonstrative ''та''
+    (that girl) from the conjunction ''та'' (and), using contrasting sentences.'
+- section: 'Цей vs Той: At the Market'
+  slug: this-vs-that-context
+  words: 200
   points:
-  - Create an H3 comparing spatial proximity (близько vs далеко) using paired contrasting
-    examples (цей стілець vs той стілець).
-  - Include a culturally relevant mini-dialogue set in a Ukrainian market (базар)
-    or bakery context, demonstrating the practical use of 'Дайте мені цей торт' vs
-    'Дайте мені той торт'.
-  - 'Create an H3 briefly explaining textual distance: using ''цей'' for something
-    just mentioned and ''той'' for something mentioned previously in a conversation.'
-- section: Практика (Practice)
-  words: 300
+  - Compare spatial proximity (близько vs далеко) using paired contrasting examples
+    (цей стілець vs той стілець).
+  - Provide a culturally relevant mini-dialogue set at a Ukrainian market (базар).
+    Since imperative verbs are not yet learned, use 'Я хочу цей торт' (I want this
+    cake) vs 'Я хочу той торт' (I want that cake).
+- section: Підсумок
+  slug: summary-practice
+  words: 150
   points:
-  - Provide a comprehensive summary reference table grouping all forms by distance
-    (близько/далеко) and gender/number.
-  - Present 4-5 guided examples prompting the learner to mentally choose the correct
-    demonstrative based on noun gender and number, providing the answers immediately
-    after.
-  - Set up a brief self-check section contrasting 'this' and 'that' based on spatial
-    distance cues to reinforce the primary learning objective.
+  - Provide a comprehensive summary reference table grouping all 8 demonstrative forms
+    by distance (близько/далеко) and gender/number.
+  - Include 3-4 self-check questions prompting the learner to mentally choose the
+    correct demonstrative (this vs. that) based on spatial cues and noun gender.

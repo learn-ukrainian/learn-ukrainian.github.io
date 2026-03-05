@@ -2,59 +2,51 @@ slug: likes-and-preferences
 title: Likes and Preferences
 word_target: 1200
 content_outline:
-- section: Мені подобається
-  words: 500
+- section: Мені подобається (I like)
+  slug: meni-podobaitsia
+  words: 350
   points:
-  - 'Use English scaffolding (approx. 40-50% for this section) to explain the Dative-experiencer
-    concept: the person is the ''receiver'' of the feeling, and the thing liked is
-    the grammatical subject.'
-  - Introduce the lexical chunks 'Мені' (to me) and 'Тобі' (to you). Explicitly state
-    that learners do not need to memorize the full Dative case yet.
-  - Provide 3-4 examples of 'Мені подобається + [Nominative singular noun]' (e.g.,
-    Мені подобається музика).
-  - Provide 3-4 examples of 'Мені подобаються + [Nominative plural noun]' (e.g., Мені
-    подобаються квіти) to show subject-verb agreement.
-  - Demonstrate the construction with infinitives (e.g., Мені подобається читати)
-    with 2-3 clear examples.
-- section: Я люблю
-  words: 400
+  - Introduce 'Мені' and 'Тобі' as set phrases (lexical chunks) meaning 'to me' and
+    'to you'. Use English scaffolding to avoid teaching the full Dative case.
+  - 'Explain the grammatical inversion: the person is the receiver of the feeling,
+    and the thing liked is the grammatical subject.'
+  - 'Demonstrate subject-verb agreement with examples: singular nouns (Мені подобається
+    кава) vs. plural nouns (Мені подобаються квіти).'
+  - Show usage with infinitives (Мені подобається читати).
+- section: Я люблю (I love)
+  slug: ya-liubliu
+  words: 300
   points:
-  - Introduce the verb 'любити' and provide a clear table of its full present tense
-    conjugation (Class II).
-  - Explain the Accusative case requirement for direct objects. Give 4-5 examples
-    showing Nominative to Accusative transformation for feminine nouns (-а -> -у,
-    e.g., кава -> каву).
-  - 'Clearly contrast the semantics: ''подобається'' (aesthetic appeal, state) vs
-    ''люблю'' (strong active enjoyment, love). Include a ''Cultural Guide'' callout
-    explaining this nuance.'
-  - Provide 3-4 examples mixing nouns and infinitives (Я люблю спорт, Я люблю читати).
-- section: Я хочу
-  words: 400
+  - Introduce the Class II verb 'любити' and its present tense conjugation.
+  - Explain the Accusative case requirement for direct objects, showing the -а to
+    -у transformation for feminine nouns (e.g., музика -> музику).
+  - 'Contrast semantics: ''подобається'' (aesthetic appeal, state) vs. ''люблю'' (strong
+    active enjoyment, action). Include a brief cultural note on this nuance.'
+  - Provide mixed examples with nouns and infinitives (Я люблю музику, Я люблю читати).
+- section: Я хочу (I want)
+  slug: ya-khochu
+  words: 250
   points:
-  - Introduce the irregular verb 'хотіти' and provide a table of its full present
-    tense conjugation.
-  - Demonstrate 'Я хочу + infinitive' for actions (Я хочу їсти, Я хочу піти) with
-    3-4 examples.
-  - Demonstrate 'Я хочу + Accusative noun' for objects (Я хочу каву, Я хочу квиток)
-    with 3-4 examples.
-  - 'Include a cultural note on directness: explain that ''Я хочу'' is perfectly polite
-    in Ukrainian daily life and does not sound rude like ''I want'' might in English.'
-- section: Порівняння
-  words: 400
+  - Introduce the irregular verb 'хотіти' and its present tense conjugation.
+  - Demonstrate 'Я хочу + infinitive' for actions (Я хочу їсти, Я хочу піти).
+  - Demonstrate 'Я хочу + Accusative noun' for objects (Я хочу каву).
+  - 'Include a cultural note on directness: ''Я хочу'' is polite in Ukrainian daily
+    life and does not sound rude like ''I want'' might in English.'
+- section: Порівняння (Comparing Likes)
+  slug: porivniannia
+  words: 200
   points:
   - 'Introduce question formats: ''А ти?'', ''Тобі подобається...?'', ''Ти любиш...?'',
     ''Ви хочете?''.'
-  - Write 2-3 short, natural mini-dialogues (4-6 lines each) where people compare
-    their preferences regarding food, music, or free time.
-  - Integrate cultural vocabulary naturally into the dialogues (e.g., борщ, львівська
-    кава).
-  - Highlight how to use 'А' (And/But) to contrast preferences (e.g., Мені подобається
-    чай, а тобі?).
-- section: Практика
-  words: 300
+  - Present 2 short mini-dialogues comparing preferences regarding food or free time
+    to model natural conversation.
+  - Highlight how to use 'а' (and/but) to contrast preferences (e.g., Мені подобається
+    музика, а тобі?).
+- section: Підсумок (Summary)
+  slug: summary
+  words: 100
   points:
-  - 'Create a summary visual table contrasting all three constructions side-by-side:
-    verb, meaning, and required following grammar (Nominative vs Accusative vs Infinitive).'
-  - Provide 4-5 guided practice sentences with English translations to solidify the
-    rules before the interactive activities.
-  - Write a brief, encouraging conclusion setting up the interactive exercises.
+  - 'Provide a summary visual table contrasting all three constructions: verb, meaning,
+    and required following grammar (Nominative vs Accusative vs Infinitive).'
+  - Include 3-4 self-check questions choosing the correct construction or case ending
+    to transition into interactive practice.

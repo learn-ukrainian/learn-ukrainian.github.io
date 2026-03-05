@@ -1,41 +1,41 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "2358",
-    "COMPUTED_WORD_TARGET": "2000",
-    "COMPUTED_WORD_PERCENT": "117.9",
-    "COMPUTED_ACTIVITY_COUNT": "10",
-    "COMPUTED_VOCAB_COUNT": "21",
+    "COMPUTED_WORD_COUNT": "1324",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "110.3",
+    "COMPUTED_ACTIVITY_COUNT": "9",
+    "COMPUTED_VOCAB_COUNT": "20",
     "COMPUTED_ENGAGEMENT_COUNT": "4",
     "COMPUTED_IMMERSION_PERCENT": "5.5",
     "COMPUTED_IMMERSION_TARGET": "5-15%",
-    "COMPUTED_RICHNESS_SCORE": "49",
+    "COMPUTED_RICHNESS_SCORE": "48",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 0/3, examples: 6/24, dialogues: 0/4, proverbs: 0/1",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, examples: 9/24, dialogues: 0/4, proverbs: 0/1",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
   "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "============================================================\n  HETMAN VERIFY: the-cyrillic-code-ii\n============================================================\n\n[1/4] Running full audit...\n[2/4] Checking sidecar files...\n[3/4] Reading status JSON...\n[4/4] Checking overall status...\n\n────────────────────────────────────────────────────────────\n  VERDICT: PASS\n  Module:  the-cyrillic-code-ii\n  Gates:   6 pass, 1 info\n────────────────────────────────────────────────────────────\n\n  Module is FULLY COMPLETE.\n  Hetman may now write completion.md and proceed.\n\nVESUM: 74/74 (100%) verified",
-  "h2_sections": "1. Вступ — Introduction\n2. Голосні — Vowels: И, І, О\n3. Приголосні — Consonants: К, Р, Б, В, Д\n4. Перші слова — First Words\n5. Практика — Practice",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-ii-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-cyrillic-code-ii.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M02 — The Cyrillic Code II\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md | Target: 1200 words\n  📋 Required activity types from meta: classify, image-to-letter, match-up, quiz, watch-and-repeat\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                     147 /  150  ✅ (-3)\n     Голосні — The Vowels И, І, Е             377 /  350  ✅ (+27)\n     Приголосні — The Consonants К, Р, В, Т   376 /  350  ✅ (+26)\n     Перші слова — First Real Words           388 /  250  ✅ (+138)\n     Підсумок — Summary                        95 /  100  ✅ (-5)\n     ───────────────────────────────────────────────────────────────\n     TOTAL                                   1383 / 1200  ✅ (+183)\n  📋 Found YAML activities file (9 activities)\n  > Watch and Repeat: New Letters: 7 items (min 1)\n  > Vowels and Consonants: 7 items (min 1)\n  > First Letter Match: 7 items (min 5)\n  > Letter Sounds and Traps: 8 items (min 8)\n  > Vocabulary Match: 10 items (min 8)\n  > True or False: Letters and Sounds: 8 items (min 8)\n  > Word Scramble: 9 items (min 8)\n  > True Friends vs. Visual Traps: 9 items (min 6)\n  > Complete the Phrase: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1324/1200 (raw: 1506)\nActivities   ✅ 9/8\nDensity      ✅ All > 6\nUnique_types ✅ 9/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 5.5% (target 5-15% (M02))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-ii-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-cyrillic-code-ii.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-cyrillic-code-ii.md\n  Words: 31 | VESUM: 31 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-ii-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 31/31 (100%) verified",
+  "h2_sections": "1. Вступ — Introduction\n2. Голосні — The Vowels И, І, Е\n3. Приголосні — The Consonants К, Р, В, Т\n4. Перші слова — First Real Words\n5. Підсумок — Summary",
   "vesum_stats": {
-    "total": 74,
-    "vesum_hits": 74,
+    "total": 31,
+    "vesum_hits": 31,
     "rag_hits": 0,
     "not_found": 0,
     "rag_errors": 0,
     "by_source": {
       "prose": {
-        "total": 71,
-        "vesum_hits": 71,
+        "total": 26,
+        "vesum_hits": 26,
         "not_found": 0
       },
       "activities": {
-        "total": 3,
-        "vesum_hits": 3,
+        "total": 5,
+        "vesum_hits": 5,
         "not_found": 0
       }
     }
   },
   "vesum_not_found": [],
-  "content_hash": "3458cd6bd9d38d48"
+  "content_hash": "31b329e44dfbc344"
 }

@@ -2,58 +2,56 @@ slug: stress-and-intonation
 title: Stress and Intonation
 word_target: 1200
 content_outline:
-- section: Наголос
-  words: 500
+- section: Що таке наголос? (What is Stress?)
+  words: 250
   points:
-  - 'Explicit English scaffolding (Immersion < 25%): Define ''free and mobile stress''
-    in English. Contrast positively with fixed-stress languages (like Polish or French)
-    to highlight Ukrainian''s flexibility.'
-  - 'H3: ''Що таке наголос?''. Explain the concept of stress and how it gives Ukrainian
-    its melodic rhythm.'
-  - 'H3: ''Зміна значення''. Demonstrate functional load using cultural minimal pairs:
-    зАмок (castle) vs замОк (lock) and мУка (torment) vs мукА (flour) with English
-    translations.'
-  - 'H3: ''Словникові позначки''. Introduce the acute accent (´) and demonstrate how
-    to read 3-4 dictionary entries. Provide the learner strategy: always memorize
-    stress with the word.'
-- section: Типові наголоси
-  words: 500
+  - Define free and mobile stress in English. Contrast positively with fixed-stress
+    languages to highlight Ukrainian's flexibility.
+  - 'Demonstrate functional load using cultural minimal pairs: зАмок (castle) vs замОк
+    (lock) and мУка (torment) vs мукА (flour).'
+  - 'Introduce the acute accent (´) as the dictionary standard. Establish the core
+    strategy: always memorize stress with the word, as guessing from spelling is unreliable.'
+- words: 300
   points:
-  - 'H3: ''Наголос на першому складі''. Introduce and analyze basic vocabulary with
-    initial stress using examples like мАма, тАто, кАва, дОбрий.'
-  - 'H3: ''Наголос на останньому складі''. Demonstrate words with final stress using
-    examples like молокО, далекО, водА.'
-  - 'H3: ''Наголос на передостанньому складі''. Show examples with stress on the second-to-last
-    syllable, such as шкОла, дорОга.'
-  - '[!note] Callout box: Explicitly state that despite common patterns, spelling
-    cannot reliably predict stress. Emphasize learning stress individually.'
-- section: Рухомий наголос
-  words: 400
+  - 'Analyze first-syllable stress using basic household/family words: мАма, тАто,
+    кАва, дОбрий.'
+  - 'Demonstrate last-syllable stress with longer words and some nouns: молокО, далекО,
+    водА.'
+  - 'Show penultimate (second-to-last) stress using frequent two- and three-syllable
+    words: шкОла, кнИжка, дорОга.'
+  - Include a callout emphasizing that despite these patterns, the exact same endings
+    can have different stress (кнИга vs водА), reinforcing the need to learn per word.
+  section: Типові наголоси (Common Stress Patterns)
+- words: 250
   points:
-  - Explain in English the concept of mobile stress during declension and conjugation
-    as a natural feature of Ukrainian.
-  - 'H3: ''Іменники: з однини в множину''. Demonstrate the stress shift from singular
-    to plural: рукА (Nom sg) → рУки (Nom/Acc pl) with visual emphasis.'
-  - 'H3: ''Дієслова: від інфінітива до особи''. Show the stress shift in verb conjugations:
-    писАти → пишУ → пИшеш.'
-  - '[!tip] Callout box: Reassure learners that absolute mastery of mobile stress
-    is not expected at A1; it will be practiced gradually in future modules.'
-- section: Інтонація
-  words: 400
+  - Explain in English that mobile stress means the stressed syllable can shift when
+    words change form (declension or conjugation).
+  - 'Provide a noun declension example: hands shifting from singular to plural (рукА
+    → рУки).'
+  - 'Provide a verb conjugation example: to write shifting from infinitive to present
+    tense forms (писАти → пишУ → пИшеш).'
+  - 'Include a tip: assure learners they don''t need to memorize all shifts now; building
+    awareness is the goal for A1.'
+  section: Рухомий наголос (Mobile Stress)
+- words: 250
   points:
-  - Introduce the three basic intonation contours required by the State Standard (§4.1.8).
-  - 'H3: ''Розповідна інтонація''. Explain falling pitch using the example sentence
-    ''Це кафе.'' and use a downward arrow or visual.'
-  - 'H3: ''Питальна інтонація''. Contrast wh-questions (pitch rises on question word,
-    then falls) with yes/no questions (sharp rise at the end, e.g., ''Це кафе?'').'
-  - 'H3: ''Оклична інтонація''. Explain the sharp rise and emphasis used for surprise
-    or excitement, e.g., ''Це кафе!''.'
-- section: Практика
-  words: 200
+  - 'Introduce declarative intonation (розповідна інтонація) with falling pitch at
+    the end: ''Це кафе.'''
+  - 'Explain interrogative intonation with a question word (pitch rises on the question
+    word, then falls): ''Де кафе?'''
+  - 'Highlight yes/no questions without question words (sharp rise at the end of the
+    sentence): ''Це кафе?'''
+  - 'Show exclamatory intonation (sharp rise and emphasis for surprise): ''Це кафе!'''
+  section: 'Музика мови: Інтонація (The Music of Language: Intonation)'
+- words: 150
   points:
-  - 'Inline Practice: ''Знайди наголос''. Create a prompt for learners to identify
-    the stressed syllable in 5 new, common words using dictionary marks.'
-  - 'Inline Practice: ''Мінімальні пари''. Provide a reading drill distinguishing
-    зАмок and замОк in short contextual sentences.'
-  - 'Inline Practice: ''Три інтонації''. Create a ''Read Aloud'' challenge prompting
-    the learner to read ''Це школа'' as a statement, question, and exclamation.'
+  - 'Summarize the lesson''s main takeaways: Ukrainian stress is free and mobile,
+    and intonation distinguishes questions from statements.'
+  - 'Self-check question 1: Does Ukrainian have a fixed stress rule like Polish or
+    French?'
+  - 'Self-check question 2: How does the meaning change between зАмок and замОк?'
+  - 'Self-check question 3: What happens to your pitch at the very end of a Yes/No
+    question in Ukrainian?'
+  - Provide a short read-aloud drill practicing the same phrase with three different
+    intonations.
+  section: Підсумок і Практика (Summary and Practice)

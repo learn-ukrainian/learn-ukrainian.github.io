@@ -1,61 +1,82 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: українська
-  pos: noun
-- lemma: український
-  pos: adj
-- lemma: мій
-  pos: adj
-- lemma: слово
-  pos: noun
-- lemma: новий
-  pos: adj
-- lemma: ми
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: маяти
-  pos: verb
-- lemma: вони
-  pos: noun
-- lemma: тут
-  pos: adv
-- lemma: великий
-  pos: adj
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: голосний
-  pos: adj
-- lemma: місто
-  pos: noun
-- lemma: людина
-  pos: noun
-- lemma: молодий
-  pos: adj
-- lemma: літера
-  pos: noun
-- lemma: старий
-  pos: adj
-- lemma: форма
-  pos: noun
-- lemma: дитина
-  pos: noun
-- lemma: вправа
-  pos: noun
-- lemma: звук
-  pos: noun
-- lemma: добрий
-  pos: adj
-- lemma: де
-  pos: adv
-- lemma: книга
-  pos: noun
-- lemma: закінчення
-  pos: noun
-- lemma: рід
-  pos: noun
+  - lemma: "студент"
+    translation: "student"
+    pos: "noun"
+    gender: "m"
+  - lemma: "студенти"
+    translation: "students"
+    pos: "noun"
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+  - lemma: "книги"
+    translation: "books"
+    pos: "noun"
+  - lemma: "місто"
+    translation: "city"
+    pos: "noun"
+    gender: "n"
+  - lemma: "міста"
+    translation: "cities"
+    pos: "noun"
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+    gender: "m"
+  - lemma: "коти"
+    translation: "cats"
+    pos: "noun"
+  - lemma: "дитина"
+    translation: "child"
+    pos: "noun"
+    gender: "f"
+  - lemma: "діти"
+    translation: "children"
+    pos: "noun"
+  - lemma: "людина"
+    translation: "person"
+    pos: "noun"
+    gender: "f"
+  - lemma: "люди"
+    translation: "people"
+    pos: "noun"
+  - lemma: "гроші"
+    translation: "money"
+    pos: "noun"
+  - lemma: "двері"
+    translation: "door"
+    pos: "noun"
+  - lemma: "око"
+    translation: "eye"
+    pos: "noun"
+    gender: "n"
+  - lemma: "очі"
+    translation: "eyes"
+    pos: "noun"
+  - lemma: "ножиці"
+    translation: "scissors"
+    pos: "noun"
+  - lemma: "цукор"
+    translation: "sugar"
+    pos: "noun"
+    gender: "m"
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+    gender: "n"
+  - lemma: "множина"
+    translation: "plural"
+    pos: "noun"
+    gender: "f"
+  - lemma: "новий"
+    translation: "new"
+    pos: "adjective"
+  - lemma: "іменник"
+    translation: "noun"
+    pos: "noun"
+    gender: "m"
+  - lemma: "прикметник"
+    translation: "adjective"
+    pos: "noun"
+    gender: "m"

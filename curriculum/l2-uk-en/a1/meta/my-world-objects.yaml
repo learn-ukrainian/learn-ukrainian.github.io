@@ -1,51 +1,51 @@
 slug: my-world-objects
+naturalness:
+  score: 10
+  status: PASS
 title: 'My World: Objects'
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 350
+- section: 'Вступ: Welcome to Your Space'
+  slug: vtsup-welcome-to-your-space
+  words: 150
   points:
-  - 'Explicit English scaffolding: explain the module''s goal of pointing to near
-    vs. far objects in our personal space before introducing Ukrainian terminology.'
-  - 'Recap module a1-03 (Gender) quickly: remind learners that a noun''s grammatical
-    gender is the necessary key to unlocking demonstratives.'
-  - Introduce the proverb «В гостях добре, а вдома краще» to set a welcoming, home-centric
-    theme for the upcoming vocabulary.
-- section: Презентація
-  words: 1200
+  - 'Welcome learners and introduce the goal: pointing to and identifying objects
+    in our immediate environment.'
+  - Briefly recap grammatical gender as the essential foundation for matching pointing
+    words to objects.
+  - Introduce the cultural proverb «В гостях добре, а вдома краще» (East or West,
+    home is best).
+- section: 'Презентація: Pointing Near and Far'
+  slug: prezentatsiya-pointing-near-and-far
+  words: 450
   points:
-  - 'H3: Near Objects (Цей, Ця, Це, Ці). Present the paradigm of ''near'' demonstratives
-    with clear examples. Emphasize the rhyming endings (цЯ книгА, цЕ вікнО) to build
-    intuition.'
-  - 'H3: Far Objects (Той, Та, Те, Ті). Present the paradigm of ''far'' demonstratives.
-    Provide a phonetic mnemonic: the ''T'' sound stands for ''That/There'' (Той).'
-  - 'H3: The ''Це'' vs ''Цей'' Hurdle. Provide a clear contrast using English metalanguage:
-    ''Це стіл'' (Identification: This is a table) vs ''Цей стіл'' (Specification:
-    This table).'
-  - 'H3: Special Plural (Двері). Highlight the inherently plural noun ''двері'' (ці
-    двері / ті двері), noting that it systematically takes plural demonstratives.'
-- section: Практика
-  words: 950
-  points:
-  - 'H3: Gender Matching Drill. Use minimal pairs and pattern recognition to correct
-    the common learner error ''цей книга'' (always match the ending!).'
-  - 'H3: Sorting the Room. Group new household vocabulary (стіл, ліжко, лампа, вікно,
-    шафа) by grammatical gender using ''цей'' and ''той''.'
-  - 'H3: Near or Far? Provide mini-dialogues applying the proximity concept. Contrast
-    ''Цей телефон'' (in hand) vs ''Той стіл'' (across the room) using specific spatial
-    contexts.'
-- section: Культурний контекст
-  words: 500
-  points:
-  - 'H3: The Traditional Ukrainian Home. Explain ''Покуття'' (Red Corner) as a traditional
-    focal point for spatial and spiritual orientation in a room.'
-  - 'H3: Дім, Хата, Квартира. Contrast the traditional rural ''хата'' with the modern
-    urban ''квартира'', while discussing the broader, emotional concept of ''дім''
-    (home).'
-- section: Продукція та підсумок
+  - Introduce Near Objects (Цей, Ця, Це, Ці) using room vocabulary. Highlight the
+    rhyming endings (цЯ книгА).
+  - Introduce Far Objects (Той, Та, Те, Ті) across the room. Use the 'T' for 'That/There'
+    mnemonic.
+  - Explain the critical difference between Identification ('Це стіл' = This is a
+    table) and Specification ('Цей стіл' = This table).
+  - Introduce 'двері' as an inherently plural noun requiring 'ці' or 'ті'.
+- section: 'Практика: Arranging the Room'
+  slug: praktyka-arranging-the-room
   words: 300
   points:
-  - 'H3: Interior Designer Task. Persona roleplay navigating a living space: point
-    to 3 distant and 3 near objects, specifying them with the correct gendered demonstratives.'
-  - 'Review checklist of §4.2.2 State Standard competencies: self-assessing the ability
-    to match demonstrative gender and number with basic household items.'
+  - 'Gender Matching Drill: Actively pair demonstratives with new room vocabulary
+    (стіл, ліжко, лампа, шафа) to build muscle memory.'
+  - 'Scenario practice: Comparing holding ''цей телефон'' vs pointing at ''той стіл''
+    to reinforce proximity rules.'
+- section: 'Культурний контекст: Дім and Хата'
+  slug: kulturnyy-kontekst-dim-and-khata
+  words: 150
+  points:
+  - Explain the 'Покуття' (Red Corner) and its historical role in room orientation.
+  - Contrast 'хата' (traditional home) with 'квартира' (modern apartment) and 'дім'.
+- section: 'Підсумок: Summary and Self-Check'
+  slug: pidsumok-summary-and-self-check
+  words: 150
+  points:
+  - Recap the absolute rule of gender agreement for near and far demonstratives.
+  - 'Self-check 1: How do you translate ''This is a table'' vs ''This table''?'
+  - 'Self-check 2: Which near demonstrative goes with the word ''книга''?'
+  - 'Self-check 3: What demonstrative form must be used with ''двері''?'
+  - 'Self-check 4: What is the difference between a ''хата'' and a ''квартира''?'

@@ -2,48 +2,52 @@ slug: describing-things-adjectives
 title: Describing Things - Adjectives
 word_target: 1200
 content_outline:
-- section: 'Вступ: Світ прикметників'
+- title: 'Вступ: Світ прикметників (Introduction: The World of Adjectives)'
+  slug: introduction-world-of-adjectives
+  words: 250
+  points:
+  - 'Scaffolding: Use English to explain ''adjective agreement''—adjectives must match
+    the noun''s gender and number.'
+  - 'Warm-up: Introduce the fundamental question words: ''Який? Яка? Яке? Які?'' (Which/What
+    kind?).'
+  - 'Bridge: Briefly review the ''Gender Code'' (masculine, feminine, neuter) from
+    A1-07 as the foundation for adjective endings.'
+  - 'Cultural Hook: Introduce St. Sophia''s Cathedral (Софійський собор) as ''старий''
+    (ancient) and ''великий'' (grand) to establish a descriptive context.'
+- title: 'Презентація: Тверда група (Presentation: Hard Stem Adjectives)'
+  slug: presentation-hard-stem-adjectives
   words: 400
   points:
-  - 'Scaffolding: Explicitly use English to explain the concept of ''adjective agreement''
-    in gender and number before introducing Ukrainian terminology.'
-  - 'Warm-up activity: Formulate the fundamental questions ''Який? Яка? Яке? Які?''
-    and use them to describe classroom objects.'
-  - 'Bridge: Briefly review the ''Gender Code'' (masculine, feminine, neuter) from
-    A1-07 as the mandatory foundation for adjective endings.'
-  - 'Cultural Hook: Introduce St. Sophia''s Cathedral (Софійський собор) as the ''старий''
-    and ''великий'' heart of Kyiv to establish descriptive context.'
-- section: 'Презентація: Тверда група'
-  words: 600
+  - Introduce the Hard Stem paradigm (-ий, -а, -е, -і) with a clear visual table and
+    color-coded gender markers.
+  - 'Provide examples using high-frequency vocabulary: новий дім (m), нова книга (f),
+    нове вікно (n), нові друзі (pl).'
+  - 'Explain Adjective Placement: Contrast attributive (''гарна погода'') with predicative
+    (''Погода гарна''), noting the omission of ''є'' (to be).'
+  - 'Error Correction: Explicitly address the mistake of using the dictionary form
+    for all nouns (e.g., correcting *новий машина* to *нова машина*).'
+- title: 'Презентація 2: М''яка група та Специфіка (Presentation 2: Soft Stem and
+    Nuances)'
+  slug: presentation-soft-stem-nuances
+  words: 350
   points:
-  - Create an H3 for the Hard Stem paradigm (-ий, -а, -е, -і) using a clear visual
-    substitution table and color-coded gender markers.
-  - 'Provide 2+ examples for each gender using high-frequency vocabulary: новий дім,
-    нова книга, нове вікно, нові друзі.'
-  - Create an H3 to contrast attributive position ('гарна погода') with predicative
-    position ('Погода гарна'), explaining that 'є' (to be) is omitted.
-  - Explicitly address and correct the common error of using masculine dictionary
-    forms for all nouns (e.g., *новий машина* -> нова машина) using minimal pair drills.
-- section: 'Презентація 2: М''яка група та Специфіка'
-  words: 500
+  - Introduce the Soft Stem paradigm (-ій, -я, -є, -і), focusing on 'синій' (blue)
+    as the primary anchor.
+  - 'Mnemonic: Use the Kyiv Metro ''синя лінія'' (Blue Line) to memorize the feminine
+    soft ending.'
+  - 'Orthography note: Address the common spelling error of writing ''-ий'' instead
+    of ''-ій'' after soft consonants.'
+  - 'Plural Consistency: Emphasize that plural adjectives take ''-і'' regardless of
+    gender (гарні дні, гарні дівчата) to prevent number disagreement.'
+- title: Практика та Культурний контекст (Practice and Cultural Context)
+  slug: practice-cultural-context
+  words: 200
   points:
-  - Create an H3 for the Soft Stem paradigm (-ій, -я, -є, -і), focusing on 'синій'
-    as the primary example.
-  - Use the Kyiv Metro 'синя лінія' (Blue Line) as a practical mnemonic anchor for
-    soft stem adjectives.
-  - Address the orthographic error of writing '-ий' instead of '-ій' after soft consonants,
-    emphasizing unique Ukrainian spelling rules.
-  - 'Create an H3 for Plural Consistency: emphasize that plural adjectives take the
-    ending ''-і'' regardless of gender (гарні дні, гарні дівчата) to prevent number
-    disagreement.'
-- section: Практика та Культурний контекст
-  words: 500
-  points:
-  - 'Cultural Portrait: Describe the folklore figure Mavka (Мавка) using feminine
-    adjectives ''молода'', ''гарна'', ''цікава'', ''зелена''.'
-  - 'Roleplay dialogue: Act as a Real Estate Agent (persona) describing a ''нова квартира''
-    or ''великий будинок'', integrating vocabulary from ''Daily Routine''.'
-  - 'Final Synthesis: Summarize the ''Який?'' question-answer pattern for all three
-    genders and plural.'
-  - Provide a brief self-check matching activity to connect adjectives with the correct
-    noun genders.
+  - 'Cultural Practice: Describe the folklore figure Mavka (Мавка) using feminine
+    adjectives ''молода'', ''гарна'', ''цікава''.'
+  - 'Roleplay Context: Act as a Real Estate Agent describing a ''нова квартира'' or
+    ''великий будинок''.'
+  - 'Summary: Recap the ''Який?'' question-answer pattern for all three genders and
+    plural.'
+  - 'Self-Check: Include 4 quick self-check questions to verify understanding of endings
+    and basic translation.'

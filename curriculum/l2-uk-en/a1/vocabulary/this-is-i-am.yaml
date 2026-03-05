@@ -1,61 +1,146 @@
 items:
-- lemma: ти
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: студент
-  pos: noun
-- lemma: тут
-  pos: adv
-- lemma: він
-  pos: noun
-- lemma: хто
-  pos: noun
-- lemma: що
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: воно
-  pos: noun
-- lemma: там
-  pos: adv
-- lemma: ми
-  pos: noun
-- lemma: стіл
-  pos: noun
-- lemma: дім
-  pos: noun
-- lemma: привіт
-  pos: noun
-- lemma: де
-  pos: adv
-- lemma: вони
-  pos: noun
-- lemma: лампа
-  pos: noun
-- lemma: я
-  pos: noun
-- lemma: займенник
-  pos: noun
-- lemma: лікар
-  pos: noun
-- lemma: так
-  pos: adv
-- lemma: вдома
-  pos: adv
-- lemma: мій
-  pos: adj
-- lemma: брат
-  pos: noun
-- lemma: вікно
-  pos: noun
-- lemma: теплий
-  pos: adj
-- lemma: хлопець
-  pos: noun
-- lemma: професор
-  pos: noun
+  - lemma: це
+    translation: this is / that is / it is
+    pos: pronoun
+  - lemma: я
+    translation: I
+    pos: pronoun
+  - lemma: ти
+    translation: you (informal singular)
+    pos: pronoun
+  - lemma: він
+    translation: he / it (masculine)
+    pos: pronoun
+  - lemma: вона
+    translation: she / it (feminine)
+    pos: pronoun
+  - lemma: воно
+    translation: it (neuter)
+    pos: pronoun
+  - lemma: ми
+    translation: we
+    pos: pronoun
+  - lemma: ви
+    translation: you (formal singular / plural)
+    pos: pronoun
+  - lemma: вони
+    translation: they
+    pos: pronoun
+  - lemma: хто
+    translation: who
+    pos: pronoun
+  - lemma: що
+    translation: what
+    pos: pronoun
+  - lemma: студент
+    translation: student (masculine)
+    pos: noun
+    gender: m
+  - lemma: студентка
+    translation: student (feminine)
+    pos: noun
+    gender: f
+  - lemma: українець
+    translation: Ukrainian (masculine)
+    pos: noun
+    gender: m
+  - lemma: українка
+    translation: Ukrainian (feminine)
+    pos: noun
+    gender: f
+  - lemma: вчитель
+    translation: teacher (masculine)
+    pos: noun
+    gender: m
+  - lemma: вчителька
+    translation: teacher (feminine)
+    pos: noun
+    gender: f
+  - lemma: ось
+    translation: here / over here
+    pos: adverb
+  - lemma: мене звати
+    translation: my name is
+    pos: phrase
+  - lemma: стіл
+    translation: table
+    pos: noun
+    gender: m
+  - lemma: особовий займенник
+    translation: personal pronoun
+    pos: noun
+    gender: m
+  - lemma: займенник
+    translation: pronoun
+    pos: noun
+    gender: m
+  - lemma: граматичний рід
+    translation: grammatical gender
+    pos: noun
+    gender: m
+  - lemma: рід
+    translation: gender
+    pos: noun
+    gender: m
+  - lemma: мама
+    translation: mom
+    pos: noun
+    gender: f
+  - lemma: тато
+    translation: dad
+    pos: noun
+    gender: m
+  - lemma: брат
+    translation: brother
+    pos: noun
+    gender: m
+  - lemma: сестра
+    translation: sister
+    pos: noun
+    gender: f
+  - lemma: телефон
+    translation: telephone
+    pos: noun
+    gender: m
+  - lemma: сім'я
+    translation: family
+    pos: noun
+    gender: f
+  - lemma: дуже приємно
+    translation: nice to meet you
+    pos: phrase
+  - lemma: давай на ти
+    translation: let's switch to 'ty'
+    pos: phrase
+  - lemma: тут
+    translation: here
+    pos: adverb
+  - lemma: там
+    translation: there
+    pos: adverb
+  - lemma: удома
+    translation: at home
+    pos: adverb
+  - lemma: на роботі
+    translation: at work
+    pos: phrase
+  - lemma: вікно
+    translation: window
+    pos: noun
+    gender: n
+  - lemma: яблуко
+    translation: apple
+    pos: noun
+    gender: n
+  - lemma: книга
+    translation: book
+    pos: noun
+    gender: f
+  - lemma: підручник
+    translation: textbook
+    pos: noun
+    gender: m
+  - lemma: паспорт
+    translation: passport
+    pos: noun
+    gender: m

@@ -1,32 +1,41 @@
-# Дослідження: Colors & Clothing
+## Research Notes
 
-## State Standard Reference
-§4.2.1.2: "узгодження прикметників з іменниками в роді й числі... форми знахідного та місцевого відмінків прикметників"
-§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
-Alignment: This module directly addresses the A1 requirement to agree adjectives with nouns in gender/number, and the use of the accusative case for direct objects (clothing items worn).
+**Textbook approach:** Ukrainian beginner textbooks introduce colors early (usually alongside basic objects) to practice gender agreement. The pattern is introducing the color palette first, then combining colors with nouns in the Nominative case (e.g., "Який це колір? Це червоний. Це червоне яблуко"). Clothing is a standard lexical set used to anchor this practice in a practical context.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| білий, чорний, червоний | High Core A1 | біла сорочка, чорний хліб, червона калина |
-| сорочка | High Core A1 | вишита сорочка, біла сорочка |
-| сукня | High Core A1 | нова сукня, вечірня сукня (standard literary synonym over "плаття") |
-| штани / джинси | High Core A1 | нові штани, сині джинси (pluralia tantum) |
-| носити | Verb High | носити одяг, носити окуляри |
+**Common errors:**
+1. Ignoring gender agreement: English speakers often treat adjectives as invariant, leading to errors like "червоний сорочка" instead of "червона сорочка".
+2. Pluralia Tantum confusion: Words like "штани" (pants) and "окуляри" (glasses) require plural adjectives ("сині штани"), which trips up learners before plural rules are fully taught.
 
-## Cultural Hooks
-1. **Symbolism of Colors in Embroidery**: Ukrainian tradition heavily relies on color coding. Red (червоний) symbolizes life, love, and energy, while black (чорний) represents the fertile soil and wisdom. White (білий) is purity. 
-2. **Vyshyvanka as an Oberyh (Оберіг)**: Traditional embroidery is not just decorative; it acts as a talisman. Embroidery on collars and cuffs forms a protective circle, "sealing" energy zones.
+**Cultural hook:** Traditional Ukrainian embroidery (вишиванка) relies heavily on color symbolism. Red (червоний) symbolizes life, love, and joy, while black (чорний) represents the fertile earth and sorrow. White (білий) is the color of purity.
 
-## Common Learner Errors
-1. **Gender disagreement** → *червоний сорочка* (Incorrect). Correct form: *червона сорочка*. Adjectives must match the noun's gender.
-2. **Missing Accusative ending for feminine nouns** → *Я ношу червона сукня* (Incorrect). Correct form: *Я ношу червону сукню*. The verb "носити" requires the direct object to be in the accusative.
-3. **Pluralia Tantum singularization** → *цей штани / один штани* (Incorrect). Correct form: *ці штани / одні штани*.
+**Cross-references:** This module directly builds on M11 (Adjectives), reinforcing the -ий/-а/-е paradigms. It also sets the stage for M13 (Plurals) by introducing Pluralia Tantum nouns like "штани" and "джинси" as lexical items.
 
-## Cross-References
-- Builds on: a1-11 (Describing Things - Adjectives)
-- Prepares for: a1-28 (Description - Adverbs), a1-30 (Checkpoint Consolidation)
+## Resource Discovery
 
-## Notes for Content Writing
-- **Decolonized Framing**: Emphasize Ukrainian symbolic traditions (like the meaning of red and black in song/embroidery) independently. Promote the literary word "сукня" over the more colloquially mixed "плаття".
-- **Bridging Strategy**: As an A1.1 module, immersion is around 25-35%. Use English to explain the cultural concepts and the concept of direct object/accusative case, providing clear, unambiguous Ukrainian examples.
+
+### Blog Articles
+- [Colors in Ukrainian + Pronunciation Trainer](https://www.ukrainianlessons.com/episode25/) (ukrainianlessons.com)
+- [Shopping for clothes — Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode32/) (ukrainianlessons.com)
+- [Ukrainian Phrasebook: Clothing](https://www.ukrainianlessons.com/ph-clothing/) (ukrainianlessons.com)
+- [Ukrainian Lessons Podcast Season 6](https://www.ukrainianlessons.com/episode228/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 6, Сторінка 7: 5
+ЗМІСТ
+ВСТУП ДО КУРСУ
+§ 1. Повторення. Що вивчає наука історія. . . . . . . . . . . . . . . . . . ....
+- Grade 6, Сторінка 141: ловий, м’ясо / рибний, історико / філологічний, військо-
+во / повітряний, 
+воєнно / стратегічний, 
+с...
+- Grade 5, Сторінка 3: 3
+Зміст
+ЗМІСТ
+Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . . . . . . ...
+- Grade 6, Сторінка 119: 119
+РОЗВИТОК МОВЛЕННЯ
+Б. У якому тексті-описі наявні художні засоби? Назвіть їх. Г. Зробіть висновок...
+- Grade 11, Сторінка 3: Зміст    3
+Зміст
+Пізнавати себе і світ . . . . . . . . . . . . . . . . . . . 7
+Вступ. . . . . . . ....

@@ -1,61 +1,75 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: той
-  pos: adj
-- lemma: ви
-  pos: noun
-- lemma: слово
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: предмет
-  pos: noun
-- lemma: рід
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: використовувати
-  pos: verb
-- lemma: мати
-  pos: verb
-- lemma: показувати
-  pos: verb
-- lemma: те
-  pos: noun
-- lemma: маяти
-  pos: verb
-- lemma: ми
-  pos: noun
-- lemma: як
-  pos: noun
-- lemma: далеко
-  pos: adv
-- lemma: стілець
-  pos: noun
-- lemma: місто
-  pos: noun
-- lemma: бачити
-  pos: verb
-- lemma: жіночий
-  pos: adj
-- lemma: говорити
-  pos: verb
-- lemma: дівчина
-  pos: noun
-- lemma: правило
-  pos: noun
-- lemma: правити
-  pos: verb
-- lemma: чоловічий
-  pos: adj
-- lemma: вони
-  pos: noun
-- lemma: інший
-  pos: adj
-- lemma: український
-  pos: adj
-- lemma: далекий
-  pos: adj
+  - lemma: "цей"
+    translation: "this (masculine)"
+    pos: "pronoun"
+    gender: "m"
+  - lemma: "ця"
+    translation: "this (feminine)"
+    pos: "pronoun"
+    gender: "f"
+  - lemma: "це"
+    translation: "this (neuter) / this is"
+    pos: "pronoun"
+    gender: "n"
+  - lemma: "ці"
+    translation: "these (plural)"
+    pos: "pronoun"
+  - lemma: "той"
+    translation: "that (masculine)"
+    pos: "pronoun"
+    gender: "m"
+  - lemma: "та"
+    translation: "that (feminine) / and"
+    pos: "pronoun"
+    gender: "f"
+  - lemma: "те"
+    translation: "that (neuter)"
+    pos: "pronoun"
+    gender: "n"
+  - lemma: "ті"
+    translation: "those (plural)"
+    pos: "pronoun"
+  - lemma: "будинок"
+    translation: "building / house"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вулиця"
+    translation: "street"
+    pos: "noun"
+    gender: "f"
+  - lemma: "озеро"
+    translation: "lake"
+    pos: "noun"
+    gender: "n"
+  - lemma: "стілець"
+    translation: "chair"
+    pos: "noun"
+    gender: "m"
+  - lemma: "такий"
+    translation: "such"
+    pos: "adjective"
+  - lemma: "інший"
+    translation: "other / another"
+    pos: "adjective"
+  - lemma: "кожний"
+    translation: "every"
+    pos: "pronoun"
+  - lemma: "сам"
+    translation: "oneself"
+    pos: "pronoun"
+  - lemma: "хлопець"
+    translation: "boy / guy"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дівчина"
+    translation: "girl"
+    pos: "noun"
+    gender: "f"
+  - lemma: "місто"
+    translation: "city"
+    pos: "noun"
+    gender: "n"
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"

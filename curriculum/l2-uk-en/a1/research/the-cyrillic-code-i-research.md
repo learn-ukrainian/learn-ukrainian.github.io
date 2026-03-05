@@ -1,40 +1,33 @@
 # Дослідження: The Cyrillic Code I
 
 ## State Standard Reference
-§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери."
-§4.1.4: "Голосні та приголосні звуки: вимова голосних у наголошеній і ненаголошеній позиціях..."
-Alignment: This module satisfies the foundational A1 requirements by introducing the concept of vowels (голосні) and consonants (приголосні), the concept of stable unstressed vowels, and the first 6 letters (А, М, Л, У, Н, С) of the Ukrainian alphabet.
+§4.1.1: "Ukrainian alphabet" and §4.1.4: "Vowel and consonant sounds"
+Alignment: This foundational module introduces the first 7 letters (3 vowels, 4 consonants), satisfying the basic phonetic recognition and reading requirements for the A1 level.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| мама | Very high (core) | мама сама |
-| сам | High | сам удома |
-| нас | High (pronoun) | для нас, у нас |
-| сума | Medium (common) | велика сума |
-| луна | Medium (poetic/nature) | гучна луна |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| мама | Extremely high frequency, universal first word | N/A (taught in isolation) |
+| сом  | Low frequency, but phonetically perfect for early decoding | N/A |
+| нас  | High frequency pronoun | у нас (with us) |
+| масло | Common household/food noun | N/A |
 
 ## Cultural Hooks
-1. The Cyrillic script was formalized by the students of Saints Cyril and Methodius in the First Bulgarian Empire in the 9th century. It is an ancient European script with its own rich independent history, not a modern derivative of Russian standardization.
-2. The Ukrainian alphabet has exactly 33 letters and is highly phonetic. Ukrainian is known for its "euphony" (милозвучність), which relies heavily on its clear, unreduced vowels.
+1. The Cyrillic script descends from the alphabet created by students of Saints Cyril and Methodius in the First Bulgarian Empire, specifically adapted for Slavic sounds.
 
 ## Common Learner Errors
-1. Visual "false friends": Mispronouncing "Н" as /h/ instead of /n/ (like English "H").
-2. Visual "false friends": Mispronouncing "С" as /k/ or /ts/ instead of /s/ (like English "C").
-3. Vowel reduction: English speakers naturally reduce unstressed vowels to a "schwa" (ə). In Ukrainian, "А" and "У" must remain completely clear and stable even when unstressed.
+1. Reducing unstressed "О" → Pronouncing unstressed "О" as "А" (Russian interference or natural English habit) — Ukrainian "О" must stay pure and rounded in all positions.
+2. False friend "Н" → Reading it as English "H" — It is the nasal consonant /n/.
+3. False friend "С" → Reading it as English "C" (/k/ sound) — It is always the sibilant /s/ in Ukrainian.
 
 ## Cross-References
-- Builds on: None (First module)
+- Builds on: first module
 - Prepares for: a1-02 (The Cyrillic Code II)
 
-## Multimedia Resources
-- Anna Ohoiko (Ukrainian Lessons) — Ukrainian Alphabet Pronunciation Guide — https://www.youtube.com/watch?v=ksXIXj7CXwc — The core pronunciation reference for all letters.
-
 ## Notes for Content Writing
-- Immersion is capped at 10-50%. English scaffolding is strictly required to explain the phonetic system before presenting Ukrainian examples.
-- Do not use Russian phonetic approximations. Use international or English approximations (e.g., "a" in "father", "oo" in "moon").
-- Frame the Ukrainian sounds confidently and independently. 
-- Ensure all example words only use the letters introduced so far. The first words reading practice should genuinely empower the learner to decode without guessing.
+- Strict decodability rule applies: DO NOT use any verbs or imperative instructions (e.g., no "Читайте" or "Слухайте"). All instructions must be in English.
+- Use only the letters А, О, У, М, Л, Н, С for any standalone Ukrainian words meant for student reading.
+- Ensure all terminology is introduced in English first, followed by Ukrainian in parentheses, e.g., "vowels (голосні)".
 
 ## Resource Discovery
 
@@ -46,6 +39,19 @@ Alignment: This module satisfies the foundational A1 requirements by introducing
 - [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode200/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
+- Grade 2, Сторінка 43: 43
+Чи відповідають підписи малюнкам? Чому? Як потрібно було 
+записати слова? Як ми позначаємо м’які ...
+- Grade 1, Сторінка 79: . . . . . . . . . . . . . . . . . . . . . . . 60
+М’який приголосний звук [й]  . . . 61
+Слова — назви...
+- Grade 2, Сторінка 6: 6
+11.	
+1.	 Чи пам’ятаєш ти алфавіт? Назви́ всі букви укра-
+їнської мови в алфавітному порядку. Проск...
+- Grade 5, Сторінка 90: 90
+228   Розгляньте таблицю. Поставте два-три запитання за змістом 
+таблиці. Доберіть по два власні ...
 - Grade 2, Сторінка 3: ЗВУКИ І БУКВИ
 к
 і
@@ -62,16 +68,3 @@ Alignment: This module satisfies the foundational A1 requirements by introducing
 л
 І
 ...
-- Grade 1, Сторінка 44: 42
-Бачу И, и. Чую  [и].
-	 Прочитай букви, слідкуючи за стрілками. 
-Збільшуй силу голосу, коли стрілк...
-- Grade 4, Сторінка 188: 66
-Урок розвитку писемного мовлення
-Вибірковий переказ тексту з елементами о п и с у...................
-- Grade 1, Сторінка 17: 15
-Приголосні тверді та м’які
-	 Вимов звуки, які ти чуєш на початку слів — 
-назв намальованих предме...
-- Grade 4, Сторінка 91: •  Спишіть, підкресліть хвилястою лінією прикметники в почат­
-ковій формі. Провідміняйте, користуючи...

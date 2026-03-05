@@ -1,6 +1,6 @@
-**Phase**: Phase 2: Content
-**Step**: Expanding content to meet high word targets
+**Phase**: Beginner Content
+**Step**: Writing Prose
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Systematically added deep English pedagogical explanations, cultural context, and varied examples to reach the word count safely without padding. Formatted Ukrainian examples clearly.
+**Self-Correction**: Rephrased the cultural hook regarding the ZUNR language law to describe the event in English rather than providing a Ukrainian sentence with a perfective verb, strictly adhering to the "imperfective only" constraint for A1.
 **Proposed Tooling Fix**: N/A

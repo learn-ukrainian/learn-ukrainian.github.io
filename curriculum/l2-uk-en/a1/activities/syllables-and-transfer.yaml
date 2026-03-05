@@ -1,351 +1,352 @@
 - type: quiz
-  title: "Перевірка знань: Склади"
-  instruction: "Choose the correct answer based on the lesson rules."
+  title: "Count the Syllables"
+  instruction: "How many syllables are in each word? Remember to count the vowels!"
   items:
-    - question: "Що є основою кожного складу в українській мові?"
-      explanation: "Кожен склад обов'язково має один голосний звук."
+    - question: "How many syllables are in the word молоко?"
+      explanation: "мо-ло-ко has three vowels (о, о, о), so it has three syllables."
       options:
-        - text: "голосний звук"
+        - text: "1"
+          correct: false
+        - text: "2"
+          correct: false
+        - text: "3"
           correct: true
-        - text: "приголосний звук"
+        - text: "4"
           correct: false
-        - text: "наголос"
-          correct: false
-        - text: "м'який знак"
-          correct: false
-    - question: "Як визначити кількість складів у слові?"
-      explanation: "Один голосний звук дорівнює одному складу."
+    - question: "How many syllables are in the word кіт?"
+      explanation: "кіт has one vowel (і), so it has one syllable."
       options:
-        - text: "порахувати голосні звуки"
+        - text: "1"
           correct: true
-        - text: "порахувати всі літери"
+        - text: "2"
           correct: false
-        - text: "порахувати приголосні звуки"
+        - text: "3"
           correct: false
-        - text: "подивитися у словнику"
+        - text: "4"
           correct: false
-    - question: "Який склад називається відкритим в українській мові?"
-      explanation: "Відкритий склад завжди закінчується на голосний звук."
+    - question: "How many syllables are in the word Україна?"
+      explanation: "У-кра-ї-на has four vowels (У, а, ї, а), so it has four syllables."
       options:
-        - text: "склад, який закінчується на голосний"
+        - text: "2"
+          correct: false
+        - text: "3"
+          correct: false
+        - text: "4"
           correct: true
-        - text: "склад, який закінчується на приголосний"
+        - text: "5"
           correct: false
-        - text: "перший склад у слові"
-          correct: false
-        - text: "наголошений склад"
-          correct: false
-    - question: "Як правильно розділити слово 'сестра' для вимови?"
-      explanation: "Українська мова переносить приголосні в наступний склад."
+    - question: "How many syllables are in the word сестра?"
+      explanation: "се-стра has two vowels (е, а), so it has two syllables."
       options:
-        - text: "се-стра"
+        - text: "1"
+          correct: false
+        - text: "2"
           correct: true
+        - text: "3"
+          correct: false
+        - text: "4"
+          correct: false
+    - question: "How many syllables are in the word дерево?"
+      explanation: "де-ре-во has three vowels (е, е, о), so it has three syllables."
+      options:
+        - text: "1"
+          correct: false
+        - text: "2"
+          correct: false
+        - text: "3"
+          correct: true
+        - text: "4"
+          correct: false
+    - question: "How many syllables are in the word вулиця?"
+      explanation: "ву-ли-ця has three vowels (у, и, я), so it has three syllables."
+      options:
+        - text: "2"
+          correct: false
+        - text: "3"
+          correct: true
+        - text: "4"
+          correct: false
+        - text: "5"
+          correct: false
+    - question: "How many syllables are in the word університет?"
+      explanation: "у-ні-вер-си-тет has five vowels (у, і, е, и, е), so it has five syllables."
+      options:
+        - text: "3"
+          correct: false
+        - text: "4"
+          correct: false
+        - text: "5"
+          correct: true
+        - text: "6"
+          correct: false
+    - question: "How many syllables are in the word автобус?"
+      explanation: "ав-то-бус has three vowels (а, о, у), so it has three syllables."
+      options:
+        - text: "2"
+          correct: false
+        - text: "3"
+          correct: true
+        - text: "4"
+          correct: false
+        - text: "5"
+          correct: false
+    - question: "How many syllables are in the word острів?"
+      explanation: "о-стрів has two vowels (о, і), so it has two syllables."
+      options:
+        - text: "1"
+          correct: false
+        - text: "2"
+          correct: true
+        - text: "3"
+          correct: false
+        - text: "4"
+          correct: false
+    - question: "How many syllables are in the word бібліотека?"
+      explanation: "бі-блі-о-те-ка has five vowels (і, і, о, е, а), so it has five syllables."
+      options:
+        - text: "3"
+          correct: false
+        - text: "4"
+          correct: false
+        - text: "5"
+          correct: true
+        - text: "6"
+          correct: false
+
+- type: quiz
+  title: "Choose the Correct Word Division"
+  instruction: "Select the correct way to divide the word into syllables."
+  items:
+    - question: "The correct way to divide сестра is ___."
+      explanation: "Ukrainian pushes consonants to the next syllable to keep the first one open."
+      options:
         - text: "сес-тра"
           correct: false
+        - text: "се-стра"
+          correct: true
         - text: "с-естра"
           correct: false
         - text: "сест-ра"
           correct: false
-    - question: "Як правильно перенести слово 'око' на інший рядок?"
-      explanation: "Одну літеру не можна залишати на рядку."
+    - question: "The correct way to divide острів is ___."
+      explanation: "The cluster 'стр' moves to the next syllable."
       options:
-        - text: "його не можна переносити"
+        - text: "ос-трів"
+          correct: false
+        - text: "ост-рів"
+          correct: false
+        - text: "о-стрів"
           correct: true
-        - text: "о-ко"
+        - text: "острі-в"
           correct: false
-        - text: "ок-о"
-          correct: false
-        - text: "можна як завгодно"
-          correct: false
-    - question: "Що не можна відривати від попередньої літери при переносі?"
-      explanation: "М'який знак та апостроф завжди залишаються з попередньою літерою."
+    - question: "The correct way to divide Україна is ___."
+      explanation: "Every vowel is a syllable, and consonants move forward."
       options:
-        - text: "м'який знак та апостроф"
+        - text: "Ук-ра-їна"
+          correct: false
+        - text: "У-кра-ї-на"
           correct: true
-        - text: "голосний звук"
+        - text: "Укр-аї-на"
           correct: false
-        - text: "останню літеру"
+        - text: "У-краї-на"
           correct: false
-        - text: "наголошений склад"
-          correct: false
-    - question: "Як вимовляється наголошений склад в українській мові?"
-      explanation: "Наголошений склад має більшу інтенсивність і довжину."
+    - question: "The correct way to hyphenate сім'я is ___."
+      explanation: "The apostrophe must stay with the preceding consonant."
       options:
-        - text: "довше і гучніше"
+        - text: "сім-'я"
+          correct: false
+        - text: "сі-м'я"
           correct: true
-        - text: "дуже швидко"
+        - text: "сі-'мя"
           correct: false
-        - text: "тихо і коротко"
+        - text: "сім-я'"
           correct: false
-        - text: "без голосного звуку"
-          correct: false
-    - question: "Що не можна розділяти при переносі слова 'ґудзик'?"
-      explanation: "Диграф дз позначає один звук і не розділяється."
+    - question: "The correct way to hyphenate пальці is ___."
+      explanation: "The soft sign (ь) must stay with the preceding consonant."
       options:
-        - text: "літери д та з"
+        - text: "пал-ьці"
+          correct: false
+        - text: "па-льці"
+          correct: false
+        - text: "паль-ці"
           correct: true
-        - text: "літери у та д"
+        - text: "пальц-і"
           correct: false
-        - text: "літери з та и"
+    - question: "The correct way to divide дерево is ___."
+      explanation: "All syllables are open."
+      options:
+        - text: "дер-ево"
           correct: false
-        - text: "літери и та к"
+        - text: "де-рев-о"
+          correct: false
+        - text: "де-ре-во"
+          correct: true
+        - text: "д-ерево"
+          correct: false
+    - question: "The correct way to hyphenate ґудзик is ___."
+      explanation: "The combination 'дз' represents one sound and cannot be separated."
+      options:
+        - text: "ґуд-зик"
+          correct: false
+        - text: "ґу-дзик"
+          correct: true
+        - text: "ґудз-ик"
+          correct: false
+        - text: "ґ-удзик"
+          correct: false
+    - question: "The correct way to divide автобус is ___."
+      explanation: "Closed syllable 'ав', open 'то', closed 'бус'."
+      options:
+        - text: "а-вто-бус"
+          correct: false
+        - text: "авт-о-бус"
+          correct: false
+        - text: "ав-то-бус"
+          correct: true
+        - text: "ав-тоб-ус"
           correct: false
 
 - type: group-sort
-  title: "Розподіліть слова за кількістю складів"
-  instruction: "Count the vowels to determine the correct group."
+  title: "Open or Closed Syllables?"
+  instruction: "Sort the syllables into open (ends in a vowel) or closed (ends in a consonant)."
   groups:
-    - name: "Один склад"
-      items:
-        - "кіт"
-        - "склад"
-        - "звук"
-    - name: "Два склади"
-      items:
-        - "око"
-        - "місто"
-        - "мова"
-        - "сестра"
-    - name: "Три склади"
-      items:
-        - "дерево"
-        - "молоко"
-        - "вулиця"
-        - "автобус"
-    - name: "Чотири і більше"
-      items:
-        - "Україна"
-        - "бібліотека"
-        - "університет"
+    - name: "Open Syllable (ends in a vowel)"
+      items: ["ма", "но", "ву", "ли", "де", "ре", "кра"]
+    - name: "Closed Syllable (ends in a consonant)"
+      items: ["кін", "бук", "ав", "бус", "кіт", "паль"]
 
 - type: match-up
-  title: "Знайдіть пару: слово та його переклад"
-  instruction: "Match the Ukrainian word with its English meaning."
+  title: "Match the Word to its Syllables"
+  instruction: "Match each word with its correct syllable breakdown."
   pairs:
     - left: "молоко"
-      right: "milk"
-    - left: "сестра"
-      right: "sister"
-    - left: "вулиця"
-      right: "street"
-    - left: "дерево"
-      right: "tree"
-    - left: "бібліотека"
-      right: "library"
-    - left: "око"
-      right: "eye"
-    - left: "місто"
-      right: "city"
-    - left: "автобус"
-      right: "bus"
-
-- type: unjumble
-  title: "Складіть речення з поданих слів"
-  instruction: "Arrange the words to form a correct Ukrainian sentence."
-  items:
-    - words:
-        - "мій"
-        - "кіт"
-        - "спить"
-      answer: "Мій кіт спить"
-    - words:
-        - "це"
-        - "старе"
-        - "дерево"
-      answer: "Це старе дерево"
-    - words:
-        - "він"
-        - "п'є"
-        - "молоко"
-      answer: "Він п'є молоко"
-    - words:
-        - "я"
-        - "живу"
-        - "в"
-        - "Україні"
-      answer: "Я живу в Україні"
-    - words:
-        - "це"
-        - "головна"
-        - "вулиця"
-      answer: "Це головна вулиця"
-    - words:
-        - "він"
-        - "чекає"
-        - "автобус"
-      answer: "Він чекає автобус"
-    - words:
-        - "це"
-        - "моя"
-        - "старша"
-        - "сестра"
-      answer: "Це моя старша сестра"
-    - words:
-        - "це"
-        - "моя"
-        - "сім'я"
-      answer: "Це моя сім'я"
-
-- type: anagram
-  title: "Розшифруйте слова"
-  instruction: "Rearrange the letters to form the correct Ukrainian word."
-  items:
-    - scrambled: "о м о к л о"
-      answer: "молоко"
-      hint: "milk"
-    - scrambled: "а с е р т с"
-      answer: "сестра"
-      hint: "sister"
-    - scrambled: "я и ц л у в"
-      answer: "вулиця"
-      hint: "street"
-    - scrambled: "о е р в е д"
-      answer: "дерево"
-      hint: "tree"
-    - scrambled: "о т і с м"
-      answer: "місто"
-      hint: "city"
-    - scrambled: "т і к"
-      answer: "кіт"
-      hint: "cat"
-    - scrambled: "к о о"
-      answer: "око"
-      hint: "eye"
-    - scrambled: "д а л к с"
-      answer: "склад"
-      hint: "syllable"
-
-- type: group-sort
-  title: "Розподіліть склади на відкриті та закриті"
-  instruction: "Determine if the syllable ends in a vowel (open) or consonant (closed)."
-  groups:
-    - name: "Відкритий склад (Open)"
-      items:
-        - "мо"
-        - "ло"
-        - "ко"
-        - "де"
-        - "ре"
-        - "во"
-        - "ву"
-        - "ли"
-        - "ця"
-    - name: "Закритий склад (Closed)"
-      items:
-        - "кіт"
-        - "ав"
-        - "бус"
-        - "вер"
-        - "тет"
-        - "склад"
-
-- type: fill-in
-  title: "Заповніть пропуски у реченнях"
-  instruction: "Choose the correct word to complete the sentence."
-  items:
-    - sentence: "Він п'є свіже _____."
-      answer: "молоко"
-      options:
-        - "молоко"
-        - "дерево"
-        - "місто"
-        - "око"
-      explanation: "Молоко is a drink."
-    - sentence: "Ми йдемо в _____, щоб взяти книгу."
-      answer: "бібліотеку"
-      options:
-        - "бібліотеку"
-        - "дерево"
-        - "молоко"
-        - "автобус"
-      explanation: "Книги беруть у бібліотеці."
-    - sentence: "По цій дорозі їде _____."
-      answer: "автобус"
-      options:
-        - "автобус"
-        - "склад"
-        - "голосний"
-        - "університет"
-      explanation: "Автобус is a vehicle that drives."
-    - sentence: "Моя старша _____ живе в Києві."
-      answer: "сестра"
-      options:
-        - "сестра"
-        - "вулиця"
-        - "бібліотека"
-        - "мова"
-      explanation: "Сестра is a family member."
-    - sentence: "Хрещатик — це головна _____ Києва."
-      answer: "вулиця"
-      options:
-        - "вулиця"
-        - "сестра"
-        - "мова"
-        - "сім'я"
-      explanation: "Хрещатик is a famous street."
-    - sentence: "Мій брат навчається в _____."
-      answer: "університеті"
-      options:
-        - "університеті"
-        - "молоці"
-        - "оці"
-        - "складі"
-      explanation: "Університет is a place of study."
-    - sentence: "В парку росте велике зелене _____."
-      answer: "дерево"
-      options:
-        - "дерево"
-        - "місто"
-        - "переніс"
-        - "наголос"
-      explanation: "Дерево grows in a park."
-    - sentence: "Київ — це велике _____."
-      answer: "місто"
-      options:
-        - "місто"
-        - "дерево"
-        - "око"
-        - "молоко"
-      explanation: "Київ is a city."
-
-- type: match-up
-  title: "Знайдіть правильний варіант переносу"
-  instruction: "Match the word to its correctly hyphenated form."
-  pairs:
+      right: "мо-ло-ко"
     - left: "Україна"
-      right: "Укра-їна"
+      right: "У-кра-ї-на"
+    - left: "сестра"
+      right: "се-стра"
+    - left: "дерево"
+      right: "де-ре-во"
     - left: "бібліотека"
-      right: "бібліо-тека"
+      right: "бі-блі-о-те-ка"
+    - left: "університет"
+      right: "у-ні-вер-си-тет"
+    - left: "острів"
+      right: "о-стрів"
+    - left: "ґудзик"
+      right: "ґу-дзик"
     - left: "сім'я"
       right: "сі-м'я"
     - left: "пальці"
       right: "паль-ці"
-    - left: "ґудзик"
-      right: "ґу-дзик"
-    - left: "університет"
-      right: "універ-ситет"
-    - left: "автобус"
-      right: "авто-бус"
-    - left: "сестра"
-      right: "се-стра"
+
+- type: true-false
+  title: "True or False: Syllables and Division"
+  instruction: "Decide if the statement is true or false based on Ukrainian rules."
+  items:
+    - statement: "The number of syllables in a Ukrainian word is exactly equal to the number of vowels."
+      correct: true
+      explanation: "This is the golden rule of Ukrainian syllables."
+    - statement: "In Ukrainian, every vowel must be pronounced."
+      correct: true
+      explanation: "There are no silent vowels in Ukrainian."
+    - statement: "An open syllable ends in a consonant."
+      correct: false
+      explanation: "An open syllable ends in a vowel."
+    - statement: "Ukrainian prefers closed syllables."
+      correct: false
+      explanation: "Ukrainian strongly prefers open syllables, which makes the language sound melodic."
+    - statement: "When dividing words, you can leave a single letter at the end of a line."
+      correct: false
+      explanation: "You must never leave a single letter alone on a line, even if it is a full syllable."
+    - statement: "The soft sign (ь) can be separated from the consonant before it when hyphenating."
+      correct: false
+      explanation: "The soft sign has no sound on its own and must stay attached to the preceding consonant."
+    - statement: "The apostrophe (') must stay with the consonant before it."
+      correct: true
+      explanation: "The apostrophe is grouped with the preceding consonant."
+    - statement: "The consonant cluster 'ст' in 'сестра' is split into two different syllables."
+      correct: false
+      explanation: "Ukrainian pushes both consonants to the next syllable: се-стра."
+
+- type: fill-in
+  title: "Complete the Sentence"
+  instruction: "Select the correct word to complete the sentence about syllables."
+  items:
+    - sentence: "The word ___ has exactly one vowel and one syllable."
+      answer: "кіт"
+      options:
+        - "кіт"
+        - "молоко"
+        - "острів"
+        - "дерево"
+    - sentence: "The word ___ has three open syllables: ву-ли-ця."
+      answer: "вулиця"
+      options:
+        - "вулиця"
+        - "автобус"
+        - "молоко"
+        - "Україна"
+    - sentence: "The word ___ has two syllables and ends in a closed syllable: о-стрів."
+      answer: "острів"
+      options:
+        - "острів"
+        - "кіт"
+        - "сестра"
+        - "сім'я"
+    - sentence: "The word ___ has exactly four vowels."
+      answer: "Україна"
+      options:
+        - "Україна"
+        - "дерево"
+        - "автобус"
+        - "молоко"
+    - sentence: "The word ___ has three open syllables: де-ре-во."
+      answer: "дерево"
+      options:
+        - "дерево"
+        - "автобус"
+        - "кіт"
+        - "сестра"
+    - sentence: "The word ___ starts with a closed syllable: ав-то-бус."
+      answer: "автобус"
+      options:
+        - "автобус"
+        - "молоко"
+        - "вулиця"
+        - "кіт"
+    - sentence: "The word ___ is divided as се-стра."
+      answer: "сестра"
+      options:
+        - "сестра"
+        - "сім'я"
+        - "пальці"
+        - "острів"
+    - sentence: "The word ___ has the soft sign (ь): паль-ці."
+      answer: "пальці"
+      options:
+        - "пальці"
+        - "сестра"
+        - "молоко"
+        - "вулиця"
 
 - type: quiz
-  title: "Перевірка правил: Наголос і переніс"
-  instruction: "Choose the correct answer regarding syllables, stress, and transfer."
+  title: "Word Division Rules"
+  instruction: "Select the correct statement about word division."
   items:
-    - question: "Скільки складів має слово 'університет'?"
-      explanation: "Слово має п'ять голосних: у, і, е, и, е."
+    - question: "Why is У-кра-ї-на wrong at the end of a line?"
+      explanation: "You cannot leave a single letter alone on a line."
       options:
-        - text: "п'ять"
+        - text: "You cannot leave a single letter alone."
           correct: true
-        - text: "чотири"
+        - text: "У is a consonant."
           correct: false
-        - text: "шість"
+        - text: "The word is too short."
           correct: false
-        - text: "три"
+        - text: "It is perfectly allowed."
           correct: false
-    - question: "Який варіант переносу слова 'пальці' є правильним?"
-      explanation: "М'який знак не можна відривати від попередньої приголосної."
+    - question: "How do you hyphenate пальці?"
+      explanation: "The soft sign stays with the preceding consonant."
       options:
         - text: "паль-ці"
           correct: true
@@ -353,118 +354,80 @@
           correct: false
         - text: "па-льці"
           correct: false
-        - text: "пальц-і"
+        - text: "п-альці"
           correct: false
-    - question: "Який варіант переносу слова 'сім'я' є правильним?"
-      explanation: "Апостроф залишається з тією літерою, після якої він стоїть."
+    - question: "How do you hyphenate сім'я?"
+      explanation: "The apostrophe stays with the preceding consonant."
       options:
         - text: "сі-м'я"
           correct: true
         - text: "сім-'я"
           correct: false
-        - text: "сі-м'-я"
+        - text: "сі-'мя"
           correct: false
         - text: "с-ім'я"
           correct: false
-    - question: "Яке з цих слів містить лише відкриті склади?"
-      explanation: "У слові дерево (де-ре-во) всі склади закінчуються на голосні."
+    - question: "How to split 'дз' in ґудзик?"
+      explanation: "You cannot split 'дж' and 'дз' when they represent a single sound."
       options:
-        - text: "дерево"
+        - text: "You cannot split them."
+          correct: true
+        - text: "Between д and ж."
+          correct: false
+        - text: "Before the д."
+          correct: false
+        - text: "After the ж."
+          correct: false
+    - question: "Which is an open syllable?"
+      explanation: "An open syllable ends in a vowel."
+      options:
+        - text: "мо"
           correct: true
         - text: "кіт"
           correct: false
-        - text: "автобус"
+        - text: "ав"
           correct: false
-        - text: "склад"
+        - text: "бус"
           correct: false
-    - question: "Скільки голосних звуків у слові 'бібліотека'?"
-      explanation: "Голосні у слові: і, і, о, е, а."
+    - question: "Which is a closed syllable?"
+      explanation: "A closed syllable ends in a consonant."
       options:
-        - text: "п'ять"
+        - text: "кін"
           correct: true
-        - text: "чотири"
+        - text: "ву"
           correct: false
-        - text: "шість"
+        - text: "де"
           correct: false
-        - text: "три"
+        - text: "на"
           correct: false
-    - question: "Чи можна розірвати слово 'око' при переносі на новий рядок?"
-      explanation: "За правилами переносу одну літеру залишати на рядку заборонено."
+    - question: "How do you hyphenate бібліотека?"
+      explanation: "All syllables in this word are open."
       options:
-        - text: "ні, одну літеру не можна залишати"
+        - text: "бі-блі-о-те-ка"
           correct: true
-        - text: "так, це правильно"
+        - text: "біб-ліо-тека"
           correct: false
-        - text: "можна, якщо мало місця"
+        - text: "біб-лі-о-те-ка"
           correct: false
-        - text: "тільки у віршах"
+        - text: "бі-бліо-тека"
           correct: false
-    - question: "Який тип звуку завжди утворює новий склад?"
-      explanation: "Скільки в слові голосних звуків, стільки й складів."
+    - question: "How do you hyphenate молоко?"
+      explanation: "All syllables are open."
       options:
-        - text: "голосний"
+        - text: "мо-ло-ко"
           correct: true
-        - text: "приголосний"
+        - text: "мол-око"
           correct: false
-        - text: "твердий"
+        - text: "мо-лок-о"
           correct: false
-        - text: "м'який"
-          correct: false
-    - question: "На який склад падає наголос у слові 'молоко'?"
-      explanation: "Наголошений останній склад: молоКО."
-      options:
-        - text: "на останній склад"
-          correct: true
-        - text: "на перший склад"
-          correct: false
-        - text: "на середній склад"
-          correct: false
-        - text: "на кожен склад"
+        - text: "мол-о-ко"
           correct: false
 
-- type: unjumble
-  title: "Складіть довші речення з поданих слів"
-  instruction: "Arrange the words to form correct Ukrainian sentences."
-  items:
-    - words:
-        - "ось"
-        - "велика"
-        - "бібліотека"
-      answer: "Ось велика бібліотека"
-    - words:
-        - "це"
-        - "праве"
-        - "око"
-      answer: "Це праве око"
-    - words:
-        - "я"
-        - "загубив"
-        - "ґудзик"
-      answer: "Я загубив ґудзик"
-    - words:
-        - "яка"
-        - "це"
-        - "вулиця"
-      answer: "Яка це вулиця"
-    - words:
-        - "мій"
-        - "університет"
-        - "дуже"
-        - "старий"
-      answer: "Мій університет дуже старий"
-    - words:
-        - "вона"
-        - "працює"
-        - "в"
-        - "бібліотеці"
-      answer: "Вона працює в бібліотеці"
-    - words:
-        - "це"
-        - "гарне"
-        - "місто"
-      answer: "Це гарне місто"
-    - words:
-        - "Україна"
-        - "велика"
-        - "країна"
-      answer: "Україна велика країна"
+- type: group-sort
+  title: "Does it end with an open or closed syllable?"
+  instruction: "Look at the LAST syllable of each word and sort them."
+  groups:
+    - name: "Ends in an Open Syllable"
+      items: ["молоко", "Україна", "сестра", "дерево", "вулиця", "сім'я"]
+    - name: "Ends in a Closed Syllable"
+      items: ["кіт", "автобус", "склад", "острів", "університет", "ґудзик"]

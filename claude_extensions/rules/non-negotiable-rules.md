@@ -39,14 +39,14 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 .venv/bin/python scripts/validate_plan_config.py {level}
 ```
 
-**Word targets by level** (from `config.py` v2026-02-15 — if stale, re-read config.py):
+**Word targets by level** (from `config.py` v2026-03-05 — if stale, re-read config.py):
 
 | Level | Config Key | target_words |
 |---|---|---|
-| A1 | A1 | 2000 |
-| A1-checkpoint | A1-checkpoint | 1500 |
-| A2 | A2 | 3000 |
-| A2-checkpoint | A2-checkpoint | 2500 |
+| A1 | A1 | 1200 |
+| A1-checkpoint | A1-checkpoint | 1000 |
+| A2 | A2 | 2000 |
+| A2-checkpoint | A2-checkpoint | 1500 |
 | B1 | B1-grammar/vocab/cultural | 4000 |
 | B1-checkpoint | B1-checkpoint | 4000 |
 | B2 | B2 | 4000 |
@@ -163,6 +163,8 @@ Plans in `plans/` are the source of truth. They require user approval to change.
 **When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → backup old plan as `.bak` → write new version with bumped `version` field.
 
 **Never** silently modify plan files, lower word_target to match output, or skip the backup step.
+
+**Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and word targets remain immutable.
 
 **This is mutiny:**
 

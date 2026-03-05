@@ -125,12 +125,12 @@ TIER_CONFIG = {
 
 def _detect_tier(file_path: str, level_code: str) -> int | None:
     """Detect which review tier this module belongs to. Returns tier number or None."""
-    path_lower = file_path.lower()
+    path_parts = [p.lower() for p in Path(file_path).parts]
 
     # Check track-based tiers first (more specific)
     for tier_num, cfg in TIER_CONFIG.items():
         for track in cfg['tracks']:
-            if track in path_lower:
+            if track in path_parts:
                 return tier_num
 
     # Then check level-based tiers
@@ -320,15 +320,20 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     base_dir = module_path.parent
     canonical = _review_path(base_dir, module_slug)
 
-    # Also check legacy audit/ location during transition
+    # Also check legacy audit/ location and content-review files during transition
     bare = to_bare_slug(module_slug)
     review_file = None
     if canonical.exists():
         review_file = canonical
     else:
-        legacy = base_dir / "audit" / f"{bare}-review.md"
-        if legacy.exists():
-            review_file = legacy
+        # Check content-review (from /content-review or /batch-review skill)
+        content_review = base_dir / "audit" / f"{bare}-content-review.md"
+        if content_review.exists():
+            review_file = content_review
+        else:
+            legacy = base_dir / "audit" / f"{bare}-review.md"
+            if legacy.exists():
+                review_file = legacy
 
     # 1. Existence Check
     if review_file is None:
@@ -342,6 +347,9 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
             'severity': 'critical',
             'message': f"No Tier {tier_num} ({cfg['name']}) review file at {rel_path}. {fix_prompt}"
         }]
+
+    # Detect if this is a content-review file (from /content-review or /batch-review)
+    is_content_review = review_file.name.endswith('-content-review.md')
 
     try:
         content = review_file.read_text(encoding='utf-8')
@@ -358,33 +366,64 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
             })
             return violations  # No point checking structure of a stub
 
-        # 2b. Verdict Check: review's own PASS/FAIL conclusion
-        # A FAIL-verdict review means the reviewer found problems that haven't
-        # been fixed yet. The module should not pass audit with a FAIL review.
-        verdict_match = re.search(
-            r'\*\*Status:\*\*\s*(PASS|FAIL)',
-            content[:1000]  # Verdict is always near the top
-        )
-        if verdict_match and verdict_match.group(1) == 'FAIL':
-            violations.append({
-                'type': 'REVIEW_VERDICT_FAIL',
-                'severity': 'critical',
-                'message': (
-                    "Review concludes with **Status:** FAIL — the reviewer identified "
-                    "issues that need to be fixed before the module can pass. "
-                    "Run Phase D.2 repair or rebuild the module."
-                )
-            })
+        if is_content_review:
+            # Content-review files use a different format: Grade (A/B/C/F) instead of PASS/FAIL
+            # Check for F grade = critical failure
+            grade_match = re.search(
+                r'\*\*Verdict:\*\*\s*([ABCF])\b',
+                content[:2000]
+            )
+            if grade_match and grade_match.group(1) == 'F':
+                violations.append({
+                    'type': 'REVIEW_VERDICT_FAIL',
+                    'severity': 'critical',
+                    'message': (
+                        "Content review grades this module F — critical issues found. "
+                        "Rebuild the module to fix identified problems."
+                    )
+                })
+            # Content-review structure check: must have Issues Found + Grade Justification
+            cr_required = [
+                (r'## (Issues Found|CRITICAL|HIGH)', 'Issues Found'),
+                (r'## Grade Justification', 'Grade Justification'),
+            ]
+            missing = [name for pattern, name in cr_required
+                       if not re.search(pattern, content)]
+            if missing:
+                violations.append({
+                    'type': 'FAKE_REVIEW_STRUCTURE',
+                    'severity': 'critical',
+                    'message': f"Content review missing required sections: {', '.join(missing)}. Rerun /content-review."
+                })
+        else:
+            # Standard pipeline review format
+            # 2b. Verdict Check: review's own PASS/FAIL conclusion
+            # A FAIL-verdict review means the reviewer found problems that haven't
+            # been fixed yet. The module should not pass audit with a FAIL review.
+            verdict_match = re.search(
+                r'\*\*Status:\*\*\s*(PASS|FAIL)',
+                content[:1000]  # Verdict is always near the top
+            )
+            if verdict_match and verdict_match.group(1) == 'FAIL':
+                violations.append({
+                    'type': 'REVIEW_VERDICT_FAIL',
+                    'severity': 'critical',
+                    'message': (
+                        "Review concludes with **Status:** FAIL — the reviewer identified "
+                        "issues that need to be fixed before the module can pass. "
+                        "Run Phase D.2 repair or rebuild the module."
+                    )
+                })
 
-        # 3. Structure Check (tier-specific required headers)
-        missing = [name for pattern, name in cfg['required_headers']
-                   if not re.search(pattern, content)]
-        if missing:
-            violations.append({
-                'type': 'FAKE_REVIEW_STRUCTURE',
-                'severity': 'critical',
-                'message': f"Review missing required sections: {', '.join(missing)}. {fix_prompt}"
-            })
+            # 3. Structure Check (tier-specific required headers)
+            missing = [name for pattern, name in cfg['required_headers']
+                       if not re.search(pattern, content)]
+            if missing:
+                violations.append({
+                    'type': 'FAKE_REVIEW_STRUCTURE',
+                    'severity': 'critical',
+                    'message': f"Review missing required sections: {', '.join(missing)}. {fix_prompt}"
+                })
 
         # 4. Template Placeholder Check
         placeholders = [

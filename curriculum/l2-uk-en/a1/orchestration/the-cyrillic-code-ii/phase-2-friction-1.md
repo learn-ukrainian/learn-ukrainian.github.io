@@ -1,6 +1,6 @@
-**Phase**: Phase 2: Content
-**Step**: Writing content prose
+**Phase**: Beginner Content
+**Step**: Writing Prose
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Ensured translations were provided for words containing unknown letters to maintain strict decodability constraints. Expanded on phonetic explanations and usage examples to comfortably clear the 2000-word target.
+**Self-Correction**: Replaced straight quotes with Ukrainian angular quotes («...») to adhere strictly to the typography rule, and ensured all vocabulary strictly followed the 14-letter limitation. Added extra elaboration in the Consonants section to hit the target word count per section.
 **Proposed Tooling Fix**: N/A

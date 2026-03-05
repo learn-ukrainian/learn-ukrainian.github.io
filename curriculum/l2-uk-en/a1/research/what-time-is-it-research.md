@@ -1,34 +1,40 @@
-# Дослідження: What Time Is It?
+## Research Notes
 
-## State Standard Reference
-§4.2.3.4: "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані, скажіть, будь ласка, котра година?"
-§4.2.3.2.2: "Із прийменниками: у (в) (позначення часу дії (дні тижня)): До зустрічі в понеділок. У середу, мабуть, буде сонячна погода."
-§4.2.3.3: "Місцевий відмінок: у, в (позначення моменту часу (коли?) в поєднанні зі словами – назвами місяців): Марія народилася у травні."
-Alignment: This module directly fulfills the A1 linguistic and communicative requirements for asking the time, using address forms (Vocative), and applying correct cases for temporal contexts (Accusative for days, Locative for months).
+**Textbook approach:** Ukrainian beginner textbooks introduce time-telling by distinguishing between two core questions: «Котра година?» (What time is it now?) and «О котрій годині?» (At what time?). Full hours are taught first using feminine ordinal numbers (перша, друга) to agree with the feminine noun «година». Minutes are initially taught in a "telegraphic" style (cardinal numbers, e.g., п'ята тридцять) to avoid complex fractions (пів на, чверть) at the A1 level. Days of the week use the Accusative case with «у/в» (у понеділок), while months use the Locative case with «у/в» (у січні).
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| година | High (Top 500) | котра година, о першій годині, ціла година |
-| хвилина | High (Top 1000) | за п'ять хвилин, одна хвилина, 30 хвилин |
-| день | High (Top 100) | добрий день, кожного дня, робочий день |
-| місяць | High (Top 1000) | у цьому місяці, зимові місяці |
-| тиждень | High (Top 1000) | наступного тижня, дні тижня |
+**Common errors:** 
+1. English speakers frequently use cardinal numbers for hours (saying *два годин* instead of the correct *друга година*).
+2. Learners often incorrectly apply the Locative case to days of the week, mimicking English prepositions (e.g., saying *у понеділку* instead of *у понеділок*).
 
-## Cultural Hooks
-1. Ukrzaliznytsia's "Iron Diplomacy" and resilience: Even amid a full-scale war in 2024, Ukrainian domestic trains maintained a remarkable 92%+ punctuality rate. Being «вчасно» (on time) is highly valued as a sign of respect, reliability, and societal resilience.
-2. Authentic Slavic month names: While Russian and English use imported Roman/Julian calendar names, Ukrainian months (e.g., січень - cutting cold, березень - blooming birch trees) are deeply intertwined with natural and agricultural cycles, preserving ancient connections to the land.
+**Cultural hook:** Ukrzaliznytsia (Ukrainian Railways) serves as an excellent cultural hook. Despite wartime challenges, their trains maintain a 90%+ punctuality rate. Being «вчасно» (on time) is framed not just as a scheduling necessity, but as a core value and symbol of Ukrainian resilience. Furthermore, Ukrainian month names (січень, лютий) are deeply connected to nature and seasonal cycles.
 
-## Common Learner Errors
-1. Translating "It is two o'clock" directly as *«Два годин» → Correct: «Зараз друга година» — Ukrainian uses feminine ordinal numbers that agree with the feminine noun «година».
-2. Overgeneralizing "in/at" for days of the week by using the Locative case (*«у понеділку») → Correct: «у понеділок» — Days of the week require the Accusative case to denote time of action.
-3. Confusing the questions «Котра година?» (What time is it right now?) and «О котрій?» (At what time does an event happen?) during scheduling.
+**Cross-references:** This module builds directly on A1-22 (Numbers and Money) by applying known numerals to time. It sets the foundational scheduling vocabulary needed for A1-24 (Modals: Can, Must, Want), A1-37 (Future Tense), and A1-38 (My Daily Routine).
 
-## Cross-References
-- Builds on: a1-22 (Numbers and Money), a1-37 (Tomorrow - Future Tense)
-- Prepares for: a1-24 (Can, Must, Want - Modals), a1-38 (My Daily Routine)
+## Resource Discovery
 
-## Notes for Content Writing
-- A1 constraints: Module immersion is low (10-50%). English scaffolding is MANDATORY to explain grammar concepts (cases for days/months, ordinal numbers for hours) before introducing Ukrainian examples.
-- For time presentation, use the 'telegraphic style' (година + хвилина) to keep it simple for A1 learners, leaving complex fractions (пів на, чверть) for later levels.
-- Emphasize decolonized framing when discussing month names: celebrate the authenticity of the Ukrainian calendar as an independent system, avoiding comparative baselines with Russian.
+
+### Blog Articles
+- [Talk Ukrainian: Days, Months and Seasons in Ukrainian](https://talkukrainian.com/days-months-seasons/) (talkukrainian)
+- [What languages do you speak?](https://www.ukrainianlessons.com/episode21/) (ukrainianlessons.com)
+- [What a surprise! Second conjugation in Ukrainian](https://www.ukrainianlessons.com/episode24/) (ukrainianlessons.com)
+- [Prepositions of Time in Ukrainian](https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/) (ukrainianlessons.com)
+- [10 Ukrainian dishes you must try in Ukraine](https://www.ukrainianlessons.com/fmu13/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 86: 86
+209.		Розгляньте таблицю та обговоріть її зміст.
+	 Склади п’ять  речень із правильними формулами ...
+- Grade 4, Сторінка 117: •  Складіть текст-розповідь за малюнком і словосполученнями. 
+Запишіть. Підкресліть словосполучення,...
+- Grade 4, Сторінка 190: Змінювання дієслів минулого часу
+за родами (в однині) й числами........................................
+- Grade 5, Сторінка 193: 193
+Відомості із синтаксису й пунктуації. Словосполучення
+08.00
+08.15
+08.30
+08.45
+2. Усно назвіть ча...
+- Grade 6, Сторінка 245: § 52. Правильне вживання числівників на позначення дат і часу  
+245
+§ 52. Правильне вживання числівн...

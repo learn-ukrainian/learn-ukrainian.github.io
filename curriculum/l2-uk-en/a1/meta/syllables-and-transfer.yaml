@@ -2,54 +2,48 @@ slug: syllables-and-transfer
 title: Syllables and Transfer
 word_target: 1200
 content_outline:
-- section: Що таке склад?
-  words: 400
-  points:
-  - 'English Scaffolding: Define the concept of a syllable (склад) and vowel (голосний
-    звук). Establish the golden rule: One vowel equals one syllable.'
-  - 'Demonstrate with clear examples using familiar vocabulary: кіт (1 vowel = 1 syllable),
-    мо-ло-ко (3 vowels = 3 syllables), у-кра-ї-на (4 vowels = 4 syllables).'
-  - 'Cultural connection: Explain why Ukrainian is called «солов''їна мова» (nightingale
-    language) — its melodic flow comes directly from this syllable structure.'
-- section: Типи складів
-  words: 400
-  points:
-  - 'English Scaffolding: Explain open syllables (відкритий склад) ending in vowels,
-    and closed syllables (закритий склад) ending in consonants.'
-  - 'Highlight Ukrainian''s strong preference for open syllables and the principle
-    of maximal onset (pushing consonants to the next syllable: се-стра, not сес-тра).'
-  - 'Provide a breakdown of high-frequency words by type: ву-ли-ця (open), ав-то-бус
-    (closed final).'
-  - 'Decolonized framing: Compare Ukrainian''s fluid open-syllable rhythm to languages
-    like Italian or Spanish, rather than using Russian as a reference point.'
-- section: Правила переносу
-  words: 500
-  points:
-  - 'English Scaffolding: Introduce «переніс» (word hyphenation) and its practical
-    importance for handwriting and typing in Ukrainian.'
-  - 'Rule 1: Never leave or carry over a single letter (e.g., о-ко cannot be split
-    across lines).'
-  - 'Rule 2: The soft sign (ь) and apostrophe ('') must remain attached to the preceding
-    consonant (паль-ці, сі-м''я).'
-  - 'Rule 3: Digraphs дж and дз cannot be split when they represent a single sound
-    (бу-дзьок).'
-  - 'Address common learner friction: warn against applying English intuitive hyphenation
-    patterns to Ukrainian words.'
-- section: Наголос і склади
-  words: 400
-  points:
-  - 'English Scaffolding: Preview the concept of stress (наголос). Explain that the
-    stressed syllable is pronounced longer and with more intensity.'
-  - Clarify that Ukrainian stress is dynamic and unpredictable from spelling, requiring
-    memorization per word.
-  - Introduce the dictionary accent mark (´) and demonstrate how stress changes the
-    'weight' of syllables using previous vocabulary.
-- section: Практика
+- section: Що таке склад? — What Is a Syllable?
+  slug: what-is-a-syllable
   words: 300
   points:
-  - Include a syllable counting walkthrough where learners identify vowels to determine
-    the number of syllables.
-  - Provide a hyphenation walkthrough identifying correct and incorrect «переніс»
-    for multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).
-  - Recommend reading multi-syllable words slowly, syllable-by-syllable, to build
-    phonological confidence before attempting full speed reading.
+  - 'Define a syllable (склад) and introduce the golden rule: the number of syllables
+    equals the exact number of vowels (голосні).'
+  - 'Demonstrate syllable counting using familiar vocabulary: кіт (1 vowel = 1 syllable),
+    мо-ло-ко (3 vowels = 3 syllables), у-кра-ї-на (4 vowels = 4 syllables).'
+  - 'Address English learner friction: contrast Ukrainian vowel-based syllable boundaries
+    with English intuition.'
+- section: Типи складів — Open and Closed Syllables
+  slug: open-and-closed-syllables
+  words: 300
+  points:
+  - Introduce open syllables (ending in vowels) and closed syllables (ending in consonants),
+    highlighting Ukrainian's strong preference for open syllables.
+  - 'Explain the principle of maximal onset for consonant clusters: consonants are
+    pushed to the beginning of the next syllable (се-стра, not сес-тра).'
+  - 'Practice identifying open and closed syllables with high-frequency words: ву-ли-ця
+    (all open), ав-то-бус (closed final syllable).'
+- section: Правила переносу — Word Division Rules
+  slug: word-division-rules
+  words: 350
+  points:
+  - Introduce «переніс» (hyphenation/word division) and its practical importance for
+    writing and typing in Ukrainian.
+  - 'Rule 1: Never leave or carry over a single letter, even if it constitutes a full
+    syllable (e.g., cannot split у-країна).'
+  - 'Rule 2: The soft sign (ь) and apostrophe ('') must always stay attached to the
+    preceding consonant (паль-ці, сі-м''я).'
+  - Practice correct division with longer words like бі-блі-о-те-ка and у-ні-вер-си-тет
+    to build confidence.
+- section: Підсумок — Summary & Self-Check
+  slug: summary-and-self-check
+  words: 250
+  points:
+  - Recap the golden rule of counting vowels to find syllables and the three critical
+    rules for word division.
+  - 'Self-check question 1: How do you determine the number of syllables in a Ukrainian
+    word?'
+  - 'Self-check question 2: Where should you split a consonant cluster like ''ст''
+    in the word ''сестра''?'
+  - 'Self-check question 3: Can you leave a single letter at the end of a line when
+    hyphenating?'
+  - 'Self-check question 4: What happens to the soft sign (ь) when dividing a word?'

@@ -1,61 +1,61 @@
 items:
-- lemma: склад
-  pos: noun
-- lemma: скласти
-  pos: verb
-- lemma: мати
-  pos: verb
-- lemma: цей
-  pos: adj
-- lemma: маяти
-  pos: verb
-- lemma: наголос
-  pos: adv
-- lemma: це
-  pos: noun
-- lemma: терти
-  pos: verb
-- lemma: звук
-  pos: noun
-- lemma: де
-  pos: adv
-- lemma: молоко
-  pos: noun
-- lemma: ко
-  pos: noun
-- lemma: голосний
-  pos: adj
-- lemma: старий
-  pos: adj
-- lemma: він
-  pos: noun
-- lemma: слово
-  pos: noun
-- lemma: сей
-  pos: adj
-- lemma: мі
-  pos: noun
-- lemma: кіт
-  pos: noun
-- lemma: мій
-  pos: adj
-- lemma: приголосний
-  pos: adj
-- lemma: рева
-  pos: noun
-- lemma: мо
-  pos: adv
-- lemma: рахувати
-  pos: verb
-- lemma: лице
-  pos: noun
-- lemma: бус
-  pos: noun
-- lemma: сестра
-  pos: noun
-- lemma: се
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: тета
-  pos: noun
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+  - lemma: "Україна"
+    translation: "Ukraine"
+    pos: "noun"
+  - lemma: "сестра"
+    translation: "sister"
+    pos: "noun"
+  - lemma: "дерево"
+    translation: "tree"
+    pos: "noun"
+  - lemma: "вулиця"
+    translation: "street"
+    pos: "noun"
+  - lemma: "автобус"
+    translation: "bus"
+    pos: "noun"
+  - lemma: "бібліотека"
+    translation: "library"
+    pos: "noun"
+  - lemma: "університет"
+    translation: "university"
+    pos: "noun"
+  - lemma: "склад"
+    translation: "syllable"
+    pos: "noun"
+  - lemma: "переніс"
+    translation: "word division"
+    pos: "noun"
+  - lemma: "голосний"
+    translation: "vowel"
+    pos: "noun"
+  - lemma: "приголосний"
+    translation: "consonant"
+    pos: "noun"
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+  - lemma: "острів"
+    translation: "island"
+    pos: "noun"
+  - lemma: "сім'я"
+    translation: "family"
+    pos: "noun"
+  - lemma: "ґудзик"
+    translation: "button"
+    pos: "noun"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+  - lemma: "сік"
+    translation: "juice"
+    pos: "noun"

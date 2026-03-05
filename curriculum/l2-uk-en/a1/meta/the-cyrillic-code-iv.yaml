@@ -2,59 +2,56 @@ slug: the-cyrillic-code-iv
 title: The Cyrillic Code IV
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 250
+- slug: introduction
+  section: Вступ — Introduction
+  words: 150
   points:
-  - Welcome the learner to the final milestone of mastering the Cyrillic alphabet.
-    Note that they already know 22 letters and only 11 remain.
-  - 'Explicitly state the English scaffolding policy for this A1 module: grammatical
-    rules and phonetic mechanics will be explained in English, while all examples
-    will be in Ukrainian.'
-  - Provide a brief diagnostic reading exercise with 5 familiar words using previously
-    learned letters to build confidence.
-- section: Шиплячі та свистячі
-  words: 500
-  points:
-  - Define Ц as a single 'ts' affricate, not two separate consonants. Provide examples
-    (цікавий, центр) with IPA on first use.
-  - Define Ч as the 'ch' sound and provide examples (чай, час).
-  - Define Ш as a strictly hard 'sh' sound with the tongue pulled back. Provide examples
-    (школа).
-  - Introduce Щ as a unique Ukrainian double-soft sibilant (prolonged soft sh+ch).
-    Contrast articulatory placement of Ш (hard, tongue back) vs Щ (soft, tongue forward)
-    using examples (ще, щастя).
-  - Include a mirror self-check technique for the learner to practice the Ш vs Щ contrast.
-- section: Йотовані голосні
-  words: 500
-  points:
-  - 'Explain the ''dual nature'' principle of iotated vowels: they make TWO sounds
-    (Й+vowel) at the beginning of a word or after a vowel, but only make ONE sound
-    and soften the consonant when placed immediately after a consonant.'
-  - Present Ю (/ju/) and Я (/ja/) with high-frequency examples (юнак, яблуко, я).
-  - Present Є (/je/), anchoring it to the cultural concept of 'Європа' and 'Євромайдан'.
-  - Present Ї (/ji/) and explicitly emphasize that it ALWAYS makes two sounds and
-    NEVER softens a consonant. Include the cultural hook of Ї as a symbol of Ukrainian
-    resistance.
-- section: М'який знак та апостроф
-  words: 450
-  points:
-  - Define the soft sign (Ь) as a palatalizing modifier, not an independent sound.
-    Explain the physical articulation of pressing the middle of the tongue to the
-    hard palate. Provide examples (день, Львів).
-  - Provide minimal contrast drills to train the ear to palatalization and demonstrate
-    how the soft sign can change a word's meaning.
-  - Explain the apostrophe (') as a blocker that prevents consonant softening and
-    preserves the /j/ sound of the following iotated vowel. Provide examples (м'ясо,
-    сім'я).
-  - 'Summarize the clear rule: Ь softens the preceding consonant; the apostrophe blocks
-    softening.'
-- section: 'Підсумок: Весь алфавіт'
+  - 'Welcome the learner: they already know 23 letters. Only 10 letters, 2 digraphs,
+    and 1 apostrophe remain to complete the alphabet.'
+  - 'Diagnostic check: Read 5 familiar words using previously learned letters to build
+    confidence.'
+  - 'Set expectations: Grammar and mechanics will be explained in English, with examples
+    in Ukrainian.'
+- slug: affricates-digraphs
+  section: Злиті звуки та рідкісні букви — Affricates, Digraphs & Ґ
   words: 300
   points:
-  - Present the full 33-letter alphabet in proper order.
-  - Provide a celebratory reading drill containing a short paragraph with all 33 letters,
-    using stress marks for guidance.
-  - Add a self-assessment checklist confirming mastery of sibilants, iotated vowels,
-    the soft sign, and the apostrophe.
-  - Include a bridge to module a1-05 (Syllables and Transfer) to transition from letter
-    recognition to fluent reading.
+  - 'Introduce Ц as a single ''ts'' sound (like cats), not two separate consonants.
+    Example: центр.'
+  - 'Introduce Щ as a uniquely Ukrainian double sound (sh+ch). Contrast with Ш. Example:
+    ще.'
+  - 'Introduce Ф as ''f'', noting its use mostly in borrowed words. Example: факт.'
+  - 'Explain digraphs ДЖ (like ''jungle'') and ДЗ (no English equivalent). Examples:
+    джаз, дзвін.'
+  - 'Introduce Ґ as the hard ''g'', noting its rarity and history. Example: ґанок.'
+- slug: iotated-vowels
+  section: Йотовані голосні — Iotated Vowels Я, Ю, Є, Ї, Й
+  words: 350
+  points:
+  - 'Explain the ''dual nature'' principle: two sounds at the beginning or after a
+    vowel, but one sound (softening) after a consonant.'
+  - Introduce Я (/ja/) and Ю (/ju/) with high-frequency examples (яблуко, я, юнак).
+  - Introduce Є (/je/), anchoring to the cultural concept of Європа.
+  - Introduce Ї (/ji/). Emphasize it ALWAYS makes two sounds and NEVER softens. Mention
+    its use as a symbol of Ukrainian resistance.
+  - 'Introduce Й as a short consonant that never forms a syllable alone. Example:
+    чай.'
+- slug: modifiers
+  section: М'який знак та апостроф — Soft Sign & Apostrophe
+  words: 250
+  points:
+  - 'Define the soft sign (Ь) as a modifier that palatalizes the preceding consonant,
+    not an independent sound. Examples: день, Львів.'
+  - 'Explain the apostrophe ('') as a blocker: it prevents softening and keeps the
+    /j/ in the following iotated vowel. Examples: сім''я, м''яч.'
+  - 'Summarize the core rule: Ь softens what comes before it, while the apostrophe
+    blocks softening.'
+- slug: summary-alphabet
+  section: 'Підсумок: Весь алфавіт — The Full Alphabet'
+  words: 150
+  points:
+  - Present the complete 33-letter Cyrillic alphabet in proper order.
+  - 'Self-check 1: Which letter always makes two sounds? (Ї)'
+  - 'Self-check 2: What does the apostrophe do? (Blocks softening)'
+  - 'Self-check 3: How is Щ different from Ш? (Щ is sh+ch)'
+  - 'Bridge to next module: a1-05 (Syllables and Word Division).'

@@ -44,6 +44,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from research_quality import assess_research_compat, find_research_path
 
+from .review_parsing import extract_review_score, extract_review_verdict, extract_plan_verdict, count_review_issues
+
 router = APIRouter(tags=["state"])
 
 
@@ -384,6 +386,7 @@ def _compute_summary() -> dict:
     totals = {
         "total": 0, "research_done": 0, "content_done": 0,
         "audit_passing": 0, "reviewed": 0, "final_review_done": 0,
+        "prompt_reviewed": 0, "content_reviewed": 0,
     }
 
     for level_cfg in LEVELS:
@@ -400,7 +403,10 @@ def _compute_summary() -> dict:
         audit_passing = 0
         reviewed = 0
         final_review_done = 0
+        prompt_reviewed = 0
+        content_reviewed = 0
 
+        audit_dir = track_dir / "audit"
         for num, slug in plan_slugs:
             orch_dir = track_dir / "orchestration" / slug
             v4 = _read_v4_state(orch_dir)
@@ -422,6 +428,10 @@ def _compute_summary() -> dict:
             final_review = track_dir / "review" / f"{slug}-final-review.md"
             if final_review.exists():
                 final_review_done += 1
+            if (audit_dir / f"{slug}-prompt-review.md").exists():
+                prompt_reviewed += 1
+            if (audit_dir / f"{slug}-content-review.md").exists():
+                content_reviewed += 1
 
         total = len(plan_slugs)
         tracks_out[track_id] = {
@@ -432,6 +442,8 @@ def _compute_summary() -> dict:
             "audit_passing": audit_passing,
             "reviewed": reviewed,
             "final_review_done": final_review_done,
+            "prompt_reviewed": prompt_reviewed,
+            "content_reviewed": content_reviewed,
         }
 
         totals["total"] += total
@@ -440,6 +452,8 @@ def _compute_summary() -> dict:
         totals["audit_passing"] += audit_passing
         totals["reviewed"] += reviewed
         totals["final_review_done"] += final_review_done
+        totals["prompt_reviewed"] += prompt_reviewed
+        totals["content_reviewed"] += content_reviewed
 
     return {"generated_at": generated_at, "tracks": tracks_out, "totals": totals}
 
@@ -478,6 +492,8 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
                 "words": word_count,
                 "word_target": word_target,
                 "research_score": research_score,
+                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
+                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
             })
         else:
             v3 = _read_v3_state(orch_dir)
@@ -514,6 +530,8 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
                 "words": word_count,
                 "word_target": word_target,
                 "research_score": research_score,
+                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
+                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
             })
 
     return {"track": track_id, "total": len(modules), "modules": modules}
@@ -588,6 +606,13 @@ def _compute_review_coverage() -> dict:
         pass_count = 0
         total_issues = 0
 
+        # Plan review counters
+        audit_dir = track_dir / "audit"
+        plan_reviewed = 0
+        plan_pass = 0
+        plan_needs_fixes = 0
+        plan_fail = 0
+
         for num, slug in plan_slugs:
             md_exists = any([
                 (track_dir / f"{slug}.md").exists(),
@@ -603,18 +628,33 @@ def _compute_review_coverage() -> dict:
             if review_file.exists():
                 has_review += 1
                 text = review_file.read_text()
-                score_match = re.search(r"Overall Score:\s*(\d+(?:\.\d+)?)\s*/\s*10", text, re.IGNORECASE)
-                status_match = re.search(r"\bStatus:\s*(PASS|FAIL)\b", text, re.IGNORECASE)
-                issue_count = len(re.findall(r"^#{1,4}\s+Issue\s*#?\s*\d+", text, re.MULTILINE | re.IGNORECASE))
+                score = extract_review_score(text)
+                verdict = extract_review_verdict(text)
 
-                if score_match:
-                    scores.append(float(score_match.group(1)))
-                if status_match and status_match.group(1).upper() == "PASS":
+                if score is not None:
+                    scores.append(score)
+                if verdict == "PASS":
                     pass_count += 1
-                total_issues += issue_count
+                total_issues += count_review_issues(text)
 
             if final_review_file.exists():
                 has_final_review += 1
+
+            # Plan review
+            plan_review_file = audit_dir / f"{slug}-plan-review.md"
+            if plan_review_file.exists():
+                plan_reviewed += 1
+                try:
+                    pr_text = plan_review_file.read_text(errors="replace")
+                    v = extract_plan_verdict(pr_text)
+                    if v == "PASS":
+                        plan_pass += 1
+                    elif v == "NEEDS FIXES":
+                        plan_needs_fixes += 1
+                    elif v == "FAIL":
+                        plan_fail += 1
+                except Exception:
+                    pass
 
         avg_score = round(sum(scores) / len(scores), 1) if scores else None
         pass_rate = round(pass_count / has_review, 2) if has_review > 0 else None
@@ -626,6 +666,10 @@ def _compute_review_coverage() -> dict:
             "avg_score": avg_score,
             "pass_rate": pass_rate,
             "total_issues_found": total_issues,
+            "plan_reviewed": plan_reviewed,
+            "plan_pass": plan_pass,
+            "plan_needs_fixes": plan_needs_fixes,
+            "plan_fail": plan_fail,
         }
 
     return {"generated_at": datetime.now(timezone.utc).isoformat(), "tracks": tracks_out}
@@ -1274,6 +1318,12 @@ async def module_detail(track_id: str, num: int):
         review_file = track_dir / "review" / f"{slug}-review.md"
         has_review = review_file.exists()
 
+        # Claude quality reviews (prompt-review + content-review)
+        prompt_review_file = track_dir / "audit" / f"{slug}-prompt-review.md"
+        content_review_file = track_dir / "audit" / f"{slug}-content-review.md"
+        has_prompt_review = prompt_review_file.exists()
+        has_content_review = content_review_file.exists()
+
         # Final review
         final_review = _get_final_review_info(track_dir, slug)
 
@@ -1310,6 +1360,8 @@ async def module_detail(track_id: str, num: int):
             "review": {
                 "exists": has_review,
             },
+            "prompt_review": has_prompt_review,
+            "content_review": has_content_review,
             "final_review": final_review,
             "enriched": enriched,
             "comms": comms,

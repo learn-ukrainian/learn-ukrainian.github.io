@@ -2,9 +2,17 @@
   "module": "naholos",
   "track": "l2-uk-direct",
   "level": "a1",
-  "status": "draft",
+  "status": "validated",
   "images_sourced": 0,
   "images_total": 0,
   "last_updated": "2026-03-01",
-  "notes": "Module 6 — stress patterns and intonation. First post-literacy module."
+  "notes": "Module 6 — stress patterns and intonation. First post-literacy module.",
+  "phases": {
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-05T19:17:34Z",
+      "errors": 0,
+      "warnings": 2
+    }
+  }
 }

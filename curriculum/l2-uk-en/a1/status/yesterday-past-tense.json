@@ -2,15 +2,15 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T22:46:26.346794Z",
+  "last_audit": "2026-03-05T23:05:28.150530Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T22:46:09.197098Z",
-    "meta": "2026-02-28T22:38:09.404559Z",
-    "activities": "2026-02-20T23:49:17.192912Z",
-    "vocabulary": "2026-02-26T10:56:53.942287Z",
-    "plan": "2026-02-28T03:02:37.401057Z",
-    "research": "2026-02-28T22:38:09.394237Z"
+    "md": "2026-03-05T23:04:15.068744Z",
+    "meta": "2026-03-05T23:05:03.689960Z",
+    "activities": "2026-03-05T23:02:50.311043Z",
+    "vocabulary": "2026-03-05T23:02:50.314960Z",
+    "plan": "2026-03-05T14:05:44.355925Z",
+    "research": "2026-03-05T22:57:59.550246Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3341/2000 (raw: 3471)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1445/1200 (raw: 1716) | pedagogy: 7 violations | immersion: 14.7% LOW (target 35-55% (M36))"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "8/8 | density: 6 < 6"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 1
   }
 }

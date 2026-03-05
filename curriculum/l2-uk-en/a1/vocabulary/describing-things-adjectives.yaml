@@ -1,61 +1,66 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: новий
-  pos: adj
-- lemma: слово
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: книга
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: місто
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: вони
-  pos: noun
-- lemma: старий
-  pos: adj
-- lemma: вікно
-  pos: noun
-- lemma: веліти
-  pos: verb
-- lemma: вести
-  pos: verb
-- lemma: опис
-  pos: noun
-- lemma: маяти
-  pos: verb
-- lemma: рід
-  pos: noun
-- lemma: великий
-  pos: adj
-- lemma: студент
-  pos: noun
-- lemma: га
-  pos: noun
-- lemma: використовувати
-  pos: verb
-- lemma: який
-  pos: adj
-- lemma: добрий
-  pos: adj
-- lemma: дім
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: закінчення
-  pos: noun
-- lemma: гарний
-  pos: adj
-- lemma: нове
-  pos: noun
-- lemma: розумний
-  pos: adj
+  - lemma: новий
+    translation: new
+    pos: adjective
+  - lemma: старий
+    translation: old, ancient
+    pos: adjective
+  - lemma: гарний
+    translation: beautiful, nice
+    pos: adjective
+  - lemma: великий
+    translation: big, grand
+    pos: adjective
+  - lemma: малий
+    translation: small
+    pos: adjective
+  - lemma: добрий
+    translation: good, kind
+    pos: adjective
+  - lemma: поганий
+    translation: bad
+    pos: adjective
+  - lemma: цікавий
+    translation: interesting
+    pos: adjective
+  - lemma: синій
+    translation: blue
+    pos: adjective
+  - lemma: червоний
+    translation: red
+    pos: adjective
+  - lemma: молодий
+    translation: young
+    pos: adjective
+  - lemma: дорогий
+    translation: expensive
+    pos: adjective
+  - lemma: дешевий
+    translation: cheap
+    pos: adjective
+  - lemma: смачний
+    translation: tasty
+    pos: adjective
+  - lemma: зелений
+    translation: green
+    pos: adjective
+  - lemma: погода
+    translation: weather
+    pos: noun
+    gender: f
+  - lemma: будинок
+    translation: house
+    pos: noun
+    gender: m
+  - lemma: квартира
+    translation: apartment
+    pos: noun
+    gender: f
+  - lemma: вікно
+    translation: window
+    pos: noun
+    gender: n
+  - lemma: лінія
+    translation: line
+    pos: noun
+    gender: f

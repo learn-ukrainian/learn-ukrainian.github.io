@@ -65,6 +65,10 @@ a:hover { text-decoration: underline; }
 .module-cell .review-badge { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #a371f7; border: 1px solid var(--bg2); }
 .module-cell .qa-badge { position: absolute; top: -3px; left: -3px; width: 8px; height: 8px; border-radius: 50%; background: #58a6ff; border: 1px solid var(--bg2); }
 .module-cell .v4-badge { position: absolute; bottom: -2px; right: -2px; background: var(--green); color: #000; font-size: 7px; padding: 1px 2px; border-radius: 2px; font-weight: 700; line-height: 1; }
+.module-cell .plan-badge { position: absolute; bottom: -3px; left: -3px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--bg2); }
+.plan-badge.plan-pass { background: var(--green); }
+.plan-badge.plan-needs-fixes { background: #f0883e; }
+.plan-badge.plan-fail { background: var(--red); }
 
 /* Obsolete (non-v4) modules */
 .obsolete { opacity: 0.4; }
@@ -204,6 +208,9 @@ a:hover { text-decoration: underline; }
   <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;border-radius:50%"></div> Final QA (top-left dot, optional)</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--green);border-radius:2px;font-size:6px;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;">v4</div> V4 pipeline</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Obsolete (v3/unbuilt)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green);border-radius:50%"></div> Plan PASS (bottom-left dot)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f0883e;border-radius:50%"></div> Plan NEEDS FIXES</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red);border-radius:50%"></div> Plan FAIL</div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -312,14 +319,17 @@ function renderModuleGrid(container, data, trackId) {
     const reviewBadge = m.has_review ? '<div class="review-badge" title="Reviewed"></div>' : '';
     const qaBadge = m.has_final_review ? '<div class="qa-badge" title="Final QA done"></div>' : '';
     const v4Badge = isV4 ? '<div class="v4-badge">v4</div>' : '';
+    const planCls = m.plan_review_verdict === 'PASS' ? 'plan-pass' : m.plan_review_verdict === 'NEEDS FIXES' ? 'plan-needs-fixes' : m.plan_review_verdict === 'FAIL' ? 'plan-fail' : '';
+    const planBadge = m.has_plan_review ? `<div class="plan-badge ${planCls}" title="Plan: ${m.plan_review_verdict || '?'}"></div>` : '';
     const verLabel = m.pipeline_version ? ` [${m.pipeline_version}]` : '';
     const reviewLabel = m.has_review ? ' ✓Rev' : '';
     const qaLabel = m.has_final_review ? ' ✓QA' : '';
+    const planLabel = m.has_plan_review ? ` Plan:${m.plan_review_verdict || '?'}` : '';
     return `
       <div class="module-cell ${cls}${obsolete}" onclick="openModule('${trackId}','${m.slug}')" title="${m.slug}">
         ${m.num}
-        ${reviewBadge}${qaBadge}${v4Badge}
-        <div class="tooltip">${m.slug} (${m.status})${verLabel}${reviewLabel}${qaLabel}</div>
+        ${reviewBadge}${qaBadge}${planBadge}${v4Badge}
+        <div class="tooltip">${m.slug} (${m.status})${verLabel}${reviewLabel}${qaLabel}${planLabel}</div>
       </div>
     `;
   }).join('');
@@ -429,10 +439,33 @@ function renderModulePanel(container, m) {
     `;
   }
 
+  // Plan review, content review score, friction — from module detail endpoint directly
+  let planReviewHtml = '';
+  if (m.plan_review_verdict) {
+    const prVerdict = m.plan_review_verdict;
+    const prColor = prVerdict === 'PASS' ? 'var(--green)' : prVerdict === 'NEEDS FIXES' ? '#f0883e' : prVerdict === 'FAIL' ? 'var(--red)' : 'var(--text3)';
+    planReviewHtml = `<span class="status-badge" style="background:rgba(0,0,0,0.2);color:${prColor};margin-left:8px;">Plan: ${prVerdict}</span>`;
+  }
+
+  let reviewScoreHtml = '';
+  if (m.review_score != null) {
+    const sc = m.review_score;
+    const rv = m.review_verdict || '';
+    const scColor = sc >= 8 ? 'var(--green)' : sc >= 6 ? 'var(--yellow)' : 'var(--red)';
+    reviewScoreHtml = `<div style="margin-top:8px;font-size:13px;">Review: <span style="color:${scColor};font-weight:600">${sc}/10</span>${rv ? ` <span style="color:${rv === 'PASS' ? 'var(--green)' : 'var(--red)'}">${rv}</span>` : ''}</div>`;
+  }
+
+  let frictionHtml = '';
+  if (m.friction_count > 0) {
+    frictionHtml = `<div style="margin-top:4px;font-size:12px;color:var(--yellow);">Build friction: ${m.friction_count} event${m.friction_count > 1 ? 's' : ''}</div>`;
+  }
+
   container.innerHTML = `
     <h2>${m.slug}</h2>
     <div class="track-label">${m.track} &middot; Module &middot; <span style="color:${versionColor};font-weight:600">${pipelineVersion}</span></div>
-    <span class="status-badge ${statusCls}">${status}</span>
+    <span class="status-badge ${statusCls}">${status}</span>${planReviewHtml}
+    ${reviewScoreHtml}
+    ${frictionHtml}
 
     <div class="word-bar-container">
       <div class="word-bar-label">Word Count: ${wc.toLocaleString()} / ${wt.toLocaleString()}</div>

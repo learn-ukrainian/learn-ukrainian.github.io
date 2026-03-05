@@ -1,0 +1,160 @@
+discovered_at: '2026-03-05T07:32:08.939551+00:00'
+query_keywords:
+- 'The Accusative II: People'
+- Розминка
+- Warm-up
+- Культурний контекст
+- Cultural Context
+- Типові помилки та практика
+- Common Errors and Practice
+- Вироблення навичок та підсумок
+- accusative case for animate nouns (people/animals)
+- between animate and inanimate accusative
+- Learner understands when accusative = genitive
+- about people as direct objects
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode33/
+  title: Talking about books in Ukrainian — Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
+- url: https://www.ukrainianlessons.com/lesson/33/
+  title: ULP 1-33 Talking about books in Ukrainian – Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/episode32/
+  title: Shopping for clothes — Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7000000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
+rag_chunks:
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0009
+  text: 'уживає такі слова: не переймайтеся, не хвилюйтеся, про0
+
+    шу, усе нормально.
+
+    Уміння чемно відмовитися чи погодитися — теж мис6
+
+    тецтво спілкування. Невміння делікатно відмовитися мо6
+
+    же образити людину. У ситуації відмови користуються
+
+    висловами: дякую, але я сьогодні маю інші справи; спа0
+
+    сибі, але наступним разом; вибачте, але я, на жаль,
+
+    не зможу. Якщо ж погоджуємося з чимось, то викорис6
+
+    товуємо такі вислови: я із задоволенням приймаю Вашу
+
+    пропозицію; щиро дякую; мені приємно, що я теж можу
+
+    бути'
+  section_title: Сторінка 10
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0184
+  text: "177\nРОЗВИТОК МОВЛЕННЯ\nА. Знайдіть звертання та вставні слова. Розкажіть,\
+    \ яку роль вони віді­\nграють у листі.\nБ. Напишіть лист рідній людині (мамі,\
+    \ татові, бабусі, дідусю, сестрі або \nбратові). Використайте в ньому звертання\
+    \ та вставні слова.\nКультура слова\n•\t Звертаючись до людей, уникайте описових\
+    \ форм на зразок: «дівчино в \nкапелюшку!», «хлопче в картатій сорочці!», «жіночко\
+    \ з морозивом!» Такі \nзвертання є порушенням етикетної норми. \n\t\nЯкщо не знаєте,\
+    \ як звернутися до незнайомої людини, может"
+  section_title: Сторінка 177
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0289
+  text: "Етикетні жанри: привітання, вибачення \x1F\n201\n• із сімейним лікарем у\
+    \ кабінеті поліклініки, куди звернулися по щеп­\nлення від грипу;\n• із запрошеним\
+    \ на літературний вечір письменником, якого вас попро-\nсили зустріти й провести\
+    \ до школи;\n• з учнем із паралельного класу на тренуванні в спортзалі;\n• з директором\
+    \ школи­інтернату, для учнів якої ваш клас зібрав бібліо-\nтечку;\n• зі старшою\
+    \ сестрою, до якої прийшли допомогти в догляді за дитиною;\n• з однокласницею,\
+    \ яка просить вашої поради для вибору гад"
+  section_title: Сторінка 201
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
+  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
+    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
+    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
+    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
+    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
+    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
+    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

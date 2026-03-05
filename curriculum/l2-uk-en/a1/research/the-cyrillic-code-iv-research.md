@@ -1,41 +1,64 @@
 # Дослідження: The Cyrillic Code IV
 
 ## State Standard Reference
-§4.1.1. "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський..."
-§4.1.2. "Апостроф: дев’ять, м’яч, п’ять."
-§4.1.3. "М’який знак: Львів, шість."
-§4.1.4. "Голосні та приголосні звуки: [...] тверді та м’які приголосні: лист – ліс, Рим – Рівне, палац – палець."
-Alignment: This module directly addresses the A1 requirements for complete alphabet recognition, the orthographic functions of the apostrophe and soft sign, and the distinction between hard and soft consonants, specifically the unique Ukrainian sibilants.
+§4.1.1: "Ukrainian alphabet"
+§4.1.2: "Apostrophe usage"
+§4.1.3: "Soft sign (м'який знак)"
+Alignment: Covers the final 10 letters of the alphabet, digraphs ДЖ/ДЗ, the soft sign, and the apostrophe to complete foundational phonetics and graphics for A1.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| чай | Top 500 | пити чай, чорний чай |
-| школа | Top 200 | у школі, іти до школи |
-| центр | Top 300 | у центрі, центр міста |
-| ще | Top 50 (Function) | ще раз, ще один |
-| яблуко | Medium freq. | червоне яблуко, їсти яблуко |
-| Європа | High Cultural | жити в Європі, Західна Європа |
-| їжа | Core Daily | смачна їжа, домашня їжа |
-| день | Top 50 | добрий день, кожен день |
-| сім'я | Top 200 | моя сім'я, велика сім'я |
-| Львів | High Cultural | їхати до Львова, у Львові |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| чай (tea) | Top 500 word; uses Й. | пити чай, чорний чай |
+| яблуко (apple) | High frequency; key word for Я. | червоне яблуко |
+| день (day) | Top 50 word; perfect example of Ь. | добрий день |
+| сім'я (family) | High frequency; demonstrates apostrophe. | моя сім'я |
+| ще (more/still) | High frequency function word; Щ. | ще ні |
 
 ## Cultural Hooks
-1. **The Letter Ї (Їжа, Київ):** A unique letter in the Cyrillic script exclusive to Ukrainian. During the Russian occupation of Ukrainian territories, it became a symbol of resistance, drawn on walls and public spaces to signify Ukrainian identity.
-2. **Європа & Євромайдан:** The letter Є is strongly tied to Ukraine's European identity, exemplified by the term "Євромайдан" (Euromaidan), which catalyzed modern Ukrainian civic resistance.
-3. **Львів:** A cultural capital of Ukraine, useful for demonstrating the soft sign (Львів) and the palatalization it represents.
+1. The letter **Ї** is uniquely Ukrainian and became a powerful symbol of resistance, painted as graffiti in occupied territories.
+2. The letter **Ґ** (hard G) was repressed and removed from the alphabet in 1933 by Soviet authorities, only to be officially restored in 1990. 
 
 ## Common Learner Errors
-1. **Hard Ш vs. Soft Щ:** Learners often try to pronounce Щ as a harsh combination or confuse it with Ш. → *Correction: Explain Щ as a prolonged, soft, palatalized sound, pulling the tongue forward, while Ш is strictly hard with the tongue back.*
-2. **Iotated Vowel Softening vs. Dual Sounds:** Learners pronounce Я as /ja/ after a consonant (e.g., saying /mjaso/ without apostrophe logic). → *Correction: Reinforce the "dual nature" rule: Я/Ю/Є only represent two sounds at the beginning or after a vowel/apostrophe. After a consonant, they only provide a single vowel sound and soften the consonant.*
-3. **Ignoring the Soft Sign (Ь):** Treating Ь as silent rather than a modifier. → *Correction: Use contrast pairs to show it changes meaning and palatalizes the preceding consonant.*
+1. **Pronouncing Ь as a vowel** → It has no sound of its own; it only softens the preceding consonant (день is one syllable, not "de-ne").
+2. **Ignoring the apostrophe** → English speakers often soften the consonant before an iotated vowel instead of pausing. The apostrophe creates a hard break (сім'я is sim-ya, not si-mya).
+3. **Confusing Щ with Ш** → Щ is a double sound (ш + ч), while Ш is a single sound.
 
 ## Cross-References
-- Builds on: a1-03 (The Cyrillic Code III) - learners know 22 letters.
-- Prepares for: a1-05 (Syllables and Transfer) - reading fluency and word-building.
+- Builds on: a1-03 (The Cyrillic Code III)
+- Prepares for: a1-05 (Syllables and Word Division)
 
 ## Notes for Content Writing
-- **Decolonized Framing:** Describe Ukrainian phonetics as an independent, rich system. Frame Щ as "unique to Ukrainian." Highlight Ї as an independent symbol of identity. Do not use Russian as a baseline.
-- **Scaffolding:** Provide clear English explanations for the phonetic mechanics (palatalization, affricates, apostrophe blocking) before drilling with Ukrainian examples. A1 immersion targets 10-50%.
-- Ensure every letter is shown with clear examples, and IPA is used for the *first occurrence* of the new vocabulary words.
+- Remember the grammar ban: do not use verb conjugations or imperatives (no "look at", "read"). Use English for instructions.
+- Ensure all 33 letters are presented in order at the end of the module as a culminating milestone.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
+- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
+- [Talk Ukrainian: Ukrainian alphabet with pronunciation](https://talkukrainian.com/ukrainian-alphabet/) (talkukrainian)
+- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode200/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 2, Сторінка 128: 128
+ЗМІСТ
+Звуки і букви. Склад. Наголос. Звуко-буквений склад слів.................3
+Звуки і букви.....
+- Grade 3, Сторінка 142: 142
+ЗМІСТ
+Звуки і букви. Алфавіт. Наголос.................................................4
+Звуки і ...
+- Grade 5, Сторінка 4: . . . . . 133
+Звукове значення букв я, ю, є, ї та  щ. Звуки  [дж], [дз] . . . . . . . . . . 137
+Вимо...
+- Grade 3, Сторінка 4: 4
+ЗВУКИ І БУКВИ. АЛФАВІТ. НАГОЛОС
+1.	 Розгадай ребуси. Запиши слова-відповіді.
+1.	
+2.	 Прочитай.
+Ми ...
+- Grade 5, Сторінка 4: 4
+Зміст
+Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ....

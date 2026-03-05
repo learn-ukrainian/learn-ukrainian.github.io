@@ -8,7 +8,7 @@ subtitle: Level Completion
 focus: checkpoint
 pedagogy: TTT
 phase: A2.6 [Practical]
-word_target: 1500
+word_target: 2000
 objectives:
 - Learner can demonstrate A2 level proficiency
 - Learner can solve practical problems in Ukrainian
@@ -16,55 +16,68 @@ objectives:
 - Learner is ready for B1 level
 content_outline:
 - section: 'Вступ: Огляд іспиту (Overview / Огляд)'
-  words: 225
+  words: 300
   points:
-  - Exam format overview referencing the modern Ukrainian 12-point grading system (where 12 is A+) vs the legacy 5-point Soviet
-    scale still expected by some foreigners
-  - Introduction to the University ECTS 100-point scale context often used for final certifications
-  - 'Alignment with State Standard §3.7: demonstrate communicative competence in the ''learning'' domain, specifically actions
-    related to gaining knowledge (вчити, вивчати, вчитися)'
+  - Exam format overview referencing the modern Ukrainian 12-point grading system
+    (where 12 is A+) vs the legacy 5-point Soviet scale still expected by some foreigners
+  - Introduction to the University ECTS 100-point scale context often used for final
+    certifications
+  - 'Alignment with State Standard §3.7: demonstrate communicative competence in the
+    ''learning'' domain, specifically actions related to gaining knowledge (вчити,
+    вивчати, вчитися)'
 - section: 'Навичка 1: Майстерність відмінків (Case System Mastery)'
-  words: 325
+  words: 433
   points:
-  - 'Advanced review of case government focusing on exam-related verbs: ''відповідати на питання'' (verb + Accusative) vs
-    ''відповідати студенту/викладачу'' (verb + Dative)'
-  - 'Practice exercises addressing the common learner error: confusion between the noun phrase ''відповідь на питання'' (Acc)
-    and the verbal construction'
-  - Drills on correct case usage for 'готуватися до іспиту' (Genitive) and 'цікавитися результатом' (Instrumental)
+  - 'Advanced review of case government focusing on exam-related verbs: ''відповідати
+    на питання'' (verb + Accusative) vs ''відповідати студенту/викладачу'' (verb +
+    Dative)'
+  - 'Practice exercises addressing the common learner error: confusion between the
+    noun phrase ''відповідь на питання'' (Acc) and the verbal construction'
+  - Drills on correct case usage for 'готуватися до іспиту' (Genitive) and 'цікавитися
+    результатом' (Instrumental)
 - section: 'Навичка 2: Вид дієслова — Процес чи результат? (Verb Aspect)'
-  words: 350
+  words: 467
   points:
-  - 'Explicit contrast between process (процес) and result (результат): ''я складав іспит'' (I was taking/trying) vs ''я склав
-    іспит'' (I passed/completed)'
-  - 'Correction of the frequent learner error: defaulting to imperfective ''Я складав'' when a completed result like ''Я склав''
-    is required for successful certification'
-  - 'Sentence transformation drills: changing descriptions of study habits (imperfective) into exam results (perfective)'
+  - 'Explicit contrast between process (процес) and result (результат): ''я складав
+    іспит'' (I was taking/trying) vs ''я склав іспит'' (I passed/completed)'
+  - 'Correction of the frequent learner error: defaulting to imperfective ''Я складав''
+    when a completed result like ''Я склав'' is required for successful certification'
+  - 'Sentence transformation drills: changing descriptions of study habits (imperfective)
+    into exam results (perfective)'
 - section: 'Навичка 3: Навігація до екзаменаційного центру (Navigation)'
-  words: 275
+  words: 367
   points:
-  - 'Practical application: ''Finding your way to the exam center'', integrating navigation vocabulary (ліворуч, праворуч,
-    прямувати) with the academic theme'
-  - Simulated dialogue for arriving at the ZNO (Зовнішнє незалежне оцінювання) or NMT (Національний мультипредметний тест)
-    testing site
-  - Giving and following directions within a university campus or school building context
+  - 'Practical application: ''Finding your way to the exam center'', integrating navigation
+    vocabulary (ліворуч, праворуч, прямувати) with the academic theme'
+  - Simulated dialogue for arriving at the ZNO (Зовнішнє незалежне оцінювання) or
+    NMT (Національний мультипредметний тест) testing site
+  - Giving and following directions within a university campus or school building
+    context
 - section: 'Інтеграційне завдання: Культура іспитів (Integration Challenge)'
-  words: 325
+  words: 433
   points:
-  - Combined skills dialogue practising 'скласти іспит' (to pass/compose) as the preferred formal form; note that 'здати іспит'
-    is also widely attested in Ukrainian (GRAC corpus) and is not a Russicism per se, but 'скласти' is considered more stylistically
+  - Combined skills dialogue practising 'скласти іспит' (to pass/compose) as the preferred
+    formal form; note that 'здати іспит' is also widely attested in Ukrainian (GRAC
+    corpus) and is not a Russicism per se, but 'скласти' is considered more stylistically
     precise
-  - 'Cultural deep dive: The role of ZNO/NMT as a modern standard fighting corruption in the Ukrainian education system'
-  - 'Final simulation: Receiving results and discussing ''висока оцінка'' vs ''провалити іспит'' using appropriate register'
+  - 'Cultural deep dive: The role of ZNO/NMT as a modern standard fighting corruption
+    in the Ukrainian education system'
+  - 'Final simulation: Receiving results and discussing ''висока оцінка'' vs ''провалити
+    іспит'' using appropriate register'
 vocabulary_hints:
   required:
-  - 'іспит (exam) — collocations: скласти іспит (pass), провалити іспит (fail), готуватися до іспиту (prepare for); High frequency
-    academic/general'
-  - 'завдання (task) — collocations: тестове завдання, виконати завдання, складне завдання'
-  - 'відповідь (answer) — collocations: правильна відповідь, дати відповідь, шукати відповідь; note case government (на +
-    Acc)'
-  - 'результат (result) — collocations: гарний результат, отримати результат, чекати на результат; High frequency general'
-  - 'рівень (level) — collocations: рівень знань, підвищити рівень, досягти рівня; High frequency general'
-  - 'оцінка (grade) — collocations: висока оцінка, отримати оцінку, система оцінювання; Medium frequency education'
+  - 'іспит (exam) — collocations: скласти іспит (pass), провалити іспит (fail), готуватися
+    до іспиту (prepare for); High frequency academic/general'
+  - 'завдання (task) — collocations: тестове завдання, виконати завдання, складне
+    завдання'
+  - 'відповідь (answer) — collocations: правильна відповідь, дати відповідь, шукати
+    відповідь; note case government (на + Acc)'
+  - 'результат (result) — collocations: гарний результат, отримати результат, чекати
+    на результат; High frequency general'
+  - 'рівень (level) — collocations: рівень знань, підвищити рівень, досягти рівня;
+    High frequency general'
+  - 'оцінка (grade) — collocations: висока оцінка, отримати оцінку, система оцінювання;
+    Medium frequency education'
   - 'готовий (ready) — usage: бути готовим до випробувань'
   - 'успішно (successfully) — collocation: успішно скласти, успішно завершити'
   recommended:
@@ -72,7 +85,8 @@ vocabulary_hints:
   - 'навички (skills) — usage: мовні навички, практичні навички'
   - 'досягнення (achievement) — usage: вагомі досягнення в навчанні'
   - 'сертифікат (certificate) — usage: отримати сертифікат А2'
-  - складати/скласти (to pass/compose) — preferred formal form; also 'здавати/здати' is standard Ukrainian (GRAC-attested)
+  - складати/скласти (to pass/compose) — preferred formal form; also 'здавати/здати'
+    is standard Ukrainian (GRAC-attested)
 activity_hints:
 - type: quiz
   focus: Comprehensive A2 grammar test

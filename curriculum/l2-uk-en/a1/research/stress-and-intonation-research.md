@@ -1,38 +1,69 @@
 # Дослідження: Stress and Intonation
 
 ## State Standard Reference
-§4.1.5: "Наголос."
-§4.1.8: "Інтонація (розповідна, питальна, оклична)."
-Alignment: This module explicitly addresses the State Standard requirements for teaching free word stress (§4.1.5) and the three foundational intonation patterns (§4.1.8).
+§4.1.5: "Word stress" and §4.1.8: "Basic intonation patterns"
+Alignment: This module directly addresses the A1 requirement to understand and identify word stress, recognize its mobility, and apply basic intonation contours for statements, questions, and exclamations.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| замок | Mid frequency | зАмок (castle), замОк (lock) |
-| вода | Top 300 | холодна водА, пити водУ |
-| рука | Top 200 | правА рукА, рУки |
-| писати | Top 200 | писАти лист, я пишУ |
-| школа | Top 200 | у шкОлі, до шкОли |
-| молоко | Mid frequency | пити молокО |
-| добрий | Top 100 | дОбрий ранок, дОбрий день |
-| далеко | Top 300 | далекО від дому |
-| питання | Top 100 | задати питАння |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| зАмок / замОк | Minimal pair, functional load | — |
+| добрий | Top 100 word, first-syllable stress | добрий день |
+| рука | Top 200 word, mobile stress | — |
+| вода | Top 300 word, last-syllable stress | пити воду, холодна вода |
+| писати | Top 200 word, verb mobile stress | — |
 
 ## Cultural Hooks
-1. "зАмок" (castle) vs "замОк" (lock) and "мУка" (torment) vs "мукА" (flour) are classic Ukrainian pedagogical tools to demonstrate the functional load of stress.
-2. The Ukrainian language's high degree of free, mobile stress contributes directly to its renowned melodic and rhythmic qualities, often culturally celebrated in the phrase "солов'їна мова" (nightingale language).
+1. Minimal Pairs as a Rite of Passage: Distinguishing between a castle (зАмок) and a lock (замОк) is a classic rite of passage for learners, highlighting how the "music" of a word is just as important as its letters.
 
 ## Common Learner Errors
-1. Predicting stress based on spelling → Assuming identical word endings share stress patterns (e.g., mispronouncing кнИга based on водА).
-2. Ignoring stress mobility → Retaining the nominative singular stress in plural forms (e.g., saying рукИ instead of the correct рУки).
-3. Using English question intonation for Ukrainian yes/no questions → Ukrainian requires a sharp, sustained upward pitch at the end of yes/no questions without question words.
+1. Guessing stress from spelling → Memorizing stress with the word. English speakers often try to apply fixed rules (like stressing the first syllable) or guess based on word length. Ukrainian stress is free.
+2. Flat intonation on Yes/No questions → Rising pitch at the end. English uses auxiliary verbs ("Do you...") to mark questions, while Ukrainian often relies entirely on a sharp rise in intonation at the end of the sentence ("Це кафе?").
+3. Assuming fixed stress → Recognizing mobile stress. Learners are often surprised when stress shifts during declension (рукА → рУки), leading to mispronunciation of plural or conjugated forms.
 
 ## Cross-References
-- Builds on: a1-05 (Syllables and Transfer)
-- Prepares for: a1-07 (The Gender Code), a1-09 (Reflexive Verbs), a1-17 (Accusative Case)
+- Builds on: a1-05 (Syllables and Word Division)
+- Prepares for: a1-07 (The Gender Code)
 
 ## Notes for Content Writing
-- Module is A1.1: English scaffolding is REQUIRED for all grammatical and theoretical explanations (Immersion < 25%).
-- Always use the acute accent (´) for the first occurrence of vocabulary words.
-- Frame Ukrainian independently. Use Polish (penultimate) or French (final) for contrast, avoiding Russian baselines.
-- Maintain an encouraging "Safe Harbor" tone. Stress mobility is hard; frame it as something to observe now, not master immediately.
+- Rely heavily on English for the grammar explanations (this is an A1 module with 15-25% immersion target).
+- Use the acute accent (´) to mark stress in all Ukrainian examples in this module to train the learner's eye.
+- Emphasize that the goal right now is *awareness* of mobile stress, not memorizing all the rules for how it shifts (which will come later).
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Lessons Podcast Season 6](https://www.ukrainianlessons.com/episode211/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 1, Сторінка 24: 24
+ЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ
+Ти вимовляєш різні звуки: голосні і приголосні. 
+Голосні звуки утворю...
+- Grade 2, Сторінка 3: ЗВУКИ І БУКВИ
+к
+і
+<
+ЗВУКИ
+СКЛАД^
+У розділі ти будеш вивчати:
+БУКВИ
+НАГОЛОС
+Дізнаєшся про:
+к
+1
+г
+л
+І
+...
+- Grade 1, Сторінка 15: 13
+	 Вимов голосні звуки в словах — назвах предме-
+тів.   
+	 Вимов приголосні звуки в словах — назва...
+- Grade 6, Сторінка 215: 1. Форма вокально-музичного твору, яка інтонаційно 
+та ритмічно на­б­лижається до декламації; наспів...
+- Grade 5, Сторінка 246: 246
+557   Прочитайте епіграф до уроку. Чому інтонації приділяють таку 
+увагу?
+558   Прочитайте текст...

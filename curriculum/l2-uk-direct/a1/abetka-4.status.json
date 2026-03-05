@@ -2,9 +2,17 @@
   "module": "abetka-4",
   "track": "l2-uk-direct",
   "level": "a1",
-  "status": "draft",
+  "status": "validated",
   "images_sourced": 0,
   "images_total": 12,
   "last_updated": "2026-03-01",
-  "notes": "Module 4 — Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + apostrophe. Full alphabet. Pre-literacy activities only."
+  "notes": "Module 4 — Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + apostrophe. Full alphabet. Pre-literacy activities only.",
+  "phases": {
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-05T19:17:34Z",
+      "errors": 0,
+      "warnings": 0
+    }
+  }
 }

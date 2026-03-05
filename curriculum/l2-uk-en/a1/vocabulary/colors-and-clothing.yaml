@@ -1,61 +1,72 @@
 items:
-- lemma: носити
-  pos: verb
-- lemma: чорний
-  pos: adj
-- lemma: синій
-  pos: adj
-- lemma: вона
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: одягати
-  pos: verb
-- lemma: білий
-  pos: adj
-- lemma: колір
-  pos: noun
-- lemma: він
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: маяти
-  pos: verb
-- lemma: червоний
-  pos: adj
-- lemma: одяг
-  pos: noun
-- lemma: одягти
-  pos: verb
-- lemma: я
-  pos: noun
-- lemma: теплий
-  pos: adj
-- lemma: куртка
-  pos: noun
-- lemma: любити
-  pos: verb
-- lemma: ви
-  pos: noun
-- lemma: рід
-  pos: noun
-- lemma: синіти
-  pos: verb
-- lemma: син
-  pos: noun
-- lemma: синь
-  pos: noun
-- lemma: сірий
-  pos: adj
-- lemma: штани
-  pos: noun
-- lemma: розмір
-  pos: noun
-- lemma: це
-  pos: noun
+  - lemma: "білий"
+    translation: "white"
+    pos: "adjective"
+  - lemma: "чорний"
+    translation: "black"
+    pos: "adjective"
+  - lemma: "червоний"
+    translation: "red"
+    pos: "adjective"
+  - lemma: "синій"
+    translation: "blue"
+    pos: "adjective"
+  - lemma: "зелений"
+    translation: "green"
+    pos: "adjective"
+  - lemma: "жовтий"
+    translation: "yellow"
+    pos: "adjective"
+  - lemma: "сорочка"
+    translation: "shirt"
+    pos: "noun"
+    gender: "f"
+  - lemma: "штани"
+    translation: "pants"
+    pos: "noun"
+    notes: "always plural"
+  - lemma: "сукня"
+    translation: "dress"
+    pos: "noun"
+    gender: "f"
+  - lemma: "носити"
+    translation: "to wear"
+    pos: "verb"
+  - lemma: "плаття"
+    translation: "dress"
+    pos: "noun"
+    gender: "n"
+    notes: "everyday term"
+  - lemma: "куртка"
+    translation: "jacket"
+    pos: "noun"
+    gender: "f"
+  - lemma: "светр"
+    translation: "sweater"
+    pos: "noun"
+    gender: "m"
+  - lemma: "окуляри"
+    translation: "glasses"
+    pos: "noun"
+    notes: "always plural"
+  - lemma: "джинси"
+    translation: "jeans"
+    pos: "noun"
+    notes: "always plural"
+  - lemma: "одягати"
+    translation: "to put on"
+    pos: "verb"
+  - lemma: "колір"
+    translation: "color"
+    pos: "noun"
+    gender: "m"
+  - lemma: "магазин"
+    translation: "store"
+    pos: "noun"
+    gender: "m"
+  - lemma: "новий"
+    translation: "new"
+    pos: "adjective"
+  - lemma: "коштувати"
+    translation: "to cost"
+    pos: "verb"

@@ -2,48 +2,44 @@ slug: checkpoint-first-contact
 title: 'Checkpoint: First Contact'
 word_target: 1200
 content_outline:
-- section: Огляд
+- section: Огляд (Overview)
+  slug: overview
   words: 200
   points:
-  - Explicit English scaffolding paragraph explaining that this is a Checkpoint module
-    for A1.1 skills
-  - Welcoming message from the 'Friendly Hostel Host' persona, outlining the Test-Teach-Test
-    approach
-  - 'Brief summary of the skills to be tested: Cyrillic reading, gender, verbs, questions'
-- section: 'Навичка 1: Читання та рід'
-  words: 500
-  points:
-  - H3 for Cyrillic reading check, focusing on reading words without transliteration.
-    Explicitly address 'И' vs 'І' using English pronunciation equivalents (bit vs
-    bee)
-  - H3 for Noun Gender. Provide a clear table of the 3 genders (-а/-я, consonant,
-    -о/-е)
-  - Explicit rule and examples for exceptions like 'тато' (masculine despite -o ending),
-    framing it positively
-  - Short practice sentences identifying the gender of items found in a hostel room
-- section: 'Навичка 2: Дієслова та питання'
-  words: 600
-  points:
-  - H3 for Present Tense Conjugation. Contrast Class I (читати, писати) and Class
-    II (говорити) with clear conjugation tables
-  - Specific focus on the 'вони' forms (-уть/-ють vs -ать/-ять) to prevent mixing
-    errors
-  - H3 for Question Formation. List the core question words (Хто, Що, Де, Куди) with
-    example Q&A pairs
-  - Explain basic negation with 'не' placed before the verb
-- section: 'Культурний контекст: Кафе'
-  words: 400
-  points:
-  - H3 detailing Lviv's coffee culture, introducing Yuriy Kulchytsky and the Vienna
-    connection, emphasizing Ukraine's European heritage
-  - 'H3 on cafe etiquette: introduce the mandatory phrase ''Смачного!'' and polite
-    requests like ''Дайте, будь ласка'' and ''Можна рахунок?'''
-  - 'Vocabulary mini-table for cafe essentials: кава, чорна кава, рахунок'
-- section: Інтеграційне завдання
+  - Welcome message from the 'Friendly Hostel Host' explaining the checkpoint purpose.
+  - Test-Teach-Test (TTT) approach to review alphabet, gender, adjectives, plurals,
+    and basic questions.
+  - Explicit English scaffolding explaining that instructions are in English to ensure
+    clear understanding.
+- section: 'Навичка 1: Читання та Рід (Skill 1: Reading and Gender)'
+  slug: skill-1-reading-and-gender
   words: 300
   points:
-  - H3 presenting a comprehensive role-play dialogue 'У кафе' that incorporates reading
-    a menu, determining noun gender for orders, and conjugating verbs
-  - Provide a self-assessment checklist for the learner (Can I read the menu? Can
-    I ask basic questions?)
-  - Provide clear transition guidance acknowledging their readiness for A1.2
+  - Cyrillic reading check without transliteration, explicitly distinguishing И vs
+    І (bit vs bee).
+  - 'Noun gender review: standard endings (-а/-я, consonant, -о/-е).'
+  - 'Exceptions rule: highlighting ''тато'' as masculine despite the -о ending.'
+- section: 'Навичка 2: Прикметники, Множина та Питання (Skill 2: Adjectives, Plurals
+    and Questions)'
+  slug: skill-2-adjectives-plurals-and-questions
+  words: 350
+  points:
+  - Reviewing plural noun formation and adjective-noun agreement from M11-M13 using
+    simple 'Це...' structures.
+  - 'Basic question formation: Хто це?, Що це?, Де кафе?.'
+  - Using 'так/ні' and simple negation with 'не' (e.g., Ні, це не велике місто).
+- section: 'Культурний контекст: Кафе (Cultural Context: Cafe)'
+  slug: cultural-context-cafe
+  words: 200
+  points:
+  - 'Lviv coffee culture hook: Yuriy Kulchytsky and the Vienna connection.'
+  - Basic cafe vocabulary (кава, чорна кава, рахунок) applied in nominal sentences.
+  - 'Dining etiquette phrase: ''Смачного!'' (Bon appetit).'
+- section: Підсумок (Summary)
+  slug: summary
+  words: 150
+  points:
+  - 3-4 self-check questions assessing readiness (Can I read Cyrillic fluently? Can
+    I match adjectives to nouns?).
+  - Transition guidance acknowledging readiness for M15, where verb conjugation will
+    begin.

@@ -3,54 +3,45 @@ title: Questions & Negation
 word_target: 1200
 content_outline:
 - section: 'Вступ: Основи заперечення та інтонації'
-  words: 300
+  slug: vtsup-osnovy-zaperetchennia
+  words: 250
   points:
-  - 'Note English scaffolding requirement: Use English to explicitly explain the absence
-    of ''do/does'' auxiliary verbs (The ''Do Trap'').'
-  - 'Emphasize the elegant simplicity of Ukrainian syntax: turning a statement into
-    a question requires only intonation or the particle ''чи''.'
-  - Introduce the critical distinction between «ні» (the standalone answer 'No') and
-    «не» (the particle 'not' placed directly before verbs), using contrasting examples.
-  - Use visual pitch arrows (↗ vs ↘) to introduce the concept of rising intonation
-    for questions versus falling tone for negative statements.
+  - 'Explicitly address the ''Do Trap'' using English scaffolding: explain that Ukrainian
+    has no ''do/does'' helper verbs for questions or negation.'
+  - Introduce the critical difference between «ні» (the standalone answer 'No') and
+    «не» (the particle 'not', placed directly before the verb).
+  - Use visual pitch arrows (↗ vs ↘) to illustrate rising intonation for questions
+    versus the falling tone of negative statements.
 - section: 'Презентація: Питальні конструкції'
-  words: 700
+  slug: prezentatsiia-pytalni-konstruktsii
+  words: 450
   points:
-  - 'Create an H3 for ''Yes/No Questions with Чи'': Demonstrate how ''чи'' functions
-    as a polite, standard question marker (e.g., «Чи ви розумієте?»).'
-  - 'Create an H3 for ''Intonation-Only Questions'': Show how to form casual questions
-    by dropping ''чи'' and applying a sharp pitch rise (↗) on the focus word.'
-  - 'Create an H3 for ''Question Words'': Introduce the core State Standard §4.3.1
-    set (що, хто, де, коли, куди, звідки) with basic example sentences.'
-  - Include a 'Street Sound' callout explaining the standard «що» versus the spoken
-    «шо».
-  - 'Provide the standard answering frameworks: confirming with «Так» and denying
-    with «Ні, я не...».'
+  - 'Create an H3 ''Intonation-Only Questions'': Show how to form casual questions
+    purely by applying a sharp pitch rise (↗) on the focus word.'
+  - 'Create an H3 ''Yes/No Questions with Чи'': Teach the particle «чи» as the polite/formal
+    standard question marker (e.g., Чи ви розумієте?).'
+  - 'Create an H3 ''Question Words'': Introduce the core State Standard set (що, хто,
+    де, коли) with basic present tense examples.'
+  - Include a 'Street Sound' callout explaining the standard «що» versus the ubiquitous
+    spoken variant «шо».
 - section: 'Практика: Тренування заперечень та запитань'
-  words: 400
+  slug: praktyka-trenuvannia
+  words: 300
   points:
   - 'Present a clear transformation paradigm: Positive Statement -> Negative Statement
     -> Question with Чи -> Intonation Question (e.g., Ти знаєш -> Ти не знаєш -> Чи
     ти знаєш? -> Ти знаєш?).'
-  - Include an 'Error Correction' sub-section targeting English-transfer mistakes
-    (e.g., using 'робити' for 'do').
-  - Provide matching examples that pair specific question words (хто vs що, де vs
-    куди) with logical situational answers.
-- section: 'Продукція: Комунікативні сценарії'
-  words: 400
-  points:
-  - Draft a 'Cafe Scenario' mini-dialogue focusing on «де», «чи є», and «скільки»
-    (e.g., asking for the menu, checking if there is sugar).
-  - 'Introduce the ''Investigative Journalist'' persona framing: encourage learners
-    to ask simple facts using «хто» and «що».'
-  - Incorporate basic frequency adverbs (завжди, часто, ніколи) into negative statements
-    (e.g., «Ні, я ніколи не...»).
-- section: Культурний контекст та ALF
+  - Draft a 'Cafe Scenario' mini-dialogue focusing on «де», «чи є», and «що» to bridge
+    towards M41.
+  - Incorporate basic frequency adverbs (завжди, ніколи) into negative statements,
+    emphasizing the double negation pattern (e.g., Я ніколи не...).
+- section: 'Підсумок: Культурний контекст та перевірка'
+  slug: pidsumok-kulturnyi-kontekst
   words: 200
   points:
-  - 'Explain register nuances: when it is appropriate to use the formal «чи» (with
-    strangers, in formal settings) versus intonation-only questions (with friends
-    and family).'
-  - 'Highlight the iconic ALF quote: «Ти не любиш котів? Ти просто не вмієш їх готувати!»
-    to demonstrate rhetorical negation, intonation, and a piece of beloved Ukrainian
-    pop culture.'
+  - 'Explain register nuances: when to use formal «чи» (strangers, business) vs casual
+    intonation (friends, family).'
+  - Highlight the iconic ALF quote («Ти не любиш котів? Ти просто не вмієш їх готувати!»)
+    as a memorable example of negation.
+  - Include 3-4 self-check questions to verify understanding of 'ні' vs 'не', the
+    absence of 'do', and basic question formation.

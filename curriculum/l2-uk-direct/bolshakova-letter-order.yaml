@@ -1,0 +1,121 @@
+# Bolshakova 2018 Bukvar - Letter Introduction Order
+# Source: RAG search of "1-klas-bukvar-bolshakova-2018-1" chunks
+# Verified: 2026-03-05 against all 33 letter pages
+#
+# This is the AUTHORITATIVE letter sequence for l2-uk-direct abetka modules.
+# Do NOT change without re-verifying against the textbook.
+
+source: "Bolshakova I.O., Prystinska M.S. Ukrainska mova. Bukvar. 1 klas. 2018."
+
+sequence:
+  # abetka-1: pp.12-22 (7 letters)
+  - letter: А
+    page: 12
+    module: abetka-1
+  - letter: О
+    page: 13
+    module: abetka-1
+  - letter: М
+    page: 14
+    module: abetka-1
+  - letter: Л
+    page: 16
+    module: abetka-1
+  - letter: У
+    page: 18
+    module: abetka-1
+  - letter: Н
+    page: 20
+    module: abetka-1
+  - letter: С
+    page: 22
+    module: abetka-1
+
+  # abetka-2: pp.26-40 (7 letters)
+  - letter: К
+    page: 26
+    module: abetka-2
+  - letter: И
+    page: 30
+    module: abetka-2
+  - letter: Р
+    page: 32
+    module: abetka-2
+  - letter: Б
+    page: 34
+    module: abetka-2
+  - letter: В
+    page: 36
+    module: abetka-2
+  - letter: Д
+    page: 38
+    module: abetka-2
+  - letter: І
+    page: 40
+    module: abetka-2
+
+  # abetka-3: pp.42-58 (9 letters)
+  - letter: П
+    page: 42
+    module: abetka-3
+  - letter: Т
+    page: 44
+    module: abetka-3
+  - letter: Г
+    page: 46
+    module: abetka-3
+  - letter: Ґ
+    page: 48
+    module: abetka-3
+  - letter: Е
+    page: 50
+    module: abetka-3
+  - letter: З
+    page: 52
+    module: abetka-3
+  - letter: Ж
+    page: 54
+    module: abetka-3
+  - letter: Ш
+    page: 56
+    module: abetka-3
+  - letter: Х
+    page: 58
+    module: abetka-3
+
+  # abetka-4: pp.60-76 (10 letters + apostrophe in Part 2 p.22)
+  - letter: Й
+    page: 60
+    module: abetka-4
+  - letter: Ч
+    page: 62
+    module: abetka-4
+  - letter: Щ
+    page: 64
+    module: abetka-4
+  - letter: Я
+    page: 66
+    module: abetka-4
+  - letter: Ю
+    page: 68
+    module: abetka-4
+  - letter: Є
+    page: 70
+    module: abetka-4
+  - letter: Ь
+    page: 72
+    module: abetka-4
+  - letter: Ї
+    page: 73
+    module: abetka-4
+  - letter: Ц
+    page: 74
+    module: abetka-4
+  - letter: Ф
+    page: 76
+    module: abetka-4
+
+apostrophe:
+  page: 22
+  part: 2
+  module: abetka-4

@@ -1,35 +1,44 @@
-# Дослідження: Checkpoint: First Contact
+## Research Notes
 
-## State Standard Reference
-§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-§4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю...)"
-§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... стверджувальні й заперечні речення"
-Alignment: This module directly addresses A1 requirements by consolidating foundational phonology (Cyrillic alphabet), morphology (noun gender classification, present tense verb conjugation), and syntax (basic questions and negation) into a single checkpoint.
+**1. Textbook approach:** Beginner Ukrainian textbooks typically consolidate the first few weeks of learning—focusing on the Cyrillic alphabet, phonetics, noun gender, and plural formation—before introducing verb conjugation. They rely heavily on simple nominal structures like "Це [прикметник] [іменник]" and basic questions ("Хто це?", "Що це?", "Де?") to build confidence without overwhelming the student with complex grammar.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| читати | High | читати меню, читати текст |
-| писати | High | писати вправу, писати ручкою |
-| говорити | High | говорити українською |
-| хто, що, де | Essential Q&A | Хто це? Що це? Де кафе? |
-| кава | Frequent | чорна кава, кава з молоком |
+**2. Common errors:** 
+- **Gender matching:** English speakers frequently forget to change adjective endings to match the noun's gender or plural form (e.g., using the masculine dictionary form 'новий' for everything).
+- **Transliteration reliance:** Over-relying on English transliteration instead of building automaticity with Cyrillic characters, especially confusing similar vowels like "И" and "І".
+- **False neuters:** Assuming all nouns ending in "-о" are neuter, leading to errors with masculine exceptions like "тато".
 
-## Cultural Hooks
-1. Lviv has a deep historical coffee culture. Yuriy Kulchytsky, a Ukrainian born near Lviv, is widely credited with opening one of Vienna's first coffeehouses ("Under the Blue Bottle" in 1683), organically connecting Ukraine to European dining traditions.
-2. "Смачного!" (Bon appetit) is an essential cultural phrase in Ukraine, demonstrating fundamental hospitality and respect at any meal.
+**3. Cultural hook:** Lviv's historical coffee culture, tracing back to Yuriy Kulchytsky and his 1683 Vienna coffeehouse, serves as a perfect cultural anchor. "Кава" is a recognizable beginner word, and the cafe setting provides a natural context for simple "Це..." vocabulary checks and the introduction of dining etiquette like "Смачного!".
 
-## Common Learner Errors
-1. Confusing letters 'И' /ɪ/ and 'І' /i/ in pronunciation. → Practice minimal pairs. Remind learners that Ukrainian 'И' is closer to the English 'i' in "bit", not the harsh Russian "Ы".
-2. Classifying 'тато' (dad) as neuter because it ends in '-о'. → Emphasize that semantic gender (meaning a person) always overrides the grammatical ending.
-3. Mixing up 3rd person plural endings: '-уть/-ють' (Class I) vs '-ать/-ять' (Class II). → Group verbs strictly by class during drills to reinforce correct patterns.
+**4. Cross-references:** This checkpoint builds directly on M01-M10 (alphabet, phonetics, gender) and M11-M13 (adjective agreement, colors, plurals). It establishes the necessary nominal foundation before progressing to verb conjugation (M15) and cases beyond the nominative (M25).
 
-## Cross-References
-- Builds on: a1-01 to a1-13 (Alphabet, genders, pronouns, basic verbs)
-- Prepares for: a1-25 (The Accusative I) and the rest of A1.2
+## Resource Discovery
 
-## Notes for Content Writing
-- Persona: Friendly Hostel Host. Frame the checkpoint as a supportive check-in.
-- Bridge module: Provide clear English scaffolding (Immersion < 50%) since learners are still at A1.1.
-- Decolonized framing: Treat the Ukrainian alphabet as an independent system. Highlight uniquely Ukrainian letters ('Ґ', 'Є', 'І', 'Ї') positively.
+
+### Blog Articles
+- [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
+- [Are you going to the party? — First verb conjugation in Ukrainian](https://www.ukrainianlessons.com/episode22/) (ukrainianlessons.com)
+- [Ukrainian History — Brief Overview](https://www.ukrainianlessons.com/ukrainian-history/) (ukrainianlessons.com)
+- [How to explain that you don’t speak Ukrainian very well (yet)](https://www.ukrainianlessons.com/fmu1/) (ukrainianlessons.com)
+- [How to exchange money in Ukrainian](https://www.ukrainianlessons.com/fmu8/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 3, Сторінка 2: Здобуваємо інформацію 
+з різних джерел.
+Роз’єднай слова і прочитай.
+Читаємо правильно.
+Досліджуємо т...
+- Grade 4, Сторінка 51: 140.1. Прочитай слова.
+Голка, гілка, подруга, сніжинка, усмішка, ложка, берег, Ма­
+рійка, бібліотека...
+- Grade 2, Сторінка 128: 112
+Спостереження за основними ознаками тексту................................. 112
+Типи текстів.......
+- Grade 5, Сторінка 20: 20
+Вступ. Українська мова в житті українців.  Види інформації.  Робота з підручником
+Вправа 16
+1.	 К...
+- Grade 9, Сторінка 10: Розвиток МОВЛЕННЯ
+4
+ВИДИ МОВЛЕННЄВОЇ ДІЯЛЬНОСТІ. 
+НАВЧАЛЬНЕ ЧИТАННЯ МОВЧКИ
+1. Пригадайте, які види м...

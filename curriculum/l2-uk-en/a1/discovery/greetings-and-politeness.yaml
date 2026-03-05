@@ -1,0 +1,171 @@
+discovered_at: '2026-03-05T20:37:48.491168+00:00'
+query_keywords:
+- Greetings and Politeness
+- Вітання
+- Greetings
+- Ти і Ви
+- T-V distinction
+- Ввічливість
+- Politeness
+- Знайомство
+- Introductions
+- Діалоги
+- Dialogues
+- Greet people appropriately by time of day
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode63/
+  title: Ukrainian Holiday Greetings
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - instrumental
+  - culture
+  - holidays
+  - phrases
+  - greetings
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 63
+- url: https://talkukrainian.com/greetings/
+  title: 'Talk Ukrainian: Greetings in Ukrainian'
+  source: talkukrainian
+  relevance_score: 0.8999999999999999
+  topics:
+  - greetings
+  - hello
+  - привіт
+  - introductions
+- url: https://www.ukrainianlessons.com/episode1/
+  title: Informal Greetings in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - phrases
+  - greetings
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 1
+- url: https://www.ukrainianlessons.com/episode2/
+  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - pronouns
+  - phrases
+  - greetings
+  - goodbyes
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 2
+- url: https://www.ukrainianlessons.com/episode111/
+  title: Birthday presents + Imperative mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - phrases
+  - greetings
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 111
+rag_chunks:
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0009
+  text: 'уживає такі слова: не переймайтеся, не хвилюйтеся, про0
+
+    шу, усе нормально.
+
+    Уміння чемно відмовитися чи погодитися — теж мис6
+
+    тецтво спілкування. Невміння делікатно відмовитися мо6
+
+    же образити людину. У ситуації відмови користуються
+
+    висловами: дякую, але я сьогодні маю інші справи; спа0
+
+    сибі, але наступним разом; вибачте, але я, на жаль,
+
+    не зможу. Якщо ж погоджуємося з чимось, то викорис6
+
+    товуємо такі вислови: я із задоволенням приймаю Вашу
+
+    пропозицію; щиро дякую; мені приємно, що я теж можу
+
+    бути'
+  section_title: Сторінка 10
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0175
+  text: "Довідка: доброзичливо, щиро, обов’язково, зацікав­\nлено, шанобливо, мало,\
+    \ тактовно, привітно, небагато, \nприязно, спокійно, уважно, увічливо, удумливо,\
+    \ виразно, \nделікатно.\n•  Порівняйте тексти вправ 400 і 401. Які прислівники\
+    \ вжива­\nються в науково-популярному тексті?\n402. Складіть і запишіть поради\
+    \ «Як зустрічати гостей», викорис- \nтовуючи (на вибір) подані словосполучення\
+    \ з прислівниками.\nЗустрічати радісно й привітно, весело й доброзичли­\nво, холодно\
+    \ й неприязно. Говорити чітко та ясно, вира"
+  section_title: Сторінка 176
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0136
+  text: "НАВЧАЮСЯ СТВОРЮВАТИ ВИСЛОВЛЮВАННЯ НА ВІДОМУ ТЕМУ\nІййіД[2і| Прочитайте текст\
+    \ про чемність \nу спілкуванні між людьми.\nЧемна людина завжди вітається \nі\
+    \ прощається, ввічливо відповідає на \nпривітання. З такою людиною при­\nємно\
+    \ спілкуватися, бо вона ніколи \nне образить і не принизить. Чемність \nвиявляється\
+    \ не тільки у словах, а й у \nжестах, у виразі очей. Тому в чемної \nлюдини завжди\
+    \ багато друзів.\nстворюю \nзаписую\n£ Яку людину\n•“\nназивають\nчЄмною? г\n\
+    • Доведіть, що ви — чемні діти. Назвіть слова ввіч"
+  section_title: Сторінка 138
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0285
+  text: "Етикетні жанри: привітання, вибачення \x1F\n199\nЕтикетні жанри: привітання,\
+    \ вибачення\n368. Прочитайте. Зміст якого з  афоризмів видається вам найактуальнішим?\
+    \ Відповідь обґрунтуйте. 1. Ввічливість — це доброзичливе ставлення до людей (Ж.-Ж.\
+    \ Руссо). 2. Чемність — це штучно створюваний гарний настрій (Т. Джефферсон).\
+    \ 3. Ввічливість є символічно умовним вираженням пошани до будь-якої лю-\nдини\
+    \ (М. Бердяєв). 4. Ввічливість — це властивість не помічати, що воро-\nта поламані,\
+    \ але звертати увагу на квіти у "
+  section_title: Сторінка 199
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0031
+  text: "V\nНайвища наука в ж итті -  \nМудрість, а найвища \nмудрість  \n-  бути\
+    \ добрим.\nГригір Тютюнник\nСинтаксис. Пунктуація. Елементи стилістики\nСКЛАДНЕ\
+    \ РЕЧЕННЯ. \nСКЛАДНОСУРЯДНЕ РЕЧЕННЯ"
+  section_title: Сторінка 28
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

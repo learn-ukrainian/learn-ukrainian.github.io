@@ -1,61 +1,77 @@
 items:
-- lemma: ми
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: де
-  pos: adv
-- lemma: вони
-  pos: noun
-- lemma: він
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: цей
-  pos: adj
-- lemma: мій
-  pos: adj
-- lemma: стіл
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: кімната
-  pos: noun
-- lemma: парк
-  pos: noun
-- lemma: вулиця
-  pos: noun
-- lemma: жити
-  pos: verb
-- lemma: зараз
-  pos: adv
-- lemma: зараза
-  pos: noun
-- lemma: книга
-  pos: noun
-- lemma: аптека
-  pos: noun
-- lemma: банк
-  pos: noun
-- lemma: підлога
-  pos: noun
-- lemma: парка
-  pos: noun
-- lemma: паркий
-  pos: adj
-- lemma: робот
-  pos: noun
-- lemma: робота
-  pos: noun
-- lemma: працювати
-  pos: verb
-- lemma: приголосний
-  pos: adj
-- lemma: там
-  pos: adv
-- lemma: той
-  pos: adj
-- lemma: банка
-  pos: noun
+  - lemma: "де"
+    translation: "where"
+    pos: "adverb"
+  - lemma: "в"
+    translation: "in (container)"
+    pos: "preposition"
+  - lemma: "у"
+    translation: "in (euphony variant)"
+    pos: "preposition"
+  - lemma: "на"
+    translation: "on / at (surface/activity)"
+    pos: "preposition"
+  - lemma: "кімната"
+    translation: "room"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стіл"
+    translation: "table"
+    pos: "noun"
+    gender: "m"
+  - lemma: "магазин"
+    translation: "store"
+    pos: "noun"
+    gender: "m"
+  - lemma: "школа"
+    translation: "school"
+    pos: "noun"
+    gender: "f"
+  - lemma: "робота"
+    translation: "work"
+    pos: "noun"
+    gender: "f"
+  - lemma: "банк"
+    translation: "bank"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вокзал"
+    translation: "train station"
+    pos: "noun"
+    gender: "m"
+  - lemma: "підлога"
+    translation: "floor"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стіна"
+    translation: "wall"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вулиця"
+    translation: "street"
+    pos: "noun"
+    gender: "f"
+  - lemma: "парк"
+    translation: "park"
+    pos: "noun"
+    gender: "m"
+  - lemma: "туалет"
+    translation: "toilet"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рука"
+    translation: "hand / arm"
+    pos: "noun"
+    gender: "f"
+  - lemma: "нога"
+    translation: "leg / foot"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вухо"
+    translation: "ear"
+    pos: "noun"
+    gender: "n"
+  - lemma: "місто"
+    translation: "city"
+    pos: "noun"
+    gender: "n"

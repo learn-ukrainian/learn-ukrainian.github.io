@@ -1,540 +1,141 @@
 <!-- SCOPE
-Covers: Numbers 0-100, currency (hryvnia), asking for prices, basic math, 1-2-5 rule.
+Covers: Numbers 0-100, basic prices, handling currency, the 1-2-5 rule for nouns
 Not covered:
-  - Ordinal numbers (first, second) → a1-23
-Related: a1-32, a1-18, a1-23
+  - Telling time → a1-23
+  - Food shopping specifics → a1-39
 -->
 
 # Numbers & Money
 
 > **Чому це важливо?**
 >
-> Уявіть базар або кав'ярню. Ви хочете купити каву чи свіжий хліб. Знання чисел і грошей — це незалежність кожного дня.
+> Числа дають свободу в новому місці. Ми можемо запитати ціну або зрозуміти розклад руху автобусів. Розуміння грошей робить кожну покупку простою та приємною.
 
-## Вступ
+## Вступ: Навіщо потрібні числа та гроші?
 
-Вітаємо на практичному уроці. Сьогодні ми відкриваємо нову тему. У цьому модулі ви навчитеся рахувати до ста. Ви будете користуватися гривнею. Ви зможете купувати речі. Числа — це необхідний інструмент.
-(Welcome to a practical lesson. Today we open a new topic. In this module, you will learn to count from zero to one hundred, use Ukrainian currency, and buy things. Numbers are an essential tool.)
+Ми щодня використовуємо числа: на вулиці, в магазині, у транспорті. Ви купуєте каву за п'ятдесят гривень або шукаєте потрібний автобус. Числа дають свободу. Ми можемо запитати ціну. Ми розуміємо розклад руху. Українські числа дуже логічні, тому вивчати їх легко і цікаво.
 
-Уявіть типовий ранок. Ви купуєте каву.
-(Imagine a typical morning. You buy coffee.)
-Касир каже: «П'ятдесят гривень, будь ласка».
-(The cashier says: "Fifty hryvnias, please.")
-Ви даєте гроші. Ви маєте свою каву.
-(You give the money. You have your coffee.)
+— Добри́день! Скі́льки кошту́є ця ка́ва?
+— Добри́день! Ка́ва кошту́є п'ятдеся́т гри́вень.
+— Дя́кую!
 
-Numbers are essential for reading prices in a supermarket. They help you catch the right bus, like bus number fifteen. Sharing your phone number with a new friend also requires them. This module gives you those tools.
+Numbers are an essential part of our daily lives. We see them absolutely everywhere, from street signs to price tags in the supermarket. Imagine you want to buy a coffee, find the right bus route, or pay for a ticket. Without numbers, these simple tasks become very difficult. Learning numbers gives you independence in a new country. You can confidently ask for the price of bread or milk. You can understand when the next train arrives.
 
-Ми вивчаємо лексику для магазину.
-(We study vocabulary for the shop.)
-Ви побачите слова для ціни й оплати.
-(You will see words for price and payment.)
-Ми також подивимося на історію української гривні.
-(We will also look at the history of the Ukrainian hryvnia.)
+Learning to count from zero to one hundred might sound like a lot of work, but Ukrainian numbers follow clear and logical patterns. Once you understand the basic building blocks, the rest is just putting the pieces together. We also explore how to use money. Handling currency is the most practical way to practice numbers. You will comfortably manage basic shopping transactions. You will know exactly how to ask for prices and understand the answers.
 
-> [!tip]
-> Numbers require muscle memory. You might understand the logic instantly, but recognizing numbers by ear takes practice. Say the numbers out loud as you read this lesson.
-
-Давайте прочитаємо короткий діалог.
-(Let's read a short dialogue.)
-
-**На базарі:**
-— Доброго дня! Скі́льки ко́штує цей хліб?
-(Good day! How much does this bread cost?)
-— Доброго дня! Двадцять п'ять гривень.
-(Good day! Twenty-five hryvnias.)
-— Це до́рого?
-(Is this expensive?)
-— Ні, це де́шево.
-(No, this is cheap.)
-— Добре, я купую. У вас є ре́шта зі ста гривень?
-(Good, I am buying. Do you have change from one hundred hryvnias?)
-— Так, звичайно.
-(Yes, of course.)
-
-Цей діалог показує наші головні слова.
-(This dialogue shows our main words.)
-Ви бачите числа «двадцять п'ять» і «ста». Ви бачите питання про ціну та решту.
-(You see questions about price and change.)
-
-## Презентація
-
-### Числа від нуля до десяти
-
-Фундамент математики починається від нуля до десяти.
-(The foundation of math starts from zero to ten.)
-Ви знаєте ці слова. Будувати великі числа дуже просто.
-(If you know these words, building large numbers is very simple.)
-
-**Основні числа:**
-*   0 — нуль
-*   1 — оди́н
-*   2 — два
-*   3 — три
-*   4 — чоти́ри
-*   5 — п'ять
-*   6 — шість
-*   7 — сім
-*   8 — ві́сім
-*   9 — де́в'ять
-*   10 — де́сять
-
-Я маю один квиток.
-(I have one ticket.)
-Ми чекаємо три хвилини.
-(We wait three minutes.)
-
-Він рахує: один, два, три.
-(He counts: one, two, three.)
-
-Notice the pronunciation challenges here. The number five, **п'ять**, contains an apostrophe. This apostrophe is not decorative. It represents a hard pause. You must articulate the hard consonant, stop the air flow slightly, and then pronounce the vowel.
-
-> [!warning]
-> Do not soften the consonant before the apostrophe in «п'ять» or «дев'ять». The apostrophe demands a clear separation. Practice saying the consonant, stopping the air, and then releasing the vowel.
-
-Слова **шість**, **вісім**, **дев'ять** і **десять** мають м'який звук.
-(The words six, eight, nine, and ten have a soft sound.)
-Ви вимовляєте їх м'яко.
-(You pronounce them softly.)
-
-### Числа від одинадцяти до дев'ятнадцяти
-
-Тепер ми вчимо числа від одинадцяти до дев'ятнадцяти.
-(Now we learn numbers from eleven to nineteen.)
-Ці числа довгі, але вони мають логіку.
-(These numbers are long, but they have logic.)
-Суфікс **-надцять** означає «на десять».
-(The suffix means "on ten".)
-
-The formation rule is straightforward. You take the base number, drop the final soft sign if it has one, and add **-надцять**.
-
-**Числа 11–19:**
-*   11 — одина́дцять
-*   12 — двана́дцять
-*   13 — трина́дцять
-*   14 — чотирна́дцять
-*   15 — п'ятна́дцять
-*   16 — шістна́дцять
-*   17 — сімна́дцять
-*   18 — вісімна́дцять
-*   19 — дев'ятна́дцять
-
-> [!fact]
-> In ancient times, people counted using physical objects. When they put «один» (one) on top of a pile of «десять» (ten), they got «один на десять». Over centuries, this fused into the single word «одинадцять».
-
-Важливий момент — це наголос.
-(An important point is the stress.)
-Слово «одинадцять» має наголос на «а».
-(The word "eleven" has stress on "a".)
-Всі ці числа мають наголос на «-надцять».
-(All these numbers have stress on "-надцять".)
-
-Я купую дванадцять яблук.
-(I buy twelve apples.)
-Квиток коштує п'ятнадцять гривень.
-(The ticket costs fifteen hryvnias.)
-
-### Десятки від двадцяти до ста
-
-Далі ми формуємо десятки.
-(Next we form the tens.)
-Ми комбінуємо базове число і слово десять.
-(We combine the base number and the word ten.)
-
-Для двадцять і тридцять ми використовуємо суфікс **-дцять**:
-*   20 — два́дцять
-*   30 — три́дцять
-
-Для п'ятдесят, шістдесят, сімдесят і вісімдесят ми використовуємо суфікс **-десят**:
-*   50 — п'ятдеся́т
-*   60 — шістдеся́т
-*   70 — сімдеся́т
-*   80 — вісімдеся́т
-
-Існують також спеціальні слова: сорок, дев'яносто і сто.
-(There are also special words: forty, ninety, and one hundred.)
-*   40 — со́рок
-*   90 — дев'яно́сто
-*   100 — сто
-
-> [!warning]
-> Look closely at words like «п'ятдесят» and «шістдесят». Notice what is missing? There is no soft sign in the middle of these words. Although the base numbers are «п'ять» and «шість», the soft sign disappears when they join with «десят». Writing a soft sign in the middle is a common spelling error.
-
-Для «двадцять п'ять» ви просто використовуєте два слова.
-(To say "twenty-five", you simply use two words.)
-
-Він має сорок дві гривні.
-(He has forty-two hryvnias.)
-Це коштує вісімдесят п'ять гривень.
-(This costs eighty-five hryvnias.)
-
-### Правило «один-два-п'ять»
-
-How do we use numbers with nouns? In Ukrainian, numbers dictate the grammatical case of the noun. This system is known as the «1-2-5 Rule».
-
-When you count items, the noun changes form depending on the last digit.
-
-**Правила для категорій:**
-1. **Категорія 1 (Ends in 1, except 11):** The noun takes Nominative Singular (dictionary form).
-2. **Категорія 2 (Ends in 2, 3, 4, except 12-14):** The noun takes Nominative Plural.
-3. **Категорія 5 (Ends in 5-9, 0, or 11-19):** The noun takes Genitive Plural.
-
-Let's visualize this with the noun «долар» (dollar).
-
-| Число | Правило | Форма слова | Приклад |
-|---|---|---|---|
-| 1 | Nominative Singular | долар | двадцять один долар |
-| 2, 3, 4 | Nominative Plural | долари | три долари |
-| 5–0, 11–19 | Genitive Plural | доларів | вісім доларів |
-
-Я бачу три долари.
-(I see three dollars.)
-Ми маємо десять доларів.
-(We have ten dollars.)
-
-### Валюта та рід
-
-Застосуємо це правило до української валюти: **гри́вня**.
-(Let's apply this rule to the Ukrainian currency: hryvnia.)
-
-Форми слова «гривня»:
-(Forms of the word "hryvnia":)
-*   Nominative Singular: одна гривня
-*   Nominative Plural: гривні
-*   Genitive Plural: гривень
-
-> [!observe]
-> The Genitive Plural form «гривень» drops the final vowel and inserts an «е» to make pronunciation easier. You learned this principle in our Genitive case modules.
-
-There is a critical detail regarding gender. The numbers 1 and 2 change their form based on the noun's gender.
-For masculine and neuter nouns, we use «один» and «два».
-For feminine nouns, we use «одна» and «дві».
-
-Оскільки «гривня» — це слово жіночого роду, ви використовуєте жіночу форму числа!
-(Since "hryvnia" is a feminine word, you use the feminine form of the number!)
-
-❌ Неправильно: два гривні (masculine number + feminine noun)
-✅ Правильно: **дві гривні** (feminine number + feminine noun)
-
-This is a frequent mistake. Always remember that «гривня» demands feminine agreement.
-
-Одна гривня лежить на столі.
-(One hryvnia lies on the table.)
-Ця кава коштує сорок дві гривні.
-(This coffee costs forty-two hryvnias.)
-Я маю п'ятдесят гривень.
-(I have fifty hryvnias.)
-
-### Запитання про ціну
-
-When you enter a shop, you need to know how to ask for the price.
-
-Найважливіше запитання — це:
-(The most important question is:)
-**Скі́льки ко́штує?** (How much does it cost?)
-
-Використовуйте це для одного предмета.
-(Use this for one item.)
-Ви можете додати слово «це».
-(You can add the word "this".)
-
-Скільки це коштує?
-(How much does this cost?)
-Скільки коштує один хліб?
-(How much does one bread cost?)
-
-Коли ви готові платити, ви питаєте касира:
-(When you are ready to pay, you ask the cashier:)
-**Скільки з мене?** (How much from me? / How much do I owe?)
-
-This phrase uses the preposition «з» (from) and the pronoun «мене» (me in the genitive case).
-
-— Доброго дня. Скільки коштує цей чай?
-(Good day. How much does this tea cost?)
-— Тридцять гривень.
-(Thirty hryvnias.)
-— А скільки коштує вода?
-(And how much does water cost?)
-— Вода коштує двадцять дві гривні.
-(Water costs twenty-two hryvnias.)
-— Добре. Я беру чай і воду. Скільки з мене?
-(Good. I take tea and water. How much do I owe?)
-— З вас п'ятдесят дві гривні.
-(You owe fifty-two hryvnias.)
-
-## Практика
-
-### Проста математика
-
-Проста математика — це чудовий старт.
-(Simple math is a great start.)
-
-Ми використовуємо три слова:
-(We use three words:)
-*   **плюс** (plus)
-*   **мінус** (minus)
-*   **дорі́внює** (equals)
-
-Давайте рахувати ціни разом.
-(Let's count prices together.)
-Уявіть супермаркет.
-(Imagine a supermarket.)
-
-Хліб коштує двадцять гривень. Молоко коштує сорок гривень.
-(Bread costs twenty hryvnias. Milk costs forty hryvnias.)
-Двадцять плюс сорок дорівнює шістдесят.
-(Twenty plus forty equals sixty.)
+In this module, you will learn to count to 100, ask for prices, and handle local currency. We will also cover the "1-2-5 rule", which dictates how Ukrainian nouns change their endings when used with numbers. 
 
 > [!note]
-> Слово «дорівнює» показує дію.
-> (The word "equals" shows action.)
-> Because it is an action word, it describes the action of the equation balancing out.
+> Ukrainian numbers are built like logical blocks. Once you learn the basic numbers from zero to ten, you already know the hardest part of counting!
 
-Кава коштує п'ятдесят гривень. Чай коштує тридцять гривень.
-(Coffee costs fifty hryvnias. Tea costs thirty hryvnias.)
-П'ятдесят плюс тридцять дорівнює вісімдесят.
-(Fifty plus thirty equals eighty.)
+## Презентація: Від нуля до ста
 
-Тепер практикуємо віднімання.
-(Now we practice subtraction.)
-Це допомагає рахувати вашу решту.
-(This helps to count your change.)
+### Numbers 0-10
 
-Я даю сто гривень. Квиток коштує двадцять гривень.
-(I give one hundred hryvnias. The ticket costs twenty hryvnias.)
-Сто мінус двадцять дорівнює вісімдесят. Моя решта — вісімдесят гривень.
-(One hundred minus twenty equals eighty. My change is eighty hryvnias.)
+Нуль, оди́н, два́, три́, чоти́ри, п'я́ть. Ші́сть, сі́м, ві́сім, де́в'ять, де́сять. 
 
-### Уникнення помилки: рід іменника
+Це головні цифри. Ми будуємо інші числа з них. Слово «п'ять» має апостроф. Апостроф означає коротку паузу. Ми чуємо тверду вимову. Такий самий апостроф є у слові «дев'ять». Багато чисел мають м'які звуки в кінці: наприклад, слова «шість» та «десять» закінчуються м'яко. Це важливо для правильної вимови.
 
-We must practice gender agreement. As discussed, numbers one and two change their form. Let's drill this pattern.
-
-Пам'ятайте правило:
-(Remember the rule:)
-*   Masculine/Neuter: один, два
-*   Feminine: одна, дві
-
-Практикуємо жіночий рід: «гривня» і **копі́йка** (kopeck).
-(We practice feminine gender: hryvnia and kopeck.)
-
-Це одна гривня.
-(This is one hryvnia.)
-Це дві гривні.
-(These are two hryvnias.)
-Це одна копійка.
-(This is one kopeck.)
-Це дві копійки.
-(These are two kopecks.)
-
-Тепер чоловічий рід: «долар».
-(Now masculine gender: dollar.)
-
-Це один долар.
-(This is one dollar.)
-Це два долари.
-(These are two dollars.)
-
-> [!warning]
-> Never say «два гривні». This sounds extremely jarring to a Ukrainian ear. The brain expects the feminine «дві» before the feminine noun.
-
-Read aloud, emphasizing the difference:
-Два долари. Дві гривні.
-Два квитки. Дві кави.
-Один стіл. Одна ціна.
-
-Я маю дві гривні.
-(I have two hryvnias.)
-Ця вода коштує двадцять дві гривні.
-(This water costs twenty-two hryvnias.)
-
-### Діалоги в магазині та на базарі
-
-Now let us put everything together into realistic shopping scenarios. We introduce a few descriptive words: **до́рого** (expensive), **де́шево** (cheap), and the noun **ре́шта** (change).
-
-**Діалог 1: На базарі:**
-(Dialogue 1: At the market)
-— Доброго ранку! Яка ці́на?
-(Good morning! What is the price?)
-— Доброго ранку. Сто п'ятдесят гривень.
-(Good morning. One hundred fifty hryvnias.)
-— Ого, це дуже дорого!
-(Wow, this is very expensive!)
-— Ні, це нормальна ціна. Це дуже гарна якість.
-(No, this is a normal price. This is very good quality.)
-— Добре, я купую. У вас є решта з двохсот гривень?
-(Fine, I am buying. Do you have change from two hundred hryvnias?)
-— Так, ваша решта — п'ятдесят гривень.
-(Yes, your change is fifty hryvnias.)
-
-Використовуйте фразу «Це дуже дорого!» для великої ціни.
-(Use the phrase "This is very expensive!" for a high price.)
-Або скажіть «Це дешево!».
-(Or say "This is cheap!".)
-
-**Діалог 2: У кав'ярні:**
-(Dialogue 2: In a cafe)
-— Ваш чек, будь ласка.
-(Your receipt, please.)
-— Дякую. Скільки з мене?
-(Thank you. How much do I owe?)
-— З вас дев'яносто п'ять гривень.
-(You owe ninety-five hryvnias.)
-— Я плачу карткою.
-(I pay by card.)
-— Добре, прикладайте картку.
-(Good, tap the card.)
-
-> [!culture]
-> Ukraine is a highly digital society. While cash (готівка) and change (решта) remain common at bazaars and in smaller towns, almost every cafe, supermarket, and metro system accepts contactless card payments. However, knowing how to handle cash remains an essential language skill.
-
-### Трансформація фраз
-
-Our final practice step involves rapid transformation. We will take a phrase and change the number, observing how the noun adapts.
-
-Читайте ці рядки вголос.
-(Read these lines aloud.)
-
-**Крок перший: зміна кількості гривень**
-(Step one: changing the amount of hryvnias)
-*   Початок: Ми маємо одну гривню. (Nominative Singular)
-*   Зміна на 3: Ми маємо три гривні. (Nominative Plural)
-*   Зміна на 10: Ми маємо десять гривень. (Genitive Plural)
-*   Зміна на 21: Ми маємо двадцять одну гривню. (Nominative Singular returns!)
-
-Цей тест показує: остання цифра — найважливіша.
-(This test shows: the last digit is the most important.)
-
-**Крок другий: робота з іншими іменниками**
-(Step two: working with other nouns)
-Let's try the drill with the masculine noun «долар».
-*   Він дає один долар. (He gives one dollar.)
-*   Він дає чотири долари. (He gives four dollars.)
-*   Він дає п'ять доларів. (He gives five dollars.)
-*   Він дає одинадцять доларів. (He gives eleven dollars. Remember, teens are Category 5!)
+Let us begin with the foundation: the numbers from zero to ten. These are the most important numbers you will learn. You will use them to build all the larger numbers later. Pay special attention to the word for five. It contains an apostrophe. In Ukrainian, an apostrophe is not a punctuation mark for contractions. It is an actual letter that tells you to make a tiny, sharp pause. You must separate the first consonant from the following vowel. We see the same rule in the word for nine. Also, notice that many of these base numbers end with a soft sign. You need to soften the final consonant when you say words like six or ten.
 
 > [!tip]
-> Create your own drills like this. Pick an object in your room, look up its word and gender, and count it from 1 to 15. This builds fluency faster than almost any other exercise.
+> Do not rush when you see an apostrophe. Take a split second before pronouncing the rest of the word. This small pause makes your Ukrainian sound very natural!
 
-Вона має один стіл.
-(She has one table.)
-Вона має два столи.
-(She has two tables.)
-Вона має сім столів.
-(She has seven tables.)
+### Numbers 11-19
 
-## Культурний контекст
+Одина́дцять, двана́дцять, трина́дцять, чотирна́дцять, п'ятна́дцять. Шістна́дцять, сімна́дцять, вісімна́дцять, дев'ятна́дцять. 
 
-### Давня гривня
+Числа від одинадцяти до дев'ятнадцяти утворюються дуже логічно: ми просто додаємо спільний суфікс «-надцять» до базового числа. Однак є дуже важливий момент — наголос часто змінює свою позицію. Ми кажемо «оди́н». Але ми кажемо «одина́дцять». Наголос падає на літеру «а».
 
-Історія українських грошей дуже давня і цікава.
-(The history of Ukrainian money is very ancient and interesting.)
-Ви тримаєте банкноту. Ви читаєте слово **гри́вня**. Це епоха Київської Русі.
-(You hold a banknote. You read the word hryvnia. It is the era of Kyivan Rus.)
+Now we move to the teen numbers, from eleven to nineteen. These are very logical. You take the base number and add a specific suffix. The suffix literally means «on ten» in old Slavic. Think of it as placing one number on top of ten. However, you must be very careful with the stress. The stress usually shifts when you add the suffix. For example, the base number one has stress on the second syllable. But in the word for eleven, the stress moves to the letter «а» in the middle of the word. This stress shift happens in almost all teen numbers.
 
-Слово «гривня» походить від кореня «грива».
-(The word "hryvnia" comes from the root "hryva" - mane/neck.)
-Спочатку це була не монета.
-(Initially, it was not a coin.)
-Це була ювелірна прикраса.
-(It was a jewelry piece.)
-Її носили на шиї.
-(They wore it on the neck.)
-Майстри робили її із золота або срібла.
-(Artisans made it from gold or silver.)
+> [!warning]
+> The stress shift in teen numbers is a very common trap. Memorize the stress pattern now to avoid confusion later. Always emphasize the «а» in the suffix!
 
-> [!history-bite]
-> In the times of Kyivan Rus, if a merchant needed to make a smaller payment, they would literally chop a piece off the silver hryvna bar. This physical act of cutting (рубати) serves as the origin of the word «рубль» (ruble), demonstrating how regional currencies evolved from the original Kyivan standard.
+### Tens 20-100
 
-Коли Україна стала незалежною, вона повернула цю назву у 1996 році.
-(When Ukraine became independent, it returned this name in 1996.)
-Це потужний символ історії.
-(This is a powerful symbol of history.)
+Два́дцять, три́дцять, со́рок, п'ятдеся́т, шістдеся́т, сімдеся́т, вісімдеся́т, дев'яно́сто, сто́. 
 
-Ця історія дуже давня.
-(This history is very ancient.)
-Гривня — це символ історії.
-(The hryvnia is a symbol of history.)
+Більшість десятків утворюється просто: ми беремо базове число і додаємо спеціальний суфікс. Тут є винятки: «сорок» та «дев'яносто». Важливе правило орфографії: ми ніколи не пишемо м'який знак тут. Це слова «п'ятдесят», «шістдесят», «сімдесят», «вісімдесят».
 
-### Символ стабільності
+Counting by tens is the next step. From twenty to thirty, you just add a shortened version of ten to the base number. Forty and ninety are unique words with ancient origins. For the numbers fifty through eighty, you add the full word for ten to the base number. But here is a critical spelling and pronunciation warning. You drop the soft sign from the base number. The word for five has a soft sign at the end. When you create fifty, that soft sign disappears completely. Never write or pronounce a soft sign in the middle of fifty or sixty.
 
-Як долар має `$`, так і українська гривня має свій символ: **₴**.
-(Just as the dollar has `$`, the Ukrainian hryvnia has its symbol: `₴`.)
+### The 1-2-5 Rule
 
-Національний банк показав цей символ у 2004 році.
-(The National Bank showed this symbol in 2004.)
-Дизайн використовує українську літеру **г**.
-(The design uses the Ukrainian letter `г`.)
-Це перша літера слова «гривня».
-(This is the first letter of the word "hryvnia".)
+Ми змінюємо форму слова після чисел. Оди́н до́лар. Два́ до́лари. П'я́ть до́ларів. Оди́н квито́к. Два́ квитки́. П'я́ть квиткі́в. Оди́н стіл. Два́ столи́. П'я́ть столі́в. Це дуже важливе правило граматики. Ми називаємо це правило «один, два, п'ять». Вони потрібні для всіх об'єктів. Ми завжди рахуємо так.
 
-Дві лінії означають фінансову стабільність.
-(Two lines mean financial stability.)
-Багато валют мають такий дизайн.
-(Many currencies have such a design.)
+Ukrainian nouns change their form depending on the number that comes before them. We call this the one-two-five rule. It dictates how we count objects. When the number ends in one, you use the basic dictionary form. For numbers ending in two, three, or four, you use a different form. Numbers ending in five or higher, including zero, use a third form. This rule applies to almost everything you can count.
 
-> [!observe]
-> You frequently see prices written as «50 ₴» in modern cafes, menus, and digital platforms. However, in everyday writing, at markets, or on informal signs, people still routinely use the abbreviation «грн» (without a period). Both are perfectly correct.
+| Number Ending | Grammatical Case | Example |
+|---------------|------------------|---------|
+| **1** | Nominative Singular | оди́н до́лар |
+| **2, 3, 4** | Nominative Plural | два́ до́лари |
+| **5, 6, 7, 8, 9, 0** | Genitive Plural | п'я́ть до́ларів |
 
-Кава коштує сто грн.
-(Coffee costs one hundred hryvnias.)
-Ціна — двісті ₴.
-(The price is two hundred ₴.)
+### Currency & Gender
 
-Цей символ допомагає читати меню в Україні.
-(This symbol helps to read menus in Ukraine.)
+Ми купуємо товари за гривні. Одна́ гри́вня. Дві́ гри́вні. П'я́ть гри́вень. 
 
-### Народна мудрість
+Слово «гривня» має жіночий рід. Тому ми кажемо «одна» та «дві». Ми не можемо сказати «один гривня». Це груба помилка. Ми не кажемо «два гривні». Ми завжди узгоджуємо рід. Жіночий рід має свої форми. Це правило працює завжди.
 
-Гроші — це важлива тема для фольклору.
-(Money is an important topic for folklore.)
-Українська культура має свої прислів'я.
-(Ukrainian culture has its proverbs.)
+Let us apply the one-two-five rule to the Ukrainian currency. The word for the currency is feminine. This is crucial because the numbers one and two change based on the gender of the object. For a masculine word like dollar, we use the masculine forms. But for our feminine currency, we must use the feminine forms. Using a masculine number with a feminine noun is a very noticeable mistake. Always remember to match the gender! Let us look at the pattern clearly. For one, we use the feminine base form. For two, three, and four, we change the ending slightly. From five to twenty, we use a special plural form.
 
-Одне з найвідоміших прислів'їв:
-(One of the most famous proverbs is:)
-**Копійка гривню береже.** (A kopeck protects the hryvnia.)
+| Number | Form of Currency |
+|--------|------------------|
+| **1** | одна́ гри́вня |
+| **2, 3, 4** | дві́ гри́вні |
+| **5, 6, 7, 8, 9, 0** | п'я́ть гри́вень |
 
-Слово **копі́йка** означає найменшу частину валюти.
-(The word kopeck means the smallest part of the currency.)
-Слово «береже» означає захищати.
-(The word "protects" means to protect/save.)
-Це означає: «A penny saved is a penny earned».
-(It means: "A penny saved is a penny earned".)
+## Практика та Культура: Рахуємо гроші
 
-> [!reflection]
-> This proverb reflects a deeply practical and grounded approach to resources. Historically, Ukrainian society valued careful management of the household and agricultural resources. This respect for the «small things» perfectly materializes in the image of a tiny kopeck guarding the larger hryvnia.
+### Useful Phrases
 
-Це стара народна мудрість.
-(This is an old folk wisdom.)
-Ми бережемо кожну копійку.
-(We protect every kopeck.)
+Ми часто запитуємо про ціну в магазині. Скі́льки кошту́є? Яка́ ціна́? Скі́льки з ме́не? Це дуже корисно знати. Ми чуємо ці питання щодня. Це дуже до́рого. Це де́шево. Ми можемо торгуватися на ринку. Це нормальна практика. Ми також запитуємо про решту. Решта — це залишок грошей.
 
-Коли ви кажете «Копійка гривню береже», ви поважаєте культуру.
-(When you say "A kopeck protects the hryvnia", you respect the culture.)
+When shopping, you will frequently use phrases like «Скі́льки кошту́є?» (How much does it cost?) or «Яка́ ціна́?» (What is the price?). When you are ready to pay, ask «Скі́льки з ме́не?» (How much do I owe you?). You can also react to prices by saying «Це дуже до́рого» (That's very expensive) or «Це де́шево» (That's cheap). If you are paying with cash, you will need to ask for your change (ре́шта).
+
+### At the Bazaar
+
+— Добри́день! Скі́льки кошту́є ка́ва?
+— Добри́день! Ка́ва кошту́є п'ятдеся́т гри́вень. А ті́стечко кошту́є со́рок гри́вень.
+— Це дуже до́рого! А скі́льки кошту́є чай?
+— Чай кошту́є три́дцять гри́вень.
+— Добре, я беру́ чай. Скі́льки з ме́не?
+— З вас три́дцять гри́вень.
+— У вас є ре́шта зі ста гри́вень?
+— Так, ва́ша ре́шта — сімдеся́т гри́вень. Дя́кую за покупку!
+— До побачення!
+— На все добре!
+
+Let's look at a realistic scenario at a local market. Notice how the buyer uses «Скі́льки з ме́не?» to get the final total for their tea, and how they ask if the seller has change (ре́шта) for a 100-hryvnia banknote.
+
+> [!culture]
+> Cash is still popular in local markets, but almost all modern cafes and supermarkets in Ukraine accept contactless card payments. However, asking for change remains an essential phrase when you do use cash!
+
+### Cultural Insight
+
+Українська гривня має дуже довгу історію. Слово походить від «грива». Це була цінна прикраса із золота. Сучасний символ гривні (₴) має дві горизонтальні лінії. Вони означають стабільність. Українці мають популярне прислів'я: «Копі́йка гри́вню береже́», Це вчить бути обережними.
+
+The name of the national currency carries a fascinating historical legacy. It originates from the era of Kyivan Rus in the eleventh century. Back then, it referred to a heavy neck ornament made of precious metals, usually gold or silver. The root of the word literally relates to an animal's mane, which rests on the neck. Today, the symbol for the currency includes two horizontal lines. These lines represent stability, similar to the symbols used for other major global currencies. There is also a famous proverb about money. It translates to saying that a small coin protects the large currency. This highlights the traditional cultural value of being careful and saving even the smallest amounts of money.
+
+### Simple Math
+
+Ми можемо трохи порахувати. Де́сять плюс де́сять дорі́внює два́дцять. Сто́ мі́нус п'ятдеся́т дорі́внює п'ятдеся́т. Два́дцять плюс три́дцять дорі́внює п'ятдеся́т. Ми купуємо хліб за два́дцять п'я́ть гри́вень, а молоко́ — за со́рок гри́вень. Ра́зом це шістдеся́т п'я́ть гри́вень. Ми платимо сто́ гри́вень. Наша ре́шта — три́дцять п'я́ть гри́вень.
+
+Practicing simple arithmetic (math) is a great way to memorize numbers quickly. You can learn the words for "plus" (плюс), "minus" (мінус), and "equals" (дорі́внює). Calculating your total cost and change (ре́шта) in your head helps you practice the one-two-five rule, associating the final digit with the correct noun form for currency.
 
 ---
 
 # Підсумок
 
-На цьому уроці ви вивчили важливі слова.
-(In this lesson, you learned important words.)
-Ви вмієте рахувати від нуля до ста.
-(You can count from zero to one hundred.)
-Ви знаєте правило «один-два-п'ять».
-(You know the "1-2-5 rule".)
-Ви знаєте, чому ми говоримо «дві гривні», а не «два».
-(You know why we say "two hryvnias", not "two".)
+Ми навчилися рахувати від нуля до ста. Ми вміємо запитувати ціну. Ми знаємо форми слова «гривня».
 
-Тепер ви можете запитати: «Скільки коштує?» та «Скільки з мене?».
-(Now you can ask: "How much does it cost?" and "How much from me?".)
-Ви знаєте історію слова «гривня».
-(You know the history of the word "hryvnia".)
-Ви готові йти в магазин!
-(You are ready to go to the store!)
+You now have the vocabulary to count to one hundred, handle Ukrainian currency, and ask for prices or change. You also know how the "one-two-five rule" affects noun endings, and you are aware of the shifting stress in teen numbers. Let's verify your new knowledge with a few quick questions.
 
-**Перевірте себе:**
-1. Як ви скажете «five hryvnias» українською?
-2. Яка правильна форма: «два гривні» чи «дві гривні»? Чому?
-3. Яке питання ви ставите касиру перед оплатою?
-4. Звідки походить слово «гривня»?
-5. Який символ використовується для позначення української валюти?
+**Self-Check Questions:**
+1. How do you correctly say «two hryvnias» versus «five hryvnias», and why are they different forms?
+2. Where exactly does the stress fall in the number «eleven» (одинадцять)?
+3. How do you confidently ask a seller «How much does it cost?» in a store?
+4. What happens to the soft sign when we write the number fifty (п'ятдесят)?
+
+---

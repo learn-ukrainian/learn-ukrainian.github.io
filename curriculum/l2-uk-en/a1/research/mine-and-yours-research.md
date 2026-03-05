@@ -1,32 +1,57 @@
-# Дослідження: Mine and Yours
+## Research Notes
 
-## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників і порядкових числівників: утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє; наш, наша, наше; ваш, ваша, ваше, їхній, їхня, їхнє; [...] утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні..."
-Alignment: This module directly addresses the A1 requirement to form and use gender and number forms of possessive pronouns.
+**Textbook Approach:**
+Ukrainian beginner textbooks typically introduce possessive pronouns immediately after basic nouns and gender categorization. The presentation usually starts with the core interrogatives (*Чий? Чия? Чиє? Чиї?*), followed by the first and second-person variable pronouns (*мій, твій, наш, ваш*), because these require active gender agreement with the noun. The third-person pronouns (*його, її, їхній*) are introduced next, with a strong emphasis on the fact that *його* and *її* are invariable (they do not change regardless of the possessed object's gender), which provides a cognitive break for learners.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| мій / моя / моє | Top 50 | мій друг, моя сім'я, моє місто |
-| твій / твоя / твоє | Top 100 | твій телефон, твоя проблема |
-| наш / ваш | Top 200 | наша країна, ваш паспорт |
-| його / її | Top 50 (invariable) | його брат, її робота |
-| їхній | Standard Ukrainian | їхній дім, їхня ідея |
+**Common Errors for English Speakers:**
+1. **Gender Mismatch (Owner vs. Object):** English speakers intuitively match the pronoun to the gender of the *owner* (e.g., a male speaker saying "мій мама" instead of "моя мама"). It takes practice to map the pronoun to the *possessed object*.
+2. **Reflexive Confusion:** Beginners often use *його/її* instead of the reflexive possessive *свій* when the subject owns the object (e.g., saying "Він читає його книгу" [He is reading his (someone else's) book] instead of "Він читає свою книгу" [He is reading his own book]).
 
-## Cultural Hooks
-1. **"Перехід на ти"**: The transition from formal "Ваш" to informal "твій" is a significant cultural milestone in relationships, often marked by mutual agreement ("Давай на ти?").
-2. **Capitalization of Respect**: In formal written communication (emails, official letters), "Ваш" is often capitalized as a sign of deep personal or professional respect.
+**Cultural Hook:**
+The distinction between *твій* (informal your) and *ваш* (formal/plural your) is deeply rooted in Ukrainian social etiquette. Moving from *ваш* to *твій* is a recognized social milestone called "перехід на ти" (switching to 'ty'), which requires mutual consent and marks a shift from polite distance to friendship or closeness. 
 
-## Common Learner Errors
-1. **Gender Mismatch** → *мій мама* instead of *моя мама* — English speakers match the pronoun to the owner (male speaking = my), whereas in Ukrainian it must match the possessed object's grammatical gender.
-2. **Russianism / Surzhyk "їх"** → Using *їх* (their) instead of the standard *їхній*. *Їхній* changes by gender (їхній, їхня, їхнє), whereas *їх* is an uninflected error in this context.
-3. **Confusion with Свій** → Saying "Він бачить його маму" (He sees his [someone else's] mom) instead of "Він бачить свою маму" (He sees his own mom).
+**Cross-References:**
+This module builds upon foundational noun gender concepts and prepares students for talking about locations in M29 (Around the City) and describing relatives in M49 (My Family). The plan also lists M28 (The Locative) as a prerequisite, suggesting possession will be practiced alongside basic locations.
 
-## Cross-References
-- Builds on: a1-28 (The Locative)
-- Prepares for: a1-29 (Around the City), a1-49 (My Family)
+## Resource Discovery
 
-## Notes for Content Writing
-- Decolonized framing: Treat *їхній* as the standard, rich Ukrainian form, actively discouraging the reduced/borrowed *їх* without using Russian as a comparative baseline.
-- Ensure immersion stays between 25-35% as per A1.2 phase rules. Use English effectively to explain the core concept of matching the object, not the owner.
-- Provide clear visual tables for the 4 genders/numbers (masculine, feminine, neuter, plural) for the changing pronouns.
+
+### Textbook References (RAG)
+- Grade 2, Сторінка 45: ч ч
+>
+✓
+✓
+Слова — назви
+(предметів, ознак, дій, чисел)
+У розділі ти дізнаєшся про:
+/
+< ч ч
+СЛОВА - Н...
+- Grade 1, Сторінка 23: 21
+Хто це?
+Слова — назви живих предметів
+	 Який у тебе сьогодні настрій? Вибери.
+ [ –    –|–  ] 
+ [...
+- Grade 1, Сторінка 25: 23
+	
+Які? (розмір)
+	
+Які? (колір)
+	
+Які? (смак)
+(яке?)
+(який?)
+(який?)
+(який?)
+(який?)
+(який?)
+(який...
+- Grade 2, Сторінка 8: 8
+мова І мовЛЕння 
+мова — це засіб спілкування людей (система звуків 
+і букв, слова, речення, тексти...
+- Grade 2, Сторінка 73: 73
+• Чому кишеню назвали щедрою? 
+• Напиши, коли ти буваєш щедрим. Чому?
+• Установи послідовність ма...

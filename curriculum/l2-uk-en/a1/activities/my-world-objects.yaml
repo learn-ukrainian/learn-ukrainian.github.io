@@ -1,482 +1,261 @@
 - type: match-up
-  title: "Знайдіть пару: словник"
-  instruction: "Match the Ukrainian words with their English translations."
+  title: "Match the Object"
+  instruction: "Match the English word to the correct Ukrainian household object."
   pairs:
-    - left: "стіл"
-      right: "table"
-    - left: "книга"
-      right: "book"
-    - left: "телефон"
-      right: "phone"
-    - left: "кімната"
-      right: "room"
-    - left: "стілець"
-      right: "chair"
-    - left: "ліжко"
-      right: "bed"
-    - left: "лампа"
-      right: "lamp"
-    - left: "вікно"
-      right: "window"
-    - left: "шафа"
-      right: "wardrobe"
-    - left: "двері"
-      right: "door"
+    - left: "table"
+      right: "стіл"
+    - left: "book"
+      right: "книга"
+    - left: "room"
+      right: "кімната"
+    - left: "window"
+      right: "вікно"
+    - left: "door"
+      right: "двері"
+    - left: "bed"
+      right: "ліжко"
+    - left: "phone"
+      right: "телефон"
+    - left: "chair"
+      right: "стілець"
 
-- type: quiz
-  title: "Оберіть правильний вказівний займенник"
-  instruction: "Choose the correct demonstrative pronoun to match the noun."
-  items:
-    - question: "Який займенник потрібно використати зі словом стіл?"
-      explanation: "Слово стіл чоловічого роду, тому використовуємо цей."
-      options:
-        - text: "цей"
-          correct: true
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-    - question: "Який займенник потрібно використати зі словом книга?"
-      explanation: "Слово книга жіночого роду, тому використовуємо ця."
-      options:
-        - text: "ця"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-    - question: "Який займенник потрібно використати зі словом вікно?"
-      explanation: "Слово вікно середнього роду, тому використовуємо це."
-      options:
-        - text: "це"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "ці"
-          correct: false
-    - question: "Який займенник потрібно використати зі словом двері?"
-      explanation: "Слово двері завжди у множині, тому використовуємо ці."
-      options:
-        - text: "ці"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-    - question: "Як правильно сказати про телефон, що лежить далеко?"
-      explanation: "Телефон чоловічого роду, а далеко означає той."
-      options:
-        - text: "той"
-          correct: true
-        - text: "цей"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-    - question: "Як правильно сказати про шафу, що стоїть далеко?"
-      explanation: "Шафа жіночого роду, а далеко означає та."
-      options:
-        - text: "та"
-          correct: true
-        - text: "ця"
-          correct: false
-        - text: "той"
-          correct: false
-        - text: "те"
-          correct: false
-    - question: "Як правильно сказати про ліжко, що стоїть далеко?"
-      explanation: "Ліжко середнього роду, а далеко означає те."
-      options:
-        - text: "те"
-          correct: true
-        - text: "це"
-          correct: false
-        - text: "той"
-          correct: false
-        - text: "та"
-          correct: false
-    - question: "Як правильно сказати про двері, що знаходяться далеко?"
-      explanation: "Двері завжди у множині, а далеко означає ті."
-      options:
-        - text: "ті"
-          correct: true
-        - text: "ці"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-
-- type: fill-in
-  title: "Доповніть речення правильним словом"
-  instruction: "Fill in the blank with the correct near demonstrative."
-  items:
-    - sentence: "Мені подобається _____ стіл у кімнаті."
-      answer: "цей"
-      options:
-        - "цей"
-        - "ця"
-        - "це"
-        - "ці"
-      explanation: "Стіл - чоловічий рід."
-    - sentence: "Чия _____ книга лежить на столі?"
-      answer: "ця"
-      options:
-        - "ця"
-        - "цей"
-        - "це"
-        - "ці"
-      explanation: "Книга - жіночий рід."
-    - sentence: "Подивись, _____ вікно дуже велике і гарне."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Вікно - середній рід."
-    - sentence: "Відчиніть, будь ласка, _____ двері для мене."
-      answer: "ці"
-      options:
-        - "ці"
-        - "цей"
-        - "ця"
-        - "це"
-      explanation: "Двері - завжди у множині."
-    - sentence: "Де мій телефон? А, ось _____ телефон!"
-      answer: "цей"
-      options:
-        - "цей"
-        - "ця"
-        - "це"
-        - "ці"
-      explanation: "Телефон - чоловічий рід."
-    - sentence: "Я думаю, що _____ лампа краща для роботи."
-      answer: "ця"
-      options:
-        - "ця"
-        - "цей"
-        - "це"
-        - "ці"
-      explanation: "Лампа - жіночий рід."
-    - sentence: "Ми купили _____ ліжко вчора у магазині."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Ліжко - середній рід."
-    - sentence: "Хто залишив _____ речі на підлозі?"
-      answer: "ці"
-      options:
-        - "ці"
-        - "цей"
-        - "ця"
-        - "це"
-      explanation: "Речі - множина."
-
-- type: fill-in
-  title: "Вказування чи називання?"
-  instruction: "Choose between the invariant це (this is) and the specific demonstrative."
-  items:
-    - sentence: "Скажіть, будь ласка, що _____ таке?"
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Для запитання Що це таке? використовуємо незмінне це."
-    - sentence: "Так, _____ мій новий зручний стілець."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Ми називаємо предмет, тому використовуємо незмінне це."
-    - sentence: "Але _____ стілець дуже старий."
-      answer: "цей"
-      options:
-        - "цей"
-        - "це"
-        - "ця"
-        - "ці"
-      explanation: "Ми вказуємо на конкретний стілець, він чоловічого роду."
-    - sentence: "Я бачу, що _____ кімната дуже велика."
-      answer: "ця"
-      options:
-        - "ця"
-        - "це"
-        - "цей"
-        - "ці"
-      explanation: "Ми вказуємо на конкретну кімнату, вона жіночого роду."
-    - sentence: "Звичайно, _____ шафа для вашого одягу."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Ми ідентифікуємо предмет (This is a wardrobe), використовуємо це."
-    - sentence: "Мені потрібна саме _____ шафа."
-      answer: "ця"
-      options:
-        - "ця"
-        - "це"
-        - "цей"
-        - "ці"
-      explanation: "Ми вказуємо на конкретну шафу, вона жіночого роду."
-    - sentence: "Я знаю, що _____ вікно нове."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Ми вказуємо на конкретне вікно, воно середнього роду."
-    - sentence: "Подивись, _____ гарне ліжко."
-      answer: "це"
-      options:
-        - "це"
-        - "цей"
-        - "ця"
-        - "ці"
-      explanation: "Ми ідентифікуємо предмет, використовуємо це."
+- type: match-up
+  title: "Match the Pointing Words"
+  instruction: "Match each demonstrative pronoun to its English meaning and gender."
+  pairs:
+    - left: "цей"
+      right: "this (masculine)"
+    - left: "ця"
+      right: "this (feminine)"
+    - left: "це"
+      right: "this (neuter)"
+    - left: "ці"
+      right: "these (plural)"
+    - left: "той"
+      right: "that (masculine)"
+    - left: "та"
+      right: "that (feminine)"
+    - left: "те"
+      right: "that (neuter)"
+    - left: "ті"
+      right: "those (plural)"
 
 - type: group-sort
-  title: "Сортування за родами"
-  instruction: "Group the objects according to their grammatical gender."
+  title: "Sort by Gender"
+  instruction: "Sort the household objects by their grammatical gender."
   groups:
-    - name: "Цей (Чоловічий рід)"
+    - name: "Masculine"
       items:
         - "стіл"
         - "телефон"
         - "стілець"
         - "дім"
-    - name: "Ця (Жіночий рід)"
+    - name: "Feminine"
       items:
         - "книга"
         - "кімната"
         - "лампа"
         - "шафа"
+        - "хата"
         - "квартира"
-    - name: "Це (Середній рід)"
+    - name: "Neuter"
       items:
         - "вікно"
         - "ліжко"
-        - "місце"
+    - name: "Plural (always)"
+      items:
+        - "двері"
+        - "речі"
+
+- type: fill-in
+  title: "Complete the Phrase: Near Objects"
+  instruction: "Choose the correct near demonstrative (this/these) to match the object."
+  items:
+    - sentence: "___ кімната."
+      answer: "ця"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ стіл."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ ліжко."
+      answer: "це"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ двері."
+      answer: "ці"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ телефон."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ шафа."
+      answer: "ця"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ дім."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ речі."
+      answer: "ці"
+      options: ["цей", "ця", "це", "ці"]
+
+- type: fill-in
+  title: "Complete the Phrase: Far Objects"
+  instruction: "Choose the correct far demonstrative (that/those) to match the object."
+  items:
+    - sentence: "___ вікно."
+      answer: "те"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ стілець."
+      answer: "той"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ лампа."
+      answer: "та"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ двері."
+      answer: "ті"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ хата."
+      answer: "та"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ дім."
+      answer: "той"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ ліжко."
+      answer: "те"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ телефон."
+      answer: "той"
+      options: ["той", "та", "те", "ті"]
 
 - type: quiz
-  title: "Близько чи далеко?"
-  instruction: "Choose the correct demonstrative pronoun based on the context of distance."
+  title: "Check Your Understanding"
+  instruction: "Choose the correct answer for each question."
   items:
-    - question: "Що ви скажете про стіл, за яким ви зараз сидите?"
-      explanation: "Стіл знаходиться поруч із вами, тому кажемо цей."
+    - question: "What is the difference between 'Це стіл' and 'Цей стіл'?"
       options:
-        - text: "цей стіл"
+        - text: "'Це стіл' means 'This is a table' (identifying), while 'Цей стіл' means 'This table' (specifying)."
           correct: true
-        - text: "той стіл"
+        - text: "'Це стіл' means 'This table' (specifying), while 'Цей стіл' means 'This is a table' (identifying)."
           correct: false
-        - text: "ця стіл"
+        - text: "They mean exactly the same thing and can be used interchangeably."
           correct: false
-        - text: "та стіл"
+        - text: "'Це' is for far objects, and 'Цей' is for near objects."
           correct: false
-    - question: "Що ви скажете про лампу в іншому кінці кімнати?"
-      explanation: "Лампа знаходиться далеко, тому кажемо та."
+    - question: "Which pointing word must you use with 'двері' (door)?"
       options:
-        - text: "та лампа"
+        - text: "Plural words (ці/ті) because the word only exists in the plural form."
           correct: true
-        - text: "ця лампа"
+        - text: "Feminine words (ця/та) because it ends with a vowel."
           correct: false
-        - text: "той лампа"
+        - text: "Neuter words (це/те) because it is an inanimate object."
           correct: false
-        - text: "цей лампа"
+        - text: "Masculine words (цей/той) because it is a solid object."
           correct: false
-    - question: "Як назвати книгу, яку ви зараз тримаєте в руках?"
-      explanation: "Книга у ваших руках, тобто поруч, тому кажемо ця."
+    - question: "What is the 'T' trick for far demonstratives?"
       options:
-        - text: "ця книга"
+        - text: "All pointing words for objects far away start with the letter 'т' (той, та, те, ті)."
           correct: true
-        - text: "та книга"
+        - text: "All pointing words for objects near you start with the letter 'т'."
           correct: false
-        - text: "цей книга"
+        - text: "All words for furniture start with the letter 'т'."
           correct: false
-        - text: "той книга"
+        - text: "The letter 'т' means the object is plural."
           correct: false
-    - question: "Що ви скажете про вікно в будинку навпроти?"
-      explanation: "Вікно знаходиться далеко, тому кажемо те."
+    - question: "Which pointing word beautifully rhymes with the feminine ending '-а' in the word 'книга'?"
       options:
-        - text: "те вікно"
+        - text: "ця"
           correct: true
-        - text: "це вікно"
+        - text: "цей"
           correct: false
-        - text: "та вікно"
+        - text: "це"
           correct: false
-        - text: "той вікно"
+        - text: "ці"
           correct: false
-    - question: "Як назвати телефон, який дзвонить у сусідній кімнаті?"
-      explanation: "Телефон знаходиться далеко, тому кажемо той."
+    - question: "What does the word 'хата' refer to in Ukrainian culture?"
       options:
-        - text: "той телефон"
+        - text: "A traditional, rural Ukrainian house."
           correct: true
-        - text: "цей телефон"
+        - text: "A modern, urban apartment."
           correct: false
-        - text: "та телефон"
+        - text: "A large wooden wardrobe."
           correct: false
-        - text: "те телефон"
+        - text: "The Red Corner in any room."
           correct: false
-    - question: "Що ви скажете про ліжко, на якому ви зараз сидите?"
-      explanation: "Ліжко знаходиться поруч із вами, тому кажемо це."
+    - question: "Which word points to a far masculine object?"
       options:
-        - text: "це ліжко"
+        - text: "той"
           correct: true
-        - text: "те ліжко"
+        - text: "та"
           correct: false
-        - text: "ця ліжко"
+        - text: "те"
           correct: false
-        - text: "та ліжко"
+        - text: "цей"
           correct: false
-    - question: "Як назвати двері на іншому кінці довгого коридору?"
-      explanation: "Двері завжди у множині, і вони далеко, тому ті."
+    - question: "Which pointing word is neuter and near?"
       options:
-        - text: "ті двері"
+        - text: "це"
           correct: true
-        - text: "ці двері"
+        - text: "те"
           correct: false
-        - text: "те двері"
+        - text: "ця"
           correct: false
-        - text: "та двері"
+        - text: "цей"
           correct: false
-    - question: "Що ви скажете про речі у вашій сумці?"
-      explanation: "Речі у вашій сумці, тобто поруч, тому кажемо ці."
+    - question: "How do you say 'these things'?"
       options:
         - text: "ці речі"
           correct: true
         - text: "ті речі"
           correct: false
-        - text: "це речі"
+        - text: "ця річ"
           correct: false
-        - text: "те речі"
+        - text: "це річ"
           correct: false
+
+- type: true-false
+  title: "True or False: Household Rules"
+  instruction: "Decide if the statement is true or false."
+  items:
+    - statement: "The word 'двері' (door) is singular in Ukrainian, just like in English."
+      correct: false
+      explanation: "In Ukrainian, 'двері' is inherently plural, like 'scissors' or 'pants' in English."
+    - statement: "It is correct to say 'цей книга' because the English word 'this' does not have a gender."
+      correct: false
+      explanation: "You must always match the gender in Ukrainian! Because 'книга' is feminine, you must say 'ця книга'."
+    - statement: "The neuter demonstrative 'це' perfectly matches neuter nouns like 'вікно' and 'ліжко'."
+      correct: true
+      explanation: "Yes, 'це' is the neuter form for near objects."
+    - statement: "The word 'квартира' describes a modern, urban apartment."
+      correct: true
+      explanation: "Yes, while 'хата' is a traditional house, 'квартира' is an apartment."
+    - statement: "The demonstrative 'ті' is used for plural objects that are far away."
+      correct: true
+      explanation: "Correct! The 'T' trick means it is far, and 'ті' is the plural form."
+    - statement: "In Ukrainian, 'This is a lamp' translates to 'Ця лампа'."
+      correct: false
+      explanation: "To say 'This is a...', you always use the fixed word 'Це'. So 'This is a lamp' is 'Це лампа'."
+    - statement: "The word 'вікно' requires a masculine pointing word."
+      correct: false
+      explanation: "No, 'вікно' ends in '-о', so it is neuter and takes 'це' or 'те'."
+    - statement: "You use 'той' for a masculine object that is far away."
+      correct: true
+      explanation: "Correct! The 'T' trick tells us it's far, and 'той' is masculine."
 
 - type: anagram
-  title: "Розшифруйте слова: меблі та об'єкти"
+  title: "Unscramble the Objects"
   instruction: "Rearrange the letters to form the correct Ukrainian word."
   items:
-    - scrambled: "і л с т"
+    - scrambled: "с т і л"
       answer: "стіл"
-    - scrambled: "а к и г н"
+    - scrambled: "к н и г а"
       answer: "книга"
-    - scrambled: "о ф е л т н е"
-      answer: "телефон"
-    - scrambled: "а т к н і м а"
-      answer: "кімната"
-    - scrambled: "а м л а п"
-      answer: "лампа"
-    - scrambled: "о в і н к"
-      answer: "вікно"
-    - scrambled: "а ф а ш"
+    - scrambled: "ш а ф а"
       answer: "шафа"
-    - scrambled: "і в д е р"
+    - scrambled: "в і к н о"
+      answer: "вікно"
+    - scrambled: "д в е р і"
       answer: "двері"
-
-- type: match-up
-  title: "Близько чи далеко: знайдіть відповідники"
-  instruction: "Match the near phrase with its far equivalent."
-  pairs:
-    - left: "цей стіл"
-      right: "той стіл"
-    - left: "ця книга"
-      right: "та книга"
-    - left: "це вікно"
-      right: "те вікно"
-    - left: "ці двері"
-      right: "ті двері"
-    - left: "цей телефон"
-      right: "той телефон"
-    - left: "ця шафа"
-      right: "та шафа"
-    - left: "це ліжко"
-      right: "те ліжко"
-    - left: "ці речі"
-      right: "ті речі"
-
-- type: fill-in
-  title: "Доповніть речення словом на відстані"
-  instruction: "Fill in the blank with the correct far demonstrative."
-  items:
-    - sentence: "Подивись, _____ стіл дуже великий."
-      answer: "той"
-      options:
-        - "той"
-        - "та"
-        - "те"
-        - "ті"
-      explanation: "Стіл - чоловічий рід."
-    - sentence: "Чия _____ книга на полиці?"
-      answer: "та"
-      options:
-        - "та"
-        - "той"
-        - "те"
-        - "ті"
-      explanation: "Книга - жіночий рід."
-    - sentence: "А _____ вікно завжди відчинене."
-      answer: "те"
-      options:
-        - "те"
-        - "той"
-        - "та"
-        - "ті"
-      explanation: "Вікно - середній рід."
-    - sentence: "Хто зачинив _____ двері в коридорі?"
-      answer: "ті"
-      options:
-        - "ті"
-        - "той"
-        - "та"
-        - "те"
-      explanation: "Двері - завжди у множині."
-    - sentence: "Де _____ телефон, що дзвонив?"
-      answer: "той"
-      options:
-        - "той"
-        - "та"
-        - "те"
-        - "ті"
-      explanation: "Телефон - чоловічий рід."
-    - sentence: "Мені не подобається _____ кімната."
-      answer: "та"
-      options:
-        - "та"
-        - "той"
-        - "те"
-        - "ті"
-      explanation: "Кімната - жіночий рід."
-    - sentence: "_____ ліжко виглядає дуже зручним."
-      answer: "те"
-      options:
-        - "те"
-        - "той"
-        - "та"
-        - "ті"
-      explanation: "Ліжко - середній рід."
-    - sentence: "Чиї _____ речі лежать там?"
-      answer: "ті"
-      options:
-        - "ті"
-        - "той"
-        - "та"
-        - "те"
-      explanation: "Речі - множина."
+    - scrambled: "л і ж к о"
+      answer: "ліжко"
+    - scrambled: "х а т а"
+      answer: "хата"
+    - scrambled: "д і м"
+      answer: "дім"

@@ -373,6 +373,42 @@ Return TWO YAML blocks with clear delimiters:
 ❌ WRONG: `items:` at root level — use `groups:` array with `name` + `items`
 ❌ WRONG: 6+ groups — keep to 2-4 for usability
 
+#### match-up
+
+```yaml
+- type: match-up
+  title: "Знайдіть пари"
+  instruction: "Match each left item with the corresponding right item."  # Optional
+  pairs:  # minItems: 6
+    - left: "книга"
+      right: "book"
+    - left: "стіл"
+      right: "table"
+    - left: "вікно"
+      right: "window"
+```
+
+❌ WRONG: `items: [{left: ..., right: ...}]` — use `pairs:` not `items:`
+✅ MUST: `pairs` array with `left` + `right` strings only
+
+#### fill-in (MUST include `options` — REQUIRED)
+
+```yaml
+- type: fill-in
+  title: "Заповніть пропуск"
+  items:  # minItems: 6
+    - sentence: "Мама купує ___."
+      answer: "молоко"
+      options: ["молоко", "молока", "молоку", "молоком"]  # REQUIRED: exactly 4 options
+    - sentence: "Я бачу ___."
+      answer: "кота"
+      options: ["кіт", "кота", "коту", "котом"]
+```
+
+❌ WRONG: fill-in without `options` — every item MUST have `options` (exactly 4 strings)
+❌ WRONG: `answer` not in `options` — the answer MUST appear verbatim in the options array
+✅ MUST: Each item has `sentence`, `answer`, and `options` (4 strings, answer included)
+
 #### mark-the-words (requires `instruction` — REQUIRED field)
 
 ```yaml

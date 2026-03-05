@@ -1,61 +1,67 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: знати
-  pos: verb
-- lemma: що
-  pos: noun
-- lemma: хто
-  pos: noun
-- lemma: як
-  pos: adv
-- lemma: де
-  pos: adv
-- lemma: слово
-  pos: noun
-- lemma: кіл
-  pos: noun
-- lemma: кола
-  pos: noun
-- lemma: коли
-  pos: adv
-- lemma: колоти
-  pos: verb
-- lemma: мова
-  pos: noun
-- lemma: зараз
-  pos: adv
-- lemma: зараза
-  pos: noun
-- lemma: працювати
-  pos: verb
-- lemma: праця
-  pos: noun
-- lemma: тут
-  pos: adv
-- lemma: новий
-  pos: adj
-- lemma: використовувати
-  pos: verb
-- lemma: чому
-  pos: adv
-- lemma: кава
-  pos: noun
-- lemma: сьогодні
-  pos: adv
-- lemma: вона
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: бути
-  pos: verb
-- lemma: так
-  pos: adv
+  - lemma: "чи"
+    translation: "question particle"
+    pos: "particle"
+    notes: "Polite/Standard question marker"
+  - lemma: "що"
+    translation: "what"
+    pos: "pronoun"
+  - lemma: "хто"
+    translation: "who"
+    pos: "pronoun"
+  - lemma: "де"
+    translation: "where"
+    pos: "adverb"
+  - lemma: "коли"
+    translation: "when"
+    pos: "adverb"
+  - lemma: "куди"
+    translation: "where to"
+    pos: "adverb"
+  - lemma: "звідки"
+    translation: "from where"
+    pos: "adverb"
+  - lemma: "чому"
+    translation: "why"
+    pos: "adverb"
+  - lemma: "як"
+    translation: "how"
+    pos: "adverb"
+  - lemma: "скільки"
+    translation: "how much"
+    pos: "adverb"
+  - lemma: "не"
+    translation: "not"
+    pos: "particle"
+    notes: "Always placed directly before the verb"
+  - lemma: "ні"
+    translation: "no"
+    pos: "particle"
+  - lemma: "так"
+    translation: "yes"
+    pos: "particle"
+  - lemma: "завжди"
+    translation: "always"
+    pos: "adverb"
+  - lemma: "ніколи"
+    translation: "never"
+    pos: "adverb"
+    notes: "Requires double negation with не"
+  - lemma: "часто"
+    translation: "often"
+    pos: "adverb"
+  - lemma: "іноді"
+    translation: "sometimes"
+    pos: "adverb"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+  - lemma: "розуміти"
+    translation: "to understand"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "знати"
+    translation: "to know"
+    pos: "verb"
+    aspect: "impf"

@@ -1,11 +1,9 @@
-# Phase 3: Activities & Vocabulary Generation
+# Beginner Activities & Vocabulary
 
-> **You are Gemini, executing Phase 3 of an orchestrated rebuild.**
+> **You are Gemini, generating activities and vocabulary for a beginner-level module.**
 > **Your ONLY task: Generate activities YAML and vocabulary YAML.**
 
-## Pre-flight Checklist
-
-Before writing ANY YAML, confirm these targets:
+## Targets
 
 | Target | Value |
 |--------|-------|
@@ -13,12 +11,9 @@ Before writing ANY YAML, confirm these targets:
 | Module persona | Patient Supportive Tutor, acting as Typography Artist |
 | Activities required | 8–15 |
 | Required types |  |
-| Priority types | fill-in, match-up, anagram, unjumble, quiz, true-false, classify, image-to-letter, watch-and-repeat |
 | Vocabulary items | 20 |
 
-### Minimum Items Per Activity Type (HARD FAIL if under)
-
-These are the **audit gate minimums** — generating fewer items causes a COMPLEXITY violation and triggers a fix loop. Generate AT LEAST this many:
+### Item Minimums Per Activity Type
 
 | Type | Minimum |
 |------|--------|
@@ -33,21 +28,21 @@ These are the **audit gate minimums** — generating fewer items causes a COMPLE
 | classify | ≥1 items |
 | image-to-letter | ≥5 items |
 
-Keep both tables visible as you write. Every activity and vocab item must serve these targets.
+DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, О, С, У):
+Use ONLY these words in activities, reading drills, AND prose examples.
+Any word with a letter outside this set will FAIL the decodability audit gate.
+Video key words from the plan's pronunciation_videos section are exempt
+(they are heard, not read), but must NOT appear in prose reading examples.
 
-DECODABLE VOCABULARY (M1 — only letters: А, Л, М, Н, С, У):
-Use ONLY these words in activities and reading drills. Any word with a letter
-outside this set will FAIL the decodability audit gate.
-
-Available words: мама, сума, луна, мул, нам, нас, сам, ум, масла, мала
+Available words: мама, сом, сон, оса, масло, сосна, насос, лама, смола, ананас, нам, нас, сам, мало, слон
 
 If you need a word not on this list, check that ALL its letters are in the
 allowed set above. Words with unknown letters need English translation.
 
-## Module Sequence Constraints (HARD FAIL if violated)
+## Module Constraints (HARD FAIL if violated)
 
-DECODABILITY (M1 — 6 known letters: А, М, Л, У, Н, С):
-- Words in reading drills MUST use ONLY these 6 letters (e.g., мама, сума, луна, мул, нам)
+DECODABILITY (M1 — 7 known letters: А, О, У, М, Л, Н, С):
+- Words in reading drills MUST use ONLY these 7 letters (e.g., мама, сом, сон, масло, ананас)
 - Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary with immediate English translation: «Привіт!» (Hello!)
 - Video example words for the letter being taught (ананас for А) are fine — they are heard, not read
 
@@ -55,206 +50,69 @@ GRAMMAR BAN (no verbs exist yet in the student's knowledge):
 - NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED
 - NO verb conjugation of any kind (present, past, future)
 - Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'
-- Allowed Ukrainian structures: bare nouns only (мама, сума, луна)
+- Allowed Ukrainian structures: bare nouns only (мама, сом, масло)
 
 METALANGUAGE:
 - ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'
 - Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')
 - NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet
 
-> **These constraints apply to activities too.** If verbs are banned, do NOT create fill-in or quiz items that use verb forms. If only bare nouns are allowed, activities must test letter recognition, word decoding, and syllable building — NOT sentence comprehension or grammar.
+> **These constraints apply to activities too.** If only specific letters are allowed, every Ukrainian word in activities must use ONLY those letters. If sentences are not allowed, do NOT create sentence-level activities.
 
 ## Your Input
 
-Read these files from disk:
+Read these files:
 
-**Lesson content** (generate activities that test/reinforce this content):
-```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
-```
-
-**Plan file** (vocabulary_hints — vocabulary list to follow):
-```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-cyrillic-code-i.yaml
-```
-
-**Meta file** (activity count targets, pedagogy):
-```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-i.yaml
-```
-
-**Activity schema** (CRITICAL — defines allowed fields per activity type):
-```
-schemas/activities-a1.schema.json
-```
-
-**Activity reference guide**:
-```
-docs/ACTIVITY-YAML-REFERENCE.md
-```
-
-## Downstream Audit Gates (your activities will be checked for)
-
-These are the top failure causes from previous rebuilds — write with them in mind:
-- **Schema violations**: `additionalProperties: false` means ANY unlisted field = instant fail. Read `schemas/activities-a1.schema.json` before writing.
-- **Item counts**: `true-false` often requires 12 items, `quiz` requires 8+. Check `minItems` in schema.
-- **Forbidden fields**: `id` only on `reading` type (seminar tracks). Reading activities REQUIRE `text` (inline source) + `tasks` (comprehension questions). `instruction` is optional.
-- **Russian characters**: ы, э, ё, ъ in any activity text = hard fail
-- **Ukrainian quotes**: do NOT use «» in YAML values — they break parsing with colons
-- **No IPA**: NEVER include IPA symbols or `ipa` fields
+| File | Purpose |
+|------|---------|
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-i.md` | Lesson content to test/reinforce |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-cyrillic-code-i.yaml` | vocabulary_hints |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-i.yaml` | Activity count targets |
+| `schemas/activities-a1.schema.json` | Allowed fields per activity type |
+| `docs/ACTIVITY-YAML-REFERENCE.md` | Activity reference guide |
 
 ---
 
-## Your Task
+## Beginner Activity Rules
 
-Generate two YAML blocks: activities and vocabulary.
+### Language in Activities
 
-### Activities YAML Rules
+- **Questions, explanations, instructions** → English (scaffolding language)
+- **Target content being practiced** → Ukrainian (letters, words, phrases)
+- **Option text** → Ukrainian when selecting Ukrainian words/letters, English when selecting concepts
 
-1. **BARE LIST at root** — no `activities:` wrapper, no `module:` or `level:` headers
-2. **Schema compliance** — only use fields defined in the schema. `additionalProperties: false` means unlisted fields cause audit failure.
-3. **Seminar style** (a1): Reading Input → Analytical Output. Focus on comprehension, analysis, and critical thinking — NOT drill exercises.
-4. **Activity count**: 10 activities (4-9 for seminar tracks)
-5. **Type variety**: Use at least 3 different activity types
-6. **Only `reading` type has `id` field** in seminar tracks — do NOT add `id` to other types
-7. **`essay-response` rubric fields**: `criteria` / `description` / `points` (NOT `criterion` / `weight`)
-8. **`mark-the-words` format**: Use `text` (no asterisks) + `answers` array
+### Activity Types by Constraint Level
 
-### CRITICAL: Activity Type Constraints for a1
+**If constraints say "letters/syllables only" (no sentences):**
+Use: `quiz`, `match-up`, `group-sort`, `anagram`, `true-false`
+Do NOT use: `fill-in`, `unjumble`, `cloze`, `error-correction`, `translate`
 
-**ALLOWED types (use ONLY these):** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+**If constraints allow words and simple phrases:**
+Add: `fill-in`, `match-up` with phrases
+Still avoid: `cloze` (needs 14+ blanks), `error-correction`, `unjumble`
 
-**FORBIDDEN types (audit will auto-FAIL if you use these):** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+**If constraints allow basic sentences:**
+Add: `unjumble`, `fill-in` with sentences, `translate`
+Still avoid: `cloze` (needs 14+ blanks)
 
-Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
+### Do NOT Use Grammar Terminology
 
-### Correct Quiz Schema (REFERENCE — read this FIRST)
+A1/A2 learners do NOT know terms like іменник (noun), дієслово (verb), голосний (vowel), відмінок (case). Write questions in plain English.
 
-**This is the EXACT correct quiz structure. Anchor to this pattern before reading mistakes below.**
+❌ "Яка частина мови позначає дію?" (meaningless to A1)
+✅ "Which letter looks like English H but sounds like N?" (clear)
 
-```yaml
-- type: quiz
-  title: "Перевірте знання"
-  items:  # minItems: 8, question ≥5 words
-    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
-      explanation: "Дієслово позначає дію або стан."  # HERE at question level
-      options:  # exactly 4
-        - text: "дієслово"
-          correct: true
-        - text: "іменник"
-          correct: false
-        - text: "прикметник"
-          correct: false
-        - text: "прислівник"
-          correct: false
-```
+---
 
-**Key rules**: `explanation` at QUESTION level (not inside options), `question` ≥5 words, exactly 4 options, exactly 1 `correct: true`.
+## Schema Reference
 
-### Correct Reading Schema (REFERENCE)
+### quiz (English questions, Ukrainian options)
 
-**Reading schema varies by track — always check `schemas/activities-a1.schema.json` for your track's required fields.**
-
-**Seminar tracks (ISTORIO, BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
-```yaml
-- type: reading
-  id: reading-hrushevsky          # REQUIRED for seminar tracks (for source_reading links)
-  title: "Первинне джерело: Звичайна схема історії"
-  source: "Михайло Грушевський (1904)"
-  text: |                          # REQUIRED — the actual passage
-    Головним і єдиним рушієм усієї світової історії є не амбітні
-    королі чи владні гетьмани, а саме широкі народні маси...
-```
-
-**Core tracks (A1, A2, B1, B2, C1):** Reading = standalone with comprehension questions.
-```yaml
-- type: reading
-  title: "Первинне джерело"
-  text: |                          # REQUIRED
-    Actual passage text here...
-  tasks:                           # REQUIRED for core tracks
-    - "Comprehension question 1?"
-    - "Comprehension question 2?"
-```
-
-**WRONG — missing `text` (the #1 reading failure):**
-```yaml
-# ❌ FAILS AUDIT — no text field
-- type: reading
-  title: "Первинне джерело"
-  source: "Грушевський"
-  instruction: "Прочитайте уривок."
-```
-
-### Common Schema Mistakes (FIX BEFORE OUTPUT)
-
-**These mistakes caused audit failures in previous rebuilds. Check EVERY activity against these rules:**
-
-1. **Quiz `explanation` placement** — `explanation` goes at the QUESTION level, NOT inside an option. WRONG:
-```yaml
-options:
-  - text: "відповідь"
-    correct: true
-    explanation: "Пояснення"  # WRONG — explanation is not a valid option field
-```
-CORRECT:
-```yaml
-explanation: "Пояснення чому ця відповідь правильна"
-options:
-  - text: "відповідь"
-    correct: true
-```
-
-2. **Quiz question text length** — Every `question` field must be ≥5 words. WRONG: "Слово «хто» — це..." (3 words). RIGHT: "До якої частини мови належить слово «хто»?" (8 words). Short questions fail the pedagogy gate.
-
-3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
-
-4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` fields.
-
-### Activity Quality Standards (MANDATORY)
-
-**These rules prevent low-quality activities that waste learner time:**
-
-1. **Activities test LANGUAGE, not content** — The Golden Rule: Can the learner answer this question WITHOUT reading the Ukrainian text? If YES → it tests content recall, not language. **REWRITE IT.** FORBIDDEN patterns: "У якому році..." (dates), "Хто був..." (names), "Скільки..." (numbers), "Що символізує..." (interpretation without text reference). REQUIRED patterns: "Згідно з текстом, як автор...", "У тексті модуля автор характеризує...", "Яку функцію автор підкреслює...", "Який аргумент автор наводить...". Applies to ALL quiz/reading/essay activities in HIST, BIO, ISTORIO, LIT, and content-heavy modules. If a quiz question is answerable from general knowledge alone, you have FAILED the activity.
-
-2. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language, not just recognize it. Production types: `translate` (with free text, not multiple choice), `fill-in`, `unjumble`, `error-correction`, `cloze`. Recognition types: `quiz`, `true-false`, `select`, `match-up`, `group-sort`. A module with only recognition activities fails review.
-
-2. **Plausible example sentences** — Every sentence in every activity must be something a real Ukrainian speaker might actually say, write, or encounter. FORBIDDEN: philosophical/motivational statements ("Граматика — це музика мови"), meta-sentences about learning ("Ми спостерігаємо за тривалістю лінгвістичного експерименту"), or artificially constructed sentences that exist only to contain target vocabulary. GOOD: everyday speech, textbook excerpts, teacher instructions, realistic dialogues.
-
-3. **Unjumble quality** — Unjumble sentences must test grammar knowledge (word order rules, case agreement, verb placement). FORBIDDEN: reassembling motivational quotes or poetic metaphors. Each unjumble sentence should have exactly one correct grammatical order.
-
-4. **mark-the-words minimum** — `mark-the-words` activities must have at least 3 separate text passages (sentences or short paragraphs). One sentence with 6 targets is too thin for meaningful practice.
-
-5. **Error-correction precision** — Each item must have exactly one clear error with one correct fix. The error must be a plausible learner mistake (wrong case, wrong aspect, Russianism), not an obviously absurd mistake nobody would make.
-
-6. **Group-sort accuracy** — Every item must belong unambiguously to exactly one group. Do NOT include category labels (like "непрямий" meaning "indirect cases") as items — only include concrete instances.
-
-7. **Item count consistency** — Activities of the same type should have similar item counts (±2). Don't have one quiz with 4 items and another with 12.
-
-### A1–A2 Activity Language Rules (CRITICAL)
-
-**Metalanguage (grammar terminology) is introduced at B1.** A1–A2 learners do NOT know terms like іменник (noun), дієслово (verb), частина мови (part of speech), голосний (vowel), відмінок (case). These are grammar jargon that hasn't been taught yet. Writing "Яка частина мови позначає дію?" to an A1–A2 learner is meaningless.
-
-**The rule for ALL A1 and A2 activities:**
-- **Questions, explanations, instructions** → English (this is scaffolding, same as the lesson prose)
-- **Target content being practiced** → Ukrainian (the words, phrases, sentences learners are learning)
-- **Option text** → Ukrainian when selecting Ukrainian words/phrases, English when selecting concepts
-
-This matches the A1 immersion band (10–50%) and A2 band (30–70%): English scaffolding for metalanguage, Ukrainian for target content.
-
-**Additional rules for Cyrillic Code modules (a1-1 through a1-4):**
-- Only use letters/words from the module's taught letter set. If the module teaches А, У, М, Л, Н, С — every Ukrainian word in activities must use ONLY those 6 letters.
-- Do not invent pedagogical terminology. "Справжні друзі / Оманливі друзі" (true/false friends) is a term for WORDS between languages, not individual letters. Say "visual traps" instead.
-- **NO sentence-level activities.** Students know bare nouns only — no verbs, no cases, no grammar. Do NOT create fill-in activities that ask students to "complete a phrase" or "choose the right word in a sentence." Activities must test: letter recognition, letter-sound mapping, syllable building, word decoding, and word-meaning matching.
-- **Do NOT use words as verbs.** Even if a word CAN be a verb form (e.g., "мала" can mean "had"), treat all decodable words as bare nouns/adjectives in activities. Do NOT create activities that rely on verb meanings.
-- **Prefer fewer, high-quality activities over padding.** If you only have 10 decodable words, 8 well-designed activities are better than 10 activities where the last 2 are garbage. Do NOT force fill-in or quiz items that require grammar the student hasn't learned.
-
-Example quiz for A1:
 ```yaml
 - type: quiz
   title: "Check Your Knowledge"
   instruction: Choose the correct answer.
-  items:
+  items:  # minItems: 6
     - question: "Which letter looks like English H but represents the /n/ sound?"
       explanation: "Н is a visual trap — it looks like H but sounds like N."
       options:
@@ -279,7 +137,98 @@ Example quiz for A1:
           correct: false
 ```
 
-### YAML Formatting Rules (HARD FAIL if violated)
+Key: `explanation` at QUESTION level (not inside options), exactly 4 options, exactly 1 `correct: true`.
+
+### anagram (letter scramble — M1-M10)
+
+```yaml
+- type: anagram
+  title: "Unscramble the Word"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:  # minItems: 8
+    - scrambled: "А М А М"    # SPACE-SEPARATED letters
+      answer: "МАМА"
+    - scrambled: "а н у л"
+      answer: "луна"
+```
+
+**CRITICAL**: Letters MUST be space-separated. `scrambled` and `answer` must have exactly the same letters.
+
+### match-up
+
+```yaml
+- type: match-up
+  title: "Match Letter to Sound"
+  pairs:  # minItems: 6 — MUST use "pairs:" not "items:"
+    - left: "Н"
+      right: "/n/ sound"
+    - left: "М"
+      right: "/m/ sound"
+```
+
+### fill-in (MUST include `options` array)
+
+```yaml
+- type: fill-in
+  title: "Complete the Sentence"
+  items:  # minItems: 6
+    - sentence: "Мама купує ___."
+      answer: "молоко"
+      options: ["молоко", "молока", "молоку", "молоком"]  # REQUIRED: exactly 4 options, answer MUST be in the list
+    - sentence: "Я бачу ___."
+      answer: "кота"
+      options: ["кіт", "кота", "коту", "котом"]
+```
+
+❌ WRONG: fill-in without `options` — every item MUST have `options` (exactly 4 strings)
+❌ WRONG: `answer` not in `options` — the answer MUST appear verbatim in the options array
+
+### group-sort
+
+```yaml
+- type: group-sort
+  title: "Sort the Letters"
+  groups:  # 2-4 groups
+    - name: "True Friends (same look, same sound)"
+      items: ["А", "М"]
+    - name: "Visual Traps (different sound)"
+      items: ["Н", "С"]
+```
+
+### true-false
+
+```yaml
+- type: true-false
+  title: "True or False?"
+  items:  # minItems: 8
+    - statement: "The Ukrainian letter Н makes the same sound as English H."
+      correct: false
+      explanation: "Н looks like H but sounds like N — it's a visual trap."
+```
+
+---
+
+## Activity Quality Rules
+
+1. **Every Ukrainian word must be from the decodable vocabulary.** Do NOT use words with letters the student hasn't learned.
+2. **Plausible, clear items.** Every question must have one unambiguous correct answer.
+3. **No sentence-level activities** if constraints say letters/syllables only.
+4. **Prefer fewer, high-quality activities** over padding. 6 good activities > 8 activities where the last 2 are filler.
+
+## Mandatory Self-Check
+
+1. **QUIZ single correct** — every quiz item has exactly 1 `correct: true`
+2. **ANAGRAM letter match** — scrambled letters = same letters as answer (same count, same chars)
+3. **MATCH-UP unique pairs** — no duplicate left or right values
+4. **Schema compliance** — only fields from `schemas/activities-a1.schema.json`, no extras
+
+## Allowed Activity Types
+
+**ALLOWED (use ONLY these):** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+
+**FORBIDDEN (audit will auto-FAIL):** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+
+## YAML Formatting Rules (HARD FAIL if violated)
 
 **Do NOT use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when combined with colons.
 
@@ -296,246 +245,49 @@ Example quiz for A1:
 **Rules:**
 1. **Never use `«»` in YAML** — use plain text or single/double quotes
 2. **Quote any value containing `:`** with single quotes: `'text: with colon'`
-3. **In example sentences**, use plain quotes or omit decorative quotes entirely
-4. **Double-check** every `title`, `question`, `sentence`, `explanation`, and `text` field
+3. **Double-check** every `title`, `question`, `sentence`, `explanation`, and `text` field
 
-### Language Quality (applies to ALL Ukrainian text in activities)
+## Language Quality (applies to ALL Ukrainian text in activities)
 
-- **Typography in CONTENT files**: use Ukrainian angular quotes «...» — but **NOT in YAML** (see above)
 - **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий
 - **No Russian characters**: ы, э, ё, ъ must NEVER appear
+- **No IPA**: NEVER include IPA symbols or `ipa` fields
+- **No Latin transliteration**: Reference Ukrainian words in Cyrillic, not Latin (ZhYty → Жити)
 
-### Pronunciation in Activity Explanations (HARD FAIL)
+## Vocabulary YAML Rules
 
-**When referencing Ukrainian words, use Cyrillic — NEVER Latin transliteration.**
-
-Note: At A1–A2, explanations themselves are written in English (see A1 Activity Language Rules above). But Ukrainian words within those English explanations must be in Cyrillic.
-
-```yaml
-❌ WRONG (Latin transliteration):
-  explanation: 'ZhYty uses the hard И sound.'
-  explanation: 'Dity uses the soft І sound.'
-  explanation: 'The first vowel in Kyiv is hard И (Ky-yiv).'
-
-❌ WRONG (non-Cyrillic in YAML):
-  explanation: 'Жити [ˈʒɪ.tɪ] uses the hard И sound.'
-
-✅ RIGHT (Ukrainian word directly):
-  explanation: 'Жити uses the hard И sound.'
-  explanation: 'Діти uses the soft І sound.'
-  explanation: 'The first vowel in Київ is the hard И.'
-```
-
-**Rules:**
-1. Reference Ukrainian words in Cyrillic, not Latin transliteration (ZhYty → Жити)
-2. At A1–A2: write explanations in English, with Ukrainian words in Cyrillic (see A1–A2 Activity Language Rules)
-3. At B1+: write explanations in Ukrainian, using metalanguage naturally
-4. English descriptions of sounds are always fine ("hard И", "soft І", "the ch sound")
-
-### Vocabulary YAML Rules
-
-1. **Object with `items:` wrapper** — NOT a bare list. Required structure: `items:` array
-2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
-3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
+1. **Object with `items:` wrapper** — NOT a bare list
+2. **Follow plan's vocabulary_hints** — include all required items
+3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos`
 4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
-5. **NO `ipa` field** — Do NOT include an `ipa` field in vocabulary YAML.
+5. **NO `ipa` field**
 6. **Count target**: 20 items
 
-## Output Format
+## Output Delimiters
 
-> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
-
-Return TWO YAML blocks with clear delimiters:
-
-### Correct YAML Examples (COPY THESE STRUCTURES EXACTLY)
-
-**These are the EXACT field structures from the schema. Using wrong fields = instant audit failure.**
-
-#### unjumble (CRITICAL — #1 schema failure in previous rebuilds)
-
-```yaml
-- type: unjumble
-  title: "Складіть речення"
-  items:  # minItems: 6
-    - words: ["мова", "українська", "красива"]  # Array of strings, NOT a single string
-      answer: "Українська мова красива"          # The correct sentence as one string
-    - words: ["граматику", "ми", "вивчаємо"]
-      answer: "Ми вивчаємо граматику"
-```
-
-❌ WRONG: `jumbled: "мова українська красива"` (string field does NOT exist in schema)
-❌ WRONG: `sentence: "..."` (field does NOT exist)
-✅ ONLY: `words` (array of strings) + `answer` (string)
-
-#### anagram (CRITICAL — scrambled MUST be space-separated)
-
-```yaml
-- type: anagram
-  title: "Розшифруйте слова"
-  instruction: "Rearrange the letters to form the correct Ukrainian word."
-  items:  # minItems: 8
-    - scrambled: "О М Т Е Р"    # SPACE-SEPARATED letters — NOT concatenated!
-      answer: "МЕТРО"
-    - scrambled: "а й ч"         # Lowercase is fine too
-      answer: "чай"
-    - scrambled: "к у б л о я"
-      answer: "яблуко"
-```
-
-❌ WRONG: `scrambled: "ОМТЕР"` (concatenated — React component splits on spaces, this produces 1 "letter")
-❌ WRONG: `scrambled: "ОМТЕР"` with 5 letters but answer "МЕТР" with 4 (letter count mismatch)
-✅ MUST: Every letter in `scrambled` separated by a space
-✅ MUST: Scrambled letters are EXACTLY the same letters as the answer (same count, same characters)
-✅ NOTE: A1 M01-M10 use anagram (letter scramble), A1 M11+ use unjumble (sentence reorder)
-
-#### group-sort
-
-```yaml
-- type: group-sort
-  title: "Розподіліть за групами"
-  groups:  # minItems: 2, practical max: 4-5
-    - name: "Іменники"
-      items: ["книга", "стіл", "місто"]
-    - name: "Дієслова"
-      items: ["читати", "писати", "бігти"]
-```
-
-❌ WRONG: `items:` at root level — use `groups:` array with `name` + `items`
-❌ WRONG: 6+ groups — keep to 2-4 for usability
-
-#### mark-the-words (requires `instruction` — REQUIRED field)
-
-```yaml
-- type: mark-the-words
-  title: "Знайдіть іменники"
-  instruction: "Знайдіть і позначте всі іменники в тексті."  # REQUIRED
-  text: "Гарний день приніс радість у серце. Маленька дитина грала в парку. Сонячне світло освітлювало дорогу."
-  answers: ["день", "радість", "серце", "дитина", "парку", "світло", "дорогу"]
-```
-
-❌ WRONG: `items:` array — mark-the-words uses `text` (single string) + `answers`
-❌ WRONG: Missing `instruction` — it is REQUIRED for this type
-
-#### cloze (minItems: 14 blanks)
-
-```yaml
-- type: cloze
-  title: "Заповніть пропуски"
-  passage: "Це {{1}} з пропусками. Кожен {{2}} має номер."  # Use {{N}} markers
-  blanks:  # minItems: 14 — you need at least 14 blanks!
-    - id: 1
-      answer: "текст"
-      options: ["текст", "слово", "речення", "абзац"]  # exactly 4
-    - id: 2
-      answer: "пропуск"
-      options: ["пропуск", "елемент", "частина", "блок"]
-```
-
-❌ WRONG: `items:` — cloze uses `passage` + `blanks`
-❌ WRONG: Fewer than 14 blanks — schema requires minItems: 14
-
-#### error-correction (ALL 5 fields REQUIRED per item)
-
-```yaml
-- type: error-correction
-  title: "Виправте помилку"
-  items:  # minItems: 6
-    - sentence: "Я кушаю яблуко кожен день."
-      error: "кушаю"                            # REQUIRED
-      answer: "їм"                              # REQUIRED
-      options: ["їм", "їду", "їжу", "кусаю"]   # REQUIRED, exactly 4
-      explanation: "«Кушати» — русизм, правильно «їсти»."  # REQUIRED
-```
-
-❌ WRONG: Missing any of `sentence/error/answer/options/explanation` — ALL five are required
-✅ Optional: `error_type: "word"` (or "phrase", "register", "construction")
-
-#### select (multi-correct, min 4 options)
-
-```yaml
-- type: select
-  title: "Оберіть правильні відповіді"
-  items:  # minItems: 6
-    - question: "Які з цих слів є іменниками? Оберіть усі правильні."
-      options:  # minItems: 4, maxItems: 6
-        - text: "книга"
-          correct: true
-        - text: "читати"
-          correct: false
-        - text: "стіл"
-          correct: true
-        - text: "швидко"
-          correct: false
-```
-
-#### quiz
-
-See **"Correct Quiz Schema"** section above for the full reference pattern.
-
-❌ WRONG: `explanation` inside an option object — it goes at the question level
-
-### Mandatory Self-Check Before Output
-
-After writing all activities, run these checks mentally. Any failure = fix before submitting.
-
-**1. SELECT min_correct match** — every `select` question's `min_correct` must equal exact count of `correct: true` options. Count them.
-
-**2. QUIZ single correct** — every `quiz` item must have exactly 1 `correct: true` option.
-
-**3. FILL-IN answer in options** — every `fill-in` item's `answer` must appear verbatim in its `options` list.
-
-**4. TRANSLATE single correct** — every `translate` item must have exactly 1 `correct: true` option.
-
-**5. MARK-THE-WORDS answers in text** — every string in `answers` must appear verbatim in the `text` field.
-
-**6. UNJUMBLE no run-ons** — every `answer` string must be a single sentence. If a capital letter appears mid-answer without preceding punctuation (`.!?:`), you have merged two sentences. Split into two separate items instead.
-
-**7. UNJUMBLE vocabulary scope** — every word in every `words` array must come from `vocabulary_hints` in the plan file OR be a basic function word (preposition, conjunction, particle). Do NOT introduce grammar forms not yet taught in this module. Specifically: if this module teaches dative PRONOUNS only, do not use possessive adjective dative forms (моїй, твоїй, нашій…) — those belong to a dative NOUNS module.
-
-### Activity Count Check (MANDATORY)
-
-**Count your activities before outputting.** You MUST generate 10 activities. Previous rebuilds consistently underproduced (8 activities when 12-16 were needed). If under target, ADD MORE activities before submitting. Types to add when short: quiz (8+ items), fill-in (8+ items), match-up (8+ pairs).
-
-### Output Delimiters
+> **Content outside delimiters is automatically discarded by the extraction pipeline.**
 
 Activities block (BARE LIST — no wrapper):
-
 ```
 ===ACTIVITIES_START===
-
 - type: quiz
   title: "..."
   items:
     ...
-
-- type: unjumble
-  title: "..."
-  items:
-    ...
-
 ===ACTIVITIES_END===
 ```
 
 Vocabulary block (OBJECT with `items:` wrapper):
-
 ```
 ===VOCABULARY_START===
-
 items:
-  - lemma: "іменник"
-    translation: "noun"
+  - lemma: "слово"
+    translation: "word"
     pos: "noun"
-  - lemma: "дієслово"
-    translation: "verb"
-    pos: "noun"
-    notes: "describes the concept of a verb as a part of speech"
-
 ===VOCABULARY_END===
 ```
 
 ## Friction Report (MANDATORY)
-
-After your YAML blocks, include:
 
 ```
 ===FRICTION_START===
@@ -553,8 +305,5 @@ After your YAML blocks, include:
 - Do NOT modify lesson content — only generate activities and vocabulary
 - Do NOT add fields not in the schema (check schema carefully!)
 - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys
-- Do NOT add `id` field to non-reading activities (seminar tracks)
 - Do NOT request skills or delegate to Claude
-- If you're unsure about a schema field, add:
-  `NEEDS_HELP: Cannot determine correct schema for {activity_type} field "{field_name}"`
-  `HELP_TYPE: yaml_schema`
+

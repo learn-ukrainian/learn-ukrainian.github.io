@@ -1,0 +1,23 @@
+{
+  "track": "a1",
+  "slug": "describing-things-adjectives",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T21:57:57Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T21:58:40Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T22:01:44Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T22:04:04Z"
+    }
+  }
+}

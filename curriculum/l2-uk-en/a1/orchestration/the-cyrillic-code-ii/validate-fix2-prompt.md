@@ -1,66 +1,49 @@
-        # Fix Phase — full audit failures
+        # Fix 0 issue(s) in `the-cyrillic-code-ii`
 
-        The following audit errors must be fixed for module `the-cyrillic-code-ii`:
+        ### Other Audit Failures
 
-        ## Audit Output (last 60 lines)
-
-        ```
-        ============================================================
-  HETMAN VERIFY: the-cyrillic-code-ii
-============================================================
-
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
-
-────────────────────────────────────────────────────────────
-  VERDICT: FAIL
-  Module:  the-cyrillic-code-ii
-────────────────────────────────────────────────────────────
-  audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-cyrillic-code-ii-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue.
-  failing gates:
-    review: No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-cyrillic-code-ii-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue.
-
-  Hetman has NOT completed this module.
-  Fix the issues above and re-run this script.
-
-─── Audit output (last 15 lines) ───
-       ❌ [MISSING_REVIEW] No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-cyrillic-code-ii-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue.
-  Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-cyrillic-code-ii.json
-
-  ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-cyrillic-code-ii-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue.
-
-  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-ii-audit.log for details)
-
-  Running RAG word verification...
-  Verifying: the-cyrillic-code-ii.md
-    Words: 78 | VESUM: 78 (100.0%) | RAG: 0 | Not found: 0
-    Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-ii-rag-audit.md
-  ✅ RAG verification: all words verified
-
-VESUM: 78/78 (100%) verified
-        ```
+```
+❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-ii-audit.log for details)
+```
 
 
-        ## Files to Fix
+## Constraints (do NOT violate while fixing)
+
+DECODABILITY (M2 — 14 known letters: А О У М Л Н С + К И І Р В Т Е):
+- Reading drills MUST use ONLY these 14 letters (e.g., кіт, молоко, місто, рис, сир, тато, вікно, він)
+- Still unknown: Б, Д, П, З, Г, Ґ, Х, Ж, Ш, Ч, Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф
+- Words needing unknown letters require immediate English translation
+
+GRAMMAR BAN (no verbs exist yet):
+- NO imperative forms — ALL BANNED. Use English for instructions.
+- NO verb conjugation of any kind
+- Allowed: bare nouns, noun phrases using known letters
+
+METALANGUAGE:
+- All terminology English-first with Ukrainian in parentheses
+
+
+DECODABLE VOCABULARY (M2 — only letters: І, А, В, Е, И, К, Л, М, Н, О, Р, С, Т, У):
+Use ONLY these words in activities, reading drills, AND prose examples.
+Any word with a letter outside this set will FAIL the decodability audit gate.
+Video key words from the plan's pronunciation_videos section are exempt
+(they are heard, not read), but must NOT appear in prose reading examples.
+
+Available words: кіт, тато, рис, сир, місто, море, метро, ліс, вікно, стіл, молоко, кіно, око, слово, літо, масло, ніс, він, вона, рука, вік
+
+If you need a word not on this list, check that ALL its letters are in the
+allowed set above. Words with unknown letters need English translation.
+
+
+        ## Files
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-ii.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-ii.yaml`
+- Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-ii.yaml`
+- Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-ii.yaml`
 
-        ## Instructions
+        ## Rules
 
-        1. Read the audit errors above carefully
-        2. Fix ONLY the issues mentioned — do not rewrite working content
-        3. Preserve section structure and word counts
-        4. After fixing, the audit must pass
-
-        **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
-        Fix only the specific violations listed above.
+        1. Fix ONLY the issues listed above — do not rewrite working content
+        2. Preserve section structure and word counts
+        3. Do NOT add or remove sections
 

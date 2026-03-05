@@ -125,12 +125,29 @@ Key: `explanation` at QUESTION level (not inside options), exactly 4 options, ex
 ```yaml
 - type: match-up
   title: "Match Letter to Sound"
-  items:  # minItems: 6
+  pairs:  # minItems: 6 — MUST use "pairs:" not "items:"
     - left: "Н"
       right: "/n/ sound"
     - left: "М"
       right: "/m/ sound"
 ```
+
+### fill-in (MUST include `options` array)
+
+```yaml
+- type: fill-in
+  title: "Complete the Sentence"
+  items:  # minItems: 6
+    - sentence: "Мама купує ___."
+      answer: "молоко"
+      options: ["молоко", "молока", "молоку", "молоком"]  # REQUIRED: exactly 4 options, answer MUST be in the list
+    - sentence: "Я бачу ___."
+      answer: "кота"
+      options: ["кіт", "кота", "коту", "котом"]
+```
+
+❌ WRONG: fill-in without `options` — every item MUST have `options` (exactly 4 strings)
+❌ WRONG: `answer` not in `options` — the answer MUST appear verbatim in the options array
 
 ### group-sort
 

@@ -1,441 +1,326 @@
-- instruction: Match the English pronoun to its Ukrainian equivalent.
-  pairs:
-  - left: I
-    right: Я
-  - left: You (singular, informal)
-    right: Ти
-  - left: He
-    right: Він
-  - left: She
-    right: Вона
-  - left: It
-    right: Воно
-  - left: We
-    right: Ми
-  - left: You (plural or formal)
-    right: Ви
-  - left: They
-    right: Вони
+- type: match-up
   title: Personal Pronouns
-  type: match-up
-- groups:
-  - items:
-    - студент
-    - Іван
-    - стіл
-    - тато
-    - лікар
-    name: Він (He)
-  - items:
-    - вчителька
-    - мама
-    - Ольга
-    - Марія
-    - лампа
-    name: Вона (She)
-  - items:
-    - місто
-    - вікно
-    name: Воно (It)
-  instruction: Sort the words into the correct gender category based on the pronoun
-    you would use to replace them.
-  title: He, She, or It?
-  type: group-sort
-- instruction: Choose the correct answer about Ukrainian grammar rules.
-  items:
-  - explanation: In the present tense, the verb 'to be' is omitted (Zero Copula).
-      'Я є студент' is unnatural.
-    options:
-    - correct: true
-      text: Я — студент.
-    - correct: false
-      text: Я є студент.
-    - correct: false
-      text: Я бути студент.
-    - correct: false
-      text: Я студент є.
-    question: How do you say 'I am a student' in Ukrainian?
-  - explanation: '''Це'' is used to introduce or identify people and objects.'
-    options:
-    - correct: true
-      text: Це
-    - correct: false
-      text: Він
-    - correct: false
-      text: Тут
-    - correct: false
-      text: Що
-    question: Which word acts as a universal pointer meaning 'This is'?
-  - explanation: '''Ви'' is used for plural groups AND for formal address (strangers,
-      elders, superiors).'
-    options:
-    - correct: true
-      text: With strangers, elders, or groups.
-    - correct: false
-      text: Only with groups of people.
-    - correct: false
-      text: Only with close friends.
-    - correct: false
-      text: With children and animals.
-    question: When should you use the pronoun 'Ви'?
-  - explanation: In Ukrainian, objects have gender. A table is masculine, so it is
-      'Він' (He).
-    options:
-    - correct: true
-      text: Він
-    - correct: false
-      text: Воно
-    - correct: false
-      text: Вона
-    - correct: false
-      text: Це
-    question: If you see a table (стіл - masculine), which pronoun replaces it?
-  - explanation: It refers to the absence of the verb 'to be' (am/is/are) in simple
-      present tense sentences.
-    options:
-    - correct: true
-      text: The absence of 'am/is/are' in the present tense.
-    - correct: false
-      text: A missing subject in the sentence.
-    - correct: false
-      text: A special type of pronoun.
-    - correct: false
-      text: The negative particle 'не'.
-    question: What is the 'Zero Copula'?
-  - explanation: '''Хто'' (Who) is for people. ''Що'' (What) is for things. ''Хто це?''
-      is the standard question form.'
-    options:
-    - correct: true
-      text: Хто це?
-    - correct: false
-      text: Що це?
-    - correct: false
-      text: Де це?
-    - correct: false
-      text: Він хто?
-    question: How do you ask 'Who is this?' for a person?
-  - explanation: '''Так'' is the Ukrainian word for ''Yes''.'
-    options:
-    - correct: true
-      text: Так
-    - correct: false
-      text: Ні
-    - correct: false
-      text: Не
-    - correct: false
-      text: Тут
-    question: How do you say 'Yes' in Ukrainian?
-  - explanation: '''Ні'' is the Ukrainian word for ''No''.'
-    options:
-    - correct: true
-      text: Ні
-    - correct: false
-      text: Так
-    - correct: false
-      text: Це
-    - correct: false
-      text: Ми
-    question: How do you say 'No' in Ukrainian?
-  title: Grammar Concepts
-  type: quiz
-- instruction: Replace the name or object with the correct personal pronoun.
-  items:
-  - answer: Він
-    explanation: Ivan is male, so we use 'Він'.
-    options:
-    - Він
-    - Вона
-    - Воно
-    - Ми
-    sentence: '{{Ivan}} is a student.'
-  - answer: Вона
-    explanation: Maria is female, so we use 'Вона'.
-    options:
-    - Вона
-    - Він
-    - Вони
-    - Ви
-    sentence: '{{Maria}} is a teacher.'
-  - answer: Вони
-    explanation: Multiple people (plural) become 'Вони' (They).
-    options:
-    - Вони
-    - Ми
-    - Ви
-    - Він
-    sentence: '{{Ivan and Maria}} are here.'
-  - answer: Ми
-    explanation: '''You and I'' is ''We'', which is ''Ми''.'
-    options:
-    - Ми
-    - Вони
-    - Ви
-    - Я
-    sentence: '{{You and I}} are here.'
-  - answer: Воно
-    explanation: Window (вікно) is neuter, so we use 'Воно'.
-    options:
-    - Воно
-    - Він
-    - Вона
-    - Це
-    sentence: '{{The window}} is here.'
-  - answer: Вона
-    explanation: Lamp (лампа) is feminine, so we use 'Вона'.
-    options:
-    - Вона
-    - Він
-    - Воно
-    - Це
-    sentence: '{{The lamp}} is new.'
-  - answer: Вона
-    explanation: Teacher (female) is 'вчителька', which is feminine.
-    options:
-    - Вона
-    - Він
-    - Вони
-    - Це
-    sentence: '{{The female teacher}} is there.'
-  - answer: Воно
-    explanation: City (місто) is neuter.
-    options:
-    - Воно
-    - Він
-    - Вона
-    - Ми
-    sentence: '{{The city}} is beautiful.'
-  title: 'Transformation: Noun to Pronoun'
-  type: fill-in
-- instruction: Decide if the statement about social etiquette is True or False.
-  items:
-  - correct: true
-    explanation: Police officers are figures of authority and strangers, so 'Ви' is
-      required.
-    statement: You should always use 'Ви' with a police officer.
-  - correct: false
-    explanation: Using 'Ти' with a boss without permission is rude. Use 'Ви'.
-    statement: You use 'Ти' with your boss to show you are friendly.
-  - correct: true
-    explanation: '''Ви'' is the ''Safety Net''. You can never be too polite.'
-    statement: It is safe to use 'Ви' with a stranger on the street.
-  - correct: true
-    explanation: '''Ти'' is used for close relationships or when addressing those
-      younger/lower in hierarchy (like children/pets).'
-    statement: You use 'Ти' with children and pets.
-  - correct: true
-    explanation: This transition marks a shift from formal to close/private relationship.
-    statement: If you switch from 'Ви' to 'Ти', it usually means you are becoming
-      closer friends.
-  - correct: false
-    explanation: While youth are more informal, they still use 'Ви' with service staff
-      or elders.
-    statement: Young people never use 'Ви'.
-  - correct: false
-    explanation: In a professional setting, you should start with 'Ви'.
-    statement: In a business meeting, you should always start with 'Ти'.
-  - correct: true
-    explanation: Using 'Ви' is a sign of respect and politeness.
-    statement: Using 'Ви' shows respect.
-  title: 'Culture Check: Ти vs Ви'
-  type: true-false
-- instruction: Unscramble the letters to find the correct word.
-  items:
-  - answer: студент
-    scrambled: н т с у е д т
-  - answer: вчитель
-    scrambled: т ь и л е в ч
-  - answer: лікар
-    scrambled: р а к і л
-  - answer: місто
-    scrambled: о т с і м
-  - answer: Україна
-    scrambled: а к н р а ї У
-  - answer: тато
-    scrambled: о т а т
-  - answer: лампа
-    scrambled: п а л а м
-  - answer: вікно
-    scrambled: н о к і в
-  title: Vocabulary Scramble
-  type: anagram
-- instruction: Choose the correct word to complete the conversation.
-  items:
-  - answer: це
-    explanation: The question 'Who is this?' is 'Хто це?'
-    options:
-    - це
-    - він
-    - вона
-    - тут
-    sentence: — Хто {{this}}? — Це Іван.
-  - answer: Вона
-    explanation: Anna is female, so 'She' is 'Вона'.
-    options:
-    - Вона
-    - Він
-    - Воно
-    - Це
-    sentence: — Це Анна. {{She}} — вчителька.
-  - answer: тут
-    explanation: '''Here'' is ''тут''.'
-    options:
-    - тут
-    - там
-    - де
-    - це
-    sentence: — Де ти? — Я {{here}}.
-  - answer: турист
-    explanation: You confirm your identity using the same noun.
-    options:
-    - турист
-    - студент
-    - лікар
-    - мама
-    sentence: — Ви турист? — Так, я {{tourist}}.
-  - answer: Що
-    explanation: For objects (phone), use 'Що' (What).
-    options:
-    - Що
-    - Хто
-    - Де
-    - Як
-    sentence: — {{What}} це? — Це телефон.
-  - answer: студент
-    explanation: Tom identifies himself as a student.
-    options:
-    - студент
-    - студенти
-    - вчителька
-    - місто
-    sentence: — Я — Том. Я — {{student}}.
-  - answer: Хто
-    explanation: To ask 'Who are you?', use 'Хто'.
-    options:
-    - Хто
-    - Що
-    - Де
-    - Це
-    sentence: — {{Who}} ти? — Я студент.
-  - answer: там
-    explanation: '''There'' is ''там''.'
-    options:
-    - там
-    - тут
-    - хто
-    - що
-    sentence: — Ти тут? — Ні, я {{there}}.
-  title: Complete the Dialogue
-  type: fill-in
-- instruction: Match the question to the most logical answer.
+  instruction: Match the Ukrainian pronoun to its English meaning.
   pairs:
-  - left: Хто це?
-    right: Це Андрій.
-  - left: Де ти?
-    right: Я тут.
-  - left: Ти студент?
-    right: Так, я студент.
-  - left: Що це?
-    right: Це телефон.
-  - left: Хто там?
-    right: Це Іван.
-  - left: Ви хто?
-    right: Я — Алекс.
-  - left: Де він?
-    right: Він там.
-  - left: Це місто?
-    right: Так, це місто.
-  title: Questions and Answers
-  type: match-up
-- instruction: Select the correct translation for the English phrase.
+    - left: я
+      right: I
+    - left: ти
+      right: you (informal)
+    - left: він
+      right: he
+    - left: вона
+      right: she
+    - left: воно
+      right: it
+    - left: ми
+      right: we
+    - left: ви
+      right: you (formal)
+    - left: вони
+      right: they
+
+- type: true-false
+  title: Grammar and Culture Check
+  instruction: Determine if the statements are true or false based on the lesson.
   items:
-  - explanation: Use the particle 'не' before the predicate.
-    options:
-    - correct: true
-      text: Він — не вчитель.
-    - correct: false
-      text: Він ні вчитель.
-    - correct: false
-      text: Він немає вчитель.
-    - correct: false
-      text: Він — вчитель ні.
-    question: How do you say 'He is not a teacher'?
-  - explanation: She = Вона, Here = тут. Zero copula means no verb needed.
-    options:
-    - correct: true
-      text: Вона тут.
-    - correct: false
-      text: Вона є тут.
-    - correct: false
-      text: Вона це тут.
-    - correct: false
-      text: Вона є тут.
-    question: How do you translate the phrase 'She is here'?
-  - explanation: We = Ми, Students = студенти.
-    options:
-    - correct: true
-      text: Ми — студенти.
-    - correct: false
-      text: Ми є студенти.
-    - correct: false
-      text: Ви — студенти.
-    - correct: false
-      text: Вони — студенти.
-    question: How do you translate the phrase 'We are students'?
-  - explanation: This is = Це, Mom = мама.
-    options:
-    - correct: true
-      text: Це мама.
-    - correct: false
-      text: Вона мама.
-    - correct: false
-      text: Це є мама.
-    - correct: false
-      text: Що мама.
-    question: How do you translate the phrase 'This is mom'?
-  - explanation: To a group, 'you' is 'Ви'. The standard question word order is 'Де
-      ви?'
-    options:
-    - correct: true
-      text: Де ви?
-    - correct: false
-      text: Де ти?
-    - correct: false
-      text: Де він?
-    - correct: false
-      text: Де ми?
-    question: How do you translate the phrase 'Where are you?' (to a group)?
-  - explanation: Window is neuter, so 'It' = 'Воно'.
-    options:
-    - correct: true
-      text: Воно тут.
-    - correct: false
-      text: Він тут.
-    - correct: false
-      text: Вона тут.
-    - correct: false
-      text: Це тут.
-    question: How do you translate the phrase 'It is here' (referring to a window)?
-  - explanation: He = Він, Student = студент.
-    options:
-    - correct: true
-      text: Він — студент.
-    - correct: false
-      text: Вона — студент.
-    - correct: false
-      text: Я — студент.
-    - correct: false
-      text: Ти — студент.
-    question: How do you translate the phrase 'He is a student'?
-  - explanation: No = Ні, not = не.
-    options:
-    - correct: true
-      text: Ні, вона не тут.
-    - correct: false
-      text: Так, вона тут.
-    - correct: false
-      text: Ні, вона тут.
-    - correct: false
-      text: Вона не тут.
-    question: How do you translate the phrase 'No, she is not here'?
-  title: Translation Challenge
-  type: quiz
+    - statement: In Ukrainian, you must use a linking verb to say I am a student.
+      correct: false
+      explanation: Ukrainian uses the zero copula. You simply say Я студент.
+    - statement: The word Ви is used when speaking to strangers, teachers, or elders.
+      correct: true
+      explanation: Ви is the formal safe mode and should always be your default with strangers.
+    - statement: The question word хто is used for inanimate objects like tables and textbooks.
+      correct: false
+      explanation: The word хто is strictly for living beings. The word що is used for objects.
+    - statement: If a noun is a non-living object, you always refer to it as воно.
+      correct: false
+      explanation: Objects use він or вона depending on their grammatical gender. The word воно is only for neuter nouns.
+    - statement: The phrase Мене звати is the standard way to say My name is.
+      correct: true
+      explanation: This is the most common and polite way to introduce yourself.
+    - statement: You can use the word це to point out both people and inanimate objects.
+      correct: true
+      explanation: The word це is versatile and works for both Who is this and What is this.
+    - statement: You should use 'ти' when speaking to a new doctor you just met.
+      correct: false
+      explanation: You should use 'Ви' with doctors and other professionals you don't know well.
+    - statement: The literal translation of "Мене звати" is "They call me".
+      correct: true
+      explanation: Yes, "Мене звати" literally means "They call me," though it translates as "My name is."
+
+- type: fill-in
+  title: 'Who or What?'
+  instruction: Choose the correct question word. Remember that Хто is for living beings and Що is for objects.
+  items:
+    - sentence: '___ це? — Це стіл.'
+      answer: Що
+      options:
+        - Що
+        - Хто
+        - Він
+        - Вона
+    - sentence: '___ це? — Це вчитель.'
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Це
+        - Ви
+    - sentence: '___ це? — Це яблуко.'
+      answer: Що
+      options:
+        - Що
+        - Хто
+        - Ми
+        - Вони
+    - sentence: '___ це? — Це Іван.'
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Ти
+        - Воно
+    - sentence: '___ це? — Це підручник.'
+      answer: Що
+      options:
+        - Що
+        - Хто
+        - Він
+        - Я
+    - sentence: '___ це? — Це Анна.'
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Ось
+        - Там
+    - sentence: '___ це? — Це вікно.'
+      answer: Що
+      options:
+        - Що
+        - Хто
+        - Він
+        - Ти
+    - sentence: '___ це? — Це мама.'
+      answer: Хто
+      options:
+        - Хто
+        - Що
+        - Вона
+        - Ми
+
+- type: quiz
+  title: 'The It Trap'
+  instruction: Choose the correct pronoun for the object mentioned.
+  items:
+    - question: The word стіл (table) ends in a consonant. Which pronoun replaces it?
+      explanation: The word стіл is masculine, so it is replaced by він.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+        - text: вони
+          correct: false
+    - question: The word книга (book) ends in -а. Which pronoun replaces it?
+      explanation: The word книга is feminine, so it is replaced by вона.
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+        - text: ви
+          correct: false
+    - question: The word яблуко (apple) ends in -о. Which pronoun replaces it?
+      explanation: The word яблуко is neuter, so it is replaced by воно.
+      options:
+        - text: воно
+          correct: true
+        - text: він
+          correct: false
+        - text: вона
+          correct: false
+        - text: я
+          correct: false
+    - question: The word паспорт (passport) ends in a consonant. Which pronoun replaces it?
+      explanation: The word паспорт is masculine, so it is replaced by він.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+        - text: ми
+          correct: false
+    - question: The word вікно (window) ends in -о. Which pronoun replaces it?
+      explanation: The word вікно is neuter, so it is replaced by воно.
+      options:
+        - text: воно
+          correct: true
+        - text: він
+          correct: false
+        - text: вона
+          correct: false
+        - text: ти
+          correct: false
+    - question: Анна is a woman's name. Which pronoun replaces it?
+      explanation: Анна is feminine, so she is replaced by вона.
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+        - text: ви
+          correct: false
+    - question: The word телефон (telephone) ends in a consonant. Which pronoun replaces it?
+      explanation: The word телефон is masculine, so it is replaced by він.
+      options:
+        - text: він
+          correct: true
+        - text: вона
+          correct: false
+        - text: воно
+          correct: false
+        - text: ти
+          correct: false
+    - question: The word сім'я (family) ends in -я. Which pronoun replaces it?
+      explanation: The word сім'я is feminine, so it is replaced by вона.
+      options:
+        - text: вона
+          correct: true
+        - text: він
+          correct: false
+        - text: воно
+          correct: false
+        - text: ви
+          correct: false
+
+- type: fill-in
+  title: Self-Introductions
+  instruction: Complete the sentences to form simple identity statements. Do not add unnecessary verbs.
+  items:
+    - sentence: 'Мене ___ Іван.'
+      answer: звати
+      options:
+        - звати
+        - я
+        - є
+        - це
+    - sentence: 'Я ___.'
+      answer: студент
+      options:
+        - студент
+        - є
+        - ти
+        - вони
+    - sentence: 'Він ___.'
+      answer: вчитель
+      options:
+        - вчитель
+        - є
+        - що
+        - звати
+    - sentence: 'Вона ___.'
+      answer: українка
+      options:
+        - українка
+        - українець
+        - є
+        - хто
+    - sentence: '___ українець.'
+      answer: Я
+      options:
+        - Я
+        - Що
+        - Це
+        - Є
+    - sentence: '___ студентка.'
+      answer: Ти
+      options:
+        - Ти
+        - Він
+        - Воно
+        - Ми
+    - sentence: '___ вчитель.'
+      answer: Він
+      options:
+        - Він
+        - Вона
+        - Воно
+        - Що
+    - sentence: '___ вчителька.'
+      answer: Вона
+      options:
+        - Вона
+        - Він
+        - Воно
+        - Що
+
+- type: group-sort
+  title: Who vs. What
+  instruction: Sort the words based on whether you would ask Хто це or Що це.
+  groups:
+    - name: Хто це
+      items:
+        - Іван
+        - Анна
+        - вчитель
+        - вчителька
+        - студент
+        - студентка
+    - name: Що це
+      items:
+        - стіл
+        - підручник
+        - книга
+        - яблуко
+        - паспорт
+
+- type: match-up
+  title: Complete the Phrase
+  instruction: Match the beginnings and ends of these common phrases.
+  pairs:
+    - left: Хто
+      right: це?
+    - left: Що
+      right: це?
+    - left: Мене
+      right: звати...
+    - left: Давай
+      right: на ти?
+    - left: Я
+      right: студент.
+    - left: Вона
+      right: вчителька.
+    - left: Це
+      right: яблуко.
+    - left: Дуже
+      right: приємно.
+
+- type: anagram
+  title: Word Scramble
+  instruction: Rearrange the letters to form the correct Ukrainian word.
+  items:
+    - scrambled: о т х
+      answer: хто
+    - scrambled: т у с д е н т
+      answer: студент
+    - scrambled: н і в
+      answer: він
+    - scrambled: а в н о
+      answer: вона
+    - scrambled: о н о в
+      answer: воно
+    - scrambled: в ч и л е т ь
+      answer: вчитель
+    - scrambled: г а к и н
+      answer: книга
+    - scrambled: и в о н
+      answer: вони

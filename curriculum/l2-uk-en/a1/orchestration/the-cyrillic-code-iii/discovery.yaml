@@ -1,0 +1,204 @@
+discovered_at: '2026-03-05T17:17:41.944268+00:00'
+query_keywords:
+- The Cyrillic Code III
+- Приголосні
+- Дзвінкі та глухі
+- Практика читання
+- new letters (Б, Д, П, З, Г, Х, Ж, Ш, Ч)
+- voiced from voiceless consonant pairs
+- the Г vs Ґ distinction preview (Ґ comes in Code IV)
+- common words using all 23 known letters
+- Letter recognition (Б, Д, П, З, Г, Х, Ж, Ш, Ч)
+- Voiced vs voiceless consonant pairs
+- П vs Р distinction reinforcement
+- Г (voiced glottal) vs Ґ (hard g) preview
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+  source: ukrainianlessons.com
+  relevance_score: 0.6000000000000001
+  topics:
+  - alphabet
+  - cyrillic
+  - letters
+  - sounds
+- url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+  title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - alphabet
+  - cyrillic
+  - pronunciation
+  - letters
+- url: https://talkukrainian.com/ukrainian-alphabet/
+  title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
+  source: talkukrainian
+  relevance_score: 0.5
+  topics:
+  - alphabet
+  - letters
+  - pronunciation
+  - cyrillic
+- url: https://www.ukrainianlessons.com/episode200/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 200
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0003
+  text: "* \n6. Розглянь таблиці. Пригадай, за допомогою чого утворю­\nються дзвінкі\
+    \ приголосні. Що ми чуємо, коли їх вимовля­\nємо?\nПриголосні звуки, які мають\
+    \ пару\nДзвінкі\n[б]\nм\n[ЦІ\n[3]\n[3']\n[ж]\n[дж]\n[дз]\n[ДЗ'1\n[г]\n[И\nГлухі\n\
+    [П]\n[Т]\n[ТІ\n[С]\n[СІ\n[ш]\n[Ч]\n[ц]\n[ЦІ\nИ\n[к]\nПриголосні звуки, які не\
+    \ мають пари\nДзвінкі\n[В]\n[Л]\n[Л'1\n[М]\n[Н]\n[НІ\n[й]\n[р]\nГлухі\n[ф]\n7.\
+    \ \nДосліди звуки в поданих словах.\nз—>\nКрок 1. Прочитай слова.\nЖабка, мед,\
+    \ низько, загадка.\nКрок 2. Які звуки позначено виділеними буквами?\nа) дзвінкі;\
+    \ \nб) "
+  section_title: Сторінка 5
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-kravtsova-2020-1_s0037
+  text: "39\n108.\t 1.\t Пригадай дзвінкі приголосні звуки.\n[б]\n[д]\n[д´]\n[з]\n\
+    [з´]\n[ж]\n[дж]\n[дз]\n[дз´]\n[г]\n[ґ]\n[в]\n[л]\n[л´]\n[м]\n[н]\n[н´]\n[й]\n\
+    [р]\n[р´]\n2.\t Дослідиѳ, які дзвінкі звуки мають парні глухі. Якими буквами \n\
+    їх позначають на письмі? \n109.\t 1.\t Прочитай слова вголос. Чітко вимовляй дзвінкі\
+    \ приголосні \nзвуки в кінці та середині слів. \nву\nні\n[ж]\nзага\nвідга\n[д]ка\n\
+    ка\nприка\n[з]ка\n2.\t Назвиѳ слова, які мають протилежне значення. \n3.\t Спиши\
+    \ слова, підкресливши дзвінкі приголосні в кінці складу \nперед глухими"
+  section_title: Сторінка 39
+  grade: 3
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0081
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . 60
+
+    П п . . . . . . . . . . . . . . . . . . . . . . . . . . 61
+
+    Дзвінкі і глухі приголосні . . . . . . . 61
+
+    Р р  . . . . . . . . . . . . . . . . . . . . . . . . . . 62
+
+    Р р  . . . . . . . . . . . . . . . . . . . . . . . . . . 63
+
+    Т т . . . . . . . . . . . . . . . . . . . . . . . . . . . 64
+
+    Т т . . . . . . . . . . . . . . . . . . . . . . . . . . . 65
+
+    Дзвінкі і глухі приголосні . . . . . . . 65
+
+    Ю ю  . . . . . . . . . . . . . . . . . . . . . . . . . 66
+
+    Ю '
+  section_title: Сторінка 79
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0001
+  text: 'ЗВУКИ І БУКВИ
+
+    к
+
+    і
+
+    <
+
+    ЗВУКИ
+
+    СКЛАД^
+
+    У розділі ти будеш вивчати:
+
+    БУКВИ
+
+    НАГОЛОС
+
+    Дізнаєшся про:
+
+    к
+
+    1
+
+    г
+
+    л
+
+    І
+
+    1
+
+    наголошені
+
+    ГОЛОСНІ ЗВУКИ
+
+    ____________________
+
+    ненаголошені
+
+    дзвінкі, глухі
+
+    г
+
+    тверді, м''які
+
+    ^ПРИГОЛОСНІ ЗВУКИ
+
+    СКЛАДИ J
+
+    ................................................................. ................
+
+    наголошені
+
+    У
+
+    ненаголошені
+
+    З'
+  section_title: Сторінка 3
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0006
+  text: '. . . . . 133
+
+    Звукове значення букв я, ю, є, ї та  щ. Звуки  [дж], [дз] . . . . . . . . . .
+    137
+
+    Вимова приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . 140
+
+    Уподібнення приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 143
+
+    За дзвінкістю . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 143
+
+    За глухістю . . . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 4
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

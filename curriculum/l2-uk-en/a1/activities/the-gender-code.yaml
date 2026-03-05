@@ -1,630 +1,331 @@
-- groups:
-  - items:
-    - стіл
-    - брат
-    - дім
-    - тато
-    - собака
-    - день
-    name: Чоловічий (Він)
-  - items:
-    - мама
-    - сестра
-    - книга
-    - земля
-    - ніч
-    - квартира
-    name: Жіночий (Вона)
-  - items:
-    - вікно
-    - місто
-    - море
-    - серце
-    - ім'я
-    - сонце
-    name: Середній (Воно)
-  instruction: Розподіліть слова за їхнім граматичним родом (Він, Вона, Воно).
-  title: Сортування за родом
-  type: group-sort
-- instruction: З'єднайте іменник з правильним займенником (Match the noun with the
-    correct possessive pronoun).
+- type: "group-sort"
+  title: "Sort the Nouns by Gender"
+  instruction: "Drag and drop the nouns into the correct gender buckets based on their endings."
+  groups:
+    - name: "Masculine (Consonant)"
+      items:
+        - "стіл"
+        - "дім"
+        - "брат"
+        - "артефакт"
+    - name: "Feminine (-а / -я)"
+      items:
+        - "книга"
+        - "сестра"
+        - "зона"
+        - "земля"
+    - name: "Neuter (-о / -е)"
+      items:
+        - "вікно"
+        - "місто"
+        - "море"
+        - "сонце"
+
+- type: "quiz"
+  title: "Identify the Gender"
+  instruction: "Look at the noun ending and select the correct grammatical gender."
+  items:
+    - question: "What is the gender of the word дім (house)?"
+      explanation: "The word дім ends in a consonant, which makes it Masculine."
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word книга (book)?"
+      explanation: "The word книга ends in -а, making it Feminine."
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word вікно (window)?"
+      explanation: "The word вікно ends in -о, making it Neuter."
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word брат (brother)?"
+      explanation: "The word брат ends in a consonant, making it Masculine."
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word сестра (sister)?"
+      explanation: "The word сестра ends in -а, making it Feminine."
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word море (sea)?"
+      explanation: "The word море ends in -е, making it Neuter."
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word земля (earth)?"
+      explanation: "The word земля ends in -я, making it Feminine."
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word сонце (sun)?"
+      explanation: "The word сонце ends in -е, making it Neuter."
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+
+- type: "true-false"
+  title: "True or False: Gender Rules and Exceptions"
+  instruction: "Determine if the following statements about Ukrainian noun genders are true or false."
+  items:
+    - statement: "The word тато (dad) is Neuter because it ends in the letter -о."
+      correct: false
+      explanation: "Biological sex overrides the ending. Because a dad is male, тато is Masculine."
+    - statement: "In Ukrainian, inanimate objects like a table or a book can be Masculine or Feminine."
+      correct: true
+      explanation: "Grammatical gender applies to all nouns, not just people or animals. A table is Masculine and a book is Feminine."
+    - statement: "The word ім'я (name) is Feminine because it ends in -я."
+      correct: false
+      explanation: "The word ім'я is a special exception. It is always Neuter despite ending in -я."
+    - statement: "Words ending in the soft sign (-ь) can be either Masculine or Feminine, so their gender must be memorized."
+      correct: true
+      explanation: "The soft sign does not give a clear gender pattern. For example, день is Masculine but ніч is Feminine."
+    - statement: "To test if a word is Feminine, you can try saying моя in front of it."
+      correct: true
+      explanation: "The word моя is the feminine word for my, and using it is a great diagnostic test for feminine nouns."
+    - statement: "The word місто (city) belongs in the Neuter category because it ends in -о."
+      correct: true
+      explanation: "Words ending in the round vowels -о or -е are typically Neuter."
+    - statement: "You should always use the word воно (it) when referring to inanimate objects."
+      correct: false
+      explanation: "You must use the pronoun that matches the grammatical gender of the object: він (he), вона (she), or воно (it)."
+    - statement: "The word собака (dog) is grammatically Feminine, even though it ends in -а."
+      correct: true
+      explanation: "The word собака ends in -а, and it is grammatically classified as a Feminine word."
+
+- type: "match-up"
+  title: "The 'My' Test"
+  instruction: "Match each noun with the correct form of the word my."
   pairs:
-  - left: брат
-    right: мій
-  - left: сестра
-    right: моя
-  - left: вікно
-    right: моє
-  - left: тато
-    right: мій
-  - left: мама
-    right: моя
-  - left: ім'я
-    right: моє
-  - left: дім
-    right: мій
-  - left: книга
-    right: моя
-  - left: море
-    right: моє
-  - left: день
-    right: мій
-  - left: сонце
-    right: моє
-  - left: земля
-    right: моя
-  - left: серце
-    right: моє
-  - left: ніч
-    right: моя
-  title: Мій, Моя чи Моє?
-  type: match-up
-- instruction: Оберіть правильну відповідь на питання про граматичний рід.
+    - left: "брат (brother)"
+      right: "мій брат"
+    - left: "сестра (sister)"
+      right: "моя сестра"
+    - left: "місто (city)"
+      right: "моє місто"
+    - left: "дім (house)"
+      right: "мій дім"
+    - left: "книга (book)"
+      right: "моя книга"
+    - left: "вікно (window)"
+      right: "моє вікно"
+    - left: "тато (dad)"
+      right: "мій тато"
+    - left: "ім'я (name)"
+      right: "моє ім'я"
+
+- type: "fill-in"
+  title: "Complete the Phrases"
+  instruction: "Select the correct form of the possessive pronoun to match the noun."
   items:
-  - explanation: Слово закінчується на приголосний, тому це чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Не має роду
-    question: Якого роду слово «стіл»?
-  - explanation: Слово закінчується на -а, тому це жіночий рід.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Множина
-    question: Якого роду слово «книга»?
-  - explanation: Слово закінчується на -о, тому це середній рід.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Універсальний
-    question: Якого роду слово «вікно»?
-  - explanation: Тато — це чоловік, тому біологічна стать переважає закінчення. Це
-      чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Спільний
-    question: Слово «тато» закінчується на -о. Якого воно роду?
-  - explanation: Це слово-виняток (Сім'я 4), воно належить до середнього роду.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Невідомий
-    question: Якого роду слово «ім'я»?
-  - explanation: Це виняток. Слова жіночого роду можуть закінчуватися на м'який знак
-      або шиплячий.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Змішаний
-    question: Слово «ніч» закінчується на приголосний. Якого воно роду?
-  - explanation: Чоловічий рід зазвичай має нульове закінчення (закінчується на приголосний).
-    options:
-    - correct: true
-      text: Приголосний
-    - correct: false
-      text: -а / -я
-    - correct: false
-      text: -о / -е
-    - correct: false
-      text: -и / -і
-    question: Яке закінчення зазвичай має чоловічий рід?
-  - explanation: Середній рід типово закінчується на -о або -е.
-    options:
-    - correct: true
-      text: -о / -е
-    - correct: false
-      text: -а / -я
-    - correct: false
-      text: Приголосний
-    - correct: false
-      text: -у / -ю
-    question: Яке закінчення зазвичай має середній рід?
-  - explanation: Слово закінчується на -я, тому це жіночий рід.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Множина
-    question: Якого роду слово «земля»?
-  - explanation: Слово закінчується на -е, тому це середній рід.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Універсальний
-    question: Якого роду слово «море»?
-  - explanation: Слово закінчується на -е, тому це середній рід.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Універсальний
-    question: Якого роду слово «серце»?
-  - explanation: Жіночий рід зазвичай має закінчення -а або -я.
-    options:
-    - correct: true
-      text: -а / -я
-    - correct: false
-      text: -о / -е
-    - correct: false
-      text: Приголосний
-    - correct: false
-      text: -у / -ю
-    question: Яке закінчення зазвичай має жіночий рід?
-  title: Теорія роду
-  type: quiz
-- instruction: Оберіть правильну форму займенника «мій» (Choose the correct form of
-    'my').
+    - sentence: "Це ___ тато."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ мама."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ місто."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ дім."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ книга."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ вікно."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ ім'я."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "я"]
+    - sentence: "Це ___ собака."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "я"]
+
+- type: "anagram"
+  title: "Unscramble the Core Vocabulary"
+  instruction: "Rearrange the letters to form the correct Ukrainian noun."
   items:
-  - answer: моя
-    explanation: Мама — жіночий рід (вона).
-    options:
-    - моя
-    - мій
-    - моє
-    - мої
-    sentence: Це ... мама.
-  - answer: мій
-    explanation: Тато — чоловічий рід (він), незважаючи на закінчення -о.
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-    sentence: Це ... тато.
-  - answer: моє
-    explanation: Вікно — середній рід (воно).
-    options:
-    - моє
-    - мій
-    - моя
-    - мої
-    sentence: Де ... вікно?
-  - answer: мій
-    explanation: Брат — чоловічий рід (він).
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-    sentence: Це ... брат.
-  - answer: моя
-    explanation: Сестра — жіночий рід (вона).
-    options:
-    - моя
-    - мій
-    - моє
-    - мої
-    sentence: Це ... сестра.
-  - answer: моє
-    explanation: Ім'я — середній рід (воно).
-    options:
-    - моє
-    - мій
-    - моя
-    - мої
-    sentence: '... ім''я — Олена.'
-  - answer: мій
-    explanation: Дім — чоловічий рід (він).
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-    sentence: Тут ... дім.
-  - answer: моя
-    explanation: Книга — жіночий рід (вона).
-    options:
-    - моя
-    - мій
-    - моє
-    - мої
-    sentence: Це ... книга.
-  - answer: моє
-    explanation: Місто — середній рід (воно).
-    options:
-    - моє
-    - мій
-    - моя
-    - мої
-    sentence: Це ... місто.
-  - answer: мій
-    explanation: Собака — чоловічий рід (він) в українській мові.
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-    sentence: Це ... собака.
-  - answer: моє
-    explanation: Сонце — середній рід (воно).
-    options:
-    - моє
-    - мій
-    - моя
-    - мої
-    sentence: Де ... сонце?
-  - answer: моя
-    explanation: Земля — жіночий рід (вона).
-    options:
-    - моя
-    - мій
-    - моє
-    - мої
-    sentence: Це ... земля.
-  title: Правильний займенник
-  type: fill-in
-- instruction: Розшифруйте слова (Rearrange the letters to form the correct Ukrainian
-    word).
+    - scrambled: "т о т а"
+      answer: "тато"
+    - scrambled: "м а а м"
+      answer: "мама"
+    - scrambled: "м і д"
+      answer: "дім"
+    - scrambled: "в н о і к"
+      answer: "вікно"
+    - scrambled: "р е м о"
+      answer: "море"
+    - scrambled: "і м т с о"
+      answer: "місто"
+    - scrambled: "б р т а"
+      answer: "брат"
+    - scrambled: "с е т с р а"
+      answer: "сестра"
+
+- type: "quiz"
+  title: "Spot the Gender Exceptions"
+  instruction: "Choose the correct answer about these special words."
   items:
-  - answer: брат
-    scrambled: т а б р
-  - answer: сестра
-    scrambled: т р а с е с
-  - answer: мама
-    scrambled: а м м а
-  - answer: тато
-    scrambled: о т а т
-  - answer: вікно
-    scrambled: к о н в і
-  - answer: місто
-    scrambled: т о с і м
-  - answer: серце
-    scrambled: ц р е с е
-  - answer: собака
-    scrambled: к а б о с а
-  - answer: сонце
-    scrambled: ц е н о с
-  - answer: море
-    scrambled: р е м о
-  - answer: земля
-    scrambled: л я з е м
-  - answer: день
-    scrambled: н ь д е
-  title: Знайдіть слово
-  type: anagram
-- instruction: Визначте, чи правильне твердження (Decide if the statement is true
-    or false).
-  items:
-  - correct: true
-    explanation: Закінчення -о вказує на середній рід.
-    statement: Слово «вікно» належить до середнього роду.
-  - correct: false
-    explanation: Тато — чоловічий рід, бо це чоловік.
-    statement: Слово «тато» належить до середнього роду.
-  - correct: true
-    explanation: Закінчення -а вказує на жіночий рід.
-    statement: Слово «мама» належить до жіночого роду.
-  - correct: false
-    explanation: Стіл закінчується на приголосний, це чоловічий рід.
-    statement: Слово «стіл» належить до жіночого роду.
-  - correct: false
-    explanation: Ім'я — це виняток, воно середнього роду.
-    statement: Слово «ім'я» належить до жіночого роду.
-  - correct: true
-    explanation: Собака в українській мові — він.
-    statement: Слово «собака» належить до чоловічого роду.
-  - correct: false
-    explanation: Ніч — це виняток, це слово жіночого роду.
-    statement: Слово «ніч» належить до чоловічого роду.
-  - correct: true
-    explanation: День — він, закінчується на м'який знак, але це чоловічий рід.
-    statement: Слово «день» належить до чоловічого роду.
-  - correct: true
-    explanation: Море закінчується на -е, це середній рід.
-    statement: Слово «море» належить до середнього роду.
-  - correct: false
-    explanation: Земля — це жіночий рід (закінчується на -я).
-    statement: Слово «земля» належить до чоловічого роду.
-  - correct: true
-    explanation: Серце закінчується на -е, це середній рід.
-    statement: Слово «серце» належить до середнього роду.
-  - correct: false
-    explanation: Брат — це чоловічий рід.
-    statement: Слово «брат» належить до жіночого роду.
-  title: Правда чи ні?
-  type: true-false
-- groups:
-  - items:
-    - дім
-    - стіл
-    - брат
-    - день
-    name: Закінчення на приголосний
-  - items:
-    - мама
-    - сестра
-    - книга
-    - земля
-    name: Закінчення на -А / -Я
-  - items:
-    - вікно
-    - місто
-    - море
-    - серце
-    name: Закінчення на -О / -Е
-  instruction: Розподіліть слова за їхнім закінченням (Sort words by their ending).
-  title: Сортування за закінченням
-  type: group-sort
-- instruction: Оберіть слово, яке підходить за родом (Choose the word that matches
-    the gender).
-  items:
-  - answer: брат
-    explanation: Потрібен іменник чоловічого роду.
-    options:
-    - брат
-    - сестра
-    - вікно
-    - книга
-    sentence: Це мій ...
-  - answer: сестра
-    explanation: Потрібен іменник жіночого роду.
-    options:
-    - сестра
-    - брат
-    - місто
-    - тато
-    sentence: Це моя ...
-  - answer: місто
-    explanation: Потрібен іменник середнього роду.
-    options:
-    - місто
-    - дім
-    - мама
-    - собака
-    sentence: Це моє ...
-  - answer: тато
-    explanation: Тато — чоловічий рід (мій).
-    options:
-    - тато
-    - мама
-    - вікно
-    - земля
-    sentence: Де мій ...
-  - answer: земля
-    explanation: Земля — жіночий рід (моя).
-    options:
-    - земля
-    - дім
-    - сонце
-    - день
-    sentence: Тут моя ...
-  - answer: ім'я
-    explanation: Ім'я — середній рід (моє).
-    options:
-    - ім'я
-    - стіл
-    - ніч
-    - день
-    sentence: Це моє ...
-  - answer: сонце
-    explanation: Сонце — середній рід (моє).
-    options:
-    - сонце
-    - мама
-    - тато
-    - стіл
-    sentence: Це моє ...
-  - answer: день
-    explanation: День — чоловічий рід (мій).
-    options:
-    - день
-    - ніч
-    - земля
-    - вікно
-    sentence: Це мій ...
-  - answer: ніч
-    explanation: Ніч — жіночий рід (моя).
-    options:
-    - ніч
-    - день
-    - дім
-    - місто
-    sentence: Це моя ...
-  - answer: серце
-    explanation: Серце — середній рід (моє).
-    options:
-    - серце
-    - собака
-    - брат
-    - сестра
-    sentence: Це моє ...
-  - answer: собака
-    explanation: Собака — чоловічий рід (мій).
-    options:
-    - собака
-    - книга
-    - ніч
-    - вікно
-    sentence: Це мій ...
-  - answer: мама
-    explanation: Мама — жіночий рід (моя).
-    options:
-    - мама
-    - тато
-    - брат
-    - стіл
-    sentence: Це моя ...
-  title: Оберіть іменник
-  type: fill-in
-- instruction: Будьте уважні! Оберіть правильний рід для складних слів (Careful! Choose
-    the correct gender for tricky words).
-  items:
-  - explanation: В українській мові собака — це він (чоловічий рід).
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «собака»?
-  - explanation: Ім'я закінчується на -я, але належить до 4-ї відміни середнього роду.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Не має роду
-    question: Якого роду слово «ім'я»?
-  - explanation: Слово ніч закінчується на приголосний, але це жіночий рід.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Змішаний
-    question: Якого роду слово «ніч»?
-  - explanation: День закінчується на м'який знак, це чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «день»?
-  - explanation: Тато — чоловічий рід, тому правильно «мій тато».
-    options:
-    - correct: true
-      text: мій тато
-    - correct: false
-      text: моє тато
-    - correct: false
-      text: моя тато
-    - correct: false
-      text: мої тато
-    question: Яке словосполучення правильне?
-  - explanation: Мама — жіночий рід, закінчується на -а.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «мама»?
-  - explanation: Чоловік (husband/man) — чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «чоловік»?
-  - explanation: Жінка (wife/woman) — жіночий рід.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «жінка»?
-  - explanation: Брат — чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «брат»?
-  - explanation: Сестра — жіночий рід.
-    options:
-    - correct: true
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «сестра»?
-  - explanation: Дім — чоловічий рід.
-    options:
-    - correct: true
-      text: Чоловічий
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Середній
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «дім»?
-  - explanation: Серце — середній рід.
-    options:
-    - correct: true
-      text: Середній
-    - correct: false
-      text: Жіночий
-    - correct: false
-      text: Чоловічий
-    - correct: false
-      text: Спільний
-    question: Якого роду слово «серце»?
-  title: Пастки та винятки
-  type: quiz
+    - question: "Why is the word тато (dad) considered Masculine?"
+      explanation: "Even though тато ends in -о (usually Neuter), the biological reality of a dad being male makes it Masculine."
+      options:
+        - text: "Biological sex overrides the ending."
+          correct: true
+        - text: "It ends in a consonant."
+          correct: false
+        - text: "All family members are Masculine."
+          correct: false
+        - text: "It ends in a soft sign."
+          correct: false
+    - question: "Which of the following words is a Neuter exception, despite ending in -я?"
+      explanation: "The word ім'я belongs to an ancient group of Neuter words and does not follow the normal Feminine pattern for -я."
+      options:
+        - text: "ім'я (name)"
+          correct: true
+        - text: "земля (earth)"
+          correct: false
+        - text: "мама (mom)"
+          correct: false
+        - text: "книга (book)"
+          correct: false
+    - question: "What is the gender of the word день (day)?"
+      explanation: "День ends in a soft sign (-ь). You must simply memorize that it is Masculine."
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "What is the gender of the word ніч (night)?"
+      explanation: "Ніч ends in a soft sign (-ь). You must simply memorize that it is Feminine."
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Not applicable"
+          correct: false
+    - question: "Which pronoun replaces the Masculine object стіл (table)?"
+      explanation: "Since стіл is Masculine, you use він (he), not воно (it)."
+      options:
+        - text: "він (he)"
+          correct: true
+        - text: "вона (she)"
+          correct: false
+        - text: "воно (it)"
+          correct: false
+        - text: "я (I)"
+          correct: false
+    - question: "Which pronoun replaces the Feminine object книга (book)?"
+      explanation: "Since книга is Feminine, you use вона (she)."
+      options:
+        - text: "вона (she)"
+          correct: true
+        - text: "він (he)"
+          correct: false
+        - text: "воно (it)"
+          correct: false
+        - text: "я (I)"
+          correct: false
+    - question: "Which pronoun perfectly matches the Neuter word сонце (sun)?"
+      explanation: "Сонце ends in -е and is a Neuter word, so we use воно."
+      options:
+        - text: "воно (it)"
+          correct: true
+        - text: "він (he)"
+          correct: false
+        - text: "вона (she)"
+          correct: false
+        - text: "я (I)"
+          correct: false
+    - question: "How do you correctly say 'my dad'?"
+      explanation: "Since тато is a biological male, it is Masculine. Therefore, we use the masculine form мій."
+      options:
+        - text: "мій тато"
+          correct: true
+        - text: "моє тато"
+          correct: false
+        - text: "моя тато"
+          correct: false
+        - text: "я тато"
+          correct: false
+
+- type: "group-sort"
+  title: "Harmonious Patterns"
+  instruction: "Sort the phrases into the correct gender categories based on how their endings match."
+  groups:
+    - name: "Masculine Patterns (Consonant)"
+      items:
+        - "великий стіл"
+        - "новий дім"
+        - "мій брат"
+        - "гарний день"
+    - name: "Feminine Patterns (-а / -я)"
+      items:
+        - "цікава книга"
+        - "моя сестра"
+        - "рідна земля"
+        - "моя собака"
+    - name: "Neuter Patterns (-о / -е)"
+      items:
+        - "чисте вікно"
+        - "моє місто"
+        - "синє море"
+        - "ясне сонце"

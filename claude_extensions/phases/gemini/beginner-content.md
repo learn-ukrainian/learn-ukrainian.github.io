@@ -40,8 +40,8 @@ Write the lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 - **Target**: approximately {WORD_TARGET} words
 - **Immersion**: {IMMERSION_RULE}
-- **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 3 different types
-- **Structure**: Follow the content_outline from `{META_PATH}` — each section maps to an H2
+- **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
+- **Structure**: Follow the content_outline from `{META_PATH}` — each section maps to an H2. **Write ALL sections. Do not skip any section, even short ones like Summary.** Missing sections fail validation.
 
 ### Beginner Writing Style
 
@@ -60,6 +60,7 @@ Write for someone seeing Ukrainian for the first time. English is the scaffoldin
 - Include IPA transcriptions or phonetic brackets
 - Use vocabulary from future modules
 - Create practice sentences if the constraints say "no sentences"
+- Repeat the same Ukrainian phrase pattern more than twice (e.g. don't write "Це склад", "Це слово", "Це правило" in every paragraph — vary your immersion: use contextual labels like "Наприклад — For example", section bridges like "А тепер — And now", vocabulary callouts, or short dialogue snippets)
 
 ### Example of Good A1 Content (letter introduction)
 

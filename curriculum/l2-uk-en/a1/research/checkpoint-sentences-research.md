@@ -1,33 +1,50 @@
-# Дослідження: Checkpoint: Sentences
+## Research Notes
 
-## State Standard Reference
-§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає...), працювати... сидіти... дивитися (дивлюся...)."
-§4.2.2: "Утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє... вказівних: той, та, те; цей, ця, це."
-§4.3.1: "Просте речення: питальне речення: Чи студент відповідає?... спеціальні слова де, звідки, куди, що, хто... стверджувальні й заперечні речення."
-Alignment: Цей модуль є консолідацією навичок рівня A1.2, що відповідає вимогам Державного стандарту щодо базової морфології (дієвідміни, займенники) та синтаксису (питання, заперечення).
+**Textbook Approach:**
+Standard A1 Ukrainian textbooks treat the first major checkpoint as a consolidation of present-tense verbs, question words, and basic expressions of want/like. The progression moves from mechanical paradigm recall to communicative use. Verbs are typically split into Class I (-ати) and Class II (-ити), followed by the introduction of question words to facilitate basic dialogue.
 
-## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| подобатися | High (A1) | мені подобається, тобі подобається |
-| хотіти | Very High (A1) | я хочу каву, я хочу їсти |
-| цей / той | Very High (A1) | цей стілець, та вулиця |
-| тому що / бо | High (A1/A2) | я читаю, тому що... |
+**Common Errors:**
+1. **Conjugation Mix-ups:** English speakers frequently confuse the 3rd person plural endings (-уть/-ють for Class I vs -ать/-ять for Class II).
+2. **Preference Constructions:** Attempting to use a nominative subject with "подобатися" (e.g., *Я подобаю* instead of the correct Dative construction *Мені подобається*).
+3. **Question Word Confusion:** Mixing up *Де* (location - where) and *Куди* (direction - where to), as English uses "where" for both.
 
-## Cultural Hooks
-1. Українці часто використовують конструкцію «Мені подобається» для предметів та дій, тоді як «Я люблю» має сильніше емоційне забарвлення і часто використовується щодо людей або сильних захоплень.
-2. Під час замовлення в кафе українці часто використовують пряме «Я хочу...» або «Мені, будь ласка...», що є цілком ввічливим, на відміну від англійського "I want", яке може звучати занадто прямолінійно.
+**Cultural Hook:**
+In Ukraine, "Я люблю" (I love) is reserved for deep affection, strong emotional attachment, or very strong preferences (like favorite foods or hobbies). For everyday likes or passing preferences, "Мені подобається" is the standard. Directness is polite; saying "Я хочу" (I want) when ordering coffee or food is completely normal and not considered rude like "I want" might be in English.
 
-## Common Learner Errors
-1. *Я подобаю каву* → Мені подобається кава — Прямий переклад англійської структури "I like" замість давального відмінка.
-2. *Вони говорють / Вони читать* → Вони говорять / Вони читають — Плутанина закінчень 3-ї особи множини між I та II дієвідмінами (-уть/-ють vs -ать/-ять).
-3. Зміна порядку слів у загальних питаннях — Українські питання з «Чи» або питання з питальними словами не вимагають складної інверсії підмета та присудка, як в англійській.
+**Cross-references:**
+This module builds directly on A1.2 modules (verbs, preferences) and serves as the final structural gate before introducing the Accusative case and motion verbs (A1.3).
 
-## Cross-References
-- Builds on: a1-23 (What Time Is It)
-- Prepares for: a1-25 (The Accusative I)
+## Resource Discovery
 
-## Notes for Content Writing
-- English scaffolding is mandatory (immersion is ~30-40%). Explain all grammar rules in English first.
-- Emphasize the "Safe Harbor" approach: this is a checkpoint to build confidence, not a stressful test.
-- Decolonized framing: Treat Ukrainian structures (like "Мені подобається" and flexible word order) as natural, efficient systems, not as "exceptions" or "different from" other languages.
+
+### Blog Articles
+- [7 helpful Ukrainian words to link sentences](https://www.ukrainianlessons.com/fmu10/) (ukrainianlessons.com)
+- [Ukrainian History — Brief Overview](https://www.ukrainianlessons.com/ukrainian-history/) (ukrainianlessons.com)
+- [Easter in Ukraine + Complex sentences with Adverbial Clauses](https://www.ukrainianlessons.com/episode116/) (ukrainianlessons.com)
+- [May picnic in Ukraine + Complex Sentences with Attributive Clauses](https://www.ukrainianlessons.com/episode117/) (ukrainianlessons.com)
+- [Grammar point: Conditional sentences in Ukrainian](https://www.ukrainianlessons.com/fmu32/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 3, Сторінка 101: Частини  мови
+У розділі ти будеш вивчати:
+ІМЕННИКИ
+хто? що?
+який? яка? 
+яке? які?
+що робить? 
+що роб...
+- Grade 4, Сторінка 115: 310.1. Розглянь малюнки. Опиши їх за допомогою дієслів.
+2. Склади та запиши за кожним малюнком три р...
+- Grade 7, Сторінка 132: Підсумкові тести  
+129
+Підсумкові тести
+Виконайте тестові завдання.
+1   Дієприслівниками є  обидва с...
+- Grade 7, Сторінка 25: Розділ 1  ДІЄСЛОВО
+22
+Вправа 15
+1   Із запропонованих слів випишіть діє слова 
+Перемогти, перемога, ...
+- Grade 7, Сторінка 7: 4
+Зміст
+Передмова                                                                                   ...

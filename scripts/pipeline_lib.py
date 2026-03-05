@@ -257,6 +257,15 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "- AVAILABLE: bare nouns, gender classification, Це + noun, Я + noun, "
         "memorized politeness phrases (Дякую, Будь ласка, Вибачте from M8)\n"
         "- FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases except nominative\n"
+        "  Exception (M6 stress): Conjugated verb forms allowed ONLY as stress pattern examples "
+        "(e.g., писа́ти → пишу́ → пи́шеш to show stress mobility). Do not teach conjugation rules.\n"
+        "  Exception (M7 gender): Adjective agreement examples allowed to demonstrate what gender does "
+        "(e.g., великий стіл, нова книга, чисте вікно). Do not teach agreement rules.\n"
+        "  Exception (M8 greetings): Memorized conversational phrases with conjugated verbs allowed "
+        "as fixed chunks (e.g., 'Як справи?', 'Що ти робиш?'). Present as whole phrases, not conjugation patterns.\n"
+        "- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, "
+        "Розглянемо, Скажіть — always use English equivalents (Let us look at, Let's talk about, "
+        "Let's review, Please tell me)\n"
         "- Use English for all classroom instructions\n\n"
         "METALANGUAGE: English-first, Ukrainian term in parentheses on first use"
     ),
@@ -1788,9 +1797,17 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         fix_instructions.append("### Other Audit Failures\n\n```\n" + "\n".join(unparsed_fails[-20:]) + "\n```")
 
     if not fix_instructions:
-        # Last resort: dump condensed fail lines
+        # Last resort: dump condensed fail lines so Gemini always sees WHY audit failed
         fail_lines = [ln for ln in audit_lines if "❌" in ln or "FAIL" in ln or "VIOLATION" in ln]
-        fix_instructions.append("### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```")
+        if fail_lines:
+            fix_instructions.append("### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```")
+        else:
+            # Ultra-fallback: include the full audit tail so the fix prompt is never empty
+            tail = "\n".join(audit_lines[-30:])
+            fix_instructions.append(
+                "### Audit Output (no specific failures extracted — review raw output)\n\n"
+                f"```\n{tail}\n```"
+            )
 
     # Pedagogical constraints (compact)
     ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num)
@@ -1834,6 +1851,9 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
 
     fixes_text = "\n\n".join(fix_instructions)
     total_fixes = len(det_issues) + len(gate_failures)
+    # Never say "Fix 0 issues" — if we got here, something failed
+    if total_fixes == 0:
+        total_fixes = len(fix_instructions)
 
     return textwrap.dedent(f"""\
         # Fix {total_fixes} issue(s) in `{ctx.slug}`
@@ -2091,7 +2111,7 @@ Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues i
 # 14. Review Tier Helpers
 # ============================================================================
 
-REVIEW_TIERS_DIR = PROJECT_ROOT / "claude_extensions" / "commands" / "review-tiers"
+REVIEW_TIERS_DIR = PROJECT_ROOT / "claude_extensions" / "skills" / "plan-review" / "review-tiers"
 
 TIER_MAP: dict[str, str] = {
     "a1": "tier-1-beginner.md",

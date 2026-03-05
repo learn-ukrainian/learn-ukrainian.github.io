@@ -1,246 +1,148 @@
 <!-- SCOPE
-Covers: 7 new letters (К, Р, Б, В, Д, И, І) + О, phonetic distinctions, reading first words
+Covers: 7 new letters (К, И, І, Р, В, Т, Е), reading simple words
 Not covered:
-  - Consonants П, Т, Г, Ґ, Е, З, Ж, Ш, Х → a1-03
-Related: a1-01, a1-03
+  - iotated vowels → a1-04
+  - remaining consonants → a1-03
 -->
 
 # The Cyrillic Code II
 
 > **Why does this matter?**
 >
-> In our first module, you learned how to read basic syllables and a few simple words. Now, we are unlocking the door to real, high-frequency Ukrainian vocabulary. By mastering these eight new letters, you will transition from sounding out syllables to recognizing everyday words like «water», «milk», and «home» on signs, menus, and in texts.
+> Learning these seven letters unlocks your ability to read real words. You transition from recognizing single sounds to decoding everyday vocabulary.
 
 ## Вступ — Introduction
 
-Welcome back to the Ukrainian alphabet. Ласкаво просимо до української абетки! In the first module, you mastered six foundational letters. Now we will carefully build your phonetic awareness using clear explanations and familiar comparisons, preparing you to read real Ukrainian words on your own. 
+Let us start with a warm welcome back. You learned seven letters in the first lesson. Let us see if you can read them. Look at these words: **ма́ма** (mom), **сом** (catfish), and **ма́сло** (butter). If you can recognize the letters in these words, you are ready for the next step.
 
-Let us briefly warm up with what you already know. Почитаймо разом! Спробуйте прочитати ці слова:
-*   **ма́ма** (mother)
-*   **су́ма** (sum)
-*   **луна́** (echo)
+Today, we add seven more letters to your toolkit. We introduce three new vowels: **И**, **І**, and **Е**. We also introduce four new consonants: **К**, **Р**, **В**, and **Т**. Once you finish this section, you will know fourteen letters in total. This represents a very important milestone. Knowing fourteen letters gives you the power to read real, high-frequency Ukrainian words. You no longer just read random syllables. You read words you can actually use in real life. We build your vocabulary slowly and steadily. Let us dive in and meet your new letters.
 
-If you read those comfortably, you are perfectly prepared for what comes next. Notice how each letter consistently makes the same sound? Це дуже важливо. That reliability is your best friend in Ukrainian.
+## Голосні — The Vowels И, І, Е
 
-### Наша мета — Our Goal: Seven New Letters Plus One
-In this lesson, your objective is to master eight new letters. Ми вивчаємо літери. We will introduce five consonants (К, Р, Б, В, Д) and three vowels (И, І, О). Seven of these are entirely new shapes or sounds, while one — the letter О — looks perfectly familiar but requires a specific phonetic focus. 
+Ukrainian has six basic vowel sounds, and today you learn the final three. These vowels appear in almost every sentence you read.
 
-By the end of this module, you will know 14 out of the 33 letters in the Ukrainian alphabet. This specific combination of letters unlocks your ability to read dozens of real, everyday Ukrainian words.
+First, let us meet the letter **Е**. This vowel is crisp and short. It sounds very much like the «e» in the English word «set» or «pet». It represents a single, clean sound, never a gliding combination of sounds. You see it in many international words.
+[Anna Ohoiko — Ukrainian Lessons — Е](https://www.youtube.com/watch?v=KFlsroBW0dk)
 
-## Голосні — Vowels: И, І, О
+Next, we look at the letter **І**. This is the high, bright vowel. To make this sound, you stretch your lips wide as if you make a big smile, and produce a sound like the «ee» in «see» or «meet».
+[Anna Ohoiko — Ukrainian Lessons — І](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
 
-Ukrainian vowels are pure and distinct. Українські голосні звуки чисті та виразні. In this section, we will focus on three vowels that define the melody of the language. Two of them look unfamiliar, while one looks exactly like an English letter but behaves a bit differently.
+> [!culture]
+> The dotted **І** holds a special place in Ukrainian hearts. It acts as a powerful visual symbol of the Ukrainian language, distinguishing our typography clearly from other Cyrillic alphabets. It represents linguistic identity and pride.
 
-### Літера И (The Deep Vowel)
-Let us start with a sound that is uniquely Ukrainian.
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=W-1rCu0indE]
+Finally, we introduce the most uniquely Ukrainian vowel: **И**. This letter often challenges English speakers because it has no exact match in your language. It makes a lower, more relaxed sound. To pronounce it, keep your jaw loose and slightly open, pulling the sound lower in your mouth than the high **І**. When you try to say **И**, imagine the sound you make when you feel unsure and say «uhhh», but slightly higher. Your tongue pulls back just a bit. You find this sound in the word **сир** (cheese). This relaxed position prevents you from smiling too much. Listen closely to the video.
+[Anna Ohoiko — Ukrainian Lessons — И](https://www.youtube.com/watch?v=W-1rCu0indE)
 
-The letter **И** is a distinctive and relaxed sound in Ukrainian. It has no exact equivalent in English, but it sounds somewhat like the "i" in "bit" or "sit", produced further back in your mouth. 
+> [!warning]
+> Do not mix up **И** and **І**. They operate as completely different letters that change the meaning of words. **І** sounds bright and high with a smile. **И** feels low and relaxed.
 
-To pronounce it correctly, keep your jaw relaxed and your tongue slightly pulled back. It is a robust, foundational sound that rarely appears at the very beginning of a native Ukrainian word. Instead, it forms the core of roots and suffixes. For example, in the word **ри́ба** (fish, note the «б» is a new letter we will learn soon), the **И** provides a deep, resonant core. Listening to native speakers is crucial here, as getting this sound right instantly makes your Ukrainian sound authentic.
+Let us look at some words using your new vowels along with letters from the first lesson.
 
-### Літера І (The Bright Vowel)
-Now, let us look at the smiling vowel.
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=Z9TH0H4ShGo]
+| Word | Meaning |
+|------|---------|
+| **ліс** | forest |
+| **ніс** | nose |
+| **мо́ре** | sea |
+| **метро́** | metro |
+| **ми** | we |
+| **сир** | cheese |
 
-In contrast to the deep **И**, the letter **І** is bright, high, and sharp. It is the soft "i", sounding very much like the "ee" in the English word "see" or "keep". When you pronounce it, your lips should pull back slightly into a smile.
+Notice how **Е**, **І**, and **И** give the language its melody. Practice the mouth positions in front of a mirror until the difference feels natural.
 
-> [!culture] The Dotted І
-> The dotted letter **І** is more than just a vowel; it is a distinct visual marker of the Ukrainian alphabet. It is frequently used in art, literature, and branding as a proud symbol of Ukrainian linguistic identity. It sets the visual texture of Ukrainian text apart from other Cyrillic alphabets.
+## Приголосні — The Consonants К, Р, В, Т
 
-Whenever you see this single-dotted letter, simply smile and say "ee". For instance, in the word **кіно́** (cinema), the **І** makes the sound sharp and clear.
+Now we move to the consonants. We have two very friendly letters today, and two very tricky ones.
 
-### Літера О (The Pure Vowel)
-Our third vowel looks perfectly familiar but behaves strictly.
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=QT3c1TiZZgk]
+Let us begin with the true friends. The letter **К** looks exactly like the English visual equivalent, and it makes the exact same sound. You do not need to learn anything new for this one.
+[Anna Ohoiko — Ukrainian Lessons — К](https://www.youtube.com/watch?v=J7sGEI4-xJo)
 
-The letter **О** looks and sounds just like the "o" in "more" or "core". However, there is a vital phonetic rule you must memorize right now. In Ukrainian, the unstressed **О** maintains phonetic purity. 
+Similarly, the letter **Т** serves as another true friend. It looks like the English visual equivalent and produces the identical sound.
+[Anna Ohoiko — Ukrainian Lessons — Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
 
-> [!warning] Don't Reduce the O
-> A common error for learners is reducing an unstressed **О** to an "a" sound. In Ukrainian, an **О** is pronounced as a clear /o/, regardless of whether it carries the stress in the word or not.
+Now we must discuss the visual traps. These two letters look like English letters, but they make completely different sounds. You must train your brain to break your English reading habits.
 
-For example, in the word **молоко́** (milk), only the final syllable is stressed. Yet, all three **О** letters must be pronounced with a round, pure "o" sound. Do not let your mouth get lazy!
+The first visual trap involves the letter **Р**. Your eyes see the English letter «P», but your mouth must make a rolled or trilled «r» sound. You produce this sound by fluttering the tip of your tongue against the roof of your mouth, just behind your teeth. It takes practice, but it remains essential for reading words like **рис** (rice).
+[Anna Ohoiko — Ukrainian Lessons — Р](https://www.youtube.com/watch?v=fMGsQ5KPQgg)
 
-### Важливий контраст — The Crucial Contrast: И versus І
-Distinguishing between **И** and **І** is not just about having a nice accent; it is a critical phonemic distinction that changes the meaning of words. The State Standard explicitly highlights the difference between hard and soft consonants, which these vowels often follow. 
+The second visual trap appears as the letter **В**. It looks exactly like the English letter «B». However, in Ukrainian, it makes the «v» sound, similar to the English word «voice». When you see it in a word like **вікно́** (window), remember to bite your bottom lip and make a «v» sound.
+[Anna Ohoiko — Ukrainian Lessons — В](https://www.youtube.com/watch?v=aFcvYfvQ2X4)
 
-Let us look at a true minimal pair to understand this contrast. 
-*   **Дим** (smoke) uses the deep, relaxed **И**.
-*   **Дім** (house) uses the sharp, smiling **І**.
+> [!tip]
+> How do you beat the visual traps? Use audio drills. When you look at **Р** and **В**, do not just stare at the shape. Say the correct sound out loud immediately. Over time, the sound links to the shape in your mind, overriding your English habit.
 
-This И vs І distinction creates a rhythmic bounce in sentences. Practice alternating your mouth shape: relaxed jaw for И, wide smile for І. 
+Let us review some examples with these consonants. These words serve as perfect practice material. Do not rush through them; take your time to ensure the sounds match the letters perfectly.
 
-## Приголосні — Consonants: К, Р, Б, В, Д
+| Word | Meaning |
+|------|---------|
+| **кіт** | cat |
+| **та́то** | dad |
+| **рис** | rice |
+| **він** | he |
+| **вона́** | she |
 
-Now that we have established our vowels, we can introduce five new consonants. Тепер вивчаємо приголосні звуки. Some of these are straightforward, while others are "visual traps" that will try to trick your English-reading brain.
+When you read these words, point to the letter and say the sound loudly.
 
-### Літера К
+## Перші слова — First Real Words
 
-The letter **К** is a true friend to the English speaker.
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=J7sGEI4-xJo]
+You now possess a powerful toolkit of fourteen letters: **А, О, У, М, Л, Н, С** from our first lesson, plus **К, И, І, Р, В, Т, Е** from today. This means you can finally read real, everyday Ukrainian vocabulary. You no longer need to restrict yourself to simple syllables.
 
-It looks like the English "K" and sounds exactly like it. There is no trick here. It is a crisp, unvoiced sound produced at the back of the mouth. 
+Let us look at some common, high-frequency words you can read right now. Read them aloud, carefully paying attention to the stressed syllables.
 
-You will use this letter constantly. For instance, our key word is **кіт** (cat; note that the letter «т» is unknown right now and sounds like an English "t"). Another great example is **ка́ва** (coffee; utilizing «в» which we will learn below).
+| Word | Meaning |
+|------|---------|
+| **мі́сто** | city |
+| **сло́во** | word |
+| **стіл** | table |
+| **кіно́** | cinema |
+| **вік** | age |
+| **о́ко** | eye |
+| **лі́то** | summer |
+| **рука́** | arm, hand |
 
-### Літера Р (The Trilled Consonant)
+We can even combine these words to build short noun phrases. Since we do not know any verbs yet, we simply connect words using the small word **і** (and).
 
-Here is our first major visual trap. The Ukrainian **Р** looks exactly like the Latin "P", but it sounds entirely different. 
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=fMGsQ5KPQgg]
-
-It is a trilled or rolled "r", similar to the "r" in Spanish or Italian. 
-
-Frame the pronunciation of the trilled **Р** independently in your mind: it requires an active tongue-tip articulation. Your tongue should vibrate rapidly against the roof of your mouth behind your front teeth. Do not use the back of your throat. Try saying **рука́** (hand or arm). If you struggle to roll it, try saying a quick "d" sound repeatedly, which mimics the tongue placement. Remember: when you see "P", think "rolled R".
-
-### Літера Б
-
-The letter **Б** is another phonetic equivalent to English, representing the "b" sound. 
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=V1hxBE_JbGg]
-
-Visually, it looks a bit like a number 6 with a flat top, or a lowercase "b" with a roof. 
-
-A perfect example of this letter is **бана́н** (banana). Since you already know А and Н, you can fully read this word! You will also see it in words like **брат** (brother; again, «т» is the English "t" sound we will formally learn later). Mastering the shape of **Б** is essential because it contrasts visually with our next letter.
-
-### Літера В (The Second Trap)
-
-Welcome to the second major visual trap. The letter **В** looks exactly like a Latin "B", but it makes a "v" sound, or sometimes a "w" sound depending on its position in a word. 
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=aFcvYfvQ2X4] 
-
-This requires mental rewiring. You must explicitly drill the visual contrast. When you see **В**, you must suppress the urge to say "b". Think of the word **вода́** (water). Or consider the word **вовк** (wolf). In **вовк**, the first **В** sounds like "v", while the second **В** (before the consonant) softens slightly toward a "w" sound. For now, focus on associating the symbol **В** with the English "v".
-
-### Літера Д
-
-The letter **Д** looks like a little house resting on two legs. 
-[Video: Anna Ohoiko — Ukrainian Lessons: https://www.youtube.com/watch?v=g4Bh-lqzd48]
-
-Fittingly, our key vocabulary word for this letter is **дім** (house or home). It makes a clear, solid "d" sound. 
-
-While the shape is unfamiliar to English readers, the sound is perfectly natural. It is pronounced with the tip of the tongue touching the back of the upper teeth, making it slightly more dental than the English "d" (which is made slightly higher on the alveolar ridge). Another high-frequency word using this letter is **друг** (friend; where «г» makes an "h" or soft "g" sound you will learn soon).
-
-### Пастки — Summary of the Visual Traps
-To read Ukrainian fluently, you have to break old habits. Let us isolate the two letters that cause the most friction for English speakers.
-
-> [!tip] Mental Rewiring
-> Create a physical association to break your English reading habits. 
-> *   When you see **Р**, tap the tip of your tongue against your teeth to remember it is a rolled "r".
-> *   When you see **В**, lightly bite your bottom lip to remember it is a "v" sound.
-
-You must stop relying on English phonetic instincts when looking at these specific Cyrillic shapes. Practice is the only way to overwrite this instinct.
-
-## Перші слова — First Words
-
-By combining the six letters you learned in Module 1 (А, М, Л, У, Н, С) with the eight letters from this module (К, И, Р, Б, В, Д, І, О), you possess a working alphabet of 14 letters. You can now decode real, useful vocabulary.
-
-### Читаємо слова — Reading Core Vocabulary
-Let us apply your knowledge immediately. Below are five high-frequency words built entirely from the 14 letters you know. Read them aloud slowly, visualizing each sound.
-
-*   **вода́** (water) — Check the trap letter! It starts with a "v" sound, not a "b".
-*   **молоко́** (milk) — Remember the rule for the pure vowel. Do not reduce the unstressed 'o' letters to 'a'.
-*   **кіно́** (cinema) — Give that first vowel a sharp, smiling "ee" sound.
-*   **бана́н** (banana) — Pay attention to the first letter; it is the Cyrillic "b".
-*   **рука́** (hand/arm) — Start with a strong trilled "r" from the tip of your tongue.
-
-These are not abstract exercises; these are words you will hear and use on your very first day in a Ukrainian-speaking environment.
-
-### Перші фрази — Simple Collocations and Noun Phrases
-Now that you can read isolated words, we can link them together. You do not need verbs to start making sense of the world. We can build simple noun phrases using the word **і**, which functions as the conjunction "and" in Ukrainian.
-
-Here are a few combinations to practice your reading flow:
-
-**Phrase 1: Fruits**
-**Бана́н і сли́ва.**
-(A banana and a plum.)
-Notice how the word **сли́ва** uses the deep, relaxed **И** sound right in the middle, perfectly contrasting with the sharp **І** that acts as the word "and".
-
-**Phrase 2: Drinks**
-**Вода́ і молоко́.**
-(Water and milk.)
-This phrase forces you to navigate the trap letter **В** immediately followed by a sequence of pure **О** sounds.
-
-**Phrase 3: Places**
-**Дім і ни́ва.**
-(A house and a field.)
-
-### Ваше перше читання — Your First Reading Exercise
-Take a deep breath. The short text below is constructed using *only* the 14 letters you have studied so far. There are no hidden tricks and no unknown letters. Read it aloud, trusting the phonetic rules you have learned.
-
-**Ма́ма і си́н. Вода́ і молоко́. Бана́н і сли́ва. Мак і рис. Си́р і ковбаса́. Сова́ і вовк. Сло́во і ді́ло.** 
-
-(Mother and son. Water and milk. Banana and plum. Poppy and rice. Cheese and sausage. Owl and wolf. Word and deed. *Note: син means son, мак means poppy, рис means rice, сир means cheese, ковбаса means sausage, сова means owl, діло means deed*). 
-
-If you successfully sounded out that paragraph, congratulations. You are officially reading Ukrainian text, combining known vowels and consonants to recognize real vocabulary! 
-
-## Практика — Practice
-
-The letters that look like English but sound different will constantly try to trick you. We need to drill these visual contrasts and phonetic distinctions until they become second nature.
-
-### Практика: Пастки — Visual Contrast Drills: Trap Letters
-Your brain wants to take shortcuts. We have to train it to recognize the Cyrillic reality. Let us contrast our current trap letters with the letters that actually make the sounds you expect.
-
-| Літера (Letter) | Звук (Sound) | Приклад (Example) | Переклад (Translation) |
-| :--- | :--- | :--- | :--- |
-| **Р** | trilled "r" | **рука́** | hand |
-| **П** *(preview)* | crisp "p" | **парк** *(contains unknown letter)* | park |
-
-When you look at **Р**, you must actively suppress the "p" sound. We are showing you the Cyrillic **П** early just to prove that the "p" sound has its own dedicated symbol (which looks like a doorway).
-
-| Літера (Letter) | Звук (Sound) | Приклад (Example) | Переклад (Translation) |
-| :--- | :--- | :--- | :--- |
-| **В** | "v" | **вода́** | water |
-| **Б** | "b" | **бана́н** | banana |
-
-This contrast is frequent. Do not let the familiar shape of the **В** confuse you when the robust **Б** is sitting right next to it in the alphabet.
-
-### Практика: И та І — Contextual Practice: И versus І
-Let us practice the distinction between these two key vowels in a controlled environment. The difference is subtle for English speakers but enormous for Ukrainians. 
-
-> [!tip] Mouth Mechanics
-> Place your hand lightly on your jaw.
-> Say **ми** (we). Your jaw should drop slightly and feel relaxed.
-> Now say **мі-** (as a prefix in compound words). Your jaw should close slightly, and your lips should pull sideways.
-
-Try reading this pair aloud, focusing entirely on the physical movement of your mouth:
-*   **Си́ла** (strength) — relaxed, deep sound in the middle.
-*   **Сі́ло** (it sat down; note «о» is known) — high, bright sound. 
-
-Training your ear for these pairs is one of the most practical skills in this lesson.
-
-### Перевірка — Self-Check Reading List
-Here is a final reading challenge for this section. Decode these high-frequency words without any transliteration assistance. They contain only the 14 letters you know.
-
-1.  **Ліс** (forest)
-2.  **Сік** (juice)
-3.  **Сло́во** (word)
-4.  **Ни́ва** (field)
-
-If you can read these aloud confidently, your brain is successfully mapping the new Cyrillic codes to their correct phonetic outputs.
+Read these phrases aloud:
+- **кіт і та́то** (a cat and a dad)
+- **сир і молоко́** (cheese and milk)
+- **рис і сир** (rice and cheese)
+- **ніс і о́ко** (a nose and an eye)
+- **ліс і мо́ре** (a forest and a sea)
+- **він і вона́** (he and she)
+- **ма́ма і та́то** (a mom and a dad)
+- **молоко́ і ма́сло** (milk and butter)
+- **лі́то і мо́ре** (a summer and a sea)
+- **ліс і мі́сто** (a forest and a city)
+- **вікно́ і стіл** (a window and a table)
+- **кіно́ і метро́** (a cinema and a metro)
+
+You can also read simple lists of objects to build reading speed:
+- **Ліс, мо́ре, мі́сто.** (Forest, sea, city.)
+- **Сир, молоко́, ма́сло.** (Cheese, milk, butter.)
+- **Стіл, вікно́, кіт.** (Table, window, cat.)
+- **Рис, сир, ма́сло.** (Rice, cheese, butter.)
+- **Ніс, о́ко, рука́.** (Nose, eye, arm.)
+
+You can even read longer combinations now:
+- **Ма́ма, та́то і кіт.** (Mom, dad and a cat.)
+- **Мі́сто і метро́.** (A city and a metro.)
+- **Мо́ре і лі́то.** (A sea and a summer.)
+- **Рис і молоко́.** (Rice and milk.)
+
+> [!fact]
+> Ukrainian words often share roots with English words. Look at **метро́** and **кіно́**. These serve as international words. Because you know the Cyrillic letters, you can immediately recognize their meaning without needing a dictionary.
+
+Take your time reading these pairs. Notice how your brain processes the letters faster with each attempt. You actively decode a new writing system, and the results clearly show. Practice these combinations until you read them smoothly.
 
 ---
 
-# Summary
+## Підсумок — Summary
 
-You have reached a significant milestone in your language journey. You now know 14 out of the 33 letters in the Ukrainian alphabet. This means you possess the tools to read hundreds of words independently. 
+You have reached a major milestone. You now know fourteen out of the thirty-three letters in the Ukrainian alphabet. You confidently recognize the six basic vowels and eight important consonants. More importantly, you possess the ability to read essential words and simple phrases.
 
-Let us review the exact additions from this module:
-
-| Літера (Letter) | Тип (Type) | Звук (Sound) | Приклад (Example) |
-| :--- | :--- | :--- | :--- |
-| **К** | Consonant | like English K | **кіт** (cat) |
-| **Р** | Consonant | rolled R | **рука́** (hand) |
-| **Б** | Consonant | like English B | **бана́н** (banana) |
-| **В** | Consonant | like English V | **вода́** (water) |
-| **Д** | Consonant | like English D | **дім** (house) |
-| **И** | Vowel | deep, relaxed i | **ри́ба** (fish) |
-| **І** | Vowel | sharp, smiling ee | **кіно́** (cinema) |
-| **О** | Vowel | pure, round o | **молоко́** (milk) |
-
-You have also learned to navigate "trap letters" that visually mimic Latin letters but carry different sounds, and you understand the crucial phonetic distinction between the deep **И** and the sharp **І**. In our next module, The Cyrillic Code III, we will maintain this momentum by introducing voiced and voiceless consonant pairs, giving you even more reading power.
-
-**Перевірте себе (Check yourself):**
-1. Який рух допомагає вимовити літеру **І**? 
-2. Яка літера виглядає як "P", але звучить як "r"? 
-3. In Ukrainian, does the unstressed letter **О** ever reduce to an "a" sound?
-4. How do you pronounce the first letter in the word **вода́**?
-5. What is the fundamental difference in mouth positioning between **И** and **І**?
+Before we move on, test your memory with these quick questions:
+1. How do you pronounce the visual trap letters **Р** and **В**?
+2. What physical mouth position difference separates the vowels **И** and **І**?
+3. Can you read the words **метро́** and **та́то** out loud?
+4. Can you correctly read the word **кіт**?
 
 ---

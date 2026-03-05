@@ -12,7 +12,7 @@ levels:
     modules: 47
     sequence:
       # Phase 0: Script (1-6)
-      - abetka-1                  # А М Л У Н С — first vowel + first consonants → syllables
+      - abetka-1                  # А О М Л У Н С — first vowels + first consonants → syllables
       - abetka-2                  # К И Р Б В Д І — first real words: МАМА, БАНАН, ВОДА
       - abetka-3                  # П Т Г Ґ Е З Ж Ш Х — voiced/voiceless pairs, most text readable
       - abetka-4                  # Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ/ДЗ + apostrophe — full alphabet
@@ -81,3 +81,189 @@ levels:
       # Phase 9: Polish & Assessment (43-44)
       - eufoniia                  # Euphony (у/в, і/й, з/із/зі)
       - checkpoint-a1             # Final A1 comprehensive assessment
+
+  a2:
+    modules: 42
+    sequence:
+      # Phase 1: Genitive / Родовий (1-6)
+      - rodovyi-koho-choho          # Genitive concept — КОГО? ЧОГО? — possession, absence, origin
+      - rodovyi-priymennyky         # Genitive prepositions — від, до, з, без, для, після, біля
+      - rodovyi-kilkist             # Genitive quantity — numerals 2-4 + gen, dates
+      - rodovyi-zaperech            # Genitive negation — немає, не було, не буде
+      - rodovyi-praktyka            # Genitive consolidation — mixed practice
+      - checkpoint-rodovyi          # Genitive checkpoint
+
+      # Phase 2: Dative / Давальний (7-9)
+      - davalnyi-komu-chomu         # Dative concept — КОМУ? ЧОМУ? — giving, age, state
+      - davalnyi-osobovi            # Dative pronouns — мені, тобі, йому, їй...
+      - davalnyi-praktyka           # Dative consolidation + genitive contrast
+
+      # Phase 3: Instrumental / Орудний (10-13)
+      - orudnyi-kym-chym            # Instrumental concept — КИМ? ЧИМ? — means, profession
+      - orudnyi-priymennyky         # Instrumental prepositions — з, за, між, над, під, перед
+      - orudnyi-osobovi             # Instrumental pronouns — мною, тобою, ним, нею...
+      - checkpoint-padezhi-1        # All 7 cases checkpoint
+
+      # Phase 4: Verb Expansion (14-19)
+      - vyd-diyeslova               # Aspect pairs — imperfective vs perfective
+      - nakazovyi-povnyi            # Full imperative — 1st pl (-мо), 3rd person (хай/нехай)
+      - rukh-diyeslova              # Motion verb pairs — іти/ходити, їхати/їздити
+      - rukh-prefiksy               # Prefixed motion — при-, ви-, за-, пере-, до-, від-
+      - maybutnie-syntetychne       # Synthetic future — -тиму/-тимеш + perfective simple
+      - checkpoint-diyeslova        # Verb system checkpoint
+
+      # Phase 5: Adjective & Pronoun Expansion (20-24)
+      - prykmetnyk-porivniannia     # Adjective comparison — вищий, найвищий, irregular
+      - zaimennyky-povni            # Full pronoun declension — all 7 cases
+      - chyslivnyky-vidminky        # Numeral declension — 1-4, ordinals, time fractions
+      - zvorotni-zaimennyky         # Reflexive себе + relative який/чий/котрий
+      - checkpoint-morfolohiia      # Morphology checkpoint
+
+      # Phase 6: Thematic Expansion (25-30)
+      - navchannia                  # Education — school, subjects, learning
+      - robota                      # Work — professions, workplace, schedule
+      - yizha-rozshyrena            # Food expanded — cooking, restaurant, recipes
+      - posluhy                     # Services — bank, post, library, gym, taxi
+      - napryamky-transport         # Directions + public transport
+      - checkpoint-temy             # Thematic vocabulary checkpoint
+
+      # Phase 7: Phonetics, Adverbs & Complex Sentences (31-38)
+      - cherhuvannia-holosni        # Vowel alternations — [і]↔[о], [і]↔[е], fleeting
+      - cherhuvannia-pryholosni     # Consonant alternations — [г]→[ж], [к]→[ч], [х]→[ш]
+      - naholos-praktyka            # Stress practice — common errors, minimal pairs, movable stress
+      - pryslivnyky-osnovy          # Adverbs — formation, categories, ЯК?
+      - spoluchnyky-rozshyreni      # Expanded conjunctions — або, зате, проте, однак, correlatives
+      - skladni-rechennia           # Complex sentences — що, щоб, де, куди, тому що, коли
+      - lystuvannia-a2              # A2 writing — letter, biography, invitation
+      - stylistics-osnovy           # Stylistics — synonyms, antonyms, register
+
+      # Phase 8: Final Assessment (39-42)
+      - dialog-praktyka             # Dialogue practice — 8-10 turn conversations
+      - chytannia-praktyka          # Reading practice — articles, recipes, instructions
+      - pysannia-praktyka           # Writing practice — 50-word texts
+      - checkpoint-a2               # Final A2 comprehensive assessment
+
+  b1:
+    modules: 45
+    sequence:
+      # Phase 1: Full Declension System (1-8)
+      - imennyky-vidminy            # 4 відміни × 3 groups — overview
+      - persha-vidmina              # I відміна full paradigm — all 3 groups
+      - druha-vidmina-cholovichyi   # II відміна masculine — hard/soft/mixed
+      - rodovyi-a-ya-u-yu           # Genitive -а/-я vs -у/-ю semantic rule
+      - druha-vidmina-seredniy      # II відміна neuter + -я type (знання)
+      - tretia-chetverta-vidmina    # III відміна (радість) + IV відміна (лоша, ім'я)
+      - mnozhyna-vidminky           # Plural declension across all відміни
+      - checkpoint-vidminky         # Declension system checkpoint
+
+      # Phase 2: Adjective, Pronoun & Numeral Mastery (9-14)
+      - prykmetnyk-vidminky-povne    # Full adjective declension — hard/soft groups
+      - zaimennyk-morfolohiia       # Full pronoun system — all types, all cases
+      - chyslivnyky-povni           # Full cardinal declension (5-1000) + collective
+      - prykmetnyk-tvorennia        # Adjective formation from nouns
+      - pryslivnyky                 # Adverbs — formation, comparison, types
+      - checkpoint-prykmetnyk-chyslivnyk  # Adjective/numeral/adverb checkpoint
+
+      # Phase 3: Phonetics & Advanced Verb System (15-22)
+      - naholos-pohlyblennia        # Advanced stress — double, meaning-distinctive
+      - umovnyi-realnyi             # Real conditional — якщо + future/present
+      - umovnyi-nerealnyi           # Irreal conditional — якби + past + би/б
+      - maibutnie-v-konteksti       # Future in complex contexts, register/aspect
+      - nepravi-diyeslova           # Irregular verbs — дати, їсти, бігти
+      - slovotvir-diyeslova         # Word formation — agent/verbal/place nouns
+      - ruh-aspekt-i-pohidni        # Motion verb aspect pairs + derivation
+      - checkpoint-diyeslova-b1     # Verb system checkpoint
+
+      # Phase 4: Complex Syntax (23-29)
+      - pidradni-chasu              # Temporal subordinate clauses — коли
+      - pidradni-prychyny-mety      # Causal + purpose — тому що, бо, щоб
+      - pidradni-umovni-dopustovi   # Conditional + concessive — якщо, якби, хоч
+      - pidradni-oznachalni         # Attributive clauses — який in all cases
+      - pryama-nepryama-mova        # Direct and indirect speech
+      - odnoridni-chleny            # Homogeneous members — listing, punctuation
+      - checkpoint-syntaksys        # Complex syntax checkpoint
+
+      # Phase 5: Phraseology & Register (30-34)
+      - frazeolohizmy               # Phraseological units — fixed expressions
+      - kultura-slova               # Anti-суржик — Russian interference corrections
+      - ofitsiynyi-rozm             # Register — official vs everyday
+      - skoro-tvorennia             # Word formation — compounds, abbreviations
+      - checkpoint-frazeolohiia     # Phraseology/register checkpoint
+
+      # Phase 6: Writing & Communication (35-40)
+      - pysannia-zaiava             # Official writing — заява, довідка, автобіографія
+      - pysannia-perekaz            # Retelling — summary writing
+      - pysannia-vidguk             # Reviews — book/film/event
+      - slukhannia                  # Listening comprehension — lectures, radio
+      - dialog-b1                   # Extended dialogue — 10-12 turns
+      - checkpoint-pysannia         # Writing/communication checkpoint
+
+      # Phase 7: Thematic Completion & Final (41-45)
+      - suspilstvo                  # Social relations — institutions, state
+      - mistsia-kultury             # Places and cultural attractions
+      - tradytsii-pohlybbleno       # Ukrainian customs — expanded
+      - povtorennia-b1              # Comprehensive B1 review
+      - checkpoint-b1               # Final B1 comprehensive assessment
+
+  b2:
+    modules: 46
+    sequence:
+      # Phase 0: Advanced Verb Forms (1-8)
+      - diieslovo-povtorennia       # Verb review — tense, aspect, conjugation
+      - diieprykmetnyky-aktyvni     # Active participles — recognition + formation
+      - diieprykmetnyky-pasyvni     # Passive participles — -ний/-тий forms
+      - diieprykmetnykovyi-zvorot   # Participial phrases — commas, style
+      - diiepryslivnyky             # Gerunds — -учи/-ачи, -вши/-ши
+      - pryslivnyky-typy            # Adverb classification — означальні/обставинні
+      - pryslivnyky-pravopys        # Adverb spelling — compound/hyphenated
+      - checkpoint-morfolohiia-b2   # Morphology checkpoint
+
+      # Phase 1: Service Parts of Speech (9-14)
+      - pryimennyky-pohlybleno      # Prepositions — advanced usage, case government
+      - spoluchnyky-suriadni        # Coordinating conjunctions — і/а/але/або/то...то
+      - spoluchnyky-pidriiadni      # Subordinating conjunctions — full taxonomy
+      - chastky                     # Particles — хіба, невже, навіть, лише, саме
+      - vyhuki-ta-zvukonasl         # Interjections and onomatopoeia
+      - checkpoint-sluzhbovi        # Service words checkpoint
+
+      # Phase 2: Sentence Architecture (15-21)
+      - slovospoluchennia           # Word combinations — types and analysis
+      - rechennia-dvoskladne        # Two-part sentences — підмет + присудок
+      - druhoriadni-chleny          # Secondary members — додаток, означення, обставина
+      - odnoskladni-oznacheno       # One-part: означено-особові + неозначено-особові
+      - odnoskladni-bezos-nazyvni   # One-part: безособові + називні
+      - nepovni-rechennia           # Incomplete sentences — ellipsis in dialogue
+      - checkpoint-syntaksys-1      # Sentence architecture checkpoint
+
+      # Phase 3: Complex Sentence Elements (22-29)
+      - odnoridni-rozshyreno         # Homogeneous members — expanded
+      - uzahalnuvalni-slova         # Generalizing words with homogeneous members
+      - zvertannia                  # Forms of address — vocative in sentences
+      - vstavni-slova               # Parenthetical words — мабуть, на жаль, отже
+      - vidokremlennia-oznachennia  # Detached attributes — participial + adj phrases
+      - vidokremlennia-obstavyny    # Detached adverbials — gerund phrases
+      - priama-nepriama-mova        # Direct/indirect speech — advanced
+      - checkpoint-uskladnene       # Complex sentence elements checkpoint
+
+      # Phase 4: Text, Style & Communication (30-37)
+      - tekst-budova                # Text structure — types, cohesion, coherence
+      - styli-movlennia             # 5 functional styles — active use
+      - dyskusiia                   # Debate and argumentation
+      - ese                         # Essay writing — opinion, 100+ words
+      - perekazuvannia              # Retelling — detailed/creative/selective
+      - mediahramotnist             # Media literacy — bias, sources, analysis
+      - dilovi-papery               # Business writing — заява, автобіографія
+      - opys-mistsevosti            # Locality description — detailed
+
+      # Phase 5: Thematic & Cultural Expansion (38-43)
+      - suspilstvo-ta-identychnist  # Society and identity
+      - nauka-i-tekhnolohii         # Science and technology
+      - mystetstvo-ta-kultura       # Art and culture
+      - robota-ta-navchannia        # Work and education — advanced
+      - kultura-slova-b2            # Anti-суржик — advanced patterns
+      - checkpoint-komunikatsiia    # Communication checkpoint
+
+      # Phase 6: Integration & Assessment (44-46)
+      - intehratsiia-morfolohiia-syntaksys  # Integration — morphology + syntax
+      - intehratsiia-komunikatsiia  # Integration — all communicative skills
+      - checkpoint-b2               # Final B2 comprehensive assessment

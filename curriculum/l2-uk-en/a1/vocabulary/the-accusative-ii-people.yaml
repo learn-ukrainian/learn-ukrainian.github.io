@@ -1,61 +1,100 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: ми
-  pos: noun
-- lemma: слово
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: вони
-  pos: noun
-- lemma: людина
-  pos: noun
-- lemma: наш
-  pos: adj
-- lemma: бачити
-  pos: verb
-- lemma: ви
-  pos: noun
-- lemma: новий
-  pos: adj
-- lemma: свій
-  pos: adj
-- lemma: знати
-  pos: verb
-- lemma: ваш
-  pos: adj
-- lemma: український
-  pos: adj
-- lemma: живий
-  pos: adj
-- lemma: друг
-  pos: noun
-- lemma: правило
-  pos: noun
-- lemma: як
-  pos: adv
-- lemma: знайомий
-  pos: adj
-- lemma: істота
-  pos: noun
-- lemma: закінчення
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: маяти
-  pos: verb
-- lemma: відмінок
-  pos: noun
-- lemma: українська
-  pos: noun
-- lemma: великий
-  pos: adj
-- lemma: завжди
-  pos: adv
-- lemma: до
-  pos: noun
+  - lemma: "брат"
+    translation: "brother"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сестра"
+    translation: "sister"
+    pos: "noun"
+    gender: "f"
+  - lemma: "друг"
+    translation: "friend (male)"
+    pos: "noun"
+    gender: "m"
+    notes: "Implies deep trust/soulmate connection"
+  - lemma: "подруга"
+    translation: "friend (female)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мама"
+    translation: "mother, mom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тато"
+    translation: "father, dad"
+    pos: "noun"
+    gender: "m"
+  - lemma: "лікар"
+    translation: "doctor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вчитель"
+    translation: "teacher"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+    gender: "m"
+  - lemma: "пес"
+    translation: "dog"
+    pos: "noun"
+    gender: "m"
+    notes: "Irregular stem change (пес -> пса)"
+  - lemma: "студент"
+    translation: "student"
+    pos: "noun"
+    gender: "m"
+  - lemma: "колега"
+    translation: "colleague"
+    pos: "noun"
+    gender: "m/f"
+    notes: "Declines like feminine nouns"
+  - lemma: "сусід"
+    translation: "neighbor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дитина"
+    translation: "child"
+    pos: "noun"
+    gender: "f"
+  - lemma: "матуся"
+    translation: "mommy"
+    pos: "noun"
+    gender: "f"
+    notes: "Diminutive form of мама"
+  - lemma: "татусь"
+    translation: "daddy"
+    pos: "noun"
+    gender: "m"
+    notes: "Diminutive form of тато"
+  - lemma: "братик"
+    translation: "little brother"
+    pos: "noun"
+    gender: "m"
+    notes: "Diminutive form of брат"
+  - lemma: "сестричка"
+    translation: "little sister"
+    pos: "noun"
+    gender: "f"
+    notes: "Diminutive form of сестра"
+  - lemma: "знайомий"
+    translation: "acquaintance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "бачити"
+    translation: "to see"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "знати"
+    translation: "to know"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "чекати"
+    translation: "to wait"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "любити"
+    translation: "to love"
+    pos: "verb"
+    aspect: "imperfective"

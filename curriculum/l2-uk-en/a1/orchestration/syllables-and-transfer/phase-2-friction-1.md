@@ -1,5 +1,5 @@
-**Phase**: Phase 2: Content
-**Step**: Content Generation
+**Phase**: Beginner Content
+**Step**: Drafting prose
 **Friction Type**: NONE
 **Raw Error**: None
 **Self-Correction**: N/A

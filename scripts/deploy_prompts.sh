@@ -48,7 +48,6 @@ diff_dirs() {
 
 diff_dirs "claude_extensions" ".claude" "claude_extensions → .claude"
 diff_dirs "claude_extensions" ".agent" "claude_extensions → .agent"
-diff_dirs "claude_extensions/commands" ".agent/workflows" "commands → .agent/workflows"
 diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
 echo ""
 
@@ -66,7 +65,6 @@ fi
 echo "=== Syncing ==="
 rsync -av --delete claude_extensions/ .claude/
 rsync -av --delete claude_extensions/ .agent/
-rsync -av --delete claude_extensions/commands/ .agent/workflows/
 rsync -av --delete gemini_extensions/ .gemini/
 echo ""
 echo "Deploy complete."

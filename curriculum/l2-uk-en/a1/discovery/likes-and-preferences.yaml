@@ -1,0 +1,111 @@
+discovered_at: '2026-03-05T05:13:44.259149+00:00'
+query_keywords:
+- Likes and Preferences
+- Мені подобається
+- I like
+- Я люблю
+- I love
+- Я хочу
+- I want
+- Порівняння
+- Comparing likes
+- Express likes using the Dative construction Мені подобається
+- Express love and enjoyment using Я люблю with Accusative
+- Express wants using Я хочу with infinitive or Accusative
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=TGkxBEYVdRE
+  channel: Listen & Read
+  title: 'Кетрін Грей "НЕСПОДІВАНА РАДІСТЬ САМОТНОСТІ" #аудіокнига #аудіокнигиукраїнською'
+  relevance_score: 0.1
+  relevance_note: The video is an audiobook on the philosophical topic of solitude
+    and relationships. It is not directly related to teaching the grammatical structures
+    for expressing likes and preferences ('Мені подобається', 'Я люблю', 'Я хочу')
+    which are the focus of this module. A single phrase 'Я обожнюю щасливі пари' is
+    marginally relevant but does not justify the video's inclusion for this module's
+    objectives.
+  transcript_excerpt: Я обожнюю щасливі пари назвати шлюб дешевої фіксією чи стверджувати
+    що бу
+  embed_suggestion: Not recommended for embedding due to very low relevance to the
+    module's linguistic objectives.
+blogs:
+- url: https://www.ukrainianlessons.com/episode14/
+  title: Likes and dislikes — common verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - grammar
+  - verbs
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 14
+rag_chunks:
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0071
+  text: "б| Порівняйте предмети за однією ознакою і вставте \nпотрібні слова. Поставте\
+    \ усно питання до слів — \nназв ознак предметів.\n• Запишіть за зразком одне речення\
+    \ (на вибір).\nДороги — широкі, а стежки — вузькі.\nч.. \n------------------------\
+    \ ----- _ \n_ _ _.------------------ -----------------._________\n7| Поміркуйте,\
+    \ у які групи можна об'єднати слова — назви \nознак цих предметів.\n• Назвіть\
+    \ групи предметів, які можна об'єднати за такими \nознаками.\nЗа формою\nЗа кольором\n\
+    ______ 1\nЗа смаком\n \nХвилинка спі"
+  section_title: Сторінка 73
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0003
+  text: "5\nЩО  Я  ЛЮБЛЮ\nЛюблю я маму, люблю тата.\nЛюблю я свою рідну хату.\nЛюблю...\n\
+    \t \t\n4   \aСклади невеликий текст «Що я люблю робити», запиши його \nі підготуйся\
+    \ прочитати у класі.\n3   \aПрочитай. Чи можна цей запис назвати завершеним висловлюванням?\
+    \ \nЧому ти так думаєш?\n\t \t\n2   \aЗ поданих пазлів склади і запиши прислів’я.\
+    \ Поясни, як ти його \nрозумієш. Чи можна назвати твоє висловлювання текстом?\n\
+    Пригадай і розкажи \nу класі.\nЯ — учителька\nЯ — учитель\nЗв’язані за змістом\
+    \ речення \nстановлять текст. До текс"
+  section_title: Сторінка 5
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0102
+  text: "НАВЧАЮСЯ РОЗПІЗНАВАТИ РЕЧЕННЯ \nЗА ЙОГО ОСНОВНИМИ ОЗНАКАМИ\nЯ — учителька\n\
+    Прочитай і розкажи \n; у класі.\n1\nрозпізнаЮ \nскладаю\nЯ — учитель\nРЄчєння\
+    \ виражає закінчену думку.\nСлова в реченні зв'язані між собою за змістом.\nі[\
+    \ Прочитай текст. Кінець кожного \nречення позначай зниженням \nголосу і паузою.\
+    \ Полічи кількість \nречень.\nЩодня ти ходиш до школи. \nУ школі тебе навчають\
+    \ учителі. \nВони хочуть, щоб діти вчилися \nз цікавістю. Твій обов’язок —\nдобре\
+    \ вчитися.\n• Запиши друге речення. Поясни думку, вислов"
+  section_title: Сторінка 104
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0028
+  text: "30\nЩо ти відчуваєш, коли споглядаєш світлини?\nЩо робить кожне фото привабливим?\n\
+    Чи все вдалося фотографові?\nЧи ти хотів би (хотіла б) щось змінити? На котрому\
+    \ фото?\nЩо відчувають твої однокласники (однокласниці), \nспоглядаючи ці світлини?\n\
+    Чи віриш ти цьому медіапродукту? Чому?\nЯку інформацію ти з нього отримав (отримала)?\n\
+    \t \t\n  \aДобери світлину «Моє дозвілля». З допомогою дорослих \nпідготуйте у\
+    \ класі фотовиставку на цю тему.\nЩо я знаю? \n\t \t\n  \aЧим текст відрізняється\
+    \ від групи окремих речень?\n\t "
+  section_title: Сторінка 30
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0243
+  text: "Складіть висловлення (усно) «Що я люблю і що ненавиджу». Використайте оцінну\
+    \ \nлексику."
+  section_title: Сторінка 171
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,132 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "2867",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "238.9",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "9",
+    "COMPUTED_IMMERSION_PERCENT": "16.3",
+    "COMPUTED_IMMERSION_TARGET": "15-35%",
+    "COMPUTED_RICHNESS_SCORE": "79",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "examples: 17/24, dialogues: 1/4, tables: 1/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-gender-code.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/the-gender-code-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-gender-code.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M07 — The Gender Code\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-gender-code.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ (Introduction)                                     255 /  175  ✅ (+80)\n     Презентація правил (Presentation of Rules)               628 /  300  ✅ (+328)\n     Практичні вправи (Practice Exercises)                    670 /  300  ✅ (+370)\n     Самостійна робота (Independent Work/Production)          455 /  250  ✅ (+205)\n     Культурний код та підсумок (Cultural Code and Summary)   321 /  175  ✅ (+146)\n     ───────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                   2329 / 1200  ✅ (+1129)\n  📋 Found YAML activities file (8 activities)\n  > Sort the Nouns by Gender: 12 items (min 6)\n  > Identify the Gender: 8 items (min 8)\n  > True or False: Gender Rules and Exceptions: 8 items (min 8)\n  > The 'My' Test: 8 items (min 8)\n  > Complete the Phrases: 8 items (min 8)\n  > Unscramble the Core Vocabulary: 8 items (min 8)\n  > Spot the Gender Exceptions: 8 items (min 8)\n  > Harmonious Patterns: 12 items (min 6)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2867/1200 (raw: 3119)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 9/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 16.3% (target 15-35% (M07))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-gender-code.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-gender-code.md\n  VESUM misses: 9 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 91980.35it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 152 | VESUM: 143 (94.1%) | RAG: 7 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 143/152 (94%) verified\n⚠️ VESUM not found (9): Андрій, Анна, Запоріжжя, земля-мати, Микола, Одеса, Олег, Олена, татою",
+  "h2_sections": "1. Вступ (Introduction)\n2. Презентація правил (Presentation of Rules)\n3. Практичні вправи (Practice Exercises)\n4. Самостійна робота (Independent Work/Production)\n5. Культурний код та підсумок (Cultural Code and Summary)\n6. Summary",
+  "vesum_stats": {
+    "total": 152,
+    "vesum_hits": 143,
+    "rag_hits": 0,
+    "not_found": 9,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 146,
+        "vesum_hits": 137,
+        "not_found": 9
+      },
+      "activities": {
+        "total": 6,
+        "vesum_hits": 6,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "Андрій",
+      "clean": "андрій",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Анна",
+      "clean": "анна",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Запоріжжя",
+      "clean": "запоріжжя",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "земля-мати",
+      "clean": "земля-мати",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Микола",
+      "clean": "микола",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Одеса",
+      "clean": "одеса",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Олег",
+      "clean": "олег",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Олена",
+      "clean": "олена",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "татою",
+      "clean": "татою",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "f5232c8cb3537964"
+}

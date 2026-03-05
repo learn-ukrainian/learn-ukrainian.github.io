@@ -2,9 +2,17 @@
   "module": "shcho-robyt",
   "track": "l2-uk-direct",
   "level": "a1",
-  "status": "draft",
+  "status": "validated",
   "images_sourced": 0,
   "images_total": 15,
   "last_updated": "2026-03-01",
-  "notes": "Module 10 — actions. ЩО РОБИТЬ? 15 core verbs in present tense 3sg."
+  "notes": "Module 10 — actions. ЩО РОБИТЬ? 15 core verbs in present tense 3sg.",
+  "phases": {
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-05T19:17:34Z",
+      "errors": 0,
+      "warnings": 0
+    }
+  }
 }

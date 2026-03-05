@@ -12,7 +12,7 @@ RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en
 REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/my-world-objects-review.md
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
+WORD_TARGET: '1200'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -21,451 +21,121 @@ IMMERSION_RULE: 'TARGET: 15-35% Ukrainian, 65-85% English. Explanatory prose pri
   in English. Grammar concepts explained in English with Ukrainian terminology introduced
   (bolded, with translation on first use). Examples increasingly in Ukrainian with
   translations. Callout text in English. Ukrainian sentences max 10 words.'
-LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
+LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10 words\
+  \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
+  \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
+  \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
+  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
+  \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
+  \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
+  \ M13), Genitive (basics), Vocative"
+PEDAGOGICAL_CONSTRAINTS: 'SEQUENCE CONSTRAINTS (M5-10 — Phonology & First Grammar):
 
-  - Max 10 words per Ukrainian sentence (STRICT — count every word)
+  Full alphabet known. Modules teach: syllables (M5), stress (M6), gender (M7), greetings
+  (M8), Це/Я/Мене звати (M9), Що це? (M10).
 
-  - ONLY 1 clause per sentence (no compound sentences)
 
-  - Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам, їм, -ові/-еві endings)
+  GRAMMAR STATUS:
 
-  - Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)
+  - AVAILABLE: bare nouns, gender classification, Це + noun, Я + noun, memorized politeness
+  phrases (Дякую, Будь ласка, Вибачте from M8)
 
-  - NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб,
-  поки are ALL BANNED
+  - FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases
+  except nominative
 
-  - Only imperfective aspect verbs
+  - Use English for all classroom instructions
 
-  - No participles
 
-  - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
-  Vocative'
-TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
+  METALANGUAGE: English-first, Ukrainian term in parentheses on first use'
+DECODABLE_VOCABULARY: ''
+STRUCTURAL_RULES: '### Rule 1: Every Concept Gets Dedicated Depth
 
 
-  > **Target:** A1 and A2 modules
+  Each concept MUST get its own `### H3` subsection with dedicated depth. Closely
+  related items (e.g., masculine/feminine/neuter endings) MAY share one H3.
 
-  > **Pedagogy:** PPP (Present-Practice-Produce)
 
-  > **Immersion:** 10-90% Ukrainian (scaffolded with English, graduated by band)
+  ### Rule 2: Introduce → Examples → Practice Tip
 
-  > **Experience Goal:** Safe, encouraging tutoring — learner feels supported, not
-  overwhelmed
 
+  Each H3 concept block MUST contain:
 
-  ---
+  1. **Introduction/explanation** (1-2 sentences)
 
+  2. **2+ example words or phrases** in context
 
-  ## LESSON EXPERIENCE AUDIT (Tier 1 Adaptation)
+  3. **Practice tip** — how to remember or use this
 
 
-  > **Key Question:** "Does this feel like a patient, encouraging tutor?"
+  Minimum **40-60 words per H3 block**.
 
-  >
 
-  > At A1/A2, learners are fragile. They need:
+  ### Rule 3: Presentation Consistency
 
-  > - Clear, simple explanations in English
 
-  > - Gentle introduction of Ukrainian
+  All items in a category: SAME format, SAME depth (±25%), SAME example count (±1).
 
-  > - Lots of encouragement
 
-  > - Predictable structure (safety)
+  ### Rule 4: Example Variety
 
-  > - Quick wins (dopamine hits)
 
+  Use at least **3 different formats** across the module: word lists, tables, inline
+  examples, callout boxes.'
+H3_WORD_RANGE: 40-60
+EXPANSION_METHOD: '**Don''t just write more — write deeper.** For EVERY concept:
 
-  ### The "Would I Continue?" Test
 
+  1. **Introduce it** (1-2 sentences)
 
-  **Read the module as a nervous beginner.** Ask:
+  2. **Give 2+ examples** with English translations
 
+  3. **Add a practice tip** or memory aid
 
-  | Question | Pass | Fail |
+  4. **Connect to real life** (when would a learner encounter this?)
 
-  |----------|------|------|
 
-  | Did I feel overwhelmed? | No, pacing was comfortable | Too much too fast |
-
-  | Were instructions clear? | Always knew what to do | Confused about expectations
-  |
-
-  | Did I get quick wins? | Early successes, manageable chunks | Long slog before
-  any reward |
-
-  | Was Ukrainian scary? | Introduced gently, with support | Thrown into deep end
-  |
-
-  | Would I come back tomorrow? | Yes, felt encouraging | No, felt discouraging |
-
-
-  **Scoring:**
-
-  - 5/5 Pass → Lesson Quality 10/10
-
-  - 4/5 Pass → Lesson Quality 9/10
-
-  - 3/5 Pass → Lesson Quality 8/10
-
-  - 2/5 Pass → Lesson Quality 7/10
-
-  - 0-1/5 Pass → Lesson Quality ≤6/10
-
-
-  ### Lesson Arc (Beginner Adaptation)
-
-
-  **Beginner modules need simpler arc:**
-
-
-  ```
-
-  WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
-
-  ```
-
-
-  | Element | What to Look For | Red Flag |
-
-  |---------|------------------|----------|
-
-  | **WELCOME** | Warm greeting, context setting | Cold start, no orientation |
-
-  | **PREVIEW** | "Today you''ll learn to..." (sets expectations) | Jumps straight
-  into content |
-
-  | **PRESENT** | Clear explanation with examples, visual aids | Wall of text, no
-  examples |
-
-  | **PRACTICE** | Guided → supported → independent progression | Too hard too fast
-  |
-
-  | **CELEBRATE** | "You can now...", encouragement, progress marker | Abrupt ending
-  |
-
-
-  ### Pacing for Beginners
-
-
-  **Cognitive load is critical at A1/A2:**
-
-
-  | Metric | A+ Standard | Fail |
-
-  |--------|-------------|------|
-
-  | New words per section | ≤5-7 | >10 new words without practice |
-
-  | Concepts before practice | ≤2 concepts | >3 concepts before any exercise |
-
-  | English support | Present when needed | Missing when learner would struggle |
-
-  | Visual aids | Tables, charts for grammar | Prose-only explanations |
-
-
-  ### Emotional Safety Mapping
-
-
-  **Required emotional beats for beginners:**
-
-
-  ```
-
-  😊 Welcomed → 🤔 Curious but safe → 💪 Small win → 😊 Encouraged → 🎯 Progress visible
-
-  ```
-
-
-  **Required moments:**
-
-  - ≥1 **Welcome/orientation** (you''re in the right place)
-
-  - ≥1 **Curiosity trigger** (but gentle, not overwhelming)
-
-  - ≥2 **Quick wins** (you got this!)
-
-  - ≥1 **Encouragement** (don''t worry, this is normal)
-
-  - ≥1 **Progress marker** (look how far you''ve come)
-
-
-  ### Weak Moment Categories (Beginner-Specific)
-
-
-  | Category | Pattern | Example | Required Fix |
-
-  |----------|---------|---------|--------------|
-
-  | **OVERWHELMING_INTRO** | Too much Ukrainian too fast | First paragraph all Ukrainian
-  | Add English scaffolding |
-
-  | **NO_QUICK_WIN** | Long content before any practice | 500 words before first activity
-  | Add mini-exercise earlier |
-
-  | **MISSING_ENGLISH** | Learner left to guess meaning | Ukrainian without translation
-  | Add translation/gloss |
-
-  | **SCARY_GRAMMAR** | Complex terminology for beginners | "Accusative case" without
-  explanation | Simplify or explain term |
-
-  | **NO_ENCOURAGEMENT** | Flat, mechanical instruction | "Now do exercise 2" | Add
-  "Great! Now let''s..." |
-
-  | **TOO_MUCH_AT_ONCE** | >3 concepts before practice | 5 verb forms in one section
-  | Split into smaller chunks |
-
-  | **MISSING_PREVIEW** | No "today you''ll learn" | Jumps into content | Add learning
-  objectives |
-
-  | **ABRUPT_END** | No celebration of progress | Module just stops | Add "You can
-  now..." summary |
-
-  | **WORD_SALAD** | Sentences randomly mix Ukrainian and English within the same
-  clause, or a paragraph strings together unrelated ideas with no logical thread |
-  "Україна — цифровізована країна (digital). Касири говорять швидко (fast). Це суперсила
-  (superpower)." — three disconnected claims stitched together | Rewrite paragraph
-  with one clear point; each sentence in one primary language |
-
-
-  ### A+ Beginner Lesson Checklist
-
-
-  | Criterion | A+ Standard | B Standard | C or Below |
-
-  |-----------|-------------|------------|------------|
-
-  | **Opening** | Warm welcome, clear preview | Basic intro | Cold start |
-
-  | **English Support** | Present throughout, scaffolded reduction | Present but inconsistent
-  | Missing when needed |
-
-  | **Visual Aids** | Tables, charts, clear formatting | Some visual organization
-  | Walls of text |
-
-  | **Pacing** | Small chunks, frequent practice | Reasonable chunks | Overwhelming
-  sections |
-
-  | **Quick Wins** | Multiple small successes | At least one | None until end |
-
-  | **Encouragement** | Regular positive reinforcement | Some encouragement | None
-  |
-
-  | **Closing** | Progress celebration, preview of next | Summarizes content | Abrupt
-  end |
-
-  | **Overall Feel** | "I can do this!" | "I learned something" | "This is too hard"
-  |
-
-
-  ---
-
-
-  ## Dimension Rubrics (Tier 1 Adaptations)
-
-
-  ### Immersion Targets (A1/A2)
-
-
-  | Level | Target Range | Notes |
-
-  |-------|--------------|-------|
-
-  | A1.1 | 20-40% | Heavy English support |
-
-  | A1.2 | 40-60% | Increasing Ukrainian |
-
-  | A1.3 | 60-80% | Scaffolded transition |
-
-  | A2 M01-20 | 50-60% | Core grammar — English for theory |
-
-  | A2 M21-50 | 60-75% | Applied grammar — English only for abstract concepts |
-
-  | A2 M51-70 | 75-90% | Consolidation — near-full Ukrainian |
-
-
-  ### Language Quality (Beginner Adaptation)
-
-
-  **Ukrainian must be:**
-
-  - Simple vocabulary (high-frequency words)
-
-  - Short sentences
-
-  - Clear pronunciation guidance (stress marks)
-
-  - Consistent grammar patterns (no exceptions early)
-
-
-  **English must be:**
-
-  - B1-level readability (accessible to non-native English speakers too)
-
-  - Contractions allowed ("you''ll", "don''t")
-
-  - Encouraging tone
-
-
-  ### Activity Quality (Beginner Gates)
-
-
-  | Metric | A1/A2 Threshold |
-
-  |--------|-----------------|
-
-  | Naturalness | ≥5.0 (functional is OK) |
-
-  | Difficulty | appropriate (not too_hard) |
-
-  | Distractor quality | ≥3.0 (obvious wrong answers OK) |
-
-  | Variety | ≥40% (repetition aids learning) |
-
-  | Item count | Per level requirements |
-
-
-  ### Richness (Beginner Adaptation)
-
-
-  **At A1/A2, richness means:**
-
-  - Clear examples (not creative prose)
-
-  - Visual organization
-
-  - Cultural context that''s relatable
-
-  - Named Ukrainian references (but simple ones)
-
-
-  **Richness score minimums:**
-
-  - A1: 70%
-
-  - A2: 75%
-
-
-  ### Humanity & Warmth (Beginner Critical)
-
-
-  **Higher thresholds for beginners:**
-
-
-  | Marker | Minimum Count |
-
-  |--------|---------------|
-
-  | Direct address (you, ви) | ≥15 |
-
-  | Encouragement phrases | ≥3 |
-
-  | "Don''t worry" moments | ≥2 |
-
-  | "You can now..." validation | ≥2 |
-
-
-  **Warmth is CRITICAL at beginner level. <3 markers → COLD_PEDAGOGY → Auto-fail**
-
-
-  ### LLM Fingerprint (Beginner)
-
-
-  **More lenient than higher levels, but still check:**
-
-  - ❌ "In this lesson, we will explore..." (generic AI opening)
-
-  - ❌ "It is important to note..." (formal AI voice)
-
-  - ✅ "Today you''ll learn..." (friendly tutor voice)
-
-  - ✅ "Let''s start with..." (encouraging, guiding)
-
-
-  **Threshold:** 2+ patterns → flag, but not auto-fail unless egregious
-
-
-  ---
-
-
-  ## Beginner-Specific Quality Markers
-
-
-  ### Good Beginner Module Signs
-
-
-  - Starts with "Привіт!" or similar warm greeting
-
-  - Learning objectives clearly stated in English
-
-  - New vocabulary introduced 3-5 words at a time
-
-  - Grammar tables are clean and visual
-
-  - Each section has practice before moving on
-
-  - Regular encouragement ("Great!", "You''ve got this!")
-
-  - Ends with "You can now..." celebration
-
-  - Preview of what''s next
-
-
-  ### Red Flags (Beginner)
-
-
-  - ❌ Opens with grammar terminology
-
-  - ❌ >10 new words without practice
-
-  - ❌ No English for first 200 words
-
-  - ❌ "This is easy" (patronizing)
-
-  - ❌ Complex sentence structures in Ukrainian
-
-  - ❌ No visual aids for grammar
-
-  - ❌ Testing before teaching
-
-  - ❌ Abrupt ending without encouragement
-
-
-  ---
-
-
-  ## Lecture Quality → Lesson Quality Translation
-
-
-  For A1/A2, "Lecture Quality" is renamed to "Lesson Quality" because:
-
-  - These aren''t lectures, they''re guided lessons
-
-  - Focus is on tutoring, not presenting
-
-  - Goal is safety and encouragement, not intellectual engagement
-
-
-  **Lesson Quality Rubric (Tier 1):**
-
-
-  | Score | Description | Action |
-
-  |-------|-------------|--------|
-
-  | 10 | Exceptional — feels like a caring tutor | None |
-
-  | 9 | Excellent — encouraging throughout | Light polish |
-
-  | 8 | Good — solid but could be warmer | Add encouragement |
-
-  | 7 | Adequate — functional but cold | Significant warmth injection |
-
-  | 6 | Weak — feels like a textbook | Rewrite for warmth |
-
-  | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
-
-  '
+  **If a section is still under target:** Add a `[!tip]` with a common mistake, a
+  comparison table, or more example words with translations.'
+WRITING_TONE_INSTRUCTION: Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE}
+  words. Avoid verbose prose — students are beginners. Focus on practical examples
+  over theory.
+TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian буквар)\n\n\
+  These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
+  \ for style and difficulty level** — notice how they use simple syllable combinations,\
+  \ short words, and build progressively. Do NOT copy them verbatim, but match their\
+  \ pedagogical approach and simplicity.\n\n**Grade 1, bolshakova** — Сторінка 3:\n\
+  ```\n3\nДорогий друже!\nТи продовжуєш подорож чудовим сві-\nтом рідної мови. Адже\
+  \ ти любиш читати, \nспілкуватися, фантазувати. \nЦя книга допоможе тобі навчитися\
+  \ \nчитати, висловлювати думки й почуття, \nспілкуватися.\nУмовні позначення:\n\t\
+  \n\t — читаю\n\t\n\t — обговорюю малюнок\n\t\n\t — досліджую мовлення\n\t\n\t —\
+  \ мислю критично\n```\n\n**Grade 1, bolshakova** — Сторінка 3:\n```\n3\nДорогий\
+  \ друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи любиш фантазувати?\n\
+  Тоді ця книга саме для тебе! \nВона допоможе тобі навчитися читати, \nвисловлювати\
+  \ думки й почуття, спілкуватися.\nУмовні позначення:\n \n — слухаю \n \n— досліджую\
+  \ мовлення\n \n — читаю \n — обговорюю малюнок\n \n — спілкуюся \n \n— мислю критично\n\
+  ```\n\n**Grade 1, zaharijchuk** — Сторінка 113:\n```\n111\n\t Запиши слова, добираючи\
+  \ до кожного відпо-\nвідну схему.\n   півень          ялинка               джміль\n\
+  [ – =  = ]            [ =  |–  = ]            [ =  |–  – |–  ]\n\t Розглянь малюнки.\n\
+  \t Запиши слова — назви намальованих пред-\nметів за групами: овочі та шкільне\
+  \ приладдя.\n\t Розглянь малюнки.\n\t Запиши слова — назви намальованих пред-\n\
+  метів, які відповідають на питання хто?\n\t Прочитай текст.\nВЕСНА\nНастала весна.\
+  \ Прилетіли птахи. На \nберезі шпаки.\n\t Випиши речення, яке відповідає схемі.\n\
+  \    \n```\n\n**Grade 1, zaharijchuk** — Сторінка 108:\n```\n106\nб і л к а\nк у\
+  \ л ь б\nб у з о к\nБачу Б, б (бе). Чую  [б].\nб\nа\nа\nБі-лі ко-ти си-\nді-ли в\
+  \ бі-ло-му \nбу-дин-ку. У-се-ре-\nди-ні все бу-ло бі-\nле. Бі-лі сто-ли з \nбі-ли-ми\
+  \ ска-тер-\nти-на-ми. \nа\nо\nу\nи\nі\nБ\nба\nбо\nбу\nби\nбі\nа\nо\nу\nи\nі\nаб\n\
+  об\nуб\nиб\nіб\nБ\nба\nбу\nбе\nба\nлет\nлкон\nбу\nква\nквар\nбі\nлизна\nла\n [ \
+  \ = •   –  | –•]\n [ –• | –  • – ]\nБ б\n```\n\n**Grade 1, zaharijchuk** — Сторінка\
+  \ 12:\n```\n10\nЯ допомагаю своїй родині  \nХоч на зріст я ще маленька, \nВ мене\
+  \ й кіска ще тоненька,\nТа робити дещо вмію — \nОсь тарілочку помию,\nОсь кімнату\
+  \ замітаю,\nВранці квіти поливаю,\nВсього я сама навчусь,\nБо роботи не боюсь.\n\
+  \                          Олена Журлива\n\t Повтори вірш за вчителем / учителькою.\n\
+  \t Розкажи, що роблять люди.\n\t Вимов наголошений склад.\n```"
+INTRO_HOOK: Чому це важливо? — Why does this matter?
+SUMMARY_HEADING: Підсумок — Summary
+SELF_CHECK_HEADING: 'Перевірте себе — Check yourself:'
+TIER_GUIDANCE: '(Tier guidance file not found: tier-1-beginner.md)'
 D1_OUTPUT_FORMAT: "## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside\
   \ delimiters is automatically discarded by the extraction pipeline.\n\n### Output\
   \ Block 0: Citation Bank (BEFORE the review)\n\n**MANDATORY** — Build this FIRST\
@@ -516,20 +186,22 @@ D1_OUTPUT_FORMAT: "## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outs
   \ in bank: {X}\n- Issues found: {X}\n\n## Verdict    <!-- REQUIRED — rejection if\
   \ missing -->\n\n**PASS** or **FAIL**\n\n{1-3 sentences. If FAIL, list blocking\
   \ issues.}\n\n===REVIEW_END===\n```\n\n### Output Block 2: Inline Fixes (MANDATORY\
-  \ if FAIL)\n\n**When you find an issue, produce the fix immediately.** The pipeline\
-  \ applies these fixes automatically via exact string matching — if FIND text doesn't\
-  \ match the file exactly, the fix is silently skipped.\n\n**CRITICAL — FIND TEXT\
-  \ VERIFICATION (same workflow as citations):**\n\nFor each FIND/REPLACE pair:\n\
-  1. Use Read tool to re-read the exact passage you want to fix\n2. Copy-paste the\
-  \ FIND text directly from Read tool output — do NOT type it from memory\n3. Verify\
-  \ with Grep: `Grep pattern=\"first 5 words of FIND text\" path=\"{file}\"`\n4. If\
-  \ Grep returns no match → you paraphrased. Re-copy from Read output.\n\n**Do NOT\
-  \ reconstruct FIND text from memory. Copy-paste only.**\n\n**FORMAT RULES — the\
-  \ parser is a dumb string matcher:**\n- FIND text = ONLY raw file content. Nothing\
-  \ else between `FIND:` and `REPLACE:`.\n- Do NOT add `Section: \"...\", Line N`\
-  \ headers before the text\n- Do NOT wrap text in triple backticks (` ``` `)\n- Do\
-  \ NOT add commentary, line numbers, or markdown formatting\n- The text between FIND:\
-  \ and REPLACE: is matched literally against the file\n\n```\n===SECTION_FIX_START===\n\
+  \ if FAIL)\n\n**PRIMARY: Use the Edit tool to fix issues as you find them during\
+  \ the review.** This is the most reliable approach — you can verify exact text with\
+  \ Grep and apply precise fixes.\n\n**BACKUP: Also produce FIND/REPLACE pairs below**\
+  \ in case any Edit tool calls fail (network issues, permission errors, etc). The\
+  \ pipeline applies these automatically via exact string matching.\n\n**CRITICAL\
+  \ — FIND TEXT VERIFICATION (same workflow as citations):**\n\nFor each FIND/REPLACE\
+  \ pair:\n1. Use Read tool to re-read the exact passage you want to fix\n2. Copy-paste\
+  \ the FIND text directly from Read tool output — do NOT type it from memory\n3.\
+  \ Verify with Grep: `Grep pattern=\"first 5 words of FIND text\" path=\"{file}\"\
+  `\n4. If Grep returns no match → you paraphrased. Re-copy from Read output.\n\n\
+  **Do NOT reconstruct FIND text from memory. Copy-paste only.**\n\n**FORMAT RULES\
+  \ — the parser is a dumb string matcher:**\n- FIND text = ONLY raw file content.\
+  \ Nothing else between `FIND:` and `REPLACE:`.\n- Do NOT add `Section: \"...\",\
+  \ Line N` headers before the text\n- Do NOT wrap text in triple backticks (` ```\
+  \ `)\n- Do NOT add commentary, line numbers, or markdown formatting\n- The text\
+  \ between FIND: and REPLACE: is matched literally against the file\n\n```\n===SECTION_FIX_START===\n\
   FILE: {CONTENT_PATH}\n---\nFIND:\nexact text from the content file (verified with\
   \ Grep)\nREPLACE:\ncorrected text\n---\nFILE: {VOCAB_PATH}\n---\nFIND:\nlast existing\
   \ vocab entry (verified with Grep)\nREPLACE:\nlast existing vocab entry\n- lemma:\
@@ -586,13 +258,282 @@ SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
   | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 
   | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
-VIDEO_DISCOVERY: (No relevant videos found)
+VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items)
+
+
+  **Required** (MUST appear in vocabulary YAML):
+
+  - цей / ця / це / ці (this) — High frequency (Top 100); цей стіл, ця кімната, це
+  вікно, ці речі
+
+  - той / та / те / ті (that) — High frequency (Top 200); той будинок, та жінка, те
+  місце, ті люди
+
+  - стіл (table) — Household high frequency; на столі, за столом, письмовий стіл,
+  обідній стіл
+
+  - книга (book) — цікава книга, читати книгу; note the rhyme with ''ця''
+
+  - телефон (phone) — мобільний телефон, мій телефон
+
+  - кімната (room) — моя кімната, велика кімната
+
+
+  **Recommended** (include if space allows):
+
+  - стілець (chair) — зручний стілець
+
+  - ліжко (bed) — Medium household frequency; у ліжку, лягати в ліжко, велике ліжко
+
+  - лампа (lamp) — настільна лампа
+
+  - вікно (window) — High frequency general; біля вікна, дивитися у вікно, відчинити
+  вікно
+
+  - шафа (wardrobe) — High frequency household; у шафі, книжкова шафа, шафа для одягу
+
+  - двері (door) — Plural only in Ukrainian (ці двері); вхідні двері
+
+
+  Do NOT add vocabulary items beyond this list unless they are decodable from the
+  module''s letter set and appear in the lesson content.'
+VIDEO_DISCOVERY: (No video discoveries available)
+PRONUNCIATION_VIDEOS: ''
+SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
+
+
+  ### Russianisms (HARD FAIL if found)
+
+
+  Scan your ENTIRE output for these. They cause automatic audit failure:
+
+
+  | Russicism | Correct Ukrainian |
+
+  |-----------|-------------------|
+
+  | кушати | їсти |
+
+  | приймати участь | брати участь |
+
+  | получати | отримувати |
+
+  | самий кращий | найкращий |
+
+  | відноситися | стосуватися |
+
+  | слідуючий | наступний |
+
+  | любий (= будь-який) | будь-який |
+
+  | на то, що | на те, що |
+
+  | красивий | гарний |
+
+  | прекрасне / прекрасний | чудовий / чудове |
+
+
+  Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
+  text.
+
+
+  ### Euphony / Милозвучність (WARNING if violated)
+
+
+  Ukrainian prose must follow euphony rules:
+
+
+  | Rule | Avoid (Bad) | Use (Good) |
+
+  |------|-------------|------------|
+
+  | і → й between vowels | вона і Олена | вона й Олена |
+
+  | й → і after consonant | він й Олена | він і Олена |
+
+  | у → в before vowel | у Одесі | в Одесі |
+
+  | в → у before в, ф | в вікні | у вікні |
+
+  | в → у before consonant cluster | в зграї | у зграї |
+
+  | з → із/зі before з, с, ш, ч | з зброєю | із зброєю (або зі) |
+
+  | Vary conjunctions | він і вона і Іван | він і вона та Іван |
+
+
+  Key: й can ONLY follow a vowel. After a consonant, always use і — even before a
+  vowel.
+
+
+  ### Stress Mark Typography
+
+
+  Use lowercase letters with a combining acute accent (´) on the stressed vowel:
+
+  - Correct: ма́ма, анана́с, оса́, сосна́
+
+  - Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
+
+
+  ### Non-Decodable Ukrainian in Beginner Modules (M1-M6)
+
+
+  In Cyrillic primer modules, the learner can only read letters taught so far. Any
+  Ukrainian phrase using letters outside the cumulative charset MUST include an English
+  translation in parentheses immediately after. No exceptions — the learner literally
+  cannot read it otherwise.
+
+
+  - Correct: "Все буде добре (Everything will be fine)."
+
+  - Wrong: "Все буде добре." (no translation — learner cannot read Б or Д at M2)
+
+
+  ### IPA and Latin Transliteration (BANNED at ALL levels)
+
+
+  Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like
+  `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark
+  (´) on the vowel.
+
+
+  Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
+
+
+  ```markdown
+
+  ❌ WRONG: "мама [ˈmɑmɑ]" or "хліб (khlib)"
+
+  ✅ RIGHT: "**ма́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
+
+  ```
+
+
+  ### Typography
+
+
+  - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
+
+  - Use ONLY vocabulary from the plan''s `vocabulary_hints` — do NOT invent new terms
+
+
+  ### No Word Salad (HARD FAIL)
+
+
+  Every paragraph must have ONE clear point and logical flow between sentences. Do
+  NOT string together unrelated observations.
+
+
+  ### LLM Writing Patterns to Avoid
+
+
+  1. **"Це не просто X, а Y"** — max ONE in entire module
+
+  2. **Grandiose openers** — don''t inflate every topic
+
+  3. **Purple prose** — no "багатогранний діамант", "хірургічного аналізу"
+
+  4. **Duplicate greetings** — "Ласкаво просимо" ONCE (intro only)
+
+  5. **Stacked identical callouts** — same title max twice, vary types
+
+  6. **"In this lesson, we will..."** — ALWAYS banned (formulaic opener)
+
+  7. **Repetitive transitions** — "It''s worth noting...", «Варто зазначити...», «Давайте
+  розглянемо...» flagged at 2+ occurrences
+
+
+  ### Anti-Robotic Writing
+
+
+  - No 3+ sentences starting with the same phrase
+
+  - Vary sentence openers across sections
+
+  - No mechanical transitions («Далі ми побачимо...», «Тепер розглянемо...»)
+
+  - Each section should have its own narrative arc
+
+
+  ### Active Voice Preference
+
+
+  Ukrainian strongly prefers active constructions. Use passive only when the agent
+  is truly unknown.
+
+
+  Avoid: «Це може бути використано...», «Правило застосовується...»
+
+  Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
+
+  '
+SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do NOT\
+  \ use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when\
+  \ combined with colons.\n\n```yaml\n❌ WRONG (guillemets + colon = YAML parse error):\n\
+  \  title: «Знайдіть пару: термін та його значення»\n  explanation: Термін «доконати»\
+  \ означає: завершити дію.\n\n✅ RIGHT (plain strings, quote with single quotes if\
+  \ value contains colon):\n  title: 'Знайдіть пару: термін та його значення'\n  explanation:\
+  \ Термін доконати означає завершити дію.\n```\n\n**Rules:**\n1. **Never use `«»`\
+  \ in YAML** — use plain text or single/double quotes\n2. **Quote any value containing\
+  \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
+  \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
+  \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
+  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
+  \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
+  \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
+  \ — include all required items\n3. **Each entry needs**: `lemma` (NOT `term`), `translation`,\
+  \ `pos`\n4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs),\
+  \ `notes`, `usage`, `example`\n5. **NO `ipa` field**\n6. **Count target**: {VOCAB_COUNT_TARGET}\
+  \ items\n\n## Output Delimiters\n\n> **Content outside delimiters is automatically\
+  \ discarded by the extraction pipeline.**\n\nActivities block (BARE LIST — no wrapper):\n\
+  ```\n===ACTIVITIES_START===\n- type: quiz\n  title: \"...\"\n  items:\n    ...\n\
+  ===ACTIVITIES_END===\n```\n\nVocabulary block (OBJECT with `items:` wrapper):\n\
+  ```\n===VOCABULARY_START===\nitems:\n  - lemma: \"слово\"\n    translation: \"word\"\
+  \n    pos: \"noun\"\n===VOCABULARY_END===\n```\n\n## Friction Report (MANDATORY)\n\
+  \n```\n===FRICTION_START===\n**Phase**: Phase 3: Activities + Vocabulary\n**Step**:\
+  \ {what you were doing when friction occurred, or \"Full YAML generation\"}\n**Friction\
+  \ Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...\n**Raw Error**:\
+  \ {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"\
+  }\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\
+  ```\n\n## Boundaries\n\n- Do NOT modify lesson content — only generate activities\
+  \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
+  - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
+  \ skills or delegate to Claude\n"
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+ACTIVITY_MAX: '15'
+ITEMS_MIN: '6'
 VOCAB_COUNT_TARGET: '20'
 FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
   essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+ALLOWED_ACTIVITY_TYPES: quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort,
+  watch-and-repeat, classify, image-to-letter
 REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz, true-false, classify,
+  image-to-letter, watch-and-repeat
+ITEM_MINIMUMS_TABLE: '| Type | Minimum |
+
+  |------|--------|
+
+  | quiz | ≥8 items |
+
+  | true-false | ≥8 items |
+
+  | fill-in | ≥8 items |
+
+  | match-up | ≥8 pairs |
+
+  | anagram | ≥8 items |
+
+  | unjumble | ≥6 items |
+
+  | group-sort | ≥8 items |
+
+  | watch-and-repeat | ≥1 items |
+
+  | classify | ≥1 items |
+
+  | image-to-letter | ≥5 items |'

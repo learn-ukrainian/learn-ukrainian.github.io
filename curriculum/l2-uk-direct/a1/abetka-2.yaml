@@ -6,12 +6,17 @@ title: "Абетка — перші слова"
 subtitle: "К И Р Б В Д І — тепер можна читати слова!"
 standard_ref: "§4.1.1 — alphabet, §4.1.4 — vowels/consonants"
 textbook_ref: "Bolshakova 2018 Part 1, pp.26-40"
+teaching_notes: >
+  Друга порція літер: К И Р Б В Д І. Тепер учні мають 14 літер і можуть читати
+  прості слова (МОЛОКО, РУКА, ВОДА, БАНАН). Голосна И — перша неочевидна для іноземців
+  (звук між [і] та [и]). Важливо: Д вимовляється м'якше перед І. Тренуйте читання
+  складів (КА-КО-КУ-КИ, РА-РО-РУ-РИ-РІ). Вже можна складати прості речення.
 
 playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
 playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
 
-# After abetka-1: А М Л У Н С
-# After this module: + К И Р Б В Д І = 13 letters total
+# After abetka-1: А О М Л У Н С (7 letters)
+# After this module: + К И Р Б В Д І = 14 letters total
 # Can now read: МАМА, БАНАН, РУКА, ВОДА, МОЛОКО, КІНО, СИЛА, ДІРКА...
 letters:
   - upper: К
@@ -142,3 +147,102 @@ activities:
       - emoji: "\U0001F983"
         answer: І
         distractors: [И, А]
+
+  # ── Reading activity — decodable sentences (only А О М Л У Н С К И Р Б В Д І) ──
+  - type: reading
+    title: "Читаймо слова і склади"
+    instruction: "Читай уголос. Усі слова — з букв, які ми вивчили."
+    source: "Adapted from Bolshakova 2018, pp.26-40"
+    items:
+      - label: "Склади з К"
+        text: "ка — ко — ку — кі — ки"
+        note: "Bolshakova p.26"
+      - label: "Склади з Р"
+        text: "ра — ро — ру — рі — ри"
+        note: "Bolshakova p.32"
+      - label: "Склади з Б"
+        text: "ба — бо — бу — бі — би"
+        note: "Bolshakova p.34"
+      - label: "Склади з В"
+        text: "ва — во — ву — ві — ви"
+        note: "Bolshakova p.36"
+      - label: "Склади з Д"
+        text: "да — до — ду — ді — ди"
+        note: "Bolshakova p.38"
+      - label: "Слова"
+        text: "мама — молоко — рука — вода — банан — кіно — сила — дім — ліс — вікно — сік — масло — дуб — кора — нора — слива — нива — лис — вовк — куб — дим — сон — бік — рис — ніс"
+      - label: "Короткі речення"
+        text: |
+          Мама мила руки.
+          Вода і молоко.
+          Лис і вовк — в ліс.
+          Дім мами.
+          Банан і слива.
+          Сік і масло.
+          Дуб і сосна.
+          Вікно в дім.
+          Кора дуба.
+          Нора лиса.
+
+# ── Vocabulary (VESUM-verified, decodable with А О М Л У Н С К И Р Б В Д І) ──
+vocabulary:
+  - word: молоко
+    emoji: "\U0001F95B"
+    sentence: "Молоко біло."
+    note: "Bolshakova p.1 — one of the first decodable nouns"
+
+  - word: рука
+    emoji: "\U0001F44B"
+    sentence: "Рука мами мила."
+    note: "Bolshakova p.32 — Р р syllable table (ру–)"
+
+  - word: вода
+    emoji: "\U0001F4A7"
+    sentence: "Вода і молоко."
+    note: "Bolshakova p.38 — Д д word list"
+
+  - word: банан
+    emoji: "\U0001F34C"
+    sentence: "Банан і слива."
+    note: "Bolshakova p.34 — Б б key word"
+
+  - word: ліс
+    emoji: "\U0001F332"
+    sentence: "Ліс і нива."
+    note: "Bolshakova p.40 — І і reading 'У лісі'"
+
+  - word: вікно
+    emoji: "\U0001FA9F"
+    sentence: "Вікно в дім."
+    note: "Bolshakova p.40 — І і word list"
+
+  - word: сік
+    emoji: "\U0001F9C3"
+    sentence: "Сік і молоко."
+    note: "Bolshakova p.40 — І і word list; cover p.1 кіт/дім/сік"
+
+  - word: масло
+    emoji: "\U0001F9C8"
+    sentence: "Масло і молоко."
+    note: "Uses letters from abetka-1 (М А С Л О) + none new — review word"
+
+  - word: дім
+    emoji: "\U0001F3E0"
+    sentence: "Дім мами."
+    note: "Bolshakova p.38 — Д д key word (дуб)"
+
+  - word: кора
+    emoji: "\U0001FAB5"
+    sentence: "Кора дуба."
+    note: "Bolshakova p.32 — Р р word list"
+
+  - word: нора
+    emoji: "\U0001F573"
+    sentence: "Лис і нора."
+    note: "Bolshakova p.32 — Р р word list"
+
+  - word: дуб
+    emoji: "\U0001F333"
+    sentence: "Дуб і ліс."
+    note: "Bolshakova p.38 — Д д scheme word"
+

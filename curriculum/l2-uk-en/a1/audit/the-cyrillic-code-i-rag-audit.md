@@ -1,40 +1,38 @@
 # RAG Verification: the-cyrillic-code-i
 
-**Date:** 2026-03-04 20:51 UTC | **Words checked:** 121 | **VESUM coverage:** 106/121 (87.6%)
+**Date:** 2026-03-05 22:04 UTC | **Words checked:** 53 | **VESUM coverage:** 40/53 (75.5%)
 
 ## Summary
-- ✅ Verified (VESUM): 106
+- ✅ Verified (VESUM): 40
 - ⚠️ Partial (RAG only): 7
-- ❌ Not found: 8
+- ❌ Not found: 6
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| АЛ | activities | ✗ | ✗ | ✗ |
-| АМ | activities | ✗ | ✗ | ✗ |
-| АН | activities | ✗ | ✗ | ✗ |
-| Зеландія | prose | ✗ | ✗ | ✗ |
-| Мексика | prose | ✗ | ✗ | ✗ |
-| Мінськ | prose | ✗ | ✗ | ✗ |
-| Сатурн | prose | ✗ | ✗ | ✗ |
-| су | prose | ✗ | ✗ | ✗ |
+| АЛ | prose | ✗ | ✗ | ✗ |
+| АМ | prose | ✗ | ✗ | ✗ |
+| АН | prose | ✗ | ✗ | ✗ |
+| ОЛ | prose | ✗ | ✗ | ✗ |
+| сна | prose | ✗ | ✗ | ✗ |
+| СУ | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Латвія | prose | ✗ | ✗ | ✓ |
-| ЛУ | activities | ✗ | ✓ | ✗ |
-| ма-ма | prose | ✗ | ✓ | ✗ |
-| СА | activities | ✗ | ✓ | ✗ |
-| УЛ | activities | ✗ | ✓ | ✗ |
-| УН | activities | ✗ | ✓ | ✗ |
-| УС | activities | ✗ | ✓ | ✗ |
+| ЛО | prose | ✗ | ✓ | ✗ |
+| ЛУ | prose | ✗ | ✓ | ✗ |
+| СА | prose | ✗ | ✓ | ✗ |
+| СО | prose | ✗ | ✓ | ✗ |
+| УЛ | prose | ✗ | ✓ | ✗ |
+| УН | prose | ✗ | ✓ | ✗ |
+| УС | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 105 | 98 | 5 |
-| Activities (.yaml) | 16 | 8 | 3 |
+| Prose (.md) | 40 | 27 | 6 |
+| Activities (.yaml) | 13 | 13 | 0 |

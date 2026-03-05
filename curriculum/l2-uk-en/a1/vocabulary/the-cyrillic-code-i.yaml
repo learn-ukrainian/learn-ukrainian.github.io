@@ -1,106 +1,78 @@
 items:
-- lemma: мама
-  translation: mom
-  pos: noun
-- lemma: сума
-  translation: sum / amount
-  pos: noun
-- lemma: луна
-  translation: echo
-  pos: noun
-- lemma: нас
-  translation: us
-  pos: pronoun
-- lemma: сам
-  translation: alone / by himself
-  pos: adjective
-- lemma: мул
-  translation: mule
-  pos: noun
-- lemma: мала
-  translation: small
-  pos: pronoun
-- lemma: мус
-  translation: mousse
-  pos: noun
-- lemma: мала
-  translation: small
-  pos: adjective
-- lemma: ананас
-  translation: pineapple
-  pos: noun
-- lemma: молоко
-  translation: milk
-  pos: noun
-- lemma: акула
-  translation: shark
-  pos: noun
-- lemma: автобус
-  translation: bus
-  pos: noun
-- lemma: Україна
-  translation: Ukraine
-  pos: noun
-- lemma: урок
-  translation: lesson
-  pos: noun
-- lemma: успіх
-  translation: success
-  pos: noun
-- lemma: літак
-  translation: airplane
-  pos: noun
-- lemma: лимон
-  translation: lemon
-  pos: noun
-- lemma: ніс
-  translation: nose
-  pos: noun
-- lemma: сумка
-  translation: bag
-  pos: noun
-- lemma: маса
-  translation: mass
-  pos: noun
-- lemma: сала
-  translation: fat / lard
-  pos: noun
-- lemma: лама
-  translation: llama
-  pos: noun
-- lemma: аптека
-  translation: pharmacy
-  pos: noun
-- lemma: університет
-  translation: university
-  pos: noun
-- lemma: місто
-  translation: city
-  pos: noun
-- lemma: музика
-  translation: music
-  pos: noun
-- lemma: любов
-  translation: love
-  pos: noun
-- lemma: ліс
-  translation: forest
-  pos: noun
-- lemma: небо
-  translation: sky
-  pos: noun
-- lemma: надія
-  translation: hope
-  pos: noun
-- lemma: сонце
-  translation: sun
-  pos: noun
-- lemma: сестра
-  translation: sister
-  pos: noun
-- lemma: сніг
-  translation: snow
-  pos: noun
-- lemma: собака
-  translation: dog
-  pos: noun
+  - lemma: 'мама'
+    translation: 'mom'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'сом'
+    translation: 'catfish'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'сон'
+    translation: 'dream / sleep'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'масло'
+    translation: 'butter / oil'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'ананас'
+    translation: 'pineapple'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'нам'
+    translation: 'to us'
+    pos: 'pronoun'
+  - lemma: 'нас'
+    translation: 'us'
+    pos: 'pronoun'
+  - lemma: 'сам'
+    translation: 'self / alone'
+    pos: 'adjective'
+    gender: 'm'
+  - lemma: 'оса'
+    translation: 'wasp'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'сосна'
+    translation: 'pine tree'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'насос'
+    translation: 'pump'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'лама'
+    translation: 'llama'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'смола'
+    translation: 'resin'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'слон'
+    translation: 'elephant'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'мало'
+    translation: 'little / few'
+    pos: 'adverb'
+  - lemma: 'сало'
+    translation: 'pork fat / lard'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'соус'
+    translation: 'sauce'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'соло'
+    translation: 'solo'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'маса'
+    translation: 'mass'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'сума'
+    translation: 'sum / amount'
+    pos: 'noun'
+    gender: 'f'

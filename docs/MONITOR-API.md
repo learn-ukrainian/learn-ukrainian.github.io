@@ -64,6 +64,8 @@ Returns per-track counts:
 - `content_done` — v4 content, v3 Phase B, or v2 phase 2 complete
 - `audit_passing` — `status/*.json` overall == "pass"
 - `final_review_done` — `review/*-final-review.md` exists
+- `prompt_reviewed` — `/prompt-review` done (`audit/*-prompt-review.md` exists)
+- `content_reviewed` — `/content-review` done (`audit/*-content-review.md` exists)
 - `profile` — "core" | "seminar" | "pro"
 
 Sample response:
@@ -233,6 +235,8 @@ Returns:
 - `audit` — status, word_count, word_target, blocking_issues
 - `research` — exists, quality score (0-10)
 - `review` — exists
+- `prompt_review` — whether `/prompt-review` has been run (bool, checks `audit/{slug}-prompt-review.md`)
+- `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
 - `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries
 - `enriched` — whether plan was enriched (`.yaml.bak` exists)
 - `comms` — last 15 broker messages related to this module's slug

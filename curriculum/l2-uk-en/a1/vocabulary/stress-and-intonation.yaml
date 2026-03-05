@@ -1,61 +1,80 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: наголос
-  pos: noun
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: вода
-  pos: noun
-- lemma: склад
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: голос
-  pos: noun
-- lemma: старий
-  pos: adj
-- lemma: мати
-  pos: verb
-- lemma: де
-  pos: adv
-- lemma: інтонація
-  pos: noun
-- lemma: слово
-  pos: noun
-- lemma: рука
-  pos: noun
-- lemma: писати
-  pos: verb
-- lemma: мелодія
-  pos: noun
-- lemma: за
-  pos: adv
-- lemma: мокнути
-  pos: verb
-- lemma: до
-  pos: noun
-- lemma: брити
-  pos: verb
-- lemma: далеко
-  pos: adv
-- lemma: питати
-  pos: verb
-- lemma: питий
-  pos: adj
-- lemma: мама
-  pos: noun
-- lemma: школа
-  pos: noun
-- lemma: прочитати
-  pos: verb
-- lemma: терти
-  pos: verb
-- lemma: змінювати
-  pos: verb
-- lemma: тон
-  pos: noun
+  - lemma: "замок"
+    translation: "castle"
+    pos: "noun"
+    gender: "m"
+    notes: "Stress on the first syllable: за́мок"
+  - lemma: "замок"
+    translation: "lock"
+    pos: "noun"
+    gender: "m"
+    notes: "Stress on the second syllable: замо́к"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рука"
+    translation: "hand, arm"
+    pos: "noun"
+    gender: "f"
+  - lemma: "писати"
+    translation: "to write"
+    pos: "verb"
+  - lemma: "школа"
+    translation: "school"
+    pos: "noun"
+    gender: "f"
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+    gender: "n"
+  - lemma: "добрий"
+    translation: "good"
+    pos: "adjective"
+  - lemma: "далеко"
+    translation: "far"
+    pos: "adverb"
+  - lemma: "наголос"
+    translation: "stress, accent"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інтонація"
+    translation: "intonation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "питання"
+    translation: "question"
+    pos: "noun"
+    gender: "n"
+  - lemma: "відповідь"
+    translation: "answer"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мама"
+    translation: "mom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тато"
+    translation: "dad"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+  - lemma: "хата"
+    translation: "house"
+    pos: "noun"
+    gender: "f"
+  - lemma: "книжка"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+  - lemma: "дорога"
+    translation: "road"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кафе"
+    translation: "cafe"
+    pos: "noun"
+    gender: "n"

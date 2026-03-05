@@ -1,61 +1,61 @@
 items:
-- lemma: ти
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: ми
-  pos: noun
-- lemma: вони
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: відпочивати
-  pos: verb
-- lemma: знати
-  pos: verb
-- lemma: вивчати
-  pos: verb
-- lemma: співати
-  pos: verb
-- lemma: праця
-  pos: noun
-- lemma: він
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: слухати
-  pos: verb
-- lemma: працювати
-  pos: verb
-- lemma: розум
-  pos: noun
-- lemma: розуміти
-  pos: verb
-- lemma: питати
-  pos: verb
-- lemma: мати
-  pos: verb
-- lemma: грати
-  pos: verb
-- lemma: гра
-  pos: noun
-- lemma: чек
-  pos: noun
-- lemma: чека
-  pos: noun
-- lemma: чекати
-  pos: verb
-- lemma: думати
-  pos: verb
-- lemma: текст
-  pos: noun
-- lemma: що
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: добре
-  pos: adv
-- lemma: добрий
-  pos: adj
-- lemma: мама
-  pos: noun
+  - lemma: 'читати'
+    translation: 'to read'
+    pos: 'verb'
+  - lemma: 'писати'
+    translation: 'to write'
+    pos: 'verb'
+  - lemma: 'знати'
+    translation: 'to know'
+    pos: 'verb'
+  - lemma: 'працювати'
+    translation: 'to work'
+    pos: 'verb'
+  - lemma: 'слухати'
+    translation: 'to listen'
+    pos: 'verb'
+  - lemma: 'питати'
+    translation: 'to ask'
+    pos: 'verb'
+  - lemma: 'грати'
+    translation: 'to play'
+    pos: 'verb'
+  - lemma: 'чекати'
+    translation: 'to wait'
+    pos: 'verb'
+  - lemma: 'думати'
+    translation: 'to think'
+    pos: 'verb'
+  - lemma: 'розуміти'
+    translation: 'to understand'
+    pos: 'verb'
+  - lemma: 'вивчати'
+    translation: 'to study'
+    pos: 'verb'
+  - lemma: 'відпочивати'
+    translation: 'to rest'
+    pos: 'verb'
+  - lemma: 'дієслово'
+    translation: 'verb'
+    pos: 'noun'
+  - lemma: 'книга'
+    translation: 'book'
+    pos: 'noun'
+  - lemma: 'текст'
+    translation: 'text'
+    pos: 'noun'
+  - lemma: 'музика'
+    translation: 'music'
+    pos: 'noun'
+  - lemma: 'новини'
+    translation: 'news'
+    pos: 'noun'
+  - lemma: 'радіо'
+    translation: 'radio'
+    pos: 'noun'
+  - lemma: 'вдома'
+    translation: 'at home'
+    pos: 'adverb'
+  - lemma: 'багато'
+    translation: 'a lot'
+    pos: 'adverb'

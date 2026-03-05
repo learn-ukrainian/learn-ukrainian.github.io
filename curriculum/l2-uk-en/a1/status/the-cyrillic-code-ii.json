@@ -2,15 +2,15 @@
   "module": "the-cyrillic-code-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-03T22:55:01.191293Z",
+  "last_audit": "2026-03-05T22:48:25.112600Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-03T22:54:45.404987Z",
-    "meta": "2026-03-03T22:35:14.414428Z",
-    "activities": "2026-03-03T22:54:45.405633Z",
-    "vocabulary": "2026-03-03T22:54:45.406053Z",
-    "plan": "2026-03-01T10:58:35.048250Z",
-    "research": "2026-03-03T22:35:36.908834Z"
+    "md": "2026-03-05T17:37:56.754083Z",
+    "meta": "2026-03-05T17:35:44.231798Z",
+    "activities": "2026-03-05T17:36:49.102190Z",
+    "vocabulary": "2026-03-05T17:32:30.855845Z",
+    "plan": "2026-03-05T16:56:18.356625Z",
+    "research": "2026-03-05T17:28:03.728260Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2358/2000 (raw: 2758)"
+      "message": "1324/1200 (raw: 1506)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/8"
+      "message": "9/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "21/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",

@@ -1,61 +1,80 @@
 items:
-- lemma: цей
-  pos: adj
-- lemma: це
-  pos: noun
-- lemma: мій
-  pos: adj
-- lemma: ми
-  pos: noun
-- lemma: де
-  pos: adv
-- lemma: до
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: читати
-  pos: verb
-- lemma: любити
-  pos: verb
-- lemma: мама
-  pos: noun
-- lemma: тут
-  pos: adv
-- lemma: євро
-  pos: noun
-- lemma: веліти
-  pos: verb
-- lemma: вести
-  pos: verb
-- lemma: сім'я
-  pos: noun
-- lemma: га
-  pos: noun
-- lemma: він
-  pos: noun
-- lemma: ти
-  pos: noun
-- lemma: ще
-  pos: adv
-- lemma: ви
-  pos: noun
-- lemma: вити
-  pos: verb
-- lemma: за
-  pos: adv
-- lemma: ко
-  pos: noun
-- lemma: юний
-  pos: adj
-- lemma: сей
-  pos: adj
-- lemma: купа
-  pos: noun
-- lemma: мі
-  pos: noun
-- lemma: йти
-  pos: verb
-- lemma: той
-  pos: adj
-- lemma: па
-  pos: noun
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+    gender: "m"
+  - lemma: "яблуко"
+    translation: "apple"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ще"
+    translation: "more, still"
+    pos: "adv"
+  - lemma: "їжа"
+    translation: "food"
+    pos: "noun"
+    gender: "f"
+  - lemma: "день"
+    translation: "day"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сім'я"
+    translation: "family"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Львів"
+    translation: "Lviv"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Європа"
+    translation: "Europe"
+    pos: "noun"
+    gender: "f"
+  - lemma: "центр"
+    translation: "center"
+    pos: "noun"
+    gender: "m"
+  - lemma: "щастя"
+    translation: "happiness"
+    pos: "noun"
+    gender: "n"
+  - lemma: "м'яч"
+    translation: "ball"
+    pos: "noun"
+    gender: "m"
+  - lemma: "факт"
+    translation: "fact"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ґанок"
+    translation: "porch"
+    pos: "noun"
+    gender: "m"
+  - lemma: "юнак"
+    translation: "young man"
+    pos: "noun"
+    gender: "m"
+  - lemma: "джаз"
+    translation: "jazz"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дзвін"
+    translation: "bell"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мама"
+    translation: "mom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "брат"
+    translation: "brother"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сестра"
+    translation: "sister"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+    gender: "m"

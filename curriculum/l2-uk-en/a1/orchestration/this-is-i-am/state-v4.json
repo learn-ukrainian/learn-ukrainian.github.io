@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "this-is-i-am",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T20:59:58Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T21:00:34Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T21:02:47Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T21:04:42Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-05T21:15:21Z",
+      "attempts": 2
+    }
+  }
+}

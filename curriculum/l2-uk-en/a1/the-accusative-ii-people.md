@@ -1,303 +1,158 @@
 <!-- SCOPE
-Covers: Accusative case for animate masculine and feminine nouns (people and animals).
+Covers: The accusative case for animate nouns (people and animals).
 Not covered:
-  - Accusative for plural nouns → a1-42
-Related: a1-11
+  - Pronouns in the accusative → M30
 -->
 
 # The Accusative II: People
 
 > **Чому це важливо?**
->
-> Talking about objects is useful, but talking about people is essential for connection. Without this rule, you cannot say "I love my brother" or "I see a doctor" naturally — you would sound like a robot. This lesson unlocks the fundamental ability to express relationships, deep emotions, and personal connections with the people and animals in your daily life.
+> 
+> Ми часто говоримо про людей та тварин. Українська граматика змінює форму слів. Це правило для живих істот. Ви вже знаєте форму для предметів. Тепер ми вивчимо форму для людей.
+> 
+> When we talk about people or animals as direct objects, Ukrainian grammar treats them differently than inanimate things. You already know the "Stone Words" rule, so now it is time to master the "Heart Words".
 
-## Розминка
+## Розминка (Warm-up)
 
-### Українська граматика: Істоти та неістоти
-У попередньому уроці ми ретельно вивчали знахідний відмінок. Ми говорили про звичайні неживі предмети навколо нас. Ми купували квиток на потяг і читали книгу. Ми пили теплу каву і бачили гарний парк. Це був базовий відмінок для повсякденних об'єктів. Але українська мова є дуже глибокою системою. Вона філософськи розрізняє живі організми і неживі об'єкти. Уявіть собі дві великі віртуальні коробки. Перша коробка — це категорія неістот. Тут лежать різні предмети, високі будівлі, зелені рослини. Друга коробка — це особлива категорія істот. Тут знаходяться реальні люди і живі тварини. Вони мають душу і справжні емоції. Вони можуть активно діяти у нашому світі. Тому граматика завжди ставиться до них зовсім інакше. Це одне з базових правил української мови. Без нього ви не зможете правильно говорити. Ви повинні знати це правило для спілкування. Ми постійно використовуємо його для розмов про родину.
+Українська мова має цікаву особливість. Ми ділимо всі об'єкти на дві великі групи. Перша група — це неживі предмети. Ми можемо назвати їх «кам'яні слова». Друга група — це живі істоти. Це люди та тварини. Ми можемо назвати їх «живі слова».
 
-In our previous lesson, we carefully studied the accusative case. We talked about ordinary inanimate objects around us. We bought a train ticket and read a book. We drank warm coffee and saw a beautiful park. This was the basic case for everyday objects. But the Ukrainian language is a very deep system. It philosophically distinguishes between living organisms and non-living objects. Imagine two large virtual boxes. The first box is the category of inanimate objects. Here lie various items, tall buildings, green plants. The second box is the special category of animate beings. Here are real people and living animals. They have a soul and real emotions. They can act actively in our world. Therefore, grammar always treats them completely differently. This is one of the basic rules of the Ukrainian language. Without it, you will not be able to speak correctly. You must know this rule for communication. We constantly use it for conversations about family.
+Ukrainian grammar has a fascinating feature. We divide all objects into two major categories. The first category contains inanimate objects, which we can call "Stone Words" (things like tables, cities, or books). The second category contains living beings, primarily people and animals, which we can call "Heart Words".
 
-### Категорія неістот: Що це таке насправді?
-До категорії неістот належать усі звичайні предмети. Ось великий стіл, новий телефон, сучасний комп'ютер. Тут є міський парк або високий будинок. Усі ці популярні слова абсолютно не мають життя. Вони існують пасивно у нашому фізичному світі. Також до цієї категорії належать усі рослини. Красива квітка або зелене дерево біологічно є живими. Вони ростуть під сонцем і п'ють чисту воду. Але граматично українська мова вважає їх неістотами. Сюди ж належать великі соціальні групи людей. Галасливий натовп, сильна армія, шкільний клас — це групи. Ми логічно сприймаємо їх як один структурний об'єкт. Ці слова поводяться максимально пасивно у довгих реченнях. Вони не змінюють форму в чоловічому роді. Знахідний відмінок для таких слів дорівнює називному відмінку. Вони є стабільними елементами мови.
+Ви вже знаєте знахідний відмінок для предметів. Це перший крок. Ви кажете: я бачу стіл, я бачу парк. Слово не змінює форму. Це правило для «кам'яних слів» чоловічого роду. 
 
-The category of inanimate objects includes all ordinary items. We see a large table, a new phone, a modern computer. There is also a city park or a tall house. All these popular words absolutely have no life. They exist passively in our physical world. Also, all plants belong to this category. A beautiful flower or a green tree are biologically alive. They grow under the sun and drink clean water. But grammatically, the Ukrainian language considers them inanimate. Large social groups of people also belong here. A noisy crowd, a strong army, a school class are groups. We logically perceive them as one structural object. These words behave as passively as possible in long sentences. They do not change their form in the masculine gender. The accusative case for such words equals the nominative case. They are stable elements of the language.
+You already know how the accusative case works for inanimate objects. That was your first step. When you talk about a masculine thing, like a table or a park, the word does not change its form. This is the rule for masculine "Stone Words".
 
-### Категорія істот: Хто має привілеї?
-До категорії істот належать усі реальні люди. Ось ваша рідна мама [ˈmɑmɑ], ваш добрий тато [ˈtɑtɔ]. Тут є ваш старший брат [brɑt] або молодша сестра [seˈstrɑ]. Сюди належать абсолютно всі існуючі сучасні професії. Розумний лікар [ˈlʲikɑr], строгий вчитель [ˈwʧɪtelʲ], молодий здібний студент. Сюди належать власні людські імена без винятків. Ваш хороший друг [druɦ] Андрій або ваша знайома Марія. І дуже цікавий факт — сюди належать усі тварини! Домашній кіт [kʲit], вірний пес [pɛs] або маленький птах. Усі вони граматично є повністю живими істотами. Вони вимагають особливої граматичної поваги до себе. Вони принципово не хочуть бути схожими на речі. Тому їхні граматичні закінчення в реченнях обов'язково змінюються. Вони показують свою активну позицію тут.
+Але живі істоти мають іншу граматику. Вони особливі. Коли ми говоримо про людей, ми показуємо повагу. Граматика має спеціальні форми для цього. Тому «живі слова» чоловічого роду змінюють свою форму. Вони не можуть мати форму як звичайний предмет.
 
-The category of animate beings includes all real people. We have your dear mom, your kind dad. We have your older brother or younger sister. All existing modern professions belong here absolutely. A smart doctor, a strict teacher, a young capable student. Proper human names belong here without exceptions. Your good friend Andriy or your acquaintance Mariya. And a very interesting fact — all animals belong here! A domestic cat, a loyal dog, or a small bird. All of them are grammatically fully animate beings. They demand special grammatical respect for themselves. They fundamentally do not want to be like things. Therefore, their grammatical endings in sentences necessarily change. They show their active position in the language.
+However, living beings follow different grammar rules. They are special. When we talk about people, the language essentially shows respect through grammar by distinguishing them from objects. Therefore, masculine "Heart Words" change their form when they are the direct object. They cannot use the same form as a regular inanimate object.
 
-> [!observe]
-> **Look closer at the logic:**
-> Ukrainian grammar deeply respects life. The distinction between "animate" (істоти) and "inanimate" (неістоти) is not just a rule; it is a worldview. When you talk about a person or an animal, the language forces you to mark that word with a special ending. It is a linguistic signal that clearly says: "This is a living, breathing being, not a cold stone."
+> [!note]
+> The Ukrainian State Standard requires learners to know these forms. You must correctly distinguish words like son, dad, mom, sister, and teacher when they are the object of your sentence. We will learn how to talk about them correctly.
 
-## Презентація
+> [!tip]
+> You can think of animate masculine nouns as demanding attention. They are "greedy" for a grammatical ending so they stand out from regular objects.
 
-### Чоловічий рід: Тверді приголосні
-Чоловічий рід неістот завжди залишається без жодних змін. Ми говоримо дуже просто про неживі об'єкти. Я бачу великий стіл у світлій кімнаті. Я маю новий український паспорт для подорожі. Але чоловічий рід істот поводиться зовсім інакше. Ці слова є дуже «жадібними» в українській граматиці. Вони відкрито крадуть своє закінчення з родового відмінка. Головне правило звучить надзвичайно чітко для студентів. Ми обов'язково додаємо закінчення -а для твердих приголосних. Тверді приголосні — це популярні звуки «т» або «н». Це логічне правило для щоденного активного використання. Воно допомагає розуміти контекст нашої розмови. Ми точно говоримо про людину.
+## Презентація (Presentation)
 
-The masculine gender of inanimate objects always remains without any changes. We speak very simply about non-living objects. I see a big table in the bright room. I have a new Ukrainian passport for the journey. But the masculine gender of animate beings behaves completely differently. These words are very "greedy" in Ukrainian grammar. They openly steal their ending from the genitive case. The main rule sounds extremely clear for students. We must add the ending -a for hard consonants. Hard consonants are the popular sounds 't' or 'n'. This is a logical rule for daily active use. It helps us understand the context of our conversation. This way we know exactly that we are talking about a person.
+Чоловічі назви істот дуже цікаві. Вони хочуть відрізнятися від неживих предметів. Тому знахідний відмінок тут дорівнює родовому відмінку. Чоловічий рід отримує закінчення «-а» або «-я». 
 
-*   **Брат** (Brother): Я щиро люблю свого старшого **брата**. (I sincerely love my older brother.)
-*   **Син** (Son): Вона дуже добре знає цього **сина**. (She knows this son very well.)
-*   **Студент** (Student): Ми довго чекаємо нового розумного **студента**. (We have been waiting a long time for the new smart student.)
-*   **Друг** (Friend): Ти поважаєш свого старого вірного **друга**. (You respect your old loyal friend.)
+Masculine nouns for living beings are very interesting. They want to stand out from inanimate objects. Because of this, their accusative form copies the genitive form. A masculine noun adds the ending "-а" or "-я".
 
-### Чоловічий рід: М'які приголосні
-Українська мова має багато цікавих слів. Вони закінчуються інакше. Вони мають м'який знак або м'який приголосний звук. Візьмемо для прикладу дуже популярне слово «вчитель». Тут є помітний м'який знак у кінці слова. Ми повністю забираємо цей м'який знак. Замість нього ми додаємо нове закінчення -я. Слово «лікар» також належить до цієї специфічної групи. Воно закінчується на звичайну українську букву «р». Але історично це дуже м'який звук у слові. Ви маєте просто запам'ятати цей важливий виняток. Тому слово лікар обов'язково змінюється на форму лікаря. Також усі імена на букву «й» беруть -я.
+Ось приклади для чоловічого роду. Я бачу брата. Ти знаєш студента. Ми чекаємо лікаря. Вона любить сусіда. Слово «брат» отримує літеру «а». Слово «лікар» отримує літеру «я». 
 
-In the Ukrainian language, many interesting words end differently. They have a soft sign or a soft consonant sound. Let's take the very popular word "вчитель" (teacher) for example. There is a noticeable soft sign at the end of the word here. According to the rule, we completely remove this soft sign. Instead of it, we add the new ending -ya. The word "лікар" (doctor) also belongs to this specific group. It ends in the regular Ukrainian letter 'r'. But historically, this is a very soft sound in the word. You just have to remember this important exception. Therefore, the word doctor necessarily changes to the form лікаря. Also, all names ending in the letter 'y' take -ya.
+Here are examples for masculine nouns. "I see a brother." "You know a student." "We are waiting for a doctor." "She loves a neighbor." The word "brother" takes the letter "a". The word "doctor" takes the letter "ya" because it ends in a soft consonant.
 
-**Вчитель** (Teacher)
-Я дуже поважаю цього мудрого шкільного **вчителя**. (I highly respect this wise school teacher.)
+| Називний (Subject) | Знахідний (Object) | Translation |
+|--------------------|--------------------|-------------|
+| брат | бачу брат**а** | see a brother |
+| студент | знаю студент**а** | know a student |
+| сусід | чекаю сусід**а** | wait for a neighbor |
+| лікар | люблю лікар**я** | love a doctor |
+| вчитель | бачу вчител**я** | see a teacher |
 
-**Лікар** (Doctor)
-Ми швидко викликали головного досвідченого **лікаря**. (We quickly called the chief experienced doctor.)
+Жіночий рід має іншу логіку. Жіночі слова зберігають своє стандартне закінчення. Це закінчення «-у» або «-ю». Вони ігнорують правило про родовий відмінок. 
 
-**Андрій** (Andriy)
-Я багато років знаю розумного **Андрія**. (I have known smart Andriy for many years.)
+Feminine nouns operate on a different logic. Feminine words keep their standard accusative ending. This is the ending "-у" or "-ю". They completely ignore the "accusative equals genitive" rule that masculine nouns use.
 
-**Дідусь** (Grandpa)
-Я завжди любив мого доброго старенького **дідуся**. (I always loved my kind old grandpa.)
+Я бачу маму. Ти знаєш сестру. Ми чекаємо подругу. Вона любить дитину. Слово «мама» змінює літеру «а» на «у». Це правило працює для всіх жіночих слів. 
 
-### Жіночий рід: Стандартне правило
-Жіночий рід має дуже просте і стабільне правило. Тут абсолютно немає різниці між живим і неживим. Усі слова жіночого роду на -а змінюються. Вони стабільно отримують нове закінчення -у. Усі слова жіночого роду на -я також змінюються. Вони гарантовано отримують нове закінчення -ю. Це правило стосується старих книг і широких вулиць. Воно також стосується рідних сестер і добрих мам. Це дійсно універсальне правило для всього жіночого роду. Ви швидко знаєте правильну букву. Ви просто автоматично міняєте останню голосну букву.
+"I see a mom." "You know a sister." "We are waiting for a friend." "She loves a child." The word "mom" changes the letter "a" to "u". This rule applies to all feminine words, whether they are people or objects.
 
-The feminine gender has a very simple and stable rule. There is absolutely no difference between living and non-living here. All feminine words ending in -a change. They stably receive the new ending -u. All feminine words ending in -ya also change. They are guaranteed to receive the new ending -yu. This rule applies to old books and wide streets. It also applies to dear sisters and kind moms. This is truly a universal rule for the entire feminine gender. You do not need to think long before the word. You just automatically change the last vowel letter.
+| Називний (Subject) | Знахідний (Object) | Translation |
+|--------------------|--------------------|-------------|
+| мама | бачу мам**у** | see a mom |
+| сестра | знаю сестр**у** | know a sister |
+| подруга | чекаю подруг**у** | wait for a friend |
+| дитина | люблю дитин**у** | love a child |
 
-| Називний (Nominative) | Знахідний (Accusative) | Переклад (Translation) |
-| :--- | :--- | :--- |
-| **мама** (mom) | я люблю **маму** | I love mom |
-| **сестра** (sister) | я бачу **сестру** | I see the sister |
-| **подруга** (friend) | ти знаєш **подругу** | you know the friend |
-| **Олена** (Olena) | він чекає **Олену** | he is waiting for Olena |
+Є ще одне важливе слово. Це слово «колега». Воно може означати чоловіка або жінку. Але воно закінчується на літеру «а». Тому воно змінює форму як жіноче слово. Я бачу колегу. 
 
-> [!myth-buster]
-> **Feminine Overthinking**
-> Do not apply the masculine "-а" rule to feminine words! Some learners get confused and say *Я бачу сестри*. Remember: Feminine animate nouns act exactly like feminine inanimate nouns. If "карта" becomes "карту", then "мама" becomes "маму". It is a wonderfully simple system.
-
-### Зміна голосних: Кіт та Пес
-Українська мова іноді змінює внутрішні голосні звуки. Це робить нашу мову дуже милозвучною та пісенною. Це часто трапляється з короткими словами кіт та пес. Ми додаємо закінчення. Голосний звук всередині зникає. Або він може змінитися на інший зручний звук. Це абсолютно природний процес для української фонетики. Українці люблять швидку і плавну безперервну вимову. Тому такі зміни допомагають говорити набагато легше. Буква «й» у слові кіт змінюється на «о». А буква «е» у слові пес просто зникає. Це створює короткі і зручні для вимови форми.
-
-In the Ukrainian language, internal vowel sounds sometimes change. This makes our language very euphonious and song-like. This often happens with the short words cat (кіт) and dog (пес). When we add an ending, the vowel sound inside disappears. Or it can change to another convenient sound. This is an absolutely natural process for Ukrainian phonetics. Ukrainians love fast and smooth continuous pronunciation. Therefore, such changes help to speak much more easily. The letter 'і' in the word cat changes to 'о'. And the letter 'е' in the word dog simply disappears. This creates short and convenient forms for pronunciation.
-
-У вас вдома є пухнастий кіт. Ви ви радісно кажете друзям: «Я маю великого **кота**» (I have a big cat). Або це активний пес. Ви ви гучно скажете: «Я зараз бачу вашого **пса**» (I see your dog now).
-
-### Зведена таблиця правил
-Ця детальна таблиця показує всі правила разом. Ви можете використовувати її як зручну шпаргалку щодня. Зверніть увагу на різницю між істотами та неістотами. Чоловічий рід вимагає найбільше вашої граматичної уваги.
-
-This detailed table shows all the rules together. You can use it as a convenient cheat sheet every day. Pay attention to the difference between animate and inanimate objects. The masculine gender requires the most of your grammatical attention.
-
-| Рід (Gender) | Істота? (Animate?) | Називний (Nominative) | Знахідний (Accusative) | Правило (Rule) |
-| :--- | :--- | :--- | :--- | :--- |
-| Чоловічий | Ні (No) | **стіл** (table) | я бачу **стіл** | Без змін (No change) |
-| Чоловічий | Так (Yes) | **брат** (brother) | я бачу **брата** | Додаємо **-а** (Add **-a**) |
-| Чоловічий | Так (Yes) | **лікар** (doctor) | я бачу **лікаря** | Додаємо **-я** (Add **-ya**) |
-| Жіночий | Ні (No) | **карта** (map) | я бачу **карту** | **-а** → **-у** |
-| Жіночий | Так (Yes) | **мама** (mom) | я бачу **маму** | **-а** → **-у** |
-
-## Типові помилки та практика
-
-### Аналіз слів: Хто істота?
-Давайте перевіримо наші нові граматичні знання на практиці. Подивіться на ці популярні слова з нашого життя. Які з них точно є живими істотами? Хто має справжню живу душу в реальності? Хто є людиною або біологічною живою твариною? Ми повинні розрізняти їх абсолютно автоматично і швидко. Це перший важливий крок до правильної української граматики. Спочатку ви думаєте, а потім говорите правильне закінчення. Це потребує певного часу для тренування мозку. Але згодом це стане вашою природною мовною звичкою.
-
-Let's test our new grammatical knowledge in practice. Look at these popular words from our life. Which of them are definitely animate beings? Who has a real living soul in reality? Who is a person or a biological living animal? We must distinguish them absolutely automatically and quickly. This is the first important step to correct Ukrainian grammar. First you think, and then you say the correct ending. This takes some time to train the brain. But eventually, this will become your natural language habit.
-
-*   **Директор** — Це жива людина. Це повноцінна істота. Змінюємо на форму: **директора**. (Director — That is a living person. That is a full animate being. Change to form: директора.)
-*   **Університет** — Це велике місце. Це типова неістота. Слово залишається без змін: **університет**. (University — That is a large place. That is a typical inanimate object. The word remains without changes: університет.)
-*   **Вчитель** — Це теж людина. Це стовідсоткова істота. Змінюємо на правильну форму: **вчителя**. (Teacher — That is also a person. That is a one hundred percent animate being. Change to the correct form: вчителя.)
-
-### Магічні дієслова: Бачити
-Це абсолютно базове слово (verb) для нашого щоденного життя. Ми використовуємо його постійно і дуже часто щодня. Ми бачимо знайомих людей на вулиці міста. Ми завжди використовуємо знахідний відмінок для живих істот. Цей граматичний процес відбувається автоматично у вашій голові. Ваш мозок повинен миттєво змінювати правильну форму слова. Ви робите це, щойно бачите людину або тварину. Це слово відкриває двері до вільного спілкування.
-
-That is an absolutely basic verb for our daily life. We use it constantly and very often every day. When we see familiar people on the city street. We always use the accusative case for animate beings. This grammatical process happens automatically in your head. Your brain must instantly change the correct form of the word. You do this as soon as you see a person or an animal. This verb opens the door to fluent communication for us.
-
-**А:** Ти зараз бачиш нашого **директора**? (Do you see our director now?)
-**Б:** Ні, я бачу нового **менеджера**. (No, I see the new manager.)
-
-### Магічні дієслова: Знати
-Це важливе слово (verb) показує наші соціальні людські зв'язки. Ми постійно знайомимося з новими цікавими людьми сьогодні. Ми будуємо довготривалі стосунки з друзями та колегами. Ви говорите про знайому людину. Ви обов'язково повинні використати знахідний відмінок для істот. Це найчастіший і найважливіший контекст для цього правила. Використання неправильної базової форми тут звучить дуже дивно. Ви ще тільки вчитеся.
-
-This important verb shows our social human connections. We constantly meet new interesting people today. We build long-term relationships with friends and colleagues. When you say that you know someone well. You must definitely use the accusative case for animate beings. That is the most frequent and most important context for this rule. Using the wrong basic form here sounds very strange. It immediately shows that you are still just learning.
-
-**Іван** (Ivan)
-Я дуже давно і добре знаю **Івана**. (I have known Ivan very well for a long time.)
-
-**Сусід** (Neighbor)
-Ми добре знаємо нашого нового веселого **сусіда**. (We know our new cheerful neighbor well.)
-
-### Магічні дієслова: Любити
-Це слово (verb) виражає найсильніші емоції в нашому житті. Ми щиро любимо нашу родину і близьких друзів. Ми відчуваємо теплі почуття до наших домашніх тварин. Ми висловлюємо любов. Об'єкт завжди стоїть у знахідному відмінку. Це правило додає емоційної глибини нашій розмові. Ви можете сказати це мамі, тату або брату. Вони будуть дуже щасливі почути ці теплі слова.
-
-This verb expresses the strongest emotions in our life. We sincerely love our family and close friends. We feel warm feelings towards our domestic animals. When we express love, the object always stands in the accusative case. This rule adds emotional depth to our Ukrainian language. You can say this to mom, dad, or brother. They will be very happy to hear these warm words.
-
-*   Я дуже люблю свою рідну **маму**. (I love my dear mom very much.)
-*   Він щиро любить свого молодшого **брата**. (He sincerely loves his younger brother.)
-*   Дитина радісно любить цього веселого **пса**. (The child joyfully loves this cheerful dog.)
-
-### Магічні дієслова: Чекати
-Ми часто фізично чекаємо когось у нашому житті. Ми стоїмо на вулиці, в кафе, вдома. Ми чекаємо друзів, колег, родичів або навіть лікарів. У таких типових ситуаціях завжди працює знахідний відмінок. Це слово (verb) є індикатором нашого очікування іншої живою людини. Воно з'єднує дві особи у спільному часі.
-
-We often physically wait for someone in our life. We stand on the street, in a cafe, at home. We wait for friends, colleagues, relatives, or even doctors. In such typical situations, the accusative case always works. This verb is an indicator of our expectation of another living person. It connects two individuals in shared time.
+There is another important word. This is the word "colleague". It can refer to a man or a woman. However, since it ends in the letter "a" in its dictionary form, it changes form exactly like a feminine word. "I see a colleague."
 
 > [!warning]
-> **Who are you waiting for?**
-> A common mistake is using the Genitive instead of Accusative here due to direct translation from other Slavic languages. In modern Ukrainian, it is best to use Accusative for specific people you are waiting for.
-> ✅ Я чекаю **друга** (I am waiting for a friend).
-> ❌ Я чекаю друг.
+> The word "тато" (dad) ends in "o", but it is a masculine word. Since it is animate, it drops the "o" and takes the "-а" ending: "бачу тата". It is important not to confuse it with neuter words.
 
-### Використання: Моя сім'я та друзі
+Тварини також є живими істотами. Українська граматика бачить їх як людей. Вони теж отримують спеціальні закінчення. 
 
-### Опис великої родини
-Українці традиційно дуже високо цінують свою велику родину. Ми дуже часто говоримо про наших численних родичів. Ми довго перераховуємо людей у великому списку. Ми обов'язково змінюємо абсолютно кожне власне ім'я. Усі слова у цьому списку отримують нові закінчення. Вони всі стають формами знахідного відмінка без винятків. Це дуже важливий нюанс. Він треба завжди пам'ятати. Інакше речення буде звучати розірвано і зовсім неприродно. Зв'язок між словами забезпечує правильне граматичне закінчення.
+Animals are also living beings. Ukrainian grammar treats them the same as people. They also receive these special endings.
 
-Ukrainians traditionally highly value their large family. We very often talk about our numerous relatives. When we list people at length in a long list. We necessarily change absolutely every proper name. All words in this list receive new endings. They all become forms of the accusative case without exceptions. That is a very important nuance that must always be remembered. Otherwise, the sentence will sound disconnected and completely unnatural. The connection between words is provided by the correct grammatical ending.
+Я маю кота. Ти бачиш пса. Слово «кіт» отримує літеру «а». Слово «пес» теж має зміну, і ми кажемо «пса». Тварини ніколи не бувають «кам'яними словами». Вони завжди мають граматику істот.
 
-*   Я маю старшого **брата** і молодшу **сестру**. (I have an older brother and a younger sister.)
-*   Ми добре знаємо **Олега**, **Андрія** і **Марію**. (We know Oleh, Andriy, and Mariya well.)
+"I have a cat." "You see a dog." The word "cat" takes the letter "a". The word "dog" also changes its internal letters, so we say "пса". Animals are never treated as inanimate "Stone Words". They always follow the grammar of living beings.
 
-### Діалог: Несподівана зустріч
-Послухайте цю звичайну розмову двох хороших друзів. Вони випадково зустрілися на шумній вулиці великого міста. Вони активно розпитують один одного про спільних знайомих. Зверніть свою увагу на правильні форми імен. Подивіться, як природно змінюються слово (noun)и у цій розмові.
+## Культурний контекст (Cultural Context)
 
-Listen to this ordinary conversation between two good friends. They accidentally met on a noisy street of a big city. They actively ask each other about mutual acquaintances. Pay your attention to the correct forms of names. See how naturally nouns change in this conversation.
+Українська культура має особливе ставлення до людей. Слово «друг» означає дуже багато. Це не просто людина, яку ви знаєте. Це близька людина. Це споріднена душа. 
 
-**Олена:** Привіт, Андрію! Кого ти зараз чекаєш тут?
-**Андрій:** Привіт, Олено! Я чекаю свою нову **подругу**. Її звати Марія.
-**Олена:** О, я добре знаю цю **Марію**! Вона сестра **Івана**?
-**Андрій:** Так, вона рідна сестра Івана. А ти кого чекаєш?
-**Олена:** Я чекаю свого старшого **брата**.
-**Андрій:** Я бачу твого **брата**! Він там.
-**Олена:** Чудово. Гарного дня, Андрію!
-**Андрій:** Дякую, до побачення!
+Ukrainian culture has a very special attitude towards personal relationships. The word "friend" means a great deal. This is not just a person you casually know. This implies a very close relationship, essentially a soulmate.
 
-**Translation:**
-**Olena:** Hi, Andriy! Whom are you waiting for here now?
-**Andriy:** Hi, Olena! I am waiting for my new friend (female). Her name is Mariya.
-**Olena:** Oh, I know this Mariya well! Is she Ivan's sister?
-**Andriy:** Yes, she is Ivan's own sister. And whom are you waiting for?
-**Olena:** I am waiting for my older brother.
-**Andriy:** I see your brother! He is over there.
-**Olena:** Great. Have a good day, Andriy!
-**Andriy:** Thank you, goodbye!
+Коли українець каже «це мій друг», це серйозно. Для інших людей ми маємо слово «знайомий». Знайомий — це колега, сусід або просто приємна людина. Але друг — це родина. 
 
-### Діалог: Де наш кіт?
-Це типова і кумедна сімейна ситуація у будинку. Домашні тварини дуже часто ховаються від своїх господарів. Ми активно шукаємо їх і завжди використовуємо відмінки. Тварини поводяться як повноцінні і рівні члени родини. Тому ми говоримо про них як про істот.
-
-That is a typical and funny family situation in the house. Domestic animals very often hide from their owners. We actively look for them and always use cases. Animals behave as full and equal members of the family. Therefore, we talk about them as animate beings.
-
-**Мама:** Максиме, ти випадково бачиш нашого **тата**?
-**Син:** Ні, я не бачу **тата**. Я бачу тільки **сусіда**.
-**Мама:** А де наш пухнастий кіт? Я шукаю **кота**.
-**Син:** Я вже бачу **кота**! Він сидить високо на дереві. Я люблю нашого **кота**.
-**Мама:** Я теж дуже люблю **кота**, але зараз я чекаю **тата**.
-
-**Translation:**
-**Mom:** Maksym, do you happen to see our dad?
-**Son:** No, I don't see dad. I only see the neighbor.
-**Mom:** And where is our fluffy cat? I am looking for the cat.
-**Son:** I already see the cat! He is sitting high on the tree. I love our cat.
-**Mom:** I also love the cat very much, but right now I am waiting for dad.
-
-### Пестливі форми: Теплі слова
-Українська мова є надзвичайно ніжною і дуже мелодійною. Ми дуже любимо використовувати різні пестливі форми слів. Ми робимо це для нашої родини і друзів. Це відкрито показує нашу велику любов і щиру турботу. Ці емоційні слова також обов'язково змінюються за нашими правилами. Жіночий рід стабільно отримує нове м'яке закінчення -ю. А чоловічий рід обов'язково отримує нове закінчення -я. Це звучить дуже тепло.
-
-The Ukrainian language is extremely tender and very melodic. We really love to use various diminutive forms of words. We do this for our family and friends. This openly shows our great love and sincere care. These emotional words also necessarily change according to our rules. The feminine gender stably receives the new soft ending -yu. And the masculine gender necessarily receives the new ending -ya. It sounds very warm.
-
-*   **Мама → Матуся.** Я дуже люблю свою добру **матусю**. (Mom → Mommy. I love my kind mommy very much.)
-*   **Тато → Татусь.** Я щовечора чекаю свого розумного **татуся**. (Dad → Daddy. I wait for my smart daddy every evening.)
-
-### Питання: Кого ти бачиш?
-Ми обов'язково повинні знати, як правильно ставити базові питання. Ми запитуємо про звичайний об'єкт або неістоту. Тоді Ми завжди кажемо коротке слово «Що?». Ми запитуємо про живу людину або істоту. Тоді Ми обов'язково кажемо питальне слово «Кого?». Це розділення працює завжди й є дуже важливим правилом. Воно показує вашу повагу до живої природи.
-
-We absolutely must know how to correctly ask basic questions. If we ask about an ordinary object or an inanimate thing. We always say the short word "Що?" (What?). If we ask about a living person or an animate being. We necessarily say the question word "Кого?" (Whom?). This division works always and is a very important rule. It shows your respect for living nature.
-
-*   **Що** ти зараз бачиш? — Я бачу новий **стіл**. (What do you see now? — I see a new table.)
-*   **Кого** ти зараз бачиш? — Я бачу молодого **студента**. (Whom do you see now? — I see a young student.)
-
-## Культурний контекст
-
-### Друг чи знайомий?
-В англійській мові популярне слово "friend" використовується постійно. В українській глибокій культурі ці слова мають іншу вагу. Слово "знайомий" просто означає звичайну людину. Її ви знаєте. Це ваш новий колега або людина з гучної вечірки. Більшість людей навколо нас — це просто знайомі люди. Слово "друг" означає дуже близьку і дуже важливу людину. Це майже рідний член вашої власної родини. Ви повністю довіряєте цій особливій людині своє складне життя. Тому ми не називаємо всіх людей друзями в Україні.
-
-In the English language, the popular word "friend" is used constantly. In Ukrainian deep culture, these words have a different weight. The word "знайомий" (acquaintance) simply means an ordinary person you know. That is your new colleague or a person from a loud party. Most people around us are just acquaintances. The word "друг" (friend) means a very close and very important person. That is almost a native member of your own family. You fully trust this special person with your complex life. Therefore, we do not call all people friends in Ukraine.
-
-*   Я сьогодні зустрічаю свого старого **знайомого**. (I am meeting my old acquaintance today. — Casual connection)
-*   Я завжди захищаю свого найкращого **друга**. (I always defend my best friend. — Deep connection)
-
-> [!quote]
-> **Народна мудрість (Folk Wisdom)**
-> «Старий друг краще нових двох.»
-> *(An old friend is better than two new ones.)*
-> This classical proverb highlights how deeply Ukrainians value long-standing, tested, and loyal friendships over casual, new acquaintances. True friendship is built over years.
+When a Ukrainian says "this is my friend", it carries serious weight. For other people, we have the word "acquaintance". An acquaintance is a colleague, a neighbor, or just a nice person you interact with. But a true friend is considered family.
 
 > [!culture]
-> **Gender in Friendship**
-> We have distinct words for male and female friends:
-> *   **Друг** (male friend)
-> *   **Подруга** (female friend)
->
-> Be careful with the phrase "моя подруга." When a man says "моя подруга," it can sometimes imply "my girlfriend" depending on the emotional context. If you want to be perfectly neutral, you can safely say "моя знайома" (my acquaintance).
+> It is good to reserve the word "друг" for deep connections because it shows you understand Ukrainian relationship dynamics. If you just met someone, you might call them a "колега" or "знайомий" rather than a "друг".
 
-### Українські імена
-Особисті імена не є статичними етикетками. Вони динамічно живуть разом із нашим загальним реченням. Вони гнучко змінюються за тими ж логічними граматичними правилами. Чоловічі імена завжди отримують нові закінчення -а або -я. Жіночі імена стабільно отримують нові закінчення -у або -ю. Це робить розмову плавною і дуже природною сьогодні.
+Ми також дуже любимо пестливі форми. Ми називаємо їх демінутиви. Вони показують тепло та близькість. Дорослі люди постійно використовують їх. 
 
-Personal names in the Ukrainian language are not static labels. They dynamically live together with our general sentence. They flexibly change according to the same logical grammatical rules. Male names always receive the new endings -a or -ya. Female names stably receive the new endings -u or -yu. This makes the conversation smooth and very natural today.
+We also really love diminutive forms. They show warmth and closeness. Adults constantly use them with their family members.
 
-*   **Іван** → Я дуже добре знаю розумного **Івана**. (Ivan → I know smart Ivan very well.)
-*   **Олена** → Він щиро любить свою красиву **Олену**. (Olena → He sincerely loves his beautiful Olena.)
+Ми кажемо «матуся» замість «мама». Ми кажемо «татусь» замість «тато». Ми маємо слова «братик» та «сестричка». Це дуже нормальна мова для дому. 
 
-> [!fact]
-> **Foreign Names**
-> Do foreign names change? Yes, usually! If they fit the Ukrainian pattern, we change them naturally.
-> *   **John** (ends in a hard consonant) acts like Ivan: Я знаю **Джона**.
-> *   **Jessica** (ends in -a) acts like Olena: Я бачу **Джесіку**.
-> *   **David** (ends in a hard consonant) acts like Oleh: Я люблю **Девіда**.
->
-> Only names ending in vowels like -o, -u, -i usually do not change (Mario, Kiki, Chloe).
+We say "mommy" instead of "mom". We say "daddy" instead of "dad". We also have words for "little brother" and "little sister". This is completely normal language for the home environment, even among adults.
 
-### День ангела: Іменини
-В сучасній Україні день народження — це дуже важливе свято. Але ми маємо ще одне велике традиційне свято. Це так звані іменини, або світлий день ангела. Це особливий день святого, чиє гарне ім'я ви маєте. Ваше красиве ім'я Андрій. Це тридцяте листопада. У цей святковий день люди тепло вітають вас. Вони бажають міцного здоров'я і великого людського щастя.
+Я дуже люблю свою матусю. Я часто бачу свого братика. Ви можете почути такі фрази щодня. Вони роблять мову м'якою та емоційною. 
 
-In modern Ukraine, a birthday is a very important holiday. But we have another big traditional holiday. These are the so-called name days, or the bright day of the angel. That is the special day of the saint whose beautiful name you have. For example, if your beautiful name is Andriy, it is the thirtieth of November. On this festive day, people warmly congratulate you. They wish you strong health and great human happiness.
+"I love my mommy very much." "I often see my little brother." You can hear phrases like these every day. They make the spoken language feel soft and highly emotional.
 
-*   Люди часто кажуть: «Щиро вітаю з іменинами!» (People often say: "Sincerely congratulate with name day!")
-*   Я радісно вітаю свого друга **Андрія**. (I joyfully congratulate my friend Andriy. — Accusative case!)
+## Практика та типові помилки (Practice and Common Errors)
 
-### Ввічливе звертання: Пан та Пані
-Ми говоримо до старшого вчителя. Ми завжди ввічливо використовуємо спеціальні поважні титули сьогодні. Це красиве слово «пан» для всіх дорослих чоловіків. Це елегантне слово «пані» для всіх дорослих жінок. Це класичне і традиційне українське шанобливе звертання. Слово «пан» змінюється як звичайний типовий чоловічий слово (noun). Воно отримує своє логічне граматичне закінчення -а. Слово «пані» — це абсолютно унікальне особливе слово. Воно ніколи не змінюється у жодному українському відмінку.
+Студенти часто роблять одну типову помилку. Це пастка чоловічого роду для істот. Англійська мова не змінює іменники для об'єктів. Тому студенти забувають змінити форму. 
 
-When we speak to an older teacher or an unfamiliar person. We always politely use special respectful titles today. That is the beautiful word "пан" (Mr.) for all adult men. That is the elegant word "пані" (Ms./Mrs.) for all adult women. That is a classic and traditional Ukrainian respectful address. The word "пан" changes like an ordinary typical masculine noun. It receives its logical grammatical ending -a. The word "пані" is an absolutely unique special word. It never changes in any Ukrainian case.
+Students often make one typical mistake. This is the masculine animate trap. The English language does not change noun endings for objects. Therefore, students simply forget to change the form.
 
-*   **Пан** → Я зараз бачу **пана** Андрія. (Mr. → I see Mr. Andriy now.)
-*   **Пані** → Я добре знаю **пані** Олену. (Ms. → I know Ms. Olena well.)
+Вони кажуть «я бачу брат». Це неправильно. Треба додати закінчення. Правильна форма — «я бачу брата». Чоловічі істоти завжди потребують цього закінчення. 
 
-### Назви сучасних професій
-Усі назви професій поводяться граматично як звичайні живі люди. Вони граматично є повноцінними істотами. Це дорослий чоловік. Ми обов'язково додаємо -а або -я. Це доросла жінка. Ми стабільно змінюємо -а на -у. Це правило працює абсолютно для всіх сучасних посад. Це працює для президентів, водіїв, кухарів і директорів.
+They say "I see a brother" using the dictionary form of the word. This is incorrect. One must add the ending. The correct form requires the "-а" ending. Masculine living beings always require this ending when they are the object.
 
-All names of professions behave grammatically like ordinary living people. They are grammatically full animate beings in our language. If it is an adult man, we necessarily add -a or -ya. If it is an adult woman, we stably change -a to -u. This rule works absolutely for all modern positions. This works for presidents, drivers, cooks, and directors.
+Інша проблема — це жіночі слова. Після правила про чоловічий рід, студенти думають забагато. Вони починають змінювати жіночі слова неправильно. 
 
-*   **Менеджер** → Я знаю цього нового **менеджера**. (Manager → I know this new manager.)
-*   **Президент** → Ми щодня бачимо нашого **президента**. (President → We see our president every day.)
+Another problem involves feminine words. After learning the rule for masculine nouns, students tend to overthink. They start changing feminine words incorrectly.
+
+Вони кажуть «я бачу сестри». Це велика помилка. Жіночі слова завжди мають тільки закінчення «-у» або «-ю». Правильно казати «я бачу сестру». Не треба використовувати чоловіче правило для жіночих слів. 
+
+They say a form that looks like the plural or genitive for feminine words. This is a big mistake. Feminine words always take only the "-у" or "-ю" ending in the accusative. The correct way is "я бачу сестру". You should never apply the masculine animate rule to feminine words.
+
+> [!warning]
+> Feminine nouns do not care if they are animate or inanimate. They always just take the "-у" or "-ю" ending in the accusative case. It is best to keep it simple.
+
+Третя типова помилка стосується тварин. Студенти часто мають думку: тварина — це предмет. Але українська мова так не думає. 
+
+The third typical mistake concerns animals. Students think that an animal is treated as an inanimate object. But the Ukrainian language does not view them this way.
+
+Вони кажуть «я маю кіт». Це неправильно. Кіт — це жива істота. Правильно казати «я маю кота». Завжди треба використовувати граматику людей для тварин.
+
+They say "I have a cat" using the base form. This is incorrect. A cat is a living being. The correct phrase requires the grammatical change. One must always use the grammar of people when talking about animals.
+
+Ви можете тренувати ці форми самостійно. Можна взяти речення про предмет. Я бачу стіл. Далі можна змінити слово на людину. Я бачу студента. Я чекаю автобус. Я чекаю брата. Це дуже корисна вправа.
+
+You can practice these forms on your own. It is helpful to take a sentence about an object. "I see a table." Then, you can change the word to a person. "I see a student." "I am waiting for a bus." "I am waiting for a brother." This is a very useful exercise.
+
+## Підсумок (Summary)
+
+Ми вивчили дуже важливе правило сьогодні. Знахідний відмінок для живих істот працює по-іншому. Чоловічі слова отримують закінчення «-а» або «-я». Жіночі слова мають закінчення «-у» або «-ю». 
+
+We learned a very important rule today. The accusative case for living beings works differently. Masculine words get the ending "-а" or "-я". Feminine words get the ending "-у" or "-ю".
+
+Тварини також мають цю граматику. Ви тепер можете говорити про свою родину та друзів правильно. 
+
+Animals also follow this exact same grammar. You can now talk about your family and friends correctly as direct objects.
+
+Можете відповісти на ці запитання?
+Can you answer these self-check questions?
+
+1. Як сказати "I see a brother"? (Я бачу брата)
+2. Як сказати "I see a sister"? (Я бачу сестру)
+3. Are animals considered animate or inanimate in Ukrainian grammar? (Animate, like people)
 
 ---
-
-## Вироблення навичок та підсумок
-
-Сьогодні ми ретельно вивчили дуже глибоку і важливу тему. Ми повністю відкрили для себе граматичну категорію істот. Тепер ви знаєте важливе правило. Реальні люди і живі тварини мають особливий статус. Вони є важливими в українській граматичній системі координат. Ви успішно навчилися правильно і швидко використовувати різні імена. Ви використовуєте назви професій та членів великої родини у знахідному відмінку. Це фундаментально робить вашу щоденну мову дуже природною. Ваша розмова стає живою і справді українською.
-
-Today we carefully studied a very deep and important topic. We fully discovered for ourselves the grammatical category of animate beings. Now you know well that real people and living animals have a special status. They are important in the Ukrainian grammatical coordinate system. You successfully learned to correctly and quickly use various names. You use names of professions and members of a large family in the accusative case. This fundamentally makes your daily speech very natural. Your conversation becomes alive and truly Ukrainian.
-
-**Перевірте себе:**
-1. Why does the word "брат" firmly change to "брата" when it is the object of a sentence, while the word "стіл" remains exactly "стіл"? What is the philosophical logic here?
-2. Does the word "сестра" follow a special unique rule just because she is a living person, or does it follow the standard feminine rule?
-3. Imagine you have a dog. Translate the simple sentence "I see the dog" into Ukrainian. How does the vowel in the word change?
-4. If you want to say "I know Ivan", should you correctly say "Я знаю Іван" or "Я знаю Івана"? Why?
-5. What is the deep cultural difference between a "знайомий" and a "друг" in Ukraine?
-6. If you are politely waiting for Mr. Director, what forms do you correctly use after "я чекаю"?
-
-Дякую за вашу працю! До побачення!
-
-## Summary
-
-In this lesson, we learned about the animate and inanimate categories and how the accusative case works for them.

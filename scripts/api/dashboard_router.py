@@ -8,6 +8,7 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 import json
 import re
 import sqlite3
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -22,7 +23,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from audit.status_cache import read_status, get_source_paths
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
+from .review_parsing import extract_review_score, extract_review_verdict, extract_plan_verdict
+
 router = APIRouter(tags=["dashboard"])
+
+# Simple TTL cache for _scan_track results
+_track_cache: dict[str, tuple[float, dict]] = {}
+_TRACK_CACHE_TTL = 30.0  # seconds
+
+
+def _scan_track_cached(track_id: str, track_path: str, manifest_modules: list) -> dict:
+    """Cached wrapper around _scan_track."""
+    entry = _track_cache.get(track_id)
+    if entry and (time.time() - entry[0]) < _TRACK_CACHE_TTL:
+        return entry[1]
+    result = _scan_track(track_id, track_path, manifest_modules)
+    _track_cache[track_id] = (time.time(), result)
+    return result
 
 
 def _load_manifest() -> dict:
@@ -118,13 +135,41 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
 
         # Pipeline version detection
         orch_dir = track_dir / "orchestration" / slug
-        pipeline_version = _detect_pipeline_version(orch_dir) if orch_dir.exists() else "unbuilt"
+        orch_exists = orch_dir.exists()
+        pipeline_version = _detect_pipeline_version(orch_dir) if orch_exists else "unbuilt"
 
         # Cross-agent review (Phase D) and optional final review (Phase F)
         review_file = track_dir / "review" / f"{slug}-review.md"
         has_review = review_file.exists()
         final_review_file = track_dir / "review" / f"{slug}-final-review.md"
         has_final_review = final_review_file.exists()
+
+        # Content review score + verdict extraction
+        review_score = None
+        review_verdict = None
+        if has_review:
+            try:
+                text = review_file.read_text(errors="replace")
+                review_score = extract_review_score(text)
+                review_verdict = extract_review_verdict(text)
+            except Exception:
+                pass
+
+        # Plan review (from /plan-review skill)
+        plan_review_file = track_dir / "audit" / f"{slug}-plan-review.md"
+        has_plan_review = plan_review_file.exists()
+        plan_review_verdict = None
+        if has_plan_review:
+            try:
+                text = plan_review_file.read_text(errors="replace")
+                plan_review_verdict = extract_plan_verdict(text)
+            except Exception:
+                pass
+
+        # Friction count from orchestration
+        friction_count = 0
+        if orch_exists:
+            friction_count = sum(1 for _ in orch_dir.glob("*friction*"))
 
         mod = {
             "slug": slug,
@@ -144,9 +189,15 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
                 "vocabulary": has_vocab,
                 "review": has_review,
                 "final_review": has_final_review,
+                "plan_review": has_plan_review,
             },
             "has_review": has_review,
             "has_final_review": has_final_review,
+            "review_score": review_score,
+            "review_verdict": review_verdict,
+            "has_plan_review": has_plan_review,
+            "plan_review_verdict": plan_review_verdict,
+            "friction_count": friction_count,
             "last_audit": last_audit,
             "is_fresh": result.is_fresh if result else False,
         }
@@ -163,6 +214,10 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
         "missing": sum(1 for m in modules if m["status"] == "missing"),
         "reviewed": sum(1 for m in modules if m.get("has_review")),
         "final_review": sum(1 for m in modules if m.get("has_final_review")),
+        "plan_reviewed": sum(1 for m in modules if m.get("has_plan_review")),
+        "plan_pass": sum(1 for m in modules if m.get("plan_review_verdict") == "PASS"),
+        "plan_needs_fixes": sum(1 for m in modules if m.get("plan_review_verdict") == "NEEDS FIXES"),
+        "plan_fail": sum(1 for m in modules if m.get("plan_review_verdict") == "FAIL"),
     }
 
     # Research stats (all tracks)
@@ -207,7 +262,7 @@ async def overview():
         if not track_modules:
             continue
 
-        track_data = _scan_track(track_id, level_cfg["path"], track_modules)
+        track_data = _scan_track_cached(track_id, level_cfg["path"], track_modules)
         s = track_data["stats"]
         pct = round(s["pass"] / track_data["module_count"] * 100) if track_data["module_count"] > 0 else 0
 
@@ -248,7 +303,7 @@ async def research_overview():
         if not track_modules:
             continue
 
-        track_data = _scan_track(track_id, level_cfg["path"], track_modules)
+        track_data = _scan_track_cached(track_id, level_cfg["path"], track_modules)
         rs = track_data["stats"].get("research", {})
 
         mod_research = []
@@ -293,7 +348,7 @@ async def track_detail(track_id: str):
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
-    return _scan_track(track_id, level_cfg["path"], track_modules)
+    return _scan_track_cached(track_id, level_cfg["path"], track_modules)
 
 
 @router.get("/module/{track_id}/{slug}")
@@ -386,6 +441,31 @@ async def module_detail(track_id: str, slug: str):
         "dimensions": None, "gaps": None,
     }
 
+    # Content review score + verdict
+    review_file = track_dir / "review" / f"{slug}-review.md"
+    if review_file.exists():
+        try:
+            text = review_file.read_text(errors="replace")
+            result["review_score"] = extract_review_score(text)
+            result["review_verdict"] = extract_review_verdict(text)
+        except Exception:
+            result["review_score"] = None
+            result["review_verdict"] = None
+    else:
+        result["review_score"] = None
+        result["review_verdict"] = None
+
+    # Plan review verdict
+    plan_review_file = track_dir / "audit" / f"{slug}-plan-review.md"
+    if plan_review_file.exists():
+        try:
+            text = plan_review_file.read_text(errors="replace")
+            result["plan_review_verdict"] = extract_plan_verdict(text)
+        except Exception:
+            result["plan_review_verdict"] = None
+    else:
+        result["plan_review_verdict"] = None
+
     # Orchestration phases
     orch_dir = track_dir / "orchestration" / slug
     if orch_dir.exists():
@@ -400,6 +480,7 @@ async def module_detail(track_id: str, slug: str):
                     ).isoformat(),
                 })
         result["orchestration"] = phases
+        result["friction_count"] = sum(1 for _ in orch_dir.glob("*friction*"))
 
         # Pipeline version + v4 phase status
         version = _detect_pipeline_version(orch_dir)
@@ -413,6 +494,7 @@ async def module_detail(track_id: str, slug: str):
             }
     else:
         result["orchestration"] = []
+        result["friction_count"] = 0
         result["pipeline_version"] = "unbuilt"
         result["needs_rebuild"] = True
 
