@@ -91,6 +91,48 @@ from research_markdown_utils import (
 
 # ==================== SUBSTANCE SCORING ====================
 
+# Substance thresholds by tier.
+# Tier is derived from track: beginner (A1/A2), core (B1/B2/C1/C2), advanced (history/professional).
+# A1 research naturally has fewer sources and simpler examples — calibrate accordingly.
+SUBSTANCE_TIERS = {
+    "beginner": {
+        "source_domains_full": 1,   # 1 known-good domain → 2/2
+        "source_domains_partial": 1, # same (any known domain → full score)
+        "examples_full": 5,          # 5 cited examples → 2/2
+        "examples_partial": 3,       # 3 → 1/2
+        "specifics_full": 5,         # 5 specific markers → 2/2
+        "specifics_partial": 2,      # 2 → 1/2
+    },
+    "core": {
+        "source_domains_full": 2,
+        "source_domains_partial": 1,
+        "examples_full": 10,
+        "examples_partial": 5,
+        "specifics_full": 10,
+        "specifics_partial": 5,
+    },
+    "advanced": {
+        "source_domains_full": 3,
+        "source_domains_partial": 1,
+        "examples_full": 15,
+        "examples_partial": 5,
+        "specifics_full": 15,
+        "specifics_partial": 5,
+    },
+}
+
+_TRACK_TO_TIER = {
+    "a1": "beginner", "a2": "beginner",
+    "b1": "core", "b2": "core", "c1": "core", "c2": "core",
+    # History/professional → advanced
+}
+
+
+def _get_substance_tier(track_id: str) -> str:
+    """Map track ID to substance scoring tier."""
+    return _TRACK_TO_TIER.get(track_id, "advanced")
+
+
 # Known good domains for Ukrainian language resources
 KNOWN_GOOD_DOMAINS = {
     # Official / institutional
@@ -132,24 +174,26 @@ def _extract_ukrainian_words(text: str) -> list[str]:
     return list(set(w.lower() for w in words))
 
 
-def _score_source_verification(text: str) -> dict:
+def _score_source_verification(text: str, tier: str = "advanced") -> dict:
     """Score source quality: known-good domains, URL count, domain diversity."""
+    thresholds = SUBSTANCE_TIERS[tier]
     urls = set(re.findall(r"https?://[^\s\)>]+", text))
     domains = _extract_domains(text)
     known = [d for d in domains if any(d.endswith(k) or k.endswith(d) for k in KNOWN_GOOD_DOMAINS)]
 
     if not urls:
         return {"score": 0, "max": 2, "detail": "no URLs found"}
-    if len(known) >= 3:
+    if len(known) >= thresholds["source_domains_full"]:
         return {"score": 2, "max": 2, "detail": f"{len(known)} known-good domains, {len(urls)} URLs"}
-    if len(known) >= 1:
+    if len(known) >= thresholds["source_domains_partial"]:
         return {"score": 1, "max": 2, "detail": f"{len(known)} known-good domain(s), {len(urls)} URLs"}
     # URLs exist but none from known sources
     return {"score": 0, "max": 2, "detail": f"{len(urls)} URLs but 0 known-good domains"}
 
 
-def _score_claim_grounding(text: str) -> dict:
+def _score_claim_grounding(text: str, tier: str = "advanced") -> dict:
     """Score claim grounding: ratio of Ukrainian words (suggests real examples vs vague text)."""
+    thresholds = SUBSTANCE_TIERS[tier]
     uk_words = _extract_ukrainian_words(text)
     total_words = len(text.split())
     if total_words == 0:
@@ -159,11 +203,11 @@ def _score_claim_grounding(text: str) -> dict:
     examples = re.findall(r"[«\"*_]([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+)[»\"*_]", text)
     example_count = len(set(examples))
 
-    if example_count >= 15 and len(uk_words) >= 30:
+    if example_count >= thresholds["examples_full"]:
         return {"score": 2, "max": 2, "detail": f"{example_count} cited examples, {len(uk_words)} Ukrainian terms"}
-    if example_count >= 5:
+    if example_count >= thresholds["examples_partial"]:
         return {"score": 1, "max": 2, "detail": f"{example_count} cited examples, {len(uk_words)} Ukrainian terms"}
-    return {"score": 0, "max": 2, "detail": f"{example_count} cited examples (need 5+)"}
+    return {"score": 0, "max": 2, "detail": f"{example_count} cited examples (need {thresholds['examples_partial']}+)"}
 
 
 def _score_discovery_integration(discovery_path: "Path | None") -> dict:
@@ -188,8 +232,9 @@ def _score_discovery_integration(discovery_path: "Path | None") -> dict:
     return {"score": 0, "max": 1, "detail": "0 external resources found"}
 
 
-def _score_specificity(text: str) -> dict:
+def _score_specificity(text: str, tier: str = "advanced") -> dict:
     """Score specificity: are claims concrete (dates, names, numbers) vs vague generalizations?"""
+    thresholds = SUBSTANCE_TIERS[tier]
     # Count specific markers
     dates = len(re.findall(r"\b\d{4}\b", text))
     section_refs = len(re.findall(r"§\d+|розділ\s+\d+|частина\s+\d+", text, re.IGNORECASE))
@@ -198,11 +243,11 @@ def _score_specificity(text: str) -> dict:
 
     specifics = dates + section_refs + page_refs + table_rows
 
-    if specifics >= 15:
+    if specifics >= thresholds["specifics_full"]:
         return {"score": 2, "max": 2, "detail": f"{dates} dates, {section_refs} §refs, {page_refs} pages, {table_rows} table rows"}
-    if specifics >= 5:
-        return {"score": 1, "max": 2, "detail": f"{specifics} specific markers (need 15+)"}
-    return {"score": 0, "max": 2, "detail": f"{specifics} specific markers (need 5+)"}
+    if specifics >= thresholds["specifics_partial"]:
+        return {"score": 1, "max": 2, "detail": f"{specifics} specific markers (need {thresholds['specifics_full']}+)"}
+    return {"score": 0, "max": 2, "detail": f"{specifics} specific markers (need {thresholds['specifics_partial']}+)"}
 
 
 def _count_table_rows(text: str) -> int:
@@ -688,11 +733,12 @@ def assess_research(
     else:
         dims = {}
 
-    # Add substance dimensions (shared across all rubrics)
-    dims["source_verification"] = _score_source_verification(text)
-    dims["claim_grounding"] = _score_claim_grounding(text)
+    # Add substance dimensions (shared across all rubrics, level-aware thresholds)
+    tier = _get_substance_tier(track_id)
+    dims["source_verification"] = _score_source_verification(text, tier)
+    dims["claim_grounding"] = _score_claim_grounding(text, tier)
     dims["discovery_integration"] = _score_discovery_integration(discovery_path)
-    dims["specificity"] = _score_specificity(text)
+    dims["specificity"] = _score_specificity(text, tier)
 
     raw_score = sum(d["score"] for d in dims.values())
     max_possible = sum(d["max"] for d in dims.values())
