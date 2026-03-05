@@ -134,6 +134,9 @@ def check_sentence_complexity(text: str, level_code: str) -> list[dict]:
     for sent in sentences:
         # Only count words with 2+ characters (excludes single-letter endings like -а/-я/-о/-е)
         words = re.findall(r'[\u0400-\u04ff]{2,}', sent)
+        # Skip drill lists (all-caps syllable/letter sequences like "МА МО МУ НА НО НУ")
+        if words and all(w == w.upper() and len(w) <= 3 for w in words):
+            continue
         if len(words) > max_words:
             violations.append({
                 'type': 'COMPLEXITY',

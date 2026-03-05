@@ -65,7 +65,61 @@ Immersion:        {COMPUTED_IMMERSION_PERCENT}%
 
 ---
 
-## Your Task: Factual Verification
+## Your Task: Plan Adherence + Factual Verification
+
+### PART A: Plan Adherence Check (MANDATORY)
+
+The plan YAML above is the source of truth for what the module MUST contain. Check EVERY point systematically:
+
+#### A1. Content Outline Points
+
+For EACH section in `content_outline`, and for EACH `points` entry within that section:
+1. Search the module content for evidence that this point is addressed
+2. Classify as:
+   - **COVERED** — the point is clearly addressed in the content. Quote the relevant sentence(s).
+   - **MISSING** — the point does not appear in the content. This is a **MEDIUM** severity issue.
+   - **PARTIAL** — some aspect is covered but key details are missing. Note what's missing.
+
+**Output a checklist:**
+```
+### Plan Point Coverage
+- Section "Вступ — Introduction":
+  - [x] Point 1: "A1 immersion 10-50%..." — COVERED (line ~5: "...")
+  - [ ] Point 2: "Cultural hook: Cyrillic script..." — MISSING
+  ...
+```
+
+#### A2. Required Vocabulary
+
+For EACH word in `vocabulary_hints.required`:
+1. Search the module content (not just the word list section — the entire prose)
+2. Check if it appears in the activities YAML (if provided in the content above)
+3. Classify as:
+   - **PRESENT** — found in prose AND activities
+   - **PROSE ONLY** — in prose but not in any activity (LOW)
+   - **MISSING** — not in prose at all (**HIGH** severity)
+
+#### A3. Activity Hints
+
+For EACH entry in `activity_hints`:
+1. Check if an activity of that `type` exists
+2. Check if the `focus` matches
+3. Check if the `items` count is met
+4. Flag missing activity types as **MEDIUM**
+
+#### A4. Section Word Budgets
+
+For EACH section in `content_outline` with a `words` target:
+1. Estimate the word count of the corresponding content section
+2. Flag sections >10% under their target as **MEDIUM**
+
+#### A5. Pronunciation Videos (if plan has `pronunciation_videos`)
+
+Check that video links from the plan are embedded in the content. Flag missing embeds as **MEDIUM**.
+
+---
+
+### PART B: Factual Verification
 
 For EVERY grammar explanation, factual claim, cultural assertion, and historical reference in the module content:
 
@@ -100,6 +154,37 @@ You MUST use these exact delimiters:
 
 ```
 ===FACTUAL_REVIEW_START===
+## Plan Adherence Summary
+
+**Content outline points:** N total, N covered, N missing, N partial
+**Required vocabulary:** N total, N present, N missing
+**Activity hints:** N total, N matched, N missing
+**Plan Adherence Score:** X/10
+(10 = all points covered; deduct 1 per MISSING content point, 2 per MISSING required word)
+
+### Plan Point Coverage
+
+[Checklist from Part A1 — every point with [x] or [ ] and evidence]
+
+### Required Vocabulary Coverage
+
+| Word | In Prose? | In Activities? | Status |
+|------|-----------|---------------|--------|
+| ... | YES/NO | YES/NO | PRESENT / PROSE ONLY / MISSING |
+
+### Activity Hints Coverage
+
+| Hint Type | Focus | Required Items | Found? | Actual Items |
+|-----------|-------|---------------|--------|-------------|
+| ... | ... | N | YES/NO | N |
+
+### Missing Plan Points (Fix Targets)
+
+[List each MISSING or PARTIAL point with the exact plan text and which section it belongs to.
+These become fix targets in the SECTION_FIX block below.]
+
+---
+
 ## Factual Verification Summary
 
 **Total claims checked:** N
@@ -130,7 +215,7 @@ You MUST use these exact delimiters:
 ## Verdict
 
 **Status:** PASS / FAIL
-(FAIL if any HIGH severity discrepancy found)
+(FAIL if any HIGH severity discrepancy OR 3+ MISSING plan points found)
 ===FACTUAL_REVIEW_END===
 ```
 
@@ -153,7 +238,8 @@ REPLACE:
 ## Boundaries
 
 - Do NOT evaluate style, naturalness, or pedagogy — that is Pass 2's job
-- Do NOT score dimensions — that is Pass 2's job
-- Do NOT evaluate from your own knowledge — ONLY compare against provided references
+- Do NOT score dimensions (except Plan Adherence and Factual Alignment) — that is Pass 2's job
+- Do NOT evaluate factual claims from your own knowledge — ONLY compare against provided references
+- Plan adherence checking uses the plan YAML as ground truth — this is objective, not subjective
 - Do NOT fabricate references — if no reference covers a claim, mark it UNVERIFIED
-- Maximum 15 FIND/REPLACE pairs
+- Maximum 15 FIND/REPLACE pairs (prioritize MISSING plan points over minor factual fixes)

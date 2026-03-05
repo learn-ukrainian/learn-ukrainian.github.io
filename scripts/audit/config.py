@@ -201,6 +201,8 @@ FIXED_PHRASES_INSTRUMENTAL = {
 
 # Dative case expressions taught as fixed phrases at A1
 FIXED_PHRASES_DATIVE = {
+    # Primer vocabulary — taught as decodable words, not grammar (Bolshakova p.22)
+    'нам',  # M1 required vocab: "нам (to us)" — reading drill word
     # Wishing expressions (Бажаю + dative)
     'бажаю тобі', 'бажаю вам', 'бажаю щастя', 'бажаю здоров',
     # Fixed dative in greetings

@@ -119,11 +119,33 @@ Every Ukrainian word in the module (prose, vocabulary, activities) was checked a
 
 Follow the full review protocol. In summary:
 
-### STEP 1: Plan Verification
-- Outline compliance: every section from `content_outline` present as H2/H3?
-- Vocabulary scope: compare against `vocabulary_hints.required` in the plan
-- Grammar scope: flag grammar from later modules (scope creep)
-- Objectives: all learning objectives addressed?
+### STEP 1: Plan Adherence (Point-by-Point)
+
+The plan YAML is the source of truth. Check EVERY point systematically:
+
+**1a. Content Outline Points:** For EACH section in `content_outline`, and for EACH `points` entry:
+- Search the module content for evidence that this point is addressed
+- Mark as COVERED (quote evidence), MISSING (MEDIUM severity), or PARTIAL (note gap)
+- Missing plan points are the #1 fix target — they belong in the Fix Plan
+
+**1b. Required Vocabulary:** For EACH word in `vocabulary_hints.required`:
+- Verify it appears in the prose (not just a word list)
+- Verify it appears in at least one activity
+- MISSING required word = HIGH severity
+
+**1c. Activity Hints:** For EACH entry in `activity_hints`:
+- Check an activity of that type exists with matching focus
+- MISSING activity type = MEDIUM severity
+
+**1d. Section Structure:** Every section from `content_outline` present as H2/H3?
+
+**1e. Objectives:** All learning objectives addressed?
+
+**1f. Grammar Scope:** Flag grammar from later modules (scope creep)
+
+**1g. Pronunciation Videos:** If plan has `pronunciation_videos`, verify they're embedded in content. Missing embeds = MEDIUM.
+
+**Include a Plan Adherence checklist in your review output** listing every `content_outline.points` entry with COVERED/MISSING/PARTIAL status.
 
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms

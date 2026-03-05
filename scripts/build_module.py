@@ -1464,7 +1464,27 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             logger.warning("Auto-fix: euphony failed", exc_info=True)
             log(f"    Auto-fix: euphony failed: {e}")
 
-    # 1.5. Strip IPA / phonetic brackets from content (Gemini keeps adding them)
+    # 1.5. Demote extra H1 headings to H2 (Gemini sometimes generates # Summary instead of ##)
+    if content_path and content_path.exists():
+        try:
+            text = content_path.read_text("utf-8")
+            lines = text.split('\n')
+            h1_count = 0
+            changed = False
+            for i, line in enumerate(lines):
+                if line.startswith('# ') and not line.startswith('## '):
+                    h1_count += 1
+                    if h1_count > 1:
+                        lines[i] = '#' + line  # '# X' → '## X'
+                        changed = True
+            if changed:
+                content_path.write_text('\n'.join(lines), "utf-8")
+                total += 1
+                log(f"    Auto-fix: demoted {h1_count - 1} extra H1 heading(s) to H2")
+        except Exception as e:
+            logger.warning("Auto-fix: H1 demotion failed: %s", e)
+
+    # 1.6. Strip IPA / phonetic brackets from content (Gemini keeps adding them)
     if content_path and content_path.exists():
         try:
             import re as _re
@@ -4735,6 +4755,15 @@ def _parse_factual_review(raw_output: str) -> D1Result:
     if score_m:
         scores["factual_accuracy"] = float(score_m.group(1))
 
+    # Extract plan adherence score
+    plan_m = re.search(r'\*\*Plan Adherence Score:\*\*\s*([\d.]+)/10', review_text)
+    if plan_m:
+        scores["plan_adherence"] = float(plan_m.group(1))
+
+    # Extract plan missing count
+    plan_missing_m = re.search(r'(\d+)\s+missing', review_text[:500])
+    plan_missing_count = int(plan_missing_m.group(1)) if plan_missing_m else 0
+
     # Extract discrepancy count
     disc_m = re.search(r'\*\*Discrepancies \[Tier 1\]:\*\*\s*(\d+)', review_text)
     discrepancy_count = int(disc_m.group(1)) if disc_m else 0
@@ -4743,8 +4772,22 @@ def _parse_factual_review(raw_output: str) -> D1Result:
     unv_m = re.search(r'\*\*Unverified:\*\*\s*(\d+)', review_text)
     unverified_count = int(unv_m.group(1)) if unv_m else 0
 
-    # Build issues from discrepancies
+    # Build issues list
     issues: list[dict] = []
+
+    # Build issues from missing plan points
+    missing_points = re.findall(
+        r'- \[ \]\s+(?:Point \d+:\s*)?(.+?)(?:\s*—\s*MISSING)',
+        review_text,
+    )
+    for pt_text in missing_points:
+        issues.append({
+            "type": "MISSING_PLAN_POINT",
+            "severity": "MEDIUM",
+            "text": pt_text.strip(),
+        })
+
+    # Build issues from discrepancies
     disc_blocks = re.findall(
         r'### Discrepancy \d+:\s*(.+?)(?=### Discrepancy|\Z)',
         review_text,
@@ -4766,9 +4809,12 @@ def _parse_factual_review(raw_output: str) -> D1Result:
             issue["fix"] = fix_m.group(1).strip()
         issues.append(issue)
 
-    # Derive verdict from discrepancy count if not explicit
+    # Derive verdict from discrepancy count + plan missing if not explicit
     if not verdict:
-        verdict = "FAIL" if discrepancy_count > 0 else "PASS"
+        if discrepancy_count > 0 or plan_missing_count >= 3:
+            verdict = "FAIL"
+        else:
+            verdict = "PASS"
 
     return D1Result(
         ok=True,
