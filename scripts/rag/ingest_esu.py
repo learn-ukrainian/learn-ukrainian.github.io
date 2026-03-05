@@ -104,10 +104,48 @@ def chunk_id_to_point_id(chunk_id: str) -> int:
     return int(hashlib.sha256(chunk_id.encode()).hexdigest()[:15], 16)
 
 
-def ingest(client, chunks: list[dict], batch_size: int = 32):
+def get_existing_point_ids(client) -> set[int]:
+    """Get all point IDs already in the collection (for resume support)."""
+    existing = set()
+    if not client.collection_exists(ESU_COLLECTION):
+        return existing
+    info = client.get_collection(ESU_COLLECTION)
+    if info.points_count == 0:
+        return existing
+
+    # Scroll through all points, fetching only IDs (no vectors/payload)
+    offset = None
+    while True:
+        results, offset = client.scroll(
+            collection_name=ESU_COLLECTION,
+            limit=1000,
+            offset=offset,
+            with_payload=False,
+            with_vectors=False,
+        )
+        for point in results:
+            existing.add(point.id)
+        if offset is None:
+            break
+
+    return existing
+
+
+def ingest(client, chunks: list[dict], batch_size: int = 32, resume: bool = True):
     """Embed chunks with BGE-M3 and upsert into Qdrant."""
     from qdrant_client.models import PointStruct, SparseVector
     from rag.embed import TextEncoder
+
+    # Resume support: skip chunks already in Qdrant
+    if resume:
+        existing_ids = get_existing_point_ids(client)
+        if existing_ids:
+            before = len(chunks)
+            chunks = [c for c in chunks if chunk_id_to_point_id(c["chunk_id"]) not in existing_ids]
+            print(f"[resume] {before - len(chunks)} chunks already ingested, {len(chunks)} remaining")
+            if not chunks:
+                print("[resume] Nothing to do — all chunks already ingested.")
+                return 0
 
     encoder = TextEncoder()
     total_ingested = 0
@@ -186,6 +224,8 @@ def main():
                        help="Count chunks without embedding or ingesting")
     parser.add_argument("--batch-size", type=int, default=32,
                        help="Embedding batch size (default 32)")
+    parser.add_argument("--no-resume", action="store_true",
+                       help="Don't skip already-ingested chunks (re-embed everything)")
     args = parser.parse_args()
 
     # Load chunks
@@ -209,9 +249,9 @@ def main():
 
     ensure_collection(client, recreate=args.recreate)
 
-    # Ingest
+    # Ingest (resumable by default — safe to Ctrl+C and restart)
     print(f"[ingest] Embedding and ingesting {len(chunks)} chunks...")
-    total = ingest(client, chunks, batch_size=args.batch_size)
+    total = ingest(client, chunks, batch_size=args.batch_size, resume=not args.no_resume)
 
     # Verify
     info = client.get_collection(ESU_COLLECTION)
