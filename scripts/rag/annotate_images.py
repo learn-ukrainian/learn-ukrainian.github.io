@@ -32,6 +32,30 @@ OUTPUT_FILE = IMAGES_DIR / "image_text_pairs.jsonl"
 # Spatial thresholds (in PDF points, 1pt = 1/72 inch)
 MAX_TEXT_DISTANCE = 200  # Ignore text blocks further than this
 
+# CP1251 mojibake: Latin chars that appear when CP1251 bytes are decoded as Latin-1
+# Maps Latin-1 char → correct Ukrainian char (via CP1251)
+_MOJIBAKE_CHARS = set("àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
+                      "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß")
+
+
+def _is_page_number(text: str) -> bool:
+    """Check if text is just a page number (1-4 digit string)."""
+    stripped = text.strip()
+    return stripped.isdigit() and len(stripped) <= 4
+
+
+def _has_mojibake(text: str) -> bool:
+    """Detect CP1251→Latin-1 mojibake in text."""
+    return bool(_MOJIBAKE_CHARS & set(text))
+
+
+def _repair_mojibake(text: str) -> str:
+    """Try to repair CP1251→Latin-1 mojibake by re-encoding."""
+    try:
+        return text.encode("latin-1").decode("cp1251")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return text
+
 
 # ── Text extraction ───────────────────────────────────────────────
 def extract_text_blocks(page) -> list[dict]:
@@ -155,12 +179,9 @@ def classify_teaching_value(
     if nearest_text is None or nearest_dist > MAX_TEXT_DISTANCE:
         return "none"
 
-    # Only nearby text is page number (bottom 5%, digits only)
-    if nearest_text.strip().isdigit():
-        text_mid_y = 0  # won't be set, but let's keep it simple
-        # If closest text is just a page number at bottom, low value
-        if nearest_dist < 50:
-            return "low"
+    # Unrepairable mojibake → none
+    if _has_mojibake(nearest_text):
+        return "none"
 
     # Short label very close → high (vocabulary illustration)
     if len(nearest_text) <= 30 and nearest_dist < 80:
@@ -206,6 +227,10 @@ def annotate_page(
     Returns list of annotation dicts ready for image_text_pairs.jsonl.
     """
     text_blocks = extract_text_blocks(page)
+    # Pre-repair mojibake once per page (avoids redundant encode/decode in inner loop)
+    for tb in text_blocks:
+        if _has_mojibake(tb["text"]):
+            tb["text"] = _repair_mojibake(tb["text"])
     xref_bboxes = build_xref_to_bboxes(page)
     page_rect = page.rect
     page_width = page_rect.width
@@ -244,11 +269,18 @@ def annotate_page(
         for bbox in bboxes:
             for tb in text_blocks:
                 dist = bbox_distance(bbox, tb["bbox"])
+                txt = tb["text"]
                 if dist <= MAX_TEXT_DISTANCE:
-                    all_nearby_texts.append((dist, tb["text"]))
-                if dist < best_nearest_dist:
+                    all_nearby_texts.append((dist, txt))
+                # Skip page numbers when choosing best nearest text
+                if dist < best_nearest_dist and not _is_page_number(txt):
                     best_nearest_dist = dist
-                    best_nearest_text = tb["text"]
+                    best_nearest_text = txt
+        # If ALL nearby texts were page numbers, fall back to the closest one
+        if best_nearest_text is None and all_nearby_texts:
+            all_nearby_texts.sort(key=lambda x: x[0])
+            best_nearest_text = all_nearby_texts[0][1]
+            best_nearest_dist = all_nearby_texts[0][0]
 
         # Deduplicate and sort by distance
         all_nearby_texts.sort(key=lambda x: x[0])
@@ -281,7 +313,14 @@ def annotate_page(
                     description = clean
                     break
         if not description and unique_texts:
-            description = unique_texts[0][:50]
+            # Skip page numbers in final fallback too
+            for text in unique_texts:
+                if not _is_page_number(text):
+                    description = text[:50]
+                    break
+            # Absolute last resort: use whatever we have
+            if not description:
+                description = unique_texts[0][:50]
 
         # Build associated_text_uk: concatenated nearby text, ~200 chars
         associated = " ".join(unique_texts)
@@ -427,6 +466,19 @@ def print_stats():
     print(f"\nWith description_uk:      {has_desc:5d} ({has_desc/len(records)*100:.1f}%)")
     print(f"With associated_text_uk:  {has_assoc:5d} ({has_assoc/len(records)*100:.1f}%)")
 
+    # Quality issues
+    page_num_desc = sum(
+        1 for r in records
+        if _is_page_number(r.get("description_uk", ""))
+    )
+    mojibake_desc = sum(
+        1 for r in records
+        if _has_mojibake(r.get("description_uk", ""))
+    )
+    print(f"\nQuality issues:")
+    print(f"  Page number as description: {page_num_desc:5d} ({page_num_desc/len(records)*100:.1f}%)")
+    print(f"  Mojibake in description:    {mojibake_desc:5d} ({mojibake_desc/len(records)*100:.1f}%)")
+
     # Per-grade breakdown
     grade_counts: dict[str, int] = {}
     for rec in records:
@@ -520,8 +572,6 @@ def main():
         # If some books were skipped, load their previous annotations
         if skipped > 0 and OUTPUT_FILE.exists():
             print(f"\n  ({skipped} books already done, loading previous annotations)")
-            done_stems = {p.stem for p in PROGRESS_DIR.glob("*.done")}
-            newly_done = {stem for stem, _ in jsonls if not args.force}
             # Reload all annotations from the existing file for previously completed books
             prev_ids = {a["image_id"] for a in all_annotations}
             with open(OUTPUT_FILE, "r", encoding="utf-8") as f:

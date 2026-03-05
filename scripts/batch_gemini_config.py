@@ -15,6 +15,7 @@ from slug_utils import to_bare_slug, review_path as _review_path, status_path as
 
 # Base paths
 PROJECT_ROOT = Path(__file__).parent.parent
+VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_YAML = CURRICULUM_DIR / "curriculum.yaml"
 PLANS_DIR = CURRICULUM_DIR / "plans"

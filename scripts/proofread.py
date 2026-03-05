@@ -45,6 +45,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 from batch_gemini_config import (
     PRO_MODEL,
     PROJECT_ROOT,
+    VENV_PYTHON,
     get_module_index,
     get_module_paths,
     slug_for_num,
@@ -55,7 +56,6 @@ import yaml
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 CLAUDE_DEFAULT_MODEL = "claude-sonnet-4-6"
 START_TAG = "===PROOFREAD_START==="
 END_TAG = "===PROOFREAD_END==="

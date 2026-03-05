@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from slug_utils import to_bare_slug, review_path as _review_path
 from batch_gemini_config import (
     get_track_config, get_module_paths, get_module_index, slug_for_num,
-    num_for_slug, PROJECT_ROOT,
+    num_for_slug, PROJECT_ROOT, VENV_PYTHON,
 )
 from gemini_output import (
     extract_delimited, extract_yaml, has_any_end_marker,
@@ -44,7 +44,6 @@ from ai_agent_bridge import send_message as broker_send
 # Constants
 GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "audit_module.sh"
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 MAX_RETRIES = 3
 MAX_FIX_ITERATIONS = 8
 TIMEOUT_SECONDS = 900  # 15 minutes

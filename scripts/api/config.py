@@ -14,7 +14,8 @@ MESSAGE_DB = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db
 # Playgrounds directory (for static file serving)
 PLAYGROUNDS_DIR = PROJECT_ROOT / "playgrounds"
 
-# Levels configuration
+# Levels configuration — keep in sync with:
+#   assess_research.py (TRACKS), batch_dispatcher_config.py (TRACKS), manifest_utils.py (CORE_LEVELS/TRACKS)
 LEVELS = [
     # Core levels
     {"id": "a1", "name": "A1 - Beginner", "path": "a1"},

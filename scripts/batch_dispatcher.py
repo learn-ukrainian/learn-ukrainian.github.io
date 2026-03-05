@@ -49,7 +49,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from batch_utils import atomic_write_json, BatchLock, LockConflictError, classify_error, ErrorCategory
-from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, SEMINAR_TRACKS
+from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, SEMINAR_TRACKS, VENV_PYTHON
 from audit.status_cache import read_status, get_source_paths
 from batch_dispatcher_config import (
     TRACKS, TRACK_BY_NAME, TRACK_NAMES,
@@ -66,7 +66,6 @@ from batch_dispatcher_config import (
 
 log = logging.getLogger("dispatcher")
 
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 BATCH_RUNNER = str(PROJECT_ROOT / "scripts" / "batch_gemini_runner.py")
 CLAUDE_BIN = shutil.which("claude") or str(Path.home() / ".local" / "bin" / "claude")
 BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"

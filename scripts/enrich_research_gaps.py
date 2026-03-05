@@ -56,49 +56,18 @@ MODULES = [
 BASE = Path("curriculum/l2-uk-en")
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Scoring helpers (mirrors research_quality.py)
+# Scoring helpers (shared with research_quality.py)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def _extract_section(text: str, header_patterns: list) -> str | None:
-    for pattern in header_patterns:
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            start = match.end()
-            next_header = re.search(r"\n##\s", text[start:])
-            end = start + next_header.start() if next_header else len(text)
-            section = text[start:end].strip()
-            return section if section else None
-    return None
-
-
-def _count_urls(text: str) -> int:
-    return len(set(re.findall(r"https?://[^\s\)>]+", text)))
-
-
-def _count_numbered_items(text: str) -> int:
-    return len(re.findall(r"^\s*\d+\.\s+", text, re.MULTILINE))
-
-
-def _count_blockquotes(text: str) -> int:
-    return sum(1 for line in text.splitlines() if line.strip().startswith(">"))
-
-
-def _count_guillemet_quotes(text: str) -> int:
-    return len(re.findall(r"«[^»]+»", text))
-
-
-def _count_dated_entries(text: str) -> int:
-    count = len(re.findall(
-        r"^[\s]*[-*]\s+.*\b\d{3,4}\s*(р\.|року|рр\.?|BC|AD|BCE|CE|до н\.)",
-        text, re.MULTILINE,
-    ))
-    if count == 0:
-        count = len(re.findall(r"\b\d{3,4}\b", text))
-    return count
-
-
-def _count_h3_subsections(text: str) -> int:
-    return len(re.findall(r"^###\s", text, re.MULTILINE))
+from research_markdown_utils import (
+    extract_section as _extract_section,
+    count_urls as _count_urls,
+    count_numbered_items as _count_numbered_items,
+    count_blockquotes as _count_blockquotes,
+    count_guillemet_quotes as _count_guillemet_quotes,
+    count_dated_entries as _count_dated_entries,
+    count_h3_subsections as _count_h3_subsections,
+)
 
 
 def current_scores(text: str) -> dict:

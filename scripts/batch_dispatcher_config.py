@@ -10,6 +10,7 @@ prerequisite pass rates before a track becomes eligible.
 
 # ---------------------------------------------------------------------------
 # Track definitions — ordered by user-specified priority
+# Keep in sync with: assess_research.py (TRACKS), api/config.py (LEVELS), manifest_utils.py
 # ---------------------------------------------------------------------------
 
 TRACKS = [

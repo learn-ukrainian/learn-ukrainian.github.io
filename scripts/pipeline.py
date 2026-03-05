@@ -32,7 +32,9 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+
+sys.path.insert(0, str(SCRIPT_DIR))
+from batch_gemini_config import VENV_PYTHON  # noqa: E402
 
 @dataclass
 class StepResult:

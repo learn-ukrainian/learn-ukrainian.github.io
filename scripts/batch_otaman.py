@@ -51,7 +51,7 @@ from threading import Lock
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT
+from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, VENV_PYTHON
 from audit.status_cache import read_status, get_source_paths
 from batch_dispatcher_config import (
     TRACKS, TRACK_BY_NAME,
@@ -65,7 +65,6 @@ from batch_dispatcher_config import (
 
 log = logging.getLogger("batch_otaman")
 
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 BRIDGE_SCRIPT = str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py")
 STATE_FILE = PROJECT_ROOT / "batch_state" / "otaman_state.json"
 FOREMAN_TIMEOUT = 45 * 60  # 45 minutes per module (Phases 0-7)
