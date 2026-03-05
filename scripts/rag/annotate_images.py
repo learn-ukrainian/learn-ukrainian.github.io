@@ -32,10 +32,23 @@ OUTPUT_FILE = IMAGES_DIR / "image_text_pairs.jsonl"
 # Spatial thresholds (in PDF points, 1pt = 1/72 inch)
 MAX_TEXT_DISTANCE = 200  # Ignore text blocks further than this
 
-# CP1251 mojibake: Latin chars that appear when CP1251 bytes are decoded as Latin-1
-# Maps Latin-1 char → correct Ukrainian char (via CP1251)
+# CP1251 mojibake: Latin chars in 0xC0-0xFF that appear when CP1251 bytes are decoded
+# as Latin-1. Also covers single-char stress marks used in Ukrainian textbooks
+# (PyMuPDF renders наголос as Latin diacritics: î=stressed о, å=stressed е, etc.)
 _MOJIBAKE_CHARS = set("àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
                       "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß")
+
+# Stress marks: Latin diacritics that represent Ukrainian stressed vowels in textbooks.
+# These are isolated chars surrounded by Cyrillic, not encoding errors.
+# î→о, å→е, è→и, à→а, ó→у, é→є, ê→к (rare)
+_STRESS_MAP = {
+    "\u00ee": "о",  # î → о (stressed о)
+    "\u00e5": "е",  # å → е (stressed е)
+    "\u00e8": "и",  # è → и (stressed и)
+    "\u00e0": "а",  # à → а (stressed а)
+    "\u00f3": "у",  # ó → у (stressed у)
+    "\u00e9": "є",  # é → є (stressed є)
+}
 
 
 def _is_page_number(text: str) -> bool:
@@ -45,16 +58,35 @@ def _is_page_number(text: str) -> bool:
 
 
 def _has_mojibake(text: str) -> bool:
-    """Detect CP1251→Latin-1 mojibake in text."""
+    """Detect CP1251→Latin-1 mojibake or stress marks in text."""
     return bool(_MOJIBAKE_CHARS & set(text))
 
 
 def _repair_mojibake(text: str) -> str:
-    """Try to repair CP1251→Latin-1 mojibake by re-encoding."""
+    """Repair CP1251→Latin-1 mojibake. Handles three cases:
+
+    1. Full mojibake (entire string is Latin-1 encoded CP1251) → re-encode
+    2. Stress marks (isolated Latin diacritics in Cyrillic text) → replace with base vowel
+    3. Mixed/unrepairable → character-by-character best-effort
+    """
+    # Case 1: try full re-encode (works when entire string is mojibaked)
     try:
-        return text.encode("latin-1").decode("cp1251")
+        repaired = text.encode("latin-1").decode("cp1251")
+        # Verify the result looks like Ukrainian (has Cyrillic chars)
+        if any("\u0400" <= c <= "\u04ff" for c in repaired):
+            return repaired
     except (UnicodeEncodeError, UnicodeDecodeError):
-        return text
+        pass
+
+    # Case 2: replace isolated stress marks (most common in textbooks)
+    result = text
+    for latin_char, ukr_char in _STRESS_MAP.items():
+        result = result.replace(latin_char, ukr_char)
+
+    # Case 3: strip any remaining mojibake chars that weren't stress marks
+    result = "".join(c for c in result if c not in _MOJIBAKE_CHARS)
+
+    return result if result.strip() else text
 
 
 # ── Text extraction ───────────────────────────────────────────────
