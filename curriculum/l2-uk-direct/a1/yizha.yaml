@@ -1,0 +1,311 @@
+module: yizha
+track: l2-uk-direct
+level: a1
+type: vocabulary
+title: "Їжа"
+subtitle: "Продукти, напої, посуд. Замовлення в кафе."
+standard_ref: "Каталог Б #8 — купівля: продукти, #9 — ресторан: страви, напої, посуд"
+textbook_ref: "Grade 3–4 — food vocabulary"
+
+# ─────────────────────────────────────────────
+# KEY PATTERN
+# ─────────────────────────────────────────────
+key_pattern:
+  text: "Я хочу + знахідний. Дайте, будь ласка, + знахідний."
+  examples:
+    - "Я хочу каву."
+    - "Дайте, будь ласка, хліб."
+    - "Принесіть, будь ласка, борщ."
+
+# ─────────────────────────────────────────────
+# VOCABULARY
+# ─────────────────────────────────────────────
+vocabulary:
+  - category: "Основні продукти"
+    items:
+      - word: "хліб"
+        emoji: "🍞"
+        sentence: "Я їм хліб щодня."
+      - word: "рис"
+        emoji: "🍚"
+        sentence: "Рис — це гарнір."
+      - word: "картопля"
+        emoji: "🥔"
+        sentence: "Мама варить картоплю."
+      - word: "макарони"
+        emoji: "🍝"
+        sentence: "Діти люблять макарони."
+      - word: "яйце"
+        emoji: "🥚"
+        sentence: "На сніданок я їм яйце."
+
+  - category: "М'ясо і риба"
+    items:
+      - word: "м'ясо"
+        emoji: "🥩"
+        sentence: "М'ясо на обід."
+      - word: "курка"
+        emoji: "🍗"
+        sentence: "Курка дуже смачна."
+      - word: "риба"
+        emoji: "🐟"
+        sentence: "Я люблю рибу."
+      - word: "сосиска"
+        emoji: "🌭"
+        sentence: "Сосиска — швидка їжа."
+      - word: "ковбаса"
+        emoji: "🥓"
+        sentence: "Ковбаса на бутерброді."
+
+  - category: "Молочні продукти"
+    items:
+      - word: "молоко"
+        emoji: "🥛"
+        sentence: "Я п'ю молоко вранці."
+      - word: "сир"
+        emoji: "🧀"
+        sentence: "Сир смачний."
+      - word: "масло"
+        emoji: "🧈"
+        sentence: "Масло на хлібі."
+      - word: "сметана"
+        emoji: "🥣"
+        sentence: "Сметана до борщу."
+      - word: "йогурт"
+        emoji: "🥛"
+        sentence: "Йогурт — на сніданок."
+
+  - category: "Овочі"
+    items:
+      - word: "помідор"
+        emoji: "🍅"
+        sentence: "Помідор червоний."
+      - word: "морква"
+        emoji: "🥕"
+        sentence: "Морква оранжева."
+      - word: "огірок"
+        emoji: "🥒"
+        sentence: "Огірок зелений."
+      - word: "цибуля"
+        emoji: "🧅"
+        sentence: "Цибуля — в супі."
+      - word: "капуста"
+        emoji: "🥬"
+        sentence: "Капуста — в салаті."
+
+  - category: "Фрукти"
+    items:
+      - word: "яблуко"
+        emoji: "🍎"
+        sentence: "Яблуко солодке."
+      - word: "банан"
+        emoji: "🍌"
+        sentence: "Банан жовтий."
+      - word: "апельсин"
+        emoji: "🍊"
+        sentence: "Апельсин кислий."
+      - word: "виноград"
+        emoji: "🍇"
+        sentence: "Виноград смачний."
+      - word: "полуниця"
+        emoji: "🍓"
+        sentence: "Полуниця червона і солодка."
+
+  - category: "Напої"
+    items:
+      - word: "вода"
+        emoji: "💧"
+        sentence: "Я п'ю воду."
+      - word: "сік"
+        emoji: "🧃"
+        sentence: "Апельсиновий сік."
+      - word: "чай"
+        emoji: "🍵"
+        sentence: "Чай гарячий."
+      - word: "кава"
+        emoji: "☕"
+        sentence: "Кава з молоком."
+      - word: "компот"
+        emoji: "🫗"
+        sentence: "Компот із фруктів."
+
+  - category: "Готові страви"
+    items:
+      - word: "суп"
+        emoji: "🥣"
+        sentence: "Суп гарячий."
+      - word: "борщ"
+        emoji: "🍲"
+        sentence: "Борщ — українська страва."
+      - word: "піца"
+        emoji: "🍕"
+        sentence: "Піца дуже смачна."
+      - word: "салат"
+        emoji: "🥗"
+        sentence: "Салат із овочів."
+      - word: "каша"
+        emoji: "🥣"
+        sentence: "Каша на сніданок."
+
+  - category: "Посуд"
+    items:
+      - word: "тарілка"
+        emoji: "🍽️"
+        sentence: "Суп у тарілці."
+      - word: "чашка"
+        emoji: "☕"
+        sentence: "Чай у чашці."
+      - word: "виделка"
+        emoji: "🍴"
+        sentence: "Їмо виделкою."
+      - word: "ніж"
+        emoji: "🔪"
+        sentence: "Ріжемо ножем."
+      - word: "ложка"
+        emoji: "🥄"
+        sentence: "Суп їмо ложкою."
+      - word: "склянка"
+        emoji: "🥛"
+        sentence: "Вода у склянці."
+
+  - category: "Смак"
+    items:
+      - word: "смачний"
+        emoji: "😋"
+        sentence: "Борщ дуже смачний."
+      - word: "солодкий"
+        emoji: "🍬"
+        sentence: "Торт солодкий."
+      - word: "гіркий"
+        emoji: "😖"
+        sentence: "Кава гірка."
+      - word: "гострий"
+        emoji: "🌶️"
+        sentence: "Цей соус гострий."
+      - word: "солоний"
+        emoji: "🧂"
+        sentence: "Суп занадто солоний."
+      - word: "свіжий"
+        emoji: "🌿"
+        sentence: "Хліб свіжий."
+      - word: "кислий"
+        emoji: "🍋"
+        sentence: "Лимон кислий."
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# ─────────────────────────────────────────────
+activities:
+
+  - type: classify
+    title: "Їжа чи напій?"
+    instruction: "Розподіли слова"
+    categories:
+      - label: "Їжа"
+        items:
+          - "хліб"
+          - "борщ"
+          - "яблуко"
+          - "курка"
+          - "сир"
+          - "рис"
+          - "піца"
+          - "каша"
+          - "салат"
+          - "яйце"
+      - label: "Напої"
+        items:
+          - "вода"
+          - "чай"
+          - "кава"
+          - "сік"
+          - "компот"
+          - "молоко"
+
+  - type: classify
+    title: "Сніданок, обід чи вечеря?"
+    instruction: "Розподіли страви за прийомом їжі"
+    categories:
+      - label: "Сніданок"
+        items:
+          - "каша"
+          - "яйце"
+          - "йогурт"
+          - "чай"
+      - label: "Обід"
+        items:
+          - "борщ"
+          - "суп"
+          - "салат"
+          - "компот"
+      - label: "Вечеря"
+        items:
+          - "піца"
+          - "рис з куркою"
+          - "салат"
+          - "чай"
+
+  - type: build_sentence
+    title: "Я хочу..."
+    instruction: "Склади речення зі знахідним відмінком"
+    sentences:
+      - words: ["Я", "хочу", "каву", "."]
+        correct: "Я хочу каву."
+      - words: ["Дайте", ",", "будь ласка", ",", "борщ", "."]
+        correct: "Дайте, будь ласка, борщ."
+      - words: ["Я", "їм", "піцу", "."]
+        correct: "Я їм піцу."
+      - words: ["Вона", "п'є", "воду", "."]
+        correct: "Вона п'є воду."
+      - words: ["Ми", "хочемо", "салат", "."]
+        correct: "Ми хочемо салат."
+      - words: ["Принесіть", ",", "будь ласка", ",", "чай", "."]
+        correct: "Принесіть, будь ласка, чай."
+      - words: ["Він", "їсть", "яблуко", "."]
+        correct: "Він їсть яблуко."
+      - words: ["Я", "люблю", "борщ", "."]
+        correct: "Я люблю борщ."
+
+  - type: true_false
+    title: "Правда чи неправда?"
+    items:
+      - statement: "Борщ — це напій."
+        answer: false
+        correction: "Борщ — це суп, не напій."
+      - statement: "Каву п'ють із чашки."
+        answer: true
+      - statement: "Суп їдять ложкою."
+        answer: true
+      - statement: "Яблуко — це овоч."
+        answer: false
+        correction: "Яблуко — це фрукт."
+      - statement: "Лимон солодкий."
+        answer: false
+        correction: "Лимон кислий."
+      - statement: "Борщ — українська страва."
+        answer: true
+
+  - type: reading
+    title: "Читання: У кафе"
+    text: |
+      — Добрий день! Що ви хочете?
+      — Добрий день! Дайте, будь ласка, борщ і хліб.
+      — Що будете пити?
+      — Каву, будь ласка. Без цукру.
+      — Ще щось?
+      — Так, принесіть, будь ласка, салат.
+    questions:
+      - question: "Що замовив клієнт?"
+        answer: "Борщ, хліб, каву і салат."
+      - question: "Каву з цукром?"
+        answer: "Ні, без цукру."
+
+  - type: riddle
+    title: "Загадка"
+    clues:
+      - "Я жовтий зовні і білий всередині."
+      - "Мене привозять з далеких країн."
+      - "Мавпи дуже мене люблять."
+    answer: "БАНАН"
+    answer_emoji: "🍌"
+    source: "народна загадка"
