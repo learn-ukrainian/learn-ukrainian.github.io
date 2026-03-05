@@ -4608,6 +4608,11 @@ def _build_pass1_prompt(ctx: ModuleContext, screen: DScreenResult, rag_data: dic
     prompt_text = prompt_text.replace("{CONTENT_FILE_CONTENT}", content_text)
     prompt_text = prompt_text.replace("{CONTENT_PATH}", str(content_path or ""))
 
+    # Inject activities YAML so plan adherence can check activity_hints
+    act_path = ctx.paths.get("activities")
+    act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(no activities file)"
+    prompt_text = prompt_text.replace("{ACTIVITIES_FILE_CONTENT}", act_text)
+
     # Inject plan
     plan_path = ctx.paths.get("plan")
     plan_text = plan_path.read_text("utf-8") if plan_path and plan_path.exists() else "(no plan)"

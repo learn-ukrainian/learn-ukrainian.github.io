@@ -25,6 +25,14 @@ Compare claims against the provided reference sources. Do NOT evaluate from your
 
 ---
 
+## Activities YAML
+
+```yaml
+{ACTIVITIES_FILE_CONTENT}
+```
+
+---
+
 ## Research Notes
 
 {RESEARCH_CONTENT}

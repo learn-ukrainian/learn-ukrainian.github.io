@@ -35,6 +35,12 @@ Ukrainian prose must follow euphony rules:
 
 Key: й can ONLY follow a vowel. After a consonant, always use і — even before a vowel.
 
+### Stress Mark Typography
+
+Use lowercase letters with a combining acute accent (´) on the stressed vowel:
+- Correct: ма́ма, анана́с, оса́, сосна́
+- Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
+
 ### IPA and Latin Transliteration (BANNED at ALL levels)
 
 Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark (´) on the vowel.
@@ -43,7 +49,7 @@ Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shc
 
 ```markdown
 ❌ WRONG: "мама [ˈmɑmɑ]" or "хліб (khlib)"
-✅ RIGHT: "**мА́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
+✅ RIGHT: "**ма́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
 ```
 
 ### Typography

@@ -164,7 +164,8 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
         "HARD GRAMMAR RULES (audit will reject violations):\n"
         "- Max 10 words per Ukrainian sentence (STRICT — count every word)\n"
         "- ONLY 1 clause per sentence (no compound sentences)\n"
-        "- Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам, їм, -ові/-еві endings)\n"
+        "- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам, їм, -ові/-еві endings)\n"
+        "  Exception: нам is taught as decodable vocabulary in M1 (reading drill word, not grammar)\n"
         "- Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)\n"
         "- NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n"
         "- Only imperfective aspect verbs\n"
@@ -429,8 +430,10 @@ def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
 
     lines = [
         f"DECODABLE VOCABULARY (M{module_num} — only letters: {letter_list}):",
-        f"Use ONLY these words in activities and reading drills. Any word with a letter",
-        f"outside this set will FAIL the decodability audit gate.",
+        f"Use ONLY these words in activities, reading drills, AND prose examples.",
+        f"Any word with a letter outside this set will FAIL the decodability audit gate.",
+        f"Video key words from the plan's pronunciation_videos section are exempt",
+        f"(they are heard, not read), but must NOT appear in prose reading examples.",
         "",
         f"Available words: {', '.join(words)}",
         "",
@@ -2396,8 +2399,9 @@ def write_placeholders(ctx: ModuleContext) -> None:
     if pv and isinstance(pv, dict):
         letters = pv.get("letters", {})
         if letters:
+            credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
             pv_lines = ["### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)"]
-            pv_lines.append(f"*Credit: {pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')}*\n")
+            pv_lines.append(f"*Credit: {credit}*\n")
             overview = pv.get("overview")
             if overview:
                 pv_lines.append(f"- **Overview**: [{credit} — Overview]({overview})")
@@ -2405,7 +2409,6 @@ def write_placeholders(ctx: ModuleContext) -> None:
             if playlist:
                 pv_lines.append(f"- **Full Playlist**: {playlist} (link only, do not embed)")
             pv_lines.append("")
-            credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
             pv_lines.append("**Each letter below MUST get its video embedded "
                             "in the corresponding H3 section. Use this EXACT markdown link format:**\n")
             for letter, url in letters.items():
