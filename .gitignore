@@ -140,6 +140,7 @@ data/vesum.db
 data/backups/
 data/esu/urls.jsonl
 data/esu/chunks.jsonl
+data/zno/
 
 # Starlight
 starlight/dist

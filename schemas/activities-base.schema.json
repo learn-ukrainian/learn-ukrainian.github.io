@@ -1323,6 +1323,159 @@
               },
               "model_answer": { "type": "string", "minLength": 1 }
             }
+          },
+          "zno-row-select": {
+            "type": "object",
+            "description": "ZNO-format: select the row where ALL words match a rule (e.g., correct stress, spelling). Source: osyvokon/zno (MIT). ISSUE-715",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "zno-row-select" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "skill": {
+                "type": "string",
+                "enum": ["наголос", "фонетика", "орфографія", "морфологія", "лексика"],
+                "description": "Language skill being tested"
+              },
+              "source": { "type": "string", "description": "Attribution (e.g., ЗНО 2019, №12)" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["question", "rows", "correct_row"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "question": { "type": "string", "minLength": 1, "description": "What rule to check (e.g., 'Наголос на другому складі в усіх словах рядка')" },
+                    "rows": {
+                      "type": "array",
+                      "minItems": 4,
+                      "maxItems": 5,
+                      "items": { "type": "string", "minLength": 1 },
+                      "description": "Each row is a comma-separated list of words"
+                    },
+                    "correct_row": { "type": "integer", "minimum": 0, "description": "0-based index of the correct row" },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "zno-sentence-select": {
+            "type": "object",
+            "description": "ZNO-format: select the sentence that is grammatically/stylistically correct (or incorrect). Source: osyvokon/zno (MIT). ISSUE-715",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "zno-sentence-select" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "skill": {
+                "type": "string",
+                "enum": ["синтаксис", "морфологія", "стилістика", "пунктуація", "лексика"],
+                "description": "Language skill being tested"
+              },
+              "source": { "type": "string", "description": "Attribution" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["question", "sentences", "correct_index"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "question": { "type": "string", "minLength": 1 },
+                    "sentences": {
+                      "type": "array",
+                      "minItems": 4,
+                      "maxItems": 5,
+                      "items": { "type": "string", "minLength": 1 }
+                    },
+                    "correct_index": { "type": "integer", "minimum": 0 },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "zno-error-find": {
+            "type": "object",
+            "description": "ZNO-format: find the error in a sentence or word list. Source: osyvokon/zno (MIT). ISSUE-715",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "zno-error-find" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "skill": {
+                "type": "string",
+                "enum": ["орфографія", "морфологія", "синтаксис", "пунктуація", "лексика"],
+                "description": "Language skill being tested"
+              },
+              "source": { "type": "string", "description": "Attribution" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "options", "error_index"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1, "description": "Context sentence or instruction" },
+                    "options": {
+                      "type": "array",
+                      "minItems": 4,
+                      "maxItems": 5,
+                      "items": { "type": "string", "minLength": 1 },
+                      "description": "Words or phrases, one of which contains an error"
+                    },
+                    "error_index": { "type": "integer", "minimum": 0, "description": "0-based index of the erroneous option" },
+                    "correction": { "type": "string", "description": "The correct form" },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "zno-fill-ending": {
+            "type": "object",
+            "description": "ZNO-format: fill in the correct word ending (suffix, case ending, verb form). Source: osyvokon/zno (MIT). ISSUE-715",
+            "required": ["type", "title", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "zno-fill-ending" },
+              "title": { "type": "string", "minLength": 1 },
+              "instruction": { "type": "string" },
+              "skill": {
+                "type": "string",
+                "enum": ["морфологія", "орфографія"],
+                "description": "Language skill being tested"
+              },
+              "source": { "type": "string", "description": "Attribution" },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["stem", "options", "correct_index"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "stem": { "type": "string", "minLength": 1, "description": "Word stem or sentence with blank (e.g., 'учител_')" },
+                    "context": { "type": "string", "description": "Sentence providing grammatical context" },
+                    "options": {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 5,
+                      "items": { "type": "string", "minLength": 1 },
+                      "description": "Possible endings"
+                    },
+                    "correct_index": { "type": "integer", "minimum": 0 },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -20,24 +20,30 @@ from pathlib import Path
 RUBRIC_REGISTRY = {
     "core": {
         "tracks": {"a1", "a2", "b1", "b2", "c1", "c2"},
-        "max_score": 10,
+        "max_score": 17,
         "dimensions": ["state_standard", "vocabulary", "cultural_hooks",
-                        "learner_errors", "cross_references", "pedagogy_notes"],
+                        "learner_errors", "cross_references", "pedagogy_notes",
+                        "source_verification", "claim_grounding",
+                        "discovery_integration", "specificity"],
     },
     "history": {
         "tracks": {"hist", "bio", "istorio", "oes", "ruth",
                     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
                     "lit-humor", "lit-youth", "lit-war", "lit-doc",
                     "lit-drama", "lit-crimea"},
-        "max_score": 10,
+        "max_score": 17,
         "dimensions": ["sources", "chronology", "primary_quotes",
-                        "engagement_hooks", "decolonization", "section_notes"],
+                        "engagement_hooks", "decolonization", "section_notes",
+                        "source_verification", "claim_grounding",
+                        "discovery_integration", "specificity"],
     },
     "professional": {
         "tracks": {"b2-pro", "c1-pro"},
-        "max_score": 10,
+        "max_score": 17,
         "dimensions": ["sources", "terminology", "language_norms",
-                        "authentic_examples", "engagement_hooks", "section_notes"],
+                        "authentic_examples", "engagement_hooks", "section_notes",
+                        "source_verification", "claim_grounding",
+                        "discovery_integration", "specificity"],
     },
 }
 
@@ -61,6 +67,11 @@ DIMENSION_SHORT_LABELS = {
     "terminology": "Trm",
     "language_norms": "Nrm",
     "authentic_examples": "Aut",
+    # Substance (shared across rubrics)
+    "source_verification": "Src✓",
+    "claim_grounding": "Clm",
+    "discovery_integration": "Dis",
+    "specificity": "Spc",
 }
 
 
@@ -76,6 +87,122 @@ from research_markdown_utils import (
     count_dated_entries as _count_dated_entries,
     count_h3_subsections as _count_h3_subsections,
 )
+
+
+# ==================== SUBSTANCE SCORING ====================
+
+# Known good domains for Ukrainian language resources
+KNOWN_GOOD_DOMAINS = {
+    # Official / institutional
+    "mon.gov.ua", "zakon.rada.gov.ua", "esu.com.ua",
+    "nbuv.gov.ua", "irbis-nbuv.gov.ua",
+    # Academic / encyclopedic
+    "uk.wikipedia.org", "uk.wikisource.org", "uk.wiktionary.org",
+    "litopys.org.ua", "izbornyk.org.ua",
+    # Language resources
+    "sum.in.ua", "goroh.pp.ua", "r2u.org.ua", "lcorp.ulif.org.ua",
+    "pravopys.net", "slovnyk.ua", "ukrlit.org",
+    # Educational
+    "ukrainianlessons.com", "osvita.ua", "zno.osvita.ua",
+    # Cultural
+    "namu.kiev.ua", "museum.if.ua",
+    # Scholarly
+    "doi.org", "jstor.org", "scholar.google.com",
+}
+
+
+def _extract_domains(text: str) -> list[str]:
+    """Extract unique domains from URLs in text."""
+    urls = re.findall(r"https?://([^\s/\)>]+)", text)
+    domains = set()
+    for raw in urls:
+        # Strip port and trailing punctuation
+        domain = raw.split(":")[0].rstrip(".,;")
+        # Get base domain (last 2 or 3 parts)
+        parts = domain.split(".")
+        if len(parts) >= 2:
+            domains.add(".".join(parts[-2:]) if len(parts[-1]) > 2 else ".".join(parts[-3:]))
+    return list(domains)
+
+
+def _extract_ukrainian_words(text: str) -> list[str]:
+    """Extract Ukrainian words (Cyrillic) from text, deduped."""
+    # Match words of 3+ Cyrillic chars (skip short prepositions etc)
+    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]{2,}\b", text)
+    return list(set(w.lower() for w in words))
+
+
+def _score_source_verification(text: str) -> dict:
+    """Score source quality: known-good domains, URL count, domain diversity."""
+    urls = set(re.findall(r"https?://[^\s\)>]+", text))
+    domains = _extract_domains(text)
+    known = [d for d in domains if any(d.endswith(k) or k.endswith(d) for k in KNOWN_GOOD_DOMAINS)]
+
+    if not urls:
+        return {"score": 0, "max": 2, "detail": "no URLs found"}
+    if len(known) >= 3:
+        return {"score": 2, "max": 2, "detail": f"{len(known)} known-good domains, {len(urls)} URLs"}
+    if len(known) >= 1:
+        return {"score": 1, "max": 2, "detail": f"{len(known)} known-good domain(s), {len(urls)} URLs"}
+    # URLs exist but none from known sources
+    return {"score": 0, "max": 2, "detail": f"{len(urls)} URLs but 0 known-good domains"}
+
+
+def _score_claim_grounding(text: str) -> dict:
+    """Score claim grounding: ratio of Ukrainian words (suggests real examples vs vague text)."""
+    uk_words = _extract_ukrainian_words(text)
+    total_words = len(text.split())
+    if total_words == 0:
+        return {"score": 0, "max": 2, "detail": "empty text"}
+
+    # Count specific linguistic examples (words in quotes, bold, or after bullets)
+    examples = re.findall(r"[«\"*_]([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+)[»\"*_]", text)
+    example_count = len(set(examples))
+
+    if example_count >= 15 and len(uk_words) >= 30:
+        return {"score": 2, "max": 2, "detail": f"{example_count} cited examples, {len(uk_words)} Ukrainian terms"}
+    if example_count >= 5:
+        return {"score": 1, "max": 2, "detail": f"{example_count} cited examples, {len(uk_words)} Ukrainian terms"}
+    return {"score": 0, "max": 2, "detail": f"{example_count} cited examples (need 5+)"}
+
+
+def _score_discovery_integration(discovery_path: "Path | None") -> dict:
+    """Score discover phase integration: external resources found."""
+    if discovery_path is None or not discovery_path.exists():
+        return {"score": 0, "max": 1, "detail": "no discovery file"}
+
+    try:
+        import yaml
+        data = yaml.safe_load(discovery_path.read_text("utf-8")) or {}
+    except Exception:
+        return {"score": 0, "max": 1, "detail": "discovery parse error"}
+
+    videos = data.get("videos") or []
+    blogs = data.get("blogs") or []
+    total = len(videos) + len(blogs)
+
+    if total >= 3:
+        return {"score": 1, "max": 1, "detail": f"{len(videos)} videos + {len(blogs)} blogs"}
+    if total >= 1:
+        return {"score": 1, "max": 1, "detail": f"{total} resource(s)"}
+    return {"score": 0, "max": 1, "detail": "0 external resources found"}
+
+
+def _score_specificity(text: str) -> dict:
+    """Score specificity: are claims concrete (dates, names, numbers) vs vague generalizations?"""
+    # Count specific markers
+    dates = len(re.findall(r"\b\d{4}\b", text))
+    section_refs = len(re.findall(r"§\d+|розділ\s+\d+|частина\s+\d+", text, re.IGNORECASE))
+    page_refs = len(re.findall(r"\bс\.\s*\d+|\bp\.\s*\d+|стор\.\s*\d+", text))
+    table_rows = len(re.findall(r"^\|.+\|$", text, re.MULTILINE))
+
+    specifics = dates + section_refs + page_refs + table_rows
+
+    if specifics >= 15:
+        return {"score": 2, "max": 2, "detail": f"{dates} dates, {section_refs} §refs, {page_refs} pages, {table_rows} table rows"}
+    if specifics >= 5:
+        return {"score": 1, "max": 2, "detail": f"{specifics} specific markers (need 15+)"}
+    return {"score": 0, "max": 2, "detail": f"{specifics} specific markers (need 5+)"}
 
 
 def _count_table_rows(text: str) -> int:
@@ -510,7 +637,12 @@ def find_research_path(track_dir: Path, slug: str) -> Path | None:
 # ==================== PUBLIC API ====================
 
 
-def assess_research(text: str, track_id: str, content_text: str | None = None) -> dict:
+def assess_research(
+    text: str,
+    track_id: str,
+    content_text: str | None = None,
+    discovery_path: "Path | None" = None,
+) -> dict:
     """
     Assess research file quality.
 
@@ -518,9 +650,11 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
         text: Research file content.
         track_id: Track identifier (e.g. "a1", "hist").
         content_text: Optional module content for alignment checking.
+        discovery_path: Optional path to discovery.yaml for resource scoring.
 
     Returns:
         Assessment dict with score, quality, dimensions, gaps, content_alignment.
+        Scores are normalized to 0-10 scale (raw score / max * 10).
     """
     words = len(text.split())
     rubric_name = get_rubric(track_id)
@@ -544,7 +678,7 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
             }
         return result
 
-    # Score using appropriate rubric
+    # Score using appropriate rubric (format dimensions)
     if rubric_name == "core":
         dims = _score_core(text)
     elif rubric_name == "history":
@@ -554,7 +688,16 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
     else:
         dims = {}
 
-    total_score = sum(d["score"] for d in dims.values())
+    # Add substance dimensions (shared across all rubrics)
+    dims["source_verification"] = _score_source_verification(text)
+    dims["claim_grounding"] = _score_claim_grounding(text)
+    dims["discovery_integration"] = _score_discovery_integration(discovery_path)
+    dims["specificity"] = _score_specificity(text)
+
+    raw_score = sum(d["score"] for d in dims.values())
+    max_possible = sum(d["max"] for d in dims.values())
+    # Normalize to 0-10 scale for backward compatibility
+    total_score = round(raw_score / max_possible * 10) if max_possible > 0 else 0
     quality = quality_label(total_score)
     gaps = _compute_gaps(dims)
 
@@ -563,6 +706,8 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
         "words": words,
         "quality": quality,
         "score": total_score,
+        "score_raw": raw_score,
+        "score_max": max_possible,
         "markers": total_score,  # backward compat
         "profile": rubric_name,
         "dimensions": dims,
@@ -584,11 +729,13 @@ def assess_research_compat(
     path: "Path | str",
     track_id: str,
     content_path: "Path | str | None" = None,
+    discovery_path: "Path | str | None" = None,
 ) -> dict | None:
     """
     Compatibility wrapper that reads files and calls assess_research.
 
     Returns None if research file doesn't exist.
+    If discovery_path is None, attempts to auto-discover it from the research path.
     """
     path = Path(path)
     if not path.exists():
@@ -621,7 +768,18 @@ def assess_research_compat(
             except Exception:
                 pass
 
-    result = assess_research(text, track_id, content_text)
+    # Auto-discover discovery.yaml from research path if not provided
+    disc_path = Path(discovery_path) if discovery_path else None
+    if disc_path is None:
+        # research/ is sibling to orchestration/
+        # research/{slug}-research.md → orchestration/{slug}/discovery.yaml
+        slug = path.stem.replace("-research", "")
+        orch_dir = path.parent.parent / "orchestration" / slug
+        candidate = orch_dir / "discovery.yaml"
+        if candidate.exists():
+            disc_path = candidate
+
+    result = assess_research(text, track_id, content_text, discovery_path=disc_path)
 
     # Mtime check: if research is newer than content, content wasn't written from it
     if content_path and content_text is not None and result.get("content_alignment"):
