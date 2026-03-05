@@ -1,61 +1,86 @@
 items:
-- lemma: мій
-  pos: adj
-- lemma: тато
-  pos: noun
-- lemma: дім
-  pos: noun
-- lemma: ім'я
-  pos: noun
-- lemma: ніч
-  pos: noun
-- lemma: земля
-  pos: noun
-- lemma: мама
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: брат
-  pos: noun
-- lemma: день
-  pos: noun
-- lemma: вікно
-  pos: noun
-- lemma: собака
-  pos: noun
-- lemma: місто
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: чоловічий
-  pos: adj
-- lemma: стіл
-  pos: noun
-- lemma: добрий
-  pos: adj
-- lemma: сестра
-  pos: noun
-- lemma: серце
-  pos: noun
-- lemma: рід
-  pos: noun
-- lemma: жіночий
-  pos: adj
-- lemma: добрити
-  pos: verb
-- lemma: рідний
-  pos: adj
-- lemma: мат
-  pos: noun
-- lemma: мата
-  pos: noun
-- lemma: привіт
-  pos: noun
-- lemma: середній
-  pos: adj
-- lemma: воно
-  pos: noun
-- lemma: той
-  pos: adj
+  - lemma: "брат"
+    translation: "brother"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сестра"
+    translation: "sister"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мама"
+    translation: "mother"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тато"
+    translation: "father"
+    pos: "noun"
+    gender: "m"
+    notes: "natural gender override"
+  - lemma: "дім"
+    translation: "house"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вікно"
+    translation: "window"
+    pos: "noun"
+    gender: "n"
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+  - lemma: "місто"
+    translation: "city"
+    pos: "noun"
+    gender: "n"
+  - lemma: "стіл"
+    translation: "table"
+    pos: "noun"
+    gender: "m"
+  - lemma: "море"
+    translation: "sea"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ніч"
+    translation: "night"
+    pos: "noun"
+    gender: "f"
+    notes: "soft sign exception"
+  - lemma: "день"
+    translation: "day"
+    pos: "noun"
+    gender: "m"
+    notes: "soft sign exception"
+  - lemma: "земля"
+    translation: "earth"
+    pos: "noun"
+    gender: "f"
+  - lemma: "серце"
+    translation: "heart"
+    pos: "noun"
+    gender: "n"
+  - lemma: "сонце"
+    translation: "sun"
+    pos: "noun"
+    gender: "n"
+  - lemma: "собака"
+    translation: "dog"
+    pos: "noun"
+    gender: "f"
+    notes: "grammatically feminine"
+  - lemma: "ім'я"
+    translation: "name"
+    pos: "noun"
+    gender: "n"
+    notes: "special neuter exception"
+  - lemma: "артефакт"
+    translation: "artifact"
+    pos: "noun"
+    gender: "m"
+  - lemma: "зона"
+    translation: "zone"
+    pos: "noun"
+    gender: "f"
+  - lemma: "укриття"
+    translation: "shelter"
+    pos: "noun"
+    gender: "n"
