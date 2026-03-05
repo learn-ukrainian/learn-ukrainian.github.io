@@ -41,6 +41,13 @@ Use lowercase letters with a combining acute accent (´) on the stressed vowel:
 - Correct: ма́ма, анана́с, оса́, сосна́
 - Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
 
+### Non-Decodable Ukrainian in Beginner Modules (M1-M6)
+
+In Cyrillic primer modules, the learner can only read letters taught so far. Any Ukrainian phrase using letters outside the cumulative charset MUST include an English translation in parentheses immediately after. No exceptions — the learner literally cannot read it otherwise.
+
+- Correct: "Все буде добре (Everything will be fine)."
+- Wrong: "Все буде добре." (no translation — learner cannot read Б or Д at M2)
+
 ### IPA and Latin Transliteration (BANNED at ALL levels)
 
 Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark (´) on the vowel.
