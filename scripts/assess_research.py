@@ -69,7 +69,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPTS_DIR.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
-# Track config (mirrors api/config.py)
+# Track config — keep in sync with:
+#   api/config.py (LEVELS), batch_dispatcher_config.py (TRACKS), manifest_utils.py (CORE_LEVELS/TRACKS)
 TRACKS = [
     {"id": "a1", "name": "A1", "path": "a1"},
     {"id": "a2", "name": "A2", "path": "a2"},
@@ -511,10 +512,20 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
             attempts_used = attempt
             # Clear v3 Phase A state so research is regenerated (not skipped)
             _clear_v3_phase_a(track_id, slug)
+            # Delete old research file so the phase is forced to regenerate it
+            # (otherwise ADOPT logic sees existing content+meta and skips)
+            track_dir = CURRICULUM_ROOT / track_id
+            old_rp = find_research_path(track_dir, slug)
+            if old_rp and old_rp.exists():
+                backup = old_rp.with_suffix(".md.bak")
+                old_rp.rename(backup)
+                print(f"  Backed up old research → {backup.name}")
+            # --force-phase research: bypass v4 "already complete" guard
+            # --rebuild: bypass ADOPT logic (skips content+meta existence check)
             cmd = [
                 str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
                 str(SCRIPTS_DIR / "build_module.py"),
-                track_id, str(num), "--research-only",
+                track_id, str(num), "--force-phase", "research", "--rebuild",
             ]
             try:
                 result = subprocess.run(cmd, timeout=600)

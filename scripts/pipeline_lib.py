@@ -51,6 +51,7 @@ from batch_gemini_config import (
     PROJECT_ROOT,
     SEMINAR_TRACKS,
     PRO_TRACKS,
+    VENV_PYTHON,
     get_module_index,
     get_module_paths,
     get_track_config,
@@ -1186,7 +1187,6 @@ def clean_phase_artifacts(ctx: ModuleContext, phase_id: str, forward: bool = Fal
 # 9. Gemini Dispatch Helpers
 # ============================================================================
 
-VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 TMP_DIR = Path("/tmp")
 MAX_FIX_ITERATIONS = 3
 
@@ -2874,7 +2874,14 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     sections = bilingualify_section_titles(sections, ctx.track, ctx.module_num)
 
     num_sections = len(sections)
-    engagement_min = ctx.meta.get("engagement_min", 4)
+    # Read engagement minimum from audit config (source of truth), with meta override
+    try:
+        from audit.config import LEVEL_CONFIG
+        _base = ctx.track.split('-')[0].upper() if ctx.track else 'A1'
+        _cfg_engagement = LEVEL_CONFIG.get(_base, {}).get('min_engagement', 3)
+    except Exception:
+        _cfg_engagement = 3
+    engagement_min = ctx.meta.get("engagement_min", _cfg_engagement)
     example_min = ctx.meta.get("example_min", 8)
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     if base_level in ('A1', 'A2'):
@@ -3319,6 +3326,21 @@ def write_completion_report_v2(ctx: ModuleContext, passed: bool) -> None:
     sections_info = ctx.state.get("phases", {}).get("2", {})
     sections_done = sections_info.get("sections_done", "?")
     sections_total = sections_info.get("sections_total", "?")
+    # Check for plan auto-fix changelog
+    plan_fix_lines = ""
+    plan_path = ctx.paths.get("plan")
+    if plan_path and plan_path.exists():
+        try:
+            plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+            if isinstance(plan_data, dict) and plan_data.get("plan_fixes"):
+                fixes = plan_data["plan_fixes"]
+                if isinstance(fixes, list) and fixes:
+                    latest = fixes[-1]
+                    changes = latest.get("changes", [])
+                    plan_fix_lines = f"\n          Plan fixes: v{latest.get('version', '?')} — {len(changes)} change(s)"
+        except Exception:
+            pass
+
     report = textwrap.dedent(f"""\
         {verdict}: pipeline {ctx.track} {ctx.module_num}
 
@@ -3329,7 +3351,7 @@ def write_completion_report_v2(ctx: ModuleContext, passed: bool) -> None:
           Sections: {sections_done}/{sections_total}
           Archive:  {'yes — ' + getattr(ctx, 'archive_source', '') if is_archived else 'no'}
           Verdict:  {verdict}
-          Date:     {_now_iso()}
+          Date:     {_now_iso()}{plan_fix_lines}
     """)
     completion_file = ctx.orch_dir / "completion.md"
     completion_file.write_text(report, encoding="utf-8")
