@@ -1,4 +1,4 @@
-discovered_at: '2026-03-05T22:42:27.837716+00:00'
+discovered_at: '2026-03-06T14:48:13.719894+00:00'
 query_keywords:
 - Describing Things - Adjectives
 - Світ прикметників
@@ -16,64 +16,31 @@ error: null
 warning: No videos found across channels
 videos: []
 blogs:
+- url: https://www.ukrainianlessons.com/vocabulary-adjectives/
+  title: Common Adjectives
+  source: Essential descriptive words
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/adjectives-and-adverbs/
+  title: Adjective Agreement
+  source: Gender agreement
+  relevance_score: 1.0
+  topics: []
 - url: https://opentext.ku.edu/dobraforma/chapter/16-1/
   title: 'Dobra Forma: Adjectives (Gender and Number in Nominative)'
   source: dobraforma
-  relevance_score: 0.6000000000000001
-  topics:
-  - adjectives
-  - gender
-  - grammar
+  relevance_score: 1.0
+  topics: []
 - url: https://talkukrainian.com/adjectives/
   title: 'Talk Ukrainian: Adjectives'
   source: talkukrainian
-  relevance_score: 0.6000000000000001
-  topics:
-  - adjectives
-  - прикметник
-  - grammar
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode108/
   title: Kyiv tour + Participle in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - grammar
-  - adjectives
-  - phrases
-  - introductions
-  - culture
-  - kyiv
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 108
-- url: https://talkukrainian.com/noun-genders/
-  title: 'Talk Ukrainian: Noun Genders and Adjective Agreement'
-  source: talkukrainian
-  relevance_score: 0.5
-  topics:
-  - gender
-  - nouns
-  - adjectives
-  - agreement
-  - grammar
-- url: https://www.ukrainianlessons.com/episode56/
-  title: Asking for advice + Accusative case in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.44999999999999996
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - adjectives
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 56
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.1666666716337204
   chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0067

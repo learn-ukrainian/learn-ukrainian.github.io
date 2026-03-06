@@ -13,10 +13,10 @@ Related: a1-54 (Checkpoint Communication), a1-52 (Travel and Transport)
 >
 > Navigating in a new city is always a complex and interesting task. You see a lot of visual information around you every day. Reading signs is critically important for your personal comfort. You must clearly understand what is allowed and what is strictly forbidden. This is a matter not only of knowing the language but also of your safety. Ukrainian cities have their own very specific visual culture. We use special grammatical constructions on signs. Therefore, today we pay separate and deep attention to this topic.
 
-## Заборони
+## Заборони — Prohibitions
 
 ### Інфінітив на вивісках
-Офіційні заборони мають правила. Вони використовують інфінітив. Це нейтральний стиль. Знак не говорить до людини. Знак дає загальне правило. Інфінітив звучить дуже офіційно. Типові заборони — не курити, не входити. Інша заборона — не торкатися. Ви бачите ці слова часто. Парки та музеї мають такі знаки. Вони є частиною міста.
+Офіційні заборони мають правила. Вони використовують інфінітив. Це нейтральний стиль. Знак не звертається до конкретної людини. Знак дає загальне правило. Інфінітив звучить дуже офіційно. Типові заборони — не курити, не входити. Інша заборона — не торкатися. Ви бачите ці слова часто. Парки та музеї мають такі знаки. Вони є частиною міста.
 
 
 
@@ -27,7 +27,7 @@ Related: a1-54 (Checkpoint Communication), a1-52 (Travel and Transport)
 These examples show how direct and uncompromising the infinitive can be. When you read such a sign, you instantly understand that there are no exceptions to this rule.
 
 ### Особисті команди чи загальні правила
-Українська мова має дві різні ситуації. Перша — це команди. Друга — це загальні правила. Ми говоримо прямо і беремо наказовий спосіб. Ми пишемо правило і беремо інфінітив. Порівняйте ці два підходи. Заборона має інфінітив. Це сувора табличка. Наказовий спосіб має емоції. Мати так говорить до дитини. Ця різниця дуже важлива. Вона дає ввічливе спілкування.
+Українська мова має дві різні ситуації. Перша — це команди. Друга — це загальні правила. Ми говоримо прямо і беремо наказовий спосіб. Ми пишемо правило і беремо інфінітив. Порівняйте ці два підходи. Заборона має інфінітив. Це сувора табличка. Наказовий спосіб має емоції. Мати так каже дитині. Ця різниця дуже важлива. Вона допомагає спілкуватися ввічливо.
 
 
 
@@ -41,9 +41,9 @@ These examples show how direct and uncompromising the infinitive can be. When yo
 Using the imperative mood on a public sign would look too aggressive and inappropriately familiar. Conversely, using the infinitive in a personal, face-to-face conversation would sound like the mechanical speech of a robot. Always match your grammar to the specific social context.
 
 ### Базова навігація: Вхід і Вихід
-Ви маєте знати головні слова для орієнтації. Без цих слів ви можете загубитися. Одне слово показує шлях всередину. Інше слово показує шлях на вулицю. Ви часто бачите червоний знак. Це сувора заборона. Ви не можете йти далі. Такі знаки висять на дверях. Розуміння цих слів допомагає всім.
+Ви маєте знати головні слова для орієнтування. Без цих слів ви можете загубитися. Одне слово показує шлях всередину. Інше слово показує шлях на вулицю. Ви часто бачите червоний знак. Це сувора заборона. Ви не можете йти далі. Такі знаки висять на дверях. Розуміння цих слів допомагає всім.
 
-You must learn to automatically recognize key words for spatial orientation. Without these basic words, you can very easily get lost in a large building. One important word shows exactly where your route inside begins. Another word shows the safe path to the street. Very often you will see a red warning sign about a strict prohibition. It means that you categorically cannot go any further. Such signs usually hang on doors for staff or on technical warehouses. Understanding these short words helps avoid awkward life situations. The core vocabulary here is **вхі́д** [ˈvxʲid] (entrance) and **ви́хід** [ˈʋɪxʲid] (exit). The strict prohibition phrase is **вхі́д заборо́нено** [ˈvxʲid zɐboˈrɔnɛno] (entrance forbidden).
+You must learn to automatically recognize key words for spatial orientation. Without these basic words, you can very easily get lost in a large building. One important word shows exactly where your route inside begins. Another word shows the safe path to the street. Very often you will see a red warning sign about a strict prohibition. It means that you categorically cannot go any further. Such signs usually hang on doors for staff or on technical warehouses. Understanding these short words helps avoid awkward life situations. The core vocabulary here is **вхі́д** (entrance) and **ви́хід** (exit). The strict prohibition phrase is **вхі́д заборо́нено** (entrance forbidden).
 
 *   «Головний вхід знаходиться відразу праворуч від першої каси.»
 *   «Аварійний вихід має бути завжди абсолютно вільним для людей.»
@@ -52,7 +52,7 @@ You must learn to automatically recognize key words for spatial orientation. Wit
 > [!tip] Життєво важливий знак
 > If you are ever confused inside a massive shopping mall or a hospital, look up at the ceiling. In Ukraine, standard safety regulations require illuminated green signs with a running person icon. These signs always have the word **ВИХІД** written in bold, easily readable letters. Memorize the visual shape of this word—it is essential for your personal safety in emergencies.
 
-## Попередження
+## Попередження — Warnings
 
 Місто може мати небезпеку. Небезпека буває раптова. Ви не маєте часу читати довгі тексти. Потрібна швидка реакція. Українська мова має короткі слова. Вони працюють як візуальні сирени. Водії та пішоходи бачать їх. Ви маєте знати ці сигнали. Це ваш базовий словник. Його треба знати добре.
 
@@ -61,7 +61,7 @@ You must learn to automatically recognize key words for spatial orientation. Wit
 ### Короткі попередження
 Іноді ми маємо привернути увагу. Ми використовуємо короткі слова. Вони працюють як сигнали тривоги. Їх пишуть великими літерами. Вони мають червоний знак оклику. Вони звучать дуже чітко. Вони рятують життя на дорогах. Ви не маєте часу на аналіз. Ви маєте реагувати швидко.
 
-Sometimes we need to instantly grab another person's attention. For this, we use short exclamatory words instead of full sentences. They function as completely independent alarm signals. Usually, they are written in capital letters and necessarily have a red exclamation mark at the end. They sound extremely clear, very loud, and maximally imperative. These short adjectives and adverbs save lives on fast roads and large construction sites. You should not stop to analyze their grammatical structure. You must react to them absolutely instinctively and quickly. The most critical words are **ува́га** [ʊˈʋɑɦɐ] (attention), **обере́жно** [obɛˈrɛʒno] (carefully/caution), and **небезпе́чно** [nɛbɛzˈpɛt͡ʃno] (dangerous).
+Sometimes we need to instantly grab another person's attention. For this, we use short exclamatory words instead of full sentences. They function as completely independent alarm signals. Usually, they are written in capital letters and necessarily have a red exclamation mark at the end. They sound extremely clear, very loud, and maximally imperative. These short adjectives and adverbs save lives on fast roads and large construction sites. You should not stop to analyze their grammatical structure. You must react to them absolutely instinctively and quickly. The most critical words are **ува́га** (attention), **обере́жно** (carefully/caution), and **небезпе́чно** (dangerous).
 
 — Увага! Цей швидкий потяг відправляється з першої колії.
 — Обережно! Скляні двері автоматично зачиняються.
@@ -69,10 +69,10 @@ Sometimes we need to instantly grab another person's attention. For this, we use
 
 These exclamations are often broadcast over public loudspeakers at train stations or printed in bold red font on warning triangles. They command immediate focus and action.
 
-### Складні прості фрази
-Багато знаків не мають дієслів. Це прості фрази. Це слово і слово. Вони стоять поруч. Формат дає максимум інформації. Ви часто бачите яскраві знаки. Вони стоять біля електрики.
+### Фрази без дієслів
+Багато знаків не мають дієслів. Це прості фрази. Це два слова. Вони стоять поруч. Формат дає максимум інформації. Ви часто бачите яскраві знаки. Вони стоять біля електричних приладів.
 
-Many warning signs do not contain any verbs at all. They are built as simple but extremely effective noun phrases. This is a short combination of a descriptive adjective and its corresponding noun. The adjective usually stands directly before the noun. It strictly agrees with it in gender, number, and case. This concise format allows conveying the maximum amount of important information with a minimum number of short words. You will very often see such bright signs during the cleaning of premises or near electrical transformers. A common example is the yellow sign **мо́кра підло́га** [ˈmɔkrɐ pʲiˈdlɔɦɐ] (wet floor). Another critically important sign is **висо́ка напру́га** [ʋɪˈsɔkɐ nɐˈpruɦɐ] (high voltage).
+Many warning signs do not contain any verbs at all. They are built as simple but extremely effective noun phrases. This is a short combination of a descriptive adjective and its corresponding noun. The adjective usually stands directly before the noun. It strictly agrees with it in gender, number, and case. This concise format allows conveying the maximum amount of important information with a minimum number of short words. You will very often see such bright signs during the cleaning of premises or near electrical transformers. A common example is the yellow sign **мо́кра підло́га** (wet floor). Another critically important sign is **висо́ка напру́га** (high voltage).
 
 *   **Обережно, мокра підлога!**
 *   **Стій! Висока напруга!**
@@ -84,7 +84,7 @@ Many warning signs do not contain any verbs at all. They are built as simple but
 ### Київське метро: «Не притулятися»
 Велике місто має візуальні символи. Київ має такий символ. Це фраза з метро. Сині вагони мають напис. Це класичний заперечний інфінітив. Фраза має чітке правило. Пасажири не можуть спиратися на двері. Вона лунає щодня тисячі разів. Це частина фольклору.
 
-Every large historical city has its own unique visual symbols. In the capital of Ukraine, one short phrase from the city metropolitan has become such an unusual symbol. On the glass doors of every blue car, there is a famous sign. It is an absolutely classic example of a Ukrainian negative infinitive. This historical phrase means that passengers are strictly forbidden to lean their backs against the doors during the fast movement of the train. It sounds from the loudspeakers thousands of times a day and has become an integral part of modern urban folklore. The iconic phrase is «Не притулятися» (Do not lean).
+Every large historical city has its own unique visual symbols. In the capital of Ukraine, one short phrase from the city metropolitan has become such an unusual symbol. On the glass doors of every blue car, there is a famous sign. It is an absolutely classic example of a Ukrainian negative infinitive. This historical phrase means that passengers are strictly forbidden to lean their backs against the doors during the fast movement of the train. It sounds from the loudspeakers thousands of times a day and has become an integral part of modern urban folklore. The iconic phrase is «Не притулятися» — Do not lean.
 
 *   «Обережно, двері зачиняються. Не притулятися!»
 *   «Досвідчені київські пасажири добре знають головне правило: до дверей не притулятися.»
@@ -92,7 +92,7 @@ Every large historical city has its own unique visual symbols. In the capital of
 > [!culture] Сучасний символ міста
 > The specific phrase «Не притулятися» is so deeply iconic that you can easily find it printed on modern t-shirts, stylish tote bags, and tourist souvenirs in Kyiv. It perfectly illustrates how a very simple grammatical structure—the negative infinitive prohibition—can gracefully move beyond formal rules and become deeply embedded in modern Ukrainian pop culture.
 
-## Розклади та оголошення
+## Розклади та оголошення — Schedules and notices
 
 Життя міста має графіки. Ви маєте знати час. Магазини та аптеки мають розклад. Ви не хочете втрачати час. Українські заклади мають свої години роботи. Вони можуть бути інші. Ви маєте читати яскраві оголошення. Вони дають інформацію про ціни. Цей розділ вчить орієнтуватися у часі.
 
@@ -101,7 +101,7 @@ Every large historical city has its own unique visual symbols. In the capital of
 ### Години роботи та перерва
 Ви плануєте свій день. Ви маєте знати словник. Головна фраза — години роботи. Ви маєте знати неробочий день. Ви також маєте пам'ятати про перерву. Вона буває вдень. Маленькі магазини мають цей графік. Розуміння дозволить приходити вчасно.
 
-For comfortable planning of your day, you need a specific vocabulary. The main basic phrase for this is the operating hours of the chosen establishment. You also absolutely need to know the word that clearly denotes a non-working day of the week. And, of course, you must always remember the traditional break, which most often happens during the day. Small local shops and government institutions strictly adhere to this old schedule. Understanding these three key concepts will allow you to always arrive on time. The essential terms are **годи́ни робо́ти** (operating hours), **вихі́дний** [ʋɪxʲiˈdnɪj] (day off), and **пере́рва** [pɛˈrɛrʋɐ] (break).
+For comfortable planning of your day, you need a specific vocabulary. The main basic phrase for this is the operating hours of the chosen establishment. You also absolutely need to know the word that clearly denotes a non-working day of the week. And, of course, you must always remember the traditional break, which most often happens during the day. Small local shops and government institutions strictly adhere to this old schedule. Understanding these three key concepts will allow you to always arrive on time. The essential terms are **годи́ни робо́ти** (operating hours), **вихі́дний** (day off), and **пере́рва** (break).
 
 *   1. «Підкажіть, будь ласка. Які у вас години роботи у цей вівторок?»
 *   2. «Завтра неділя, тому це наш офіційний вихідний день.»
@@ -124,9 +124,9 @@ Ukrainians constantly use one specific grammatical construction to indicate time
 This exact time pattern is absolutely universal across the country. You will see it printed on almost every commercial door. It is the absolute standard way to express a time range in both written schedules and spontaneous spoken Ukrainian conversation.
 
 ### Оголошення та акції
-Бізнес хоче мати увагу. Вітрини мають яскраві плакати. Ви побачите там спеціальні слова. Покупці люблять вигідні пропозиції. Це означає зменшення ціни. Ви можете зберегти гроші. Це корисно під час покупок.
+Бізнес хоче привернути увагу. Вітрини мають яскраві плакати. Ви побачите там спеціальні слова. Покупці люблять вигідні пропозиції. Це означає зменшення ціни. Ви можете заощадити гроші. Це корисно під час покупок.
 
-Every business actively tries to attract maximum attention of its potential clients. For this, large and very bright posters with text often hang on glass shop windows. You are guaranteed to see a special word for any important information there. For ordinary buyers, the most attractive words are those about beneficial offers and substantial price reductions. They perfectly help to save your own money during daily shopping in a large supermarket. You must instantly recognize the words **оголо́шення** [oɦoˈlɔʃɛnʲɐ] (announcement), **а́кція** [ˈɑkt͡sʲijɐ] (sale/promotion), and **зни́жка** [ˈznɪʒkɐ] (discount).
+Every business actively tries to attract maximum attention of its potential clients. For this, large and very bright posters with text often hang on glass shop windows. You are guaranteed to see a special word for any important information there. For ordinary buyers, the most attractive words are those about beneficial offers and substantial price reductions. They perfectly help to save your own money during daily shopping in a large supermarket. You must instantly recognize the words **оголо́шення** (announcement), **а́кція** (sale/promotion), and **зни́жка** (discount).
 
 *   «Уважно прочитайте це нове офіційне оголошення на інформаційній дошці.»
 *   «Сьогодні в нашому місцевому супермаркеті проходить дійсно велика акція.»
@@ -136,9 +136,9 @@ Every business actively tries to attract maximum attention of its potential clie
 > The word **акція** looks like the English word "action", but it is a notorious "false friend" in this specific context. In retail and commerce, it specifically means a special offer, a promotional campaign, or a big sale. If you see a yellow or bright red price tag prominently featuring the bold word **акція**, it means that specific item is currently sold at a heavily reduced promotional price.
 
 ### Розклад руху транспорту
-Ви маєте читати табло. Вокзали мають електронні табло. Головне слово — це графік руху. Ви шукаєте час відправлення. Ви шукаєте час прибуття. Ви перевіряєте цифри вашого напрямку. Ці навички дають для вас спокій. Ви ніколи не загубитеся.
+Ви маєте читати табло. Вокзали мають електронні табло. Головне слово — це графік руху. Ви шукаєте час відправлення. Ви шукаєте час прибуття. Ви перевіряєте цифри вашого напрямку. Ці навички дають спокій. Ви ніколи не загубитеся.
 
-During long journeys across the country, you must be able to correctly read the electronic boards at noisy train stations. The most important key word for a successful and calm trip is the timetable of fast trains or buses. In this long digital list, you constantly look for the time when the transport leaves the station and the time when it arrives at the place. You must also strictly and very carefully check the numbers of your specific direction. These skills guarantee that you will never get lost. The critical words are **ро́зклад** [ˈrɔzklɐd] (schedule/timetable), **відпра́влення** [ʋʲiˈdprɑʋlɛnʲɐ] (departure), **прибуття́** [prɪbʊˈtʲ:ɑ] (arrival), and **но́мер маршру́ту** [ˈnɔmɛr mɐrˈʃrutʊ] (route number).
+During long journeys across the country, you must be able to correctly read the electronic boards at noisy train stations. The most important key word for a successful and calm trip is the timetable of fast trains or buses. In this long digital list, you constantly look for the time when the transport leaves the station and the time when it arrives at the place. You must also strictly and very carefully check the numbers of your specific direction. These skills guarantee that you will never get lost. The critical words are **ро́зклад** (schedule/timetable), **відпра́влення** (departure), **прибуття́** (arrival), and **но́мер маршру́ту** (route number).
 
 *   «Скажіть, де саме можна подивитися актуальний розклад швидкісних поїздів до Львова?»
 *   «Точний час відправлення нашого жовтого автобуса — сімнадцята година рівно.»
@@ -146,16 +146,16 @@ During long journeys across the country, you must be able to correctly read the 
 
 These specific transport words connect directly to the travel vocabulary you learned previously. Reading a complex train or bus timetable perfectly combines your practical knowledge of numbers, specific time formats, and essential transport terms into one highly useful real-world skill.
 
-## На вулиці
+## На вулиці — On the street
 
 Ви маєте швидко читати таблички. Міста мають свою систему назв. Ви маєте знати прості слова. Це ваша фізична безпека. Цей розділ має важливі нюанси. Це слова про двері та магазини. Ми вивчаємо правильні норми.
 
 
 
 ### Вулиці, площі, провулки
-Україна має три типи доріг. Базове слово — це звичайна дорога. Великий великий простір має іншу назву. Вузька дорога має третє слово. Таблички мають скорочені слова. Це економить місце на знаках.
+Україна має три типи доріг. Базове слово — це звичайна дорога. Великий широкий простір має іншу назву. Вузька дорога має третє слово. Таблички мають скорочені слова. Це економить місце на знаках.
 
-In Ukraine, there are three main types of urban roads that you will often see on paper maps. The basic word denotes a regular city road with residential houses. A large and wide open space, often right in the historical city center, has a different name. A short and narrow road that connects larger roads is called by a third special word. On real street signs and plaques, these long words are almost always written in an abbreviated form to save space. You must thoroughly learn the words **ву́лиця** [ˈʋʊlɪt͡sʲɐ] (street), **пло́ща** [ˈplɔʃt͡ʃɐ] (square), and **прову́лок** [proˈʋulok] (lane).
+In Ukraine, there are three main types of urban roads that you will often see on paper maps. The basic word denotes a regular city road with residential houses. A large and wide open space, often right in the historical city center, has a different name. A short and narrow road that connects larger roads is called by a third special word. On real street signs and plaques, these long words are almost always written in an abbreviated form to save space. You must thoroughly learn the words **ву́лиця** (street), **пло́ща** (square), and **прову́лок** (lane).
 
 | Повне слово | Скорочення | Типовий приклад |
 | :--- | :--- | :--- |
@@ -168,7 +168,7 @@ Recognizing these standard abbreviations is absolutely crucial for daily navigat
 ### Транспорт та пішоходи
 Ви маєте знати слова дороги. Це ваша безпека. Одне слово розуміють всі водії. Інша фраза означає безпечний перехід. Місце очікування транспорту має назву. Метро також має спеціальне слово. Воно дозволяє змінити лінію.
 
-For your personal safety, you must flawlessly know key road terminology. One popular English word is understood by all drivers without any translation. But you critically need to know the long Ukrainian phrase for a safe road crossing. A special place for the long wait for city transport also has its own name. And in a massive metropolitan, you constantly look for the word that allows changing the line deep underground. The essential vocabulary includes **стоп** [stɔp] (stop), **пішохі́дний перехі́д** [pʲiʃoˈxʲidnɪj pɛrɛˈxʲid] (pedestrian crossing), **зупи́нка** [zʊˈpɪnkɐ] (stop), and **перехі́д** [pɛrɛˈxʲid] (crossing/transfer).
+For your personal safety, you must flawlessly know key road terminology. One popular English word is understood by all drivers without any translation. But you critically need to know the long Ukrainian phrase for a safe road crossing. A special place for the long wait for city transport also has its own name. And in a massive metropolitan, you constantly look for the word that allows changing the line deep underground. The essential vocabulary includes **стоп** (stop), **пішохі́дний перехі́д** (pedestrian crossing), **зупи́нка** (stop), and **перехі́д** (crossing/transfer).
 
 *   «Кожен водій обов'язково зупинився перед великим червоним знаком "Стоп".»
 *   «Ми завжди безпечно переходимо широку дорогу лише через пішохідний перехід.»
@@ -178,20 +178,20 @@ For your personal safety, you must flawlessly know key road terminology. One pop
 These important terms help you move safely through very heavy urban traffic and successfully navigate complex underground transport systems. Always remember to cross the street only exactly where you see the painted pedestrian crossing sign on the asphalt.
 
 ### Відчинено чи зачинено: точність слів
-Українська мова має точні слова. Ми говоримо про графік роботи магазину. Ми вживаємо конкретні слова. Ви можете зайти всередину. Цей статус має спеціальне слово. Вхід зараз не працює. Цей статус має інше слово. Це єдина правильна норма. Ми не кажемо «роботу» про двері.
+Українська мова має точні слова. Ми говоримо про графік роботи магазину. Ми вживаємо конкретні слова. Ви можете зайти всередину. Цей статус має спеціальне слово. Вхід зараз не працює. Цей статус має інше слово. Це єдина правильна норма. Ми не кажемо «відкрито» про двері.
 
-The Ukrainian language is extremely beautiful and perfectly precise in its daily phrasing. When we talk about the operating schedule of a shop or the physical state of a door, we use very specific words. If you can freely go inside, the status of this room is denoted by a special word. If the entrance is temporarily unavailable to you, then the status is denoted by another word. This is the only correct, absolutely pure literary norm. We never use words that mean discovering something new to describe regular wooden doors. The strictly correct words are **відчи́нено** [ʋʲiˈd͡tʃɪnɛno] (open) and **зачи́нено** [zɐˈt͡ʃɪnɛno] (closed).
+The Ukrainian language is extremely beautiful and perfectly precise in its daily phrasing. When we talk about the operating schedule of a shop or the physical state of a door, we use very specific words. If you can freely go inside, the status of this room is denoted by a special word. If the entrance is temporarily unavailable to you, then the status is denoted by another word. This is the only correct, absolutely pure literary norm. We never use words that mean discovering something new to describe regular wooden doors. The strictly correct words are **відчи́нено** (open) and **зачи́нено** (closed).
 
 *   «Вибачте, але наш новий офіс зараз зачинено, у нас почалася велика обідня перерва.»
 *   «Ці важкі дерев'яні двері відчинено, будь ласка, сміливо заходьте всередину.»
 *   «Сьогодні центральний державний банк повністю зачинено на офіційний вихідний.»
 
 > [!myth-buster] Деколонізація словника
-> Many people mistakenly use the incorrect words «роботу» (opened up/discovered) and «закрито» (covered/concluded) for shops and doors. This is a direct consequence of long-term Russian linguistic interference, commonly known as Surzhyk. In proper Ukrainian, you "open" (відкривати) a fascinating book, a brand-new continent, or your deep feelings. But physical barriers, such as wooden doors, glass windows, and commercial shops, are strictly **відчинені** (opened) or **зачинені** (closed). Consistently using the correct terminology demonstrates your deep respect for the authenticity of the language.
+> Many people mistakenly use the incorrect words «відкрито» (opened up/discovered) and «закрито» (covered/concluded) for shops and doors. This is a direct consequence of long-term Russian linguistic interference, commonly known as Surzhyk. In proper Ukrainian, you "open" (відкривати) a fascinating book, a brand-new continent, or your deep feelings. But physical barriers, such as wooden doors, glass windows, and commercial shops, are strictly **відчинені** (opened) or **зачинені** (closed). Consistently using the correct terminology demonstrates your deep respect for the authenticity of the language.
 
-## Практика
+## Підсумок і Практика — Summary and Practice
 
-Час застосувати ваші знання. Наша мета — дати для вас впевненість. Ми беремо кілька типових ситуацій. Ви зустрінете їх в Україні. Ви маєте аналізувати інформацію швидко. Ви маєте розуміти знаки без словника. Це крок до мовної самостійності.
+Час застосувати ваші знання. Наша мета — ваша впевненість. Ми беремо кілька типових ситуацій. Ви зустрінете їх в Україні. Ви маєте аналізувати інформацію швидко. Ви маєте розуміти знаки без словника. Це крок до мовної самостійності.
 
 
 
@@ -205,7 +205,7 @@ Imagine that you have come to sunny Kyiv for the first time and are slowly walki
 3.  **Ситуація третя.** Ці двері мають знак. Напис каже «Вхід заборонено». Це найвища заборона. Це небезпечна територія.
 4.  **Ситуація четверта.** Двері кав'ярні мають напис. Напис каже «Відчинено». Ви можете заходити всередину. Ви можете замовляти каву.
 
-Scenario one. You stand before an absolutely new office. On the glass doors is a red sign: «Не входити!» (Do not enter!). This is a typical Ukrainian infinitive. It means a strict and categorical prohibition. You have no right to go in there. Scenario two. You see a yellow plastic plaque on the floor: «Обережно, мокра підлога!». This is a classic noun phrase with an important warning. You must walk there very slowly and maximally carefully. Scenario three. On the metal doors of a large warehouse hangs a sign: «Вхід заборонено» (Entrance forbidden). This means the highest level of prohibition for people. This is a private or very dangerous territory. Scenario four. On the wooden doors of a small coffee shop is beautifully written: «Відчинено» (Open). This means you can boldly go inside and order your favorite coffee.
+Scenario one. You stand before an absolutely new office. On the glass doors is a red sign: «Не входити!» (Do not enter!). This is a typical Ukrainian infinitive. It means a strict and categorical prohibition. You have no right to go in there. Scenario two. You see a yellow plastic plaque on the floor: «Обережно, мокра підлога!». This is a classic noun phrase with an important warning. You must walk there very slowly and maximally carefully. Scenario three. On the metal doors of a large warehouse hangs a sign: «Вхід заборонено» — Entrance forbidden. This means the highest level of prohibition for people. This is a private or very dangerous territory. Scenario four. On the wooden doors of a small coffee shop is beautifully written: «Відчинено» (Open). This means you can boldly go inside and order your favorite coffee.
 
 ### Аналізуємо розклад
 Розглянемо графік роботи аптеки. Ви стоїте перед табличкою. Ви маєте купити ліки. Прочитайте цей текст. Знайдіть правильні відповіді. Ця вправа тренує вас. Ви краще орієнтуєтеся у часі.
@@ -242,7 +242,7 @@ Please memorize this vital grammatical distinction forever. Always use the neutr
 
 ---
 
-# Підсумок
+### Підсумок
 
 Сьогодні ви вивчили читання вивісок. Ви знаєте про інфінітив. Ви знаєте короткі слова про небезпеку. Ви розумієте графік роботи. Ви можете знаходити площу на карті. Ви знаєте слова для відкритих дверей. Ці знання роблять життя безпечним. Ви можете орієнтуватися вільно.
 
@@ -252,7 +252,7 @@ Today you successfully and deeply learned how to correctly read and understand U
 1. Яку саме граматичну форму дієслова ми обов'язково використовуємо на офіційних знаках заборони?
 2. Які три короткі слова-вигуки ми найчастіше використовуємо для миттєвого попередження про небезпеку?
 3. Що конкретно означає стандартна фраза «перерва з 13:00 до 14:00» на магазині?
-4. Яке точне українське слово ми маємо завжди використовувати замість русизму «роботу», коли говоримо про двері?
+4. Яке точне українське слово ми маємо завжди використовувати замість русизму «відкрито», коли говоримо про двері?
 5. Яке стандартне скорочення постійно використовується для слова «вулиця» на міських адресних табличках?
 6. Чим граматично та ситуативно відрізняється суворе правило «Не торкатися!» від дружнього прохання «Не чіпай!»?
 

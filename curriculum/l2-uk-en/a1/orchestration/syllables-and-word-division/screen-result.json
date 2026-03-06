@@ -1,0 +1,582 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1690",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "140.8",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "12.5",
+    "COMPUTED_IMMERSION_TARGET": "10-25%",
+    "COMPUTED_RICHNESS_SCORE": "39",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, examples: 3/24, dialogues: 0/4, proverbs: 0/1, tables: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/syllables-and-transfer.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/syllables-and-transfer-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/syllables-and-transfer.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M05 — Syllables and Transfer\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/syllables-and-transfer.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, group-sort, match-up, quiz\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Що таке склад? — What Is a Syllable?       417 /  300  ✅ (+117)\n     Типи складів — Open and Closed Syllables   464 /  300  ✅ (+164)\n     Правила переносу — Word Division Rules     494 /  350  ✅ (+144)\n     Підсумок — Summary & Self-Check            288 /  250  ✅ (+38)\n     ─────────────────────────────────────────────────────────────────\n     TOTAL                                     1663 / 1200  ✅ (+463)\n  📋 Found YAML activities file (8 activities)\n  > Count the Syllables: 10 items (min 8)\n  > Choose the Correct Word Division: 8 items (min 8)\n  > Open or Closed Syllables?: 13 items (min 6)\n  > Match the Word to its Syllables: 10 items (min 8)\n  > True or False: Syllables and Division: 8 items (min 8)\n  > Complete the Sentence: 8 items (min 8)\n  > Word Division Rules: 8 items (min 8)\n  > Does it end with an open or closed syllable?: 12 items (min 6)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1690/1200 (raw: 1746)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 5/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 12.5% (target 10-25% (M05))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/syllables-and-transfer-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/syllables-and-transfer.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: syllables-and-transfer.md\n  VESUM misses: 54 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 65913.63it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 142 | VESUM: 88 (62.0%) | RAG: 9 | Not found: 45\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/syllables-and-transfer-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 88/142 (62%) verified\n⚠️ VESUM not found (54): а-вто-бус, ав-то-бус, ав-тоб-ус, авт-о-бус, бі-блі-о-те-ка, бі-бліо-тека, біб-лі-о-те-ка, біб-ліо-тека, ву, ву-ли-ця",
+  "h2_sections": "1. Що таке склад? — What Is a Syllable?\n2. Типи складів — Open and Closed Syllables\n3. Правила переносу — Word Division Rules\n4. Підсумок — Summary & Self-Check",
+  "vesum_stats": {
+    "total": 142,
+    "vesum_hits": 88,
+    "rag_hits": 0,
+    "not_found": 54,
+    "rag_errors": 0,
+    "by_source": {
+      "activities": {
+        "total": 38,
+        "vesum_hits": 7,
+        "not_found": 31
+      },
+      "prose": {
+        "total": 104,
+        "vesum_hits": 81,
+        "not_found": 23
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "а-вто-бус",
+      "clean": "а-вто-бус",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ав-то-бус",
+      "clean": "ав-то-бус",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ав-тоб-ус",
+      "clean": "ав-тоб-ус",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "авт-о-бус",
+      "clean": "авт-о-бус",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "бі-блі-о-те-ка",
+      "clean": "бі-блі-о-те-ка",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "бі-бліо-тека",
+      "clean": "бі-бліо-тека",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "біб-лі-о-те-ка",
+      "clean": "біб-лі-о-те-ка",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "біб-ліо-тека",
+      "clean": "біб-ліо-тека",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ву",
+      "clean": "ву",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ву-ли-ця",
+      "clean": "ву-ли-ця",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "д-ерево",
+      "clean": "д-ерево",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "де-ре-во",
+      "clean": "де-ре-во",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "де-рев-о",
+      "clean": "де-рев-о",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "дер-ево",
+      "clean": "дер-ево",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "дж",
+      "clean": "дж",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "дз",
+      "clean": "дз",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "кра",
+      "clean": "кра",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ли",
+      "clean": "ли",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ль",
+      "clean": "ль",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "мо-ло-ко",
+      "clean": "мо-ло-ко",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "мо-лок-о",
+      "clean": "мо-лок-о",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "мол-о-ко",
+      "clean": "мол-о-ко",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "мол-око",
+      "clean": "мол-око",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "о-стрів",
+      "clean": "о-стрів",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ос-трів",
+      "clean": "ос-трів",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ост-рів",
+      "clean": "ост-рів",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "острі-в",
+      "clean": "острі-в",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "п-альці",
+      "clean": "п-альці",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "па-льці",
+      "clean": "па-льці",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "пал-ьці",
+      "clean": "пал-ьці",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "паль-ці",
+      "clean": "паль-ці",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "пальц-і",
+      "clean": "пальц-і",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "с-естра",
+      "clean": "с-естра",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "с-ім'я",
+      "clean": "с-ім'я",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "се-стра",
+      "clean": "се-стра",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сес-тра",
+      "clean": "сес-тра",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сест-ра",
+      "clean": "сест-ра",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "со",
+      "clean": "со",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ст",
+      "clean": "ст",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "стр",
+      "clean": "стр",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сі-'мя",
+      "clean": "сі-'мя",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сі-м'я",
+      "clean": "сі-м'я",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сіль-ський",
+      "clean": "сіль-ський",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сім-'я",
+      "clean": "сім-'я",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сім-я",
+      "clean": "сім-я",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "У-кра-ї-на",
+      "clean": "у-кра-ї-на",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "У-краї-на",
+      "clean": "у-краї-на",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "у-ні-вер-си-тет",
+      "clean": "у-ні-вер-си-тет",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Ук-ра-їна",
+      "clean": "ук-ра-їна",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Укр-аї-на",
+      "clean": "укр-аї-на",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ґ-удзик",
+      "clean": "ґ-удзик",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ґу-дзик",
+      "clean": "ґу-дзик",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ґуд-зик",
+      "clean": "ґуд-зик",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ґудз-ик",
+      "clean": "ґудз-ик",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "4871701809f1de88"
+}

@@ -1,349 +1,168 @@
 <!-- SCOPE
-Covers: Demonstrative pronouns (цей, той) and their gender and number agreement
+Covers: Demonstrative pronouns цей and той, gender agreement, proximity contrast, plural forms, and the copula distinction.
 Not covered:
-  - Advanced demonstrative adjectives
+  - Numbers and Money (future module) → a1-22
 -->
 
 # Demonstratives
 
 > **Чому це важливо?**
 >
-> Learning how to point at things is a crucial survival skill in any language. By mastering demonstratives, you will be able to easily ask for things at a market, navigate directions, and avoid confusion when making choices.
+> Ми часто показуємо на речі навколо нас. Українська мова має різні форми для слів «цей» і «той». Вони залежать від роду і числа. (We often need to point to things around us to communicate clearly. In Ukrainian, words for «this» and «that» must agree with the gender and number of the object you are pointing at). Використання цих слів дуже допомагає на базарі і в місті! (Mastering these small pointing words helps you navigate physical spaces and local markets).
 
-## Цей, Ця, Це: 'This' in Ukrainian
+## Цей/ця/це (This)
 
-When we want to point out something that is physically close to us, we use a demonstrative pronoun. In English, we simply say the word "this." In Ukrainian, however, the word for "this" changes its form. It must always match the gender of the noun it is pointing to. You already know this grammatical logic from using possessive pronouns like «мій» and «моя». Let us look closely at the three singular forms for "this."
+Ми часто показуємо на предмети навколо нас (We often point at objects around us). Тут є новий стіл. **Цей** стіл гарний. Тут є лампа. **Ця** лампа велика. Тут є вікно. **Це** вікно чисте.
 
-### Masculine: Цей
+Коли предмет поруч, ми кажемо «цей» (When an object is physically close to you, you use a word for «this»). Українська мова має різні форми для цих слів (In Ukrainian, pointing words have different forms). Вони залежать від роду (Just like possessives, pointing words in Ukrainian must match the grammatical gender of the noun they describe). Ось три форми однини (Let's look at the three singular forms for «this»).
 
-The word «цей» is the masculine form. You must use «цей» when you are pointing to a masculine noun that is close to you.
+Для чоловічого роду ми використовуємо слово **цей** (For masculine words, we use the pointing word **цей**).
 
-Цей будинок дуже великий.
-This building is very big.
+**Цей буди́нок великий.** (This building is big.)
+**Цей стіле́ць новий.** (This chair is new.)
+**Цей хло́пець — мій друг.** (This boy is my friend.)
 
-Я бачу цей стілець.
-I see this chair.
+Для жіночого роду ми використовуємо слово **ця** (For feminine words, we use the pointing word **ця**). Закінчення **-я** дуже допомагає (The ending **-я** helps it match feminine nouns).
 
-Цей хлопець — мій брат.
-This boy is my brother.
+**Ця ву́лиця довга.** (This street is long.)
+**Ця кни́га цікава.** (This book is interesting.)
+**Ця ді́вчина — студентка.** (This girl is a student.)
 
-**Нові приклади:**
-Ось будинок. Цей будинок великий. Я бачу цей будинок.
-Ось стілець. Цей стілець новий. Я маю цей стілець.
-Ось торт. Цей торт смачний. Я хочу цей торт.
-Ось чай. Цей чай гарячий. Я п'ю цей чай.
-Ось сік. Цей сік холодний. Я люблю цей сік.
-Ось стіл. Цей стіл старий. Я бачу цей стіл.
-Ось парк. Цей парк гарний. Я люблю цей парк.
-Ось мій брат. Цей хлопець дуже розумний.
-Ось чоловік. Цей чоловік дуже добрий.
+Для середнього роду ми використовуємо слово **це** (For neuter words, we use the pointing word **це**).
 
-Notice how the pronoun and the noun work together as a matching pair. Because «будинок», «стілець», and «хлопець» are all masculine words, they strictly require the masculine pronoun «цей».
-
-### Feminine: Ця
-
-The word «ця» is the feminine form. You use it whenever you point to a feminine noun that is nearby.
-
-Ця вулиця дуже красива.
-This street is very beautiful.
-
-Ця дівчина — моя сестра.
-This girl is my sister.
-
-Ця книга цікава.
-This book is interesting.
-
-**Нові приклади:**
-Ось вулиця. Ця вулиця стара. Я бачу цю вулицю.
-Ось дівчина. Ця дівчина гарна. Я знаю цю дівчину.
-Ось книга. Ця книга нова. Я маю цю книгу.
-Ось кава. Ця кава смачна. Я хочу цю каву.
-Ось вода. Ця вода холодна. Я п'ю цю воду.
-Ось моя сестра. Ця дівчина дуже розумна.
-Ось машина. Ця машина дуже велика.
-Ось проблема. Ця проблема нова.
-Ось робота. Ця робота цікава.
-
-Just like the masculine forms, the feminine pronoun firmly locks together with the feminine noun to create a clear phrase.
-
-### Neuter: Це
-
-The word «це» is the neuter form. You strictly use it with neuter nouns.
-
-Це місто дуже старе.
-This city is very old.
-
-Це озеро велике.
-This lake is big.
-
-Я люблю це кафе.
-I love this cafe.
-
-**Нові приклади:**
-Ось місто. Це місто велике. Я бачу це місто.
-Ось озеро. Це озеро гарне. Я люблю це озеро.
-Ось кафе. Це кафе нове. Я знаю це кафе.
-Ось море. Це море тепле. Я бачу це море.
-Ось вікно. Це вікно чисте.
-Ось слово. Це слово нове. Я знаю це слово.
-Ось ліжко. Це ліжко старе. Я маю це ліжко.
-Ось яблуко. Це яблуко смачне. Я їм це яблуко.
-Ось питання. Це питання цікаве.
-
-### The Copula Confusion: "Це" vs "це"
-
-There is a very common visual trap here for English speakers that we must address. You have already seen the word «це» used to mean "This is." For example:
-
-Це кафе.
-This is a cafe.
-
-Це озеро.
-This is a lake.
-
-In these short sentences, «це» acts like an invariable identity marker. It simply introduces what something is, without acting as an adjective. However, when «це» is used as a demonstrative pronoun, it acts as a direct modifier to describe the noun.
-
-Це кафе дуже гарне.
-This cafe is very nice.
-
-Це озеро холодне.
-This lake is cold.
-
-> [!warning]
-> Be careful not to confuse the identity marker «це» with the demonstrative modifier «це». When «це» stands alone, it generally means "this is." When it is attached directly to a neuter noun, it simply means "this."
-
-Also, please remember that as a demonstrative modifier, «це» is ONLY used with neuter nouns. English speakers very often make the mistake of using «це» as a universal, unchanging word for "this" with all nouns.
-
-❌ Це будинок старий. (Incorrect)
-✅ Цей будинок старий. (Correct)
-
-✅ Це будинок. (Correct)
-
-## Ці: The Universal 'These'
-
-Now that you know exactly how to say "this" for singular nouns, let us look at how to say "these" for plural nouns. The great news is that Ukrainian makes the plural form very simple. There is only one plural form for all genders. This makes the learning process much easier.
-
-The universal word for "these" is «ці». You will use it for any group of objects or people that are close to you.
-
-Ці студенти дуже розумні.
-These students are very smart.
-
-Ці книги цікаві.
-These books are interesting.
-
-Ці міста великі.
-These cities are big.
-
-**Нові приклади:**
-Ось студенти. Ці студенти розумні. Я знаю студентів.
-Ось книги. Ці книги цікаві. Я маю ці книги.
-Ось міста. Ці міста великі. Я бачу ці міста.
-Ось люди. Ці люди добрі.
-Ось будинки. Ці будинки нові. Я бачу будинки.
-Ось хлопці. Ці хлопці тут.
-Ось дівчата. Ці дівчата гарні.
-Ось проблеми. Ці проблеми нові.
-
-Look at how the three singular forms transform into the single plural form. The gender distinction completely disappears:
-* цей → ці
-* ця → ці
-* це → ці
+**Це мі́сто старе.** (This city is old.)
+**Це о́зеро велике.** (This lake is big.)
+**Це кафе́ популярне.** (This cafe is popular.)
 
 > [!tip]
-> You do not need to worry about the gender of the noun when you use the plural form. Just use «ці» for absolutely everything that is plural!
+> A great way to remember these forms is to look at the endings of the words they describe. Feminine words very often end in «а» or «я», and so does the word **ця**. Neuter words often end in «о» or «е», and so does the word **це**.
 
-You might wonder if you can use the invariable identity marker «це» with plural nouns to say "These are". The answer is yes! Just as «це» means "this is", it also translates perfectly to "these are".
+Слово **це** має дві ролі. Воно може бути зв'язкою («this is») або вказівкою для середнього роду («this»).
 
-✅ Це люди. (These are people.)
-✅ Ці люди добрі. (These people are kind.)
+Слово **це** — це слово-зв'язка («this is»). Але це також вказівне слово («this») для середнього роду (We have already seen the word **це** used as an invariable connecting word meaning «this is». But it is also the pointing word «this» for neuter nouns, so you need to tell the two roles apart).
 
-Remember, if you want to modify a plural noun directly ("these people", "these books"), you must use the plural pronoun «ці».
+**Це кафе́.** (This is a cafe.)
+**Це мі́сто.** (This is a city.)
 
-## Той, Та, Те, Ті: 'That' and 'Those'
+У цих реченнях **Це** — це головне слово (In the examples above, **Це** stands alone as the subject of the sentence). Воно не змінює форму. Але коли **це** — вказівне слово для середнього роду, воно працює інакше (However, when **це** is used as a demonstrative describing a neuter noun, it acts differently).
 
-We have talked extensively about things that are close to us, things you can almost touch. But what about things that are far away? When we want to point at something distant, we use words meaning "that" and "those." Just like with the word "this," the Ukrainian word for "that" changes its form based on the gender of the noun it modifies. Understanding this concept is essential for expressing spatial distance clearly.
-
-### Masculine: Той
-
-The word «той» is the masculine form for "that." You must use it with masculine nouns that are physically distant from you or the speaker.
-
-Той будинок дуже старий.
-That building is very old.
-
-Я бачу той стілець.
-I see that chair.
-
-Той хлопець — студент.
-That boy is a student.
-
-**Нові приклади:**
-Там будинок. Той будинок старий. Я бачу той будинок.
-Там стілець. Той стілець зручний.
-Там торт. Той торт великий. Я хочу той торт.
-Там чай. Той чай гарячий.
-Там сік. Той сік смачний.
-Там стіл. Той стіл новий.
-Там парк. Той парк великий.
-Там чоловік. Той чоловік працює. Я знаю чоловіка.
-
-Notice that the distance is the only thing that changes. The grammatical agreement rule remains exactly the same as with «цей».
-
-### Feminine: Та
-
-The word «та» is the feminine form for "that." You use it with all feminine nouns located further away.
-
-Та вулиця дуже довга.
-That street is very long.
-
-Та дівчина гарна.
-That girl is pretty.
-
-Та книга моя.
-That book is mine.
-
-**Нові приклади:**
-Там вулиця. Та вулиця стара. Я бачу ту вулицю.
-Там дівчина. Та дівчина читає. Я знаю ту дівчину.
-Там книга. Та книга нова. Я бачу ту книгу.
-Там кава. Та кава смачна.
-Там вода. Та вода холодна.
-Там машина. Та машина велика. Я бачу ту машину.
-Там проблема. Та проблема велика.
+**Це кафе́ га́рне.** (This cafe is nice.)
+**Це мі́сто вели́ке.** (This city is big.)
 
 > [!warning]
-> You will also often see the exact same word «та» used as a short conjunction meaning "and." Context will always tell you which meaning is intended.
->
-> Та дівчина та її подруга.
-> That girl and her friend.
->
-> In the first instance, the word «та» acts as a demonstrative, pointing to the distant girl. In the second instance, it acts as a simple conjunction, securely connecting the two people.
+> Do not confuse the connector «This is» with the demonstrative «This». The connector is usually the first word and acts as the whole subject. The demonstrative «this» attaches directly to a neuter noun and simply describes it. Visualizing the structure will help you see the difference clearly.
 
-### Neuter: Те
+## Ці (These)
 
-The word «те» is the neuter form for "that." You use it when referring to distant neuter nouns.
+Українська мова має лише одне слово для всіх предметів у множині — **ці** (Ukrainian has only one word for all objects in the plural — these). Тут стоять студенти. **Ці** студенти читають. Тут лежать книги. **Ці** книги цікаві. (Students are standing here. These students are reading. Books are lying here. These books are interesting.)
 
-Те озеро глибоке.
-That lake is deep.
+Коли ми показуємо на багато предметів, граматика дуже проста (When pointing to multiple objects, Ukrainian grammar is very simple). Ми не думаємо про рід. Ми пам'ятаємо лише одне слово для множини — **ці** (Instead of worrying about masculine, feminine, or neuter genders, you only need to remember one single plural word for «these»: **ці**).
 
-Те місто дуже гарне.
-That city is very beautiful.
+Ми змінюємо форму слова для множини (We change the word form for the plural).
+Ми бачимо, як це працює (Let us observe how the singular pointing words transform into the plural pointing word).
 
-Я знаю те кафе.
-I know that cafe.
+| Singular | Plural | Example |
+|---|---|---|
+| **цей** | **ці** | **ці буди́нки** (these buildings) |
+| **ця** | **ці** | **ці ву́лиці** (these streets) |
+| **це** | **ці** | **ці озе́ра** (these lakes) |
 
-**Нові приклади:**
-Там місто. Те місто велике. Я бачу те місто.
-Там озеро. Те озеро гарне.
-Там кафе. Те кафе старе. Я знаю те кафе.
-Там море. Те море тепле. Я бачу те море.
-Там вікно. Те вікно велике.
-Там слово. Те слово нове.
-Там ліжко. Те ліжко зручне.
-Там яблуко. Те яблуко смачне.
+Ви можете використовувати слово **ці** для всіх об'єктів (You can use **ці** with any plural noun, whether it refers to everyday objects, geographical places, or groups of people). Це універсальне слово! (It is a universal tool for multiple items).
 
-### Plural: Ті
+**Ці студе́нти дуже розумні.** (These students are very smart.)
+**Ці кни́ги нові.** (These books are new.)
+**Ці столи́ зручні.** (These tables are comfortable.)
 
-Just as «ці» is the universal plural for "these," the word «ті» is the universal plural form for "those." You use it with plural nouns of any gender that are located far away. This makes plural forms wonderfully simple to remember.
+> [!warning]
+> Remember the difference between the connector **це** ("this is" / "these are") and the pointing word **ці** ("these"). You CAN say **Це лю́ди** to mean "These are people." But if you want to say "these people" (as a phrase describing specific people), you must use the plural pointing word: **Ці лю́ди**.
 
-Ті люди дуже добрі.
-Those people are very kind.
+## Той/та/те/ті (That/Those)
 
-Ті міста великі.
-Those cities are big.
+Коли предмет далеко, ми використовуємо інші слова (When an object is further away from you, you use words that translate to «that» and «those»). Там стоїть високий будинок. **Той** будинок старий. Там є широка вулиця. **Та** вулиця довга. А там гуляють люди. **Ті** люди веселі.
 
-Ті студенти працюють.
-Those students are working.
+Ці слова також мають різний рід (Just like the words for «this», these distant pointing words must match the noun's gender).
 
-**Нові приклади:**
-Там студенти. Ті студенти розумні. Я знаю студентів.
-Там книги. Ті книги старі. Я читаю ті книги.
-Там міста. Ті міста великі. Я бачу ті міста.
-Там люди. Ті люди добрі.
-Там будинки. Ті будинки високі.
-Там хлопці. Ті хлопці там.
-Там дівчата. Ті дівчата співають.
+Чоловічий рід має форму «той». Це слово показує велику відстань (For masculine words, we use the distant word **той**. This word shows a large distance).
 
-## Цей vs Той: At the Market
+**Той буди́нок дуже великий.** (That building is very big.)
+**Той стіле́ць старий.** (That chair is old.)
+**Я бачу той парк.** (I see that park.)
 
-Let us put this all together in a highly practical context. Imagine you are visiting a busy local Ukrainian market, known as a базар. This bustling environment is the perfect place to practice pointing at things and distinguishing between what is right in front of you and what is located further away.
+Жіночий рід має форму «та» (For feminine words, we use the distant word **та**).
 
-When you are standing right in front of a vendor's stall, you will naturally use the close demonstratives: цей, ця, це, or ці. These words tell the vendor exactly what you are looking at nearby.
+**Та ву́лиця гарна.** (That street is nice.)
+**Та ді́вчина — студентка.** (That girl is a student.)
+**Я знаю, де та школа.** (I know where that school is.)
 
-Я хочу цей торт.
-I want this cake.
+Середній рід має форму «те» (For neuter words, we use the distant word **те**).
 
-Цей торт дуже смачний.
-This cake is very tasty.
+**Те мі́сто дуже далеко.** (That city is very far.)
+**Те о́зеро холодне.** (That lake is cold.)
 
-Ця книга цікава.
-This book is interesting.
+> [!tip]
+> A good rule of thumb: if you can easily touch the object, use **цей** (this). If you have to point across the room or down the street, use **той** (that).
 
-Now, imagine you see something interesting far away from your reach. In this situation, you will use the distant demonstratives: той, та, те, or ті.
+Для множини ми маємо форму «ті». Це слово також універсальне (When pointing to multiple objects that are far away, we again drop all the gender rules. The plural form is **ті**).
 
-Я хочу той торт.
-I want that cake.
+**Ті буди́нки старі.** (Those buildings are old.)
+**Ті лю́ди працюють.** (Those people are working.)
+**Ті міста́ красиві.** (Those cities are beautiful.)
 
-Той торт великий.
-That cake is big.
+Слово **та** має два значення. Це може бути вказівне слово («that») або сполучник («and»).
 
-Та книга нова.
-That book is new.
+Вказівне слово **та** (that) і сполучник **та** (and) дуже схожі. Ви можете легко зрозуміти їхню роль у реченні (You can easily tell them apart by their role in the sentence):
 
-You can easily compare two objects using these pronouns in the same sentence. This creates a clear spatial contrast between "here" and "there," which is incredibly useful for everyday communication.
+**Та ді́вчина чита́є книгу.** (That girl is reading a book.)
+**Тут є хло́пець та ді́вчина.** (Here is a boy and a girl.)
 
-Цей стілець новий, а той стілець старий.
-This chair is new, and that chair is old.
+У першому реченні **та** — це вказівне слово (In the first sentence, **та** acts as a pointing word). У другому реченні **та** з'єднує два слова (In the second sentence, **та** links two different nouns together). Ви швидко зрозумієте різницю!
 
-Ця вулиця тиха, а та вулиця шумна.
-This street is quiet, and that street is loud.
+## Цей vs Той у контексті (This vs That in context)
 
-Це озеро мале, а те озеро велике.
-This lake is small, and that lake is big.
+На базарі ми часто порівнюємо речі. Одні товари лежать поруч, а інші — далеко (At the market, we often compare things. Some goods lie nearby, and others — far away).
 
-**Нові приклади:**
-Я хочу цей торт. Я не хочу той торт.
-Цей торт дуже смачний. Той торт не смачний.
-Я бачу цю каву. Я не бачу ту каву.
-Ця кава дуже гаряча. Та кава дуже холодна.
-Я люблю це яблуко. Я не люблю те яблуко.
-Ці яблука добрі. Ті яблука погані.
+На базарі або в магазині ви часто показуєте на предмети (At a market or a shop, you will often need to point things out). Ми можемо побачити, як це працює! (We can see how «this» and «that» work together in everyday situations).
 
-> [!culture]
-> Pointing at items and clearly saying «цей» or «той» is a perfectly normal, polite, and acceptable way to shop at a Ukrainian market, especially if you do not know the exact vocabulary word for the item. Local vendors will always appreciate your effort to use the correct gender for the item you are pointing to!
+**Цей стіле́ць нови́й.** (This chair is new.)
+**Той стіле́ць стари́й.** (That chair is old.)
+
+**Ця кни́га ціка́ва.** (This book is interesting.)
+**Та кни́га нудна́.** (That book is boring.)
+
+Ми на українському базарі (We are at a traditional Ukrainian market). Товар лежить тут. Ми кажемо «цей» (The item lies here. We say "this"). Товар лежить далеко. Ми кажемо «той» (The item is on the high shelf. We say "that").
+
+**Я хо́чу цей торт.** (I want this cake.) (pointing to the counter)
+**Він хо́че той торт.** (He wants that cake.) (pointing behind the vendor)
+**Вона купує ці яблука.** (She is buying these apples.)
+**Я купую ті груші.** (I am buying those pears.)
+
+Ми також чуємо інші слова на базарі. **Кожний** день ми робимо вибір. Ми кажемо: я хочу **інший** торт, або я хочу **такий** торт. Я **сам** хочу цей торт! (Every day we make a choice. We say: I want another cake, or I want such a cake. I myself want this cake!)
+
+Вибір між **цей** і **той** допомагає продавцю зрозуміти вас (Notice how the choice between **цей** and **той** instantly tells the vendor exactly which item you mean). Ви також можете почути слова **такий** (such), **інший** (other), **кожний** (every), або **сам** (oneself) (You might also hear related words like **такий**, **інший**, **кожний**, or **сам** in these situations, which follow similar ending rules).
+
+> [!tip]
+> Ці слова також працюють у розмові (These pointing words are also used for textual distance in conversations). Коли ми говоримо про щось нове, ми кажемо «цей» (When you talk about something you just mentioned a moment ago, you use «цей»). Коли ми згадуємо старе, ми кажемо «той» (If you refer back to something discussed much earlier in your conversation, you switch to «той»).
 
 ---
 
-# Підсумок
+## Підсумок: Практика (Practice)
 
-You have now successfully learned how to confidently point at objects using Ukrainian demonstrative pronouns. Remember the core rule: these pronouns must always agree with the noun they modify in both gender and number. This might feel unusual at first, but with practice, it will become second nature.
+Ми вивчили нові вказівні слова. Ми знаємо, як говорити про предмети поруч і далеко.
 
-Here is a comprehensive summary reference table grouping all eight demonstrative forms by distance (close versus distant) and by gender or number. Keep this table handy as you continue your language journey:
+Ви вивчили нові слова! (You have learned how to point to objects near and far, matching the words to the noun's gender and number). Ось усі вісім форми (Here is a summary of all eight demonstrative forms).
 
-| Gender / Number | Close (This / These) | Distant (That / Those) |
-| :--- | :--- | :--- |
-| **Masculine** | цей | той |
-| **Feminine** | ця | та |
-| **Neuter** | це | те |
-| **Plural** | ці | ті |
+| Gender / Number | Close («This» / «These») | Far («That» / «Those») |
+|---|---|---|
+| Masculine | **цей** | **той** |
+| Feminine | **ця** | **та** |
+| Neuter | **це** | **те** |
+| Plural | **ці** | **ті** |
 
-Let us quickly test your new knowledge with a few simple self-check questions. Think carefully about the gender of the noun and the spatial distance indicated. Try to answer these before looking back at the lesson.
+Час для перевірки (Time for a check. Now test your knowledge by mentally choosing the correct demonstrative word based on the spatial cues and noun gender).
 
-1. You are holding a book (книга - feminine). Would you mentally say «ця книга» or «та книга»?
-2. You point to a building (будинок - masculine) far down the street. Should you use «цей будинок» or «той будинок»?
-3. You are standing right next to a lake (озеро - neuter). Is the correct phrase «це озеро» or «те озеро»?
-4. You are talking about students (студенти - plural) standing across the room. Which form is correct: «ці студенти» or «ті студенти»?
-
-Practice using these forms whenever you can in your daily life. Point to objects around your room and try to name them using the correct form of «цей» or «той». This simple daily habit will quickly build your spoken confidence.
-
-**Фінальна практика:**
-Цей день дуже гарний. Той день дуже поганий.
-Ця дівчина дуже розумна. Та дівчина теж розумна.
-Це місто дуже старе. Те місто дуже нове.
-Ці книги дуже старі. Ті книги дуже нові.
-Ось мій стілець. Цей стілець дуже зручний.
-Там мій стіл. Той стіл дуже новий.
-Я бачу цю вулицю. Ця вулиця дуже тиха.
-Я бачу ту вулицю. Та вулиця дуже шумна.
-Я хочу це кафе. Це кафе дуже гарне.
-Я хочу те кафе. Те кафе дуже гарне.
+1. У вас є слово чоловічого роду (**буди́нок**). Яке слово означає «this»? (You are holding a masculine noun. What is the word for «this»?)
+2. Ви показуєте на вулицю далеко. Як сказати «that»? (You point to a distant feminine noun. How do you say «that»?)
+3. Ви дивитесь на озера поруч. Яке слово означає «these»? (You are looking at several plural nouns right in front of you. Which term means «these»?)
+4. Ви говорите про місто далеко. Яке правильне слово? (You are talking about a distant neuter noun. What is the right word for «that»?)
 
 ---

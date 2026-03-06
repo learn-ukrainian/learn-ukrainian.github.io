@@ -2,7 +2,14 @@
   "slug": "describing-things-adjectives",
   "track": "a1",
   "module_num": 11,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-06T00:21:43Z"
+  "mode": "v5",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-03-06T14:57:33Z",
+      "words": 1686,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-03-06T14:57:33Z"
 }

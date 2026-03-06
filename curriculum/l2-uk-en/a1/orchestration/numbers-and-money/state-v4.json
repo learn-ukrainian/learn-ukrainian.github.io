@@ -1,0 +1,19 @@
+{
+  "track": "a1",
+  "slug": "numbers-and-money",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T07:38:35Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T07:39:04Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T07:41:29Z"
+    }
+  }
+}

@@ -2,7 +2,7 @@ slug: at-the-restaurant
 title: At the Restaurant
 word_target: 1200
 content_outline:
-- title: Вступ та культурний контекст
+- section: Вступ та культурний контекст (Introduction & Cultural Context)
   slug: introduction-and-culture
   words: 300
   points:
@@ -10,7 +10,7 @@ content_outline:
     меню.'
   - 'Explain the traditional three-course structure: «Перше», «Друге», and «Третє».'
   - Discuss tipping etiquette («чайові») and basic politeness markers.
-- title: 'Презентація: Мова замовлення'
+- section: 'Презентація: Мова замовлення (Presentation: Ordering Language)'
   slug: presentation-ordering
   words: 350
   points:
@@ -18,7 +18,7 @@ content_outline:
   - Present the «Я буду...» structure as the most natural and polite way to order.
   - 'Differentiate verbs with examples: «замовити столик» (book a table) vs. «замовити
     страву» (order a dish).'
-- title: 'Практика: Знахідний відмінок'
+- section: 'Практика: Типові ситуації (Practice: Typical Situations)'
   slug: practice-accusative
   words: 300
   points:
@@ -26,7 +26,7 @@ content_outline:
   - Show the -а → -у shift with clear examples (кава → каву, піца → піцу).
   - 'Drill correction of the common error: «Я буду каву» (✅), explicitly warning against
     the Nominative mismatch.'
-- title: Типові ситуації та Підсумок
+- section: Підсумок та етикет (Summary & Etiquette)
   slug: situations-and-summary
   words: 250
   points:

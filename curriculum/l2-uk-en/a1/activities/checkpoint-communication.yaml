@@ -1,425 +1,370 @@
-- type: match-up
-  title: 'Знайдіть відповідники: базовий словник'
-  pairs:
-  - left: подорож
-    right: journey
-  - left: стадіон
-    right: stadium
-  - left: автобусом
-    right: by bus
-  - left: наліво
-    right: to the left
-  - left: хобі
-    right: hobby
-  - left: запрошувати
-    right: to invite
-  instruction: З'єднайте відповідні елементи.
 - type: quiz
-  title: 'Модальні дієслова: Могти чи Вміти?'
+  title: "Modal Verbs Check"
+  instruction: "Choose the correct modal verb for each situation."
   items:
-  - question: Яке дієслово ми використовуємо для опису фізичної можливості?
-    explanation: Слово могти означає фізичну можливість або наявність часу.
-    options:
-    - text: могти
-      correct: true
-    - text: вміти
-      correct: false
-    - text: хотіти
-      correct: false
-    - text: треба
-      correct: false
-  - question: Яке дієслово ми використовуємо для опису набутої навички?
-    explanation: Слово вміти означає навичку, якої ви навчилися.
-    options:
-    - text: вміти
-      correct: true
-    - text: могти
-      correct: false
-    - text: повинен
-      correct: false
-    - text: можна
-      correct: false
-  - question: Як правильно сказати, що ви знаєте, як грати на гітарі?
-    explanation: Грати на гітарі — це навичка, тому ми використовуємо вміти.
-    options:
-    - text: Я вмію грати на гітарі.
-      correct: true
-    - text: Я можу грати на гітарі.
-      correct: false
-    - text: Мені треба грати на гітарі.
-      correct: false
-    - text: Я повинен грати на гітарі.
-      correct: false
-  - question: Як сказати, що ви не маєте часу допомогти сьогодні?
-    explanation: Брак часу — це зовнішня обставина, тому використовуємо не можу.
-    options:
-    - text: Я не можу допомогти сьогодні.
-      correct: true
-    - text: Я не вмію допомогти сьогодні.
-      correct: false
-    - text: Мені не можна допомогти сьогодні.
-      correct: false
-    - text: Я не повинен допомогти сьогодні.
-      correct: false
-  - question: Яке слово означає загальну або сувору заборону для всіх людей?
-    explanation: Слово не можна використовується для заборон і правил.
-    options:
-    - text: не можна
-      correct: true
-    - text: не можу
-      correct: false
-    - text: не вмію
-      correct: false
-    - text: не хочу
-      correct: false
-  - question: Що ви скажете, якщо вам зараз занадто темно читати книгу?
-    explanation: Темрява — це зовнішня обставина, тому ми кажемо не можу.
-    options:
-    - text: Я не можу читати.
-      correct: true
-    - text: Я не вмію читати.
-      correct: false
-    - text: Мені не можна читати.
-      correct: false
-    - text: Я не хочу читати.
-      correct: false
-  instruction: Оберіть правильну відповідь.
-- type: fill-in
-  title: 'Заповніть пропуски: Необхідність та обов''язок'
+    - question: "What word do you use to say you learned how to cook?"
+      options:
+        - text: "вмію"
+          correct: true
+        - text: "можу"
+          correct: false
+        - text: "треба"
+          correct: false
+        - text: "хочу"
+          correct: false
+    - question: "Which word means you cannot meet right now?"
+      options:
+        - text: "не можу"
+          correct: true
+        - text: "не вмію"
+          correct: false
+        - text: "не можна"
+          correct: false
+        - text: "не треба"
+          correct: false
+    - question: "How do you express necessity, like 'it is necessary'?"
+      options:
+        - text: "треба"
+          correct: true
+        - text: "я треба"
+          correct: false
+        - text: "я хочу"
+          correct: false
+        - text: "я можу"
+          correct: false
+    - question: "What word is used for a strict personal obligation, like 'I must work'?"
+      options:
+        - text: "повинен"
+          correct: true
+        - text: "можу"
+          correct: false
+        - text: "вмію"
+          correct: false
+        - text: "хочу"
+          correct: false
+    - question: "Which word means 'to want'?"
+      options:
+        - text: "хотіти"
+          correct: true
+        - text: "могти"
+          correct: false
+        - text: "вміти"
+          correct: false
+        - text: "стояти"
+          correct: false
+    - question: "How do you express that something is forbidden or not allowed?"
+      options:
+        - text: "не можна"
+          correct: true
+        - text: "не треба"
+          correct: false
+        - text: "не вмію"
+          correct: false
+        - text: "не можу"
+          correct: false
+    - question: "What is the correct way to say 'I do not know how to swim'?"
+      options:
+        - text: "я не вмію"
+          correct: true
+        - text: "я не можу"
+          correct: false
+        - text: "я не можна"
+          correct: false
+        - text: "я не хочу"
+          correct: false
+    - question: "What is the correct way to say 'I cannot play today'?"
+      options:
+        - text: "я не можу"
+          correct: true
+        - text: "я не вмію"
+          correct: false
+        - text: "я не можна"
+          correct: false
+        - text: "я не повинен"
+          correct: false
+
+- type: true-false
+  title: "True or False: Modals"
+  instruction: "Read the statements and decide if they are true or false."
   items:
-  - sentence: Мені ____ купити квитки на автобус сьогодні.
-    answer: треба
-    options:
-    - треба
-    - повинен
-    - хочу
-    - можеш
-  - sentence: Він ____ працювати завтра рано вранці.
-    answer: повинен
-    options:
-    - повинен
-    - треба
-    - хочуть
-    - вміємо
-  - sentence: Ти ____ поїхати з нами в подорож?
-    answer: хочеш
-    options:
-    - хочеш
-    - треба
-    - повинен
-    - вмієш
-  - sentence: Нам ____ знайти правильну дорогу до стадіону.
-    answer: треба
-    options:
-    - треба
-    - повинні
-    - хочемо
-    - може
-  - sentence: Я ____ закінчити цю роботу якомога швидше.
-    answer: повинен
-    options:
-    - повинен
-    - треба
-    - хоче
-    - можеш
-  - sentence: Олені ____ повернутися додому в неділю ввечері.
-    answer: треба
-    options:
-    - треба
-    - повинна
-    - хоче
-    - може
-  instruction: Оберіть правильне слово для заповнення пропуску.
-- type: unjumble
-  title: 'Складіть речення: Накази та прохання'
-  items:
-  - words:
-    - Скажіть
-    - будь
-    - ласка
-    - де
-    - автобус
-    answer: Скажіть, будь ласка, де автобус.
-  - words:
-    - Я
-    - хочу
-    - запросити
-    - тебе
-    - на
-    - стадіон
-    answer: Я хочу запросити тебе на стадіон.
-  - words:
-    - Нам
-    - треба
-    - купити
-    - квитки
-    - на
-    - автобус
-    answer: Нам треба купити квитки на автобус.
-  - words:
-    - Читай
-    - цей
-    - текст
-    - дуже
-    - швидко
-    answer: Читай цей текст дуже швидко.
-  - words:
-    - Дайте
-    - мені
-    - квиток
-    - будь
-    - ласка
-    answer: Дайте мені квиток, будь ласка.
-  instruction: Розташуйте слова у правильному порядку.
+    - statement: "We use the word 'могти' to express a learned skill."
+      correct: false
+      explanation: "We use 'вміти' for learned skills, and 'могти' for situational ability."
+    - statement: "The word 'треба' does not change its ending for I, you, or he."
+      correct: true
+      explanation: "Треба is impersonal and does not change its form."
+    - statement: "'Треба' means 'I want'."
+      correct: false
+      explanation: "'Треба' means 'it is necessary'."
+    - statement: "'Тут не можна' means 'It is not allowed here'."
+      correct: true
+      explanation: "'Не можна' is used to state that something is forbidden."
+    - statement: "'Я не можу' and 'я не вмію' mean exactly the same thing."
+      correct: false
+      explanation: "'Не можу' means you cannot right now, 'не вмію' means you do not know how."
+    - statement: "To say 'I must work', we use 'Я повинен працювати'."
+      correct: true
+      explanation: "'Повинен' expresses a strong personal obligation."
+    - statement: "'Могти' is used when you have the time and physical ability to do something right now."
+      correct: true
+      explanation: "It depends on the circumstances."
+    - statement: "'Я вмію читати' means 'I am reading right now'."
+      correct: false
+      explanation: "'Я вмію читати' means 'I know how to read'."
+
+- type: match-up
+  title: "Match the Imperatives"
+  instruction: "Match the infinitive verb to its informal command form."
+  pairs:
+    - left: "читати"
+      right: "читай"
+    - left: "писати"
+      right: "пиши"
+    - left: "сказати"
+      right: "скажи"
+    - left: "дати"
+      right: "дай"
+    - left: "іти"
+      right: "іди"
+    - left: "слухати"
+      right: "слухай"
+    - left: "дивитися"
+      right: "дивись"
+    - left: "стояти"
+      right: "стій"
+
 - type: group-sort
-  title: Розподіліть форми наказового способу
+  title: "Sort the Commands"
+  instruction: "Sort the verbs into informal and formal commands."
   groups:
-  - name: Форма Ти (неформальна)
-    items:
-    - читай
-    - пиши
-    - скажи
-    - дай
-    - іди
-  - name: Форма Ви (формальна або множина)
-    items:
-    - слухайте
-    - дивіться
-    - стійте
-    - читайте
-    - скажіть
-  instruction: Розподіліть елементи за групами.
-- type: quiz
-  title: 'Перевірте знання: Транспорт та напрямки'
-  items:
-  - question: В якому граматичному відмінку стоїть слово у фразі їхати автобусом?
-    explanation: Для транспорту ми використовуємо орудний відмінок без прийменника.
-    options:
-    - text: в орудному відмінку
-      correct: true
-    - text: в давальному відмінку
-      correct: false
-    - text: у місцевому відмінку
-      correct: false
-    - text: у знахідному відмінку
-      correct: false
-  - question: Як правильно сказати, що ви подорожуєте на великому поїзді?
-    explanation: 'Транспорт завжди потребує орудного відмінка: поїздом.'
-    options:
-    - text: Я їду поїздом.
-      correct: true
-    - text: Я їду поїзд.
-      correct: false
-    - text: Мені треба поїзд.
-      correct: false
-    - text: Я їду на поїзд.
-      correct: false
-  - question: Що вам скажуть люди, якщо вам треба йти прямо?
-    explanation: Прямо означає рух вперед по прямій лінії.
-    options:
-    - text: Ідіть прямо по вулиці.
-      correct: true
-    - text: Ідіть направо по вулиці.
-      correct: false
-    - text: Ідіть наліво по вулиці.
-      correct: false
-    - text: Стійте прямо по вулиці.
-      correct: false
-  - question: Як ввічливо попросити незнайому людину показати вам правильну дорогу?
-    explanation: Ми використовуємо ввічливу форму Ви та слово будь ласка.
-    options:
-    - text: Скажіть, будь ласка, де станція?
-      correct: true
-    - text: Пишіть, будь ласка, де станція?
-      correct: false
-    - text: Читай, де станція?
-      correct: false
-    - text: Іди, де станція?
-      correct: false
-  - question: Яке слово ми використовуємо, коли пропонуємо другу піти кудись разом?
-    explanation: Ходімо — це популярна фраза для дружнього запрошення.
-    options:
-    - text: Ходімо!
-      correct: true
-    - text: Стійте!
-      correct: false
-    - text: Дайте!
-      correct: false
-    - text: Дивись!
-      correct: false
-  - question: Як правильно описати напрямок руху, якщо ви повертаєте ліворуч?
-    explanation: Слово наліво означає рух у лівий бік.
-    options:
-    - text: Автобус повертає наліво.
-      correct: true
-    - text: Автобус повертає направо.
-      correct: false
-    - text: Автобус повертає прямо.
-      correct: false
-    - text: Автобус їде автобусом.
-      correct: false
-  instruction: Оберіть правильну відповідь.
+    - name: "Informal Commands"
+      items:
+        - "читай"
+        - "пиши"
+        - "скажи"
+        - "іди"
+        - "слухай"
+    - name: "Formal/Plural Commands"
+      items:
+        - "читайте"
+        - "пишіть"
+        - "скажіть"
+        - "ідіть"
+        - "слухайте"
+
 - type: fill-in
-  title: 'Заповніть пропуски: Повсякденне життя'
+  title: "Complete the Sentences"
+  instruction: "Choose the correct word to complete the sentence."
   items:
-  - sentence: Моєму старшому брату зараз тридцять ____.
-    answer: років
-    options:
-    - років
-    - рік
-    - роки
-    - вік
-  - sentence: Він має високий зріст і темне ____.
-    answer: волосся
-    options:
-    - волосся
-    - хобі
-    - автобус
-    - квиток
-  - sentence: Моя подруга чудово ____ на гітарі.
-    answer: грає
-    options:
-    - грає
-    - грати
-    - читає
-    - дивиться
-  - sentence: Мій брат любить грати ____ теніс.
-    answer: в
-    options:
-    - в
-    - на
-    - з
-    - до
-  - sentence: Я хочу ____ тебе в нове кіно.
-    answer: запросити
-    options:
-    - запросити
-    - сказати
-    - дати
-    - стояти
-  - sentence: Ми довго подорожуємо великим ____.
-    answer: містом
-    options:
-    - містом
-    - місту
-    - місто
-    - міста
-  instruction: Оберіть правильне слово для заповнення пропуску.
-- type: match-up
-  title: 'Знайдіть пару: Накази та заборони'
-  pairs:
-  - left: читай
-    right: не читай
-  - left: ідіть
-    right: не ідіть
-  - left: дивіться
-    right: не дивіться
-  - left: слухай
-    right: не слухай
-  - left: пишіть
-    right: не пишіть
-  - left: стій
-    right: не стій
-  instruction: З'єднайте відповідні елементи.
+    - sentence: "Я хочу поїхати в ___."
+      answer: "подорож"
+      options:
+        - "подорож"
+        - "парк"
+        - "центр"
+        - "офіс"
+    - sentence: "Ми будемо їхати ___."
+      answer: "автобусом"
+      options:
+        - "автобусом"
+        - "автобус"
+        - "автобуса"
+        - "автобусу"
+    - sentence: "Я люблю грати в ___."
+      answer: "теніс"
+      options:
+        - "теніс"
+        - "гітара"
+        - "піаніно"
+        - "скрипка"
+    - sentence: "Поверніть ___ біля стадіону."
+      answer: "наліво"
+      options:
+        - "наліво"
+        - "вліво"
+        - "лівий"
+        - "ліва"
+    - sentence: "Я ___ зустрітися в неділю."
+      answer: "можу"
+      options:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можуть"
+    - sentence: "___ розклад, будь ласка."
+      answer: "подивись"
+      options:
+        - "подивись"
+        - "дивитися"
+        - "дивиться"
+        - "дивлюся"
+    - sentence: "Нам ___ купити квитки сьогодні."
+      answer: "треба"
+      options:
+        - "треба"
+        - "можна"
+        - "повинен"
+        - "хочу"
+    - sentence: "Я не ___ грати на гітарі."
+      answer: "вмію"
+      options:
+        - "вмію"
+        - "вмієш"
+        - "вміє"
+        - "вміють"
+
 - type: unjumble
-  title: 'Складіть речення: Модальні дієслова у контексті'
+  title: "Build the Sentences"
+  instruction: "Put the words in the correct order."
   items:
-  - words:
-    - Мені
-    - треба
-    - працювати
-    - в
-    - суботу
-    answer: Мені треба працювати в суботу.
-  - words:
-    - Ми
-    - можемо
-    - поїхати
-    - в
-    - подорож
-    answer: Ми можемо поїхати в подорож.
-  - words:
-    - Ти
-    - вмієш
-    - грати
-    - на
-    - гітарі
-    answer: Ти вмієш грати на гітарі?
-  - words:
-    - Я
-    - повинен
-    - купити
-    - їжу
-    - сьогодні
-    answer: Я повинен купити їжу сьогодні.
-  instruction: Розташуйте слова у правильному порядку.
+    - words:
+        - "Я"
+        - "хочу"
+        - "поїхати"
+        - "в"
+        - "подорож"
+      answer: "Я хочу поїхати в подорож"
+    - words:
+        - "Треба"
+        - "купити"
+        - "квиток"
+      answer: "Треба купити квиток"
+    - words:
+        - "Я"
+        - "не"
+        - "вмію"
+        - "читати"
+      answer: "Я не вмію читати"
+    - words:
+        - "Я"
+        - "люблю"
+        - "грати"
+        - "в"
+        - "теніс"
+      answer: "Я люблю грати в теніс"
+    - words:
+        - "Зустріньмося"
+        - "в"
+        - "парку"
+        - "сьогодні"
+      answer: "Зустріньмося в парку сьогодні"
+    - words:
+        - "Ми"
+        - "будемо"
+        - "їхати"
+        - "автобусом"
+      answer: "Ми будемо їхати автобусом"
+
 - type: quiz
-  title: 'Фінальний тест: Комунікація'
+  title: "Everyday Scenarios"
+  instruction: "Choose the best response for each situation."
   items:
-  - question: Яка форма є найбільш ввічливою для прохання до літньої людини?
-    explanation: Конструкція Прошу вас є дуже формальною та ввічливою.
-    options:
-    - text: Прошу вас дати мені квиток.
+    - question: "How do you ask a friend for a ticket?"
+      options:
+        - text: "Дай квиток"
+          correct: true
+        - text: "Дайте квиток"
+          correct: false
+        - text: "Прошу дати"
+          correct: false
+        - text: "Давати квиток"
+          correct: false
+    - question: "How do you politely ask for the time?"
+      options:
+        - text: "Скажіть, будь ласка"
+          correct: true
+        - text: "Скажи, будь ласка"
+          correct: false
+        - text: "Сказати, будь ласка"
+          correct: false
+        - text: "Кажи, будь ласка"
+          correct: false
+    - question: "You are telling your friend not to listen to something. What do you say?"
+      options:
+        - text: "Не слухай це"
+          correct: true
+        - text: "Не слухайте це"
+          correct: false
+        - text: "Не слухати це"
+          correct: false
+        - text: "Не слухає це"
+          correct: false
+    - question: "You want to suggest going to the stadium. What do you say?"
+      options:
+        - text: "Ходімо на стадіон"
+          correct: true
+        - text: "Іди на стадіон"
+          correct: false
+        - text: "Ідіть на стадіон"
+          correct: false
+        - text: "Стояти на стадіоні"
+          correct: false
+    - question: "You want to say that you must work on Saturday. What do you say?"
+      options:
+        - text: "Я повинен працювати"
+          correct: true
+        - text: "Я можу працювати"
+          correct: false
+        - text: "Я вмію працювати"
+          correct: false
+        - text: "Я хочу працювати"
+          correct: false
+    - question: "You want to tell a friend to stand here. What do you say?"
+      options:
+        - text: "Стій тут"
+          correct: true
+        - text: "Стояти тут"
+          correct: false
+        - text: "Стійте тут"
+          correct: false
+        - text: "Стою тут"
+          correct: false
+    - question: "How do you say 'He is young'?"
+      options:
+        - text: "Він молодий"
+          correct: true
+        - text: "Він двадцять років"
+          correct: false
+        - text: "Його молодий"
+          correct: false
+        - text: "Він є молодий"
+          correct: false
+    - question: "How do you say 'We will go by bus'?"
+      options:
+        - text: "Ми будемо їхати автобусом"
+          correct: true
+        - text: "Ми будемо їхати автобус"
+          correct: false
+        - text: "Ми будемо їхати в автобусі"
+          correct: false
+        - text: "Ми будемо їхати на автобус"
+          correct: false
+
+- type: true-false
+  title: "True or False: Everyday Vocabulary"
+  instruction: "Read the statements and decide if they are true or false."
+  items:
+    - statement: "'Автобусом' is a fixed phrase meaning 'by bus'."
       correct: true
-    - text: Дай мені свій квиток.
+      explanation: "In Ukrainian, we use this form to express traveling by bus."
+    - statement: "'Грати в' is used for musical instruments, and 'грати на' is for sports."
       correct: false
-    - text: Дай, будь ласка, свій квиток.
-      correct: false
-    - text: Дайте мені квиток.
-      correct: false
-  - question: Як правильно описати вік вашого друга Антона українською мовою?
-    explanation: 'Для віку ми завжди використовуємо давальний відмінок: Йому.'
-    options:
-    - text: Йому двадцять п'ять років.
+      explanation: "It is the opposite: 'грати в' is for sports, 'грати на' is for instruments."
+    - statement: "'Зустріньмося' means 'Let's meet'."
       correct: true
-    - text: Він має двадцять п'ять років.
+      explanation: "It is a friendly way to invite someone to meet."
+    - statement: "You should say 'Я граю на теніс'."
       correct: false
-    - text: Він є двадцять п'ять років.
+      explanation: "You should say 'Я граю в теніс' because tennis is a sport."
+    - statement: "'Стій тут' is a polite formal command."
       correct: false
-    - text: Його двадцять п'ять років.
-      correct: false
-  - question: Що ви скажете, якщо вам потрібно знайти станцію метро?
-    explanation: Для запитання про дорогу найкраще підходить дієслово скажіть.
-    options:
-    - text: Скажіть, будь ласка, де станція?
+      explanation: "It is informal. The formal version is 'Стійте'."
+    - statement: "'Високий і стрункий' means 'tall and slim'."
       correct: true
-    - text: Дивіться, будь ласка, де станція?
-      correct: false
-    - text: Ідіть, будь ласка, де станція?
-      correct: false
-    - text: Пишіть, будь ласка, де станція?
-      correct: false
-  - question: Який відмінок завжди використовується після модального слова треба?
-    explanation: 'Ми кажемо: мені треба, йому треба, нам треба.'
-    options:
-    - text: давальний відмінок
+      explanation: "These words are used to describe physical appearance."
+    - statement: "'Будь ласка' is used to make a request polite."
       correct: true
-    - text: називний відмінок
-      correct: false
-    - text: знахідний відмінок
-      correct: false
-    - text: орудний відмінок
-      correct: false
-  - question: Яке дієслово змінюється за родами (він, вона) у теперішньому часі?
-    explanation: 'Слово повинен змінюється: він повинен, вона повинна.'
-    options:
-    - text: повинен
+      explanation: "It means 'please'."
+    - statement: "'Я хочу запросити тебе' means 'I want to invite you'."
       correct: true
-    - text: треба
-      correct: false
-    - text: можна
-      correct: false
-    - text: потрібно
-      correct: false
-  - question: Як правильно запросити близького друга на вечірній концерт?
-    explanation: Для друзів ми використовуємо неформальні фрази, як-от давай зустрінемось.
-    options:
-    - text: Давай зустрінемось на вечірньому концерті.
-      correct: true
-    - text: Прошу вас піти на концерт.
-      correct: false
-    - text: Вам треба йти на концерт.
-      correct: false
-    - text: Ви повинні бути на концерті.
-      correct: false
-  instruction: Оберіть правильну відповідь.
+      explanation: "This is a common way to invite a friend."

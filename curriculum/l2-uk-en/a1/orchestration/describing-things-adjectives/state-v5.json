@@ -1,0 +1,31 @@
+{
+  "track": "a1",
+  "slug": "describing-things-adjectives",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T14:48:13Z",
+      "task_id": "v5-describing-things-adjectives-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T14:48:47Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T14:57:33Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T14:59:36Z",
+      "task_id": "v5-describing-things-adjectives-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T15:11:36Z",
+      "attempts": 1
+    }
+  }
+}

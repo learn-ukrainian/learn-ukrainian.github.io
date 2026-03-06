@@ -1,0 +1,121 @@
+discovered_at: '2026-03-06T07:16:52.237279+00:00'
+query_keywords:
+- 'Checkpoint: Communication'
+- Огляд
+- Overview
+- 'Навичка 1: Модальні дієслова'
+- 'Skill 1: Modal Verbs'
+- 'Навичка 2: Накази та прохання'
+- 'Skill 2: Commands & Requests'
+- 'Навичка 3: Повсякдення'
+- 'Skill 3: Everyday Life'
+- Інтеграційне завдання
+- Integration Task
+- Demonstrate modal verb usage in context
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+  title: Useful Ukrainian Questions
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - questions
+  - phrases
+  - communication
+- url: https://www.ukrainianlessons.com/ph-language/
+  title: 'Ukrainian Phrasebook: Language'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - language
+  - communication
+  - learning
+- url: https://www.ukrainianlessons.com/ukrainian-history/
+  title: Ukrainian History — Brief Overview
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - history
+  - culture
+  - overview
+- url: https://talkukrainian.com/grammatical-cases/
+  title: 'Talk Ukrainian: Ukrainian Grammatical Cases'
+  source: talkukrainian
+  relevance_score: 0.3
+  topics:
+  - cases
+  - grammar
+  - overview
+  - відмінки
+rag_chunks:
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0216
+  text: "§ 101–102.\t Творення дієслів наказового способу\nA felszólító módú igealakok\
+    \ képzése\nНаказовий спосіб означає наказ, прохання і спону-\nкання до дії. \n\
+    Губами говори, а руками роби! (Нар. творчість)\nДієслова наказового способу змінюються\
+    \ за числа-\nми та особами.\nФорми дієслів наказового способу\nОсоба\nОднина\n\
+    Множина\n1\nкричімо, пробачмо\n2\nкричи, пробач \nкричіть, пробачте\n3\nхай кричить,\
+    \  \nхай пробачить\nхай кричать,  \nхай пробачать\n \a\nДієслово їсти має такі\
+    \ форми наказового способу: \nїж, ї ́жмо, ї ́жт"
+  section_title: Сторінка 218
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0322
+  text: "§ 72 Види дієслів \n181\nДомашнє завдання\n513 Складіть словниковий диктант\
+    \ (20 слів) з вивченої теми, намагаю-\nчись не повторювати дієслова із вправ,\
+    \ виконаних на уроці.\nПеревірте себе\n \n Дайте відповіді на запитання.\n— Які\
+    \ дієслова належать до I дієвідміни? \nНаведіть приклади.\n— Які дієслова належать\
+    \ до II дієвідміни? \nНаведіть приклади.\n§ 72\n \n ВИДИ ДІЄСЛІВ\nДієслово — рух,\
+    \ дія, образ.\nВ. Русанівський\nБуду я  навчатись мови золотої\nРозрізняють два\
+    \ види дієслів — доконаний і недоконаний.\nДієслова "
+  section_title: Сторінка 181
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0075
+  text: "Розділ 1  ДІЄСЛОВО\n68\nВправа 104\n \nРоздивіться фрагменти записів на дошці\
+    \ й  поміркуйте, до вивчення яких \nтем вони були зроблені  За потреби скористайтеся\
+    \ довідкою  \nсказати  — змужніти\n зміг  — змогла\n сидіти  — сиджу\nненавидіти \
+    \ — не любити\n кажеш  — говориш\nграється  — граєшся\nДовідка: правопис особових\
+    \ закінчень діє слів, правопис із \nчасткою не, правопис префіксів, м’який знак\
+    \ у формах діє-\nслова, чергування приголосних і голосних у формах діє слова.\n\
+    Вправа 105\n1  Спишіть словосполучення, "
+  section_title: Сторінка 71
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0136
+  text: "Підсумкові тести  \n129\nПідсумкові тести\nВиконайте тестові завдання.\n\
+    1   Дієприслівниками є  обидва слова в  рядку\nА  зрозумілий, розуміючи\nБ  здивувавшись,\
+    \ здивовано\nВ  говоривши, говорячи\nГ  думали, думаючи\n2   Серед ознак дієприслівника\
+    \ НЕМАЄ такої\nА  виду\nБ  часу\nВ  роду\nГ  властивости мати залежні слова\n\
+    3   Дієприслівниковий зворот є  в усіх реченнях, ОКРІМ\nА  Впорядковуючи свої\
+    \ речі, спробуйте насолодитися про-\nцесом.\nБ  Робіть це, уявляючи результат.\n\
+    В  Позбавившись зайвого, ви можете «пер"
+  section_title: Сторінка 132
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

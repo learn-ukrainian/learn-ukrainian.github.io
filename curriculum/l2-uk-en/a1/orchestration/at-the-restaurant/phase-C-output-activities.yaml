@@ -1,0 +1,243 @@
+- type: match-up
+  title: "Match the Ukrainian word to its English meaning"
+  pairs:
+    - left: "офіціант"
+      right: "waiter"
+    - left: "меню"
+      right: "menu"
+    - left: "рахунок"
+      right: "bill"
+    - left: "столик"
+      right: "table"
+    - left: "страва"
+      right: "dish"
+    - left: "гарнір"
+      right: "side dish"
+    - left: "чайові"
+      right: "tip"
+    - left: "замовити"
+      right: "to order"
+
+- type: group-sort
+  title: "Sort the dishes and drinks into the traditional courses"
+  groups:
+    - name: "Перше (First course)"
+      items: ["борщ", "суп"]
+    - name: "Друге (Main course)"
+      items: ["м'ясо", "риба", "гарнір", "рис"]
+    - name: "Третє (Dessert / Drinks)"
+      items: ["десерт", "кава", "чай", "сік", "вода"]
+
+- type: fill-in
+  title: "Complete the order"
+  instruction: "Choose the correct form of the word to complete the sentence."
+  items:
+    - sentence: "Я буду ___, будь ласка."
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+    - sentence: "На перше я буду ___."
+      answer: "борщ"
+      options: ["борщ", "борщу", "борщем", "борщі"]
+    - sentence: "Він буде ___."
+      answer: "піцу"
+      options: ["піца", "піцу", "піці", "піцею"]
+    - sentence: "На друге я буду ___."
+      answer: "рибу"
+      options: ["риба", "рибу", "рибі", "рибою"]
+    - sentence: "Ти будеш ___?"
+      answer: "воду"
+      options: ["вода", "воду", "воді", "водою"]
+    - sentence: "Вона буде ___."
+      answer: "салат"
+      options: ["салат", "салату", "салатом", "салаті"]
+    - sentence: "Я буду замовляти ___."
+      answer: "десерт"
+      options: ["десерт", "десерту", "десертом", "десерті"]
+    - sentence: "Я буду національну ___."
+      answer: "страву"
+      options: ["страва", "страву", "страві", "стравою"]
+
+- type: match-up
+  title: "Match the basic word to its ordering form"
+  instruction: "Match the dictionary word to the form you use when ordering it."
+  pairs:
+    - left: "кава"
+      right: "каву"
+    - left: "вода"
+      right: "воду"
+    - left: "піца"
+      right: "піцу"
+    - left: "страва"
+      right: "страву"
+    - left: "риба"
+      right: "рибу"
+    - left: "борщ"
+      right: "борщ"
+    - left: "сік"
+      right: "сік"
+    - left: "десерт"
+      right: "десерт"
+
+- type: fill-in
+  title: "Complete the restaurant conversation"
+  items:
+    - sentence: "Добрий вечір. Ми хочемо замовити ___."
+      answer: "столик"
+      options: ["столик", "меню", "рахунок", "чайові"]
+    - sentence: "Перепрошую, дайте ___, будь ласка."
+      answer: "меню"
+      options: ["меню", "столик", "чайові", "офіціант"]
+    - sentence: "Ви готові зробити ___?"
+      answer: "замовлення"
+      options: ["замовлення", "столик", "меню", "рахунок"]
+    - sentence: "Я не їм м'ясо. У вас є салат без ___?"
+      answer: "м'яса"
+      options: ["м'яса", "глютену", "гарніру", "риби"]
+    - sentence: "А у вас є паста без ___?"
+      answer: "глютену"
+      options: ["глютену", "м'яса", "води", "кави"]
+    - sentence: "Офіціант каже: ___!"
+      answer: "Смачного"
+      options: ["Смачного", "Будьмо", "Рахунок", "Дякую"]
+    - sentence: "Ми закінчили їсти. Дайте ___, будь ласка."
+      answer: "рахунок"
+      options: ["рахунок", "меню", "столик", "замовлення"]
+    - sentence: "Ви можете оплатити ___."
+      answer: "рахунок"
+      options: ["рахунок", "меню", "офіціанта", "столик"]
+
+- type: quiz
+  title: "Choose the best response"
+  items:
+    - question: "How do you correctly ask the waiter for the bill?"
+      explanation: "Always use 'рахунок' for the bill, never the Russian word 'счёт'."
+      options:
+        - text: "Рахунок, будь ласка."
+          correct: true
+        - text: "Счёт, будь ласка."
+          correct: false
+        - text: "Меню, будь ласка."
+          correct: false
+        - text: "Столик, будь ласка."
+          correct: false
+    - question: "What is the best and most polite way to place an order in Ukrainian?"
+      explanation: "Using the future tense 'Я буду...' (I will) is the standard, natural way to order."
+      options:
+        - text: "Я буду..."
+          correct: true
+        - text: "Я хочу..."
+          correct: false
+        - text: "Дайте мені..."
+          correct: false
+        - text: "Я маю..."
+          correct: false
+    - question: "The waiter asks: 'Ви готові зробити замовлення?' What does this mean?"
+      explanation: "It translates to 'Are you ready to place an order?'"
+      options:
+        - text: "Are you ready to place an order?"
+          correct: true
+        - text: "Do you want the bill?"
+          correct: false
+        - text: "Do you need a table?"
+          correct: false
+        - text: "Where is the menu?"
+          correct: false
+    - question: "If you want a table for two, what should you ask for?"
+      explanation: "You need 'столик на двох' (a table for two)."
+      options:
+        - text: "Столик на двох"
+          correct: true
+        - text: "Першу страву"
+          correct: false
+        - text: "Чайові"
+          correct: false
+        - text: "Рахунок"
+          correct: false
+    - question: "When someone says 'Будьмо!', how do people usually respond?"
+      explanation: "The traditional enthusiastic response to 'Будьмо!' is 'Гей!'."
+      options:
+        - text: "Гей!"
+          correct: true
+        - text: "Смачного!"
+          correct: false
+        - text: "Дякую!"
+          correct: false
+        - text: "Будь ласка!"
+          correct: false
+    - question: "Which word is the standard for leaving a tip in Ukraine?"
+      explanation: "The word for tip is 'чайові' (literally 'for tea')."
+      options:
+        - text: "Чайові"
+          correct: true
+        - text: "Рахунок"
+          correct: false
+        - text: "Замовлення"
+          correct: false
+        - text: "Меню"
+          correct: false
+    - question: "Which of these is typically considered 'перше' (the first course)?"
+      explanation: "The first course is usually soup or borshch."
+      options:
+        - text: "Борщ"
+          correct: true
+        - text: "Торт"
+          correct: false
+        - text: "Кава"
+          correct: false
+        - text: "Рис"
+          correct: false
+    - question: "If you are a vegetarian, which phrase is most useful?"
+      explanation: "'Без м'яса' means 'without meat'."
+      options:
+        - text: "Без м'яса"
+          correct: true
+        - text: "Без води"
+          correct: false
+        - text: "На перше"
+          correct: false
+        - text: "З м'ясом"
+          correct: false
+
+- type: true-false
+  title: "True or False: Restaurant Etiquette and Grammar"
+  items:
+    - statement: "When ordering in Ukrainian, it is best to literally translate 'I would like' instead of using the future tense."
+      correct: false
+      explanation: "The simple future tense 'Я буду...' is the absolute standard and most natural way to order."
+    - statement: "If a dish ends in the letter 'а', like 'піца', it changes to 'у' when you order it."
+      correct: true
+      explanation: "Direct objects use the Accusative case, so 'піца' becomes 'піцу'."
+    - statement: "Words that end in a consonant, like 'борщ' or 'сік', do not change when you order them."
+      correct: true
+      explanation: "Masculine inanimate nouns ending in a consonant have the same form in the Accusative case."
+    - statement: "In Ukraine, a 'кафе' is usually more formal and celebratory than a 'ресторан'."
+      correct: false
+      explanation: "A 'ресторан' is for formal events or big dinners, while a 'кафе' is for casual, daily relaxation."
+    - statement: "A traditional Ukrainian lunch has three main parts: перше, друге, and третє."
+      correct: true
+      explanation: "This tripartite structure is very common: soup, main dish, and dessert/drink."
+    - statement: "It is polite to use the word 'счёт' when asking for the bill in a Ukrainian restaurant."
+      correct: false
+      explanation: "You should use the Ukrainian word 'рахунок'. 'Счёт' is a Russian word."
+    - statement: "Leaving a cash tip (чайові) is still highly appreciated by staff in Ukraine."
+      correct: true
+      explanation: "Even with the popularity of card payments, cash tips are very much appreciated."
+    - statement: "The verb 'замовити' can be used for both booking a table and ordering a dish."
+      correct: true
+      explanation: "You can say 'замовити столик' (book a table) and 'замовити страву' (order a dish)."
+
+- type: unjumble
+  title: "Put the words in the correct order to form a sentence"
+  items:
+    - words: ["Я", "буду", "борщ,", "будь", "ласка."]
+      answer: "Я буду борщ, будь ласка."
+    - words: ["На", "перше", "я", "буду", "суп."]
+      answer: "На перше я буду суп."
+    - words: ["А", "на", "друге", "я", "буду", "рибу."]
+      answer: "А на друге я буду рибу."
+    - words: ["Дайте", "рахунок,", "будь", "ласка."]
+      answer: "Дайте рахунок, будь ласка."
+    - words: ["Ви", "можете", "замовити", "столик."]
+      answer: "Ви можете замовити столик."
+    - words: ["Ви", "готові", "зробити", "замовлення?"]
+      answer: "Ви готові зробити замовлення?"

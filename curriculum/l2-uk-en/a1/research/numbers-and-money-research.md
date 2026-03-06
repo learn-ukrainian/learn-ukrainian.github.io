@@ -1,15 +1,35 @@
-## Research Notes
+# Дослідження: Numbers & Money
 
-**Textbook approach:** Ukrainian textbooks typically introduce numbers systematically: first 0-10 with a strong emphasis on phonetics (e.g., the apostrophe in «п'ять», soft consonants in «шість», «дев'ять», «десять»). Next, 11-19 are taught by explaining the «-надцять» suffix and the critical stress shifts. Then tens (20-100) are introduced, specifically pointing out spelling exceptions where the soft sign is dropped (e.g., «п'ятдесят», «шістдесят»). Finally, numbers are applied to currency («гривня», «копійка») to teach the 1-2-5 case agreement rule.
+## State Standard Reference
+§4.2.1.3: "Cardinal and ordinal numerals — basic forms"
+Alignment: Introduces basic cardinal numbers 0-100 and applies them to the thematic area of "купівля" (shopping) defined in §3.
 
-**Common errors:** 
-1. Gender mismatch: English speakers frequently use the masculine «два» instead of the feminine «дві» with feminine nouns, resulting in the incorrect «два гривні» instead of «дві гривні».
-2. Pronunciation of teens: Misplacing stress on teen numbers (saying оди́ннадцять instead of одина́дцять).
-3. Spelling/pronunciation of tens: Incorrectly inserting a soft sign in the middle of 50 and 60 (e.g., п'ятьдесят).
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| один / одна | High frequency. Gender agreement is crucial. | одна гривня, один раз |
+| два / дві | High frequency. Gender agreement error prone. | дві гривні, два долари |
+| п'ять | Pronunciation focus: distinct apostrophe pause. | п'ять гривень, п'ять хвилин |
+| гривня | Currency base unit. Derived from "hryva" (neck). | одна гривня, скільки гривень? |
+| коштувати | Essential for transactions and shopping. | скільки це коштує? |
 
-**Cultural hook:** The currency name «гривня» (hryvnia) dates back to the 11th-century Kyivan Rus, originally referring to a gold or silver neck ornament (from «грива» - mane) or a precious metal ingot. The modern ₴ symbol represents stability. A relevant proverb is «Копійка гривню береже» (A kopeck saves a hryvnia).
+## Cultural Hooks
+1. The word «гривня» originates from the 11th-century Kyivan Rus period, referring to a gold or silver neck ornament («грива» means neck/mane).
+2. A popular Ukrainian proverb about savings is «Копійка гривню береже» (A kopeck saves a hryvnia).
 
-**Cross-references:** This module builds on the Genitive I concepts from a1-32 for the 5+ genitive plural rule. It prepares the learner for telling time (a1-23) and food shopping (a1-39). Following the sequence constraints (M15+), present tense verbs can be used, but imperative forms (e.g., "Читайте!") are strictly avoided since they are not introduced until M47; indirect requests will be used instead.
+## Common Learner Errors
+1. Gender agreement with two: Saying *два гривні* instead of *дві гривні* — *гривня* is feminine, requiring the feminine form *дві*.
+2. Missing apostrophe in five: Pronouncing *п'ять* like "pyat" without the glottal stop/pause before "ya", leading to incorrect sounds.
+3. Intrusive soft signs: Adding a soft sign in the middle of 50 and 60 (*п'ятьдесят* instead of *п'ятдесят*) — a common spelling and pronunciation mistake.
+
+## Cross-References
+- Builds on: a1-21 (Demonstratives)
+- Prepares for: a1-23 (What Time Is It), a1-39 (Food and Drink)
+
+## Notes for Content Writing
+- Teach the 1-2-5 rule (1 гривня, 2-4 гривні, 5+ гривень) strictly as a lexical pattern/chunk. Do not delve into the grammatical theory of Genitive Plural, as it is too advanced for this stage.
+- Emphasize practical roleplay (asking for prices, giving change).
+- Ensure English scaffolding is used for explaining the grammatical structure, as per A1 level constraints.
 
 ## Resource Discovery
 

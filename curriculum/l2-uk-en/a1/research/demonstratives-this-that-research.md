@@ -1,23 +1,41 @@
-## Research Notes
+# Дослідження: Demonstratives
 
-**1. Textbook approach:**
-Ukrainian textbooks for beginners strategically introduce demonstrative pronouns (вказівні займенники) immediately following possessive pronouns. This is because words like *цей/ця/це* share the exact same adjectival gender agreement logic as *мій/моя/моє*. Textbooks initially focus strictly on spatial contrast—"here" (близько) versus "there" (далеко)—using concrete, highly visual vocabulary (e.g., pointing at a table, a window, a book).
+## State Standard Reference
+§4.2.2: "Pronoun gender and number forms"
+Alignment: This module introduces demonstrative pronouns (цей, той) and enforces strict gender (masculine, feminine, neuter) and number (singular, plural) agreement with the nouns they modify.
 
-**2. Common errors for English speakers:**
-*   **Overusing "це" as a universal modifier:** English speakers often treat "це" like the invariable English "this," saying incorrectly *це книга* instead of *ця книга*, failing to match the feminine gender.
-*   **Plural mismatch:** Using singular demonstratives with plural nouns (e.g., saying *це студенти* or *цей студенти* instead of *ці студенти*).
-*   **The Copula Confusion:** Conflating the invariable identity marker "Це" ("This is...", e.g., *Це брат* = This is a brother) with the specific neuter demonstrative modifier "це" (*це вікно* = this window). This is the most critical hurdle at A1.
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| цей / ця / це | Demonstrative "this" (m/f/n). Agrees with the noun in proximity (close). | цей будинок, ця вулиця, це місто |
+| ці | Demonstrative "these" (pl). Universal plural for proximity. | ці люди, ці книги |
+| той / та / те | Demonstrative "that" (m/f/n). Agrees with the noun in distance (far). | той стілець, та дівчина, те озеро |
+| ті | Demonstrative "those" (pl). Universal plural for distance. | ті студенти, ті міста |
+| Це (copula) | Invariable particle "This is". Does not change form. | Це стіл. Це Київ. |
 
-**3. Cultural hook:**
-The Ukrainian *базар* (market) or local bakery is the ideal authentic environment for teaching this. Pointing at pastries or vegetables and distinguishing between "this one here" and "that one there" is an essential, highly practical survival skill in Ukraine. 
+## Cultural Hooks
+1. At a Ukrainian "базар" (market), spatial distance dictates language: you use "цей" for the produce right in front of you that you can touch, and "той" to point at items hanging or sitting on the vendor's higher shelves out of reach.
 
-**4. Cross-references:**
-This module heavily relies on the gender identification skills and noun agreement concepts solidified in **A1-20 (Mine and Yours)**. Furthermore, it acts as a direct prerequisite for **A1-22 (Numbers and Money)**, setting the stage for the learner to ask "How much is this?" or "I want that one."
+## Common Learner Errors
+1. Overusing singular "це" with plurals → "ці люди" (Correct) vs *це люди (Incorrect). English sometimes uses "this is" invariantly in colloquial speech, but Ukrainian requires strict plural "ці" for plural demonstratives.
+2. Copula vs. Demonstrative confusion → "Це кафе" (This is a cafe) vs "Це кафе гарне" (This cafe is nice). Beginners miss that the lower-case "це" acts as an adjective (attribute) here.
+3. Conjunction vs. Demonstrative "та" → "та книга" (that book) vs "книга та зошит" (book and notebook). Context is required to distinguish the demonstrative feminine "та" from the conjunction "та" (and).
+
+## Cross-References
+- Builds on: a1-20 (Mine and Yours — establishes the foundational logic of gender agreement).
+- Prepares for: a1-22 (Numbers and Money — essential for pointing out items to buy and pay for).
+
+## Notes for Content Writing
+- A1 level requires heavy English scaffolding for all grammar explanations.
+- Introduce one concept at a time: singular proximity (цей/ця/це) → plural proximity (ці) → singular distance (той/та/те) → plural distance (ті).
+- Keep Ukrainian sentences very short (max 8-10 words).
+- Provide IPA only for the first occurrence of new vocabulary words; do not IPA full sentences.
+- **CRITICAL RESTRICTION**: Imperative forms (Слухайте!, Дайте!) are NOT allowed yet. Use indirect requests like "Я хочу цей торт" (I want this cake) instead.
 
 ## Resource Discovery
 
 ### Videos
-- [УРОК 32. ВКАЗІВНІ ЗАЙМЕННИКИ THIS THAT THESE THOSE ПОЯСНЕННЯ УКРАЇНСЬКОЮ](https://www.youtube.com/watch?v=Ng0Lt33xBIk) (Learn Ukrainian Language) — The video directly addresses Ukrainian demonstrative pronouns 'цей, ця, це, ці' and explains their usage, including gender agreement, by contrasting them with English equivalents. This aligns perfectly with the module's core topic and initial sections.
+- [УРОК 32. ВКАЗІВНІ ЗАЙМЕННИКИ THIS THAT THESE THOSE ПОЯСНЕННЯ УКРАЇНСЬКОЮ](https://www.youtube.com/watch?v=Ng0Lt33xBIk) (Learn Ukrainian Language) — The video directly addresses Ukrainian demonstrative pronouns 'цей, ця, це, ці' and explains their gender and number agreement, contrasting it with English equivalents. This is highly relevant to the initial sections of the module.
 
 ### Blog Articles
 - [This and That in Ukrainian — Demonstrative Pronouns](https://www.ukrainianlessons.com/pronouns-this-that/) (ukrainianlessons.com)

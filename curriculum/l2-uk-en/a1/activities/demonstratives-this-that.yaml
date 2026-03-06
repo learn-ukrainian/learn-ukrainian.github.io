@@ -1,440 +1,318 @@
-- type: match-up
-  title: "Match the Demonstrative to its Meaning"
-  instruction: "Match the Ukrainian pronoun with its exact English equivalent based on gender and distance."
-  pairs:
-    - left: "цей"
-      right: "this (masculine)"
-    - left: "ця"
-      right: "this (feminine)"
-    - left: "це"
-      right: "this (neuter)"
-    - left: "ці"
-      right: "these (plural)"
-    - left: "той"
-      right: "that (masculine)"
-    - left: "та"
-      right: "that (feminine)"
-    - left: "те"
-      right: "that (neuter)"
-    - left: "ті"
-      right: "those (plural)"
+- type: quiz
+  title: "Identify the Correct Demonstrative"
+  instruction: "Choose the correct word based on gender and distance."
+  items:
+    - question: "What is the correct 'this' form for a masculine noun like будинок?"
+      options:
+        - text: "цей"
+          correct: true
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+    - question: "Choose the form of 'this' used with a feminine noun like вулиця:"
+      options:
+        - text: "ця"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "це"
+          correct: false
+        - text: "ці"
+          correct: false
+    - question: "Identify the neuter form of 'this' for a noun like місто:"
+      options:
+        - text: "це"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "ці"
+          correct: false
+    - question: "How do we say 'these' for all plural nouns?"
+      options:
+        - text: "ці"
+          correct: true
+        - text: "цей"
+          correct: false
+        - text: "ця"
+          correct: false
+        - text: "це"
+          correct: false
+    - question: "Select the word for 'that' when pointing to a masculine noun like стілець:"
+      options:
+        - text: "той"
+          correct: true
+        - text: "та"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+    - question: "If you want to say 'that' for a feminine noun like дівчина, use:"
+      options:
+        - text: "та"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "те"
+          correct: false
+        - text: "ті"
+          correct: false
+    - question: "For a neuter noun like озеро, 'that' is:"
+      options:
+        - text: "те"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "та"
+          correct: false
+        - text: "ті"
+          correct: false
+    - question: "What is the universal plural form for 'those'?"
+      options:
+        - text: "ті"
+          correct: true
+        - text: "той"
+          correct: false
+        - text: "та"
+          correct: false
+        - text: "те"
+          correct: false
+
+- type: fill-in
+  title: "Complete the Sentence (This/These)"
+  instruction: "Select the correct word to mean 'this' or 'these'."
+  items:
+    - sentence: "Я хочу ___ торт."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "___ вулиця дуже довга."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ озеро чисте."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ люди цікаві."
+      answer: "Ці"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ хлопець розумний."
+      answer: "Цей"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ книга нова."
+      answer: "Ця"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ місто велике."
+      answer: "Це"
+      options: ["Цей", "Ця", "Це", "Ці"]
+    - sentence: "___ студенти читають."
+      answer: "Ці"
+      options: ["Цей", "Ця", "Це", "Ці"]
+
+- type: fill-in
+  title: "Complete the Sentence (That/Those)"
+  instruction: "Select the correct word to mean 'that' or 'those'."
+  items:
+    - sentence: "___ будинок старий."
+      answer: "Той"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "___ дівчина весела."
+      answer: "Та"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "___ кафе гарне."
+      answer: "Те"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "___ книги нудні."
+      answer: "Ті"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "Він хоче ___ стілець."
+      answer: "той"
+      options: ["той", "та", "те", "ті"]
+    - sentence: "___ вулиця широка."
+      answer: "Та"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "___ вікно чисте."
+      answer: "Те"
+      options: ["Той", "Та", "Те", "Ті"]
+    - sentence: "___ люди гуляють там."
+      answer: "Ті"
+      options: ["Той", "Та", "Те", "Ті"]
 
 - type: group-sort
-  title: "Sort the Nouns"
-  instruction: "Sort the nouns into the correct group based on which 'this' pronoun they require."
+  title: "Sort Nouns by 'This' Word"
+  instruction: "Drag each noun to the group that uses its correct pointing word."
   groups:
     - name: "Цей (Masculine)"
-      items:
-        - "будинок"
-        - "стілець"
-        - "хлопець"
+      items: ["будинок", "стілець", "торт", "хлопець"]
     - name: "Ця (Feminine)"
-      items:
-        - "вулиця"
-        - "дівчина"
-        - "книга"
-        - "сестра"
+      items: ["вулиця", "дівчина", "книга", "лампа"]
     - name: "Це (Neuter)"
-      items:
-        - "озеро"
-        - "місто"
-        - "кафе"
-    - name: "Ці (Plural)"
-      items:
-        - "студенти"
-        - "люди"
-        - "міста"
+      items: ["місто", "озеро", "вікно", "кафе"]
 
-- type: quiz
-  title: "Choose the Correct Pronoun"
-  instruction: "Select the correct demonstrative pronoun to match the noun."
-  items:
-    - question: "Which pronoun correctly goes with 'будинок' (building) if it is close to you?"
-      options:
-        - text: "цей"
-          correct: true
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "'будинок' is a masculine noun."
-    - question: "Which pronoun correctly goes with 'вулиця' (street) if it is close to you?"
-      options:
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: true
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: false
-      explanation: "'вулиця' is a feminine noun."
-    - question: "Which pronoun correctly goes with 'озеро' (lake) if it is close to you?"
-      options:
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: true
-        - text: "ці"
-          correct: false
-      explanation: "'озеро' is a neuter noun."
-    - question: "Which pronoun correctly goes with 'студенти' (students) if they are close to you?"
-      options:
-        - text: "цей"
-          correct: false
-        - text: "ця"
-          correct: false
-        - text: "це"
-          correct: false
-        - text: "ці"
-          correct: true
-      explanation: "'студенти' is a plural noun."
-    - question: "Which distant pronoun goes with 'стілець' (chair)?"
-      options:
-        - text: "той"
-          correct: true
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "'стілець' is a masculine noun, so we use 'той' for 'that'."
-    - question: "Which distant pronoun goes with 'дівчина' (girl)?"
-      options:
-        - text: "той"
-          correct: false
-        - text: "та"
-          correct: true
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: false
-      explanation: "'дівчина' is a feminine noun, so we use 'та' for 'that'."
-    - question: "Which distant pronoun goes with 'місто' (city)?"
-      options:
-        - text: "той"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: true
-        - text: "ті"
-          correct: false
-      explanation: "'місто' is a neuter noun, so we use 'те' for 'that'."
-    - question: "Which distant pronoun goes with 'книги' (books)?"
-      options:
-        - text: "той"
-          correct: false
-        - text: "та"
-          correct: false
-        - text: "те"
-          correct: false
-        - text: "ті"
-          correct: true
-      explanation: "'книги' is a plural noun, so we use 'ті' for 'those'."
+- type: group-sort
+  title: "Sort Nouns by 'That' Word"
+  instruction: "Drag each noun to the group that uses its correct distant pointing word."
+  groups:
+    - name: "Той (Masculine)"
+      items: ["стілець", "будинок", "хлопець"]
+    - name: "Та (Feminine)"
+      items: ["вулиця", "дівчина", "книга"]
+    - name: "Те (Neuter)"
+      items: ["озеро", "місто", "вікно"]
+    - name: "Ті (Plural)"
+      items: ["люди", "студенти"]
+
+- type: match-up
+  title: "Match the Phrase to English"
+  instruction: "Connect each Ukrainian phrase with its English translation."
+  pairs:
+    - left: "цей стілець"
+      right: "this chair"
+    - left: "ця вулиця"
+      right: "this street"
+    - left: "це озеро"
+      right: "this lake"
+    - left: "ці книги"
+      right: "these books"
+    - left: "той будинок"
+      right: "that building"
+    - left: "та дівчина"
+      right: "that girl"
+    - left: "те місто"
+      right: "that city"
+    - left: "ті люди"
+      right: "those people"
 
 - type: true-false
-  title: "True or False: Demonstratives"
-  instruction: "Decide if the statements about Ukrainian demonstratives are true or false."
+  title: "True or False?"
+  instruction: "Decide if the statement about demonstrative words is true or false."
   items:
-    - statement: "The word 'ці' is used for plural nouns of all genders."
-      correct: true
-      explanation: "Yes, in the plural, gender distinction disappears completely."
-    - statement: "The word 'та' only means 'that' and has no other meanings."
+    - statement: "The word ця is used with masculine nouns."
       correct: false
-      explanation: "'та' can mean 'that' (feminine) or act as the conjunction 'and'."
-    - statement: "When pointing to a distant masculine object, you use 'той'."
+      explanation: "Ця is for feminine nouns. For masculine nouns, we use цей."
+    - statement: "The word це acts as both a connector meaning 'This is' and a neuter pointing word."
       correct: true
-      explanation: "'той' is the masculine form for distant objects."
-    - statement: "You can use 'це' as a universal word for 'this' with any singular noun."
+      explanation: "Це is a very common word because it does both jobs depending on the sentence."
+    - statement: "In Ukrainian, there is a different plural word for 'these' depending on the gender."
       correct: false
-      explanation: "'це' as a modifier is only used with neuter nouns."
-    - statement: "The demonstrative pronoun must agree with the noun in gender and number."
+      explanation: "There is only one universal plural word for 'these', which is ці."
+    - statement: "The word той means 'that' and is used for masculine nouns."
       correct: true
-      explanation: "This is a core rule of Ukrainian grammar."
-    - statement: "To say 'those people' (distant plural), you use 'ці люди'."
-      correct: false
-      explanation: "'ці' means 'these' (close). For 'those' (distant), you use 'ті люди'."
-    - statement: "'Це озеро' translates to 'this lake'."
+      explanation: "Той points to distant masculine objects."
+    - statement: "You must always say Ці люди to mean 'these people', because it is plural."
       correct: true
-      explanation: "'Озеро' is neuter, so 'це' is the correct demonstrative modifier."
-    - statement: "'Цей хлопець' translates to 'that boy'."
+      explanation: "Since люди is plural, it requires the plural demonstrative ці."
+    - statement: "The word та can only ever mean 'that' and nothing else."
       correct: false
-      explanation: "'Цей' means 'this' (close). 'That boy' would be 'той хлопець'."
-
-- type: fill-in
-  title: "Fill in the Blanks: This and These"
-  instruction: "Choose the correct close demonstrative (this/these) for each sentence."
-  items:
-    - sentence: "_____ будинок дуже великий."
-      answer: "Цей"
-      options:
-        - "Цей"
-        - "Ця"
-        - "Це"
-        - "Ці"
-      explanation: "'будинок' is masculine."
-    - sentence: "_____ вулиця дуже красива."
-      answer: "Ця"
-      options:
-        - "Цей"
-        - "Ця"
-        - "Це"
-        - "Ці"
-      explanation: "'вулиця' is feminine."
-    - sentence: "Я люблю _____ місто."
-      answer: "це"
-      options:
-        - "цей"
-        - "ця"
-        - "це"
-        - "ці"
-      explanation: "'місто' is neuter."
-    - sentence: "_____ студенти дуже розумні."
-      answer: "Ці"
-      options:
-        - "Цей"
-        - "Ця"
-        - "Це"
-        - "Ці"
-      explanation: "'студенти' is plural."
-    - sentence: "Я бачу _____ стілець."
-      answer: "цей"
-      options:
-        - "цей"
-        - "ця"
-        - "це"
-        - "ці"
-      explanation: "'стілець' is masculine."
-    - sentence: "_____ книга цікава."
-      answer: "Ця"
-      options:
-        - "Цей"
-        - "Ця"
-        - "Це"
-        - "Ці"
-      explanation: "'книга' is feminine."
-    - sentence: "Я хочу _____ торт."
-      answer: "цей"
-      options:
-        - "цей"
-        - "ця"
-        - "це"
-        - "ці"
-      explanation: "'торт' is masculine."
-    - sentence: "_____ міста великі."
-      answer: "Ці"
-      options:
-        - "Цей"
-        - "Ця"
-        - "Це"
-        - "Ці"
-      explanation: "'міста' is plural."
-
-- type: fill-in
-  title: "Fill in the Blanks: That and Those"
-  instruction: "Choose the correct distant demonstrative (that/those) for each sentence."
-  items:
-    - sentence: "_____ будинок дуже старий."
-      answer: "Той"
-      options:
-        - "Той"
-        - "Та"
-        - "Те"
-        - "Ті"
-      explanation: "'будинок' is masculine."
-    - sentence: "_____ дівчина гарна."
-      answer: "Та"
-      options:
-        - "Той"
-        - "Та"
-        - "Те"
-        - "Ті"
-      explanation: "'дівчина' is feminine."
-    - sentence: "Я знаю _____ кафе."
-      answer: "те"
-      options:
-        - "той"
-        - "та"
-        - "те"
-        - "ті"
-      explanation: "'кафе' is neuter."
-    - sentence: "_____ люди дуже добрі."
-      answer: "Ті"
-      options:
-        - "Той"
-        - "Та"
-        - "Те"
-        - "Ті"
-      explanation: "'люди' is plural."
-    - sentence: "Я хочу _____ торт."
-      answer: "той"
-      options:
-        - "той"
-        - "та"
-        - "те"
-        - "ті"
-      explanation: "'торт' is masculine."
-    - sentence: "_____ міста великі."
-      answer: "Ті"
-      options:
-        - "Той"
-        - "Та"
-        - "Те"
-        - "Ті"
-      explanation: "'міста' is plural."
-    - sentence: "_____ студенти працюють."
-      answer: "Ті"
-      options:
-        - "Той"
-        - "Та"
-        - "Те"
-        - "Ті"
-      explanation: "'студенти' is plural."
-    - sentence: "Я бачу _____ стілець."
-      answer: "той"
-      options:
-        - "той"
-        - "та"
-        - "те"
-        - "ті"
-      explanation: "'стілець' is masculine."
+      explanation: "Та can mean the feminine 'that' or it can act as the conjunction 'and'."
+    - statement: "To point to a distant neuter object, you use the word те."
+      correct: true
+      explanation: "Те is the neuter form for objects that are far away."
+    - statement: "We use цей when an object is very far away."
+      correct: false
+      explanation: "Цей is used for objects that are close. For distant objects, we use той."
 
 - type: unjumble
-  title: "Unjumble the Sentences"
-  instruction: "Put the words in the correct order to form a sentence."
+  title: "Make a Sentence"
+  instruction: "Put the words in the correct order."
   items:
-    - words:
-        - "Цей"
-        - "будинок"
-        - "дуже"
-        - "великий"
-      answer: "Цей будинок дуже великий."
-    - words:
-        - "Ця"
-        - "дівчина"
-        - "моя"
-        - "сестра"
-      answer: "Ця дівчина моя сестра."
-    - words:
-        - "Це"
-        - "місто"
-        - "дуже"
-        - "старе"
-      answer: "Це місто дуже старе."
-    - words:
-        - "Ті"
-        - "люди"
-        - "дуже"
-        - "добрі"
-      answer: "Ті люди дуже добрі."
-    - words:
-        - "Я"
-        - "хочу"
-        - "цей"
-        - "торт"
+    - words: ["Цей", "стілець", "новий."]
+      answer: "Цей стілець новий."
+    - words: ["Той", "будинок", "старий."]
+      answer: "Той будинок старий."
+    - words: ["Я", "хочу", "цей", "торт."]
       answer: "Я хочу цей торт."
-    - words:
-        - "Той"
-        - "хлопець"
-        - "мій"
-        - "брат"
-      answer: "Той хлопець мій брат."
+    - words: ["Ця", "книга", "дуже", "цікава."]
+      answer: "Ця книга дуже цікава."
+    - words: ["Ті", "люди", "дуже", "веселі."]
+      answer: "Ті люди дуже веселі."
+    - words: ["Ці", "студенти", "читають", "текст."]
+      answer: "Ці студенти читають текст."
 
 - type: quiz
-  title: "Is it a Modifier or a Copula?"
-  instruction: "Determine if 'це' is acting as a demonstrative modifier ('this') or an identity marker ('this is')."
+  title: "Distinguish 'This is' from 'This noun'"
+  instruction: "Choose the correct sentence translation."
   items:
-    - question: "In the sentence 'Це кафе дуже гарне', what is 'це'?"
+    - question: "Which sentence correctly uses це to mean 'This is' a neuter noun?"
       options:
-        - text: "Demonstrative modifier (this)"
+        - text: "Це вікно."
           correct: true
-        - text: "Identity marker (this is)"
+        - text: "Це вікно чисте."
           correct: false
-        - text: "Conjunction (and)"
+        - text: "Ця книга."
           correct: false
-        - text: "Feminine pronoun"
+        - text: "Той стілець."
           correct: false
-      explanation: "Here, it directly modifies the noun 'кафе'."
-    - question: "In the sentence 'Це кафе', what is 'це'?"
+    - question: "Which sentence correctly uses the demonstrative to say 'This window is clean'?"
       options:
-        - text: "Identity marker (this is)"
+        - text: "Це вікно чисте."
           correct: true
-        - text: "Demonstrative modifier (this)"
+        - text: "Це вікно."
           correct: false
-        - text: "Plural pronoun"
+        - text: "Ця вікно чисте."
           correct: false
-        - text: "Masculine pronoun"
+        - text: "Цей вікно чисте."
           correct: false
-      explanation: "Here, it introduces what something is ('This is a cafe')."
-    - question: "In the sentence 'Це озеро холодне', what does 'це' mean?"
+    - question: "How do you translate 'This is a building'?"
       options:
-        - text: "This (modifier)"
+        - text: "Це будинок."
           correct: true
-        - text: "This is (copula)"
+        - text: "Цей будинок."
           correct: false
-        - text: "That (distant modifier)"
+        - text: "Той будинок."
           correct: false
-        - text: "These (plural)"
+        - text: "Цей будинок новий."
           correct: false
-      explanation: "It modifies the neuter noun 'озеро'."
-    - question: "In the sentence 'Це будинок', what does 'це' mean?"
+    - question: "How do you translate 'This building is new'?"
       options:
-        - text: "This is (copula)"
+        - text: "Цей будинок новий."
           correct: true
-        - text: "This (modifier)"
-          correct: false
-        - text: "That (modifier)"
-          correct: false
-        - text: "These are"
-          correct: false
-      explanation: "It cannot be a modifier here because 'будинок' is masculine. It means 'This is a building'."
-    - question: "Which sentence is grammatically INCORRECT?"
-      options:
-        - text: "Це будинок старий."
-          correct: true
-        - text: "Цей будинок старий."
-          correct: false
-        - text: "Це озеро старе."
+        - text: "Це будинок новий."
           correct: false
         - text: "Це будинок."
           correct: false
-      explanation: "'це' cannot modify the masculine noun 'будинок'. You must use 'цей будинок'."
-    - question: "Which sentence correctly translates 'These people'?"
+        - text: "Цей будинок."
+          correct: false
+    - question: "How do you translate 'This is a street'?"
       options:
-        - text: "Ці люди."
+        - text: "Це вулиця."
           correct: true
-        - text: "Це люди."
+        - text: "Ця вулиця."
           correct: false
-        - text: "Ця люди."
+        - text: "Ця вулиця довга."
           correct: false
-        - text: "Цей люди."
+        - text: "Та вулиця."
           correct: false
-      explanation: "For plural nouns, you must use the plural form 'ці'."
-    - question: "In the sentence 'Це місто старе', what does 'це' mean?"
+    - question: "How do you translate 'This street is long'?"
       options:
-        - text: "This (modifier)"
+        - text: "Ця вулиця довга."
           correct: true
-        - text: "This is (copula)"
+        - text: "Це вулиця довга."
           correct: false
-        - text: "That (modifier)"
+        - text: "Це вулиця."
           correct: false
-        - text: "These (plural)"
+        - text: "Ця вулиця."
           correct: false
-      explanation: "It directly modifies the neuter noun 'місто'."
-    - question: "In the sentence 'Це місто', what does 'це' mean?"
+    - question: "What is the correct way to point to 'these people'?"
       options:
-        - text: "This is (copula)"
+        - text: "Ці люди"
           correct: true
-        - text: "This (modifier)"
+        - text: "Це люди"
           correct: false
-        - text: "That (modifier)"
+        - text: "Ця люди"
           correct: false
-        - text: "These (plural)"
+        - text: "Цей люди"
           correct: false
-      explanation: "It introduces what something is ('This is a city')."
+    - question: "Which phrase means 'that girl'?"
+      options:
+        - text: "Та дівчина"
+          correct: true
+        - text: "Ця дівчина"
+          correct: false
+        - text: "Це дівчина"
+          correct: false
+        - text: "Те дівчина"
+          correct: false

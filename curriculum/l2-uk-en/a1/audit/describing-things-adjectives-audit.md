@@ -1,7 +1,7 @@
 # Audit Report: M11 — describing-things-adjectives.md
 **Level:** A1 | **Module:** M11 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-06 01:20:38
+**Generated:** 2026-03-06 16:11:43
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Essential Adjectives for Descriptions | 8 | 8 | ✅ |
-| 2 | group-sort | Sorting Adjective Endings | 12 | 6 | ✅ |
-| 3 | fill-in | The Real Estate Agent: House Tour | 8 | 8 | ✅ |
-| 4 | true-false | Grammar Rules for Descriptions | 8 | 8 | ✅ |
-| 5 | match-up | Property Descriptions | 8 | 8 | ✅ |
-| 6 | unjumble | The Real Estate Agent: Writing Listings | 6 | 6 | ✅ |
-| 7 | fill-in | City Life and Details | 8 | 8 | ✅ |
-| 8 | match-up | Matching Questions to Things | 8 | 8 | ✅ |
+| 1 | match-up | Match the Opposites | 8 | 8 | ✅ |
+| 2 | group-sort | Sort by Gender | 12 | 6 | ✅ |
+| 3 | fill-in | Real Estate Agent: Describe the Property | 8 | 8 | ✅ |
+| 4 | true-false | True or False? | 8 | 8 | ✅ |
+| 5 | quiz | Check Your Knowledge | 8 | 8 | ✅ |
+| 6 | unjumble | Put the Words in Order | 8 | 6 | ✅ |
+| 7 | fill-in | Questions and Answers | 8 | 8 | ✅ |
+| 8 | match-up | Match the Adjective to the Noun | 8 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅
@@ -36,19 +36,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1468/1200 (raw: 1652)
+- **Words:** ✅ 1354/1200 (raw: 1554)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.2% (target 25-40% (M11))
+- **Immersion:** 🇺🇦 27.5% (target 25-40% (M11))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -57,9 +57,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Describing Things - Adjectives** | ✅ | 60 | Included in Core |
-| **Вступ: Світ прикметників (Introduction: The World of Adjectives)** | ✅ | 195 | Included in Core |
-| **Тверда група прикметників (Hard Stem Adjectives)** | ✅ | 380 | Included in Core |
-| **М'яка група та множина (Soft Stem and Plurals)** | ✅ | 381 | Included in Core |
-| **Практика: Люди і місця (Practice: People and Places)** | ✅ | 326 | Included in Core |
-| **Підсумок — Summary** | ✅ | 126 | Included in Core |
+| **Describing Things - Adjectives** | ✅ | 44 | Included in Core |
+| **Вступ: Світ прикметників (Introduction: The World of Adjectives)** | ✅ | 273 | Included in Core |
+| **Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)** | ✅ | 344 | Included in Core |
+| **Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)** | ✅ | 338 | Included in Core |
+| **Практика: Люди і місця (Practice: People and Places)** | ✅ | 213 | Included in Core |
+| **Підсумок (Summary & Self-Check)** | ➖ | 142 | Excluded Type |

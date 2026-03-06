@@ -2,53 +2,54 @@ slug: prohibitions-and-signs
 title: Prohibitions and Signs
 word_target: 1200
 content_outline:
-- section: Заборони
-  words: 450
-  points:
-  - 'Module intro (English scaffolding): explain that reading signs is essential for
-    navigating Ukrainian cities.'
-  - Create an H3 to define infinitive prohibitions on public signs (Не курити!, Не
-    входити!, Не торкатися!). Explain the impersonal register.
-  - Create an H3 comparing sign language vs. personal commands (Не торкатися! vs Не
-    чіпай!). Explain when to use which.
-  - 'Introduce essential navigation signs: Вхід (Entrance), Вихід (Exit), Вхід заборонено.
-    Provide IPA for the first occurrence of each word.'
-- section: Попередження
-  words: 400
-  points:
-  - 'Create an H3 for exclamatory warnings: Увага! (Attention!), Обережно! (Careful!),
-    Небезпечно! (Dangerous!). Explain how short-form words function as standalone
-    safety alerts.'
-  - 'Create an H3 for compound noun phrase warnings: Мокра підлога (Wet floor), Висока
-    напруга (High voltage). Explain the noun-adjective agreement.'
-  - 'Cultural hook: Feature the iconic Kyiv Metro sign «Не притулятися» (Do not lean)
-    as a real-world example of an infinitive prohibition.'
-- section: Розклади та оголошення
-  words: 450
-  points:
-  - 'Create an H3 for reading business schedules: години роботи (operating hours),
-    вихідний (day off), перерва (break). Note the cultural importance of the lunch
-    break.'
-  - 'Create an H3 for time formats: teach ''з 9:00 до 18:00'' as a fixed practical
-    chunk, noting the genitive case usage for ''from... to...''.'
-  - 'Create an H3 for notices: Оголошення (Announcement), Акція (Promotion), Знижка
-    (Discount). Connect to transport vocab: відправлення, прибуття.'
-- section: На вулиці
-  words: 400
-  points:
-  - 'Create an H3 for street navigation terms and their standard abbreviations: вулиця
-    (вул.), площа (пл.), провулок (пров.).'
-  - 'Create an H3 for traffic and crossing vocabulary: Пішохідний перехід, Перехід,
-    Зупинка, Стоп.'
-  - 'Create an H3 highlighting decolonized precise vocabulary: explain the strict
-    use of «відчинено / зачинено» for shops/doors, explicitly contrasting with «відкрито
-    / закрито» (Surzhyk/Russian interference).'
-- section: Практика
+- section: Заборони — Prohibitions
+  slug: zaborony
   words: 300
   points:
-  - 'Interactive sign-reading drill: present 4 realistic Ukrainian signs and have
-    the learner identify meaning and grammatical form (infinitive vs imperative).'
-  - 'Schedule comprehension drill: present a store''s «години роботи» and have the
-    learner identify the «перерва» and «вихідний».'
-  - 'Summary recap: brief English table comparing infinitive on signs versus spoken
+  - 'Module intro (English scaffolding): explain the importance of reading signs for
+    safely navigating Ukrainian spaces.'
+  - Introduce public signs using the infinitive (Не курити!, Не входити!, Не торкатися!).
+    Explain the impersonal register.
+  - Contrast impersonal sign language with personal commands (Не торкатися! vs Не
+    чіпай!), clarifying contexts for each without teaching full imperative conjugations.
+  - 'Essential navigation signs: Вхід (Entrance), Вихід (Exit), Вхід заборонено. Provide
+    IPA for the first occurrence of each word.'
+- section: Попередження — Warnings
+  slug: poperedzhennia
+  words: 250
+  points:
+  - 'Exclamatory warnings: Увага! (Attention!), Обережно! (Careful!), Небезпечно!
+    (Dangerous!). Explain their standalone safety alert function.'
+  - 'Compound noun phrase warnings: Мокра підлога (Wet floor), Висока напруга (High
+    voltage). Note basic noun-adjective agreement.'
+  - 'Cultural hook: Feature the Kyiv Metro sign «Не притулятися» (Do not lean) to
+    illustrate an iconic real-world infinitive prohibition.'
+- section: Розклади та оголошення — Schedules and notices
+  slug: rozklady-ta-oholoshennia
+  words: 250
+  points:
+  - 'Reading business schedules: години роботи (operating hours), вихідний (day off),
+    перерва (break). Highlight the cultural significance of the scheduled lunch break.'
+  - 'Time formats: teach ''з 9:00 до 18:00'' as a fixed practical chunk, briefly mentioning
+    the genitive case usage for ''from... to...''.'
+  - 'Notices: Оголошення (Announcement), Акція (Promotion), Знижка (Discount). Connect
+    to transport vocab: відправлення, прибуття.'
+- section: На вулиці — On the street
+  slug: na-vulytsi
+  words: 250
+  points:
+  - 'Street navigation terms and their standard abbreviations: вулиця (вул.), площа
+    (пл.), провулок (пров.).'
+  - 'Traffic and crossing vocabulary: Пішохідний перехід, Перехід, Зупинка, Стоп.'
+  - 'Highlight precise vocabulary: strict use of «відчинено / зачинено» for shops
+    and doors, explicitly contrasting with «відкрито / закрито» (Surzhyk/Russian interference).'
+- section: Підсумок і Практика — Summary and Practice
+  slug: pidsumok-i-praktyka
+  words: 150
+  points:
+  - 'Summary recap: brief English table comparing the infinitive on signs versus spoken
     commands.'
+  - 'Self-check question 1: Which word means a store is closed?'
+  - 'Self-check question 2: How do you say ''No smoking'' on a public sign?'
+  - 'Self-check question 3: What does ''Обережно'' mean?'
+  - 'Self-check question 4: What is a ''перерва''?'

@@ -2,15 +2,15 @@
   "module": "describing-things-adjectives",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-06T01:20:38.999880Z",
+  "last_audit": "2026-03-06T16:11:43.103204Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T00:03:55.048616Z",
-    "meta": "2026-03-05T23:52:02.831362Z",
-    "activities": "2026-03-05T23:52:32.726949Z",
-    "vocabulary": "2026-03-05T23:55:15.645680Z",
+    "md": "2026-03-06T16:10:13.982646Z",
+    "meta": "2026-03-06T15:48:13.703864Z",
+    "activities": "2026-03-06T15:59:36.607831Z",
+    "vocabulary": "2026-03-06T16:10:29.358152Z",
     "plan": "2026-03-05T10:20:01.530912Z",
-    "research": "2026-03-05T23:42:53.463513Z"
+    "research": "2026-03-06T15:48:47.870314Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1468/1200 (raw: 1652)"
+      "message": "1354/1200 (raw: 1554)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "22/1"
+      "message": "23/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,18 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/describing-things-adjectives-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/describing-things-adjectives-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
-    ],
+    "status": "content-complete",
+    "blocking_issues": [],
     "pass_count": 5,
-    "fail_count": 1,
-    "deferred_count": 0
+    "fail_count": 0,
+    "deferred_count": 1
   }
 }

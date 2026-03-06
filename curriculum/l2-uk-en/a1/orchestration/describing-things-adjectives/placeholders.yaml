@@ -13,6 +13,7 @@ REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
 WORD_TARGET: '1200'
+WORD_CEILING: '1800'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -27,30 +28,40 @@ LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10
   \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
   \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
   \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
-  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ M1 (reading drill word, not grammar)\n  Exception (M19 likes-and-preferences):\
+  \ Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n    ONLY in the fixed construction\
+  \ «Мені подобається + noun/infinitive». Teach as a memorized\n    chunk — do NOT\
+  \ explain dative case rules or paradigms.\n- Instrumental case FORBIDDEN (no з другом,\
   \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
   \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
   \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
   \ M13), Genitive (basics), Vocative"
-PEDAGOGICAL_CONSTRAINTS: 'SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):
-
-  Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.
-
-  Learning: adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M14).
-
-
-  GRAMMAR STATUS:
-
-  - AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement (from M11),
-  Це/Я sentences, memorized phrases
-
-  - FORBIDDEN: verb conjugation (starts M15), imperatives (M47), cases beyond nominative
-  (accusative starts M25)
-
-  - Use English for classroom instructions
-
-
-  METALANGUAGE: English-first, Ukrainian in parentheses'
+PEDAGOGICAL_CONSTRAINTS: "SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):\n\
+  Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.\nLearning:\
+  \ adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M14).\n\n\
+  GRAMMAR STATUS:\n- AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement\
+  \ (from M11), Це/Я sentences, memorized phrases\n- FORBIDDEN: verb conjugation (starts\
+  \ M15), imperatives (M47), cases beyond nominative (accusative starts M25)\n- BANNED\
+  \ Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо,\
+  \ Скажіть — always use English equivalents\n- BANNED IMPERATIVE FORMS (non-exhaustive):\
+  \ Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте,\
+  \ Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо,\
+  \ Давайте розглянемо, Розглянемо.\n  INSTEAD OF → USE:\n  - Запам'ятайте → \"Remember\
+  \ that...\" (English)\n  - Порівняйте → \"Compare...\" (English)\n  - Зверніть увагу\
+  \ → \"Notice that...\" (English)\n  - Подивіться → \"Look at...\" (English)\n  -\
+  \ Спробуйте → \"Try to...\" (English)\n  - Прочитайте → \"Read...\" (English)\n\
+  \  - Повторіть → \"Repeat...\" (English)\n- Use English for classroom instructions\n\
+  \nVERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):\n- Це\
+  \ + noun: «Це кіт», «Це нова книга»\n- Adj + noun phrases: «великий дім», «червона\
+  \ сукня», «гарне місто»\n- Question particles: «Хто це?», «Що це?», «Який?», «Яка?»,\
+  \ «Яке?»\n- Demonstratives: «Цей стіл», «Ця книга», «Це вікно», «Ці слова»\n- Possessives:\
+  \ «мій зошит», «моя мама», «моє місто», «мої друзі»\n- Preposition + noun: «у місті»,\
+  \ «на столі», «з молоком»\n- Noun listings: «кіт, собака, хом'як — це тварини»\n\
+  - Contextual labels: «Наприклад — For example», «А тепер — And now»\n- Comparisons\
+  \ (without verbs): «кіт — маленький, собака — великий»\nDO NOT use: conjugated verbs\
+  \ (є, має, робить), imperatives, infinitives.\nEvery Ukrainian phrase must be VERB-FREE.\
+  \ Use English for any sentence requiring a verb.\n\nMETALANGUAGE: English-first,\
+  \ Ukrainian in parentheses"
 DECODABLE_VOCABULARY: ''
 STRUCTURAL_RULES: '### Rule 1: Every Concept Gets Dedicated Depth
 
@@ -107,20 +118,44 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
   \ for style and difficulty level** — notice how they use simple syllable combinations,\
   \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 105:\n\
-  ```\n103\n\t Тобі сподобався Чижик-Пижик? Він уперше \nполетів. Що ти хотів би /\
-  \ хотіла б йому поба-\nжати?\nЧитаємо разом\nСлова — назви дій\n \nСлова — назви\
-  \ дій предмета відпо-\nвідають на питання що робити? що \nробить? що роб­лять? \n\
-  \t Розглянь малюнки. \n1\n5\n3\n7\n2\n6\n4\n\t Прочитай слова — назви дій.\nПоливає,\
-  \ снідає, читає, ідуть, навча-\nються, малює, чистить зуби.\nPidruchnyk.com.ua\n\
-  ```\n\n**Grade 1, zaharijchuk** — Сторінка 103:\n```\n101\nПовторюємо разом\nСлова\
-  \ — назви ознак. \nСлова, протилежні за \nзначенням\n \n\t Розглянь малюнки. \n\
-  Який?\nЯка? \nЯка? \nСлова, які відповідають на питання \nякий? яка? яке? які?,\
-  \ указують на \nознаку предмета.\n\t Перепиши перше речення тексту (с. 99). Під-\n\
-  кресли слова — назви ознак кошеняти. По-\nстав до цих слів запитання.\n\t Прочитай\
-  \ текст.\nЧижик-Пижик сидів на високій гілці й \nкрутив головою. Раптом перед ним\
-  \ про-\nлетіла яскрава бабка. Він хотів її схопи-\nти, але зірвався з гілки. Зірвався,\
-  \ за-\nкру\n```"
+  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 15:\n\
+  ```\n13\n\t Вимов голосні звуки в словах — назвах предме-\nтів.   \n\t Вимов приголосні\
+  \ звуки в словах — назвах \nпредметів.\n\t Який у тебе сьогодні настрій? Вибери.\n\
+  Мовні звуки: голосні та приголосні\n[•]\n[•]\n [ – ]\n [ – ]\n [ – ]\n [ – ]\n\t\
+  \ Вимов перший звук у словах — назвах предме-\nтів. Який це звук? Приголосний звук\
+  \ позначає-\nмо так: [–].\n\t Вимов перший звук у словах — назвах предметів. \n\
+  Який це звук? Голосний звук позначаємо так: [•].\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 17:\n```\n15\nПриголосні тверді та м’які\n\t Вимов звуки, які ти чуєш\
+  \ на початку слів — \nназв намальованих предметів.\n\t Порівняй вимову перших звуків\
+  \ у словах — на-\nзвах предметів. У яких словах перші звуки ви-\nмовляємо м’яко?\
+  \ М’які звуки позначай так: [ =].\n\t Який у тебе сьогодні настрій? Вибери.\n [\
+  \      ] \n [      ] \n [      ] \n [      ] \n [      ] \n [      ] \n [ = ]  \n\
+  \ [ = ]  \n [ = ]  \n [ – ] \n [ – ] \n [ – ] \n\t Хто неправильно поділив слово\
+  \ — назву нама-\nльованого предмета на склади?\n```\n\n**Grade 1, bolshakova** —\
+  \ Сторінка 79:\n```\n. . . . . . . . . . . . . . . . . . 44\nТ т . . . . . . . .\
+  \ . . . . . . . . . . . . . . . . . . . 45\nТверді і пом’якшені  \nприголосні звуки\
+  \ . . . . . . . . . . . . . . 45\nГ г . . . . . . . . . . . . . . . . . . . . .\
+  \ . . . . . . 46\nГ г . . . . . . . . . . . . . . . . . . . . . . . . . . . 47\n\
+  Тверді і пом’якшені  \nприголосні звуки . . . . . . . . . . . . . . 47\nҐ ґ . .\
+  \ . . . . . . . . . . . . . . . . . . . . . . . . . 48\nҐ ґ . . . . . . . . . .\
+  \ . . . . . . . . . . . . . . . . . 49\nЕ е  . . . . . .\n```"
+CHECKPOINT_GUIDANCE: ''
+EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
+
+
+  Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently,
+  or add creative subtitles. The audit will reject any section with a different title.
+
+
+  - `## Вступ: Світ прикметників (Introduction: The World of Adjectives)` (~200 words)
+
+  - `## Тверда група прикметників (Hard Stem Adjectives)` (~350 words)
+
+  - `## М''яка група та множина (Soft Stem and Plurals)` (~350 words)
+
+  - `## Практика: Люди і місця (Practice: People and Places)` (~200 words)
+
+  - `## Підсумок (Summary & Self-Check)` (~100 words)'
 INTRO_HOOK: Чому це важливо? — Why does this matter?
 SUMMARY_HEADING: Підсумок — Summary
 SELF_CHECK_HEADING: 'Перевірте себе — Check yourself:'
@@ -721,7 +756,12 @@ VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items
 
 
   Do NOT add vocabulary items beyond this list unless they are decodable from the
-  module''s letter set and appear in the lesson content.'
+  module''s letter set and appear in the lesson content.
+
+
+  **VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints MUST appear
+  at least once in the module content. Orphaned vocabulary (listed but never used
+  in content) is a validation failure.'
 VIDEO_DISCOVERY: (No video discoveries available)
 PRONUNCIATION_VIDEOS: ''
 SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
@@ -760,6 +800,34 @@ SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
 
   Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
   text.
+
+
+  ### English Calque Checklist
+
+
+  As an English-dominant model, you may produce English-to-Ukrainian calques. Check
+  and avoid:
+
+
+  | English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+
+  |---|---|---|
+
+  | "will have" | буду мати | матиму |
+
+  | "do work" | робити роботу | працювати |
+
+  | "save money" | зберегти гроші | заощадити гроші |
+
+  | "make a decision" | зробити рішення | прийняти рішення |
+
+  | "take a photo" | брати фото | фотографувати / робити фото |
+
+  | "have attention" | мати увагу | звертати увагу |
+
+  | "give an answer" | давати відповідь | відповідати |
+
+  | "make sense" | робити сенс | мати сенс |
 
 
   ### Euphony / Милозвучність (WARNING if violated)
@@ -904,8 +972,9 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
   \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
   \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
-  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
-  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний,\
+  \ красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний\n\
+  - **No Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
   \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
   \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
   \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
@@ -927,6 +996,100 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
   - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
   \ skills or delegate to Claude\n"
+SELF_AUDIT_SNIPPET: '## Self-Audit (Run BEFORE Final Output)
+
+
+  After writing all content, you MUST run the audit and fix any issues — all within
+  this session.
+
+
+  ### Step 1: Write Content to Disk
+
+
+  Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+
+  ```bash
+
+  cat > {CONTENT_PATH} << ''CONTENT_EOF''
+
+  ... your content here ...
+
+  CONTENT_EOF
+
+  ```
+
+
+  ### Step 2: Run Audit
+
+
+  ```bash
+
+  bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+
+  ```
+
+
+  This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion
+  %.
+
+
+  ### Step 3: Parse Results
+
+
+  - If you see `AUDIT PASSED` — proceed to output.
+
+  - If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run
+  the audit.
+
+
+  ### Step 4: Fix Loop (max 2 iterations)
+
+
+  If the audit fails:
+
+  1. Read the specific gate failures and violation details from the audit output
+
+  2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms,
+  add callout boxes, etc.)
+
+  3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+
+  4. If still failing after 2 fix attempts, proceed to output anyway — the validate
+  phase will handle remaining issues.
+
+
+  ### Step 5: Report Self-Audit Result
+
+
+  After audit (pass or fail), include this block in your output:
+
+
+  ```
+
+  ===SELF_AUDIT_START===
+
+  status: PASS | FAIL
+
+  iterations: {number of audit runs}
+
+  final_word_count: {word count from last audit}
+
+  gates_passed: {list of passed gates}
+
+  gates_failed: {list of failed gates, or "none"}
+
+  fixes_applied: {brief description of what you fixed, or "none"}
+
+  ===SELF_AUDIT_END===
+
+  ```
+
+
+  **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual
+  command and report real output.
+
+  '
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'

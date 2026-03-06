@@ -2,19 +2,19 @@ slug: demonstratives-this-that
 title: Demonstratives
 word_target: 1200
 content_outline:
-- section: 'Цей, Ця, Це: ''This'' in Ukrainian'
+- section: Цей/ця/це (This)
   slug: this-singular
   words: 350
   points:
-  - Provide English scaffolding to explain that demonstrative pronouns must agree
-    in gender with the noun they modify, linking back to the logic learned with possessives.
-  - 'Present the three singular forms for ''this'' (proximity: близько): masculine
-    ''цей'', feminine ''ця'', neuter ''це''. Provide 3+ simple examples for each (e.g.,
-    цей будинок, ця вулиця, це місто) with English translations.'
+  - Use English scaffolding to explain that demonstrative pronouns must agree in gender
+    with the noun they modify, linking back to the logic learned with possessives.
+  - 'Present the three singular forms for ''this'' (близько / close): masculine ''цей'',
+    feminine ''ця'', neuter ''це''. Provide 3+ simple examples for each (e.g., цей
+    будинок, ця вулиця, це місто) with English translations.'
   - 'CRITICAL DISTINCTION: Dedicate a subsection to contrast the invariable copula
     ''Це'' (This is a cafe) and the neuter demonstrative ''це'' (This cafe is nice).
     Use visual contrast to prevent confusion.'
-- section: 'Ці: The Universal ''These'''
+- section: Ці (These)
   slug: these-plural
   words: 150
   points:
@@ -24,26 +24,26 @@ content_outline:
     → ці, ця → ці, це → ці.'
   - Include a 'Common Learner Error' warning about using singular 'це' with plural
     nouns (*це люди instead of ці люди).
-- section: 'Той, Та, Те, Ті: ''That'' and ''Those'''
+- section: Той/та/те/ті (That/Those)
   slug: that-those
   words: 350
   points:
   - Use English scaffolding to introduce spatial distance (далеко / far from speaker)
     and the corresponding forms for 'that/those'.
   - Present the singular forms (той, та, те) with gender agreement examples, and a
-    separate section for the plural form (ті).
+    separate section for the universal plural form (ті).
   - 'Contextual warning: Explicitly distinguish the feminine demonstrative ''та''
     (that girl) from the conjunction ''та'' (and), using contrasting sentences.'
-- section: 'Цей vs Той: At the Market'
+- section: Цей vs Той у контексті (This vs That in context)
   slug: this-vs-that-context
   words: 200
   points:
   - Compare spatial proximity (близько vs далеко) using paired contrasting examples
     (цей стілець vs той стілець).
-  - Provide a culturally relevant mini-dialogue set at a Ukrainian market (базар).
-    Since imperative verbs are not yet learned, use 'Я хочу цей торт' (I want this
-    cake) vs 'Я хочу той торт' (I want that cake).
-- section: Підсумок
+  - 'Provide a culturally relevant mini-dialogue set at a Ukrainian market (базар).
+    Remember the sequence constraint: do NOT use imperative verbs. Use ''Я хочу цей
+    торт'' (I want this cake) instead of ''Дайте мені...''.'
+- section: Практика (Practice)
   slug: summary-practice
   words: 150
   points:

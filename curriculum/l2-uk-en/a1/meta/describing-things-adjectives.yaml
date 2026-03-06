@@ -2,50 +2,55 @@ slug: describing-things-adjectives
 title: Describing Things - Adjectives
 word_target: 1200
 content_outline:
-- section: 'Вступ: Світ прикметників (Introduction: The World of Adjectives)'
+- title: 'Вступ: Світ прикметників (Introduction: The World of Adjectives)'
   slug: introduction-world-of-adjectives
-  words: 200
+  words: 250
   points:
-  - 'Scaffolding: Use English to explain the concept of ''adjective agreement''—adjectives
-    must match the noun''s gender and number.'
-  - 'Bridge: Review the ''Gender Code'' (masculine, feminine, neuter) from A1-07 and
-    introduce the question words ''Який? Яка? Яке? Які?''.'
-  - 'Cultural Hook: Introduce St. Sophia''s Cathedral as a context for ''старий''
+  - 'Scaffolding: Use English to explain the concept of adjective agreement, emphasizing
+    that adjectives must match the noun''s gender and number.'
+  - 'Bridge: Briefly review the ''Gender Code'' (masculine, feminine, neuter) introduced
+    in module a1-07.'
+  - 'Introduction: Introduce the question words ''Який? Яка? Яке? Які?'' using verb-free
+    phrases like ''Який це дім?''.'
+  - 'Cultural Hook: Mention St. Sophia''s Cathedral as an example to demonstrate ''старий''
     and ''великий''.'
-- section: Тверда група прикметників (Hard Stem Adjectives)
+- title: 'Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)'
   slug: hard-stem-adjectives
   words: 350
   points:
-  - Present the Hard Stem paradigm (-ий, -а, -е, -і) with a visual table and color-coded
-    gender markers.
-  - 'Provide high-frequency examples: новий дім, нова книга, нове вікно, нові друзі.'
-  - 'Error Correction: Explicitly address the common mistake of using the dictionary
-    form for all nouns (correcting *новий машина* to *нова машина*).'
-  - 'Explain adjective placement: Contrast attributive (''гарна погода'') with predicative
-    (''Погода гарна'') usage.'
-- section: М'яка група та множина (Soft Stem and Plurals)
+  - 'Paradigm: Present the Hard Stem endings (-ий, -а, -е, -і) using a clear visual
+    table and color-coded gender markers.'
+  - 'Examples: Provide high-frequency, verb-free examples such as ''новий дім'', ''нова
+    книга'', ''нове вікно''.'
+  - 'Error Correction: Explicitly warn against using the dictionary form for all nouns,
+    contrasting *новий машина* with the correct ''нова машина''.'
+  - 'Usage: Explain adjective placement by contrasting attributive (''гарна погода'')
+    with predicative (''Погода — гарна'') positions.'
+- title: 'Презентація 2: М''яка група та множина (Presentation: Soft Stem and Plurals)'
   slug: soft-stem-and-plurals
   words: 300
   points:
-  - 'Introduce the Soft Stem paradigm (-ій, -я, -є, -і), using ''синій'' as the primary
-    anchor (mnemonic: ''синя лінія'' in Kyiv Metro).'
+  - 'Paradigm: Introduce the Soft Stem endings (-ій, -я, -є, -і) using ''синій'' as
+    the primary anchor, referencing the ''синя лінія'' of the Kyiv Metro.'
   - 'Orthography Note: Address the common spelling error of writing ''-ий'' instead
     of ''-ій'' after soft consonants.'
   - 'Plural Consistency: Emphasize that all plural adjectives take ''-і'' regardless
-    of gender to prevent number disagreement.'
-- section: 'Практика: Люди і місця (Practice: People and Places)'
+    of gender, supported by verb-free examples like ''нові дні'' and ''великі міста''.'
+- title: 'Практика: Люди і місця (Practice: People and Places)'
   slug: practice-people-and-places
   words: 200
   points:
   - 'Cultural Practice: Describe the folklore figure Mavka using feminine adjectives
-    (''молода'', ''гарна'', ''цікава'').'
-  - 'Roleplay Context: Real Estate Agent describing a ''нова квартира'' or ''великий
-    будинок'' using vocabulary from A1-38.'
-- section: Підсумок (Summary & Self-Check)
+    like ''молода'', ''гарна'', and ''цікава''.'
+  - 'Roleplay Context: Adopt a Real Estate Agent persona to describe a ''нова квартира''
+    or ''великий будинок'', reinforcing descriptive vocabulary in a functional setting.'
+- title: Підсумок (Summary & Self-Check)
   slug: summary-self-check
-  words: 150
+  words: 100
   points:
-  - 'Summary: Recap the ''Який?'' question-answer pattern and the main endings for
-    all three genders and plural.'
-  - 'Self-Check: Provide 4 self-check questions focusing on matching the correct ending
-    to a given noun.'
+  - 'Summary: Recap the ''Який?'' question-answer pattern and the primary adjective
+    endings.'
+  - 'Self-Check 1: What is the correct form of ''новий'' for the masculine noun ''телефон''?'
+  - 'Self-Check 2: What is the correct form of ''великий'' for the feminine noun ''книга''?'
+  - 'Self-Check 3: What is the correct form of ''синій'' for the neuter noun ''море''?'
+  - 'Self-Check 4: What is the correct plural form of ''гарний'' for ''квіти''?'

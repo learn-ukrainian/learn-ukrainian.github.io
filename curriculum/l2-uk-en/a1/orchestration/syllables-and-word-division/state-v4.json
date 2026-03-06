@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "syllables-and-transfer",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T19:43:22Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T19:43:36Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T19:44:59Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T19:46:29Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-05T20:08:26Z",
+      "attempts": 4
+    }
+  }
+}

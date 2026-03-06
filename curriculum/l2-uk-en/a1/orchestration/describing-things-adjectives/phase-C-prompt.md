@@ -28,6 +28,8 @@
 | classify | ≥1 items |
 | image-to-letter | ≥5 items |
 
+**CRITICAL — HARD FAIL if violated:** Each activity MUST meet the minimum item count for its type. Activities with fewer items than the minimum will cause an automatic validation failure. Check the minimums table above BEFORE submitting.
+
 
 
 ## Module Constraints (HARD FAIL if violated)
@@ -39,7 +41,30 @@ Learning: adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M1
 GRAMMAR STATUS:
 - AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement (from M11), Це/Я sentences, memorized phrases
 - FORBIDDEN: verb conjugation (starts M15), imperatives (M47), cases beyond nominative (accusative starts M25)
+- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо, Скажіть — always use English equivalents
+- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+  INSTEAD OF → USE:
+  - Запам'ятайте → "Remember that..." (English)
+  - Порівняйте → "Compare..." (English)
+  - Зверніть увагу → "Notice that..." (English)
+  - Подивіться → "Look at..." (English)
+  - Спробуйте → "Try to..." (English)
+  - Прочитайте → "Read..." (English)
+  - Повторіть → "Repeat..." (English)
 - Use English for classroom instructions
+
+VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):
+- Це + noun: «Це кіт», «Це нова книга»
+- Adj + noun phrases: «великий дім», «червона сукня», «гарне місто»
+- Question particles: «Хто це?», «Що це?», «Який?», «Яка?», «Яке?»
+- Demonstratives: «Цей стіл», «Ця книга», «Це вікно», «Ці слова»
+- Possessives: «мій зошит», «моя мама», «моє місто», «мої друзі»
+- Preposition + noun: «у місті», «на столі», «з молоком»
+- Noun listings: «кіт, собака, хом'як — це тварини»
+- Contextual labels: «Наприклад — For example», «А тепер — And now»
+- Comparisons (without verbs): «кіт — маленький, собака — великий»
+DO NOT use: conjugated verbs (є, має, робить), imperatives, infinitives.
+Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.
 
 METALANGUAGE: English-first, Ukrainian in parentheses
 
@@ -80,6 +105,21 @@ Still avoid: `cloze` (needs 14+ blanks), `error-correction`, `unjumble`
 **If constraints allow basic sentences:**
 Add: `unjumble`, `fill-in` with sentences, `translate`
 Still avoid: `cloze` (needs 14+ blanks)
+
+### unjumble (sentence word reordering — ONLY when sentences allowed)
+
+```yaml
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:  # minItems: 8
+    - words: ["книга", "Це", "нова"]
+      answer: "Це нова книга"
+    - words: ["великий", "дім", "Це"]
+      answer: "Це великий дім"
+```
+
+**CRITICAL**: Use `words` (array of strings) + `answer` (string). Do NOT use `sentence`, `jumbled`, or `scrambled` fields — those are WRONG and will fail schema validation.
 
 ### Do NOT Use Grammar Terminology
 
@@ -235,7 +275,7 @@ Key: `explanation` at QUESTION level (not inside options), exactly 4 options, ex
 
 ## Language Quality (applies to ALL Ukrainian text in activities)
 
-- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий
+- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний, красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний
 - **No Russian characters**: ы, э, ё, ъ must NEVER appear
 - **No IPA**: NEVER include IPA symbols or `ipa` fields
 - **No Latin transliteration**: Reference Ukrainian words in Cyrillic, not Latin (ZhYty → Жити)

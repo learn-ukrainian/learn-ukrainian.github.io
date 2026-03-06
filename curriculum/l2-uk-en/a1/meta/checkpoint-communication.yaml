@@ -2,8 +2,9 @@ slug: checkpoint-communication
 title: 'Checkpoint: Communication'
 word_target: 1200
 content_outline:
-- section: Огляд
-  words: 300
+- section: 'Огляд: Checkpoint Communication'
+  slug: overview
+  words: 200
   points:
   - Introduce the A1.5 checkpoint consolidating modals, imperatives, and everyday
     scenarios. Set an encouraging, supportive tone as the 'Patient Supportive Tutor'.
@@ -12,38 +13,43 @@ content_outline:
     100% Ukrainian.'
   - Provide a warm-up self-assessment checklist (3-4 questions) verifying the learner's
     confidence with ability, necessity, and polite commands.
-- section: 'Навичка 1: Модальні дієслова'
-  words: 500
+- section: 'Навичка 1: Модальні дієслова (Skill 1: Modal Verbs)'
+  slug: skill-1-modals
+  words: 300
   points:
-  - Define and contrast 'могти' (circumstantial ability) and 'вміти' (learned skill).
-    Give 4 paired examples. Frame independently (do not use Russian as a baseline).
-  - Explain the three-way negative contrast (не можу, не вмію, не можна) using clear
-    everyday scenarios, providing English scaffolding for the abstract concepts.
-  - 'Detail obligation modals: ''треба/потрібно'' (requires Dative, impersonal) vs
-    ''повинен'' (personal duty) vs ''хотіти''. Use a simple table to show the intensity
-    scale.'
+  - Review and contrast 'могти' (circumstantial ability) and 'вміти' (learned skill).
+    Give 4 paired examples demonstrating the difference.
+  - Review the three-way negative contrast (не можу, не вмію, не можна) using clear
+    everyday scenarios with English scaffolding for the abstract concepts.
+  - 'Review obligation modals: ''треба'' (teach ''мені треба'' as a fixed chunk without
+    explaining Dative case) vs ''повинен'' vs ''хотіти''. Provide a simple intensity
+    scale table.'
   - Include an H3 mini-dialogue (6-8 lines) between friends discussing weekend plans,
     demonstrating at least 4 modals natively.
-- section: 'Навичка 2: Накази та прохання'
-  words: 400
+- section: 'Навичка 2: Накази та прохання (Skill 2: Commands & Requests)'
+  slug: skill-2-commands
+  words: 250
   points:
-  - 'Present a 3-column table of imperative forms (Ти and Ви) for the 8 core A1 verbs:
+  - 'Present a review table of imperative forms (Ти and Ви) for the 8 core A1 verbs:
     читай, пиши, скажи, дай, іди, слухай, дивись, стій.'
-  - Explain how to form polite requests natively using 'будь ласка' and 'прошу вас'
+  - Review how to form polite requests natively using 'будь ласка' and 'прошу вас'
     + infinitive. Provide 3 examples of escalating politeness.
   - Contrast positive and negative commands (e.g., 'читай' vs 'не читай') focusing
-    on everyday situations like public transport etiquette ('Сідайте, будь ласка!').
-- section: 'Навичка 3: Повсякдення'
-  words: 400
+    on everyday situations like public transport etiquette.
+- section: 'Навичка 3: Повсякдення (Skill 3: Everyday Life)'
+  slug: skill-3-everyday-life
+  words: 250
   points:
   - Review family, appearance, and age vocabulary through a cohesive descriptive paragraph
     about a friend (100% Ukrainian with English translations provided).
   - Revisit hobbies ('грати в/на') and invitation patterns ('Ходімо!', 'Давай зустрінемось!')
     with 3 contextual examples.
-  - Integrate travel and transport expressions (Instrumental case for transport means,
-    basic directions) into a short travel narrative.
-- section: Інтеграційне завдання
-  words: 400
+  - Integrate travel and transport expressions into a short narrative. Treat Instrumental
+    transport means ('автобусом') as fixed vocabulary chunks to strictly respect A1
+    case constraints.
+- section: Інтеграційне завдання (Integration Task)
+  slug: integration-task
+  words: 200
   points:
   - 'Present a realistic H3 scenario: Planning a weekend trip with a friend.'
   - Provide a model response (dialogue of ~80 words) that natively integrates modals,
