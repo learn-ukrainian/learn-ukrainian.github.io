@@ -34,7 +34,10 @@ BLOG_DB_PATHS: list[Path] = [
     _PROJECT_ROOT / "docs" / "resources" / "ukrainianlessons" / "blog_db.json",
     _PROJECT_ROOT / "docs" / "resources" / "dobraforma" / "dobraforma_db.json",
     _PROJECT_ROOT / "docs" / "resources" / "talkukrainian" / "talkukrainian_db.json",
+    _PROJECT_ROOT / "docs" / "resources" / "verba" / "verba_db.json",
 ]
+PODCAST_DB_PATH = _PROJECT_ROOT / "docs" / "resources" / "podcasts" / "podcast_db.json"
+CURATED_RESOURCES_PATH = _PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
 SCORE_DB_PATH = _PROJECT_ROOT / "docs" / "resources" / "ukrainianlessons" / "resource_module_scores_final.json"
 
 
@@ -246,8 +249,16 @@ def cap_query(keywords: list[str], max_len: int = MAX_QUERY_LENGTH) -> str:
 # Blog discovery — static DB matching
 # ---------------------------------------------------------------------------
 
+_blog_db_cache: list[dict] | None = None
+_score_db_cache: dict | None = None
+_curated_cache: dict | None = None
+
+
 def _load_blog_dbs() -> list[dict]:
-    """Load all blog database files. Returns flat list of article dicts."""
+    """Load all blog + podcast database files. Returns flat list of article dicts."""
+    global _blog_db_cache
+    if _blog_db_cache is not None:
+        return _blog_db_cache
     articles: list[dict] = []
     for db_path in BLOG_DB_PATHS:
         if not db_path.exists():
@@ -257,17 +268,62 @@ def _load_blog_dbs() -> list[dict]:
             articles.extend(data.get("articles", []))
         except Exception as e:
             logger.debug("Failed to load blog DB %s: %s", db_path, e)
+
+    # Podcast episodes (normalize to article format)
+    if PODCAST_DB_PATH.exists():
+        try:
+            pod_data = json.loads(PODCAST_DB_PATH.read_text("utf-8"))
+            episodes = pod_data if isinstance(pod_data, list) else pod_data.get("episodes", [])
+            for ep in episodes:
+                articles.append({
+                    "id": ep.get("id", ""),
+                    "url": ep.get("url", ""),
+                    "title": ep.get("title", ""),
+                    "topics": ep.get("tags", []),
+                    "description": ep.get("summary", ""),
+                    "suggested_level": "",
+                    "content_type": "podcast_episode",
+                    "source": "ukrainianlessons.com",
+                    "series": ep.get("season", ""),
+                    "season": ep.get("season", 0),
+                    "episode": ep.get("episode_number", 0),
+                })
+        except Exception as e:
+            logger.debug("Failed to load podcast DB: %s", e)
+    _blog_db_cache = articles
     return articles
 
 
 def _load_score_db() -> dict:
     """Load pre-computed module→resource score mappings."""
+    global _score_db_cache
+    if _score_db_cache is not None:
+        return _score_db_cache
     if not SCORE_DB_PATH.exists():
-        return {}
+        _score_db_cache = {}
+        return _score_db_cache
     try:
-        return json.loads(SCORE_DB_PATH.read_text("utf-8"))
+        _score_db_cache = json.loads(SCORE_DB_PATH.read_text("utf-8"))
     except Exception:
-        return {}
+        _score_db_cache = {}
+    return _score_db_cache
+
+
+def _load_curated_resources() -> dict:
+    """Load curated per-module resources from external_resources.yaml."""
+    global _curated_cache
+    if _curated_cache is not None:
+        return _curated_cache
+    if not CURATED_RESOURCES_PATH.exists():
+        _curated_cache = {}
+        return _curated_cache
+    try:
+        data = yaml.safe_load(CURATED_RESOURCES_PATH.read_text("utf-8"))
+        _curated_cache = data.get("resources", {})
+    except Exception as e:
+        logger.debug("Failed to load curated resources: %s", e)
+        _curated_cache = {}
+    return _curated_cache
 
 
 def search_blogs(
@@ -277,16 +333,38 @@ def search_blogs(
     keywords: list[str],
     max_results: int = 5,
 ) -> list[dict]:
-    """Find relevant blog articles for a module.
+    """Find relevant blog/podcast articles for a module.
 
-    Two-layer approach:
+    Three-layer approach:
+    0. Curated per-module resources (external_resources.yaml) — guaranteed matches
     1. Pre-computed score DB (resource_module_scores_final.json)
-    2. Keyword + topic matching against blog_db.json + dobraforma_db.json
+    2. Keyword + topic matching against blog/podcast DBs
 
     Returns list of dicts with: url, title, source, relevance_score, topics.
     """
     results: list[dict] = []
     seen_urls: set[str] = set()
+
+    # Layer 0: Curated per-module resources (highest priority)
+    curated = _load_curated_resources()
+    # external_resources.yaml uses "a1-01-slug" format; match by slug suffix
+    matching_keys = [k for k in curated if k == module_slug or k.endswith(f"-{module_slug}")]
+    for key in matching_keys:
+        module_resources = curated.get(key, {})
+        if not module_resources:
+            continue
+        for cat, score in [("articles", 1.0), ("websites", 0.95)]:
+            for item in module_resources.get(cat, []):
+                url = item.get("url", "")
+                if url and url not in seen_urls:
+                    seen_urls.add(url)
+                    results.append({
+                        "url": url,
+                        "title": item.get("title", ""),
+                        "source": item.get("source", "curated"),
+                        "relevance_score": score,
+                        "topics": [],
+                    })
 
     # Layer 1: Pre-computed scores
     score_db = _load_score_db()
@@ -314,12 +392,28 @@ def search_blogs(
     if not all_articles:
         return results[:max_results]
 
-    # Build search terms (lowercased)
-    search_terms = {kw.lower() for kw in keywords}
+    # Build search terms (lowercased), filtering stopwords
+    _stopwords = {
+        "ukrainian", "english", "language", "learn", "learning", "lesson",
+        "introduce", "introduction", "explain", "practice", "identify",
+        "demonstrate", "apply", "define", "understand", "review", "summary",
+        "module", "section", "chapter", "guide", "rule", "rules", "self",
+        "correctly", "fluently", "basic", "advanced", "common", "simple",
+        "using", "about", "with", "from", "that", "this", "what", "where",
+        "which", "have", "will", "they", "their", "your", "into", "also",
+        "when", "more", "most", "some", "other", "each", "both", "than",
+        "very", "only", "just", "make", "take", "give", "know", "help",
+        "read", "write", "open", "leave", "never",
+    }
+    search_terms: set[str] = set()
     search_terms.add(topic_title.lower())
-    # Add English topic words
+    for kw in keywords:
+        kw_lower = kw.lower().strip()
+        if kw_lower and kw_lower not in _stopwords:
+            search_terms.add(kw_lower)
+    # Add individual topic words (only domain-specific ones)
     for word in topic_title.lower().split():
-        if len(word) > 3:
+        if len(word) > 3 and word not in _stopwords:
             search_terms.add(word)
 
     level_base = level.split("-")[0].upper()
@@ -342,12 +436,13 @@ def search_blogs(
         desc_overlap = len(search_terms & desc_words)
         level_match = 1 if article_level == level_base else 0
 
-        # Gate: require at least one keyword match — level-only matches
-        # (e.g. podcast_boost + level_match) produce irrelevant results
-        if topic_overlap + title_overlap + desc_overlap == 0:
+        # Gate: require at least one topic tag match OR 2+ title/desc matches.
+        # Single title word overlaps (e.g. "transport" matching "transport")
+        # produce too many false positives.
+        if topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
             continue
 
-        score = topic_overlap * 0.3 + title_overlap * 0.1 + desc_overlap * 0.05 + level_match * 0.2
+        score = topic_overlap * 0.3 + title_overlap * 0.15 + desc_overlap * 0.05 + level_match * 0.1
 
         # Podcast episodes get a priority boost — structured content
         # (audio + transcript + vocab) is more useful than a generic blog post
@@ -604,11 +699,17 @@ def format_rag_discovery(
 # tracks: ["*"] = all tracks, or specific track IDs.
 DEFAULT_CHANNELS: list[dict[str, Any]] = [
     # Language learning (core A1-C2)
+    {"name": "Ukrainian Lessons", "handle": "@UkrainianLessons", "tracks": ["*"]},
     {"name": "Anna Ohoiko", "handle": "@annaohoiko", "tracks": ["*"]},
     {"name": "Ukrainian with Olha", "handle": "@ukrainianwitholha", "tracks": ["*"]},
     {"name": "Let's Learn Ukrainian", "handle": "@LetsLearnUkrainian", "tracks": ["*"]},
     {"name": "Speak Ukrainian", "handle": "@SpeakUkrainian", "tracks": ["*"]},
     {"name": "Learn Ukrainian Language", "handle": "@LearnUkrainianLanguage", "tracks": ["*"]},
+    {"name": "Learn Ukrainian with Vakulenko", "handle": "@learnukrainianwithvakulenko", "tracks": ["*"]},
+    {"name": "VERBA SCHOOL", "handle": "@verbaschool", "tracks": ["*"]},
+    {"name": "Red Purple Ukrainian", "handle": "@RedPurpleUkrainian", "tracks": ["*"]},
+    {"name": "Ukrainian Guy", "handle": "@ukrainianguy", "tracks": ["*"]},
+    {"name": "Bright Kids Ukrainian", "handle": "@BrightKidsUkrainianOnlineSchool", "tracks": ["a1", "a2"]},
     {"name": "Listen & Read", "handle": "@listen-read", "tracks": ["*"]},
     {"name": "UkrainerNet", "handle": "@ukrainernet", "tracks": ["*"]},
     # History (HIST, ISTORIO, BIO)

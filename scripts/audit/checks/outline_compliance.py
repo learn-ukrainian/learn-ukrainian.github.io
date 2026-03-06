@@ -206,6 +206,10 @@ def normalize_section_name(name: str) -> str:
     # Remove em-dash subtitles (disabled because it breaks sections with common prefixes)
     # name = re.sub(r"\s+[—–\-]\s+.*$", "", name)
 
+    # Remove parenthetical English translations — these cause false mismatches
+    # e.g. "Тверда група (Hard Stem)" vs "Тверда група прикметників (Hard Stem Adjectives)"
+    name = re.sub(r"\s*\([^)]*\)\s*", " ", name)
+
     # Remove punctuation
     name = re.sub(r"[^\wа-яіїєґ\s]", " ", name)
 
@@ -287,7 +291,7 @@ def check_outline_compliance(
                 "type": "NO_SECTIONS_FOUND",
                 "message": (
                     "No sections found in markdown, but content_outline exists in meta YAML.\n"
-                    "  Expected sections:\n" + "\n".join(f"    - {s['section']}" for s in outline)
+                    "  Expected sections:\n" + "\n".join(f"    - {s.get('section') or s.get('title', '?')}" for s in outline)
                 ),
                 "severity": "error",
             }
@@ -295,7 +299,7 @@ def check_outline_compliance(
         return violations
 
     # Build outline section names for matching
-    outline_section_names = [s["section"] for s in outline]
+    outline_section_names = [s.get("section") or s.get("title", "") for s in outline]
     matched_outline_sections = set()
 
     # Sections that are handled by sidecars/Docusaurus and don't need to be in MD
@@ -328,7 +332,7 @@ def check_outline_compliance(
 
     # Check each outline section exists in markdown
     for outline_sec in outline:
-        section_name = outline_sec["section"]
+        section_name = outline_sec.get("section") or outline_sec.get("title", "")
         expected_words = outline_sec.get("words", 0)
 
         # Skip exempt sections if they are missing from markdown
@@ -447,7 +451,7 @@ def get_section_word_summary(file_path: str) -> Optional[Dict]:
     total_actual = 0
 
     for outline_sec in outline:
-        section_name = outline_sec["section"]
+        section_name = outline_sec.get("section") or outline_sec.get("title", "")
         expected = outline_sec["words"]
         total_expected += expected
 

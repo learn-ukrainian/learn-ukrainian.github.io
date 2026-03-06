@@ -2097,18 +2097,10 @@ def main():
                 print(f'\n❌ CRITICAL: Error parsing YAML activities for {mod.slug}: {e}')
                 sys.exit(1)
 
-        # EXTERNAL RESOURCES — try both slug formats:
-        #   "a1-the-cyrillic-code-i" (manifest slug) and
-        #   "a1-01-the-cyrillic-code-i" (numbered slug from resource generator)
+        # EXTERNAL RESOURCES — single source of truth: external_resources.yaml
+        # Discovery files are pipeline intermediates, not rendered directly.
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
-        if not module_resources:
-            numbered_id = f"{mod.level}-{str(mod.local_num).zfill(2)}-{mod.slug}"
-            module_resources = all_resources.get(numbered_id, {})
-
-        # Merge discovered resources (from pipeline discover phase)
-        discovery_resources = _load_discovery_resources(level_dir, mod.slug)
-        module_resources = _merge_resources(module_resources, discovery_resources)
 
         # Detect pipeline version and build status
         pv, bs = detect_pipeline_info(level_dir, mod.slug)

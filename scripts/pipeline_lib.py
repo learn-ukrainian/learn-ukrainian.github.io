@@ -167,6 +167,9 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
         "- ONLY 1 clause per sentence (no compound sentences)\n"
         "- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам, їм, -ові/-еві endings)\n"
         "  Exception: нам is taught as decodable vocabulary in M1 (reading drill word, not grammar)\n"
+        "  Exception (M19 likes-and-preferences): Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n"
+        "    ONLY in the fixed construction «Мені подобається + noun/infinitive». Teach as a memorized\n"
+        "    chunk — do NOT explain dative case rules or paradigms.\n"
         "- Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)\n"
         "- NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n"
         "- Only imperfective aspect verbs\n"
@@ -266,7 +269,26 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, "
         "Розглянемо, Скажіть — always use English equivalents (Let us look at, Let's talk about, "
         "Let's review, Please tell me)\n"
+        "- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
+        "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
+        "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
+        "Давайте розглянемо, Розглянемо.\n"
+        "  INSTEAD OF → USE:\n"
+        "  - Запам'ятайте → \"Remember that...\" (English)\n"
+        "  - Порівняйте → \"Compare...\" (English)\n"
+        "  - Зверніть увагу → \"Notice that...\" (English)\n"
+        "  - Подивіться → \"Look at...\" (English)\n"
+        "  - Спробуйте → \"Try to...\" (English)\n"
+        "  - Прочитайте → \"Read...\" (English)\n"
+        "  - Повторіть → \"Repeat...\" (English)\n"
         "- Use English for all classroom instructions\n\n"
+        "VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):\n"
+        "- Це + noun: «Це кіт», «Це стіл»\n"
+        "- Question particles: «Хто це?», «Що це?»\n"
+        "- Noun listings with gender: «стіл (він), книга (вона), вікно (воно)»\n"
+        "- Contextual labels: «Наприклад — For example», «А тепер — And now»\n"
+        "DO NOT use: conjugated verbs, imperatives, infinitives.\n"
+        "Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.\n\n"
         "METALANGUAGE: English-first, Ukrainian term in parentheses on first use"
     ),
     "a1-m11-14": (
@@ -278,7 +300,33 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "Це/Я sentences, memorized phrases\n"
         "- FORBIDDEN: verb conjugation (starts M15), imperatives (M47), "
         "cases beyond nominative (accusative starts M25)\n"
+        "- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, "
+        "Розглянемо, Скажіть — always use English equivalents\n"
+        "- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
+        "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
+        "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
+        "Давайте розглянемо, Розглянемо.\n"
+        "  INSTEAD OF → USE:\n"
+        "  - Запам'ятайте → \"Remember that...\" (English)\n"
+        "  - Порівняйте → \"Compare...\" (English)\n"
+        "  - Зверніть увагу → \"Notice that...\" (English)\n"
+        "  - Подивіться → \"Look at...\" (English)\n"
+        "  - Спробуйте → \"Try to...\" (English)\n"
+        "  - Прочитайте → \"Read...\" (English)\n"
+        "  - Повторіть → \"Repeat...\" (English)\n"
         "- Use English for classroom instructions\n\n"
+        "VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):\n"
+        "- Це + noun: «Це кіт», «Це нова книга»\n"
+        "- Adj + noun phrases: «великий дім», «червона сукня», «гарне місто»\n"
+        "- Question particles: «Хто це?», «Що це?», «Який?», «Яка?», «Яке?»\n"
+        "- Demonstratives: «Цей стіл», «Ця книга», «Це вікно», «Ці слова»\n"
+        "- Possessives: «мій зошит», «моя мама», «моє місто», «мої друзі»\n"
+        "- Preposition + noun: «у місті», «на столі», «з молоком»\n"
+        "- Noun listings: «кіт, собака, хом'як — це тварини»\n"
+        "- Contextual labels: «Наприклад — For example», «А тепер — And now»\n"
+        "- Comparisons (without verbs): «кіт — маленький, собака — великий»\n"
+        "DO NOT use: conjugated verbs (є, має, робить), imperatives, infinitives.\n"
+        "Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.\n\n"
         "METALANGUAGE: English-first, Ukrainian in parentheses"
     ),
     "a1-m15+": (
@@ -287,6 +335,18 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) "
         "are NOT taught until M47 (imperative-and-requests). "
         "Before M47, use indirect requests or English for instructions.\n\n"
+        "BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
+        "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
+        "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
+        "Давайте розглянемо, Розглянемо.\n\n"
+        "INSTEAD OF → USE:\n"
+        "- Запам'ятайте → \"Remember that...\" (English)\n"
+        "- Порівняйте → \"Compare...\" (English)\n"
+        "- Зверніть увагу → \"Notice that...\" (English)\n"
+        "- Подивіться → \"Look at...\" (English)\n"
+        "- Спробуйте → \"Try to...\" (English)\n"
+        "- Прочитайте → \"Read...\" (English)\n"
+        "- Повторіть → \"Repeat...\" (English)\n\n"
         "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) "
         "apply in addition to this constraint."
     ),
@@ -456,6 +516,46 @@ def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
 # ---------------------------------------------------------------------------
 # Level-aware structural rules for phase-2 content
 # ---------------------------------------------------------------------------
+
+
+def _build_exact_section_titles(ctx) -> str:
+    """Build an explicit list of required H2 section titles from the content outline."""
+    if not ctx.content_outline:
+        return ""
+    titles = []
+    for section in ctx.content_outline:
+        name = section.get("section") or section.get("title", "")
+        words = section.get("words", 0)
+        if name:
+            titles.append(f"- `## {name}` (~{words} words)")
+    if not titles:
+        return ""
+    return (
+        "## REQUIRED H2 Sections (use EXACT titles)\n\n"
+        "Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, "
+        "or add creative subtitles. The audit will reject any section with a different title.\n\n"
+        + "\n".join(titles)
+    )
+
+
+def _get_checkpoint_guidance(ctx) -> str:
+    """Return checkpoint-specific guidance if module slug starts with 'checkpoint-'."""
+    if not ctx.slug.startswith("checkpoint-"):
+        return ""
+    return textwrap.dedent("""\
+        ## Checkpoint Module Guidance
+
+        This is a CHECKPOINT (review/consolidation) module, NOT a teaching module.
+
+        **Structure differences from regular modules:**
+        - Do NOT introduce new grammar or vocabulary
+        - REVIEW and consolidate concepts from the preceding phase
+        - Use INTEGRATION exercises that combine skills from multiple prior modules
+        - Include a self-assessment section where students can gauge their progress
+        - Focus on PRACTICE, not explanation — students already learned the concepts
+        - Activities should test recall and application, not introduce new patterns
+        - Include a "What you should know by now" summary of prior module objectives
+    """)
 
 
 def _get_writing_tone(track: str, module_num: int) -> str:
@@ -830,10 +930,43 @@ def get_immersion_rule(track: str, module_num: int) -> str:
         return IMMERSION_RULES["b2+"]
 
 
-def get_level_constraints(track: str) -> str:
-    """Get grammar constraint text for the base level."""
+def get_level_constraints(track: str, plan: dict | None = None) -> str:
+    """Get grammar constraint text for the base level.
+
+    For A1, if the module's plan explicitly teaches a banned grammar construct
+    (e.g. Dative case), the corresponding ban is relaxed automatically.
+    """
     base = track.split("-")[0]
-    return LEVEL_CONSTRAINTS.get(base, LEVEL_CONSTRAINTS["c1"])
+    constraints = LEVEL_CONSTRAINTS.get(base, LEVEL_CONSTRAINTS["c1"])
+
+    if base == "a1" and plan:
+        grammar_list = plan.get("grammar", [])
+        if grammar_list:
+            # Filter out negative instructions ("do NOT teach", "avoid") before matching
+            grammar_text = " ".join(
+                str(g).lower() for g in grammar_list
+                if not any(neg in str(g).lower() for neg in ("do not", "don't", "avoid", "не ", "заборон"))
+            )
+            relaxations: list[str] = []
+
+            if any(kw in grammar_text for kw in ("dative", "давальн", "мені подобається")):
+                relaxations.append("Dative case (plan teaches it)")
+            if any(kw in grammar_text for kw in ("instrumental", "орудн", "з другом")):
+                relaxations.append("Instrumental case (plan teaches it)")
+            if any(kw in grammar_text for kw in ("subordinate", "підрядн", "який", "що-clause",
+                                                   "коли", "якщо", "тому що", "бо", "щоб")):
+                relaxations.append("Subordinate clauses (plan teaches them)")
+
+            if relaxations:
+                relaxed_list = ", ".join(relaxations)
+                constraints += (
+                    f"\n\nPLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module "
+                    f"because the plan explicitly teaches these constructs: {relaxed_list}. "
+                    "Exception: If a grammar construct appears in this module's plan grammar list "
+                    "or objectives, it is ALLOWED for this module."
+                )
+
+    return constraints
 
 
 def get_activity_config(track: str, module_num: int) -> dict[str, str]:
@@ -1295,6 +1428,32 @@ def dispatch_gemini_raw(
     return False, last_output
 
 
+# ---------------------------------------------------------------------------
+# Gemini session capture
+# ---------------------------------------------------------------------------
+_GEMINI_SESSION_DIR = Path.home() / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
+
+
+def save_gemini_session(dest: Path, label: str = "session") -> bool:
+    """Copy the most recent gemini-cli session JSON to dest directory.
+
+    Returns True if a session was found and copied.
+    """
+    if not _GEMINI_SESSION_DIR.exists():
+        return False
+    try:
+        sessions = sorted(_GEMINI_SESSION_DIR.glob("session-*.json"), key=lambda p: p.stat().st_mtime)
+        if not sessions:
+            return False
+        latest = sessions[-1]
+        dest.mkdir(parents=True, exist_ok=True)
+        target = dest / f"{label}-gemini-session.json"
+        shutil.copy2(latest, target)
+        return True
+    except Exception:
+        return False
+
+
 # Rate limit / auth failure signatures in Gemini CLI output
 _RATE_LIMIT_PATTERNS = [
     "Error authenticating",
@@ -1711,8 +1870,17 @@ def _extract_pedagogy_violations(audit_output: str) -> list[dict]:
             # Violation line: "  [TYPE] description"
             m = re.match(r"\s*\[([^\]]+)\]\s+(.*)", stripped)
             if m:
+                vtype = m.group(1)
+                # Skip noise from RAG/embedding model loading and progress bars
+                if vtype.lower() in ("embed", "info", "warning", "error", "debug"):
+                    continue
+                if any(noise in stripped for noise in (
+                    "Loading BGE", "BGE-M3 loaded", "Fetching", "it/s]",
+                    "XLMRoberta", "tokenizer",
+                )):
+                    continue
                 violations.append({
-                    "type": m.group(1),
+                    "type": vtype,
                     "issue": m.group(2),
                     "fix": "",
                 })
@@ -1936,6 +2104,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         1. Fix ONLY the issues listed above — do not rewrite working content
         2. Preserve section structure and word counts
         3. Do NOT add or remove sections
+        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
         {section_fix}
     """)
 
@@ -2361,7 +2530,8 @@ def write_placeholders(ctx: ModuleContext) -> None:
                                "DECODABLE_VOCABULARY", "STRUCTURAL_RULES",
                                "H3_WORD_RANGE", "EXPANSION_METHOD",
                                "WRITING_TONE_INSTRUCTION",
-                               "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES"}
+                               "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES",
+                               "SELF_AUDIT_SNIPPET"}
             if _critical_keys <= set(existing.keys()):
                 log("Placeholders: Using existing")
                 return
@@ -2387,6 +2557,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "QUICK_REF_PATH": str(quick_ref_path) if quick_ref_path else "",
         "SCHEMA_PATH": f"schemas/activities-{ctx.track}.schema.json",
         "WORD_TARGET": str(ctx.word_target),
+        "WORD_CEILING": str(int(ctx.word_target * 1.5)),
         "SKILL_IDENTITY": ctx.skill_identity,
         "PERSONA_FLAVOR": ctx.persona_flavor,
         "PERSONA_VOICE": ctx.plan.get("persona", {}).get("voice", ""),
@@ -2400,6 +2571,8 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
         "WRITING_TONE_INSTRUCTION": _get_writing_tone(ctx.track, ctx.module_num),
         "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
+        "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
+        "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),
         "INTRO_HOOK": (
             "Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
             else "Чому це важливо? — Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
@@ -2440,6 +2613,10 @@ def write_placeholders(ctx: ModuleContext) -> None:
             vh_lines.append("")
         vh_lines.append("Do NOT add vocabulary items beyond this list unless they are "
                         "decodable from the module's letter set and appear in the lesson content.")
+        vh_lines.append("")
+        vh_lines.append("**VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints "
+                        "MUST appear at least once in the module content. Orphaned vocabulary "
+                        "(listed but never used in content) is a validation failure.")
         placeholders["VOCAB_HINTS"] = "\n".join(vh_lines)
     else:
         placeholders["VOCAB_HINTS"] = ""
@@ -2506,6 +2683,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
     # Shared rules (injected into tier-specific prompts via placeholders)
     placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
+    placeholders["SELF_AUDIT_SNIPPET"] = _read_phase_file("_shared-self-audit.md")
 
     placeholders.update(ctx.activity_config)
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
@@ -2754,7 +2932,7 @@ def _prefetch_sources_for_phase_B(ctx: ModuleContext) -> str:
     topic = ctx.meta.get("topic_title", ctx.slug.replace("-", " "))
     search_terms.append(topic)
     for section in ctx.content_outline:
-        section_name = section.get("section", "")
+        section_name = section.get("section") or section.get("title", "")
         if section_name:
             search_terms.append(section_name)
     # Add vocabulary hints as search terms
@@ -2815,7 +2993,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     if plan_keywords:
         search_terms.extend(plan_keywords[:3])
     for section in ctx.content_outline[:3]:
-        section_name = section.get("section", "")
+        section_name = section.get("section") or section.get("title", "")
         if section_name:
             uk_part = section_name.split("—")[0].strip() if "—" in section_name else section_name
             search_terms.append(uk_part)
@@ -2895,7 +3073,9 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     except ImportError:
         return ""
 
-    if base in ("a1", "a2"):
+    if base in ("a1", "a2") and (base != "a1" or ctx.module_num <= 14):
+        # M1-M14 (script & first contact): bukvar syllable/letter exercises
+        # A2: grade 2 bukvar
         subject = "bukvar"
         grade = 1 if base == "a1" else 2
         header = (
@@ -2905,6 +3085,17 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
             "notice how they use simple syllable combinations, short words, "
             "and build progressively. Do NOT copy them verbatim, but match their "
             "pedagogical approach and simplicity.\n\n"
+        )
+    elif base == "a1" and ctx.module_num >= 15:
+        # M15+: grammar textbooks (verbs, cases, tenses) — bukvar is irrelevant
+        subject = "ukrainska-mova"
+        grade = None
+        header = (
+            "## Textbook Reference (from Ukrainian grammar textbooks)\n\n"
+            "These are explanations from Ukrainian school grammar textbooks. "
+            "Use them as **reference** for grammar rules and examples. "
+            "Adapt for adult A1 learners — keep explanations simple "
+            "but maintain grammatical accuracy.\n\n"
         )
     else:
         # --- B1+ core tracks: ukrainska-mova grammar ---
@@ -2929,10 +3120,10 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
                 continue
             seen_chunks.add(cid)
             author = hit.get("author", "")
-            grade = hit.get("grade", "")
+            hit_grade = hit.get("grade", "")
             section = hit.get("section_title", hit.get("section", ""))
             text = hit.get("text", "")[:500]
-            label = f"Grade {grade}, {author}" if author else f"Grade {grade}"
+            label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
             results.append(
                 f"**{label}** — {section}:\n```\n{text}\n```"
             )
@@ -2989,6 +3180,33 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     word_target_tokens = ctx.word_target * 2 // 1000
     primary_sources = _prefetch_sources_for_phase_B(ctx)
+
+    # Fix 12: Extract research-identified errors and surface them to content prompt
+    research_errors = ""
+    _research_path = ctx.paths.get("research")
+    if _research_path and _research_path.exists():
+        try:
+            _research_text = _research_path.read_text("utf-8")
+            _error_lines: list[str] = []
+            _in_error_section = False
+            for _rline in _research_text.split("\n"):
+                _lower = _rline.lower()
+                if any(kw in _lower for kw in ["common errors:", "помилки", "common mistakes:",
+                                                 "типові помилки", "frequent errors"]):
+                    _in_error_section = True
+                    _error_lines.append(_rline)
+                elif _in_error_section:
+                    if _rline.startswith("#"):
+                        # Next heading — stop collecting
+                        break  # New heading ends the section
+                    else:
+                        _error_lines.append(_rline)
+            if len(_error_lines) > 1:
+                research_errors = "\n".join(_error_lines).strip()
+                log(f"  Phase 2: Extracted {len(_error_lines)-1} research error line(s) for content prompt")
+        except Exception:
+            pass
+
     overrides = {
         "OVERSHOOT_TARGET": str(overshoot),
         "ENGAGEMENT_MIN": str(engagement_min),
@@ -2996,6 +3214,10 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         "SECTION_BUDGET_TABLE": _build_section_budget_table(sections, ctx.word_target),
         "WORD_TARGET_TOKENS": str(word_target_tokens),
         "PRIMARY_SOURCE_EXCERPTS": primary_sources or "(No primary source excerpts available from RAG)",
+        "RESEARCH_ERRORS": (
+            f"RESEARCH-IDENTIFIED ERRORS (avoid these in content):\n{research_errors}"
+            if research_errors else ""
+        ),
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
         return False
@@ -3016,6 +3238,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         if attempt > 1 and content_path.exists():
             current_text = content_path.read_text(encoding="utf-8")
             current_words = len(current_text.split())
+            # Skip expand if content already meets or exceeds word target
+            if current_words >= ctx.word_target:
+                log(f"  Phase 2: word count {current_words} >= target {ctx.word_target}, skipping expand")
+                mark_phase(ctx, phase, "complete", words=current_words, attempts=attempt - 1)
+                return True
             deficit = ctx.word_target - current_words
             had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
             if had_truncation:
@@ -3035,6 +3262,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             _dispatch_prompt(ctx, dispatch_file),
             task_id=f"yw-{ctx.slug}-p2{task_suffix}",
             model=ctx.model, stdout_only=True, output_file=output_file,
+            allow_write=True, timeout=1200,
         )
         if not ok:
             log(f"  Phase 2: Dispatch failed (attempt {attempt})")
@@ -3057,13 +3285,29 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log("  Phase 2: ⚠ Gemini reported token limit truncation")
                 last_friction = friction if is_real_truncation else last_friction
 
+            # Extract self-audit result if Gemini ran audit in-session
+            self_audit = _extract_delimited_content(raw, "===SELF_AUDIT_START===", "===SELF_AUDIT_END===")
+            if self_audit:
+                sa_file = ctx.orch_dir / f"self-audit-output-{attempt}.md"
+                sa_file.write_text(self_audit, encoding="utf-8")
+                sa_passed = "status: PASS" in self_audit or "status:PASS" in self_audit
+                log(f"  Phase 2: Self-audit {'PASSED' if sa_passed else 'FAILED'} → {sa_file.name}")
+                if sa_passed:
+                    ctx._self_audited = True  # type: ignore[attr-defined]
+
         if not content_text:
-            log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
-            continue
+            # Fallback: Gemini may have written directly to CONTENT_PATH via allow_write
+            if content_path.exists() and content_path.stat().st_size > 100:
+                content_text = content_path.read_text(encoding="utf-8")
+                log(f"  Phase 2: No delimiters, but Gemini wrote {content_path.name} directly ({len(content_text.split())}w)")
+            else:
+                log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
+                continue
 
         content_path.write_text(content_text, encoding="utf-8")
-        # Save extracted content to orchestration dir for traceability
+        # Save extracted content + session to orchestration dir for traceability
         (ctx.orch_dir / f"phase-2-output-{attempt}.md").write_text(content_text, encoding="utf-8")
+        save_gemini_session(ctx.orch_dir, label=f"phase-2-attempt-{attempt}")
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
         log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
@@ -3264,7 +3508,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
     skill_name, skill_identity, persona_flavor = get_track_skill(track, num)
     immersion_rule = get_immersion_rule(track, num)
-    level_constraints = get_level_constraints(track)
+    level_constraints = get_level_constraints(track, plan)
     activity_config = get_activity_config(track, num)
     track_config = get_track_config(track)
 

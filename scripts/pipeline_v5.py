@@ -11,6 +11,7 @@ State file: state-v5.json (plain phase keys, no "v4-" prefix).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -44,9 +45,7 @@ from pipeline_lib import (
     run_verify,
     _build_fix_prompt, _apply_section_fixes, _identify_affected_sections,
     fill_template, _dispatch_prompt, _gemini_output_path,
-    _run_with_heartbeat, _init_log,
-    # Phase E (MDX) — reuse directly
-    phase_8_mdx,
+    _run_with_heartbeat, _init_log, save_gemini_session,
     # Phase B content (archive check + fallback to phase_2_content)
     phase_B_content,
     # Preflight + completion
@@ -85,6 +84,7 @@ MAX_REVIEW_FIX_ITERS = 2
 
 # Dispatch timeouts (seconds)
 TIMEOUT_CONTENT = 600
+TIMEOUT_CONTENT_SELFAUDIT = 1200  # 20 min: generate + audit + fix in one session
 TIMEOUT_ACTIVITIES = 600
 TIMEOUT_FIX = 600
 TIMEOUT_REVIEW = 900
@@ -375,52 +375,111 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     if current_max_mtime > 0 and current_max_mtime <= last_mtime:
         return 0
 
-    # 1. Euphony auto-fix
+    # 1. Content text transforms — read once, apply all, write once
     if content_path and content_path.exists():
         try:
-            from audit.checks.euphony import auto_fix_euphony
             text = content_path.read_text("utf-8")
-            fixed_text, n = auto_fix_euphony(text, str(content_path))
-            if n > 0:
-                content_path.write_text(fixed_text, "utf-8")
-                total += n
-                log(f"    Auto-fix: {n} euphony violation(s)")
-        except Exception as e:
-            logger.warning("Auto-fix: euphony failed", exc_info=True)
-            log(f"    Auto-fix: euphony failed: {e}")
+            dirty = False
 
-    # 1.5. Demote extra H1 headings to H2
-    if content_path and content_path.exists():
-        try:
-            text = content_path.read_text("utf-8")
-            lines = text.split('\n')
-            h1_count = 0
-            changed = False
-            for i, line in enumerate(lines):
-                if line.startswith('# ') and not line.startswith('## '):
-                    h1_count += 1
-                    if h1_count > 1:
-                        lines[i] = '#' + line
-                        changed = True
-            if changed:
-                content_path.write_text('\n'.join(lines), "utf-8")
-                total += 1
-                log(f"    Auto-fix: demoted {h1_count - 1} extra H1 heading(s) to H2")
-        except Exception as e:
-            logger.warning("Auto-fix: H1 demotion failed: %s", e)
+            # 1a. Euphony auto-fix
+            try:
+                from audit.checks.euphony import auto_fix_euphony
+                text, n = auto_fix_euphony(text, str(content_path))
+                if n > 0:
+                    dirty = True
+                    total += n
+                    log(f"    Auto-fix: {n} euphony violation(s)")
+            except Exception as e:
+                logger.warning("Auto-fix: euphony failed: %s", e)
 
-    # 1.6. Strip IPA / phonetic brackets
-    if content_path and content_path.exists():
-        try:
-            text = content_path.read_text("utf-8")
-            cleaned = re.sub(r' \[[^\]\n]{2,40}\] \(', ' (', text)
-            if cleaned != text:
-                n_ipa = text.count('[') - cleaned.count('[')
-                content_path.write_text(cleaned, "utf-8")
-                total += n_ipa
-                log(f"    Auto-fix: stripped {n_ipa} IPA/phonetic bracket(s)")
+            # 1b. Demote extra H1 headings to H2
+            try:
+                lines = text.split('\n')
+                h1_count = 0
+                changed = False
+                in_code_block = False
+                for i, line in enumerate(lines):
+                    if line.strip().startswith('```'):
+                        in_code_block = not in_code_block
+                        continue
+                    if in_code_block:
+                        continue
+                    if line.startswith('# ') and not line.startswith('## '):
+                        h1_count += 1
+                        if h1_count > 1:
+                            lines[i] = '#' + line
+                            changed = True
+                if changed:
+                    text = '\n'.join(lines)
+                    dirty = True
+                    total += 1
+                    log(f"    Auto-fix: demoted {h1_count - 1} extra H1 heading(s) to H2")
+            except Exception as e:
+                logger.warning("Auto-fix: H1 demotion failed: %s", e)
+
+            # 1c. Auto-correct H2 section titles to match content_outline
+            try:
+                if ctx.content_outline:
+                    expected_titles = {
+                        (s.get("section") or s.get("title", "")).strip(): (s.get("section") or s.get("title", "")).strip()
+                        for s in ctx.content_outline if s.get("section") or s.get("title")
+                    }
+                    if expected_titles:
+                        from difflib import SequenceMatcher
+                        from audit.checks.outline_compliance import normalize_section_name
+                        new_lines = text.split('\n')
+                        in_cb = False
+                        for i, ln in enumerate(new_lines):
+                            if ln.strip().startswith('```'):
+                                in_cb = not in_cb
+                                continue
+                            if in_cb:
+                                continue
+                            if ln.startswith('## ') and not ln.startswith('### '):
+                                md_title = ln[3:].strip()
+                                md_norm = normalize_section_name(md_title)
+                                # Check if this title already matches an expected title
+                                exact_match = any(
+                                    normalize_section_name(et) == md_norm for et in expected_titles
+                                )
+                                if not exact_match:
+                                    # Try fuzzy match
+                                    best_score = 0.0
+                                    best_expected = ""
+                                    for et in expected_titles:
+                                        score = SequenceMatcher(
+                                            None, md_norm, normalize_section_name(et)
+                                        ).ratio()
+                                        if score > best_score:
+                                            best_score = score
+                                            best_expected = et
+                                    if best_score >= 0.6 and best_expected:
+                                        new_lines[i] = f"## {best_expected}"
+                                        changed = True
+                                        log(f"    Auto-fix: H2 title '{md_title}' → '{best_expected}' (similarity {best_score:.0%})")
+                        if changed:
+                            text = '\n'.join(new_lines)
+                            dirty = True
+                            total += 1
+            except Exception as e:
+                logger.warning("Auto-fix: H2 title correction failed: %s", e)
+
+            # 1d. Strip IPA / phonetic brackets
+            try:
+                cleaned = re.sub(r' \[[^\]\n]{2,40}\] \(', ' (', text)
+                if cleaned != text:
+                    n_ipa = text.count('[') - cleaned.count('[')
+                    text = cleaned
+                    dirty = True
+                    total += n_ipa
+                    log(f"    Auto-fix: stripped {n_ipa} IPA/phonetic bracket(s)")
+            except Exception as e:
+                logger.warning("Auto-fix: IPA strip failed: %s", e)
+
+            if dirty:
+                content_path.write_text(text, "utf-8")
         except Exception as e:
-            logger.warning("Auto-fix: IPA strip failed: %s", e)
+            logger.warning("Auto-fix: content read failed: %s", e)
 
     # 2. YAML schema fixes (activities)
     act_path = ctx.paths.get("activities")
@@ -2611,8 +2670,73 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
 # Phase: discover
 # ---------------------------------------------------------------------------
 
+def _update_external_resources(ctx: ModuleContext, result: Any) -> None:
+    """Write discovered blogs/videos to external_resources.yaml."""
+    import yaml as _yaml
+    ext_path = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
+    if not ext_path.exists():
+        return
+
+    try:
+        data = _yaml.safe_load(ext_path.read_text("utf-8"))
+        resources = data.get("resources", {})
+    except Exception:
+        return
+
+    module_key = f"{ctx.track}-{ctx.slug}"
+
+    # Build new entries from discovery results
+    articles: list[dict] = []
+    seen_urls: set[str] = set()
+
+    for blog in getattr(result, "blogs", []):
+        url = blog.get("url", "")
+        if not url or url in seen_urls or blog.get("relevance_score", 0) < 0.5:
+            continue
+        seen_urls.add(url)
+        articles.append({
+            "title": blog.get("title", ""),
+            "url": url,
+            "relevance": "high" if blog.get("relevance_score", 0) >= 0.7 else "medium",
+            "source": blog.get("source", ""),
+        })
+
+    youtube: list[dict] = []
+    for vid in getattr(result, "videos", []):
+        url = getattr(vid, "url", "")
+        if not url or url in seen_urls or getattr(vid, "relevance_score", 0) < 0.5:
+            continue
+        seen_urls.add(url)
+        youtube.append({
+            "title": getattr(vid, "title", ""),
+            "url": url,
+            "source": getattr(vid, "channel", ""),
+        })
+
+    if not articles and not youtube:
+        return
+
+    entry = resources.get(module_key, {}) or {}
+    if articles:
+        entry["articles"] = articles
+    if youtube:
+        entry["youtube"] = youtube
+    resources[module_key] = entry
+
+    try:
+        with open(ext_path, "w", encoding="utf-8") as f:
+            _yaml.dump(data, f, allow_unicode=True, default_flow_style=False,
+                       sort_keys=False, width=120)
+    except Exception as e:
+        log(f"  discover: WARNING — failed to update external_resources.yaml: {e}")
+
 def phase_discover(ctx: ModuleContext, state: dict) -> bool:
-    """Discover: video/blog/RAG search. Always returns True (non-blocking)."""
+    """Discover: video/blog/RAG search. Always returns True (non-blocking).
+
+    Results are written to:
+    - discovery/{slug}.yaml (pipeline state, used by review phase for RAG context)
+    - external_resources.yaml (single source of truth for MDX rendering)
+    """
     if is_complete(state, "discover"):
         log("  discover: SKIP (already complete)")
         return True
@@ -2678,15 +2802,17 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
     orch_discovery = ctx.orch_dir / "discovery.yaml"
     write_discovery_yaml(result, orch_discovery)
 
+    # Write blog/podcast results to external_resources.yaml (single source of truth for MDX)
+    _update_external_resources(ctx, result)
+
+    relevant = [v for v in result.videos if v.relevance_score >= 0.5]
+    n_rag = len(result.rag_chunks) + len(result.rag_images) + len(result.rag_literary)
+    log(f"  discover: {len(result.videos)} videos ({len(relevant)} relevant), "
+        f"{len(result.blogs)} blogs, {n_rag} RAG items")
     if result.error:
-        log(f"  discover: completed with error: {result.error}")
+        log(f"  discover: WARNING: {result.error}")
     elif result.warning:
-        log(f"  discover: {result.warning}")
-    else:
-        relevant = [v for v in result.videos if v.relevance_score >= 0.5]
-        n_rag = len(result.rag_chunks) + len(result.rag_images) + len(result.rag_literary)
-        log(f"  discover: found {len(result.videos)} videos ({len(relevant)} relevant), "
-            f"{len(result.blogs)} blogs, {n_rag} RAG items")
+        log(f"  discover: WARNING: {result.warning}")
 
     _append_discovery_to_research(ctx, result)
 
@@ -2714,11 +2840,24 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         mark_failed(state, "content", ctx)
         return False
 
+    # Track self-audit status from content phase
+    self_audited = getattr(ctx, "_self_audited", False)
+    if self_audited:
+        log("  content: Self-audit PASSED in content session — validate will use reduced fix iterations")
+        state.setdefault("phases", {}).setdefault("content", {})["self_audited"] = True
+
     # Post-content gates
     content_path = ctx.paths.get("md")
     if content_path and content_path.exists():
         from audit.cleaners import clean_for_stats
         raw = content_path.read_text("utf-8")
+
+        # Deterministic heading fix: Summary must be H1
+        fixed = re.sub(r'^##\s+(Підсумок|Summary)\b', r'# \1', raw, flags=re.MULTILINE)
+        if fixed != raw:
+            content_path.write_text(fixed, "utf-8")
+            log("  content: Fixed Summary/Підсумок heading level (## → #)")
+            raw = fixed
 
         # Gate 1: Word count
         if ctx.word_target:
@@ -2880,6 +3019,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
             wrote_activities = True
             log(f"  activities: Activities extracted → {act_path.name}")
             (ctx.orch_dir / "phase-C-output-activities.yaml").write_text(activities_text, "utf-8")
+            save_gemini_session(ctx.orch_dir, label="phase-C")
 
     if not wrote_vocab:
         vocab_text = _extract_delimiter_tolerant(raw_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
@@ -3077,17 +3217,58 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
             _update_pipeline_status(ctx, "draft")
             return True
 
-    # Gemini fix loop
+    # Gemini fix loop — reduce iterations if content was self-audited
     max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
+    content_self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
+    if content_self_audited and max_iters > 2:
+        log(f"  validate: Content was self-audited — reducing max fix iterations from {max_iters} to 2")
+        max_iters = 2
     content_path = ctx.paths["md"]
     prev_audit_output = screen.audit_output
 
     consecutive_failures = 0
+    _seen_fix_hashes: set[str] = set()
     for attempt in range(1, max_iters + 1):
         log(f"  validate: Fix attempt {attempt}/{max_iters}...")
 
         fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False,
                                        deterministic_issues=screen.deterministic_issues)
+
+        # Guard: skip if fix prompt has no specific violations (just boilerplate)
+        # Count "### Fix" headers — if zero, the prompt is empty/useless
+        _fix_count = fix_prompt.count("### Fix")
+        _other_failures = "### Other Audit Failures" in fix_prompt
+        if _fix_count == 0 and not _other_failures:
+            log(f"  validate: EMPTY fix prompt (no violations extracted), escalating directly")
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+                screen = _deterministic_screen(ctx, skip_review=_skip_review)
+                _save_screen_result(ctx, screen)
+                mark_complete(state, phase, ctx,
+                              attempts=attempt, note="escalation-empty-fix")
+                _update_pipeline_status(ctx, "draft")
+                return True
+            _save_screen_result(ctx, screen)
+            mark_failed(state, phase, ctx, attempts=attempt, note="empty-fix-exhausted")
+            _update_pipeline_status(ctx, "needs-manual-review")
+            return False
+
+        # Dedup: skip if we already sent an identical fix prompt
+        _fix_hash = hashlib.sha256(fix_prompt.encode()).hexdigest()[:16]
+        if _fix_hash in _seen_fix_hashes:
+            log(f"  validate: DEDUP — fix prompt identical to a previous attempt, escalating")
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+                screen = _deterministic_screen(ctx, skip_review=_skip_review)
+                _save_screen_result(ctx, screen)
+                mark_complete(state, phase, ctx,
+                              attempts=attempt, note="escalation-claude-dedup")
+                _update_pipeline_status(ctx, "draft")
+                return True
+            _save_screen_result(ctx, screen)
+            mark_failed(state, phase, ctx, attempts=attempt, note="dedup-exhausted")
+            _update_pipeline_status(ctx, "needs-manual-review")
+            return False
+        _seen_fix_hashes.add(_fix_hash)
+
         fix_prompt_file = ctx.orch_dir / f"validate-fix{attempt}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
@@ -3109,6 +3290,9 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
 
         if fix_output.exists():
             fix_text = fix_output.read_text("utf-8")
+            # Save raw Gemini output + session to orchestration for debugging fix loops
+            (ctx.orch_dir / f"validate-fix{attempt}-raw.md").write_text(fix_text, "utf-8")
+            save_gemini_session(ctx.orch_dir, label=f"validate-fix{attempt}")
             if "===SECTION_FIX_START===" in fix_text:
                 _apply_section_fixes(ctx.paths["md"], fix_text)
                 if ctx.paths.get("activities") and ctx.paths["activities"].exists():
@@ -3646,9 +3830,73 @@ def phase_review(ctx: ModuleContext, state: dict) -> bool:
 # Phase: mdx
 # ---------------------------------------------------------------------------
 
+def _clean_external_resources(ctx: ModuleContext) -> None:
+    """Remove garbage entries from this module's external_resources.yaml slot."""
+    from fix_external_resources import (
+        RESOURCES_PATH, _is_generic_url, _is_generic_title,
+    )
+    if not RESOURCES_PATH.exists():
+        return
+    try:
+        import yaml
+        data = yaml.safe_load(RESOURCES_PATH.read_text("utf-8"))
+        resources = data.get("resources", {})
+    except Exception:
+        return
+
+    # Find this module's key
+    slug = ctx.slug
+    matching_keys = [k for k in resources if k == slug or k.endswith(f"-{slug}")]
+    if not matching_keys:
+        return
+
+    removed = 0
+    for key in matching_keys:
+        module_data = resources.get(key)
+        if not module_data:
+            continue
+        for cat in ("youtube", "articles", "websites"):
+            items = module_data.get(cat, [])
+            if not items:
+                continue
+            clean_items = []
+            for item in items:
+                url = item.get("url", "")
+                title = item.get("title", "")
+                if _is_generic_url(url) or _is_generic_title(title) or "example" in url:
+                    removed += 1
+                else:
+                    clean_items.append(item)
+            if clean_items:
+                module_data[cat] = clean_items
+            elif cat in module_data:
+                del module_data[cat]
+
+    if removed:
+        with open(RESOURCES_PATH, "w", encoding="utf-8") as f:
+            yaml.dump(data, f, allow_unicode=True, default_flow_style=False,
+                      sort_keys=False, width=120)
+        log(f"  mdx: Cleaned {removed} bad external resource entries")
+
+
 def phase_mdx(ctx: ModuleContext) -> bool:
-    """MDX generation + lint. Delegates to pipeline_lib.phase_8_mdx."""
-    return phase_8_mdx(ctx)
+    """MDX generation + lint. Deterministic, no LLM."""
+    if ctx.dry_run:
+        log("  mdx: DRY-RUN — would generate MDX")
+        return True
+
+    # Clean garbage from external resources before generating MDX
+    _clean_external_resources(ctx)
+
+    log("  mdx: Generating MDX...")
+    result = subprocess.run(
+        [sys.executable, str(SCRIPTS_DIR / "generate_mdx.py"),
+         "l2-uk-en", ctx.track, str(ctx.module_num)],
+        cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=600,
+    )
+    if result.returncode != 0:
+        log(f"  mdx: WARNING — MDX generation returned {result.returncode}")
+    return True
 
 
 # ============================================================================
@@ -3736,6 +3984,14 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
         log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
             if not _call_phase(PHASE_FUNCTIONS[phase_id], phase_id, ctx, state):
+                _expected = {
+                    "research": ctx.paths.get("research"),
+                    "content": ctx.paths.get("md"),
+                    "activities": ctx.paths.get("activities"),
+                }
+                _exp_path = _expected.get(phase_id)
+                if _exp_path and not _exp_path.exists():
+                    log(f"  {phase_id}: WARNING — no output produced ({_exp_path.name} missing), pipeline may halt")
                 if phase_id in NON_BLOCKING:
                     log(f"  {phase_id}: FAIL — continuing")
                     continue
@@ -3753,7 +4009,17 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
             return True
 
         func = PHASE_FUNCTIONS[phase_id]
-        if not _call_phase(func, phase_id, ctx, state):
+        ok = _call_phase(func, phase_id, ctx, state)
+        if not ok:
+            # Check for expected output files to diagnose silent failures
+            _expected = {
+                "research": ctx.paths.get("research"),
+                "content": ctx.paths.get("md"),
+                "activities": ctx.paths.get("activities"),
+            }
+            _exp_path = _expected.get(phase_id)
+            if _exp_path and not _exp_path.exists():
+                log(f"  {phase_id}: WARNING — no output produced ({_exp_path.name} missing), pipeline may halt")
             if phase_id in NON_BLOCKING:
                 log(f"  {phase_id}: FAIL — continuing")
                 continue
