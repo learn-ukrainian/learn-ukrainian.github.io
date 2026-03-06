@@ -96,6 +96,15 @@ vocabulary:
       - word: "пісня"
         emoji: "🎶"
         sentence: "Ми слухаємо пісню."
+      - word: "яблуко"
+        emoji: "🍎"
+        sentence: "Дитина їсть яблуко."
+      - word: "сік"
+        emoji: "🧃"
+        sentence: "Я п'ю сік."
+      - word: "телефон"
+        emoji: "📱"
+        sentence: "Вона бачить телефон."
 
 # ─────────────────────────────────────────────
 # ACTIVITIES
