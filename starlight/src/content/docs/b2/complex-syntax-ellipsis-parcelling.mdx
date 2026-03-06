@@ -4,6 +4,9 @@ description: "Omitted words and stylistic fragmentation"
 sidebar:
   order: 22
   label: "22. Складний синтаксис: еліпсис і парцеляція"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Складний синтаксис: еліпсис і парцеляція
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -303,7 +312,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **термін** |  | term | ім |  |
+| **поняття** |  | concept | ім |  |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **еліпсис** |  | ellipsis | ім |  |
+| **парцеляція** |  | parcelling | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **нагнітання** |  | buildup | ім |  |
+| **лаконічність** |  | conciseness | ім |  |
+| **динаміка** |  | dynamics | ім |  |
+| **синтаксис** |  | syntax | ім |  |
+| **експресія** |  | expression | ім |  |
+| **стилістика** |  | stylistics | ім |  |
+| **номінативний** |  | nominative | adjective |  |
+| **інтонація** |  | intonation | ім |  |
+| **фрагментація** |  | fragmentation | ім |  |
+| **зв'язка** |  | copula | ім |  |
+| **обставина** |  | adverbial modifier | ім |  |
+| **додаток** |  | object | ім |  |
+| **ефект** |  | effect | ім |  |
+| **штучний** |  | artificial | adjective |  |
+| **свідомий** |  | conscious | adjective |  |
+| **напруга** |  | tension | ім |  |
+| **ритм** |  | rhythm | ім |  |
+| **пауза** |  | pause | ім |  |
+| **ізоляція** |  | isolation | ім |  |
+| **цілісність** |  | integrity | ім |  |
+| **інтуїція** |  | intuition | ім |  |
+| **пропуск** |  | omission | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Уривок із поезії Ліни Костенко
 
@@ -364,37 +410,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Характеристики еліпсису": ["Свідомий художній пропуск слова", "Повна відсутність дієслова-зв'язки", "Швидке пришвидшення динаміки розповіді", "Часта заміна дієслова на тире", "Дуже короткі рекламні слогани"], "Характеристики парцеляції": ["Штучний розрив цілого речення", "Використання крапки для глибокої паузи", "Створення сильного емоційного нагнітання", "Майстерна імітація розірваного мовлення", "Жорстке відокремлення другорядних членів"]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **термін** | [ˈtɛrmʲin] | term | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **еліпсис** | [ˈɛlʲipsɪs] | ellipsis | ім |  |
-| **парцеляція** | [pɑrt͡sɛˈlʲɑt͡sʲijɑ] | parcelling | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **нагнітання** | [nɑɦnʲiˈtɑnʲːɑ] | buildup | ім |  |
-| **лаконічність** | [lɑkɔˈnʲit͡ʃnʲisʲtʲ] | conciseness | ім |  |
-| **динаміка** | [dɪˈnɑmʲikɑ] | dynamics | ім |  |
-| **синтаксис** | [ˈsɪntɑksɪs] | syntax | ім |  |
-| **експресія** | [ɛˈksprɛsʲijɑ] | expression | ім |  |
-| **стилістика** | [stɪˈlʲistɪkɑ] | stylistics | ім |  |
-| **номінативний** | [nɔmʲinɑˈtɪu̯nɪj] | nominative | adjective |  |
-| **інтонація** | [intɔˈnɑt͡sʲijɑ] | intonation | ім |  |
-| **фрагментація** | [frɑɦmɛnˈtɑt͡sʲijɑ] | fragmentation | ім |  |
-| **зв'язка** | [ˈzʋjɑzkɑ] | copula | ім |  |
-| **обставина** | [ɔˈbstɑʋɪnɑ] | adverbial modifier | ім |  |
-| **додаток** | [dɔˈdɑtɔk] | object | ім |  |
-| **ефект** | [ɛˈfɛkt] | effect | ім |  |
-| **штучний** | [ˈʃtut͡ʃnɪj] | artificial | adjective |  |
-| **свідомий** | [sʲʋʲiˈdɔmɪj] | conscious | adjective |  |
-| **напруга** | [nɑˈpruɦɑ] | tension | ім |  |
-| **ритм** | [rɪtm] | rhythm | ім |  |
-| **пауза** | [ˈpɑuzɑ] | pause | ім |  |
-| **ізоляція** | [izɔˈlʲɑt͡sʲijɑ] | isolation | ім |  |
-| **цілісність** | [ˈt͡sʲilʲisʲnʲisʲtʲ] | integrity | ім |  |
-| **інтуїція** | [intuˈjit͡sʲijɑ] | intuition | ім |  |
-| **пропуск** | [ˈprɔpusk] | omission | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**🌐 Сайти:**
+- [Електронна бібліотека](https://www.ukrlib.com.ua/) — твори класиків української літератури
+:::
+
+</TabItem>
+</Tabs>

@@ -1,9 +1,12 @@
 ---
 title: "Офіційно-діловий стиль: документи, закони, заяви"
-description: ""
+description: "Official and Legal Ukrainian"
 sidebar:
   order: 29
   label: "29. Офіційно-діловий стиль: документи, закони, заяви"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Офіційно-діловий стиль: документи, закони, заяви
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -428,7 +437,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **офіційно-діловий стиль** |  | official-business style | ім |  |
+| **заява** |  | application/statement | ім |  |
+| **наказ** |  | order/decree | ім |  |
+| **протокол** |  | minutes/protocol | ім |  |
+| **згідно з** |  | according to | preposition |  |
+| **відповідно до** |  | in accordance with | preposition |  |
+| **брати участь** |  | to participate | дієсл |  |
+| **вживати заходів** |  | to take measures | дієсл |  |
+| **протягом** |  | during/throughout | preposition |  |
+| **чинний** |  | valid/effective | adjective |  |
+| **універсал** |  | universal (historical act) | ім |  |
+| **канцеляризм** |  | bureaucratese | ім |  |
+| **реквізит** |  | requisite/detail | ім |  |
+| **постанова** |  | resolution | ім |  |
+| **віддієслівний іменник** |  | verbal noun | ім |  |
+| **законодавство** |  | legislation | ім |  |
+| **договір** |  | contract/agreement | ім |  |
+| **юрисдикція** |  | jurisdiction | ім |  |
+| **преамбула** |  | preamble | ім |  |
+| **укладати** |  | to conclude/sign (a contract) | дієсл |  |
+| **скасувати** |  | to cancel/annul | дієсл |  |
+| **порядок денний** |  | agenda | ім |  |
+| **витяг** |  | extract/excerpt | ім |  |
+| **підпис** |  | signature | ім |  |
+| **печатка** |  | stamp/seal | ім |  |
+| **адресат** |  | addressee | ім |  |
+| **адресант** |  | sender | ім |  |
+| **ухвалити** |  | to resolve/decide | дієсл |  |
+| **розпорядження** |  | directive/order | ім |  |
+| **акт** |  | act/document | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірте свої знання про офіційно-діловий стиль
 
@@ -487,37 +533,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Письмове завдання: Оформлення заяви" prompt={"Уявіть, що ви працюєте менеджером відділу маркетингу в ТОВ 'Глобал'. Напишіть офіційну заяву на ім'я директора компанії (Коваленка Олександра Івановича) з проханням надати вам щорічну оплачувану відпустку терміном на 14 календарних днів з 1 числа наступного місяця. Зверніть особливу увагу на правильне оформлення шапки документа (відмінки) та розташування всіх обов'язкових реквізитів."} modelAnswer={"Директору ТОВ 'Глобал'\nКоваленку О. І.\nменеджера відділу маркетингу\n[Ваше прізвище та ініціали]\n\nЗаява\n\nПрошу надати мені щорічну оплачувану відпустку терміном на 14 календарних днів з 01 червня 2024 року.\n\n25.05.2024                                       (підпис)"} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Оформлення шапки | Адресат вказаний у Давальному відмінку, адресант — у Родовому без прийменника 'від'. | 4 |\n| Структура та реквізити | Наявні назва документа, чіткий текст, дата та місце для підпису. | 3 |\n| Стилістика тексту | Використано стандартні кліше ('Прошу надати'), відсутні емоційні чи неформальні вирази. | 3 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **офіційно-діловий стиль** | [ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj stɪlʲ] | official-business style | ім |  |
-| **заява** | [zɑˈjɑʋɑ] | application/statement | ім |  |
-| **наказ** | [nɑˈkɑz] | order/decree | ім |  |
-| **протокол** | [prɔtɔˈkɔl] | minutes/protocol | ім |  |
-| **згідно з** | [ˈzʲɦʲidnɔ z] | according to | preposition |  |
-| **відповідно до** | [ʋʲidpɔˈʋʲidnɔ dɔ] | in accordance with | preposition |  |
-| **брати участь** | [ˈbrɑtɪ ˈut͡ʃɑsʲtʲ] | to participate | дієсл |  |
-| **вживати заходів** | [ʋʒɪˈʋɑtɪ ˈzɑxɔdʲiu̯] | to take measures | дієсл |  |
-| **протягом** | [ˈprɔtʲɑɦɔm] | during/throughout | preposition |  |
-| **чинний** | [ˈt͡ʃɪnːɪj] | valid/effective | adjective |  |
-| **універсал** | [unʲiʋɛrˈsɑl] | universal (historical act) | ім |  |
-| **канцеляризм** | [kɑnt͡sɛlʲɑˈrɪzm] | bureaucratese | ім |  |
-| **реквізит** | [rɛkʋʲiˈzɪt] | requisite/detail | ім |  |
-| **постанова** | [pɔstɑˈnɔʋɑ] | resolution | ім |  |
-| **віддієслівний іменник** | [ʋʲidʲːijɛˈsʲlʲiu̯nɪj iˈmɛnːɪk] | verbal noun | ім |  |
-| **законодавство** | [zɑkɔnɔˈdɑu̯stʋɔ] | legislation | ім |  |
-| **договір** | [ˈdɔɦɔˈʋʲir] | contract/agreement | ім |  |
-| **юрисдикція** | [jurɪˈzdɪkt͡sʲijɑ] | jurisdiction | ім |  |
-| **преамбула** | [prɛˈɑmbulɑ] | preamble | ім |  |
-| **укладати** | [uklɑˈdɑtɪ] | to conclude/sign (a contract) | дієсл |  |
-| **скасувати** | [skɑsuˈʋɑtɪ] | to cancel/annul | дієсл |  |
-| **порядок денний** | [pɔˈrʲɑdɔk ˈdɛnːɪj] | agenda | ім |  |
-| **витяг** | [ˈʋɪtʲɑɦ] | extract/excerpt | ім |  |
-| **підпис** | [ˈpʲidpɪs] | signature | ім |  |
-| **печатка** | [pɛˈt͡ʃɑtkɑ] | stamp/seal | ім |  |
-| **адресат** | [ɑdrɛˈsɑt] | addressee | ім |  |
-| **адресант** | [ɑdrɛˈsɑnt] | sender | ім |  |
-| **ухвалити** | [uxʋɑˈlɪtɪ] | to resolve/decide | дієсл |  |
-| **розпорядження** | [rɔzpɔˈrʲɑd͡ʒɛnʲːɑ] | directive/order | ім |  |
-| **акт** | [ɑkt] | act/document | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

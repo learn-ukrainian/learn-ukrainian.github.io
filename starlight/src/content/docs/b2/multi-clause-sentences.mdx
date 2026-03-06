@@ -1,9 +1,12 @@
 ---
 title: "Багатоскладні речення"
-description: ""
+description: "Складнопідрядні та складносурядні речення"
 sidebar:
   order: 18
   label: "18. Багатоскладні речення"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Багатоскладні речення
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -409,7 +418,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **складносурядне речення** |  | compound sentence | фраза |  |
+| **складнопідрядне речення** |  | complex sentence | фраза |  |
+| **підрядне речення** |  | subordinate clause | фраза |  |
+| **головне речення** |  | main clause | фраза |  |
+| **сполучник** |  | conjunction | ім |  |
+| **сполучне слово** |  | relative word | фраза |  |
+| **послідовне підпорядкування** |  | sequential subordination | фраза |  |
+| **однорідне підпорядкування** |  | homogeneous subordination | фраза |  |
+| **пунктуація** |  | punctuation | ім |  |
+| **кома** |  | comma | ім |  |
+| **вкладене речення** |  | embedded clause | фраза |  |
+| **синтаксис** |  | syntax | ім |  |
+| **проте** |  | however | conjunction |  |
+| **оскільки** |  | since / as | conjunction |  |
+| **дарма що** |  | albeit / even though | conjunction |  |
+| **який** |  | which | pronoun |  |
+| **котрий** |  | which / who | pronoun |  |
+| **залежно від** |  | depending on | preposition |  |
+| **плинність** |  | flow | ім |  |
+| **сполучний зв'язок** |  | conjunctive connection | фраза |  |
+| **граматична основа** |  | grammatical core | фраза |  |
+| **єднальний зв'язок** |  | copulative connection | фраза |  |
+| **протиставний зв'язок** |  | adversative connection | фраза |  |
+| **розділовий зв'язок** |  | disjunctive connection | фраза |  |
+| **означальне речення** |  | attributive clause | фраза |  |
+| **з'ясувальне речення** |  | object clause | фраза |  |
+| **обставинне речення** |  | adverbial clause | фраза |  |
+| **милозвучність** |  | euphony | ім |  |
+| **русизм** |  | Russianism | ім |  |
+| **дієприкметниковий зворот** |  | participial phrase | фраза |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Теоретичні аспекти: Багатоскладні речення
 
@@ -470,37 +516,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Есе: Архітектура думки" prompt={"Напишіть невелике есе (мінімум 150 слів) про важливість вивчення іноземних мов у сучасному світі. Використайте у своєму тексті щонайменше одне складносурядне речення з протиставним сполучником, одне складнопідрядне означальне речення зі словом який, одне речення з однорідним підпорядкуванням та одну вкладену конструкцію. Зверніть особливу увагу на правильну пунктуацію."} modelAnswer={"Вивчення іноземних мов є надзвичайно важливим у сучасному світі, оскільки воно відкриває перед нами безліч нових можливостей. Багато людей вважають цей процес складним, проте регулярна практика дозволяє досягти вражаючих результатів. Цей процес, який вимагає величезного терпіння та щоденної концентрації, допомагає розвивати пам'ять і загальні когнітивні здібності людини. Ми чітко розуміємо, що знання мов розширює наші кар'єрні горизонти і що культурний обмін стає значно легшим та приємнішим. Якщо ви хочете зрозуміти справжній менталітет іншої нації, ви обов'язково повинні вивчати її мову, тому що саме в ній заховані найглибші культурні коди суспільства. Зрештою, кожна нова вивчена мова — це ще одне велике вікно у світ, яке дозволяє нам бачити реальність значно ширше, глибше та об'єктивніше, уникаючи стереотипів."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Синтаксична складність | Наявність усіх необхідних багатоскладних конструкцій (протиставлення, означальні речення, однорідне підпорядкування, вкладена конструкція). | 40 |\n| Пунктуація | Правильне використання ком у складних реченнях згідно з правилами українського синтаксису. | 30 |\n| Стилістика та лексика | Відсутність русизмів, використання академічної лексики та збереження професійного регістру. | 30 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **складносурядне речення** | [sklɑdnɔsuˈrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | compound sentence | фраза |  |
-| **складнопідрядне речення** | [sklɑdnɔpʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | complex sentence | фраза |  |
-| **підрядне речення** | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | фраза |  |
-| **головне речення** | [ɦɔlɔˈʋnɛ rɛt͡ʃɛnʲːɑ] | main clause | фраза |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **сполучне слово** | [spɔlut͡ʃnɛ ˈslɔʋɔ] | relative word | фраза |  |
-| **послідовне підпорядкування** | [pɔsʲlʲiˈdɔu̯nɛ pʲidpɔrʲɑdkuˈʋɑnʲːɑ] | sequential subordination | фраза |  |
-| **однорідне підпорядкування** | [ɔdnɔˈrʲidnɛ pʲidpɔrʲɑdkuˈʋɑnʲːɑ] | homogeneous subordination | фраза |  |
-| **пунктуація** | [punktuˈɑt͡sʲijɑ] | punctuation | ім |  |
-| **кома** | [ˈkɔmɑ] | comma | ім |  |
-| **вкладене речення** | [ˈʍklɑdɛnɛ rɛt͡ʃɛnʲːɑ] | embedded clause | фраза |  |
-| **синтаксис** | [ˈsɪntɑksɪs] | syntax | ім |  |
-| **проте** | [prɔˈtɛ] | however | conjunction |  |
-| **оскільки** | [ɔˈsʲkʲilʲkɪ] | since / as | conjunction |  |
-| **дарма що** | [dɑrˈmɑ ʃt͡ʃɔ] | albeit / even though | conjunction |  |
-| **який** | [jɑˈkɪj] | which | pronoun |  |
-| **котрий** | [kɔˈtrɪj] | which / who | pronoun |  |
-| **залежно від** | [zɑˈlɛʒnɔ ʋʲid] | depending on | preposition |  |
-| **плинність** | [ˈplɪnʲːisʲtʲ] | flow | ім |  |
-| **сполучний зв'язок** | [spɔlut͡ʃnɪj zʋjɑzɔk] | conjunctive connection | фраза |  |
-| **граматична основа** | [ɦrɑmɑˈtɪt͡ʃnɑ ɔˈsnɔʋɑ] | grammatical core | фраза |  |
-| **єднальний зв'язок** | [jɛˈdnɑlʲnɪj zʋjɑzɔk] | copulative connection | фраза |  |
-| **протиставний зв'язок** | [prɔtɪˈstɑu̯nɪj zʋjɑzɔk] | adversative connection | фраза |  |
-| **розділовий зв'язок** | [rɔzʲdʲiˈlɔʋɪj zʋjɑzɔk] | disjunctive connection | фраза |  |
-| **означальне речення** | [ɔznɑˈt͡ʃɑlʲnɛ rɛt͡ʃɛnʲːɑ] | attributive clause | фраза |  |
-| **з'ясувальне речення** | [zjɑsuʋɑlʲnɛ rɛt͡ʃɛnʲːɑ] | object clause | фраза |  |
-| **обставинне речення** | [ɔˈbstɑʋɪnːɛ rɛt͡ʃɛnʲːɑ] | adverbial clause | фраза |  |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | ім |  |
-| **русизм** | [ruˈsɪzm] | Russianism | ім |  |
-| **дієприкметниковий зворот** | [dʲijɛprɪkmɛtnɪˈkɔʋɪj zʋɔˈrɔt] | participial phrase | фраза |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Синтаксис української мови](https://uk.wikipedia.org/wiki/Синтаксис_української_мови) — базові поняття
+:::
+
+</TabItem>
+</Tabs>

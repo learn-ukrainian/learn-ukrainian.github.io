@@ -1,9 +1,12 @@
 ---
 title: "Стилістичні сполучники"
-description: ""
+description: "Linking Ideas Across Registers"
 sidebar:
   order: 21
   label: "21. Стилістичні сполучники"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Стилістичні сполучники
+{/**/}
 
 :::warning[❗ Важливо]
 **Чому це важливо?**
@@ -363,7 +372,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **сполучник** |  | connector, conjunction | ім |  |
+| **проте** |  | however, nevertheless | conjunction |  |
+| **зате** |  | but on the other hand | conjunction |  |
+| **натомість** |  | instead | conjunction |  |
+| **відтак** |  | consequently, therefore | conjunction |  |
+| **втім** |  | nevertheless, however | conjunction |  |
+| **причому** |  | moreover, and what is more | conjunction |  |
+| **отже** |  | thus, so | conjunction |  |
+| **незважаючи на** |  | despite, regardless of | preposition |  |
+| **зв'язність** |  | cohesion | ім |  |
+| **тавтологія** |  | tautology | ім |  |
+| **дисонанс** |  | dissonance | ім |  |
+| **дарма що** |  | even though | conjunction |  |
+| **попри те що** |  | despite the fact that | conjunction |  |
+| **внаслідок чого** |  | as a result of which | conjunction |  |
+| **тим більше** |  | all the more so | conjunction |  |
+| **однак** |  | however | conjunction |  |
+| **бо** |  | because, for | conjunction |  |
+| **компенсація** |  | compensation | ім |  |
+| **протиставлення** |  | contrast, opposition | ім |  |
+| **допустовий** |  | concessive | adjective |  |
+| **наслідок** |  | consequence, result | ім |  |
+| **приєднання** |  | addition, joining | ім |  |
+| **сурядність** |  | coordination | ім |  |
+| **підрядність** |  | subordination | ім |  |
+| **синтаксис** |  | syntax | ім |  |
+| **монотонний** |  | monotonous | adjective |  |
+| **неминучий** |  | inevitable | adjective |  |
+| **категоричний** |  | categorical, absolute | adjective |  |
+| **філігранно** |  | exquisitely, delicately | adverb |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірте знання: Функції стилістичних сполучників
 
@@ -424,37 +470,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Написання аргументованого тексту" prompt={"Напишіть абзац-роздум (150-200 слів) на тему: «Чи може штучний інтелект повністю замінити живого викладача?». Використовуйте різноманітні стилістичні сполучники (проте, натомість, причому, відтак, отже) для забезпечення логічної зв'язності та потужної аргументації."} modelAnswer={"Сьогодні багато експертів прогнозують швидке зникнення традиційних професій через стрімкий розвиток сучасних технологій. Дехто вважає, що штучний інтелект здатний повністю замінити живого викладача, оскільки алгоритми можуть миттєво генерувати навчальні матеріали і швидко перевіряти складні тести. Проте така популярна думка є надто оптимістичною і відверто поверхневою. Машина дійсно володіє гігантськими обсягами інформації, причому вона ніколи не втомлюється і зовсім не вимагає перерв. Натомість штучний інтелект абсолютно позбавлений емоційної емпатії, яка є критично важливою у педагогічному процесі навчання. Живий викладач не просто передає сухі факти, він мотивує студента, глибоко відчуває його настрій і психологічний стан, відтак він може вчасно адаптувати свою методику під конкретну людину. Алгоритм бачить лише механічну помилку в тесті, хоча справжня причина цієї помилки може ховатися у невпевненості або страху студента. Отже, новітні технології є лише потужним допоміжним інструментом, але вони ніколи не зможуть повністю відтворити той глибокий людський зв'язок, який необхідний для справжньої, якісної освіти."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання сполучників | У тексті органічно використано не менше 4 різних стилістичних сполучників (напр., проте, причому, натомість, відтак). | 10 |\n| Зв'язність та логіка | Думки викладено послідовно, аргументи логічно випливають один з одного. | 10 |\n| Граматична правильність | Відсутність орфографічних та пунктуаційних помилок, правильне виділення вставних слів. | 5 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | connector, conjunction | ім |  |
-| **проте** | [prɔˈtɛ] | however, nevertheless | conjunction |  |
-| **зате** | [zɑˈtɛ] | but on the other hand | conjunction |  |
-| **натомість** | [nɑˈtɔmʲisʲtʲ] | instead | conjunction |  |
-| **відтак** | [ʋʲiˈdtɑk] | consequently, therefore | conjunction |  |
-| **втім** | [ʍtʲim] | nevertheless, however | conjunction |  |
-| **причому** | [prɪˈt͡ʃɔmu] | moreover, and what is more | conjunction |  |
-| **отже** | [ˈɔd͡ʒɛ] | thus, so | conjunction |  |
-| **незважаючи на** | [nɛzʋɑˈʒɑjut͡ʃɪ nɑ] | despite, regardless of | preposition |  |
-| **зв'язність** | [ˈzʋjɑzʲnʲisʲtʲ] | cohesion | ім |  |
-| **тавтологія** | [tɑu̯tɔˈlɔɦʲijɑ] | tautology | ім |  |
-| **дисонанс** | [dɪsɔˈnɑns] | dissonance | ім |  |
-| **дарма що** | [dɑrˈmɑ ʃt͡ʃɔ] | even though | conjunction |  |
-| **попри те що** | [ˈpɔprɪ tɛ ʃt͡ʃɔ] | despite the fact that | conjunction |  |
-| **внаслідок чого** | [ˈʋnɑsʲlʲidɔk t͡ʃɔˈɦɔ] | as a result of which | conjunction |  |
-| **тим більше** | [tɪm ˈbʲilʲʃɛ] | all the more so | conjunction |  |
-| **однак** | [ɔˈdnɑk] | however | conjunction |  |
-| **бо** | [bɔ] | because, for | conjunction |  |
-| **компенсація** | [kɔmpɛnˈsɑt͡sʲijɑ] | compensation | ім |  |
-| **протиставлення** | [prɔtɪˈstɑu̯lɛnʲːɑ] | contrast, opposition | ім |  |
-| **допустовий** | [dɔpuˈstɔʋɪj] | concessive | adjective |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence, result | ім |  |
-| **приєднання** | [prɪjɛˈdnɑnʲːɑ] | addition, joining | ім |  |
-| **сурядність** | [suˈrʲɑdʲnʲisʲtʲ] | coordination | ім |  |
-| **підрядність** | [pʲiˈdʲrʲɑdʲnʲisʲtʲ] | subordination | ім |  |
-| **синтаксис** | [ˈsɪntɑksɪs] | syntax | ім |  |
-| **монотонний** | [mɔnɔˈtɔnːɪj] | monotonous | adjective |  |
-| **неминучий** | [nɛmɪˈnut͡ʃɪj] | inevitable | adjective |  |
-| **категоричний** | [kɑtɛɦɔˈrɪt͡ʃnɪj] | categorical, absolute | adjective |  |
-| **філігранно** | [fʲilʲiˈɦrɑnːɔ] | exquisitely, delicately | adverb |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Сполучники української мови](https://uk.wikipedia.org/wiki/Сполучник) — теоретичні основи
+:::
+
+</TabItem>
+</Tabs>

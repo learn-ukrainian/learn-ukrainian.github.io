@@ -1,9 +1,12 @@
 ---
 title: "Активні дієприкметники минулого часу (-лий)"
-description: ""
+description: "Past Active Participles and Alternatives"
 sidebar:
   order: 8
   label: "08. Активні дієприкметники минулого часу (-лий)"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Активні дієприкметники минулого часу (-лий)
 
 > **Чому це важливо?**
 >
@@ -340,7 +349,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **минулий** |  | past (chronological) | adjective |  |
+| **колишній** |  | former (status/role) | adjective |  |
+| **майбутній** |  | future | adjective |  |
+| **пожовтілий** |  | yellowed | adjective |  |
+| **зів'ялий** |  | withered | adjective |  |
+| **русизм** |  | russism | ім |  |
+| **нормативний** |  | normative | adjective |  |
+| **синтетичний** |  | synthetic | adjective |  |
+| **антисуржик** |  | anti-surzhyk | ім |  |
+| **канцелярит** |  | bureaucratic jargon | ім |  |
+| **милозвучність** |  | euphony | ім |  |
+| **застарілий** |  | outdated | adjective |  |
+| **посивілий** |  | gray-haired | adjective |  |
+| **вживаний** |  | used / second-hand | adjective |  |
+| **дієприкметник** |  | participle | ім |  |
+| **маргінальний** |  | marginal | adjective |  |
+| **неперехідний** |  | intransitive | adjective |  |
+| **доконаний** |  | perfective | adjective |  |
+| **калькування** |  | calquing / literal translation | ім |  |
+| **знеособлення** |  | depersonalization | ім |  |
+| **підрядний** |  | subordinate | adjective |  |
+| **лексикалізація** |  | lexicalization | ім |  |
+| **інфінітив** |  | infinitive | ім |  |
+| **аналітичний** |  | analytic | adjective |  |
+| **ущільнення** |  | condensation | ім |  |
+| **прийдешнє** |  | the future | ім |  |
+| **спізнілий** |  | late / belated | adjective |  |
+| **абсурд** |  | absurdity | ім |  |
+| **дієвідмінювання** |  | conjugation | ім |  |
+| **той, хто** |  | the one who | pronoun |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Розпізнавання нормативних форм
 
@@ -407,37 +453,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Українська мова має унікальний фонетичний [___:0]}, який називається [___:1]}. Цей принцип вимагає гармонійного чергування голосних та приголосних звуків. Саме тому наша мова історично відкидає важкі [___:2]} на кшталт 'прийшовший' або 'перемігший'. Такі слова є типовими [___:3]}, які прийшли до нас через радянський [___:4]}. Замість них ми використовуємо елегантні [___:5]} речення, наприклад, 'той, [___:6]} прийшов'.\nНормативні активні дієприкметники можуть мати лише суфікс -лий. Вони утворюються від [___:7]} дієслів [___:8]} виду. Прикладами є слова '[___:9]}' для старого листя, '[___:10]}' для старих технологій, або '[___:11]}' для зів'ялих квітів.\nЩодо статусу людей у минулому, ми завжди вживаємо прикметник '[___:12]}', уникаючи суржикового слова 'бувший'. А для подій, що вже пройшли, існує слово '[___:13]}'.\nКрім того, українська мова має унікальну [___:14]} форму майбутнього часу, яка утворюється злиттям інфінітива та особового закінчення. Наприклад, замість 'буду читати' ми кажемо '[___:15]}'."} blanks={JSON.parse(`[{"index": 0, "answer": "принцип", "options": ["принцип", "закон", "напрямок", "варіант"]}, {"index": 1, "answer": "милозвучність", "options": ["милозвучність", "канцелярит", "лексикалізація", "русизм"]}, {"index": 2, "answer": "форми", "options": ["форми", "звуки", "літери", "правила"]}, {"index": 3, "answer": "русизмами", "options": ["русизмами", "нормами", "діалектами", "архаїзмами"]}, {"index": 4, "answer": "канцелярит", "options": ["канцелярит", "правопис", "словник", "документ"]}, {"index": 5, "answer": "підрядні", "options": ["підрядні", "головні", "прості", "вставні"]}, {"index": 6, "answer": "хто", "options": ["хто", "який", "що", "чий"]}, {"index": 7, "answer": "неперехідних", "options": ["неперехідних", "перехідних", "всіх", "зворотних"]}, {"index": 8, "answer": "доконаного", "options": ["доконаного", "недоконаного", "майбутнього", "минулого"]}, {"index": 9, "answer": "пожовтілий", "options": ["пожовтілий", "пожовтівший", "жовтіючий", "жовтий"]}, {"index": 10, "answer": "застарілий", "options": ["застарілий", "старіючий", "постарілий", "старий"]}, {"index": 11, "answer": "зів'ялий", "options": ["зів'ялий", "зів'янувший", "в'янучий", "в'ялий"]}, {"index": 12, "answer": "колишній", "options": ["колишній", "бувший", "минулий", "вживаний"]}, {"index": 13, "answer": "минулий", "options": ["минулий", "колишній", "старий", "бувший"]}, {"index": 14, "answer": "синтетичну", "options": ["синтетичну", "аналітичну", "просту", "складну"]}, {"index": 15, "answer": "читатиму", "options": ["читатиму", "буду читатиму", "читавший", "читатимеш"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **минулий** | [mɪˈnulɪj] | past (chronological) | adjective |  |
-| **колишній** | [kɔˈlɪʃnʲij] | former (status/role) | adjective |  |
-| **майбутній** | [mɑjˈbutʲnʲij] | future | adjective |  |
-| **пожовтілий** | [pɔʒɔˈʋtʲilɪj] | yellowed | adjective |  |
-| **зів'ялий** | [zʲiˈʋjɑlɪj] | withered | adjective |  |
-| **русизм** | [ruˈsɪzm] | russism | ім |  |
-| **нормативний** | [nɔrmɑˈtɪu̯nɪj] | normative | adjective |  |
-| **синтетичний** | [sɪntɛˈtɪt͡ʃnɪj] | synthetic | adjective |  |
-| **антисуржик** | [ɑntɪsurʒɪk] | anti-surzhyk | ім |  |
-| **канцелярит** | [kɑnt͡sɛlʲɑrɪt] | bureaucratic jargon | ім |  |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | ім |  |
-| **застарілий** | [zɑstɑˈrʲilɪj] | outdated | adjective |  |
-| **посивілий** | [pɔˈsɪˈʋʲilɪj] | gray-haired | adjective |  |
-| **вживаний** | [ˈʋʒɪʋɑnɪj] | used / second-hand | adjective |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **маргінальний** | [mɑrɦʲiˈnɑlʲnɪj] | marginal | adjective |  |
-| **неперехідний** | [nɛpɛrɛxʲidnɪj] | intransitive | adjective |  |
-| **доконаний** | [dɔˈkɔnɑnɪj] | perfective | adjective |  |
-| **калькування** | [kɑlʲkuˈʋɑnʲːɑ] | calquing / literal translation | ім |  |
-| **знеособлення** | [znɛɔˈsɔblɛnʲːɑ] | depersonalization | ім |  |
-| **підрядний** | [pʲiˈdʲrʲɑdnɪj] | subordinate | adjective |  |
-| **лексикалізація** | [lɛksɪkɑlʲiˈzɑt͡sʲijɑ] | lexicalization | ім |  |
-| **інфінітив** | [inʲfʲinʲiˈtɪu̯] | infinitive | ім |  |
-| **аналітичний** | [ɑnɑlʲiˈtɪt͡ʃnɪj] | analytic | adjective |  |
-| **ущільнення** | [uˈʃt͡ʃʲilʲnɛnʲːɑ] | condensation | ім |  |
-| **прийдешнє** | [prɪjˈdɛʃnʲɛ] | the future | ім |  |
-| **спізнілий** | [sʲpʲiˈzʲnʲilɪj] | late / belated | adjective |  |
-| **абсурд** | [ɑˈbsurd] | absurdity | ім |  |
-| **дієвідмінювання** | [dʲijɛʋʲiˈdʲmʲinʲuʋɑnʲːɑ] | conjugation | ім |  |
-| **той, хто** | [tɔj, xtɔ] | the one who | pronoun |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

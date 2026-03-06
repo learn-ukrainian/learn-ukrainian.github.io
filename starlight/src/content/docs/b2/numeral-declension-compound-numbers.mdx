@@ -4,6 +4,9 @@ description: "Numeral Declension II: Compound Numbers"
 sidebar:
   order: 45
   label: "45. Відмінювання числівників ІІ: Складені числівники"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Відмінювання числівників ІІ: Складені числівники
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -336,7 +345,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **відсоток** |  | percent | ім |  |
+| **населення** |  | population | ім |  |
+| **бюджет** |  | budget | ім |  |
+| **гривня** |  | hryvnia | ім |  |
+| **кілометр** |  | kilometer | ім |  |
+| **термін** |  | term | ім |  |
+| **поняття** |  | concept | ім |  |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **дослідження** |  | research | ім |  |
+| **кількість** |  | quantity | ім |  |
+| **показник** |  | indicator | ім |  |
+| **бухгалтер** |  | accountant | ім |  |
+| **прибуток** |  | profit | ім |  |
+| **мільйон** |  | million | ім |  |
+| **компанія** |  | company | ім |  |
+| **статистика** |  | statistics | ім |  |
+| **контракт** |  | contract | ім |  |
+| **звіт** |  | report | ім |  |
+| **сума** |  | sum/amount | ім |  |
+| **податок** |  | tax | ім |  |
+| **економіка** |  | economy | ім |  |
+| **інвестиція** |  | investment | ім |  |
+| **директор** |  | director | ім |  |
+| **рахунок** |  | account/bill | ім |  |
+| **транзакція** |  | transaction | ім |  |
+| **баланс** |  | balance | ім |  |
+| **корпорація** |  | corporation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Офіційний звіт бухгалтера
 
@@ -397,37 +443,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Змінюються всі слова (кількісні)": ["триста сорок п'ять", "вісімсот дванадцять", "шістдесят чотири", "дев'ятсот дев'яносто дев'ять", "сто двадцять"], "Змінюється лише останнє слово (порядкові)": ["дві тисячі перший", "тисяча дев'ятсот дев'яностий", "триста восьмий", "сорок третій", "п'ятсот десятий"], "Змінюється друга частина (десятки)": ["п'ятдесят", "шістдесят", "сімдесят", "вісімдесят"]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **відсоток** | [ʋʲiˈd͡zsɔtɔk] | percent | ім |  |
-| **населення** | [nɑˈsɛlɛnʲːɑ] | population | ім |  |
-| **бюджет** | [bʲuˈd͡ʒɛt] | budget | ім |  |
-| **гривня** | [ˈɦrɪu̯nʲɑ] | hryvnia | ім |  |
-| **кілометр** | [kʲilɔˈmɛtr] | kilometer | ім |  |
-| **термін** | [ˈtɛrmʲin] | term | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research | ім |  |
-| **кількість** | [ˈkʲilʲkʲisʲtʲ] | quantity | ім |  |
-| **показник** | [pɔˈkɑznɪk] | indicator | ім |  |
-| **бухгалтер** | [buˈɦɦɑltɛr] | accountant | ім |  |
-| **прибуток** | [prɪˈbutɔk] | profit | ім |  |
-| **мільйон** | [mʲiˈlʲjɔn] | million | ім |  |
-| **компанія** | [kɔmˈpɑnʲijɑ] | company | ім |  |
-| **статистика** | [stɑˈtɪstɪkɑ] | statistics | ім |  |
-| **контракт** | [kɔnˈtrɑkt] | contract | ім |  |
-| **звіт** | [zʲʋʲit] | report | ім |  |
-| **сума** | [sumɑ] | sum/amount | ім |  |
-| **податок** | [pɔˈdɑtɔk] | tax | ім |  |
-| **економіка** | [ɛkɔˈnɔmʲikɑ] | economy | ім |  |
-| **інвестиція** | [inʋɛˈstɪt͡sʲijɑ] | investment | ім |  |
-| **директор** | [dɪˈrɛktɔr] | director | ім |  |
-| **рахунок** | [rɑˈxunɔk] | account/bill | ім |  |
-| **транзакція** | [trɑnˈzɑkt͡sʲijɑ] | transaction | ім |  |
-| **баланс** | [bɑˈlɑns] | balance | ім |  |
-| **корпорація** | [kɔrpɔˈrɑt͡sʲijɑ] | corporation | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Numeral Practice](https://ukrainianlessons.com/numerals) — Ukrainian Lessons
+:::
+
+</TabItem>
+</Tabs>

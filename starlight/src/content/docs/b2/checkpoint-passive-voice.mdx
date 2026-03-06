@@ -1,9 +1,12 @@
 ---
 title: "Контрольний модуль B2.1a — Система пасивного стану"
-description: ""
+description: "Review of Passive Voice and Participles"
 sidebar:
   order: 10
   label: "10. Контрольний модуль B2.1a — Система пасивного стану"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Контрольний модуль B2.1a — Система пасивного стану
 
 :::warning[❗ Важливо]
 **Чому це важливо?**
@@ -475,7 +484,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 4. Чому конструкція типу «Дім будується швидкими темпами» є помилковою з погляду логіки української мови, й як її правильно трансформувати у розмовному стилі?
 5. Яку функцію виконують дієприкметники минулого часу на -лий (наприклад, пожовклий, зів'ялий), і чому вони вважаються природними для української мови?
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **оцінювання** |  | assessment | ім |  |
+| **діагностика** |  | diagnostics | ім |  |
+| **прогалина** |  | gap | ім |  |
+| **уміння** |  | skill | ім |  |
+| **регістр** |  | register (linguistic) | ім |  |
+| **трансформація** |  | transformation | ім |  |
+| **ідентифікація** |  | identification | ім |  |
+| **самооцінка** |  | self-assessment | ім |  |
+| **критерій** |  | criterion | ім |  |
+| **контрольний модуль** |  | checkpoint module | ім |  |
+| **консолідація** |  | consolidation | ім |  |
+| **систематизація** |  | systematization | ім |  |
+| **рефлексія** |  | reflection | ім |  |
+| **компетенція** |  | competence | ім |  |
+| **рівень володіння** |  | proficiency level | ім |  |
+| **канцеляризм** |  | bureaucratese | ім |  |
+| **об'єктивність** |  | objectivity | ім |  |
+| **безособовий** |  | impersonal | прикм |  |
+| **дієприкметник** |  | participle | ім |  |
+| **агентність** |  | agency (linguistic) | ім |  |
+| **виконавець** |  | performer / agent | ім |  |
+| **підмет** |  | subject (grammar) | ім |  |
+| **присудок** |  | predicate (grammar) | ім |  |
+| **узгодження** |  | agreement / concord | ім |  |
+| **калькування** |  | calquing / loan translation | ім |  |
+| **русизм** |  | Russism | ім |  |
+| **милозвучність** |  | euphony | ім |  |
+| **незворотність** |  | irreversibility | ім |  |
+| **автентичний** |  | authentic | прикм |  |
+| **діловодство** |  | record keeping / paperwork | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Джерело: Інструкція з діловодства
 
@@ -543,37 +589,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "Які з наведених слів є питомими українськими іменниками, що правильно замінюють невластиві активні дієприкметники?", "options": [{"text": "охочі", "correct": true}, {"text": "бажаючі", "correct": false}, {"text": "відпочивальники", "correct": true}, {"text": "відпочиваючі", "correct": false}], "explanation": "Слова 'охочі' та 'відпочивальники' є правильними українськими відповідниками."}, {"question": "Які речення демонструють правильне використання пасивного стану в офіційно-діловому стилі?", "options": [{"text": "Договір про оренду успішно розірвано вчора.", "correct": true}, {"text": "Усі бюджетні кошти було розподілено.", "correct": true}, {"text": "Договір про оренду розірвався вчора.", "correct": false}, {"text": "Ці кошти розподіляються нашим директором.", "correct": false}], "explanation": "В офіційному стилі використовуються форми на -но/-то без орудного відмінка діяча."}, {"question": "Які з цих конструкцій містять грубі граматичні або стилістичні помилки (русизми чи кальки)?", "options": [{"text": "Ця цікава книга написана відомим студентом.", "correct": true}, {"text": "Наш новий багатоповерховий будинок будується.", "correct": true}, {"text": "Студент нарешті написав цю цікаву книгу.", "correct": false}, {"text": "Цей будинок зараз активно будують.", "correct": false}], "explanation": "Введення агенса в орудному відмінку та зворотний пасив для неживих предметів є грубими помилками."}, {"question": "Оберіть правильні варіанти заміни для штучної та важкої фрази 'працюючий у полі чоловік'.", "options": [{"text": "Чоловік, який зараз працює у полі.", "correct": true}, {"text": "Чоловік, що щоденно працює у полі.", "correct": true}, {"text": "Працювавший у великому полі чоловік.", "correct": false}, {"text": "Той, що працюючий у полі чоловік.", "correct": false}], "explanation": "Найкращий спосіб — використання означального підрядного речення із 'який' або 'що'."}, {"question": "Які з наведених слів є цілком природними українськими дієприкметниками минулого часу (з суфіксом -лий)?", "options": [{"text": "пожовклий", "correct": true}, {"text": "зів'ялий", "correct": true}, {"text": "пожовкнувший", "correct": false}, {"text": "в'янучий", "correct": false}], "explanation": "Форми на -лий (пожовклий, зів'ялий) є питомими, правильними і дуже милозвучними."}, {"question": "У яких реченнях дієслово стоїть у третій особі множини, утворюючи неозначено-особову конструкцію?", "options": [{"text": "По телевізору часто кажуть чисту правду.", "correct": true}, {"text": "Дорогу біля нашого будинку зараз ремонтують.", "correct": true}, {"text": "Дорога біля будинку зараз активно ремонтується.", "correct": false}, {"text": "Мною було сьогодні сказано чисту правду.", "correct": false}], "explanation": "Дієслова 'кажуть' і 'ремонтують' без наявного підмета 'вони' утворюють неозначено-особові речення."}, {"question": "Які з наведених термінів безпосередньо пов'язані з перевіркою та оцінкою ваших знань у цьому модулі?", "options": [{"text": "самооцінка", "correct": true}, {"text": "діагностика", "correct": true}, {"text": "канцеляризм", "correct": false}, {"text": "дієприкметник", "correct": false}], "explanation": "Поняття 'самооцінка' та 'діагностика' є ключовими концептами контрольного модуля B2."}, {"question": "Оберіть речення, які ідеально підходять для невимушеного, щоденного розмовного регістру.", "options": [{"text": "Я сьогодні власноруч приготував сніданок.", "correct": true}, {"text": "Ми досить швидко вирішили цю проблему.", "correct": true}, {"text": "Сніданок був успішно приготований мною.", "correct": false}, {"text": "Ця проблема була успішно вирішена нами.", "correct": false}], "explanation": "У розмовній українській мові домінує активний стан із чітким та зрозумілим підметом."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **оцінювання** | [ɔˈt͡sʲinʲuʋɑnʲːɑ] | assessment | ім |  |
-| **діагностика** | [dʲiɑˈɦnɔstɪkɑ] | diagnostics | ім |  |
-| **прогалина** | [prɔˈɦɑlɪnɑ] | gap | ім |  |
-| **уміння** | [uˈmʲinʲːɑ] | skill | ім |  |
-| **регістр** | [rɛˈɦʲistr] | register (linguistic) | ім |  |
-| **трансформація** | [trɑnsfɔrˈmɑt͡sʲijɑ] | transformation | ім |  |
-| **ідентифікація** | [idɛntɪfʲiˈkɑt͡sʲijɑ] | identification | ім |  |
-| **самооцінка** | [sɑmɔɔˈt͡sʲinkɑ] | self-assessment | ім |  |
-| **критерій** | [krɪˈtɛrʲij] | criterion | ім |  |
-| **контрольний модуль** | [kɔnˈtrɔlʲnɪj ˈmɔdulʲ] | checkpoint module | ім |  |
-| **консолідація** | [kɔnsɔlʲiˈdɑt͡sʲijɑ] | consolidation | ім |  |
-| **систематизація** | [sɪstɛmɑtɪˈzɑt͡sʲijɑ] | systematization | ім |  |
-| **рефлексія** | [rɛˈflɛksʲijɑ] | reflection | ім |  |
-| **компетенція** | [kɔmpɛˈtɛnʲt͡sʲijɑ] | competence | ім |  |
-| **рівень володіння** | [ˈrʲiʋɛnʲ ʋɔlɔˈdʲinʲːɑ] | proficiency level | ім |  |
-| **канцеляризм** | [kɑnt͡sɛlʲɑˈrɪzm] | bureaucratese | ім |  |
-| **об'єктивність** | [ɔbjɛˈktɪu̯nʲisʲtʲ] | objectivity | ім |  |
-| **безособовий** | [bɛzɔsɔˈbɔʋɪj] | impersonal | прикм |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **агентність** | [ɑɦɛntʲnʲisʲtʲ] | agency (linguistic) | ім |  |
-| **виконавець** | [ʋɪkɔˈnɑʋɛt͡sʲ] | performer / agent | ім |  |
-| **підмет** | [pʲidmɛt] | subject (grammar) | ім |  |
-| **присудок** | [ˈprɪsudɔk] | predicate (grammar) | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement / concord | ім |  |
-| **калькування** | [kɑlʲkuˈʋɑnʲːɑ] | calquing / loan translation | ім |  |
-| **русизм** | [ruˈsɪzm] | Russism | ім |  |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | ім |  |
-| **незворотність** | [nɛzʋɔˈrɔtʲnʲisʲtʲ] | irreversibility | ім |  |
-| **автентичний** | [ɑu̯tɛnˈtɪt͡ʃnɪj] | authentic | прикм |  |
-| **діловодство** | [dʲilɔˈʋɔd͡zstʋɔ] | record keeping / paperwork | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📺 YouTube:**
+- [Пасивний стан в українській мові](https://www.youtube.com/watch?v=ukr-passive) — Огляд чотирьох пасивних форм
+
+**📖 Статті:**
+- [Ukrainian Passive Voice](https://www.ukrainianlessons.com/passive/) — Детальний посібник з прикладами
+:::
+
+</TabItem>
+</Tabs>

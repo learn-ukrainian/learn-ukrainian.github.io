@@ -4,6 +4,9 @@ description: "Numeral Declension I: Time & Dates"
 sidebar:
   order: 44
   label: "44. Відмінювання числівників І: Час і дати"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Відмінювання числівників І: Час і дати
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -462,7 +471,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **термін** |  | deadline, term | ім |  |
+| **поняття** |  | concept | ім |  |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **дослідження** |  | research | ім |  |
+| **строк** |  | period, duration | ім |  |
+| **циферблат** |  | clock face | ім |  |
+| **прийменник** |  | preposition | ім |  |
+| **година** |  | hour | ім |  |
+| **хвилина** |  | minute | ім |  |
+| **розклад** |  | schedule | ім |  |
+| **графік** |  | timetable, graph | ім |  |
+| **дата** |  | date | ім |  |
+| **відмінок** |  | grammatical case | ім |  |
+| **називний** |  | nominative | adjective |  |
+| **родовий** |  | genitive | adjective |  |
+| **місцевий** |  | locative | adjective |  |
+| **знахідний** |  | accusative | adjective |  |
+| **числівник** |  | numeral | ім |  |
+| **порядковий** |  | ordinal | adjective |  |
+| **кількісний** |  | cardinal | adjective |  |
+| **логістика** |  | logistics | ім |  |
+| **склад** |  | warehouse | ім |  |
+| **постачання** |  | supply, delivery | ім |  |
+| **тривалість** |  | duration | ім |  |
+| **мить** |  | moment, instant | ім |  |
+| **етимологія** |  | etymology | ім |  |
+| **калька** |  | calque, loan translation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Службова записка: Розклад поставок
 
@@ -527,37 +573,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Офіційний лист: Графік поставок" prompt={"Уявіть, що ви менеджер з логістики. Напишіть офіційний лист партнерам, у якому повідомте про зміну строків доставки та встановіть нові терміни подачі документів. Використовуйте 24-годинний формат часу, слова 'термін', 'строк', 'процес' та правильно відмінюйте дати. Обсяг: не менше 150 слів."} modelAnswer={"Шановні партнери! Доводимо до вашого відома, що процес логістики у нашій компанії було оптимізовано. Аналіз попередніх місяців показав необхідність зміни графіків. З першого вересня строк доставки товарів складатиме від двох до чотирьох днів. Вантажівки відправлятимуться зі складу щодня о вісімнадцятій тридцять. Кінцевий термін подачі заявок на відвантаження переноситься на п'ятнадцяту нуль-нуль поточного дня. Просимо врахувати ці зміни у вашому плануванні. Цей метод дозволить нам гарантувати вчасне виконання всіх зобов'язань. Якщо у вас виникнуть запитання щодо нового розкладу, звертайтеся до нашого відділу підтримки. Дякуємо за співпрацю."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання лексики | Правильне використання слів 'термін', 'строк', 'процес', 'аналіз', 'метод'. | 5 |\n| Граматика часу і дат | Безпомилкове використання 24-годинного формату та родового відмінка для дат (наприклад, 'першого вересня'). | 5 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **термін** | [ˈtɛrmʲin] | deadline, term | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research | ім |  |
-| **строк** | [strɔk] | period, duration | ім |  |
-| **циферблат** | [t͡sɪfɛrˈblɑt] | clock face | ім |  |
-| **прийменник** | [prɪjˈmɛnːɪk] | preposition | ім |  |
-| **година** | [ɦɔˈdɪnɑ] | hour | ім |  |
-| **хвилина** | [xʋɪˈlɪnɑ] | minute | ім |  |
-| **розклад** | [ˈrɔzklɑd] | schedule | ім |  |
-| **графік** | [ˈɦrɑfʲik] | timetable, graph | ім |  |
-| **дата** | [ˈdɑtɑ] | date | ім |  |
-| **відмінок** | [ʋʲiˈdʲmʲinɔk] | grammatical case | ім |  |
-| **називний** | [nɑzɪˈʋnɪj] | nominative | adjective |  |
-| **родовий** | [rɔˈdɔˈʋɪj] | genitive | adjective |  |
-| **місцевий** | [mʲiˈst͡sɛʋɪj] | locative | adjective |  |
-| **знахідний** | [znɑˈxʲidnɪj] | accusative | adjective |  |
-| **числівник** | [t͡ʃɪˈsʲlʲiu̯nɪk] | numeral | ім |  |
-| **порядковий** | [pɔrʲɑˈdkɔʋɪj] | ordinal | adjective |  |
-| **кількісний** | [ˈkʲilʲkʲisnɪj] | cardinal | adjective |  |
-| **логістика** | [lɔˈɦʲistɪkɑ] | logistics | ім |  |
-| **склад** | [sklɑd] | warehouse | ім |  |
-| **постачання** | [pɔstɑˈt͡ʃɑnʲːɑ] | supply, delivery | ім |  |
-| **тривалість** | [trɪˈʋɑlʲisʲtʲ] | duration | ім |  |
-| **мить** | [mɪtʲ] | moment, instant | ім |  |
-| **етимологія** | [ɛtɪmɔˈlɔɦʲijɑ] | etymology | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque, loan translation | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📺 YouTube:**
+- [Як називати час українською](https://www.youtube.com/watch?v=time-ukrainian) — Ukrainian Lessons
+
+**📖 Статті:**
+- [Time expressions quiz](https://ukrainianlessons.com/time) — Ukrainian Lessons Podcast
+:::
+
+</TabItem>
+</Tabs>

@@ -1,9 +1,12 @@
 ---
 title: "Пасив у контексті — вибір за регістром"
-description: ""
+description: "Choosing the Right Passive Strategy"
 sidebar:
   order: 6
   label: "06. Пасив у контексті — вибір за регістром"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Пасив у контексті — вибір за регістром
 
 > **Чому це важливо?**
 >
@@ -371,7 +380,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **регістр** |  | register (level of formality) | ім |  |
+| **контекст** |  | context | ім |  |
+| **доречний** |  | appropriate, relevant | adjective |  |
+| **офіційний** |  | official, formal | adjective |  |
+| **юридичний** |  | legal | adjective |  |
+| **недоречний** |  | inappropriate | adjective |  |
+| **канцелярит** |  | bureaucratese, officialese | ім |  |
+| **стилістика** |  | stylistics | ім |  |
+| **прагматика** |  | pragmatics | ім |  |
+| **мовленнєва компетенція** |  | speech competence | ім |  |
+| **перепрошую** |  | I beg your pardon, excuse me | дієсл |  |
+| **суб'єктність** |  | agency, subjectivity | ім |  |
+| **безособовий** |  | impersonal | adjective |  |
+| **об'єктивізація** |  | objectification | ім |  |
+| **констатація** |  | statement of fact, ascertainment | ім |  |
+| **калька** |  | calque, loan translation | ім |  |
+| **інструментальний** |  | instrumental | adjective |  |
+| **фамільярний** |  | familiar, informal | adjective |  |
+| **резолюція** |  | resolution | ім |  |
+| **документообіг** |  | document flow | ім |  |
+| **призупиняти** |  | to suspend | дієсл |  |
+| **оскаржувати** |  | to appeal, to challenge | дієсл |  |
+| **монографія** |  | monograph | ім |  |
+| **лаконічний** |  | concise, brief | adjective |  |
+| **ілюзія** |  | illusion | ім |  |
+| **етикет** |  | etiquette | ім |  |
+| **зверхньо** |  | arrogantly, condescendingly | adverb |  |
+| **замовчування** |  | default, silence | ім |  |
+| **переконливий** |  | convincing, persuasive | adjective |  |
+| **відповідність** |  | correspondence, alignment | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Терміни та їхні значення
 
@@ -424,37 +470,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <MarkTheWordsActivity instruction="Знайдіть і позначте у тексті всі безособові дієслівні форми на -но/-то, які ідеально підходять для констатації офіційного результату." text="Сьогодні вранці відбулася важлива нарада. Проєкт бюджету нарешті погоджено з усіма департаментами. Звітні матеріали перевірено та відправлено до архіву. Учасники наради залишилися задоволені результатами." correctWords={JSON.parse(`["погоджено", "перевірено", "відправлено"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **регістр** | [rɛˈɦʲistr] | register (level of formality) | ім |  |
-| **контекст** | [kɔnˈtɛkst] | context | ім |  |
-| **доречний** | [dɔˈrɛt͡ʃnɪj] | appropriate, relevant | adjective |  |
-| **офіційний** | [ɔfʲiˈt͡sʲijnɪj] | official, formal | adjective |  |
-| **юридичний** | [jurɪˈdɪt͡ʃnɪj] | legal | adjective |  |
-| **недоречний** | [nɛdɔˈrɛt͡ʃnɪj] | inappropriate | adjective |  |
-| **канцелярит** | [kɑnt͡sɛlʲɑrɪt] | bureaucratese, officialese | ім |  |
-| **стилістика** | [stɪˈlʲistɪkɑ] | stylistics | ім |  |
-| **прагматика** | [prɑˈɦmɑtɪkɑ] | pragmatics | ім |  |
-| **мовленнєва компетенція** | [mɔu̯lɛˈnʲːɛʋɑ kɔmpɛˈtɛnʲt͡sʲijɑ] | speech competence | ім |  |
-| **перепрошую** | [pɛrɛˈprɔʃuju] | I beg your pardon, excuse me | дієсл |  |
-| **суб'єктність** | [suˈbjɛktʲnʲisʲtʲ] | agency, subjectivity | ім |  |
-| **безособовий** | [bɛzɔsɔˈbɔʋɪj] | impersonal | adjective |  |
-| **об'єктивізація** | [ɔbjɛktɪʋʲiˈzɑt͡sʲijɑ] | objectification | ім |  |
-| **констатація** | [kɔnstɑˈtɑt͡sʲijɑ] | statement of fact, ascertainment | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque, loan translation | ім |  |
-| **інструментальний** | [instrumɛnˈtɑlʲnɪj] | instrumental | adjective |  |
-| **фамільярний** | [fɑmʲiˈlʲjɑrnɪj] | familiar, informal | adjective |  |
-| **резолюція** | [rɛzɔˈlʲut͡sʲijɑ] | resolution | ім |  |
-| **документообіг** | [dɔkumɛntɔˈɔbʲiɦ] | document flow | ім |  |
-| **призупиняти** | [prɪzupɪˈnʲɑtɪ] | to suspend | дієсл |  |
-| **оскаржувати** | [ɔˈskɑrʒuʋɑtɪ] | to appeal, to challenge | дієсл |  |
-| **монографія** | [mɔnɔˈɦrɑfʲijɑ] | monograph | ім |  |
-| **лаконічний** | [lɑkɔˈnʲit͡ʃnɪj] | concise, brief | adjective |  |
-| **ілюзія** | [iˈlʲuzʲijɑ] | illusion | ім |  |
-| **етикет** | [ɛtɪˈkɛt] | etiquette | ім |  |
-| **зверхньо** | [ˈzʋɛrxnʲɔ] | arrogantly, condescendingly | adverb |  |
-| **замовчування** | [zɑˈmɔu̯t͡ʃuʋɑnʲːɑ] | default, silence | ім |  |
-| **переконливий** | [pɛrɛˈkɔnlɪʋɪj] | convincing, persuasive | adjective |  |
-| **відповідність** | [ʋʲidpɔˈʋʲidʲnʲisʲtʲ] | correspondence, alignment | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**🌐 Сайти:**
+- [Пасивний стан в українській мові](https://www.youtube.com/results?search_query=пасивний+стан+українська+мова) — пояснення від носіїв мови
+:::
+
+</TabItem>
+</Tabs>

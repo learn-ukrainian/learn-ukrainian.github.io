@@ -4,6 +4,9 @@ description: "Ну, типу, як говорити по-справжньому"
 sidebar:
   order: 32
   label: "32. Розмовний стиль"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Розмовний стиль
+{/**/}
 
 :::note[📝 Чому це важливо?]
 
@@ -385,7 +394,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **типу** |  | like / sort of | particle |  |
+| **коротше** |  | long story short | adverb |  |
+| **власне** |  | actually / properly speaking | particle |  |
+| **жесть** |  | tough / hardcore | ім |  |
+| **крінж** |  | cringe | ім |  |
+| **краш** |  | crush | ім |  |
+| **бавовна** |  | cotton / explosion | ім |  |
+| **мопед** |  | moped / drone | ім |  |
+| **бачиш** |  | you see | дієсл |  |
+| **отакої** |  | oh my / wow | interjection |  |
+| **інфа** |  | info / information | ім |  |
+| **універ** |  | uni / university | ім |  |
+| **тел** |  | phone | ім |  |
+| **комп** |  | computer / laptop | ім |  |
+| **вуличка** |  | little street | ім |  |
+| **матуся** |  | mommy | ім |  |
+| **кавуся** |  | coffee (affectionate) | ім |  |
+| **бо** |  | because / for | particle |  |
+| **таки** |  | after all / still | particle |  |
+| **отже** |  | therefore / thus | conjunction |  |
+| **по-перше** |  | firstly | adverb |  |
+| **по-друге** |  | secondly | adverb |  |
+| **шурх-шурх** |  | rustle-rustle | interjection |  |
+| **гав** |  | woof | interjection |  |
+| **тю** |  | duh / wow | interjection |  |
+| **знаєш** |  | you know | дієсл |  |
+| **розумієш** |  | you understand | дієсл |  |
+| **крашиха** |  | female crush | ім |  |
+| **смачного** |  | bon appetit | фраза |  |
+| **стендап** |  | stand-up comedy | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Стендап-монолог: Життя без інтернету
 
@@ -446,37 +492,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Творче завдання: Стендап-монолог" prompt={"Уявіть, що ви виступаєте на сцені «Підпільного стендапу». Напишіть короткий монолог (150-250 слів) про смішну або незручну ситуацію з вашого життя. Обов'язково використовуйте розмовний стиль, сучасний сленг (наприклад, крінж, жесть), наповнювачі пауз (типу, коротше) та емфатичні частки (ж, бо, таки)."} modelAnswer={"Усім привіт! Коротше кажучи, сталася зі мною вчора одна історія, це просто повна жесть. Я типу йду собі спокійно вулицею, нікого не чіпаю. І тут бачу — назустріч іде людина, дуже схожа на мого старого знайомого, справжній краш моїх студентських років. Я ж, звісно, радісно махаю рукою, кричу на всю вуличку: «Привіт! Як ти?» Людина зупиняється, дивиться на мене такими великими очима і каже: «Вибачте, ви взагалі хто?» Отакої! Я просто зловив такий крінж, що хотілося під землю провалитися. Власне кажучи, я швиденько розвернувся і побіг у протилежний бік. Отак-от воно буває. Ідіть-бо ви всі зі своїми раптовими зустрічами, краще я буду завжди вдома сидіти."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання розмовної лексики | Правильно та доречно використано сучасні сленгові слова та скорочення. | 4 |\n| Наповнювачі та частки | У тексті присутні органічні наповнювачі пауз та підсилювальні частки. | 3 |\n| Природність і синтаксис | Речення побудовані максимально динамічно, активно використано еліпсис. | 3 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **типу** | [ˈtɪpu] | like / sort of | particle |  |
-| **коротше** | [kɔˈrɔt͡ʃʃɛ] | long story short | adverb |  |
-| **власне** | [ˈʋlɑsnɛ] | actually / properly speaking | particle |  |
-| **жесть** | [ʒɛsʲtʲ] | tough / hardcore | ім |  |
-| **крінж** | [krʲinʒ] | cringe | ім |  |
-| **краш** | [krɑʃ] | crush | ім |  |
-| **бавовна** | [bɑˈʋɔu̯nɑ] | cotton / explosion | ім |  |
-| **мопед** | [mɔˈpɛd] | moped / drone | ім |  |
-| **бачиш** | [ˈbɑt͡ʃɪʃ] | you see | дієсл |  |
-| **отакої** | [ɔtɑˈkɔji] | oh my / wow | interjection |  |
-| **інфа** | [infɑ] | info / information | ім |  |
-| **універ** | [uˈnʲiʋɛr] | uni / university | ім |  |
-| **тел** | [tɛl] | phone | ім |  |
-| **комп** | [kɔmp] | computer / laptop | ім |  |
-| **вуличка** | [ˈʋulɪt͡ʃkɑ] | little street | ім |  |
-| **матуся** | [mɑˈtusʲɑ] | mommy | ім |  |
-| **кавуся** | [kɑˈʋusʲɑ] | coffee (affectionate) | ім |  |
-| **бо** | [bɔ] | because / for | particle |  |
-| **таки** | [tɑˈkɪ] | after all / still | particle |  |
-| **отже** | [ˈɔd͡ʒɛ] | therefore / thus | conjunction |  |
-| **по-перше** | [pɔ-ˈpɛrʃɛ] | firstly | adverb |  |
-| **по-друге** | [pɔ-ˈdruɦɛ] | secondly | adverb |  |
-| **шурх-шурх** | [ʃurx-ʃurx] | rustle-rustle | interjection |  |
-| **гав** | [ɦɑu̯] | woof | interjection |  |
-| **тю** | [tʲu] | duh / wow | interjection |  |
-| **знаєш** | [ˈznɑjɛʃ] | you know | дієсл |  |
-| **розумієш** | [rɔzuˈmʲijɛʃ] | you understand | дієсл |  |
-| **крашиха** | [krɑʃɪxɑ] | female crush | ім |  |
-| **смачного** | [smɑˈt͡ʃnɔɦɔ] | bon appetit | фраза |  |
-| **стендап** | [stɛndɑp] | stand-up comedy | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**🌐 Сайти:**
+- [Українська розмовна мова](https://www.youtube.com/results?search_query=українська+розмовна+мова) — реальні приклади від носіїв
+:::
+
+</TabItem>
+</Tabs>

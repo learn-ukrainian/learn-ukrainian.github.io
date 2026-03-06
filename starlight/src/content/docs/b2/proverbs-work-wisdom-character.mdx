@@ -4,6 +4,9 @@ description: "Proverbs I: Work, Wisdom & Character"
 sidebar:
   order: 57
   label: "57. Прислів'я I: Праця, мудрість і характер"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Прислів'я I: Праця, мудрість і характер
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -371,7 +380,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **праця** |  | work, labor | ім |  |
+| **мудрість** |  | wisdom | ім |  |
+| **характер** |  | character | ім |  |
+| **плід** |  | fruit, result | ім |  |
+| **поняття** |  | concept | ім |  |
+| **дослідження** |  | research | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **процес** |  | process | ім |  |
+| **сродний** |  | congenial, kindred | adjective |  |
+| **найманий** |  | hired | adjective |  |
+| **плідний** |  | fruitful, productive | adjective |  |
+| **загартовувати** |  | to temper, to build (character) | дієсл |  |
+| **блудити** |  | to wander, to get lost | дієсл |  |
+| **відміряти** |  | to measure | дієсл |  |
+| **горобець** |  | sparrow | ім |  |
+| **бджола** |  | bee | ім |  |
+| **мед** |  | honey | ім |  |
+| **золото** |  | gold | ім |  |
+| **клин** |  | wedge | ім |  |
+| **сивина** |  | gray hair | ім |  |
+| **ребро** |  | rib | ім |  |
+| **лестощі** |  | flattery | ім |  |
+| **русизм** |  | Russianism | ім |  |
+| **алгоритм** |  | algorithm | ім |  |
+| **старійшина** |  | elder | ім |  |
+| **покликання** |  | calling, vocation | ім |  |
+| **висновок** |  | conclusion | ім |  |
+| **спадковість** |  | heredity | ім |  |
+| **калькування** |  | calquing | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Первинне джерело: Сила слова та праці
 
@@ -432,37 +478,18 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Аналітичне есе: Сродна праця" prompt={"Поясніть концепцію сродної праці філософа Григорія Сковороди. Як ця історична ідея застосовується до сучасного життєвого вибору кар'єри? Наведіть один розгорнутий приклад з реального життя."} modelAnswer={"Концепція сродної праці Григорія Сковороди є одним із найважливіших філософських здобутків української культури вісімнадцятого століття. Її головна ідея полягає в тому, що кожна людина народжується з певними вродженими талантами та унікальними нахилами до конкретної діяльності. Справжнє людське щастя можливе лише тоді, коли особа займається справою, яка повністю відповідає її внутрішній природі. Якщо ж людина під тиском суспільства обирає дуже престижну або високооплачувану, але абсолютно несродну професію, вона неминуче буде відчувати глибоке внутрішнє незадоволення та розчарування.\nУ нашому сучасному світі ця глибока ідея залишається надзвичайно актуальною. Сьогодні дуже багато людей стикаються з емоційним та професійним вигоранням на високих корпоративних посадах, незважаючи на величезні зарплати. Наприклад, успішний корпоративний юрист може раптово покинути міжнародну фірму, щоб відкрити власну невеличку кав'ярню або ремісничу пекарню. Він робить цей крок тому, що саме в такій простій праці він знаходить гармонію та відчуває радість справжнього творчого процесу. Це і є сучасний пошук сродної праці — постійна спроба знайти ідеальний баланс між фінансовим заробітком та душевним спокоєм. Сковорода вчив нас усіх, що лише через щиру сродну працю ми можемо приносити найбільшу користь суспільству, подібно до працьовитої бджоли, яка із задоволенням збирає солодкий нектар та перетворює його на цілющий мед.\n"} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Змістове наповнення та повнота розкриття | Дуже точне пояснення концепції та наявність релевантного сучасного прикладу з життя. | 5 |\n| Лексична різноманітність та точність | Активне використання вивчених термінів модуля (сродна праця, творчий процес, плідна праця). | 3 |\n| Граматична правильність та чистота | Повна відсутність русизмів, правильна та гарна побудова складних речень. | 2 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **праця** | [ˈprɑt͡sʲɑ] | work, labor | ім |  |
-| **мудрість** | [ˈmudʲrʲisʲtʲ] | wisdom | ім |  |
-| **характер** | [xɑˈrɑktɛr] | character | ім |  |
-| **плід** | [plʲid] | fruit, result | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **сродний** | [srɔdnɪj] | congenial, kindred | adjective |  |
-| **найманий** | [ˈnɑjmɑnɪj] | hired | adjective |  |
-| **плідний** | [ˈplʲidnɪj] | fruitful, productive | adjective |  |
-| **загартовувати** | [zɑɦɑrˈtɔʋuʋɑtɪ] | to temper, to build (character) | дієсл |  |
-| **блудити** | [bluˈdɪtɪ] | to wander, to get lost | дієсл |  |
-| **відміряти** | [ʋʲidʲmʲirʲɑtɪ] | to measure | дієсл |  |
-| **горобець** | [ɦɔrɔˈbɛt͡sʲ] | sparrow | ім |  |
-| **бджола** | [bd͡ʒɔˈlɑ] | bee | ім |  |
-| **мед** | [mɛd] | honey | ім |  |
-| **золото** | [ˈzɔlɔtɔ] | gold | ім |  |
-| **клин** | [klɪn] | wedge | ім |  |
-| **сивина** | [sɪʋɪˈnɑ] | gray hair | ім |  |
-| **ребро** | [rɛˈbrɔ] | rib | ім |  |
-| **лестощі** | [ˈlɛstɔʃt͡ʃʲi] | flattery | ім |  |
-| **русизм** | [ruˈsɪzm] | Russianism | ім |  |
-| **алгоритм** | [ɑlɦɔˈrɪtm] | algorithm | ім |  |
-| **старійшина** | [stɑˈrʲijʃɪnɑ] | elder | ім |  |
-| **покликання** | [pɔˈklɪkɑnʲːɑ] | calling, vocation | ім |  |
-| **висновок** | [ˈʋɪsnɔʋɔk] | conclusion | ім |  |
-| **спадковість** | [spɑˈdkɔʋʲisʲtʲ] | heredity | ім |  |
-| **калькування** | [kɑlʲkuˈʋɑnʲːɑ] | calquing | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Ukrainian Lessons - Proverbs Series](https://ukrainianlessons.com/category/proverbs/) — подкаст з поясненням прислів'їв
+
+**🌐 Сайти:**
+- [Learn Ukrainian with Anna - Idioms and Proverbs](https://www.youtube.com/c/LearnUkrainianWithAnna) — популярний канал з пояснення фразеології
+- [YouTube: Speak Ukrainian - Proverbs](https://www.youtube.com/results?search_query=ukrainian+proverbs+speak+ukrainian) — відеоуроки з вимовою
+:::
+
+</TabItem>
+</Tabs>

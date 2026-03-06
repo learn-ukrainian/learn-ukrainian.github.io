@@ -4,6 +4,9 @@ description: "Мова новин і преси"
 sidebar:
   order: 31
   label: "31. Медійний та журналістський регістр"
+pipeline: v3
+build_status: draft
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Медійний та журналістський регістр
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -332,3 +341,21 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 6. За якими лексичними маркерами в тексті можна розпізнати суб'єктивне судження та упередженість автора?
 
 ---
+
+</TabItem>
+<TabItem label="Словник">
+
+*Немає словника для цього модуля.*
+
+</TabItem>
+<TabItem label="Вправи">
+
+*Немає вправ для цього модуля.*
+
+</TabItem>
+<TabItem label="Ресурси">
+
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

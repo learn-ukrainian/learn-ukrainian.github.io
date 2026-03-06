@@ -4,6 +4,9 @@ description: "Paired Demonstrative and Relative Words"
 sidebar:
   order: 19
   label: "19. Співвідносні конструкції"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Співвідносні конструкції
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -400,7 +409,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **термін** |  | term | ім |  |
+| **поняття** |  | concept | ім |  |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **те, що** |  | that which | фраза |  |
+| **той, хто** |  | the one who | фраза |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **дослідження** |  | research | ім |  |
+| **там, де** |  | there where | фраза |  |
+| **туди, куди** |  | there where to | фраза |  |
+| **звідти, звідки** |  | from there where | фраза |  |
+| **тоді, коли** |  | then when | фраза |  |
+| **доти, поки** |  | until | фраза |  |
+| **стільки, скільки** |  | as much as | фраза |  |
+| **настільки, наскільки** |  | to the extent that | фраза |  |
+| **вказівне слово** |  | demonstrative word | фраза |  |
+| **сполучне слово** |  | conjunctive word | фраза |  |
+| **складнопідрядне речення** |  | complex sentence | фраза |  |
+| **узгодження** |  | agreement | ім |  |
+| **абстракція** |  | abstraction | ім |  |
+| **суб'єкт** |  | subject | ім |  |
+| **об'єкт** |  | object | ім |  |
+| **інтерференція** |  | interference | ім |  |
+| **калька** |  | calque | ім |  |
+| **конструкція** |  | construction | ім |  |
+| **логічний зв'язок** |  | logical connection | фраза |  |
+| **незворотність** |  | irreversibility | ім |  |
+| **ідентифікація** |  | identification | ім |  |
+| **синхронізація** |  | synchronization | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Первинне джерело: Роль корелятивів у науці
 
@@ -463,37 +509,14 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "The one who controls the information has the most influence.", "options": [{"text": "Той, хто контролює інформацію, має найбільше впливу.", "correct": true}, {"text": "Один, хто контролює інформацію, має найбільше впливу.", "correct": false}, {"text": "Те, що контролює інформацію, має найбільше впливу.", "correct": false}, {"text": "Хто контролює інформацію, той має найбільше впливів.", "correct": false}]}, {"source": "We stopped exactly there where the forest began.", "options": [{"text": "Ми зупинилися точно туди, куди починався ліс.", "correct": false}, {"text": "Ми зупинилися саме там, де починався ліс.", "correct": true}, {"text": "Ми зупинилися там, куди починався ліс.", "correct": false}, {"text": "Ми зупинилися туди, де починався ліс.", "correct": false}]}, {"source": "Pay attention to the fact that the conditions have changed.", "options": [{"text": "Зверніть увагу на то, що умови змінилися.", "correct": false}, {"text": "Зверніть увагу на факт, який умови змінилися.", "correct": false}, {"text": "Зверніть увагу на те, що умови змінилися.", "correct": true}, {"text": "Зверніть увагу до того, що умови змінилися.", "correct": false}]}, {"source": "The experiment will continue until we find a solution.", "options": [{"text": "Експеримент триватиме тоді, коли ми знайдемо рішення.", "correct": false}, {"text": "Експеримент триватиме стільки, скільки ми знайдемо рішення.", "correct": false}, {"text": "Експеримент триватиме доти, поки ми не знайдемо рішення.", "correct": true}, {"text": "Експеримент триватиме там, де ми знайдемо рішення.", "correct": false}]}, {"source": "The task was as difficult as we were warned.", "options": [{"text": "Завдання було настільки складним, наскільки нас попереджали.", "correct": true}, {"text": "Завдання було стільки складним, скільки нас попереджали.", "correct": false}, {"text": "Завдання було тоді складним, коли нас попереджали.", "correct": false}, {"text": "Завдання було те складним, що нас попереджали.", "correct": false}]}, {"source": "We are grateful to you for coming.", "options": [{"text": "Ми вдячні вам за то, що ви прийшли.", "correct": false}, {"text": "Ми вдячні вам за те, що ви прийшли.", "correct": true}, {"text": "Ми вдячні вам для того, що ви прийшли.", "correct": false}, {"text": "Ми вдячні вам тому, що ви прийшли.", "correct": false}]}, {"source": "That concept which forms the basis of physics is very complex.", "options": [{"text": "Той поняття, яке формує основу фізики, дуже складний.", "correct": false}, {"text": "Та поняття, що формує основу фізики, дуже складна.", "correct": false}, {"text": "Те поняття, що лежить в основі фізики, є дуже складним.", "correct": true}, {"text": "Ті поняття, які лежать в основі фізики, є дуже складно.", "correct": false}]}, {"source": "True success comes only when a person works hard.", "options": [{"text": "Справжній успіх приходить лише тоді, коли людина наполегливо працює.", "correct": true}, {"text": "Справжній успіх приходить лише доти, поки людина наполегливо працює.", "correct": false}, {"text": "Справжній успіх приходить лише там, де людина наполегливо працює.", "correct": false}, {"text": "Справжній успіх приходить лише настільки, наскільки людина працює.", "correct": false}]}, {"source": "They went there where no one had gone before.", "options": [{"text": "Вони пішли туди, куди ніхто раніше не ходив.", "correct": true}, {"text": "Вони пішли там, де ніхто раніше не ходив.", "correct": false}, {"text": "Вони пішли туди, де ніхто раніше не ходив.", "correct": false}, {"text": "Вони пішли звідти, звідки ніхто раніше не ходив.", "correct": false}]}, {"source": "I am proud of the fact that we succeeded.", "options": [{"text": "Я пишаюся тим, що ми досягли успіху.", "correct": true}, {"text": "Я пишаюся те, що ми досягли успіху.", "correct": false}, {"text": "Я пишаюся того, що ми досягли успіху.", "correct": false}, {"text": "Я пишаюся про те, що ми досягли успіху.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **термін** | [ˈtɛrmʲin] | term | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **те, що** | [tɛ, ʃt͡ʃɔ] | that which | фраза |  |
-| **той, хто** | [tɔj, xtɔ] | the one who | фраза |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research | ім |  |
-| **там, де** | [tɑm, dɛ] | there where | фраза |  |
-| **туди, куди** | [tuˈdɪ, kuˈdɪ] | there where to | фраза |  |
-| **звідти, звідки** | [ˈzʲʋʲidtɪ, ˈzʲʋʲidkɪ] | from there where | фраза |  |
-| **тоді, коли** | [tɔˈdʲi, kɔˈlɪ] | then when | фраза |  |
-| **доти, поки** | [ˈdɔtɪ, ˈpɔkɪ] | until | фраза |  |
-| **стільки, скільки** | [ˈsʲtʲilʲkɪ, ˈsʲkʲilʲkɪ] | as much as | фраза |  |
-| **настільки, наскільки** | [nɑˈsʲtʲilʲkɪ, nɑˈsʲkʲilʲkɪ] | to the extent that | фраза |  |
-| **вказівне слово** | [ʍkɑzʲiˈʋnɛ ˈslɔʋɔ] | demonstrative word | фраза |  |
-| **сполучне слово** | [spɔlut͡ʃnɛ ˈslɔʋɔ] | conjunctive word | фраза |  |
-| **складнопідрядне речення** | [sklɑdnɔpʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | complex sentence | фраза |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement | ім |  |
-| **абстракція** | [ɑˈbstrɑkt͡sʲijɑ] | abstraction | ім |  |
-| **суб'єкт** | [subjɛkt] | subject | ім |  |
-| **об'єкт** | [ɔbjɛkt] | object | ім |  |
-| **інтерференція** | [intɛrfɛˈrɛnʲt͡sʲijɑ] | interference | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque | ім |  |
-| **конструкція** | [kɔnˈstrukt͡sʲijɑ] | construction | ім |  |
-| **логічний зв'язок** | [lɔˈɦʲit͡ʃnɪj zʋjɑzɔk] | logical connection | фраза |  |
-| **незворотність** | [nɛzʋɔˈrɔtʲnʲisʲtʲ] | irreversibility | ім |  |
-| **ідентифікація** | [idɛntɪfʲiˈkɑt͡sʲijɑ] | identification | ім |  |
-| **синхронізація** | [sɪnxrɔnʲiˈzɑt͡sʲijɑ] | synchronization | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Синтаксис української мови](https://uk.wikipedia.org/wiki/Синтаксис_української_мови) — складні речення
+:::
+
+</TabItem>
+</Tabs>

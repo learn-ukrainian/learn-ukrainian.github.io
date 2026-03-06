@@ -1,9 +1,12 @@
 ---
 title: "Огляд B2 та міст до C1"
-description: ""
+description: "Introduction: From B2 to C1"
 sidebar:
   order: 1
   label: "01. Огляд B2 та міст до C1"
+pipeline: v3
+build_status: draft
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Огляд B2 та міст до C1
 
 > **Чому це важливо?**
 >
@@ -565,7 +574,13 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 6. Спробуйте перефразувати речення «Я зробив помилку» в офіційно-діловому стилі, уникаючи прямої вказівки на виконавця, але не використовуючи пасив на -ся.
 7. Чому використання фразеологізмів (ідіом) є недоречним у строгому офіційно-діловому документі, навіть якщо вони дуже влучно описують ситуацію?
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+*Немає словника для цього модуля.*
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Рівень C1: Філософія та компетенції
 
@@ -640,3 +655,11 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 ### Аналіз стилістичної доречності
 
 <EssayResponse client:load title="Аналіз стилістичної доречності" prompt={"Ви — керівник відділу. Ваш підлеглий надіслав вам звіт, написаний розмовною мовою зі сленгом. Напишіть йому електронний лист із зауваженнями, використовуючи офіційно-діловий стиль, але зберігаючи доброзичливий тон. Поясніть, чому стиль звіту неприйнятний."} modelAnswer={"Шановний Андрію! Дякую за надісланий звіт. Ознайомившись із ним, я виявив низку стилістичних невідповідностей. Документ містить багато розмовних зворотів та сленгових виразів, які є неприпустимими в діловій комунікації. Офіційно-діловий стиль вимагає точності, об''єктивності та стандартизованої лексики. Прошу Вас відредагувати текст, замінивши емоційні висловлювання на нейтральні конструкції, та надіслати виправлений варіант до кінця робочого дня. З повагою, [Ваше ім''я]."} rubric={""} isUkrainian={true} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -4,6 +4,9 @@ description: "Proverbs II: Nature, Time & Caution"
 sidebar:
   order: 58
   label: "58. Прислів'я II: Природа, час і обережність"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Прислів'я II: Природа, час і обережність
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -356,7 +365,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **верба** |  | willow | ім |  |
+| **брід** |  | ford | ім |  |
+| **згаяний** |  | wasted / lost | adjective |  |
+| **термін** |  | term | ім |  |
+| **поняття** |  | concept | ім |  |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **бузина** |  | elderberry | ім |  |
+| **калька** |  | calque / literal translation | ім |  |
+| **суржик** |  | surzhyk | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **дослідження** |  | research / study | ім |  |
+| **хліборобський** |  | agricultural | adjective |  |
+| **прислів'я** |  | proverb | ім |  |
+| **світогляд** |  | worldview | ім |  |
+| **мачуха** |  | stepmother | ім |  |
+| **закономірність** |  | regularity / pattern | ім |  |
+| **неминучий** |  | inevitable | adjective |  |
+| **непередбачуваний** |  | unpredictable | adjective |  |
+| **наслідок** |  | consequence | ім |  |
+| **коваль** |  | blacksmith | ім |  |
+| **втручання** |  | intervention | ім |  |
+| **ожеледиця** |  | black ice | ім |  |
+| **тріска** |  | splinter | ім |  |
+| **синиця** |  | tit (bird) | ім |  |
+| **журавель** |  | crane (bird) | ім |  |
+| **нездоланний** |  | insurmountable | adjective |  |
+| **уособлення** |  | personification | ім |  |
+| **імплементація** |  | implementation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Аналіз тексту: Природа та час
 
@@ -417,37 +463,18 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Творче завдання: Аргументоване есе" prompt={"Ваш найкращий друг хоче інвестувати всі свої заощадження у вкрай сумнівний криптовалютний проект, який обіцяє надшвидке збагачення без зусиль. Напишіть йому аргументовану пораду. У своєму тексті обов'язково використайте щонайменше три українські прислів'я (наприклад, про синицю і журавля, про невідомий брід чи про сани влітку). Чітко структуруйте текст: вступна порада, аргументація ризиків, альтернативний безпечний план."} modelAnswer={"Привіт, мій дорогий друже! Я дуже уважно вислухав твою ідею щодо нових інвестицій, і хочу поділитися своїми думками. Як твій друг, я маю бути відвертим: ця пропозиція виглядає надзвичайно небезпечною. Пам'ятай мудре застереження: не знаючи броду, не лізь у воду. Ти збираєшся вкласти гроші у сферу, в якій ми обоє зовсім не є експертами. Криптовалютний ринок зараз вкрай нестабільний. Я розумію твоє бажання швидко розбагатіти, але краще синиця в руках, ніж журавель у небі. Твої заощадження — це гарантія безпеки твоєї родини, і ризикувати ними заради примарної мрії є необачним. Окрім того, якщо цей проект збанкрутує, твого згаяного часу і конем не доженеш, доведеться починати все з нуля. Замість цього ризику я пропоную тобі довгострокове і безпечне планування. Давай краще інвестуємо частину коштів у державні облігації або освіту. Готуй сани влітку: якщо ми почнемо поступово і безпечно відкладати гроші під стабільний відсоток уже сьогодні, через кілька років ти матимеш надійний капітал без жодного стресу. Ранок вечора мудріший — просто добре виспись, обміркуй усе це завтра на свіжу голову, і ти зрозумієш, що я правий."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання фразеології | У тексті доречно та правильно використано щонайменше три фразеологізми. | 4 |\n| Аргументованість | Ризики чітко пояснені, запропоновано логічну альтернативу. | 3 |\n| Граматика та чистота мови | Відсутність кальок, суржику та стилістичних помилок. | 3 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **верба** | [ʋɛrˈbɑ] | willow | ім |  |
-| **брід** | [brʲid] | ford | ім |  |
-| **згаяний** | [ˈzɦɑjɑnɪj] | wasted / lost | adjective |  |
-| **термін** | [ˈtɛrmʲin] | term | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **бузина** | [buzɪˈnɑ] | elderberry | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque / literal translation | ім |  |
-| **суржик** | [ˈsurʒɪk] | surzhyk | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research / study | ім |  |
-| **хліборобський** | [xlʲibɔˈrɔbsʲkɪj] | agricultural | adjective |  |
-| **прислів'я** | [prɪˈsʲlʲiu̯jɑ] | proverb | ім |  |
-| **світогляд** | [sʲʋʲiˈtɔɦlʲɑd] | worldview | ім |  |
-| **мачуха** | [ˈmɑt͡ʃuxɑ] | stepmother | ім |  |
-| **закономірність** | [zɑkɔnɔˈmʲirnʲisʲtʲ] | regularity / pattern | ім |  |
-| **неминучий** | [nɛmɪˈnut͡ʃɪj] | inevitable | adjective |  |
-| **непередбачуваний** | [nɛpɛrɛˈdbɑt͡ʃuʋɑnɪj] | unpredictable | adjective |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence | ім |  |
-| **коваль** | [kɔˈʋɑlʲ] | blacksmith | ім |  |
-| **втручання** | [ʍtruˈt͡ʃɑnʲːɑ] | intervention | ім |  |
-| **ожеледиця** | [ɔʒɛˈlɛdɪt͡sʲɑ] | black ice | ім |  |
-| **тріска** | [tʲrʲiskɑ] | splinter | ім |  |
-| **синиця** | [sɪˈnɪt͡sʲɑ] | tit (bird) | ім |  |
-| **журавель** | [ʒurɑˈʋɛlʲ] | crane (bird) | ім |  |
-| **нездоланний** | [nɛzdɔˈlɑnːɪj] | insurmountable | adjective |  |
-| **уособлення** | [uɔˈsɔblɛnʲːɑ] | personification | ім |  |
-| **імплементація** | [implɛmɛnˈtɑt͡sʲijɑ] | implementation | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Ukrainian Lessons - Proverbs Series](https://ukrainianlessons.com/category/proverbs/) — подкаст з поясненням прислів'їв
+- [Паремії української мови](https://uk.wikipedia.org/wiki/Категорія:Українські_приказки) — Вікіпедія
+
+**🌐 Сайти:**
+- [YouTube: Speak Ukrainian - Proverbs](https://www.youtube.com/results?search_query=ukrainian+proverbs+speak+ukrainian) — відеоуроки з вимовою
+:::
+
+</TabItem>
+</Tabs>

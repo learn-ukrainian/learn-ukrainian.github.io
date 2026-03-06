@@ -1,9 +1,12 @@
 ---
 title: "Зворотний пасив із -ся"
-description: ""
+description: "Passive with -ся Verbs"
 sidebar:
   order: 4
   label: "04. Зворотний пасив із -ся"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Зворотний пасив із -ся
 
 > **Чому це важливо?**
 > Зворотний пасив із часткою «-ся» — це не просто чергова граматична тема, а ваш головний інструмент для глибокого розуміння українського наукового, офіційного та технічного дискурсів. Опанувавши цю синтаксичну конструкцію, ви зможете читати складні аналітичні статті, вільно аналізувати офіційні документи та професійно обговорювати тривалі процеси без прив'язки до конкретної особи-виконавця. Це крок до справжньої мовної майстерності на рівні B2.
@@ -296,7 +305,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **проводиться** |  | is being conducted | дієсл |  |
+| **вивчається** |  | is being studied | дієсл |  |
+| **застосовується** |  | is applied | дієсл |  |
+| **будується** |  | is being built | дієсл |  |
+| **аналізується** |  | is being analyzed | дієсл |  |
+| **досліджується** |  | is being researched | дієсл |  |
+| **розробляється** |  | is being developed | дієсл |  |
+| **створюється** |  | is being created | дієсл |  |
+| **встановлюється** |  | is being installed/established | дієсл |  |
+| **зворотний** |  | reflexive | adjective |  |
+| **процес** |  | process | ім |  |
+| **науковець** |  | scientist | ім |  |
+| **експеримент** |  | experiment | ім |  |
+| **винахідник** |  | inventor | ім |  |
+| **проміння** |  | rays/radiation | ім |  |
+| **інженер** |  | engineer | ім |  |
+| **об'єкт** |  | object | ім |  |
+| **стаття** |  | article | ім |  |
+| **дискурс** |  | discourse | ім |  |
+| **документ** |  | document | ім |  |
+| **метод** |  | method | ім |  |
+| **мікроскоп** |  | microscope | ім |  |
+| **реактор** |  | reactor | ім |  |
+| **алгоритм** |  | algorithm | ім |  |
+| **обчислення** |  | calculation | ім |  |
+| **машина** |  | machine | ім |  |
+| **прототип** |  | prototype | ім |  |
+| **гелікоптер** |  | helicopter | ім |  |
+| **аеродинамічний** |  | aerodynamic | adjective |  |
+| **інвестиційний** |  | investment (adj) | adjective |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Заповніть пропуски: пасивні конструкції
 
@@ -365,37 +411,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Есе: Науковий процес" prompt={"Спираючись на прочитаний текст, напишіть коротке есе (мінімум 150 слів) про важливість досліджень Івана Пулюя. Використовуйте зворотний пасив із часткою -ся для опису наукових процесів (наприклад, досліджується, аналізується). Обов'язково використовуйте орудний відмінок для позначення виконавців дій.\n"} modelAnswer={"Дослідження Івана Пулюя мають величезне значення для розвитку світової науки. У його працях детально досліджується природа катодних променів. Цей складний фізичний процес вивчається українським науковцем з неймовірною точністю. Для експериментів створюється спеціальна скляна лампа, яка генерує унікальне невидиме проміння. Цей інноваційний метод успішно застосовується для отримання перших рентгенівських знімків скелета людини. Отримані результати ретельно аналізуються науковою спільнотою та стають основою для подальшого розвитку медицини. Важливо зазначити, що фундаментальні принципи, які розробляються Пулюєм, і досі використовуються в сучасних рентгенівських апаратах. Таким чином, інноваційні ідеї, що генеруються українським винахідником, назавжди змінили історію європейської та світової науки.\n"} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання пасиву | Правильне утворення та використання дієслів на -ся у відповідному контексті. | 40 |\n| Вираження агента | Правильне використання орудного відмінка без прийменників для позначення виконавця. | 30 |\n| Лексичне багатство | Використання академічної лексики (науковець, досліджується, метод, застосовується). | 30 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **проводиться** | [prɔˈʋɔdɪt͡sʲːɑ] | is being conducted | дієсл |  |
-| **вивчається** | [ʋɪˈʋt͡ʃɑjɛt͡sʲːɑ] | is being studied | дієсл |  |
-| **застосовується** | [zɑstɔˈsɔʋujɛt͡sʲːɑ] | is applied | дієсл |  |
-| **будується** | [buˈdujɛt͡sʲːɑ] | is being built | дієсл |  |
-| **аналізується** | [ɑnɑlʲiˈzujɛt͡sʲːɑ] | is being analyzed | дієсл |  |
-| **досліджується** | [dɔˈsʲlʲid͡ʒujɛt͡sʲːɑ] | is being researched | дієсл |  |
-| **розробляється** | [rɔzrɔˈblʲɑjɛt͡sʲːɑ] | is being developed | дієсл |  |
-| **створюється** | [ˈstʋɔrʲujɛt͡sʲːɑ] | is being created | дієсл |  |
-| **встановлюється** | [ʍstɑˈnɔu̯lʲujɛt͡sʲːɑ] | is being installed/established | дієсл |  |
-| **зворотний** | [zʋɔˈrɔtnɪj] | reflexive | adjective |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **науковець** | [nɑuˈkɔʋɛt͡sʲ] | scientist | ім |  |
-| **експеримент** | [ɛkspɛrɪˈmɛnt] | experiment | ім |  |
-| **винахідник** | [ʋɪnɑˈxʲidnɪk] | inventor | ім |  |
-| **проміння** | [prɔˈmʲinʲːɑ] | rays/radiation | ім |  |
-| **інженер** | [inʒɛˈnɛr] | engineer | ім |  |
-| **об'єкт** | [ɔbjɛkt] | object | ім |  |
-| **стаття** | [stɑˈtʲːɑ] | article | ім |  |
-| **дискурс** | [ˈdɪskurs] | discourse | ім |  |
-| **документ** | [dɔkuˈmɛnt] | document | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **мікроскоп** | [mʲikrɔˈskɔp] | microscope | ім |  |
-| **реактор** | [rɛˈɑktɔr] | reactor | ім |  |
-| **алгоритм** | [ɑlɦɔˈrɪtm] | algorithm | ім |  |
-| **обчислення** | [ɔˈbt͡ʃɪslɛnʲːɑ] | calculation | ім |  |
-| **машина** | [mɑˈʃɪnɑ] | machine | ім |  |
-| **прототип** | [prɔtɔˈtɪp] | prototype | ім |  |
-| **гелікоптер** | [ɦɛlʲikɔˈptɛr] | helicopter | ім |  |
-| **аеродинамічний** | [ɑɛrɔdɪnɑˈmʲit͡ʃnɪj] | aerodynamic | adjective |  |
-| **інвестиційний** | [inʋɛstɪˈt͡sʲijnɪj] | investment (adj) | adjective |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/reflexive-verbs/) — ukrainianlessons.com
+
+**🌐 Сайти:**
+- [Словники України онлайн](https://lcorp.ulif.org.ua/dictua/) — для перевірки дієслівних форм
+:::
+
+</TabItem>
+</Tabs>

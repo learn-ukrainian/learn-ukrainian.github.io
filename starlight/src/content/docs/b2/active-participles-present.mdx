@@ -1,9 +1,12 @@
 ---
 title: "Активні дієприкметники теперішнього часу (-учий/-ючий)"
-description: ""
+description: "Present Active Participles (-учий/-ючий)"
 sidebar:
   order: 7
   label: "07. Активні дієприкметники теперішнього часу (-учий/-ючий)"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Активні дієприкметники теперішнього часу (-учий/-ючий)
 
 > **Чому це важливо?**
 >
@@ -325,7 +334,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **активний** |  | active | adjective |  |
+| **дієприкметник** |  | participle | ім |  |
+| **теперішній час** |  | present tense | фраза |  |
+| **чинний** |  | valid, in force | adjective |  |
+| **діючий** |  | acting, functioning | adjective |  |
+| **завідуючий** |  | head, manager | ім |  |
+| **керуючий** |  | manager, governor | ім |  |
+| **наступний** |  | next | adjective |  |
+| **наявний** |  | available, existing | adjective |  |
+| **довкілля** |  | environment | ім |  |
+| **підрядне речення** |  | subordinate clause | фраза |  |
+| **книжний** |  | bookish, literary | adjective |  |
+| **архаїчний** |  | archaic | adjective |  |
+| **лексикалізований** |  | lexicalized | adjective |  |
+| **діюча особа** |  | acting person, character | фраза |  |
+| **цілющий** |  | healing, medicinal | adjective |  |
+| **родючий** |  | fertile | adjective |  |
+| **канцеляризм** |  | bureaucratese | ім |  |
+| **штучний** |  | artificial | adjective |  |
+| **природний** |  | natural | adjective |  |
+| **ідіоматичний** |  | idiomatic | adjective |  |
+| **відносний займенник** |  | relative pronoun | фраза |  |
+| **законодавство** |  | legislation | ім |  |
+| **повноваження** |  | authority, powers | ім |  |
+| **суфікс** |  | suffix | ім |  |
+| **дієвідміна** |  | conjugation | ім |  |
+| **недоконаний вид** |  | imperfective aspect | фраза |  |
+| **завідувач** |  | head, manager (modern) | ім |  |
+| **керівник** |  | manager, leader (modern) | ім |  |
+| **мовознавець** |  | linguist | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Замініть дієприкметник підрядним реченням
 
@@ -388,37 +434,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "The student reading a book is my younger brother.", "options": [{"text": "Студент, який читає книгу, — мій молодший брат.", "correct": true}, {"text": "Читаючий книгу студент — мій молодший брат.", "correct": false}, {"text": "Студент, що читаючий книгу, — мій молодший брат.", "correct": false}]}, {"source": "We urgently need to analyze all existing problems in our company.", "options": [{"text": "Ми маємо терміново проаналізувати всі наявні проблеми в компанії.", "correct": true}, {"text": "Ми маємо терміново проаналізувати всі існуючі проблеми в компанії.", "correct": false}, {"text": "Ми маємо терміново проаналізувати всі живучі проблеми в компанії.", "correct": false}]}, {"source": "The acting law strictly prohibits this dangerous activity.", "options": [{"text": "Чинний закон суворо забороняє цю небезпечну діяльність.", "correct": true}, {"text": "Діючий закон суворо забороняє цю небезпечну діяльність.", "correct": false}, {"text": "Працюючий закон суворо забороняє цю небезпечну діяльність.", "correct": false}]}, {"source": "It is critically important to protect the natural environment.", "options": [{"text": "Критично важливо захищати наше природне довкілля.", "correct": true}, {"text": "Критично важливо захищати наше оточуюче середовище.", "correct": false}, {"text": "Критично важливо захищати наше навкружне середовище.", "correct": false}]}, {"source": "Please pay attention, the next stop is the central railway station.", "options": [{"text": "Увага, наступна зупинка — центральний залізничний вокзал.", "correct": true}, {"text": "Увага, слідуюча зупинка — центральний залізничний вокзал.", "correct": false}, {"text": "Увага, ідуча слідом зупинка — центральний залізничний вокзал.", "correct": false}]}, {"source": "Tourists resting high in the mountains should be extremely careful.", "options": [{"text": "Туристи, які відпочивають високо в горах, мають бути вкрай обережними.", "correct": true}, {"text": "Відпочиваючі високо в горах туристи мають бути вкрай обережними.", "correct": false}, {"text": "Туристи, відпочиваючі високо в горах, мають бути вкрай обережними.", "correct": false}]}, {"source": "There is a real active volcano on this distant tropical island.", "options": [{"text": "На цьому далекому тропічному острові є справжній діючий вулкан.", "correct": true}, {"text": "На цьому далекому тропічному острові є справжній чинний вулкан.", "correct": false}, {"text": "На цьому далекому тропічному острові є справжній працюючий вулкан.", "correct": false}]}, {"source": "The mineral water from this cold mountain spring is very medicinal.", "options": [{"text": "Мінеральна вода з цього холодного гірського джерела є дуже цілющою.", "correct": true}, {"text": "Мінеральна вода з цього холодного гірського джерела є дуже лікуючою.", "correct": false}, {"text": "Мінеральна вода з цього холодного гірського джерела є дуже зцілюючою.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **активний** | [ɑˈktɪu̯nɪj] | active | adjective |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **теперішній час** | [tɛˈpɛrʲiʃnʲij t͡ʃɑs] | present tense | фраза |  |
-| **чинний** | [ˈt͡ʃɪnːɪj] | valid, in force | adjective |  |
-| **діючий** | [ˈdʲijut͡ʃɪj] | acting, functioning | adjective |  |
-| **завідуючий** | [zɑˈʋʲidujut͡ʃɪj] | head, manager | ім |  |
-| **керуючий** | [kɛˈrujut͡ʃɪj] | manager, governor | ім |  |
-| **наступний** | [nɑˈstupnɪj] | next | adjective |  |
-| **наявний** | [nɑˈjɑu̯nɪj] | available, existing | adjective |  |
-| **довкілля** | [dɔˈʋkʲilʲːɑ] | environment | ім |  |
-| **підрядне речення** | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | фраза |  |
-| **книжний** | [ˈknɪʒnɪj] | bookish, literary | adjective |  |
-| **архаїчний** | [ɑrxɑˈjit͡ʃnɪj] | archaic | adjective |  |
-| **лексикалізований** | [lɛksɪkɑlʲiˈzɔʋɑnɪj] | lexicalized | adjective |  |
-| **діюча особа** | [ˈdʲijut͡ʃɑ ɔˈsɔbɑ] | acting person, character | фраза |  |
-| **цілющий** | [t͡sʲiˈlʲuʃt͡ʃɪj] | healing, medicinal | adjective |  |
-| **родючий** | [rɔˈdʲut͡ʃɪj] | fertile | adjective |  |
-| **канцеляризм** | [kɑnt͡sɛlʲɑˈrɪzm] | bureaucratese | ім |  |
-| **штучний** | [ˈʃtut͡ʃnɪj] | artificial | adjective |  |
-| **природний** | [prɪˈrɔdnɪj] | natural | adjective |  |
-| **ідіоматичний** | [idʲiɔmɑˈtɪt͡ʃnɪj] | idiomatic | adjective |  |
-| **відносний займенник** | [ʋʲiˈdnɔsnɪj zɑjˈmɛnːɪk] | relative pronoun | фраза |  |
-| **законодавство** | [zɑkɔnɔˈdɑu̯stʋɔ] | legislation | ім |  |
-| **повноваження** | [pɔu̯nɔˈʋɑʒɛnʲːɑ] | authority, powers | ім |  |
-| **суфікс** | [ˈsufʲiks] | suffix | ім |  |
-| **дієвідміна** | [dʲijɛʋʲiˈdʲmʲinɑ] | conjugation | ім |  |
-| **недоконаний вид** | [nɛdɔˈkɔnɑnɪj ʋɪd] | imperfective aspect | фраза |  |
-| **завідувач** | [zɑˈʋʲiduʋɑt͡ʃ] | head, manager (modern) | ім |  |
-| **керівник** | [kɛrʲiˈʋnɪk] | manager, leader (modern) | ім |  |
-| **мовознавець** | [mɔʋɔˈznɑʋɛt͡sʲ] | linguist | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

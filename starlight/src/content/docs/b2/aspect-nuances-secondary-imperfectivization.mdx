@@ -4,6 +4,9 @@ description: "Secondary Imperfectivization - Deriving Imperfective from Perfecti
 sidebar:
   order: 40
   label: "40. Видові нюанси I: Вторинна імперфективація"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Видові нюанси I: Вторинна імперфективація
+{/**/}
 
 :::warning[❗ Важливо]
 **Чому це важливо?**
@@ -447,7 +456,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **процес** |  | process | ім |  |
+| **метод** |  | method | ім |  |
+| **поняття** |  | concept | ім |  |
+| **термін** |  | term | ім |  |
+| **аналіз** |  | analysis | ім |  |
+| **синтез** |  | synthesis | ім |  |
+| **дослідження** |  | research | ім |  |
+| **палімпсест** |  | palimpsest | ім |  |
+| **перейменовування** |  | renaming | ім |  |
+| **вторинний** |  | secondary | прикм |  |
+| **імперфективація** |  | imperfectivization | ім |  |
+| **ітеративність** |  | iterativity | ім |  |
+| **дуративність** |  | durativity | ім |  |
+| **доконаний** |  | perfective | прикм |  |
+| **недоконаний** |  | imperfective | прикм |  |
+| **результативний** |  | resultative | прикм |  |
+| **чергування** |  | alternation | ім |  |
+| **суфікс** |  | suffix | ім |  |
+| **префікс** |  | prefix | ім |  |
+| **наголос** |  | stress, accent | ім |  |
+| **омографія** |  | homography | ім |  |
+| **гіперкорекція** |  | hypercorrection | ім |  |
+| **ненормативний** |  | non-normative | прикм |  |
+| **зафіксовувати** |  | to record regularly | дієсл |  |
+| **обґрунтовувати** |  | to justify regularly | дієсл |  |
+| **розробляти** |  | to develop over time | дієсл |  |
+| **перечитувати** |  | to reread often | дієсл |  |
+| **диференціювати** |  | to differentiate | дієсл |  |
+| **розшифровувати** |  | to decipher continuously | дієсл |  |
+| **вибудовувати** |  | to build up gradually | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Первинне джерело: Метафора Палімпсесту
 
@@ -514,37 +560,20 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Опис складного процесу" prompt={"Опишіть довготривалий науковий або суспільний процес (наприклад, деколонізацію, проведення складного експерименту або реформування системи). Використайте щонайменше 5 вторинних недоконаних дієслів для підкреслення дуративності або ітеративності дій. Ваша відповідь має демонструвати глибоке розуміння академічного стилю."} modelAnswer={"Процес деколонізації публічного простору в Україні виявився набагато складнішим, ніж просто разова зміна табличок. Протягом кількох років громади постійно перейменовували вулиці та площі. Історики регулярно переглядали архівні документи, щоб знаходити автентичні історичні назви. Комісії довго розробляли нові концепції міського простору, а науковці ретельно обґрунтовували кожне прийняте рішення. Місцева влада поступово додавала нові імена до офіційних реєстрів. Ми часто спостерігали, як мешканці місяцями обговорювали доцільність тієї чи іншої назви. Цей процес вимагав величезної кількості часу, оскільки суспільство мало глибоко переосмислювати власну історію та викреслювати імперські наративи зі своєї пам'яті. Журналісти щотижня записували великі інтерв'ю з експертами, намагаючись пояснювати важливість цих культурних змін. У результаті ми отримали не просто новий список поштових адрес, а глибоко пропрацьовану культурну трансформацію, яку продовжуємо впроваджувати й сьогодні в усіх регіонах країни."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання вторинних імперфективів | Наявність у тексті щонайменше п'яти правильно утворених вторинних недоконаних дієслів. | 40 |\n| Академічний або публіцистичний стиль | Текст написаний формальною українською мовою з активним використанням відповідної лексики (наприклад: процес, метод, термін). | 30 |\n| Граматична правильність | Повна відсутність помилок у чергуванні голосних та виборі суфіксів. | 30 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **метод** | [ˈmɛtɔd] | method | ім |  |
-| **поняття** | [pɔˈnʲɑtʲːɑ] | concept | ім |  |
-| **термін** | [ˈtɛrmʲin] | term | ім |  |
-| **аналіз** | [ɑˈnɑlʲiz] | analysis | ім |  |
-| **синтез** | [ˈsɪntɛz] | synthesis | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research | ім |  |
-| **палімпсест** | [pɑlʲimˈpsɛst] | palimpsest | ім |  |
-| **перейменовування** | [pɛrɛjmɛˈnɔʋuʋɑnʲːɑ] | renaming | ім |  |
-| **вторинний** | [ʍtɔˈrɪnːɪj] | secondary | прикм |  |
-| **імперфективація** | [impɛrfɛktɪˈʋɑt͡sʲijɑ] | imperfectivization | ім |  |
-| **ітеративність** | [itɛrɑˈtɪu̯nʲisʲtʲ] | iterativity | ім |  |
-| **дуративність** | [durɑtɪu̯nʲisʲtʲ] | durativity | ім |  |
-| **доконаний** | [dɔˈkɔnɑnɪj] | perfective | прикм |  |
-| **недоконаний** | [nɛdɔˈkɔnɑnɪj] | imperfective | прикм |  |
-| **результативний** | [rɛzulʲtɑˈtɪu̯nɪj] | resultative | прикм |  |
-| **чергування** | [t͡ʃɛrɦuˈʋɑnʲːɑ] | alternation | ім |  |
-| **суфікс** | [ˈsufʲiks] | suffix | ім |  |
-| **префікс** | [prɛfʲiks] | prefix | ім |  |
-| **наголос** | [ˈnɑɦɔlɔs] | stress, accent | ім |  |
-| **омографія** | [ɔmɔˈɦrɑfʲijɑ] | homography | ім |  |
-| **гіперкорекція** | [ɦʲipɛrkɔrɛkt͡sʲijɑ] | hypercorrection | ім |  |
-| **ненормативний** | [nɛnɔrmɑˈtɪu̯nɪj] | non-normative | прикм |  |
-| **зафіксовувати** | [zɑfʲiˈksɔʋuʋɑtɪ] | to record regularly | дієсл |  |
-| **обґрунтовувати** | [ɔbɡrunˈtɔʋuʋɑtɪ] | to justify regularly | дієсл |  |
-| **розробляти** | [rɔzrɔˈblʲɑtɪ] | to develop over time | дієсл |  |
-| **перечитувати** | [pɛrɛˈt͡ʃɪtuʋɑtɪ] | to reread often | дієсл |  |
-| **диференціювати** | [dɪfɛrɛnʲt͡sʲijuˈʋɑtɪ] | to differentiate | дієсл |  |
-| **розшифровувати** | [rɔʒʃɪˈfrɔʋuʋɑtɪ] | to decipher continuously | дієсл |  |
-| **вибудовувати** | [ʋɪbuˈdɔʋuʋɑtɪ] | to build up gradually | дієсл |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — ukrainianlessons.com
+- [ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian](https://www.ukrainianlessons.com/lesson/92/) — ukrainianlessons.com
+- [Verb Aspect in Ukrainian](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) — ukrainianlessons.com
+
+**🌐 Сайти:**
+- [ГРАК](https://uacorpus.org/) — Генеральний регіонально анотований корпус української мови
+- [Словники України онлайн](https://lcorp.ulif.org.ua/dictua/) — перевірка видових пар
+:::
+
+</TabItem>
+</Tabs>

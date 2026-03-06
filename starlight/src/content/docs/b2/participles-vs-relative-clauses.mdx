@@ -1,9 +1,12 @@
 ---
 title: "Дієприкметники проти підрядних речень"
-description: ""
+description: "When to Use Який Instead"
 sidebar:
   order: 9
   label: "09. Дієприкметники проти підрядних речень"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Дієприкметники проти підрядних речень
 
 :::info[🤔 Чому це важливо?]
 
@@ -443,7 +452,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **який** |  | which / that | pronoun |  |
+| **що** |  | that | pronoun |  |
+| **котрий** |  | which / who | pronoun |  |
+| **чинний закон** |  | effective law | ім |  |
+| **діючий вулкан** |  | active volcano | ім |  |
+| **охочий** |  | willing / eager | adjective |  |
+| **канцелярит** |  | officialese / bureaucratese | ім |  |
+| **агентність** |  | agency | ім |  |
+| **природність** |  | naturalness | ім |  |
+| **стилістична норма** |  | stylistic norm | ім |  |
+| **еквівалентний** |  | equivalent | adjective |  |
+| **суржик** |  | surzhyk | ім |  |
+| **підрядне речення** |  | subordinate clause | ім |  |
+| **літературний редактор** |  | literary editor | ім |  |
+| **дієприкметник** |  | participle | ім |  |
+| **дієслово** |  | verb | ім |  |
+| **прикметник** |  | adjective | ім |  |
+| **милозвучність** |  | euphony | ім |  |
+| **калькування** |  | calquing | ім |  |
+| **регістр** |  | register | ім |  |
+| **довкілля** |  | environment | ім |  |
+| **прийдешній** |  | upcoming / future | adjective |  |
+| **захопливий** |  | exciting / captivating | adjective |  |
+| **зворушливий** |  | touching / moving | adjective |  |
+| **мандрівник** |  | traveler | ім |  |
+| **монотонність** |  | monotony | ім |  |
+| **узгодження** |  | agreement / concord | ім |  |
+| **непрямий відмінок** |  | oblique case | ім |  |
+| **суб'єкт дії** |  | subject of action | ім |  |
+| **обставина** |  | adverbial modifier | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть відповідник
 
@@ -519,37 +565,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Дієприкметник — це форма, яка поєднує властивості [___:0]} та прикметника. Його головна перевага — це [___:1]}. Проте надмірне використання дієприкметників створює явище, яке називають [___:2]}. Це суха і мертва [___:3]} мова. Сучасна літературна [___:4]} вимагає замінювати активні дієприкметники на [___:5]} речення. Наприклад, замість 'працюючий студент' ми говоримо 'студент, [___:6]} працює'. Сполучне слово 'який' має узгоджуватися з іменником у [___:7]} і числі. Але його [___:8]} залежить від ролі в підрядному реченні. Щоб уникнути монотонності або '[___:9]}', варто чергувати 'який' зі словом [___:10]}. Український синтаксис має виражену [___:11]}, тому ми надаємо перевагу активним [___:12]}. Уникайте використання слова [___:13]} для запитань про час, правильно казати 'о [___:14]}'. Також уникайте кальки 'бажаючі', краще вжити [___:15]}."} blanks={JSON.parse(`[{"index": 0, "answer": "дієслова", "options": ["дієслова", "іменника", "прислівника", "займенника"]}, {"index": 1, "answer": "компактність", "options": ["компактність", "складність", "довжина", "монотонність"]}, {"index": 2, "answer": "канцелярит", "options": ["канцелярит", "суржик", "архаїзм", "діалект"]}, {"index": 3, "answer": "бюрократична", "options": ["бюрократична", "художня", "розмовна", "поетична"]}, {"index": 4, "answer": "норма", "options": ["норма", "форма", "помилка", "цитата"]}, {"index": 5, "answer": "підрядні", "options": ["підрядні", "головні", "прості", "безсполучникові"]}, {"index": 6, "answer": "який", "options": ["який", "що", "котрий", "чиї"]}, {"index": 7, "answer": "роді", "options": ["роді", "відмінку", "часі", "особі"]}, {"index": 8, "answer": "відмінок", "options": ["відмінок", "рід", "число", "суфікс"]}, {"index": 9, "answer": "якання", "options": ["якання", "щокання", "суржику", "канцеляриту"]}, {"index": 10, "answer": "що", "options": ["що", "хто", "де", "коли"]}, {"index": 11, "answer": "агентність", "options": ["агентність", "пасивність", "складність", "повільність"]}, {"index": 12, "answer": "дієсловам", "options": ["дієсловам", "прикметникам", "іменникам", "дієприслівникам"]}, {"index": 13, "answer": "якій", "options": ["якій", "котрій", "що", "коли"]}, {"index": 14, "answer": "котрій", "options": ["котрій", "якій", "чиїй", "моїй"]}, {"index": 15, "answer": "охочі", "options": ["охочі", "хочучі", "бажані", "ті"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **який** | [jɑˈkɪj] | which / that | pronoun |  |
-| **що** | [ʃt͡ʃɔ] | that | pronoun |  |
-| **котрий** | [kɔˈtrɪj] | which / who | pronoun |  |
-| **чинний закон** | [ˈt͡ʃɪnːɪj zɑˈkɔn] | effective law | ім |  |
-| **діючий вулкан** | [ˈdʲijut͡ʃɪj ʋulˈkɑn] | active volcano | ім |  |
-| **охочий** | [ɔˈxɔt͡ʃɪj] | willing / eager | adjective |  |
-| **канцелярит** | [kɑnt͡sɛlʲɑrɪt] | officialese / bureaucratese | ім |  |
-| **агентність** | [ɑɦɛntʲnʲisʲtʲ] | agency | ім |  |
-| **природність** | [prɪˈrɔdʲnʲisʲtʲ] | naturalness | ім |  |
-| **стилістична норма** | [stɪlʲiˈstɪt͡ʃnɑ ˈnɔrmɑ] | stylistic norm | ім |  |
-| **еквівалентний** | [ɛkʋʲiʋɑˈlɛntnɪj] | equivalent | adjective |  |
-| **суржик** | [ˈsurʒɪk] | surzhyk | ім |  |
-| **підрядне речення** | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | ім |  |
-| **літературний редактор** | [lʲitɛrɑˈturnɪj rɛˈdɑktɔr] | literary editor | ім |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **дієслово** | [dʲijɛˈslɔʋɔ] | verb | ім |  |
-| **прикметник** | [prɪˈkmɛtnɪk] | adjective | ім |  |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | ім |  |
-| **калькування** | [kɑlʲkuˈʋɑnʲːɑ] | calquing | ім |  |
-| **регістр** | [rɛˈɦʲistr] | register | ім |  |
-| **довкілля** | [dɔˈʋkʲilʲːɑ] | environment | ім |  |
-| **прийдешній** | [prɪjˈdɛʃnʲij] | upcoming / future | adjective |  |
-| **захопливий** | [zɑˈxɔplɪʋɪj] | exciting / captivating | adjective |  |
-| **зворушливий** | [zʋɔˈruʃlɪʋɪj] | touching / moving | adjective |  |
-| **мандрівник** | [mɑnˈdʲrʲiˈʋnɪk] | traveler | ім |  |
-| **монотонність** | [mɔnɔˈtɔnʲːisʲtʲ] | monotony | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement / concord | ім |  |
-| **непрямий відмінок** | [nɛprʲɑˈmɪj ʋʲiˈdʲmʲinɔk] | oblique case | ім |  |
-| **суб'єкт дії** | [suˈbjɛkt ˈdʲiji] | subject of action | ім |  |
-| **обставина** | [ɔˈbstɑʋɪnɑ] | adverbial modifier | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Ukrainian Lessons: Participles in Ukrainian](https://ukrainianlessons.com/participles) — детальний огляд системи дієприкметників
+
+**🌐 Сайти:**
+- [YouTube: Українська з Анною](https://youtube.com/ukrainewithlove) — відеоуроки про складні граматичні теми
+:::
+
+</TabItem>
+</Tabs>

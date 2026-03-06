@@ -1,9 +1,12 @@
 ---
 title: "Формальне та неформальне спілкування"
-description: ""
+description: "Formal vs Informal Ukrainian"
 sidebar:
   order: 26
   label: "26. Формальне та неформальне спілкування"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Формальне та неформальне спілкування
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -368,7 +377,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **формальний** |  | formal | adjective |  |
+| **неформальний** |  | informal | adjective |  |
+| **звертання** |  | form of address | ім |  |
+| **пан** |  | Mr. / sir | ім |  |
+| **пані** |  | Mrs. / Ms. / madam | ім |  |
+| **шановний** |  | respected / dear | adjective |  |
+| **по батькові** |  | patronymic | ім |  |
+| **етикет** |  | etiquette | ім |  |
+| **ввічливість** |  | politeness | ім |  |
+| **офіційний** |  | official | adjective |  |
+| **розмовний** |  | colloquial | adjective |  |
+| **колегіальний** |  | collegial | adjective |  |
+| **субординація** |  | subordination | ім |  |
+| **соціальна дистанція** |  | social distance | фраза |  |
+| **тон** |  | tone | ім |  |
+| **доречність** |  | appropriateness | ім |  |
+| **переходити на «ви»** |  | to switch to formal "Vy" | дієсл |  |
+| **звертатися на «ти»** |  | to address informally as "ty" | дієсл |  |
+| **соціолінгвістичний** |  | sociolinguistic | adjective |  |
+| **еліпсис** |  | ellipsis | ім |  |
+| **регістр** |  | register (linguistics) | ім |  |
+| **статус** |  | status | ім |  |
+| **контекст** |  | context | ім |  |
+| **протокол** |  | protocol | ім |  |
+| **узгодження** |  | grammatical agreement | ім |  |
+| **гіперкорекція** |  | hypercorrection | ім |  |
+| **фамільярність** |  | familiarity | ім |  |
+| **колега** |  | colleague | ім |  |
+| **приятель** |  | acquaintance / friend | ім |  |
+| **віддієслівний** |  | deverbal (from a verb) | adjective |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: ситуація та доречне звертання
 
@@ -429,37 +475,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Напишіть два прохання" prompt={"Уявіть, що вам потрібно терміново перенести зустріч на інший день через непередбачені обставини. Напишіть два різних повідомлення: 1) Офіційний електронний лист до директора департаменту (використовуйте формальний стиль, поважні форми звертання та віддієслівні іменники). 2) Коротке повідомлення колезі-приятелю у месенджері (використовуйте неформальний стиль, еліпсис та колегіальний тон). Обидва тексти повинні передавати одну й ту саму інформацію."} modelAnswer={"1) Вельмишановний пане Директоре! Звертаюся до вас із проханням розглянути можливість перенесення нашої запланованої зустрічі на інший день. З огляду на непередбачені технічні обставини, я об'єктивно потребую додаткового часу для підготовки належних матеріалів. Заздалегідь вдячний за ваше розуміння. 2) Привіт, Максе! Слухай, у мене тут виник невеликий завал. Чи можемо ми якось посунути нашу зустріч на інший день? Хочу все нормально підготувати без поспіху. Що скажеш?"} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Формальний стиль | Наявність правильного офіційного звертання (пане Директоре), використання Ви, відсутність розмовної лексики. | 4 |\n| Неформальний стиль | Наявність дружнього звертання (на ти), використання розмовних виразів та еліпсису. | 4 |\n| Лексичне різноманіття | Використання синонімів та відповідної лексики для кожного регістру без повторень. | 2 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **формальний** | [fɔrˈmɑlʲnɪj] | formal | adjective |  |
-| **неформальний** | [nɛfɔrˈmɑlʲnɪj] | informal | adjective |  |
-| **звертання** | [zʋɛrˈtɑnʲːɑ] | form of address | ім |  |
-| **пан** | [pɑn] | Mr. / sir | ім |  |
-| **пані** | [ˈpɑnʲi] | Mrs. / Ms. / madam | ім |  |
-| **шановний** | [ʃɑˈnɔu̯nɪj] | respected / dear | adjective |  |
-| **по батькові** | [pɔ ˈbɑtʲkɔʋʲi] | patronymic | ім |  |
-| **етикет** | [ɛtɪˈkɛt] | etiquette | ім |  |
-| **ввічливість** | [ˈʋʲːit͡ʃlɪʋʲisʲtʲ] | politeness | ім |  |
-| **офіційний** | [ɔfʲiˈt͡sʲijnɪj] | official | adjective |  |
-| **розмовний** | [rɔˈzmɔu̯nɪj] | colloquial | adjective |  |
-| **колегіальний** | [kɔlɛɦʲiˈɑlʲnɪj] | collegial | adjective |  |
-| **субординація** | [subɔrdɪˈnɑt͡sʲijɑ] | subordination | ім |  |
-| **соціальна дистанція** | [sɔt͡sʲiˈɑlʲnɑ dɪˈstɑnʲt͡sʲijɑ] | social distance | фраза |  |
-| **тон** | [tɔn] | tone | ім |  |
-| **доречність** | [dɔˈrɛt͡ʃnʲisʲtʲ] | appropriateness | ім |  |
-| **переходити на «ви»** | [pɛrɛxɔdɪtɪ nɑ «ʋɪ»] | to switch to formal "Vy" | дієсл |  |
-| **звертатися на «ти»** | [zʋɛrˈtɑtɪsʲɑ nɑ «tɪ»] | to address informally as "ty" | дієсл |  |
-| **соціолінгвістичний** | [sɔt͡sʲiɔlʲinɦʋʲiˈstɪt͡ʃnɪj] | sociolinguistic | adjective |  |
-| **еліпсис** | [ˈɛlʲipsɪs] | ellipsis | ім |  |
-| **регістр** | [rɛˈɦʲistr] | register (linguistics) | ім |  |
-| **статус** | [ˈstɑtus] | status | ім |  |
-| **контекст** | [kɔnˈtɛkst] | context | ім |  |
-| **протокол** | [prɔtɔˈkɔl] | protocol | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | grammatical agreement | ім |  |
-| **гіперкорекція** | [ɦʲipɛrkɔrɛkt͡sʲijɑ] | hypercorrection | ім |  |
-| **фамільярність** | [fɑmʲiˈlʲjɑrnʲisʲtʲ] | familiarity | ім |  |
-| **колега** | [kɔˈlɛɦɑ] | colleague | ім |  |
-| **приятель** | [ˈprɪjɑtɛlʲ] | acquaintance / friend | ім |  |
-| **віддієслівний** | [ʋʲidʲːijɛˈsʲlʲiu̯nɪj] | deverbal (from a verb) | adjective |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Український мовний етикет](https://uk.wikipedia.org/wiki/Український_мовний_етикет) — правила ввічливого спілкування
+
+**🌐 Сайти:**
+- [Ти чи Ви? Українська мова](https://www.youtube.com/results?search_query=ти+чи+ви+українська+мова) — пояснення від носіїв мови
+:::
+
+</TabItem>
+</Tabs>

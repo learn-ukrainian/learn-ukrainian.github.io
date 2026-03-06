@@ -1,9 +1,12 @@
 ---
 title: "Ділова українська мова"
-description: ""
+description: "Ukrainian for Business Communication"
 sidebar:
   order: 27
   label: "27. Ділова українська мова"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Ділова українська мова
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -488,7 +497,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 Крім того, важливо постійно оновлювати свої знання. Мова — це живий організм, який розвивається щодня. З'являються нові терміни, змінюються акценти у стилістиці. Читайте фахову літературу, слідкуйте за публікаціями провідних бізнес-видань та аналізуйте комунікацію лідерів ринку. Ваша готовність вчитися та вдосконалюватися стане найкращим підтвердженням вашого високого професіоналізму. Українська культура — це глибока народна традиція, давні звичаї та культура справжньої свободи, і ця свобода знаходить своє відображення у кожному написаному рядку.
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **ділове листування** |  | business correspondence | ім |  |
+| **переговори** |  | negotiations | ім |  |
+| **угода** |  | contract, agreement | ім |  |
+| **пропозиція** |  | proposal, offer | ім |  |
+| **співпраця** |  | cooperation | ім |  |
+| **домовленість** |  | agreement | ім |  |
+| **компроміс** |  | compromise | ім |  |
+| **звіт** |  | report | ім |  |
+| **презентація** |  | presentation | ім |  |
+| **корпоративний** |  | corporate | adjective |  |
+| **партнерство** |  | partnership | ім |  |
+| **укласти** |  | to conclude (an agreement) | дієсл |  |
+| **умова** |  | condition, term | ім |  |
+| **дедлайн** |  | deadline | ім |  |
+| **бюджет** |  | budget | ім |  |
+| **результат** |  | result | ім |  |
+| **актуальний** |  | relevant, timely | adjective |  |
+| **спілкування** |  | communication | ім |  |
+| **контракт** |  | contract | ім |  |
+| **довіра** |  | trust | ім |  |
+| **підпис** |  | signature | ім |  |
+| **зустріч** |  | meeting | ім |  |
+| **звертання** |  | form of address | ім |  |
+| **розірвати** |  | to terminate, break | дієсл |  |
+| **ухвалювати** |  | to adopt, to make (a decision) | дієсл |  |
+| **посада** |  | position, job title | ім |  |
+| **колега** |  | colleague | ім |  |
+| **фінансовий** |  | financial | adjective |  |
+| **вигідний** |  | profitable, advantageous | adjective |  |
+| **рішення** |  | decision | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірте знання ділового етикету
 
@@ -547,37 +593,17 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Ввічлива незгода у листуванні" prompt={"Ви отримали пропозицію від підрядника щодо закупівлі нового обладнання. Умови є для вас неприйнятними через завищений бюджет. Напишіть лист-відповідь, використовуючи техніку амортизації, щоб відхилити пропозицію, але зберегти хороші стосунки з підрядником на майбутнє."} modelAnswer={"Тема: [Закупівля обладнання] Відповідь на комерційну пропозицію\n\nШановна пані Оксано, доброго дня!\n\nЩиро дякуємо за вашу детальну комерційну пропозицію та готовність до співпраці. Ми уважно ознайомилися з усіма технічними характеристиками запропонованого обладнання і високо оцінюємо його якість.\n\nЯ чудово розумію вашу позицію щодо формування вартості. Водночас змушений повідомити, що на даному етапі ці фінансові умови є для нас неприйнятними, оскільки ми обмежені жорстким бюджетом на поточний квартал. На жаль, зараз ми не можемо укласти угоду на запропонованих умовах.\n\nМи зберігаємо ваші контакти та обов'язково повернемося до обговорення можливого партнерства в наступному фінансовому році, коли бюджетні обмеження будуть переглянуті.\n\nДякую за ваш час та розуміння.\n\nЗ повагою,\nІван Коваленко\nКерівник відділу закупівель\n"} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Техніка амортизації | Використання ввічливої форми незгоди замість прямого ні. | 4 |\n| Професійний тон | Збереження поваги до партнера та позитивного настрою. | 3 |\n| Форматування | Наявність усіх необхідних атрибутів ділового листа. | 3 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **ділове листування** | [dʲilɔˈʋɛ lɪstuˈʋɑnʲːɑ] | business correspondence | ім |  |
-| **переговори** | [pɛrɛɦɔʋɔrɪ] | negotiations | ім |  |
-| **угода** | [uˈɦɔdɑ] | contract, agreement | ім |  |
-| **пропозиція** | [prɔpɔˈzɪt͡sʲijɑ] | proposal, offer | ім |  |
-| **співпраця** | [sʲpʲiˈʋprɑt͡sʲɑ] | cooperation | ім |  |
-| **домовленість** | [dɔˈmɔu̯lɛnʲisʲtʲ] | agreement | ім |  |
-| **компроміс** | [kɔmprɔˈmʲis] | compromise | ім |  |
-| **звіт** | [zʲʋʲit] | report | ім |  |
-| **презентація** | [prɛzɛnˈtɑt͡sʲijɑ] | presentation | ім |  |
-| **корпоративний** | [kɔrpɔrɑˈtɪu̯nɪj] | corporate | adjective |  |
-| **партнерство** | [pɑrˈtnɛrstʋɔ] | partnership | ім |  |
-| **укласти** | [uˈklɑstɪ] | to conclude (an agreement) | дієсл |  |
-| **умова** | [uˈmɔʋɑ] | condition, term | ім |  |
-| **дедлайн** | [dɛdlɑjn] | deadline | ім |  |
-| **бюджет** | [bʲuˈd͡ʒɛt] | budget | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **актуальний** | [ɑktuˈɑlʲnɪj] | relevant, timely | adjective |  |
-| **спілкування** | [sʲpʲilkuˈʋɑnʲːɑ] | communication | ім |  |
-| **контракт** | [kɔnˈtrɑkt] | contract | ім |  |
-| **довіра** | [dɔˈʋʲirɑ] | trust | ім |  |
-| **підпис** | [ˈpʲidpɪs] | signature | ім |  |
-| **зустріч** | [ˈzustʲrʲit͡ʃ] | meeting | ім |  |
-| **звертання** | [zʋɛrˈtɑnʲːɑ] | form of address | ім |  |
-| **розірвати** | [rɔzʲirˈʋɑtɪ] | to terminate, break | дієсл |  |
-| **ухвалювати** | [uˈxʋɑlʲuʋɑtɪ] | to adopt, to make (a decision) | дієсл |  |
-| **посада** | [pɔˈsɑdɑ] | position, job title | ім |  |
-| **колега** | [kɔˈlɛɦɑ] | colleague | ім |  |
-| **фінансовий** | [fʲiˈnɑnsɔʋɪj] | financial | adjective |  |
-| **вигідний** | [ʋɪɦʲidnɪj] | profitable, advantageous | adjective |  |
-| **рішення** | [ˈrʲiʃɛnʲːɑ] | decision | ім |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Зразки ділових листів](https://uk.wikipedia.org/wiki/Діловодство) — типові форми документів
+
+**🌐 Сайти:**
+- [Бізнес-етикет в Україні](https://www.youtube.com/results?search_query=бізнес+етикет+україна) — відео про культуру ділового спілкування
+:::
+
+</TabItem>
+</Tabs>

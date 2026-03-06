@@ -1,9 +1,12 @@
 ---
 title: "Вставні слова та вирази"
-description: ""
+description: "Вставні слова та конструкції"
 sidebar:
   order: 16
   label: "16. Вставні слова та вирази"
+pipeline: v3
+build_status: validated
+draft: true
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -34,10 +37,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вставні слова та вирази
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -411,7 +420,44 @@ graph TD
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **вставне слово** |  | parenthetical word | ім |  |
+| **мабуть** |  | probably | parenthetical |  |
+| **на жаль** |  | unfortunately | parenthetical |  |
+| **по-перше** |  | firstly | parenthetical |  |
+| **кажуть** |  | they say | parenthetical |  |
+| **безумовно** |  | undoubtedly | parenthetical |  |
+| **на щастя** |  | fortunately | parenthetical |  |
+| **до речі** |  | by the way | parenthetical |  |
+| **звісно** |  | of course | parenthetical |  |
+| **мабуть, так** |  | probably so | фраза |  |
+| **напевно** |  | surely / probably | parenthetical |  |
+| **отже** |  | so / therefore | parenthetical |  |
+| **зокрема** |  | in particular | parenthetical |  |
+| **навіть** |  | even | particle |  |
+| **принаймні** |  | at least | particle |  |
+| **безперечно** |  | unquestionably | parenthetical |  |
+| **без сумніву** |  | without a doubt | parenthetical |  |
+| **справді** |  | really / indeed | parenthetical |  |
+| **здається** |  | it seems | parenthetical |  |
+| **очевидно** |  | obviously | parenthetical |  |
+| **ймовірно** |  | likely | parenthetical |  |
+| **можливо** |  | possibly | parenthetical |  |
+| **на радість** |  | to ones joy | parenthetical |  |
+| **як не дивно** |  | strangely enough | parenthetical |  |
+| **на біду** |  | unfortunately / unluckily | parenthetical |  |
+| **як на зло** |  | as ill luck would have it | parenthetical |  |
+| **на превеликий жаль** |  | to my great regret | parenthetical |  |
+| **за словами** |  | according to the words of | parenthetical |  |
+| **на мою думку** |  | in my opinion | parenthetical |  |
+| **як відомо** |  | as is known | parenthetical |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Теорія комунікації: функції вставних слів
 
@@ -472,37 +518,17 @@ graph TD
 
 <EssayResponse client:load title="Есе: Екологічна відповідальність" prompt={"Напишіть коротке есе (мінімум 150 слів) на тему екологічної відповідальності громадян. Висловіть свою думку щодо проблеми сортування сміття у вашому місті. Обов'язково використайте щонайменше 5 різних вставних конструкцій (наприклад: по-перше, на мою думку, на жаль, безумовно, отже) для логічної організації тексту та вираження емоційного ставлення."} modelAnswer={"На мою думку, проблема сортування сміття є однією з найгостріших у сучасному суспільстві. По-перше, наші міста потопають у пластику, який розкладається сотні років. По-друге, ми безвідповідально ставимося до природних ресурсів. На жаль, багато людей досі вважають, що ця проблема їх не стосується. Вони, очевидно, не розуміють масштабів екологічної загрози. Безумовно, місцева влада має створити належну інфраструктуру: встановити спеціальні баки, організувати регулярний вивіз відходів. Проте, як відомо, жодна ініціатива не запрацює без активної участі самих громадян. На щастя, останнім часом молодь стає дедалі більш екосвідомою. Кажуть, що нове покоління зможе змінити ситуацію на краще. До речі, у нашому районі нещодавно відкрили нову станцію переробки. Отже, якщо кожен із нас зробить свій невеликий внесок, ми зможемо зберегти природу для майбутніх поколінь. Таким чином, відповідальність лежить на всіх нас."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання вставних слів | У тексті органічно вжито щонайменше 5 вставних конструкцій із різних семантичних груп. | 4 |\n| Зв'язність та логіка викладу | Текст логічно структурований, думки послідовні, аргументація вибудувана зрозуміло. | 3 |\n| Граматика та пунктуація | Продемонстровано правильне виділення вставних слів комами, відсутні орфографічні помилки. | 3 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **вставне слово** | [ʍstɑˈʋnɛ ˈslɔʋɔ] | parenthetical word | ім |  |
-| **мабуть** | [ˈmɑˈbutʲ] | probably | parenthetical |  |
-| **на жаль** | [nɑ ʒɑlʲ] | unfortunately | parenthetical |  |
-| **по-перше** | [pɔ-ˈpɛrʃɛ] | firstly | parenthetical |  |
-| **кажуть** | [ˈkɑʒutʲ] | they say | parenthetical |  |
-| **безумовно** | [bɛzuˈmɔu̯nɔ] | undoubtedly | parenthetical |  |
-| **на щастя** | [nɑ ˈʃt͡ʃɑsʲtʲɑ] | fortunately | parenthetical |  |
-| **до речі** | [dɔ ˈrɛt͡ʃʲi] | by the way | parenthetical |  |
-| **звісно** | [ˈzʲʋʲisnɔ] | of course | parenthetical |  |
-| **мабуть, так** | [ˈmɑˈbutʲ, tɑk] | probably so | фраза |  |
-| **напевно** | [nɑˈpɛu̯nɔ] | surely / probably | parenthetical |  |
-| **отже** | [ˈɔd͡ʒɛ] | so / therefore | parenthetical |  |
-| **зокрема** | [zɔˈkrɛˈmɑ] | in particular | parenthetical |  |
-| **навіть** | [ˈnɑʋʲitʲ] | even | particle |  |
-| **принаймні** | [prɪˈnɑjmnʲi] | at least | particle |  |
-| **безперечно** | [bɛzpɛˈrɛt͡ʃnɔ] | unquestionably | parenthetical |  |
-| **без сумніву** | [bɛz ˈsumnʲiʋu] | without a doubt | parenthetical |  |
-| **справді** | [ˈsprɑu̯dʲi] | really / indeed | parenthetical |  |
-| **здається** | [zdɑˈjɛt͡sʲːɑ] | it seems | parenthetical |  |
-| **очевидно** | [ɔt͡ʃɛˈʋɪdnɔ] | obviously | parenthetical |  |
-| **ймовірно** | [jmɔˈʋʲirnɔ] | likely | parenthetical |  |
-| **можливо** | [mɔˈʒlɪʋɔ] | possibly | parenthetical |  |
-| **на радість** | [nɑ ˈrɑdʲisʲtʲ] | to ones joy | parenthetical |  |
-| **як не дивно** | [jɑk nɛ ˈdɪu̯nɔ] | strangely enough | parenthetical |  |
-| **на біду** | [nɑ bʲiˈdu] | unfortunately / unluckily | parenthetical |  |
-| **як на зло** | [jɑk nɑ zlɔ] | as ill luck would have it | parenthetical |  |
-| **на превеликий жаль** | [nɑ prɛʋɛˈlɪkɪj ʒɑlʲ] | to my great regret | parenthetical |  |
-| **за словами** | [zɑ slɔˈʋɑmɪ] | according to the words of | parenthetical |  |
-| **на мою думку** | [nɑ mɔˈju ˈdumku] | in my opinion | parenthetical |  |
-| **як відомо** | [jɑk ʋʲiˈdɔmɔ] | as is known | parenthetical |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📖 Статті:**
+- [Синтаксис української мови](https://uk.wikipedia.org/wiki/Вставні_слова) — теорія вставних конструкцій
+
+**🌐 Сайти:**
+- [ГРАК](https://uacorpus.org/) — приклади вживання в реальних текстах
+:::
+
+</TabItem>
+</Tabs>
