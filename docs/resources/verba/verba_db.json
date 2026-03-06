@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "source": "verba.school",
+  "generated_at": "2026-03-06",
+  "stats": {
+    "total_articles": 17
+  },
+  "articles": [
+    {
+      "id": "verba-001",
+      "content_type": "cultural_guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/the-magic-of-ukrainian-christmas-from-ancient-rituals-to-modern-traditions",
+      "title": "The Magic of Ukrainian Christmas: From Ancient Rituals to Modern Traditions",
+      "topics": ["christmas", "traditions", "culture", "holidays"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-002",
+      "content_type": "cultural_guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/ukrainian_easter_en",
+      "title": "Easter in the world and Ukraine: A Celebration of Faith, Tradition and Family",
+      "topics": ["easter", "traditions", "culture", "holidays"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-003",
+      "content_type": "cultural_guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/ukraine-s-victories-at-the-eurovision",
+      "title": "Ukraine's victories at the Eurovision",
+      "topics": ["eurovision", "music", "culture"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-004",
+      "content_type": "guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/mavka-the-forest-song-learn-ukrainian-with-ukrainian-cartoon",
+      "title": "Mavka. The Forest Song. Learn Ukrainian with Ukrainian Cartoon!",
+      "topics": ["cartoon", "culture", "listening", "vocabulary"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-005",
+      "content_type": "guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/5-reasons-to-learn-ukrainian",
+      "title": "5 reasons to learn Ukrainian",
+      "topics": ["motivation", "culture"],
+      "suggested_level": "A1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-006",
+      "content_type": "cultural_guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/ukrainian-motanka-dolls",
+      "title": "Magic of Ukrainian Motanka Dolls",
+      "topics": ["crafts", "traditions", "culture"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-007",
+      "content_type": "cultural_guide",
+      "category": "cuisine",
+      "url": "https://www.verba.school/post/the-magic-of-ukrainian-borscht",
+      "title": "The magic of Ukrainian Borscht",
+      "topics": ["food", "cuisine", "borscht", "culture"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-008",
+      "content_type": "grammar_guide",
+      "category": "grammar",
+      "url": "https://www.verba.school/post/past-tense-in-the-ukrainian-language",
+      "title": "Past tense in the Ukrainian language",
+      "topics": ["grammar", "verbs", "past tense", "conjugation"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-009",
+      "content_type": "grammar_guide",
+      "category": "grammar",
+      "url": "https://www.verba.school/post/ukrainian-personal-pronouns",
+      "title": "Ukrainian Personal Pronouns",
+      "topics": ["grammar", "pronouns"],
+      "suggested_level": "A1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-010",
+      "content_type": "vocabulary_guide",
+      "category": "vocabulary",
+      "url": "https://www.verba.school/post/polite-phrases-in-ukrainian",
+      "title": "Polite Phrases in Ukrainian",
+      "topics": ["vocabulary", "phrases", "greetings", "politeness"],
+      "suggested_level": "A1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-011",
+      "content_type": "guide",
+      "category": "phonetics",
+      "url": "https://www.verba.school/post/10-tongue-twisters-in-ukrainian",
+      "title": "10 Tongue Twisters in Ukrainian",
+      "topics": ["phonetics", "pronunciation", "tongue twisters"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-012",
+      "content_type": "reading_guide",
+      "category": "reading",
+      "url": "https://www.verba.school/post/reading-in-ukrainian-for-beginners-1",
+      "title": "Reading in Ukrainian for beginners",
+      "topics": ["reading", "beginners"],
+      "suggested_level": "A1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-013",
+      "content_type": "travel_guide",
+      "category": "travel",
+      "url": "https://www.verba.school/post/travel-in-ukraine-lviv",
+      "title": "Travel in Ukraine: Lviv",
+      "topics": ["travel", "lviv", "culture", "vocabulary"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-014",
+      "content_type": "cultural_guide",
+      "category": "music",
+      "url": "https://www.verba.school/post/ukrainian-music-for-learning",
+      "title": "Ukrainian Music for Learning",
+      "topics": ["music", "listening", "culture"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-015",
+      "content_type": "reading_guide",
+      "category": "reading",
+      "url": "https://www.verba.school/post/best-ukrainian-books-for-learning",
+      "title": "Best Ukrainian Books for Learning",
+      "topics": ["reading", "books", "literature"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-016",
+      "content_type": "charity_guide",
+      "category": "charity",
+      "url": "https://www.verba.school/post/how-to-help-ukraine",
+      "title": "How to Help Ukraine",
+      "topics": ["charity", "ukraine", "support"],
+      "suggested_level": "B1",
+      "source": "verba.school"
+    },
+    {
+      "id": "verba-017",
+      "content_type": "guide",
+      "category": "culture",
+      "url": "https://www.verba.school/post/ukrainian-national-symbols",
+      "title": "Ukrainian National Symbols",
+      "topics": ["culture", "symbols", "history"],
+      "suggested_level": "A2",
+      "source": "verba.school"
+    }
+  ]
+}
