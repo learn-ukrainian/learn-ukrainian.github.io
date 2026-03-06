@@ -2,7 +2,7 @@ module: a1-014
 level: A1
 sequence: 14
 slug: checkpoint-first-contact
-version: '2.1'
+version: '2.0'
 title: 'Checkpoint: First Contact'
 subtitle: Can You Do the A1.1 Skills?
 focus: checkpoint
@@ -12,8 +12,8 @@ word_target: 1200
 objectives:
 - Demonstrate Cyrillic reading fluency
 - Identify noun gender by word ending
-- Use adjective-noun agreement with correct gender endings
-- Form basic noun phrases using Це + adjective + noun patterns
+- Conjugate First Conjugation verbs correctly
+- Form questions and negative statements
 content_outline:
 - section: Огляд (Overview)
   words: 180
@@ -34,15 +34,16 @@ content_outline:
     'місто'
   - Швидка перевірка вміння впізнавати всі 33 літери українського алфавіту без використання
     транслітерації
-- section: 'Навичка 2: Прикметники та Множина (Skill 2: Adjectives and Plurals)'
+- section: 'Навичка 2: Дієслова та Питання (Skill 2: Verbs and Questions)'
   words: 300
   points:
-  - 'Узгодження прикметників з іменниками за родом (M11 review): великий стіл (M),
-    нова книга (F), гарне місто (N). Drill на правильні закінчення -ий/-а/-е.'
-  - 'Утворення множини (M13 review): стіл → столи, книга → книги, місто → міста.
-    Чергування приголосних та голосних у множині.'
-  - 'Кольори + одяг (M12 review): червона сукня, сині штани, білий светр.
-    Поєднання прикметників з іменниками одягу.'
+  - 'Дієвідмінювання у теперішньому часі (§4.2.4.1) — drill для подолання типової
+    помилки: плутанина закінчень 3-ї особи множини -уть/-ють (I дієвідміна) та -ать/-ять
+    (II дієвідміна)'
+  - Конструювання питань з хто/що/де/куди (§4.3.1) — інтонаційні моделі для закритих
+    питань та використання заперечної частки 'не' у відповідях
+  - 'Використання високочастотних дієслів у контексті: читати вголос, писати вправу
+    ручкою, говорити повільно по-українськи'
 - section: 'Культурний контекст: Кафе (Cultural Context: Cafe)'
   words: 240
   points:
@@ -53,26 +54,30 @@ content_outline:
 - section: Інтеграційне завдання (Integration Task)
   words: 180
   points:
-  - 'Інтеграція навичок: опис кафе та меню через Це + adj + noun (Це чорна кава,
-    Це великий торт, Це нове кафе). Визначення роду іменників та правильне узгодження.'
+  - 'Рольова гра: Діалог у кафе — інтеграція навичок читання меню, визначення роду
+    (чорна кава) та вживання дієслів (Я хочу каву, Я читаю меню)'
   - Самооцінка готовності до переходу на рівень A1.2 — підбиття підсумків засвоєння
-    модулів M1-M13
+    перших 10 модулів
 vocabulary_hints:
   required:
-  - великий (big) — великий стіл, великий дім; Review from M11
-  - новий (new) — нова книга, нове місто; Review from M11
-  - гарний (beautiful/nice) — гарна книга, гарне місто; Review from M11
-  - червоний (red) — червона сукня, червоний светр; Review from M12
-  - хто (who) — Хто це?; Interrogative focus
-  - що (what) — Що це?; Interrogative focus
-  - де (where) — Де кафе?; Interrogative focus
+  - читати (to read) — читати меню, читати текст, читати вголос; High Frequency
+  - писати (to write) — писати листа, писати вправу, писати ручкою; High Frequency
+  - говорити (to speak) — говорити українською, говорити повільно, говорити правду;
+    High Frequency
+  - знати (to know) — я знаю, хто знає?, знати відповідь; High Frequency
+  - хто (who) — Хто це? Хто ви?; Interrogative focus
+  - що (what) — Що це? Що тобі купити?; Interrogative focus
+  - де (where) — Де ви? Де кафе?; Interrogative focus
   - так/ні (yes/no) — базові ствердні та заперечні відповіді
   recommended:
-  - синій (blue) — сині штани, синій светр; Review from M12
-  - білий (white) — біла сорочка, білий сніг; Review from M12
-  - 'кава (coffee) — чорна кава, кава з молоком; Cultural hook: Lviv tradition'
+  - розуміти (to understand) — я розумію, не розумію; Core A1 communication
+  - питати (to ask) — питати дорогу, питати ціну; Verb conjugation practice
+  - відповідати (to answer) — відповідати на питання; Verb conjugation practice
+  - 'кава (coffee) — чорна кава, кава з молоком, філіжанка кави; Cultural hook: Lviv
+    tradition'
+  - рахунок (bill/check) — Можна рахунок?, оплатити рахунок; Essential service vocabulary
   - Смачного! (Bon appetit) — Essential cultural phrase for dining
-  - маленький (small) — маленький кіт, маленька книга; Adjective practice
+  - перевіряти (to check) — перевіряти вправу, перевіряти навички; Checkpoint specific
 activity_hints:
 - type: quiz
   focus: A1.1 grammar and vocabulary
@@ -80,13 +85,13 @@ activity_hints:
 connects_to:
 - a1-25 (The Accusative I)
 prerequisites:
-- a1-13 (Plurals and Alternation)
+- a1-17 (Reflexive Verbs)
 persona:
   voice: Patient Supportive Tutor
   role: Friendly Hostel Host
 grammar:
 - Cyrillic alphabet (all 33 letters)
 - Noun gender (m/f/n)
-- Adjective-noun agreement
-- Plural formation
+- Present tense conjugation
+- Questions and negation
 register: розмовний

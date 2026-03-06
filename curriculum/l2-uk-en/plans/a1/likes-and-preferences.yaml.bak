@@ -2,7 +2,7 @@ module: a1-019
 level: A1
 sequence: 19
 slug: likes-and-preferences
-version: '2.1'
+version: '2.0'
 title: Likes and Preferences
 subtitle: What Do You Like?
 focus: grammar
@@ -86,9 +86,4 @@ grammar:
 - Dative construction Мені подобається
 - Люблю + Accusative
 - Хочу + infinitive
-scope_note: >
-  Dative forms (мені, тобі, etc.) are taught as memorized chunks in the
-  «Мені подобається» construction, NOT as formal dative case grammar.
-  Accusative with люблю/хочу is also a lexical pattern preview before
-  formal Accusative instruction in seq 25. LEVEL_CONSTRAINTS exception applies.
 register: розмовний

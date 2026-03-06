@@ -9,7 +9,7 @@ levels:
       - the-cyrillic-code-ii         # 2  К И Р Б В Д І + О (8 letters)
       - the-cyrillic-code-iii        # 3  П Т Г Ґ Е З Ж Ш Х (9 letters)
       - the-cyrillic-code-iv         # 4  Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + '
-      - syllables-and-transfer       # 5  Syllable structure, word transfer
+      - syllables-and-word-division   # 5  Syllable structure, word division (переніс)
       - stress-and-intonation        # 6  Наголос, intonation patterns
       - the-gender-code              # 7  Masculine/feminine/neuter
       - greetings-and-politeness     # 8  Добрий ранок, Дякую, Ти vs Ви
