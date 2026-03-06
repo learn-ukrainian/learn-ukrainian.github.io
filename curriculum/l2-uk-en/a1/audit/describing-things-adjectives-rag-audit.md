@@ -1,17 +1,12 @@
 # RAG Verification: describing-things-adjectives
 
-**Date:** 2026-03-06 15:12 UTC | **Words checked:** 147 | **VESUM coverage:** 144/147 (98.0%)
+**Date:** 2026-03-06 20:26 UTC | **Words checked:** 133 | **VESUM coverage:** 130/133 (97.7%)
 
 ## Summary
-- ✅ Verified (VESUM): 144
+- ✅ Verified (VESUM): 130
 - ⚠️ Partial (RAG only): 2
-- ❌ Not found: 1
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| синий | prose | ✗ | ✗ | ✗ |
+- ❌ Not found: 0
+- ❓ RAG error (Qdrant unreachable): 1
 
 ## ⚠️ Partial Match (human review)
 
@@ -24,5 +19,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 134 | 131 | 1 |
-| Activities (.yaml) | 13 | 13 | 0 |
+| Prose (.md) | 126 | 123 | 1 |
+| Activities (.yaml) | 7 | 7 | 0 |

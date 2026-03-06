@@ -388,7 +388,7 @@ def check_plan_section_coverage(
     if missing:
         issues.append({
             "type": "PLAN_SECTION_MISSING",
-            "severity": "MEDIUM",
+            "severity": "HIGH",
             "location": "(plan vs content)",
             "text": f"Missing {len(missing)} plan section(s): {', '.join(missing[:5])}",
             "fix": "Add content for the missing plan sections or update section headings to match plan.",
@@ -448,18 +448,40 @@ def check_activity_answers_vesum(
                         for w in words:
                             if w.lower() in failed_words:
                                 flagged.append(w)
-        # Check options/items for correct answers
+        # Check options/items — both dict entries and bare string lists
         items = act.get("items", act.get("options", []))
         if isinstance(items, list):
             for item in items:
                 if isinstance(item, dict):
-                    for key in ("answer", "correct", "text"):
+                    for key in ("answer", "correct", "text", "prompt", "sentence"):
                         val = item.get(key, "")
                         if isinstance(val, str):
                             words = _CYRILLIC_WORD_RE.findall(val)
                             for w in words:
                                 if w.lower() in failed_words:
                                     flagged.append(w)
+                    # Check nested options (e.g. items[].options: ["слово", "слов"])
+                    sub_options = item.get("options", item.get("words", []))
+                    if isinstance(sub_options, list):
+                        for opt in sub_options:
+                            if isinstance(opt, str):
+                                words = _CYRILLIC_WORD_RE.findall(opt)
+                                for w in words:
+                                    if w.lower() in failed_words:
+                                        flagged.append(w)
+                            elif isinstance(opt, dict):
+                                for key in ("text", "answer", "correct"):
+                                    val = opt.get(key, "")
+                                    if isinstance(val, str):
+                                        words = _CYRILLIC_WORD_RE.findall(val)
+                                        for w in words:
+                                            if w.lower() in failed_words:
+                                                flagged.append(w)
+                elif isinstance(item, str):
+                    words = _CYRILLIC_WORD_RE.findall(item)
+                    for w in words:
+                        if w.lower() in failed_words:
+                            flagged.append(w)
 
     if flagged:
         unique = sorted(set(flagged))[:10]

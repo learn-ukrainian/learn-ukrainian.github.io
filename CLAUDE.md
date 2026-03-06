@@ -42,13 +42,16 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 <critical>
 
-**Cross-agent build pipeline:**
-- **v4** (default): research → discover → content → activities → validate → [review] → mdx
-- **v3** (legacy, `--v3`): A → B → C → audit → D → [F] → E
+**Pipeline v5** (`build_module_v5.py`) — the ONLY pipeline:
+- research → discover → **sandbox** → content → activities → validate → [review] → mdx
+- **v4 and v3 are RETIRED.** Do not use `build_module.py`.
 - **Gemini** builds: research, discover, content, activities
 - **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)
-- Discover is non-blocking — failures don't halt the pipeline. Skip with `--skip-discover`.
+- **Sandbox**: VESUM-validated word bank (deterministic, no LLM) — injected via `{LEXICAL_SANDBOX}`
+- **Validate**: morphological validator + Russicism detection + agreement checking
+- Discover and sandbox are non-blocking — failures don't halt the pipeline.
 - Model defaults: `scripts/batch_gemini_config.py` | Review default: `claude-opus-4-6`
+- Build: `.venv/bin/python scripts/build_module_v5.py {track} {num} [--rebuild] [--restart-from {phase}]`
 
 **An LLM must NEVER review its own work.** Gemini builds → Claude reviews. Enforced by `SELF_REVIEW_DETECTED` audit gate.
 
@@ -125,7 +128,7 @@ Bare list at root (NOT `activities:` wrapper). Full schema: [`vocabulary-activit
 - **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
-- **Build pipeline**: `.venv/bin/python scripts/build_module.py {level} {seq} [--review] [--restart-from {phase}] [--force-phase {phase}]`
+- **Build pipeline**: `.venv/bin/python scripts/build_module_v5.py {level} {seq} [--review] [--restart-from {phase}] [--force-phase {phase}]`
 
 ---
 

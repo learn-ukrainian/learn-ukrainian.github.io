@@ -2,15 +2,15 @@
   "module": "describing-things-adjectives",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-06T16:11:43.103204Z",
+  "last_audit": "2026-03-06T21:25:41.578323Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T16:10:13.982646Z",
-    "meta": "2026-03-06T15:48:13.703864Z",
-    "activities": "2026-03-06T15:59:36.607831Z",
-    "vocabulary": "2026-03-06T16:10:29.358152Z",
+    "md": "2026-03-06T21:25:39.250757Z",
+    "meta": "2026-03-06T18:46:22.909232Z",
+    "activities": "2026-03-06T21:25:38.947853Z",
+    "vocabulary": "2026-03-06T21:25:39.106556Z",
     "plan": "2026-03-05T10:20:01.530912Z",
-    "research": "2026-03-06T15:48:47.870314Z"
+    "research": "2026-03-06T18:46:40.098665Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1354/1200 (raw: 1554)"
+      "message": "1737/1200 (raw: 1822)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "23/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",

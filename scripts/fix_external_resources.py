@@ -252,11 +252,65 @@ def _normalize_keys(resources: dict) -> int:
     return fixed
 
 
-def reassign(resources: dict, track: str, start: int, end: int) -> int:
+def _verify_with_gemini(topic_title: str, slug: str, candidates: list[dict]) -> list[dict]:
+    """Ask Gemini to verify which candidates are actually relevant.
+
+    Returns only candidates that Gemini judges as relevant.
+    """
+    from pipeline_lib import dispatch_gemini_raw
+
+    article_list = "\n".join(
+        f"{i+1}. \"{c['title']}\" (source: {c.get('source', '?')})"
+        for i, c in enumerate(candidates)
+    )
+
+    prompt = f"""You are a Ukrainian language curriculum resource matcher.
+
+Module: "{topic_title}" (slug: {slug})
+
+Candidate external resources:
+{article_list}
+
+For each candidate, judge: is this article/podcast SPECIFICALLY relevant to the module topic "{topic_title}"?
+
+Rules:
+- RELEVANT: The article directly teaches or practices the same grammar, vocabulary, or skill as the module
+- NOT RELEVANT: The article is about a different topic, even if it's about Ukrainian language in general
+- "Grammar" or "verbs" alone is NOT enough — the specific grammar point must match
+- Podcast episodes about daily life topics (market, restaurant, travel) are only relevant to vocabulary modules about those topics, NOT to grammar modules
+
+Reply with ONLY the numbers of relevant articles, comma-separated. If none are relevant, reply "NONE".
+Example: 1, 3, 5"""
+
+    ok, output = dispatch_gemini_raw(
+        prompt, task_id=f"verify-{slug}",
+        model="gemini-3-flash-preview",
+        stdout_only=True, timeout=120,
+    )
+
+    if not ok:
+        # On failure, return all candidates (don't block)
+        return candidates
+
+    output = output.strip()
+    if "NONE" in output.upper():
+        return []
+
+    # Parse numbers
+    try:
+        nums = [int(x.strip()) for x in output.replace("\n", ",").split(",") if x.strip().isdigit()]
+        return [candidates[n - 1] for n in nums if 1 <= n <= len(candidates)]
+    except (ValueError, IndexError):
+        return candidates
+
+
+def reassign(resources: dict, track: str, start: int, end: int, use_llm: bool = False) -> int:
     """Re-score resource assignments using blog/podcast DBs + discovery data.
 
     For each module, searches the blog DBs for relevant articles and updates
     the external_resources entry. Preserves good existing entries.
+
+    If use_llm=True, candidates are verified by Gemini before assignment.
     """
     from video_discovery import search_blogs
     idx = get_module_index(track)
@@ -357,18 +411,30 @@ def reassign(resources: dict, track: str, start: int, end: int) -> int:
             for item in existing.get(cat, []):
                 existing_urls.add(item.get("url", ""))
 
-        # Build fresh articles list from search results
+        # Filter candidates — only keep those with relevance_score >= 0.5
+        candidates = [
+            r for r in results
+            if r["url"] not in existing_urls and r.get("relevance_score", 0) >= 0.5
+        ]
+
+        if not candidates:
+            continue
+
+        # LLM verification — ask Gemini to judge actual relevance
+        if use_llm:
+            before = len(candidates)
+            candidates = _verify_with_gemini(topic_title, slug, candidates)
+            rejected = before - len(candidates)
+            if rejected:
+                print(f"    verify: {rejected}/{before} rejected by Gemini")
+
+        # Build fresh articles list
         new_articles: list[dict] = []
-        for r in results:
-            if r["url"] in existing_urls:
-                continue
-            if r["relevance_score"] < 0.5:
-                continue
-            existing_urls.add(r["url"])
+        for r in candidates:
             new_articles.append({
                 "title": r["title"],
                 "url": r["url"],
-                "relevance": "high" if r["relevance_score"] >= 0.7 else "medium",
+                "relevance": "high" if r.get("relevance_score", 0) >= 0.7 else "medium",
                 "source": r.get("source", "blog DB match"),
             })
 
@@ -422,6 +488,8 @@ def main() -> int:
     parser.add_argument("--clean", action="store_true", help="Remove bad entries (placeholders, overused, generic)")
     parser.add_argument("--reassign", nargs=2, metavar=("TRACK", "RANGE"),
                         help="Re-score assignments for a range (e.g. a1 1-30, a1 all)")
+    parser.add_argument("--verify", action="store_true",
+                        help="Use Gemini to verify relevance during --reassign (slower, more accurate)")
     parser.add_argument("--regen-mdx", nargs=2, metavar=("TRACK", "RANGE"),
                         help="Regenerate MDX after fixes (e.g. a1 1-30)")
 
@@ -446,7 +514,7 @@ def main() -> int:
     if args.reassign:
         track, range_str = args.reassign
         start, end = parse_range(range_str, track)
-        n_updated = reassign(resources, track, start, end)
+        n_updated = reassign(resources, track, start, end, use_llm=args.verify)
         if n_updated > 0:
             save_resources(data)
 

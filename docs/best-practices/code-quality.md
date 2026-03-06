@@ -10,12 +10,12 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build_module.py bio 5
+.venv/bin/python scripts/build_module_v5.py bio 5
 scripts/audit_module.sh curriculum/l2-uk-en/bio/module.md  # wraps venv automatically
 
 # ❌ Wrong
-python3 scripts/build_module.py   # missing deps
-python scripts/build_module.py    # wrong version
+python3 scripts/build_module_v5.py   # missing deps
+python scripts/build_module_v5.py    # wrong version
 ```
 
 **Why:** The venv uses pyenv Python 3.12.8 compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec. Homebrew Python will silently fail on vector search.
@@ -29,17 +29,14 @@ rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 
 ## Script Hierarchy
 
-```
-v3 > v2 > v1
-```
-
 | Script | Use for | Status |
 |--------|---------|--------|
-| `build_module.py` | All new builds | **Preferred** |
-| `build_module_v2.py` | Fallback if v3 has issues | Stable |
-| `build_module.py` (v1) | Utility library only | Do not invoke directly |
+| `build_module_v5.py` | All new builds | **Current** |
+| `pipeline_v5.py` | v5 pipeline phases | **Current** |
+| `build_module.py` | Legacy v4 pipeline | **RETIRED** — do not use |
+| `build_module_v2.py` | Legacy v2 pipeline | **RETIRED** — do not use |
 
-v3 imports from v2 which imports from v1. Never skip levels — use the highest available version.
+Always use v5. Legacy scripts remain for reference only.
 
 ---
 
@@ -87,22 +84,21 @@ If an API call or test fails, don't wait and retry the same action. Consider alt
 
 ## State File Conventions
 
-### v3 uses separate state file
-`state-v3.json` — never share state with v2's `state.json`. Prevents collisions when running both pipelines.
+### v5 state file
+`state-v5.json` in each module's orchestration directory tracks phase progress.
 
-### Phase ID prefixes
-v3 phase IDs use `v3-` prefix: `v3-A`, `v3-B`, `v3-C`, `v3-audit`, `v3-D`.
-v2 phase IDs are plain numbers: `0`, `1`, `2`, `3a`, `3b`, `6`, `8`.
+### Phase names (v5)
+v5 phases: `research`, `discover`, `sandbox`, `content`, `activities`, `validate`, `review`, `mdx`.
 
 ### State schema
 ```json
 {
   "track": "bio",
   "slug": "danylo-apostol",
-  "mode": "v3",
+  "mode": "v5",
   "phases": {
-    "v3-A": {"status": "complete", "ts": "2026-02-19T00:00:00Z", "mode": "meta-only"},
-    "v3-B": {"status": "complete", "ts": "2026-02-19T00:10:00Z"}
+    "research": {"status": "complete", "ts": "2026-02-19T00:00:00Z"},
+    "content": {"status": "complete", "ts": "2026-02-19T00:10:00Z"}
   }
 }
 ```
@@ -113,7 +109,7 @@ Always include: `status`, `ts`. Add `mode`, `note`, `task_id` as needed for obse
 
 ## Delimiter Extraction
 
-Use `_extract_delimiter()` from `build_module.py` for all structured output parsing:
+Use `_extract_delimiter()` from `pipeline_lib.py` for all structured output parsing:
 
 ```python
 def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:

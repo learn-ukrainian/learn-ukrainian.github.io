@@ -369,16 +369,16 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 | word | слово |
 ```
 
-## AI Build Pipeline (v4 — Hybrid Gemini+Claude)
+## AI Build Pipeline (v5 — `build_module_v5.py`)
 
-`scripts/build_module.py` orchestrates module creation using the best LLM for each phase.
+`scripts/build_module_v5.py` orchestrates module creation using the best LLM for each phase.
 Gemini handles research, discovery, and long-form prose (1M context, fast iteration);
-Claude handles interactive activities and final QA (better reasoning, structured outputs).
+Claude handles final QA (better reasoning, adversarial review).
 
-### Pipeline v4 (default)
+### Pipeline v5
 
 ```
-research → discover → content → activities → validate → [review] → mdx
+research → discover → sandbox → content → activities → validate → [review] → mdx
 ```
 
 ### Phase-to-LLM Assignment
@@ -387,13 +387,14 @@ research → discover → content → activities → validate → [review] → m
 |-------|-----|---------------|---------|
 | **research** | Gemini | `gemini-2.5-pro` | Web research, meta outline, friction hooks |
 | **discover** | Gemini | `gemini-2.5-flash` | YouTube search across curated channels, transcript scoring |
-| **content** | Gemini | `gemini-2.5-pro` | Full lesson prose with track context + video discoveries |
-| **activities** | **Claude** | Sonnet (core) / Opus (seminar) | Interactive activities, vocabulary YAML |
-| **validate** | Gemini | `gemini-2.5-pro` | Audit + screen + fix loop |
+| **sandbox** | _(no LLM)_ | — | VESUM-validated word bank (deterministic) |
+| **content** | Gemini | `gemini-2.5-pro` | Full lesson prose with lexical sandbox + video discoveries |
+| **activities** | Gemini | `gemini-2.5-pro` | Interactive activities, vocabulary YAML |
+| **validate** | Gemini | `gemini-2.5-pro` | Audit + morphological validator + Russicism check + fix loop |
 | **review** _(optional)_ | **Claude** | Opus (always) | Cross-agent adversarial review, max 2 fix attempts |
 | **mdx** | _(no LLM)_ | — | Deterministic: markdown → Docusaurus MDX |
 
-**Non-blocking phases:** discover, validate, review — failures don't halt the pipeline.
+**Non-blocking phases:** discover, sandbox, validate, review — failures don't halt the pipeline.
 **Rule:** MDX always runs last, even on validate/review failure (for preview).
 
 ### Model Selection Logic
@@ -428,14 +429,14 @@ Override per-session with `--claude-model-A`, `--claude-model-C`, `--claude-mode
 
 Phase F (and optionally A/C) call the headless Claude CLI directly via subprocess.
 When running from Claude Code's bash tool, the 2-minute timeout applies.
-**Solution:** Run `build_module.py` directly from a terminal, not from Claude Code:
+**Solution:** Run `build_module_v5.py` directly from a terminal, not from Claude Code:
 
 ```bash
-# Terminal (no timeout): Claude handles Phase C + F automatically
-.venv/bin/python scripts/build_module.py bio --all --final-review
+# Terminal (no timeout)
+.venv/bin/python scripts/build_module_v5.py bio --all --review
 
-# Route Phase A to Claude too (e.g. for c1/c2 where Claude research is preferred)
-.venv/bin/python scripts/build_module.py c1 --all --use-claude A
+# With Claude review
+.venv/bin/python scripts/build_module_v5.py c1 --all --review-claude
 ```
 
 The script removes `CLAUDECODE` from the environment before spawning Claude CLI to avoid

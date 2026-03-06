@@ -8,7 +8,7 @@ While the Yellow Team (Gemini) generates research and prose at scale, the Blue T
 - **Architecture & Tooling**: Designing the v3 pipeline, audit framework, meta schemas, activity validators, and monitoring API. Every script in `scripts/` and every skill in `claude_extensions/` is Blue Team work.
 - **Phase D Review**: Cross-agent adversarial review of all content Yellow produces. We reject filler, catch Surzhyk, verify pedagogical depth, and enforce the Ukrainian State Standard 2024.
 - **Quality Gates**: Maintaining `audit_module.py`, `content_gaming.py`, `review_gaming.py` — the automated enforcement layer that catches what manual review misses.
-- **Orchestration**: Deciding build priority, dispatching batch builds, managing the `build_module.py` pipeline, and coordinating work across sessions via GitHub issues and memory graph.
+- **Orchestration**: Deciding build priority, dispatching batch builds, managing the `build_module_v5.py` pipeline, and coordinating work across sessions via GitHub issues and memory graph.
 - **Infrastructure**: Monitor API, deploy pipeline, session scripts, state management, and the MCP communication layer.
 
 ## The Challenges We Face

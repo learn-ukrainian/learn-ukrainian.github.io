@@ -19,7 +19,7 @@ Key files to analyze (not all will exist for every module):
 | `phase-C-prompt.md` | Activities prompt | MEDIUM |
 | `phase-C-friction.md` | Activities friction report | **HIGH** |
 | `placeholders.yaml` | Variables injected into prompts | **HIGH** -- what context was available |
-| `state.json` / `state-v4.json` | Pipeline state (attempts, phases) | MEDIUM |
+| `state-v5.json` / `state.json` | Pipeline state (attempts, phases) | MEDIUM |
 | `completion.md` | Final verdict (PASS/FAIL, word count) | LOW |
 | `validate-fix*-prompt.md` | Validation fix attempts | **HIGH** -- what went wrong |
 | `screen-result.json` | VESUM screening results | MEDIUM |
@@ -65,7 +65,7 @@ Read `phase-2-friction-1.md` and `phase-C-friction.md`:
 
 ### 4. FIX LOOP ANALYSIS
 
-If `state.json` / `state-v4.json` shows `attempts > 1` for any phase:
+If `state-v5.json` / `state.json` shows `attempts > 1` for any phase:
 
 - [ ] **What failed validation?** -- Read `validate-fix*-prompt.md` and `screen-result.json`.
 - [ ] **Was the fix prompt clear?** -- Did the fix prompt tell Gemini exactly what to change, or was it vague?

@@ -1,5 +1,5 @@
 <!-- SCOPE
-Covers: Adjective agreement in gender (masculine, feminine, neuter) and number (plural) in the Nominative case, hard and soft stems.
+Covers: Adjective agreement in gender (masculine, feminine, neuter) and number (plural) in the Nominative case. Hard and soft stem endings.
 Not covered:
   - Colors and Clothing → a1-12
   - Description: Adverbs → a1-42
@@ -7,190 +7,259 @@ Not covered:
 
 # Describing Things - Adjectives
 
-> **Чому це важливо?**
-> Наприклад, кава — велика чи маленька? Телефон — новий чи старий? Прикметники — це опис.
+> **Чому це важливо? — Why does this matter?**
 >
-> **Why does this matter?**
-> For example, is a coffee large or small? Is a phone new or old? Adjectives are descriptions.
+> Learning to describe objects and people adds incredible color and depth to your vocabulary.
+> 
+> Це ду́же важли́ве пра́вило. (This is a very important rule.)
+> Це га́рні слова́. (These are beautiful words.)
+> Це ду́же ціка́ва те́ма. (This is a very interesting topic.)
 
 ## Вступ: Світ прикметників (Introduction: The World of Adjectives)
 
-Прикметники — це опис. Розмір, вік, колір. Adjectives describe the qualities of nouns: their size, age, color, or how good they are.
+Прикме́тник — це нове́ сло́во. (An adjective is a new word.)
+Прикме́тники — це нові́ слова́. (Adjectives are new words.)
+Вони́ — ду́же важли́ві. (They are very important.)
+Це га́рне пра́вило. (This is a nice rule.)
 
-Це мі́сто. Це га́рне мі́сто. Це нова́ кни́га. Це га́рна пого́да.
+Маскулі́нний, феміні́нний і сере́дній рід — це важли́ві слова́. (Masculine, feminine, and neuter gender are important words.)
 
-A city. A beautiful city. A new book. Beautiful weather.
+Adjectives act like mirrors. They must perfectly reflect the properties of the noun. If a noun is feminine, the adjective must take a feminine ending. They work together as a team.
 
-Прикметник і іменник — це пара. In Ukrainian, adjectives must match the noun they describe. Рід іменника — це рід прикметника. The adjective always has the same gender as the noun it describes. This is a fundamental rule called adjective agreement.
+To ask "What kind?" or "Which?", we use specific question words:
 
-Це чоловічий рід. Це жіночий рід. Це середній рід.
+*   **Яки́й?** (What kind? - masculine)
+*   **Яка́?** (What kind? - feminine)
+*   **Яке́?** (What kind? - neuter)
+*   **Які́?** (What kind? - plural)
 
-This is masculine. This is feminine. This is neuter.
+Яки́й це дім? (What kind of house is this?)
+Це нови́й дім. (This is a new house.)
 
-To ask for a description, we use the question word "which" or "what kind". Because of gender agreement, this question word also has different forms depending on the noun.
+Яка́ це кни́га? (What kind of book is this?)
+Це нова́ кни́га. (This is a new book.)
 
-Яки́й? (Which? / What kind? — for masculine nouns).
-Яка́? (Which? / What kind? — for feminine nouns).
-Яке́? (Which? / What kind? — for neuter nouns).
-Які́? (Which? / What kind? — for plural / множина).
+Яке́ це мі́сто? (What kind of city is this?)
+Це нове́ мі́сто. (This is a new city.)
 
-Наприклад, Софі́йський собо́р у Києві. For example, St. Sophia's Cathedral in Kyiv.
+Які́ це слова́? (What kind of words are these?)
+Це нові́ слова́. (These are new words.)
 
-Софі́йський собо́р — це стари́й собо́р. Це вели́кий собо́р. Це цікаве місце.
+When we visit Kyiv, we can describe St. Sophia's Cathedral (Софі́йський собо́р):
 
-St. Sophia's Cathedral is an old cathedral. It is a grand cathedral. A very interesting place.
+Це стари́й собо́р. (This is an old cathedral.)
+Це вели́кий собо́р. (This is a grand cathedral.)
+Собо́р — стари́й. (The cathedral is old.)
+Собо́р — вели́кий. (The cathedral is grand.)
+Це ду́же стари́й собо́р. (This is a very old cathedral.)
 
 > [!culture]
-> Софі́йський собо́р — це дуже стари́й собо́р. Це вели́кий та га́рний собо́р у Києві. 
->
-> St. Sophia's Cathedral is a very old cathedral. It is a grand and beautiful cathedral in Kyiv.
-
-Because «собо́р» is a masculine noun, our adjectives must also take the masculine form. In the next section, we will look exactly at how to form these specific endings.
+> St. Sophia's Cathedral is one of the most recognizable landmarks in Kyiv. You will often hear the words **стари́й** (ancient) and **вели́кий** (grand) used to describe its historical significance.
+> Собо́р — ду́же га́рний. (The cathedral is very beautiful.)
 
 ## Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)
 
-Тверда група прикметників. The vast majority of adjectives belong to the "Hard Stem" group. This simply means that the core part of the word ends in a hard consonant.
+Most adjectives in the Ukrainian language belong to the "Hard Stem" group. 
 
-Let us look at the standard endings for hard stem adjectives. Notice how the ending changes to match the gender of the noun.
+Це тверда́ гру́па. (This is a hard group.)
+Це тверди́й прикме́тник. (This is a hard adjective.)
+Це тверде́ сло́во. (This is a hard word.)
+Тверді́ прикме́тники — це до́брі слова́. (Hard adjectives are good words.)
 
-| Category | Ending | Ukrainian Phrase | Meaning |
-|---|---|---|---|
-| Masculine | **-ий** | нови́й дім. | a new house. |
-| Feminine | **-а** | нова́ кни́га. | a new book. |
-| Neuter | **-е** | нове́ вікно́. | a new window. |
-| Plural (Множина) | **-і** | нові́ слова́. | new words. |
+In Ukrainian phonetics, consonants can be pronounced softly or hardly. The vast majority of adjectives end in a firm, hard consonant sound right before their final gender ending is applied. These adjectives follow a very predictable pattern.
 
-Словник — це завжди чоловічий рід. When you look up an adjective in a dictionary, you will always find it listed in its masculine singular form ending in **-ий**.
+Here are the standard endings for hard stem adjectives:
+
+*   Masculine: **-ий** — нови́й дім (a new house)
+*   Feminine: **-а** — нова́ кни́га (a new book)
+*   Neuter: **-е** — нове́ вікно́ (a new window)
+*   Plural: **-і** — нові́ слова́ (new words)
+
+Let us look at some useful descriptive words:
+
+*   вели́кий (big)
+*   мали́й (small)
+*   до́брий (good)
+*   пога́ний (bad)
+*   ціка́вий (interesting)
+*   черво́ний (red)
+*   га́рний (beautiful, nice)
+*   стари́й (old)
+
+Here are examples of how to use them without any verbs:
+
+Це вели́ке мі́сто. (This is a big city.)
+Це мала́ дити́на. (This is a small child.)
+Це ціка́ва кни́га. (This is an interesting book.)
+Це до́брий день. (This is a good day.)
+Це пога́на пого́да. (This is bad weather.)
+Це га́рна люди́на. (This is a beautiful person.)
+Це стари́й дім. (This is an old house.)
+Це смачни́й борщ. (This is a tasty borsch.)
+Це дороги́й телефо́н. (This is an expensive phone.)
+Це деше́вий квито́к. (This is a cheap ticket.)
 
 > [!warning]
-> Увага! «Нови́й маши́на» — це помилка! Маши́на — це жіночий рід.
->
-> Attention! «Нови́й маши́на» is a mistake! Machine (car) is feminine.
+> A very common mistake for beginners is using the dictionary form of the adjective for everything. The dictionary always lists the masculine form. Do not say **нови́й маши́на**! The noun **маши́на** is feminine, so you must change the adjective ending to match: **нова́ маши́на**.
 
-You must change the adjective to match the feminine noun.
+In Ukrainian, you can use the adjective to state a fact about the noun. We do not need a connecting verb like "is" or "are" in the present tense. We use a slight pause, often represented by a dash in writing.
 
-Правильна фраза — це «нова́ маши́на». Це нова квартира. Це нове життя.
+га́рна пого́да (nice weather)
+Пого́да — га́рна. (The weather is nice.)
 
-The correct phrase is "a new car". A new apartment. A new life.
+ціка́ва люди́на (an interesting person)
+Люди́на — ціка́ва. (The person is interesting.)
 
-Популярні слова: Popular words:
+смачни́й борщ (tasty borsch)
+Борщ — смачни́й. (The borsch is tasty.)
 
-вели́кий / мали́й.
-до́брий / пога́ний.
-стари́й / нови́й.
+дороги́й телефо́н (an expensive phone)
+Телефо́н — дороги́й. (The phone is expensive.)
 
-big / small.
-good / bad.
-old / new.
+деше́вий квито́к (a cheap ticket)
+Квито́к — деше́вий. (The ticket is cheap.)
 
-Here are some examples of these adjectives in action:
+вели́кий дім (a big house)
+Дім — вели́кий. (The house is big.)
 
-Це вели́ке мі́сто. Це мали́й бі́знес. Це до́брий ве́чір. Це пога́на пого́да. Це до́бра люди́на. Це ціка́ва кни́га.
+мала́ дити́на (a small child)
+Дити́на — мала́. (The child is small.)
 
-A big city. A small business. A good evening. Bad weather. A kind person. An interesting book.
+до́брий день (a good day)
+День — до́брий. (The day is good.)
 
-Це смачний борщ. Це червоний колір. Це дорогий телефон. Це дешева ручка.
-
-A tasty borscht. A red color. An expensive phone. A cheap pen.
-
-Adjectives usually go directly before the noun, just like in English.
-
-Це га́рна пого́да. Це смачний борщ. Це нове́ місто.
-
-Beautiful weather. Tasty borscht. A new city.
-
-But because Ukrainian doesn't use the verb "is" in the present tense, you can also put the adjective after the noun to make a complete sentence. We often write a dash to show where "is" would be.
-
-Пого́да — га́рна. Борщ — смачний. Місто — нове.
-
-The weather is beautiful. The borscht is tasty. The city is new.
-
-Notice that in both cases, the adjective ending remains exactly the same. It must always agree with the noun's gender, regardless of its position in the sentence.
+пога́на пого́да (bad weather)
+Пого́да — пога́на. (The weather is bad.)
 
 ## Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)
 
-М'яка група прикметників. While most adjectives belong to the hard stem group, there exists another smaller but important category. This is the soft stem group.
+Now we will look at the "Soft Stem" group. 
 
-For these words, the core stem ends in a soft consonant. Because the consonant is soft, the vowels in the endings must also be "soft". We use vowels that naturally follow soft sounds.
+Це м'яка́ гру́па. (This is a soft group.)
+Це м'яки́й прикме́тник. (This is a soft adjective.)
+Це м'яке́ сло́во. (This is a soft word.)
+Вони́ — ду́же ціка́ві. (They are very interesting.)
+Це га́рні прикме́тники. (These are beautiful adjectives.)
 
-Наприклад, слово «си́ній». Let us look at the endings for the soft stem group. We will use the word «си́ній» (blue) as our primary example.
+These are adjectives where the core word ends in a soft consonant. Because the consonant is soft, the vowel endings change slightly to match the softness. We use 'я' instead of 'а', and 'є' instead of 'е'.
 
-| Group | Soft Ending | Soft Example | English |
-|---|---|---|---|
-| Masculine | **-ій** | си́ній ко́лір. | blue color. |
-| Feminine | **-я** | си́ня лі́нія. | blue line. |
-| Neuter | **-є** | си́нє мо́ре. | blue sea. |
-| Plural (Множина) | **-і** | си́ні квитки́. | blue tickets. |
+The absolute most important example of a soft stem adjective to learn right now is **си́ній** (blue).
+
+*   Masculine: **-ій** — си́ній оліве́ць (a blue pencil)
+*   Feminine: **-я** — си́ня су́кня (a blue dress)
+*   Neuter: **-є** — си́нє мо́ре (a blue sea)
+*   Plural: **-і** — си́ні кві́ти (blue flowers)
+
+In the capital city of Kyiv, the metro system is a crucial lifeline. When you navigate the deep underground, you will often look for the **си́ня лі́нія** (blue line).
+
+Це си́ня лі́нія. (This is the blue line.)
+Лі́нія — си́ня. (The line is blue.)
+
+Це си́ній оліве́ць. (This is a blue pencil.)
+Оліве́ць — си́ній. (The pencil is blue.)
+
+Це си́нє мо́ре. (This is a blue sea.)
+Мо́ре — си́нє. (The sea is blue.)
+
+Це си́ні кві́ти. (These are blue flowers.)
+Кві́ти — си́ні. (The flowers are blue.)
 
 > [!tip]
-> Київське метро. Це си́ня лі́нія та зеле́на лі́нія. «Зеле́на» — це тверда основа, закінчення **-а**. «Си́ня» — це м'яка основа, закінчення **-я**!
->
-> The Kyiv metro. This is a **си́ня лі́нія** (blue line) and a **зеле́на лі́нія** (green line). "Зелена" has a hard stem, so it takes **-а**, but "синя" has a soft stem, so it takes **-я**!
+> Pay close attention to your spelling! English speakers often hear the soft "і" sound at the end of these adjectives, but accidentally spell it with the hard letter "и". Always write **си́ній** and never write **си́ний**. The soft stems strictly require the soft vowel "і".
 
-There is a common spelling trap here. Because **-ий** and **-ій** sound similar to English speakers, many try to write «синий». This is incorrect.
+Let us also talk about plural nouns. The fantastic news is that plural adjectives are incredibly consistent. Regardless of whether the original noun was masculine, feminine, or neuter, the plural adjective will always take the ending **-і**.
 
-Завжди **«си́ній»**. You must always write **«си́ній»** with the soft **-ій** ending. When pronouncing it, raise your tongue towards the roof of your mouth to make the "n" sound soft before the ending.
+*   нові́ дні (new days)
+*   вели́кі міста́ (big cities)
+*   га́рні дівча́та (beautiful girls)
+*   га́рні ві́кна (beautiful windows)
+*   старі́ буди́нки (old houses)
+*   малі́ ді́ти (small children)
+*   до́брі лю́ди (good people)
+*   ціка́ві слова́ (interesting words)
+*   нові́ слова́ (new words)
+*   до́брі дні (good days)
+*   вели́кі ві́кна (big windows)
+*   старі́ мі́ста (old cities)
+*   черво́ні я́блука (red apples)
 
-Множина. Now, let us talk about the plural (множина) form. You might have noticed something interesting when comparing the hard and soft groups.
+Notice that both hard stem and soft stem adjectives use the exact same plural ending **-і**.
 
-For both hard stem adjectives and soft stem adjectives, the plural (множина) ending is exactly the same. It is always **-і**. Закінчення **-і**.
-
-This makes describing multiple objects wonderfully simple. You do not need to worry about whether the original noun was masculine, feminine, or neuter. If the noun is plural (множина), the adjective takes the **-і** ending.
-
-га́рні дівча́та. нові́ дні. вели́кі міста́. старі́ книжки́. си́ні зо́шити. добрі друзі.
-
-beautiful girls. new days. big cities. old books. blue notebooks. good friends.
-
-Notice how the plural ending simplifies everything. You do not need to memorize separate plural endings for masculine, feminine, or neuter nouns. The **-і** ending is universal for all plurals (множина).
+*   ціка́ві книжки́ (interesting books)
+*   си́ні кві́ти (blue flowers)
+*   черво́ні я́блука (red apples)
+*   си́ні дні (blue days)
+*   вели́кі міста́ (big cities)
+*   до́брі лю́ди (good people)
 
 ## Практика: Люди і місця (Practice: People and Places)
 
-Ма́вка — це персонаж української міфології. Ма́вка — це жіночий рід.
+Let us put our new vocabulary to practical use right away. Imagine we are talking about famous figures from Ukrainian folklore. One of the most beloved characters is **Ма́вка** (Mavka), a magical spirit of the forest.
 
-Mavka is a character of Ukrainian mythology. Mavka is feminine.
+Ма́вка — це молода́ дівчи́на. (Mavka is a young girl.)
+Вона́ — га́рна. (She is beautiful.)
+Вона́ — ду́же ціка́ва. (She is very interesting.)
+Ма́вка — це зеле́на лісова́ душа́. (Mavka is a green forest soul.)
+Це ду́же га́рна Ма́вка. (This is a very beautiful Mavka.)
+Ця дівчи́на — ціка́ва. (This girl is interesting.)
 
-молода́ Ма́вка. га́рна дівчи́на. ціка́ва істо́рія. зеле́на су́кня.
+> [!did-you-know]
+> In ancient Ukrainian mythology, Mavkas are deeply and permanently connected to nature. That is exactly why the descriptive adjective **зеле́ний** (green) is so often associated with their mysterious forest environment. 
+> Це зеле́ний ліс. (This is a green forest.)
+> Ліс — зеле́ний. (The forest is green.)
+> Це зеле́на Ма́вка. (This is a green Mavka.)
 
-A young Mavka. A beautiful girl. An interesting story. A green dress.
+Now, imagine you are a real estate agent showing a brand new property to a prospective client. You will need to use positive adjectives to make the place sound appealing.
 
-> [!culture]
-> Сло́во «су́кня» (dress) — це жіночий рід, закінчення **-а**: зеле́н**а** су́кня.
->
-> The word «сукня» (dress) is feminine, the ending is **-а**: зеле́н**а** су́кня.
+Це нови́й буди́нок. (This is a new house.)
+Це вели́ка кварти́ра. (This is a large apartment.)
+Тут вели́ка кімна́та. (Here is a large room.)
+Це га́рне вікно́. (This is a nice window.)
+Тут до́бра со́нячна пого́да. (There is good sunny weather here.)
+Це дороги́й райо́н. (This is an expensive district.)
+Буди́нок — нови́й. (The house is new.)
+Кварти́ра — вели́ка. (The apartment is large.)
 
-Інша ситуація. Ми в агенції нерухомості.
+You can effortlessly answer questions from the curious client using our verb-free descriptions.
 
-Another situation. We are in a real estate agency.
+Яка́ це кварти́ра? (What kind of apartment is this?)
+Кварти́ра — вели́ка й нова́. (The apartment is large and new.)
 
-As a real estate agent showing properties in Ukraine, you will need to describe buildings and apartments to your clients. Let's look at a short dialogue.
+Яки́й це дім? (What kind of house is this?)
+Дім — стари́й, але́ га́рний. (The house is old, but beautiful.)
 
-Діалог: Нова квартира.
-— Яки́й це буди́нок?
-— Це нови́й буди́нок. Це дорогий дім.
-— Яка́ це кварти́ра?
-— Це вели́ка кварти́ра. Це гарна кімната.
-— А вікно́?
-— Це га́рне вікно́. Це нове вікно.
+Яке́ це мі́сто? (What kind of city is this?)
+Мі́сто — вели́ке. (The city is large.)
 
-Dialogue: A new apartment.
-— What kind of house is this?
-— A new house. An expensive house.
-— What kind of apartment is this?
-— A big apartment. A beautiful room.
-— And the window?
-— A beautiful window. A new window.
+Які́ це кімна́ти? (What kind of rooms are these?)
+Кімна́ти — вели́кі. (The rooms are large.)
 
-Notice how the adjectives naturally shift to match the gender of each property type. The feminine «кварти́ра» takes «нова́», while the masculine «буди́нок» takes «вели́кий». 
+Яки́й це райо́н? (What kind of district is this?)
+Райо́н — дороги́й. (The district is expensive.)
+
+Яка́ це пого́да? (What kind of weather is this?)
+Пого́да — до́бра. (The weather is good.)
 
 ## Підсумок (Summary & Self-Check)
 
-Головне правило: прикметник і іменник — це завжди пара. Adjectives make the language rich. The main rule: the adjective and the noun have the same gender and number.
+You now confidently know how to describe the fascinating world around you. 
 
-We use the question words «Яки́й?», «Яка́?», «Яке́?», and «Які́?» to ask for descriptions. Hard stem adjectives take the endings **-ий**, **-а**, **-е**, and **-і**, while soft stem adjectives take **-ій**, **-я**, **-є**, and **-і**. Fortunately, the plural (множина) ending is always **-і**.
+Це нови́й світ. (This is a new world.)
+Він — вели́кий. (It is big.)
+Він — ду́же ціка́вий. (It is very interesting.)
+Прикме́тники — це до́брі слова́. (Adjectives are good words.)
+Вони́ — ду́же важли́ві. (They are very important.)
+Це га́рні слова́. (These are beautiful words.)
 
-Тест. Test your understanding with these questions:
+Adjectives must always perfectly agree with the noun's specific gender (masculine, feminine, neuter) and number (singular or plural). 
 
-Яки́й? (Which? / What kind? - for a masculine noun) — Відповідь: нови́й телефо́н (new phone).
-Яка́? (Which? / What kind? - for a feminine noun) — Відповідь: вели́ка кни́га (big book).
-Яке́? (Which? / What kind? - for a neuter noun) — Відповідь: си́нє мо́ре (blue sea).
-Які́? (Which? / What kind? - for plural / множина) — Відповідь: га́рні кві́ти (beautiful flowers).
+To ask for a detailed description, precisely match the question word to the noun's gender: **Яки́й? Яка́? Яке́? Які́?** 
+
+Most descriptive adjectives belong to the predictable hard group (**-ий, -а, -е, -і**), while a few specific ones, like **си́ній**, belong to the soft group (**-ій, -я, -є, -і**). Plural adjectives are exceptionally easy because they all consistently end in **-і**.
+
+**Self-Check**
+
+*   Яки́й? (What kind?) — нови́й телефо́н (a new phone)
+*   Яка́? (What kind?) — вели́ка кни́га (a big book)
+*   Яке́? (What kind?) — си́нє мо́ре (a blue sea)
+*   Які́? (What kind?) — га́рні кві́ти (beautiful flowers)

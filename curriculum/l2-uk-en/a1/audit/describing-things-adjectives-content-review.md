@@ -1,103 +1,188 @@
-# Content Review: describing-things-adjectives
+# Content Review: describing-things-adjectives (v5 Rebuild)
+
 **Track:** a1 | **Sequence:** 11
-**Mode:** core
+**Mode:** v5
 **Tier:** 1-beginner
-**Pipeline:** PASS (words: 1468, target: 1200)
-**Verdict:** B
+**Pipeline:** PASS (words: 1822 raw / 1737 computed, target: 1200)
+**Reviewed:** 2026-03-06
+**Verdict:** B+
 
 ## Plan Adherence
 
 All 4 plan objectives are covered:
-- Masculine adjective endings: covered with table and examples (line 38-41)
-- Feminine adjective endings: covered with table and examples (line 39)
-- Neuter adjective endings: covered with table and examples (line 40)
-- Plural adjective forms: covered with golden rule section (lines 100-112)
+1. **Masculine adjective endings:** Covered with paradigm list and 10+ examples (lines 73, 80-98)
+2. **Feminine adjective endings:** Covered with feminine forms throughout (lines 74, 92-96)
+3. **Neuter adjective endings:** Covered with neuter examples (lines 75, 91)
+4. **Plural adjective forms:** Covered extensively with dedicated sub-section (lines 170-193)
 
 Content outline adherence:
-- 5/5 sections present and match meta outline
-- Section word counts: Intro 194/200, Hard Stem 403/350, Soft Stem 429/300, Practice 329/200, Summary 124/150
-- Summary is 17% under target (124 vs 150) but within tolerance
+- 5/5 sections present with EXACT H2 title matches (verified against meta content_outline)
+- Section word counts per audit: Intro 299/250, Hard Stem 479/350, Soft Stem 451/300, Practice 394/200, Summary 187/100
+- All sections exceed targets. Practice section is 97% over target (394 vs 200), which is acceptable -- more practice is better.
 
-Vocabulary coverage: 13/15 plan vocabulary items appear in content (червоний and зелений are in vocabulary YAML but not prominently featured in prose — acceptable since they appear in activities).
+Vocabulary coverage from plan:
+- **Required (8/8):** новий, старий, гарний, великий, малий, добрий, поганий, цікавий -- all appear in content prose
+- **Recommended (7/7):** синій, червоний, молодий, дорогий, дешевий, смачний, зелений -- all appear in content prose
+- Total: 15/15 plan vocabulary items appear in content. Full coverage.
 
 ## Linguistic Accuracy
 
-VESUM verification: 190/194 words verified (97.9%). Unverified: "ий", "нов", "синий", "ій" — these are morpheme fragments used in grammar explanations (e.g., showing endings "-ий", "-ій" and the stem "нов-"). Not actual errors.
+### VESUM Verification
+- 151/155 unique Ukrainian words verified (97.4%)
+- Not found: "ий", "синий", "слов", "ій"
+- "ий" and "ій" are morpheme fragments used to show endings (e.g., "Masculine: **-ий**")
+- "синий" is an intentional WRONG spelling example (line 168: "never write **синий**") -- pedagogically correct
+- "слов" appears only in activities as a distractor option -- see Activities section below
 
-"синий" appears as an intentional example of a WRONG spelling (line 92: "many learners accidentally write синий. This is incorrect spelling.") — pedagogically correct usage.
+### Russianisms
+None detected. The content uses correct Ukrainian forms throughout: гарний (not красивий), добрий (not хороший).
 
-No Russianisms detected in the content. No Russian characters found.
+### Euphony
+Generally correct. Line 226: "велика й нова" -- correct use of й after vowel. No obvious і/й or в/у violations found.
 
-Euphony: Generally correct. No obvious violations of і/й or в/у rules.
+### Grammar Accuracy
+- Hard stem endings (-ий, -а, -е, -і): Correct per textbook sources (Avramenko Grade 6, p.132; Golub Grade 6, p.134)
+- Soft stem endings (-ій, -я, -є, -і): Correct. "синій" correctly identified as soft-stem anchor.
+- Plural -і for all genders: Correct.
+- Attributive vs predicative position: Correctly demonstrated with dash notation (e.g., "Погода -- гарна")
 
-Imperatives in final content: "Подивімося" (line 34) survived validation. This is an imperative form that should have been caught. However, it appears only once and in a bilingual context with English translation, so impact is minor.
+### Constraint Compliance
+- **Verb-free Ukrainian:** PASS. All Ukrainian phrases are verb-free. Uses Це + noun, Adj + noun, Question particles, and dash predicatives. No conjugated verbs in Ukrainian text.
+- **Banned imperatives:** PASS. No Ukrainian imperatives found. Previous build had residual "Подивімося" -- this is now eliminated.
+- **Cases:** Only Nominative case used. No dative, instrumental, or accusative forms in Ukrainian examples. PASS.
 
 ## Pedagogical Quality
 
-**Lesson arc:** WELCOME (warm hook about describing the world) -> PREVIEW (question words) -> PRESENT (hard stem table) -> PRESENT (soft stem table) -> PRACTICE (Mavka + real estate) -> CELEBRATE (self-check with answers). Strong arc.
+### Lesson Arc
+WELCOME (motivating intro about describing the world) --> PREVIEW (question words Який/Яка/Яке/Які) --> PRESENT (hard stem paradigm + examples) --> PRESENT (soft stem + plurals) --> PRACTICE (Mavka + real estate roleplay) --> CELEBRATE (self-check with answers)
 
-**Cognitive load:** Well managed. New concepts introduced 1-2 at a time. Hard stem before soft stem is logical progression. Plural golden rule is a nice simplification.
+Strong pedagogical arc. The PPP (Present-Practice-Produce) model is well-implemented.
 
-**Examples before rules:** Mostly yes. The intro uses Sophia Cathedral to motivate, then shows the paradigm. Good.
+### Cognitive Load
+Well managed:
+- Introduction starts with question words (4 forms) -- manageable set
+- Hard stem presented first (most common pattern) -- good sequencing
+- Soft stem introduced separately with single anchor word (синій) -- reduces cognitive overload
+- Plural golden rule ("always -і") is an excellent pedagogical simplification
+- New vocabulary introduced in groups of 4-8, each with immediate examples
 
-**Warmth:** Moderate. Opening is encouraging ("Adjectives let you add color, size, and character"). Could use more "you've got this" moments. The self-check with answers is a nice closing win.
+### "Would I Continue?" Test
+- Overwhelmed? **PASS** -- pacing is comfortable, one concept at a time
+- Instructions clear? **PASS** -- English scaffolding throughout, every Ukrainian phrase translated
+- Quick wins? **PASS** -- learner can form correct phrases by end of section 1
+- Ukrainian scary? **PASS** -- introduced gently with full English support
+- Come back tomorrow? **PASS** -- encouraging tone, cultural hooks maintain interest
 
-**Cultural hooks:** St. Sophia's Cathedral (intro), Mavka/Forest Song (practice section), Kyiv Metro blue line. Three distinct cultural anchors — excellent for A1.
+Score: 5/5
 
-**Mini-dialogue:** Lines 146-151 provide a natural conversational model. Good addition.
+### Warmth Assessment
+- Direct address: Present throughout ("You now know...", "When we visit Kyiv...")
+- Encouragement: "The fantastic news is that plural adjectives are incredibly consistent" (line 170)
+- Cultural connection: 3 hooks (Sophia Cathedral, Mavka, Kyiv Metro)
+- Progress marker: Self-check at end validates learning
+
+Warmth is adequate but not exceptional. The module reads more like a clean textbook than a warm tutor. Could use 1-2 more "you've got this" moments, especially after the soft stem section.
+
+### Cultural Hooks
+1. **St. Sophia's Cathedral** (Intro) -- demonstrates старий/великий in real context
+2. **Mavka / Forest Song** (Practice) -- practices feminine adjectives with folklore
+3. **Kyiv Metro blue line** (Soft Stem) -- practical mnemonic for синій
+
+Three distinct, verified cultural anchors. Excellent variety for A1.
 
 ## Activities Quality
 
-8 activities total (minimum 8). 6 unique types: quiz, group-sort, fill-in (x2), true-false, match-up (x2), unjumble. Good variety.
+8 activities, 6 unique types. Meets minimum requirements.
 
-Specific checks:
-- **Quiz** (8 items): Tests vocabulary meaning. Clear, unambiguous. All have exactly 1 correct answer.
-- **Group-sort** (12 items, 3 groups): Sorts by gender. Correct categorization.
-- **Fill-in "House Tour"** (8 items): Tests gender agreement. All options are 4 gender forms. Answers are correct.
-- **True-false** (8 items): Mix of grammar rules and content. Item 5 ("Mavka is famous figure...described as лісова дівчина") tests content knowledge, not language — borderline rule 10a violation but acceptable at A1 since it tests vocabulary recognition.
-- **Match-up "Property Descriptions"** (8 pairs): Ukrainian phrases to English. Correct.
-- **Unjumble** (6 items): Simple 3-word sentences. Appropriate difficulty.
-- **Fill-in "City Life"** (8 items): Tests soft stem agreement. Good focus on синій paradigm. Item 3: "У мене є ___ зошит" uses "У мене є" which includes genitive construction — slightly above A1 scope but acceptable as a memorized chunk.
-- **Match-up "Questions to Things"** (8 pairs): Matches Який/Яка/Яке/Які to nouns. Has duplicate left values (Яка? appears twice, Яке? twice, etc.) which is technically valid for match-up but could confuse learners.
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Match the Adjective | 8 pairs | 8 | PASS |
+| 2 | fill-in | Choose the Correct Adjective Form | 8 items | 8 | PASS |
+| 3 | true-false | True or False? | 8 items | 8 | PASS |
+| 4 | group-sort | Sort by Gender | 12 items (3 groups) | 8 | PASS |
+| 5 | quiz | Question Words | 8 items | 8 | PASS |
+| 6 | unjumble | Build the Sentence | 6 items | 6 | PASS |
+| 7 | fill-in | Complete the Plural Phrase | 8 items | 8 | ISSUE |
+| 8 | match-up | Match More Vocabulary | 8 pairs | 8 | PASS |
 
-Schema compliance: All activities use allowed types. No forbidden types. Item counts meet minimums.
+### Activity-Level Issues
+
+**Activity 7 (Complete the Plural Phrase):**
+- **"слов" as a distractor option** (line 277): "слов" is not a standard Ukrainian word form. VESUM does not recognize it. While "слів" (genitive plural of "слово") exists, "слов" does not. This is an invalid distractor. Should be replaced with a real word form like "слів" or "словам".
+- **"книго" as a distractor** (line 312): VESUM finds this as a vocative of "книга" -- technically valid but extremely obscure for A1. Learners would never encounter this form. Acceptable as a distractor since it's clearly wrong in context.
+- **"квіті" as a distractor** (line 319): VESUM finds this as a form of "квіт" (blossom). Valid distractor.
+
+**Activity 6 (Build the Sentence):**
+- Item 3: "Дім старий але гарний" -- missing comma before "але". Correct Ukrainian: "Дім старий, але гарний". Minor punctuation issue.
+
+**Activity 8 (Match More Vocabulary):**
+- Last pair: "місто / city" -- this is a noun, not an adjective. Inconsistent with the activity's implied focus on adjectives. Minor issue.
+
+### Activity Pedagogical Quality
+- Activities test LANGUAGE skills (gender agreement, question word matching, word order) -- not content recall. PASS for rule 10a.
+- Good progression: recognition (match-up) --> selection (fill-in) --> judgment (true-false) --> categorization (group-sort) --> application (unjumble)
+- All quiz items have exactly 1 correct answer with clear explanations.
+
+## Vocabulary Completeness
+
+20 vocabulary items in YAML. Covers:
+- All 8 required adjectives (новий, старий, гарний, великий, малий, добрий, поганий, цікавий)
+- All 7 recommended adjectives (синій, червоний, молодий, дорогий, дешевий, смачний, зелений)
+- 5 supporting nouns (дім, книга, місто, вікно, погода)
+
+All items have required fields (lemma, translation, pos). Nouns have gender field. No IPA fields. Schema-compliant.
+
+**Issue:** No metalanguage terms in vocabulary (прикметник, множина) -- this is actually CORRECT per the audit flag about metalanguage. These are used as instructional terms in the prose but should not be vocabulary items for A1 learners.
 
 ## Engagement
 
-4 callout boxes found (minimum 3):
-1. `[!tip]` — question word matching pattern (line 43-47)
-2. `[!warning]` — "новий машина" error (line 51-52)
-3. `[!warning]` — soft stem spelling trap (line 91-92)
-4. `[!culture]` — Mavka cultural note (line 127-128)
+3 callout boxes found (minimum 3):
+1. `[!culture]` -- St. Sophia's Cathedral significance (line 56-58)
+2. `[!warning]` -- Dictionary form error "новий машина" (line 102-103)
+3. `[!tip]` -- Soft stem spelling trap синій vs синий (line 167-168)
+4. `[!did-you-know]` -- Mavka and nature connection (line 206-210)
 
-Good variety of types. Well-distributed across sections.
+Actually 4 callout boxes -- exceeds minimum. Good variety of types (culture, warning, tip, did-you-know). Well-distributed across sections.
 
-Tables: 2 grammar tables (hard stem, soft stem). Clean formatting.
+Tables: Paradigm endings presented as bullet-point lists rather than formal tables. Adequate for A1 but true tables with gender column headers would be more visually effective.
 
-## Issues Found
+## Issues Summary
+
+### CRITICAL
+None.
 
 ### HIGH
-1. **Residual imperative "Подивімося"** (line 34): "Подивімося на популярні прикметники" — imperative form that survived 5 validation rounds. Should be replaced with English instruction or noun phrase.
+1. **Invalid distractor "слов"** in Activity 7, item 1 (line 277): Not a real Ukrainian word form. Replace with "слів" (gen. pl.) or "словами" (instr. pl.).
 
 ### MEDIUM
-2. **Vocabulary YAML includes metalanguage terms**: "множина" (plural) and "прикметник" (adjective) are in vocabulary YAML (lines 68-74) but these are Ukrainian grammar terms that A1 learners don't need to memorize as vocabulary items. They are metalanguage, not target vocabulary.
-3. **"червоний" missing from content prose**: Listed as "recommended" in plan and present in vocabulary YAML, but the word "червоний" never appears in the lesson content itself. Only appears in activities.
-4. **Summary section slightly thin** (124/150 words, -17%): Could use one more self-check question or a brief "what's next" preview.
+2. **Missing comma in unjumble answer** (Activity 6, item 3): "Дім старий але гарний" should be "Дім старий, але гарний". Punctuation matters for learners.
+3. **Paragraph repetitiveness in Hard Stem section** (lines 91-132): The attributive/predicative contrast section lists 9 consecutive pairs in identical format (phrase + dash sentence). This is pedagogically sound but reads mechanically. Could benefit from grouping into a table or adding 1-2 English commentary sentences between pairs.
 
 ### LOW
-5. **Match-up "Questions to Things" has repeated left values**: "Який?" appears twice, "Яка?" twice, "Яке?" twice, "Які?" twice. While schema-valid, a match-up with duplicate left items is pedagogically confusing — learners may think there's only one correct pairing.
-6. **Line 54**: "Зазвичай він стоїть перший: нова машина, новий дім." — includes Latin transliteration artifacts "nova mashyna, novyi dim" which appear to be formatting errors. Actually on re-read: the English text says "Usually it stands first: nova mashyna, novyi dim" which is accidental Latin transliteration in what should be Ukrainian or English text. This violates the "Latin transliterations are BANNED" rule.
+4. **Mixed noun in adjective match-up** (Activity 8, last pair): "місто / city" is a noun among adjective pairs. Minor inconsistency.
+5. **No formal grammar tables:** Paradigm endings shown as bullet lists, not as proper tables with gender/number headers. Tables would be more scannable for reference.
+6. **Borderline immersion at 25.6%:** Passes the 25% minimum but is at the very floor. Some bilingual translation pairs feel forced/repetitive (e.g., lines 20-25 with four consecutive "Це X. (This is X.)" patterns).
 
 ## Grade Justification
 
-**Grade: B**
+**Grade: B+**
 
-The module is pedagogically sound with a clear lesson arc, good cultural hooks, and well-structured grammar presentation. Activities are varied and test language skills appropriately. The hard-then-soft stem progression is logical, and the plural golden rule is an excellent pedagogical simplification.
+**Strengths:**
+- Full plan coverage (15/15 vocabulary items, 4/4 objectives, 5/5 sections)
+- Zero constraint violations (verb-free, no imperatives, nominative case only)
+- Excellent cultural hooks (Sophia Cathedral, Mavka, Kyiv Metro)
+- Strong pedagogical arc with good cognitive load management
+- Self-audit caught and fixed issues before validation
+- Activities test language skills with good variety
 
-Deductions:
-- One surviving imperative (HIGH) that escaped 5 validation rounds
-- Latin transliteration artifacts in line 54
-- Metalanguage in vocabulary YAML
-- These prevent an A grade but are all fixable in a single pass
+**Deductions from A:**
+- One invalid distractor "слов" in activities (HIGH)
+- Missing comma in unjumble answer (MEDIUM)
+- Repetitive attributive/predicative listing in Hard Stem section (MEDIUM)
+- Borderline immersion with some forced bilingual patterns (LOW)
 
-The module delivers on all 4 plan objectives and exceeds the word target by 22%. Content quality is good for a pipeline-generated A1 module.
+**Upgrade path to A:**
+1. Replace "слов" with "слів" in Activity 7, item 1
+2. Add comma to unjumble item 3 answer
+3. Convert the 9 attributive/predicative pairs into a 2-column table (phrase | sentence)
+4. Add 1 more `[!tip]` in the Soft Stem section about how to identify hard vs soft stems

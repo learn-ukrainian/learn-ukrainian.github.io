@@ -59,8 +59,10 @@ if [ ! -f "$MODULE_PATH" ]; then
 fi
 
 # Extract level and slug from path
-# Path format: curriculum/l2-uk-en/{level}/{num}-{slug}.md
-LEVEL=$(echo "$MODULE_PATH" | cut -d'/' -f3)
+# Path format: curriculum/l2-uk-en/{level}/{num}-{slug}.md (relative or absolute)
+# Strip everything up to and including "curriculum/l2-uk-en/" to normalize
+REL_PATH=$(echo "$MODULE_PATH" | sed 's|.*/curriculum/l2-uk-en/|curriculum/l2-uk-en/|; s|^curriculum/l2-uk-en/||')
+LEVEL=$(echo "$REL_PATH" | cut -d'/' -f1)
 FILENAME=$(basename "$MODULE_PATH" .md)
 
 # Extract slug (everything after first dash)

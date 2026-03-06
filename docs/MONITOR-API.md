@@ -317,7 +317,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` (`"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module.py --all`.
+Each entry includes `pipeline_version` (`"v5"`, `"v4"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module_v5.py --all`.
 
 ---
 

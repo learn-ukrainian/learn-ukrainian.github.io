@@ -1,99 +1,106 @@
-# Prompt Engineering Review: describing-things-adjectives (Post-Fix Rebuild)
+# Prompt Engineering Review: describing-things-adjectives (v5 Rebuild)
 
 **Track:** a1 | **Sequence:** 11
 **Pipeline:** v5
-**Validate attempts:** 2
-**Friction reports:** 2 (content: NONE, activities: NONE)
-**Previous build:** Failed (dedup-exhausted, KeyError crash)
+**Validate attempts:** 0
+**Self-audit iterations:** 3
+**Friction reports:** 2 (content: Immersion/Dative false positive, activities: NONE)
+**Previous build:** 2 validate attempts, heading mismatch + immersion issues
 
-## Fix Effectiveness
+## 1. Template Health
 
-| Fix # | Description | Effective? | Details |
-|-------|-------------|------------|---------|
-| 1 | Imperative ban examples in PEDAGOGICAL_CONSTRAINTS | YES | No banned imperatives in output content. Gemini respected the INSTEAD OF -> USE mapping completely. |
-| 2 | Heading post-processing (H2 matching to outline) | PARTIAL | Fix 1 revealed MISSING_OUTLINE_SECTION for 2 sections -- Gemini used different H2 titles than the outline ("Презентація 2: М'яка група та Специфіка" vs "М'яка група та множина"). Post-processing could not fuzzy-match these. |
-| 3 | Empty fix guard | NOT TESTED | No empty fix scenario occurred. |
-| 4 | KeyError crash fix | YES | No KeyError crash. Pipeline completed all phases cleanly. |
-| 5 | Section title matching improvements | PARTIAL | Gemini deviated from outline section titles in initial content (used "Презентація:" prefix and different subtitles). Validation caught this but it required a fix attempt to resolve. |
+| Aspect | Status | Details |
+|--------|--------|---------|
+| Placeholder filling | GOOD | All placeholders resolved. CONTENT_PATH, META_PATH, PLAN_PATH, QUICK_REF_PATH all point to correct absolute paths. WORD_TARGET=1200, IMMERSION_RULE correctly injected. |
+| Section titles | GOOD | `EXACT_SECTION_TITLES` placeholder now includes explicit `## REQUIRED H2 Sections (use EXACT titles)` with verbatim H2 headings. This is the P1 fix from the previous prompt review. All 5 H2 sections in output match exactly. |
+| Constraint injection | GOOD | PEDAGOGICAL_CONSTRAINTS, LEVEL_CONSTRAINTS, VERB-FREE PATTERN BANK all present. No `{UNFILLED}` tokens found. |
+| Self-audit snippet | GOOD | SELF_AUDIT_SNIPPET fully expanded with correct paths and bash commands. |
+| Vocab hints | GOOD | VOCAB_HINTS includes all 8 required + 7 recommended items with collocations. VOCAB-IN-CONTENT RULE present. |
 
-## Prompt Clarity
+**Template health verdict: GOOD** -- All placeholders filled correctly. The P1 fix from the previous review (exact heading match instruction) is now integrated and worked perfectly.
 
-| Issue | Severity | Template File | Details |
-|-------|----------|---------------|---------|
-| Section title mismatch not prevented | MEDIUM | phase-2-prompt.md | The prompt says "Follow the content_outline" and "each section maps to an H2" but does not explicitly say "Use the EXACT H2 titles from the outline." Gemini used creative variations (e.g., "Презентація: Тверда група" instead of "Тверда група прикметників"; "Презентація 2: М'яка група та Специфіка" instead of "М'яка група та множина"). This caused MISSING_OUTLINE_SECTION errors requiring fix 1. |
-| Immersion target contradicts verb-free constraint | LOW | placeholders.yaml | IMMERSION_RULE says "25-40% Ukrainian" but LEVEL_CONSTRAINTS ban all verbs. Gemini initially produced 13.7% Ukrainian immersion because achieving 25%+ with verb-free Ukrainian is genuinely difficult. Fix 1 had to expand Ukrainian content blocks with repetitive verb-free patterns to reach 25.1%. |
-| Self-check answer format not specified | LOW | phase-2-prompt.md | The prompt did not specify that self-check answers need English translations. Validate-fix2 had to add English to 4 answer items. The template should include a note like "All Ukrainian in self-check answers must include English translations." |
-| Word target overshoot massive | INFO | phase-2-prompt.md | Target 1200, output 2963 words (247% of target). The prompt says "approximately 1200 words" but Gemini wrote nearly 2.5x. Not harmful (passes audit), but indicates weak word budget enforcement. |
+## 2. Friction Analysis
 
-## Context Gaps
+### Friction 1: Content Phase (phase-2-friction-1.md)
+- **Type:** Immersion Check + False Positive Dative
+- **Root cause:** The audit script's dative regex matched the substring "чолові" within "чоловічий" (masculine) and flagged it as a dative case violation. Additionally, immersion was initially below 25%.
+- **Classification:** TOOLING friction (dative false positive) + CONTENT friction (immersion shortfall)
+- **Resolution:** Gemini removed "чоловічий" and used alternative Ukrainian sentences; increased Ukrainian content with bilingual translation pairs to reach 25.6%.
+- **Proposed tooling fix (from Gemini):** Fix the dative regex in `audit_module` to avoid matching substrings like "чолові" within compound words.
+- **Assessment:** The dative false positive is a real bug in the audit script. This is a legitimate tooling friction that should be fixed to prevent recurring issues across modules. The immersion fix was handled well.
 
-| Missing Context | Impact | Fix |
-|----------------|--------|-----|
-| No prior module content injected | LOW | M11 builds on M7 (Gender Code). Research references it but actual content from M7 is not provided. Gemini handled this adequately via the SEQUENCE CONSTRAINTS block. |
-| No explicit heading match instruction | MEDIUM | Add to phase-2 content template: "CRITICAL: Your H2 headings MUST exactly match the `title` field from each content_outline section. Do not paraphrase, prefix, or modify section titles." |
-| Self-check English requirement not in content template | LOW | Add to the Summary/Self-Check section guidance: "Every Ukrainian answer in self-check must include an English translation in parentheses." |
+### Friction 2: Activities Phase (phase-C-friction.md)
+- **Type:** NONE
+- **Assessment:** Clean run. The activities and vocabulary phase had zero friction. This is a significant improvement from earlier builds.
 
-## Friction Root Causes
+## 3. Self-Audit Effectiveness
 
-| Friction Point | Root Cause Type | Details | Template Fix |
-|----------------|----------------|---------|--------------|
-| MISSING_OUTLINE_SECTION (2 sections) | template_gap | Gemini used creative H2 titles ("Презентація 2: М'яка група та Специфіка") instead of outline titles ("М'яка група та множина"). The post-processing heading matcher could not fuzzy-match these. | Add explicit instruction: "Use EXACT H2 titles from content_outline. Do not add prefixes like 'Презентація:' or modify subtitle text." |
-| Immersion 13.7% (target 25-40%) | conflicting_guidance | Verb-free constraint severely limits Ukrainian content volume. Gemini wrote English-heavy content because grammar explanations must be in English. Fix 1 added repetitive verb-free Ukrainian blocks to reach 25.1%. | Consider adjusting M11 immersion target to 20-35% for verb-free modules, OR provide more verb-free immersion pattern examples. |
-| SELF_CHECK_NEEDS_ENGLISH (4 items) | template_gap | Self-check answer format was not specified to require English translations. | Add to self-check guidance in content template. |
-| ROBOTIC_STRUCTURE (3x "what is...") | model_limitation | Gemini's default pattern for introducing concepts. Anti-robotic writing section exists but was insufficient to prevent this specific pattern. | Minor model tendency, not a template issue. Already addressed by varied sentence opener guidance. |
+**This is the key new feature being evaluated.**
 
-## Fix Loop Analysis
+| Metric | Value | Assessment |
+|--------|-------|------------|
+| Self-audit status | PASS | Gemini reported passing |
+| Iterations | 3 | Gemini ran the audit 3 times (initial + 2 fix loops) |
+| Final word count | 1737 | Well above 1200 target |
+| Gates passed | Persona, Words, Engagement, Structure, Lint, Pedagogy, Research, Immersion | All required gates |
+| Gates failed | none | Clean pass |
+| Fixes applied | Fixed false positive dative + boosted immersion above 25% | Substantive fixes |
 
-| Phase | Attempts | Root Cause | Preventable? |
-|-------|----------|-----------|--------------|
-| Validate | 2 | Fix 1: Missing sections (heading mismatch) + low immersion + robotic structure. Fix 2: Self-check missing English translations. | YES (heading mismatch) / PARTIALLY (immersion) / YES (self-check English) |
+**Did Gemini actually run the audit script?** YES -- the self-audit output references specific gate names (Persona, Words, Engagement, Structure, Lint, Pedagogy, Research, Immersion) that match the audit script's output format. The word count of 1737 matches the screen-result.json COMPUTED_WORD_COUNT of 1737. This is consistent with real execution, not fabrication.
 
-**Fix 1** was the heavy lift: it had to restore 2 missing sections (by matching H2 titles to outline), boost immersion from 13.7% to 25.1%, and fix robotic sentence structures. The response indicates success: "All outline sections restored, immersion target reached (25.1%), and robotic structures resolved."
+**Did it fix issues correctly?** YES -- The immersion percentage in the final audit is 25.6%, which is within the 25-40% target. The dative false positive was worked around by removing the triggering word.
 
-**Fix 2** was lightweight: adding English translations to 4 self-check answers. Response: "SUCCESS".
+**Was the self-audit report honest?** YES -- The report accurately reflects the final audit state. No discrepancies between self-audit output and screen-result.json.
 
-Both fixes were clean -- no cascading issues or regressions. The fix loop was efficient (2 attempts, both successful).
+**Self-audit verdict: EFFECTIVE** -- The self-audit feature achieved its primary goal: zero validate-fix attempts needed. In the previous build, this module required 2 validate fix attempts. The self-audit caught and fixed the same types of issues (immersion shortfall, structural compliance) before the validate phase even ran.
 
-## Suggested Template Fixes (priority ranked)
+## 4. Fix Loop Efficiency
 
-### P1: Exact heading match instruction (prevents fix loops)
+| Metric | Previous Build | Current Build |
+|--------|---------------|---------------|
+| Validate attempts | 2 | 0 |
+| Self-audit iterations | N/A | 3 |
+| Total LLM round-trips | 4 (content + fix1 + fix2 + activities) | 3 (content with self-audit + activities) |
+| Fix types needed | Heading mismatch, low immersion, self-check English, robotic structure | Dative false positive, low immersion (both handled in self-audit) |
 
-**File:** Content template (phase-2-prompt or beginner content template)
-**Where:** Section structure instructions
+**Verdict:** The self-audit saved 1 LLM round-trip and eliminated all validate-phase fixes. This is the ideal outcome: content arrives at validation already passing.
 
-**Before:** "Follow the content_outline from {META_PATH} -- each section maps to an H2."
+## 5. Prompt Gaps
 
-**After:** "Follow the content_outline from {META_PATH} -- each section maps to an H2. CRITICAL: Your H2 headings MUST use the EXACT `title` text from each content_outline section. Do not add prefixes (like 'Презентація:', 'Part 1:'), do not paraphrase, do not modify the bilingual title format. The audit matches H2 headings literally against the outline."
+| Gap | Severity | Details | Suggested Fix |
+|-----|----------|---------|---------------|
+| Dative regex false positive | MEDIUM | The audit script flags substrings like "чолові" within "чоловічий". Gemini had to work around this by removing a legitimate word. | Fix the dative regex in `audit_module.sh` to use word-boundary matching, not substring matching. |
+| Immersion target still borderline | LOW | 25.6% achieved vs 25% minimum. Verb-free constraint continues to make 25%+ difficult. Gemini had to add bilingual translation pairs to reach the threshold. | Same as previous review P3: consider 20-35% target for verb-free modules, or provide more verb-free patterns. |
+| Textbook examples irrelevant for M11 | LOW | The prompt includes Grade 1 bukvar examples (syllable/sound exercises) under TEXTBOOK_EXAMPLES. These are irrelevant for an adjective agreement module. The prompt itself says "NOTE: ...For modules M15+, focus on communicative patterns, not letter/syllable exercises" but M11 still gets these. | Filter textbook examples by module type. Adjective modules should get adjective-relevant textbook examples from the RAG chunks (the discovery phase found Grade 6 adjective content). |
+| Persona role "Real Estate Agent" underused | LOW | The persona role is specified but only manifests in 8 lines of the Practice section. The prompt doesn't guide how prominently the persona should appear. | Add guidance: "The persona role should appear in at least one full subsection with 3+ examples in character." |
 
-### P2: Self-check answer format guidance
+## 6. Comparison: Previous Build vs Current Build
 
-**File:** Content template, summary section
-**Add:** "Self-check answers: Every Ukrainian answer must include an English translation in parentheses, e.g., 'новий телефон (new phone)'."
-
-### P3: Immersion target calibration for verb-free modules
-
-**File:** `placeholders.yaml` generation logic (or `scripts/pipeline_v5.py`)
-**Issue:** M1-M14 have VERB-FREE constraint which makes 25% Ukrainian immersion difficult. Consider:
-- Adjusting target to 20-35% for verb-free modules, OR
-- Adding more verb-free immersion examples in the pattern bank (the current bank has 9 patterns, but more variety would help), OR
-- Accepting that 20-25% is the realistic floor for verb-free modules
-
-## Comparison with Pre-Fix Build
-
-| Dimension | Previous Build | Current Build |
-|-----------|---------------|---------------|
-| Pipeline completion | FAILED (dedup-exhausted) | PASSED |
-| KeyError crash | YES (crashed during heading processing) | NO |
-| Heading level issues | YES (caused KeyError) | NO (but heading TITLE mismatch required fix) |
-| Content quality | N/A (never completed) | Good -- 2963 words, 4 callouts, 8 activities |
-| Fix attempts | Exhausted all attempts | 2 of N attempts, both successful |
-| Immersion | N/A | 25.1% (borderline but passing) |
-| VESUM verification | N/A | 96.4% (133/138; 5 not found are fragments: "-ий", "-ій", "нов", "синий", "Хрещатик") |
+| Dimension | Previous Build (v4-era) | Current Build (v5) |
+|-----------|------------------------|-------------------|
+| Pipeline completion | PASS (after 2 fixes) | PASS (0 fixes) |
+| Heading match | FAILED initially | PASSED first time |
+| Immersion | 25.1% (after fix) | 25.6% (after self-audit) |
+| Word count | 2963 (247% of target) | 1822 (152% of target) |
+| Activities | 8 | 8 |
+| Vocab items | 21 | 20 |
+| Callout boxes | 4 | 3 (minimum) |
+| Self-audit | N/A | 3 iterations, PASS |
+| Validate fixes | 2 | 0 |
+| Surviving issues | Imperative "Подивімося", Latin transliteration | Metalanguage "множина" unflagged, "слов" invalid distractor |
 
 ## Summary
 
-**Template health:** GOOD -- the v5 template fixes (imperative ban, KeyError crash, heading post-processing) all worked effectively. Two remaining gaps (exact heading match instruction, self-check English requirement) are minor and easily fixable.
+**Template health: GOOD** -- The v5 template with exact heading instructions and self-audit snippet works well. All placeholders filled correctly. The P1 fix from the previous review (exact heading match) eliminated heading mismatch issues entirely.
 
-**Comparison:** IMPROVED -- the previous build crashed and exhausted fix attempts. This build completed cleanly in 2 fix attempts with no regressions. The module passed all audit gates with strong numbers (2963/1200 words, 8 activities, 21 vocab items, 25.1% immersion).
+**Self-audit effectiveness: HIGH** -- The self-audit feature is the biggest improvement in this build. It caught and fixed issues that previously required 2 validate round-trips. Gemini ran the audit script genuinely (not fabricated) and applied meaningful fixes.
 
-**Remaining risk:** The immersion target of 25-40% is borderline achievable for verb-free modules. The module barely passed at 25.1% after fix 1 injected additional Ukrainian blocks. This could be a recurring issue for M1-M14 modules.
+**Remaining risks:**
+1. **Dative regex false positive** -- a real audit tooling bug that needs fixing
+2. **Immersion target borderline** -- 25.6% is barely passing; verb-free modules will continue to struggle
+3. **Textbook examples irrelevance** -- Grade 1 bukvar examples are noise for M11+
+
+**Priority fixes:**
+- P1: Fix dative regex in audit_module.sh (tooling bug, affects all modules using "чоловічий")
+- P2: Adjust immersion target for verb-free modules (or add more verb-free patterns)
+- P3: Filter textbook examples by module topic relevance

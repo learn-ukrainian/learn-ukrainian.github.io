@@ -405,16 +405,23 @@ def search_blogs(
         "very", "only", "just", "make", "take", "give", "know", "help",
         "read", "write", "open", "leave", "never",
     }
-    search_terms: set[str] = set()
-    search_terms.add(topic_title.lower())
+    # Separate phrase-level terms (multi-word) from single-word terms
+    search_phrases: list[str] = []  # e.g. "past tense", "reflexive verbs"
+    search_words: set[str] = set()  # single domain-specific words
     for kw in keywords:
         kw_lower = kw.lower().strip()
-        if kw_lower and kw_lower not in _stopwords:
-            search_terms.add(kw_lower)
+        if not kw_lower or kw_lower in _stopwords:
+            continue
+        if " " in kw_lower:
+            search_phrases.append(kw_lower)
+        else:
+            search_words.add(kw_lower)
+    # Add topic title as a phrase
+    search_phrases.insert(0, topic_title.lower())
     # Add individual topic words (only domain-specific ones)
     for word in topic_title.lower().split():
         if len(word) > 3 and word not in _stopwords:
-            search_terms.add(word)
+            search_words.add(word)
 
     level_base = level.split("-")[0].upper()
 
@@ -424,33 +431,38 @@ def search_blogs(
             continue
 
         article_topics = {t.lower() for t in article.get("topics", [])}
-        article_title_words = set(article.get("title", "").lower().split())
+        article_title = article.get("title", "").lower()
+        article_title_words = set(article_title.split())
         article_level = article.get("suggested_level", "").upper()
+        desc = article.get("description", "").lower()
+        desc_words = set(desc.split())
 
-        # Also match against description (podcast episodes have rich descriptions)
-        desc_words = set(article.get("description", "").lower().split())
+        # Phrase matching — much stronger signal than single words
+        phrase_score = 0.0
+        for phrase in search_phrases:
+            if phrase in article_title or phrase in desc:
+                phrase_score += 0.5
+            elif any(phrase in t for t in article_topics):
+                phrase_score += 0.4
 
-        # Score: topic overlap + level match + title match + description match
-        topic_overlap = len(search_terms & article_topics)
-        title_overlap = len(search_terms & article_title_words)
-        desc_overlap = len(search_terms & desc_words)
+        # Word-level matching
+        topic_overlap = len(search_words & article_topics)
+        title_overlap = len(search_words & article_title_words)
+        desc_overlap = len(search_words & desc_words)
         level_match = 1 if article_level == level_base else 0
 
-        # Gate: require at least one topic tag match OR 2+ title/desc matches.
-        # Single title word overlaps (e.g. "transport" matching "transport")
-        # produce too many false positives.
-        if topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
+        # Gate: require a phrase match, or a topic tag match, or 2+ title/desc word matches
+        if phrase_score == 0 and topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
             continue
 
-        score = topic_overlap * 0.3 + title_overlap * 0.15 + desc_overlap * 0.05 + level_match * 0.1
+        score = phrase_score + topic_overlap * 0.25 + title_overlap * 0.1 + desc_overlap * 0.05 + level_match * 0.1
 
         # Podcast episodes get a priority boost — structured content
-        # (audio + transcript + vocab) is more useful than a generic blog post
         content_type = article.get("content_type", "")
         if content_type in ("podcast_episode", "podcast_episode_short"):
-            score += 0.15
+            score += 0.1
 
-        if score < 0.2:
+        if score < 0.3:
             continue
 
         seen_urls.add(url)

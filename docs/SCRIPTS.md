@@ -1598,126 +1598,66 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 .venv/bin/python scripts/scan_activity_errors.py --track b2 hist # Scan specific tracks
 ```
 
-### Deterministic Python Builder v3 (Preferred — Hybrid Gemini+Claude pipeline)
+### Module Builder v5 (Current — `build_module_v5.py`)
 
-`scripts/build_module.py` reduces round-trips vs v2 by collapsing phases into single calls,
-and routes phases to the best LLM: Gemini for research/prose, Claude for activities and final review.
-
-**Baseline: 4 LLM calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+ Gemini-only.**
+`scripts/build_module_v5.py` — clean pipeline with lexical sandbox, VESUM morphological validation,
+and no v3/v4 legacy code. State: `state-v5.json`.
 
 ```bash
-# Single module — full E2E (Gemini phases A+B, Claude phases C+F)
-.venv/bin/python scripts/build_module.py {track} {num}
+# Single module — full E2E
+.venv/bin/python scripts/build_module_v5.py {track} {num}
 
 # Build entire track (skips already-passing modules)
-.venv/bin/python scripts/build_module.py {track} --all
+.venv/bin/python scripts/build_module_v5.py {track} --all
 
 # Build a range of modules
-.venv/bin/python scripts/build_module.py {track} --range 1-20
+.venv/bin/python scripts/build_module_v5.py {track} --range 1-20
 
-# Pre-seed research for all modules (Phase A only — fast batch)
-.venv/bin/python scripts/build_module.py {track} --all --research-only
+# Nuke state and rebuild from scratch
+.venv/bin/python scripts/build_module_v5.py {track} {num} --rebuild
 
-# Nuke v3 state and restart from Phase A
-.venv/bin/python scripts/build_module.py {track} {num} --rebuild
+# Restart from a specific phase onward
+.venv/bin/python scripts/build_module_v5.py {track} {num} --restart-from sandbox
 
-# Re-run a single v4 phase (research/discover/content/activities/validate/review/mdx)
-.venv/bin/python scripts/build_module.py {track} {num} --force-phase validate
-
-# Skip video/blog discovery (faster builds when not needed)
-.venv/bin/python scripts/build_module.py {track} {num} --skip-discover
-
-# Run only the discover phase for a module
-.venv/bin/python scripts/build_module.py {track} {num} --force-phase discover
-
-# Restart from discover phase onward
-.venv/bin/python scripts/build_module.py {track} {num} --restart-from discover
+# Re-run a single phase
+.venv/bin/python scripts/build_module_v5.py {track} {num} --force-phase validate
 
 # Dry-run (show plan, no LLM dispatches)
-.venv/bin/python scripts/build_module.py {track} {num} --dry-run
+.venv/bin/python scripts/build_module_v5.py {track} {num} --dry-run
 
 # Just verify (run audit, print PASS/FAIL, exit)
-.venv/bin/python scripts/build_module.py {track} {num} --verify
+.venv/bin/python scripts/build_module_v5.py {track} {num} --verify
 
 # + Review: optional Claude QA gate
-.venv/bin/python scripts/build_module.py {track} {num} --review
+.venv/bin/python scripts/build_module_v5.py {track} {num} --review
 
-# Phase F via Gemini (cross-agent: D=Claude, F=Gemini)
-.venv/bin/python scripts/build_module.py {track} {num} --final-review --final-review-agent gemini
+# Review via Claude (cross-agent: Gemini builds, Claude reviews)
+.venv/bin/python scripts/build_module_v5.py {track} {num} --review-claude
+
+# Stop before a phase
+.venv/bin/python scripts/build_module_v5.py {track} {num} --stop-before review
 ```
 
-**Cross-agent pipeline:**
-
-Review phase always uses Claude — the opposite agent from content (Gemini builds).
-This prevents self-review gaming detected by anti-gaming audit checks (issue #610).
-
-**Hybrid LLM routing — `--use-claude`:**
-
-By default, Phases A/B/C use Gemini and Phase D uses Claude.
-Use `--use-claude` to route additional phases to Claude (useful when running from a terminal
-to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activity quality):
-
-```bash
-# Route Phase A (research) to Claude — useful for c1/c2/b2-pro/c1-pro
-.venv/bin/python scripts/build_module.py {track} {num} --use-claude A
-
-# Route Phase C (activities) to Claude explicitly (this is the default)
-.venv/bin/python scripts/build_module.py {track} {num} --use-claude C
-
-# Route both A and C to Claude
-.venv/bin/python scripts/build_module.py {track} {num} --use-claude "A C"
-
-# Research-only batch via Claude (for c1, c2, b2-pro, c1-pro)
-.venv/bin/python scripts/build_module.py c1 --all --research-only --use-claude A
+**Pipeline v5 phases:**
+```
+research    (research+meta)         [Gemini]
+→ discover  (video+blog search)     [Gemini Flash; non-blocking]
+→ sandbox   (VESUM-validated word bank) [deterministic, no LLM]
+→ content   (prose)                 [Gemini]
+→ activities (activities+vocab)     [Gemini]
+→ validate  (audit+screen+fix)      [deterministic + Gemini fix loop]
+→ [review: Claude QA gate, --review/--review-claude to enable]
+→ mdx       (MDX generation, no LLM)
 ```
 
-**Per-phase model overrides:**
+**Key v5 improvements over v4:**
+- Lexical sandbox: VESUM-validated word bank injected into content prompt
+- Morphological validator: deterministic grammar constraint checking via VESUM tags
+- Russicism detection: 9K+ LanguageTool replacement rules
+- Agreement checking: adj-noun gender/case mismatch detection
+- Clean state management (no v3/v4 prefix legacy)
 
-Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
-- Seminar tracks (bio, hist, istorio, lit, oes, ruth): **claude-opus-4-6** for Claude phases
-- Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
-- Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
-- Phase F (final review): always **claude-opus-4-6** regardless of track
-
-Override models per-phase when needed:
-
-```bash
-# Use Opus for activities even on a core track
-.venv/bin/python scripts/build_module.py a1 {num} --claude-model-C claude-opus-4-6
-
-# Use Sonnet for Phase D review (faster, cheaper)
-.venv/bin/python scripts/build_module.py {track} {num} --claude-model-D claude-sonnet-4-6
-
-# Use Sonnet for final review (faster, cheaper)
-.venv/bin/python scripts/build_module.py {track} {num} --final-review --claude-model-F claude-sonnet-4-6
-
-# Use Opus for research on a core track
-.venv/bin/python scripts/build_module.py c1 {num} --use-claude A --claude-model-A claude-opus-4-6
-```
-
-**Model config defaults (edit `scripts/batch_gemini_config.py` to change globally):**
-
-```python
-CLAUDE_SONNET = "claude-sonnet-4-6"
-CLAUDE_OPUS   = "claude-opus-4-6"
-
-CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Phase A, core tracks
-CLAUDE_MODEL_CORE_ACTIVITIES    = CLAUDE_SONNET  # Phase C, core tracks
-CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A, seminar tracks
-CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C, seminar tracks
-CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F, all tracks
-```
-
-**Pipeline v4 phases (default):**
-```
-research    (research+meta)    [Gemini by default; --use-claude A for Claude]
-→ discover  (video+blog search) [Gemini Flash; --skip-discover to bypass]
-→ content   (prose+track-ctx)  [Gemini always]
-→ activities (activities+vocab) [Claude: sonnet for core, opus for seminar]
-→ validate  (audit+screen+fix) [deterministic + Gemini fix loop]
-→ [review: Claude QA gate, --review to enable; opus always]
-→ mdx       (MDX generation, always last, no LLM call)
-```
+> **v4 (`build_module.py`) and v3 are RETIRED.** Do not use them.
 
 **Legacy v3 phases (--v3 flag):**
 ```
@@ -1743,18 +1683,18 @@ Contains: `dispatch_gemini` (with rate-limit fallback), `dispatch_gemini_raw` (n
 `mark_phase` (thread-safe via FileLock), state helpers, template helpers, verify helpers,
 archive detection/restoration, Phase B/E/F delegates, preflight, logging, config tables.
 
-### Legacy Shims
+### Legacy (RETIRED)
 
-`scripts/build_module.py` — backward-compat shim that re-exports from `pipeline_lib`.
-`scripts/build_module_v2.py` — **deleted** (#671). All functionality moved to `pipeline_lib.py`.
+`scripts/build_module.py` — v4 pipeline, **RETIRED**. Use `build_module_v5.py`.
+`scripts/build_module_v2.py` — **deleted** (#671).
 
 ### Key Components
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| **Module builder v3** | `scripts/build_module.py` | **4-call optimised pipeline (preferred)** |
-| Shared utilities | `scripts/pipeline_lib.py` | Dispatch, state, verify, config (extracted #671) |
-| v1 shim | `scripts/build_module.py` | Backward-compat re-export from pipeline_lib |
+| **Module builder v5** | `scripts/build_module_v5.py` | **Current pipeline** |
+| Pipeline v5 phases | `scripts/pipeline_v5.py` | Phase implementations + state |
+| Shared utilities | `scripts/pipeline_lib.py` | Dispatch, state, verify, config |
 | Final review (Claude) | `claude_extensions/commands/final-review.md` | Claude cross-agent QA |
 | Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
 | Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
@@ -2135,23 +2075,23 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/enrich_research_gaps.py --apply
 ```
 
-### Full Research → Build Workflow (v3)
+### Full Research → Build Workflow
 
 ```bash
 # 1. Pre-seed research for all modules
-.venv/bin/python scripts/build_module.py bio --all --research-only
+.venv/bin/python scripts/build_module_v5.py bio --all --research-only
 
 # 2. Assess — see what's below 9/10
 .venv/bin/python scripts/assess_research.py bio --gaps
 
-# 3. Upgrade weak research (auto-resets v3 Phase A for upgraded modules)
+# 3. Upgrade weak research
 .venv/bin/python scripts/assess_research.py bio --upgrade
 
 # 4. Enrich plans from 9+ research
 .venv/bin/python scripts/assess_research.py bio --enrich
 
-# 5. Full build — Phase A cached for passing modules, re-runs for upgraded ones
-.venv/bin/python scripts/build_module.py bio --all
+# 5. Full build
+.venv/bin/python scripts/build_module_v5.py bio --all
 ```
 
 ---

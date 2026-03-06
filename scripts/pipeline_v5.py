@@ -118,11 +118,12 @@ _DIFFUSE_FAILURE_CODES = {
 }
 
 # Phase sequence
-PHASES = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
+PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
 
 PHASE_LABELS: dict[str, str] = {
     "research":   "Research + Meta",
     "discover":   "Discover (video + blog search)",
+    "sandbox":    "Lexical Sandbox (VESUM-validated word bank)",
     "content":    "Content (prose)",
     "activities": "Activities + Vocab",
     "validate":   "Validate (audit + screen + Gemini fix)",
@@ -131,7 +132,7 @@ PHASE_LABELS: dict[str, str] = {
 }
 
 # Non-blocking phases (failures don't stop the pipeline)
-NON_BLOCKING = {"validate", "review", "discover"}
+NON_BLOCKING = {"validate", "review", "discover", "sandbox"}
 
 # Research constants
 _RESEARCH_EXISTS_MIN_WORDS = 500
@@ -671,6 +672,19 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
                 log(f"  D.0: Rule engine: {len(rule_issues)} issue(s)")
         except Exception as e:
             logger.warning("D.0: Rule engine failed: %s", e)
+
+    # 7.6 VESUM morphological validator (tag-based grammar constraints)
+    if content_text is not None:
+        try:
+            from audit.checks.morphological_validator import validate_morphology
+            level_code = ctx.track.split("-")[0].upper() if "-" in ctx.track else ctx.track.upper()
+            morph_issues = validate_morphology(
+                content_text, level_code, ctx.module_num, ctx.track)
+            result.deterministic_issues.extend(morph_issues)
+            if morph_issues:
+                log(f"  D.0: Morphological validator: {len(morph_issues)} issue(s)")
+        except Exception as e:
+            logger.warning("D.0: Morphological validator failed: %s", e)
 
     # 9. Content quality pipeline checks
     if content_text is not None:
@@ -2824,6 +2838,57 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
 # Phase: content
 # ---------------------------------------------------------------------------
 
+def phase_sandbox(ctx: ModuleContext, state: dict) -> bool:
+    """Lexical Sandbox: build VESUM-validated word bank for content generation.
+
+    Two modes:
+    - Plan-only (fast): Build sandbox directly from plan vocabulary_hints
+    - Pass 1 (full): Dispatch Gemini to request resources, then build sandbox
+
+    The sandbox is saved to orchestration/ and injected into the content prompt
+    via the {LEXICAL_SANDBOX} placeholder.
+    """
+    if is_complete(state, "sandbox"):
+        log("  sandbox: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  sandbox: DRY-RUN — would build lexical sandbox")
+        return True
+
+    try:
+        from lexical_sandbox import build_sandbox
+
+        # Build sandbox from plan vocabulary + common words for this level
+        sandbox_md = build_sandbox(
+            track=ctx.track,
+            module_num=ctx.module_num,
+            plan=ctx.plan,
+            max_examples=6,
+        )
+
+        if sandbox_md:
+            # Save to orchestration
+            sandbox_path = ctx.orch_dir / "lexical-sandbox.md"
+            sandbox_path.write_text(sandbox_md, encoding="utf-8")
+
+            # Attach to context for content phase placeholder injection
+            ctx._lexical_sandbox = sandbox_md
+
+            word_count = sandbox_md.count("|") // 3  # rough table row count
+            log(f"  sandbox: Built lexical sandbox ({len(sandbox_md)} chars, ~{word_count} entries)")
+        else:
+            log("  sandbox: No vocabulary_hints in plan — skipping sandbox")
+            ctx._lexical_sandbox = ""
+
+    except Exception as e:
+        logger.warning("sandbox: Failed to build lexical sandbox: %s", e)
+        ctx._lexical_sandbox = ""
+
+    mark_complete(state, "sandbox", ctx)
+    return True
+
+
 def phase_content(ctx: ModuleContext, state: dict) -> bool:
     """Content: write prose. Delegates to pipeline_lib.phase_B_content."""
     if is_complete(state, "content"):
@@ -3906,6 +3971,7 @@ def phase_mdx(ctx: ModuleContext) -> bool:
 PHASE_FUNCTIONS: dict[str, Any] = {
     "research":   phase_research,
     "discover":   phase_discover,
+    "sandbox":    phase_sandbox,
     "content":    phase_content,
     "activities": phase_activities,
     "validate":   phase_validate,

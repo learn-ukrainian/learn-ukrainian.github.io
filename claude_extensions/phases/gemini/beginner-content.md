@@ -30,6 +30,8 @@ Read ALL files before writing.
 
 {DECODABLE_VOCABULARY}
 
+{LEXICAL_SANDBOX}
+
 NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
 
 {TEXTBOOK_EXAMPLES}

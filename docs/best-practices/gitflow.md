@@ -27,7 +27,7 @@ Never `git add -A` or `git add .` — it risks including:
 
 Stage by file group:
 ```bash
-git add scripts/build_module.py scripts/build_module_v2.py  # scripts
+git add scripts/build_module_v5.py scripts/pipeline_v5.py  # scripts
 git add claude_extensions/phases/gemini/phase-A-seminar.md     # templates
 git add curriculum/l2-uk-en/plans/bio/petro-veskliaov.yaml  # content fixes
 ```
@@ -62,7 +62,7 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ### Examples
 ```
-feat: build_module.py — 4-call optimised pipeline (#585)
+feat: build_module_v5.py — v5 pipeline (#585)
 
 fix: meta health check + Phase A splitting rules for oversized sections (#589)
 

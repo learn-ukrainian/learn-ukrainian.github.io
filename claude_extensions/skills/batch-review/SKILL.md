@@ -34,7 +34,7 @@ for n in range({start}, {end}+1):
 
 Skip modules that don't have content yet. Check:
 - `curriculum/l2-uk-en/{track}/{slug}.md` exists
-- `curriculum/l2-uk-en/{track}/orchestration/{slug}/state-v4.json` exists
+- `curriculum/l2-uk-en/{track}/orchestration/{slug}/state-v5.json` (or `state.json`) exists
 
 List the modules to review and any skipped modules.
 
@@ -54,7 +54,7 @@ Read ALL files in `curriculum/l2-uk-en/{track}/orchestration/{slug}/`:
 - `phase-C-prompt.md`, `phase-C-friction.md` (activities prompt + friction)
 - `phase-A-prompt.md`, `phase-A-output.md` (research)
 - `placeholders.yaml` (injected context)
-- `state-v4.json` or `state.json` (pipeline state, attempt counts)
+- `state-v5.json` or `state.json` (pipeline state, attempt counts)
 - `completion.md` (final verdict)
 - `validate-fix*-prompt.md` (validation fix attempts)
 - `screen-result.json` (VESUM screening)

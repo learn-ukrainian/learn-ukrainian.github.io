@@ -38,14 +38,6 @@ resources:
       url: https://talkukrainian.com/ukrainian-alphabet/
       relevance: high
       source: talkukrainian
-    - title: How to Introduce Yourself in Ukrainian
-      url: https://www.ukrainianlessons.com/episode3/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Grammar point: numeral / noun agreement in Ukrainian'
-      url: https://www.ukrainianlessons.com/fmu7/
-      relevance: high
-      source: ukrainianlessons.com
   a1-the-gender-code:
     youtube:
     - title: Gender of Ukrainian Nouns
@@ -227,6 +219,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode22/
       relevance: high
       source: ukrainianlessons.com
+    - title: How to look for a place to rent in Ukraine
+      url: https://www.ukrainianlessons.com/fmu41/
+      relevance: high
+      source: ukrainianlessons.com
   a1-the-living-verb-ii:
     youtube:
     - title: Ukrainian Present Tense. The First Conjugation Group.
@@ -279,6 +275,10 @@ resources:
       source: ukrainianlessons.com
     - title: Going to the movies in Ukraine — Perfective verbs in Ukrainian
       url: https://www.ukrainianlessons.com/episode34/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: On a date in Ukrainian + Reflexive verbs
+      url: https://www.ukrainianlessons.com/episode109/
       relevance: high
       source: ukrainianlessons.com
   a1-questions-and-negation:
@@ -2058,10 +2058,6 @@ resources:
       relevance: high
       source: All 33 letters with IPA and native audio
     articles:
-    - title: Ukrainian Lessons Podcast — Beginner Episodes
-      url: https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/
-      relevance: high
-      source: Curated Season 1 episodes for beginners, with native speaker audio
     - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
       url: https://www.ukrainianlessons.com/ukrainian-alphabet/
       relevance: high
@@ -2089,14 +2085,6 @@ resources:
       url: https://talkukrainian.com/ukrainian-alphabet/
       relevance: high
       source: talkukrainian
-    - title: How to ORDER at the restaurant in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu16/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: How to PAY at the restaurant in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu17/
-      relevance: high
-      source: ukrainianlessons.com
   a1-what-time-is-it:
     youtube:
     - title: Telling Time in Ukrainian
@@ -4275,71 +4263,72 @@ resources:
     articles:
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode222/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode223/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode224/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode225/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode226/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
   c2-literary-community:
     articles:
     - title: 10 Ukrainian dishes you must try in Ukraine
       url: https://www.ukrainianlessons.com/fmu13/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
   c2-regional-varieties:
     articles:
     - title: Kyiv tour + Participle in Ukrainian
       url: https://www.ukrainianlessons.com/episode108/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: My life in Kyiv (Voice message №3)
       url: https://www.ukrainianlessons.com/episode95/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian History Test – Review 71-79
       url: https://www.ukrainianlessons.com/episode80/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
       url: https://www.ukrainianlessons.com/episode92/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode233/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
   c2-interpretation-advanced:
     articles:
     - title: 'Review: 46-49 + What I eat in a day in Ukrainian'
       url: https://www.ukrainianlessons.com/episode50/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: 'Review: 56-60 – My week in Ukrainian'
       url: https://www.ukrainianlessons.com/episode60/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Review + My American (road) trip
       url: https://www.ukrainianlessons.com/episode65/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Children’s Poem + Vocative case in Ukrainian
       url: https://www.ukrainianlessons.com/episode69/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian History Course Part 1
       url: https://www.ukrainianlessons.com/episode71/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
+  a1-syllables-and-word-division: {}

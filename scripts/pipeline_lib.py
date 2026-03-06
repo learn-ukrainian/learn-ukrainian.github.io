@@ -2531,7 +2531,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
                                "H3_WORD_RANGE", "EXPANSION_METHOD",
                                "WRITING_TONE_INSTRUCTION",
                                "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES",
-                               "SELF_AUDIT_SNIPPET"}
+                               "SELF_AUDIT_SNIPPET", "LEXICAL_SANDBOX"}
             if _critical_keys <= set(existing.keys()):
                 log("Placeholders: Using existing")
                 return
@@ -2684,6 +2684,9 @@ def write_placeholders(ctx: ModuleContext) -> None:
     placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
     placeholders["SELF_AUDIT_SNIPPET"] = _read_phase_file("_shared-self-audit.md")
+
+    # Lexical Sandbox (built by phase_sandbox, injected via ctx._lexical_sandbox)
+    placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
 
     placeholders.update(ctx.activity_config)
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)

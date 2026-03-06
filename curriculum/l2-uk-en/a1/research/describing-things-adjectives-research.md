@@ -2,34 +2,35 @@
 
 ## State Standard Reference
 §4.2.1.2: "Adjective declension — hard/soft groups, gender agreement"
-Alignment: Introduces basic adjective agreement in gender (masculine, feminine, neuter) and number (plural) in the Nominative case, addressing both hard and soft stem groups.
+Alignment: Introduces Nominative case agreement for hard and soft stem adjectives across all three genders and plural, perfectly aligning with A1 requirements.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| новий (new) | Top 100 high-frequency adjective | новий рік, новий день, нове життя |
-| старий (old/ancient) | Essential for historical/physical descriptions | старий будинок, стара книга |
-| гарний (beautiful/nice) | High-frequency social descriptor | гарна погода, гарний день, гарна дівчина |
-| великий (big/grand) | Essential for indicating scale | велике місто, велика родина, великий привіт |
-| синій (blue) | Primary anchor for soft stem (-ій) | синя лінія (Kyiv Metro) |
+| новий | Top 100 high-frequency adjective | новий дім, нова книга |
+| великий | Essential for scale and basic descriptions | велике місто, велика родина |
+| гарний | High-frequency social descriptor | гарна погода, гарний день |
+| синій | Primary anchor for soft stem (-ій) | синя лінія, синє море |
+| старий | Used for describing historical objects | старий собор, старе місто |
 
 ## Cultural Hooks
-1. St. Sophia's Cathedral (Софійський собор) serves as a prominent physical example of "старий" (ancient) and "великий" (grand) architecture in Kyiv.
-2. The folklore figure Mavka (Мавка) from Lesya Ukrainka's "Forest Song" provides an engaging context for feminine adjectives like "молода", "гарна", "цікава", and "зелена".
+1. **St. Sophia's Cathedral (Софійський собор)**: Used as a real-world example to demonstrate the adjectives *старий* (ancient) and *великий* (grand).
+2. **Mavka (Мавка)**: The Ukrainian folklore figure from Lesya Ukrainka's "Forest Song," used to practice feminine adjectives like *молода*, *гарна*, and *зелена*.
+3. **Kyiv Metro**: The *синя лінія* (Blue Line) serves as a practical, memorable anchor for the soft-stem adjective *синій*.
 
 ## Common Learner Errors
-1. Gender mismatch → *нова машина* (not *новий машина*) — Learners often mistakenly use the dictionary (masculine) form for all nouns regardless of the noun's actual gender.
-2. Hard/Soft stem orthography → *синій* (not *синий*) — Phonetic spelling habits often cause English speakers to use the hard '-ий' ending instead of the correct soft '-ій' ending.
-3. Plural inconsistency → *гарні дні* (not *гарний дні*) — Learners may default to singular adjectives when describing plural nouns, forgetting that plurals take '-і' across all genders.
+1. **Dictionary Form Defaulting** → *нова машина* (not *новий машина*) — Learners often fail to agree the adjective with the noun, using the masculine nominative dictionary form for everything.
+2. **Phonetic Misspelling of Soft Stems** → *синій* (not *синий*) — English speakers often miss the soft "і" after soft consonants and spell it with "и".
+3. **Singular Adjectives for Plural Nouns** → *гарні дні* (not *гарна дні*) — Learners forget that plural nouns require the plural adjective ending "-і" regardless of their original gender.
 
 ## Cross-References
 - Builds on: a1-07 (The Gender Code), a1-38 (My Daily Routine)
 - Prepares for: a1-12 (Colors and Clothing), a1-42 (Description: Adverbs)
 
 ## Notes for Content Writing
-- Rely exclusively on verb-free Ukrainian patterns (e.g., "Це нова книга", "гарне місто", "Який це дім?"). Do not use conjugated verbs (є, має), imperatives, or infinitives.
-- English must be used for all instructional language ("Remember that...", "Look at...") — no Ukrainian imperative commands like "Запам'ятайте" or "Подивіться".
-- The 'Який? Яка? Яке? Які?' question forms are critical for introducing this grammar.
+- **Verb-Free Mandate**: Absolute strict adherence to verb-free Ukrainian patterns. Use "Це нова книга", "Який це дім?", "гарна погода". Do NOT use conjugated verbs.
+- **Metalanguage**: Use English for all explanations and instructions. Ban on Ukrainian imperatives (e.g., do not use *Запам'ятайте*, use "Remember that...").
+- **Pedagogy**: Follow the PPP structure (Presentation-Practice-Production) clearly outlined in the meta section. Maintain the Real Estate Agent persona during practice.
 
 ## Resource Discovery
 

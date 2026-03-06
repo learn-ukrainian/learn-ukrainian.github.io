@@ -40,6 +40,7 @@ class ValidationRule:
 
     case_sensitive: bool = True
     max_hits: int = 5  # Cap findings per rule
+    deprecated: bool = False  # Replaced by VESUM morphological validator (#753)
 
 
 # ---------------------------------------------------------------------------
@@ -96,7 +97,7 @@ def _make_decodability_rules() -> list[ValidationRule]:
 # ---------------------------------------------------------------------------
 
 RULES: list[ValidationRule] = [
-    # 1. No imperatives in early A1 (M1-46)
+    # 1. No imperatives in early A1 (M1-46) — DEPRECATED: replaced by VESUM morphological validator (#753)
     ValidationRule(
         name="NO_IMPERATIVES_EARLY_A1",
         category="PEDAGOGICAL",
@@ -108,15 +109,14 @@ RULES: list[ValidationRule] = [
         levels=["A1"],
         module_range=(1, 46),
         patterns=[
-            # Specific common imperatives
             r"\b(?:Слухайте|Читайте|Повторюйте|Пишіть|Дивіться|Спробуйте)\b",
             r"\b(?:Почитаймо|Послухаймо|Подивімось|Попрацюймо)\b",
-            # General imperative endings: -йте, -іть (verb), -аймо/-яймо/-імо
             r"\b[А-ЯҐЄІЇа-яґєії]+(?:йте|іть)\b",
             r"\b[А-ЯҐЄІЇа-яґєії]+(?:аймо|яймо|імо)\b",
         ],
+        deprecated=True,
     ),
-    # 2. No verb conjugation before M15
+    # 2. No verb conjugation before M15 — DEPRECATED: replaced by VESUM morphological validator (#753)
     ValidationRule(
         name="NO_VERB_CONJUGATION_PRE_M15",
         category="PEDAGOGICAL",
@@ -128,15 +128,30 @@ RULES: list[ValidationRule] = [
         levels=["A1"],
         module_range=(1, 14),
         patterns=[
-            # First person plural -ємо/-імо (not imperative -аймо)
             r"\b[А-ЯҐЄІЇа-яґєії]+(?:ємо|імо)\b",
-            # Third person -ють/-ать/-ять
+            r"\b[А-ЯҐЄІЇа-яґєії]+(?:иш|їш|єш|аш)\b",
+            r"\b[А-ЯҐЄІЇа-яґєії]+(?:ите|їте|єте|ате)\b",
             r"\b[А-ЯҐЄІЇа-яґєії]+(?:ують|юють|ають|яють|ять)\b",
-            # Third person singular -ає/-є (common)
-            r"\b[А-ЯҐЄІЇа-яґєії]+(?:ає|іє)\b",
-            # Common specific conjugated forms
-            r"\b(?:вивчаємо|читаємо|пишемо|говоримо|знаємо|бачимо)\b",
+            r"\b[А-ЯҐЄІЇа-яґєії]+(?:ає|іє|ить)\b",
+            r"\b(?:вивчаємо|читаємо|пишемо|говоримо|знаємо|бачимо|робиш|робите|робить|маєш|маєте|має)\b",
         ],
+        deprecated=True,
+    ),
+    # 2b. No non-nominative case forms before M25 — DEPRECATED: replaced by VESUM morphological validator (#753)
+    ValidationRule(
+        name="NO_OBLIQUE_CASES_PRE_M25",
+        category="PEDAGOGICAL",
+        severity="HIGH",
+        description="Non-nominative case forms should not appear in M5-14 content. "
+        "Only nominative case is available at this stage. Exception: memorized "
+        "chunks in vocabulary tables or callout boxes.",
+        fix="Replace oblique case forms with nominative equivalents or use English. "
+        "E.g. 'на роботі' (locative) → 'робота' (nominative) or 'at work' (English). "
+        "Exception: memorized phrases in vocabulary tables are OK.",
+        levels=["A1"],
+        module_range=(5, 14),
+        custom_check="check_oblique_cases",
+        deprecated=True,
     ),
     # 3-5. Decodability rules (generated from data table)
     *_make_decodability_rules(),
@@ -177,6 +192,14 @@ def _rule_applies(rule: ValidationRule, level_code: str, module_num: int,
 # Check mechanisms
 # ---------------------------------------------------------------------------
 
+# Words that match verb conjugation patterns but are actually nouns/adjectives
+_VERB_FALSE_POSITIVES = {
+    "університе", "університеті", "алфавіте",
+    "інтернеті", "комп'ютері", "документі",
+    "має",  # allow as memorized chunk "як справи? — має" in greetings
+}
+
+
 def _check_patterns(rule: ValidationRule, content: str) -> list[dict]:
     """Run regex patterns against content. Any match = violation."""
     issues: list[dict] = []
@@ -185,12 +208,16 @@ def _check_patterns(rule: ValidationRule, content: str) -> list[dict]:
         for m in re.finditer(pattern, content, flags):
             if len(issues) >= rule.max_hits:
                 return issues
+            matched = m.group()
+            # Skip known false positives for verb rules
+            if rule.name.startswith("NO_VERB") and matched.lower() in _VERB_FALSE_POSITIVES:
+                continue
             # Find approximate line number
             line_num = content[:m.start()].count("\n") + 1
             issues.append({
                 "type": rule.category,
                 "severity": rule.severity,
-                "text": f"[{rule.name}] '{m.group()}' — {rule.description}",
+                "text": f"[{rule.name}] '{matched}' — {rule.description}",
                 "fix": rule.fix,
                 "location": f"~line {line_num}",
             })
@@ -361,8 +388,79 @@ def _check_self_check_english(rule: ValidationRule, content: str,
     return issues
 
 
+def _check_oblique_cases(
+    rule: ValidationRule, content: str, level_code: str, module_num: int,
+) -> list[dict]:
+    """Detect non-nominative case usage in M5-14 prose.
+
+    Looks for common preposition+noun patterns that require oblique cases:
+    - Locative: на/у/в + locative (на роботі, у місті, в школі)
+    - Instrumental: з/із + instrumental (з другом, із сестрою)
+    - Genitive: від/до/без + genitive (від мами, до школи)
+    - Dative: specific verb patterns
+
+    Skips table rows, vocabulary sections, callout boxes, and memorized phrases.
+    """
+    issues: list[dict] = []
+
+    # Memorized phrases that use oblique cases but are taught as fixed chunks
+    _ALLOWED_CHUNKS = {
+        "до побачення", "до зустрічі", "на жаль", "на здоров'я",
+        "будь ласка", "з днем", "на добраніч", "до речі",
+        "на щастя", "без сумніву", "з повагою",
+    }
+
+    # Preposition patterns that force oblique cases
+    oblique_patterns = [
+        # Locative: на/у/в + noun ending in -і/-ї/-у/-ю (locative endings)
+        (r"(?:на|у|в)\s+[а-яґєії]+(?:і|ї|у|ю)\b", "locative"),
+        # Instrumental: з/із/зі + noun ending in -ом/-ем/-ою/-ею/-ям/-ями
+        (r"(?:зі?|із)\s+[а-яґєії]+(?:ом|ем|ою|ею|ям|ями)\b", "instrumental"),
+        # Genitive prepositions: від/до/без/для/біля
+        (r"(?:від|до|без|для|біля)\s+[а-яґєії]+(?:и|і|а|я|у|ю)\b", "genitive"),
+    ]
+
+    lines = content.split("\n")
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        # Skip tables, callout boxes, code blocks, vocabulary sections
+        if (stripped.startswith("|") or stripped.startswith(">") or
+                stripped.startswith("```") or stripped.startswith("---")):
+            continue
+        # Skip lines that are clearly English-dominant (translation context)
+        latin_chars = sum(1 for c in stripped if c.isascii() and c.isalpha())
+        cyrillic_chars = sum(1 for c in stripped if '\u0400' <= c <= '\u04ff')
+        if latin_chars > cyrillic_chars * 2:
+            continue
+
+        for pattern, case_name in oblique_patterns:
+            matches = re.findall(pattern, stripped, re.IGNORECASE)
+            for match in matches:
+                # Skip memorized phrases
+                if match.lower() in _ALLOWED_CHUNKS:
+                    continue
+                if any(match.lower().startswith(chunk) or chunk.startswith(match.lower())
+                       for chunk in _ALLOWED_CHUNKS):
+                    continue
+                issues.append({
+                    "type": "PEDAGOGICAL",
+                    "severity": rule.severity,
+                    "text": (
+                        f"[NO_OBLIQUE_CASES_PRE_M25] {case_name} case usage: "
+                        f"'{match}' — only nominative allowed in M5-14"
+                    ),
+                    "fix": rule.fix,
+                    "location": f"~line {i}",
+                })
+                if len(issues) >= rule.max_hits:
+                    return issues
+
+    return issues
+
+
 _CUSTOM_CHECKS: dict[str, CustomCheckFn] = {
     "check_self_check_english": _check_self_check_english,
+    "check_oblique_cases": _check_oblique_cases,
 }
 
 # Validate all custom_check references at import time
@@ -417,6 +515,8 @@ def run_rule_engine(content: str, level_code: str, module_num: int,
     """
     issues: list[dict] = []
     for rule in RULES:
+        if rule.deprecated:
+            continue
         if not _rule_applies(rule, level_code, module_num, track_code):
             continue
         if rule.patterns:

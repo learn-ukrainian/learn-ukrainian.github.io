@@ -24,7 +24,7 @@ MDX Gate (deterministic)
 └── 7. MDX generation         — always last, always succeeds if content passes
 ```
 
-**The review gate (Phase D) does not determine pass/fail.** Only content gates 1-5 do. This removes the incentive for LLMs to inflate review scores.
+**The review gate does not determine pass/fail.** Only content gates 1-5 do. This removes the incentive for LLMs to inflate review scores.
 
 ---
 
@@ -50,8 +50,8 @@ MDX Gate (deterministic)
 **Word target in meta file overrides the above.** If meta sets `word_target: 4000`, that's the gate.
 
 ### Word count failures
-If Phase B produces <80% of target: automatic retry (up to 3 attempts).
-If still failing after retries: Phase D (review+fix) should add content.
+If the content phase produces <80% of target: automatic retry (up to 3 attempts).
+If still failing after retries: the review phase (review+fix) should add content.
 
 ---
 
@@ -59,9 +59,9 @@ If still failing after retries: Phase D (review+fix) should add content.
 
 Every section name in the plan's `content_outline` must appear as an H2 (`##`) heading in the content file. Names must match exactly (or very closely).
 
-**Most common audit failure.** Root cause: Phase A generates meta sections that don't match plan section names → Phase B writes wrong H2 headings.
+**Most common audit failure.** Root cause: the research phase generates meta sections that don't match plan section names, then the content phase writes wrong H2 headings.
 
-Fix: Phase A template explicitly says "section names must match plan exactly."
+Fix: research phase template explicitly says "section names must match plan exactly."
 
 ---
 
@@ -150,7 +150,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{file}.md
 scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{track}/{file}.md
 
 # Verify module without rebuilding
-.venv/bin/python scripts/build_module.py {track} {num} --verify
+.venv/bin/python scripts/build_module_v5.py {track} {num} --verify
 
 # Batch verification
 .venv/bin/python scripts/verify_track.py {track}

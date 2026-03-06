@@ -29,7 +29,7 @@ For any module build, context priority (highest → lowest):
 Always for seminar tracks (hist, bio, istorio, lit, oes, ruth). Optional for core tracks.
 
 ### Quality threshold
-A research file under 500 words is not usable — dispatch Phase A in full research mode instead.
+A research file under 500 words is not usable — dispatch the research phase in full research mode instead.
 
 ### Content requirements
 Good research files contain:
@@ -44,7 +44,7 @@ Good research files contain:
 If a substantial research file already exists (≥500 words), skip the research call and dispatch meta-only. This saves one Gemini call per pre-researched module.
 
 ```python
-# build_module.py
+# pipeline_v5.py
 if _research_file_is_usable(ctx):
     template_name = "phase-A-meta-only.md"  # meta only, 1 call saved
 else:
@@ -56,13 +56,13 @@ else:
 ## Meta File (Content Outline)
 
 ### Purpose
-The meta's `content_outline` is the section-level blueprint Phase B writes against. Each entry = one H2 section with word allocation and writing points.
+The meta's `content_outline` is the section-level blueprint the content phase writes against. Each entry = one H2 section with word allocation and writing points.
 
 ### Health check (auto-enforced)
-Before treating Phase A as complete, `build_module.py` checks that no section exceeds 25% of `word_target`. If violated, Phase A re-runs automatically:
+Before treating the research phase as complete, `build_module_v5.py` checks that no section exceeds 25% of `word_target`. If violated, the research phase re-runs automatically:
 
 ```python
-# Any section consuming >25% of word_target → re-run Phase A
+# Any section consuming >25% of word_target → re-run research phase
 _META_SECTION_MAX_PCT = 0.25
 ```
 
@@ -117,7 +117,7 @@ Never hardcode paths in templates. Always use placeholders — they make templat
 
 `WORD_TARGET` is always injected as a placeholder. Templates use it for:
 - Section allocation validation (sum ≈ WORD_TARGET)
-- Overshoot calculation (Phase B targets 1.5× word_target to account for natural shortfall)
+- Overshoot calculation (content phase targets 1.5x word_target to account for natural shortfall)
 - Activity count guidance
 
 **Never hardcode word targets in templates** — different tracks have different targets (A1: 750w, B2: 1750w, BIO: 5000w).
@@ -173,7 +173,7 @@ For a 5000w module, output is ~7500 tokens. Context cost is not the constraint �
 | Failure | Root Cause | Fix |
 |---------|-----------|-----|
 | Gemini copies old meta | Meta shown before plan | Show plan first; label old meta "for reference only" |
-| Thin content despite large research file | Section too big (>25% target) | Health check splits meta before Phase B |
+| Thin content despite large research file | Section too big (>25% target) | Health check splits meta before content phase |
 | Hallucinated facts | No research file | Ensure research phase runs before content |
 | Wrong section names | Plan not shown | Always include plan as first context item |
 | Inconsistent vocabulary across modules | No track context (core) | Inject last 5 modules for core tracks |
