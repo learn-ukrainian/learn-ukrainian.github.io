@@ -1,7 +1,7 @@
 # Audit Report: M15 — the-living-verb-i.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-06 02:10:39
+**Generated:** 2026-03-06 02:27:22
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,27 +35,29 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 40/100)
+## PEDAGOGICAL VIOLATIONS
+- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
 
-- Revision recommended (severity 40/100)
-- Immersion 14% off target
-- Structure issue: Missing '## Summary'
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1319/1200 (raw: 1469)
+- **Words:** ✅ 1842/1200 (raw: 2002)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
-- **Structure:** ❌ Missing '## Summary'
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 11.2% LOW (target 25-40% (M15))
+- **Immersion:** 🇺🇦 37.8% (target 25-40% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -65,7 +67,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Living Verb I** | ✅ | 42 | Included in Core |
-| **Вступ (Introduction)** | ✅ | 302 | Included in Core |
-| **Презентація (Presentation)** | ✅ | 309 | Included in Core |
-| **Практика (Practice)** | ✅ | 385 | Included in Core |
-| **Культурний аспект та підсумок (Cultural Insight and Summary)** | ✅ | 281 | Included in Core |
+| **Вступ (Introduction)** | ✅ | 355 | Included in Core |
+| **Презентація (Presentation)** | ✅ | 388 | Included in Core |
+| **Практика (Practice)** | ✅ | 706 | Included in Core |
+| **Культурний аспект та підсумок (Cultural Insight and Summary)** | ✅ | 324 | Included in Core |
+| **Summary** | ✅ | 27 | Included in Core |

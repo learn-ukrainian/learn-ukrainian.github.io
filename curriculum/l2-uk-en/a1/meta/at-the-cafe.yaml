@@ -2,7 +2,7 @@ slug: at-the-cafe
 title: At the Café
 word_target: 1200
 content_outline:
-- title: Вступ (Introduction)
+- section: Вступ (Introduction)
   slug: vtsup
   words: 300
   points:
@@ -12,7 +12,7 @@ content_outline:
     of Yuriy Kulchytsky to ground the lesson.'
   - 'Vocabulary Presentation: Introduce essential cafe vocabulary (кава, чай, вода,
     меню, офіціант) in a table, with IPA on the first occurrence.'
-- title: Презентація (Presentation)
+- section: Презентація (Presentation)
   slug: prezentatsiya
   words: 400
   points:
@@ -24,7 +24,7 @@ content_outline:
     будь ласка...'' and ''Я буду...''.'
   - 'Lexical Chunks: Teach ''з молоком'' and ''без цукру'' as fixed vocabulary phrases,
     without explaining Instrumental or Genitive case theory.'
-- title: Практика (Practice)
+- section: Практика (Practice)
   slug: praktyka
   words: 300
   points:
@@ -35,7 +35,7 @@ content_outline:
   - 'Payment Methods: Introduce ''карткою'' and ''готівкою'' as fixed chunks for paying.'
   - 'Mini-Dialogue: A realistic exchange featuring ordering and clarification (e.g.,
     ''Яку каву?'').'
-- title: Підсумок (Summary)
+- section: Продукція та Підсумок (Production and Summary)
   slug: pidsumok
   words: 200
   points:

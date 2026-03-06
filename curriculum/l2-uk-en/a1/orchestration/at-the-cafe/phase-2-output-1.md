@@ -12,23 +12,21 @@ Not covered:
 
 ## Вступ (Introduction)
 
-Приві́т! Ви в кав'я́рні. Ласка́во про́симо. Сього́дні ми бу́демо замовля́ти напо́ї. Ми ви́вчимо нові́ слова́.
+Приві́т! Я ваш бари́ста. Ласка́во про́симо в кав'я́рню. Сього́дні ми бу́демо замовля́ти напо́ї. Ми ви́вчимо нові́ слова́.
 
-Hello! You are in a café. Welcome. Today we will be ordering drinks. We will learn new words. Welcome to the wonderful world of Ukrainian coffee culture (кавова культура). Knowing how to confidently walk into a café (кав'ярня), read the menu (меню), interact with the staff, and order your favorite drink is an essential skill. 
+Hello! I am your barista. Welcome to the café. Today we will be ordering drinks. We will learn new words. Welcome to the wonderful world of Ukrainian coffee culture. Knowing how to confidently walk into a café, read the menu, interact with the staff, and order your favorite drink is an essential skill. 
 
 > [!culture]
-> In Ukraine, going for coffee is much more than just a quick caffeine fix before work. The phrase «Піти на каву» (to go for coffee) is a central social ritual. It means taking time to connect with a friend (друг), discuss life, or simply enjoy the beautiful atmosphere of the city. The city of Lviv (Львів), in western Ukraine, is especially famous for its rich, historic coffee culture and themed cafes.
+> In Ukraine, going for coffee is much more than just a quick caffeine fix before work. The phrase «Піти на каву» (to go for coffee) is a central social ritual. It means taking time to connect with a friend, discuss life, or simply enjoy the beautiful atmosphere of the city. The city of Lviv, in western Ukraine, is especially famous for its rich, historic coffee culture and themed cafes.
 
 Did you know that a Ukrainian helped bring coffee to Europe?
 
 > [!did-you-know]
-> According to a popular legend, Yuriy Kulchytsky, a Ukrainian hero of the 1683 Battle of Vienna, was given bags of coffee beans captured from the Ottoman army. He opened one of the very first coffee houses in Vienna and popularized the brilliant idea of adding milk (молоко) and sugar (цукор) to the dark, bitter brew. His legacy lives on today, and you can even find a monument to him in Lviv!
+> According to a popular legend, Yuriy Kulchytsky, a Ukrainian hero of the 1683 Battle of Vienna, was given bags of coffee beans captured from the Ottoman army. He opened one of the very first coffee houses in Vienna and popularized the brilliant idea of adding milk and sugar to the dark, bitter brew. His legacy lives on today, and you can even find a monument to him in Lviv!
 
 Ось нові́ слова́. Ми бу́демо їх чита́ти. 
 
-Here are the new words. We will be reading them. Let us look at some essential vocabulary (новий словник) you need for your first café visit. We will use these words throughout the lesson, so take a moment to review them.
-
-Наприклад (For example):
+Here are the new words. We will be reading them. Let us look at some essential vocabulary you need for your first café visit. We will use these words throughout the lesson, so take a moment to review them.
 
 | Word | Meaning | Example |
 |------|---------|---------|
@@ -41,7 +39,7 @@ Here are the new words. We will be reading them. Let us look at some essential v
 
 Ви гото́ві? Ми йдемо́ до ба́ру.
 
-Are you ready? We are going to the bar. Now that we know the basic words, we are ready to step up to the counter and speak with the barista (бари́ста).
+Are you ready? We are going to the bar. Now that we know the basic words, we are ready to step up to the counter and speak with the barista.
 
 ## Презентація (Presentation)
 
@@ -53,26 +51,24 @@ When you are in a café, the waiter greets you. The waiter says: "Good afternoon
 
 You can say: "I want coffee." But this is not very polite. It is better to say it differently. In Ukrainian, saying «Я хо́чу» (I want) sounds quite demanding when speaking to a waiter or barista. Instead, we use softer, more polite alternatives.
 
-Ось га́рні фра́зи: «Мо́жна, будь ла́ска, ка́ву?». Або́: «Я бу́ду чай».
+Ось га́рні фра́зи: «Мені́, будь ла́ска, ка́ву». Або́: «Я бу́ду чай».
 
-Here are good phrases: "May I have, please, coffee?" Or: "I will have tea." These two phrases are your best friends. The phrase «будь ла́ска» (please) is incredibly common and should be used constantly to soften almost any request.
+Here are good phrases: "To me, please, coffee." Or: "I will have tea." These two phrases are your best friends. The phrase «будь ла́ска» (please) is incredibly common and should be used constantly to soften almost any request.
 
-### Знахідний відмінок (The Accusative Case: Direct Objects)
+### The Accusative Case (Direct Objects)
 
 Сло́во «ка́ва» змі́нюється. Ми ка́жемо «ка́ву». Чому́ ми так ро́бимо?
 
 The word «ка́ва» changes. We say «ка́ву». Why do we do this? 
 
-Now, let us look closely at the word for coffee. You learned the dictionary word as «ка́ва». But in the sentence «Мо́жна, будь ла́ска, ка́ву?», the ending changes from **-а** to **-у**. 
+Now, let us look closely at the word for coffee. You learned the dictionary word as «ка́ва». But in the sentence «Мені́, будь ла́ска, ка́ву», the ending changes from **-а** to **-у**. 
 
-In Ukrainian grammar, when a noun is the direct object of an action (like the thing you are ordering, seeing, or buying), it takes a form called the Accusative case (знахідний відмінок). For feminine nouns ending in **-а**, this means we drop the **-а** and add an **-у**.
-
-Порівняйте (Compare):
+In Ukrainian grammar, when a noun is the direct object of an action (like the thing you are ordering, seeing, or buying), it takes a form called the Accusative case. For feminine nouns ending in **-а**, this means we drop the **-а** and add an **-у**.
 
 | Dictionary Form (Subject) | Ordering Form (Accusative) | Example Sentence |
 |---------------------------|----------------------------|------------------|
 | **вода́** (water) | **во́ду** | Я бу́ду во́ду. (I will have water.) |
-| **ка́ва** (coffee) | **ка́ву** | Мо́жна, будь ла́ска, ка́ву? (May I have coffee, please?) |
+| **ка́ва** (coffee) | **ка́ву** | Мені́, будь ла́ска, ка́ву. (Coffee for me, please.) |
 
 Сло́во «чай» не змі́нюється. Ми ка́жемо «чай». Сло́во «сік» та́кож не змі́нюється.
 
@@ -80,25 +76,21 @@ The word «чай» does not change. We say «чай». The word «сік» also
 
 What about masculine nouns? Here is some excellent news for beginners. For inanimate masculine nouns (objects that are not alive) ending in a consonant, the word does not change at all! You simply use the dictionary form.
 
-Порівняйте (Compare):
-
-| Noun Form (Subject) | Object Form (Accusative) | Example |
-|---------------------|----------------------------|---------|
+| Dictionary Form (Subject) | Ordering Form (Accusative) | Example Sentence |
+|---------------------------|----------------------------|------------------|
 | **чай** (tea) | **чай** | Я бу́ду чай. (I will have tea.) |
-| **сік** (juice) | **сік** | Мо́жна, будь ла́ска, сік? (May I have juice, please?) |
+| **сік** (juice) | **сік** | Мені́, будь ла́ска, сік. (Juice for me, please.) |
 
 > [!warning]
 > A very common learner mistake is to say «Я бу́ду ка́ва». Your brain wants to use the comfortable dictionary form, but the barista expects the Accusative form. Always remember to change that final -а to a -у when ordering feminine items!
 
-### Ваші напої (Customizing Your Drink)
+### Customizing Your Drink
 
 Іноді́ ми хо́чемо ка́ву з молоко́м. Або́ чай без цу́кру. Це гото́ві фра́зи.
 
 Sometimes we want coffee with milk. Or tea without sugar. These are ready phrases. 
 
-Sometimes you do not just want black coffee; you want coffee with milk (з молоком) or without sugar (без цукру). We will learn these additions as fixed phrases. You do not need to worry about the complex grammar behind them right now—just memorize them as complete, ready-to-use chunks of vocabulary.
-
-Наприклад (For example):
+Sometimes you do not just want black coffee; you want coffee with milk or without sugar. We will learn these additions as fixed phrases. You do not need to worry about the complex grammar behind them right now—just memorize them as complete, ready-to-use chunks of vocabulary.
 
 | Phrase | Meaning | Example |
 |--------|---------|---------|
@@ -116,7 +108,7 @@ Now we will ask for things. We do not say commands. We ask "is it possible."
 
 Now let us practice how to ask for things nicely. When we need a menu, a napkin, or the bill, we do not use commands.
 
-### Непрямі прохання (Indirect Requests)
+### Indirect Requests
 
 Instead of using a command like "Give me" or "Bring me," we ask a question: "Is it possible to have...?" We do this using the highly versatile word «Мо́жна» (is it possible / may I). This is the safest, most natural way to request an item anywhere in Ukraine.
 
@@ -132,7 +124,7 @@ Notice that we still use the Accusative case here because you are asking for an 
 
 You can also order a pastry. The word «ті́стечко» does not change. If you want a sweet treat, you might order a pastry. It is a neuter noun ending in -о, so just like «меню́», it does not change its ending when you order it.
 
-### Оплата (Paying the Bill): Раху́нок vs Чек
+### Paying the Bill: Раху́нок vs Чек
 
 Час плати́ти. Ви про́сите раху́нок. Ви ніко́ли не про́сите чек.
 
@@ -148,15 +140,13 @@ If you ask the waiter for a «чек» before paying, they will be very confused
 Мо́жна раху́нок, будь ла́ска?
 May I have the bill, please?
 
-### Деталі замовлення (Clarifying Your Order)
+### Clarifying Your Order
 
 Бари́ста мо́же ста́вити пита́ння. Яка́ ка́ва? Вели́ка чи мала́? Холо́дна чи гаря́ча?
 
 The barista can ask questions. Which coffee? Large or small? Cold or hot?
 
 Baristas love to ask questions to make sure your drink is perfect. They might ask you to choose between two options using opposite adjectives. If you order water, they will almost always ask if you want it sparkling or still. These are also excellent fixed phrases to memorize for everyday life.
-
-Наприклад (For example):
 
 | Adjective / Phrase | Meaning |
 |--------------------|---------|
@@ -167,11 +157,11 @@ Baristas love to ask questions to make sure your drink is perfect. They might as
 | **з га́зом** | sparkling (with gas) |
 | **без га́зу** | still (without gas) |
 
-Во́ду з га́зом, будь ла́ска. Мо́жна, будь ла́ска, гаря́чу ка́ву?
+Во́ду з га́зом, будь ла́ска. Мені́, будь ла́ска, гаря́чу ка́ву.
 
-Sparkling water, please. May I have hot coffee, please? Notice that the adjectives also change their endings to match the noun they describe. Since «ка́ва» becomes «ка́ву», the adjective «гаря́ча» becomes «гаря́чу». 
+Sparkling water, please. To me, please, hot coffee. Notice that the adjectives also change their endings to match the noun they describe. Since «ка́ва» becomes «ка́ву», the adjective «гаря́ча» becomes «гаря́чу». 
 
-## Продукція та Підсумок (Production and Summary)
+## Підсумок (Summary)
 
 Ви гото́ві йти в кав'я́рню. Ви зна́єте слова́. Ви мо́жете замовля́ти.
 
@@ -183,15 +173,15 @@ I will pay by card. I will pay in cash. I will leave a tip.
 
 When the waiter brings your «раху́нок», they might ask how you want to pay. They need to know whether to bring the card reader or cash change. Notice the endings on the words «ка́рткою» and «готі́вкою». This is another special grammatical case used to show the method you use to pay. For now, just memorize them as set phrases. Many modern cafes in Ukraine are completely cashless, so «Я заплачу́ ка́рткою» will be one of your most used phrases! If the service was excellent, it is polite to leave a tip («чайові́»).
 
-### Діалог у кав'ярні (Café Roleplay)
+### Café Roleplay
 
-Let us put everything together in a short, realistic café dialogue (діалог). Read it carefully and see if you can understand all the steps of the process, from greeting the barista to settling the bill.
+Let us put everything together in a short, realistic café dialogue. Read it carefully and see if you can understand all the steps of the process, from greeting the barista to settling the bill.
 
 — До́брий день! Мо́жна меню́, будь ла́ска?
 — До́брий день! Так, ось меню́. Що ви замо́вите?
 — Я бу́ду ка́ву й шокола́дне ті́стечко.
 — Яку́ ка́ву? З молоко́м чи без цу́кру?
-— Мо́жна, будь ла́ска, вели́ку ка́ву з молоко́м?
+— Мені́, будь ла́ска, вели́ку ка́ву з молоко́м.
 — До́бре.
 
 *(Later, after enjoying the food...)*
@@ -204,12 +194,12 @@ Let us put everything together in a short, realistic café dialogue (діало�
 — Good afternoon! Yes, here is the menu. What will you order?
 — I will have coffee and a chocolate pastry.
 — Which coffee? With milk or without sugar?
-— May I have a large coffee with milk, please?
+— To me, please, a large coffee with milk.
 — Good.
 — May I have the bill, please? I will pay by card.
 — Of course.
 
-### Граматика (Grammar Recap): Accusative Endings
+### Grammar Recap: Accusative Endings
 
 Remember this simple rule when ordering objects:
 
@@ -219,7 +209,7 @@ Remember this simple rule when ordering objects:
 | Masculine | consonant | **no change** | чай → чай |
 | Neuter | -о, -е, -ю | **no change** | меню́ → меню́ |
 
-### Перевірка (Self-Check Questions)
+### Self-Check Questions
 
 Before you head out to order your first «ка́ва з молоко́м», test your knowledge:
 
@@ -227,9 +217,5 @@ Before you head out to order your first «ка́ва з молоко́м», test
 2. You want to ask for the menu politely. What magic question word should you use instead of "give me"?
 3. You are ready to leave and need to pay. Should you ask the waiter for a «чек» or a «раху́нок»?
 4. What does the phrase «ка́ва без цу́кру» mean in English?
-
-# Summary
-
-You learned how to politely order drinks and food in a café, including using the Accusative case for objects, making indirect requests, and paying the bill. Now you are ready to visit a café in Ukraine!
 
 ---

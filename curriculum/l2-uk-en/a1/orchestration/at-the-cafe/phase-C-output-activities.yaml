@@ -21,14 +21,14 @@
           correct: false
         - text: 'Дайте меню!'
           correct: false
-        - text: 'Мені меню!'
+        - text: 'Мені меню.'
           correct: false
       explanation: 'Using «Можна» is the most polite and natural way to ask for something.'
     - question: 'If you want water, what is the best phrase to use?'
       options:
-        - text: 'Можна, будь ласка, воду?'
+        - text: 'Мені, будь ласка, воду.'
           correct: true
-        - text: 'Можна, будь ласка, вода?'
+        - text: 'Мені, будь ласка, вода.'
           correct: false
         - text: 'Я хочу вода.'
           correct: false
@@ -68,7 +68,7 @@
         - text: 'Я буду каву.'
           correct: false
       explanation: '«Карткою» means by card.'
-    - question: 'Which of these words means waiter in a café?'
+    - question: 'Which word means waiter?'
       options:
         - text: 'офіціант'
           correct: true
@@ -116,7 +116,7 @@
         - 'замовлю'
         - 'замовить'
         - 'замовляти'
-    - sentence: 'Можна, ___ ласка, чай?'
+    - sentence: 'Мені, ___ ласка, чай.'
       answer: 'будь'
       options:
         - 'будь'
@@ -156,7 +156,7 @@
   title: 'Accusative Case Endings'
   instruction: 'Choose the correct form of the word to complete your order.'
   items:
-    - sentence: 'Можна, будь ласка, ___?'
+    - sentence: 'Мені, будь ласка, ___.'
       answer: 'воду'
       options:
         - 'воду'
@@ -184,7 +184,7 @@
         - 'соку'
         - 'соком'
         - 'соки'
-    - sentence: 'Можна, будь ласка, шоколадне ___?'
+    - sentence: 'Мені, будь ласка, шоколадне ___.'
       answer: 'тістечко'
       options:
         - 'тістечко'
@@ -198,7 +198,7 @@
         - 'кава'
         - 'кави'
         - 'кавою'
-    - sentence: 'Можна, будь ласка, холодну ___?'
+    - sentence: 'Мені, будь ласка, холодну ___.'
       answer: 'воду'
       options:
         - 'воду'
@@ -231,7 +231,7 @@
       explanation: 'Inanimate masculine nouns like чай do not change their form when ordering.'
     - statement: 'Я хочу is the most polite way to order coffee.'
       correct: false
-      explanation: 'Я хочу sounds demanding. It is better to use Можна, будь ласка or Я буду.'
+      explanation: 'Я хочу sounds demanding. It is better to use Мені, будь ласка or Я буду.'
     - statement: 'Кава з молоком means coffee without sugar.'
       correct: false
       explanation: 'Кава з молоком means coffee with milk. Without sugar is без цукру.'
@@ -287,11 +287,11 @@
   instruction: 'Put the words in the correct order to form polite café phrases.'
   items:
     - words:
-        - 'Можна,'
+        - 'Мені,'
         - 'будь'
         - 'ласка,'
-        - 'каву?'
-      answer: 'Можна, будь ласка, каву?'
+        - 'каву.'
+      answer: 'Мені, будь ласка, каву.'
     - words:
         - 'Я'
         - 'буду'
@@ -349,7 +349,7 @@
         - text: 'з молоком'
           correct: false
       explanation: 'Без газу means without gas (still).'
-    - question: 'What does the adjective гарячий mean in English?'
+    - question: 'What does гарячий mean?'
       options:
         - text: 'hot'
           correct: true
@@ -360,7 +360,7 @@
         - text: 'large'
           correct: false
       explanation: 'Гарячий means hot.'
-    - question: 'What does the adjective холодний mean in English?'
+    - question: 'What does холодний mean?'
       options:
         - text: 'cold'
           correct: true
@@ -371,7 +371,7 @@
         - text: 'sweet'
           correct: false
       explanation: 'Холодний means cold.'
-    - question: 'What is the word for a small drink?'
+    - question: 'If the waiter asks Великий чи малий?, what do you answer if you want a small drink?'
       options:
         - text: 'Малий.'
           correct: true
