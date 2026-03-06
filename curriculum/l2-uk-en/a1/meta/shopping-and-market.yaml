@@ -2,7 +2,7 @@ slug: shopping-and-market
 title: Shopping and Market
 word_target: 1200
 content_outline:
-- title: Скільки коштує? (How Much?)
+- section: Скільки коштує? (How Much?)
   slug: skilky-koshtuie
   words: 275
   points:
@@ -12,7 +12,7 @@ content_outline:
     2-4 гривні, 5+ гривень) based on rules from A1-17.'
   - 'H3: Examples. Provide basic Q&A examples with food items: ''Скільки коштує борщ?
     — Борщ коштує сімдесят гривень.'''
-- title: У магазині (In the Store)
+- section: У магазині (In the Store)
   slug: u-mahazyni
   words: 250
   points:
@@ -23,7 +23,7 @@ content_outline:
     the English ''Do you have'' to avoid the common error of using the verb ''мати''.'
   - 'H3: Mini-Dialogue. A simple bilingual shopping flow: greeting, asking for an
     item, asking the price, paying, thanking.'
-- title: Кількість та одиниці (Quantities and Units)
+- section: Кількість та одиниці (Quantities and Units)
   slug: kilkist-ta-odynytsi
   words: 250
   points:
@@ -33,7 +33,7 @@ content_outline:
     (from A1-18), without deep grammar explanations.'
   - 'H3: Numbers with Units. Briefly explain and show case agreement with units (e.g.,
     ''два літри'', ''п''ять кілограмів'').'
-- title: Засоби гігієни (Hygiene Products)
+- section: Засоби гігієни (Hygiene Products)
   slug: zasoby-hihiieny
   words: 175
   points:
@@ -41,7 +41,7 @@ content_outline:
     ''туалетний папір'' as required by the State Standard.'
   - 'H3: Finding Things. Combine hygiene vocabulary with location questions: ''Де
     тут аптека?'', ''Де можна купити мило?''.'
-- title: Практика (Practice & Summary)
+- section: Практика (Practice & Summary)
   slug: praktyka
   words: 250
   points:

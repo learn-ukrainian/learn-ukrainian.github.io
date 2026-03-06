@@ -11,15 +11,13 @@ Not covered:
 >
 > Verbs are the engine of any language. Mastering the basic conjugation pattern allows you to talk about your daily actions, habits, and routines. It moves you from pointing at objects to actually describing life in motion.
 
-## Вступ (Introduction)
+## Вступ
 
-Welcome! So far in our journey, we have looked at the world around us. We learned how to say what things are. We described our objects and our surroundings. Now, it is time to bring those objects to life. Today, we make a big jump (великий стрибок). Our focus moves from static descriptions to dynamic actions.
+Welcome! So far in our journey, we have looked at the world around us. We learned how to say what things are. We described our objects and our surroundings. Now, it is time to bring those objects to life. We are making a big jump today. We are moving from static descriptions to dynamic actions.
 
-Instead of just saying what something is, we now express what we do. Let's step into the exciting world of actions. Actions give our sentences energy and movement. Our next step is learning how to express daily actions (щоденні дії).
+We are shifting from saying what something is, to what we do. We are stepping into the exciting world of verbs. Verbs give our sentences energy and movement. Our next step is learning how to express daily actions.
 
-You will learn how to use some of the most common words in Ukrainian. We will look at how to say you read, work, and know things. This is a very important step (важливий крок) forward.
-
-Наприклад (For example):
+You will learn how to use some of the most common words in Ukrainian. We will look at how to say you read, work, and know things. This is a very important step forward.
 
 Це дуже важливо.
 (This is very important.)
@@ -36,9 +34,7 @@ You will learn how to use some of the most common words in Ukrainian. We will lo
 > [!culture]
 > The verb **читати** (to read) holds a special place in Ukrainian history. In 1574, Ivan Fedorov printed the «Апостол» (The Apostle). It was the very first printed book in Ukraine. This event marked a deep-rooted tradition of literacy and education. When you say you read in Ukrainian, you are connecting to a centuries-old love for the printed word.
 
-Our focus today is on a specific group of verbs. These verbs share a common, predictable pattern (правило). Once you learn this pattern, you unlock hundreds of new words. It is like finding a master key. We start with our first high-frequency verbs.
-
-Наприклад:
+Our focus today is on a specific group of verbs. These verbs share a common, predictable pattern. Once you learn this pattern, you unlock hundreds of new words. It is like finding a master key. We start with our first high-frequency verbs.
 
 Я читаю книгу.
 (I read a book.)
@@ -46,15 +42,15 @@ Our focus today is on a specific group of verbs. These verbs share a common, pre
 Я працюю вдома.
 (I work at home.)
 
-You will soon see how simple it is to build these action sentences. We will take it step by step, focusing on practical communication (практичне спілкування).
+You will soon see how simple it is to build these action sentences. We will take it step by step, focusing on practical communication.
 
-## Презентація (Presentation)
+## Презентація: The -ати Pattern
 
-Most verbs in Ukrainian belong to clear families or classes. Today, we look at the most common family. This is the Class I pattern. You can easily recognize these verbs. Their dictionary form (словникова форма) almost always ends in **-ати**.
+Most verbs in Ukrainian belong to clear families or classes. Today, we look at the most common family. This is the Class I pattern. You can easily recognize these verbs. Their dictionary form almost always ends in **-ати**.
 
-Take the word **читати** (to read). The ending **-ти** simply shows that it is the dictionary form. To use the word in a sentence, we drop the **-ти**. What is left is our stem (основа). For our example, the stem is **чита-**.
+Take the verb **читати** (to read). The ending **-ти** simply shows that it is the dictionary form. To use the verb in a sentence, we drop the **-ти**. What is left is our stem. For our example, the stem is **чита-**.
 
-Now, we add personal endings (закінчення) to this stem. These endings tell us exactly who is doing the action. Observe the complete pattern for **читати**.
+Now, we add personal endings to this stem. These endings tell us exactly who is doing the action. Observe the complete pattern for **читати**.
 
 | Pronoun | Stem | Ending | Verb Form | Meaning |
 |---|---|---|---|---|
@@ -68,9 +64,7 @@ Now, we add personal endings (закінчення) to this stem. These endings 
 > [!tip]
 > Notice how the ending changes for every single person. Because the ending itself clearly shows who is acting, we often drop the pronoun completely! This is a natural feature of Ukrainian grammar. Instead of saying «Я читаю», you can simply say «Читаю». The meaning remains perfectly clear, and your speech sounds much more authentic.
 
-These verbs describe actions that are happening right now, or things you do regularly. This concept is called the imperfective aspect. It focuses on the ongoing process rather than a completed result. It tells us what you are doing at this very moment, or what you usually do every day (кожного дня).
-
-Порівняйте (Compare):
+These verbs describe actions that are happening right now, or things you do regularly. This concept is called the imperfective aspect. It focuses on the ongoing process rather than a completed result. It tells us what you are doing at this very moment, or what you usually do every day.
 
 Він працює вдома.
 (He works at home.)
@@ -92,20 +86,18 @@ We apply the exact same pattern to another essential verb: **знати** (to kn
 Вона зна́є усе.
 (She knows everything.)
 
-The pattern is perfectly regular and reliable. By memorizing these six small endings (шість закінчень), you can instantly conjugate hundreds of everyday verbs with total confidence.
+The pattern is perfectly regular and reliable. By memorizing these six small endings, you can instantly conjugate hundreds of everyday verbs with total confidence.
 
-## Практика (Practice)
+## Практика та типові помилки
 
-Now that you understand the core pattern, let's build some real sentences. We will also look at common traps for English speakers so you can avoid them from the very beginning.
+Now that you understand the core pattern, we build some real sentences. We will also look at common traps for English speakers so you can avoid them from the very beginning.
 
-The biggest trap (великий ризик) is using the dictionary form in a sentence. In English, we say "I read" or "I work," which looks exactly like the base verb. In Ukrainian, you absolutely cannot do this. You must always use the conjugated form that matches the person performing the action.
+The biggest trap is using the dictionary form in a sentence. In English, we say "I read" or "I work," which looks exactly like the base verb. In Ukrainian, you absolutely cannot do this. You must always use the conjugated form that matches the person performing the action.
 
 > [!warning]
 > Never say «Я читати» or «Я працювати». This literally sounds like "I to read" or "I to work" to a native speaker. It is a very common mistake. Always remember to drop the **-ти** and add the correct personal ending.
 
 We can practice the correct forms together. We will pair our verbs with simple objects.
-
-Наприклад:
 
 Я читаю журнал.
 (I am reading a magazine.)
@@ -116,13 +108,11 @@ We can practice the correct forms together. We will pair our verbs with simple o
 Я пишу лист.
 (I am writing a letter.)
 
-In these examples, we use inanimate objects like a magazine, a radio, or a letter. Notice how the structure flows beautifully. The sentence goes straight from the actor, to the action, to the object (додаток).
+In these examples, we use inanimate objects like a magazine, a radio, or a letter. Notice how the structure flows beautifully. The sentence goes straight from the actor, to the action, to the object.
 
 Another common habit for English speakers is using the pronoun **я** (I) in every single sentence. While it is not grammatically wrong, it sounds unnatural and robotic in Ukrainian. Since the verb ending **-ю** already means "I", repeating the pronoun constantly feels heavy.
 
 Native speakers usually talk about their daily routine differently. They drop the pronouns to create a smooth, elegant flow.
-
-Порівняйте:
 
 Працюю багато.
 (I work a lot.)
@@ -136,7 +126,7 @@ Native speakers usually talk about their daily routine differently. They drop th
 Відпочиваю вдома.
 (I am resting at home.)
 
-This minor adjustment makes the language sound much more natural. Try combining our new verbs to describe a typical evening routine (вечірня рутина). Pay attention to how the verbs do all the heavy lifting.
+This minor adjustment makes the language sound much more natural. Try combining our new verbs to describe a typical evening routine. Pay attention to how the verbs do all the heavy lifting.
 
 Я вдома.
 (I am at home.)
@@ -150,15 +140,13 @@ This minor adjustment makes the language sound much more natural. Try combining 
 Думаю про це.
 (I am thinking about it.)
 
-By practicing these short, pronoun-free sentences, you will quickly build confidence. You already create dynamic action statements. Remember, the verb carries the weight of the sentence. Let the ending do the work for you.
+By practicing these short, pronoun-free sentences, you will quickly build confidence. You are already creating dynamic action statements. Remember, the verb carries the weight of the sentence. Let the ending do the work for you.
 
-## Культурний аспект та підсумок (Cultural Insight and Summary)
+## Підсумок
 
-You have just unlocked a massive and essential part of the Ukrainian language. The **-ати** pattern is truly your master key (головний ключ). By learning just one set of endings, you now have the power to use a huge number of action words in your daily conversations.
+You have just unlocked a massive and essential part of the Ukrainian language. The **-ати** verb pattern is truly your master key. By learning just one set of endings, you now have the power to use a huge number of action words in your daily conversations.
 
 Here are the core rules we covered today. First, you find the verb stem by dropping the **-ти** from the dictionary form. Second, you attach the appropriate personal endings: **-ю, -єш, -є, -ємо, -єте, -ють**.
-
-Наприклад:
 
 Ми розуміємо все.
 (We understand everything.)
@@ -170,7 +158,7 @@ Here are the core rules we covered today. First, you find the verb stem by dropp
 (They play the guitar.)
 
 > [!did-you-know]
-> Українська мова дуже красива (The Ukrainian language is very beautiful). Speaking accurately and using the correct verb endings shows care and respect for the rich Ukrainian language! Ukrainians appreciate when learners try to use the correct endings.
+> There is a famous Ukrainian proverb: «Птицю пізнати по пір'ю, а людину по мові». This translates beautifully to: A bird is known by its feathers, a person by their speech. Speaking accurately and using the correct verb endings shows care and respect for the rich Ukrainian language!
 
 Third, always remember the pro-drop rule. The verb ending alone tells us who is performing the action, so you do not need to repeat the pronoun every single time. This creates a natural and authentic rhythm in your speech.
 
@@ -181,4 +169,4 @@ Here are a few quick questions to check your understanding before we finish:
 3. How do you find the stem for the verb **читати**?
 4. How do you correctly say "I am reading" in Ukrainian?
 
-Take a moment to answer these questions for yourself. You have made fantastic progress today. You are no longer just describing static things—you are finally talking about life in motion!\n# Summary
+Take a moment to answer these questions for yourself. You have made fantastic progress today. You are no longer just describing static things—you are finally talking about life in motion!

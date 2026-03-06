@@ -30,3 +30,51 @@ Alignment: Addresses the thematic requirement for daily life transactions, speci
 - Maintain high English scaffolding for the number agreement and unit explanations.
 - Introduce vocabulary with IPA only on the first occurrence.
 - Keep example sentences short (max 8-10 Ukrainian words per sentence).
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Phrasebook: Clothing](https://www.ukrainianlessons.com/ph-clothing/) (ukrainianlessons.com)
+- [Ukrainian Phrasebook: Money](https://www.ukrainianlessons.com/ph-money/) (ukrainianlessons.com)
+- [Vocabulary booster! Shopping Vocabulary in Ukrainian](https://www.ukrainianlessons.com/fmu18/) (ukrainianlessons.com)
+- [How much does it cost? At the market in Ukraine](https://www.ukrainianlessons.com/episode9/) (ukrainianlessons.com)
+- [Shopping in Ukrainian — At the shoe shop](https://www.ukrainianlessons.com/episode31/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 2, Сторінка 91: 91
+СЛОВА, ЯКІ НАЗИВАЮТЬ КІЛЬКІСТЬ ПРЕДМЕТІВ 
+(ЧИСЛІВНИКИ)
+327. Розглянь комікс. Прочитай репліки дру...
+- Grade 4, Сторінка 110: ЧИСЛІВНИК
+-  
+ 
+ 
+ 
+ - 
+  
+ 
+ 
+ 
+....
+^\Ґ| Ч ислівник як частина мови
+254. Прочитайте запитання.
+Скі...
+- Grade 2, Сторінка 86: § 15 СЛОВА — НАЗВИ ЧИСЕЛ 
+(ЧИСЛІВНИКИ)
+НАВЧАЮСЯ ВИЗНАЧАТИ СЛОВА, ЯКІ НАЗИВАЮТЬ ЧИСЛА
+Я — учителька
+П...
+- Grade 5, Сторінка 38: § 10. Числівник. Роль числівників у мовленні
+A számnév. A számnév szerepe a beszédben
+Числівник — це...
+- Grade 2, Сторінка 45: ч ч
+>
+✓
+✓
+Слова — назви
+(предметів, ознак, дій, чисел)
+У розділі ти дізнаєшся про:
+/
+< ч ч
+СЛОВА - Н...

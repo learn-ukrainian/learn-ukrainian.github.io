@@ -2,53 +2,46 @@ slug: at-the-cafe
 title: At the Café
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 450
+- title: Вступ (Introduction)
+  slug: vtsup
+  words: 300
   points:
-  - 'Introduce the ''Chatty Barista'' persona using English scaffolding to set the
-    context and clearly state the module''s goal: polite ordering in a café setting.'
-  - 'Cultural Hook: Present the rich Lviv coffee tradition and the legend of Yuriy
-    Kulchytsky (Battle of Vienna, 1683), grounding Ukrainian culture firmly in a European
-    historical context.'
-  - 'Vocabulary Presentation: Introduce essential vocabulary (кава, чай, вода, меню,
-    офіціант) in a clear markdown table, providing IPA transcriptions on their first
-    occurrence.'
-- section: Презентація
-  words: 650
+  - Introduce the 'Chatty Barista' persona using English scaffolding to set the context
+    of polite ordering.
+  - 'Cultural Hook: Share the tradition of Lviv coffee culture and the brief legend
+    of Yuriy Kulchytsky to ground the lesson.'
+  - 'Vocabulary Presentation: Introduce essential cafe vocabulary (кава, чай, вода,
+    меню, офіціант) in a table, with IPA on the first occurrence.'
+- title: Презентація (Presentation)
+  slug: prezentatsiya
+  words: 400
   points:
-  - 'Grammar Theory (in English): Explain the Accusative case for direct objects (§4.2.3.2),
-    emphasizing the phonetic shift for feminine nouns ending in -а/-я (-а → -у, -я
-    → -ю).'
-  - 'Provide three dedicated H3 sections with highly visible examples of case transformation:
-    «вода» → «воду», «кава» → «каву», and the unchanged masculine inanimate «сік»
-    → «сік».'
-  - 'Polite Phrases: Explicitly contrast the rude direct translation «Я хочу» with
-    culturally appropriate and polite alternatives like «Мені, будь ласка...» and
-    «Я буду...».'
-  - 'Lexical Chunks: Present the common modifiers «з молоком» and «без цукру» purely
-    as fixed vocabulary phrases, intentionally avoiding any complex explanation of
-    Instrumental or Genitive case theory.'
-- section: Практика
-  words: 550
+  - 'Grammar Theory (in English): Explain the Accusative case for direct objects,
+    focusing on feminine -а/-я changing to -у/-ю.'
+  - 'Provide clear examples in H3 subsections: «вода» → «воду», «кава» → «каву», and
+    the unchanged masculine «сік» → «сік».'
+  - 'Polite Phrases: Contrast direct ''Я хочу'' with the culturally polite ''Мені,
+    будь ласка...'' and ''Я буду...''.'
+  - 'Lexical Chunks: Teach ''з молоком'' and ''без цукру'' as fixed vocabulary phrases,
+    without explaining Instrumental or Genitive case theory.'
+- title: Практика (Practice)
+  slug: praktyka
+  words: 300
   points:
-  - 'Polite Imperatives: Dedicate an H3 to 2nd person plural imperative forms (§4.2.4.2),
-    specifically teaching «дайте, будь ласка» and «принесіть, будь ласка» with concrete
-    examples.'
-  - 'Mini-Dialogue: Provide a realistic back-and-forth exchange between an «офіціант»
-    and a customer, demonstrating the ordering flow and typical clarification questions
-    (e.g., «Яку каву?»).'
-  - 'Usage Note: Differentiate «рахунок» (the bill to pay) and «чек» (the printed
-    receipt), framing this explicitly as a common pitfall for English-speaking learners.'
-  - 'Payment Vocabulary: Introduce and drill practical vocabulary for payment methods:
-    «карткою» (by card) and «готівкою» (by cash).'
-- section: Продукція та Підсумок
-  words: 350
+  - 'Indirect Requests: Teach ''Можна [noun], будь ласка?'' as the primary way to
+    ask for things, strictly avoiding imperative verbs.'
+  - 'Vocabulary Usage: Explicitly contrast ''рахунок'' (the bill to pay) with ''чек''
+    (the receipt), framing it as a common learner trap.'
+  - 'Payment Methods: Introduce ''карткою'' and ''готівкою'' as fixed chunks for paying.'
+  - 'Mini-Dialogue: A realistic exchange featuring ordering and clarification (e.g.,
+    ''Яку каву?'').'
+- title: Підсумок (Summary)
+  slug: pidsumok
+  words: 200
   points:
-  - 'Roleplay Scenario: Provide a comprehensive reading text that simulates a full
-    café visit, beginning with the greeting («Добрий день») and concluding with payment
-    and leaving a tip («чайові»).'
-  - 'Grammar Recap: Include a concise, visual summary table reviewing the core Accusative
-    noun endings used for ordering food and drinks.'
-  - 'Self-Check: End the lesson with 3-4 simple comprehension questions to verify
-    the learner grasps the «рахунок» vs «чек» distinction and basic Accusative transformation
-    before moving to activities.'
+  - 'Roleplay Text: A short reading scenario simulating a full café visit, from greeting
+    to paying the bill.'
+  - 'Grammar Recap: A concise visual table reviewing the Accusative noun endings for
+    food/drinks.'
+  - 'Self-Check: 3-4 simple comprehension questions to verify understanding of ''рахунок''
+    vs ''чек'' and Accusative transformation.'

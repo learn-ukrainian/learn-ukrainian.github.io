@@ -6,6 +6,23 @@
     "v4-research": {
       "status": "complete",
       "ts": "2026-03-06T00:52:39Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T00:53:28Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T00:56:38Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T00:59:04Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T01:06:38Z",
+      "attempts": 2
     }
   }
 }

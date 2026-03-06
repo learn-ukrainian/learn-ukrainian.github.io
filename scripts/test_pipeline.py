@@ -743,6 +743,37 @@ def test_immersion_scope_guard(test_dir: Path) -> TestResult:
     return r
 
 
+def test_resumption_two_runs(test_dir: Path) -> TestResult:
+    """Test: run build twice on a complete module — both runs skip all phases."""
+    r = TestResult("resumption_two_runs")
+
+    # Run 1: dry-run on fully-built M1
+    rc1, out1 = run_build("a1", 1, dry_run=True)
+    skip1 = out1.count("SKIP")
+    done1 = out1.count("[DONE]")
+
+    if done1 < 4:
+        r.fail(f"Run 1: expected 4+ [DONE], got {done1}\nOutput:\n{out1}")
+        return r
+
+    # Run 2: same module again — should produce identical skip behavior
+    rc2, out2 = run_build("a1", 1, dry_run=True)
+    skip2 = out2.count("SKIP")
+    done2 = out2.count("[DONE]")
+
+    if done2 < 4:
+        r.fail(f"Run 2: expected 4+ [DONE], got {done2}\nOutput:\n{out2}")
+        return r
+
+    # Both runs should skip the same number of phases
+    if abs(done1 - done2) > 1:
+        r.fail(f"Inconsistent runs: run1={done1} [DONE], run2={done2} [DONE]")
+        return r
+
+    r.ok(f"Run 1: {done1} [DONE] {skip1} SKIP | Run 2: {done2} [DONE] {skip2} SKIP — consistent")
+    return r
+
+
 def test_consecutive_timeout_bailout(test_dir: Path) -> TestResult:
     """Test: verify consecutive failure counter logic exists in validate loop."""
     r = TestResult("consecutive_timeout_bailout")
@@ -775,6 +806,7 @@ def test_consecutive_timeout_bailout(test_dir: Path) -> TestResult:
 ALL_TESTS = {
     "complete_skips": test_complete_module_skips,
     "resumption": test_resumption_via_state,
+    "resumption_two_runs": test_resumption_two_runs,
     "failed_validate": test_failed_validate_state,
     "rebuild": test_rebuild_cleans_state,
     "auto_rebuild": test_auto_rebuild_detection,

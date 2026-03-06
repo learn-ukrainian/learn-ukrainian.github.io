@@ -1,3 +1,5 @@
+===RESEARCH_START===
+
 # Дослідження: The Living Verb I
 
 ## State Standard Reference
@@ -30,35 +32,36 @@ Alignment: Introduces indicative mood conjugation in the present tense focusing 
 - Use inanimate masculine and neuter objects (e.g., журнал, радіо, лист) for initial SVO practice because their Nominative equals Accusative, preventing early case confusion.
 - Emphasize the concept of imperfective aspect (ongoing or habitual actions).
 
-## Resource Discovery
+===RESEARCH_END===
 
-
-### Blog Articles
-- [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) (ukrainianlessons.com)
-- [Are you going to the party? — First verb conjugation in Ukrainian](https://www.ukrainianlessons.com/episode22/) (ukrainianlessons.com)
-- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) (ukrainianlessons.com)
-- [Formal Greetings and Saying Goodbye in Ukrainian + Pronouns](https://www.ukrainianlessons.com/episode2/) (ukrainianlessons.com)
-- [More about your family in Ukrainian + Possessive Pronouns](https://www.ukrainianlessons.com/episode7/) (ukrainianlessons.com)
-
-### Textbook References (RAG)
-- Grade 5, Сторінка 175: Порівняйте: 
-Я, на жаль, запізнився і Я запізнився. Речення, що містять вставні слова, звертання або...
-- Grade 11, Сторінка 77: (тимчасова ознака)
-4. Присудок у позиції перед однорідними підметами може мати форму як однини, так ...
-- Grade 6, Сторінка 226: який? Зміст
-події і вчинки 
-персонажів
-причини ознак 
-і дій
-ознаки особи, 
-предмета
-Будова
-зав’язка ...
-- Grade 5, Сторінка 145: 145
- § 63.  Словосполучення
-В сміливий учинок, усі уподобання
-Г проліски розцвітають, чотири банани
-...
-- Grade 10, Сторінка 141: За лексичними й морфо-
-логічними ознаками поділяються на власні 
-й загальні, конкретні й абстрактні,...
+===META_OUTLINE_START===
+content_outline:
+  - title: "Вступ"
+    slug: introduction
+    words: 250
+    points:
+      - "Transition from static descriptions to dynamic actions: moving from 'this is' to 'I do'."
+      - "Introduce target high-frequency verbs (читати, працювати) in a simple context."
+      - "Cultural hook: Connect the verb 'читати' to the 1574 'Apostol' and Ukraine's literacy tradition."
+  - title: "Презентація: The -ати Pattern"
+    slug: presentation-the-pattern
+    words: 350
+    points:
+      - "Visualize the Class I conjugation pattern (-ати): drop '-ти' and add personal endings (-ю, -єш, -є, -ємо, -єте, -ють) using clear tables."
+      - "Introduce the Pro-drop feature: explain that verb endings indicate the subject, so pronouns like 'я' and 'ми' can often be dropped."
+      - "Explain the Imperfective Aspect simply: these verbs describe ongoing actions or habits (what you are doing now or usually do)."
+  - title: "Практика та типові помилки"
+    slug: practice-and-errors
+    words: 350
+    points:
+      - "Error Correction 1 (Infinitive Abuse): Drill replacing the incorrect 'Я читати' with the conjugated 'Я читаю'."
+      - "Error Correction 2 (Pronoun Overuse): Practice reading and forming short sentences without constantly repeating 'я'."
+      - "Contextual SVO Sentences: Practice combining target verbs with inanimate masculine/neuter objects (e.g., читаю журнал, слухаю радіо) to avoid Accusative case confusion."
+  - title: "Підсумок"
+    slug: summary
+    words: 250
+    points:
+      - "The 'Master Key' concept: summarize how this single pattern unlocks hundreds of everyday verbs."
+      - "Recap the conjugation table and the pro-drop rule."
+      - "Self-check questions: 1. What is the 'ми' ending? 2. Do you always need to use 'я'? 3. How do you form the stem of 'читати'? 4. How do you say 'I am reading'?"
+===META_OUTLINE_END===

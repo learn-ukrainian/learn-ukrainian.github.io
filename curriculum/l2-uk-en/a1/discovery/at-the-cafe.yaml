@@ -1,0 +1,116 @@
+discovered_at: '2026-03-06T01:09:45.614919+00:00'
+query_keywords:
+- At the Café
+- food and drinks at a café
+- for recommendations
+- the bill
+- polite forms and cases correctly
+- Integration of Accusative, Genitive, Locative
+- Polite imperatives (принесіть, візьміть)
+- Future tense preview (візьму)
+- practical
+- кава
+- чай
+- меню
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=fKAkWRAO6B0
+  channel: Listen & Read
+  title: My Family Forced Me to Marry a Pregnant Woman… I Walked Away and Became a
+    Billionaire
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=LRJXMKZ4wOw
+  channel: Listen & Read
+  title: 36 English Phrases For Professional Customer Service (FREE PDF Guide)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode165/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - general
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 165
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0209
+  text: "204\nВідомості із синтаксису й пунктуації. Види речень за метою висловлення\n\
+    \ Дайте домашку \nз математики.\n15:28\nЯ загубила в класі \nщоденник. Ніхто \n\
+    не бачив?\n15:39\nНа завтра треба \nготувати поробку?\n15:53\nВізьміть завтра\
+    \ під-\nручники з англій-\nської, буде заміна. \n16:21\nХодімо разом \nу кіно.\
+    \ \nр\n16:42\nЯ не знаю, як \nрозв’язати задачу. \nДопоможіть!!!  \n \n \nД\n\
+    \ \n \n \n17:36\nВправа 331\n1. Прочитайте речення, узяті з чату \nкласу .\n2.\
+    \ Назвіть спочатку розповідні ре-\nчення, потім питальні та  спону-\nкальн"
+  section_title: Сторінка 204
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0203
+  text: "168\n392\t Прочитайте оголошення. Які помилки в них допущено? Поясніть свою\
+    \ відповідь. \nПлануєте швидко  \nпообідати?  \nТоді вам до нас!\nШирокий вибір\
+    \  \nхолодних закусок: \nсалатів, бутербродів, \nтарталеток, фруктових  \nта овочевих\
+    \ соків.\nна все меню\nПропонуємо холодні \nта гарячі напої,  \nлимонади! \nКожна\
+    \ шоста  \nчашечка кави \nза наш рахунок!\nКортить чогось  \nсмачненького? \n\
+    Слухай свій  \nвнутрішній голос! \nЗаходь і замовляй \nжеле, еклери,  \nдесерти,\
+    \ морозиво\n \n393\t\nСИТУАЦІЯ. Уявіть, що вам доручили "
+  section_title: Сторінка 172
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-golub-2022_s0200
+  text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
+    \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
+    \ особисті \nцілі.\nЗапрîшення — коротке повідомлення про якусь подію \nі прохання\
+    \ взяти в ній участь.\nЗапрошення може бути усне або письмове.\nСлова запросити\
+    \ і просити, прохання мають однако-\nвий корінь. Це дає підстави вважати запрошення\
+    \ різ-\nновидом прохання.\n467   Розгляньте подану інформацію. Що вам відоме,\
+    \ а що   — нове? \nЯких помилок припус"
+  section_title: Сторінка 201
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0267
+  text: "216\nШановні відвідувачі! \nВідповідно до діючого законодавства України,\
+    \ ми не продаємо  \nтютюнові вироби та алкогольні напої, уключаючи  \nслабоалкогольні,\
+    \ особам, які не досягли 18 років.\nІІ. Напишіть оголошення (2–3 речення) для\
+    \ розміщення в торгових цент­рах, \nкав’ярнях, кінотеатрах чи парках відпочинку,\
+    \ використавши відокремлений до-\nдаток і звертання.  \n492\t І. Спишіть речення,\
+    \ розкриваючи дужки й розставляючи пропущені розділові \nзнаки. Підкресліть відокремлені\
+    \ додатки. \n1. Там замість житеч"
+  section_title: Сторінка 220
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n6\n1.\tПрочитайте діалог «У громадському транспорті»\
+    \ та виконайте завдання. \n— Жінко в червоній сукні, ви виходите на наступній\
+    \ зупинці? \n— Ні, проходьте, будь ласка.\nА.\t Хто з пасажирів порушив етикет?\
+    \ \nБ.\t Чи потрібно наголошувати на статі, віці й одязі незнайомої людини? \n\
+    Етикетні формули\nвітання\nпрощання\nвибачення\nДоброго ранку!\nДобрий день! Добридень!\n\
+    Добрий вечір! Добриве-\nчір!\nПривіт! Салют! Вітаю! \nМоє вам шанування! \nСкільки\
+    \ літ!\nДо побачення! Прощайте!\nНа все добре! До "
+  section_title: Сторінка 9
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []
