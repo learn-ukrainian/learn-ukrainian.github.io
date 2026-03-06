@@ -1,0 +1,61 @@
+{
+  "module": "describing-things-adjectives",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-06T01:20:38.999880Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-06T00:03:55.048616Z",
+    "meta": "2026-03-05T23:52:02.831362Z",
+    "activities": "2026-03-05T23:52:32.726949Z",
+    "vocabulary": "2026-03-05T23:55:15.645680Z",
+    "plan": "2026-03-05T10:20:01.530912Z",
+    "research": "2026-03-05T23:42:53.463513Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1468/1200 (raw: 1652)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "22/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/describing-things-adjectives-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/describing-things-adjectives-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

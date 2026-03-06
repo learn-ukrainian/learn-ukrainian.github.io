@@ -13,7 +13,7 @@ pronunciation_videos:
     Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
     С: https://www.youtube.com/watch?v=7UsFBgSL91E
 content_outline:
-- title: Вступ — Introduction
+- section: Вступ — Introduction
   slug: vtsup-introduction
   words: 200
   points:
@@ -24,7 +24,7 @@ content_outline:
     formalized the alphabet.'
   - Introduce the pronunciation video guide (Anna Ohoiko) as the visual reference
     for these letters.
-- title: Голосні — Vowels
+- section: Голосні — Vowels
   slug: holosni-vowels
   words: 300
   points:
@@ -37,7 +37,7 @@ content_outline:
     unstressed О to an ''a'' sound.'
   - 'Letter У: sounds like ''oo'' in ''moon''. Key word: Україна (Ukraine) — provided
     with English translation as it contains unknown letters.'
-- title: Приголосні — Consonants
+- section: Приголосні — Consonants
   slug: pryholosni-consonants
   words: 300
   points:
@@ -49,7 +49,7 @@ content_outline:
     Key decodable word: нам (to us).'
   - 'Letter С: highlight as a FALSE FRIEND. Looks like English C but always sounds
     like S, never K. Key decodable word: сом (catfish).'
-- title: Склади і слова — Syllables and Words
+- section: Склади і слова — Syllables and Words
   slug: sklady-i-slova-syllables-and-words
   words: 300
   points:
@@ -59,7 +59,7 @@ content_outline:
   - 'Provide a strict decodable reading drill using ONLY the 7 known letters: мама,
     сом, сон, оса, масло, сосна, ананас, насос, лама, смола, нам, нас, сам, мало,
     слон.'
-- title: Підсумок — Summary
+- section: Підсумок — Summary
   slug: pidsumok-summary
   words: 100
   points:

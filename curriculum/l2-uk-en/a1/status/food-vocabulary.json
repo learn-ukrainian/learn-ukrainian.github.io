@@ -2,15 +2,15 @@
   "module": "food-vocabulary",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T23:08:04.075860Z",
+  "last_audit": "2026-03-06T01:49:33.086075Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T23:07:42.356205Z",
-    "meta": "2026-02-28T23:02:22.941071Z",
-    "activities": "2026-02-28T14:15:55.558384Z",
-    "vocabulary": "2026-02-28T14:15:55.558846Z",
-    "plan": "2026-02-28T02:53:04.285935Z",
-    "research": "2026-02-28T23:02:22.931698Z"
+    "md": "2026-03-06T01:41:58.040525Z",
+    "meta": "2026-03-06T01:46:12.436651Z",
+    "activities": "2026-03-06T01:41:58.041535Z",
+    "vocabulary": "2026-03-06T01:41:58.042362Z",
+    "plan": "2026-03-05T10:20:01.546565Z",
+    "research": "2026-03-06T00:38:46.420670Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3282/2000 (raw: 3526)"
+      "status": "fail",
+      "violations": 2,
+      "message": "4105/1200 (raw: 4538) | pedagogy: 16 violations | immersion: 32.5% LOW (target 35-55% (M39))"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "8/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 1
   }
 }

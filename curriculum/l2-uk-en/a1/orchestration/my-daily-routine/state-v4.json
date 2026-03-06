@@ -1,0 +1,19 @@
+{
+  "track": "a1",
+  "slug": "my-daily-routine",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T23:16:36Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T23:17:01Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T23:19:40Z"
+    }
+  }
+}

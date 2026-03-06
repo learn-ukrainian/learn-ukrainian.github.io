@@ -16,6 +16,15 @@ You are about to unlock a highly phonetic writing system, consisting of exactly 
 
 Before looking at the individual characters, it helps to understand their origin. The Cyrillic script gets its name from Saint Cyril. His brilliant students formalized this alphabet during the era of the First Bulgarian Empire, specifically adapting it to capture the unique sounds of Slavic speech.
 
+> [!culture]
+> Even before learning all the letters, Ukrainians appreciate when you try to speak! Here are some basic phrases. Since you do not know all these letters yet, we provide the English translation immediately. Listen to how they sound:
+> «До́брий день!» (Good day!)
+> «Приві́т!» (Hello!)
+> «Дя́кую!» (Thank you!)
+> «Будь ла́ска!» (You're welcome!)
+> «Так!» (Yes!)
+> «Ні!» (No!)
+
 To help you hear these sounds perfectly, we rely on a wonderful visual reference. You use the pronunciation video guide by Anna Ohoiko. Her clear demonstrations provide the exact mouth shapes and sounds you need.
 
 [Anna Ohoiko — Ukrainian Lessons — Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc)
@@ -57,6 +66,9 @@ A very common learner mistake occurs here. Because of the Golden Rule, you must 
 | Word | Meaning |
 |------|---------|
 | **о́ко** | eye |
+| **оса́** | wasp |
+| **о́сінь** | autumn |
+| **озе́ро** | lake |
 
 ### Літера У
 
@@ -69,6 +81,8 @@ Push your lips forward to make this sound correctly. You can hear it perfectly i
 | Word | Meaning |
 |------|---------|
 | **Украї́на** | Ukraine |
+| **у́рок** | lesson |
+| **учи́тель** | teacher |
 
 ## Приголосні — Consonants
 
@@ -90,6 +104,8 @@ You can immediately read your first full Ukrainian word:
 | Word | Meaning |
 |------|---------|
 | **ма́ма** | mom |
+| **ма́сло** | butter |
+| **ма́ло** | little |
 
 ### Літера Л
 
@@ -102,6 +118,8 @@ Try saying this animal name:
 | Word | Meaning |
 |------|---------|
 | **ла́ма** | llama |
+| **ма́ло** | little / few |
+| **са́ло** | salo / fat |
 
 ### Літера Н
 
@@ -114,6 +132,8 @@ Read this word carefully:
 | Word | Meaning |
 |------|---------|
 | **нам** | to us |
+| **нас** | us |
+| **насо́с** | pump |
 
 ### Літера С
 
@@ -126,6 +146,11 @@ Combine it with the letters you already know:
 | Word | Meaning |
 |------|---------|
 | **сом** | catfish |
+| **сон** | dream |
+| **слон** | elephant |
+| **сосна́** | pine tree |
+| **смола́** | resin |
+| **сам** | self / alone |
 
 ## Склади і слова — Syllables and Words
 
@@ -181,7 +206,23 @@ Now for your ultimate reading drill. Every single word below uses only the seven
 You can even read full phrases:
 «У нас — **анана́с**.» (We have a pineapple.)
 «У нас — **сом**.» (We have a catfish.)
+«А у нас — **слон**!» (And we have an elephant!)
+«Ма́ма, у нас **оса́**!» (Mom, we have a wasp!)
+«У нас **ма́ло**.» (We have little.)
+«**Анана́с** — нам, **ма́сло** — нам.» (Pineapple for us, butter for us.)
+«**Сон**.» (A dream.)
+«**Сосна́**.» (A pine tree.)
+«**Смола́**.» (Resin.)
 «А у вас?» (And what about you?)
+
+> [!practice]
+> Read these out loud for extra practice. You know all these letters!
+> «Ма́ма, ла́ма, слон!» (Mom, llama, elephant!)
+> «Нам — ма́сло, нам — анана́с.» (Butter for us, pineapple for us.)
+> «Сосна́, смола́, насо́с.» (Pine tree, resin, pump.)
+> «Сам сом, оса́.» (The catfish itself, a wasp.)
+> «Ма́ло сна, ма́ло ма́сла.» (Little sleep, little butter.)
+> «Он слон!» (There is an elephant!)
 
 ---
 

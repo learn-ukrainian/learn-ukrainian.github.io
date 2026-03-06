@@ -3,45 +3,47 @@ title: Colors & Clothing
 word_target: 1200
 content_outline:
 - section: Вступ та культурний контекст (Introduction & Cultural Context)
-  slug: introduction-cultural-context
+  slug: introduction
   words: 200
   points:
   - 'Introduce the cultural significance of colors in traditional Ukrainian embroidery
     (vyshyvanka): червоний for life and love, чорний for the fertile earth, and білий
     for purity.'
-  - Use simple English scaffolding to explain the concept, integrating the new Ukrainian
-    color vocabulary.
-- section: Кольори та узгодження (Colors & Agreement)
+  - Set a warm, patient tone welcoming learners to describe their world, providing
+    simple English scaffolding.
+- section: Кольори та узгодження (Colors & Grammar of Agreement)
   slug: colors-and-agreement
-  words: 350
+  words: 300
   points:
   - 'Present the core color vocabulary: білий, чорний, червоний, синій, зелений, жовтий.'
   - 'Reinforce M11 adjective agreement rules in the Nominative case: matching masculine
     (-ий/ій), feminine (-а/я), and neuter (-е/є) endings to nouns.'
-  - Address the common English-speaker error of ignoring agreement, contrasting incorrect
-    ('червоний сорочка') with correct ('червона сорочка') forms.
+  - 'Explain indeclinable borrowed colors (бордо, беж, хакі) simply: they never change
+    endings regardless of noun gender.'
 - section: Лексика одягу (Clothing Vocabulary)
   slug: clothing-vocabulary
-  words: 350
+  words: 300
   points:
   - 'Introduce basic clothing nouns: сорочка, штани, сукня, куртка, светр.'
   - Combine colors and clothing using only the Nominative case ('Це мій новий синій
-    светр', 'Ось червона сукня'), respecting the 'no cases beyond nominative' constraint.
+    светр', 'Ось червона сукня').
   - Introduce Pluralia Tantum words (штани, джинси, окуляри) as fixed vocabulary items
     to preview M13 plural concepts.
-- section: Практичне застосування (Practice & Shopping)
+- section: 'Практика: Дієслово «носити» та покупки (Practice: The Verb ''To Wear'' &
+    Shopping)'
   slug: practice-shopping
-  words: 200
+  words: 250
   points:
-  - Provide a situational dialogue in a clothing store using simple Nominative phrases
-    ('Скільки коштує ця червона сукня?').
-  - 'Teach preference phrases without complex grammar: ''Мені подобається цей колір''.'
-  - Guided practice describing outfits in pictures using 'Це...' constructions.
+  - 'Introduce ''носити'' (to wear) as a lexical chunk requiring the Accusative (-у/-ю
+    for feminine: ''Я ношу червону сукню''), without deep case analysis.'
+  - Provide a situational dialogue in a clothing store ('У магазині одягу') asking
+    for price, size, and expressing preference ('Мені подобається цей колір').
 - section: Підсумок (Summary)
   slug: summary
-  words: 100
+  words: 150
   points:
   - Recap the color adjective endings for masculine, feminine, and neuter nouns.
   - 'Self-check question 1: How do you say ''red dress'' in Ukrainian?'
-  - 'Self-check question 2: What gender is the word ''светр''?'
-  - 'Self-check question 3: Which colors symbolize life and earth in Ukrainian culture?'
+  - 'Self-check question 2: Translate the phrase ''I wear a white shirt'' into Ukrainian.'
+  - 'Self-check question 3: What gender is the word ''светр''?'
+  - 'Self-check question 4: Which colors symbolize life and earth in Ukrainian culture?'

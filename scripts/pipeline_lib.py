@@ -1672,6 +1672,7 @@ def _extract_gate_failures(audit_output: str) -> list[dict]:
     """Parse audit output to extract specific gate failures with values.
 
     Returns list of dicts: {gate, status, current, required, detail}
+    Also extracts pedagogical violation details from the 📚 section.
     """
     failures = []
     for line in audit_output.split("\n"):
@@ -1688,6 +1689,41 @@ def _extract_gate_failures(audit_output: str) -> list[dict]:
     return failures
 
 
+def _extract_pedagogy_violations(audit_output: str) -> list[dict]:
+    """Extract detailed pedagogical violations from audit output.
+
+    Parses the 📚 PEDAGOGICAL VIOLATIONS section to get type, issue, and fix.
+    These are NOT captured by _extract_gate_failures (which only sees the
+    gate summary line 'Pedagogy ❌ 3 violations').
+    """
+    violations = []
+    lines = audit_output.split("\n")
+    in_section = False
+    for line in lines:
+        stripped = line.strip()
+        if "📚 PEDAGOGICAL VIOLATIONS FOUND" in stripped:
+            in_section = True
+            continue
+        if in_section:
+            # End of section: next header (--- or emoji-prefixed or gate line)
+            if stripped.startswith("---") or re.match(r"^[^\[→\s].*[❌✅⚠]", stripped):
+                break
+            # Violation line: "  [TYPE] description"
+            m = re.match(r"\s*\[([^\]]+)\]\s+(.*)", stripped)
+            if m:
+                violations.append({
+                    "type": m.group(1),
+                    "issue": m.group(2),
+                    "fix": "",
+                })
+                continue
+            # Fix line: "     → FIX: description"
+            fm = re.match(r"\s*→\s*FIX:\s*(.*)", stripped)
+            if fm and violations:
+                violations[-1]["fix"] = fm.group(1)
+    return violations
+
+
 def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
                       deterministic_issues: list[dict] | None = None) -> str:
     """Build a surgical fix prompt with per-issue instructions.
@@ -1697,6 +1733,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     """
     det_issues = deterministic_issues or []
     gate_failures = _extract_gate_failures(audit_output)
+    ped_violations = _extract_pedagogy_violations(audit_output)
     schema_hint = _build_schema_hint(ctx, audit_output)
 
     # Read content file once — reuse for line lookups and word count
@@ -1772,8 +1809,26 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
             lines_block.append("**Action:** Expand content in the shortest sections. "
                              "Add examples, explanations, or practice scenarios.")
         elif gate.lower() == "immersion":
-            lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
-                             "Convert some English explanations to Ukrainian with English glosses.")
+            # Parse immersion gap to detect unfixable cases
+            imm_match = re.search(r"([\d.]+)%\s+LOW\s+\(target\s+(\d+)-(\d+)%", detail)
+            if imm_match:
+                current_imm = float(imm_match.group(1))
+                target_min = int(imm_match.group(2))
+                gap = target_min - current_imm
+                if gap > 15:
+                    lines_block.append(
+                        f"**⚠ SCOPE WARNING:** Immersion gap is {gap:.0f}% ({current_imm:.1f}% → {target_min}% min). "
+                        "This is too large for a fix pass. Focus on the EASIEST wins:\n"
+                        "1. Add Ukrainian section headers with English in parentheses\n"
+                        "2. Add 'Наприклад:' / 'Порівняйте:' before example blocks\n"
+                        "3. Add short Ukrainian phrases with (translations) in existing paragraphs\n"
+                        "Do NOT rewrite entire sections. Target +5-8% improvement max.")
+                else:
+                    lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
+                                     "Convert some English explanations to Ukrainian with English glosses.")
+            else:
+                lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
+                                 "Convert some English explanations to Ukrainian with English glosses.")
         elif gate.lower() in ("activities", "unique_types"):
             lines_block.append("**Action:** Add more activities or diversify activity types "
                              "in the activities YAML file.")
@@ -1783,6 +1838,15 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         elif gate == "YAML_SCHEMA":
             lines_block.append(f"**Action:** Fix the YAML schema violation: {detail}")
 
+        fix_instructions.append("\n".join(lines_block))
+
+    # 3. Pedagogical violations — extracted from the 📚 section
+    # The Pedagogy gate only says "3 violations" — this adds the actual details
+    for i, pv in enumerate(ped_violations, len(det_issues) + len(gate_failures) + 1):
+        lines_block = [f"### Fix {i}: PEDAGOGICAL_VIOLATION"]
+        lines_block.append(f"**What:** [{pv['type']}] {pv['issue']}")
+        if pv.get("fix"):
+            lines_block.append(f"**How to fix:** {pv['fix']}")
         fix_instructions.append("\n".join(lines_block))
 
     # Always append any unparsed ❌ failures not already covered by gate_failures
@@ -1850,7 +1914,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
             file_list += f"\n- Vocabulary: `{ctx.paths['vocabulary']}`"
 
     fixes_text = "\n\n".join(fix_instructions)
-    total_fixes = len(det_issues) + len(gate_failures)
+    total_fixes = len(det_issues) + len(gate_failures) + len(ped_violations)
     # Never say "Fix 0 issues" — if we got here, something failed
     if total_fixes == 0:
         total_fixes = len(fix_instructions)
@@ -2998,6 +3062,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             continue
 
         content_path.write_text(content_text, encoding="utf-8")
+        # Save extracted content to orchestration dir for traceability
+        (ctx.orch_dir / f"phase-2-output-{attempt}.md").write_text(content_text, encoding="utf-8")
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
         log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")

@@ -1,10 +1,10 @@
-PASS: pipeline a1 38
+FAIL: pipeline a1 38
 
   Module:   my-daily-routine
   Track:    a1
-  Mode:     v3
-  Words:    5133 (target: 2000)
+  Mode:     v4
+  Words:    1671 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T22:01:08Z
+  Verdict:  FAIL
+  Date:     2026-03-05T23:36:57Z

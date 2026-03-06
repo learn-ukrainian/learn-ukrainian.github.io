@@ -1,0 +1,316 @@
+- type: true-false
+  title: "True or False: Check Your Knowledge"
+  items:
+    - statement: "The Ukrainian letter І sounds like the 'ee' in 'bee'."
+      correct: true
+      explanation: "Yes, it is sharp and high."
+    - statement: "The Ukrainian letter И sounds exactly like English H."
+      correct: false
+      explanation: "It looks like an H but sounds like the short 'i' in 'bit'."
+    - statement: "Nouns ending in a consonant are usually masculine."
+      correct: true
+      explanation: "This is the standard rule for masculine nouns."
+    - statement: "The word тато is a neuter noun because it ends in -о."
+      correct: false
+      explanation: "Meaning overrides the ending; dad is a male person, so it is masculine."
+    - statement: "The question word хто is used to ask about things."
+      correct: false
+      explanation: "Хто means who, and is used for people or animals."
+    - statement: "You use що to ask 'what'."
+      correct: true
+      explanation: "Що is used for inanimate objects."
+    - statement: "Saying Смачного before eating is polite in Ukraine."
+      correct: true
+      explanation: "It means bon appetit and is an essential cultural phrase."
+    - statement: "A кіт is a large ocean animal."
+      correct: false
+      explanation: "Кіт means cat. A кит is a whale."
+
+- type: group-sort
+  title: "Sort the Nouns by Gender"
+  groups:
+    - name: "Masculine"
+      items: ["хліб", "тато", "кіт", "рахунок"]
+    - name: "Feminine"
+      items: ["мама", "кава"]
+    - name: "Neuter"
+      items: ["місто", "кафе"]
+
+- type: match-up
+  title: "Match the Phrase"
+  pairs:
+    - left: "Хто це?"
+      right: "Who is this?"
+    - left: "Що це?"
+      right: "What is this?"
+    - left: "Де кіт?"
+      right: "Where is the cat?"
+    - left: "Це велика кава."
+      right: "This is big coffee."
+    - left: "Він тут."
+      right: "He is here."
+    - left: "Вона там."
+      right: "She is there."
+    - left: "Воно тут."
+      right: "It is here."
+    - left: "Смачного!"
+      right: "Bon appetit!"
+    - left: "Ні, це не мама."
+      right: "No, this is not mom."
+
+- type: anagram
+  title: "Unscramble the Vocabulary"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "в а к а"
+      answer: "кава"
+    - scrambled: "т о м і с"
+      answer: "місто"
+    - scrambled: "о т а т"
+      answer: "тато"
+    - scrambled: "б і х л"
+      answer: "хліб"
+    - scrambled: "е ф а к"
+      answer: "кафе"
+    - scrambled: "н о к у х а р"
+      answer: "рахунок"
+    - scrambled: "т і к"
+      answer: "кіт"
+    - scrambled: "и т к"
+      answer: "кит"
+
+- type: quiz
+  title: "Adjective Agreement Quiz"
+  instruction: "Choose the correct phrase."
+  items:
+    - question: "Which phrase is correct for 'big city'?"
+      explanation: "Місто is neuter, so the adjective takes the -е ending."
+      options:
+        - text: "велике місто"
+          correct: true
+        - text: "великий місто"
+          correct: false
+        - text: "велика місто"
+          correct: false
+        - text: "великі місто"
+          correct: false
+    - question: "Which phrase is correct for 'big coffee'?"
+      explanation: "Кава is feminine, so the adjective takes the -а ending."
+      options:
+        - text: "велика кава"
+          correct: true
+        - text: "великий кава"
+          correct: false
+        - text: "велике кава"
+          correct: false
+        - text: "великі кава"
+          correct: false
+    - question: "Which phrase is correct for 'big bread'?"
+      explanation: "Хліб is masculine, so the adjective takes the -ий ending."
+      options:
+        - text: "великий хліб"
+          correct: true
+        - text: "велика хліб"
+          correct: false
+        - text: "велике хліб"
+          correct: false
+        - text: "великі хліб"
+          correct: false
+    - question: "How do you say 'good coffee'?"
+      explanation: "Кава is feminine, so the adjective must be добра."
+      options:
+        - text: "добра кава"
+          correct: true
+        - text: "добрий кава"
+          correct: false
+        - text: "добре кава"
+          correct: false
+        - text: "добрі кава"
+          correct: false
+    - question: "Which is the correct plural form for 'moms'?"
+      explanation: "Feminine nouns ending in -а often change to -и."
+      options:
+        - text: "мами"
+          correct: true
+        - text: "мама"
+          correct: false
+        - text: "маме"
+          correct: false
+        - text: "мамо"
+          correct: false
+    - question: "Which is the correct plural form for 'cats'?"
+      explanation: "Masculine nouns often take -и or -і in the plural."
+      options:
+        - text: "коти"
+          correct: true
+        - text: "кота"
+          correct: false
+        - text: "коту"
+          correct: false
+        - text: "кіт"
+          correct: false
+    - question: "Which is the correct plural form for 'cities'?"
+      explanation: "Neuter nouns ending in -о change to -а."
+      options:
+        - text: "міста"
+          correct: true
+        - text: "місти"
+          correct: false
+        - text: "місто"
+          correct: false
+        - text: "місту"
+          correct: false
+    - question: "What is the meaning of Смачного?"
+      explanation: "It is a polite phrase meaning bon appetit."
+      options:
+        - text: "Bon appetit"
+          correct: true
+        - text: "Hello"
+          correct: false
+        - text: "Goodbye"
+          correct: false
+        - text: "Thank you"
+          correct: false
+
+- type: fill-in
+  title: "Complete the Sentence"
+  items:
+    - sentence: "___ це? Це тато."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Ні"]
+    - sentence: "___ це? Це чорна кава."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Ні"]
+    - sentence: "___ кафе? Кафе там."
+      answer: "Де"
+      options: ["Де", "Що", "Хто", "Ні"]
+    - sentence: "Це мама? ___, це не мама."
+      answer: "Ні"
+      options: ["Ні", "Так", "Що", "Хто"]
+    - sentence: "Де мій ___?"
+      answer: "рахунок"
+      options: ["рахунок", "кава", "місто", "мама"]
+    - sentence: "Це ___ кава."
+      answer: "добра"
+      options: ["добра", "добрий", "добре", "добрі"]
+    - sentence: "Це велике ___."
+      answer: "місто"
+      options: ["місто", "міста", "місту", "містом"]
+    - sentence: "Кіт там? Ні, кіт ___ там."
+      answer: "не"
+      options: ["не", "ні", "так", "де"]
+
+- type: quiz
+  title: "Grammar Review Quiz"
+  instruction: "Choose the correct rule or fact."
+  items:
+    - question: "What gender is a noun that ends in a consonant?"
+      explanation: "Most words ending in a consonant are masculine."
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+    - question: "What gender is a noun that ends in -а or -я?"
+      explanation: "Most words ending in -а or -я are feminine."
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+    - question: "What gender is a noun that ends in -о or -е?"
+      explanation: "Most words ending in -о or -е are neuter."
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Plural"
+          correct: false
+    - question: "Why is 'тато' a masculine noun even though it ends in -о?"
+      explanation: "Meaning overrides the ending. 'Тато' refers to a male person, so it is masculine."
+      options:
+        - text: "Because it refers to a male person."
+          correct: true
+        - text: "Because it is a mistake."
+          correct: false
+        - text: "Because all words ending in -о are masculine."
+          correct: false
+        - text: "Because it is a plural word."
+          correct: false
+    - question: "How do you make a negative sentence in Ukrainian?"
+      explanation: "The particle 'не' is placed directly before the negated word."
+      options:
+        - text: "Use 'не' before the word you are negating."
+          correct: true
+        - text: "Put 'не' at the end of the sentence."
+          correct: false
+        - text: "Change the noun gender."
+          correct: false
+        - text: "Add 'ні' after the verb."
+          correct: false
+    - question: "Do you need words like 'is' or 'are' in Ukrainian present tense sentences?"
+      explanation: "You can simply say 'Кіт тут' (Cat here) instead of 'The cat is here'."
+      options:
+        - text: "No, you skip them."
+          correct: true
+        - text: "Yes, you must always use them."
+          correct: false
+        - text: "Only in negative sentences."
+          correct: false
+        - text: "Only when asking questions."
+          correct: false
+    - question: "Which Ukrainian letter looks like English H but sounds like N?"
+      explanation: "Н is a tricky letter that looks like H but is pronounced /n/."
+      options:
+        - text: "Н"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "І"
+          correct: false
+        - text: "П"
+          correct: false
+    - question: "In a cafe, what do you ask for when you are ready to pay?"
+      explanation: "Рахунок means bill or check."
+      options:
+        - text: "рахунок"
+          correct: true
+        - text: "кава"
+          correct: false
+        - text: "хліб"
+          correct: false
+        - text: "мама"
+          correct: false
+
+- type: match-up
+  title: "Match the Plurals and Concepts"
+  pairs:
+    - left: "Singular: кіт"
+      right: "Plural: коти"
+    - left: "Singular: мама"
+      right: "Plural: мами"
+    - left: "Singular: місто"
+      right: "Plural: міста"
+    - left: "Masculine: великий"
+      right: "Plural: великі"
+    - left: "Question: Who?"
+      right: "Хто?"
+    - left: "Question: What?"
+      right: "Що?"
+    - left: "Question: Where?"
+      right: "Де?"
+    - left: "Negative: No"
+      right: "Ні"
+    - left: "Affirmative: Yes"
+      right: "Так"

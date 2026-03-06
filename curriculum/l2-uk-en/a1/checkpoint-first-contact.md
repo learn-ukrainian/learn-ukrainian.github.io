@@ -153,7 +153,7 @@ Whether you are in a bustling Lviv cafe or drinking coffee at home, try using **
 
 ---
 
-# Підсумок — Summary
+## Підсумок — Summary
 
 Ви чудово попрацювали сьогодні. Ми повторили багато важливих тем. Ви молодці!
 You worked wonderfully today. We reviewed many important topics. You are great!

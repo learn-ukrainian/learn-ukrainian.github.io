@@ -1,237 +1,405 @@
+- type: quiz
+  title: Past Tense and Gender
+  instruction: Choose the correct answer based on the grammar rules.
+  items:
+    - question: Which ending is used for a man in the past tense?
+      options:
+        - text: -в
+          correct: true
+        - text: -ла
+          correct: false
+        - text: -ло
+          correct: false
+        - text: -ли
+          correct: false
+    - question: Which ending is used for a woman in the past tense?
+      options:
+        - text: -ла
+          correct: true
+        - text: -в
+          correct: false
+        - text: -ло
+          correct: false
+        - text: -ли
+          correct: false
+    - question: Which ending is used for plural subjects?
+      options:
+        - text: -ли
+          correct: true
+        - text: -в
+          correct: false
+        - text: -ла
+          correct: false
+        - text: -ло
+          correct: false
+    - question: 'How do you say I was working if you are a woman?'
+      options:
+        - text: Я працювала
+          correct: true
+        - text: Я працював
+          correct: false
+        - text: Я була працювала
+          correct: false
+        - text: Я був працював
+          correct: false
+    - question: 'How do you say I was working if you are a man?'
+      options:
+        - text: Я працював
+          correct: true
+        - text: Я працювала
+          correct: false
+        - text: Я був працював
+          correct: false
+        - text: Я була працювала
+          correct: false
+    - question: 'How do you translate the word yesterday into Ukrainian?'
+      options:
+        - text: вчора
+          correct: true
+        - text: сьогодні
+          correct: false
+        - text: минулого
+          correct: false
+        - text: раніше
+          correct: false
+    - question: 'What is the past tense of бути for воно?'
+      options:
+        - text: було
+          correct: true
+        - text: був
+          correct: false
+        - text: була
+          correct: false
+        - text: були
+          correct: false
+    - question: 'How do you translate the word earlier into Ukrainian?'
+      options:
+        - text: раніше
+          correct: true
+        - text: вчора
+          correct: false
+        - text: минулого
+          correct: false
+        - text: сьогодні
+          correct: false
+
+- type: fill-in
+  title: Choose the Correct Ending
+  instruction: Complete the sentence with the correct past tense verb.
+  items:
+    - sentence: Він ___ каву.
+      answer: робив
+      options:
+        - робив
+        - робила
+        - робило
+        - робили
+    - sentence: Вона ___ новини.
+      answer: читала
+      options:
+        - читав
+        - читала
+        - читало
+        - читали
+    - sentence: Воно ___ цікаво.
+      answer: було
+      options:
+        - був
+        - була
+        - було
+        - були
+    - sentence: Ми ___ разом.
+      answer: працювали
+      options:
+        - працював
+        - працювала
+        - працювало
+        - працювали
+    - sentence: Я (Марія) ___ чай.
+      answer: пила
+      options:
+        - пив
+        - пила
+        - пило
+        - пили
+    - sentence: Я (Іван) ___ телевізор.
+      answer: дивився
+      options:
+        - дивився
+        - дивилася
+        - дивилося
+        - дивилися
+    - sentence: Вона ___ мало.
+      answer: спала
+      options:
+        - спав
+        - спала
+        - спало
+        - спали
+    - sentence: Ти (Олег) ___ це правило.
+      answer: знав
+      options:
+        - знав
+        - знала
+        - знало
+        - знали
+
 - type: match-up
-  title: 'Infinitive to Past Tense (Masculine)'
-  instruction: 'Match the dictionary form of the verb to its masculine past tense form.'
+  title: Time Expressions and Verbs
+  instruction: Match the Ukrainian words to their English meanings.
   pairs:
-    - left: 'робити'
-      right: 'робив'
-    - left: 'читати'
-      right: 'читав'
-    - left: 'бути'
-      right: 'був'
-    - left: 'їсти'
-      right: 'їв'
-    - left: 'пити'
-      right: 'пив'
-    - left: 'спати'
-      right: 'спав'
-    - left: 'працювати'
-      right: 'працював'
-    - left: 'йти'
-      right: 'ішов'
-
-- type: group-sort
-  title: 'Sort by Gender'
-  instruction: 'Sort the past tense verbs according to the gender they match.'
-  groups:
-    - name: 'Він (He / Masculine)'
-      items:
-        - 'робив'
-        - 'читав'
-        - 'був'
-        - 'ішов'
-    - name: 'Вона (She / Feminine)'
-      items:
-        - 'робила'
-        - 'читала'
-        - 'була'
-        - 'йшла'
-    - name: 'Вони (They / Plural)'
-      items:
-        - 'робили'
-        - 'читали'
-        - 'були'
-        - 'йшли'
-
-- type: fill-in
-  title: 'Complete the Sentence (He)'
-  instruction: 'Choose the correct past tense verb for a male subject (він).'
-  items:
-    - sentence: 'Вчора він ___ каву.'
-      answer: 'робив'
-      options: ['робив', 'робила', 'робили', 'робити']
-    - sentence: 'Він ___ новини.'
-      answer: 'читав'
-      options: ['читав', 'читала', 'читали', 'читати']
-    - sentence: 'Вчора він ___ воду.'
-      answer: 'пив'
-      options: ['пив', 'пила', 'пили', 'пити']
-    - sentence: 'Він ___ довго.'
-      answer: 'спав'
-      options: ['спав', 'спала', 'спали', 'спати']
-    - sentence: 'Він ___ в офісі.'
-      answer: 'працював'
-      options: ['працював', 'працювала', 'працювали', 'працювати']
-    - sentence: 'Він ___ вдома.'
-      answer: 'був'
-      options: ['був', 'була', 'були', 'бути']
-
-- type: fill-in
-  title: 'Complete the Sentence (She)'
-  instruction: 'Choose the correct past tense verb for a female subject (вона).'
-  items:
-    - sentence: 'Вчора вона ___ каву.'
-      answer: 'робила'
-      options: ['робив', 'робила', 'робили', 'робити']
-    - sentence: 'Вона ___ книгу.'
-      answer: 'читала'
-      options: ['читав', 'читала', 'читали', 'читати']
-    - sentence: 'Вона ___ чай.'
-      answer: 'пила'
-      options: ['пив', 'пила', 'пили', 'пити']
-    - sentence: 'Вона ___ довго.'
-      answer: 'спала'
-      options: ['спав', 'спала', 'спали', 'спати']
-    - sentence: 'Вона ___ там.'
-      answer: 'працювала'
-      options: ['працював', 'працювала', 'працювали', 'працювати']
-    - sentence: 'Вона ___ на роботі.'
-      answer: 'була'
-      options: ['був', 'була', 'були', 'бути']
-
-- type: fill-in
-  title: 'Irregular Verbs and Time'
-  instruction: 'Choose the correct word to complete the sentence.'
-  items:
-    - sentence: 'Минулого ___ ми були там.'
-      answer: 'тижня'
-      options: ['тижня', 'тиждень', 'в тиждень', 'тижні']
-    - sentence: 'Минулого ___ я був удома.'
-      answer: 'року'
-      options: ['року', 'рік', 'в рік', 'роки']
-    - sentence: 'Вчора він ___ обід.'
-      answer: 'їв'
-      options: ['їв', 'їла', 'їли', 'їсти']
-    - sentence: 'Вчора вона ___ яблуко.'
-      answer: 'їла'
-      options: ['їв', 'їла', 'їли', 'їсти']
-    - sentence: 'Він ___ додому.'
-      answer: 'ішов'
-      options: ['ішов', 'йшла', 'йшли', 'йти']
-    - sentence: 'Вона ___ в магазин.'
-      answer: 'йшла'
-      options: ['ішов', 'йшла', 'йшли', 'йти']
+    - left: вчора
+      right: yesterday
+    - left: минулого тижня
+      right: last week
+    - left: минулого місяця
+      right: last month
+    - left: минулого року
+      right: last year
+    - left: раніше
+      right: earlier
+    - left: він ішов
+      right: he went
+    - left: вона ішла
+      right: she went
+    - left: він їв
+      right: he ate
 
 - type: true-false
-  title: 'True or False: Past Tense Rules'
-  instruction: 'Decide if the statement about Ukrainian grammar is true or false.'
+  title: Past Tense Rules
+  instruction: Decide if the statement is true or false.
   items:
-    - statement: "To say 'last week' in Ukrainian, you must use the preposition 'в'."
-      correct: false
-      explanation: "False. The phrase 'минулого тижня' is used without the preposition 'в'."
-    - statement: "The past tense of the verb 'бути' for 'він' (he) is 'був'."
+    - statement: In Ukrainian, the past tense ending depends on the gender of the person.
       correct: true
-      explanation: "True. 'Він був' means 'he was'."
-    - statement: "In Ukrainian, past tense verbs change their ending depending on the gender of the speaker or subject."
-      correct: true
-      explanation: "True. For example, a man says 'я читав' while a woman says 'я читала'."
-    - statement: "The correct translation for 'I was working' (said by a man) is 'Я був працював'."
+    - statement: A man and a woman use the same past tense ending for the word I.
       correct: false
-      explanation: "False. This is a direct calque from English. You just use the single past tense verb: 'Я працював'."
-    - statement: "The past tense of 'їсти' for 'вона' (she) is 'їла'."
-      correct: true
-      explanation: "True. 'Вона їла' means 'she ate'."
-    - statement: "For plural subjects like 'ми', 'ви', or 'вони', the past tense ending is '-ло'."
+      explanation: 'A man says я робив, a woman says я робила.'
+    - statement: 'You must use the preposition в before минулого.'
       correct: false
-      explanation: "False. The plural ending is '-ли', as in 'ми робили'."
-
-- type: quiz
-  title: 'Check Your Knowledge'
-  instruction: 'Choose the best answer for each question.'
-  items:
-    - question: "How do you say 'last year' in Ukrainian?"
-      options:
-        - text: "минулого року"
-          correct: true
-        - text: "в минулому році"
-          correct: false
-        - text: "минулий рік"
-          correct: false
-        - text: "в минулий рік"
-          correct: false
-      explanation: "Always use 'минулого року' without the preposition 'в'."
-    - question: "Which ending do you add to the verb base for 'воно' (it) in the past tense?"
-      options:
-        - text: "-ло"
-          correct: true
-        - text: "-в"
-          correct: false
-        - text: "-ла"
-          correct: false
-        - text: "-ли"
-          correct: false
-    - question: "What is the correct masculine past tense form of 'йти' (to go)?"
-      options:
-        - text: "ішов"
-          correct: true
-        - text: "йшла"
-          correct: false
-        - text: "йшли"
-          correct: false
-        - text: "йшов"
-          correct: false
-    - question: "Translate to Ukrainian: 'Yesterday evening she was reading.'"
-      options:
-        - text: "Вчора ввечері вона читала."
-          correct: true
-        - text: "Вчора ввечері вона читав."
-          correct: false
-        - text: "Вчора зранку вона читала."
-          correct: false
-        - text: "Вчора ввечері він читала."
-          correct: false
-    - question: "If a woman wants to say 'I was at home', which phrase does she use?"
-      options:
-        - text: "Я була вдома."
-          correct: true
-        - text: "Я був вдома."
-          correct: false
-        - text: "Я було вдома."
-          correct: false
-        - text: "Я були вдома."
-          correct: false
-    - question: "Which time word translates to 'yesterday'?"
-      options:
-        - text: "вчора"
-          correct: true
-        - text: "раніше"
-          correct: false
-        - text: "сьогодні"
-          correct: false
-        - text: "тиждень"
-          correct: false
+      explanation: 'Never use в or у before минулого.'
+    - statement: 'The past tense of the verb бути is completely regular.'
+      correct: true
+      explanation: 'Yes, it follows the standard pattern: був, була, було, були.'
+    - statement: 'The feminine form of the verb їсти in the past tense is їла.'
+      correct: true
+    - statement: 'To translate I was reading, you must use the verb бути.'
+      correct: false
+      explanation: 'You simply say Я читав or Я читала.'
+    - statement: 'The word вчора means tomorrow.'
+      correct: false
+      explanation: Вчора means yesterday.
+    - statement: 'The past tense form of йти for a man is ішов.'
+      correct: true
 
 - type: unjumble
-  title: 'Build the Sentence'
-  instruction: 'Put the words in the correct order to form sentences about the past.'
+  title: Build Past Tense Sentences
+  instruction: Put the words in the correct order.
   items:
     - words:
-        - "Вчора"
-        - "я"
-        - "був"
-        - "удома."
-      answer: "Вчора я був удома."
+        - Вчора
+        - я
+        - пив
+        - каву.
+      answer: Вчора я пив каву.
     - words:
-        - "Минулого"
-        - "тижня"
-        - "ми"
-        - "були"
-        - "там."
-      answer: "Минулого тижня ми були там."
+        - Минулого
+        - тижня
+        - ми
+        - були
+        - там.
+      answer: Минулого тижня ми були там.
     - words:
-        - "Вона"
-        - "йшла"
-        - "в"
-        - "магазин."
-      answer: "Вона йшла в магазин."
+        - Вона
+        - працювала
+        - в
+        - офісі.
+      answer: Вона працювала в офісі.
     - words:
-        - "Що"
-        - "ти"
-        - "робив"
-        - "вчора?"
-      answer: "Що ти робив вчора?"
+        - Що
+        - ти
+        - робив
+        - вчора?
+      answer: Що ти робив вчора?
     - words:
-        - "Ввечері"
-        - "я"
-        - "дивилася"
-        - "фільм."
-      answer: "Ввечері я дивилася фільм."
+        - Це
+        - була
+        - перша
+        - книга.
+      answer: Це була перша книга.
+    - words:
+        - Він
+        - ішов
+        - у
+        - музей.
+      answer: Він ішов у музей.
+
+- type: group-sort
+  title: Sort by Gender Ending
+  instruction: Group the verbs according to their gender and number.
+  groups:
+    - name: Чоловічий
+      items:
+        - читав
+        - робив
+        - ішов
+    - name: Жіночий
+      items:
+        - читала
+        - робила
+        - ішла
+    - name: Середній
+      items:
+        - читало
+        - робило
+        - було
+    - name: Множина
+      items:
+        - читали
+        - робили
+        - ішли
+
+- type: fill-in
+  title: Irregular Verbs in the Past Tense
+  instruction: Complete the sentence with the correct form of the verb.
+  items:
+    - sentence: Він ___ обід.
+      answer: їв
+      options:
+        - їв
+        - їла
+        - їло
+        - їли
+    - sentence: Вона ___ яблуко.
+      answer: їла
+      options:
+        - їв
+        - їла
+        - їло
+        - їли
+    - sentence: Він ___ додому.
+      answer: ішов
+      options:
+        - ішов
+        - ішла
+        - ішло
+        - ішли
+    - sentence: Вона ___ в музей.
+      answer: ішла
+      options:
+        - ішов
+        - ішла
+        - ішло
+        - ішли
+    - sentence: Ми ___ в ресторані.
+      answer: їли
+      options:
+        - їв
+        - їла
+        - їло
+        - їли
+    - sentence: Вони ___ разом.
+      answer: ішли
+      options:
+        - ішов
+        - ішла
+        - ішло
+        - ішли
+    - sentence: Я (Олена) ___ сюди.
+      answer: ішла
+      options:
+        - ішов
+        - ішла
+        - ішло
+        - ішли
+    - sentence: Я (Максим) ___ суп.
+      answer: їв
+      options:
+        - їв
+        - їла
+        - їло
+        - їли
+
+- type: quiz
+  title: Meaning and Context
+  instruction: Choose the best option to answer the question or complete the thought.
+  items:
+    - question: 'If a woman is speaking, how should she say I watched a film?'
+      options:
+        - text: Я дивилася фільм.
+          correct: true
+        - text: Я дивився фільм.
+          correct: false
+        - text: Я дивилося фільм.
+          correct: false
+        - text: Я дивилися фільм.
+          correct: false
+    - question: 'How do you say last week in Ukrainian?'
+      options:
+        - text: минулого тижня
+          correct: true
+        - text: в минулого тижня
+          correct: false
+        - text: минулого місяця
+          correct: false
+        - text: вчора тижня
+          correct: false
+    - question: 'If you ask a man what he did yesterday, you say:'
+      options:
+        - text: Що ти робив вчора?
+          correct: true
+        - text: Що ти робила вчора?
+          correct: false
+        - text: Що він робив вчора?
+          correct: false
+        - text: Що ти робили вчора?
+          correct: false
+    - question: 'What is the English translation of Вчора зранку вона пила каву?'
+      options:
+        - text: Yesterday morning she drank coffee.
+          correct: true
+        - text: Yesterday evening she drank coffee.
+          correct: false
+        - text: Yesterday morning he drank coffee.
+          correct: false
+        - text: Today morning she drank coffee.
+          correct: false
+    - question: 'Choose the correct phrase for we were there:'
+      options:
+        - text: ми були там
+          correct: true
+        - text: ми був там
+          correct: false
+        - text: ми була там
+          correct: false
+        - text: ми було там
+          correct: false
+    - question: Which sentence is grammatically correct?
+      options:
+        - text: Воно було цікаво.
+          correct: true
+        - text: Воно був цікаво.
+          correct: false
+        - text: Воно була цікаво.
+          correct: false
+        - text: Воно були цікаво.
+          correct: false
+    - question: 'What does Тільки вчора ми говорили про це mean?'
+      options:
+        - text: Only yesterday we talked about this.
+          correct: true
+        - text: Only today we talk about this.
+          correct: false
+        - text: Earlier we talked about this.
+          correct: false
+        - text: Only yesterday he talked about this.
+          correct: false
+    - question: 'How do you say she slept little?'
+      options:
+        - text: Вона спала мало.
+          correct: true
+        - text: Вона спав мало.
+          correct: false
+        - text: Вона спала довго.
+          correct: false
+        - text: Вона спав довго.
+          correct: false

@@ -2,15 +2,15 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-05T23:05:28.150530Z",
+  "last_audit": "2026-03-05T23:54:40.590486Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-05T23:04:15.068744Z",
-    "meta": "2026-03-05T23:05:03.689960Z",
-    "activities": "2026-03-05T23:02:50.311043Z",
-    "vocabulary": "2026-03-05T23:02:50.314960Z",
+    "md": "2026-03-05T23:53:53.229175Z",
+    "meta": "2026-03-05T23:49:31.492759Z",
+    "activities": "2026-03-05T23:53:08.810369Z",
+    "vocabulary": "2026-03-05T23:52:01.087928Z",
     "plan": "2026-03-05T14:05:44.355925Z",
-    "research": "2026-03-05T22:57:59.550246Z"
+    "research": "2026-03-05T23:42:48.164479Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1445/1200 (raw: 1716) | pedagogy: 7 violations | immersion: 14.7% LOW (target 35-55% (M36))"
+      "status": "pass",
+      "violations": 0,
+      "message": "1225/1200 (raw: 1346)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "8/8 | density: 6 < 6"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "24/1"
     },
     "naturalness": {
       "status": "info",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 2,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 1
   }
 }

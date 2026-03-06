@@ -1,0 +1,19 @@
+{
+  "track": "a1",
+  "slug": "plurals-and-alternation",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T00:34:26Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T00:35:01Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T00:36:50Z"
+    }
+  }
+}

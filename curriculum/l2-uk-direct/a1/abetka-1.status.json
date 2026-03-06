@@ -2,7 +2,7 @@
   "module": "abetka-1",
   "track": "l2-uk-direct",
   "level": "a1",
-  "status": "ready",
+  "status": "validated",
   "images_sourced": 0,
   "images_total": 6,
   "last_updated": "2026-03-01",
@@ -11,6 +11,12 @@
     "mdx": {
       "status": "complete",
       "ts": "2026-03-05T19:26:38Z"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T00:51:53Z",
+      "errors": 0,
+      "warnings": 0
     }
   }
 }

@@ -3,71 +3,67 @@
 # Дослідження: Tomorrow - Future Tense
 
 ## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслова бути в майбутньому часі: буду, будеш, буде, будемо, будете, будуть; утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати, будеш сидіти, буде сміятися, будемо гуляти, будете працювати, будуть відпочивати;"
-Alignment: This module strictly satisfies the A1 requirement to teach the compound future tense of imperfective verbs using "буду" + infinitive and its full conjugation for all persons, directly addressing §4.2.4.1 of the standard.
+§4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
+Alignment: Introduces the compound future tense (буду + infinitive) and the future conjugation of "бути" for expressing plans.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| завтра | Top 100 (High) | завтра вранці, завтра вдень, завтра ввечері |
-| наступний | High | наступного тижня, наступного року, наступного разу |
-| план | High | мати плани, складати план, плани на майбутнє |
-| хотіти | Top 100 (High) | хочу знати, хочу сказати, дуже хочу |
-| збиратися | Medium-High | збиратися додому, збиратися в дорогу |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| завтра | High frequency (Top 100) | завтра вранці, завтра вдень, завтра ввечері |
+| буду | Grammatical marker, imperfective only | я буду там, будемо працювати |
+| наступний | Requires Genitive in time expressions | наступного тижня, наступного року |
+| хотіти | High frequency, expresses intention | хочу знати, дуже хочу |
+| збиратися | Expresses intention | збираюся їхати, збираюся вчити |
+| скоро | High frequency | скоро буду, дуже скоро |
 
 ## Cultural Hooks
-1. "Не кажи «гоп», поки не перескочиш" (Don't say 'hop' until you've jumped over) — A verified and commonly used proverb reflecting the cultural tendency of Ukrainians to be cautious about declaring plans until they are fully realized. 
-2. "Завтра буде новий день" (Tomorrow will be a new day) — A phrase demonstrating resilience, hope, and an optimistic outlook towards the future, deeply embedded in modern Ukrainian society.
+1. «Не кажи "гоп", поки не перескочиш» (Don't say "hop" until you've jumped over) — reflects Ukrainian cautiousness about declaring definite plans before they happen.
+2. «Завтра буде новий день» (Tomorrow will be a new day) — an anchor phrase for expressing hope and optimism.
 
 ## Common Learner Errors
-1. Aspect conflict: *буду прочитати (wrong) → буду читати (correct). Learners often attempt to attach "буду" to perfective verbs. The strict rule is that "буду" takes ONLY imperfective infinitives.
-2. Case mapping for "next": *наступний тиждень (wrong) → наступного тижня (correct). English speakers default to the Nominative case for "next week", whereas Ukrainian requires the Genitive of time.
+1. Aspect conflict → «буду читати» (correct) vs «буду прочитати» (wrong) — English speakers often try to use the perfective infinitive after "буду" because English lacks grammatical aspect. "Буду" only pairs with imperfective verbs.
+2. Case in time expressions → «наступного тижня» (correct) vs «наступний тиждень» (wrong) — Translating "next week" directly into Nominative instead of using the required Genitive of Time.
 
 ## Cross-References
 - Builds on: a1-36 (Yesterday - Past Tense)
-- Prepares for: a1-38 (My Daily Routine) (and connects conceptually to a1-23 What Time Is It)
+- Prepares for: a1-23 (What Time Is It), a1-38 (My Daily Routine)
 
 ## Notes for Content Writing
-- Decolonized framing: Emphasize the elegant simplicity of the Ukrainian future tense compared to English (no complex distinction between 'will' and 'going to'). Do not contrast with Russian structures. 
-- Scaffolding: Since this is an A1 module (M37), English scaffolding is still heavily required for explaining abstract grammar rules (the aspect restriction for "буду" and the Genitive case trigger for "наступного").
-- Maintain the Persona Flavor: "The Ukrainian Teacher" (Role: Event Planner). Be encouraging, practical, and link the grammar to everyday planning scenarios.
+- English scaffolding is mandatory for A1 grammar explanations.
+- IMPERATIVES ARE FORBIDDEN. Do not use direct commands (Слухайте!, Читайте!). Use indirect requests or English for instructions.
+- Present the synthetic future (працюватиму) only as a brief FYI for reading recognition. Do not drill it.
+- Ensure clear distinction between definite plans (буду + inf) and intentions (хочу / збираюся).
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ"
-    words: 400
+  - title: "Вступ (Introduction)"
+    slug: introduction
+    words: 250
     points:
-      - "English scaffolding requirement: Explicitly use English to introduce the Ukrainian future tense, highlighting its simplicity compared to English 'will' vs. 'going to'."
-      - "Timeline mapping: Briefly review A1-36 (Yesterday) and contrast the past and present timelines with where we will be tomorrow."
-      - "Cultural hook: Introduce the phrase «Завтра буде новий день» as an anchor for expressing Ukrainian optimism and resilience."
-  - section: "Презентація граматики"
-    words: 600
+      - "English scaffolding: Contrast the timeline: where we were 'yesterday' (A1-36) vs. where we will be 'tomorrow'."
+      - "Cultural context: «Завтра буде новий день» as an expression of hope."
+  - title: "Презентація граматики: Буду + Інфінітив (Grammar: Буду + Infinitive)"
+    slug: grammar-presentation
+    words: 350
     points:
-      - "Introduce the compound future formula (буду + infinitive) aligned with State Standard §4.2.4.1. Each person gets its own H3 for the conjugation of 'бути' (буду, будеш, буде, будемо, будете, будуть) with simple bilingual examples."
-      - "Address the Common Learner Error (Conflict of aspects): Explicitly state in English that 'буду' is only used with imperfective verbs. Contrast correct («буду читати») and incorrect («буду прочитати») usage."
-      - "Briefly overview the synthetic future tense («працюватиму») in a short FYI box, strictly as a recognition-only feature for authentic texts, without any drilling or exercises."
-  - section: "Лексика та культурний контекст"
-    words: 600
+      - "Introduce the compound future formula (буду + infinitive). Present the full conjugation table for 'бути'."
+      - "Learner Error (Aspects): Emphasize that 'буду' takes ONLY imperfective verbs («буду читати», NOT «буду прочитати»)."
+      - "FYI Box: Briefly mention the synthetic future («працюватиму») strictly for recognition in authentic texts."
+  - title: "Лексика та культурний контекст: Плани на майбутнє (Vocabulary and Plans)"
+    slug: vocabulary-and-culture
+    words: 350
     points:
-      - "Introduce future time markers (завтра, післязавтра, скоро) and high-frequency phrases (завтра вранці, завтра вдень) using a structured vocabulary table."
-      - "Explain the 'Genitive of Time' rule for phrases like «наступного тижня» and «наступного року». Warn against the common error of using the Nominative case."
-      - "Differentiate between expressing intentions («хочу», «збираюся») and definite future actions («буду») using simple parallel examples."
-      - "Integrate the cultural hook: Discuss the proverb «Не кажи 'гоп', поки не перескочиш» to explain Ukrainian cultural cautiousness regarding sharing definite plans."
-  - section: "Практика та підсумок"
-    words: 400
+      - "Future markers: завтра, післязавтра, скоро. Introduce collocations (завтра вранці, завтра ввечері)."
+      - "Genitive of Time: Explain how to use «наступного тижня» and «наступного року». Warn against Nominative translation."
+      - "Intentions vs. definite plans: Contrast «буду» (certainty) with «хочу / збираюся» (intention)."
+      - "Cultural Hook: «Не кажи 'гоп', поки не перескочиш» to explain Ukrainian cautiousness regarding definite plans."
+  - title: "Практика та підсумок (Practice and Summary)"
+    slug: practice-and-summary
+    words: 250
     points:
-      - "Provide controlled practice mini-dialogues focusing on weekend and evening plans, incorporating collocations like «мати плани» and «складати план»."
-      - "Develop a role-play scenario (Persona: 'Організатор подій' / Event Planner) where the learner actively plans a vacation or work week, observing the conjugated forms of 'бути'."
-      - "Summarize the grammar rules in a bulleted recap, highlighting the correct usage of the auxiliary verb, the imperfective infinitive rule, and the genitive case for time markers."
+      - "Mini-dialogues: Practice planning the weekend and evening using 'мати плани' and 'складати план'."
+      - "Role-play scenario: Planning a work week using 'бути' forms and Genitive time markers (use indirect instructions, no imperatives)."
+      - "Summary: 3-4 self-check questions verifying the 'бути' conjugation, imperfective rule, and Genitive time markers."
 ===META_OUTLINE_END===
-
-===FRICTION_START===
-**Phase**: Phase A: Meta + Research (Core)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: N/A
-**Proposed Tooling Fix**: N/A
-===FRICTION_END===

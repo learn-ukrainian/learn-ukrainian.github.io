@@ -1,15 +1,36 @@
-## Research Notes
+# Дослідження: Checkpoint: First Contact
 
-**1. Textbook approach:** Beginner Ukrainian textbooks typically consolidate the first few weeks of learning—focusing on the Cyrillic alphabet, phonetics, noun gender, and plural formation—before introducing verb conjugation. They rely heavily on simple nominal structures like "Це [прикметник] [іменник]" and basic questions ("Хто це?", "Що це?", "Де?") to build confidence without overwhelming the student with complex grammar.
+## State Standard Reference
+§4.1.1: "Ukrainian alphabet"
+§4.2.1.2: "Adjective declension — hard/soft groups, gender agreement"
+Alignment: Consolidates foundational Cyrillic reading skills, noun gender identification, and basic adjective agreement in the nominative case before advancing to verbs.
 
-**2. Common errors:** 
-- **Gender matching:** English speakers frequently forget to change adjective endings to match the noun's gender or plural form (e.g., using the masculine dictionary form 'новий' for everything).
-- **Transliteration reliance:** Over-relying on English transliteration instead of building automaticity with Cyrillic characters, especially confusing similar vowels like "И" and "І".
-- **False neuters:** Assuming all nouns ending in "-о" are neuter, leading to errors with masculine exceptions like "тато".
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| хто (who) | Used for animate nouns | Хто це? Хто там? |
+| що (what) | Used for inanimate nouns | Що це? |
+| де (where) | Interrogative for location | Де кафе? Де мій рахунок? |
+| кава (coffee) | Feminine, cultural hook | чорна кава, велика кава |
+| рахунок (bill) | Essential service vocabulary | Можна рахунок? |
 
-**3. Cultural hook:** Lviv's historical coffee culture, tracing back to Yuriy Kulchytsky and his 1683 Vienna coffeehouse, serves as a perfect cultural anchor. "Кава" is a recognizable beginner word, and the cafe setting provides a natural context for simple "Це..." vocabulary checks and the introduction of dining etiquette like "Смачного!".
+## Cultural Hooks
+1. Lviv Coffee Culture: Ukrainian Yuriy Kulchytsky opened one of Vienna's first coffeehouses in 1683, establishing a strong coffee tradition in western Ukraine.
+2. Dining Etiquette: Saying "Смачного!" (Bon appetit) is an essential courtesy before eating or drinking.
 
-**4. Cross-references:** This checkpoint builds directly on M01-M10 (alphabet, phonetics, gender) and M11-M13 (adjective agreement, colors, plurals). It establishes the necessary nominal foundation before progressing to verb conjugation (M15) and cases beyond the nominative (M25).
+## Common Learner Errors
+1. Confusing "И" and "І" → /ɪ/ vs /i/ is challenging for English speakers (e.g., confusing "кит" and "кіт").
+2. Overgeneralizing the -о ending → Incorrectly assuming "тато" (dad) is neuter; it is a masculine exception.
+3. Forgetting adjective agreement → Saying "великий місто" instead of matching the neuter noun: "велике місто".
+
+## Cross-References
+- Builds on: a1-01 through a1-13 (Alphabet, noun gender, adjectives, plurals)
+- Prepares for: a1-15 (First Conjugation Verbs)
+
+## Notes for Content Writing
+- Sequence constraint check: Verb conjugation is FORBIDDEN. Keep all practice sentences nominal (e.g., "Це кава. Вона чорна.").
+- Maintain English for classroom instructions to provide necessary scaffolding for this A1.1 checkpoint.
+- Use a Test-Teach-Test (TTT) approach to validate learners' grasp of gender and plural endings.
 
 ## Resource Discovery
 

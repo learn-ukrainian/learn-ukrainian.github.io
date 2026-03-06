@@ -1,0 +1,110 @@
+discovered_at: '2026-03-05T23:16:36.594806+00:00'
+query_keywords:
+- My Daily Routine
+- Продукування та Підсумок
+- common reflexive verbs
+- daily routine activities
+- sequence words to order events
+- about habits and regular activities
+- Reflexive verbs (-ся/-сь) in context
+- Sequence adverbs (спочатку, потім, нарешті)
+- Daily routine expressions
+- practical
+- прокидатися
+- вмиватися
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu58/
+  title: How to describe your daily routine in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - phrases
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 58
+- url: https://www.ukrainianlessons.com/episode165/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - general
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 165
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0056
+  text: "55\nоДнина І мноЖина\nЩо відбувається? Склади та запиши речення за малюнком.\
+    \ \nПідкресли слова — назви дій. \nганчірка\nвитирає\nпраска\nпідодіяльник\nприбирання\n\
+    прасує\nпростирадло\nвіяло\nЗразок. Дарина несе простирадло в шафу.\n \nНапиши,\
+    \ яку домашню роботу ти виконуєш один (пиши я), \nа яку ви в родині виконуєте\
+    \ разом чи по черзі (пиши ми).\nЗразок. Я гуляю з собакою. Ми вибиваємо килим.\n\
+    Слова для довідки. Поливаю, підмітаю, прибираю пило-\nсосом, складаю, витираю,\
+    \ прасую, перу, мию, готую.\n \nРозглянь предм"
+  section_title: Сторінка 55
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0025
+  text: "25\nСлова — назви дій\nЩо робить?\nЩо роблять?\nЩо чим роблять?\n\t Який\
+    \ у тебе сьогодні настрій? Вибери.\nСлова — назви дій"
+  section_title: Сторінка 27
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0051
+  text: "50\nсЛова — назви ДІЙ\nПовтори дії, які виконують діти. Назви дії словами.\
+    \ Запиши \nслова — назви дій дітей. Дай дітям імена.\nЗразок. Карина стрибає.\
+    \ \n Слова — назви дій відповідають на питання:\nЩо робити?\nЩо робив?\nЩо робить?\n\
+    Що буде робити?\nЩо зробити?\nЩо зробив?\nЩо роблять?\nЩо зробить?\n \nЩо відбувається?\
+    \ Що роблять діти, коли побачили, як Тимко \nрозбив тарілку? Дай дітям імена.\
+    \ Розкажи історію.\nРозбив, засмутився, сміється, плаче, думає, кричить.\n• Як\
+    \ би ти вчинив/вчинила? Чому? Опиши свої дії.\n"
+  section_title: Сторінка 50
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0136
+  text: "Підсумкові тести  \n129\nПідсумкові тести\nВиконайте тестові завдання.\n\
+    1   Дієприслівниками є  обидва слова в  рядку\nА  зрозумілий, розуміючи\nБ  здивувавшись,\
+    \ здивовано\nВ  говоривши, говорячи\nГ  думали, думаючи\n2   Серед ознак дієприслівника\
+    \ НЕМАЄ такої\nА  виду\nБ  часу\nВ  роду\nГ  властивости мати залежні слова\n\
+    3   Дієприслівниковий зворот є  в усіх реченнях, ОКРІМ\nА  Впорядковуючи свої\
+    \ речі, спробуйте насолодитися про-\nцесом.\nБ  Робіть це, уявляючи результат.\n\
+    В  Позбавившись зайвого, ви можете «пер"
+  section_title: Сторінка 132
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

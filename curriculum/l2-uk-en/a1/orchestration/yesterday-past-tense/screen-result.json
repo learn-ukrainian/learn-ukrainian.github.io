@@ -1,0 +1,142 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1225",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "102.1",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "24",
+    "COMPUTED_ENGAGEMENT_COUNT": "4",
+    "COMPUTED_IMMERSION_PERCENT": "43.5",
+    "COMPUTED_IMMERSION_TARGET": "35-55%",
+    "COMPUTED_RICHNESS_SCORE": "79",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3, examples: 18/24, tables: 1/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/yesterday-past-tense.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/yesterday-past-tense-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/yesterday-past-tense.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M36 — Yesterday - Past Tense\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/yesterday-past-tense.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Що було вчора? (Introduction: What Happened Yesterday?)   236 /  250  ✅ (-14)\n     Основи минулого часу (Grammar: Past Tense Formation)             400 /  400  ✅ \n     Складні випадки та практика (Irregular Verbs and Practice)       340 /  350  ✅ (-10)\n     Підсумок: Мій день (Summary and Production)                      216 /  200  ✅ (+16)\n     ───────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                           1192 / 1200  ❌ (-8)\n  📋 Found YAML activities file (8 activities)\n  > Past Tense and Gender: 8 items (min 8)\n  > Choose the Correct Ending: 8 items (min 8)\n  > Time Expressions and Verbs: 8 items (min 8)\n  > Past Tense Rules: 8 items (min 8)\n  > Build Past Tense Sentences: 6 items (min 6)\n  > Sort by Gender Ending: 12 items (min 6)\n  > Irregular Verbs in the Past Tense: 8 items (min 8)\n  > Meaning and Context: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1225/1200 (raw: 1346)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 24/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 43.5% (target 35-55% (M36))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/yesterday-past-tense-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/yesterday-past-tense.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: yesterday-past-tense.md\n  VESUM misses: 10 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 100986.45it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 248 | VESUM: 238 (96.0%) | RAG: 9 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/yesterday-past-tense-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 238/248 (96%) verified\n⚠️ VESUM not found (10): ЗУНР, ли, ло, Львові, Марія, Олег, Олена, ст, Федоров, Іван",
+  "h2_sections": "1. Вступ: Що було вчора? (Introduction: What Happened Yesterday?)\n2. Основи минулого часу (Grammar: Past Tense Formation)\n3. Складні випадки та практика (Irregular Verbs and Practice)\n4. Підсумок: Мій день (Summary and Production)",
+  "vesum_stats": {
+    "total": 248,
+    "vesum_hits": 238,
+    "rag_hits": 0,
+    "not_found": 10,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 232,
+        "vesum_hits": 225,
+        "not_found": 7
+      },
+      "activities": {
+        "total": 16,
+        "vesum_hits": 13,
+        "not_found": 3
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "ЗУНР",
+      "clean": "зунр",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ли",
+      "clean": "ли",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ло",
+      "clean": "ло",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Львові",
+      "clean": "львові",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Марія",
+      "clean": "марія",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Олег",
+      "clean": "олег",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Олена",
+      "clean": "олена",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ст",
+      "clean": "ст",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Федоров",
+      "clean": "федоров",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Іван",
+      "clean": "іван",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "817c41be3d850c13"
+}

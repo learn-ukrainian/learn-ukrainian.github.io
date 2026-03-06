@@ -2,61 +2,42 @@ slug: food-vocabulary
 title: Food and Drink
 word_target: 1200
 content_outline:
-- section: Їжа
-  words: 500
+- section: Їжа (Food)
+  words: 275
   points:
-  - Introduce the section with English scaffolding explaining the concept of noun
-    gender for food items and how it affects adjective agreement.
-  - 'Present core food vocabulary with IPA for first occurrences: хліб, м''ясо, риба,
-    овочі, фрукти, каша, суп, борщ.'
-  - 'Group the vocabulary by gender in clear visual tables (Чоловічий рід: хліб, суп,
-    борщ; Жіночий рід: каша, риба; Середній рід: м''ясо; Множина: овочі, фрукти).'
-  - Provide basic matching adjectives for each group (свіжий, гаряча, смачне) to demonstrate
-    agreement.
-  - 'Usage note: Explicitly teach the verb «їсти» (to eat) and explain the standard
-    phrasing «їсти суп» rather than drinking it.'
-- section: Напої
-  words: 400
+  - 'Basic food categories: хліб, м''ясо, риба, овочі, фрукти, каша, суп, борщ. Organized by food group for memorization.'
+  - 'Gender of food nouns: masculine (хліб, суп, борщ, сир), feminine (каша, риба, картопля), neuter (м''ясо, яблуко, молоко).
+    Gender awareness for adjective agreement.'
+  - 'Collocations with adjectives: свіжий хліб, гаряча каша, смачний борщ, домашній суп. Building natural-sounding food descriptions.'
+- section: Напої (Drinks)
+  words: 250
   points:
-  - 'Introduce common drinks vocabulary with IPA on first occurrence: вода, чай, кава,
-    сік, молоко, компот.'
-  - 'Provide English scaffolding for ordering using the Accusative case: «Я хочу...».
-    Create a clear rule box highlighting the feminine -а to -у shift (каву, воду).'
-  - 'Cultural note: Contrast traditional Ukrainian tea culture (чай з медом, чай з
-    лимоном) with the historic coffee culture of Lviv (кава по-львівськи), alongside
-    traditional drinks like компот.'
-  - Include a short, authentic mini-dialogue demonstrating how to order a drink at
-    a cafe using the Accusative case.
-- section: Паляниця
-  words: 300
+  - 'Common drinks vocabulary: вода, чай, кава, сік, молоко, компот. Gender and typical modifiers: гаряча кава, холодна вода,
+    апельсиновий сік.'
+  - 'Ordering pattern: Я хочу каву (Accusative). Будь ласка, чай з молоком. Building on Accusative knowledge from earlier
+    modules.'
+  - 'Cultural note: Ukrainian tea culture (чай з медом, чай з лимоном) vs coffee culture (кава по-львівськи). Regional preferences
+    across Ukraine.'
+- section: Паляниця (The Shibboleth Bread)
+  words: 175
   points:
-  - Define «паляниця» (a traditional round wheat bread) and explain its physical characteristics
-    and historical roots.
-  - 'Decolonized phonetic focus: Explain why «паляниця» acts as a linguistic shibboleth
-    by detailing the independent phonetic properties of Ukrainian, specifically the
-    uniquely soft «ц» [t͡sʲ].'
-  - Discuss broader Ukrainian bread traditions, including the «хліб-сіль» hospitality
-    greeting, and introduce the proverb «Хліб — усьому голова».
-- section: Мені подобається / Я не їм
-  words: 400
+  - 'Cultural sidebar: Паляниця — the round wheat bread that became a linguistic shibboleth during 2022. The specific pronunciation
+    of пал-я-ни-ця is difficult for Russian speakers to reproduce.'
+  - 'Ukrainian bread traditions: хліб as sacred (never thrown away), the ''хліб-сіль'' (bread and salt) hospitality greeting.
+    Connection to the proverb «Хліб — усьому голова».'
+- section: Мені подобається / Я не їм (Preferences)
+  words: 250
   points:
-  - Use English scaffolding to introduce the Dative structure «Мені подобається» for
-    expressing preferences, offering a simple contrast with the Nominative/Accusative
-    «Я люблю».
-  - 'Provide clear, short example sentences expressing food preferences: «Мені подобається
-    борщ», «Я люблю каву з молоком».'
-  - 'Introduce practical vocabulary for dietary restrictions, dislikes, and negation:
-    «Я не їм м''ясо» (vegetarian context), «Я не п''ю молоко», «У мене алергія на...».'
-  - Present 2 short situational dialogues showing how to express food preferences
-    and dietary restrictions at a dinner table.
-- section: Практика
-  words: 400
+  - 'Expressing food preferences: Мені подобається борщ (I like borscht). Я люблю каву з молоком (I love coffee with milk).
+    Review of подобатися + Dative construction.'
+  - 'Expressing dislikes and restrictions: Я не їм м''ясо (I don''t eat meat — vegetarian). Я не п''ю каву (I don''t drink
+    coffee). Negation with food verbs.'
+  - 'Allergies and dietary needs: У мене алергія на горіхи (I have an allergy to nuts). Я не можу їсти глютен. Practical survival
+    phrases for dietary restrictions.'
+- section: Практика (Practice)
+  words: 250
   points:
-  - Create a simulated simple restaurant menu («Читаємо меню») featuring authentic
-    Ukrainian food and drink names grouped logically, with prices listed in hryvnias
-    (грн).
-  - Provide conversational practice («Розмова») with short dialogues focused on questions
-    like «Що ти любиш їсти?» and «Яка твоя улюблена їжа?».
-  - Include actionable instructions for the learner to mentally practice categorizing
-    vocabulary (їжа vs напої), sorting by gender, and forming basic noun-adjective
-    pairs.
+  - 'Food vocabulary drills: Categorization (їжа vs напої), gender sorting, adjective matching. Building automatic recall
+    of food terms.'
+  - 'Menu reading preview: Simple Ukrainian menu items. Recognizing food words in authentic format with prices.'
+  - 'Preference dialogues: Що ти любиш їсти? Яка твоя улюблена їжа? Conversational practice expressing food tastes.'

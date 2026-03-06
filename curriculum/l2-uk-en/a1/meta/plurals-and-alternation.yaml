@@ -2,46 +2,47 @@ slug: plurals-and-alternation
 title: Plurals and Alternation
 word_target: 1200
 content_outline:
-- section: Множина іменників
+- title: Множина іменників (Noun Plurals)
   slug: noun-plurals
   words: 350
   points:
-  - 'Introduction to Ukrainian plurals: categorizing by gender.'
-  - 'Masculine nouns: adding -и or -і to consonants (студент → студенти, хлопець →
-    хлопці).'
-  - 'Feminine nouns: replacing -а/-я with -и/-і (книга → книги, земля → землі).'
-  - 'Neuter nouns: replacing -о/-е with -а/-я (місто → міста, море → моря).'
-  - 'Common irregular plurals to memorize immediately: діти (children), люди (people),
-    очі (eyes).'
-- section: Чергування (Vowel Alternation)
+  - Introduce the concept of plural nouns categorized by gender.
+  - 'Masculine nouns: Add -и/-і to consonants (студент → студенти, хлопець → хлопці).'
+  - 'Feminine nouns: Replace -а/-я with -и/-і (книга → книги, земля → землі).'
+  - 'Neuter nouns: Replace -о/-е with -а/-я (місто → міста, море → моря).'
+  - 'Introduce high-frequency irregular plurals: діти (children), люди (people), очі
+    (eyes).'
+- title: Чергування (Vowel Alternation)
   slug: vowel-alternation
   words: 300
   points:
-  - 'The ''fleeting і'' concept: why the vowel changes when the syllable opens.'
-  - The і → о shift with examples (кіт → коти, рік → роки).
-  - The і → е shift with examples (піч → печі, палець → пальці).
-  - 'Strategy for learners: checking monosyllabic masculine nouns for stem changes.'
-- section: Множина прикметників
+  - 'Explain the ''fleeting і'' concept: why the vowel ''і'' changes when the syllable
+    opens.'
+  - Show the і → о shift with examples (кіт → коти, рік → роки).
+  - Show the і → е shift with examples (піч → печі, палець → пальці).
+  - 'Provide a simple strategy: checking monosyllabic masculine nouns for stem changes.'
+- title: Множина прикметників (Adjective Plurals)
   slug: plural-adjectives
   words: 250
   points:
-  - 'The great simplification: masculine, feminine, and neuter adjectives all share
-    the same plural ending.'
-  - Hard vs. soft stems in plural adjectives (новий/нова/нове → нові; синій/синя/синє
-    → сині).
-  - 'Matching plural adjectives with plural nouns: Це нові книги. Ті великі міста.'
-- section: Винятки та особливості
+  - 'Highlight the simplification: all genders share the same plural adjective ending
+    (-і/-ї).'
+  - Demonstrate hard vs. soft stems (новий/нова/нове → нові; синій/синя/синє → сині).
+  - Practice matching plural adjectives with plural nouns (Це нові книги, Ті великі
+    міста).
+- title: Винятки та особливості (Special Cases)
   slug: special-cases
   words: 150
   points:
-  - Uncountable nouns that exist only in the singular (молоко, цукор, вода).
-  - Plural-only nouns (pluralia tantum) like гроші (money) and двері (door).
-  - A brief note on stress shifts in plural forms (рукА → рУки).
-- section: Підсумок і практика
+  - Introduce uncountable nouns that exist only in singular (молоко, цукор, вода).
+  - Introduce plural-only nouns (pluralia tantum) such as гроші (money) and двері
+    (door).
+  - Briefly note that stress can shift in plural forms (рукА → рУки).
+- title: Підсумок і практика (Summary and Practice)
   slug: summary-practice
   words: 150
   points:
-  - Summary table of plural endings by gender.
-  - 'Self-check question 1: Pluralize a mix of masculine, feminine, and neuter nouns.'
-  - 'Self-check question 2: Apply the і → о/е alternation rule to a given noun.'
-  - 'Self-check question 3: Combine an adjective and noun in the plural.'
+  - Provide a quick summary table of plural endings by gender.
+  - 'Self-check 1: Pluralize a mix of masculine, feminine, and neuter nouns.'
+  - 'Self-check 2: Apply the і → о/е alternation rule correctly.'
+  - 'Self-check 3: Form a complete phrase combining an adjective and noun in the plural.'

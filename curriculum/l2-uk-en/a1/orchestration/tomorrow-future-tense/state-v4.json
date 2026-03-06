@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "tomorrow-future-tense",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T22:56:34Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T22:56:59Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T22:58:28Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T23:00:35Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-05T23:15:12Z",
+      "attempts": 3
+    }
+  }
+}

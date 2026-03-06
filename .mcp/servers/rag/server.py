@@ -251,6 +251,29 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="verify_words",
+            description=(
+                "Batch-verify multiple Ukrainian word forms against VESUM in a single call. "
+                "Much faster than multiple verify_word calls — one SQL query instead of N round-trips. "
+                "Returns per-word results: found/not-found with lemma, POS, and tags."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of Ukrainian word forms to verify (e.g., ['кращий', 'гірший', 'більший'])"
+                    },
+                    "pos_filter": {
+                        "type": "string",
+                        "description": "Optional POS filter applied to all words (e.g., 'adj', 'noun')."
+                    },
+                },
+                "required": ["words"]
+            },
+        ),
+        Tool(
             name="verify_lemma",
             description=(
                 "Get all inflected forms of a Ukrainian lemma from the VESUM morphological dictionary. "
@@ -411,6 +434,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_collection_stats(arguments)
         elif name == "verify_word":
             return await handle_verify_word(arguments)
+        elif name == "verify_words":
+            return await handle_verify_words(arguments)
         elif name == "verify_lemma":
             return await handle_verify_lemma(arguments)
         elif name == "query_wikipedia":
@@ -607,6 +632,28 @@ async def handle_verify_word(args: dict) -> list[TextContent]:
     for m in matches:
         lines.append(f"- **lemma**: {m['lemma']}  |  **pos**: {m['pos']}  |  **tags**: `{m['tags']}`")
 
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_verify_words(args: dict) -> list[TextContent]:
+    words = args["words"]
+    pos_filter = args.get("pos_filter")
+
+    from rag.query import verify_words
+    results = await asyncio.to_thread(verify_words, words, pos_filter)
+
+    lines = [f"Batch verification: {len(words)} words\n"]
+    found = 0
+    for word in words:
+        matches = results.get(word, [])
+        if matches:
+            found += 1
+            tags_str = ", ".join(f"{m['lemma']}({m['pos']})" for m in matches[:3])
+            lines.append(f"- **{word}** — FOUND ({len(matches)} match): {tags_str}")
+        else:
+            lines.append(f"- **{word}** — NOT FOUND")
+
+    lines.insert(1, f"Found: {found}/{len(words)}\n")
     return [TextContent(type="text", text="\n".join(lines))]
 
 

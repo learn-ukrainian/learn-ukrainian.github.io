@@ -6,40 +6,45 @@ content_outline:
   slug: overview
   words: 200
   points:
-  - Welcome message from the 'Friendly Hostel Host' explaining the checkpoint purpose.
-  - Test-Teach-Test (TTT) approach to review alphabet, gender, adjectives, plurals,
-    and basic questions.
-  - Explicit English scaffolding explaining that instructions are in English to ensure
-    clear understanding.
+  - 'Introduce: Welcome message from the ''Friendly Hostel Host'' explaining the checkpoint''s
+    purpose.'
+  - 'Show examples: Briefly demonstrate what will be tested (reading, gender, adjectives).'
+  - 'Summarize: Explicit English scaffolding stating that instructions remain in English
+    for clarity.'
 - section: 'Навичка 1: Читання та Рід (Skill 1: Reading and Gender)'
   slug: skill-1-reading-and-gender
   words: 300
   points:
-  - Cyrillic reading check without transliteration, explicitly distinguishing И vs
-    І (bit vs bee).
-  - 'Noun gender review: standard endings (-а/-я, consonant, -о/-е).'
-  - 'Exceptions rule: highlighting ''тато'' as masculine despite the -о ending.'
+  - 'Introduce: Cyrillic reading check without transliteration, focusing on ''И''
+    vs ''І''.'
+  - 'Show examples: Review regular noun gender endings (-а/-я, consonant, -о/-е) and
+    the exception ''тато''.'
+  - 'Practice: Identifying gender and reading minimal pairs.'
+  - 'Summarize: Quick recap of the three noun genders.'
 - section: 'Навичка 2: Прикметники, Множина та Питання (Skill 2: Adjectives, Plurals
     and Questions)'
   slug: skill-2-adjectives-plurals-and-questions
   words: 350
   points:
-  - Reviewing plural noun formation and adjective-noun agreement from M11-M13 using
-    simple 'Це...' structures.
-  - 'Basic question formation: Хто це?, Що це?, Де кафе?.'
-  - Using 'так/ні' and simple negation with 'не' (e.g., Ні, це не велике місто).
+  - 'Introduce: Plural noun formation and matching adjectives to nouns.'
+  - 'Show examples: Basic nominal questions (Хто це? Що це? Де?) and negative answers
+    using ''не''.'
+  - 'Practice: Matching adjectives to singular and plural nouns in ''Це...'' sentences.'
+  - 'Summarize: Review the importance of adjective-noun agreement.'
 - section: 'Культурний контекст: Кафе (Cultural Context: Cafe)'
   slug: cultural-context-cafe
   words: 200
   points:
-  - 'Lviv coffee culture hook: Yuriy Kulchytsky and the Vienna connection.'
-  - Basic cafe vocabulary (кава, чорна кава, рахунок) applied in nominal sentences.
-  - 'Dining etiquette phrase: ''Смачного!'' (Bon appetit).'
+  - 'Introduce: Lviv coffee culture and the historical impact of Yuriy Kulchytsky.'
+  - 'Show examples: Essential cafe vocabulary (кава, рахунок, Смачного!).'
+  - 'Practice: Using cafe words in simple ''Де...?'' or ''Це...'' contexts.'
+  - 'Summarize: Recap of cultural dining etiquette.'
 - section: Підсумок (Summary)
   slug: summary
   words: 150
   points:
-  - 3-4 self-check questions assessing readiness (Can I read Cyrillic fluently? Can
-    I match adjectives to nouns?).
-  - Transition guidance acknowledging readiness for M15, where verb conjugation will
-    begin.
+  - 'Self-check: Can I read Cyrillic words without transliteration fluently?'
+  - 'Self-check: Can I correctly identify noun genders and form basic plurals?'
+  - 'Self-check: Can I match adjectives to nouns correctly?'
+  - 'Self-check: Can I ask simple questions with хто, що, and де?'
+  - 'Transition: Congratulate the learner and prepare them for verbs in the next module.'

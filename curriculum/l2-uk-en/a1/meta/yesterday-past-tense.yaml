@@ -8,12 +8,12 @@ content_outline:
   points:
   - Introduce the past tense conceptually with English scaffolding, visually contrasting
     the present ('Сьогодні я тут') with the past ('Вчора я був там').
-  - 'Cultural hook: Mention historical events (like Ivan Fedorov printing the ''Apostol''
-    in Lviv in 1574) to anchor the past tense in reality.'
   - Present high-frequency past time markers ('вчора', 'вчора ввечері', 'минулого
     тижня/року') with short Ukrainian examples.
   - 'Grammatical warning: Explicitly teach that ''минулого'' must be used without
     the preposition ''в''.'
+  - 'Cultural hook: Mention historical events (like Ivan Fedorov printing the ''Apostol''
+    in Lviv in 1574) to anchor the past tense in reality.'
 - section: 'Основи минулого часу (Grammar: Past Tense Formation)'
   slug: grammar-past-tense-formation
   words: 400
@@ -35,10 +35,10 @@ content_outline:
   - 'Introduce essential irregular verbs: ''їсти'' (їв/їла) and ''йти'' (ішов/ішла/ішли).'
   - Briefly explain the vowel alternation (о/і) in 'йти', keeping the explanation
     accessible for A1 beginners.
-  - Provide a mini-dialogue set in a museum context (referencing the ZUNR language
-    law of 1919) to show irregular verbs in action.
-  - Include quick-fire drills distinguishing gender forms (він пив / вона пила, він
-    ішов / вона йшла) to build automaticity.
+  - Provide a mini-dialogue set in a museum context to show irregular verbs in action,
+    using a cultural hook like the ZUNR language law.
+  - 'Include quick-fire drills distinguishing gender forms (він пив / вона пила, він
+    ішов / вона йшла) to build automaticity. (Note: use English instructions, no imperatives).'
 - section: 'Підсумок: Мій день (Summary and Production)'
   slug: summary-production
   words: 200

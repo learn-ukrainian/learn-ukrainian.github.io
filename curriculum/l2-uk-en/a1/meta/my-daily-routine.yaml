@@ -2,40 +2,44 @@ slug: my-daily-routine
 title: My Daily Routine
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 400
+- title: Вступ (Introduction)
+  slug: introduction
+  words: 250
   points:
   - Set immersion at 35-40% using English scaffolding to introduce the concept of
     daily routine (типові щоденні заняття) and the difference between a working day
     (робочий день) and a day off (вихідний день).
   - Use chronological markers to map the day from morning to evening, using simple
     Ukrainian sentences.
-- section: Презентація
-  words: 600
+- title: Презентація (Presentation)
+  slug: presentation
+  words: 350
   points:
-  - Give 'прокидатися' and 'вмиватися' their own H3 with definition and 3+ examples
-    each.
-  - Create an H3 to explicitly contrast reflexive 'вмиватися' (washing oneself) with
-    transitive 'мити руки' (washing hands), addressing the common learner error.
-  - Create an H3 for the conjugation of 'дивитися' (дивлюся, дивишся) and explain
+  - Introduce 'прокидатися' and 'вмиватися' with their own H3, providing definitions
+    and 3+ examples each.
+  - Create an H3 to explicitly contrast the reflexive 'вмиватися' (washing oneself)
+    with the transitive 'мити руки' (washing hands) to address common learner errors.
+  - Provide an H3 for the conjugation of 'дивитися' (дивлюся, дивишся) and explain
     the -ся/-сь rule (-сь after vowels, -ся after consonants).
   - Include a cultural note box about 'Обід' being the main, substantial meal of the
     day (13:00-14:00).
-- section: Практика
-  words: 550
+- title: Практика (Practice)
+  slug: practice
+  words: 350
   points:
-  - Create an H3 distinguishing 'їхати на роботу' (transport) and 'йти на роботу'
-    (on foot).
+  - Distinguish between 'їхати на роботу' (by transport) and 'йти на роботу' (on foot)
+    in daily commuting contexts.
   - 'Create an H3 for scheduling tasks: drill the Locative pattern ''о сьомій годині'',
-    explicitly correcting the error of using ''в'' + Accusative.'
+    explicitly correcting the error of using ''в'' + Accusative for time.'
   - Integrate frequency and sequence adverbs (зазвичай, спочатку, потім, після цього)
-    in a short reading text about a morning routine.
-- section: Продукування та Підсумок
-  words: 450
+    within a short, practical reading text about a morning routine.
+- title: Продукування та Підсумок (Production and Summary)
+  slug: production-and-summary
+  words: 250
   points:
   - Include a cultural hook on 'домашній одяг' (changing into home clothes) as an
     evening transition.
   - Provide a Model Answer text where a persona describes their typical day, contrasting
     a busy working day with a relaxing day off.
   - Include a bulleted summary of the core reflexive verb endings and sequence adverbs
-    covered in the module.
+    covered in the module, followed by 3-4 self-check questions to verify understanding.

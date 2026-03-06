@@ -1,15 +1,36 @@
-## Research Notes
+# Дослідження: Plurals and Alternation
 
-Textbook approach: Ukrainian textbooks for beginners logically sequence nominative plurals by noun gender, as the ending depends on the base gender. Standard progression: masculine adds `-и`/`-і`, feminine replaces `-а`/`-я` with `-и`/`-і`, and neuter replaces `-о`/`-е` with `-а`/`-я`. Adjective agreement is introduced as a major simplification, because the distinct gender forms (masculine, feminine, neuter) collapse into a single `-і` or `-ї` plural ending. The vowel alternation (`і` → `о`/`е`), often referred to as the "fleeting vowel," is taught practically through high-frequency words (*кіт* → *коти*) before formal phonetic rules.
+## State Standard Reference
+§4.2.1.1: "Noun case form formation — singular/plural, all 4 declensions basic"
+§4.2.1.2: "Adjective declension — hard/soft groups, gender agreement"
+Alignment: This module introduces basic nominative plural forms for nouns across genders and the unified plural ending for adjectives, fulfilling foundational morphological requirements.
 
-Common errors:
-1. Treating neuter nouns like masculine/feminine nouns by applying `-и`/`-і` (e.g., saying *місти* instead of the correct *міста*).
-2. Forgetting the `і` → `о`/`е` vowel alternation and keeping the "і" in the plural stem (e.g., *кіти* instead of *коти*).
-3. Pluralizing uncountable nouns like *молоко* or *цукор*.
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| студенти | Regular masculine plural (-и); Top 500 | нові студенти, молоді студенти |
+| книги | Regular feminine plural (-и); Top 200 | цікаві книги, старі книги |
+| міста | Regular neuter plural (-а); Top 100 | великі міста, нові міста |
+| коти | Vowel alternation (і → о) | руді коти, домашні коти |
+| діти | Irregular plural from дитина; Top 100 | маленькі діти, наші діти |
+| гроші | Plural-only noun (pluralia tantum); Top 300 | багато грошей, заробляти гроші |
 
-Cultural hook: Ukrainian shares the "pluralia tantum" (plural-only nouns) concept with English (like *ножиці* - scissors, *окуляри* - glasses), but interestingly applies it to *двері* (door) and *гроші* (money), treating them grammatically as multiple items.
+## Cultural Hooks
+1. In Ukrainian, the concept of "money" (гроші) is always plural, unlike in English where it is uncountable singular. You literally talk about "moneys".
 
-Cross-references: This module relies on noun genders (M04) and adjective agreement (M11-M12), preparing the learner for the Checkpoint (M14) and later noun cases.
+## Common Learner Errors
+1. Forgetting vowel alternation → saying *кіти* instead of *коти* — English speakers are used to simply adding an ending to the base stem.
+2. Mismatching adjective and noun number → saying *новий книги* instead of *нові книги* — forgetting that adjectives must also pluralize to agree with the noun.
+3. Pluralizing uncountables → trying to make words like *молоко* or *цукор* plural in general contexts.
+
+## Cross-References
+- Builds on: a1-12 (Colors and Clothing), a1-06 (stress mobility)
+- Prepares for: a1-14 (Checkpoint First Contact)
+
+## Notes for Content Writing
+- A1 Level requirement: Use heavy English scaffolding for grammar explanations. Keep Ukrainian examples short (max 8-10 words).
+- Provide IPA only for the first occurrence of each new vocabulary word. Do not use IPA for full sentences.
+- Ensure the "fleeting і" concept is explained simply without overly academic linguistics jargon.
 
 ## Resource Discovery
 

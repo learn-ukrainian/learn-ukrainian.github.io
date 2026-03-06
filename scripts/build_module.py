@@ -2156,6 +2156,8 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
             act_path.write_text(activities_text, "utf-8")
             wrote_activities = True
             log(f"  Phase C: Activities extracted → {act_path.name}")
+            # Save to orchestration dir for traceability
+            (ctx.orch_dir / "phase-C-output-activities.yaml").write_text(activities_text, "utf-8")
 
     if not wrote_vocab:
         vocab_text = _extract_delimiter_tolerant(raw_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
@@ -2164,6 +2166,8 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
             voc_path.write_text(vocab_text, "utf-8")
             wrote_vocab = True
             log(f"  Phase C: Vocabulary extracted → {voc_path.name}")
+            # Save to orchestration dir for traceability
+            (ctx.orch_dir / "phase-C-output-vocabulary.yaml").write_text(vocab_text, "utf-8")
 
     # Extract and log friction
     friction = _extract_delimiter(raw_output, "===FRICTION_START===", "===FRICTION_END===")
@@ -4214,6 +4218,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     content_path = ctx.paths["md"]
     prev_audit_output = screen.audit_output  # Track previous audit for progress detection
 
+    consecutive_failures = 0  # Track consecutive dispatch failures (timeouts)
     for attempt in range(1, max_iters + 1):
         log(f"  validate: Fix attempt {attempt}/{max_iters}...")
 
@@ -4232,8 +4237,14 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
             timeout=TIMEOUT_FIX,
         )
         if not ok:
-            log(f"  validate: Fix dispatch {attempt} failed")
+            consecutive_failures += 1
+            log(f"  validate: Fix dispatch {attempt} failed (consecutive: {consecutive_failures})")
+            if consecutive_failures >= 2:
+                log("  validate: 2 consecutive dispatch failures (likely timeouts) — "
+                    "skipping remaining fix attempts")
+                break
             continue
+        consecutive_failures = 0  # Reset on success
 
         if fix_output.exists():
             fix_text = fix_output.read_text("utf-8")
@@ -5737,6 +5748,8 @@ def main() -> int:
                         help="Build a range of modules (e.g. 1-20)")
     parser.add_argument("--rebuild", action="store_true",
                         help="Nuke state and rebuild from research")
+    parser.add_argument("--no-auto-rebuild", action="store_true",
+                        help="Disable automatic rebuild when validate exhausts fix attempts")
     parser.add_argument("--force-phase", type=str, default=None,
                         help="Re-run a single phase (research/content/activities/validate/review/mdx)")
     parser.add_argument("--restart-from", type=str, default=None,
@@ -5920,14 +5933,17 @@ def main() -> int:
                 use_v3=getattr(args, "use_v3", False),
                 gemini_model=getattr(args, "gemini_model", None),
                 skip_discover=getattr(args, "skip_discover", False),
+                no_auto_rebuild=getattr(args, "no_auto_rebuild", False),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
                 passed_list.append((n, slug))
             else:
                 # Auto-rebuild: if review/D exhausted, attempt one rebuild.
+                # Disabled with --no-auto-rebuild to prevent silent restarts.
                 _rebuilt_ok = False
-                if not args.rebuild:
+                _no_auto_rebuild = getattr(args, "no_auto_rebuild", False)
+                if not args.rebuild and not _no_auto_rebuild:
                     try:
                         _rb_paths = get_module_paths(args.track, slug)
                         _rb_orch = _rb_paths["md"].parent / "orchestration" / slug

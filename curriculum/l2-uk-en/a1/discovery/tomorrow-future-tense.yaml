@@ -1,0 +1,116 @@
+discovered_at: '2026-03-05T22:56:34.919686+00:00'
+query_keywords:
+- Tomorrow - Future Tense
+- Презентація граматики
+- Grammar Presentation
+- Лексика та культурний контекст
+- Vocabulary and Culture
+- Практика та підсумок
+- Practice and Summary
+- compound future using буду + infinitive
+- буду for all persons
+- plans and intentions
+- future time expressions correctly
+- Compound future (буду + infinitive)
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/grammar-past-tense/
+  title: Past Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/grammar-future/
+  title: Future Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/26/
+  title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/27/
+  title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/28/
+  title: ULP 1-28 Making plans for the weekend – Future tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0002
+  text: "3\n\uFEFF\n— повторення;\n— спостереження;\n— творче завдання;\n— ключ-відповідь;\n\
+    Умовні позначення:\n— культура слова;\n— матеріали мережі Інтернет;\n— словник;\n\
+    — домашнє завдання. Дорогі дев’ятикласники! Цього навчального року ви продовжуєте\
+    \ вивчення синтаксису й пунктуації. Звуки, слова \nта їхні особливості, які ви\
+    \ детально вивчали в попередніх класах, є будівельним матеріалом \nдля речення,\
+    \ за допомогою якого ви вже можете передавати свої думки, інтонації та емоції.\
+    \ Підручник допоможе вам у цікавій і суча"
+  section_title: Сторінка 3
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
+  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
+    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
+    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
+    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
+    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
+    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
+    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0209
+  text: "204\nВідомості із синтаксису й пунктуації. Види речень за метою висловлення\n\
+    \ Дайте домашку \nз математики.\n15:28\nЯ загубила в класі \nщоденник. Ніхто \n\
+    не бачив?\n15:39\nНа завтра треба \nготувати поробку?\n15:53\nВізьміть завтра\
+    \ під-\nручники з англій-\nської, буде заміна. \n16:21\nХодімо разом \nу кіно.\
+    \ \nр\n16:42\nЯ не знаю, як \nрозв’язати задачу. \nДопоможіть!!!  \n \n \nД\n\
+    \ \n \n \n17:36\nВправа 331\n1. Прочитайте речення, узяті з чату \nкласу .\n2.\
+    \ Назвіть спочатку розповідні ре-\nчення, потім питальні та  спону-\nкальн"
+  section_title: Сторінка 204
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-uhor-2022-1_s0094
+  text: "196\t До поданих речень утворіть нові зі словами минулий / наступ-\nний за\
+    \ зразком.\nЗразок: Минулого четверга ми були на виставці. /  \nНаступного четверга\
+    \ ми підемо на виставку.\n1. Минулої суботи ми ходили у театр. 2. Минулого по-\n\
+    неділка діти ходили на екскурсію. 3. Наступної суботи ти \nбудеш вдома? 4. Наступного\
+    \ тижня буде холодно. 5. Ми \nзустрілися минулого четверга. 6. Улітку наступного\
+    \ року \nми поїдемо на море.\n197\t Перепишіть речення. На місці крапок вставте\
+    \ дієслово чекати \nв потрібній за з"
+  section_title: Сторінка 96
+  grade: 5
+  author: uhor
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n6\n1.\tПрочитайте діалог «У громадському транспорті»\
+    \ та виконайте завдання. \n— Жінко в червоній сукні, ви виходите на наступній\
+    \ зупинці? \n— Ні, проходьте, будь ласка.\nА.\t Хто з пасажирів порушив етикет?\
+    \ \nБ.\t Чи потрібно наголошувати на статі, віці й одязі незнайомої людини? \n\
+    Етикетні формули\nвітання\nпрощання\nвибачення\nДоброго ранку!\nДобрий день! Добридень!\n\
+    Добрий вечір! Добриве-\nчір!\nПривіт! Салют! Вітаю! \nМоє вам шанування! \nСкільки\
+    \ літ!\nДо побачення! Прощайте!\nНа все добре! До "
+  section_title: Сторінка 9
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

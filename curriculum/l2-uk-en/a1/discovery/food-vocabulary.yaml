@@ -1,0 +1,150 @@
+discovered_at: '2026-03-05T23:38:08.088210+00:00'
+query_keywords:
+- Food and Drink
+- Їжа
+- Food
+- Напої
+- Drinks
+- Паляниця
+- The Shibboleth Bread
+- Мені подобається / Я не їм
+- Preferences
+- Name common foods and drinks in Ukrainian
+- Express food preferences and dislikes
+- Understand the cultural significance of паляниця
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode12/
+  title: Ordering food in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - vocabulary
+  - food
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 12
+- url: https://www.ukrainianlessons.com/episode13/
+  title: More about food in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - vocabulary
+  - food
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 13
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7000000000000001
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
+- url: https://www.ukrainianlessons.com/ph-food/
+  title: 'Ukrainian Phrasebook: Food and Restaurants'
+  source: ukrainianlessons.com
+  relevance_score: 0.6000000000000001
+  topics:
+  - food
+  - restaurant
+  - ordering
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 47
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0066
+  text: "67\nту – тю\t\nлу – лю\t\nлюблю\nру – рю\t\nсу – сю\t\nлюбить\nПрочитай.\
+    \ Яка улюблена їжа дівчинки? Розкажи про свою \nулюблену страву.\n\b\nПрочитай.\
+    \ Що любить робити хлопчик?  \nА що любиш робити ти?\n1\n2\nЮ ю\nЯ не люблю лимонний\
+    \ сік. \nЯ  люблю пити смачне молоко. \nЯ люблю пироги з  вишнями \nта черешнями.\
+    \ Я  не люблю \nбананові тістечка з  кремом. \nЯ думаю, що кожна людина \nмає\
+    \ улюблені страви.\nЯ люблю малювати.  \nЯ не люблю грати в хокей.  \nЯ люблю\
+    \ грати в шахи.  \nЯ не люблю стріляти з лука."
+  section_title: Сторінка 67
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0019
+  text: "18\nоДнина І мноЖина\nЄ слова — назви предметів, які називають один \nпредмет:\
+    \ м’яч \n. Є слова — назви предметів, які \nназивають багато предметів: м’ячі\
+    \ \n. \nУ гнома Буркотуна є чарівна паличка, яка може розмножу-\nвати предмети.\
+    \ Був один предмет — стало багато. Розглянь \nмалюнки. Над якими предметами Буркотун\
+    \ ще не чаклував? \nЗапиши слова за зразком.\nЗразок: пташка — пташки, … .\nодин\n\
+    багато\n \nДо слова, яке називає один предмет, допиши слово, яке \nназиває багато\
+    \ предметів за зразком. Склади два реч"
+  section_title: Сторінка 18
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0059
+  text: "59\nМа-ти  ра-но у-ста-ва-ла,\nНа  сні-да-нок го-ту-ва-ла\nІз виш-ня-ми ва-ре-ни-ки,\n\
+    Ва-ре-ни-ки-ту-ле-ни-ки.\n                              Зірка Мензатюк\n\t Знайди\
+    \ у вірші букву в. \n\t\nТи знаєш, що таке вареники? Це дуже смач-\nна українська\
+    \ страва, виріб із тіста з різною \nначинкою. \n\t Чому у вірші вареники називають\
+    \ туленика­\nми? Вислов свою думку.\n\t З якими продуктами, на твою думку, не\
+    \ варять \nвареники?"
+  section_title: Сторінка 61
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0017
+  text: "16\nЙ й\nБачу Й, й (йот). Чую  [й].\nа й в а\n [ •  =   |  –• ]\nа й с т\
+    \ р и\n* а й в о р о\nа\nо\nи\nі\nЙ\nга\nми\nрі\nЙ\nн о к\nлій- \n\t\nліній-\n\
+    \t\nмай- \nчай- \n\t\nгай- \n\t\nчай- \nмий\t\nлий \t\nчай\t\nграй\nвимий\t\n\
+    долий\t\nчайник\t\nзіграй\nай\nой\nий\nій\nа\nо\nі\nі\nч\nй\nд\nм\nй\nPidruchnyk.com.ua"
+  section_title: Сторінка 18
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0062
+  text: "63\nЗнайди слово — підпис до малюнка. \nВідшукай слово до схеми.\n \nчо-бо-ти\
+    \ \nчовник \nжучок \nніч\n че-ре-ви-ки \nчасник \nрачок \nпіч\n си-ни-чка \nкабачок\
+    \ \nпавучок \nріч\n \nТекст. Тема тексту. Заголовок\nЯКИЙ ЧАЙ СМАЧНІШИЙ?\nМама\
+    \ заварила чай у чайниках. \nТато пив чорний чай із пиріжками. Мама пила \nзелений\
+    \ чай із печивом. Марічка пила квітковий \nчай із тістечками. \nВ усіх був смачний\
+    \ і корисний чай.\n Який чай пила Марічка? мама Марічки? Який чай пив \nтато Марічки?\
+    \ Як ти думаєш, чому в усіх був різний чай? "
+  section_title: Сторінка 63
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

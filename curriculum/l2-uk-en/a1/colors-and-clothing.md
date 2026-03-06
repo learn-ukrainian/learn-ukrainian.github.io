@@ -1,267 +1,416 @@
 <!-- SCOPE
-Covers: Basic colors, gender agreement with adjectives, simple clothing vocabulary, Pluralia Tantum words
+Covers: Vocabulary for colors and clothing, adjective agreement, and the verb «носити».
 Not covered:
-  - Verb conjugation for wear (носити) → M15
-  - Accusative case for clothing → M25
+  - Formal instruction on Accusative case rules → a1-25
 -->
 
 # Colors & Clothing
 
 > **Чому це важливо? — Why does this matter?**
 >
-> Learning colors helps you describe the world around you. By combining colors with clothing, you will practice making words match in gender, which is a core skill in Ukrainian.
+> Colors bring your language to life, and clothing vocabulary helps you beautifully describe the people around you. Understanding colors also unlocks deep cultural symbols in ancient Ukrainian traditions.
 
 ## Вступ та культурний контекст (Introduction & Cultural Context)
 
-Світ кольорів! (The world of colors!) Сьогодні тема — кольори. (Today the topic is colors.) У культурі України колір — це історія. (In the culture of Ukraine, color is a story.) Кольори і традиції. (Colors and traditions.)
+Welcome back! Today we learn colors and clothing.
 
-Традиційна українська вишиванка.
-A traditional Ukrainian embroidered shirt.
+Привіт! Це кольори.
+Hello! Here are the colors.
+
+Це наш одяг.
+Here is our clothing.
+
+Кольори й одяг.
+Colors and clothing.
+
+Це нова тема.
+The topic is new.
+
+Ось нові слова.
+Here are new words.
 
 Значення кольорів.
 The meaning of colors.
 
-Червоний колір — це любов і радість.
-The red color is love and joy.
+The «вишиванка» (embroidered shirt) is an «оберіг» (talisman).
 
-Чорний колір — це наша земля.
-The black color is our earth.
+Ось українська вишиванка.
+Here is a Ukrainian embroidered shirt.
 
-Білий колір — це чистота.
-The white color is purity.
+Це красива сорочка.
+The shirt is beautiful.
 
-Традиційна сорочка і кольори. (The traditional shirt and colors.) Червоний колір — це життя та енергія. (The red color is life and energy.) Чорний колір — це родюча земля. (The black color is fertile earth.) Білий колір — це світло. (The white color is light.) Разом ці кольори — це візуальна поезія. (Together these colors are a visual poetry.)
+Це оберіг.
+It acts as a talisman.
 
-> [!cultural]
-> The traditional embroidered shirt is called a **вишивА́нка**. The embroidery is usually placed around the collar and cuffs. This is not just for decoration! Historically, these patterns acted as a talisman or protective circle to keep bad energy away. The colors played a huge role in this protection.
+Це наша історія.
+Our history is deep.
 
-Today we will combine colors and clothing. You already know that Ukrainian nouns have gender (masculine, feminine, neuter). Because colors describe nouns, they must change their endings to perfectly match the gender of the word they describe.
+Червоний колір символізує життя та любов.
+Red symbolizes life and love.
 
-## Кольори та узгодження (Colors & Agreement)
+Це життя.
+It represents life.
 
-Основні кольори. (Basic colors.) Вісім слів. (Eight words.)
+Це любов.
+It stands for love.
 
-Ось білий колір.
-Look at the white color.
+Чорний колір — це родюча земля.
+Black is fertile earth.
 
-А це чорний колір.
-And this is the black color.
+Це земля.
+It means earth.
 
-Тут червоний колір.
-This is the red color.
+Білий колір — це знак чистоти.
+White is a sign of purity.
 
-Ось синій колір.
-Check out the blue color.
+Це чистота.
+It symbolizes purity.
 
-А це зелений колір.
-And this is the green color.
+Це дуже цікаво.
+The topic is interesting.
 
-Тут жовтий колір.
-We have the yellow color.
+Це наша історія.
+Our history is important.
 
-Ось сірий колір.
-Now the grey color.
+Кольори дуже важливі.
+Colors are very important.
 
-А це коричневий колір.
-And this is the brown color.
+Ми використовуємо кольори щодня.
+We use colors every day.
 
-Here is your color dictionary:
+Кольори допомагають описувати людей і речі.
+Colors help describe people and things.
 
-| Word | Meaning |
-|------|---------|
-| **бІ́лий** | white |
-| **чО́рний** | black |
-| **червО́ний**| red |
-| **сИ́ній** | blue |
-| **зелЕ́ний** | green |
-| **жО́втий** | yellow |
-| **сІ́рий** | grey |
-| **кори́чневий** | brown |
+Це корисні слова.
+These are useful words.
 
-Кольори в українській мові. (Colors in the Ukrainian language.) Колір і слово. (Color and word.) Завжди той самий рід. (Always the same gender.) It is like choosing the right size of shoes — the word must fit perfectly!
+Ви зможете описувати одяг.
+You will be able to describe clothing.
 
-Слова і рід. (Words and gender.) Чоловічий рід, жіночий рід, середній рід. (Masculine, feminine, neuter.) Колір і закінчення. (Color and ending.)
+Почнімо!
+Let's start!
 
-Look at the standard endings for most colors:
-- Masculine: **-ий** 
-- Feminine: **-а** 
-- Neuter: **-е** 
+## Кольори та узгодження (Colors & Grammar of Agreement)
 
-> [!note]
-> English speakers often forget to change the adjective ending! Your brain might want to use the dictionary form (**червоний**) for everything. But «червоний машина» is incorrect because **машина** (car) is feminine. You must say «червона машина». Always check the gender of the noun first!
+Тепер ми знаємо символізм.
+Now we know the symbolism.
 
-Приклади. (Examples.)
+Вивчімо основні кольори.
+Let us learn the core color words.
 
-Стіл — це чоловічий рід.
-A table is masculine.
+Ви будете використовувати їх щодня.
+You will use these every day.
 
-Ось чорний стіл.
-This is a black table.
+Ось основні кольори українською мовою.
+Here are the basic colors in the Ukrainian language.
 
-Машина — це жіночий рід.
-A car is feminine.
+Який це колір?
+What color is it?
 
-А це чорна машина.
-And this is a black car.
+Це гарний колір.
+The color is beautiful.
 
-Вікно — це середній рід.
-A window is neuter.
+Це білий колір.
+White is here.
 
-Тут чорне вікно.
-Look at a black window.
+Це чорний колір.
+Black is here.
 
-Закінчення кольору. (The ending of the color.) Корінь і закінчення. (The root and the ending.) The root of the word stays the same, but the ending adapts to fit the noun perfectly.
+Це червоний колір.
+Red is here.
 
-Some colors end in **-ій** for masculine. For example, **сИ́ній** (blue). Let's see how it changes:
-- Masculine: **сИ́ній**
-- Feminine: **сИ́ня**
-- Neuter: **сИ́нє**
+| Color | Meaning |
+|-------|---------|
+| **бі́лий** | white |
+| **чо́рний** | black |
+| **черво́ний** | red |
+| **си́ній** | blue |
+| **зеле́ний** | green |
+| **жо́втий** | yellow |
 
-Ось синій зошит.
-This is a blue notebook.
+Український прапор синій і жовтий.
+The Ukrainian flag is blue and yellow.
 
-А це синя ручка.
-And this is a blue pen.
+Це красивий прапор.
+The flag is beautiful.
 
-Секрет успіху: колір і слово разом! (The secret to success: color and word together!)
+Remember the rule about adjectives from the previous lesson? They must always agree with the noun they describe in gender: masculine, feminine, or neuter.
+
+> [!tip]
+> Adjectives and nouns must always match. If the noun is feminine, the adjective must also take a feminine ending!
+
+Подивімося на це правило.
+Let us see this rule in action.
+
+Чоловічий рід має закінчення «-ий».
+Masculine gender has the ending «-ий».
+
+Жіночий рід має закінчення «-а».
+Feminine gender has the ending «-а».
+
+Середній рід має закінчення «-е».
+Neuter gender has the ending «-е».
+
+Це правило.
+The rule is simple.
+
+Це важливо.
+It is important.
+
+Ось черво́ний све́тр.
+Here is a red sweater. (Masculine)
+
+Це черво́на соро́чка.
+Here is a red shirt. (Feminine)
+
+Там зеле́не пла́ття.
+There is a green dress. (Neuter)
+
+Ви бачите, як закінчення змінюється?
+Do you see how the ending changes?
+
+Це дуже часта помилка.
+This is a very common mistake.
+
+Не кажіть «черво́ний соро́чка».
+Do not say "черво́ний соро́чка".
+
+Це неправильно. Сорочка — жіночий рід.
+It is incorrect because shirt is feminine gender.
+
+Завжди перевіряйте рід іменника.
+Always check the gender of the noun.
+
+> [!warning]
+> Watch out carefully for the tricky color «си́ній» (blue). It uniquely belongs to the special soft group of adjectives. Its endings are slightly different and notably softer: «-ій» for masculine, «-я» for feminine, and «-є» for neuter (си́ній, си́ня, си́нє).
+
+Finally, there is a distinctly small, unique group of colors borrowed directly from other languages. These are elegant words like «бордо́» (burgundy), «беж» (beige), and «ха́кі» (khaki). The truly wonderful thing about these specific foreign words is that they never ever change their endings! They stay exactly the same, no matter what gender the attached noun is.
+
+Ось колір бордо́.
+Here is the burgundy color.
 
 ## Лексика одягу (Clothing Vocabulary)
 
-Новий одяг. (New clothes.) Одяг і кольори. (Clothes and colors.)
+You already know the familiar words «соро́чка» and «све́тр». Let us quickly expand your everyday wardrobe with significantly more essential and practical clothing vocabulary.
+
+Це нова тема.
+The topic is new.
+
+Це мій новий одяг.
+My new clothing is here.
+
+Ось одяг.
+Here is the clothing.
+
+Що це?
+What is this?
+
+Це мій одяг.
+My clothing is here.
+
+| Word | Meaning |
+|------|---------|
+| **соро́чка** | shirt |
+| **све́тр** | sweater |
+| **ку́ртка** | jacket |
+| **су́кня** | dress (elegant) |
+| **пла́ття** | dress (casual) |
+
+> [!culture]
+> Слово «су́кня» — це елегантний одяг. Слово «пла́ття» — це щоденний одяг.
+> The word "су́кня" is elegant clothing. The word "пла́ття" is everyday clothing.
+
+Це нові фрази.
+These are new phrases.
+
+Ось мій нови́й си́ній све́тр.
+Here is my new blue sweater.
+
+Ось гарна черво́на су́кня.
+Here is a beautiful red dress.
+
+Там те́пла ку́ртка.
+There is a warm jacket.
+
+Ці чо́рні штани́ дуже зру́чні.
+These black pants are very comfortable.
+
+Я люблю́ цей зеле́ний све́тр.
+I love this green sweater.
+
+Ось магазин.
+Here is a store.
+
+Це гарний одяг.
+This clothing is beautiful.
+
+Який одяг ви лю́бите найбі́льше?
+What clothing do you like the most?
+
+Я найбі́льше люблю́ соро́чку.
+I like shirts the most.
+
+Тепер поговоримо про спеціальну групу слів.
+Now let's talk about a special group of words.
+
+Це спеціальні слова.
+These are special words.
+
+Ці слова — завжди множина.
+These words are always plural.
+
+| Word | Meaning |
+|------|---------|
+| **штани́** | pants |
+| **джи́нси** | jeans |
+| **окуля́ри** | glasses |
+
+Це важливо запам'ятати.
+It is important to remember this.
+
+Because these words are always plural, any adjective describing them must also be in the plural form. You cannot use a singular adjective with these nouns.
+
+Це мої нові́ джи́нси.
+These are my new jeans.
+
+Ось мої чо́рні окуля́ри.
+Here are my black glasses.
+
+Там одні́ си́ні штани́.
+There is one pair of blue pants.
+
+Ось мої нові́ те́плі штани́.
+Here are my new warm pants.
+
+Ці окуля́ри дуже гарні.
+These glasses are very beautiful.
+
+## Практика: Дієслово «носити» та покупки (Practice: The Verb 'To Wear' & Shopping)
+
+Now we thoroughly know the undeniably correct names of clothes and the vibrant descriptive colors.
+
+Дієслово «носити».
+The verb 'to wear'.
+
+Я часто ношу́ бі́лу соро́чку.
+I often wear a white shirt.
+
+Подивімося на правило.
+Let us look at the rule.
+
+Дієслово «носити» змінює жіночий рід.
+The verb 'to wear' changes feminine gender.
+
+Закінчення «-а» змінюється на «-у».
+The ending '-a' changes to '-у'.
+
+Закінчення «-я» змінюється на «-ю».
+The ending '-я' changes to '-ю'.
+
+Слово також змінює закінчення!
+The adjective also changes its ending!
+
+Я ношу́ черво́ну су́кню.
+I wear a red dress.
+
+Ви бачите, як два слова змінюються?
+Do you see how two words change?
+
+Це не «черво́на су́кня».
+It is not 'черво́на су́кня'.
+
+Це «черво́ну су́кню».
+It is 'черво́ну су́кню'.
+
+Я ношу́ си́ні джи́нси.
+I wear blue jeans.
+(Слова у множині не змінюють закінчення — це дуже легко! Plural words do not change their endings — it is very easy!)
+
+Практикуймо!
+Let's practice.
+
+Ось короткий діалог.
+Here is a short dialogue.
+
+Ви зараз у магазині одягу.
+Imagine you are in a store.
+
+Ми в магазині одягу.
+We are in a clothing store.
+
+— Добрий день. Де бі́ла соро́чка?
+— Good afternoon. Where is the white shirt?
+— Ось бі́ла соро́чка. Це ваш розмір.
+— Here is the white shirt. Your size is right here.
+— Так, це мій розмір. Це гарний колір.
+— Yes, it fits. The color is beautiful.
+— Це чудова бі́ла соро́чка.
+— The white shirt is wonderful.
+
+When shopping for clothes, you can use these helpful phrases to express what you like or if something fits well.
+
+Ці штани́ гарні.
+These pants are beautiful.
+
+Ця чо́рна ку́ртка дуже гарна.
+This black jacket is very beautiful.
+
+## Підсумок (Summary)
 
 Ось нові слова.
-These are the new words.
+Here are the new words.
 
-Це сорочка.
-This is a shirt.
+Кольори і граматика.
+Colors and grammar.
 
-Ось сукня.
-This is a dress.
+Ось мій одяг.
+Look at my clothing.
 
-А це куртка.
-And this is a jacket.
+Я ношу чорні штани.
+I wear black pants.
 
-Тут светр.
-Look at a sweater.
+Я ношу білу сорочку.
+I wear a white shirt.
 
-| Word | Meaning | Gender |
-|------|---------|--------|
-| **сорО́чка** | shirt | Feminine |
-| **сУ́кня** | dress | Feminine |
-| **плА́ття** | dress | Neuter |
-| **кУ́ртка** | jacket | Feminine |
-| **свЕ́тр** | sweater | Masculine |
+Ось гарна червона сукня.
+Here is a beautiful red dress.
 
-Два слова для сукні: сукня і плаття. (Two words for a dress: сукня and плаття.) Обидва слова — популярні. (Both words are popular.) The word **сУ́кня** is very common and sounds a bit more elegant. The word **плА́ття** is also used in everyday speech.
+Там мій новий синій светр.
+There is my new blue sweater.
 
-Одяг і кольори разом. (Clothes and colors together.) Рід одягу — це важливо. (The gender of clothing is important.)
+Чоловічий рід: закінчення -ий (чорний светр).
+Masculine adjectives end in -ий.
 
-Слово «сорочка» і літера «а». (The word "сорочка" and the letter "a".) Це жіночий рід. (This is feminine.) Колір — також жіночий рід. (The color — also feminine.)
+Жіночий рід: закінчення -а (чорна сорочка).
+Feminine adjectives end in -а.
 
-Ось біла сорочка.
-This is a white shirt.
+Середній рід: закінчення -е (чорне плаття).
+Neuter adjectives end in -е.
 
-Моя червона куртка.
-My red jacket.
+Ці слова — завжди множина (штани́, окуля́ри).
+These words are always plural.
 
-Твій новий синій светр.
-Your new blue sweater.
+Дієслово «носити» змінює закінчення.
+The verb 'to wear' changes endings.
 
-Гарна зелена сукня.
-A beautiful green dress.
+Я ношу́ бі́лу ку́ртку.
+I wear a white jacket.
 
-> [!tip]
-> Always ask yourself: "What gender is the clothing?" before you say the color. If it is a sweater (**свЕ́тр**), it gets a masculine color ending. If it is a jacket (**кУ́ртка**), it gets a feminine color ending. 
+Ось мій розмір.
+Here is my size.
 
-Англійська мова і українська мова: спільні правила. (The English language and the Ukrainian language: shared rules.) We have a special group of words. In English, you also have these: pants, jeans, glasses. You never say "one pant." Ukrainian does the exact same thing!
+Це дуже важливо.
+It is very important.
 
-Ось штани.
-These are pants.
+Тест.
+Quiz.
 
-А це джинси.
-And these are jeans.
+Take a moment to answer these review questions:
+1. How do you say «red dress» in Ukrainian?
+2. Translate the phrase «I wear a white shirt».
+3. What is the grammatical gender of «све́тр»?
+4. Which colors symbolize life and earth?
 
-Тут окуляри.
-Look at glasses.
-
-| Word | Meaning | Note |
-|------|---------|------|
-| **штанИ́** | pants | Always plural |
-| **джИ́нси** | jeans | Always plural |
-| **окулЯ́ри** | glasses | Always plural |
-
-Because these words are always plural, you must use the plural adjective ending. Закінчення для plural — «і». (The ending for plural is «і».) Notice how **сИ́ній** becomes **сИ́ні**, and **чО́рний** becomes **чО́рні**:
-
-Це сині джинси.
-These are blue jeans.
-
-Ось чорні штани.
-These are black pants.
-
-А це нові окуляри.
-And these are new glasses.
-
-## Практичне застосування (Practice & Shopping)
-
-Магазин одягу — це ідеальне місце для практики. (A clothing store is the perfect place for practice.) You are in a Ukrainian store.
-
-Ми в магазині.
-We are in a store.
-
-Ось біла сорочка.
-This is a white shirt.
-
-Ця біла сорочка — скільки?
-This white shirt — how much?
-
-You can describe what you see and ask for prices. You can also express what you like! To say that a piece of clothing is beautiful, use the word **гарна** (beautiful for feminine) or **гарний** (for masculine).
-
-Ця сорочка — супер!
-This shirt is super!
-
-Ця червона сукня — дуже гарна.
-This red dress is very beautiful.
-
-І цей зелений светр — гарний.
-And this green sweater is beautiful.
-
-Діалог у магазині.
-Dialogue in the store.
-
-— Добрий день! Ця біла сорочка — скільки?
-— Good afternoon! This white shirt — how much?
-
-— Ця біла сорочка? Сто гривень.
-— This white shirt? One hundred hryvnias.
-
-— Дякую. А той синій светр?
-— Thank you. And that blue sweater?
-
-— Той синій светр — двісті гривень.
-— That blue sweater — two hundred hryvnias.
-
-> [!myth-buster]
-> A common myth is that you must learn complex grammar to start speaking. In reality, pointing and naming is enough! If you don't know the word for "this" or "that" yet, you can simply point and use **ось** (here is) with the Nominative case: «Ось червона куртка» (Here is a red jacket) or «Ось синій светр» (Here is a blue sweater). It's a perfect survival phrase for shopping!
-
-Practice these phrases every day. By practicing these simple descriptions, you will quickly master gender agreement!
-
----
-
-# Підсумок — Summary
-
-Ваш словниковий запас тепер набагато багатший. (Your vocabulary is now much richer.) You know the basic colors in Ukrainian and how to match them with clothing vocabulary. 
-
-Remember the golden rule of adjectives: the color must always match the gender of the noun it describes. 
-
-- Masculine words take **-ий** or **-ій** (чорний светр).
-- Feminine words take **-а** or **-я** (чорна куртка).
-- Neuter words take **-е** or **-є** (чорне плаття).
-- Some words are always plural (штани, джинси, окуляри).
-
-Let's test your memory with a quick self-check!
-
-1. How do you say "red dress" in Ukrainian using the word "сукня"?
-2. What gender is the word "светр"?
-3. Which two colors symbolize life and earth in traditional Ukrainian embroidery?
-
-Keep practicing by naming the colors of your own clothes every morning!
+Практика важлива!
+Practice is important!

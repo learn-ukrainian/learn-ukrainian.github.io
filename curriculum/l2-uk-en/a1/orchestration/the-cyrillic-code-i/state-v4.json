@@ -18,6 +18,11 @@
     "v4-activities": {
       "status": "complete",
       "ts": "2026-03-05T22:03:43Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-05T22:13:58Z",
+      "attempts": 1
     }
   }
 }

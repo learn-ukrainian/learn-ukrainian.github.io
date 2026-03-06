@@ -1,10 +1,10 @@
 # RAG Verification: yesterday-past-tense
 
-**Date:** 2026-03-05 22:03 UTC | **Words checked:** 106 | **VESUM coverage:** 102/106 (96.2%)
+**Date:** 2026-03-05 22:55 UTC | **Words checked:** 248 | **VESUM coverage:** 238/248 (96.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 102
-- ⚠️ Partial (RAG only): 3
+- ✅ Verified (VESUM): 238
+- ⚠️ Partial (RAG only): 9
 - ❌ Not found: 1
 
 ## ❌ Not Found (action required)
@@ -17,13 +17,19 @@
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| бу | prose | ✗ | ✓ | ✗ |
 | ли | prose | ✗ | ✓ | ✗ |
 | ло | prose | ✗ | ✓ | ✗ |
+| Львові | prose | ✗ | ✓ | ✗ |
+| Марія | activities | ✗ | ✓ | ✗ |
+| Олег | activities | ✗ | ✓ | ✗ |
+| Олена | activities | ✗ | ✓ | ✗ |
+| ст | prose | ✗ | ✓ | ✗ |
+| Федоров | prose | ✗ | ✗ | ✓ |
+| Іван | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 85 | 81 | 1 |
-| Activities (.yaml) | 21 | 21 | 0 |
+| Prose (.md) | 232 | 225 | 1 |
+| Activities (.yaml) | 16 | 13 | 0 |

@@ -1,0 +1,330 @@
+- type: quiz
+  title: "Essential Adjectives for Descriptions"
+  instruction: "Choose the correct meaning for these descriptive words."
+  items:
+    - question: "Which word means 'new'?"
+      options:
+        - text: "новий"
+          correct: true
+        - text: "старий"
+          correct: false
+        - text: "гарний"
+          correct: false
+        - text: "малий"
+          correct: false
+    - question: "Which word means 'expensive'?"
+      options:
+        - text: "дорогий"
+          correct: true
+        - text: "дешевий"
+          correct: false
+        - text: "добрий"
+          correct: false
+        - text: "поганий"
+          correct: false
+    - question: "Which word means 'beautiful' or 'nice'?"
+      options:
+        - text: "гарний"
+          correct: true
+        - text: "синій"
+          correct: false
+        - text: "зелений"
+          correct: false
+        - text: "старий"
+          correct: false
+    - question: "Which word means 'tasty'?"
+      options:
+        - text: "смачний"
+          correct: true
+        - text: "великий"
+          correct: false
+        - text: "цікавий"
+          correct: false
+        - text: "новий"
+          correct: false
+    - question: "What is the opposite of 'великий' (big)?"
+      options:
+        - text: "малий"
+          correct: true
+        - text: "старий"
+          correct: false
+        - text: "добрий"
+          correct: false
+        - text: "синій"
+          correct: false
+    - question: "What is the opposite of 'поганий' (bad)?"
+      options:
+        - text: "добрий"
+          correct: true
+        - text: "молодий"
+          correct: false
+        - text: "дешевий"
+          correct: false
+        - text: "цікавий"
+          correct: false
+    - question: "Which word means 'young'?"
+      options:
+        - text: "молодий"
+          correct: true
+        - text: "дорогий"
+          correct: false
+        - text: "старий"
+          correct: false
+        - text: "новий"
+          correct: false
+    - question: "Which word means 'old' or 'ancient'?"
+      options:
+        - text: "старий"
+          correct: true
+        - text: "новий"
+          correct: false
+        - text: "малий"
+          correct: false
+        - text: "зелений"
+          correct: false
+
+- type: group-sort
+  title: "Sorting Adjective Endings"
+  instruction: "Sort the adjectives into the correct gender category based on their ending."
+  groups:
+    - name: "Masculine Words"
+      items:
+        - "новий"
+        - "великий"
+        - "синій"
+        - "старий"
+    - name: "Feminine Words"
+      items:
+        - "нова"
+        - "велика"
+        - "синя"
+        - "стара"
+    - name: "Neuter Words"
+      items:
+        - "нове"
+        - "велике"
+        - "синє"
+        - "старе"
+
+- type: fill-in
+  title: "The Real Estate Agent: House Tour"
+  instruction: "Complete the descriptions of the properties for your clients."
+  items:
+    - sentence: "Це ___ будинок."
+      answer: "великий"
+      options:
+        - "великий"
+        - "велика"
+        - "велике"
+        - "великі"
+    - sentence: "Це ___ квартира."
+      answer: "нова"
+      options:
+        - "новий"
+        - "нова"
+        - "нове"
+        - "нові"
+    - sentence: "Квартира дуже ___."
+      answer: "дорога"
+      options:
+        - "дорогий"
+        - "дорога"
+        - "дороге"
+        - "дорогі"
+    - sentence: "Це ___ вікно."
+      answer: "мале"
+      options:
+        - "малий"
+        - "мала"
+        - "мале"
+        - "малі"
+    - sentence: "Це ___ місто."
+      answer: "старе"
+      options:
+        - "старий"
+        - "стара"
+        - "старе"
+        - "старі"
+    - sentence: "Будинок дуже ___."
+      answer: "дешевий"
+      options:
+        - "дешевий"
+        - "дешева"
+        - "дешеве"
+        - "дешеві"
+    - sentence: "Борщ дуже ___."
+      answer: "смачний"
+      options:
+        - "смачний"
+        - "смачна"
+        - "смачне"
+        - "смачні"
+    - sentence: "Це ___ кава."
+      answer: "смачна"
+      options:
+        - "смачний"
+        - "смачна"
+        - "смачне"
+        - "смачні"
+
+- type: true-false
+  title: "Grammar Rules for Descriptions"
+  instruction: "Decide if these grammar statements are true or false."
+  items:
+    - statement: "The adjective ending for plural words is always -і."
+      correct: true
+    - statement: "The word машина is feminine, so we say новий машина."
+      correct: false
+      explanation: "We must say нова машина because the adjective must copy the feminine gender."
+    - statement: "Синій is a soft stem adjective, so its feminine form is синя."
+      correct: true
+    - statement: "The question word for a masculine word is Який?."
+      correct: true
+    - statement: "Mavka is a famous figure from Ukrainian folklore, described as лісова дівчина."
+      correct: true
+    - statement: "In Ukrainian, adjectives usually come after the noun, like in Spanish."
+      correct: false
+      explanation: "Adjectives usually go right before the noun, exactly like in English."
+    - statement: "If you look up an adjective in a dictionary, it will be in the masculine form."
+      correct: true
+    - statement: "The question word for a neuter word is Яка?."
+      correct: false
+      explanation: "The question word for a neuter word is Яке?. Яка? is for feminine words."
+
+- type: match-up
+  title: "Property Descriptions"
+  instruction: "Match the Ukrainian phrases with their English meanings."
+  pairs:
+    - left: "новий дім"
+      right: "new house"
+    - left: "стара книга"
+      right: "old book"
+    - left: "велике місто"
+      right: "big city"
+    - left: "синя лінія"
+      right: "blue line"
+    - left: "добрий ранок"
+      right: "good morning"
+    - left: "нові друзі"
+      right: "new friends"
+    - left: "смачна кава"
+      right: "tasty coffee"
+    - left: "дорога квартира"
+      right: "expensive apartment"
+
+- type: unjumble
+  title: "The Real Estate Agent: Writing Listings"
+  instruction: "Put the words in the correct order to write attractive property listings."
+  items:
+    - words:
+        - "Це"
+        - "великий"
+        - "будинок."
+      answer: "Це великий будинок."
+    - words:
+        - "Квартира"
+        - "дуже"
+        - "гарна."
+      answer: "Квартира дуже гарна."
+    - words:
+        - "Це"
+        - "смачна"
+        - "кава."
+      answer: "Це смачна кава."
+    - words:
+        - "Борщ"
+        - "дуже"
+        - "смачний."
+      answer: "Борщ дуже смачний."
+    - words:
+        - "Це"
+        - "нова"
+        - "квартира."
+      answer: "Це нова квартира."
+    - words:
+        - "Вона"
+        - "дуже"
+        - "молода."
+      answer: "Вона дуже молода."
+
+- type: fill-in
+  title: "City Life and Details"
+  instruction: "Complete the phrases to describe life in the city with the correct endings."
+  items:
+    - sentence: "Це ___ лінія метро."
+      answer: "синя"
+      options:
+        - "синій"
+        - "синя"
+        - "синє"
+        - "сині"
+    - sentence: "Це ___ море."
+      answer: "синє"
+      options:
+        - "синій"
+        - "синя"
+        - "синє"
+        - "сині"
+    - sentence: "У мене є ___ зошит."
+      answer: "синій"
+      options:
+        - "синій"
+        - "синя"
+        - "синє"
+        - "сині"
+    - sentence: "Там ___ дівчата."
+      answer: "гарні"
+      options:
+        - "гарний"
+        - "гарна"
+        - "гарне"
+        - "гарні"
+    - sentence: "Це ___ дні."
+      answer: "сині"
+      options:
+        - "синій"
+        - "синя"
+        - "синє"
+        - "сині"
+    - sentence: "У місті є ___ вікна."
+      answer: "нові"
+      options:
+        - "новий"
+        - "нова"
+        - "нове"
+        - "нові"
+    - sentence: "Це ___ друзі."
+      answer: "добрі"
+      options:
+        - "добрий"
+        - "добра"
+        - "добре"
+        - "добрі"
+    - sentence: "У нас є ___ книги."
+      answer: "цікаві"
+      options:
+        - "цікавий"
+        - "цікава"
+        - "цікаве"
+        - "цікаві"
+
+- type: match-up
+  title: "Matching Questions to Things"
+  instruction: "Match the correct question word to the noun your clients are asking about."
+  pairs:
+    - left: "Який?"
+      right: "дім (masculine)"
+    - left: "Яка?"
+      right: "машина (feminine)"
+    - left: "Яке?"
+      right: "місто (neuter)"
+    - left: "Які?"
+      right: "друзі (plural)"
+    - left: "Яка?"
+      right: "погода (feminine)"
+    - left: "Яке?"
+      right: "вікно (neuter)"
+    - left: "Який?"
+      right: "день (masculine)"
+    - left: "Які?"
+      right: "дівчата (plural)"

@@ -1,0 +1,401 @@
+- type: match-up
+  title: Match the Colors
+  instruction: Match the Ukrainian color to its English translation.
+  pairs:
+    - left: білий
+      right: white
+    - left: чорний
+      right: black
+    - left: червоний
+      right: red
+    - left: синій
+      right: blue
+    - left: зелений
+      right: green
+    - left: жовтий
+      right: yellow
+    - left: бордо
+      right: burgundy
+    - left: хакі
+      right: khaki
+
+- type: match-up
+  title: Match the Clothing
+  instruction: Match the clothing item to its English translation.
+  pairs:
+    - left: сорочка
+      right: shirt
+    - left: штани
+      right: pants
+    - left: сукня
+      right: dress (elegant)
+    - left: плаття
+      right: dress (casual)
+    - left: куртка
+      right: jacket
+    - left: светр
+      right: sweater
+    - left: джинси
+      right: jeans
+    - left: окуляри
+      right: glasses
+
+- type: quiz
+  title: Choose the Correct Form
+  instruction: Match the color adjective to the gender of the noun.
+  items:
+    - question: 'Which word correctly completes: Це ___ светр.'
+      explanation: Светр is a masculine noun, so it takes the -ий ending.
+      options:
+        - text: червоний
+          correct: true
+        - text: червона
+          correct: false
+        - text: червоне
+          correct: false
+        - text: червоні
+          correct: false
+    - question: 'Which word correctly completes: Це ___ сорочка.'
+      explanation: Сорочка is a feminine noun, so it takes the -а ending.
+      options:
+        - text: біла
+          correct: true
+        - text: білий
+          correct: false
+        - text: біле
+          correct: false
+        - text: білі
+          correct: false
+    - question: 'Which word correctly completes: Це ___ плаття.'
+      explanation: Плаття is a neuter noun, so it takes the -е ending.
+      options:
+        - text: зелене
+          correct: true
+        - text: зелений
+          correct: false
+        - text: зелена
+          correct: false
+        - text: зелені
+          correct: false
+    - question: 'Which word correctly completes: Ось ___ джинси.'
+      explanation: Джинси is plural, so it takes the -і ending.
+      options:
+        - text: сині
+          correct: true
+        - text: синій
+          correct: false
+        - text: синя
+          correct: false
+        - text: синє
+          correct: false
+    - question: 'Choose the right ending for black jacket: ___ куртка.'
+      explanation: Куртка is a feminine noun, so it requires чорна.
+      options:
+        - text: чорна
+          correct: true
+        - text: чорний
+          correct: false
+        - text: чорне
+          correct: false
+        - text: чорні
+          correct: false
+    - question: Which color never changes its ending?
+      explanation: Бордо is a borrowed word and never changes its ending.
+      options:
+        - text: бордо
+          correct: true
+        - text: білий
+          correct: false
+        - text: синій
+          correct: false
+        - text: жовтий
+          correct: false
+    - question: 'Which word correctly completes: Це мій новий ___ светр.'
+      explanation: Светр is masculine, so it requires the soft masculine ending -ій.
+      options:
+        - text: синій
+          correct: true
+        - text: синя
+          correct: false
+        - text: синє
+          correct: false
+        - text: сині
+          correct: false
+    - question: 'Which word correctly completes: Ось гарна червона ___.'
+      explanation: Червона is feminine, so it must describe a feminine noun like сукня.
+      options:
+        - text: сукня
+          correct: true
+        - text: светр
+          correct: false
+        - text: джинси
+          correct: false
+        - text: плаття
+          correct: false
+
+- type: fill-in
+  title: Complete with the Correct Color Ending
+  instruction: Choose the correct letter or letters to finish the word.
+  items:
+    - sentence: Це чорн__ светр.
+      answer: ий
+      options:
+        - ий
+        - а
+        - е
+        - і
+    - sentence: Ось біл__ сорочка.
+      answer: а
+      options:
+        - а
+        - ий
+        - е
+        - і
+    - sentence: Там висить зелен__ плаття.
+      answer: е
+      options:
+        - е
+        - ий
+        - а
+        - і
+    - sentence: Це мої нов__ джинси.
+      answer: і
+      options:
+        - і
+        - ий
+        - а
+        - е
+    - sentence: Це син__ светр.
+      answer: ій
+      options:
+        - ій
+        - я
+        - є
+        - і
+    - sentence: Це син__ сорочка.
+      answer: я
+      options:
+        - я
+        - ій
+        - є
+        - і
+    - sentence: Це син__ плаття.
+      answer: є
+      options:
+        - є
+        - ій
+        - я
+        - і
+    - sentence: Ось син__ джинси.
+      answer: і
+      options:
+        - і
+        - ій
+        - я
+        - є
+
+- type: group-sort
+  title: Sort the Words
+  instruction: Group the words into Colors and Clothing.
+  groups:
+    - name: Colors
+      items:
+        - білий
+        - чорний
+        - червоний
+        - синій
+        - зелений
+        - жовтий
+        - бордо
+    - name: Clothing
+      items:
+        - сорочка
+        - штани
+        - сукня
+        - куртка
+        - светр
+        - джинси
+        - окуляри
+
+- type: true-false
+  title: True or False
+  instruction: Test your knowledge of Ukrainian culture and grammar rules.
+  items:
+    - statement: The red color in traditional Ukrainian embroidery symbolizes life and love.
+      correct: true
+      explanation: Red is constantly seen in folklore and brings vibrant energy.
+    - statement: The black color in Ukrainian culture represents sadness and death.
+      correct: false
+      explanation: Black beautifully represents fertile earth, wisdom, and wealth.
+    - statement: The white color in Ukrainian tradition represents purity and the divine world.
+      correct: true
+      explanation: White is a sign of purity, like in the phrase білий світ.
+    - statement: Words like штани and окуляри are always plural in Ukrainian.
+      correct: true
+      explanation: These are Pluralia Tantum words and only exist in plural form.
+    - statement: The color синій (blue) uses the hard endings like -ий and -а.
+      correct: false
+      explanation: Синій belongs to the soft group and takes softer endings like -ій, -я, -є.
+    - statement: Borrowed colors like бордо and беж never change their endings.
+      correct: true
+      explanation: These foreign words stay exactly the same regardless of the noun's gender.
+    - statement: To say one pair of pants, you use the singular form один штани.
+      correct: false
+      explanation: Because штани is always plural, you must use the plural form одні штани.
+    - statement: When you use the verb носити (to wear), feminine nouns ending in -а change to -у.
+      correct: true
+      explanation: This is the Accusative case pattern you use when describing what someone is wearing.
+
+- type: quiz
+  title: 'Using the Verb To Wear'
+  instruction: Choose the correct translation or form.
+  items:
+    - question: "How do you say 'I wear a white shirt'?"
+      explanation: Сорочка is feminine, so біла сорочка becomes білу сорочку.
+      options:
+        - text: Я ношу білу сорочку.
+          correct: true
+        - text: Я ношу біла сорочка.
+          correct: false
+        - text: Я ношу білий сорочка.
+          correct: false
+        - text: Я ношу біле сорочка.
+          correct: false
+    - question: "How do you say 'I wear a red dress'?"
+      explanation: Сукня is feminine and ends in -я, so it changes to -ю.
+      options:
+        - text: Я ношу червону сукню.
+          correct: true
+        - text: Я ношу червона сукня.
+          correct: false
+        - text: Я ношу червоний сукня.
+          correct: false
+        - text: Я ношу червоне сукня.
+          correct: false
+    - question: "How do you say 'I wear blue jeans'?"
+      explanation: Plural words like джинси do not change their familiar endings here.
+      options:
+        - text: Я ношу сині джинси.
+          correct: true
+        - text: Я ношу сині джинсу.
+          correct: false
+        - text: Я ношу синю джинси.
+          correct: false
+        - text: Я ношу синя джинси.
+          correct: false
+    - question: "How do you say 'I wear a black jacket'?"
+      explanation: Куртка is feminine, so it becomes куртку.
+      options:
+        - text: Я ношу чорну куртку.
+          correct: true
+        - text: Я ношу чорна куртка.
+          correct: false
+        - text: Я ношу чорний куртка.
+          correct: false
+        - text: Я ношу чорне куртка.
+          correct: false
+    - question: 'Translate: Ці штани мені підходять.'
+      explanation: This is a useful phrase when shopping for clothes.
+      options:
+        - text: These pants suit me.
+          correct: true
+        - text: I like these pants.
+          correct: false
+        - text: I wear these pants.
+          correct: false
+        - text: These are my pants.
+          correct: false
+    - question: 'Translate: Мені подобається цей колір.'
+      explanation: This phrase expresses that you like something.
+      options:
+        - text: I like this color.
+          correct: true
+        - text: I wear this color.
+          correct: false
+        - text: This color suits me.
+          correct: false
+        - text: This is my color.
+          correct: false
+    - question: Which sentence is correct?
+      explanation: Плаття is neuter, so both the adjective and noun keep their basic neuter forms.
+      options:
+        - text: Я ношу зелене плаття.
+          correct: true
+        - text: Я ношу зелена плаття.
+          correct: false
+        - text: Я ношу зелений плаття.
+          correct: false
+        - text: Я ношу зелену плаття.
+          correct: false
+    - question: Which sentence is correct?
+      explanation: Светр is masculine, so both the adjective and noun keep their basic masculine forms.
+      options:
+        - text: Я ношу чорний светр.
+          correct: true
+        - text: Я ношу чорну светр.
+          correct: false
+        - text: Я ношу чорна светр.
+          correct: false
+        - text: Я ношу чорне светр.
+          correct: false
+
+- type: fill-in
+  title: Shopping for Clothes
+  instruction: Complete the dialogue with the correct word.
+  items:
+    - sentence: Добрий день. Мені потрібна біла ___.
+      answer: сорочка
+      options:
+        - сорочка
+        - куртка
+        - штани
+        - джинси
+    - sentence: Який ___ ви шукаєте?
+      answer: колір
+      options:
+        - колір
+        - розмір
+        - светр
+        - одяг
+    - sentence: Мені ___ цей колір.
+      answer: подобається
+      options:
+        - подобається
+        - підходить
+        - потрібна
+        - ношу
+    - sentence: Ці штани мені ___.
+      answer: підходять
+      options:
+        - підходять
+        - подобається
+        - потрібна
+        - ношу
+    - sentence: Ця сорочка вам ___.
+      answer: підходить
+      options:
+        - підходить
+        - подобається
+        - підходять
+        - ношу
+    - sentence: Я часто ___ білу сорочку.
+      answer: ношу
+      options:
+        - ношу
+        - шукаю
+        - підходять
+        - подобається
+    - sentence: Це ___ біла сорочка.
+      answer: нова
+      options:
+        - нова
+        - новий
+        - нове
+        - нові
+    - sentence: Ось мої чорні ___.
+      answer: окуляри
+      options:
+        - окуляри
+        - сорочка
+        - куртка
+        - сукня

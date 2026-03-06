@@ -2,50 +2,52 @@ slug: shopping-and-market
 title: Shopping and Market
 word_target: 1200
 content_outline:
-- section: Скільки коштує?
-  words: 500
+- title: Скільки коштує? (How Much?)
+  slug: skilky-koshtuie
+  words: 275
   points:
-  - 'H3: Introduction & Verb. English scaffolding explaining the goal of the module
-    and the verb «коштувати». Define the universal question «Скільки це коштує?» and
-    explain why we use the 3rd person singular/plural.'
-  - 'H3: Currency Agreement. English explanation recalling rules from A1-17: 1 гривня,
-    2-4 гривні, 5+ гривень.'
-  - 'H3: Examples. 6+ bilingual example sentences showing price questions and answers
-    with various food items (e.g., «Скільки коштує хліб? — Хліб коштує двадцять гривень.»).'
-- section: У магазині
-  words: 400
+  - 'H3: The Core Question. Introduce the verb ''коштувати'' and the essential question
+    ''Скільки це коштує?'' with English scaffolding.'
+  - 'H3: Money and Numbers. Review number-noun agreement for ''гривня'' (1 гривня,
+    2-4 гривні, 5+ гривень) based on rules from A1-17.'
+  - 'H3: Examples. Provide basic Q&A examples with food items: ''Скільки коштує борщ?
+    — Борщ коштує сімдесят гривень.'''
+- title: У магазині (In the Store)
+  slug: u-mahazyni
+  words: 250
   points:
-  - 'H3: Polite Requests. Introduce «Дайте, будь ласка...» and «Я хочу купити...».
-    Explain in English that direct imperatives with «будь ласка» are culturally polite
-    in Ukrainian.'
-  - 'H3: Availability. Explicitly contrast the natural «У вас є...?» with the English
-    ''Do you have?'', warning against using the verb «мати» in this context.'
-  - 'H3: Dialogue. A complete bilingual role-play dialogue (greeting → asking for
-    item → price → paying → thanking) in a local store.'
-- section: Кількість та одиниці
-  words: 400
+  - 'H3: Polite Requests. Teach fixed phrases ''Я хочу купити...'' and ''Дайте, будь
+    ласка...''. Explicitly note that ''дайте'' is a fixed polite chunk (imperatives
+    aren''t taught yet).'
+  - 'H3: Checking Availability. Introduce ''У вас є...?'' / ''Є...?''. Contrast with
+    the English ''Do you have'' to avoid the common error of using the verb ''мати''.'
+  - 'H3: Mini-Dialogue. A simple bilingual shopping flow: greeting, asking for an
+    item, asking the price, paying, thanking.'
+- title: Кількість та одиниці (Quantities and Units)
+  slug: kilkist-ta-odynytsi
+  words: 250
   points:
-  - 'H3: Units Vocabulary. Introduce «кілограм», «літр», «пачка», «пляшка», «штука»
-    with English definitions and visual formatting.'
-  - 'H3: Formulaic Genitive. Connect to A1-18. Teach phrases as fixed chunks (e.g.,
-    «кілограм яблук», «літр молока») rather than full grammar rules.'
-  - 'H3: Numbers with Units. English explanation of case agreement with units (e.g.,
-    «два літри» vs «п''ять літрів»), providing a clear reference table.'
-- section: Засоби гігієни
-  words: 300
+  - 'H3: Measurement Units. Introduce ''кілограм'', ''літр'', ''пачка'', ''пляшка''
+    with visual formatting and English translations.'
+  - 'H3: Formulaic Genitive. Reinforce chunks like ''літр молока'' or ''пачка цукру''
+    (from A1-18), without deep grammar explanations.'
+  - 'H3: Numbers with Units. Briefly explain and show case agreement with units (e.g.,
+    ''два літри'', ''п''ять кілограмів'').'
+- title: Засоби гігієни (Hygiene Products)
+  slug: zasoby-hihiieny
+  words: 175
   points:
-  - 'H3: Hygiene Vocabulary. Introduce State Standard mandated items: «мило», «зубна
-    паста», «шампунь» (explicitly note masculine gender), «рушник», «туалетний папір».'
-  - 'H3: Location Questions. Combine shopping with location queries: «Де можна купити...?»,
-    «Де тут аптека?».'
-  - 'H3: Examples. 5+ bilingual sentences asking for hygiene products or their locations
-    in a store.'
-- section: Практика
-  words: 400
+  - 'H3: Essential Vocabulary. Teach ''мило'', ''зубна паста'', ''шампунь'', ''рушник'',
+    ''туалетний папір'' as required by the State Standard.'
+  - 'H3: Finding Things. Combine hygiene vocabulary with location questions: ''Де
+    тут аптека?'', ''Де можна купити мило?''.'
+- title: Практика (Practice & Summary)
+  slug: praktyka
+  words: 250
   points:
-  - 'H3: На ринку. A realistic bilingual role-play dialogue at the outdoor market,
-    asking for fresh produce quantities and paying.'
-  - 'H3: В аптеці. A short dialogue focused on finding and purchasing hygiene products.'
-  - 'H3: Список покупок (Shopping List). A reading exercise presenting a typical Ukrainian
-    shopping list with quantities (e.g., «2 літри молока», «1 пачка масла») for learners
-    to decode in context.'
+  - 'H3: Shopping Role-play. Provide two short bilingual dialogues: one at a store
+    (магазин) and one at an outdoor market (ринок).'
+  - 'H3: Shopping List Decoding. Present a typical Ukrainian shopping list with quantities
+    for reading practice.'
+  - 'H3: Self-Check. 3-4 questions verifying the learner''s ability to ask prices,
+    use ''У вас є...?'', and understand ''гривня'' agreements.'

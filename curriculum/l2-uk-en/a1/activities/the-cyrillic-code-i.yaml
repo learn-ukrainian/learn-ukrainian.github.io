@@ -1,312 +1,300 @@
 - type: watch-and-repeat
   title: 'Pronunciation Guide: Vowels and Consonants'
-  instruction: 'Watch the video for each letter and repeat the sound aloud.'
+  instruction: Watch the video for each letter and repeat the sound aloud.
   items:
-    - letter: 'А'
-      word: 'ананас'
-      video: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE'
-      note: 'Stays open and relaxed.'
-    - letter: 'О'
-      word: 'око'
-      video: 'https://www.youtube.com/watch?v=QT3c1TiZZgk'
-      note: 'Never reduce unstressed О to an A sound.'
-    - letter: 'У'
-      word: 'Україна'
-      video: 'https://www.youtube.com/watch?v=VB1O6PmtYRU'
-      note: 'Push your lips forward.'
-    - letter: 'М'
-      word: 'мама'
-      video: 'https://www.youtube.com/watch?v=Ez95H4ibuJo'
-      note: 'Just like English M.'
-    - letter: 'Л'
-      word: 'лама'
-      video: 'https://www.youtube.com/watch?v=v6-3Xg52Buk'
-      note: 'Looks like a tent, sounds like L.'
-    - letter: 'Н'
-      word: 'нам'
-      video: 'https://www.youtube.com/watch?v=vNUfiKHPYaU'
-      note: 'False Friend! Looks like H, sounds like N.'
-    - letter: 'С'
-      word: 'сом'
-      video: 'https://www.youtube.com/watch?v=7UsFBgSL91E'
-      note: 'False Friend! Looks like C, sounds like S.'
-
+  - letter: А
+    word: ананас
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    note: Stays open and relaxed.
+  - letter: О
+    word: око
+    video: https://www.youtube.com/watch?v=QT3c1TiZZgk
+    note: Never reduce unstressed О to an A sound.
+  - letter: У
+    word: Україна
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    note: Push your lips forward.
+  - letter: М
+    word: мама
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    note: Just like English M.
+  - letter: Л
+    word: лама
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    note: Looks like a tent, sounds like L.
+  - letter: Н
+    word: нам
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    note: False Friend! Looks like H, sounds like N.
+  - letter: С
+    word: сом
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    note: False Friend! Looks like C, sounds like S.
 - type: image-to-letter
-  title: 'First Letter Match'
-  instruction: 'Look at the English word or emoji. Which Ukrainian letter does the translation start with?'
+  title: First Letter Match
+  instruction: Look at the English word or emoji. Which Ukrainian letter does the
+    translation start with?
   items:
-    - emoji: '🍍 (pineapple)'
-      answer: 'А'
-      distractors:
-        - 'О'
-        - 'У'
-        - 'М'
-    - emoji: '👩 (mom)'
-      answer: 'М'
-      distractors:
-        - 'Н'
-        - 'Л'
-        - 'С'
-    - emoji: '🐟 (catfish)'
-      answer: 'С'
-      distractors:
-        - 'О'
-        - 'А'
-        - 'У'
-    - emoji: '🦙 (llama)'
-      answer: 'Л'
-      distractors:
-        - 'М'
-        - 'Н'
-        - 'А'
-    - emoji: '💤 (dream)'
-      answer: 'С'
-      distractors:
-        - 'Н'
-        - 'О'
-        - 'М'
-    - emoji: '🐘 (elephant)'
-      answer: 'С'
-      distractors:
-        - 'Л'
-        - 'М'
-        - 'Н'
-    - emoji: '🌲 (pine tree)'
-      answer: 'С'
-      distractors:
-        - 'Н'
-        - 'М'
-        - 'У'
-
+  - emoji: 🍍 (pineapple)
+    answer: А
+    distractors:
+    - О
+    - У
+    - М
+  - emoji: 👩 (mom)
+    answer: М
+    distractors:
+    - Н
+    - Л
+    - С
+  - emoji: 🐟 (catfish)
+    answer: С
+    distractors:
+    - О
+    - А
+    - У
+  - emoji: 🦙 (llama)
+    answer: Л
+    distractors:
+    - М
+    - Н
+    - А
+  - emoji: 💤 (dream)
+    answer: С
+    distractors:
+    - Н
+    - О
+    - М
+  - emoji: 🐘 (elephant)
+    answer: С
+    distractors:
+    - Л
+    - М
+    - Н
+  - emoji: 🌲 (pine tree)
+    answer: С
+    distractors:
+    - Н
+    - М
+    - У
 - type: classify
-  title: 'Vowels vs Consonants'
-  instruction: 'Sort the letters into vowels (голосні) and consonants (приголосні).'
+  title: Vowels vs Consonants
+  instruction: Sort the letters into vowels (голосні) and consonants (приголосні).
   categories:
-    - label: 'Голосні (Vowels)'
-      symbol_hint: 'vowel'
-      items:
-        - 'А'
-        - 'О'
-        - 'У'
-    - label: 'Приголосні (Consonants)'
-      symbol_hint: 'consonant'
-      items:
-        - 'М'
-        - 'Л'
-        - 'Н'
-        - 'С'
-
+  - label: Голосні (Vowels)
+    symbol_hint: vowel
+    items:
+    - А
+    - О
+    - У
+  - label: Приголосні (Consonants)
+    symbol_hint: consonant
+    items:
+    - М
+    - Л
+    - Н
+    - С
 - type: match-up
-  title: 'Word Meanings'
-  instruction: 'Match the Ukrainian word to its English meaning.'
+  title: Word Meanings
+  instruction: Match the Ukrainian word to its English meaning.
   pairs:
-    - left: 'мама'
-      right: 'mom'
-    - left: 'сом'
-      right: 'catfish'
-    - left: 'сон'
-      right: 'dream'
-    - left: 'масло'
-      right: 'butter'
-    - left: 'ананас'
-      right: 'pineapple'
-    - left: 'насос'
-      right: 'pump'
-    - left: 'смола'
-      right: 'resin'
-    - left: 'слон'
-      right: 'elephant'
-
+  - left: мама
+    right: mom
+  - left: сом
+    right: catfish
+  - left: сон
+    right: dream
+  - left: масло
+    right: butter
+  - left: ананас
+    right: pineapple
+  - left: насос
+    right: pump
+  - left: смола
+    right: resin
+  - left: слон
+    right: elephant
 - type: group-sort
-  title: 'Open vs Closed Syllables'
-  instruction: 'Sort the syllables based on whether they end in a vowel (open) or a consonant (closed).'
+  title: Open vs Closed Syllables
+  instruction: Sort the syllables based on whether they end in a vowel (open) or a
+    consonant (closed).
   groups:
-    - name: 'Open Syllables (Відкриті склади)'
-      items:
-        - 'МА'
-        - 'НО'
-        - 'СУ'
-        - 'ЛА'
-        - 'СО'
-        - 'МУ'
-    - name: 'Closed Syllables (Закриті склади)'
-      items:
-        - 'АМ'
-        - 'ОН'
-        - 'УС'
-        - 'АЛ'
-        - 'ОС'
-        - 'УМ'
-
+  - name: Open Syllables (Відкриті склади)
+    items:
+    - МА
+    - НО
+    - СУ
+    - ЛА
+    - СО
+    - МУ
+  - name: Closed Syllables (Закриті склади)
+    items:
+    - АМ
+    - ОН
+    - УС
+    - АЛ
+    - ОС
+    - УМ
 - type: anagram
-  title: 'Word Scramble'
-  instruction: 'Rearrange the letters to form the correct Ukrainian word.'
+  title: Word Scramble
+  instruction: Rearrange the letters to form the correct Ukrainian word.
   items:
-    - scrambled: 'м а м а'
-      answer: 'мама'
-      hint: 'mom'
-    - scrambled: 'м с о'
-      answer: 'сом'
-      hint: 'catfish'
-    - scrambled: 'о н с'
-      answer: 'сон'
-      hint: 'dream'
-    - scrambled: 'а м л а'
-      answer: 'лама'
-      hint: 'llama'
-    - scrambled: 'л о м а с'
-      answer: 'масло'
-      hint: 'butter'
-    - scrambled: 'с н л о'
-      answer: 'слон'
-      hint: 'elephant'
-    - scrambled: 'с о с н а'
-      answer: 'сосна'
-      hint: 'pine tree'
-    - scrambled: 'а н а с н а'
-      answer: 'ананас'
-      hint: 'pineapple'
-
+  - scrambled: м а м а
+    answer: мама
+  - scrambled: м с о
+    answer: сом
+  - scrambled: о н с
+    answer: сон
+  - scrambled: а м л а
+    answer: лама
+  - scrambled: л о м а с
+    answer: масло
+  - scrambled: с н л о
+    answer: слон
+  - scrambled: с о с н а
+    answer: сосна
+  - scrambled: а н а с н а
+    answer: ананас
 - type: true-false
-  title: 'Alphabet Rules'
-  instruction: 'Decide if the statement is true or false.'
+  title: Alphabet Rules
+  instruction: Decide if the statement is true or false.
   items:
-    - statement: 'The Ukrainian alphabet has exactly 33 letters.'
-      correct: true
-      explanation: 'Ukrainian has 33 letters and is highly phonetic.'
-    - statement: 'The letter Н sounds exactly like the English letter H.'
-      correct: false
-      explanation: 'Н is a False Friend. It sounds like the English N.'
-    - statement: 'The letter С makes a hard K sound like in the word cat.'
-      correct: false
-      explanation: 'С is a False Friend. It always makes the soft S sound, like in snake.'
-    - statement: 'Ukrainian vowels keep their pure sound even when they are unstressed.'
-      correct: true
-      explanation: 'This is the Golden Rule: Ukrainian vowels are never reduced.'
-    - statement: 'The letter Л makes the L sound and looks a bit like a tent.'
-      correct: true
-      explanation: 'Л looks like a tent or the Greek letter lambda and sounds like L.'
-    - statement: 'An open syllable is one that ends in a consonant.'
-      correct: false
-      explanation: 'An open syllable ends directly in a vowel, like МА or НО.'
-    - statement: 'The letter О should be pronounced like an A when unstressed.'
-      correct: false
-      explanation: 'Never reduce unstressed О to an A sound. It stays perfectly rounded everywhere.'
-    - statement: 'The letter У produces the deep oo sound found in the word moon.'
-      correct: true
-      explanation: 'У sounds like oo. Push your lips forward to make this sound correctly.'
-
+  - statement: The Ukrainian alphabet has exactly 33 letters.
+    correct: true
+    explanation: Ukrainian has 33 letters and is highly phonetic.
+  - statement: The letter Н sounds exactly like the English letter H.
+    correct: false
+    explanation: Н is a False Friend. It sounds like the English N.
+  - statement: The letter С makes a hard K sound like in the word cat.
+    correct: false
+    explanation: С is a False Friend. It always makes the soft S sound, like in snake.
+  - statement: Ukrainian vowels keep their pure sound even when they are unstressed.
+    correct: true
+    explanation: 'This is the Golden Rule: Ukrainian vowels are never reduced.'
+  - statement: The letter Л makes the L sound and looks a bit like a tent.
+    correct: true
+    explanation: Л looks like a tent or the Greek letter lambda and sounds like L.
+  - statement: An open syllable is one that ends in a consonant.
+    correct: false
+    explanation: An open syllable ends directly in a vowel, like МА or НО.
+  - statement: The letter О should be pronounced like an A when unstressed.
+    correct: false
+    explanation: Never reduce unstressed О to an A sound. It stays perfectly rounded
+      everywhere.
+  - statement: The letter У produces the deep oo sound found in the word moon.
+    correct: true
+    explanation: У sounds like oo. Push your lips forward to make this sound correctly.
 - type: quiz
-  title: 'Letter and Sound Recognition'
-  instruction: 'Choose the correct answer.'
+  title: Letter and Sound Recognition
+  instruction: Choose the correct answer.
   items:
-    - question: 'Which of these letters is a vowel (голосна)?'
-      explanation: 'А is a vowel. The others are consonants.'
-      options:
-        - text: 'А'
-          correct: true
-        - text: 'М'
-          correct: false
-        - text: 'Л'
-          correct: false
-        - text: 'С'
-          correct: false
-    - question: 'What does the word "сом" mean?'
-      explanation: 'The word "сом" means catfish in English.'
-      options:
-        - text: 'catfish'
-          correct: true
-        - text: 'dream'
-          correct: false
-        - text: 'pine tree'
-          correct: false
-        - text: 'wasp'
-          correct: false
-    - question: 'Which Ukrainian word means "butter" or "oil"?'
-      explanation: 'The word "масло" means butter or oil.'
-      options:
-        - text: 'масло'
-          correct: true
-        - text: 'мама'
-          correct: false
-        - text: 'насос'
-          correct: false
-        - text: 'смола'
-          correct: false
-    - question: 'What sound does the Ukrainian letter Н make?'
-      explanation: 'Н is a visual trap — it looks like H but sounds like N.'
-      options:
-        - text: '/n/ sound'
-          correct: true
-        - text: '/h/ sound'
-          correct: false
-        - text: '/m/ sound'
-          correct: false
-        - text: '/s/ sound'
-          correct: false
-    - question: 'Which letter looks identical to English C but makes a different sound?'
-      explanation: 'The Ukrainian С looks like English C but makes the /s/ sound.'
-      options:
-        - text: 'С'
-          correct: true
-        - text: 'Н'
-          correct: false
-        - text: 'М'
-          correct: false
-        - text: 'О'
-          correct: false
-    - question: 'What does the word "сосна" mean?'
-      explanation: 'The word "сосна" means pine tree.'
-      options:
-        - text: 'pine tree'
-          correct: true
-        - text: 'resin'
-          correct: false
-        - text: 'pump'
-          correct: false
-        - text: 'llama'
-          correct: false
-    - question: 'Which group contains ONLY consonants (приголосні)?'
-      explanation: 'М, Л, Н, and С are all consonants.'
-      options:
-        - text: 'М, Л, Н, С'
-          correct: true
-        - text: 'А, О, У'
-          correct: false
-        - text: 'М, А, С'
-          correct: false
-        - text: 'У, Н, О'
-          correct: false
-    - question: 'How do you say "mom" in Ukrainian using the letters you learned?'
-      explanation: 'The word for mom is "мама".'
-      options:
-        - text: 'мама'
-          correct: true
-        - text: 'мало'
-          correct: false
-        - text: 'сало'
-          correct: false
-        - text: 'сама'
-          correct: false
-    - question: 'Which vowel looks like a Y but sounds like "oo" in moon?'
-      explanation: 'The Ukrainian У looks like an English Y.'
-      options:
-        - text: 'У'
-          correct: true
-        - text: 'О'
-          correct: false
-        - text: 'А'
-          correct: false
-        - text: 'С'
-          correct: false
-    - question: 'Which letter looks like a small tent or lambda (Λ)?'
-      explanation: 'The letter Л has this shape and makes the /l/ sound.'
-      options:
-        - text: 'Л'
-          correct: true
-        - text: 'М'
-          correct: false
-        - text: 'Н'
-          correct: false
-        - text: 'А'
-          correct: false
+  - question: Which of these letters is a vowel (голосна)?
+    explanation: А is a vowel. The others are consonants.
+    options:
+    - text: А
+      correct: true
+    - text: М
+      correct: false
+    - text: Л
+      correct: false
+    - text: С
+      correct: false
+  - question: What does the word "сом" mean?
+    explanation: The word "сом" means catfish in English.
+    options:
+    - text: catfish
+      correct: true
+    - text: dream
+      correct: false
+    - text: pine tree
+      correct: false
+    - text: wasp
+      correct: false
+  - question: Which Ukrainian word means "butter" or "oil"?
+    explanation: The word "масло" means butter or oil.
+    options:
+    - text: масло
+      correct: true
+    - text: мама
+      correct: false
+    - text: насос
+      correct: false
+    - text: смола
+      correct: false
+  - question: What sound does the Ukrainian letter Н make?
+    explanation: Н is a visual trap — it looks like H but sounds like N.
+    options:
+    - text: /n/ sound
+      correct: true
+    - text: /h/ sound
+      correct: false
+    - text: /m/ sound
+      correct: false
+    - text: /s/ sound
+      correct: false
+  - question: Which letter looks identical to English C but makes a different sound?
+    explanation: The Ukrainian С looks like English C but makes the /s/ sound.
+    options:
+    - text: С
+      correct: true
+    - text: Н
+      correct: false
+    - text: М
+      correct: false
+    - text: О
+      correct: false
+  - question: What does the word "сосна" mean?
+    explanation: The word "сосна" means pine tree.
+    options:
+    - text: pine tree
+      correct: true
+    - text: resin
+      correct: false
+    - text: pump
+      correct: false
+    - text: llama
+      correct: false
+  - question: Which group contains ONLY consonants (приголосні)?
+    explanation: М, Л, Н, and С are all consonants.
+    options:
+    - text: М, Л, Н, С
+      correct: true
+    - text: А, О, У
+      correct: false
+    - text: М, А, С
+      correct: false
+    - text: У, Н, О
+      correct: false
+  - question: How do you say "mom" in Ukrainian using the letters you learned?
+    explanation: The word for mom is "мама".
+    options:
+    - text: мама
+      correct: true
+    - text: мало
+      correct: false
+    - text: сало
+      correct: false
+    - text: сама
+      correct: false
+  - question: Which vowel looks like a Y but sounds like "oo" in moon?
+    explanation: The Ukrainian У looks like an English Y.
+    options:
+    - text: У
+      correct: true
+    - text: О
+      correct: false
+    - text: А
+      correct: false
+    - text: С
+      correct: false
+  - question: Which letter looks like a small tent or lambda (Λ)?
+    explanation: The letter Л has this shape and makes the /l/ sound.
+    options:
+    - text: Л
+      correct: true
+    - text: М
+      correct: false
+    - text: Н
+      correct: false
+    - text: А
+      correct: false

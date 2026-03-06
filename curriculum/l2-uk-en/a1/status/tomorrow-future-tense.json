@@ -2,15 +2,15 @@
   "module": "tomorrow-future-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T22:52:20.768339Z",
+  "last_audit": "2026-03-06T00:15:14.821619Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T22:52:03.319068Z",
-    "meta": "2026-02-28T22:47:16.607421Z",
-    "activities": "2026-02-20T23:55:26.137586Z",
-    "vocabulary": "2026-02-26T10:56:38.079026Z",
-    "plan": "2026-02-28T03:02:37.382422Z",
-    "research": "2026-02-28T22:47:16.600229Z"
+    "md": "2026-03-06T00:13:47.836067Z",
+    "meta": "2026-03-06T00:01:39.855288Z",
+    "activities": "2026-03-06T00:11:40.177986Z",
+    "vocabulary": "2026-03-06T00:11:40.179631Z",
+    "plan": "2026-03-05T10:33:17.522865Z",
+    "research": "2026-03-05T23:56:59.156820Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3022/2000 (raw: 3159)"
+      "message": "2105/1200 (raw: 2261)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "8/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "15/1"
     },
     "naturalness": {
       "status": "info",
@@ -52,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 1
   }
 }

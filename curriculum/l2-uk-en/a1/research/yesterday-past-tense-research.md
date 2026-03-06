@@ -2,35 +2,32 @@
 
 ## State Standard Reference
 §4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
-Alignment: This module introduces the past tense formation using the L-participle, fulfilling the foundational past tense requirement of the A1 standard.
+Alignment: Introduces past tense formation, focusing on the L-participle and gender agreement, directly fulfilling the indicative mood past tense requirement.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| вчора (yesterday) | High frequency adverb (Top 100) | вчора ввечері, вчора зранку |
-| бути (to be) | Foundational linking verb, very high frequency (Top 10) | був удома, була на роботі |
-| робити (to do) | Core to daily routines, very high frequency (Top 20) | робити каву, що ти робив? |
-| їсти / йти (eat / go) | Irregular suppletive forms | їв обід, ішов додому, вона йшла |
-| минулий (past/last) | High frequency adjective for time. Used without 'в' | минулого тижня, минулого року |
+| бути | Very High frequency (Top 10), irregular | був удома, була на роботі |
+| робити | Very High frequency (Top 20) | робити каву, робити уроки |
+| вчора | High frequency adverb (Top 100) | вчора ввечері, вчора зранку |
+| минулий | High frequency adjective, no prep 'в' | минулого тижня, минулого року |
 
 ## Cultural Hooks
-1. On February 15, 1574, Ivan Fedorov printed the "Apostol" in Lviv (can be used to contrast past and present events).
-2. The ZUNR (West Ukrainian People's Republic) language law was adopted on February 15, 1919 (useful for museum/history context).
+1. On February 15, 1574, Ivan Fedorov printed the first book ("Apostol") in Lviv — a clear historical event to anchor past tense.
+2. The ZUNR law on state language was passed on February 15, 1919, providing a museum context for past tense verbs.
 
 ## Common Learner Errors
-1. **Gender mismatch for "я"**: "Я читав" (said by a female) → "Я читала" — English speakers aren't used to verbs reflecting the speaker's gender.
-2. **The "I was working" calque**: "Я був працював" → "Я працював" — Learners mistakenly try to translate the English past continuous using "to be" + verb.
-3. **Using prepositions with "минулого"**: "В минулого тижня" → "Минулого тижня" — Learners literally translate "in the past week".
+1. "Я читав" (spoken by a woman) → "Я читала" — English speakers often forget gender agreement for the 1st person pronoun "I".
+2. "Я був працював" → "Я працював" — Direct translation of the English continuous past ("I was working"), resulting in an incorrect compound past form.
 
 ## Cross-References
 - Builds on: a1-35 (Direction and Origin)
 - Prepares for: a1-37 (Tomorrow - Future Tense), a1-38 (My Daily Routine)
 
 ## Notes for Content Writing
-- **Scaffolding:** Use English scaffolding for all grammar explanations, per Core A (A1) rules. Provide IPA only on the first occurrence of new vocabulary words.
-- **Safety:** Explicitly create a safe harbor for the concept of gendered verbs, as this is intimidating for English speakers. Emphasize that "я" changes based on who is speaking.
-- **Visuals:** Use simple tables to show the -в, -ла, -ло, -ли paradigm.
-- **Constraint Checklist:** Stick strictly to imperfective past tense verbs. No imperative instructions (Слухайте!, Читайте!). No dative/instrumental cases.
+- Remember the restriction: DO NOT use imperative forms for instructions (no "Слухайте!" or "Пишіть!"). Use English instructions.
+- Ensure IPA is provided only on the first occurrence of each new vocabulary word.
+- Dedicate specific focus to the difference between masculine (-в) and feminine (-ла) endings for the 1st person, as it's a common stumbling block.
 
 ## Resource Discovery
 

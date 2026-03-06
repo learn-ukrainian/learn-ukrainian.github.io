@@ -488,6 +488,32 @@ def verify_word(word: str, pos_filter: str | None = None) -> list[dict]:
     return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
 
 
+def verify_words(words: list[str], pos_filter: str | None = None) -> dict[str, list[dict]]:
+    """Batch-verify multiple word forms against VESUM in a single query.
+
+    Returns dict mapping each word to its list of matches.
+    Words not found map to an empty list.
+    """
+    if not words:
+        return {}
+    conn = get_vesum_conn()
+    placeholders = ",".join("?" * len(words))
+    if pos_filter:
+        rows = conn.execute(
+            f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders}) AND pos = ?",
+            (*words, pos_filter),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders})",
+            words,
+        ).fetchall()
+    result: dict[str, list[dict]] = {w: [] for w in words}
+    for r in rows:
+        result[r["word_form"]].append({"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]})
+    return result
+
+
 def verify_lemma(lemma: str) -> list[dict]:
     """Get all inflected forms of a lemma.
 

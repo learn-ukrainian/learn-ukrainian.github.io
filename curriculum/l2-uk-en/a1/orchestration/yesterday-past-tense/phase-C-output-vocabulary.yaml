@@ -1,0 +1,78 @@
+items:
+  - lemma: вчора
+    translation: yesterday
+    pos: adverb
+  - lemma: бути
+    translation: to be
+    pos: verb
+    aspect: imperfective
+  - lemma: робити
+    translation: to do
+    pos: verb
+    aspect: imperfective
+  - lemma: їсти
+    translation: to eat
+    pos: verb
+    aspect: imperfective
+  - lemma: пити
+    translation: to drink
+    pos: verb
+    aspect: imperfective
+  - lemma: читати
+    translation: to read
+    pos: verb
+    aspect: imperfective
+  - lemma: дивитися
+    translation: to watch
+    pos: verb
+    aspect: imperfective
+  - lemma: ходити
+    translation: to go
+    pos: verb
+    aspect: imperfective
+  - lemma: минулий
+    translation: past, last
+    pos: adjective
+  - lemma: раніше
+    translation: earlier
+    pos: adverb
+  - lemma: тиждень
+    translation: week
+    pos: noun
+    gender: m
+  - lemma: місяць
+    translation: month
+    pos: noun
+    gender: m
+  - lemma: спати
+    translation: to sleep
+    pos: verb
+    aspect: imperfective
+  - lemma: працювати
+    translation: to work
+    pos: verb
+    aspect: imperfective
+  - lemma: рік
+    translation: year
+    pos: noun
+    gender: m
+  - lemma: йти
+    translation: to go (on foot)
+    pos: verb
+    aspect: imperfective
+  - lemma: ранок
+    translation: morning
+    pos: noun
+    gender: m
+  - lemma: вечір
+    translation: evening
+    pos: noun
+    gender: m
+  - lemma: знати
+    translation: to know
+    pos: verb
+    aspect: imperfective
+  - lemma: говорити
+    translation: to speak
+    pos: verb
+    aspect: imperfective

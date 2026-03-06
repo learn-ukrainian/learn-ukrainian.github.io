@@ -2,47 +2,42 @@ slug: tomorrow-future-tense
 title: Tomorrow - Future Tense
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 400
+- section: Вступ (Introduction)
+  slug: introduction
+  words: 250
   points:
-  - 'English scaffolding requirement: Explicitly use English to introduce the Ukrainian
-    future tense, highlighting its simplicity compared to English ''will'' vs. ''going
-    to''.'
-  - 'Timeline mapping: Briefly review A1-36 (Yesterday) and contrast the past and
-    present timelines with where we will be tomorrow.'
-  - 'Cultural hook: Introduce the phrase «Завтра буде новий день» as an anchor for
-    expressing Ukrainian optimism and resilience.'
-- section: Презентація граматики
-  words: 600
+  - 'English scaffolding: Contrast the timeline: where we were ''yesterday'' (A1-36)
+    vs. where we will be ''tomorrow''.'
+  - 'Cultural context: «Завтра буде новий день» as an expression of hope.'
+- section: 'Презентація граматики: Буду + Інфінітив (Grammar: Буду + Infinitive)'
+  slug: grammar-presentation
+  words: 350
   points:
-  - Introduce the compound future formula (буду + infinitive) aligned with State Standard
-    §4.2.4.1. Each person gets its own H3 for the conjugation of 'бути' (буду, будеш,
-    буде, будемо, будете, будуть) with simple bilingual examples.
-  - 'Address the Common Learner Error (Conflict of aspects): Explicitly state in English
-    that ''буду'' is only used with imperfective verbs. Contrast correct («буду читати»)
-    and incorrect («буду прочитати») usage.'
-  - Briefly overview the synthetic future tense («працюватиму») in a short FYI box,
-    strictly as a recognition-only feature for authentic texts, without any drilling
-    or exercises.
-- section: Лексика та культурний контекст
-  words: 600
+  - Introduce the compound future formula (буду + infinitive). Present the full conjugation
+    table for 'бути'.
+  - 'Learner Error (Aspects): Emphasize that ''буду'' takes ONLY imperfective verbs
+    («буду читати», NOT «буду прочитати»).'
+  - 'FYI Box: Briefly mention the synthetic future («працюватиму») strictly for recognition
+    in authentic texts.'
+- section: 'Лексика та культурний контекст: Плани на майбутнє (Vocabulary and Plans)'
+  slug: vocabulary-and-culture
+  words: 350
   points:
-  - Introduce future time markers (завтра, післязавтра, скоро) and high-frequency
-    phrases (завтра вранці, завтра вдень) using a structured vocabulary table.
-  - Explain the 'Genitive of Time' rule for phrases like «наступного тижня» and «наступного
-    року». Warn against the common error of using the Nominative case.
-  - Differentiate between expressing intentions («хочу», «збираюся») and definite
-    future actions («буду») using simple parallel examples.
-  - 'Integrate the cultural hook: Discuss the proverb «Не кажи ''гоп'', поки не перескочиш»
-    to explain Ukrainian cultural cautiousness regarding sharing definite plans.'
-- section: Практика та підсумок
-  words: 400
+  - 'Future markers: завтра, післязавтра, скоро. Introduce collocations (завтра вранці,
+    завтра ввечері).'
+  - 'Genitive of Time: Explain how to use «наступного тижня» and «наступного року».
+    Warn against Nominative translation.'
+  - 'Intentions vs. definite plans: Contrast «буду» (certainty) with «хочу / збираюся»
+    (intention).'
+  - 'Cultural Hook: «Не кажи ''гоп'', поки не перескочиш» to explain Ukrainian cautiousness
+    regarding definite plans.'
+- section: Практика та підсумок (Practice and Summary)
+  slug: practice-and-summary
+  words: 250
   points:
-  - Provide controlled practice mini-dialogues focusing on weekend and evening plans,
-    incorporating collocations like «мати плани» and «складати план».
-  - 'Develop a role-play scenario (Persona: ''Організатор подій'' / Event Planner)
-    where the learner actively plans a vacation or work week, observing the conjugated
-    forms of ''бути''.'
-  - Summarize the grammar rules in a bulleted recap, highlighting the correct usage
-    of the auxiliary verb, the imperfective infinitive rule, and the genitive case
-    for time markers.
+  - 'Mini-dialogues: Practice planning the weekend and evening using ''мати плани''
+    and ''складати план''.'
+  - 'Role-play scenario: Planning a work week using ''бути'' forms and Genitive time
+    markers (use indirect instructions, no imperatives).'
+  - 'Summary: 3-4 self-check questions verifying the ''бути'' conjugation, imperfective
+    rule, and Genitive time markers.'

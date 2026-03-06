@@ -1,61 +1,55 @@
 items:
-- lemma: бути
-  pos: verb
-- lemma: ми
-  pos: noun
-- lemma: буда
-  pos: noun
-- lemma: працювати
-  pos: verb
-- lemma: новий
-  pos: adj
-- lemma: завтра
-  pos: adv
-- lemma: ти
-  pos: noun
-- lemma: наступний
-  pos: adj
-- lemma: цей
-  pos: adj
-- lemma: план
-  pos: noun
-- lemma: читати
-  pos: verb
-- lemma: це
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: приклад
-  pos: noun
-- lemma: прикласти
-  pos: verb
-- lemma: там
-  pos: adv
-- lemma: робити
-  pos: verb
-- lemma: вони
-  pos: noun
-- lemma: тиждень
-  pos: noun
-- lemma: відпочивати
-  pos: verb
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: час
-  pos: noun
-- lemma: день
-  pos: noun
-- lemma: наш
-  pos: adj
-- lemma: вона
-  pos: noun
-- lemma: раз
-  pos: noun
-- lemma: ввечері
-  pos: adv
-- lemma: що
-  pos: noun
-- lemma: разом
-  pos: adv
+  - lemma: "завтра"
+    translation: "tomorrow"
+    pos: "adverb"
+  - lemma: "буду"
+    translation: "I will"
+    pos: "verb"
+    aspect: "imperfective"
+    notes: "Helper verb. Pairs only with imperfective verbs."
+  - lemma: "наступний"
+    translation: "next"
+    pos: "adjective"
+    notes: "Requires Genitive case in time expressions like наступного тижня."
+  - lemma: "план"
+    translation: "plan"
+    pos: "noun"
+    gender: "m"
+  - lemma: "хотіти"
+    translation: "to want"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "збиратися"
+    translation: "to be going to"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "скоро"
+    translation: "soon"
+    pos: "adverb"
+  - lemma: "потім"
+    translation: "then, later"
+    pos: "adverb"
+  - lemma: "тиждень"
+    translation: "week"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рік"
+    translation: "year"
+    pos: "noun"
+    gender: "m"
+  - lemma: "післязавтра"
+    translation: "the day after tomorrow"
+    pos: "adverb"
+  - lemma: "вранці"
+    translation: "in the morning"
+    pos: "adverb"
+  - lemma: "вдень"
+    translation: "in the day"
+    pos: "adverb"
+  - lemma: "ввечері"
+    translation: "in the evening"
+    pos: "adverb"
+  - lemma: "майбутнє"
+    translation: "future"
+    pos: "noun"
+    gender: "n"

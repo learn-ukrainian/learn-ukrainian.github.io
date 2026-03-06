@@ -1,245 +1,195 @@
 <!-- SCOPE
-Covers: Past tense formation with L-participle, gender agreement in past tense, time expressions (вчора, минулого), and common irregular verbs (їсти, йти).
+Covers: Past tense formation, gender agreement, time expressions for the past
 Not covered:
   - Future tense → a1-37
-  - Complex daily routine verbs → a1-38
 -->
 
 # Yesterday - Past Tense
 
 > **Чому це важливо?**
 >
-> The past tense is your key to telling stories and sharing your life. In Ukrainian, there is only one simple past tense for all past actions, making it incredibly logical and easy to build once you learn the core endings.
+> You already know how to talk about what you are doing right now. But life is full of memories and stories. To talk about what happened earlier, you need the past tense.
 
 ## Вступ: Що було вчора? (Introduction: What Happened Yesterday?)
 
-Сього́дні ми тут. Сього́дні ми чита́ємо.
-(Today we are here. Today we are reading.)
+Сьогодні я тут. Вчора я був там.
+Сьогодні ми працюємо. Вчора ми відпочивали.
+Сьогодні все добре. Вчора теж усе було добре.
 
-Але́ що ми роби́ли вчо́ра? Що ми роби́ли мину́лого ти́жня? Що було́ мину́лого ро́ку?
-(But what did we do yesterday? What did we do last week? What happened last year?)
+Notice how the words change when we shift from the present moment to the past. Сьогодні ми вивчаємо минулий час. It is time to learn how to express memories and past actions in Ukrainian.
 
-In Ukrainian, we use one simple tense to talk about the past. It does not matter if the action happened a minute ago or a century ago. You just need one past tense to describe it all.
+Іван Федоров друкував книгу «Апостол» у Львові.
+Він робив це дуже давно.
+Це була перша книга.
+Ми пам'ятаємо цю подію.
 
-For example, on February 15, 1574, Ivan Fedorov printed the first book called the «Apostol» in Lviv. We talk about this historic event using the exact same past tense form as what you ate for breakfast this morning. It makes telling stories very straightforward and much simpler than in English.
+Минулий час helps us describe historical events, like the printing of the first book in Lviv, and it also helps us describe our everyday routines.
 
-Let's look at the most common time words for the past. You will use these constantly in your daily conversations.
+Минулого тижня я читав новини.
+Минулого місяця вона працювала.
+Минулого року ми були в музеї.
+Вчора був дуже гарний день.
+Я був радий.
+Ми всі були там і говорили про наші справи.
+Коли ми говоримо про минуле, ми використовуємо нові форми слів.
 
-| Сло́во (Word) | Пере́клад (Translation) |
-|--------------|------------------------|
-| **вчо́ра** | yesterday |
-| **вчо́ра вве́чері** | yesterday evening |
-| **вчо́ра зра́нку** | yesterday morning |
-| **мину́лого ти́жня** | last week |
-| **мину́лого мі́сяця** | last month |
-| **мину́лого ро́ку** | last year |
+> [!warning]
+> The word **минулого** (last / past) is a bit tricky for English speakers. In English, you might want to add a preposition like «in». In Ukrainian, we just use the word **минулого** followed by the time word. Never use «в» or «у» before it!
 
-Вчо́ра я був удо́ма.
-(Yesterday I was at home.)
+Вчора увечері я пив чай.
+Вчора зранку вона пила каву.
+Тільки вчора ми говорили про це.
+Раніше я не знав це правило.
 
-Вчо́ра вве́чері вона́ чита́ла.
-(Yesterday evening she was reading.)
-
-Мину́лого ти́жня ми ї́ли пі́цу.
-(Last week we ate pizza.)
-
-Мину́лого ро́ку ми бу́ли там.
-(Last year we were there.)
-
-> [!warning] A Visual Trap for English Speakers
-> When you want to say «in the past week» or «in the last year», you might be tempted to use the preposition «в». Do not do this! In Ukrainian, the word «мину́лого» already contains the meaning of time. Just say «мину́лого ти́жня» (last week) or «мину́лого ро́ку» (last year). Adding «в» is a very common beginner mistake.
-
-This past tense is your main tool for sharing your life. You can describe your daily routine, talk about your weekend adventures, and discuss historical facts. The structure is incredibly logical and easy to build once you know the core pattern.
+To tell a good story, you need to know when it happened. Слова **вчора** та **раніше** дуже важливі. Вони допомагають нам describe exactly what you did before today.
 
 ## Основи минулого часу (Grammar: Past Tense Formation)
 
-Let's learn how to build the past tense. It is much easier than in English because you do not have to memorize a massive list of irregular verbs. You just follow a simple formula.
+Робити минулий час дуже легко.
+Він не має складної системи.
 
-Take the dictionary form of a verb. This is the infinitive form that ends in «-ти». Then, drop the «-ти» to find the base. Finally, add a new ending depending on who did the action.
+Creating the past tense in Ukrainian is wonderfully simple. Форма залежить від статі. You only need to look at the dictionary form of the verb, which ends in **-ти**. You remove the **-ти** and add a new ending. 
 
-The endings show gender and number.
-Він (He): add «-в»
-Вона́ (She): add «-ла»
-Воно́ (It): add «-ло»
-Ми, ви, вони́ (We, you, they): add «-ли»
+Я робив каву.
+Вона робила уроки.
+Воно робило шум.
+Ми робили каву.
 
-Let's look at the high frequency verb «роби́ти» (to do). Drop the «-ти» to get the base «роби-».
+The endings are **-в** for a man, **-ла** for a woman, **-ло** for a neutral object, and **-ли** for plural. Тут немає складної системи. We only care about gender and number!
 
-| Хто? (Who?) | Дієсло́во (Verb) | Пере́клад (Translation) |
-|-------------|-----------------|------------------------|
-| Він | роби́в | he did / he was doing |
-| Вона́ | роби́ла | she did / she was doing |
-| Воно́ | роби́ло | it did / it was doing |
-| Ми, ви, вони́ | роби́ли | we, you, they did / were doing |
+| Особа (Person) | Стать (Gender) | читати (to read) | робити (to do) |
+|----------------|----------------|------------------|----------------|
+| я, ти, він | Чоловічий (He) | читав | робив |
+| я, ти, вона | Жіночий (She) | читала | робила |
+| воно | Середній (It) | читало | робило |
+| ми, ви, вони | Множина (They) | читали | робили |
 
-Now let's look at the verb «чита́ти» (to read). The base is «чита-».
+Я читав книгу.
+Вона читала новини.
+Вони читали текст.
 
-| Хто? (Who?) | Дієсло́во (Verb) | Пере́клад (Translation) |
-|-------------|-----------------|------------------------|
-| Він | чита́в | he read / he was reading |
-| Вона́ | чита́ла | she read / she was reading |
-| Воно́ | чита́ло | it read / it was reading |
-| Ми, ви, вони́ | чита́ли | we, you, they read / were reading |
+> [!tip]
+> Pay special attention to the pronoun **я** (I). In English, «I read» gives no clue about the speaker's gender. Увага на закінчення. In Ukrainian, a man must say **я читав**, and a woman must say **я читала**. If a woman says «я читав», it sounds very strange to a native speaker!
 
-### How to use «Я» (I)
+Він спав довго.
+Вона спала мало.
+Ми спали добре.
 
-This is the most important concept to grasp. In English, the word «I» is gender-neutral. In Ukrainian, verbs in the past tense must match the gender of the speaker.
+Let us look at the most important verb in the language: **бути** (to be). It is highly irregular in the present, but perfectly regular in the past tense!
 
-If you are a man speaking, you use the «він» ending. You will end the verb with a consonant:
+Я був удома.
+Вона була на роботі.
+Свято було цікаве.
+Ми були там раніше.
 
-Я роби́в. Я чита́в.
-(I did. I read.)
+You will use these forms constantly. Вони дуже популярні. They are the foundation of describing any past state or location.
 
-If you are a woman speaking, you use the «вона́» ending. You will end the verb with a vowel:
+Він працював в офісі.
+Вона працювала вдома.
+Ми працювали разом.
 
-Я роби́ла. Я чита́ла.
-(I did. I read.)
+> [!warning]
+> English speakers often make a direct translation error here. In English, you say «I was working». Many students try to translate this literally as «Я був працював». Це неправильно in modern Ukrainian! To say «I was working», simply say **Я працював** (if you are a man) or **Я працювала** (if you are a woman).
 
-> [!tip] The Gender Habit
-> This is often intimidating for English speakers, but it just takes a little practice. Before you say «I did something», pause for a second. Ask yourself what ending matches your gender. Men always end with the consonant «-в». Women always end with the vowel «-а».
+Що ти робив вчора?
+Що ти робила вчора?
 
-### The Verb «Бу́ти» (To Be)
+Notice how the question itself changes depending on who you are asking. A man will hear «робив», and a woman will hear «робила».
 
-The verb «бу́ти» (to be) is a foundational linking verb. You will use it constantly to describe past states and locations. It follows the exact same pattern. The base is «бу-».
+Він дивився фільм.
+Вона дивилася телевізор.
+Вони дивилися на нас.
 
-Він був.
-(He was.)
-
-Вона́ була́.
-(She was.)
-
-Воно́ було́.
-(It was.)
-
-Ми бу́ли.
-(We were.)
-
-Вчо́ра я був удо́ма.
-(Yesterday I was at home. - male speaker)
-
-Вчо́ра я була́ на робо́ті.
-(Yesterday I was at work. - female speaker)
-
-Мину́лого ти́жня ми бу́ли там.
-(Last week we were there.)
-
-### A Common English Calque
-
-English has many past tenses. You can say «I worked» and «I was working». Ukrainian only has one past tense for these continuous actions.
-
-When you want to translate «I was working», you might be tempted to translate word-for-word. You might think «I was» is «я був» and «working» is «працюва́в».
-
-Do not say «я був працюва́в». This is a direct calque from English and sounds very unnatural.
-
-Just use the simple past tense verb.
-
-Я працюва́в.
-(I worked / I was working. - male speaker)
-
-Я працюва́ла.
-(I worked / I was working. - female speaker)
+If the verb has a reflexive ending like **-ся**, you just attach it after the past tense ending. So **дивити-ся** becomes **дивив-ся** for a man and **дивила-ся** for a woman. Це як конструктор!
 
 ## Складні випадки та практика (Irregular Verbs and Practice)
 
-While the past tense formula is incredibly consistent, there are a couple of essential verbs that behave a little differently. You use these verbs every single day, so it is important to learn their special forms.
+Деякі дієслова мають цікаві форми.
+Ми маємо запам'ятати їх.
 
-The first irregular verb is «ї́сти» (to eat). The base changes slightly in the past tense, but the endings still show gender clearly.
+While most verbs are perfectly regular, a few of the most common ones change their stem slightly in the past tense. You just have to memorize them, but they are short and easy.
 
-Він їв.
-(He ate.)
+Він їв обід.
+Вона їла яблуко.
+Ми їли в ресторані.
 
-Вона́ ї́ла.
-(She ate.)
+The verb **їсти** (to eat) drops the «ст» and gives us the short forms **їв** and **їла**.
 
-Воно́ ї́ло.
-(It ate.)
+Він ішов додому.
+Вона ішла в музей.
+Вони ішли разом.
 
-Ми ї́ли.
-(We ate.)
+The verb **йти** (to go on foot) is very special. For a man, the form is **ішов**. But for a woman, the «о» disappears and it becomes **ішла**. This vowel alternation is a historic feature of Ukrainian, keeping the language melodious.
 
-Вчо́ра вве́чері я їв обі́д.
-(Yesterday evening I ate lunch. - male speaker)
+Let us look at a conversation in a history museum. The date is February 15, 1919.
 
-Вона́ ї́ла я́блуко.
-(She ate an apple.)
+— Що це за документ?
+— Це закон про мову.
+— Хто писав цей закон?
+— ЗУНР прийняла цей закон дуже давно.
+— Ти читав його раніше?
+— Ні, я не читав. А ти читала?
+— Так, я читала. Це було цікаво.
 
-Ми ї́ли в рестора́ні.
-(We ate in a restaurant.)
+Notice how the museum guide uses the feminine form «прийняла» because ЗУНР (Західноукраїнська Народна Республіка) acts as a feminine noun here. The visitors match their endings to their own genders.
 
-The second irregular verb is the verb of motion «йти» (to go on foot). This verb has a vowel change in the root. Notice how the «о» appears in the masculine form, but disappears in the feminine, neuter, and plural forms.
+> [!culture]
+> On February 15, 1919, the Ukrainian National Republic (ЗУНР) officially adopted a law declaring Ukrainian as the state language. Коли ми говоримо про історію, the past tense is absolutely essential!
 
-Він ішо́в.
-(He was going.)
+Now it is your turn to practice recognizing these patterns. Observe the difference between the masculine and feminine forms in these pairs:
 
-Вона́ йшла.
-(She was going.)
+Він пив воду.
+Вона пила чай.
 
-Воно́ йшло.
-(It was going.)
+Він ішов туди.
+Вона ішла сюди.
 
-Вони́ йшли.
-(They were going.)
+Він їв суп.
+Вона їла борщ.
 
-> [!culture] A Walk Through History
-> Imagine walking through a history museum. You can use these past tense verbs to describe what people did every day. On February 15, 1919, the West Ukrainian People's Republic (ЗУНР) passed an important law about the state language. When reading about this era, you will see verbs describing how people lived and worked during that time.
+Він ходив у магазин.
+Вона ходила в кіно.
 
-Let's practice these forms with a quick drill. Pay attention to the gender of the subject and match the verb ending. Notice how the endings sound different depending on who is doing the action.
+Ми часто використовуємо ці слова щодня.
+Наприклад, вчора вранці я ішов на роботу.
+Мій друг теж ішов на роботу.
+Ми ішли туди разом.
+Потім ми їли смачний сніданок.
+Ми говорили про наш минулий день.
 
-Він пив во́ду.
-(He drank water.)
-
-Вона́ пила́ чай.
-(She drank tea.)
-
-Він спав до́вго.
-(He slept a long time.)
-
-Вона́ спала́.
-(She slept.)
-
-Він ішо́в додо́му.
-(He was going home.)
-
-Вона́ йшла в магази́н.
-(She was going to the store.)
-
-Ми йшли на робо́ту.
-(We were going to work.)
-
-> [!tip] Building Automaticity
-> The key to mastering these irregular forms is repetition. Say the pairs out loud: «він ішо́в, вона́ йшла». «Він їв, вона́ ї́ла». Hearing the difference will help your brain automatically select the right form when you are speaking. Do not worry about the grammar rules; just memorize the sound patterns.
+Try reading the pairs aloud and focus on the final sound. The feminine **-ла** always adds a soft, open rhythm to the sentence. You will quickly learn to expect it!
 
 ## Підсумок: Мій день (Summary and Production)
 
-Now you have all the tools you need to talk about your day. Let's look at a model narrative describing yesterday's routine. Notice how we use common collocations like making coffee and watching a movie.
+Вчора я мав добрий день.
+Зранку я робив каву.
+Потім я ішов у магазин.
+Увечері я читав новини.
 
-Вчо́ра я роби́в ка́ву. По́тім я чита́в нови́ни. Я ішо́в на робо́ту. Вве́чері я диви́вся фі́льм.
-(Yesterday I made coffee. Then I read the news. I went to work. In the evening I watched a movie. - male speaker)
+When you put everything together, you can tell a complete story about your day. Notice how the same past tense endings repeat consistently. Let us look at a standard conversation about yesterday.
 
-Вчо́ра я роби́ла ка́ву. По́тім я чита́ла нови́ни. Я йшла на робо́ту. Вве́чері я диви́лася фі́льм.
-(Yesterday I made coffee. Then I read the news. I went to work. In the evening I watched a movie. - female speaker)
+— Що ти робив вчора?
+— Я дивився фільм. А ти?
+— Я ходила в магазин, а потім пила чай.
+— Це було добре?
+— Так, це було дуже добре!
 
-You will hear this question very often in conversations when people want to know about your day:
+To wrap up, remember this golden checklist for the past tense:
+- Чоловік: use **-в** (я робив).
+- Жінка: use **-ла** (я робила).
+- Середній рід: use **-ло** (воно було).
+- Множина: use **-ли** (ми були).
 
-— Що ти роби́в вчо́ра?
-(What did you do yesterday? - asking a man)
+Please answer these questions for yourself:
+1. Which letter ending tells you that a woman performed the action?
+2. How do you correctly translate «I was reading» into Ukrainian?
+3. What is the masculine past tense form of the verb **йти**?
+4. Can you use the word **минулого** with the preposition **в**?
 
-— Що ти роби́ла вчо́ра?
-(What did you do yesterday? - asking a woman)
+Вчора ви не знали ці правила. Сьогодні ви знаєте їх добре!
 
-— Я диви́вся фі́льм. А ти?
-(I watched a movie. And you? - male speaker)
-
-### Quick Checklist
-
-Before we finish, remember these three main rules for the past tense:
-1. Drop «-ти» and add the ending: «-в», «-ла», «-ло», or «-ли».
-2. Always match the verb to the gender of the subject. A man says «я був», a woman says «я була́».
-3. Never use «в» with the word «мину́лого» when talking about last week or last year.
-
-### Self-Check Questions
-
-1. How do you say «last week» in Ukrainian without making the common preposition mistake?
-2. If a woman is speaking, what ending does she add to the verb base to form the past tense?
-3. What is the correct past tense translation for «I was working» (said by a man)?
-4. What is the masculine past tense form of the verb «йти»?
+Тепер ви знаєте, як розказувати про свій день.
+Це дуже корисно для спілкування з новими друзями.
+Тепер ви знаєте нові слова. Ви можете розповідати історії. Ви були там. Ви робили це. Це дуже просто і логічно.
+Українська мова має дуже логічну систему для цього.
+Вона допомагає нам розуміти один одного.

@@ -12,7 +12,7 @@ RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en
 REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/food-vocabulary-review.md
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
+WORD_TARGET: '1200'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -22,25 +22,130 @@ IMMERSION_RULE: 'TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section con
   for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix
   languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar
   rules still anchored in English. A1 register — simple concrete vocabulary.'
-LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
+LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10 words\
+  \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
+  \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
+  \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
+  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
+  \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
+  \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
+  \ M13), Genitive (basics), Vocative"
+PEDAGOGICAL_CONSTRAINTS: 'SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
 
-  - Max 10 words per Ukrainian sentence (STRICT — count every word)
+  Present tense verbs start at M15. Past tense at M36. Future at M37.
 
-  - ONLY 1 clause per sentence (no compound sentences)
 
-  - Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам, їм, -ові/-еві endings)
+  KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught
+  until M47 (imperative-and-requests). Before M47, use indirect requests or English
+  for instructions.
 
-  - Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)
 
-  - NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб,
-  поки are ALL BANNED
+  The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only)
+  apply in addition to this constraint.'
+DECODABLE_VOCABULARY: ''
+STRUCTURAL_RULES: '### Rule 1: Every Concept Gets Dedicated Depth
 
-  - Only imperfective aspect verbs
 
-  - No participles
+  Each concept MUST get its own `### H3` subsection. Closely related items MAY share
+  one H3 with equal coverage.
 
-  - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
-  Vocative'
+
+  ### Rule 2: Depth Over Compression
+
+
+  Each H3 concept block MUST contain:
+
+  1. **Definition/explanation** (1-2 sentences)
+
+  2. **How it works** (formation rules, patterns)
+
+  3. **2+ example sentences** in context
+
+  4. **Usage note** — when/why a speaker uses this form
+
+
+  Minimum **60-80 words per H3 block**.
+
+
+  ### Rule 3: Presentation Consistency
+
+
+  All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).
+
+
+  ### Rule 4: Example Variety
+
+
+  FORBIDDEN: 5+ consecutive examples in the same format. Use at least **3 different
+  formats**: standalone examples, comparison tables, inline examples, mini-dialogues,
+  callout boxes.'
+H3_WORD_RANGE: 60-80
+EXPANSION_METHOD: '**Don''t just write more — write deeper.** For EVERY concept:
+
+
+  1. **Define it** (1-2 sentences explaining what it is)
+
+  2. **Show how it works** (pattern, rule, formation)
+
+  3. **Give 2+ examples** in full sentences with context
+
+  4. **Add a comparison** (table, before/after, correct vs incorrect)
+
+  5. **Connect to real life** (when would a Ukrainian speaker use this?)
+
+
+  **If a section is still under target:** Add a `[!warning]` with a common mistake,
+  a `[!culture]` connecting to Ukrainian culture, or a mini-dialogue.'
+WRITING_TONE_INSTRUCTION: Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE}
+  words. Avoid verbose prose — students are beginners. Focus on practical examples
+  over theory.
+TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian буквар)\n\n\
+  These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
+  \ for style and difficulty level** — notice how they use simple syllable combinations,\
+  \ short words, and build progressively. Do NOT copy them verbatim, but match their\
+  \ pedagogical approach and simplicity.\n\n**Grade 1, bolshakova** — Сторінка 30:\n\
+  ```\n30\nЗнайди слово до схеми. \n\t\nїжа\t\nї-жа-чи-ха\t\nї-хав\t\nКи-їв\n\t їжак\t\
+  \nї-жа-че-ня\t\nпо-ї-хав\t\nУ-кра-ї-на\n\t їжаки\t си-ро-їж-ка\t\nпо-їзд\t\nу-кра-їн-ці\n\
+  \b\n\t Один — багато\nЯкі слова називають багато предметів?\n\t гай — гаї\t\nмузей\
+  \ — музеї\n\t чай — чаї\t\nтрамвай — трамваї \n\b\nЗаголовок. Передбачення \nЧому\
+  \ їжачок колючий? Що було б, якби він був без голок? \nОдяг для їжачка\nУ сім’ї\
+  \ їжаків на-ро-ди-ло-ся їжаченя. Ма-\nлень-ке, пу-хна-сте, зовсім без голок. Їжак\
+  \ та \nї-жа-чи-ха су-му-ва-ли. З’їсть лисичка ї-жа-че-ня. \n\n```\n\n**Grade 1,\
+  \ zaharijchuk** — Сторінка 38:\n```\n36\nБачу  Ї, ї. Чую  [й], [і].\nЇ ї\nу к р\
+  \ а ї\nУ к р а\nК и ї в\nї\n*\nн\nн а\nі\n [ –•| = •– ] \nсво\nтво\nмо\nЇ\nм\nж\n\
+  жа\nжак\nсти\nїжа\t\t\n\t\n  мої   \t \t\nдоїхав   \n [ =•|–• ] \n [ –•| =•]  \n\
+  \ [ –•| =•|–•– ] \nЇжак, їжаченя\nЇздять по гриби щодня.\nЇжачиха помагає —\nСироїжки\
+  \ їм збирає (нар. тв.).\nСкоромовка\n\t\nПрочитай скоромовку.\n\t Які звуки позначає\
+  \ буква, виділена червоним \nкольором? Вимов ці звуки. \nPidruchnyk.com.ua\n```\n\
+  \n**Grade 1, zaharijchuk** — Сторінка 76:\n```\n74\nп * * * * *\nс о п і л к а\n\
+  п і в * н\nа\nо\nу\nи\nі\nП\nпа\nпо\nпу\nпи\nпі\nа\nо\nу\nи\nі\nап\nоп\nуп\nип\n\
+  іп\nП\nБачу  П, п (пе). Чую  [п].\n*\nпа\nва\nска\nпо\nніс\nси-пав\nпи\nла\nсан-ка\n\
+  пі\nпо\nпа\nКо-ло  сли-ви  ма-ма,  Пав-лик  і  По-лі-на.\nПав-лик:\n— Ма-мо,  он\
+  \  слив-ка!  Во-на  ки-сла?\nМа-ма:\n— Ні,  си-ну!  Слив-ка  спі-ла  і  ______ !\
+  \ \n [ –•  |  –  •  =  ]\n [  = • |  –  • = ]\nП п\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 18:\n```\n16\nЙ й\nБачу Й, й (йот). Чую  [й].\nа й в а\n [ •  =   |\
+  \  –• ]\nа й с т р и\n* а й в о р о\nа\nо\nи\nі\nЙ\nга\nми\nрі\nЙ\nн о к\nлій- \n\
+  \t\nліній-\n\t\nмай- \nчай- \n\t\nгай- \n\t\nчай- \nмий\t\nлий \t\nчай\t\nграй\n\
+  вимий\t\nдолий\t\nчайник\t\nзіграй\nай\nой\nий\nій\nа\nо\nі\nі\nч\nй\nд\nм\nй\n\
+  Pidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 101:\n```\n99\nПовторюємо\
+  \ разом\nСлова — назви пред-\nметів. Слова, які ма-\nють кілька значень\n \n\t\
+  \ Доповни речення, відповідаючи на запитання.\n\t Хто зібрався на леваді? Це — істоти.\n\
+  На леваді зібралися: метелик, бабка, … .\n\t Що росло на леваді? Це — неістоти.\n\
+  На леваді росли ромашка, конюшина, \n… .\n\t Хто був балакучим?\nБалакучим був …\
+  \ .\n\t Розглянь малюнки.\n\t Скільки значень мають слова коник, дзвоник, \nсонечко?\n\
+  \t Добери до слова бабка інші значення.\n\t Прочитай текст.\nЖило собі кошеня: товстеньке,\
+  \ сі-\nреньке,\n```\n\n**Grade 1, bolshakova** — Сторінка 19:\n```\n19\nТекст. Заголовок.\
+  \ Послідовність подій\nНа галявині росли листяні дерева: ясен, топо-\nля, яблуня.\
+  \ На яблуні червоніли яблука. У траві \nвиднілися ягідки сунички. \nЗелена ящірка\
+  \ сховалася в густій траві. Вона \nчекала на здобич. Раптом із трави ви-стри-бнув\
+  \ \nконик. Стрибнув перед нею. Ящірка випустила \nдовгий язик і  піймала коника.\
+  \ У траві знову за-\nшур-хо-ті-ло. До ящірки тихо повзла змія. \nХрусь! З яблуні\
+  \ впало яблучко. Ящірка зляка-\nлася і втекла. Я радів, що ящірка вря-ту-ва-ла-ся.\n\
+  Установи п\n```"
+INTRO_HOOK: Чому це важливо?
+SUMMARY_HEADING: Підсумок
+SELF_CHECK_HEADING: 'Перевірте себе:'
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -467,288 +572,100 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-D1_OUTPUT_FORMAT: '## Output Format
-
-
-  > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded
-  by the extraction pipeline.
-
-  > **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a
-  separate step if needed.
-
-
-  ### Output Block 0: Citation Bank (BEFORE the review)
-
-
-  **MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting
-  exact quotes.
-
-  Each citation must be verified with Grep before adding to the bank.
-
-  Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those
-  appear inside Ukrainian text and cause parsing collisions).
-
-
-  ```
-
-  ===CITATION_BANK_START===
-
-  1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
-
-  ...
-
-  ===CITATION_BANK_END===
-
-  ```
-
-
-  **Rules:**
-
-  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
-
-  - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
-
-  - If Grep returns no match, you paraphrased — delete and re-copy
-
-  - Minimum 8 citations for modules >2000 words
-
-  - In the review body below, you may ONLY use `「」` citations that appear in this
-  bank
-
-
-  ### Output Block 1: Review
-
-
-  ```
-
-  ===REVIEW_START===
-
-  # Рецензія: {TOPIC_TITLE}
-
-
-  **Level:** {LEVEL} | **Module:** {MODULE_NUM}
-
-  **Overall Score:** {X.X}/10
-
-  **Status:** PASS / FAIL
-
-  **Reviewed:** {date}
-
-
-  ## Plan Verification
-
-
-  ```
-
-  Plan-Content Alignment: [PASS/FAIL]
-
-  - Sections: [status]
-
-  - Vocabulary: [X/Y from plan, Z extra]
-
-  - Grammar scope: [status]
-
-  - Objectives: [status]
-
-  ```
-
-
-  ## Scores    <!-- REQUIRED — rejection if missing -->
-
-
-  {SCORING_OUTPUT_TABLE}
-
-
-  **Weighted Overall:** {show calculation} = **X.X/10**
-
-
-  ## Auto-Fail Checklist Results
-
-
-  - Russianisms: [CLEAN] or [list]
-
-  - Calques: [CLEAN] or [list]
-
-  - Grammar scope: [CLEAN] or [list]
-
-  - Activity errors: [CLEAN] or [list]
-
-  - Beginner safety: X/5
-
-  - Factual accuracy: [CLEAN] or [list of discrepancies]
-
-
-  ## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
-
-
-  ### Issue 1: {Category}
-
-  - **Location**: Line {N} / Section "{name}"
-
-  - **Original**: 「{exact Ukrainian text from Citation Bank}」
-
-  - **Problem**: {why it''s wrong}
-
-  - **Fix**: {concrete replacement}
-
-
-  [... more issues ...]
-
-
-  ## Ukrainian Language Issues
-
-
-  | Line | Current | Corrected | Type |
-
-  |------|---------|-----------|------|
-
-  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
-
-
-  ## Beginner Safety Audit
-
-
-  "Would I Continue?" Test: X/5
-
-  - Overwhelmed? [Pass/Fail]
-
-  - Instructions clear? [Pass/Fail]
-
-  - Quick wins? [Pass/Fail]
-
-  - Ukrainian scary? [Pass/Fail]
-
-  - Come back tomorrow? [Pass/Fail]
-
-
-  ## Strengths
-
-  - [Specific strength with evidence]
-
-
-  ## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
-
-
-  ### {Dimension Name}: {current}/10 -> 9/10
-
-  **What to fix:**
-
-  1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
-
-  2. Section "{name}": {action} — {impact}
-
-
-  **Expected score after fix:** {X}/10
-
-
-  ### Projected Overall After Fixes
-
-  ```
-
-  {Recalculate weighted overall with projected scores}
-
-  ```
-
-
-  ## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing
-  -->
-
-
-  - Research notes consulted: {YES/NO/NOT_APPLICABLE}
-
-  - Key Facts Ledger present: {YES/NO}
-
-  - Dates checked: {X} ({all correct / N discrepancies listed below})
-
-  - Named figures verified: {X}
-
-  - Primary quotes cross-referenced: {X/Y matched}
-
-  - Chronological sequence: {CONSISTENT / ISSUES}
-
-  - Claims without research grounding: {N found — listed below if any}
-
-
-  {If discrepancies found, list each one:}
-
-  {- Line N: Prose says "X" but research says "Y" for [event/date/attribution]}
-
-
-  ## Verification Summary    <!-- REQUIRED — rejection if missing -->
-
-
-  - Content lines read: {X}
-
-  - Activity items checked: {X}
-
-  - Ukrainian sentences verified: {X}
-
-  - Citations in bank: {X}
-
-  - Issues found: {X}
-
-
-  ## Verdict    <!-- REQUIRED — rejection if missing -->
-
-
-  **PASS** or **FAIL**
-
-
-  {1-3 sentences. If FAIL, list blocking issues.}
-
-
-  ===REVIEW_END===
-
-  ```
-
-
-  ### Output Block 2: Friction Report (MANDATORY)
-
-
-  ```
-
-  ===FRICTION_START===
-
-  **Phase**: Phase D.1: Evidence Review
-
-  **Step**: {what you were doing when friction occurred, or "Full Phase D.1"}
-
-  **Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
-
-  **Raw Error**: {actual error or "None"}
-
-  **Self-Correction**: {what you changed, or "N/A"}
-
-  **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
-
-  ===FRICTION_END===
-
-  ```
-
-
-  ---
-
-
-  ## CRITICAL: Output Format Reminder
-
-
-  **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review
-  MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT
-  cite it — you are hallucinating. Use your Citation Bank as the single source of
-  verified quotes.
-
-
-  Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
-  BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these
-  exact delimiters. Any output without these delimiters is **automatically discarded**
-  and the entire phase fails. Do not write a summary or conversational response —
-  output the citation bank, then the structured review inside the delimiters.
-
-  '
+D1_OUTPUT_FORMAT: "## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside\
+  \ delimiters is automatically discarded by the extraction pipeline.\n\n### Output\
+  \ Block 0: Citation Bank (BEFORE the review)\n\n**MANDATORY** — Build this FIRST\
+  \ by reading files with Read tool and copy-pasting exact quotes.\nEach citation\
+  \ must be verified with Grep before adding to the bank.\nUse `「...」` (CJK corner\
+  \ brackets) for ALL Ukrainian citations — NOT `«»` (those appear inside Ukrainian\
+  \ text and cause parsing collisions).\n\n```\n===CITATION_BANK_START===\n1. Line\
+  \ {N}: 「{exact Ukrainian text copy-pasted from Read output}」\n2. Line {N}: 「{exact\
+  \ Ukrainian text copy-pasted from Read output}」\n3. Line {N}: 「{exact Ukrainian\
+  \ text copy-pasted from Read output}」\n...\n===CITATION_BANK_END===\n```\n\n**Rules:**\n\
+  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording\n\
+  - Verify each with Grep before adding: `Grep pattern=\"first 5 words\" path=\"{CONTENT_PATH}\"\
+  `\n- If Grep returns no match, you paraphrased — delete and re-copy\n- Minimum 8\
+  \ citations for modules >2000 words\n- In the review body below, you may ONLY use\
+  \ `「」` citations that appear in this bank\n\n### Output Block 1: Review\n\n```\n\
+  ===REVIEW_START===\n# Рецензія: {TOPIC_TITLE}\n\n**Level:** {LEVEL} | **Module:**\
+  \ {MODULE_NUM}\n**Overall Score:** {X.X}/10\n**Status:** PASS / FAIL\n**Reviewed:**\
+  \ {date}\n\n## Plan Verification\n\n```\nPlan-Content Alignment: [PASS/FAIL]\n-\
+  \ Sections: [status]\n- Vocabulary: [X/Y from plan, Z extra]\n- Grammar scope: [status]\n\
+  - Objectives: [status]\n```\n\n## Scores    <!-- REQUIRED — rejection if missing\
+  \ -->\n\n{SCORING_OUTPUT_TABLE}\n\n**Weighted Overall:** {show calculation} = **X.X/10**\n\
+  \n## Auto-Fail Checklist Results\n\n- Russianisms: [CLEAN] or [list]\n- Calques:\
+  \ [CLEAN] or [list]\n- Grammar scope: [CLEAN] or [list]\n- Activity errors: [CLEAN]\
+  \ or [list]\n- Beginner safety: X/5\n- Factual accuracy: [CLEAN] or [list of discrepancies]\n\
+  \n## Critical Issues Found    <!-- REQUIRED — rejection if missing -->\n\n### Issue\
+  \ 1: {Category}\n- **Location**: Line {N} / Section \"{name}\"\n- **Original**:\
+  \ 「{exact Ukrainian text from Citation Bank}」\n- **Problem**: {why it's wrong}\n\
+  - **Fix**: {concrete replacement}\n\n[... more issues ...]\n\n## Ukrainian Language\
+  \ Issues\n\n| Line | Current | Corrected | Type |\n|------|---------|-----------|------|\n\
+  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |\n\n\
+  ## Beginner Safety Audit\n\n\"Would I Continue?\" Test: X/5\n- Overwhelmed? [Pass/Fail]\n\
+  - Instructions clear? [Pass/Fail]\n- Quick wins? [Pass/Fail]\n- Ukrainian scary?\
+  \ [Pass/Fail]\n- Come back tomorrow? [Pass/Fail]\n\n## Strengths\n- [Specific strength\
+  \ with evidence]\n\n## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)\n\n### {Dimension\
+  \ Name}: {current}/10 -> 9/10\n**What to fix:**\n1. Line {N}: Change 「{current}」\
+  \ -> 「{replacement}」 — {why}\n2. Section \"{name}\": {action} — {impact}\n\n**Expected\
+  \ score after fix:** {X}/10\n\n### Projected Overall After Fixes\n```\n{Recalculate\
+  \ weighted overall with projected scores}\n```\n\n## Factual Verification    <!--\
+  \ REQUIRED for seminar tracks — rejection if missing -->\n\n- Research notes consulted:\
+  \ {YES/NO/NOT_APPLICABLE}\n- Key Facts Ledger present: {YES/NO}\n- Dates checked:\
+  \ {X} ({all correct / N discrepancies listed below})\n- Named figures verified:\
+  \ {X}\n- Primary quotes cross-referenced: {X/Y matched}\n- Chronological sequence:\
+  \ {CONSISTENT / ISSUES}\n- Claims without research grounding: {N found — listed\
+  \ below if any}\n\n{If discrepancies found, list each one:}\n{- Line N: Prose says\
+  \ \"X\" but research says \"Y\" for [event/date/attribution]}\n\n## Verification\
+  \ Summary    <!-- REQUIRED — rejection if missing -->\n\n- Content lines read: {X}\n\
+  - Activity items checked: {X}\n- Ukrainian sentences verified: {X}\n- Citations\
+  \ in bank: {X}\n- Issues found: {X}\n\n## Verdict    <!-- REQUIRED — rejection if\
+  \ missing -->\n\n**PASS** or **FAIL**\n\n{1-3 sentences. If FAIL, list blocking\
+  \ issues.}\n\n===REVIEW_END===\n```\n\n### Output Block 2: Inline Fixes (MANDATORY\
+  \ if FAIL)\n\n**PRIMARY: Use the Edit tool to fix issues as you find them during\
+  \ the review.** This is the most reliable approach — you can verify exact text with\
+  \ Grep and apply precise fixes.\n\n**BACKUP: Also produce FIND/REPLACE pairs below**\
+  \ in case any Edit tool calls fail (network issues, permission errors, etc). The\
+  \ pipeline applies these automatically via exact string matching.\n\n**CRITICAL\
+  \ — FIND TEXT VERIFICATION (same workflow as citations):**\n\nFor each FIND/REPLACE\
+  \ pair:\n1. Use Read tool to re-read the exact passage you want to fix\n2. Copy-paste\
+  \ the FIND text directly from Read tool output — do NOT type it from memory\n3.\
+  \ Verify with Grep: `Grep pattern=\"first 5 words of FIND text\" path=\"{file}\"\
+  `\n4. If Grep returns no match → you paraphrased. Re-copy from Read output.\n\n\
+  **Do NOT reconstruct FIND text from memory. Copy-paste only.**\n\n**FORMAT RULES\
+  \ — the parser is a dumb string matcher:**\n- FIND text = ONLY raw file content.\
+  \ Nothing else between `FIND:` and `REPLACE:`.\n- Do NOT add `Section: \"...\",\
+  \ Line N` headers before the text\n- Do NOT wrap text in triple backticks (` ```\
+  \ `)\n- Do NOT add commentary, line numbers, or markdown formatting\n- The text\
+  \ between FIND: and REPLACE: is matched literally against the file\n\n```\n===SECTION_FIX_START===\n\
+  FILE: {CONTENT_PATH}\n---\nFIND:\nexact text from the content file (verified with\
+  \ Grep)\nREPLACE:\ncorrected text\n---\nFILE: {VOCAB_PATH}\n---\nFIND:\nlast existing\
+  \ vocab entry (verified with Grep)\nREPLACE:\nlast existing vocab entry\n- lemma:\
+  \ new_word\n  pos: noun\n  translation: meaning\n  notes: context\n---\n===SECTION_FIX_END===\n\
+  ```\n\n**Rules:**\n- FIND text must be verified with Grep before including — if\
+  \ Grep doesn't find it, don't include it\n- Only fix issues documented in your review\
+  \ above — no silent extra changes\n- To ADD content (tables, callouts, scaffolding),\
+  \ FIND the line before the insertion point, REPLACE with that line + new content\n\
+  - To ADD a YAML entry, FIND the last existing entry, REPLACE with that entry + new\
+  \ entry\n- Maximum **10 FIND/REPLACE pairs** (prioritize audit gate failures, then\
+  \ critical issues)\n- Each `FILE:` line starts fixes for that file\n- If review\
+  \ verdict is PASS with no fixes needed, output empty delimiters:\n  ```\n  ===SECTION_FIX_START===\n\
+  \  ===SECTION_FIX_END===\n  ```\n\n### Output Block 3: Friction Report (MANDATORY)\n\
+  \n```\n===FRICTION_START===\n**Phase**: Phase D.1: Evidence Review\n**Step**: {what\
+  \ you were doing when friction occurred, or \"Full Phase D.1\"}\n**Friction Type**:\
+  \ NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...\n**Raw Error**: {actual\
+  \ error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed\
+  \ Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n```\n\
+  \n---\n\n## CRITICAL: Output Format Reminder\n\n**CITATION RULE (LAST REMINDER):**\
+  \ Every `「」`-quoted Ukrainian text in your review MUST appear verbatim in the source\
+  \ files. If you cannot find it with Grep, do NOT cite it — you are hallucinating.\
+  \ Use your Citation Bank as the single source of verified quotes.\n\nYour output\
+  \ MUST contain these delimiter blocks in order:\n1. `===CITATION_BANK_START===`\
+  \ / `===CITATION_BANK_END===`\n2. `===REVIEW_START===` / `===REVIEW_END===`\n3.\
+  \ `===SECTION_FIX_START===` / `===SECTION_FIX_END===` (if FAIL — fixes for every\
+  \ issue found)\n\nAny output without these delimiters is **automatically discarded**\
+  \ and the entire phase fails. Do not write a summary or conversational response\
+  \ — output the citation bank, then the structured review, then the inline fixes.\n"
 SCORING_SECTION: "### STEP 4: Score 7 Dimensions\n\n| # | Dimension | Weight | Auto-fail\
   \ |\n|---|-----------|--------|-----------|\n| 1 | Experience Quality | 1.5 | <7\
   \ |\n| 2 | Language | 1.1 | <8 |\n| 3 | Pedagogy | 1.2 | <7 |\n| 4 | Activities\
@@ -777,12 +694,286 @@ SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
   | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 
   | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
+VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items)
+
+
+  **Required** (MUST appear in vocabulary YAML):
+
+  - хліб (bread) — свіжий хліб; sacred symbol, хліб-сіль tradition
+
+  - борщ (borscht) — смачний борщ; national dish, masculine gender
+
+  - м''ясо (meat) — neuter gender; Я не їм м''ясо (vegetarian phrase)
+
+  - овочі (vegetables) — plural noun; food category
+
+  - фрукти (fruits) — plural noun; food category
+
+  - вода (water) — холодна вода, пляшка води; high frequency
+
+  - кава (coffee) — кава з молоком; feminine gender
+
+  - чай (tea) — чай з лимоном; masculine gender
+
+  - молоко (milk) — neuter gender; кава з молоком
+
+  - сік (juice) — апельсиновий сік; masculine gender
+
+  - суп (soup) — їсти суп (eat, not drink); masculine gender
+
+
+  **Recommended** (include if space allows):
+
+  - паляниця (palianytsia) — cultural shibboleth; round wheat bread
+
+  - каша (porridge) — гаряча каша; feminine gender, traditional breakfast
+
+  - компот (compote) — traditional Ukrainian drink; masculine gender
+
+  - риба (fish) — feminine gender; food category
+
+  - сир (cheese) — masculine gender; not to confuse with Russian сыр
+
+
+  Do NOT add vocabulary items beyond this list unless they are decodable from the
+  module''s letter set and appear in the lesson content.'
+VIDEO_DISCOVERY: (No video discoveries available)
+PRONUNCIATION_VIDEOS: ''
+SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
+
+
+  ### Russianisms (HARD FAIL if found)
+
+
+  Scan your ENTIRE output for these. They cause automatic audit failure:
+
+
+  | Russicism | Correct Ukrainian |
+
+  |-----------|-------------------|
+
+  | кушати | їсти |
+
+  | приймати участь | брати участь |
+
+  | получати | отримувати |
+
+  | самий кращий | найкращий |
+
+  | відноситися | стосуватися |
+
+  | слідуючий | наступний |
+
+  | любий (= будь-який) | будь-який |
+
+  | на то, що | на те, що |
+
+  | красивий | гарний |
+
+  | прекрасне / прекрасний | чудовий / чудове |
+
+
+  Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
+  text.
+
+
+  ### Euphony / Милозвучність (WARNING if violated)
+
+
+  Ukrainian prose must follow euphony rules:
+
+
+  | Rule | Avoid (Bad) | Use (Good) |
+
+  |------|-------------|------------|
+
+  | і → й between vowels | вона і Олена | вона й Олена |
+
+  | й → і after consonant | він й Олена | він і Олена |
+
+  | у → в before vowel | у Одесі | в Одесі |
+
+  | в → у before в, ф | в вікні | у вікні |
+
+  | в → у before consonant cluster | в зграї | у зграї |
+
+  | з → із/зі before з, с, ш, ч | з зброєю | із зброєю (або зі) |
+
+  | Vary conjunctions | він і вона і Іван | він і вона та Іван |
+
+
+  Key: й can ONLY follow a vowel. After a consonant, always use і — even before a
+  vowel.
+
+
+  ### Stress Mark Typography
+
+
+  Use lowercase letters with a combining acute accent (´) on the stressed vowel:
+
+  - Correct: ма́ма, анана́с, оса́, сосна́
+
+  - Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
+
+
+  ### Non-Decodable Ukrainian in Beginner Modules (M1-M6)
+
+
+  In Cyrillic primer modules, the learner can only read letters taught so far. Any
+  Ukrainian phrase using letters outside the cumulative charset MUST include an English
+  translation in parentheses immediately after. No exceptions — the learner literally
+  cannot read it otherwise.
+
+
+  - Correct: "Все буде добре (Everything will be fine)."
+
+  - Wrong: "Все буде добре." (no translation — learner cannot read Б or Д at M2)
+
+
+  ### IPA and Latin Transliteration (BANNED at ALL levels)
+
+
+  Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like
+  `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark
+  (´) on the vowel.
+
+
+  Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
+
+
+  ```markdown
+
+  ❌ WRONG: "мама [ˈmɑmɑ]" or "хліб (khlib)"
+
+  ✅ RIGHT: "**ма́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
+
+  ```
+
+
+  ### Typography
+
+
+  - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
+
+  - Use ONLY vocabulary from the plan''s `vocabulary_hints` — do NOT invent new terms
+
+
+  ### No Word Salad (HARD FAIL)
+
+
+  Every paragraph must have ONE clear point and logical flow between sentences. Do
+  NOT string together unrelated observations.
+
+
+  ### LLM Writing Patterns to Avoid
+
+
+  1. **"Це не просто X, а Y"** — max ONE in entire module
+
+  2. **Grandiose openers** — don''t inflate every topic
+
+  3. **Purple prose** — no "багатогранний діамант", "хірургічного аналізу"
+
+  4. **Duplicate greetings** — "Ласкаво просимо" ONCE (intro only)
+
+  5. **Stacked identical callouts** — same title max twice, vary types
+
+  6. **"In this lesson, we will..."** — ALWAYS banned (formulaic opener)
+
+  7. **Repetitive transitions** — "It''s worth noting...", «Варто зазначити...», «Давайте
+  розглянемо...» flagged at 2+ occurrences
+
+
+  ### Anti-Robotic Writing
+
+
+  - No 3+ sentences starting with the same phrase
+
+  - Vary sentence openers across sections
+
+  - No mechanical transitions («Далі ми побачимо...», «Тепер розглянемо...»)
+
+  - Each section should have its own narrative arc
+
+
+  ### Active Voice Preference
+
+
+  Ukrainian strongly prefers active constructions. Use passive only when the agent
+  is truly unknown.
+
+
+  Avoid: «Це може бути використано...», «Правило застосовується...»
+
+  Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
+
+  '
+SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do NOT\
+  \ use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when\
+  \ combined with colons.\n\n```yaml\n❌ WRONG (guillemets + colon = YAML parse error):\n\
+  \  title: «Знайдіть пару: термін та його значення»\n  explanation: Термін «доконати»\
+  \ означає: завершити дію.\n\n✅ RIGHT (plain strings, quote with single quotes if\
+  \ value contains colon):\n  title: 'Знайдіть пару: термін та його значення'\n  explanation:\
+  \ Термін доконати означає завершити дію.\n```\n\n**Rules:**\n1. **Never use `«»`\
+  \ in YAML** — use plain text or single/double quotes\n2. **Quote any value containing\
+  \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
+  \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
+  \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
+  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
+  \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
+  \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
+  \ — include all required items\n3. **Each entry needs**: `lemma` (NOT `term`), `translation`,\
+  \ `pos`\n4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs),\
+  \ `notes`, `usage`, `example`\n5. **NO `ipa` field**\n6. **Count target**: {VOCAB_COUNT_TARGET}\
+  \ items\n\n## Output Delimiters\n\n> **Content outside delimiters is automatically\
+  \ discarded by the extraction pipeline.**\n\nActivities block (BARE LIST — no wrapper):\n\
+  ```\n===ACTIVITIES_START===\n- type: quiz\n  title: \"...\"\n  items:\n    ...\n\
+  ===ACTIVITIES_END===\n```\n\nVocabulary block (OBJECT with `items:` wrapper):\n\
+  ```\n===VOCABULARY_START===\nitems:\n  - lemma: \"слово\"\n    translation: \"word\"\
+  \n    pos: \"noun\"\n===VOCABULARY_END===\n```\n\n## Friction Report (MANDATORY)\n\
+  \n```\n===FRICTION_START===\n**Phase**: Phase 3: Activities + Vocabulary\n**Step**:\
+  \ {what you were doing when friction occurred, or \"Full YAML generation\"}\n**Friction\
+  \ Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...\n**Raw Error**:\
+  \ {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"\
+  }\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\
+  ```\n\n## Boundaries\n\n- Do NOT modify lesson content — only generate activities\
+  \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
+  - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
+  \ skills or delegate to Claude\n"
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+ACTIVITY_MAX: '15'
+ITEMS_MIN: '6'
 VOCAB_COUNT_TARGET: '20'
 FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
   essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+ALLOWED_ACTIVITY_TYPES: quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort,
+  watch-and-repeat, classify, image-to-letter
 REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz, true-false, classify,
+  image-to-letter, watch-and-repeat
+ITEM_MINIMUMS_TABLE: '| Type | Minimum |
+
+  |------|--------|
+
+  | quiz | ≥8 items |
+
+  | true-false | ≥8 items |
+
+  | fill-in | ≥8 items |
+
+  | match-up | ≥8 pairs |
+
+  | anagram | ≥8 items |
+
+  | unjumble | ≥6 items |
+
+  | group-sort | ≥8 items |
+
+  | watch-and-repeat | ≥1 items |
+
+  | classify | ≥1 items |
+
+  | image-to-letter | ≥5 items |'

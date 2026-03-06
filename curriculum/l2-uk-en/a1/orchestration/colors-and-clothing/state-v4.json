@@ -1,0 +1,29 @@
+{
+  "track": "a1",
+  "slug": "colors-and-clothing",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-05T23:06:22Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-05T23:07:48Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-05T23:10:51Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-05T23:13:11Z"
+    },
+    "v4-validate": {
+      "status": "failed",
+      "ts": "2026-03-06T00:32:36Z",
+      "attempts": 6,
+      "note": "exhausted"
+    }
+  }
+}

@@ -1,289 +1,308 @@
-- type: match-up
-  title: 'Хто буде? (Who will be?)'
-  instruction: 'Match the person with the correct form of "бути" (to be) in the future tense.'
-  pairs:
-    - left: 'Я (I)'
-      right: 'буду'
-    - left: 'Ти (You)'
-      right: 'будеш'
-    - left: 'Він (He)'
-      right: 'буде'
-    - left: 'Ми (We)'
-      right: 'будемо'
-    - left: 'Ви (You plural)'
-      right: 'будете'
-    - left: 'Вони (They)'
-      right: 'будуть'
-    - left: 'Діти (Children)'
-      right: 'будуть'
-    - left: 'Кіт (Cat)'
-      right: 'буде'
-
-- type: fill-in
-  title: 'Майбутнє: Я буду... (Future Tense)'
-  instruction: 'Choose the correct form of "бути" to complete the sentence.'
+- type: quiz
+  title: "Conjugation of 'to be' (future)"
+  instruction: "Choose the correct form of the helper verb."
   items:
-    - sentence: 'Завтра я ___ читати книгу.'
-      answer: 'буду'
-      options: ['буду', 'будеш', 'буде', 'будуть']
-    - sentence: 'Ми ___ працювати наступного тижня.'
-      answer: 'будемо'
-      options: ['будемо', 'будете', 'будуть', 'будеш']
-    - sentence: 'Що ти ___ робити ввечері?'
-      answer: 'будеш'
-      options: ['будеш', 'буде', 'буду', 'будете']
-    - sentence: 'Вони ___ відпочивати на морі.'
-      answer: 'будуть'
-      options: ['будуть', 'будемо', 'буду', 'будеш']
-    - sentence: 'Вона ___ гуляти в парку.'
-      answer: 'буде'
-      options: ['буде', 'будеш', 'буду', 'будуть']
-    - sentence: 'Ви ___ писати лист?'
-      answer: 'будете'
-      options: ['будете', 'будемо', 'будуть', 'буде']
-    - sentence: 'Я не ___ спати.'
-      answer: 'буду'
-      options: ['буду', 'будеш', 'буде', 'будуть']
-    - sentence: 'Чи ви ___ говорити?'
-      answer: 'будете'
-      options: ['будете', 'будемо', 'будуть', 'буде']
-
-- type: unjumble
-  title: 'Складіть речення (Make sentences)'
-  instruction: 'Arrange the words to form correct sentences in the future tense.'
-  items:
-    - words: ['буду', 'спати', 'довго', 'Я']
-      answer: 'Я буду спати довго'
-    - words: ['будемо', 'їсти', 'піцу', 'Ми']
-      answer: 'Ми будемо їсти піцу'
-    - words: ['буде', 'новий', 'день', 'Завтра']
-      answer: 'Завтра буде новий день'
-    - words: ['ти', 'працювати', 'завтра', 'будеш', 'Чи']
-      answer: 'Чи ти будеш працювати завтра'
-    - words: ['Ми', 'гуляти', 'будемо', 'парку', 'в']
-      answer: 'Ми будемо гуляти в парку'
-    - words: ['буде', 'світити', 'Сонце']
-      answer: 'Сонце буде світити'
+    - question: "How do you say 'I will' in Ukrainian?"
+      options:
+        - text: "буду"
+          correct: true
+        - text: "будеш"
+          correct: false
+        - text: "буде"
+          correct: false
+        - text: "будемо"
+          correct: false
+    - question: "How do you say 'You will' (singular/informal)?"
+      options:
+        - text: "будеш"
+          correct: true
+        - text: "буду"
+          correct: false
+        - text: "буде"
+          correct: false
+        - text: "будете"
+          correct: false
+    - question: "How do you say 'He will'?"
+      options:
+        - text: "буде"
+          correct: true
+        - text: "буду"
+          correct: false
+        - text: "будуть"
+          correct: false
+        - text: "будемо"
+          correct: false
+    - question: "How do you say 'We will'?"
+      options:
+        - text: "будемо"
+          correct: true
+        - text: "буду"
+          correct: false
+        - text: "будете"
+          correct: false
+        - text: "будуть"
+          correct: false
+    - question: "How do you say 'You will' (plural/formal)?"
+      options:
+        - text: "будете"
+          correct: true
+        - text: "будемо"
+          correct: false
+        - text: "будуть"
+          correct: false
+        - text: "буде"
+          correct: false
+    - question: "How do you say 'They will'?"
+      options:
+        - text: "будуть"
+          correct: true
+        - text: "будемо"
+          correct: false
+        - text: "будете"
+          correct: false
+        - text: "буде"
+          correct: false
+    - question: "Which form of the helper verb goes with 'вона' (she)?"
+      options:
+        - text: "буде"
+          correct: true
+        - text: "буду"
+          correct: false
+        - text: "будеш"
+          correct: false
+        - text: "будуть"
+          correct: false
+    - question: "Which form of the helper verb goes with 'я' (I)?"
+      options:
+        - text: "буду"
+          correct: true
+        - text: "будеш"
+          correct: false
+        - text: "буде"
+          correct: false
+        - text: "будемо"
+          correct: false
 
 - type: true-false
-  title: 'Правда чи ні? (True or False?)'
-  instruction: 'Read the statement and decide if it is true or false.'
+  title: "Grammar and Usage: True or False?"
+  instruction: "Determine if the statements are true or false."
   items:
-    - statement: 'Слово "завтра" means "yesterday".'
+    - statement: "The helper verb 'буду' can be used with perfective verbs to talk about the future."
       correct: false
-      explanation: '"Завтра" means "tomorrow".'
-    - statement: '"Я буду читати" means "I will read".'
+      explanation: "The verb 'буду' is strictly used with imperfective verbs to show ongoing or repeated future actions."
+    - statement: "To say 'next week', you use the Genitive case: 'наступного тижня'."
       correct: true
-    - statement: 'To say "next week", we use the phrase "наступного тижня".'
-      correct: true
-    - statement: '"Незабаром" means "never".'
+      explanation: "When expressing 'next week' or 'next year', Ukrainian uses the Genitive case to indicate the time of action."
+    - statement: "The phrase 'Я буду прочитати' is grammatically correct."
       correct: false
-      explanation: '"Незабаром" means "soon".'
-    - statement: '"Ми будемо" is the correct form for "We will".'
+      explanation: "'Прочитати' is perfective, so it cannot follow 'буду'. You must say 'Я буду читати'."
+    - statement: "The verb 'збиратися' is used to express an intention, similar to 'to be going to'."
       correct: true
-    - statement: 'We use "буду" with perfective verbs (like "прочитати").'
+      explanation: "Yes, Ukrainians often use 'збиратися' for plans that are not yet firmly arranged."
+    - statement: "'Завтра ввечері' means 'tomorrow morning'."
       correct: false
-      explanation: 'We use "буду" only with imperfective verbs (like "читати").'
-    - statement: '"Післязавтра" means "next year".'
-      correct: false
-      explanation: '"Післязавтра" means "the day after tomorrow".'
-    - statement: 'Word order in Ukrainian is quite free.'
+      explanation: "'Ввечері' means 'in the evening'. Tomorrow morning is 'завтра вранці'."
+    - statement: "To say 'I will not work', you put 'не' before the helper verb: 'Я не буду працювати'."
       correct: true
-
-- type: group-sort
-  title: 'Коли це? (When is it?)'
-  instruction: 'Sort the time expressions into "Future" (Майбутнє) or "Not Future" (Не майбутнє).'
-  groups:
-    - name: 'Майбутнє (Future)'
-      items: ['завтра', 'післязавтра', 'скоро', 'наступного року', 'незабаром', 'потім', 'наступного разу']
-    - name: 'Не майбутнє (Not Future)'
-      items: ['вчора', 'сьогодні', 'зараз', 'минулого тижня', 'минулого року']
-
-- type: quiz
-  title: 'Перевірка знань (Knowledge Check)'
-  instruction: 'Choose the correct answer.'
-  items:
-    - question: 'Яке слово перекладається як "vacation"?'
-      explanation: '"Відпустка" means vacation (from work).'
-      options:
-        - text: 'відпустка'
-          correct: true
-        - text: 'вихідні'
-          correct: false
-        - text: 'канікули'
-          correct: false
-        - text: 'робота'
-          correct: false
-    - question: 'Як правильно перекласти українською фразу "next year"?'
-      explanation: 'For "next year" as a time marker, we use the Genitive case: "наступного року".'
-      options:
-        - text: 'наступного року'
-          correct: true
-        - text: 'наступний рік'
-          correct: false
-        - text: 'минулого року'
-          correct: false
-        - text: 'цей рік'
-          correct: false
-    - question: 'Яке дієслово означає "to intend / to be going to"?'
-      explanation: '"Збиратися" means to be going to do something.'
-      options:
-        - text: 'збиратися'
-          correct: true
-        - text: 'хотіти'
-          correct: false
-        - text: 'бути'
-          correct: false
-        - text: 'мати'
-          correct: false
-    - question: 'Що означає українське слово "скоро" англійською мовою?'
-      explanation: '"Скоро" means soon.'
-      options:
-        - text: 'soon'
-          correct: true
-        - text: 'later'
-          correct: false
-        - text: 'now'
-          correct: false
-        - text: 'never'
-          correct: false
-    - question: 'Яка форма правильна: Я ___ їсти.'
-      explanation: 'You can say "Я хочу їсти" (I want to eat).'
-      options:
-        - text: 'хочу'
-          correct: true
-        - text: 'буде'
-          correct: false
-        - text: 'хочеш'
-          correct: false
-        - text: 'збирається'
-          correct: false
-    - question: 'Як сказати "The day after tomorrow"?'
-      explanation: 'It is one word: "післязавтра".'
-      options:
-        - text: 'післязавтра'
-          correct: true
-        - text: 'завтра'
-          correct: false
-        - text: 'вчора'
-          correct: false
-        - text: 'сьогодні'
-          correct: false
-    - question: 'Що означає слово "weekend" в українській мові?'
-      explanation: '"Вихідні" literally means "exit days".'
-      options:
-        - text: 'вихідні'
-          correct: true
-        - text: 'робочі дні'
-          correct: false
-        - text: 'свято'
-          correct: false
-        - text: 'ранок'
-          correct: false
-    - question: 'Як правильно перекласти "I plan" українською?'
-      explanation: 'You can say "Я планую" (I plan).'
-      options:
-        - text: 'Я планую'
-          correct: true
-        - text: 'Я буду'
-          correct: false
-        - text: 'Я хочу'
-          correct: false
-        - text: 'Я маю'
-          correct: false
+      explanation: "The negative particle 'не' comes directly before the helper verb."
+    - statement: "The phrase 'наступного року' means 'next year'."
+      correct: true
+      explanation: "It uses the Genitive case to show when an action happens."
+    - statement: "Ukrainians often say 'Я буду' for everything, even highly uncertain plans."
+      correct: false
+      explanation: "People often prefer 'Я збираюся' for things that are not yet fixed, following the cautious proverb."
 
 - type: fill-in
-  title: 'Словник: Плани (Vocabulary: Plans)'
-  instruction: 'Complete the sentences with the correct words.'
+  title: "Complete the Sentence"
+  instruction: "Choose the correct helper verb."
   items:
-    - sentence: 'У мене є ___ на вечір.'
-      answer: 'плани'
-      options: ['плани', 'мрії', 'слова', 'думки']
-    - sentence: 'Ми плануємо ___ на море.'
-      answer: 'поїхати'
-      options: ['поїхати', 'робити', 'мати', 'бути']
-    - sentence: 'Я ___ новий телефон.'
-      answer: 'хочу'
-      options: ['хочу', 'буду', 'маю', 'роблю']
-    - sentence: 'Скоро будуть шкільні ___.'
-      answer: 'канікули'
-      options: ['канікули', 'відпустка', 'вибори', 'уроки']
-    - sentence: 'Ми йдемо в кіно ___ тижня.'
-      answer: 'наступного'
-      options: ['наступного', 'цей', 'минулий', 'завтра']
-    - sentence: 'Спочатку робота, а ___ відпочинок.'
-      answer: 'потім'
-      options: ['потім', 'зараз', 'тут', 'там']
-    - sentence: 'Це мої ___ на літо.'
-      answer: 'плани'
-      options: ['плани', 'думки', 'мрії', 'слова']
-    - sentence: 'Ми будемо ___ у горах.'
-      answer: 'відпочивати'
-      options: ['відпочивати', 'працювати', 'писати', 'читати']
+    - sentence: "Завтра я ___ працювати."
+      answer: "буду"
+      options: ["буду", "будеш", "буде", "будемо"]
+    - sentence: "Що ти ___ робити завтра?"
+      answer: "будеш"
+      options: ["будеш", "буду", "буде", "будете"]
+    - sentence: "Ми ___ обідати разом."
+      answer: "будемо"
+      options: ["будемо", "буду", "буде", "будуть"]
+    - sentence: "Вони не ___ слухати музику."
+      answer: "будуть"
+      options: ["будуть", "будемо", "будете", "буде"]
+    - sentence: "Він ___ спати вдень."
+      answer: "буде"
+      options: ["буде", "буду", "будеш", "будуть"]
+    - sentence: "Ви ___ читати книгу?"
+      answer: "будете"
+      options: ["будете", "будемо", "будуть", "буду"]
+    - sentence: "Завтра вона ___ відпочивати."
+      answer: "буде"
+      options: ["буде", "буду", "будеш", "будуть"]
+    - sentence: "Я не ___ жити там."
+      answer: "буду"
+      options: ["буду", "буде", "будемо", "будуть"]
 
 - type: match-up
-  title: 'Переклад слів (Translation)'
-  instruction: 'Match the English word with the Ukrainian translation.'
+  title: "Match the Vocabulary"
+  instruction: "Match the Ukrainian words with their English translations."
   pairs:
-    - left: 'tomorrow'
-      right: 'завтра'
-    - left: 'soon'
-      right: 'скоро'
-    - left: 'later'
-      right: 'пізніше'
-    - left: 'weekend'
-      right: 'вихідні'
-    - left: 'vacation'
-      right: 'відпустка'
-    - left: 'next week'
-      right: 'наступного тижня'
-    - left: 'to plan'
-      right: 'планувати'
-    - left: 'to want'
-      right: 'хотіти'
+    - left: "завтра"
+      right: "tomorrow"
+    - left: "післязавтра"
+      right: "the day after tomorrow"
+    - left: "скоро"
+      right: "soon"
+    - left: "потім"
+      right: "then, later"
+    - left: "план"
+      right: "plan"
+    - left: "наступного тижня"
+      right: "next week"
+    - left: "хотіти"
+      right: "to want"
+    - left: "збиратися"
+      right: "to be going to"
 
 - type: unjumble
-  title: 'Запитання про плани (Questions about plans)'
-  instruction: 'Arrange the words to form questions.'
+  title: "Build the Sentence"
+  instruction: "Put the words in the correct order."
   items:
-    - words: ['будеш', 'робити', 'Що', 'ти']
-      answer: 'Що ти будеш робити'
-    - words: ['ми', 'будемо', 'Коли', 'там']
-      answer: 'Коли ми будемо там'
-    - words: ['хочеш', 'піти', 'в', 'кіно', 'Ти']
-      answer: 'Ти хочеш піти в кіно'
-    - words: ['ти', 'завтра', 'будеш', 'Де']
-      answer: 'Де ти будеш завтра'
-    - words: ['плани', 'твої', 'Які', 'на', 'завтра']
-      answer: 'Які твої плани на завтра'
-    - words: ['ти', 'куди', 'поїхати', 'хочеш']
-      answer: 'Куди ти хочеш поїхати'
+    - words: ["Я", "буду", "читати", "книгу."]
+      answer: "Я буду читати книгу."
+    - words: ["Що", "ти", "будеш", "робити?"]
+      answer: "Що ти будеш робити?"
+    - words: ["Ми", "будемо", "працювати", "завтра."]
+      answer: "Ми будемо працювати завтра."
+    - words: ["Вони", "не", "будуть", "спати."]
+      answer: "Вони не будуть спати."
+    - words: ["Я", "збираюся", "їхати", "в", "гори."]
+      answer: "Я збираюся їхати в гори."
+    - words: ["Завтра", "буде", "новий", "день."]
+      answer: "Завтра буде новий день."
+
+- type: group-sort
+  title: "Sort the Words"
+  instruction: "Categorize the words into the correct groups."
+  groups:
+    - name: "Helper Verb Forms"
+      items: ["буду", "будеш", "буде", "будемо", "будуть"]
+    - name: "Time Markers"
+      items: ["завтра", "скоро", "потім", "післязавтра"]
+    - name: "Intention Verbs"
+      items: ["хотіти", "збиратися"]
+
+- type: quiz
+  title: "Usage of Time and Intentions"
+  instruction: "Choose the best answer for each question."
+  items:
+    - question: "How do you say 'next week' in Ukrainian?"
+      options:
+        - text: "наступного тижня"
+          correct: true
+        - text: "наступний тиждень"
+          correct: false
+        - text: "наступного року"
+          correct: false
+        - text: "завтра"
+          correct: false
+      explanation: "Time expressions like 'next week' require the Genitive case."
+    - question: "Which phrase means 'next year'?"
+      options:
+        - text: "наступного року"
+          correct: true
+        - text: "наступний рік"
+          correct: false
+        - text: "наступного тижня"
+          correct: false
+        - text: "наступного разу"
+          correct: false
+    - question: "If you are making a firm commitment to read, what do you say?"
+      options:
+        - text: "Я буду читати."
+          correct: true
+        - text: "Я хочу читати."
+          correct: false
+        - text: "Я збираюся читати."
+          correct: false
+        - text: "Я буду прочитати."
+          correct: false
+      explanation: "Using 'буду' shows a solid commitment."
+    - question: "Which verb expresses an intention for the future?"
+      options:
+        - text: "збиратися"
+          correct: true
+        - text: "бути"
+          correct: false
+        - text: "мати"
+          correct: false
+        - text: "робити"
+          correct: false
+      explanation: "Ukrainians use 'збиратися' for intentions."
+    - question: "How do you express 'I really want to sleep'?"
+      options:
+        - text: "Я дуже хочу спати."
+          correct: true
+        - text: "Я буду спати."
+          correct: false
+        - text: "Я збираюся спати."
+          correct: false
+        - text: "Я не хочу спати."
+          correct: false
+    - question: "What does the word 'скоро' mean in English?"
+      options:
+        - text: "soon"
+          correct: true
+        - text: "tomorrow"
+          correct: false
+        - text: "then"
+          correct: false
+        - text: "later"
+          correct: false
+    - question: "How do you ask 'What plans do you have?'"
+      options:
+        - text: "Які ти маєш плани?"
+          correct: true
+        - text: "Який план?"
+          correct: false
+        - text: "Що ти робиш?"
+          correct: false
+        - text: "Які ти маєш роки?"
+          correct: false
+    - question: "How do you say 'tomorrow evening'?"
+      options:
+        - text: "завтра ввечері"
+          correct: true
+        - text: "завтра вранці"
+          correct: false
+        - text: "завтра вдень"
+          correct: false
+        - text: "післязавтра"
+          correct: false
 
 - type: fill-in
-  title: 'Граматика: Наступного... (Grammar: Next...)'
-  instruction: 'Fill in the correct form "наступного" (next) for time expressions.'
+  title: "Time and Intentions"
+  instruction: "Choose the correct word to complete the sentence."
   items:
-    - sentence: 'Ми їдемо ___ тижня.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступна', 'наступні']
-    - sentence: 'Я буду там ___ року.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступне', 'наступні']
-    - sentence: '___ разу буде краще.'
-      answer: 'Наступного'
-      options: ['Наступного', 'Наступний', 'Наступна', 'Наступне']
-    - sentence: '___ тижня ми працюємо.'
-      answer: 'Наступного'
-      options: ['Наступного', 'Наступний', 'Наступна', 'Наступне']
-    - sentence: 'Це буде ___ місяця.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступна', 'наступні']
-    - sentence: '___ літа я їду на море.'
-      answer: 'Наступного'
-      options: ['Наступного', 'Наступний', 'Наступна', 'Наступне']
-    - sentence: '___ разу я буду розумнішим.'
-      answer: 'Наступного'
-      options: ['Наступного', 'Наступний', 'Наступна', 'Наступне']
-    - sentence: 'Це буде ___ тижня.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступна', 'наступні']
+    - sentence: "___ буде новий день."
+      answer: "Завтра"
+      options: ["Завтра", "Скоро", "Потім", "Сьогодні"]
+    - sentence: "Я ___ їхати в гори."
+      answer: "збираюся"
+      options: ["збираюся", "буду", "хочу", "план"]
+    - sentence: "Ми будемо працювати ___ тижня."
+      answer: "наступного"
+      options: ["наступного", "наступний", "завтра", "скоро"]
+    - sentence: "Вони дуже ___ знати правду."
+      answer: "хочуть"
+      options: ["хочуть", "будуть", "збираються", "планують"]
+    - sentence: "Ми складаємо ___ на майбутнє."
+      answer: "план"
+      options: ["план", "року", "тижня", "день"]
+    - sentence: "___ року ми маємо великі плани."
+      answer: "Наступного"
+      options: ["Наступного", "Наступний", "Цього", "Минулого"]
+    - sentence: "Завтра вранці ми будемо працювати, а ___ відпочивати."
+      answer: "потім"
+      options: ["потім", "завтра", "скоро", "дуже"]
+    - sentence: "___ ми будемо слухати презентацію."
+      answer: "Післязавтра"
+      options: ["Післязавтра", "Завтра", "Сьогодні", "Потім"]

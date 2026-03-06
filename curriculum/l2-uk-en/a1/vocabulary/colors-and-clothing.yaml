@@ -1,72 +1,84 @@
 items:
-  - lemma: "білий"
-    translation: "white"
-    pos: "adjective"
-  - lemma: "чорний"
-    translation: "black"
-    pos: "adjective"
-  - lemma: "червоний"
-    translation: "red"
-    pos: "adjective"
-  - lemma: "синій"
-    translation: "blue"
-    pos: "adjective"
-  - lemma: "зелений"
-    translation: "green"
-    pos: "adjective"
-  - lemma: "жовтий"
-    translation: "yellow"
-    pos: "adjective"
-  - lemma: "сорочка"
-    translation: "shirt"
-    pos: "noun"
-    gender: "f"
-  - lemma: "штани"
-    translation: "pants"
-    pos: "noun"
-    notes: "always plural"
-  - lemma: "сукня"
-    translation: "dress"
-    pos: "noun"
-    gender: "f"
-  - lemma: "носити"
-    translation: "to wear"
-    pos: "verb"
-  - lemma: "плаття"
-    translation: "dress"
-    pos: "noun"
-    gender: "n"
-    notes: "everyday term"
-  - lemma: "куртка"
-    translation: "jacket"
-    pos: "noun"
-    gender: "f"
-  - lemma: "светр"
-    translation: "sweater"
-    pos: "noun"
-    gender: "m"
-  - lemma: "окуляри"
-    translation: "glasses"
-    pos: "noun"
-    notes: "always plural"
-  - lemma: "джинси"
-    translation: "jeans"
-    pos: "noun"
-    notes: "always plural"
-  - lemma: "одягати"
-    translation: "to put on"
-    pos: "verb"
-  - lemma: "колір"
-    translation: "color"
-    pos: "noun"
-    gender: "m"
-  - lemma: "магазин"
-    translation: "store"
-    pos: "noun"
-    gender: "m"
-  - lemma: "новий"
-    translation: "new"
-    pos: "adjective"
-  - lemma: "коштувати"
-    translation: "to cost"
-    pos: "verb"
+  - lemma: білий
+    translation: white
+    pos: adj
+  - lemma: чорний
+    translation: black
+    pos: adj
+  - lemma: червоний
+    translation: red
+    pos: adj
+  - lemma: синій
+    translation: blue
+    pos: adj
+  - lemma: зелений
+    translation: green
+    pos: adj
+  - lemma: жовтий
+    translation: yellow
+    pos: adj
+  - lemma: бордо
+    translation: burgundy
+    pos: adj
+  - lemma: беж
+    translation: beige
+    pos: adj
+  - lemma: хакі
+    translation: khaki
+    pos: adj
+  - lemma: колір
+    translation: color
+    pos: noun
+    gender: m
+  - lemma: сорочка
+    translation: shirt
+    pos: noun
+    gender: f
+  - lemma: штани
+    translation: pants
+    pos: noun
+    notes: pluralia tantum
+  - lemma: сукня
+    translation: dress (elegant)
+    pos: noun
+    gender: f
+  - lemma: плаття
+    translation: dress (casual)
+    pos: noun
+    gender: n
+  - lemma: куртка
+    translation: jacket
+    pos: noun
+    gender: f
+  - lemma: светр
+    translation: sweater
+    pos: noun
+    gender: m
+  - lemma: джинси
+    translation: jeans
+    pos: noun
+    notes: pluralia tantum
+  - lemma: окуляри
+    translation: glasses
+    pos: noun
+    notes: pluralia tantum
+  - lemma: носити
+    translation: to wear
+    pos: verb
+    aspect: impf
+  - lemma: одягати
+    translation: to put on
+    pos: verb
+    aspect: impf
+  - lemma: розмір
+    translation: size
+    pos: noun
+    gender: m
+  - lemma: дієслово
+    translation: verb
+    pos: noun
+    gender: n
+  - lemma: множина
+    translation: plural
+    pos: noun
+    gender: f

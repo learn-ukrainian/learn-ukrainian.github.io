@@ -2,6 +2,14 @@
   "module": "nakazovyi-povnyi",
   "track": "l2-uk-direct",
   "level": "a2",
-  "status": "draft",
-  "created": "2026-03-06T00:39:36.228714+00:00"
+  "status": "validated",
+  "created": "2026-03-06T00:39:36.228714+00:00",
+  "phases": {
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T00:52:02Z",
+      "errors": 0,
+      "warnings": 0
+    }
+  }
 }
