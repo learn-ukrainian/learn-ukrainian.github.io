@@ -2,51 +2,45 @@ slug: holidays-and-traditions
 title: Holidays & Traditions
 word_target: 1200
 content_outline:
-- section: Вступ та культура
-  words: 500
+- section: Вступ та культура (Introduction & Culture)
+  slug: introduction-and-culture
+  words: 300
   points:
-  - 'Scaffolding Note: A1 level module (~40% immersion). English scaffolding is mandatory
-    for all cultural context and complex explanations.'
-  - Introduce major holidays (Новий рік, Різдво, Великдень) fulfilling State Standard
-    §3.12, using clear bilingual vocabulary tables.
-  - 'Each cultural concept gets its own H3: Write a section on the tradition of 12
-    meatless dishes on Святвечір and the central role of Кутя.'
-  - Create an H3 section detailing the history of «Щедрик» (Mykola Leontovych) as
-    an authentic Ukrainian New Year's carol, emphasizing Ukrainian cultural agency.
-- section: 'Презентація: Вітання'
-  words: 500
+  - Introduce major Ukrainian holidays (Новий рік, Різдво, Великдень) using clear
+    bilingual vocabulary tables.
+  - Explain the cultural significance of Святвечір, the 12 meatless dishes, and the
+    central role of Кутя.
+  - Share the history of «Щедрик» (Mykola Leontovych) as an authentic Ukrainian carol,
+    emphasizing cultural agency.
+- section: 'Презентація: Вітання (Presentation: Greetings)'
+  slug: presentation-greetings
+  words: 300
   points:
-  - 'Scaffolding Note: Provide clear English explanation for the greeting formula
-    before showing Ukrainian examples.'
-  - Create an H3 for the core greeting formula «Вітаю + З + [Instrumental]» with a
-    rule definition and 3+ bilingual examples.
-  - Present «З Новим роком», «З Різдвом», «З Великоднем» as lexicalized, fixed formulas
-    rather than teaching the full Instrumental declension paradigm.
-  - Explicitly address the common learner error of using Nominative («З Новий рік»),
-    explaining why the preposition «З» in this context requires the Instrumental case.
-  - Define the verb «вітати» (the act of greeting/congratulating) with 3+ short, A1-appropriate
-    sentence examples.
-- section: 'Презентація: Побажання'
-  words: 500
+  - Introduce the fixed greeting formula «З + [Instrumental]» (e.g., З Новим роком,
+    З Різдвом) as lexicalized phrases.
+  - Address the common error of using the Nominative case (e.g., З Новий рік) and
+    explain the rule simply.
+  - Define the verb «вітати» (to congratulate) with 3+ short, A1-appropriate sentence
+    examples.
+- section: 'Презентація: Побажання (Presentation: Wishes)'
+  slug: presentation-wishes
+  words: 300
   points:
-  - 'Scaffolding Note: Provide clear English explanation for the wishing formula before
-    Ukrainian examples.'
-  - Create an H3 for the wishing formula «Бажаю + [Genitive]» with a concise rule
-    definition and 3+ bilingual examples.
-  - Introduce abstract nouns «щастя» /ˈʃtʃɑstʲɐ/ and «здоров'я» /zdɔˈrɔu̯jɐ/ with
-    pronunciation guides and their Genitive forms.
-  - Address the common learner error of using the Accusative («Бажаю успіх»); explicitly
-    explain that wishing for abstract concepts requires the Genitive case.
+  - Introduce the wishing formula «Бажаю + [Genitive]» for abstract concepts (щастя,
+    здоров'я, успіху).
+  - Provide pronunciation guides for complex sounds in words like «щастя» /ˈʃtʃɑstʲɐ/
+    and «здоров'я» /zdɔˈrɔu̯jɐ/.
+  - Address the common error of using the Accusative case (Бажаю успіх) instead of
+    the required Genitive.
   - Provide a practical mini-dialogue demonstrating how to express wishes and respond
-    appropriately (e.g., «Дякую!», «Взаємно!»).
-- section: Практика та дні народження
-  words: 500
+    (e.g., Дякую, Взаємно).
+- section: Практика та дні народження (Practice & Birthdays)
+  slug: practice-and-birthdays
+  words: 300
   points:
-  - Create an H3 focusing on birthdays (State Standard §3.12), recalling module a1-23
-    to ask «Коли твій день народження?» and answering with Genitive dates.
-  - 'Cultural connection: Briefly explain the playful Ukrainian tradition of pulling
-    ears («тягнути за вуха») on birthdays.'
-  - Introduce the crucial vocabulary collocations «дарувати подарунок» and «отримати
-    подарунок», explicitly using «отримати» to avoid Russianisms.
-  - 'Practical focus: Conclude with a step-by-step writing guide and a model answer
-    for crafting a short, informal greeting card to a friend.'
+  - 'Focus on birthdays: review asking «Коли твій день народження?» and answering
+    with Genitive dates.'
+  - Introduce the playful tradition of pulling ears («тягнути за вуха») for birthdays.
+  - 'Teach vital collocations for gifts: «дарувати подарунок» and «отримати подарунок».'
+  - Include a step-by-step writing guide for crafting a short greeting card, followed
+    by a summary with 3-4 self-check questions.

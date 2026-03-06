@@ -1,188 +1,189 @@
 <!-- SCOPE
-Covers: Second Conjugation (-ити) verbs, consonant mutations in the 'я' form, and the irregular verbs їсти and пити.
+Covers: Second Conjugation (-ити verbs) in present tense, consonant mutations in 1st person singular, irregular verbs їсти/пити.
 Not covered:
-  - Reflexive Verbs → a1-17
-  - Past Tense → a1-21
+  - Reflexive verbs (-ся/-сь) → a1-17
+  - Past tense → a1-21
 -->
 
 # The Living Verb II
 
 > **Чому це важливо?**
 >
-> You are expanding your ability to describe actions. By mastering this second major group of verbs, you unlock the vocabulary needed for daily routines, preferences, and participating in cultural hospitality.
+> Українська мова має дві великі групи. The Ukrainian language has two large verb groups. The second group is essential for describing states, routines, and deep social connections like hospitality.
 
 ## Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)
 
-Українці дуже люблять приймати гостей вдома. Гостинність — це важлива частина нашої культури. Вдома ми зазвичай робимо три речі. Ми смачно їмо, п'ємо та багато говоримо.
+Ми вже знаємо першу групу. We already know the first group. Зараз ми вивчаємо другу групу. Now we are studying the second group. Ці слова зазвичай мають закінчення **-ити**. These words usually have the ending **-ити**.
 
-Ukrainians really love hosting guests at home. Hospitality is an important part of our culture. At the table, we usually do three things. We eat deliciously, we drink, and we speak a lot.
+У чому їхня особливість? What is their special feature? While Class I verbs cover general activities, Class II verbs often describe ongoing states and fundamental human interactions. 
 
-У попередньому модулі ми вивчали дієслова першої групи. (In our previous module, we studied the first group verbs.) You met the Class I verbs, which typically end in **-ати**. Тепер час вивчити дієслова другої групи. (Now it is time to learn the second group verbs.) These verbs usually end in the suffix **-ити**.
+В українській культурі дуже важлива гостинність. In Ukrainian culture, hospitality is very important. We can call its foundation the «Triad of Hospitality».
 
-В українській культурі соціальні зв'язки дуже важливі. (In Ukrainian culture, social connections are very important.) Social connection heavily revolves around what we can call the "Triad of Hospitality": the verbs **їсти** (to eat), **пити** (to drink), and **говорити** (to speak). Коли ви йдете в гості, ви використовуєте ці слова. (When you go visiting, you use these words.) Refusing food or drink is sometimes even seen as rejecting the host's goodwill, so knowing how to express your needs gently is a crucial survival skill.
+Украї́нці лю́блять госте́й. (Ukrainians love guests.)
+Ми лю́бимо ї́сти. (We love to eat.)
+Ми лю́бимо пи́ти. (We love to drink.)
+Ми лю́бимо говори́ти. (We love to speak.)
 
-Ви вже знаєте, як говорити про дії. (You already know how to talk about actions.) You already know how to talk about actions using the **-ати** pattern. The **-ити** pattern is very similar in structure, but it uses a completely different set of vowels in the endings. Ми вивчимо цю нову структуру. (We will learn this new structure.) We will learn this new structural pattern so you can comfortably talk about your daily routines, your personal preferences, and your favorite foods. Understanding both verb classes gives you the foundational tools to build almost any basic sentence.
+Ми йдемо в гості. When we go visiting, these three actions — eating, drinking, and speaking — form the core of your experience. You cannot separate social bonding from sharing a meal and a good conversation.
+
+> [!culture]
+> Hospitality is a central value in Ukraine. Offering food and drink is a primary way to show respect and care. Refusing a meal can sometimes be perceived as rejecting the host's goodwill, so it is always polite to accept at least a little bit!
+
+Before we look at the endings, remember a key concept about the present tense. Теперішній час — це зараз. The present tense is now. It also describes actions that happen regularly.
+
+Я ба́чу стіл. (I see a table.)
+Я ба́чу хліб. (I see bread.)
+Я ба́чу во́ду. (I see water.)
+
+When you say you do these things, you describe your ongoing reality. Now, let's see how these words change their shapes to match the subject.
 
 ## Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)
 
-Подивіться уважно на ці два короткі речення. Ми читаємо цікавий текст. Ми говоримо українською мовою. Ви бачите різницю в літерах?
+Ми можемо подивитися на правила. We can look at the rules. You will notice they are very similar to what you already know, but with a crucial vowel shift.
 
-Look closely at these two short sentences. We read an interesting text. We speak the Ukrainian language. Do you see the difference in the letters?
+Замість звуків «е» або «є» ми маємо «и» або «і». Instead of «е» or «є» we have «и» or «і». Це головна різниця. This is the main difference.
 
-Дієслова першої групи мають літери «е» та «є». (Class I verbs have letters "е" and "є".) Class I verbs rely heavily on the vowels **е** and **є** for their grammatical endings. Дієслова другої групи мають літеру «и». (Class II verbs have the letter "и".) Class II verbs, however, build their endings around the vowel **и**. This difference is the key to identifying and conjugating them correctly.
+Наша модель — слово **говори́ти**. Our model is the verb **говори́ти**. Це правильне і дуже корисне слово. It is a regular and very useful verb.
 
-### The Standard Endings
+Я говорю́ украї́нською. (I speak Ukrainian.)
+Ти говори́ш до́бре. (You speak well.)
+Він говори́ть ти́хо. (He speaks quietly.)
 
-Ось стандартні закінчення для дієслів другої групи:
-(Here are the standard endings for Class II verbs:)
-*   я: **-ю** (or sometimes **-у**)
-*   ти: **-иш**
-*   він / вона / воно: **-ить**
-*   ми: **-имо**
-*   ви: **-ите**
-*   вони: **-ять** (or sometimes **-ать**)
+Тут ми бачимо закінчення. Here we see the endings:
+*   Я (I) drops the -ити and adds **-ю** (or sometimes **-у**).
+*   Ти (You singular) adds **-иш**.
+*   Він/Вона/Воно (He/She/It) adds **-ить**.
+*   Ми (We) adds **-имо**.
+*   Ви (You plural/formal) adds **-ите**.
+*   Вони (They) adds **-ять** (or sometimes **-ать**).
 
-### The Verb Говорити (To Speak)
+Ось повна таблиця для **говори́ти**. Here is the full table for **говори́ти**:
 
-Подивімося на дієслово «говорити». (Let's look at the verb "to speak".) Let's look at the highly useful verb **говорити** (to speak) to see this pattern in action:
-*   я **говорю** (I speak) — Я говорю дуже швидко. (I speak very fast.)
-*   ти **говориш** (you speak) — Ти говориш про роботу. (You speak about work.)
-*   він / вона **говорить** (he/she speaks) — Вона говорить добре. (She speaks well.)
-*   ми **говоримо** (we speak) — Ми говоримо багато. (We speak a lot.)
-*   ви **говорите** (you speak) — Ви говорите тихо. (You speak quietly.)
-*   вони **говорять** (they speak) — Вони говорять сьогодні. (They speak today.)
-
-### The Verb Вчити (To Teach / To Learn)
-
-Тепер вивчимо дієслово «вчити». (Now let's learn the verb "to teach" or "to learn".) Now let's examine another regular Class II verb, **вчити** (to teach or to learn):
-*   я **вчу** (I teach / I learn) — Я вчу нове слово. (I learn a new word.)
-*   ти **вчиш** (you teach / you learn) — Ти вчиш текст. (You learn the text.)
-*   він / вона **вчить** (he/she teaches / he/she learns) — Він вчить вас. (He teaches you.)
-*   ми **вчимо** (we teach / we learn) — Ми вчимо діалог. (We learn the dialogue.)
-*   ви **вчите** (you teach / you learn) — Ви вчите правило. (You learn the rule.)
-*   вони **вчать** (they teach / they learn) — Вони вчать багато. (They learn a lot.)
+| Pronoun | Form | Ending |
+| :--- | :--- | :--- |
+| Я | я говорю́ | -ю |
+| Ти | ти говори́ш | -иш |
+| Він / Вона | він говори́ть | -ить |
+| Ми | ми говори́мо | -имо |
+| Ви | ви говори́те | -ите |
+| Вони | вони говоря́ть | -ять |
 
 > [!tip]
-> Notice that after the consonant **ч** in the verb **вчити**, we must use **-у** instead of **-ю**, and **-ать** instead of **-ять**. This is strictly a spelling and pronunciation rule to make the word sound better. The rhythm and logic of the verb endings remain exactly the same!
+> A great way to remember the difference is to compare the «you» forms. Class I has «ти чита́єш» (you read). Class II has «ти говори́ш» (you speak). Ми чуємо «е/є» — це перша група. We hear «е/є» — it is the first group. Ми чуємо «и/і» — це друга група! We hear «и/і» — it is the second group!
 
-## Презентація: Мутації приголосних (Presentation: Consonant Mutations)
+Ось ще одне часте слово, **вчи́ти**. Here is another frequent verb, **вчи́ти** (to teach or to learn):
 
-Деякі дієслова мають маленьку зміну звуку. Ця зміна відбувається лише у формі «я». Усі інші форми залишаються абсолютно стандартними.
+Вона́ вчить слова́. (She learns words.)
+Вони́ вчать мо́ву. (They learn a language.)
 
-Some verbs have a small change of sound. This change happens only in the "I" form. All other forms remain absolutely standard.
+Notice that for **вчи́ти**, the «я» form takes **-у** instead of **-ю** (я вчу), and the «вони» form takes **-ать** instead of **-ять** (вони вчать). Це природна зміна після літери «ч». This is a natural change after the letter «ч».
 
-Коли ми відмінюємо деякі дієслова, остання літера змінюється. (When we conjugate some verbs, the last letter changes.) When we conjugate some Class II verbs, the final consonant of the stem mutates (changes its shape). For most of these verbs, the mutation only happens in the **я** (I) form. However, if the stem ends in a labial consonant (like **б**, **п**, **в**, **м**, or **ф**), the extra **л** also appears in the **вони** (they) form! For all other pronouns, the consonant stays normal.
+## Презентація: Мутації та Неправильні дієслова (Presentation: Mutations and Irregulars)
 
-### The Labial "L" Addition
+А зараз дуже цікава тема. And now a very interesting topic. Sometimes, the last consonant of the verb stem changes when we say «I do it». Це відбувається тільки у формі «я». This happens only in the «я» form. Ми називаємо це мутацією приголосних. We call this a consonant mutation.
 
-Ми маємо літери **б**, **п**, **в**, **м** або **ф**. Ми додаємо **л**. (We have letters **б**, **п**, **в**, **м** or **ф**. We add **л**.)
-When a verb stem ends in a labial consonant—like **б**, **п**, **в**, **м**, or **ф**—we insert an extra **л** before the **-ю** ending. Це фонетичне правило. Так легше говорити. (This is a phonetic rule. It is easier to speak this way.) This phonetic bridge makes the word physically easier to pronounce.
-*   **робити** (to do / to make): я **роблю**, ти **робиш**, він **робить**, вони **роблять**
-    *   Я роблю каву. (I make coffee.)
-    *   Вони роблять чай. (They make tea.)
-*   **любити** (to love): я **люблю**, ти **любиш**, вона **любить**, ми **любимо**
-    *   Я люблю літо. (I love summer.)
-    *   Ми любимо зиму. (We love winter.)
+Let's look at the verb **ходи́ти** (to walk or to go regularly).
+
+Він хо́дить до шко́ли. (He walks to school.)
+Ти хо́диш у парк. (You walk to the park.)
+
+Я йду. The «д» changes to a «дж» sound.
+
+Я ходжу́. (I walk.)
+Я ходжу́ до шко́ли. (I walk to school.)
+
+Це також так для **сиді́ти**. This is also true for **сиді́ти**.
+
+Я сиджу́. (I sit.)
+Вона́ сиди́ть. (She sits.)
+
+Інший тип мутації працює з губами. Another type of mutation involves lips. When a verb stem ends in a labial consonant — like б, п, в, м, or ф — it is physically difficult to say the «ю» ending right after it. To make pronunciation easier, Ukrainian inserts a soft «л» sound.
+
+Ми бачимо це для **роби́ти**. We see this for **роби́ти**:
+
+Ти ро́биш. (You do.)
+Я роблю́. (I do.)
+
+І також для **люби́ти**. And also for **люби́ти**:
+
+Ми лю́бимо приро́ду. (We love nature.)
+Я люблю́ те́бе. (I love you.)
+
+Без звуку «л» це важко сказати. Without the «л» sound it is hard to say. The «л» acts as a bridge for your tongue.
 
 > [!culture]
-> In Ukrainian, the verb **любити** is incredibly versatile. It means both "to love" and "to like". You can use it to express deep affection for your family (**Я люблю маму** — I love mom) just as easily as you use it to state your preference for a beverage (**Я люблю каву** — I like coffee).
+> Слово **люби́ти** і слово **лю́ди** — родичі. The word **люби́ти** and the word **лю́ди** are relatives. In a deep historical sense, to love means to belong to a community of people!
 
-### Dental Consonant Shifts
+Деякі слова унікальні. Some words are unique. They do not follow normal rules. Найважливіше з них — **ї́сти**. The most important of them is **ї́сти**. Ми маємо запам'ятати його форми. We must memorize its forms.
 
-Коли дієслово має літери «д» або «т», звук змінюється у формі «я». (When a verb has letters "д" or "т", the sound changes in the "я" form.) When a verb stem ends in the dental consonants **д** or **т**, the sound shifts noticeably in the **я** form.
-*   The letter **д** changes to **дж**:
-    *   **ходити** (to walk / to go): я **ходжу**, ти **ходиш**, ми **ходимо**
-        *   Я ходжу туди часто. (I go there often.)
-    *   **сидіти** (to sit): я **сиджу**, ти **сидиш**, ви **сидите**
-*   The letter **т** changes to **ч**:
-    *   **платити** (to pay): я **плачу**, ти **платиш**, вони **платять**
-        *   Я плачу тут. (I pay here.)
+Я їм. (I eat.)
+Ти їси́. (You eat.)
+Він їсть. (He eats.)
+Ми їмо́. (We eat.)
+Ви їсте́. (You eat.)
+Вони́ їдя́ть. (They eat.)
 
-### Sibilant Consonant Shifts
+Слово **пи́ти** коротке і чітке. The word **пи́ти** is short and punchy.
 
-Коли дієслово має літери «с» або «з», звук також змінюється. (When a verb has letters "с" or "з", the sound also changes.) When a verb stem ends in the sibilant consonants **с** or **з**, the sound also shifts.
-*   The letter **с** changes to **ш**:
-    *   **просити** (to ask for): я **прошу**, ти **просиш**, вона **просить**
-        *   Я прошу води. (I ask for water.)
+Я п'ю во́ду. (I drink water.)
+Він п'є ка́ву. (He drinks coffee.)
+Вони́ п'ють. (They drink.)
 
-Ці зміни є тільки у формі «я». (These changes are only in the "я" form.) These changes only affect how you speak about yourself! The rest of the verb follows the standard Class II pattern without any surprises.
+Нарешті, ми говоримо про зір. Finally, we talk about sight. **Ба́чити** means to see — it describes the physical ability or the result of sight.
 
-## Презентація: Неправильні дієслова (Presentation: Irregular Verbs)
+Я ба́чу стіл. (I see a table.)
 
-Слова «їсти» та «пити» є дуже особливими. Ми використовуємо їх кожного дня. Вони мають свої власні граматичні правила.
+Для процесу ми використовуємо інше слово, **диви́тися**. For the process we use another word, **диви́тися**, which we will explore later. Зараз наш фокус — **ба́чити**. For now our focus is **ба́чити**.
 
-The words "to eat" and "to drink" are very special. We use them every day. They have their own grammatical rules.
+## Практика: Уникнення типових помилок (Practice: Avoiding Common Errors)
 
-Дієслова «їсти» та «пити» дуже важливі. Вони складні. (The verbs "to eat" and "to drink" are very important for hospitality, but they are difficult.) The verbs **їсти** (to eat) and **пити** (to drink) are essential for hospitality, but they can trick learners. The verb **їсти** is completely irregular and has its own unique endings. The verb **пити** ends in **-ити**, but it actually belongs to Class I and uses the regular **-є** endings!
+Ми вивчаємо цю групу. We study this group. It is easy to accidentally mix the rules. Найбільша помилка — використовувати першу групу. The biggest mistake is using Class I endings where they do not belong. 
 
-### The Verb Їсти (To Eat)
+Ми маємо тренувати наші вуха. We must train our ears to expect the «и» sound. Ми можемо порівняти правильні та неправильні форми. We can compare correct and incorrect forms.
 
-Ось як ми відмінюємо дієслово «їсти»: (Here is how we conjugate the verb "to eat":) Here is how we conjugate the verb **їсти**:
-*   я **їм** — Я їм борщ. (I eat borscht.)
-*   ти **їси** — Ти їси хліб. (You eat bread.)
-*   він / вона / воно **їсть** — Він їсть суп. (He eats soup.)
-*   ми **їмо** — Ми їмо сало. (We eat salo.)
-*   ви **їсте** — Ви їсте торт. (You eat cake.)
-*   вони **їдять** — Вони їдять м'ясо. (They eat meat.)
+Він ро́бить. (He does. — Правильно)
+Він ро́бе. (Incorrect.)
 
-### The Verb Пити (To Drink)
+Ти говори́ш. (You speak. — Правильно)
+Ти говори́єш. (Incorrect.)
 
-А ось дієслово «пити»: (And here is the verb "to drink":) And here is the conjugation for **пити**:
-*   я **п'ю** — Я п'ю каву. (I drink coffee.)
-*   ти **п'єш** — Ти п'єш чай. (You drink tea.)
-*   він / вона / воно **п'є** — Вона п'є воду. (She drinks water.)
-*   ми **п'ємо** — Ми п'ємо сік. (We drink juice.)
-*   ви **п'єте** — Ви п'єте вино. (You drink wine.)
-*   вони **п'ють** — Вони п'ють пиво. (They drink beer.)
+Ми пла́тимо. (We pay. — Правильно)
+Ми пла́темо. (Incorrect.)
 
-> [!did-you-know]
-> The verb **пити** has a very short stem, which is why it uses an apostrophe in forms like **п'ю** and **п'єш**. The apostrophe tells you to pronounce the consonant and the vowel distinctly, without blending them together!
+Дуже важливо знати правильну голосну. It is very important to know the right vowel.
 
-### The Verb Бачити (To See)
+Інша часта помилка — забувати мутацію. Another frequent mistake is forgetting the consonant mutations in the «я» form. Ми маємо практикувати їх. We must practice them.
 
-Ще одне дуже важливе дієслово — це «бачити». Це стандартне дієслово другої групи. (Another very important verb is "to see". This is a standard Class II verb.) Another extremely important verb is **бачити** (to see). This is actually a fully regular Class II verb. You conjugate it normally: я **бачу**, ти **бачиш**, вона **бачить**. However, you must be careful with its meaning. Ми використовуємо «бачити» для фізичної дії. (We use "to see" for physical action.) We use **бачити** when we talk about the physical faculty or ability to see something. If you want to talk about actively watching something over time, like a film or a performance, we use a different verb, **дивитися**.
-
-## Практика: Типові помилки (Practice: Common Errors)
-
-Ми вчимо українську мову. Ми часто робимо помилки. Це нормально.
-
-We learn the Ukrainian language. We often make mistakes. This is normal.
-
-Є дві типові помилки. (There are two common errors.) The two most common errors learners make with Class II verbs are mixing conjugations and forgetting the mutations in the first person singular form. Подивімося на них. (Let's look at them.) Let's look at how to avoid them.
-
-### Error 1: Conjugation Mixing
-
-Студенти часто роблять цю помилку. (Students often make this mistake.) Because Class I verbs are taught first, students often try to use Class I vowels (**е** or **є**) with Class II verbs. Ви повинні завжди використовувати літеру «и» для цієї групи. (You must always use the letter "и" for this group.) You must always use **и** for this group.
-*   ✅ ти **робиш** (you do)
-*   ❌ ти робеш
-*   ✅ він **ходить** (he walks)
-*   ❌ він ходеть
-*   ✅ ви **говорите** (you speak)
-*   ❌ ви говорете
-
-### Error 2: Forgetting the Mutation
-
-Ви говорите про себе (я). Ви змінюєте звук. (You talk about yourself (I). You change the sound.)
-Коли ви говорите про себе, ви повинні змінити приголосний звук. (When you talk about yourself, you must change the consonant sound.) When you speak about yourself using the **я** form, you must apply the consonant mutations we learned earlier. Do not simply attach **-ю** to the infinitive stem.
-*   ✅ я **ходжу** (I walk)
-*   ❌ я ходю
-*   ✅ я **люблю** (I love)
-*   ❌ я любю
-*   ✅ я **сиджу** (I sit)
-*   ❌ я сидю
+Я ходжу́. (I walk.)
+Я сиджу́. (I sit.)
+Я плачу́. (I pay.)
+Я прошу́. (I ask.)
 
 > [!warning]
-> The verb **їсти** is completely irregular. Never try to make it fit a regular pattern by adding common endings. The correct form is simply **я їм**, not the commonly mistaken **я їджу** or **я їстю**.
+> Без мутації ви кажете «я ходю» або «я сидю». Without the mutation you say «я ходю» or «я сидю». People will understand you, but it sounds like baby talk. The mutations give your speech an authentic, mature sound.
+
+Ми хочемо використовувати нові слова. We want to use the new words. Ми використовуємо їх постійно. We use them constantly.
+
+Я роблю́ дома́шнє завда́ння. (I do homework.)
+Він лю́бить приро́ду. (He loves nature.)
+Ми говори́мо украї́нською. (We speak Ukrainian.)
+Вони́ лю́блять чита́ти. (They love to read.)
+
+Ці прості речення — наша база. These simple sentences form the foundation of your ability to converse. Наш успіх залежить від закінчень. Our success depends on the endings, and your sentences will sound natural and clear.
 
 ---
 
-# Підсумок
+## Підсумок (Summary)
 
-Ми вивчаємо нову групу. Ми маємо нові правила. (We learn a new group. We have new rules.)
-Дієслова другої групи — це друга велика частина української системи дієслів. (Class II verbs are the second major part of the Ukrainian verb system.) Class II verbs form the second major structural pillar of the Ukrainian verb system. They are defined by their strict use of the **и** vowel in their endings, directly contrasting with the **е** and **є** vowels characteristic of Class I verbs. While the **я** form often features a consonant mutation—like the added **л** in **люблю** or the shift to **дж** in **ходжу**—the rest of the paradigm remains highly reliable and regular. Mastering these verbs, along with essentials like **їсти** and **пити**, gives you the vocabulary to navigate daily Ukrainian conversation.
+Ви вже знаєте дві головні групи. You already know the two main groups. Remember the golden rule: Class I verbs rely on «е» and «є» in their endings, while Class II verbs rely on «и» and «і». 
 
-**Self-Check Questions**
-1. How do you correctly say "I love" and "I do" in Ukrainian?
-2. What is the mutated "я" form of the verb **ходити**?
-3. Which vowels are the signature markers of a Class II verb ending?
-4. How do you conjugate the highly irregular verb **їсти** for the pronouns "я", "ти", and "він"?
+Це дуже важливе знання. This is very important knowledge. Understanding this distinction, along with the special «я» form mutations and the essential irregular verbs, opens up a massive part of the language for you.
+
+Ось кілька питань для перевірки. Here are a few questions for review:
+
+1. Як сказати «I love» та «I do» українською? (How to say «I love» and «I do» in Ukrainian?)
+2. Яка форма «я» для **ходи́ти** та **сиді́ти**? (What is the «я» form for **ходи́ти** and **сиді́ти**?)
+3. How do you conjugate the verb **ї́сти** for «I», «you», and «he»?
+4. Який голосний звук головний для другої групи? (Which vowel is main for the second group?)
+
+Ви знаєте ці відповіді? Do you know these answers? You are ready to move forward. Ваш прогрес чудовий! Your progress is excellent!

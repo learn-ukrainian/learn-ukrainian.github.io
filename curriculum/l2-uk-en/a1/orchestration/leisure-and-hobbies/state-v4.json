@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "leisure-and-hobbies",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T06:10:54Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T06:11:29Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T06:16:29Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T06:19:15Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T06:33:19Z",
+      "attempts": 2
+    }
+  }
+}

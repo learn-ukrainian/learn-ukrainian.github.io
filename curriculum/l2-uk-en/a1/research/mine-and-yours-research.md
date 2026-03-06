@@ -1,17 +1,34 @@
-## Research Notes
+# Дослідження: Mine and Yours
 
-**Textbook Approach:**
-Ukrainian beginner textbooks typically introduce possessive pronouns immediately after basic nouns and gender categorization. The presentation usually starts with the core interrogatives (*Чий? Чия? Чиє? Чиї?*), followed by the first and second-person variable pronouns (*мій, твій, наш, ваш*), because these require active gender agreement with the noun. The third-person pronouns (*його, її, їхній*) are introduced next, with a strong emphasis on the fact that *його* and *її* are invariable (they do not change regardless of the possessed object's gender), which provides a cognitive break for learners.
+## State Standard Reference
+§4.2.2: "Pronoun gender and number forms"
+Alignment: This module introduces basic possessive pronouns and establishes the core mechanism of matching possessive pronouns to noun gender (masculine, feminine, neuter) and number.
 
-**Common Errors for English Speakers:**
-1. **Gender Mismatch (Owner vs. Object):** English speakers intuitively match the pronoun to the gender of the *owner* (e.g., a male speaker saying "мій мама" instead of "моя мама"). It takes practice to map the pronoun to the *possessed object*.
-2. **Reflexive Confusion:** Beginners often use *його/її* instead of the reflexive possessive *свій* when the subject owns the object (e.g., saying "Він читає його книгу" [He is reading his (someone else's) book] instead of "Він читає свою книгу" [He is reading his own book]).
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| мій / моя / моє | High frequency (Top 50), variable forms | мій телефон, моя мама, моє місто |
+| його / її | Invariable forms | його батько, її сумка |
+| їхній | Literary standard | їхній будинок, їхня сім’я |
+| наш / ваш | High frequency (Top 100/200), variable | наша країна, ваша адреса |
+| свій | Reflexive possessive | свій час, своя справа |
 
-**Cultural Hook:**
-The distinction between *твій* (informal your) and *ваш* (formal/plural your) is deeply rooted in Ukrainian social etiquette. Moving from *ваш* to *твій* is a recognized social milestone called "перехід на ти" (switching to 'ty'), which requires mutual consent and marks a shift from polite distance to friendship or closeness. 
+## Cultural Hooks
+1. "Перехід на ти" (switching to "you" informal): Moving from formal *Ваш* to informal *твій* is a significant social milestone in Ukrainian relationships, usually requiring an explicit invitation.
 
-**Cross-References:**
-This module builds upon foundational noun gender concepts and prepares students for talking about locations in M29 (Around the City) and describing relatives in M49 (My Family). The plan also lists M28 (The Locative) as a prerequisite, suggesting possession will be practiced alongside basic locations.
+## Common Learner Errors
+1. Gender Mismatch → *мій мама* instead of *моя мама* — English speakers match the pronoun to the owner rather than the object possessed.
+2. The "Їх" Trap → Using *їх* instead of *їхній* for "their" — a widespread error and Russianism. Emphasize *їхній* as the standard.
+3. Reflexive Confusion → *Він бачить його маму* (someone else's mom) instead of *свою маму* (his own mom) — English lacks a direct equivalent to the reflexive *свій*.
+
+## Cross-References
+- Builds on: a1-28 (The Locative)
+- Prepares for: a1-29 (Around the City), a1-49 (My Family)
+
+## Notes for Content Writing
+- Phase A1.2 (Verbs & Sentences): Present tense verbs are permitted (since M15).
+- Structural Restraint: DO NOT use imperative forms for instructions (e.g., Слухайте!, Читайте!). Imperatives are not introduced until M47. Rely on English instructions or indirect phrasing.
+- Visuals: Use simple color-coded tables to distinguish between variable (мій, твій) and invariable (його, її) paradigms.
 
 ## Resource Discovery
 

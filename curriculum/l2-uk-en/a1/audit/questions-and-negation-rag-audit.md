@@ -1,9 +1,9 @@
 # RAG Verification: questions-and-negation
 
-**Date:** 2026-03-05 05:12 UTC | **Words checked:** 211 | **VESUM coverage:** 209/211 (99.1%)
+**Date:** 2026-03-06 05:40 UTC | **Words checked:** 191 | **VESUM coverage:** 189/191 (99.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 209
+- ✅ Verified (VESUM): 189
 - ⚠️ Partial (RAG only): 1
 - ❌ Not found: 1
 
@@ -17,11 +17,11 @@
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Іван | activities | ✗ | ✓ | ✗ |
+| щу | activities | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 193 | 192 | 1 |
-| Activities (.yaml) | 18 | 17 | 0 |
+| Prose (.md) | 181 | 180 | 1 |
+| Activities (.yaml) | 10 | 9 | 0 |

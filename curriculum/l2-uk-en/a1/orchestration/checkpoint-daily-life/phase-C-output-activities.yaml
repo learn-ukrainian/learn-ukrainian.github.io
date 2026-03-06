@@ -1,0 +1,323 @@
+- type: quiz
+  title: "Grammar Check: Past and Future"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "How do you say 'he read' in Ukrainian?"
+      options:
+        - text: "Він читав"
+          correct: true
+        - text: "Він читала"
+          correct: false
+        - text: "Він читало"
+          correct: false
+        - text: "Він читали"
+          correct: false
+      explanation: "The past tense for 'he' (він) ends in -в."
+    - question: "Which word means 'yesterday'?"
+      options:
+        - text: "вчора"
+          correct: true
+        - text: "завтра"
+          correct: false
+        - text: "сьогодні"
+          correct: false
+        - text: "ранок"
+          correct: false
+      explanation: "Вчора means yesterday."
+    - question: "How do you say 'we will read'?"
+      options:
+        - text: "ми будемо читати"
+          correct: true
+        - text: "я буду читати"
+          correct: false
+        - text: "ви будете читати"
+          correct: false
+        - text: "вони будуть читати"
+          correct: false
+      explanation: "Ми (we) goes with будемо."
+    - question: "Which word is used to ask about a static location (where at)?"
+      options:
+        - text: "Де?"
+          correct: true
+        - text: "Куди?"
+          correct: false
+        - text: "Що?"
+          correct: false
+        - text: "Хто?"
+          correct: false
+      explanation: "Де? means 'where at?' and Куди? means 'where to?'"
+    - question: "How do you say 'she was reading'?"
+      options:
+        - text: "вона читала"
+          correct: true
+        - text: "вона читав"
+          correct: false
+        - text: "вона читало"
+          correct: false
+        - text: "вона читали"
+          correct: false
+      explanation: "The past tense for 'she' (вона) ends in -ла."
+    - question: "How do you ask 'How much does it cost?'"
+      options:
+        - text: "Скільки коштує?"
+          correct: true
+        - text: "Скільки це?"
+          correct: false
+        - text: "Як коштує?"
+          correct: false
+        - text: "Що коштує?"
+          correct: false
+      explanation: "Скільки коштує? is the correct way to ask for a price."
+    - question: "Which word means 'tomorrow'?"
+      options:
+        - text: "завтра"
+          correct: true
+        - text: "вчора"
+          correct: false
+        - text: "сьогодні"
+          correct: false
+        - text: "вечір"
+          correct: false
+      explanation: "Завтра means tomorrow."
+    - question: "How do you say 'they will rest'?"
+      options:
+        - text: "вони будуть відпочивати"
+          correct: true
+        - text: "він буде відпочивати"
+          correct: false
+        - text: "ми будемо відпочивати"
+          correct: false
+        - text: "ти будеш відпочивати"
+          correct: false
+      explanation: "Вони (they) goes with будуть."
+
+- type: match-up
+  title: "Match the Daily Routine"
+  instruction: "Match the Ukrainian verbs with their English meaning."
+  pairs:
+    - left: "вставати"
+      right: "to get up"
+    - left: "снідати"
+      right: "to have breakfast"
+    - left: "працювати"
+      right: "to work"
+    - left: "обідати"
+      right: "to have lunch"
+    - left: "вечеряти"
+      right: "to have dinner"
+    - left: "відпочивати"
+      right: "to rest"
+    - left: "купувати"
+      right: "to buy"
+    - left: "спати"
+      right: "to sleep"
+
+- type: fill-in
+  title: "Complete the Sentences"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - sentence: "Вчора він ___."
+      answer: "читав"
+      options: ["читав", "читала", "читало", "читали"]
+    - sentence: "Вчора вона ___."
+      answer: "працювала"
+      options: ["працював", "працювала", "працювало", "працювали"]
+    - sentence: "Завтра ми ___ відпочивати."
+      answer: "будемо"
+      options: ["буду", "будеш", "буде", "будемо"]
+    - sentence: "Завтра вони ___ працювати."
+      answer: "будуть"
+      options: ["будемо", "будете", "будуть", "буде"]
+    - sentence: "Взимку дуже ___."
+      answer: "холодно"
+      options: ["тепло", "холодно", "добре", "погано"]
+    - sentence: "Влітку часто ___."
+      answer: "тепло"
+      options: ["тепло", "холодно", "погано", "швидко"]
+    - sentence: "Кава ___ 50 гривень."
+      answer: "коштує"
+      options: ["коштує", "купує", "працює", "снідає"]
+    - sentence: "Я буду ___, будь ласка."
+      answer: "каву"
+      options: ["каву", "кава", "каві", "кавою"]
+
+- type: true-false
+  title: "True or False: Grammar Rules"
+  instruction: "Decide if the statement about Ukrainian is true or false."
+  items:
+    - statement: "The past tense ending for 'вона' (she) is '-ла'."
+      correct: true
+      explanation: "Yes, 'вона читала', 'вона працювала'."
+    - statement: "To make the future tense with 'я' (I), we use 'буду'."
+      correct: true
+      explanation: "Correct! Я буду читати."
+    - statement: "The word 'вчора' means 'tomorrow'."
+      correct: false
+      explanation: "Вчора means yesterday. Завтра means tomorrow."
+    - statement: "When asking 'Where to?' involving motion, you use 'Де?'."
+      correct: false
+      explanation: "For motion (where to?), you use 'Куди?'. 'Де?' is for static location."
+    - statement: "In Ukrainian, you do not need 'to be' to ask for a price, just 'Скільки коштує?'."
+      correct: true
+      explanation: "Correct, we just ask 'How much does it cost?'."
+    - statement: "The past tense ending for 'він' (he) is '-ло'."
+      correct: false
+      explanation: "The ending for 'він' is '-в'. The '-ло' ending is for 'воно' (it)."
+    - statement: "Adverbs like 'добре' and 'швидко' describe how an action is done."
+      correct: true
+      explanation: "Yes, they answer the question 'Як?' (How?)."
+    - statement: "You say 'Він читала' if a man is reading in the past."
+      correct: false
+      explanation: "The past tense must match the gender. For a man, it is 'Він читав'."
+
+- type: group-sort
+  title: "Sort the Words: Time and Weather"
+  instruction: "Sort the words into the correct category."
+  groups:
+    - name: "Time and Frequency"
+      items:
+        - "вчора"
+        - "завтра"
+        - "сьогодні"
+        - "зазвичай"
+        - "часто"
+        - "рідко"
+    - name: "Weather and Adverbs"
+      items:
+        - "тепло"
+        - "холодно"
+        - "сонячно"
+        - "хмарно"
+        - "добре"
+        - "погано"
+
+- type: unjumble
+  title: "Make a Sentence"
+  instruction: "Put the words in the correct order."
+  items:
+    - words: ["Вчора", "я", "встав", "рано"]
+      answer: "Вчора я встав рано"
+    - words: ["Завтра", "буде", "тепло"]
+      answer: "Завтра буде тепло"
+    - words: ["Скільки", "коштує", "кава"]
+      answer: "Скільки коштує кава"
+    - words: ["Він", "іде", "дуже", "швидко"]
+      answer: "Він іде дуже швидко"
+    - words: ["Я", "буду", "вечеряти", "вдома"]
+      answer: "Я буду вечеряти вдома"
+    - words: ["Куди", "він", "ішов"]
+      answer: "Куди він ішов"
+
+- type: match-up
+  title: "Match English and Ukrainian Adverbs"
+  instruction: "Match the words that mean the same thing."
+  pairs:
+    - left: "добре"
+      right: "well"
+    - left: "погано"
+      right: "poorly"
+    - left: "швидко"
+      right: "quickly"
+    - left: "повільно"
+      right: "slowly"
+    - left: "тихо"
+      right: "quietly"
+    - left: "голосно"
+      right: "loudly"
+    - left: "тепло"
+      right: "warm"
+    - left: "холодно"
+      right: "cold"
+
+- type: quiz
+  title: "Daily Life Situations"
+  instruction: "Choose the best phrase for the situation."
+  items:
+    - question: "You want to say 'I will get up early'. How do you say it?"
+      options:
+        - text: "Я буду вставати рано"
+          correct: true
+        - text: "Я встав рано"
+          correct: false
+        - text: "Вона вставала рано"
+          correct: false
+        - text: "Я буду спати"
+          correct: false
+      explanation: "'Буду вставати' is the future tense for 'will get up'."
+    - question: "You are in a cafe. The barista asks what you want. What do you say?"
+      options:
+        - text: "Я буду каву"
+          correct: true
+        - text: "Скільки коштує?"
+          correct: false
+        - text: "Я снідав"
+          correct: false
+        - text: "Було холодно"
+          correct: false
+      explanation: "'Я буду каву' means 'I will have coffee'."
+    - question: "You want to say it was cold yesterday. Which phrase is correct?"
+      options:
+        - text: "Вчора було холодно"
+          correct: true
+        - text: "Завтра буде холодно"
+          correct: false
+        - text: "Сьогодні тепло"
+          correct: false
+        - text: "Взимку тепло"
+          correct: false
+      explanation: "'Було' is the past tense form used for weather."
+    - question: "How do you ask about a price in a store?"
+      options:
+        - text: "Скільки коштує?"
+          correct: true
+        - text: "Де магазин?"
+          correct: false
+        - text: "Куди він ішов?"
+          correct: false
+        - text: "Що це?"
+          correct: false
+      explanation: "Скільки коштує? means 'How much does it cost?'."
+    - question: "You want to say 'I had lunch in a cafe'. How do you say it?"
+      options:
+        - text: "Я обідав у кафе"
+          correct: true
+        - text: "Я буду обідати у кафе"
+          correct: false
+        - text: "Я снідав вдома"
+          correct: false
+        - text: "Я працював у кафе"
+          correct: false
+      explanation: "'Обідав' is the past tense for having lunch."
+    - question: "Your friend says 'Сьогодні тепло'. What does it mean?"
+      options:
+        - text: "Today is warm"
+          correct: true
+        - text: "Today is cold"
+          correct: false
+        - text: "Yesterday was warm"
+          correct: false
+        - text: "Tomorrow will be warm"
+          correct: false
+      explanation: "Сьогодні means today, and тепло means warm."
+    - question: "Which question do you use to ask someone where they went?"
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Як?"
+          correct: false
+        - text: "Скільки?"
+          correct: false
+      explanation: "'Куди' asks about the destination of movement."
+    - question: "You want to say you read poorly. How do you say it?"
+      options:
+        - text: "Я читаю погано"
+          correct: true
+        - text: "Я читаю добре"
+          correct: false
+        - text: "Я читаю швидко"
+          correct: false
+        - text: "Я читаю голосно"
+          correct: false
+      explanation: "'Погано' means poorly or badly."

@@ -1,517 +1,323 @@
 - type: quiz
-  title: 'Перевірка знань: минулий і майбутній час'
-  instruction: 'Оберіть правильну відповідь на кожне запитання.'
+  title: "Grammar Check: Past and Future"
+  instruction: "Choose the correct answer."
   items:
-    - question: 'Яка форма дієслова є правильною для речення: Вчора вона ... книгу?'
+    - question: "How do you say 'he read' in Ukrainian?"
       options:
-        - text: 'читала'
+        - text: "Він читав"
           correct: true
-        - text: 'читав'
+        - text: "Він читала"
           correct: false
-        - text: 'читало'
+        - text: "Він читало"
           correct: false
-        - text: 'читали'
+        - text: "Він читали"
           correct: false
-      explanation: 'Жіночий рід у минулому часі завжди закінчується на -ла.'
-    - question: 'Яка форма дієслова є правильною для речення: Вчора ми ... в парку?'
+      explanation: "The past tense for 'he' (він) ends in -в."
+    - question: "Which of these words means 'yesterday' in Ukrainian?"
       options:
-        - text: 'гуляли'
+        - text: "вчора"
           correct: true
-        - text: 'гуляв'
+        - text: "завтра"
           correct: false
-        - text: 'гуляла'
+        - text: "сьогодні"
           correct: false
-        - text: 'гуляло'
+        - text: "ранок"
           correct: false
-      explanation: 'Для множини у минулому часі ми використовуємо закінчення -ли.'
-    - question: 'Яке речення вказує на майбутній час в українській мові?'
+      explanation: "Вчора means yesterday."
+    - question: "How do you say 'we will read'?"
       options:
-        - text: 'Завтра я буду працювати.'
+        - text: "ми будемо читати"
           correct: true
-        - text: 'Вчора я працював.'
+        - text: "я буду читати"
           correct: false
-        - text: 'Сьогодні я працюю.'
+        - text: "ви будете читати"
           correct: false
-        - text: 'Я часто працюю.'
+        - text: "вони будуть читати"
           correct: false
-      explanation: 'Слово буду вказує на майбутній час (аналітична форма).'
-    - question: 'Як правильно запитати про напрямок руху в українській мові?'
+      explanation: "Ми (we) goes with будемо."
+    - question: "Which word is used to ask about a static location (where at)?"
       options:
-        - text: 'Куди ти йдеш?'
+        - text: "Де?"
           correct: true
-        - text: 'Де ти йдеш?'
+        - text: "Куди?"
           correct: false
-        - text: 'Що ти йдеш?'
+        - text: "Що?"
           correct: false
-        - text: 'Коли ти йдеш?'
+        - text: "Хто?"
           correct: false
-      explanation: 'Слово куди використовується для напрямку (direction).'
-    - question: 'Який відмінок потрібен після питання Де в українській мові?'
+      explanation: "Де? means 'where at?' and Куди? means 'where to?'"
+    - question: "How do you say 'she was reading'?"
       options:
-        - text: 'Місцевий'
+        - text: "вона читала"
           correct: true
-        - text: 'Знахідний'
+        - text: "вона читав"
           correct: false
-        - text: 'Називний'
+        - text: "вона читало"
           correct: false
-        - text: 'Родовий'
+        - text: "вона читали"
           correct: false
-      explanation: 'Питання де вказує на локацію, тому використовуємо Місцевий відмінок.'
-    - question: 'Яке слово відповідає на питання Як і описує дію?'
+      explanation: "The past tense for 'she' (вона) ends in -ла."
+    - question: "How do you ask 'How much does it cost?'"
       options:
-        - text: 'добре'
+        - text: "Скільки коштує?"
           correct: true
-        - text: 'добрий'
+        - text: "Скільки це?"
           correct: false
-        - text: 'добра'
+        - text: "Як коштує?"
           correct: false
-        - text: 'добро'
+        - text: "Що коштує?"
           correct: false
-      explanation: 'Слово добре — це прислівник, який описує дію.'
-    - question: 'Яка з цих фраз правильно описує погоду на вулиці?'
+      explanation: "Скільки коштує? is the correct way to ask for a price."
+    - question: "Which of these words means 'tomorrow' in Ukrainian?"
       options:
-        - text: 'Сьогодні дуже тепло.'
+        - text: "завтра"
           correct: true
-        - text: 'Сьогодні це тепло.'
+        - text: "вчора"
           correct: false
-        - text: 'Сьогодні є тепло.'
+        - text: "сьогодні"
           correct: false
-        - text: 'Сьогодні ми тепло.'
+        - text: "вечір"
           correct: false
-      explanation: 'Для погоди ми використовуємо безособові короткі форми, наприклад тепло.'
-    - question: 'Як правильно сказати про час дії у ранковий час?'
+      explanation: "Завтра means tomorrow."
+    - question: "How do you say 'they will rest'?"
       options:
-        - text: "Вранці я п'ю каву."
+        - text: "вони будуть відпочивати"
           correct: true
-        - text: "Ранок я п'ю каву."
+        - text: "він буде відпочивати"
           correct: false
-        - text: "На ранок я п'ю каву."
+        - text: "ми будемо відпочивати"
           correct: false
-        - text: "У ранок я п'ю каву."
+        - text: "ти будеш відпочивати"
           correct: false
-      explanation: 'Слово вранці є правильним прислівником часу.'
-    - question: 'Що ми зазвичай робимо ввечері після довгого робочого дня?'
-      options:
-        - text: 'Ми вечеряємо.'
-          correct: true
-        - text: 'Ми снідаємо.'
-          correct: false
-        - text: 'Ми обідаємо.'
-          correct: false
-        - text: 'Ми встаємо.'
-          correct: false
-      explanation: 'Вечеря — це їжа у вечірній час.'
-    - question: 'Як правильно запитати про ціну товару в українському магазині?'
-      options:
-        - text: 'Скільки це коштує?'
-          correct: true
-        - text: 'Як це коштує?'
-          correct: false
-        - text: 'Де це коштує?'
-          correct: false
-        - text: 'Куди це коштує?'
-          correct: false
-      explanation: 'Фраза скільки коштує є стандартною для питання про ціну.'
-    - question: 'Яка форма дієслова є правильною для речення: Завтра він ... відпочивати?'
-      options:
-        - text: 'буде'
-          correct: true
-        - text: 'буду'
-          correct: false
-        - text: 'будемо'
-          correct: false
-        - text: 'будуть'
-          correct: false
-      explanation: 'Для займенника він використовуємо форму буде.'
-    - question: 'Яке речення вказує на минулий час для середнього роду?'
-      options:
-        - text: 'Сонце світило яскраво.'
-          correct: true
-        - text: 'Сонце світив яскраво.'
-          correct: false
-        - text: 'Сонце світила яскраво.'
-          correct: false
-        - text: 'Сонце світили яскраво.'
-          correct: false
-      explanation: 'Слово сонце — середнього роду, тому дієслово закінчується на -ло.'
+      explanation: "Вони (they) goes with будуть."
 
 - type: match-up
-  title: 'Знайдіть переклад слів про час і день'
-  instruction: 'З''єднайте українське слово з його англійським перекладом.'
+  title: "Match the Daily Routine"
+  instruction: "Match the Ukrainian verbs with their English meaning."
   pairs:
-    - left: 'вчора'
-      right: 'yesterday'
-    - left: 'завтра'
-      right: 'tomorrow'
-    - left: 'вранці'
-      right: 'in the morning'
-    - left: 'вдень'
-      right: 'in the afternoon'
-    - left: 'ввечері'
-      right: 'in the evening'
-    - left: 'снідати'
-      right: 'to have breakfast'
-    - left: 'обідати'
-      right: 'to have lunch'
-    - left: 'вечеряти'
-      right: 'to have dinner'
-    - left: 'вставати'
-      right: 'to get up'
-    - left: 'купувати'
-      right: 'to buy'
-    - left: 'коштувати'
-      right: 'to cost'
-    - left: 'відпочивати'
-      right: 'to rest'
+    - left: "вставати"
+      right: "to get up"
+    - left: "снідати"
+      right: "to have breakfast"
+    - left: "працювати"
+      right: "to work"
+    - left: "обідати"
+      right: "to have lunch"
+    - left: "вечеряти"
+      right: "to have dinner"
+    - left: "відпочивати"
+      right: "to rest"
+    - left: "купувати"
+      right: "to buy"
+    - left: "спати"
+      right: "to sleep"
 
 - type: fill-in
-  title: 'Оберіть правильне слово для розпорядку дня'
-  instruction: 'Вставте правильну форму дієслова або слово.'
+  title: "Complete the Sentences"
+  instruction: "Choose the correct word to complete the sentence."
   items:
-    - sentence: 'Вчора я _____ книгу ввечері.'
-      answer: 'читав'
-      options: ['читав', 'читала', 'читало', 'читали']
-      explanation: 'Форма читав використовується для чоловічого роду.'
-    - sentence: 'Вчора вона _____ в кафе.'
-      answer: 'обідала'
-      options: ['обідала', 'обідав', 'обідало', 'обідали']
-      explanation: 'Форма обідала використовується для жіночого роду.'
-    - sentence: 'Ми _____ у парку разом.'
-      answer: 'гуляли'
-      options: ['гуляли', 'гуляв', 'гуляла', 'гуляло']
-      explanation: 'Форма гуляли використовується для множини.'
-    - sentence: 'Сонце _____ дуже яскраво вчора.'
-      answer: 'світило'
-      options: ['світило', 'світив', 'світила', 'світили']
-      explanation: 'Слово сонце середнього роду.'
-    - sentence: 'Зазвичай я _____ о сьомій годині.'
-      answer: 'встаю'
-      options: ['встаю', 'встаєш', 'встає', 'встають']
-      explanation: 'Форма встаю відповідає займеннику я.'
-    - sentence: "Вранці він завжди _____ каву."
-      answer: "п'є"
-      options: ["п'є", "п'ю", "п'єш", "п'ють"]
-      explanation: "Форма п'є відповідає займеннику він."
-    - sentence: 'Сьогодні дуже _____ на вулиці.'
-      answer: 'холодно'
-      options: ['холодно', 'холодний', 'холодна', 'холодні']
-      explanation: 'Використовуємо прислівник холодно для опису погоди.'
-    - sentence: 'Влітку часто буває _____.'
-      answer: 'тепло'
-      options: ['тепло', 'теплий', 'тепла', 'теплі']
-      explanation: 'Використовуємо прислівник тепло для опису погоди.'
-    - sentence: 'Скільки _____ ця вода?'
-      answer: 'коштує'
-      options: ['коштує', 'коштують', 'коштувати', 'коштував']
-      explanation: 'Вода — однина, тому коштує.'
-    - sentence: 'Завтра я _____ працювати вдома.'
-      answer: 'буду'
-      options: ['буду', 'будеш', 'буде', 'будемо']
-      explanation: 'Для я використовуємо форму буду.'
-    - sentence: 'Ми _____ обідати в новому ресторані.'
-      answer: 'будемо'
-      options: ['будемо', 'буду', 'буде', 'будуть']
-      explanation: 'Для ми використовуємо форму будемо.'
-    - sentence: 'Вони _____ дивитися фільм.'
-      answer: 'будуть'
-      options: ['будуть', 'буду', 'будеш', 'будемо']
-      explanation: 'Для вони використовуємо форму будуть.'
+    - sentence: "Вчора він ___."
+      answer: "читав"
+      options: ["читав", "читала", "читало", "читали"]
+    - sentence: "Вчора вона ___."
+      answer: "працювала"
+      options: ["працював", "працювала", "працювало", "працювали"]
+    - sentence: "Завтра ми ___ відпочивати."
+      answer: "будемо"
+      options: ["буду", "будеш", "буде", "будемо"]
+    - sentence: "Завтра вони ___ працювати."
+      answer: "будуть"
+      options: ["будемо", "будете", "будуть", "буде"]
+    - sentence: "Взимку дуже ___."
+      answer: "холодно"
+      options: ["тепло", "холодно", "добре", "погано"]
+    - sentence: "Влітку часто ___."
+      answer: "тепло"
+      options: ["тепло", "холодно", "погано", "швидко"]
+    - sentence: "Кава ___ 50 гривень."
+      answer: "коштує"
+      options: ["коштує", "купує", "працює", "снідає"]
+    - sentence: "Я буду ___, будь ласка."
+      answer: "каву"
+      options: ["каву", "кава", "каві", "кавою"]
 
-- type: unjumble
-  title: 'Складіть речення про ваші плани'
-  instruction: 'Поставте слова у правильному порядку.'
+- type: true-false
+  title: "True or False: Grammar Rules"
+  instruction: "Decide if the statement about Ukrainian is true or false."
   items:
-    - words: ['Вчора', 'я', 'читав', 'цікаву', 'книгу']
-      answer: 'Вчора я читав цікаву книгу'
-    - words: ['Завтра', 'ми', 'будемо', 'гуляти', 'разом']
-      answer: 'Завтра ми будемо гуляти разом'
-    - words: ['Вона', 'завжди', 'добре', 'співає', 'пісні']
-      answer: 'Вона завжди добре співає пісні'
-    - words: ['Сьогодні', 'дуже', 'холодно', 'на', 'вулиці']
-      answer: 'Сьогодні дуже холодно на вулиці'
-    - words: ['Скільки', 'коштує', 'ця', 'смачна', 'кава']
-      answer: 'Скільки коштує ця смачна кава'
-    - words: ['Зазвичай', 'я', 'снідаю', 'дуже', 'рано']
-      answer: 'Зазвичай я снідаю дуже рано'
-    - words: ['Ввечері', 'мій', 'брат', 'буде', 'відпочивати']
-      answer: 'Ввечері мій брат буде відпочивати'
-    - words: ['Зараз', 'я', 'йду', 'в', 'парк']
-      answer: 'Зараз я йду в парк'
-    - words: ['Сьогодні', 'я', 'гуляю', 'в', 'парку']
-      answer: 'Сьогодні я гуляю в парку'
-    - words: ['Взимку', 'було', 'дуже', 'холодно', 'там']
-      answer: 'Взимку було дуже холодно там'
-    - words: ['Дайте', 'будь', 'ласка', 'один', 'кілограм']
-      answer: 'Дайте будь ласка один кілограм'
-    - words: ['Я', 'часто', 'купую', 'хліб', 'тут']
-      answer: 'Я часто купую хліб тут'
+    - statement: "The past tense ending for 'вона' (she) is '-ла'."
+      correct: true
+      explanation: "Yes, 'вона читала', 'вона працювала'."
+    - statement: "To make the future tense with 'я' (I), we use 'буду'."
+      correct: true
+      explanation: "Correct! Я буду читати."
+    - statement: "The word 'вчора' means 'tomorrow'."
+      correct: false
+      explanation: "Вчора means yesterday. Завтра means tomorrow."
+    - statement: "When asking 'Where to?' involving motion, you use 'Де?'."
+      correct: false
+      explanation: "For motion (where to?), you use 'Куди?'. 'Де?' is for static location."
+    - statement: "In Ukrainian, you do not need 'to be' to ask for a price, just 'Скільки коштує?'."
+      correct: true
+      explanation: "Correct, we just ask 'How much does it cost?'."
+    - statement: "The past tense ending for 'він' (he) is '-ло'."
+      correct: false
+      explanation: "The ending for 'він' is '-в'. The '-ло' ending is for 'воно' (it)."
+    - statement: "Adverbs like 'добре' and 'швидко' describe how an action is done."
+      correct: true
+      explanation: "Yes, they answer the question 'Як?' (How?)."
+    - statement: "You say 'Він читала' if a man is reading in the past."
+      correct: false
+      explanation: "The past tense must match the gender. For a man, it is 'Він читав'."
 
 - type: group-sort
-  title: 'Розподіліть слова за категоріями'
-  instruction: 'Перетягніть слова у правильні колонки.'
+  title: "Sort the Words: Time and Weather"
+  instruction: "Sort the words into the correct category."
   groups:
-    - name: 'Погода'
-      items: ['тепло', 'холодно', 'сонячно', 'хмарно']
-    - name: 'Час'
-      items: ['вчора', 'завтра', 'сьогодні', 'вранці']
-    - name: 'Їжа'
-      items: ['хліб', 'вода', 'кава', 'салат']
+    - name: "Time and Frequency"
+      items:
+        - "вчора"
+        - "завтра"
+        - "сьогодні"
+        - "зазвичай"
+        - "часто"
+        - "рідко"
+    - name: "Weather and Adverbs"
+      items:
+        - "тепло"
+        - "холодно"
+        - "сонячно"
+        - "хмарно"
+        - "добре"
+        - "погано"
+
+- type: unjumble
+  title: "Make a Sentence"
+  instruction: "Put the words in the correct order."
+  items:
+    - words: ["Вчора", "я", "встав", "рано"]
+      answer: "Вчора я встав рано"
+    - words: ["Завтра", "буде", "тепло"]
+      answer: "Завтра буде тепло"
+    - words: ["Скільки", "коштує", "кава"]
+      answer: "Скільки коштує кава"
+    - words: ["Він", "іде", "дуже", "швидко"]
+      answer: "Він іде дуже швидко"
+    - words: ["Я", "буду", "вечеряти", "вдома"]
+      answer: "Я буду вечеряти вдома"
+    - words: ["Куди", "він", "ішов"]
+      answer: "Куди він ішов"
 
 - type: match-up
-  title: 'Знайдіть протилежні слова або переклад'
-  instruction: 'З''єднайте слова.'
+  title: "Match English and Ukrainian Adverbs"
+  instruction: "Match the words that mean the same thing."
   pairs:
-    - left: 'швидко'
-      right: 'quickly'
-    - left: 'повільно'
-      right: 'slowly'
-    - left: 'добре'
-      right: 'well'
-    - left: 'погано'
-      right: 'badly'
-    - left: 'тихо'
-      right: 'quietly'
-    - left: 'голосно'
-      right: 'loudly'
-    - left: 'часто'
-      right: 'often'
-    - left: 'рідко'
-      right: 'rarely'
-    - left: 'тепло'
-      right: 'warm'
-    - left: 'холодно'
-      right: 'cold'
-    - left: 'взимку'
-      right: 'in winter'
-    - left: 'влітку'
-      right: 'in summer'
+    - left: "добре"
+      right: "well"
+    - left: "погано"
+      right: "poorly"
+    - left: "швидко"
+      right: "quickly"
+    - left: "тихо"
+      right: "quietly"
+    - left: "голосно"
+      right: "loudly"
+    - left: "тепло"
+      right: "warm"
+    - left: "холодно"
+      right: "cold"
+    - left: "часто"
+      right: "often"
 
 - type: quiz
-  title: 'Перевірка знань: плануємо майбутнє'
-  instruction: 'Дайте відповідь на запитання про час і плани.'
+  title: "Daily Life Situations"
+  instruction: "Choose the best phrase for the situation."
   items:
-    - question: 'Як сказати I will be resting українською мовою правильно?'
+    - question: "You want to say 'I will get up early'. How do you say it?"
       options:
-        - text: 'Я буду відпочивати.'
+        - text: "Я буду вставати рано"
           correct: true
-        - text: 'Я відпочиваю.'
+        - text: "Я встав рано"
           correct: false
-        - text: 'Я відпочивав.'
+        - text: "Вона вставала рано"
           correct: false
-        - text: 'Я відпочивала.'
+        - text: "Я буду спати"
           correct: false
-      explanation: 'Майбутній час використовує слово буду та інфінітив.'
-    - question: 'Яка форма є правильною для речення: Вона ... читати книгу?'
+      explanation: "'Буду вставати' is the future tense for 'will get up'."
+    - question: "You are in a cafe. The barista asks what you want. What do you say?"
       options:
-        - text: 'буде'
+        - text: "Я буду каву"
           correct: true
-        - text: 'буду'
+        - text: "Скільки коштує?"
           correct: false
-        - text: 'будеш'
+        - text: "Я снідав"
           correct: false
-        - text: 'будуть'
+        - text: "Було холодно"
           correct: false
-      explanation: 'Для вона використовуємо форму буде.'
-    - question: 'Яка форма є правильною для речення: Ми ... гуляти в парку?'
+      explanation: "'Я буду каву' means 'I will have coffee'."
+    - question: "You want to say it was cold yesterday. Which phrase is correct?"
       options:
-        - text: 'будемо'
+        - text: "Вчора було холодно"
           correct: true
-        - text: 'буду'
+        - text: "Завтра буде холодно"
           correct: false
-        - text: 'буде'
+        - text: "Сьогодні тепло"
           correct: false
-        - text: 'будуть'
+        - text: "Взимку тепло"
           correct: false
-      explanation: 'Для ми використовуємо форму будемо.'
-    - question: 'Яка форма є правильною для речення: Ти ... пити смачну каву?'
+      explanation: "'Було' is the past tense form used for weather."
+    - question: "How do you ask about a price in a store?"
       options:
-        - text: 'будеш'
+        - text: "Скільки коштує?"
           correct: true
-        - text: 'буду'
+        - text: "Де магазин?"
           correct: false
-        - text: 'буде'
+        - text: "Куди він ішов?"
           correct: false
-        - text: 'будете'
+        - text: "Що це?"
           correct: false
-      explanation: 'Для ти використовуємо форму будеш.'
-    - question: 'Яка форма є правильною для речення: Вони ... обідати в кафе?'
+      explanation: "Скільки коштує? means 'How much does it cost?'."
+    - question: "You want to say 'I had lunch in a cafe'. How do you say it?"
       options:
-        - text: 'будуть'
+        - text: "Я обідав у кафе"
           correct: true
-        - text: 'буду'
+        - text: "Я буду обідати у кафе"
           correct: false
-        - text: 'буде'
+        - text: "Я снідав вдома"
           correct: false
-        - text: 'будемо'
+        - text: "Я працював у кафе"
           correct: false
-      explanation: 'Для вони використовуємо форму будуть.'
-    - question: 'Яке слово є прислівником, який відповідає на питання Як?'
+      explanation: "'Обідав' is the past tense for having lunch."
+    - question: "Your friend says 'Сьогодні тепло'. What does it mean?"
       options:
-        - text: 'добре'
+        - text: "Today is warm"
           correct: true
-        - text: 'добрий'
+        - text: "Today is cold"
           correct: false
-        - text: 'добра'
+        - text: "Yesterday was warm"
           correct: false
-        - text: 'добро'
+        - text: "Tomorrow will be warm"
           correct: false
-      explanation: 'Добре описує дію і є прислівником.'
-    - question: 'Яке слово показує, що дія відбувається кожного дня регулярно?'
+      explanation: "Сьогодні means today, and тепло means warm."
+    - question: "Which question do you use to ask someone where they went?"
       options:
-        - text: 'часто'
+        - text: "Куди?"
           correct: true
-        - text: 'вчора'
+        - text: "Де?"
           correct: false
-        - text: 'завтра'
+        - text: "Як?"
           correct: false
-        - text: 'швидко'
+        - text: "Скільки?"
           correct: false
-      explanation: 'Часто означає often.'
-    - question: 'Як правильно запитати про напрямок під час вашої подорожі?'
+      explanation: "'Куди' asks about the destination of movement."
+    - question: "You want to say you read poorly. How do you say it?"
       options:
-        - text: 'Куди ти йдеш?'
+        - text: "Я читаю погано"
           correct: true
-        - text: 'Де ти йдеш?'
+        - text: "Я читаю добре"
           correct: false
-        - text: 'Що ти йдеш?'
+        - text: "Я читаю швидко"
           correct: false
-        - text: 'Як ти йдеш?'
+        - text: "Я читаю голосно"
           correct: false
-      explanation: 'Куди використовується для напрямку (direction).'
-    - question: 'Як правильно запитати про місце або локацію, де ви були?'
-      options:
-        - text: 'Де ти був?'
-          correct: true
-        - text: 'Куди ти був?'
-          correct: false
-        - text: 'Як ти був?'
-          correct: false
-        - text: 'Що ти був?'
-          correct: false
-      explanation: 'Де використовується для місця (location).'
-    - question: 'Яке слово українською мовою означає the first meal of the day?'
-      options:
-        - text: 'сніданок'
-          correct: true
-        - text: 'обід'
-          correct: false
-        - text: 'вечеря'
-          correct: false
-        - text: 'десерт'
-          correct: false
-      explanation: 'Сніданок — це їжа вранці.'
-    - question: 'Що означає ввічлива українська фраза Дайте, будь ласка в магазині?'
-      options:
-        - text: 'Give me, please.'
-          correct: true
-        - text: 'Thank you.'
-          correct: false
-        - text: 'How much is it?'
-          correct: false
-        - text: 'Good afternoon.'
-          correct: false
-      explanation: 'Це стандартна фраза для прохання або замовлення.'
-    - question: 'Яке слово означає пору року, коли на вулиці дуже холодно?'
-      options:
-        - text: 'зима'
-          correct: true
-        - text: 'літо'
-          correct: false
-        - text: 'весна'
-          correct: false
-        - text: 'осінь'
-          correct: false
-      explanation: 'Взимку зазвичай холодно.'
-
-- type: fill-in
-  title: 'Вставте пропущене слово про ваш день'
-  instruction: 'Оберіть правильний прислівник або дієслово.'
-  items:
-    - sentence: 'Мій брат _____ готує.'
-      answer: 'погано'
-      options: ['погано', 'поганий', 'погана', 'погані']
-      explanation: 'Прислівник погано описує дію готує.'
-    - sentence: 'Вона завжди _____ співає.'
-      answer: 'добре'
-      options: ['добре', 'добрий', 'добра', 'добрі']
-      explanation: 'Прислівник добре описує дію співає.'
-    - sentence: 'Собака біжить дуже _____.'
-      answer: 'швидко'
-      options: ['швидко', 'швидкий', 'швидка', 'швидкі']
-      explanation: 'Швидко описує швидкість.'
-    - sentence: 'Він п''є чай дуже _____.'
-      answer: 'повільно'
-      options: ['повільно', 'повільний', 'повільна', 'повільні']
-      explanation: 'Повільно означає slowly.'
-    - sentence: 'Ми _____ йдемо в кіно.'
-      answer: 'часто'
-      options: ['часто', 'частий', 'часта', 'часті']
-      explanation: 'Часто показує регулярність.'
-    - sentence: 'Завтра я _____ купувати хліб.'
-      answer: 'буду'
-      options: ['буду', 'будеш', 'буде', 'будемо']
-      explanation: 'Форма для я — буду.'
-    - sentence: 'Вчора вона _____ вдома.'
-      answer: 'відпочивала'
-      options: ['відпочивала', 'відпочивав', 'відпочивало', 'відпочивали']
-      explanation: 'Вона вимагає закінчення -ла.'
-    - sentence: 'Сьогодні на вулиці дуже _____.'
-      answer: 'тепло'
-      options: ['тепло', 'теплий', 'тепла', 'теплі']
-      explanation: 'Використовуємо коротку форму тепло.'
-    - sentence: 'Скільки _____ цей чай?'
-      answer: 'коштує'
-      options: ['коштує', 'коштують', 'коштував', 'коштувати']
-      explanation: 'Чай в однині, тому коштує.'
-    - sentence: '_____ я буду готувати обід.'
-      answer: 'Завтра'
-      options: ['Завтра', 'Вчора', 'Часто', 'Дуже']
-      explanation: 'Буду вказує на майбутній час (завтра).'
-    - sentence: '_____ я багато працював і читав.'
-      answer: 'Вчора'
-      options: ['Вчора', 'Завтра', 'Часто', 'Добре']
-      explanation: 'Працював вказує на минулий час (вчора).'
-    - sentence: '_____ він був у кафе?'
-      answer: 'Де'
-      options: ['Де', 'Куди', 'Як', 'Що']
-      explanation: 'У кафе — це локація, тому запитуємо Де.'
-
-- type: unjumble
-  title: 'Складіть речення про розпорядок дня'
-  instruction: 'Розташуйте слова у правильному порядку, щоб утворити речення.'
-  items:
-    - words: ['Вранці', 'я', 'швидко', "п'ю", 'каву']
-      answer: "Вранці я швидко п'ю каву"
-    - words: ['Вона', 'завжди', 'снідає', 'дуже', 'рано']
-      answer: 'Вона завжди снідає дуже рано'
-    - words: ['Вдень', 'ми', 'обідаємо', 'в', 'кафе']
-      answer: 'Вдень ми обідаємо в кафе'
-    - words: ['Ввечері', 'вони', 'вечеряють', 'удома', 'разом']
-      answer: 'Ввечері вони вечеряють удома разом'
-    - words: ['Зазвичай', 'я', 'лягаю', 'спати', 'пізно']
-      answer: 'Зазвичай я лягаю спати пізно'
-    - words: ['Вчора', 'я', 'купував', 'свіжі', 'фрукти']
-      answer: 'Вчора я купував свіжі фрукти'
-    - words: ['Дайте', 'будь', 'ласка', 'смачний', 'суп']
-      answer: 'Дайте будь ласка смачний суп'
-    - words: ['Завтра', 'вона', 'буде', 'купувати', 'овочі']
-      answer: 'Завтра вона буде купувати овочі'
-    - words: ['Взимку', 'ми', 'часто', 'сидимо', 'вдома']
-      answer: 'Взимку ми часто сидимо вдома'
-    - words: ['Влітку', 'вони', 'будуть', 'багато', 'гуляти']
-      answer: 'Влітку вони будуть багато гуляти'
-    - words: ['Сьогодні', 'погода', 'дуже', 'гарна', 'там']
-      answer: 'Сьогодні погода дуже гарна там'
-    - words: ['Мій', 'брат', 'дуже', 'погано', 'готує']
-      answer: 'Мій брат дуже погано готує'
-
-- type: group-sort
-  title: 'Розподіліть дієслова за часом'
-  instruction: 'Розподіліть слова за їхньою граматичною формою.'
-  groups:
-    - name: 'Минулий час'
-      items: ['читав', 'працювала', 'гуляли', 'було']
-    - name: 'Майбутній час (Допоміжне дієслово)'
-      items: ['буду', 'будеш', 'будемо', 'будуть']
-    - name: 'Інфінітив'
-      items: ['читати', 'працювати', 'гуляти', 'бути']
+      explanation: "'Погано' means poorly or badly."

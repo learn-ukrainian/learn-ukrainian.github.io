@@ -1,0 +1,252 @@
+- type: match-up
+  title: 'Match the verb to its "ти" command'
+  instruction: 'Connect the infinitive form to the informal command.'
+  pairs:
+    - left: 'читати'
+      right: 'читай'
+    - left: 'писати'
+      right: 'пиши'
+    - left: 'сказати'
+      right: 'скажи'
+    - left: 'дати'
+      right: 'дай'
+    - left: 'дивитися'
+      right: 'дивись'
+    - left: 'допомогти'
+      right: 'допоможи'
+- type: match-up
+  title: 'Match the verb to its "ви" command'
+  instruction: 'Connect the infinitive form to the formal/plural command.'
+  pairs:
+    - left: 'іти'
+      right: 'ідіть'
+    - left: 'слухати'
+      right: 'слухайте'
+    - left: 'стояти'
+      right: 'стійте'
+    - left: 'показати'
+      right: 'покажіть'
+    - left: 'взяти'
+      right: 'візьміть'
+    - left: 'чекати'
+      right: 'чекайте'
+- type: group-sort
+  title: 'Sort by Form: Informal vs. Formal'
+  instruction: 'Group the commands into informal (ти) and formal/plural (ви).'
+  groups:
+    - name: 'Informal (ти)'
+      items: ['читай', 'пиши', 'скажи', 'дай', 'стій']
+    - name: 'Formal/Plural (ви)'
+      items: ['читайте', 'пишіть', 'скажіть', 'дайте', 'стійте']
+- type: quiz
+  title: 'Choose the Right Command'
+  instruction: 'Select the correct imperative form for the situation.'
+  items:
+    - question: 'You are talking to your close friend. How do you say "Give!"?'
+      explanation: 'For a close friend, we use the short "ти" form: дай.'
+      options:
+        - text: 'дай'
+          correct: true
+        - text: 'дайте'
+          correct: false
+        - text: 'давати'
+          correct: false
+        - text: 'даю'
+          correct: false
+    - question: 'Your teacher is speaking to the whole class. What will they say to mean "Listen!"?'
+      explanation: 'For a group of people, we use the "ви" form: слухайте.'
+      options:
+        - text: 'слухайте'
+          correct: true
+        - text: 'слухай'
+          correct: false
+        - text: 'слухати'
+          correct: false
+        - text: 'слухають'
+          correct: false
+    - question: 'You want to tell someone formally to wait. What is the correct form?'
+      explanation: 'The formal command is чекайте.'
+      options:
+        - text: 'чекайте'
+          correct: true
+        - text: 'чекай'
+          correct: false
+        - text: 'чекати'
+          correct: false
+        - text: 'чекає'
+          correct: false
+    - question: 'Which is the correct informal command (ти) for "to write" (писати)?'
+      explanation: 'The stem changes slightly: пиши.'
+      options:
+        - text: 'пиши'
+          correct: true
+        - text: 'пишіть'
+          correct: false
+        - text: 'писати'
+          correct: false
+        - text: 'пишу'
+          correct: false
+    - question: 'How do you say "Say!" to a group of people?'
+      explanation: 'The verb сказати changes the consonant to ж, and for "ви" we add -іть: скажіть.'
+      options:
+        - text: 'скажіть'
+          correct: true
+        - text: 'скажи'
+          correct: false
+        - text: 'сказати'
+          correct: false
+        - text: 'кажу'
+          correct: false
+    - question: 'You need help immediately. What do you yell to the people around you?'
+      explanation: 'For a general plea to multiple people, use the plural: допоможіть.'
+      options:
+        - text: 'допоможіть'
+          correct: true
+        - text: 'допоможи'
+          correct: false
+        - text: 'допомогти'
+          correct: false
+        - text: 'допомога'
+          correct: false
+- type: true-false
+  title: 'True or False: Rules of Commands'
+  instruction: 'Decide if the statement about the imperative mood is correct.'
+  items:
+    - statement: 'To make a command, you just use the infinitive form, like "Читати!".'
+      correct: false
+      explanation: 'In live conversation, we do not use the infinitive. We remove the -ти ending and use imperative forms like "Читай!".'
+    - statement: 'The phrase "будь ласка" can be placed at the beginning, middle, or end of a sentence.'
+      correct: true
+      explanation: 'Yes, it is very flexible and works as a universal softener anywhere in the sentence.'
+    - statement: 'If you want to tell your friend not to look, you say "Не дивись!".'
+      correct: true
+      explanation: 'We form the negative command by simply putting "не" before the regular imperative form.'
+    - statement: 'The most polite way to ask for something is a direct command like "Дайте!".'
+      correct: false
+      explanation: 'The most polite way is an indirect question like "Чи не могли б ви дати?".'
+    - statement: 'For the verb "стояти" (to stand), the informal command is "стій".'
+      correct: true
+      explanation: 'This is an irregular form that you need to memorize.'
+    - statement: 'The construction "Прошу вас" is a very informal way to ask a friend for a favor.'
+      correct: false
+      explanation: '"Прошу вас" is a formal phrase often used in banks or service centers.'
+    - statement: 'When you see "Не торкатися!" on a sign, it means the same thing as "Не чіпай!", but it is a formal rule.'
+      correct: true
+      explanation: 'Signs often use the infinitive for public rules, while "Не чіпай!" is for personal conversation.'
+    - statement: 'To make a "ви" command from "читати", you add "-йте" to get "читайте".'
+      correct: true
+      explanation: 'This is the standard rule for verbs like читати.'
+- type: fill-in
+  title: 'Complete the Classroom Commands'
+  instruction: 'Choose the missing word to complete the sentence.'
+  items:
+    - sentence: 'Студенти, ___ текст, будь ласка.'
+      answer: 'читайте'
+      options: ['читайте', 'читай', 'читати', 'читає']
+    - sentence: 'Діти, ___ на дошку!'
+      answer: 'дивіться'
+      options: ['дивіться', 'дивись', 'дивитися', 'дивляться']
+    - sentence: 'Будь ласка, ___ у зошиті.'
+      answer: 'пишіть'
+      options: ['пишіть', 'пиши', 'писати', 'пише']
+    - sentence: '___ уважно, це важливо!'
+      answer: 'слухайте'
+      options: ['слухайте', 'слухай', 'слухати', 'слухає']
+    - sentence: 'Павло, ___ сюди, будь ласка.'
+      answer: 'іди'
+      options: ['іди', 'ідіть', 'іти', 'іде']
+    - sentence: 'Максиме, не ___ !'
+      answer: 'біжи'
+      options: ['біжи', 'біжіть', 'бігти', 'біжить']
+    - sentence: 'Олено, ___ хвилинку, я зараз допоможу.'
+      answer: 'зачекай'
+      options: ['зачекай', 'зачекайте', 'чекати', 'чекає']
+    - sentence: 'Анно, ___ , будь ласка, де банк?'
+      answer: 'скажи'
+      options: ['скажи', 'скажіть', 'сказати', 'каже']
+- type: unjumble
+  title: 'Build the Sentence'
+  instruction: 'Put the words in the correct order to make a polite request or command.'
+  items:
+    - words: ['скажіть', 'будь', 'ласка']
+      answer: 'скажіть будь ласка'
+    - words: ['прошу', 'вас', 'сісти']
+      answer: 'прошу вас сісти'
+    - words: ['чи', 'не', 'могли', 'б', 'ви', 'допомогти']
+      answer: 'чи не могли б ви допомогти'
+    - words: ['ідіть', 'сюди', 'будь', 'ласка']
+      answer: 'ідіть сюди будь ласка'
+    - words: ['не', 'дивіться', 'на', 'дошку']
+      answer: 'не дивіться на дошку'
+    - words: ['дайте', 'мені', 'зошит']
+      answer: 'дайте мені зошит'
+- type: quiz
+  title: 'Negative Commands and Polite Requests'
+  instruction: 'Select the best phrase for the situation.'
+  items:
+    - question: 'How do you tell a child not to touch something?'
+      explanation: 'Use the negative "не" plus the "ти" command.'
+      options:
+        - text: 'не чіпай'
+          correct: true
+        - text: 'не чіпайте'
+          correct: false
+        - text: 'не торкатися'
+          correct: false
+        - text: 'не чіпати'
+          correct: false
+    - question: 'You are at a bank. How will the clerk likely ask you to sit down?'
+      explanation: 'In formal service settings, "Прошу вас + infinitive" is common.'
+      options:
+        - text: 'прошу вас сісти'
+          correct: true
+        - text: 'сідай'
+          correct: false
+        - text: 'сісти'
+          correct: false
+        - text: 'сідайте'
+          correct: false
+    - question: 'What is the most formal, indirect way to ask "Could you repeat?"'
+      explanation: 'The indirect question "Чи не могли б ви..." is the most polite.'
+      options:
+        - text: 'чи не могли б ви повторити'
+          correct: true
+        - text: 'повторіть будь ласка'
+          correct: false
+        - text: 'повтори'
+          correct: false
+        - text: 'повторити'
+          correct: false
+    - question: 'You want to soften the command "Скажіть". What do you add?'
+      explanation: '"Будь ласка" is the universal softener.'
+      options:
+        - text: 'будь ласка'
+          correct: true
+        - text: 'прошу'
+          correct: false
+        - text: 'не'
+          correct: false
+        - text: 'чи'
+          correct: false
+    - question: 'What would a public sign say for "Do not touch!"?'
+      explanation: 'Public signs use the infinitive form.'
+      options:
+        - text: 'не торкатися'
+          correct: true
+        - text: 'не чіпай'
+          correct: false
+        - text: 'не чіпайте'
+          correct: false
+        - text: 'не торкайся'
+          correct: false
+    - question: 'How do you tell a friend "Do not smoke!"?'
+      explanation: 'Use the informal negative command.'
+      options:
+        - text: 'не кури'
+          correct: true
+        - text: 'не куріть'
+          correct: false
+        - text: 'не курити'
+          correct: false
+        - text: 'курити'
+          correct: false

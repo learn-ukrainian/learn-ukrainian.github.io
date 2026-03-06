@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "mine-and-yours",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T06:22:09Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T06:22:45Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T06:26:42Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T06:29:28Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T07:01:30Z",
+      "attempts": 5
+    }
+  }
+}

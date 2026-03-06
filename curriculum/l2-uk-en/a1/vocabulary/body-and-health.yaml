@@ -1,61 +1,90 @@
 items:
-- lemma: ми
-  pos: noun
-- lemma: цей
-  pos: adj
-- lemma: я
-  pos: noun
-- lemma: це
-  pos: noun
-- lemma: боліти
-  pos: verb
-- lemma: слово
-  pos: noun
-- lemma: мати
-  pos: verb
-- lemma: дуже
-  pos: adv
-- lemma: дужий
-  pos: adj
-- lemma: маяти
-  pos: verb
-- lemma: він
-  pos: noun
-- lemma: ви
-  pos: noun
-- lemma: той
-  pos: adj
-- lemma: що
-  pos: noun
-- lemma: рука
-  pos: noun
-- lemma: біль
-  pos: noun
-- lemma: використовувати
-  pos: verb
-- lemma: фраза
-  pos: noun
-- lemma: хворий
-  pos: adj
-- lemma: людина
-  pos: noun
-- lemma: часто
-  pos: adv
-- lemma: казати
-  pos: verb
-- lemma: лікар
-  pos: noun
-- lemma: нога
-  pos: noun
-- lemma: вона
-  pos: noun
-- lemma: йти
-  pos: verb
-- lemma: те
-  pos: noun
-- lemma: том
-  pos: noun
-- lemma: тому
-  pos: adv
-- lemma: тіло
-  pos: noun
+  - lemma: "голова"
+    translation: "head"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рука"
+    translation: "arm, hand"
+    pos: "noun"
+    gender: "f"
+  - lemma: "нога"
+    translation: "leg, foot"
+    pos: "noun"
+    gender: "f"
+  - lemma: "живіт"
+    translation: "stomach"
+    pos: "noun"
+    gender: "m"
+  - lemma: "горло"
+    translation: "throat"
+    pos: "noun"
+    gender: "n"
+  - lemma: "око"
+    translation: "eye"
+    pos: "noun"
+    gender: "n"
+    notes: "Plural form is очі"
+  - lemma: "вухо"
+    translation: "ear"
+    pos: "noun"
+    gender: "n"
+    notes: "Plural form is вуха"
+  - lemma: "боліти"
+    translation: "to hurt"
+    pos: "verb"
+    aspect: "impf"
+    usage: "У мене болить голова"
+  - lemma: "лікар"
+    translation: "doctor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "лікарня"
+    translation: "hospital"
+    pos: "noun"
+    gender: "f"
+  - lemma: "аптека"
+    translation: "pharmacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "температура"
+    translation: "fever, temperature"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кашель"
+    translation: "cough"
+    pos: "noun"
+    gender: "m"
+  - lemma: "нежить"
+    translation: "runny nose"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ліки"
+    translation: "medicine"
+    pos: "noun"
+    notes: "Plural only"
+  - lemma: "хворий"
+    translation: "sick, ill"
+    pos: "adjective"
+  - lemma: "здоровий"
+    translation: "healthy"
+    pos: "adjective"
+  - lemma: "рецепт"
+    translation: "prescription"
+    pos: "noun"
+    gender: "m"
+  - lemma: "малина"
+    translation: "raspberry"
+    pos: "noun"
+    gender: "f"
+  - lemma: "погано"
+    translation: "badly, poorly"
+    pos: "adverb"
+    usage: "Мені погано"
+  - lemma: "однина"
+    translation: "singular"
+    pos: "noun"
+    gender: "f"
+  - lemma: "множина"
+    translation: "plural"
+    pos: "noun"
+    gender: "f"

@@ -1,472 +1,305 @@
-- type: quiz
-  title: Перевірка розуміння слів
-  items:
-  - question: Що ми зазвичай робимо у великому парку?
-    explanation: У парку ми найчастіше гуляємо.
-    options:
-    - text: гуляти
-      correct: true
-    - text: читати
-      correct: false
-    - text: готувати
-      correct: false
-    - text: малювати
-      correct: false
-  - question: Яке слово означає улюблене заняття людини для душі?
-    explanation: Улюблене заняття для душі називається хобі.
-    options:
-    - text: хобі
-      correct: true
-    - text: робота
-      correct: false
-    - text: школа
-      correct: false
-    - text: спорт
-      correct: false
-  - question: Що ми зазвичай робимо, коли вмикаємо цікавий фільм?
-    explanation: Фільми ми зазвичай дивимося.
-    options:
-    - text: дивитися
-      correct: true
-    - text: співати
-      correct: false
-    - text: танцювати
-      correct: false
-    - text: плавати
-      correct: false
-  - question: Яке дієслово ми використовуємо разом зі словом книга?
-    explanation: Книгу ми зазвичай читаємо.
-    options:
-    - text: читати
-      correct: true
-    - text: писати
-      correct: false
-    - text: слухати
-      correct: false
-    - text: робити
-      correct: false
-  - question: Куди ми йдемо, щоб подивитися новий цікавий фільм?
-    explanation: Нові фільми ми дивимося у кіно.
-    options:
-    - text: у кіно
-      correct: true
-    - text: у парк
-      correct: false
-    - text: на роботу
-      correct: false
-    - text: у ліс
-      correct: false
-  - question: Яке слово означає фізичну активність або різні ігри?
-    explanation: Фізична активність називається спорт.
-    options:
-    - text: спорт
-      correct: true
-    - text: музика
-      correct: false
-    - text: кіно
-      correct: false
-    - text: книга
-      correct: false
-  - question: Що ми робимо на кухні у наш вільний час?
-    explanation: На кухні ми готуємо їжу.
-    options:
-    - text: готувати
-      correct: true
-    - text: гуляти
-      correct: false
-    - text: малювати
-      correct: false
-    - text: читати
-      correct: false
-  - question: Яке дієслово ми використовуємо, коли створюємо красиву картину?
-    explanation: Картину ми зазвичай малюємо.
-    options:
-    - text: малювати
-      correct: true
-    - text: співати
-      correct: false
-    - text: слухати
-      correct: false
-    - text: грати
-      correct: false
-  instruction: Оберіть правильну відповідь.
-- type: quiz
-  title: Що вони роблять?
-  items:
-  - question: Що робить людина, яка має гітару або піаніно?
-    explanation: На гітарі або піаніно ми граємо.
-    options:
-    - text: грати
-      correct: true
-    - text: гуляти
-      correct: false
-    - text: малювати
-      correct: false
-    - text: плавати
-      correct: false
-  - question: Що ми зазвичай робимо, коли чуємо ритмічну музику?
-    explanation: Коли грає музика, ми танцюємо.
-    options:
-    - text: танцювати
-      correct: true
-    - text: читати
-      correct: false
-    - text: спати
-      correct: false
-    - text: писати
-      correct: false
-  - question: Що означає словосполучення вільний час українською мовою сьогодні?
-    explanation: Це час для відпочинку та хобі.
-    options:
-    - text: час для хобі
-      correct: true
-    - text: час для роботи
-      correct: false
-    - text: час для школи
-      correct: false
-    - text: час для стресу
-      correct: false
-  - question: Що ми беремо з собою, коли йдемо фотографувати?
-    explanation: Щоб фотографувати, потрібен фотоапарат або телефон.
-    options:
-    - text: камеру
-      correct: true
-    - text: книгу
-      correct: false
-    - text: м'яч
-      correct: false
-    - text: гітару
-      correct: false
-  - question: Що ми зазвичай робимо у басейні або у морі?
-    explanation: У басейні або морі ми плаваємо.
-    options:
-    - text: плавати
-      correct: true
-    - text: літати
-      correct: false
-    - text: бігати
-      correct: false
-    - text: стрибати
-      correct: false
-  - question: Як ми називаємо період, коли ми не працюємо взагалі?
-    explanation: Час без роботи - це відпочинок.
-    options:
-    - text: відпочинок
-      correct: true
-    - text: робота
-      correct: false
-    - text: навчання
-      correct: false
-    - text: спорт
-      correct: false
-  - question: Яке дієслово означає їхати в інші міста або країни?
-    explanation: Подорожувати означає їздити у нові місця.
-    options:
-    - text: подорожувати
-      correct: true
-    - text: малювати
-      correct: false
-    - text: готувати
-      correct: false
-    - text: гуляти
-      correct: false
-  - question: Що ми використовуємо, щоб слухати улюблену сучасну музику?
-    explanation: Музику слухають у навушниках.
-    options:
-    - text: навушники
-      correct: true
-    - text: окуляри
-      correct: false
-    - text: книги
-      correct: false
-    - text: каструлі
-      correct: false
-  instruction: Оберіть правильну відповідь.
-- type: unjumble
-  title: Складіть правильні речення
-  items:
-  - words:
-    - у
-    - мене
-    - є
-    - нове
-    - хобі
-    answer: У мене є нове хобі
-  - words:
-    - я
-    - люблю
-    - читати
-    - цікаві
-    - книги
-    answer: Я люблю читати цікаві книги
-  - words:
-    - ми
-    - часто
-    - гуляємо
-    - у
-    - парку
-    answer: Ми часто гуляємо у парку
-  - words:
-    - він
-    - добре
-    - грає
-    - у
-    - футбол
-    answer: Він добре грає у футбол
-  - words:
-    - вона
-    - гарно
-    - малює
-    - великі
-    - картини
-    answer: Вона гарно малює великі картини
-  - words:
-    - у
-    - вільний
-    - час
-    - я
-    - відпочиваю
-    answer: У вільний час я відпочиваю
-  instruction: Розташуйте слова у правильному порядку.
-- type: unjumble
-  title: Складіть речення про відпочинок
-  items:
-  - words:
-    - вони
-    - люблять
-    - дивитися
-    - старе
-    - кіно
-    answer: Вони люблять дивитися старе кіно
-  - words:
-    - мій
-    - брат
-    - любить
-    - слухати
-    - музику
-    answer: Мій брат любить слухати музику
-  - words:
-    - моя
-    - сестра
-    - часто
-    - готує
-    - вечерю
-    answer: Моя сестра часто готує вечерю
-  - words:
-    - ми
-    - дуже
-    - любимо
-    - багато
-    - подорожувати
-    answer: Ми дуже любимо багато подорожувати
-  - words:
-    - ти
-    - гарно
-    - співаєш
-    - українські
-    - пісні
-    answer: Ти гарно співаєш українські пісні
-  - words:
-    - я
-    - завжди
-    - танцюю
-    - на
-    - вечірці
-    answer: Я завжди танцюю на вечірці
-  instruction: Розташуйте слова у правильному порядку.
-- type: anagram
-  title: Розшифруйте назви хобі
-  instruction: Rearrange the letters to form words about hobbies.
-  items:
-  - scrambled: С П О Т Р
-    answer: СПОРТ
-  - scrambled: Х О І Б
-    answer: ХОБІ
-  - scrambled: К И Н А Г
-    answer: КНИГА
-  - scrambled: І К О Н
-    answer: КІНО
-  - scrambled: П Р А К
-    answer: ПАРК
-  - scrambled: І Ф М Л Ь
-    answer: ФІЛЬМ
-  - scrambled: У М И З А К
-    answer: МУЗИКА
-  - scrambled: А Ч С
-    answer: ЧАС
-- type: anagram
-  title: Розшифруйте дієслова
-  instruction: Rearrange the letters to form action verbs.
-  items:
-  - scrambled: а г т р и
-    answer: грати
-  - scrambled: и ч а т и т
-    answer: читати
-  - scrambled: я г у л и т
-    answer: гуляти
-  - scrambled: с п в і а и т
-    answer: співати
-  - scrambled: в а л п т и а
-    answer: плавати
-  - scrambled: м ю в а л т и а
-    answer: малювати
-  - scrambled: и и в д и с т я
-    answer: дивитися
-  - scrambled: ц ю т а н в т и а
-    answer: танцювати
+- type: match-up
+  title: "Vocabulary: Hobbies and Sports"
+  instruction: "Match the Ukrainian word to its English meaning."
+  pairs:
+    - left: "читати"
+      right: "to read"
+    - left: "малювати"
+      right: "to draw"
+    - left: "танцювати"
+      right: "to dance"
+    - left: "співати"
+      right: "to sing"
+    - left: "плавати"
+      right: "to swim"
+    - left: "бігати"
+      right: "to run"
+    - left: "готувати"
+      right: "to cook"
+    - left: "фотографувати"
+      right: "to photograph"
+    - left: "хобі"
+      right: "hobby"
+    - left: "спорт"
+      right: "sport"
+
 - type: group-sort
-  title: Розподіліть слова за групами
+  title: "Categorize the Words"
+  instruction: "Sort the words into locations and activities."
   groups:
-  - name: Іменники
-    items:
-    - книга
-    - фільм
-    - спорт
-    - музика
-    - парк
-  - name: Дієслова
-    items:
-    - читати
-    - дивитися
-    - грати
-    - слухати
-    - гуляти
-  instruction: Розподіліть елементи за групами.
-- type: group-sort
-  title: Місце чи активність?
-  groups:
-  - name: Місце (де?)
-    items:
-    - парк
-    - кіно
-    - дім
-    - стадіон
-    - басейн
-  - name: Активність (що робити?)
-    items:
-    - малювати
-    - танцювати
-    - подорожувати
-    - готувати
-    - плавати
-  instruction: Розподіліть елементи за групами.
+    - name: "Locations"
+      items: ["стадіон", "басейн", "спортзал", "парк", "кіно"]
+    - name: "Activities"
+      items: ["плавати", "бігати", "танцювати", "готувати", "гуляти"]
+
 - type: fill-in
-  title: Вставте правильне дієслово
+  title: "Complete the Sentences"
+  instruction: "Choose the correct word to complete each sentence."
   items:
-  - sentence: Я люблю {читати} цікаві книги ввечері.
-    answer: читати
-    options:
-    - читати
-    - слухати
-    - гуляти
-    - малювати
-  - sentence: Мій друг любить {грати} у футбол.
-    answer: грати
-    options:
-    - грати
-    - робити
-    - дивитися
-    - співати
-  - sentence: Ми часто ходимо {гуляти} у великий парк.
-    answer: гуляти
-    options:
-    - гуляти
-    - готувати
-    - читати
-    - писати
-  - sentence: У кіно ми будемо {дивитися} новий фільм.
-    answer: дивитися
-    options:
-    - дивитися
-    - слухати
-    - плавати
-    - грати
-  - sentence: Моя мама дуже смачно вміє {готувати}.
-    answer: готувати
-    options:
-    - готувати
-    - танцювати
-    - малювати
-    - співати
-  - sentence: Вона любить {малювати} красиві картини.
-    answer: малювати
-    options:
-    - малювати
-    - читати
-    - грати
-    - робити
-  - sentence: У басейні я можу довго {плавати}.
-    answer: плавати
-    options:
-    - плавати
-    - гуляти
-    - співати
-    - дивитися
-  - sentence: Ми любимо голосно {співати} пісні.
-    answer: співати
-    options:
-    - співати
-    - читати
-    - малювати
-    - готувати
-  instruction: Оберіть правильне слово для заповнення пропуску.
-- type: fill-in
-  title: Вставте правильний іменник
+    - sentence: "Ми любимо грати в ___."
+      answer: "футбол"
+      options: ["футбол", "футболу", "футболі", "футболом"]
+    - sentence: "Вона грає в ___."
+      answer: "теніс"
+      options: ["теніс", "тенісом", "тенісу", "тенісі"]
+    - sentence: "Мій брат грає в ___."
+      answer: "шахи"
+      options: ["шахи", "шахах", "шахів", "шахами"]
+    - sentence: "Я йду в ___."
+      answer: "басейн"
+      options: ["басейн", "басейні", "басейну", "басейном"]
+      explanation: "Use the destination form for where you are going."
+    - sentence: "Я плаваю в ___."
+      answer: "басейні"
+      options: ["басейні", "басейн", "басейну", "басейном"]
+      explanation: "Use the location form for where you are."
+    - sentence: "Ми йдемо на ___."
+      answer: "стадіон"
+      options: ["стадіон", "стадіоні", "стадіону", "стадіоном"]
+      explanation: "Use the destination form for where you are going."
+    - sentence: "Я бігаю на ___."
+      answer: "стадіоні"
+      options: ["стадіоні", "стадіон", "стадіону", "стадіоном"]
+      explanation: "Use the location form for where you are."
+    - sentence: "Мама любить ходити в ___."
+      answer: "кіно"
+      options: ["кіно", "кіні", "кіна", "кіном"]
+      explanation: "The word for cinema never changes its ending."
+
+- type: quiz
+  title: "Check Your Understanding"
+  instruction: "Choose the correct answer for each question."
   items:
-  - sentence: Моє улюблене {хобі} — це фотографія.
-    answer: хобі
-    options:
-    - хобі
-    - робота
-    - місто
-    - спорт
-  - sentence: У мене є {час} на відпочинок сьогодні.
-    answer: час
-    options:
-    - час
-    - парк
-    - фільм
-    - книга
-  - sentence: Це дуже цікава {книга} про історію.
-    answer: книга
-    options:
-    - книга
-    - музика
-    - картина
-    - пісня
-  - sentence: Ми слухаємо сучасну {музику} в машині.
-    answer: музику
-    options:
-    - музику
-    - книгу
-    - воду
-    - їжу
-  - sentence: Це відомий американський {фільм} про кохання.
-    answer: фільм
-    options:
-    - фільм
-    - парк
-    - спорт
-    - басейн
-  - sentence: Ми йдемо на прогулянку у міський {парк}.
-    answer: парк
-    options:
-    - парк
-    - кіно
-    - робота
-    - магазин
-  - sentence: Мій улюблений {спорт} — це теніс.
-    answer: спорт
-    options:
-    - спорт
-    - фільм
-    - час
-    - музика
-  - sentence: Сьогодні ми йдемо у {кіно} на прем'єру.
-    answer: кіно
-    options:
-    - кіно
-    - книга
-    - робота
-    - басейн
-  instruction: Оберіть правильне слово для заповнення пропуску.
+    - question: "Which of these words means weekend in Ukrainian?"
+      options:
+        - text: "вихідні"
+          correct: true
+        - text: "спортзал"
+          correct: false
+        - text: "парк"
+          correct: false
+        - text: "стадіон"
+          correct: false
+    - question: "Which word never changes its ending?"
+      options:
+        - text: "хобі"
+          correct: true
+        - text: "басейн"
+          correct: false
+        - text: "парк"
+          correct: false
+        - text: "спортзал"
+          correct: false
+    - question: "How do you say: I play football every day?"
+      options:
+        - text: "Я граю у футбол кожного дня."
+          correct: true
+        - text: "Моє хобі — це спорт."
+          correct: false
+        - text: "Я люблю бігати."
+          correct: false
+        - text: "Я люблю футбол."
+          correct: false
+    - question: "Which phrase means: to ride a bicycle?"
+      options:
+        - text: "кататися на велосипеді"
+          correct: true
+        - text: "грати в футбол"
+          correct: false
+        - text: "гуляти в парку"
+          correct: false
+        - text: "дивитися серіали"
+          correct: false
+    - question: "How do you say: We can go together."
+      options:
+        - text: "Ми можемо піти разом."
+          correct: true
+        - text: "Хочеш піти в кіно?"
+          correct: false
+        - text: "Ми можемо зустрітися."
+          correct: false
+        - text: "Із задоволенням!"
+          correct: false
+    - question: "How do you respond to an invitation if you agree?"
+      options:
+        - text: "Із задоволенням!"
+          correct: true
+        - text: "На жаль, не можу."
+          correct: false
+        - text: "Може, іншим разом?"
+          correct: false
+        - text: "Нічого не роблю."
+          correct: false
+    - question: "Which sentence is correct for playing football?"
+      explanation: "We use the preposition in for sports with a ball."
+      options:
+        - text: "Я граю в футбол."
+          correct: true
+        - text: "Я граю футбол."
+          correct: false
+        - text: "Я граю на футболі."
+          correct: false
+        - text: "Я плаваю в футбол."
+          correct: false
+    - question: "Which activity literally means to go into guests?"
+      options:
+        - text: "ходити в гості"
+          correct: true
+        - text: "зустрічатися з друзями"
+          correct: false
+        - text: "гуляти в парку"
+          correct: false
+        - text: "ходити в кіно"
+          correct: false
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Read the statements and decide if they are true or false."
+  items:
+    - statement: "The word кіно changes its ending depending on where it is in the sentence."
+      correct: false
+      explanation: "The word for cinema is indeclinable and never changes."
+    - statement: "In Ukrainian, you must use a preposition like в when saying you play a team sport like basketball."
+      correct: true
+      explanation: "Unlike English, Ukrainian requires a preposition for ball games."
+    - statement: "Ходити в гості means to go to a restaurant with friends."
+      correct: false
+      explanation: "It means to visit someone's home, which is a big part of Ukrainian culture."
+    - statement: "Із задоволенням is a polite way to decline an invitation."
+      correct: false
+      explanation: "It means with pleasure and is an enthusiastic way to say yes."
+    - statement: "If you say Я йду в басейн, it means the pool is your destination."
+      correct: true
+      explanation: "We use the destination form when moving towards a place."
+    - statement: "Як ти відпочиваєш у вихідні? asks about your weekend plans."
+      correct: true
+      explanation: "Вихідні means weekend."
+    - statement: "You can say грати плавати to mean to play swimming."
+      correct: false
+      explanation: "Swimming is an individual sport and does not use the word to play."
+    - statement: "Я люблю малювати means I like to draw."
+      correct: true
+      explanation: "It is a simple and popular structure."
+
+- type: unjumble
+  title: "Build the Sentences"
+  instruction: "Put the words in the correct order to form a sentence."
+  items:
+    - words: ["Моє", "хобі", "—", "це", "спорт."]
+      answer: "Моє хобі — це спорт."
+    - words: ["Я", "плаваю", "кожного", "ранку."]
+      answer: "Я плаваю кожного ранку."
+    - words: ["Ми", "любимо", "зустрічатися", "з", "друзями."]
+      answer: "Ми любимо зустрічатися з друзями."
+    - words: ["Як", "ти", "відпочиваєш", "у", "вихідні?"]
+      answer: "Як ти відпочиваєш у вихідні?"
+    - words: ["У", "неділю", "я", "ходжу", "в", "гості."]
+      answer: "У неділю я ходжу в гості."
+    - words: ["Я", "люблю", "малювати."]
+      answer: "Я люблю малювати."
+
+- type: match-up
+  title: "Social Phrases"
+  instruction: "Match the Ukrainian phrase to its English meaning."
+  pairs:
+    - left: "Хочеш піти в кіно?"
+      right: "Want to go to the cinema?"
+    - left: "Ми можемо піти разом."
+      right: "We can go together."
+    - left: "Ми можемо зустрітися."
+      right: "We can meet up."
+    - left: "Із задоволенням!"
+      right: "With pleasure!"
+    - left: "Чудова ідея!"
+      right: "Great idea!"
+    - left: "На жаль, не можу."
+      right: "Unfortunately, I cannot."
+    - left: "Може, іншим разом?"
+      right: "Maybe another time?"
+    - left: "Я вільна."
+      right: "I am free."
+
+- type: quiz
+  title: "Vocabulary in Context"
+  instruction: "Choose the correct word to complete the thought."
+  items:
+    - question: "Which place do you go to swim?"
+      options:
+        - text: "басейн"
+          correct: true
+        - text: "стадіон"
+          correct: false
+        - text: "парк"
+          correct: false
+        - text: "спортзал"
+          correct: false
+    - question: "Where do you typically go to play football?"
+      options:
+        - text: "стадіон"
+          correct: true
+        - text: "кіно"
+          correct: false
+        - text: "басейн"
+          correct: false
+        - text: "театр"
+          correct: false
+    - question: "Which activity involves a bicycle?"
+      options:
+        - text: "кататися"
+          correct: true
+        - text: "читати"
+          correct: false
+        - text: "малювати"
+          correct: false
+        - text: "плавати"
+          correct: false
+    - question: "What do you say when you have no plans?"
+      options:
+        - text: "Я вільна."
+          correct: true
+        - text: "Я працюю."
+          correct: false
+        - text: "Я плаваю."
+          correct: false
+        - text: "Я бігаю."
+          correct: false
+    - question: "Which phrase describes where you are training (location)?"
+      options:
+        - text: "у спортзалі"
+          correct: true
+        - text: "у спортзал"
+          correct: false
+        - text: "на спортзалі"
+          correct: false
+        - text: "на спортзал"
+          correct: false
+    - question: "Which phrase describes where you are going (destination)?"
+      options:
+        - text: "на стадіон"
+          correct: true
+        - text: "на стадіоні"
+          correct: false
+        - text: "у стадіоні"
+          correct: false
+        - text: "в стадіон"
+          correct: false
+    - question: "What do you watch when you relax at home?"
+      options:
+        - text: "серіали"
+          correct: true
+        - text: "шахи"
+          correct: false
+        - text: "баскетбол"
+          correct: false
+        - text: "кіно"
+          correct: false
+    - question: "How do you casually suggest meeting up?"
+      options:
+        - text: "Ми можемо зустрітися."
+          correct: true
+        - text: "На жаль."
+          correct: false
+        - text: "Іншим разом."
+          correct: false
+        - text: "Я не можу."
+          correct: false

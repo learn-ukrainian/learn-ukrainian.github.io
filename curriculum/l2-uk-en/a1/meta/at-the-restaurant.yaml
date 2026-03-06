@@ -2,46 +2,36 @@ slug: at-the-restaurant
 title: At the Restaurant
 word_target: 1200
 content_outline:
-- section: Вступ та культурний контекст
-  words: 450
+- title: Вступ та культурний контекст
+  slug: introduction-and-culture
+  words: 300
   points:
-  - 'Establish the setting with English scaffolding (targeting ~35% immersion for
-    this A1 stage). Introduce §3.9 core vocabulary: ресторан, кафе, офіціант, меню.'
-  - 'Explain the traditional Ukrainian three-course structure with clear H3 headers:
-    «Перше» (soups like borshch), «Друге» (meat/fish + гарнір), and «Третє» (drinks/dessert).'
-  - 'Detail cultural tipping norms: the 10% standard, the modern ubiquity of QR-code
-    payments (e.g., Expirenza), and the usefulness of the phrase «Решти не треба»
-    (Keep the change).'
-- section: 'Презентація: Мова замовлення'
-  words: 650
+  - 'Establish the restaurant setting using core vocabulary: ресторан, кафе, офіціант,
+    меню.'
+  - 'Explain the traditional three-course structure: «Перше», «Друге», and «Третє».'
+  - Discuss tipping etiquette («чайові») and basic politeness markers.
+- title: 'Презентація: Мова замовлення'
+  slug: presentation-ordering
+  words: 350
   points:
-  - Present §4.2.4.1 Future Tense of «бути». Create a clear table showing «Я буду,
-    ти будеш...» and establish «Я буду...» as the standard, natural way to order.
-  - Integrate §4.2.3.2.1 Accusative Case. Explain in English that the ordered item
-    is the direct object. Provide 5+ varied examples showing the -а → -у shift (кава
-    → каву, піца → піцу).
-  - Include a specific 'Learner Error' callout box explicitly drilling «Я буду каву»
-    (✅) and warning against the Nominative mismatch.
-  - 'Differentiate verbs with examples: «замовити столик» (to book a table) vs. «замовити
-    страву» (to order a dish).'
-- section: 'Практика: Типові ситуації'
-  words: 500
+  - 'Introduce Future Tense of «бути» (§4.2.4.1) for ordering: «Я буду, ти будеш...».'
+  - Present the «Я буду...» structure as the most natural and polite way to order.
+  - 'Differentiate verbs with examples: «замовити столик» (book a table) vs. «замовити
+    страву» (order a dish).'
+- title: 'Практика: Знахідний відмінок'
+  slug: practice-accusative
+  words: 300
   points:
-  - Provide 2 short, highly practical mini-dialogues (Waitstaff and Customer) with
-    English translations. Focus on requesting the menu and ordering.
-  - Explicitly teach «рахунок, будь ласка». Include a 'Language Note' to combat Russian
-    interference, enforcing «рахунок» over «счёт».
-  - 'Introduce modern dietary phrases with their own H3: «без м''яса» (vegetarian)
-    and «без глютену» (gluten-free), noting their high utility in modern Ukrainian
-    cities.'
-  - 'Include an engagement callout: How to ask polite questions about the menu, e.g.,
-    «З чого це?» or «Це гостре?».'
-- section: Підсумок та етикет
-  words: 400
+  - Integrate Accusative Case (§4.2.3.2) for direct objects being ordered.
+  - Show the -а → -у shift with clear examples (кава → каву, піца → піцу).
+  - 'Drill correction of the common error: «Я буду каву» (✅), explicitly warning against
+    the Nominative mismatch.'
+- title: Типові ситуації та Підсумок
+  slug: situations-and-summary
+  words: 250
   points:
-  - Highlight the cultural toast «Будьмо!» (Let us be!) and its response «Гей!». Briefly
-    explain its empowering Cossack origins.
-  - 'Summarize essential polite dining closures: «смачного» (enjoy your meal) and
-    «дякую».'
-  - Provide a final, consolidated recap table of the «Я буду... + [Accusative]» grammatical
-    formula as the main takeaway of the lesson.
+  - Provide mini-dialogues for interacting with the «офіціант» and asking for the
+    «рахунок» (explicitly avoiding 'счёт').
+  - 'Introduce modern dietary phrases: «без м''яса», «без глютену».'
+  - Summarize with the toast «Будьмо!» and include 3-4 self-check questions to verify
+    understanding.

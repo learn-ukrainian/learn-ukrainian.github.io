@@ -1,0 +1,41 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1516",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "126.3",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "22",
+    "COMPUTED_ENGAGEMENT_COUNT": "6",
+    "COMPUTED_IMMERSION_PERCENT": "37.7",
+    "COMPUTED_IMMERSION_TARGET": "35-55%",
+    "COMPUTED_RICHNESS_SCORE": "54",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "cultural: 0/3, collocations: 0/20, register_notes: 0/5",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/body-and-health.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/body-and-health-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/body-and-health.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M48 — Body & Health\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/body-and-health.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Частини тіла (Introduction: Body Parts)                            367 /  300  ✅ (+67)\n     Презентація: Як ми говоримо про біль (Presentation: Expressing Pain)      500 /  350  ✅ (+150)\n     Практика: У лікаря та в аптеці (Practice: At the Doctor's and Pharmacy)   424 /  300  ✅ (+124)\n     Підсумок: Причини та самоперевірка (Summary: Causes and Self-Check)       332 /  250  ✅ (+82)\n     ────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                    1623 / 1200  ✅ (+423)\n  📋 Found YAML activities file (8 activities)\n  > Match the Body Parts: 8 items (min 8)\n  > Expressing Pain: 8 items (min 8)\n  > Describing Symptoms: 8 items (min 8)\n  > True or False?: 8 items (min 8)\n  > Build the Sentences: 6 items (min 6)\n  > Singular or Plural?: 10 items (min 6)\n  > Health & Pharmacy Quiz: 8 items (min 8)\n  > Why? (Causes): 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1516/1200 (raw: 1664)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 6/3\nAudio        ℹ️ No audio\nVocab        ✅ 22/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 37.7% (target 35-55% (M48))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/body-and-health-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/body-and-health.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: body-and-health.md\n  Words: 293 | VESUM: 293 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/body-and-health-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 293/293 (100%) verified",
+  "h2_sections": "1. Вступ: Частини тіла (Introduction: Body Parts)\n2. Презентація: Як ми говоримо про біль (Presentation: Expressing Pain)\n3. Практика: У лікаря та в аптеці (Practice: At the Doctor's and Pharmacy)\n4. Підсумок: Причини та самоперевірка (Summary: Causes and Self-Check)",
+  "vesum_stats": {
+    "total": 293,
+    "vesum_hits": 293,
+    "rag_hits": 0,
+    "not_found": 0,
+    "rag_errors": 0,
+    "by_source": {
+      "activities": {
+        "total": 11,
+        "vesum_hits": 11,
+        "not_found": 0
+      },
+      "prose": {
+        "total": 282,
+        "vesum_hits": 282,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [],
+  "content_hash": "0ba4f4a4b36d8d7c"
+}

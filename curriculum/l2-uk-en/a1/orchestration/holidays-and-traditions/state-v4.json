@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "holidays-and-traditions",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T05:53:09Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T05:53:55Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T05:57:08Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T06:00:27Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T06:08:16Z",
+      "attempts": 1
+    }
+  }
+}

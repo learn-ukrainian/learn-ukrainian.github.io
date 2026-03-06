@@ -1,17 +1,34 @@
-## Research Notes
+# Дослідження: Reflexive Verbs (-ся)
 
-**Textbook Approach:**
-Beginner Ukrainian textbooks typically introduce reflexive verbs (`-ся`/`-сь`) after basic present tense conjugations (Class I and II). The pedagogical focus is on the "mirror" analogy—the action reflecting back on the subject. Textbooks heavily tie this grammatical concept to "Daily Routine" vocabulary (вмиватися, одягатися) and basic identification (називатися).
+## State Standard Reference
+§4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
+Alignment: This module fulfills the requirement to teach reflexive verbs (-ся/-сь) within the indicative mood, focusing exclusively on the present tense for A1.
 
-**Common Errors:**
-1. **The "Myself" Redundancy:** English speakers often try to translate "I wash myself" literally as "Я мию себе" instead of using the proper reflexive verb "Я миюся".
-2. **Incorrect Prepositions:** With verbs like `сміятися`, learners often use the Russian-influenced `над` (сміятися над) instead of the correct Ukrainian `сміятися з` (to laugh at).
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| дивитися | High frequency (Top 100). | дивитися телевізор, дивитися у вікно |
+| називатися | High frequency. Crucial for identification. | як це називається?, вулиця називається... |
+| вчитися | High frequency (Academic contexts). | вчитися в школі, вчитися добре |
+| вмиватися / одягатися | Medium frequency. Essential for daily routine. | вмиватися вранці, одягатися тепло |
 
-**Cultural Hook:**
-The "Apology" Logic: The word `вибачаюсь` literally translates to "I excuse myself," which culturally implies absolving oneself of guilt. It is considered slightly rude or informal compared to the correct `вибачте` (Excuse me / Forgive me), which directs the request to the other person.
+## Cultural Hooks
+1. The "Apology" Logic — The common colloquial error even among native speakers is saying "Вибачаюсь" (literally: I excuse myself, implying self-forgiveness). The culturally polite and correct form is "Вибачте" (Excuse me, asking another person for forgiveness). This perfectly illustrates the self-directed nature of the -ся suffix.
 
-**Cross-References:**
-This module builds directly on basic verb conjugations from `a1-16 (The Living Verb II)` and lays the essential vocabulary groundwork for `a1-38 (My Daily Routine)`.
+## Common Learner Errors
+1. The "Myself" Redundancy → "Я миюся" (Correct) instead of "Я мию себе" (Incorrect) — English speakers often try to translate "myself" literally using "себе" instead of relying on the reflexive verb ending.
+2. Suffix Confusion → "я вмиваюся" (Incorrect) instead of "я вмиваюсь" (Correct) — Forgetting the phonetic rule that -сь follows vowels and -ся follows consonants.
+3. Pronunciation of -ться → Pronouncing it as a hard [тся] instead of the correct soft, lengthened [ц':а].
+
+## Cross-References
+- Builds on: a1-16 (The Living Verb II)
+- Prepares for: a1-38 (My Daily Routine)
+
+## Notes for Content Writing
+- Stick strictly to the present tense indicative. Past tense is not introduced until M36, and future tense until M37.
+- Do NOT use imperative forms (e.g., "Дивіться!") as they are restricted until M47. Use indirect requests or English for instructions.
+- Use the "Patient Supportive Tutor" persona. Frame explanations warmly, using practical daily life scenarios rather than complex abstractions.
+- Limit IPA to the first occurrence of new vocabulary words. Do not transcribe full sentences.
 
 ## Resource Discovery
 

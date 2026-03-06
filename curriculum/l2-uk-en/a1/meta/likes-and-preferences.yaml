@@ -4,49 +4,45 @@ word_target: 1200
 content_outline:
 - section: Мені подобається (I like)
   slug: meni-podobaitsia
-  words: 350
+  words: 300
   points:
-  - Introduce 'Мені' and 'Тобі' as set phrases (lexical chunks) meaning 'to me' and
-    'to you'. Use English scaffolding to avoid teaching the full Dative case.
-  - 'Explain the grammatical inversion: the person is the receiver of the feeling,
-    and the thing liked is the grammatical subject.'
-  - 'Demonstrate subject-verb agreement with examples: singular nouns (Мені подобається
-    кава) vs. plural nouns (Мені подобаються квіти).'
-  - Show usage with infinitives (Мені подобається читати).
+  - Introduce 'Мені' and 'Тобі' as lexical chunks ('to me', 'to you'). Do not teach
+    the full Dative case.
+  - 'Explain grammatical inversion: the thing liked is the subject (Мені подобається
+    кава).'
+  - Show agreement with singular (подобається) and plural (подобаються) nouns.
+  - Provide examples with infinitives (Мені подобається читати).
 - section: Я люблю (I love)
   slug: ya-liubliu
   words: 300
   points:
-  - Introduce the Class II verb 'любити' and its present tense conjugation.
-  - Explain the Accusative case requirement for direct objects, showing the -а to
-    -у transformation for feminine nouns (e.g., музика -> музику).
+  - Introduce Class II verb 'любити' and its present tense conjugation.
+  - Explain Accusative case for direct objects (-а to -у for feminine nouns like музику,
+    каву).
   - 'Contrast semantics: ''подобається'' (aesthetic appeal, state) vs. ''люблю'' (strong
-    active enjoyment, action). Include a brief cultural note on this nuance.'
-  - Provide mixed examples with nouns and infinitives (Я люблю музику, Я люблю читати).
+    active enjoyment, action).'
 - section: Я хочу (I want)
   slug: ya-khochu
   words: 250
   points:
-  - Introduce the irregular verb 'хотіти' and its present tense conjugation.
-  - Demonstrate 'Я хочу + infinitive' for actions (Я хочу їсти, Я хочу піти).
-  - Demonstrate 'Я хочу + Accusative noun' for objects (Я хочу каву).
-  - 'Include a cultural note on directness: ''Я хочу'' is polite in Ukrainian daily
-    life and does not sound rude like ''I want'' might in English.'
+  - Introduce irregular verb 'хотіти' and its present tense conjugation.
+  - Demonstrate 'Я хочу + infinitive' for actions (хочу їсти, хочу піти).
+  - Demonstrate 'Я хочу + Accusative noun' for objects (хочу каву).
+  - 'Include a cultural note on directness: ''Я хочу'' is standard and polite in Ukrainian.'
 - section: Порівняння (Comparing Likes)
   slug: porivniannia
   words: 200
   points:
-  - 'Introduce question formats: ''А ти?'', ''Тобі подобається...?'', ''Ти любиш...?'',
-    ''Ви хочете?''.'
-  - Present 2 short mini-dialogues comparing preferences regarding food or free time
-    to model natural conversation.
-  - Highlight how to use 'а' (and/but) to contrast preferences (e.g., Мені подобається
-    музика, а тобі?).
+  - 'Introduce question formats: ''А ти?'', ''Тобі подобається...?'', ''Ти любиш...?''.'
+  - Provide mini-dialogues comparing food and free time preferences.
+  - Show how to use 'а' to contrast preferences (Мені подобається музика, а тобі?).
 - section: Підсумок (Summary)
   slug: summary
-  words: 100
+  words: 150
   points:
-  - 'Provide a summary visual table contrasting all three constructions: verb, meaning,
-    and required following grammar (Nominative vs Accusative vs Infinitive).'
-  - Include 3-4 self-check questions choosing the correct construction or case ending
-    to transition into interactive practice.
+  - Provide a summary visual table contrasting 'подобається', 'люблю', and 'хочу'
+    with their required grammar (Nominative vs Accusative vs Infinitive).
+  - 'Include self-check question 1: Learner identifies the correct construction based
+    on context.'
+  - 'Include self-check question 2: Learner identifies the correct noun case ending.'
+  - 'Include self-check question 3: Learner chooses the correct verb conjugation.'

@@ -2,60 +2,60 @@ slug: leisure-and-hobbies
 title: Leisure and Hobbies
 word_target: 1200
 content_outline:
-- section: Хобі
-  words: 500
+- section: Хобі (Hobbies)
+  slug: hobbies
+  words: 300
   points:
-  - 'Note on Immersion: This is an A1 module. English scaffolding is mandatory for
-    all grammar explanations and conceptual introductions.'
-  - Introduce the concept of 'хобі' as an indeclinable neuter noun. Use English scaffolding
-    to explain its unchanging nature and provide IPA on its first occurrence.
-  - 'Present a detailed table of 7 common hobby verbs: читати, малювати, грати, фотографувати,
+  - Introduce the concept of 'хобі' as an indeclinable neuter noun. Provide English
+    scaffolding to explain its unchanging nature and use IPA for its first occurrence.
+  - 'Present a table of 7 core hobby verbs: читати, малювати, грати, фотографувати,
     танцювати, співати, готувати. Include IPA and English translations.'
-  - 'Create three distinct H3 subsections for expressing hobbies: ''Моє хобі — це...'',
-    ''Я захоплююся... (+ Instrumental as a fixed phrase)'', and ''Мені подобається...
-    (+ infinitive)''. Explain the structure of each in English.'
-  - Write an extended mini-dialogue demonstrating 'Яке у тебе хобі?' and 'Чим ти захоплюєшся?'
-    with full English translations and short, A1-appropriate sentences.
-- section: Спорт
-  words: 400
+  - 'Teach three expressive patterns in distinct subsections: ''Моє хобі — це...'',
+    ''Мені подобається...'' (+ infinitive), and the fixed lexical phrase ''Я захоплююся...''
+    (+ Instrumental). Explain them clearly with English scaffolding.'
+  - Write a mini-dialogue demonstrating 'Яке у тебе хобі?' and 'Чим ти захоплюєшся?'
+    using short A1-appropriate sentences and full English translations.
+- section: Спорт (Sports)
+  slug: sports
+  words: 300
   points:
-  - Explain the 'грати в + Accusative' construction for team and ball sports (футбол,
-    баскетбол, теніс, шахи) using clear English scaffolding. Contrast with the English
-    lack of prepositions ('play tennis').
-  - Contrast 'грати в' with individual sports that use bare verbs (плавати, бігати,
-    кататися на велосипеді) in a separate H3 subsection with multiple examples.
-  - 'Introduce sports venues: стадіон, басейн, спортзал.'
-  - 'Create a visual table comparing ''location'' (Locative: в басейні, на стадіоні)
-    vs. ''destination'' (Accusative: в басейн, на стадіон) using the verb ''ходити''.
-    Provide clear English context to prevent common learner errors.'
-- section: Дозвілля
-  words: 400
+  - Explain the 'грати в + Accusative' construction for ball and team sports (футбол,
+    баскетбол, теніс, шахи) using English scaffolding. Explicitly contrast this with
+    the English lack of prepositions.
+  - Introduce individual sports that use bare verbs or phrases (плавати, бігати, кататися
+    на велосипеді) with clear examples.
+  - 'Present vocabulary for sports venues: стадіон, басейн, спортзал.'
+  - 'Provide a visual comparison of location vs. destination: Locative (бути в басейні,
+    на стадіоні) vs. Accusative (ходити в басейн, на стадіон). Use English context
+    to prevent common errors.'
+- section: Дозвілля (Leisure activities)
+  slug: leisure
+  words: 250
   points:
-  - 'Introduce vocabulary for entertainment outings: ходити в кіно, дивитися серіали,
-    гуляти в парку. Explicitly highlight that ''кіно'' is indeclinable.'
-  - Explain the concept of habitual outings using 'ходити в + Accusative' with English
-    instructions and relatable examples of daily life.
-  - 'Present social activities: зустрічатися з друзями (note the Instrumental case
-    usage as a set phrase) and ходити в гості (explain the cultural significance of
-    home visiting).'
-  - Draft a simple paragraph describing a typical weekend (Що ти робиш у вихідні?)
-    using short sentences of maximum 8-10 words to build reading confidence.
-- section: Запрошення
-  words: 350
+  - 'Introduce entertainment vocabulary: ходити в кіно, дивитися серіали, гуляти в
+    парку. Remind learners that ''кіно'' is indeclinable.'
+  - 'Present social activities as fixed phrases: зустрічатися з друзями (Instrumental)
+    and ходити в гості. Briefly mention the cultural significance of visiting homes.'
+  - Draft a simple guided reading paragraph describing a typical weekend ('Що ти робиш
+    у вихідні?'), keeping sentences to a maximum of 8-10 words.
+- section: Запрошення (Invitations)
+  slug: invitations
+  words: 200
   points:
-  - 'Introduce 3 patterns for making invitations, giving each its own H3: ''Хочеш
-    піти в...?'', ''Ходімо разом!'', ''Давай зустрінемось!''. Explain the formality
-    nuance and social context of each in English.'
-  - 'Provide a two-column table for responding to invitations: Accepting (З задоволенням,
+  - 'Introduce 3 functional patterns for making invitations: ''Хочеш піти в...?'',
+    ''Ходімо разом!'', ''Давай зустрінемось!''. Explain the social context of each
+    in English.'
+  - 'Provide a clear table for responding to invitations: Accepting (З задоволенням,
     Чудова ідея) vs. Declining (На жаль, не можу, Може, іншим разом).'
-  - Include a practical, multi-turn dialogue demonstrating an invitation to the cinema,
-    discussing the time, and a positive response, accompanied by English translations.
-- section: Практика
-  words: 350
+  - Include a multi-turn, practical dialogue of two friends making plans for the weekend,
+    accompanied by English translations.
+- section: Практика (Practice)
+  slug: summary
+  words: 150
   points:
-  - Provide a guided reading text (100-150 words) where characters discuss their hobbies,
-    sports preferences, and make weekend plans, integrating the target grammar.
-  - Include an engagement callout [!cultural] about the tradition and popularity of
-    playing chess in Ukrainian public parks, adding depth to the reading.
-  - Summarize the key takeaways (грати в, ходити в vs. бути в, invitation patterns)
-    in a clear, bulleted list for easy student review.
+  - 'Summarize the key grammatical takeaways in a bulleted list: ''грати в + Accusative'',
+    the difference between ''ходити в + Accusative'' and ''бути в + Locative'', and
+    invitation structures.'
+  - Provide 4 self-check questions for the learner to verify understanding (e.g.,
+    'How do you ask someone what their hobby is?', 'What case is used for the destination
+    when you go to the pool?').

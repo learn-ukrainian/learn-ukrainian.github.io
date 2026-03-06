@@ -2,49 +2,48 @@ slug: checkpoint-daily-life
 title: 'Checkpoint: Daily Life'
 word_target: 1200
 content_outline:
-- section: Огляд
-  words: 200
+- section: 'Огляд (Overview)'
+  slug: overview
+  words: 150
   points:
   - 'H3: Welcome to the Checkpoint. Establish a Patient & Supportive Tutor persona.
-    Reduce test anxiety by explaining this module consolidates past/future tenses,
-    daily routines, and weather.'
+    Reduce test anxiety by explaining this module simply consolidates past/future
+    tenses, daily routines, and weather.'
   - 'H3: How to Use This Review. Explicitly note the English scaffolding policy: English
-    will be used to clarify grammar rules and instructions, while practical examples
-    and reading passages will prioritize Ukrainian.'
-- section: 'Навичка 1: Часові форми'
-  words: 600
+    will be used to clarify grammar rules, while practical examples will prioritize
+    Ukrainian.'
+- section: 'Навичка 1: Часові форми (Skill 1: Tenses)'
+  slug: skill-1-tenses
+  words: 300
   points:
-  - 'H3: Минулий час. Present a clear, visually distinct table for the -в/-ла/-ло/-ли
-    endings. Include 4+ examples emphasizing gender agreement (e.g., Він читав, Вона
-    читала).'
-  - 'H3: Майбутній час. Provide a structural breakdown of the analytic future (буду
-    + infinitive) with conjugation of ''бути''. Provide 4+ examples of planned actions.'
-  - 'H3: Куди чи Де. Create a comparative table showing motion towards a destination
-    (Куди? + Accusative) versus static location (Де? + Locative) using familiar verbs.'
-- section: 'Навичка 2: Повсякденне життя'
-  words: 400
+  - 'H3: Минулий час. Clear review of the -в/-ла/-ло/-ли endings. Include examples
+    emphasizing gender agreement (e.g., Він читав, Вона читала).'
+  - 'H3: Майбутній час. Review the analytic future (буду + infinitive) with the conjugation
+    of ''бути''. Provide examples of planned actions.'
+  - 'H3: Куди чи Де. Comparative overview showing motion towards a destination (Куди?
+    + Accusative) versus static location (Де? + Locative).'
+- section: 'Навичка 2: Повсякденне життя (Skill 2: Daily Life)'
+  slug: skill-2-daily-life
+  words: 250
   points:
-  - 'H3: Щоденна рутина. Provide a timeline narrative covering a standard day (вставати,
-    снідати, працювати, лягати спати) combining new tenses.'
-  - 'H3: Замовлення їжі. Include a short, practical mini-dialogue demonstrating how
-    to state preferences and order in a café.'
-  - 'H3: У крамниці. Review transactional vocabulary, focusing on asking prices (Скільки
-    коштує?) and basic polite requests (Дайте, будь ласка).'
-- section: 'Навичка 3: Опис та погода'
-  words: 400
+  - 'H3: Щоденна рутина. Timeline narrative covering a standard day (вставати, снідати,
+    працювати, лягати спати) combining the reviewed tenses.'
+  - 'H3: Замовлення їжі та покупки. Mini-dialogue demonstrating how to state preferences,
+    order in a café, and ask prices (Скільки коштує?).'
+- section: 'Навичка 3: Опис та погода (Skill 3: Description & Weather)'
+  slug: skill-3-description-and-weather
+  words: 250
   points:
-  - 'H3: Прислівники способу дії. Reintroduce modifying adverbs (добре, погано, швидко,
+  - 'H3: Прислівники способу дії. Review modifying adverbs (добре, погано, швидко,
     повільно) showing how they describe actions.'
-  - 'H3: Прогноз на сьогодні. Review impersonal weather constructions (Сьогодні тепло/холодно)
-    with 3+ distinct examples.'
-  - 'H3: Сезони. Combine seasonal vocabulary (взимку, влітку) with future and past
-    tenses to describe activities (Взимку було холодно).'
-- section: Інтеграційне завдання
-  words: 400
+  - 'H3: Прогноз погоди. Review impersonal weather constructions (Сьогодні тепло/холодно)
+    and seasonal vocabulary (взимку, влітку).'
+- section: 'Інтеграційне завдання (Integration Task)'
+  slug: integration-task
+  words: 250
   points:
-  - 'H3: Вчорашні події. A cohesive 4-5 sentence reading passage narrating a completed
-    daily routine, combining past tense, food, and weather.'
-  - 'H3: Завтрашні плани. A cohesive 4-5 sentence reading passage outlining future
-    plans, integrating the analytic future tense and shopping vocabulary.'
-  - 'H3: Ваш прогрес. A supportive self-assessment checklist allowing the learner
-    to verify their readiness to progress to the next phase.'
+  - 'H3: Вчорашні події та завтрашні плани. Cohesive reading passages narrating a
+    completed daily routine (past) and outlining future plans (future).'
+  - 'H3: Перевірте себе. 4 self-check questions: 1. Can you describe what you did
+    yesterday? 2. Can you state your plans for tomorrow? 3. Can you order lunch and
+    ask for the price? 4. Can you describe today''s weather?'

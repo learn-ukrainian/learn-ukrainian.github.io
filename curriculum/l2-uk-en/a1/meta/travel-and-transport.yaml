@@ -2,57 +2,45 @@ slug: travel-and-transport
 title: Travel and Transport
 word_target: 1200
 content_outline:
-- section: Транспорт
-  words: 400
+- section: Транспорт (Transport types)
+  slug: transport-types
+  words: 250
   points:
-  - 'H3: Вступ та Словник. Use explicit English scaffolding to introduce the topic
-    of transport (immersion level allows this). Provide a structured vocabulary table
-    for city transport (автобус, тролейбус, маршрутка, трамвай, метро) with English
-    translations and IPA for the first occurrence.'
-  - 'H3: Міський транспорт. Explain the use of city transit. Emphasize clearly that
-    ''метро'' and ''таксі'' are indeclinable neuter nouns in Ukrainian.'
-  - 'H3: Міжміський транспорт. Introduce long-distance options (потяг, літак). Include
-    a cultural note on Укрзалізниця and the dominance of trains for intercity travel
-    in Ukraine.'
-- section: Вокзал та аеропорт
-  words: 400
+  - Introduce city public transport vocabulary (автобус, тролейбус, маршрутка, трамвай,
+    метро). Emphasize that 'метро' and 'таксі' are indeclinable.
+  - Introduce long-distance transport (потяг, літак) and discuss choosing transport
+    for different distances.
+- section: Вокзал та аеропорт (Station and airport)
+  slug: station-and-airport
+  words: 275
   points:
-  - 'H3: Транспортні вузли. Define and distinguish between залізничний вокзал, автовокзал,
-    and аеропорт. Highlight that the word ''вокзал'' used alone almost always implies
-    the train station.'
-  - 'H3: Усередині вокзалу. Detail key internal locations: каса, зал очікування, платформа.
-    Provide 2-3 short, simple A1-level example sentences for each with clear English
-    translations.'
-  - 'H3: Корисні фрази та квитки. Present functional navigation phrases as lexical
-    chunks: Де вокзал? Звідки відправляється потяг? О котрій годині? Introduce core
-    ticket vocabulary: квиток, купити квиток, туди й назад.'
-- section: Напрямки
-  words: 400
+  - 'Define and distinguish transport hubs: залізничний вокзал, автовокзал, аеропорт.'
+  - 'Introduce key locations inside the station: каса, зал очікування, платформа.'
+  - Teach essential navigation phrases (Де вокзал?, Звідки відправляється потяг?,
+    О котрій годині?) and ticket basics (купити квиток).
+- section: Напрямки (Directions)
+  slug: directions
+  words: 250
   points:
-  - 'H3: Вказівники. Present core direction words: наліво, направо, прямо, назад.
-    Introduce ordinal numbers for taking turns: перший поворот, другий поворот.'
-  - 'H3: Наказовий спосіб. Explain the A1 imperative for giving directions using English
-    scaffolding: Поверніть наліво, Ідіть прямо. Emphasize that these are polite plural
-    (2nd person) forms.'
-  - 'H3: Як запитати дорогу. Teach navigation questions as set phrases: Як дістатися
-    до...? (+ Genitive) and Скажіть, будь ласка, де...?'
-- section: Подорожі
-  words: 400
+  - 'Introduce basic direction vocabulary: наліво, направо, прямо, назад, and ordinal
+    turns (перший поворот, другий поворот).'
+  - 'Practice A1 2nd-person imperative forms for giving directions: Поверніть наліво,
+    Ідіть прямо.'
+  - Teach how to ask for directions using 'Як дістатися до...?' (+ Genitive) and 'Скажіть,
+    будь ласка, де...?'
+- section: Подорожі (Journeys)
+  slug: journeys
+  words: 250
   points:
-  - 'H3: Куди ми їдемо? Explain the use of ''до'' + Genitive for destination cities
-    (до Львова, до Києва). Reinforce the use of the verb ''їхати'' vs ''іти''.'
-  - 'H3: Чим ми їдемо? Introduce the Instrumental case for means of transport (потягом,
-    автобусом, літаком). Frame this as an elegant and simple feature of Ukrainian
-    grammar that requires no prepositions.'
-  - 'H3: Тривалість подорожі. Present phrases for time duration: Скільки часу їхати?
-    Я їду 3 години. Connect numbers and basic time concepts.'
-- section: Практика
-  words: 400
+  - Explain how to state a destination using 'до' + Genitive (Я їду до Львова).
+  - Introduce the Instrumental case as a lexical chunk for means of transport (потягом,
+    автобусом, літаком).
+  - 'Teach phrases for journey duration: Скільки часу їхати? Я їду 3 години.'
+- section: Практика (Practice)
+  slug: practice
+  words: 175
   points:
-  - 'H3: Діалог 1: На вулиці. Create a 6-8 line natural dialogue focusing on asking
-    for and receiving directions to the metro station. Include full English translations.'
-  - 'H3: Діалог 2: Наша подорож. Create a short narrative dialogue describing a trip
-    to Lviv by train, successfully integrating duration, destination, and the transport
-    method.'
-  - 'H3: Перевірка. Include 3 simple comprehension questions in Ukrainian at the end
-    of the section to verify understanding of the dialogues without relying on translation.'
+  - Provide a direction-giving dialogue combining imperative forms and direction words.
+  - Provide a journey description narrative or dialogue covering destination, duration,
+    and means of transport.
+  - Include 3-4 simple self-check comprehension questions in Ukrainian to verify understanding.

@@ -1,234 +1,249 @@
 <!-- SCOPE
-Covers: Possessive pronouns (мій, твій, його, її, наш, ваш, їхній, свій), gender agreement, and asking "whose".
+Covers: Possessive pronouns, gender agreement, variable vs invariable forms, and the reflexive possessive 'свій'.
 Not covered:
-  - Possessives in oblique cases (covered in future case modules)
+  - Plural agreement for possessives → future module
 -->
 
 # Mine and Yours
 
 > **Чому це важливо?**
 >
-> Ми щодня говоримо про речі. Ви шукаєте свій телефон. Ви питаєте про сумку. Без цих слів важко.
->
-> We talk about things every day. You look for your phone. You ask about a bag. Without these words it is hard.
+> Learning to say «mine» and «yours» helps you claim your things, talk about your family, and build a sense of personal space in Ukrainian. Unlike English, where «my» is always just «my», Ukrainian possession is a beautiful matching game where the pronoun dances with the object you own.
 
-## Introduction: Whose is this?
+## Вступ: Чия це річ? (Introduction: Whose Thing is This?)
 
-Це типова ситуація.
-This is a typical situation.
+Уяві́ть цю ситуа́цію.
+Ви у бюро́ знахі́док.
 
-Ви у бюро знахідок.
-You are at a lost and found office.
+Read this dialogue:
+— Добрий день. Це бюро знахідок?
+— Так, добрий день.
+— Я шукаю телефон.
+— Тут є телефон. Чий це телефон?
+— Це мій телефон. Дуже дякую!
+— А чия це сумка?
+— Це не моя сумка. Це її сумка.
+— Добре, до побачення.
+— До побачення.
 
-Тут лежить багато різних речей.
-Here lie many different things.
+Read these simple sentences:
+Це мій словник.
+Це твій олівець.
+Це наша аудиторія.
+Це ваше завдання.
 
-Ми бачимо телефон, ключі та паспорт.
-We see a phone, keys, and a passport.
+You might notice something interesting right away. The English word «whose» stays exactly the same no matter what object we are talking about. But in Ukrainian, the question word actually changes its shape depending on what you are asking about. 
 
-Як запитати про власника?
-How to ask about the owner?
+This happens because Ukrainian is a language of grammatical gender. Every single noun in the language belongs to a gender category: masculine, feminine, or neuter. There are no exceptions to this rule. Even abstract concepts and inanimate objects have a designated gender. When you want to talk about who owns an object, the owner word must match the gender of the object being owned. 
 
-Коли ви бачите нову річ, важливо знати її рід.
-When you see a new thing, it is important to know its gender.
+This is the absolute most important rule of the entire lesson. The possessive pronoun agrees with the thing you possess, not with you as the owner. It works like a puzzle where two pieces must fit perfectly together. For example, a tall, strong man who owns a small bag must use the feminine word for «my». The bag is the boss! It dictates the shape of the word that comes before it.
 
-Тоді ви можете вибрати правильне питання.
-Then you can choose the correct question.
+> [!tip] Порада
+> Think of possessive pronouns as mirrors. They reflect the grammatical gender of the noun that comes right after them. When dealing with a feminine noun, the pronoun must be feminine too.
 
-Англійською ми маємо одне просте слово для цього: **whose**. Ви можете показати на будь-який об'єкт і запитати: Whose is this? In Ukrainian, the word for **whose** changes depending on the grammatical gender of the object we are pointing to. Це золоте правило: ці слова залежать від об'єкта, а не від власника. This is the golden rule of Ukrainian possession: possessive words agree with the object possessed, not the owner.
+Let's look at the basic question words we use to ask «whose thing is this» in our office. 
+Compare:
+- Чий? (Whose? — used for a masculine object)
+- Чия́? (Whose? — used for a feminine object)
+- Чиє́? (Whose? — used for a neuter object)
 
-Це перший крок. Learning these core question words is the very first step to navigating the physical world around you. When you enter a room, when you find a lost item, or when you simply want to clarify ownership, these four little words are your best tools. They unlock the ability to organize your environment.
+It is time to discover how to answer these questions using our own possessive pronouns.
 
-We can explore the core question words. They look and sound very similar, but the ending gives away the gender. 
+## Презентація: Система форм та узгодження (Presentation: System of Forms and Agreement)
 
-| Word | Gender | English | Example |
-|------|--------|---------|---------|
-| **чий** | Masculine | whose | Чий це телефон? |
-| **чия** | Feminine | whose | Чия це сумка? |
-| **чиє** | Neuter | whose | Чиє це ім’я? |
-| **чиї** | Plural | whose | Чиї це ключі? |
+When we want to claim ownership, we have to choose the right version of a word to match our noun. Let's look at these variable possessive pronouns.
 
-> [!tip]
-> In English, **my** is always just **my**. Whether it is a brother or a sister, the word stays exactly the same. In Ukrainian, the word for **my** changes its shape like a chameleon to match the noun it describes.
+First, let's explore how to say «my». We have three different options depending on the noun's gender. We will start with masculine nouns.
+Ось чоловічий рід:
+Мі́й телефо́н.
+Мі́й дім.
+Мі́й па́спорт.
+Мі́й друг.
+Мі́й стіл.
+Мі́й брат.
+Мі́й квиток.
 
-If you know the noun is feminine (like **книга**), you immediately know you must ask **Чия це книга?** and not **Чий це книга?**. Ця маленька деталь дуже важлива. This small detail makes your Ukrainian sound natural and correct from the very beginning.
+For a feminine object, we must use the feminine form. Notice how it usually ends in the letter «я» or «а».
+Ось жіночий рід:
+Моя́ ма́ма.
+Моя́ су́мка.
+Моя́ кімна́та.
+Моя́ робо́та.
+Моя́ сестра.
+Моя́ кава.
+Моя́ машина.
 
-## Variable Possessives: Мій, Твій, Наш, Ваш
+When dealing with a neuter object, we must use the neuter form. This usually ends in the letter «е».
+Ось середній рід:
+Моє́ мі́сто.
+Моє́ ім’я́.
+Моє́ вікно.
+Моє́ прізвище.
 
-Ми маємо чотири головні слова. Вони змінюють свою форму.
-We have four main words. They change their form.
+The pronoun always dances to the tune of the noun. A common error for English speakers is to match the pronoun to themselves. A male student might try to say «мій мама» because he is male. But the mother is a feminine noun, so it absolutely must be «моя́ ма́ма», regardless of the gender of the speaker.
 
-Це слова «мій», «твій», «наш» та «ваш».
-These are the words «мій», «твій», «наш», and «ваш».
+The exact same pattern applies to «your» when speaking to one person informally.
+Наприклад:
+Тві́й друг.
+Твоя́ ма́ма.
+Твоє́ мі́сто.
 
-Ми пишемо ці слова поруч.
-We write these words nearby.
+For «our» (наш), we use a very similar set of endings.
+Ось як це виглядає:
+Наш дім.
+На́ша краї́на.
+На́ше мі́сто.
 
-Це важливо пам'ятати. We can break down these variable possessive pronouns. Because they must match the object they describe, each of these pronouns has a masculine, feminine, neuter, and plural form. You cannot simply memorize one single word for **my**; you need to know how it adapts to its environment.
+And finally, for «your» when speaking formally or to multiple people (ваш), we use the formal versions.
+Note:
+Ваш квито́к.
+Ва́ша адре́са.
+Ва́ше прі́звище.
 
-### My and Your (Informal)
+> [!warning] Увага
+> The «Gender Mismatch» is the number one trap for beginners. Always check the ending of the noun before you choose your pronoun. When the noun ends in -а or -я, you almost always need the feminine form (моя́, твоя́, на́ша, ва́ша). Do not guess based on your own gender!
 
-Слова для «my» та «your» мають однакову логіку. The words for my and your follow the exact same pattern. They end in vowels that clearly signal their gender.
+Here is a reference table:
 
-| Gender | My | Example | Your (informal) | Example |
-|--------|----|---------|-----------------|---------|
-| Masculine | **мій** | мій паспорт | **твій** | твій друг |
-| Feminine | **моя** | моя адреса | **твоя** | твоя мама |
-| Neuter | **моє** | моє місто | **твоє** | твоє місце |
-| Plural | **мої** | мої ключі | **твої** | твої речі |
+| English | Masculine | Feminine | Neuter |
+|---------|-----------|----------|--------|
+| My      | мі́й       | моя́      | моє́    |
+| Your    | тві́й      | твоя́     | твоє́   |
+| Our     | наш       | на́ша     | на́ше   |
+| Your    | ваш       | ва́ша     | ва́ше   |
 
-Це мій новий телефон.
-This is my new phone.
+### Незмінні форми (Invariable Forms: His, Her, Their, One's Own)
 
-А де твоя сумка?
-And where is your bag?
+The Ukrainian pronouns for «his» and «her» are completely invariable. They do not change their shape, no matter what noun follows them.
 
-Це моє місто. Воно дуже гарне.
-This is my city. It is very beautiful.
+For «his», we always use the word **його́**.
+Compare:
+Його́ ба́тько.
+Його́ маши́на.
+Його́ мі́сто.
 
-If you are pointing to a passport (which is masculine), you use the masculine form: **мій паспорт**. If you are talking about an address (which is feminine), you must switch to the feminine form: **моя адреса**. And if you are discussing a city (which is neuter), you use the neuter form: **моє місто**. This matching game becomes completely automatic with a little bit of practice. The same logic applies to the plural form: **мої ключі** works for any plural noun, regardless of its original gender.
+For «her», we always use the word **її́**.
+Наприклад:
+Її́ па́спорт.
+Її́ су́мка.
+Її́ ім’я́.
 
-> [!warning]
-> The most common trap for English speakers is the Gender Mismatch. A male speaker might naturally want to say **мій мама** because he is male. But the pronoun must match **мама** (feminine), so it must be **моя мама**. The owner's gender does not matter at all here.
+These forms are securely frozen. You never need to worry about the gender of the object when you are talking about what belongs to him or her.
 
-### Our and Your (Formal/Plural)
+Now, let's talk about «their». The standard, beautiful literary word for «their» is **ї́хній**. Unlike «his» and «her», this word DOES change to match the object.
+Ось як це виглядає:
+Ї́хній буди́нок.
+Ї́хня сім’я́.
+Ї́хнє рі́шення.
 
-Слова для «our» та «your» також схожі. The words for our and your also share a very similar pattern. You will notice that the endings sound solid and strong.
+> [!culture] Культура
+> You might sometimes hear people use the short word «їх» instead of «їхній» to mean «their». This is a Russianism and is considered incorrect in standard Ukrainian. Always choose the proper, elegant form «ї́хній», «ї́хня», «ї́хнє». It is an important marker of clean, decolonized speech.
 
-| Gender | Our | Example | Your (formal/plural) | Example |
-|--------|-----|---------|----------------------|---------|
-| Masculine | **наш** | наш клас | **ваш** | ваш квиток |
-| Feminine | **наша** | наша країна | **ваша** | ваша кімната |
-| Neuter | **наше** | наше рішення | **ваше** | ваше прізвище |
-| Plural | **наші** | наші друзі | **ваші** | ваші ключі |
+Finally, Ukrainian has a very special reflexive possessive pronoun: **сві́й** (one's own).
+We use «сві́й» when the subject of the sentence owns the object. It matches genders exactly like «мі́й» and «тві́й»: сві́й, своя́, своє́.
+Why do we need this special word? Look at this situation to see the difference.
+Compare:
+Іва́н лю́бить свою́ робо́ту.
+Іва́н лю́бить його́ робо́ту.
 
-Це наша країна. Вона велика.
-This is our country. It is large.
+Using «сві́й» prevents awkward confusion and makes it crystal clear that the person doing the action is also the actual owner of the object. Whenever you mean «one's own», reach for this reflexive pronoun.
 
-Тут лежить ваш квиток.
-Here lies your ticket.
+## Культурний контекст: Етикет та еволюція стосунків (Cultural Context: Etiquette and Relationship Evolution)
 
-Чия це кімната? Це ваша кімната? Ні, це наша.
-Whose room is this? Is this your room? No, it is ours.
+In Ukrainian society, the choice between «тві́й» and «ваш» is about much more than just grammar. It is a direct reflection of social distance and respect. Understanding this distinction is crucial for effective communication and building strong relationships.
 
-Ви будете використовувати ці слова щодня. You will use these words constantly in daily life. When you travel, people will ask for **ваш паспорт** (your passport). When you introduce a colleague to someone, you might say **це наш друг** (this is our friend). You should always look at the noun first, then select the matching possessive form.
+В Україні ми використовуємо «ваш», «ва́ша», «ва́ше». Це формальна ситуація. Це вчителі, лікарі, старші люди. Це також незнайомці.
+Using the formal address shows politeness and cultural awareness. You also use «ваш» whenever you are talking to two or more people at the same time, regardless of how intimately well you know them. 
 
-## Invariable Possessives and Свій
+Діалог в офісі:
+— Добрий ранок, пане Іване.
+— Добрий ранок. Це ваш документ?
+— Так, мій. А де ваша папка?
+— Моя папка тут.
+— Добре. До речі, ми вже довго працюємо разом. Давай на ти?
+— Згоден. Це твоя кава?
+— Так, моя. Дякую!
 
-Тепер у нас є гарні новини.
-Now we have good news.
+Ми використовуємо «тві́й», «твоя́», «твоє́» тільки з близькими людьми. Це друзі, родина та діти.
 
-Деякі слова ніколи не змінюють свою форму.
-Some words never change their form.
+The transition from «ваш» to «тві́й» is a significant cultural milestone in the evolution of Ukrainian relationships. We call this social ritual «перехі́д на ти». It is usually a very deliberate, planned moment. Often, the older person or the person of higher social status will explicitly invite the other person to switch to the informal address. 
+Вони можуть сказати:
+— Дава́й на ти.
+— Зго́ден.
 
-Це слова «його» та «її».
-These are the words «його» and «її».
+Until that clear invitation is extended, it is always much safer to stick with the formal «ваш». It shows that you respect their personal boundaries and value traditional politeness.
 
-Деякі слова ніколи не змінюють свою форму. Some words never change their form. They are invariable. This means **його** (his/its) and **її** (her) stay exactly the same, no matter what object they own. They provide a nice cognitive break for learners! They do not care if the noun is masculine, feminine, or neuter.
+Ось ще один приклад:
+— Вибачте, це ваше місце?
+— Ні, це не моє місце. Моє місце там.
+— Дякую! А чий це квиток?
+— Це її квиток.
 
-| Pronoun | Meaning | Examples |
-|---------|---------|----------|
-| **його** | his / its | його батько, його машина, його місце |
-| **її** | her | її сумка, її паспорт, її робота |
-
-Там стоїть його машина. Вона нова.
-There stands his car. It is new.
-
-Ось її робота. Вона цікава.
-Here is her work. It is interesting.
-
-Це дуже допомагає новачкам. This is incredibly helpful for beginners. Ми говоримо про машину чоловіка (**машина**, feminine). Ми не змінюємо слово **його**. If you want to talk about a man's car (**машина**, feminine), you do not need to alter the word **його**. Воно залишається **його машина**. It remains **його машина**. If you want to talk about a woman's passport (**паспорт**, masculine), it simply remains **її паспорт**. Ви знаєте лише два слова. Вони працюють ідеально. You only need to remember two words, and they work perfectly in every possible situation.
-
-А як сказати «their»? And how to say "their"? For **their**, the standard Ukrainian literary word is **їхній**. It works just like a normal adjective, so it changes its ending based on the noun (**їхній**, **їхня**, **їхнє**, **їхні**).
-
-Їхній будинок великий.
-Their house is big.
-
-Їхня сім’я живе там.
-Their family lives there.
-
-> [!note]
-> Sometimes you might hear people use the word «їх» instead of «їхній» for possession. Using «їх» as a possessive is a Russian influence. To speak clean, standard Ukrainian, you should always use **їхній** (їхній дім, їхня робота) when you mean **their**.
-
-### The Magic Word: Свій
-
-Ukrainian has a special reflexive possessive pronoun: **свій** (one's own). It acts exactly like **мій** and **твій**, changing its form to **своя**, **своє**, and **свої**. We use it when the subject of the sentence owns the object they are interacting with.
-
-Він читає свою книгу.
-He is reading his own book.
-
-Вона любить свій дім.
-She loves her own house.
-
-If you say «Він читає його книгу», it means he is reading someone else's book. To say he is reading his own book, you must use the special word **свою**. The reflexive pronoun helps avoid major confusion in daily conversations. We can imagine you want to say that a colleague is doing his work. If you use the standard possessive, the meaning changes completely. It is a powerful tool for clear communication.
-
-## Cultural Context: Твій vs. Ваш
-
-Вибір між словами «твій» і «ваш» дуже важливий.
-The choice between the words «твій» and «ваш» is very important.
-
-Це показує рівень поваги та дистанцію.
-This shows the level of respect and distance.
-
-In English, **your** covers every situation, whether you are talking to a judge or your best friend. In Ukrainian, social etiquette strictly separates **твій** and **ваш**. Understanding this difference goes far beyond simple grammar; it is about reading the room and respecting the social boundaries that define Ukrainian society. Using the wrong pronoun can make you sound overly familiar and rude, or unnecessarily distant and cold. 
-
-You default to **ваш** when speaking to strangers, colleagues, elders, or anyone you want to show professional respect. You also use it when talking to more than one person. You reserve **твій** only for close friends, family members, children, and animals.
-
-> [!culture]
-> Це велика подія. The transition from **ваш** to **твій** is a major event in Ukrainian friendships. It is called «перехід на ти» (switching to "ty"). It means moving from polite distance to a closer, warmer relationship.
-
-You should never force this transition; it is usually initiated by the older or more senior person. When in doubt, always lean towards the formal option until you are explicitly invited to switch. It marks a beautiful shift from formal acquaintance to genuine connection.
+Цей діалог показує типову ввічливу розмову. Ми використовуємо «ваш» і «ваше» з незнайомими людьми. Це дуже важливо в Україні. Ми на вулиці або у транспорті. Ми завжди кажемо «ваш». Це показує нашу повагу. Наприклад, ми можемо запитати: «Це ваша сумка?» або «Це ваш телефон?». 
 
 ---
 
-## Summary and Self-Check
+## Практика та продукція (Practice and Production)
 
-Сьогодні ми вивчили дуже важливу тему.
-Today we studied a very important topic.
+Let's take a comprehensive moment to review the main rules of possession we have explored today. You have learned a lot of essential grammar!
 
-Ви тепер знаєте, як говорити про речі.
-You now know how to talk about things.
+The absolute golden rule to remember is that most possessive pronouns must match the grammatical gender of the object being owned, not the person who owns it. The object is always the boss in this relationship. Головне правило дуже просте. Предмет — це бос! A masculine object requires a masculine pronoun. A feminine object demands a feminine pronoun. A neuter object takes a neuter pronoun. 
 
-Ми запитуємо: «Чий це телефон?», «Чия це сумка?», «Чиє це місце?».
-We ask: «Whose phone is this?», «Whose bag is this?», «Whose place is this?».
+We learned the core variable pronouns that dynamically change their shape to match their noun partners:
+- Мі́й, моя́, моє́.
+- Тві́й, твоя́, твоє́.
+- Наш, на́ша, на́ше.
+- Ваш, ва́ша, ва́ше.
 
-Головне правило: слово завжди відповідає роду.
-The main rule: the word always matches the gender.
+We also discovered the wonderful invariable pronouns that stay completely frozen and never change, no matter what complicated noun follows them. These are great time-savers that you will learn to love!
+- Його́.
+- Її́.
 
-Тут короткий діалог у бюро знахідок.
-Here is a short dialogue at a lost and found office.
+And we learned the literary standard for «their», which does return to the pattern of changing to match the object:
+- Ї́хній, ї́хня, ї́хнє.
 
-— Добрий день. Чия це сумка?
-— Good afternoon. Whose bag is this?
+Finally, we explored the unique reflexive pronoun сві́й, своя́, своє́, which we use when the owner is the one performing the action in the sentence. This elegant tool keeps our sentences clear and prevents us from accidentally talking about someone else's personal belongings.
 
-— Це моя сумка. Дякую! А чий це телефон?
-— This is my bag. Thank you! And whose phone is this?
+Read this text about the office:
+Привіт! Мене звати Анна. Це мій новий офіс. Мій офіс дуже великий. Тут є мій стіл і моя лампа. Це мій комп'ютер, а це моя клавіатура.
+Там працює мій колега Іван. Це його стіл і його стілець. Його кава завжди тут. А де її папка? Її папка на столі. 
+Це наш директор. Його кабінет там. Наш директор дуже хороший. Це його машина на вулиці.
+А де ваша кімната? Ваша кімната тут. Це ваше вікно і ваші двері. 
+Ми любимо свою роботу. Наша робота дуже цікава!
 
-— Це його телефон.
-— This is his phone.
+Read this dialogue in a cafe:
+— Привіт, Олено! Це твій стіл?
+— Привіт! Ні, це не мій стіл. Наш стіл там.
+— А чия це куртка?
+— Це його куртка.
+— Зрозуміло. А де її кава?
+— Її кава тут.
+— Чудово. Їхній десерт також тут.
 
-Ви бачите: питання і відповідь мають однаковий рід.
-You see: question and answer have the same gender.
+Read the text about the family:
+Це моя сім'я. Моя сім'я велика. Це мій тато і моя мама. Мій тато дуже добрий. Це його машина. Моя мама працює тут. Це її новий кабінет. 
+Там мій брат. Його звати Антон. Це його стіл. А де його сумка? Його сумка там. 
+А це моя сестра. Її звати Олена. Це її новий телефон. 
+Ми дуже любимо наш дім. Наш дім дуже затишний. Тут наша кімната. Це наше вікно. Де ваш собака? Наш собака тут. Це його іграшка.
 
-Practicing these dialogues helps you internalize the grammar rules without overthinking them. You will soon realize that asking and answering these basic questions forms the foundation of almost every practical interaction you will have in Ukrainian.
+Read these phrases:
+— Це мій новий телефон.
+— Де твоя велика сумка?
+— Це його стара машина.
+— Її кімната дуже гарна.
+— Наш дім тут.
+— Ваша адреса там.
+— Їхній собака дуже веселий.
 
-Here are the key takeaways from this module:
-1. **Variable Possessives:** Words like **мій/моя/моє** and **наш/наша/наше** must match the grammatical gender of the object you possess, not your own gender.
-2. **Invariable Possessives:** Words like **його** (his) and **її** (her) never change, regardless of what object is owned.
-3. **The Standard "Their":** Always use **їхній** (**їхня**, **їхнє**) to say **their**. You should avoid the incorrect form «їх».
-4. **Reflexive "Own":** You use **свій/своя/своє** when the subject of the sentence owns the object they are interacting with.
+Before you finish this lesson, try this short self-check. Read the following questions carefully and think deeply about your answers to verify your true understanding of the material.
 
-Ми маємо кілька питань для вас.
-We have a few questions for you.
+1. When a woman wants to say «my passport» (па́спорт is masculine), does she use the feminine pronoun «моя́» because she is female, or the masculine pronoun «мі́й» because the passport is masculine?
+2. What is the fundamental difference in behavior between the pronoun «його́» (his) and the pronoun «мі́й» (my)? Do they both change to match the noun they stand next to?
+3. Why is it strictly considered incorrect to use the short word «їх» to mean «their» in proper standard Ukrainian? What is the correct word you should use instead?
+4. What happens when you switch from using «ваш» to using «тві́й» with a Ukrainian colleague at work? What does this important cultural milestone represent in your evolving relationship?
 
-Ви можете перевірити свої знання.
-You can check your knowledge.
+Keep practicing this grammatical matching game every single day. Look at objects around your room and try claiming them with the correct pronoun. Very soon, matching the genders will feel completely natural and automatic!
 
-1. You are holding a passport (**паспорт**, masculine) belonging to you. How do you say "my passport"?
-2. You want to ask a stranger about their bag (**сумка**, feminine). Do you use «твоя сумка» or «ваша сумка»?
-3. Your friend is pointing to a car (**машина**, feminine) belonging to a man. Do you use «його машина» or «його машин»? Wait, what is the rule for **його**?
-4. How do you say "Whose is this city?" knowing that city (**місто**) is neuter?
+## Підсумок
 
-**Словник:** мій, моя, моє, твій, твоя, твоє, наш, наша, ваш, ваша, його, її, їхній, чий, чия, чиє, чиї, свій, річ, сумка, паспорт.
-
----
+You have learned how possessive pronouns mirror the gender of the object in Ukrainian!

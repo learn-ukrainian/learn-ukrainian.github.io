@@ -1,280 +1,199 @@
 <!-- SCOPE
-Covers: Body parts, expressing pain (У мене болить), doctor/pharmacy dialogues, causal conjunctions (бо, тому що)
+Covers: Basic body parts, expressing pain (болить/болять), describing symptoms, doctor and pharmacy vocabulary.
 Not covered:
-  - Complex medical diagnoses
-  - Emergency vocabulary → a1-62
-Related: a1-30, a1-49
+  - Complex medical conditions and emergencies → emergencies
 -->
 
 # Body & Health
 
 > **Чому це важливо?**
 >
-> Здоров'я — це найважливіша тема для кожної людини. Ми знаходимося в іншій країні. Ми повинні вміти пояснити наші відчуття. Цей урок навчить вас говорити про тіло. Ви зможете описувати симптоми застуди. Ви будете розуміти українських лікарів і фармацевтів.
-
-## Вступ: Частини тіла та народна мудрість
-
-### Основні частини тіла: Голова та тулуб
-
-Ми починаємо вивчати тему здоров'я з базових слів. Кожна людина має тіло. Ми повинні знати його частини. Найважливіша частина тіла — це **голова́**. У центрі нашого тіла знаходиться **живі́т**. Коли ми їмо, їжа потрапляє в живіт. Для розмови або співу ми використовуємо **го́рло**. Ці слова дуже часто звучать у щоденних розмовах.
-
-We begin studying the topic of health with basic words. Every person has a body, and we must know its parts. The most important part of the body is the head (**голова́**). In the center of our body is the stomach (**живі́т**). When we eat, food goes into the stomach. For talking or singing, we use our throat (**го́рло**). These words sound very often in daily conversations.
-
-* Це моя голова. (This is my head.)
-* У мене великий живіт. (I have a big stomach.)
-* Моє горло червоне. (My throat is red.)
-
-### Кінцівки: Руки та ноги
-
-Для руху і роботи ми використовуємо кінцівки. У нас є ліва й права **рука́**. Ми можемо тримати речі в руках або мити руки. Також у нас є ліва й права **нога́**. Ми використовуємо ноги для ходьби пішки. Спортсмени мають дуже сильні ноги. Це важливі слова для опису фізичної активності.
-
-For movement and work, we use our limbs. We have a left and right arm/hand (**рука́**). We can hold things in our hands or wash our hands. We also have a left and right leg/foot (**нога́**). We use our legs for walking on foot. Athletes have very strong legs. These are important words for describing physical activity.
-
-* Це моя права рука. (This is my right hand.)
-* Я мию руки. (I wash my hands.)
-* Його ліва нога дуже сильна. (His left leg is very strong.)
-
-> [!fact] Цікавий факт
-> In Ukrainian, the word **рука** means both «arm» and «hand». We do not use different words for these parts. Similarly, the word **нога** means both «leg» and «foot». The context always helps to understand what exactly we are talking about.
-
-### Особливі пари: Очі та вуха
-
-На нашому обличчі є парні органи. Вони мають особливі форми у множині. Одне **о́ко** допомагає бачити. Але ми маємо два **о́чі**. Одне **ву́хо** допомагає чути. Але ми маємо два **ву́ха**. Ці слова мають дуже давню історію. Їхні форми множини не є стандартними. Тому їх треба просто запам'ятати.
-
-On our face, there are paired organs. They have special forms in the plural. One eye (**о́ко**) helps see. But we have two eyes (**о́чі**). One ear (**ву́хо**) helps hear. But we have two ears (**ву́ха**). These words have a very ancient history. Their plural forms are not standard. Therefore, they just need to be memorized.
-
-| Однина (Singular) | Множина (Plural) | Переклад (Translation) |
-| :--- | :--- | :--- |
-| око | очі | eye / eyes |
-| вухо | вуха | ear / ears |
-
-### Народна мудрість про здоров'я
-
-Українська культура має багато прислів'їв про здоров'я. Одне з найвідоміших прислів'їв звучить дуже цікаво. У здоровому тілі — здоровий дух. Ця фраза означає такий факт. Фізичний стан впливає на емоції. Вчителі часто кажуть цю фразу дітям у школі. Також тренери використовують її під час спортивних занять. Слово **здоро́вий** тут є ключовим.
-
-Ukrainian culture has many proverbs about health. One of the most famous proverbs sounds very interesting: «In a healthy body, a healthy spirit». This phrase means such a fact. A physical condition affects emotions. Teachers often say this phrase to children at school. Coaches also use it during sports classes. The word healthy (**здоро́вий**) is key here.
-
-> [!quote] Українське прислів'я
-> «У здоровому тілі — здоровий дух».
-> (In a healthy body, a healthy spirit.)
-
-### Де це знаходиться? (Місцевий відмінок)
-
-Ми вже вивчали дуже корисне питання «де?». Для опису місця ми використовуємо прийменник «на». Ми також додаємо місцевий відмінок. Наприклад, теплий капелюх є тут. Новий годинник є на руці. Мої черевики є на ногах. Ми змінюємо закінчення цих коротких слів. Це правило допомагає описувати розташування речей.
-
-We have already studied the very useful question «where?» («де?»). For describing a place, we use the preposition «на». We also add the Locative case. For example, a warm hat is here («тут»). A new watch is on the arm («на руці»). My shoes are on the feet («на ногах»). We change the endings of these short words. This rule helps describe the location of things.
-
-* Голова → тут (here)
-* Рука → на руці (on the hand/arm)
-* Нога → на нозі (on the foot/leg)
-* Живіт → на животі (on the stomach)
-
-## Презентація: Як ми говоримо про біль
-
-### Конструкція «У мене болить»
-
-Коли ми відчуваємо біль, ми використовуємо спеціальну конструкцію. Ми часто говоримо фразу: «У мене **боли́ть**». Після цієї фрази ми ставимо слово у називному відмінку. Це слово показує проблемну частину тіла. Ця структура дуже відрізняється від англійської мови. В Україні не людина є суб'єктом. Сама частина тіла є головним словом. Вона ніби сама виконує цю дію.
-
-When we feel pain, we use a special construction. We often say the phrase: «I have a pain in...» («У мене болить»). After this phrase, we put the word in the Nominative case. This word shows the problematic body part. This structure is very different from English. In Ukrainian, the person is not the subject. The body part itself is the main word. It acts as if it is performing this action itself.
-
-* У мене болить голова. (My head hurts. / I have a headache.)
-* У мене болить живіт. (My stomach hurts. / I have a stomach ache.)
-* У мене болить горло. (My throat hurts. / I have a sore throat.)
-
-> [!tip] Як це працює
-> Think of «У мене болить голова» literally as «At me, the head is hurting». The head («голова») is the subject of the sentence, and the verb hurts («болить») agrees with it.
-
-### Узгодження числа: Болить чи болять?
-
-Оскільки частина тіла є головним словом, дієслово змінюється. Воно повинно повністю узгоджуватися з цим словом. Одна частина тіла вимагає слово «болить». Дві частини вимагають форму «болять». Це логічне і дуже важливе правило граматики. Ми повинні уважно слухати всі закінчення слів.
-
-Since the body part is the main word, the verb changes. It must fully agree with this word. One body part requires the word «болить» (hurts - singular). Two parts require the form «болять» (hurt - plural). This is a logical and very important grammar rule. We must listen carefully to all word endings.
-
-| Однина (Singular Subject) | Множина (Plural Subject) |
-| :--- | :--- |
-| У мене **болить** рука. (My arm hurts.) | У мене **болять** руки. (My arms hurt.) |
-| У мене **болить** нога. (My leg hurts.) | У мене **болять** ноги. (My legs hurt.) |
-| У мене **болить** око. (My eye hurts.) | У мене **болять** очі. (My eyes hurt.) |
-
-> [!warning] Поширена помилка
-> Learners often say: «У мене болять голова». This is **incorrect**! The word «голова» is singular, so the verb must be singular too.
-> ❌ У мене болять голова.
-> ✅ У мене болить голова.
-
-### Вираження стану: Мені погано
-
-Часто у нас нічого конкретно не болить. Але ми відчуваємо загальну слабкість організму. У таких випадках ми використовуємо короткі слова у давальному відмінку. Ми кажемо: «Мені погано» або «Мені добре». Коротке слово «мені» означає «to me». Цей стан є повністю безособовим. Ця конструкція є базовою для опису здоров'я.
-
-Often nothing specifically hurts. But we feel a general weakness of the body. In such cases, we use short words in the Dative case. We say: «I feel bad» («Мені погано») or «I feel good» («Мені добре»). The short word «мені» means «to me». This state is completely impersonal. This construction is basic for describing health.
-
-| Особа (Person) | Стан (State) | Переклад (Translation) |
-| :--- | :--- | :--- |
-| Я → **мені** | Мені погано. | I feel bad. |
-| Ти → **тобі** | Тобі погано? | Do you feel bad? |
-| Він → **йому** | Йому погано? | Does he feel bad? |
-| Вона → **їй** | Їй погано? | Does she feel bad? |
-
-> [!myth-buster] Я погано?
-> Never translate «I am unwell» literally as «Я погано». In Ukrainian, «я» (I) cannot be used with adverbs of state like «погано» (bad) or «добре» (good). Always use the Dative case: «Мені погано».
-
-### Основні симптоми застуди
-
-Хвора людина має різні симптоми. Дуже частий симптом — це висока **температу́ра**. Гаряче тіло означає високу температуру. Ми повинні міряти температуру. Інший неприємний симптом — це сильний **ка́шель**. Такий кашель часто заважає спати вночі. Також люди часто мають нежить. Тоді буває важко дихати носом. Ми повинні знати ці слова для опису проблеми.
-
-A sick person has various symptoms. A very frequent symptom is a high fever (**температу́ра**). A hot body means a high temperature. We must measure the temperature («міряти температуру»). Another unpleasant symptom is a strong cough (**ка́шель**). Such a cough often prevents sleeping at night. Also, people often have a runny nose («нежить»). Then it can be hard to breathe through the nose. We must know these words to describe the problem.
-
-* У мене температура. (I have a fever.)
-* У нього сильний кашель. (He has a bad cough.)
-* Я маю нежить. (I have a runny nose.)
-
-### Траволікування та домашні засоби
-
-Українці мають давню традицію траволікування. Коли з'являються перші симптоми, ми не відразу п'ємо таблетки. Часто ми просто робимо гарячий чай. Один з найкращих засобів — це малиновий чай. **Мали́на** має багато вітамінів і допомагає знизити температуру. Також ми п'ємо калиновий чай або додаємо мед. Це дуже старовинний, смачний і корисний рецепт.
-
-Ukrainians have an ancient tradition of phytotherapy («траволікування»). When the first symptoms appear, we do not immediately take pills. Often we just make hot tea. One of the best remedies is raspberry tea. Raspberry (**мали́на**) has many vitamins and helps lower the fever. We also drink viburnum tea («калиновий чай») or add honey («мед»). This is a very ancient, tasty, and healthy recipe.
-
-> [!culture] Народна медицина
-> In Ukraine, drinking raspberry tea or eating **мед** (honey) is the first line of defense against a cold. It is a comforting cultural ritual before seeking formal medical help.
-
-### Біль чи захворювання? Різні слова
-
-Українці мають коротке слово «біль». Воно означає загальне фізичне страждання. Наприклад, ми часто кажемо фразу «головний біль». Це слово є звичайним іменником. Для опису дії ми використовуємо дієслово «болить». Це дві різні частини мови. Коли ви в аптеці, ви просите ліки від болю. Але у лікарні ви кажете про ваш біль. Важливо розуміти цю головну різницю.
-
-In Ukrainian, we have the short word pain («біль»). It means general physical suffering. For example, we often say the phrase headache («головний біль»). This word is a regular noun. But when we describe an action, we use the verb hurts («болить»). These are two different parts of speech. When you are in the pharmacy, you ask for medicine for pain. But in the hospital, you say about your pain. It is important to understand this basic grammatical difference.
-
-* Я маю сильний головний біль. (I have a bad headache.)
-* У мене сильно болить голова. (My head hurts badly.)
-
-## Діалог: У лікаря та в аптеці
-
-### Лікар чи лікарня? Куди ми йдемо
-
-Хвора людина шукає допомогу. Ми йдемо до фахівця, якого називають **лі́кар**. Більшість людей в Україні має свого сімейного лікаря. Місце, де працюють медики, називається лікарня. Дуже важливо розуміти різницю між людиною і місцем. Від цього повністю залежить граматика. Ми йдемо до людини, але ми йдемо в місце.
-
-When we are sick, professional help is needed. We go to a specialist who is called a doctor (**лі́кар**). Most people in Ukraine have their own family doctor («сімейний лікар»). The place where medics work is called a hospital («лікарня»). It is very important to understand the difference between a person and a place. The grammar completely depends on this. We go TO a person, but we go INTO a place.
-
-* Я йду **до лікаря**. (I am going to the doctor.)
-* Я йду **в лікарню**. (I am going to the hospital.)
-
-> [!warning] Важливий напрямок
-> Do not say ❌ «Я йду в лікар». You cannot go «inside» a doctor. Because the doctor is a person, we use the preposition **до** + Genitive case: ✅ «Я йду до лікаря».
-
-### Візит до лікаря: Що вас турбує?
-
-Коли пацієнт приходить у лікарню, він іде в реєстратуру. Там він швидко отримує свою медичну картку. Потім він чекає біля кабінету свого лікаря. Зазвичай там є невелика черга. Люди просто сидять і чекають. Коли підходить ваша черга, ви заходите в кабінет. Під час візиту лікар зазвичай ставить запитання. Одне з найголовніших запитань: «Що вас турбує?». Це означає вашу проблему. Пацієнт повинен детально описати свої симптоми. Лікар уважно слухає, оглядає горло і міряє температуру. Після цього фахівець виписує рецепт.
-
-When a patient comes to the hospital, they go to the registry. There they quickly receive their medical card. Then they wait near their doctor's office. Usually, there is a small queue there. People just sit and wait. When your turn comes, you enter the office. During the visit, the doctor usually asks questions. One of the most important questions is: «What bothers you?» («Що вас турбує?»). This means your problem. The patient must describe their symptoms in detail. The doctor listens carefully, examines the throat, and measures the temperature. After this, the specialist writes a prescription.
-
-### Як знайти аптеку в Україні
-
-Після візиту до лікаря потрібно купити медикаменти. Ми йдемо у спеціальний медичний магазин. Цей популярний магазин називається **апте́ка**. На вулицях міст дуже легко знайти аптеку. Її універсальний символ — це великий зелений хрест. Він дуже яскраво світиться вночі. Часом ми бачимо напис «Аптечний пункт». Це маленька аптека всередині іншого великого будинку. Вона може бути в супермаркеті або в самій лікарні. Там можна зручно купити прості ліки.
-
-After visiting the doctor, it is necessary to buy medications. We go to a special medical store. This popular store is called a pharmacy (**апте́ка**). On cities streets, it is very easy to find a pharmacy. Its universal symbol is a large green cross. It glows very brightly at night. Sometimes we see the sign «Аптечний пункт». This is a small pharmacy inside another large building. It can be in a supermarket or in the hospital itself. You can conveniently buy basic medicines there.
-
-> [!context] Зелений хрест
-> The green cross is the universal sign for an **аптека** in Ukraine. Whether you are in a big city like Kyiv or a small village, look for the illuminated green cross if you need medicine.
-
-### Як купити ліки
-
-В аптеці ми зазвичай купуємо **лі́ки**. Зверніть увагу, що це слово має тільки форму множини. Для прохання ми використовуємо ввічливу фразу. Ми кажемо: «Дайте, будь ласка, ліки від...». Далі ми додаємо назву проблеми у родовому відмінку. Деякі медикаменти ми можемо купити абсолютно вільно. Це звичайні ліки без рецепту. Інші препарати продають. Вони мають офіційний рецепт. **Реце́пт** — це важливий офіційний документ від вашого лікаря. Фармацевт в аптеці також може допомогти. Ви не маєте рецепта. Опишіть свої симптоми. Фармацевт знає медикаменти і може порадити найкращий варіант. Але фармацевт — це не лікар. Він не може ставити точний діагноз. Тому для серйозних проблем завжди треба йти в лікарню.
-
-In the pharmacy, we usually buy medicine (**лі́ки**). Note that this word only has a plural form. For a request, we use a polite phrase. We say: «Give me, please, medicine for...» («Дайте, будь ласка, ліки від...»). Then we add the name of the problem in the Genitive case. We can buy some medications absolutely freely. These are regular medicines without a prescription («без рецепту»). Other drugs are sold. They have an official prescription. A prescription (**реце́пт**) is an important official document from your doctor. The pharmacist in the pharmacy can also help. If you do not have a prescription, describe your symptoms. The pharmacist knows the medications and can advise the best option. But remember that a pharmacist is not a doctor. They cannot give an exact diagnosis. Therefore, for serious problems, you must always go to the hospital.
-
-* Дайте, будь ласка, ліки від кашлю. (Give me, please, medicine for a cough.)
-* Дайте, будь ласка, ліки від головного болю. (Give me, please, medicine for a headache.)
-* Ці ліки мають рецепт? (Do these medicines have a prescription?)
-
-## Практика: Пояснення причин
-
-### Сполучники «бо» та «тому що»
-
-У щоденному житті ми часто пояснюємо різні речі. Наприклад, чому ми не прийшли сьогодні на роботу. Для цього ми активно використовуємо складні речення. Ми об'єднуємо дві частини за допомогою коротких слів. Ми використовуємо сполучники «бо» або «тому що». Вони мають абсолютно однакове граматичне значення. Слово «бо» є дуже популярним. Фраза «тому що» є трохи більш офіційною.
-
-In daily life, we often explain various things. For example, why we didn't come to work today. For this, we actively use complex sentences. We join two parts using short words. We use the conjunctions «бо» (because) or «тому що» (because). They have the exact same grammatical meaning. The word «бо» is very popular in spoken language. The phrase «тому що» is slightly more formal.
-
-* Я не йду на роботу, **бо** маю кашель. (I am not going to work because I have a cough.)
-* Ми п'ємо чай, **тому що** у нас болить горло. (We are drinking tea because our throat hurts.)
-* Він іде в аптеку, **бо** йому потрібні ліки. (He is going to the pharmacy because he needs medicine.)
-
-### Стан чи процес: Хворий проти хворіти
-
-Дуже важливо розрізняти тимчасовий стан людини та довготривалий процес. Слово **хво́рий** описує стан людини. Він описує фізичний стан людини прямо зараз. Наприклад, ми кажемо: «Сьогодні він хворий». Але у нас також є дієслово **хворі́ти**. Воно показує регулярний процес або певну тенденцію. Наприклад, ми кажемо: «Взимку він часто хворіє». Це дві різні і дуже важливі граматичні категорії. Вони описують різні аспекти нашого життя.
-
-It is very important to distinguish a person's temporary state and a long-term process. The word sick (**хво́рий**) describes a person's state. It describes a person's physical state right now. For example, we say: «Today he is sick» («Сьогодні він хворий»). But we also have the verb to get sick / to be sick (**хворі́ти**). It shows a regular process or a certain tendency. For example, we say: «In winter, he often gets sick» («Взимку він часто хворіє»). These are two different and very important grammatical categories. They describe different aspects of our life.
-
-* Я сьогодні **хворий**. (I am sick today.)
-* Моя дитина рідко **хворіє**. (My child rarely gets sick.)
-
-> [!note] Форма змінюється
-> Remember that the word **хворий** changes by gender:
-> Він хворий. (He is sick - masculine)
-> Вона хвора. (She is sick - feminine)
-> Вони хворі. (They are sick - plural)
-
-### Поширена помилка: Мені болить
-
-Ми вже детально вивчали фразу «У мене болить». Це найкращий і найправильніший спосіб сказати про біль. Але часом українці кажуть «Мені болить». Ця форма є допустимою, але вона має емоційний відтінок. Вона набагато більше підходить для сильного душевного болю. Проте, ніколи не можна казати фразу «Я болю». Людина не може бути джерелом болю у такій конструкції.
-
-We have already studied the phrase «У мене болить» in detail. This is the best and most correct way to talk about pain. But sometimes Ukrainians in spoken language say «Мені болить». This form is acceptable, but it has an emotional nuance. It is much more suitable for strong mental or emotional pain. However, you must never say the phrase «Я болю». A person cannot be the source of pain in such a construction.
-
-> [!warning] Я болю?
-> The verb **боліти** means «to radiate pain». If you say ❌ «Я болю», it literally means «I am radiating pain onto others». Always use ✅ «У мене болить» or ✅ «Мені болить».
-
-### Ситуації з життя: Два діалоги
-
-Тепер подивімося на дві різні життєві ситуації. Перша ситуація — це звичайна розмова друзів по телефону. Вона є неформальною, дружньою і дуже щирою. Друга ситуація — це серйозна розмова в реєстратурі лікарні. Вона є формальною і потребує дуже офіційних фраз. Зверніть увагу на велику різницю у загальному тоні.
-
-Now let's look at two different life situations. The first situation is a regular phone conversation between friends. It is informal, friendly, and very sincere. The second situation is a serious conversation at the hospital registry. It is formal and requires very official phrases. Pay attention to the big difference in the general tone.
-
-*Діалог 1: Неформальна розмова*
-— Привіт! Ти йдеш сьогодні у кіно?
-(Hi! Are you going to the cinema today?)
-— Привіт. Ні, я не йду. Я маю температуру.
-(Hi. No, I am not going, because I have a fever.)
-— Що сталося?
-(What happened?)
-— У мене температура і болить голова.
-(I have a fever and a headache.)
-— Тобі треба пити малиновий чай. Одужуй!
-(You need to drink raspberry tea. Get well!)
-
-*Діалог 2: Офіційна розмова*
-— Добрий день. Мені потрібен лікар.
-(Good afternoon. I need a doctor.)
-— Добрий день. Що вас турбує?
-(Good afternoon. What bothers you?)
-— Мені погано. У мене сильний кашель.
-(I feel bad. I have a bad cough.)
-— Ваш сімейний лікар приймає о другій годині.
-(Your family doctor is receiving at two o'clock.)
-— Дякую. А де тут аптека?
-(Thank you. And where is the pharmacy here?)
-— Аптека на першому поверсі.
-(The pharmacy is on the first floor.)
-
-### Коли ми здорові
-
-Ми говорили дуже багато про хвороби та біль. Але важливо також вміти сказати про хороший стан. Ви повністю одужали. Ви можете сказати приємну фразу. Ви кажете: «Я здоровий» або «Я здорова». Це завжди дуже чудове і радісне відчуття. Також ми можемо сказати фразу «Мені дуже добре». Або ми кажемо: «У мене зовсім нічого не болить». Українці дуже часто щиро бажають одне одному здоров'я. Наприклад, ми часто кажемо фразу «Будьте здорові!». Ми кажемо це після чхання поруч. Або ми використовуємо це просто як хороше побажання.
-
-We talked a lot about illnesses and pain. But it is also important to be able to express a good state of health. If you have completely recovered, you can say a pleasant phrase. You say: «I am healthy» (**здоро́вий** / здорова). This is always a very wonderful and joyful feeling. We can also say the phrase «I feel very good» («Мені дуже добре»). Or we say: «Absolutely nothing hurts me» («У мене зовсім нічого не болить»). Ukrainians very often sincerely wish each other health. For example, we often say the phrase «Be healthy!» («Будьте здорові!»). We say this when someone sneezes near us. Or we use it simply as a good wish.
-
-* Я почуваюся добре. Я здоровий. (I feel good. I am healthy.)
-* Будьте здорові і не хворійте! (Be healthy and do not get sick!)
-
----
-
-# Підсумок
-
-У цьому модулі ми вивчили багато дуже важливих слів і граматичних правил. Тепер ви чудово знаєте основні частини тіла: голова, рука, нога, живіт, очі та вуха. Ви вмієте правильно використовувати особливу конструкцію «У мене болить». Ви вмієте правильно узгоджувати її. Також ви можете вільно розповісти про загальні симптоми застуди. Це сильний кашель і висока температура. Ви розумієте різницю між лікарем і лікарнею. Ви готові пояснити свої причини. Ви використовуєте слова «бо» та «тому що».
-
-In this module, we learned many very important words and grammar rules. Now you perfectly know the main body parts: head, arm, leg, stomach, eyes, and ears. You know how to correctly use the special construction «У мене болить». You know how to correctly agree it. You can also freely talk about general cold symptoms. It is a bad cough and a high fever. You understand the difference between a doctor and a hospital. You are ready to explain your reasons. You use the words «бо» and «тому що».
-
-**Перевірте себе:**
-1. Як сказати українською «I have a headache»? Яке слово є головним суб'єктом у цьому реченні?
-2. Яка точна граматична різниця між фразами «У мене болить рука» та «У мене болять руки»?
-3. Чому абсолютно неправильно говорити «Я йду в лікар» і як сказати це граматично правильно?
-4. Яка різниця між словами «хворий» (стан) та «хворіти» (дія)?
-5. Який традиційний гарячий напій найчастіше п'ють українці при перших симптомах застуди?
-6. Як правильно сказати «I feel bad» без використання слова «Я»?
-
----
+> Knowing how to describe what hurts is essential for your well-being in any language. This lesson gives you the tools to visit a doctor or pharmacy in Ukraine confidently. You will learn the unique Ukrainian logic for expressing physical pain.
+
+## Вступ: Частини тіла (Introduction: Body Parts)
+
+Вітаю на нашому новому уроці! Welcome to our new lesson!
+Сьогодні ми говоримо про здоров'я. Today we are talking about health.
+Це дуже важлива тема для всіх. This is a very important topic for everyone.
+Let's learn the basic body parts.
+Look at these new words very carefully.
+
+| Українською | In English |
+|-------------|------------|
+| **голова́** | head |
+| **рука́** | arm or hand |
+| **нога́** | leg or foot |
+| **живі́т** | stomach |
+| **го́рло** | throat |
+
+Pay attention to the singular and plural forms.
+Деякі слова дуже сильно змінюються. Some words change very strongly.
+Це так звані візуальні пари. These are so-called visual pairs.
+
+| Однина (Singular) | Множина (Plural) | In English |
+|-------------------|------------------|------------|
+| **о́ко** | **о́чі** | eye, eyes |
+| **ву́хо** | **ву́ха** | ear, ears |
+| **рука́** | **ру́ки** | hand, hands |
+| **нога́** | **но́ги** | leg, legs |
+
+> [!tip]
+> Note that **о́ко** (eye) and **ву́хо** (ear) completely change their letters in the plural form to **о́чі** and **ву́ха**. Just memorize these visual pairs!
+
+Українці часто кажуть гарну стару приказку. Ukrainians often say a beautiful old proverb.
+«У здоро́вому ті́лі — здоро́вий дух». «In a healthy body, a healthy spirit».
+Фізичне здоров'я дуже важливе. This means that physical health is very important.
+
+> [!culture]
+> You will hear the phrase «У здоро́вому ті́лі — здоро́вий дух» often. It is widely used in schools and sports clubs across the country to encourage an active lifestyle.
+
+Let's learn some useful adjectives.
+Це дуже важливі слова сьогодні. These are very important words today.
+Use them to describe body parts.
+
+Моя́ голова́ вели́ка. My head is big.
+Моя́ рука́ чи́ста. My hand is clean.
+Мій живі́т по́вний. My stomach is full.
+
+Українці також кажуть: пра́ва рука́ і лі́ва рука́. Ukrainians also say: right hand and left hand.
+Люди часто ми́ють ру́ки вдома. People often wash their hands at home.
+Діти багато йду́ть пі́шки до школи. Children walk a lot on foot to school.
+Що ви маєте в рука́х? What do you have in your hands?
+Я трима́ю телефо́н у руці. I am holding a phone in my hand.
+Ва́ші ру́ки чи́сті. Your hands are clean.
+Read these phrases slowly and out loud.
+
+## Презентація: Як ми говоримо про біль (Presentation: Expressing Pain)
+
+Як описати сильний біль? How to say that you are in a lot of pain?
+Українська логіка тут зовсім інша. The Ukrainian logic here is completely different.
+Ми кажемо: «У ме́не боли́ть...» We say: «At me hurts...»
+Тут частина тіла є головною. This means the body part is the main thing.
+Частина тіла сама робить дію. The body part does the action itself.
+
+У ме́не боли́ть голова́. I have a headache.
+У бра́та боли́ть живі́т. The brother has a stomachache.
+У сестри́ боли́ть го́рло. The sister's throat hurts.
+
+Для кількох частин тіла ми змінюємо слово. If several body parts hurt, we change the word.
+Use the form «boliat».
+Це форма множини для слова. This is the plural form for the word.
+
+У ме́не боля́ть о́чі. My eyes hurt.
+У бра́та боля́ть ру́ки. The brother's hands hurt.
+У сестри́ боля́ть но́ги. The sister's legs hurt.
+У мого́ бра́та боли́ть спи́на. My brother's back hurts.
+У моє́ї ма́ми боля́ть ву́ха. My mother's ears hurt.
+
+> [!warning]
+> The most common mistake English speakers make is saying «У мене болять голова». Remember, you are not doing the hurting! The head is doing the hurting, so the word must be singular: **боли́ть**.
+
+Як описати інші неприємні симптоми? How to describe other unpleasant symptoms?
+Ось нові важливі слова для вас. Here are new important words for you.
+
+У ме́не температу́ра. I have a fever.
+Брат має ка́шель. The brother has a cough.
+Сестра має не́жить. The sister has a runny nose.
+У мами си́льний головни́й біль. Mom has a bad headache.
+
+Треба постійно мі́ряти температу́ру. It is necessary to constantly measure the temperature.
+У вас дуже висо́ка температу́ра. You have a very high fever.
+
+Як ви почуваєтеся загалом сьогодні? How do you feel overall today?
+Для цього ми використовуємо спеціальні конструкції. For this, we use special constructions.
+Ме́ні пога́но. I feel bad.
+Ме́ні до́бре. I feel good.
+Ме́ні кра́ще. I feel better.
+
+> [!warning]
+> Never say «Я погано»! This translates literally as «I am a bad person.» Always use the pronoun **мені** to express how you are feeling physically: **Мені погано**.
+
+Як українці лікують хвороби? How do Ukrainians treat illnesses?
+Люди люблять традиційні методи. People love traditional methods.
+Це називається траволікува́ння. This is called phytotherapy.
+Хворі п'ю́ть гаря́чий чай і їдя́ть мали́ну. Sick people drink hot tea and eat raspberry.
+Кали́на також дуже популярна. Viburnum is also very popular.
+Бабусі додаю́ть солодкий мед у чай. Grandmothers add sweet honey to the tea.
+Це дуже допомагає від ка́шлю і го́рла. This helps a lot against a cough and throat.
+Always listen to your body carefully.
+Drink medicine and rest a lot.
+Це дуже важливо для вашого здоров'я. This is very important for your health.
+
+## Практика: У лікаря та в аптеці (Practice: At the Doctor's and Pharmacy)
+
+Коли людина хвора, треба йти до лі́каря. When a person is sick, you need to go to the doctor.
+В Україні ми маємо сіме́йного лі́каря. In Ukraine, we have a family doctor.
+Цей лікар знає всю вашу історію хвороб. This doctor knows all your medical history.
+
+Pay attention to the big difference.
+Лі́кар — це кваліфікована людина. A doctor is a qualified person.
+Ліка́рня — це велике медичне місце. A hospital is a large medical place.
+
+Я йду до сімейного лі́каря. I am going to the family doctor.
+Я їду в центральну ліка́рню. I am driving to the central hospital.
+
+> [!tip]
+> Do not mix up the person and the building! «Я йду в лікар» is incorrect because you cannot go inside a doctor. You go to see a doctor (**до лікаря**) or inside a hospital (**в лікарню**).
+
+Let's read a typical dialogue.
+Imagine that you are in the doctor's office.
+Лікар уважно дивиться і питає вас. The doctor looks carefully and asks you.
+
+— До́брий день! Що вас турбу́є? Good afternoon! What bothers you?
+— До́брий день! Ме́ні дуже пога́но. Good afternoon! I feel very bad.
+— Що саме у вас боли́ть? What exactly hurts you?
+— У ме́не сильно боли́ть го́рло і голова́. My throat and head hurt strongly.
+— У вас є зараз температу́ра? Do you have a fever right now?
+— Так, у ме́не висо́ка температу́ра. Yes, I have a high fever.
+
+Лікар пи́ше реце́пт. The doctor writes a prescription.
+Тоді ви йдете прямо в апте́ку. Then you go straight to the pharmacy.
+Як швидко знайти найближчу аптеку? How to quickly find the nearest pharmacy?
+Look for a big green cross on the street.
+
+В аптеці ви можете сказати так. At the pharmacy, you can say this.
+У вас є лі́ки від ка́шлю? Do you have medicine for a cough?
+У вас є лі́ки від головно́го бо́лю? Do you have medicine for a headache?
+
+Фармацевти продають сильні ліки. Pharmacists sell strong medicines.
+Для цього потрібен реце́пт. For this, a prescription is needed.
+Інші прості ліки можна купувати без реце́пту. Other simple medicines can be bought without a prescription.
+Лі́ки — це унікальне слово тільки у множині. Medicine is a unique plural-only word.
+Пацієнти кажуть: я п'ю свої лі́ки. Patients say: I drink my medicine.
+
+Ці корисні фрази обов'язково допоможуть. These useful phrases will definitely help.
+Always listen to the doctor and drink hot tea.
+
+## Підсумок: Причини та самоперевірка (Summary: Causes and Self-Check)
+
+Як правильно пояснити ситуацію? How to correctly explain the situation?
+Тут допомагає дуже просте слово. A very simple word helps here.
+Це мале слово — «тому́». This small word is «therefore».
+Воно добре пояснює результат. It explains the result well.
+
+Я хво́рий. Тому́ я сиджу вдо́ма. I am sick. Therefore I sit at home.
+У не́ї температу́ра. Тому́ вона́ не працю́є. She has a fever. Therefore she does not work.
+У ньо́го ка́шель. Тому́ він п'є лі́ки. He has a cough. Therefore he drinks medicine.
+У дитини болить живіт. Тому́ вона плаче. The child's stomach hurts. Therefore she cries.
+
+Pay attention to one important difference.
+Хво́рий — це ваш фізичний стан зараз. Sick is your physical state right now.
+Він хво́рий і лежи́ть у своєму лі́жку. He is sick and lying in his bed.
+Хворі́ти — це тривалий процес. To be ill is a long process.
+Він ча́сто хворі́є взимку на застуду. He often gets ill with a cold in winter.
+
+> [!warning]
+> Students sometimes try to translate «I hurt» literally and say «Я болю», but this means «I cause pain to someone»! Always stick to «Мені болить» to express that something hurts you.
+
+Час перевірити ваші нові знання. Time to check your new knowledge.
+Give the correct answers to these questions.
+
+1. Як сказати українською «My head hurts»? How do you say «My head hurts» in Ukrainian?
+2. Яке правильне слово ми використовуємо для «eyes»? Which correct word do we use for «eyes»?
+3. Як українці традиційно лікують застуду вдома? How do Ukrainians traditionally treat a cold at home?
+4. Що точно означає фраза «Мені погано»? What exactly does the phrase «I feel bad» mean?
+5. Яке слово описує високу температуру? Which word describes a high fever?
+
+Ви сьогодні великі молодці! You are doing great today!
+Здоров'я — це найголовніше в житті людини. Health is the most important thing in a person's life.
+Take care of yourself and do not get sick ever!

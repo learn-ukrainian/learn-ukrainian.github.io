@@ -1,32 +1,61 @@
 # Дослідження: Imperative and Requests
 
 ## State Standard Reference
-§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте), прочитати (прочитай, прочитайте), сказати (скажи, скажіть), дати (дай, дайте), писати (пиши, пишіть), написати (напиши, напишіть), сідати (сідай, сідайте), сидіти (сиди, сидіть)."
-Alignment: The module precisely targets the A1 requirement by teaching the 2nd person singular and plural imperative forms of essential verbs.
+§4.2.4.2: "Imperative mood — 2nd person only at A1"
+Alignment: Focuses exclusively on the allowed 2nd person singular ("ти") and plural/formal ("ви") imperative forms, satisfying A1 requirements while strictly avoiding 1st person plural or 3rd person forms.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| сказати | High (Top 20 verbs) | Скажіть, будь ласка... |
-| дати | High (Top 20 verbs) | Дайте, будь ласка... |
-| іти | High | Ідіть сюди, іди туди |
-| читати | Medium-High (Classroom) | Читайте текст |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| читати/читай | Regular vowel stem, core classroom verb | Читайте текст |
+| писати/пиши | Present stem mutation (с→ш), core classroom | Пишіть у зошиті |
+| сказати/скажи | Irregular mutation (к→ж) | Скажіть, будь ласка |
+| дати/дай | Irregular short form | Дайте, будь ласка |
 
 ## Cultural Hooks
-1. **The Politeness of "Будь ласка"**: In Ukrainian, the imperative mood combined with "будь ласка" is the standard, culturally appropriate way to make a polite request. It does not sound harsh or bossy, unlike direct commands in some other languages.
-2. **Flexible Syntax**: The phrase "будь ласка" can naturally float within the sentence (beginning, middle, or end) without changing the core meaning, showcasing the fluidity of Ukrainian word order.
+1. Using direct imperatives is much more common and socially acceptable in Ukrainian than in English, where it often sounds "bossy". It is the standard, natural way to give instructions.
+2. The literal translation of "будь ласка" comes from "будьте ласкаві" (be kind), showing how politeness is deeply built into the language itself.
 
 ## Common Learner Errors
-1. Infinitive instead of Imperative → *Читати текст!* instead of *Читай текст!* — Learners often translate "to read" as a command directly, but infinitives are for impersonal signs, not personal requests.
-2. Incorrect stem extraction → *Пис!* instead of *Пиши!* — Learners simply drop "-ати" without applying the consonant stem suffix "-и".
-3. Overusing "Ти" → Using *Дай!* with strangers — Failing to apply the "-те/-іть" suffix for the polite/plural "Ви" form in service contexts.
+1. Confusing infinitive with imperative ("Читати!" vs "Читай!") → "Читай!" — Infinitives are mostly used for impersonal public signs, while personal commands require the imperative.
+2. Over-regularizing irregular stems (e.g., *дайи instead of дай, *сказай instead of скажи) → Required verbs with mutations must be memorized as set forms early on.
 
 ## Cross-References
 - Builds on: a1-46 (Must and Want)
 - Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
 
 ## Notes for Content Writing
-- Module is in A1.5 (Immersion: 35-40%). Ensure English scaffolding is explicitly provided for the grammatical theory of the imperative mood.
-- Frame the Ukrainian imperative positively: it is an efficient and polite way to communicate when paired with appropriate softeners.
-- Ensure vocabulary hints do not use Russianisms.
-- Keep phonetic explanations of consonant mutations (к→ж) very simple and focused on pattern recognition rather than deep phonology.
+- Stick strictly to the 2nd person imperative. Do not introduce "хай/нехай" or "давай" (these belong to A2).
+- Reassure learners that using imperatives does not make them sound rude in Ukrainian.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Birthday presents + Imperative mood in Ukrainian](https://www.ukrainianlessons.com/episode111/) (ukrainianlessons.com)
+- [How to cook varenyky + Imperative mood of the second person plural](https://www.ukrainianlessons.com/episode112/) (ukrainianlessons.com)
+- [Ukrainian traditional embroidery masterclass + More about the Imperative mood in Ukrainian](https://www.ukrainianlessons.com/episode113/) (ukrainianlessons.com)
+- [How to make pysanky + Imperative mood of the verbs in the first person plural (Let’s…)](https://www.ukrainianlessons.com/episode114/) (ukrainianlessons.com)
+- [Ukrainian Phrasebook: Needs](https://www.ukrainianlessons.com/ph-needs/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 6, Сторінка 218: § 101–102.	 Творення дієслів наказового способу
+A felszólító módú igealakok képzése
+Наказовий спосіб...
+- Grade 11, Сторінка 55: 55
+Наказовий спосіб дієслова
+У формі 2-ї особи множини паралельно із закінченням -іть можна вживати ...
+- Grade 7, Сторінка 80: 77
+Зауважте!
+Дієслова умовного та наказового способу, на відміну від дійсного, не ма-
+ють часових фо...
+- Grade 6, Сторінка 216: § 100.	
+Способи дієслів (дійсний, умовний, 
+наказовий). Творення дієслів умовного 
+способу
+Az igemód...
+- Grade 11, Сторінка 46: Морфологічна норма
+46
+ § 9 
+Паралельні форми вираження наказового 
+ способу дієслів І та ІІ особи мн...

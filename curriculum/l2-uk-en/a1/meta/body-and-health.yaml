@@ -2,53 +2,47 @@ slug: body-and-health
 title: Body & Health
 word_target: 1200
 content_outline:
-- section: 'Вступ: Частини тіла та народна мудрість'
-  words: 400
+- section: 'Вступ: Частини тіла (Introduction: Body Parts)'
+  slug: introduction-body-parts
+  words: 300
   points:
-  - 'Note for bridge module: English scaffolding is required for all new vocabulary
-    introduction and grammar concepts to maintain A1 immersion levels.'
-  - 'Introduce high-frequency body parts in a clear table format: голова, рука, нога,
-    спина, живіт.'
+  - 'Introduce high-frequency body parts: голова, рука, нога, спина, живіт using simple
+    tables.'
   - 'Highlight visual pairs for singular/plural with English translations: око/очі,
-    вухо/вуха, emphasizing the distinct morphological endings.'
-  - 'Cultural Hook: Present the proverb «У здоровому тілі — здоровий дух» with brief
-    English context on its usage in daily life and sports.'
-  - 'Interactive grammar check: Briefly review location with ''де?'' (на голові, на
-    руках) connecting back to module a1-30.'
-- section: 'Презентація: Як ми говоримо про біль'
-  words: 600
+    вухо/вуха, emphasizing the ending changes.'
+  - 'Cultural Hook: Present the proverb «У здоровому тілі — здоровий дух» and its
+    usage.'
+  - Briefly review location prepositions with 'де?' (на голові, на руках) connecting
+    back to earlier modules.
+- section: 'Презентація: Як ми говоримо про біль (Presentation: Expressing Pain)'
+  slug: presentation-expressing-pain
+  words: 350
   points:
-  - 'Grammar explanation (in English): Present the core structure «У мене болить +
-    [singular subject]» and «У мене болять + [plural subject]».'
-  - 'Learner error warning: Explicitly drill that the body part is the active subject,
-    contrasting the incorrect «У мене болять голова» with the correct «У мене болить
-    голова».'
-  - 'Introduce State Standard §4.2.1.4: Impersonal phrases for health states «Мені
-    погано / Мені добре». Explicitly warn against the direct translation error ''Я
-    погано''.'
-  - 'Provide vocabulary for common symptoms: температура, кашель, нежить, головний
-    біль, with key collocations like ''міряти температуру''.'
-  - 'Cultural Insight: Describe the Ukrainian tradition of ''траволікування'' (phytotherapy)
-    and the custom of drinking tea with ''малина'' or ''калина''.'
-- section: 'Діалог: У лікаря та в аптеці'
-  words: 500
+  - 'Explain the grammar of pain: «У мене болить + [singular subject]» and «У мене
+    болять + [plural subject]».'
+  - Explicitly address the common error of treating 'I' as the subject; clarify that
+    the body part does the hurting.
+  - 'Introduce symptoms vocabulary: температура, кашель, нежить, головний біль.'
+  - 'Explain impersonal health states with Dative pronouns: «Мені погано», «Мені добре»,
+    warning against «Я погано».'
+- section: 'Практика: У лікаря та в аптеці (Practice: At the Doctor''s and Pharmacy)'
+  slug: practice-doctor-pharmacy
+  words: 300
   points:
-  - Provide a structured dialogue with a 'сімейний лікар', contrasting the person
-    'лікар' with the place 'лікарня' to correct the 'Я йду в лікар' error.
-  - 'Pharmacy context: Explain navigating an ''аптека'' versus an ''аптечний пункт'',
-    including recognizing the ubiquitous green cross.'
-  - 'Introduce functional Genitive phrases for medicine: «Дайте, будь ласка, ліки
-    від...» (від кашлю, від болю).'
-  - 'Present typical doctor/patient dialogue phrases: «Що вас турбує?» versus the
-    patient reply «У мене висока температура».'
-- section: 'Практика: Пояснення причин'
-  words: 500
+  - Provide a simple dialogue with a 'сімейний лікар', practicing «Що вас турбує?»
+    and describing symptoms.
+  - Contrast 'лікар' (person) with 'лікарня' (place) to prevent common movement errors.
+  - 'Introduce pharmacy context (аптека) and functional phrases: «Дайте, будь ласка,
+    ліки від...».'
+  - 'Cultural context: Mention phytotherapy and drinking tea with raspberry (чай з
+    малиною) as a common remedy.'
+- section: 'Підсумок: Причини та самоперевірка (Summary: Causes and Self-Check)'
+  slug: summary-causes-self-check
+  words: 250
   points:
-  - 'Grammar explanation (State Standard §4.3.2): Teach how to build complex causal
-    sentences using ''бо'' and ''тому що'' (e.g., «Я не прийшов, бо я хворий»).'
-  - 'Lexical distinction: Contrast ''хворий'' (adjective describing a state) with
-    ''хворіти'' (verb describing an ongoing process).'
-  - 'Provide two contrasting roleplays: A casual dialogue with a friend about feeling
-    unwell versus a formal dialogue at the polyclinic.'
-  - 'Summary: Recap the ''У мене болить'' construction and the usage of Dative pronouns
-    for expressing health conditions.'
+  - Teach how to construct basic causal sentences using 'бо' and 'тому що' (e.g.,
+    «Я вдома, бо я хворий»).
+  - Contrast 'хворий' (adjective/state) with 'хворіти' (verb/process) briefly.
+  - Recap the core «У мене болить» structure and essential vocabulary.
+  - Include 3-4 self-check questions to verify understanding of symptoms and body
+    parts.

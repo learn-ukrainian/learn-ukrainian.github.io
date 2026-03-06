@@ -4,48 +4,50 @@ word_target: 1200
 content_outline:
 - section: 'Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)'
   slug: introduction-triad-of-hospitality
-  words: 200
-  points:
-  - Introduce Second Conjugation (Class II) verbs ending in -ити.
-  - 'Connect to the cultural ''Triad of Hospitality'': їсти (to eat), пити (to drink),
-    говорити (to speak).'
-  - Briefly contrast with Class I (-ати) verbs learned previously.
-- section: 'Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)'
-  slug: presentation-paradigms-and-endings
   words: 250
   points:
-  - 'Introduce regular endings: -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать.'
-  - 'Compare visually: Class I (читати - є/е) vs. Class II (говорити - и/і).'
-  - Provide full conjugation tables for 'говорити' and 'вчити'.
-- section: 'Презентація: Мутації приголосних (Presentation: Consonant Mutations)'
-  slug: presentation-consonant-mutations
+  - Introduce Second Conjugation (Class II) verbs ending in -ити, focusing on ongoing
+    and habitual meanings.
+  - Introduce the 'Triad of Hospitality' concept to anchor the verbs їсти, пити, and
+    говорити.
+  - Review concept difference between doing and completing, anchoring to existing
+    present tense knowledge.
+- section: 'Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)'
+  slug: presentation-paradigms-and-endings
+  words: 300
+  points:
+  - 'Systematically introduce regular endings: -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать.'
+  - Side-by-side comparison with First Conjugation (читати vs говорити) highlighting
+    the critical vowel difference (е/є vs и/і).
+  - Provide full conjugation tables using high-frequency verbs as clear models.
+- section: 'Презентація: Мутації та Неправильні дієслова (Presentation: Mutations and
+    Irregulars)'
+  slug: presentation-mutations-and-irregulars
   words: 350
   points:
-  - Explain that mutations only happen in the 'я' (I) form for these verbs.
-  - 'Labial + L: ''робити'' (я роблю), ''любити'' (я люблю). Connect ''любити'' to
-    ''люди''.'
-  - 'Dental changes: ''ходити'' (я ходжу), ''сидіти'' (я сиджу).'
-  - 'Sibilant changes: ''просити'' (я прошу), ''платити'' (я плачу).'
-- section: 'Презентація: Неправильні дієслова (Presentation: Irregular Verbs)'
-  slug: presentation-irregular-verbs
-  words: 150
+  - Introduce consonant mutation in the 1st person singular (я сиджу, я ходжу) per
+    State Standard §4.2.4.1.
+  - Explain the 'Labial L' rule conceptually and physically (робити -> я роблю, любити
+    -> я люблю).
+  - Explicitly teach the highly irregular verb 'їсти' (я їм, ти їси, він їсть) and
+    the verb 'пити'.
+  - Distinguish 'бачити' (faculty of seeing) and 'дивитися' (process of watching).
+- section: 'Практика: Уникнення типових помилок (Practice: Avoiding Common Errors)'
+  slug: practice-avoiding-common-errors
+  words: 200
   points:
-  - Explicitly teach the conjugation of 'їсти' (я їм, ти їси...) and 'пити' (я п'ю,
-    ти п'єш...).
-  - Clarify the difference between 'бачити' (to see - faculty) and 'дивитися' (to
-    watch - process).
-- section: 'Практика: Типові помилки (Practice: Common Errors)'
-  slug: practice-common-errors
-  words: 150
-  points:
-  - Contrastive examples to prevent Conjugation Mixing (e.g., 'робиш', NOT 'робеш').
-  - Focus on 'Я'-form drills to eliminate omission errors (e.g., 'ходжу', NOT 'ходю';
-    'їм', NOT 'їджу').
+  - Contrastive drills specifically designed to prevent Conjugation Mixing (e.g.,
+    ти робиш vs incorrect ти робеш).
+  - Intensive 'Я'-form drills for mutated verbs (ходжу, сиджу, плачу) to eliminate
+    omission errors (ходю, сидю).
+  - 'Contextual production: describing daily routines with collocations like ''робити
+    домашнє завдання'' and ''любити природу''.'
 - section: Підсумок (Summary)
   slug: summary
   words: 100
   points:
-  - Recap the key vowel difference between Class I and Class II verbs.
+  - Recap the essential vowel difference between Class I (-ати) and Class II (-ити)
+    verbs.
   - 'Self-check question 1: How do you say ''I love'' and ''I do'' in Ukrainian?'
-  - 'Self-check question 2: What is the ''я'' form of ''ходити''?'
+  - 'Self-check question 2: What is the ''я'' form of ''ходити'' and ''сидіти''?'
   - 'Self-check question 3: How do you conjugate the verb ''їсти''?'

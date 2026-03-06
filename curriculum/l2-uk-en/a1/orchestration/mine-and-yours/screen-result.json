@@ -1,0 +1,112 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1965",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "163.8",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "28.6",
+    "COMPUTED_IMMERSION_TARGET": "25-40%",
+    "COMPUTED_RICHNESS_SCORE": "78",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, tables: 1/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/mine-and-yours.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/mine-and-yours-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/mine-and-yours.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M20 — Mine and Yours\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/mine-and-yours.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz, true-false\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Чия це річ? (Introduction: Whose Thing is This?)                                                      330 /  250  ✅ (+80)\n     Презентація: Система форм та узгодження (Presentation: System of Forms and Agreement)                        654 /  375  ✅ (+279)\n     Культурний контекст: Етикет та еволюція стосунків (Cultural Context: Etiquette and Relationship Evolution)   311 /  250  ✅ (+61)\n     Практика та продукція (Practice and Production)                                                              659 /  325  ✅ (+334)\n     ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                                                       1954 / 1200  ✅ (+754)\n  📋 Found YAML activities file (8 activities)\n  > Complete with the Correct Possessive: 8 items (min 8)\n  > Match the Word to Its Meaning: 8 items (min 8)\n  > Ask: Whose is this?: 8 items (min 8)\n  > Sort by Gender: 15 items (min 6)\n  > Using Свій vs. Його/Її: 8 items (min 8)\n  > Rules of Possession and Culture: 8 items (min 8)\n  > Build Sentences with Possessives: 8 items (min 6)\n  > Invariable and Third-Person Possessives: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1965/1200 (raw: 2097)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 28.6% (target 25-40% (M20))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/mine-and-yours-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/mine-and-yours.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: mine-and-yours.md\n  VESUM misses: 7 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 16967.25it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 179 | VESUM: 172 (96.1%) | RAG: 3 | Not found: 4\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/mine-and-yours-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 172/179 (96%) verified\n⚠️ VESUM not found (7): Анна, мія, папка, твія, Іван, Іване, ім",
+  "h2_sections": "1. Вступ: Чия це річ? (Introduction: Whose Thing is This?)\n2. Презентація: Система форм та узгодження (Presentation: System of Forms and Agreement)\n3. Культурний контекст: Етикет та еволюція стосунків (Cultural Context: Etiquette and Relationship Evolution)\n4. Практика та продукція (Practice and Production)\n5. Підсумок",
+  "vesum_stats": {
+    "total": 179,
+    "vesum_hits": 172,
+    "rag_hits": 0,
+    "not_found": 7,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 161,
+        "vesum_hits": 157,
+        "not_found": 4
+      },
+      "activities": {
+        "total": 18,
+        "vesum_hits": 15,
+        "not_found": 3
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "Анна",
+      "clean": "анна",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "мія",
+      "clean": "мія",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "папка",
+      "clean": "папка",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "твія",
+      "clean": "твія",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Іван",
+      "clean": "іван",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Іване",
+      "clean": "іване",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ім",
+      "clean": "ім",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "21ab4591f091e85b"
+}

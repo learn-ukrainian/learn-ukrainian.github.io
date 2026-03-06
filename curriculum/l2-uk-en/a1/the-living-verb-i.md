@@ -206,8 +206,8 @@ Compare:
 Відпочиваю вдома.
 (I am resting at home.)
 
-Це робить мову дуже природною. Спробуйте використати нові слова для вечора. Ви бачите: слова роблять усю роботу.
-(This makes the language very natural. Try combining our new verbs for an evening routine. Notice how the verbs do all the work.)
+Це робить мову дуже природною. Практика для вечора. Ви бачите: слова роблять усю роботу.
+(This makes the language very natural. Evening routine practice. Notice how the verbs do all the work.)
 
 Я вдома.
 (I am at home.)

@@ -2,55 +2,54 @@ slug: imperative-and-requests
 title: Imperative and Requests
 word_target: 1200
 content_outline:
-- section: Наказовий спосіб
-  words: 500
-  points:
-  - 'H3: Вступ. Provide English scaffolding to define the imperative mood. Reassure
-    learners that using imperatives is polite and normal in Ukrainian daily life.'
-  - 'H3: Форми «Ти» та «Ви». Define the social context for «Ти» (informal/singular)
-    and «Ви» (formal/plural). Explain that «Ви» adds «-те» or «-іть» to the «Ти» form.'
-  - 'H3: Правила утворення. Explain dropping the «-ти» infinitive ending. Detail the
-    two patterns: vowel stems take «-й/-йте» (читати → читай), consonant stems take
-    «-и/-іть» (робити → роби), with 2+ examples each.'
-  - 'Увага (Learner Warning): Contrast personal commands («Читай!») with impersonal
-    infinitives («Читати!»), explaining why learners shouldn''t use infinitives for
-    direct requests.'
-- section: Вісім обов'язкових дієслів
-  words: 500
-  points:
-  - 'H3: Таблиця дієслів. Present a table of the 8 State Standard verbs (читати, писати,
-    сказати, дати, іти, слухати, дивитися, стояти) with Infinitive, «Ти» form, «Ви»
-    form, and English translation.'
-  - 'H3: Класні команди. Provide short, contextual Ukrainian sentences for regular
-    verbs (читати, слухати, дивитися, іти), e.g., «Слухайте уважно».'
-  - 'H3: Зміни приголосних. Gently explain consonant mutations for сказати (к→ж: скажи)
-    and писати (с→ш: пиши). Focus on the pattern.'
-  - 'H3: Важливі винятки. Highlight the irregular stems for дати (дай/дайте) and стояти
-    (стій/стійте) that require strict memorization.'
-- section: Ввічливе прохання
-  words: 400
-  points:
-  - 'H3: Чарівні слова «будь ласка». Introduce «будь ласка» as the universal softener.
-    Provide 3 examples showing its flexible position (start, middle, end of sentence).'
-  - 'H3: Офіційні прохання з «прошу». Introduce the structure «Прошу вас» + infinitive
-    for formal or service contexts, with 2 examples.'
-  - 'H3: Ввічлива конструкція. Provide a simplified preview of «Чи не могли б ви...?»
-    (Could you...?) as a fixed, polite vocabulary chunk for A1 learners.'
-- section: Заборони
+- section: Наказовий спосіб - Imperative mood
+  slug: nakazovyi-sposib
   words: 300
   points:
-  - 'H3: Заперечна форма. Explain the rule of adding the negative particle «не» directly
-    before the imperative verb.'
-  - 'Приклади (Examples): Provide 5-6 bulleted examples of common negative commands
-    (e.g., Не кури! Не біжи! Не чіпай!).'
-  - 'Контекст (Context Note): Briefly preview the difference between personal prohibitions
-    (Не чіпай!) and public impersonal signs (Не торкатися! - linking to module a1-55).'
-- section: Практика
+  - 'Formation rule: 2nd person singular and plural. Remove -ти ending, add imperative
+    suffix. Pattern depends on conjugation type and stem final consonant.'
+  - 'Ти-form vs Ви-form: читай (ти) → читайте (ви), пиши (ти) → пишіть (ви), говори
+    (ти) → говоріть (ви). Ви-form adds -те/-іть for politeness and plurality.'
+  - 'Learner error: confusing imperative with infinitive. ''Читати!'' is a sign/rule
+    (read!), ''Читай!'' is a personal command. Context determines which form to use.'
+- section: Вісім обов'язкових дієслів - Eight required verbs
+  slug: visim-oboviazkovykh-diesliv
   words: 300
   points:
-  - 'H3: Міні-діалог. Present a short, realistic dialogue in a cafe or classroom combining
-    direct commands and polite requests.'
-  - 'H3: Тренування ввічливості. Demonstrate ''politeness escalation'' with a step-by-step
-    upgrade: «Дай» → «Дайте» → «Дайте, будь ласка».'
-  - 'H3: Перевірка. A 4-item self-check where the learner translates situational English
-    commands into Ukrainian using the 8 required verbs.'
+  - 'State Standard §4.2.4.2 required verbs: читай(те), пиши(те), скажи(те), дай(те),
+    іди(те), слухай(те), дивись(те), стій(те).'
+  - 'Classroom commands context: Читайте текст (Read the text). Пишіть у зошиті (Write
+    in your notebook). Слухайте уважно (Listen carefully). Дивіться на дошку (Look
+    at the board).'
+  - 'Irregular stems: дати → дай (not *дайи), сказати → скажи (consonant mutation
+    к→ж), стояти → стій (stem vowel change). These must be memorized as set forms.'
+- section: Ввічливе прохання - Polite requests
+  slug: vvichlyve-prokhannia
+  words: 250
+  points:
+  - 'Будь ласка as universal softener: Дайте, будь ласка (Please give). Position flexibility:
+    beginning, middle, or end of sentence. Most common after the verb.'
+  - 'Прошу вас + infinitive: Прошу вас сісти (Please sit down). More formal than будь
+    ласка. Used in official or service contexts.'
+  - 'Indirect request pattern: Чи не могли б ви...? (Could you...?). Preview of conditional
+    mood. Чи не могли б ви повторити? (Could you repeat?). Most polite option available
+    at A1.'
+- section: Заборони - Prohibitions
+  slug: zaborony
+  words: 175
+  points:
+  - 'Negative imperative: Не + imperative form. Не кури! (Do not smoke!). Не біжи!
+    (Do not run!). Не чіпай! (Do not touch!). Same formation as positive, with не.'
+  - 'Preview connection to a1-55 (Prohibitions and Signs): Distinction between personal
+    prohibition (Не чіпай!) and public sign prohibition (Не торкатися! — infinitive
+    form). Both mean ''do not touch'' but differ in register.'
+- section: Практика - Practice
+  slug: summary
+  words: 175
+  points:
+  - 'Command drills: Teacher gives situation, learner produces correct imperative
+    form. Focus on the 8 required verbs in varied contexts.'
+  - 'Politeness escalation practice: Upgrading direct commands to polite requests.
+    Дай → Дайте, будь ласка → Чи не могли б ви дати?'
+  - Self-check summary questions to evaluate understanding of the imperative formation
+    and usage.

@@ -1,34 +1,74 @@
 # Дослідження: Body & Health
 
 ## State Standard Reference
-§4.2.1.4: "Займенник. Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
-§4.3.2: "Складне речення... складні (складнопідрядні) речення з підрядною частиною причини (сполучники тому що, бо): Віктор не може говорити, тому що він хворий. Ми не гуляємо, бо холодно."
-Alignment: This module precisely aligns with the A1 thematic catalog for "Здоров'я" and introduces fundamental linguistic competence structures: Dative pronouns for expressing states (мені погано) and complex causal sentences (тому що/бо).
+§3: Thematic catalogue includes "здоров'я" (health) as a core topic.
+§4.2.1.4: Personal pronouns (Dative usage: Мені погано).
+§4.3.2: Basic complex sentences (бо, тому що).
+Alignment: This module introduces fundamental vocabulary for body parts and health conditions, utilizing the nominative subject for pain (болить) and impersonal dative constructions for states (мені погано), strictly following A1 syntactic and thematic requirements.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| голова | High (Top 100) | болить голова, головний біль |
-| рука | High | права/ліва рука, мити руки |
-| нога | High | права/ліва нога |
-| живіт | Medium | болить живіт |
-| лікар | High | сімейний лікар, іти до лікаря |
-| ліки | High | пити ліки, ліки від... |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| голова | High frequency (Top 100) | болить голова, головний біль |
+| рука | High frequency, singular/plural contrast (рука/руки) | права/ліва рука, мити руки |
+| болить | 3rd person singular verb, agrees with body part | у мене болить, що болить? |
+| лікар | Animate noun (person), contrast with лікарня | сімейний лікар, до лікаря |
+| ліки | Plural only noun | ліки від кашлю, пити ліки |
 
 ## Cultural Hooks
-1. Проказка «У здоровому тілі — здоровий дух»: A widely recognized proverb emphasizing the balance between physical well-being and mental/spiritual health, often used in educational contexts.
-2. Траволікування (Phytotherapy): The robust Ukrainian tradition of treating initial cold symptoms with natural remedies, such as drinking hot tea with raspberry (чай з малиною), viburnum (калина), or honey, before seeking formal medical care.
+1. Traditional Ukrainian home remedies (траволікування) are deeply ingrained in daily life; drinking hot tea with raspberry (чай з малиною), viburnum (калина), or honey is the standard first response to a cold.
+2. The proverb «У здоровому тілі — здоровий дух» (In a healthy body, a healthy spirit) is widely used in school and sports contexts.
 
 ## Common Learner Errors
-1. "У мене болять голова" → "У мене болить голова" — Learners mistakenly treat themselves ("I") as the subject, rather than the singular body part that governs the verb agreement.
-2. "Я погано" → "Мені погано" — A direct translation error from English ("I am unwell"); Ukrainian requires the Dative case with impersonal adverbs to describe physical states.
-3. "Я йду в лікар" → "Я йду до лікаря" or "Я йду в лікарню" — Confusion between the animate professional (лікар) requiring "до + Genitive" and the inanimate location (лікарня) requiring "в + Accusative".
+1. «У мене болять голова» → «У мене болить голова» — English speakers often think "I" am the subject having the pain, but in Ukrainian, the body part is the active subject doing the hurting.
+2. «Я погано» → «Мені погано» — Direct translation of "I am bad/sick"; Ukrainian requires the Dative pronoun for impersonal states of being.
+3. «Я йду в лікар» → «Я йду до лікаря» or «в лікарню» — Confusing the profession (лікар) with the building (лікарня).
 
 ## Cross-References
 - Builds on: a1-30 (Prepositions: Direction & Origin)
 - Prepares for: a1-49 (My Family), a1-62 (Emergencies)
 
 ## Notes for Content Writing
-- Decolonized framing: Present "У мене болить" as an elegant, intrinsic feature of Ukrainian syntax. Do not compare it to Russian equivalents or frame it as a derivation.
-- Vocabulary rigor: Strictly avoid Russianisms such as "кушати" (use їсти) or "получати" (use отримувати) in all examples and activities.
-- A1 Level Immersion: Ensure all new vocabulary and abstract grammatical explanations (like Dative impersonal states) are accompanied by concise English scaffolding.
+- A1.5 Phase (Module 48): Since this is post-M47, imperative forms (Читайте!, Слухайте!) are permitted for instructions.
+- Ensure heavy English scaffolding for explaining the grammar of «У мене болить» and Dative pronouns, as the reversal of subject/object is conceptually difficult for beginners.
+- Only use IPA on the first occurrence of each new vocabulary word.
+- Keep sentences short (max 8-10 Ukrainian words per sentence).
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Something Hurts — Health Vocabulary in Ukrainian](https://www.ukrainianlessons.com/something-hurts/) (ukrainianlessons.com)
+- [Ukrainian Phrasebook: Health](https://www.ukrainianlessons.com/ph-health/) (ukrainianlessons.com)
+- [Vocabulary booster! Body parts in Ukrainian](https://www.ukrainianlessons.com/fmu52/) (ukrainianlessons.com)
+- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode170/) (ukrainianlessons.com)
+- [Making a doctor’s appointment in Ukrainian + Indefinite adverbs and pronouns](https://www.ukrainianlessons.com/episode102/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 3, Сторінка 41: 41
+іЗ ДЖЕРЕЛ 
+НАРОДНОЇ МУДРОСТІ
+ 
+З давніх-давåн дійшли до нас складені народом тво-
+ри, у яких відо...
+- Grade 4, Сторінка 27: 27
+ЗБАГАЧУЄМОСЯ СКАРБАМИ
+ЗБАГАЧУЄМОСЯ СКАРБАМИ
+ УСНОЇ НАРОДНОЇ ТВОРЧОСТІ
+ УСНОЇ НАРОДНОЇ ТВОРЧОСТІ
+ ...
+- Grade 2, Сторінка 8: 8
+мова І мовЛЕння 
+мова — це засіб спілкування людей (система звуків 
+і букв, слова, речення, тексти...
+- Grade 3, Сторінка 156: 156
+Узагальнюю знання про дієслово як частину мови
+7   Прочитай текст. Візьми до уваги поради.
+  В...
+- Grade 7, Сторінка 218: 215
+  
+Розділ 7   
+ЧАСТКА
+Що на нас чекає в  цьому розділі?
+• Пригадаємо, що називають часткою.
+• З’...

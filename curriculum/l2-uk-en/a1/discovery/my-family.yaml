@@ -1,0 +1,128 @@
+discovered_at: '2026-03-06T05:35:16.412348+00:00'
+query_keywords:
+- My Family
+- Моя сім'я
+- Близька та розширена родина
+- Immediate and Extended Family
+- Характеристики та стосунки
+- Characteristics and Relationships
+- Звертання та спілкування
+- Address and Communication
+- family members
+- family relationships
+- about their own family
+- possessives with family terms
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/vocabulary-family/
+  title: Family Vocabulary in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/6/
+  title: ULP 1-06 Talking about your family in Ukrainian + I have, you have
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/episode6/
+  title: Talking about your family in Ukrainian + I have, you have
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - vocabulary
+  - family
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 6
+- url: https://www.ukrainianlessons.com/episode7/
+  title: More about your family in Ukrainian + Possessive Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - pronouns
+  - vocabulary
+  - family
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 7
+- url: https://talkukrainian.com/family/
+  title: 'Talk Ukrainian: Family – Родина'
+  source: talkukrainian
+  relevance_score: 0.6000000000000001
+  topics:
+  - family
+  - родина
+  - сім'я
+  - vocabulary
+rag_chunks:
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0071
+  text: "б| Порівняйте предмети за однією ознакою і вставте \nпотрібні слова. Поставте\
+    \ усно питання до слів — \nназв ознак предметів.\n• Запишіть за зразком одне речення\
+    \ (на вибір).\nДороги — широкі, а стежки — вузькі.\nч.. \n------------------------\
+    \ ----- _ \n_ _ _.------------------ -----------------._________\n7| Поміркуйте,\
+    \ у які групи можна об'єднати слова — назви \nознак цих предметів.\n• Назвіть\
+    \ групи предметів, які можна об'єднати за такими \nознаками.\nЗа формою\nЗа кольором\n\
+    ______ 1\nЗа смаком\n \nХвилинка спі"
+  section_title: Сторінка 73
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0261
+  text: "Такі синтаксичні конструкції мають обмежувальне чи розширю­\nвальне значення,\
+    \ виокремлюють когось або щось із низки інших \nосіб, предметів, явищ. До складу\
+    \ відокремленого додатка, крім іменника чи займенника, \nможуть входити залежні\
+    \ від цього іменника чи займенника слова. НА-\nПРИКЛАД: На світі все знайдеш,\
+    \ крім рідної матері (Нар. творчість). Для відокремлення додатка в усному мовленні\
+    \ робимо невеликі \nпаузи, а на письмі ставимо êому (коми). Умови відокремлення"
+  section_title: Сторінка 215
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0182
+  text: "Порівняйте: \nЯ, на жаль, запізнився і Я запізнився. Речення, що містять\
+    \ вставні слова, звертання або однорідні члени, на-\nзиваємо ускладненими."
+  section_title: Сторінка 175
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0266
+  text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n259\n\
+    2. Що цікавого щодо займенників ви помітили в  реченнях?\n3. Якому стилю властиві\
+    \ такі речення? Поміркуйте чому.\nПрисвійні займенники\nПрисвійні (від присвоїти)\
+    \ займенники вказують на \nналежність когось або чогось певній особі, вони спів-\n\
+    відносяться з  особовими займенниками.\nОсобові\nПрисвійні\nОсобові\nПрисвійні\n\
+    я\nмій, моя, моє, \nмої\nми\nнаш, наша, \nнаше, наші\nти\nтвій, твоя, \nтвоє,\
+    \ твої\nви\nваш, ваша, \nваше, ваші\nвін, воно, \nв"
+  section_title: Сторінка 259
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0254
+  text: "За лексичними й морфо-\nлогічними ознаками поділяються на власні \nй загальні,\
+    \ конкретні й абстрактні, назви істот \nі неістот, збірні та одиничні\nОсновна:\
+    \ підмет (називний відмінок або родовий, \nколи поєднується з кількісним числівником\
+    \ або \nіншим словом із кількісним значенням — у скла-\nденому підметі), додаток\
+    \ (у непрямих відмінках). Неосновна: обставина (частіше іменник із при-\nйменником,\
+    \ особливо в місцевому відмінку), не-\nузгоджене означення, прикладка, іменна\
+    \ частина \nскладеного присудка"
+  section_title: Сторінка 141
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "the-living-verb-ii",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T01:38:57Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T01:39:39Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T01:41:45Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T01:43:21Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T01:56:33Z",
+      "attempts": 2
+    }
+  }
+}

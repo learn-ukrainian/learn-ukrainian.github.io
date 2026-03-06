@@ -1,0 +1,41 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1349",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "112.4",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "5",
+    "COMPUTED_IMMERSION_PERCENT": "35.1",
+    "COMPUTED_IMMERSION_TARGET": "35-55%",
+    "COMPUTED_RICHNESS_SCORE": "52",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "cultural: 0/3, collocations: 0/20, register_notes: 0/5",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/my-family.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/my-family-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/my-family.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M49 — My Family\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/my-family.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Моя сім'я (Introduction: My Family)                                                  260 /  250  ✅ (+10)\n     Презентація: Близька та розширена родина (Presentation: Immediate and Extended Family)      345 /  350  ✅ (-5)\n     Презентація: Характеристики та стосунки (Presentation: Characteristics and Relationships)   307 /  300  ✅ (+7)\n     Практика: Звертання та спілкування (Practice: Address and Communication)                    275 /  300  ✅ (-25)\n     ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                                      1187 / 1200  ❌ (-13)\n  📋 Found YAML activities file (8 activities)\n  > Match the Immediate Family: 8 items (min 8)\n  > Match the Extended Family and Descriptors: 8 items (min 8)\n  > Sort by Gender: Мій vs Моя: 8 items (min 6)\n  > Family Concepts and Culture: 8 items (min 8)\n  > True or False?: 8 items (min 8)\n  > Complete the Sentences with Possessives: 8 items (min 8)\n  > Complete the Sentences with the Correct Form: 8 items (min 8)\n  > Unjumble the Sentences: 8 items (min 6)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1349/1200 (raw: 1543)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 5/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ✅ 10/10 (High)\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 35.1% (target 35-55% (M49))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-family-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/my-family.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: my-family.md\n  Words: 199 | VESUM: 199 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-family-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 199/199 (100%) verified",
+  "h2_sections": "1. Вступ: Моя сім'я (Introduction: My Family)\n2. Презентація: Близька та розширена родина (Presentation: Immediate and Extended Family)\n3. Презентація: Характеристики та стосунки (Presentation: Characteristics and Relationships)\n4. Практика: Звертання та спілкування (Practice: Address and Communication)\n5. Підсумок",
+  "vesum_stats": {
+    "total": 199,
+    "vesum_hits": 199,
+    "rag_hits": 0,
+    "not_found": 0,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 183,
+        "vesum_hits": 183,
+        "not_found": 0
+      },
+      "activities": {
+        "total": 16,
+        "vesum_hits": 16,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [],
+  "content_hash": "8d4b91ab7075a897"
+}

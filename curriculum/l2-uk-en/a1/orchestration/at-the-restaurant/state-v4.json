@@ -1,0 +1,19 @@
+{
+  "track": "a1",
+  "slug": "at-the-restaurant",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T06:57:37Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T06:58:09Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T07:00:41Z"
+    }
+  }
+}

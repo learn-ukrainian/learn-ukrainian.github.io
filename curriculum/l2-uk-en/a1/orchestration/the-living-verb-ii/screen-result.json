@@ -1,0 +1,252 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1457",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "121.4",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "4",
+    "COMPUTED_IMMERSION_PERCENT": "34.8",
+    "COMPUTED_IMMERSION_TARGET": "25-40%",
+    "COMPUTED_RICHNESS_SCORE": "46",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, examples: 5/24, dialogues: 0/4, tables: 1/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-ii.md\nSaving log to: curriculum/l2-uk-en/krisztiankoos/audit/the-living-verb-ii-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-living-verb-ii.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M16 — The Living Verb II\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-ii.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)                      279 /  250  ✅ (+29)\n     Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)                 338 /  300  ✅ (+38)\n     Презентація: Мутації та Неправильні дієслова (Presentation: Mutations and Irregulars)   446 /  350  ✅ (+96)\n     Практика: Уникнення типових помилок (Practice: Avoiding Common Errors)                  275 /  200  ✅ (+75)\n     Підсумок (Summary)                                                                      171 /  100  ✅ (+71)\n     ──────────────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                                  1509 / 1200  ✅ (+309)\n  📋 Found YAML activities file (8 activities)\n  > Check Your Understanding: 8 items (min 8)\n  > Match the Pronoun to the Verb Form: 8 items (min 8)\n  > Choose the Correct Verb Form: 8 items (min 8)\n  > True or False?: 8 items (min 8)\n  > Sort the Verb Forms: 10 items (min 6)\n  > Match the Verbs to their Objects: 8 items (min 8)\n  > Focus on the 'Я' Form: 8 items (min 8)\n  > Build the Sentences: 6 items (min 6)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1457/1200 (raw: 1600)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 34.8% (target 25-40% (M16))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-ii-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-living-verb-ii.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-living-verb-ii.md\n  VESUM misses: 21 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 14873.42it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  WARNING: RAG query failed: <_InactiveRpcError of RPC that terminated with:\n\tstatus = StatusCode.DEADLINE_EXCEEDED\n\tdetails = \"Deadline Exceeded\"\n\tdebug_error_string = \"UNKNOWN:Error received from peer  {grpc_status:4, grpc_message:\"Deadline Exceeded\"}\"\n>\n  Words: 255 | VESUM: 234 (91.8%) | RAG: 1 | Not found: 19\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-ii-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 234/255 (92%) verified\n⚠️ VESUM not found (21): ать, говориєш, дж, имо, ите, ити, ить, иш, любю, пию",
+  "h2_sections": "1. Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)\n2. Презентація: Моделі та закінчення (Presentation: Paradigms and Endings)\n3. Презентація: Мутації та Неправильні дієслова (Presentation: Mutations and Irregulars)\n4. Практика: Уникнення типових помилок (Practice: Avoiding Common Errors)\n5. Підсумок (Summary)",
+  "vesum_stats": {
+    "total": 255,
+    "vesum_hits": 234,
+    "rag_hits": 0,
+    "not_found": 21,
+    "rag_errors": 0,
+    "by_source": {
+      "prose": {
+        "total": 228,
+        "vesum_hits": 216,
+        "not_found": 12
+      },
+      "activities": {
+        "total": 27,
+        "vesum_hits": 18,
+        "not_found": 9
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "ать",
+      "clean": "ать",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "говориєш",
+      "clean": "говориєш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "дж",
+      "clean": "дж",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "имо",
+      "clean": "имо",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ите",
+      "clean": "ите",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ити",
+      "clean": "ити",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ить",
+      "clean": "ить",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "иш",
+      "clean": "иш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "любю",
+      "clean": "любю",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "пию",
+      "clean": "пию",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "платемо",
+      "clean": "платемо",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "платю",
+      "clean": "платю",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "роблу",
+      "clean": "роблу",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "робю",
+      "clean": "робю",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сиду",
+      "clean": "сиду",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сидю",
+      "clean": "сидю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сь",
+      "clean": "сь",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ходю",
+      "clean": "ходю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "хожу",
+      "clean": "хожу",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "їджу",
+      "clean": "їджу",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "їсю",
+      "clean": "їсю",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "b29d270fef9de902"
+}

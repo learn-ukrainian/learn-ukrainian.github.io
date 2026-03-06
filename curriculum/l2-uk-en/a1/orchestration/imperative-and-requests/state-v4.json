@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "imperative-and-requests",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T04:31:01Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T04:31:28Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T04:35:07Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T04:53:36Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T05:14:48Z",
+      "attempts": 3
+    }
+  }
+}

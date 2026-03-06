@@ -1,0 +1,164 @@
+discovered_at: '2026-03-06T06:35:27.803160+00:00'
+query_keywords:
+- Travel and Transport
+- Транспорт
+- Transport types
+- Вокзал та аеропорт
+- Station and airport
+- Напрямки
+- Directions
+- Подорожі
+- Journeys
+- Name common types of transport
+- Navigate stations and airports with basic phrases
+- Give and follow simple directions
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu5/
+  title: How to talk about transport in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7500000000000001
+  topics:
+  - grammar
+  - cases
+  - instrumental
+  - vocabulary
+  - travel
+  - phrases
+  - culture
+  - lviv
+  - review
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 5
+- url: https://www.ukrainianlessons.com/episode26/
+  title: Talking about traveling — Past tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - verbs
+  - past tense
+  - vocabulary
+  - travel
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 26
+- url: https://www.ukrainianlessons.com/episode27/
+  title: Traveling in Ukraine in winter — More Past tense
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - verbs
+  - past tense
+  - vocabulary
+  - travel
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 27
+- url: https://www.ukrainianlessons.com/episode30/
+  title: Review 21-29 — My travels in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - vocabulary
+  - travel
+  - review
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 30
+- url: https://www.ukrainianlessons.com/episode99/
+  title: Travel plan (Voice message №4)
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - vocabulary
+  - food
+  - travel
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 99
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-uhor-2022-1_s0057
+  text: "трамвай\nтрамва-єм\nавтобус\nавтобус-ом\nтролейбус\nтролейбус-ом\nпоїзд/потяг\n\
+    поїзд-ом/ потяг-ом\nметро\nна метро\nвелосипед\nвелосипед-ом\nтаксі\nна таксі\n\
+    корабель\nкорабл-ем\nчовен\nчовн-ом\nлітак\nлітак-ом\nЗверни увагу\nЇХАТИ\nПЛИВТИ\n\
+    ЛЕТІТИ\nДЕ?\nу школі, в університеті, у класі, у місті, у будівлі, \nу зоопарку,\
+    \ у кінотеатрі, у поліклініці, у країні, \nв області, у центрі, в Угорщині\nна\
+    \ уроці, на вулиці, на площі, на спортивному \nмайданчику, на заводі, на концерті,\
+    \ на виставці, на \nпівночі, на морі\n114\t У тексті в"
+  section_title: Сторінка 59
+  grade: 5
+  author: uhor
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0015
+  text: "16\nЗнайди слово — підпис до малюнка. \nВідшукай слово до схеми.\n\t маки\t\
+    \nморе\t\nміст\t\nмісце\n\t маски\t\nморяк\t\nмісток\t\nмімоза\n\t марки\t\nморський\t\
+    \nмісто\t\nміміка\n\b\nТекст. Тема тексту\nУ містах багато високих будинків. Біля\
+    \ \nбудинків є май-дан-чи-ки для дітей. У містах \nє музеї, театри, су-пер-мар-ке-ти.\
+    \ Вулицями \nміст їздять тро-лей-бу-си, трамваї, автобуси, \nмаршрутні таксі.\
+    \ А  що ще є в містах?\n1\n2\nМ м\nм і |с т о\nвулиця\nпарк\nметро\nплоща\nсупермаркет"
+  section_title: Сторінка 16
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0205
+  text: "Á\tМіський транспорт перевозить пасажирів і школярів. В\tНагородили юристів,\
+    \ учителів, економістів, лікарів. Ã\t Купили канцелярські товари: ручки, ножиці,\
+    \ лампи."
+  section_title: Сторінка 173
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0211
+  text: "206\nВідомості із синтаксису й пунктуації. Види речень за емоційним забарвленням\n\
+    Види речень за емоційним забарвленням\nВправа 335\n1. Прочитайте речення .\nМи\
+    \ вже приїхали. \nМи вже приїхали! \nМи вже приїхали? \nМи вже приїхали?!\nІдіть\
+    \ додому.\nІдіть додому!\n2. Поміркуйте й  висловте свої думки: чим відрізняються\
+    \ одне від одного \nречення в  кожному рядку?\n3. Згадайте, як називаються такі\
+    \ види речень .\nМи можемо говорити нейтрально, а  можемо емоційно, поси-\nлюючи\
+    \ голос . Речення, що вимовляємо з нейтр"
+  section_title: Сторінка 206
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

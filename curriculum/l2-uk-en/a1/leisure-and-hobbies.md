@@ -1,685 +1,287 @@
 <!-- SCOPE
-Covers: Hobbies, sports, leisure activities, making invitations, location vs. destination grammar
+Covers: Hobbies, sports, leisure activities, making invitations, Accusative for destinations.
 Not covered:
-  - Telling time for schedules → a1-53
-Related: a1-50, a1-52
+  - Travel and transport → a1-52
 -->
 
 # Leisure and Hobbies
 
 > **Чому це важливо?**
 >
-> Talking about your interests is the best way to make friends in any language. Розмови про інтереси — це найкращий спосіб знайти друзів. Ви говорите про хобі. Ви знаходите нових друзів. In this lesson, you will learn how to discuss your hobbies, favorite sports, and weekend plans in Ukrainian. Тут ви вивчите нові слова. Ми говоримо про хобі і спорт.
+> What do you do for fun? Everyone has a hobby or a favorite way to relax. Talking about sports and free time helps you make friends. Let's learn how to invite people and share your interests.
 
-## Хобі
+## Хобі (Hobbies)
 
-### Що таке хобі?
-The word for hobby in Ukrainian is **хо́бі**.
-Слово «хобі» — середнього роду (neuter noun).
-It is also an indeclinable word.
-This means its ending never changes, no matter what grammatical case you use it in.
-Він використовується як підмет, об'єкт або з прийменниками, і завжди залишається «хобі» (It is used as a subject, an object, or with prepositions, and it will always remain «хобі»).
-Це дуже просте слово для речень (It is very easy to use in a sentence).
-Let us look at some examples of how Ukrainians talk about a hobby.
+У ко́жної люди́ни є хо́бі. Хтось лю́бить чита́ти книжки́. Хтось лю́бить співа́ти пісні́. Моє́ хо́бі — це спорт. Яке́ в те́бе хо́бі?
 
-Моє хобі дуже цікаве.
-My hobby is very interesting.
-
-Я маю нове хобі.
-I have a new hobby.
-
-Ми говоримо про моє хобі.
-We are talking about my hobby.
-
-### Основні дієслова для хобі
-To talk about what you do, you need action words.
-Here are seven common verbs that describe popular hobbies.
-They are all regular verbs, mostly belonging to Class I.
-
-**чита́ти** — to read.
-Я люблю читати.
-I love to read.
-
-**малюва́ти** — to draw.
-Вона гарно малює.
-She draws beautifully.
-
-**гра́ти** — to play.
-Діти грають у парку.
-The children are playing in the park.
-
-**фотографува́ти** — to photograph.
-Він часто фотографує природу.
-He often photographs nature.
-
-**танцюва́ти** — to dance.
-Ти вмієш танцювати?
-Do you know how to dance?
-
-**співа́ти** — to sing.
-Ми співаємо українські пісні.
-We sing Ukrainian songs.
-
-**готува́ти** — to cook.
-Я готую вечерю для друзів.
-I am cooking dinner for friends.
+Everyone has a hobby. Some people like to read books. Some people like to sing songs. My hobby is sport. What is your hobby?
 
 > [!tip]
-> Notice that verbs ending in **-ювати** (like малювати, фотографувати, танцювати) change their stem in the present tense.
-> The suffix **-юва-** becomes **-ю-**.
-> For example, «малювати» becomes «я малюю», not «я малюваю».
+> Сло́во «хо́бі» особли́ве. Воно́ ніко́ли не змі́нюється.
+> The word for hobby is special. It never changes its ending, no matter what grammatical case you use!
 
-### Читання: книги та журнали
-Reading is a fundamental hobby for many people.
-The verb is **чита́ти**.
-Для об'єкта використовуйте знахідний відмінок.
-To specify the object, use the Accusative case.
-Наприклад, книга — це «кни́га». У знахідному відмінку вона стає «кни́гу».
-Журнал — це «журна́л». Він залишається «журна́л». Це неістота.
+Ми вивча́ємо нові́ слова́. Це популя́рні хо́бі.
 
-Я люблю читати.
-I love to read.
+We are learning new words. These are popular hobbies.
 
-Вона читає цікаву книгу.
-She is reading an interesting book.
+| Сло́во | Meaning |
+|--------|---------|
+| **чита́ти** | to read |
+| **малюва́ти** | to draw |
+| **гра́ти** | to play |
+| **фотографува́ти** | to photograph |
+| **танцюва́ти** | to dance |
+| **співа́ти** | to sing |
+| **готува́ти** | to cook |
 
-Ми часто читаємо журнали.
-We often read magazines.
+Я люблю́ малюва́ти карти́ни. Ти вмі́єш до́бре танцюва́ти. Вона́ лю́бить фотографува́ти приро́ду.
 
-> [!fact]
-> Ukraine has a thriving modern publishing industry.
-> Translating popular global literature into Ukrainian has become a massive cultural movement, and reading in Ukrainian is a point of national pride.
+I like to draw pictures. You know how to dance well. She likes to photograph nature.
 
-### Як сказати «Моє хобі — це...»
-Найпростіший спосіб сказати про хобі — це використати фразу «Моє хобі — це...».
-Ця фраза означає «My hobby is...».
-Українці використовують тире (—) замість дієслова «to be» у теперішньому часі.
-Слово «це» означає «this is» і додає акцент.
+Є рі́зні варіа́нти про хо́бі.
 
-Моє хобі — це музика.
-My hobby is music.
+There are different options about hobbies.
 
-Її хобі — це спорт.
-Her hobby is sports.
+**Варі́ант 1.**
+**Option 1.**
+Моє́ хо́бі — це спорт. Моє́ хо́бі — це му́зика.
+My hobby is sport. My hobby is music.
+Це проста́ і популя́рна структу́ра.
+This is a simple and popular structure.
 
-Його хобі — це фотографія.
-His hobby is photography.
+**Варі́ант 2.**
+**Option 2.**
+Я люблю́ малюва́ти. Я люблю́ готува́ти.
+I love to draw. I love to cook.
+Ми ча́сто використо́вуємо цей варіа́нт.
+We often use this option.
 
-This structure requires a noun after the word «це».
-You cannot easily put a verb here without changing its form.
+**Варі́ант 3.**
+**Option 3.**
+Я гра́ю у футбо́л ко́жного дня.
+I play football every day.
+Це та́кож ду́же га́рна фра́за.
+This is also a very good phrase.
 
-### Як сказати «Я захоплююся...»
-If you want to say that you are passionate about something, you can use the verb **захо́плюватися**.
-Це дуже емоційний спосіб розповісти про ваші інтереси (a more expressive way to talk about your interests).
-This verb always requires the Instrumental case for the object that follows it.
-The Instrumental case shows what instrument or tool you use, but here it shows what holds your interest.
+Як запита́ти люди́ну про її́ інтере́си? Ми ка́жемо: Яке́ в те́бе хо́бі?
+How to ask a person about their interests? We say: What is your hobby?
 
-Я захоплююся музикою.
-I am passionate about music.
+### Діало́г про хо́бі
+### Dialogue about hobbies
 
-Він захоплюється історією.
-He is passionate about history.
+— Приві́т! Я люблю́ малюва́ти. А яке́ в те́бе хо́бі?
+— Hi! I love to draw. And what is your hobby?
+— Я гра́ю у футбо́л. Я люблю́ бі́гати.
+— I play football. I like to run.
 
-Ми захоплюємося мистецтвом.
-We are passionate about art.
+## Спорт (Sports)
 
-> [!context]
-> Using «захоплюватися» shows that you have a deep, active interest in the topic.
-> It sounds more sophisticated than just saying you like something.
+Спорт — це здоро́в'я й си́ла. Бага́то люде́й лю́блять спорт. Вони́ гра́ють у футбо́л. Вони́ гра́ють у те́ніс.
 
-### Як сказати «Мені подобається...»
-Інший дуже популярний спосіб сказати про свої інтереси — це конструкція **«Мені подо́бається...»**.
-Вона означає «To me is pleasing...».
-Людина, якій щось подобається, стоїть у давальному відмінку (Dative case: Мені = to me).
-Реч або дія — це підмет у реченні (The thing or action that is pleasing is the subject of the sentence).
-Після цієї фрази часто йде інфінітив (An infinitive verb often follows this phrase).
+Sport is health and strength. Many people like sport. They play football. They play tennis.
 
-Мені подобається читати.
-I like to read.
+Для і́гор з м'яче́м ми завжди́ вжива́ємо прийме́нник «в».
 
-Тобі подобається малювати.
-You like to draw.
+For games with a ball, we always use a preposition.
 
-Їй подобається танцювати.
-She likes to dance.
+| Сло́во | Meaning |
+|--------|---------|
+| **гра́ти в футбо́л** | to play football |
+| **гра́ти в баскетбо́л** | to play basketball |
+| **гра́ти в те́ніс** | to play tennis |
+| **гра́ти в ша́хи** | to play chess |
 
-Також можна використовувати назву предмета.
-You can also use a noun.
+Я гра́ю в баскетбо́л щоти́жня. Мій брат гра́є в ша́хи.
 
-Мені подобається ця книга.
-I like this book.
-
-### Як запитати про хобі?
-A conversation requires asking questions.
-There are two main ways to ask someone about their hobbies in Ukrainian.
-The first uses the noun «хобі», and the second uses the verb «захоплюватися».
-
-Яке у тебе хобі?
-What is your hobby?
-
-Моє хобі — це спорт.
-My hobby is sports.
-
-Чим ти захоплюєшся?
-What are you passionate about?
-
-Я захоплююся літературою.
-I am passionate about literature.
-
-Here is a short exchange you might hear when people meet.
-
-— Привіт! Яке у тебе хобі?
-— Hello! What is your hobby?
-— Привіт! Мені подобається фотографувати. А чим ти захоплюєшся?
-— Hello! I like to take photographs. And what are you into?
-— Я захоплююся спортом.
-— I am passionate about sports.
-
-## Спорт
-
-### Конструкція «грати в»
-When you talk about playing team sports or games with a ball, Ukrainian uses a specific structure.
-You must use the verb **гра́ти** followed by the preposition **в** (or **у**) and the Accusative case.
-This is different from playing a musical instrument.
-For sports, the structure «грати в» is mandatory.
-
-Я граю у футбо́л.
-I play football.
-
-Вона грає в баскетбо́л.
-She plays basketball.
-
-Ми граємо у те́ніс.
-We play tennis.
+I play basketball every week. My brother plays chess.
 
 > [!warning]
-> A common mistake for beginners is to skip the preposition and just say «я граю футбол».
-> This is incorrect in Ukrainian.
-> Always remember to include the «в» or «у».
-> Also, remember that «в» and «у» are interchangeable depending on the surrounding letters to maintain euphony.
+> Англі́йська мо́ва не ма́є прийме́нника для і́гор. В украї́нській мо́ві це обов'язко́во!
+> English language has no preposition for games. In Ukrainian, it is mandatory! If you forget it, the sentence sounds very strange.
 
-Chess is also considered a sport in this context.
-Therefore, it takes the same grammatical structure.
+Деякі́ ви́ди спо́рту індивідуа́льні. Тут не тре́ба сло́во «гра́ти».
 
-Дідусь грає в ша́хи.
-Grandfather plays chess.
+Some sports are individual. Here we do not need the word to play.
 
-### Інструменти проти спорту: грати на чи грати в?
-We must distinguish between playing a sport and playing a musical instrument.
-When you play a musical instrument, Ukrainian uses the preposition **на** followed by the Locative case.
-When you play a sport, you use the preposition **в** followed by the Accusative case.
-This is a very strict rule.
+| Сло́во | Meaning |
+|--------|---------|
+| **пла́вати** | to swim |
+| **бі́гати** | to run |
+| **ката́тися на велосипе́ді** | to ride a bicycle |
 
-Я граю на гіта́рі.
-I play the guitar.
-(Instrument = на + Locative)
+Я пла́ваю ко́жного ра́нку. Вона́ лю́бить ката́тися на велосипе́ді.
 
-Я граю у футбо́л.
-I play football.
-(Sport = в + Accusative)
+I swim every morning. She likes to ride a bicycle.
 
-Вона грає на піані́но.
-She plays the piano.
+### Де ми займа́ємося спо́ртом?
+### Where do we practice sports?
 
-Він грає в баскетбо́л.
-He plays basketball.
+Де ми гра́ємо? Ми хо́димо на стадіо́н. Спортсме́ни йдуть у спортза́л. Я люблю́ басе́йн.
 
-By keeping these two structures separate in your mind, you will speak much more accurately.
-Sports go with «в», instruments go with «на».
+Where do we play? We go to the stadium. Athletes go to the gym. I love the pool.
 
-### Індивідуальні види спорту
-Not all sports use the verb «грати».
-Individual sports, where you do not play a match or use a ball in a team setting, often have their own specific verbs.
-You use these verbs directly, without any preposition.
+| Сло́во | Meaning |
+|--------|---------|
+| **стадіо́н** | stadium |
+| **басе́йн** | swimming pool |
+| **спортза́л** | gym |
 
-**пла́вати** — to swim.
-Я плаваю щодня.
-I swim every day.
+Тут напря́мок і мі́сце — це рі́зне.
 
-**бі́гати** — to run.
-Він бігає вранці.
-He runs in the morning.
+Here destination and location are different.
 
-Для велосипеда є спеціальна фраза: **ката́тися на велосипе́ді**.
-Ця фраза означає «to ride on a bicycle».
-Слово «велосипе́д» стоїть у місцевому відмінку.
+Для на́прямку ді́є знахі́дний відмі́нок. 
+For destination we use the Accusative case.
 
-Вона любить кататися на велосипеді.
-She loves to ride a bicycle.
+**Напря́мок:**
+**Destination:**
+Я йду в басе́йн. Я хо́джу на стадіо́н.
+I am going to the pool. I go to the stadium.
 
-Мої друзі катаються на велосипеді у парку.
-My friends are riding bicycles in the park.
+Для мі́сця ді́є місце́вий відмі́нок.
+For location we use the Locative case.
 
-### Спортивні локації
-To talk about where you practice these sports, you need to know the names of sports venues.
-Наприклад, **стадіо́н** (a stadium) — це велике місце для спорту. Слово «стадіон» — чоловічого роду (masculine). Інше популярне місце — це **басе́йн** (a swimming pool). Слово «басейн» також чоловічого роду. Для фітнесу ви йдете у **спортза́л** (a gym).
+**Мі́сце:**
+**Location:**
+Я пла́ваю в басе́йні. Я бі́гаю на стадіо́ні. Я трену́юся у спортза́лі.
+I swim in the pool. I run at the stadium. I train in the gym.
 
-Let us look at how to describe the location where an activity happens.
-When you are already at the place, you use the Locative case.
-The Locative case answers the question «де?» (where?).
+## Дозвілля (Leisure activities)
 
-Я плаваю в басейні.
-I am swimming in the pool.
+Дозві́лля — це наш ві́льний час. Ми мо́жемо відпочива́ти вдо́ма. Ми мо́жемо гуля́ти на ву́лиці. 
 
-Вони бігають на стадіоні.
-They are running at the stadium.
+Leisure is our free time. We can relax at home. We can walk outside.
 
-Ми тренуємося у спортзалі.
-We train in the gym.
+Ось популя́рні варіа́нти дозві́лля:
 
-### Чому ми використовуємо різні прийменники?
-You might wonder why we say «в басейні» but «на стадіоні».
-The choice between the prepositions **в/у** (in) and **на** (on) depends on the physical shape of the location.
-If the location is a closed building with a roof and walls, we use «в/у».
-A swimming pool (басейн) and a gym (спортзал) are enclosed spaces. Therefore, we use «в басейні» and «у спортзалі».
+Here are popular leisure options:
 
-If the location is an open space, a surface, or a territory without walls, we use «на».
-A stadium (стадіон) is historically an open field.
-Even modern covered stadiums retain this grammatical rule.
-Therefore, we say «на стадіоні».
+| Фра́за | Meaning |
+|--------|---------|
+| **ходи́ти в кіно́** | to go to the cinema |
+| **диви́тися серіа́ли** | to watch series |
+| **гуля́ти в па́рку** | to walk in the park |
 
-Я тренуюся у спортзалі.
-I train in the gym.
+Я люблю́ ходи́ти в кіно́. Сло́во «кіно́» ніко́ли не змі́нюється. 
 
-Він грає на стадіоні.
-He plays at the stadium.
+I like to go to the cinema. The word for cinema never changes.
 
-This logical rule helps you guess the correct preposition for many new places you will learn in the future.
+> [!tip]
+> Це сло́во не змі́нює фо́рму.
+> Just like the word for hobby, the word for cinema is indeclinable. You use the exact same form for both location and destination.
 
-### Напрямок проти місця: в басейн чи в басейні?
-One of the most important concepts in Ukrainian spatial grammar is the difference between location and destination.
-Location means you are already there (static).
-Destination means you are moving towards it (dynamic).
+Ми та́кож лю́бимо соціа́льне життя́. Ми лю́бимо зустріча́тися з дру́зями. Ми лю́бимо ходи́ти в го́сті.
 
-When you use the verb **ходи́ти** (to go regularly, on foot), you are expressing a destination.
-For destinations, Ukrainian uses the Accusative case, not the Locative case.
+We also like social life. We like to meet with friends. We like to visit homes. 
 
-Let us compare the two forms directly in a table format for clarity.
+Зустріча́тися з дру́зями — це ду́же важли́во. Ми ра́зом відпочива́ємо. 
+Meeting with friends is very important. We relax together.
 
-**Destination (Accusative): Moving to a place**
-Я ходжу в басейн.
-I go to the pool.
+| Фра́за | Meaning |
+|--------|---------|
+| **зустріча́тися з дру́зями** | to meet with friends |
+| **ходи́ти в го́сті** | to visit someone's home |
 
-Я йду на стадіон.
-I am going to the stadium.
+> [!culture]
+> Фра́за ходи́ти в го́сті — це йти додо́му. Це вели́ка части́на на́шої культу́ри.
+> This phrase literally means to go into guests. Visiting someone's home is a massive part of Ukrainian culture. Instead of meeting at a cafe, Ukrainians often prefer to invite friends over for tea, coffee, and homemade food.
 
-Він ходить у спортзал.
-He goes to the gym.
+### Як ти відпочива́єш у вихідні́?
+### How do you relax on weekends?
 
-**Location (Locative): Already at the place**
-Я плаваю в басейні.
-I am swimming in the pool.
+За́раз вихідні́. Я не працю́ю. У субо́ту ра́нком я йду у спортза́л. По́тім я гуля́ю в па́рку. Уве́чері я дивлю́ся серіа́ли. У неді́лю я хо́джу в го́сті. Ми зустріча́ємося з дру́зями. Ми п'є́мо ка́ву й говори́мо про життя́. Як ти відпочива́єш у вихідні́?
 
-Я граю у футбол на стадіоні.
-I am playing football at the stadium.
+Now it is the weekend. I am not working. On Saturday morning I go to the gym. Then I walk in the park. In the evening I watch series. On Sunday I visit friends. We meet with friends. We drink coffee and talk about life. How do you relax on weekends?
 
-Він зараз у спортзалі.
-He is in the gym right now.
+## Запрошення (Invitations)
 
-This distinction is crucial.
-Using the Locative case with a verb of motion sounds unnatural to a Ukrainian ear.
-Always ask yourself: is the subject moving towards a target, or simply existing in a space?
+Ми ма́ємо пла́ни. Ми запро́шуємо дру́зів. Як пра́вильно це зроби́ти?
 
-## Дозвілля
+We have plans. We invite friends. How to do this correctly?
 
-### Розваги та кіно
-Вільний час, або **дозві́лля**, — це відпочинок і розваги (entertainment and relaxation).
-Давайте вивчимо популярні фрази для вечора і вихідних (Let us learn some common phrases for evening and weekend entertainment).
+Запро́шення бува́є форма́льним або́ неформа́льним. З дру́зями ми говори́мо неформа́льно. 
 
-Слово **кіно́** означає cinema або movies.
-Як і слово «хобі», «кіно» — це слово середнього роду (neuter noun). Воно не змінює свою форму (indeclinable).
-Воно ніколи не змінюється.
-It never changes its form.
+An invitation can be formal or informal. With friends we speak informally.
 
-Я люблю ходити в кіно.
-I love going to the cinema.
+Ось три ко́рисні фра́зи:
 
-Вчора ми були в кіно.
-Yesterday we were at the cinema.
+Here are three useful phrases:
 
-Another popular activity is watching television series.
-The word for a series is «серіа́л».
+1. **Хо́чеш піти́ в кіно́?** 
+   Want to go to the cinema? A simple, direct question asking about their desire.
+2. **Ми мо́жемо піти́ ра́зом.** 
+   We can go together. A friendly suggestion.
+3. **Ми мо́жемо зустрі́тися.** 
+   We can meet up. A casual proposal to spend time together.
 
-Я люблю дивитися серіали.
-I love to watch series.
+Що мо́жна сказа́ти на запро́шення?
 
-Вона дивиться новий серіал.
-She is watching a new series.
+What can one say to an invitation?
 
-For outdoor relaxation, Ukrainians love to walk.
-The phrase is **гуля́ти в па́рку**.
-The word «па́рк» takes the Locative case here, becoming «в парку».
+| Фра́за | Meaning |
+|----------|---------|
+| **Із задово́ленням!** | With pleasure! |
+| **Чудо́ва іде́я!** | Great idea! |
+| **На жаль, не мо́жу.** | Unfortunately, I cannot. |
+| **Мо́же, і́ншим ра́зом?** | Maybe another time? |
 
-Увечері ми гуляємо в парку.
-In the evening, we walk in the park.
+> [!did-you-know]
+> Фра́за «із задово́ленням» — це найкра́щий спо́сіб сказа́ти «так».
+> The phrase for with pleasure is the most common way to politely say yes to an invitation. It shows genuine enthusiasm and joy!
 
-Діти гуляють у парку щодня.
-The children walk in the park every day.
+### Пла́ни на вихідні́
+### Weekend plans
 
-### Мистецтво спостереження: дивитися
-Let us look closer at the verb **диви́тися** (to watch, to look at).
-This verb is essential for leisure because so much of our free time is spent watching things.
-It is a Class II verb, meaning it conjugates with -и- endings (ти дивишся, він дивиться).
-It takes the Accusative case for the object you are watching.
-
-Я люблю дивитися телевізор.
-I love to watch television.
-
-Ми дивимося цікавий фільм.
-We are watching an interesting movie.
-
-Діти дивляться мультфільми.
-The children are watching cartoons.
-
-You also use «дивитися» when watching sports matches, not just movies.
-
-Він дивиться футбол на стадіоні.
-He is watching football at the stadium.
-
-This makes it a highly flexible verb for discussing weekend entertainment.
-
-### Звичні походи: ходити в
-We briefly discussed the verb **ходити** (to go, to walk).
-This verb is incredibly useful for talking about habitual leisure activities.
-It implies that you do something regularly, as a routine or a habit, rather than just one specific time.
-You pair it with the preposition «в» or «на» and the Accusative case.
-
-Я часто ходжу в кіно.
-I often go to the cinema.
-(This means I am a regular moviegoer.)
-
-Він ходить у спортзал тричі на тиждень.
-He goes to the gym three times a week.
-(This is his routine.)
-
-Ми ходимо на стадіон кожну суботу.
-We go to the stadium every Saturday.
-
-By using «ходити», you are describing your lifestyle.
-It is the perfect verb to answer questions about your general interests and habits.
-
-### Соціальні активності: друзі та гості
-A huge part of leisure in Ukraine involves other people.
-Socializing is deeply ingrained in the culture.
-The phrase for meeting friends is **зустріча́тися з дру́зями**.
-The verb «зустрічатися» is reflexive (it ends in -ся).
-It requires the preposition «з» (with) and the Instrumental case («друзями» is the Instrumental plural of «друзі»).
-
-На вихідних я зустрічаюся з друзями.
-On weekends, I meet with friends.
-
-Де ви зазвичай зустрічаєтеся з друзями?
-Where do you usually meet with friends?
-
-Another vital cultural concept is **ходити в го́сті**.
-This literally translates to «going into guests», but it means to visit someone's home.
-Visiting friends and family at their homes is a central social activity in Ukraine, often involving long meals and tea.
-
-Сьогодні ми йдемо в гості.
-Today we are going to visit someone.
-
-Я люблю ходити в гості до бабусі.
-I love visiting my grandmother.
-
-> [!cultural]
-> The concept of «ходити в гості» is very important.
-> When you visit someone's home in Ukraine, you usually bring a small gift, like a cake, chocolates, or flowers.
-> You will also likely be offered food, and it is polite to accept.
-> This tradition of home hospitality is a warm and essential part of Ukrainian leisure.
-
-### Типові вихідні: Що ти робиш у вихідні?
-The weekend is **ви́хідні**.
-Notice this word is always plural.
-To ask someone what they do on the weekend, you say:
-
-Що ти робиш у вихідні?
-What do you do on weekends?
-
-Let us look at a short paragraph describing a typical weekend routine.
-Notice how the sentences are short and clear.
-
-У суботу я не працюю.
-On Saturday, I do not work.
-
-Вранці я ходжу у спортзал.
-In the morning, I go to the gym.
-
-Там я плаваю в басейні.
-There, I swim in the pool.
-
-Вдень я читаю книгу або дивлюся серіали.
-In the afternoon, I read a book or watch series.
-
-Увечері я зустрічаюся з друзями.
-In the evening, I meet with friends.
-
-Ми гуляємо в парку або йдемо в кіно.
-We walk in the park or go to the cinema.
-
-У неділю я відпочиваю вдома.
-On Sunday, I rest at home.
-
-This narrative uses all the vocabulary and grammar structures we have covered so far.
-Practice reading it aloud to build your fluency.
-
-## Запрошення
-
-### Запрошення: Хочеш піти в...?
-Now that you can talk about what you like to do, you need to know how to invite others to join you.
-The most direct and casual way to invite a friend is to ask if they want to go somewhere.
-The phrase is **Хо́чеш піти в...?**
-It literally means «Do you want to go to...?».
-Remember to use the Accusative case for the destination.
-
-Хочеш піти в кіно сьогодні?
-Would you like to go to the cinema today?
-
-Хочеш піти в парк?
-How about going to the park?
-
-Хочеш піти на стадіон завтра?
-Shall we go to the stadium tomorrow?
-
-This structure is friendly, common, and perfect for everyday situations with people you know well.
-
-### Запрошення: Ходімо разом!
-If you want to suggest an activity with enthusiasm, you can use the imperative form.
-The phrase **Ході́мо ра́зом!** means «Let's go together!».
-This is a very positive and encouraging way to invite someone.
-
-Я йду у спортзал. Ходімо разом!
-I am going to the gym. Let's go together!
-
-Сьогодні гарна погода. Ходімо в парк!
-Today is beautiful weather. Let's go to the park!
-
-Сьогодні концерт. Ходімо!
-There is a concert today. Let's go!
-
-The word «ходімо» is a special command form that includes the speaker and the listener, similar to «let us» in English.
-
-### Запрошення: Давай зустрінемось!
-Another excellent way to suggest a plan is using the word «Дава́й».
-This word is extremely versatile and is used to propose actions.
-To suggest meeting up, you say **Дава́й зустрі́немось!** (Let's meet up!).
-
-Давай зустрінемось у суботу!
-Let's meet on Saturday!
-
-Давай зустрінемось біля кінотеатру.
-Let's meet near the cinema.
-
-Давай зустрінемось у центрі міста.
-Let's meet in the city center.
-
-You can pair «Давай» with many other verbs to suggest different activities.
-
-Давай грати в шахи!
-Let's play chess!
-
-Давай читати цю книгу разом!
-Let's read this book together!
-
-### Як прийняти запрошення або відмовитися
-Вас запрошують. Важливо знати, як відповісти ввічливо.
-Ось фрази для прийняття і відмови.
-
-**Accepting an invitation (Прийняття):**
-Ви хочете піти? Покажіть свій ентузіазм!
-
-Із задово́ленням!
-With pleasure!
-
-Це чудо́ва іде́я!
-That is a great idea!
-
-Так, дава́й!
-Yes, let's do it!
-
-**Declining an invitation (Відмова):**
-Ви не можете? Ввічливо вибачтеся і запропонуйте інший час.
-
-На жа́ль, я не мо́жу.
-Unfortunately, I cannot.
-
-Ви́бач, я сього́дні зайняти́й. (for a male speaker)
-Sorry, I am busy today.
-
-Ви́бач, я сього́дні зайнята́. (for a female speaker)
-Sorry, I am busy today.
-
-Мо́же, і́ншим ра́зом?
-Maybe another time?
-
-Let us see how these phrases work in a real context.
-
-— Привіт! Хочеш піти в кіно завтра?
-— Hello! Do you want to go to the cinema tomorrow?
-— Привіт! На жаль, я не можу. Я йду у спортзал.
-— Hello! Unfortunately, I cannot. I am going to the gym.
-— Розумію. Тоді, може, зустрінемось у неділю?
-— I understand. Then maybe let's meet on Sunday?
-— Це чудова ідея! Із задоволенням!
-— That is a great idea! With pleasure!
-
-## Практика
-
-### Діалог 1: Розмова про хобі
-Let us put everything together.
-Read this conversation between two acquaintances, Олена and Максим, discussing their interests.
-
-Олена: Привіт, Максиме! Що ти робиш у вільний час? Яке у тебе хобі?
-Олена: Hello, Maksym! What do you do in your free time? What is your hobby?
-
-Максим: Привіт, Олено! Моє хобі — це спорт. Я люблю бігати. А ти?
-Максим: Hello, Olena! My hobby is sports. I love to run. And you?
-
-Олена: Я захоплююся мистецтвом. Мені подобається малювати і фотографувати.
-Олена: I am passionate about art. I like to draw and take photographs.
-
-Максим: Дуже цікаво. А ти граєш у спортивні ігри?
-Максим: Very interesting. Do you play sports games?
-
-Олена: Так, іноді я граю в теніс. Але я не люблю плавати.
-Олена: Yes, sometimes I play tennis. But I do not like to swim.
-
-Максим: Зрозуміло. А я часто ходжу в басейн.
-Максим: I understand. And I often go to the pool.
-
-This dialogue uses three different ways to express preferences: «Моє хобі — це...», «Я захоплююся...», and «Мені подобається...».
-
-### Діалог 2: Планування вихідних
-Now, let us read a conversation where friends plan their weekend activities.
-Notice the use of invitations and destination grammar.
-
-Анна: Привіт, Сергію! Що ти робиш у суботу?
-Анна: Hello, Serhiy! What are you doing on Saturday?
-
-Сергій: Привіт, Анно! Вранці я йду на стадіон. Я граю у футбол.
-Сергій: Hello, Anna! In the morning I am going to the stadium. I play football.
-
-Анна: Чудово! А ввечері? Хочеш піти в кіно?
-Анна: Great! And in the evening? Would you like to go to the cinema?
-
-Сергій: Із задоволенням! Який фільм ми дивимося?
-Сергій: With pleasure! What movie are we watching?
-
-Анна: Новий український фільм. Давай зустрінемось о шостій?
-Анна: A new Ukrainian movie. Let's meet at six?
-
-Сергій: Так, давай. До зустрічі!
-Сергій: Yes, let's. See you!
-
-This short exchange demonstrates a successful invitation and clear planning using the vocabulary from this lesson.
-
-### Шахи у парках України
-> [!quote]
-> Шахи — це гімнастика для розуму.
-> Chess is gymnastics for the mind.
-
-In Ukraine, chess is not just a quiet indoor game.
-It is a vibrant, public activity.
-If you visit Taras Shevchenko Park in the center of Kyiv, especially on a warm weekend, you will see something wonderful.
-Dozens of people, mostly older gentlemen, gather at permanent concrete tables to play chess (грати в шахи).
-They bring their own chess sets, and crowds often gather around to watch intense matches.
-It is a lively social event.
-People debate moves, socialize, and spend hours outdoors.
-Playing chess in the park is a beloved cultural tradition that combines intellectual sport with community leisure.
-
-### Зустріч з друзями: ще один діалог
-Let us practice one more conversation focused on socializing.
-
-Катерина: Привіт, Іване! Ми з друзями сьогодні йдемо гуляти в парку. Ходімо разом!
-Катерина: Hello, Ivan! My friends and I are going for a walk in the park today. Let's go together!
-
-Іван: Привіт! На жаль, не можу. Я сьогодні зайнятий.
-Іван: Hello! Unfortunately, I cannot. I am busy today.
-
-Катерина: Шкода. Ти працюєш?
-Катерина: It is a pity. Are you working?
-
-Іван: Я йду в гості до брата. Ми будемо готувати вечерю.
-Іван: I am going to visit my brother. We will cook dinner.
-
-Катерина: О, це чудово. Тоді, може, іншим разом?
-Катерина: Oh, that is great. Then maybe another time?
-
-Іван: Обов'язково! Давай зустрінемось у неділю.
-Іван: Definitely! Let's meet on Sunday.
-
-Here you see how «ходити в гості» is used naturally as a reason for declining an invitation.
-
-### Текст: Мої ідеальні вихідні
-Прочитайте текст про вихідні. Це допомагає зрозуміти нові слова в контексті.
-
-Привіт! Мене звати Тарас. Я дуже люблю вихідні. У суботу і неділю я не працюю. У мене є багато різних хобі. Моє головне хобі — це спорт. У суботу вранці я завжди ходжу на стадіон. Там я бігаю і роблю гімнастику. Потім я йду у спортзал. Я люблю активно тренуватися. Моя дівчина, Оксана, не дуже любить спорт. Її хобі — це мистецтво та література. Вона любить малювати, читати і фотографувати природу.
-
-У суботу ввечері ми часто зустрічаємося з друзями. Ми йдемо гуляти в парку або йдемо в кіно. Ми дивимося новий український фільм або цікавий комедійний серіал. 
-
-У неділю вранці я плаваю в басейні. Після басейну ми часто йдемо в гості до батьків Оксани. Ми разом готуємо смачну вечерю. Ми п'ємо каву. Ми довго розмовляємо. Це мої ідеальні вихідні!
+— Приві́т, Окса́но! Що ти ро́биш у субо́ту?
+— Hi, Oksana! What are you doing on Saturday?
+— Приві́т! Я ві́льна. Нічо́го не роблю́.
+— Hi! I am free. I am doing nothing.
+— Хо́чеш піти́ в кіно́?
+— Want to go to the cinema?
+— Із задово́ленням! Яке́ кіно́ ми бу́демо диви́тися?
+— With pleasure! What movie will we watch?
+— Нову́ коме́дію. Ми мо́жемо піти́ ра́зом.
+— A new comedy. We can go together.
+— Чудо́ва іде́я. Ми мо́жемо зустрі́тися в це́нтрі.
+— Great idea. We can meet in the center.
 
 ---
 
-# Підсумок
+## Практика (Practice)
 
-You have learned a vast amount of vocabulary and grammar to help you talk about your free time.
-Це дуже корисна тема. Тепер ви можете говорити про спорт.
-You can now confidently discuss what you do, where you go, and who you meet.
-Ви знаєте нові дієслова. Ви знаєте нові іменники.
+Час повтори́ти нові́ пра́вила.
 
-Here are the key takeaways from this lesson.
+Time to review the new rules.
 
-- **Expressing Hobbies:** Ви знаєте три конструкції. You know three patterns. Фраза «Моє хобі — це...» працює для прямого твердження. Дієслово «захоплюватися» з орудним відмінком показує сильну пристрасть. Конструкція «Мені подобається...» підходить для загальних інтересів.
-- **Sports Rules:** When playing team sports, always use «грати в» plus the Accusative case (грати в футбол). Individual sports use their own verbs without prepositions (плавати, бігати).
-- **Location vs. Destination:** Ця граматична концепція дуже важлива. The static position requires the Locative case, while movement toward a target uses the Accusative case.
-- **Invitations:** You have three levels of invitation. «Хочеш піти в...?» is casually asking. «Ходімо разом!» is an enthusiastic suggestion. «Давай зустрінемось!» is a direct proposal to make a plan.
+- **Гра́ти в + Accusative:** Ми завжди́ вжива́ємо прийме́нник «в», коли́ гра́ємо у спорт.
+  Always use the preposition when playing team sports.
+- **Location vs. Destination:** Ми вжива́ємо місце́вий відмі́нок для мі́сця і знахі́дний відмі́нок для на́прямку.
+  Use Locative for where you are and Accusative for where you are going.
+- **Indeclinable nouns:** Деякі́ слова́ ніко́ли не змі́нюють закінче́ння.
+  Some words never change their endings.
+- **Invitations:** Ми пропону́ємо пла́ни дру́зям акти́вно.
+  Use active phrases to make plans with friends.
 
-**Перевірте себе:**
-1. Як сказати "My hobby is music" за допомогою конструкції "це"?
-2. Який відмінок ми використовуємо після дієслова "захоплюватися"?
-3. Як перекласти "I play tennis"? Чому ми використовуємо прийменник "в"?
-4. Яка різниця: "я плаваю в басейні" чи "я йду в басейн"?
-5. Як ввічливо відмовитися від запрошення і запропонувати інший час?
-6. Що означає культурна фраза "ходити в гості"?
+**Пита́ння для ва́с:**
+**Questions for you:**
+
+1. Як запита́ти люди́ну про її́ хо́бі?
+   How do you ask someone what their hobby is?
+2. Який відмі́нок потрі́бен для на́прямку?
+   What case is used for the destination when you go to the pool?
+3. Як сказа́ти про гру в те́ніс украї́нською мо́вою?
+   How do you say to play tennis in Ukrainian?
+4. Як вві́чливо відмови́ти на запро́шення?
+   What is a polite way to decline an invitation?
+
+Інформа́ція є в те́ксті. Ви мо́жете прочита́ти текст ще раз. Словни́к та́кож допомага́є. Пра́ктика ро́бить нас кра́щими!
+
+The answers are in the text. Read it again if needed! If you forgot a word, look in the dictionary. Practice makes us better!
+
+## Summary
+
+Ми вивчили нові слова про хобі та спорт. Ми також навчилися запрошувати друзів і приймати запрошення.
+
+We learned new words about hobbies and sports. We also learned how to invite friends and accept invitations.
 
 ---

@@ -1,0 +1,28 @@
+{
+  "track": "a1",
+  "slug": "questions-and-negation",
+  "mode": "v4",
+  "phases": {
+    "v4-research": {
+      "status": "complete",
+      "ts": "2026-03-06T05:04:51Z"
+    },
+    "v4-discover": {
+      "status": "complete",
+      "ts": "2026-03-06T05:05:19Z"
+    },
+    "v4-content": {
+      "status": "complete",
+      "ts": "2026-03-06T05:08:08Z"
+    },
+    "v4-activities": {
+      "status": "complete",
+      "ts": "2026-03-06T05:09:58Z"
+    },
+    "v4-validate": {
+      "status": "complete",
+      "ts": "2026-03-06T05:40:18Z",
+      "attempts": 5
+    }
+  }
+}

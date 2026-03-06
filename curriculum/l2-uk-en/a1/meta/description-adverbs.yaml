@@ -2,54 +2,53 @@ slug: description-adverbs
 title: 'Description: Adverbs'
 word_target: 1200
 content_outline:
-- section: Вступ
-  words: 400
+- title: Вступ (Introduction)
+  slug: introduction
+  words: 250
   points:
-  - 'Note for generator: Apply A1 heavy English scaffolding (10-50% immersion). Introduce
-    grammar concepts in English before providing Ukrainian examples.'
-  - 'Define what an adverb is by contrasting it with adjectives: Adjectives answer
-    Який? (What kind?, describing nouns), while adverbs answer Як? (How?, describing
-    actions).'
+  - Define what an adverb is using English scaffolding. Contrast adjectives (Який?
+    - What kind?, describing nouns) with adverbs (Як? - How?, describing actions).
   - 'Provide a visual contrast table: Noun + Adjective vs. Verb + Adverb.'
   - Explicitly address the common learner error of using adjectives for actions (e.g.,
-    *Він говорить хороший) and explain why Ukrainian requires a different form.
-- section: Основи та формування
-  words: 450
+    *Він говорить хороший) due to English interference.
+- title: Основи та формування (Basics and Formation)
+  slug: basics-and-formation
+  words: 300
   points:
-  - 'Teach the derivation rule with a clear visual step-by-step: Adjective stem +
-    -ий → -о (швидкий → швидко, гарний → гарно). Provide 4-5 core examples with IPA
-    on their first occurrence.'
-  - Create an H3 for the exception 'добре' (from добрий). Explain its high frequency
-    and universal cultural usage as 'OK/Agreed'.
-  - 'Establish the standard sentence structure: Adverbs typically follow the verb
-    to describe the action (Він працює добре). Provide 3 simple SVO sentences as examples.'
-- section: Час та частота
-  words: 450
+  - 'Teach the derivation rule visually: Adjective stem + -ий → -о (швидкий → швидко,
+    гарний → гарно). Include 4-5 core examples with IPA on their first occurrence.'
+  - Explain the exception 'добре' (from добрий), its high frequency, and its universal
+    cultural usage as 'OK/Agreed'.
+  - 'Establish standard sentence structure: Adverbs typically follow the verb to describe
+    the action (Він працює добре), using simple SVO sentences.'
+- title: Час та частота (Time and Frequency)
+  slug: time-and-frequency
+  words: 300
   points:
   - 'Present a visual frequency scale from 100% to 0%: завжди → зазвичай → часто →
     іноді → рідко → ніколи.'
-  - Create a dedicated H3 for 'ніколи'. Teach the strict Ukrainian double negation
-    rule (Я ніколи не + verb). Contrast directly with English 'I never...' to preempt
-    errors.
+  - Teach the strict Ukrainian double negation rule for 'ніколи' (Я ніколи не + verb).
+    Contrast directly with English 'I never...' to preempt errors.
   - Introduce Catalog A spatial and temporal markers (тут, там, сьогодні, завтра)
-    as basic adverbs of time and place. Show them in simple 3-word sentences.
-- section: Синтаксис та інтенсивність
-  words: 400
+    as basic adverbs of time and place in 3-word sentences.
+- title: Синтаксис та інтенсивність (Syntax and Intensity)
+  slug: syntax-and-intensity
+  words: 200
   points:
   - 'Introduce intensity modifiers: дуже (very), трохи (a bit), зовсім (completely),
     майже (almost).'
   - 'State the strict syntax rule: intensifiers MUST immediately precede the modified
-    adverb or adjective. Do not place them at the end of the sentence.'
-  - Provide a 'Correct vs. Incorrect' visual box (e.g., 'Це дуже добре' vs '*Це добре
-    дуже') to reinforce the syntax.
-  - Provide a short dialogue using 'дуже' + adverbs of manner to model natural conversational
-    rhythm.
-- section: Підсумок та культура
-  words: 300
+    adverb or adjective. Show a ''Correct vs. Incorrect'' box (''Це дуже добре'' vs
+    ''*Це добре дуже'').'
+  - Provide a short, non-imperative dialogue using 'дуже' + adverbs of manner to model
+    natural conversational rhythm.
+- title: 'Підсумок: Як ми це робимо? (Summary: How We Do It)'
+  slug: summary-how-we-do-it
+  words: 150
   points:
-  - Introduce the cultural proverb «Повільно їдеш — далі будеш» to reinforce 'повільно'
-    and discuss traditional perspectives on patience.
+  - Introduce the cultural proverb «Повільно їдеш — далі будеш» to reinforce the adverb
+    'повільно' and its cultural context.
   - 'Adopt the ''Food Critic'' persona: write a 4-5 sentence roleplay describing how
     someone cooks or eats (добре, погано, дуже смачно, швидко).'
-  - Model a simple daily routine using frequency adverbs (Я зазвичай снідаю швидко)
-    to demonstrate practical application.
+  - Include 3-4 self-check questions to verify understanding (e.g., How do you form
+    an adverb from 'швидкий'?, What is the rule for using 'ніколи'?).

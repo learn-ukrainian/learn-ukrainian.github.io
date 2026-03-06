@@ -1,325 +1,255 @@
 - type: match-up
-  title: 'Частини тіла: переклад'
-  instruction: 'З’єднайте українське слово з англійським перекладом.'
+  title: "Match the Body Parts"
+  instruction: "Match the Ukrainian words with their English translations."
   pairs:
-    - left: 'голова'
-      right: 'head'
-    - left: 'рука'
-      right: 'arm/hand'
-    - left: 'нога'
-      right: 'leg/foot'
-    - left: 'живіт'
-      right: 'stomach'
-    - left: 'спина'
-      right: 'back'
-    - left: 'горло'
-      right: 'throat'
-    - left: 'очі'
-      right: 'eyes'
-    - left: 'вуха'
-      right: 'ears'
-
-- type: group-sort
-  title: 'Рід іменників: частини тіла'
-  instruction: 'Розподіліть слова за родом (Він, Вона, Воно).'
-  groups:
-    - name: 'Він (Masculine)'
-      items:
-        - 'ніс'
-        - 'рот'
-        - 'живіт'
-        - 'кашель'
-    - name: 'Вона (Feminine)'
-      items:
-        - 'голова'
-        - 'спина'
-        - 'рука'
-        - 'нога'
-        - 'температура'
-        - 'аптека'
-    - name: 'Воно (Neuter)'
-      items:
-        - 'вухо'
-        - 'око'
-        - 'горло'
-        - 'серце'
-        - 'обличчя'
-        - 'тіло'
+    - left: "голова"
+      right: "head"
+    - left: "рука"
+      right: "arm or hand"
+    - left: "нога"
+      right: "leg or foot"
+    - left: "живіт"
+      right: "stomach"
+    - left: "горло"
+      right: "throat"
+    - left: "око"
+      right: "eye"
+    - left: "вухо"
+      right: "ear"
+    - left: "спина"
+      right: "back"
 
 - type: fill-in
-  title: 'Однина та множина'
-  instruction: 'Оберіть правильну форму слова (однина або множина).'
+  title: "Expressing Pain"
+  instruction: "Choose the correct form of the word to complete the sentence."
   items:
-    - sentence: 'Це моє {{1}}.'
-      answer: 'око'
-      options: ['око', 'очі', 'оком', 'ока']
-      explanation: '«Це» indicates singular neuter here, pointing to one eye.'
-    - sentence: 'У мене гарні {{1}}.'
-      answer: 'очі'
-      options: ['очі', 'око', 'очей', 'очами']
-      explanation: '«Гарні» is plural, so we need the plural form "очі".'
-    - sentence: 'У мене болить ліва {{1}}.'
-      answer: 'рука'
-      options: ['рука', 'руки', 'руку', 'рукою']
-      explanation: '«Ліва» is singular feminine, so we need "рука".'
-    - sentence: 'Мийте {{1}} перед їжею.'
-      answer: 'руки'
-      options: ['руки', 'рука', 'рукою', 'рукам']
-      explanation: 'Wash your hands (plural).'
-    - sentence: 'Це мої {{1}}.'
-      answer: 'вуха'
-      options: ['вуха', 'вухо', 'вух', 'вухам']
-      explanation: '«Мої» is plural.'
-    - sentence: 'У мене червоне {{1}}.'
-      answer: 'горло'
-      options: ['горло', 'горла', 'горлом', 'горлі']
-      explanation: '«Червоне» is singular neuter.'
-    - sentence: 'У мене болять {{1}}.'
-      answer: 'ноги'
-      options: ['ноги', 'нога', 'ногою', 'ніг']
-      explanation: '«Болять» is plural.'
-    - sentence: 'У мене болить праве {{1}}.'
-      answer: 'вухо'
-      options: ['вухо', 'вуха', 'вухом', 'вух']
-      explanation: '«Праве» is singular neuter.'
-
-- type: quiz
-  title: 'Правила про здоров’я'
-  instruction: 'Оберіть правильну відповідь на запитання.'
-  items:
-    - question: 'Як правильно сказати, що ви почуваєтеся недобре?'
-      explanation: 'Use the dative pronoun: Мені + adverb (погано, добре, краще).'
-      options:
-        - text: 'Мені погано.'
-          correct: true
-        - text: 'Я погано.'
-          correct: false
-        - text: 'Мене погано.'
-          correct: false
-        - text: 'Моє погано.'
-          correct: false
-    - question: 'Яка форма дієслова правильна: "У мене ... голова"?'
-      explanation: 'Голова (head) is singular, so the verb must be singular.'
-      options:
-        - text: 'болить'
-          correct: true
-        - text: 'болять'
-          correct: false
-        - text: 'хворіє'
-          correct: false
-        - text: 'має'
-          correct: false
-    - question: 'Яка форма дієслова правильна: "У мене ... ноги"?'
-      explanation: 'Ноги (legs) is plural, so the verb must be plural.'
-      options:
-        - text: 'болять'
-          correct: true
-        - text: 'болить'
-          correct: false
-        - text: 'хворіють'
-          correct: false
-        - text: 'мають'
-          correct: false
-    - question: 'Що ми зазвичай купуємо в аптеці, коли хворіємо?'
-      explanation: 'We buy medicine (ліки) in a pharmacy.'
-      options:
-        - text: 'ліки'
-          correct: true
-        - text: 'продукти'
-          correct: false
-        - text: 'одяг'
-          correct: false
-        - text: 'книги'
-          correct: false
-    - question: 'Як називається людина, яка лікує людей у лікарні?'
-      explanation: 'Лікар (doctor) treats people.'
-      options:
-        - text: 'лікар'
-          correct: true
-        - text: 'учитель'
-          correct: false
-        - text: 'водій'
-          correct: false
-        - text: 'кухар'
-          correct: false
-    - question: 'Що означає слово "температура" в українській мові?'
-      explanation: 'Температура means fever or temperature.'
-      options:
-        - text: 'fever'
-          correct: true
-        - text: 'pain'
-          correct: false
-        - text: 'cough'
-          correct: false
-        - text: 'health'
-          correct: false
-    - question: 'Як правильно попросити ліки в аптеці?'
-      explanation: 'We use "Дайте, будь ласка..." to politely ask for medicine.'
-      options:
-        - text: 'Дайте, будь ласка, ліки від кашлю.'
-          correct: true
-        - text: 'Я хочу грати.'
-          correct: false
-        - text: 'Де автобус?'
-          correct: false
-        - text: 'Скільки людей?'
-          correct: false
-    - question: 'Якого граматичного роду слово "серце" в українській мові?'
-      explanation: 'Серце (heart) is neuter (воно).'
-      options:
-        - text: 'Середнього (Neuter)'
-          correct: true
-        - text: 'Чоловічого (Masculine)'
-          correct: false
-        - text: 'Жіночого (Feminine)'
-          correct: false
-        - text: 'Множина (Plural)'
-          correct: false
+    - sentence: "У мене ___ голова."
+      answer: "болить"
+      options: ["болить", "болять", "хворий", "погано"]
+    - sentence: "У мене ___ очі."
+      answer: "болять"
+      options: ["болить", "болять", "кашель", "добре"]
+    - sentence: "У брата ___ спина."
+      answer: "болить"
+      options: ["болить", "болять", "лікар", "рецепт"]
+    - sentence: "У мами ___ вуха."
+      answer: "болять"
+      options: ["болить", "болять", "аптека", "нежить"]
+    - sentence: "У мене болить ___."
+      answer: "живіт"
+      options: ["живіт", "ноги", "очі", "руки"]
+    - sentence: "У мене болять ___."
+      answer: "руки"
+      options: ["руки", "горло", "голова", "живіт"]
+    - sentence: "У мене ___ горло."
+      answer: "болить"
+      options: ["болить", "болять", "погано", "лікар"]
+    - sentence: "У мене болить ___."
+      answer: "голова"
+      options: ["голова", "очі", "руки", "ноги"]
 
 - type: fill-in
-  title: 'Що болить?'
-  instruction: 'Доповніть речення правильними словами.'
+  title: "Describing Symptoms"
+  instruction: "Choose the correct word to describe how you feel."
   items:
-    - sentence: 'У мене {{1}} голова.'
-      answer: 'болить'
-      options: ['болить', 'болять', 'хворіє', 'біль']
-      explanation: 'Singular subject (голова) takes singular verb.'
-    - sentence: 'У мене {{1}} очі.'
-      answer: 'болять'
-      options: ['болять', 'болить', 'хворіють', 'біль']
-      explanation: 'Plural subject (очі) takes plural verb.'
-    - sentence: 'У мене {{1}} живіт.'
-      answer: 'болить'
-      options: ['болить', 'болять', 'хворіє', 'має']
-    - sentence: 'У мене {{1}} ноги.'
-      answer: 'болять'
-      options: ['болять', 'болить', 'хворіють', 'мають']
-    - sentence: 'У мене {{1}} горло.'
-      answer: 'болить'
-      options: ['болить', 'болять', 'хворіє', 'біль']
-    - sentence: 'У мене {{1}} спина.'
-      answer: 'болить'
-      options: ['болить', 'болять', 'хворіє', 'біль']
-    - sentence: 'У мене {{1}} вухо.'
-      answer: 'болить'
-      options: ['болить', 'болять', 'хворіє', 'біль']
-    - sentence: 'У мене {{1}} руки.'
-      answer: 'болять'
-      options: ['болять', 'болить', 'хворіють', 'мають']
+    - sentence: "У мене висока ___."
+      answer: "температура"
+      options: ["температура", "голова", "лікарня", "аптека"]
+    - sentence: "Я п'ю гарячий чай, бо в мене сильний ___."
+      answer: "кашель"
+      options: ["кашель", "живіт", "лікар", "рука"]
+    - sentence: "Мені дуже ___."
+      answer: "погано"
+      options: ["погано", "кашель", "нежить", "голова"]
+    - sentence: "Вона сьогодні вдома, бо в неї ___."
+      answer: "нежить"
+      options: ["нежить", "добре", "краще", "лікар"]
+    - sentence: "Я йду в аптеку купити ___."
+      answer: "ліки"
+      options: ["ліки", "голова", "хворий", "лікарня"]
+    - sentence: "Для цього потрібен ___."
+      answer: "рецепт"
+      options: ["рецепт", "кашель", "живіт", "горло"]
+    - sentence: "У мами сильний головний ___."
+      answer: "біль"
+      options: ["біль", "нежить", "кашель", "рецепт"]
+    - sentence: "Я п'ю свої ___."
+      answer: "ліки"
+      options: ["ліки", "голова", "живіт", "аптека"]
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide if the statements about Ukrainian grammar and culture are correct."
+  items:
+    - statement: "To say 'I feel bad', you should say 'Я погано'."
+      correct: false
+      explanation: "You must use the pronoun 'мені': Мені погано."
+    - statement: "The word 'ліки' (medicine) is always plural in Ukrainian."
+      correct: true
+      explanation: "Yes, 'ліки' is a unique plural-only word."
+    - statement: "When you say 'У мене болять ноги', you use 'болять' because 'ноги' is plural."
+      correct: true
+      explanation: "The body part is the subject, so the verb must match its plural form."
+    - statement: "A 'лікар' is a building where you go for medical help."
+      correct: false
+      explanation: "'Лікар' is a doctor (a person). 'Лікарня' is a hospital (a building)."
+    - statement: "Ukrainians often drink hot tea with raspberry or viburnum for a cold."
+      correct: true
+      explanation: "Phytotherapy (траволікування) is a popular traditional method."
+    - statement: "If your throat hurts, you say 'Я болю горло'."
+      correct: false
+      explanation: "You must say 'У мене болить горло'. 'Я болю' means 'I cause pain'."
+    - statement: "An 'аптека' is a place where you buy medicine."
+      correct: true
+      explanation: "Yes, 'аптека' is a pharmacy."
+    - statement: "You say 'Я йду в лікаря'."
+      correct: false
+      explanation: "You say 'Я йду до лікаря' because doctor is a person, not a building."
 
 - type: unjumble
-  title: 'Складіть речення'
-  instruction: 'Розставте слова у правильному порядку.'
+  title: "Build the Sentences"
+  instruction: "Put the words in the correct order."
   items:
-    - words: ['мене', 'У', 'голова', 'болить']
-      answer: 'У мене болить голова'
-    - words: ['потрібно', 'Мені', 'лікаря', 'до']
-      answer: 'Мені потрібно до лікаря'
-    - words: ['здоровому', 'У', 'дух', 'тілі', 'здоровий']
-      answer: 'У здоровому тілі здоровий дух'
-    - words: ['чай', 'малиновий', 'Пийте']
-      answer: 'Пийте малиновий чай'
-    - words: ['ліки', 'в', 'Купіть', 'аптеці']
-      answer: 'Купіть ліки в аптеці'
-    - words: ['мене', 'У', 'температура', 'висока']
-      answer: 'У мене висока температура'
-
-- type: match-up
-  title: 'Симптоми та поради'
-  instruction: 'З’єднайте симптом з порадою лікаря.'
-  pairs:
-    - left: 'У мене болить горло'
-      right: 'Пийте теплий чай'
-    - left: 'У мене температура'
-      right: 'Відпочивайте вдома'
-    - left: 'Я погано сплю'
-      right: 'Не пийте каву ввечері'
-    - left: 'У мене болить спина'
-      right: 'Не піднімайте важке'
-    - left: 'У мене немає апетиту'
-      right: 'Їжте легку їжу'
-    - left: 'У мене нежить'
-      right: 'Купіть краплі для носа'
-    - left: 'У мене кашель'
-      right: 'Купіть сироп'
-    - left: 'У мене болить голова'
-      right: 'Прийміть таблетку'
+    - words: ["У", "мене", "дуже", "болить", "голова."]
+      answer: "У мене дуже болить голова."
+    - words: ["Мені", "сьогодні", "дуже", "погано."]
+      answer: "Мені сьогодні дуже погано."
+    - words: ["Я", "йду", "до", "сімейного", "лікаря."]
+      answer: "Я йду до сімейного лікаря."
+    - words: ["У", "вас", "є", "ліки", "від", "кашлю?"]
+      answer: "У вас є ліки від кашлю?"
+    - words: ["У", "здоровому", "тілі", "—", "здоровий", "дух."]
+      answer: "У здоровому тілі — здоровий дух."
+    - words: ["Я", "п'ю", "свої", "ліки."]
+      answer: "Я п'ю свої ліки."
 
 - type: group-sort
-  title: 'Однина чи множина?'
-  instruction: 'Розподіліть слова за категоріями.'
+  title: "Singular or Plural?"
+  instruction: "Sort the body parts into the correct categories."
   groups:
-    - name: 'Однина (Singular)'
-      items:
-        - 'рука'
-        - 'нога'
-        - 'око'
-        - 'вухо'
-        - 'живіт'
-        - 'спина'
-    - name: 'Множина (Plural)'
-      items:
-        - 'руки'
-        - 'ноги'
-        - 'очі'
-        - 'вуха'
-        - 'таблетки'
-        - 'вітаміни'
+    - name: "Однина (Singular)"
+      items: ["голова", "рука", "нога", "око", "вухо", "живіт"]
+    - name: "Множина (Plural)"
+      items: ["руки", "ноги", "очі", "вуха"]
+
+- type: quiz
+  title: "Health & Pharmacy Quiz"
+  instruction: "Choose the best answer for each question."
+  items:
+    - question: "How do you ask for cough medicine at a pharmacy?"
+      explanation: "You say 'У вас є ліки від кашлю?' (Do you have medicine for a cough?)."
+      options:
+        - text: "У вас є ліки від кашлю?"
+          correct: true
+        - text: "У мене болить живіт."
+          correct: false
+        - text: "Я йду в лікарня."
+          correct: false
+        - text: "Мені дуже добре."
+          correct: false
+    - question: "Which phrase means 'I feel bad'?"
+      explanation: "You must use the dative pronoun 'Мені'."
+      options:
+        - text: "Мені погано."
+          correct: true
+        - text: "Я погано."
+          correct: false
+        - text: "У мене погано."
+          correct: false
+        - text: "Я хворий."
+          correct: false
+    - question: "What is a 'сімейний лікар'?"
+      explanation: "Сімейний лікар is a family doctor."
+      options:
+        - text: "A family doctor"
+          correct: true
+        - text: "A central hospital"
+          correct: false
+        - text: "A sick relative"
+          correct: false
+        - text: "A pharmacy"
+          correct: false
+    - question: "Which word do you use for 'prescription'?"
+      explanation: "The word for prescription is рецепт."
+      options:
+        - text: "рецепт"
+          correct: true
+        - text: "аптека"
+          correct: false
+        - text: "ліки"
+          correct: false
+        - text: "нежить"
+          correct: false
+    - question: "Complete the proverb: У здоровому тілі — здоровий ___."
+      explanation: "The proverb is 'У здоровому тілі — здоровий дух'."
+      options:
+        - text: "дух"
+          correct: true
+        - text: "живіт"
+          correct: false
+        - text: "лікар"
+          correct: false
+        - text: "кашель"
+          correct: false
+    - question: "If you have a high fever, you have висока ___."
+      explanation: "Fever is температура."
+      options:
+        - text: "температура"
+          correct: true
+        - text: "голова"
+          correct: false
+        - text: "аптека"
+          correct: false
+        - text: "малина"
+          correct: false
+    - question: "Which word means 'runny nose'?"
+      explanation: "The word for runny nose is нежить."
+      options:
+        - text: "нежить"
+          correct: true
+        - text: "кашель"
+          correct: false
+        - text: "живіт"
+          correct: false
+        - text: "біль"
+          correct: false
+    - question: "What do you need to buy strong medicine?"
+      explanation: "You need a prescription (рецепт)."
+      options:
+        - text: "рецепт"
+          correct: true
+        - text: "аптека"
+          correct: false
+        - text: "кашель"
+          correct: false
+        - text: "голова"
+          correct: false
 
 - type: fill-in
-  title: 'Діалог у лікаря'
-  instruction: 'Відтворіть розмову з лікарем.'
+  title: "Why? (Causes)"
+  instruction: "Complete the sentences explaining results."
   items:
-    - sentence: 'Доброго {{1}}.'
-      answer: 'дня'
-      options: ['дня', 'ночі', 'вечора', 'ранку']
-    - sentence: 'Що вас {{1}}?'
-      answer: 'турбує'
-      options: ['турбує', 'радує', 'цікавить', 'болить']
-    - sentence: 'У мене сильний {{1}}.'
-      answer: 'кашель'
-      options: ['кашель', 'кашлю', 'кашлем', 'кашлі']
-    - sentence: 'У вас є {{1}}?'
-      answer: 'температура'
-      options: ['температура', 'апетит', 'біль', 'ліки']
-    - sentence: 'Ось ваш {{1}}.'
-      answer: 'рецепт'
-      options: ['рецепт', 'квиток', 'паспорт', 'телефон']
-    - sentence: 'Приймайте ці {{1}}.'
-      answer: 'ліки'
-      options: ['ліки', 'цукерки', 'продукти', 'речі']
-    - sentence: 'Відкрийте {{1}}.'
-      answer: 'рот'
-      options: ['рот', 'очі', 'вуха', 'двері']
-    - sentence: 'Не {{1}}.'
-      answer: 'дихайте'
-      options: ['дихайте', 'спіть', 'їжте', 'ходіть']
-
-- type: fill-in
-  title: 'В аптеці'
-  instruction: 'Доповніть діалог в аптеці.'
-  items:
-    - sentence: 'Дайте, будь {{1}}, сироп.'
-      answer: 'ласка'
-      options: ['ласка', 'прошу', 'добре', 'дякую']
-    - sentence: 'У вас {{1}} кашель?'
-      answer: 'сухий'
-      options: ['сухий', 'мокрий', 'гарний', 'добрий']
-    - sentence: 'Скільки це {{1}}?'
-      answer: 'коштує'
-      options: ['коштує', 'робить', 'варто', 'є']
-    - sentence: 'Можна без {{1}}?'
-      answer: 'рецепту'
-      options: ['рецепту', 'грошей', 'аптеки', 'ліків']
-    - sentence: 'Візьміть ці {{1}}.'
-      answer: 'вітаміни'
-      options: ['вітаміни', 'книги', 'ручки', 'зошити']
-    - sentence: 'Дякую, до {{1}}.'
-      answer: 'побачення'
-      options: ['побачення', 'зустрічі', 'завтра', 'вечора']
-    - sentence: 'Дайте щось від {{1}}.'
-      answer: 'грипу'
-      options: ['грипу', 'хліба', 'води', 'чаю']
-    - sentence: 'Це ліки від {{1}}.'
-      answer: 'температури'
-      options: ['температури', 'голоду', 'спраги', 'сну']
+    - sentence: "Я хворий. ___ я сиджу вдома."
+      answer: "Тому"
+      options: ["Тому", "Що", "Як", "Де"]
+    - sentence: "У неї температура. Тому вона не ___."
+      answer: "працює"
+      options: ["працює", "добре", "хворий", "ліки"]
+    - sentence: "У нього кашель. Тому він п'є ___."
+      answer: "ліки"
+      options: ["ліки", "лікар", "аптека", "рецепт"]
+    - sentence: "У дитини болить живіт. Тому вона ___."
+      answer: "плаче"
+      options: ["плаче", "спить", "працює", "п'є"]
+    - sentence: "Я хворий. Тому ___ сиджу вдома."
+      answer: "я"
+      options: ["я", "він", "вона", "вони"]
+    - sentence: "У неї температура. Тому ___ не працює."
+      answer: "вона"
+      options: ["вона", "він", "я", "ми"]
+    - sentence: "У нього кашель. Тому ___ п'є ліки."
+      answer: "він"
+      options: ["він", "вона", "я", "ми"]
+    - sentence: "У дитини болить живіт. Тому ___ плаче."
+      answer: "вона"
+      options: ["вона", "він", "я", "ми"]

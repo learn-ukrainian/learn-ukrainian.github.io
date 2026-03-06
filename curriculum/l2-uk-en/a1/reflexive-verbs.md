@@ -9,142 +9,156 @@ Not covered:
 
 > **Чому це важливо?**
 >
-> Багато щоденних дій спрямовані на нас самих. Дзеркальні дієслова допомагають описувати ці дії правильно.
-> Many daily actions are directed at ourselves. Mirror verbs help describe these actions correctly.
+> Багато щоденних дій спрямовані на нас самих. Ми робимо це щодня. Дзеркальні дієслова допомагають описувати ці дії правильно.
+> Many daily actions are directed at ourselves. We do this every day. Mirror verbs help describe these actions correctly.
 
 ## Вступ: Що таке дієслова на -ся? (Introduction: What are Reflexive Verbs?)
 
-Ласкаво просимо! Українська мова має цікаву групу слів. Це дзеркальні дієслова.
-Welcome! The Ukrainian language has an interesting group of words. These are mirror verbs.
+Ласкаво просимо! Українська мова має дуже цікаву групу слів. Це так звані дзеркальні дієслова. Вони особливі та унікальні.
+Welcome! The Ukrainian language has a very interesting group of words. These are the so-called mirror verbs. They are special and unique.
 
-Дієслова можуть бути як дзеркало. Дія повертається до вас. Ми часто говоримо про себе.
-Verbs can be like a mirror. The action returns to you. We often talk about ourselves.
+Дієслова можуть працювати як дзеркало. Дія повертається прямо до вас. Ми часто говоримо про себе.
+Verbs can work like a mirror. The action returns right back to you. We often talk about ourselves.
 
-Українці використовують ці слова постійно. Ви будете чути їх скрізь. Вони роблять вашу мову природною.
-Ukrainians use these words constantly. You will hear them everywhere. They make your language natural.
+Українці використовують ці слова постійно. Ви будете чути їх скрізь. Вони роблять вашу мову дуже природною.
+Ukrainians use these words constantly. You will hear them everywhere. They make your language very natural.
 
-Let us look at a simple example. The verb «мити» means to wash something else. This can be a plate or a window. But if you want to talk about washing yourself, you add a special ending. The verb becomes «митися».
+Let us look at a simple everyday example. The normal verb «мити» means to wash something else. This can be a plate, a car, or a dirty window. You do the action to another object. But if you want to talk about washing yourself, you need a change. You add a special ending to the verb. The verb then becomes «митися».
 
-The ending «-ся» acts exactly like a mirror. It returns the action back to the subject. Historically, this ending was a separate word.
+The ending «-ся» acts exactly like a mirror. It returns the action back to the subject of the sentence. Historically, this ending was a completely separate word.
 
-Історично закінчення «-ся» — це окреме слово «себе» (oneself).
-Historically, the ending "-ся" was a separate word, «себе» (oneself). Over time, as people spoke, it merged with the verb to become a short ending.
+Історично закінчення «-ся» — це окреме слово. Це було слово «себе». Із часом воно стало коротшим.
+Historically, the ending «-ся» was a separate word. It was the word «себе» (oneself). Over time, it became shorter.
+
+People spoke quickly. The word «себе» merged with the main verb to become a simple, short ending. This makes speaking much faster and easier.
 
 > [!warning]
 > **The «Myself» Redundancy**
-> English speakers often try to translate word for word. They say «Я мию себе» to mean "I wash myself." This sounds very unnatural in Ukrainian. Do not use this literal translation. Always use the proper mirror verb: «Я миюся».
+> English speakers often try to translate word for word. They might say «Я мию себе» to mean «I wash myself». This sounds very unnatural and strange in Ukrainian. Do not use this literal English translation. Always use the proper mirror verb: «Я миюся».
 
-Це важливо для етикету.
-Understanding how "-ся" works (action directed at oneself) also helps explain a common etiquette mistake.
+Розуміння цього правила дуже важливе. Воно також допомагає для правильного етикету. Ви уникаєте типових помилок.
+Understanding this rule is very important. It also helps for proper etiquette. You avoid typical mistakes.
 
 > [!culture]
 > **The Apology Logic**
-> Sometimes you will hear people say «Вибачаюсь». Literally, this translates to "I excuse myself." Culturally, this implies you are absolving yourself of guilt, which can seem self-centered. The polite and correct way to apologize is «Вибачте». This word directs the request to the other person, meaning "Excuse me" or "Forgive me."
+> Sometimes you will hear people say «Вибачаюсь». Literally, this translates to «I excuse myself». Culturally, this implies you are absolving yourself of guilt, which can seem self-centered. The polite and correct way to apologize is «Вибачте». This word directs the request to the other person, meaning «Excuse me» or «Forgive me».
 
-## Відмінювання: Теперішній час
+## Відмінювання: Теперішній час (Conjugation: Present Tense)
 
-Відмінювати дзеркальні дієслова просто: ви берете звичайне дієслово і додаєте «-ся» або «-сь» у самому кінці.
-Conjugating mirror verbs is simple: you take the standard conjugated verb and attach "-ся" or "-сь" at the very end. This choice helps the language flow smoothly.
+Відмінювати такі дієслова досить просто. Ви берете звичайне дієслово. Потім ви додаєте закінчення.
+Conjugating such verbs is quite simple. You take the regular verb. Then you add the ending.
 
-However, there is one core phonetic rule to remember. The Ukrainian language loves to sound smooth and melodic. Because of this, the mirror ending actually has two different forms: «-ся» and «-сь».
+You do all the normal verb conjugation rules you already know. You conjugate the verb for «I», «you», «he», and so on. Then, at the very end of the word, you attach the mirror ending. This choice helps the beautiful language flow smoothly.
 
-You must look at the last letter of the conjugated verb. If the verb ends in a consonant, you add **«-ся»** (e.g., *ти миєш* + *ся* = **миєшся**). If the verb ends in a vowel, you add **«-сь»** (e.g., *я мию* + *сь* = **миюсь**). 
+However, there is one core phonetic rule to remember. The Ukrainian language loves to sound smooth and highly melodic. Because of this, the mirror ending actually has two different forms. These forms are «-ся» and «-сь».
 
-*Note: The 3rd-person forms (he/she/they) always end in the special cluster **-ться** (миється).*
+You must look at the exact last letter of the conjugated verb. 
+If the verb ends in a consonant, you add **«-ся»** (for example, *ти миєш* + *ся* = **миєшся**). 
+If the verb ends in a vowel, you add **«-сь»** (for example, *я мию* + *сь* = **миюсь**). 
 
-Ось дієслово «дивитися». Воно дуже популярне. Ми часто його використовуємо.
-Here is the verb "to watch." It is very popular. We use it often.
+Ось наше перше дієслово для практики. Це дієслово «дивитися». Ми часто його використовуємо.
+Here is our first verb for practice. This is the verb «to look» or «to watch». We use it often.
 
-| Займенник | Дієслово | Meaning |
-|-----------|----------|---------|
+Let us look at the full conjugation table for «дивитися».
+
+| Займенник (Pronoun) | Дієслово (Verb) | Meaning |
+|---------------------|-----------------|---------|
 | Я | дивлюсь | I watch |
 | Ти | дивишся | You watch |
 | Він / Вона | дивиться | He / She watches |
 | Ми | дивимось | We watch |
-| Ви | дивитесь | You watch (plural) |
+| Ви | дивитесь | You watch (plural/formal) |
 | Вони | дивляться | They watch |
 
-Я дивлюсь телевізор. Ти дивишся у вікно. Він дивиться на мене.
-I watch television. You look out the window. He looks at me.
+Я дивлюсь новий телевізор. Ти дивишся у велике вікно. Він уважно дивиться на мене.
+I watch the new television. You look out the big window. He looks carefully at me.
 
 > [!tip]
-> **The Pronunciation Secret**
-> Look carefully at the forms for Він, Вона, and Вони. They end in «-ться». This ending is a distinct phonetic marker of Ukrainian identity. It is never pronounced exactly as written. Instead, it sounds like a long, soft «ts» followed by an «a» sound. It flows together seamlessly!
+> **The Pronunciation Secret for 3rd Person**
+> Look carefully at the forms for Він, Вона, and Вони. They end in the cluster «-ться». This ending is a distinct phonetic marker of Ukrainian. It is NEVER pronounced exactly as written (with a separate T and S). Instead, it sounds like a long, soft Ukrainian «ц» followed by an «а» sound. It flows together seamlessly into one beautiful sound! Just think of it as sounding like «-цця».
 
-Ще одне дієслово для практики. Це дієслово «вчитися». Воно дуже корисне для студентів.
-Another verb for practice. This is the verb "to study." It is very useful for students.
+Ще одне дуже корисне дієслово. Це слово «вчитися». Воно ідеальне для всіх студентів.
+Another very useful verb. This is the word «to study». It is perfect for all students.
 
-Він добре вчиться у школі. Ми вчимось грати на гітарі. Вони вчаться добре.
-He studies well at school. We study playing the guitar. They study well.
+Він добре вчиться у школі. Ми вчимось грати на гітарі. Вони завжди вчаться добре.
+He studies well at school. We study playing the guitar. They always study well.
 
-Ми бачимо дві форми: «-ся» та «-сь». Вони роблять слова плавними.
-We see two forms that help the language sound smooth.
+Ми бачимо тут дві форми. Це закінчення «-ся» та «-сь». Вони роблять слова плавними.
+We see two forms here. These are the endings «-ся» and «-сь». They make the words smooth.
 
-Notice how the phonetic rule applies perfectly here. We use «-ся» after a consonant (*він вчить* + *ся* = **вчиться**), and we use «-сь» after a vowel (*ми вчимо* + *сь* = **вчимось**). It becomes completely automatic with a little bit of practice.
+Notice how the phonetic rule applies perfectly here. We use «-ся» after a consonant (*він вчить* + *ся* = **вчиться**), and we use «-сь» after a vowel (*ми вчимо* + *сь* = **вчимось**). It becomes completely automatic with just a little bit of practice. Your tongue will naturally choose the right form.
 
-## Семантичні групи та щоденна рутина
+## Семантичні групи та щоденна рутина (Semantic Groups and Daily Routine)
 
-Дзеркальні дієслова потрібні не тільки для миття. Вони описують багато щоденних дій.
-Mirror verbs are needed not only for washing. They describe many daily actions.
+Дзеркальні дієслова корисні не тільки для миття. Вони можуть описувати багато різних дій.
+Mirror verbs are useful not only for washing. They can describe many different actions.
 
-Ми можемо поділити їх на три групи. Це робить навчання набагато легшим.
-We can divide them into three groups. This makes learning much easier.
+Ми можемо зручно поділити їх на три групи. Це робить навчання набагато легшим.
+We can conveniently divide them into three groups. This makes learning much easier.
 
-### Type 1: True Reflexive Actions
-These are actions you do directly to yourself. They are absolutely essential for describing your daily routine. For example, «вмиватися» means to wash one's face, and «одягатися» means to dress oneself.
+### Справжні дзеркальні дії (True Reflexive Actions)
 
-Я вмиваюсь холодною водою щоранку. Він швидко одягається. Ми одягаємось тепло.
-I wash my face with cold water every morning. He dresses quickly. We dress warmly.
+These are actions you do directly to yourself. They are absolutely essential for describing your daily morning routine and getting ready for the day. For example, «вмиватися» means to wash one's face, and «одягатися» means to dress oneself.
 
-Ви будете використовувати ці слова постійно. Вони ідеальні для вашого ранкового розкладу.
-You will use these words constantly. They are perfect for your morning schedule.
+Я вмиваюсь холодною водою щоранку. Він дуже швидко одягається. Ми завжди одягаємось тепло.
+I wash my face with cold water every morning. He dresses very quickly. We always dress warmly.
 
-### Type 2: Reciprocal Actions
-Sometimes, the mirror ending actually means "each other." These verbs describe mutual actions between two or more people. Excellent common examples are «зустрічатися» (to meet each other) and «вітатися» (to greet each other).
+Ви будете використовувати ці слова постійно. Вони ідеальні для вашого ранкового розкладу. Вони показують вашу самостійність.
+You will use these words constantly. They are perfect for your morning schedule. They show your independence.
 
-Вони часто зустрічаються у місті. Ми вітаємось кожного дня. Ви також знайомитесь.
-They meet often in the city. We greet each other every day. You are also getting acquainted.
+When you wake up, you do many things for yourself. You wash yourself, you dry yourself, you dress yourself. In English, we often drop the «myself», but in Ukrainian, you must keep the mirror ending to show who receives the action.
 
-### Type 3: Lexicalized Verbs
-Some verbs are always reflexive. They simply do not exist without the mirror ending. A great example is «сміятися» (to laugh).
+### Взаємні дії (Reciprocal Actions)
 
-Вони голосно сміються. Ми сміємось до сліз. Я сміюсь кожного дня.
-They laugh loudly. We laugh to tears. I laugh every day.
+Sometimes, the mirror ending actually changes meaning. It means «each other» instead of «oneself». These verbs perfectly describe mutual actions between two or more people doing something together. Excellent common examples are «зустрічатися» (to meet each other) and «вітатися» (to greet each other).
 
-> [!warning]
-> **Watch Your Prepositions**
-> When you want to say "to laugh at a joke," English uses the word "at." Learners often make a big mistake here. The correct standard Ukrainian phrase is «сміятися з жарту». Always use the preposition «з» when laughing at something.
+Вони часто зустрічаються у великому місті. Ми радісно вітаємось кожного дня. Ви також часто знайомитесь.
+They meet often in the big city. We happily greet each other every day. You also frequently get acquainted.
 
-Ось ще слова. Вони мають інше значення із «-ся». Це слова «повертатися» та «займатися».
-Here are verbs that take on a special meaning with the mirror ending. These include "to return" and "to engage in."
+In these situations, the action goes back and forth between people. I greet you, and you greet me. We do it to each other. The mirror ending beautifully captures this mutual connection.
 
-Я займаюсь спортом. Вона займається бізнесом. Ми повертаємось додому пізно.
-I do sports. She does business. We return home late.
+### Особливі слова (Lexicalized Verbs)
 
-Finally, please be careful with agent confusion. We have the normal transitive verb «називати» (to name something). For objects, you use the reflexive form «називатися» (to be called). 
+Some verbs are always reflexive. They simply do not exist without the mirror ending. If you remove the ending, the word loses its meaning or sounds broken. A great example is «сміятися» (to laugh).
 
-Як це називається? Вулиця називається Хрещатик.
-What is this called? The street is called Khreshchatyk.
+Вони голосно сміються на вулиці. Ми сміємось до сліз. Я щиро сміюсь кожного дня.
+They laugh loudly on the street. We laugh to tears. I laugh sincerely every day.
 
 > [!warning]
-> **Introducing Yourself**
-> While objects use «називатися», it sounds unnatural to use it for your own name (e.g., *Я називаюсь Андрій* is incorrect). Always use **«Мене звати Андрій»** (They call me Andriy).
+> **Watch Your Prepositions with Laughing**
+> When you want to say «to laugh at a joke», English uses the word «at». Learners often make a big mistake here by translating literally. The correct standard Ukrainian phrase is «сміятися з жарту». Always use the preposition «з» when laughing at something.
 
-## Підсумок і перевірка
+Ось ще важливі слова для вас. Вони мають інше значення із «-ся». Це слова «повертатися» та «займатися».
+Here are more important words for you. They have a different meaning with «-ся». These are the words «to return» and «to engage in».
 
-Підсумок. Дзеркальні дієслова (mirror verbs) є важливою частиною щоденної української мови.
-Summary. Mirror verbs are an important part of everyday Ukrainian.
+Я із задоволенням займаюсь спортом. Вона дуже успішно займається бізнесом. Ми повертаємось додому пізно ввечері.
+I do sports with pleasure. She does business very successfully. We return home late in the evening.
 
-First, always remember that the suffix «-ся» reflects an action back onto the subject. We use two different forms based on the preceding letter. You must use «-ся» after consonants, and you must use «-сь» after vowels. This important phonetic rule keeps the Ukrainian language euphonic and smooth.
+Finally, please be very careful with agent confusion when naming things. We have the normal transitive verb «називати» (to name something). But for objects identifying themselves, you use the reflexive form «називатися» (to be called). 
 
-Second, we explored three main semantic functions today. You can use these mirror verbs for self-directed actions, like talking about your daily routine. You can use them for reciprocal actions, when the meaning changes to "each other." Finally, you use lexicalized verbs that simply cannot exist without this special ending.
+Як це гарно називається? Це прекрасне місто називається Одеса.
+What is this called beautifully? This beautiful city is called Odesa.
 
-Third, never forget the critical pronunciation rule for the third person. The ending «-ться» always sounds like a long, soft «ts» followed by «a».
+> [!warning]
+> **Introducing Yourself Correctly**
+> While objects use «називатися», it sounds very unnatural to use it for your own personal name (for example, *Я називаюсь Олег* is absolutely incorrect and unnatural). Always use **«Мене звати Олег»** (They call me Oleh) to introduce yourself.
 
-Тепер час для перевірки. Час для запитань. Бажаю успіху!
-Now it is time for a check. Time for questions. I wish you success!
+## Підсумок і перевірка (Summary and Self-Check)
 
-1. How do you correctly say "I wash myself" without using a literal English translation?
-2. Why is the word «Вибачаюсь» considered impolite compared to the proper word?
-3. How do you accurately pronounce the ending of the verb in the sentence «Він вчиться»?
-4. When exactly do we use the ending «-сь» instead of the ending «-ся»?
+Підсумок нашого уроку. Дзеркальні дієслова є надзвичайно важливою частиною щоденної української мови.
+Summary of our lesson. Mirror verbs are an extremely important part of everyday Ukrainian language.
+
+First, always remember that the suffix «-ся» reflects an action back onto the subject. It acts like a grammatical mirror. We use two different forms strictly based on the preceding letter. You must use «-ся» after consonants, and you must use «-сь» after vowels. This important phonetic rule keeps the Ukrainian language euphonically pleasing and smooth.
+
+Second, we explored three main semantic functions today. You can use these mirror verbs for self-directed actions, like talking about your daily routine and getting ready. You can use them for reciprocal actions, when the meaning changes to «each other». Finally, you use lexicalized verbs that simply cannot exist without this special ending.
+
+Third, never forget the critical pronunciation rule for the third person. The ending «-ться» always sounds like a long, soft Ukrainian «ц» followed by «а». It never sounds like a hard T and S.
+
+Тепер час для маленької перевірки. Це час для ваших запитань. Бажаю вам великого успіху!
+Now it is time for a little check. This is the time for your questions. I wish you great success!
+
+**Self-Check Questions:**
+1. How do you correctly say «I wash myself» without using a literal English translation? What is the correct single word?
+2. Why is the word «Вибачаюсь» considered impolite compared to the proper word? What does it literally mean?
+3. How do you accurately pronounce the ending of the verb in the sentence «Він добре вчиться»? What sound does it make?
+4. When exactly do we use the ending «-сь» instead of the ending «-ся»? Give an example of a word ending in «-сь».

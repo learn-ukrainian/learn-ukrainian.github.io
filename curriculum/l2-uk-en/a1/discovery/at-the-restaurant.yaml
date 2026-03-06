@@ -1,0 +1,135 @@
+discovered_at: '2026-03-06T06:57:37.130876+00:00'
+query_keywords:
+- At the Restaurant
+- Вступ та культурний контекст
+- Introduction & Cultural Context
+- Мова замовлення
+- Ordering Language
+- Типові ситуації
+- Typical Situations
+- Підсумок та етикет
+- Summary & Etiquette
+- a reservation
+- a full meal
+- restaurant situations
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/ph-food/
+  title: 'Ukrainian Phrasebook: Food and Restaurants'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - food
+  - restaurant
+  - ordering
+- url: https://www.ukrainianlessons.com/fmu17/
+  title: How to PAY at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 17
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.45000000000000007
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
+- url: https://www.ukrainianlessons.com/episode183/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.2
+  topics:
+  - general
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 183
+rag_chunks:
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-golub-2022_s0200
+  text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
+    \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
+    \ особисті \nцілі.\nЗапрîшення — коротке повідомлення про якусь подію \nі прохання\
+    \ взяти в ній участь.\nЗапрошення може бути усне або письмове.\nСлова запросити\
+    \ і просити, прохання мають однако-\nвий корінь. Це дає підстави вважати запрошення\
+    \ різ-\nновидом прохання.\n467   Розгляньте подану інформацію. Що вам відоме,\
+    \ а що   — нове? \nЯких помилок припус"
+  section_title: Сторінка 201
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0227
+  text: "162\nСтилістична норма\n6.\t Прочитайте уривок і виконайте завдання. \nДивовижно,\
+    \ але для більшості українців звичне в Європі слово кейтеринг (від англійського\
+    \ \ncater — постачання провізії) залишається незрозумілим. Зовсім інша ситуація,\
+    \ наприклад, \nу США: у цій країні всі фірми й установи користуються доставкою\
+    \ обідів до офісу.\nДля порівняння: за оцінками спеціалістів, понад 50 % київських\
+    \ фірм не мають своєї \nїдальні або буфету. За даними статистичних опитувань населення,\
+    \ тільки 10 % співробітни-\n"
+  section_title: Сторінка 162
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0011
+  text: "12\nРОЗВИТОК МОВЛЕННЯ\nПоміркуйте!\nЗа яких обставин (офіційних чи неофіційних)\
+    \ може відбувати­\nся спілкування в поданих ситуаціях?\n Супермаркет; \n день\
+    \ народження брата; \n пікнік зі своєю родиною;\n спортзал; \n кінотеатр.\n3.\
+    \ Складіть усний діалог за однією із ситуацій спілкування (не менше \nп’яти реплік\
+    \ від кожного/кожної учасника/учасниці діалогу). \n••\nВам дали завдання вирвати\
+    \ бур’ян на шкільній клумбі й полити кві-\nти. Ваші однокласник чи однокласниця\
+    \ хочуть перекласти на вас усю \nроботу. Переко"
+  section_title: Сторінка 12
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-golub-2022_s0202
+  text: "203\nПригадуємо:\n1   Пригадайте з власного досвіду, чи доводилося вам від-\n\
+    мовляти у відповідь на прохання чи запрошення. Як ви \nце робили? Чи мали сумніви?\n\
+    2   Чи легко відмовляти? Чи вмієте ви відмовляти не \nображаючи?\nШукаємо відповіді\
+    \ на запитання:\n1   Що таке згода і відмова? З якими мовленнєвими жанрами \n\
+    вони пов’язані?\n2   З яких частин складається текст згоди і відмови? За яких\
+    \ \nумов на прохання (пропозицію, запрошення) треба відпо-\nвідати лише відмовою?\n\
+    Відповідно до поставлених запитань"
+  section_title: Сторінка 203
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0019
+  text: "§ 6.\t\nУрок розвитку комунікативних умінь. \nВимоги до мовлення \nKommunikációs\
+    \ készségek fejlesztése. \nBeszédkövetelmények\nАдресат — той, до \nкого звертаються.\n\
+    Адресант — \nтой, хто ініціює \nмовлення. \nРозповідь\nПро дії особи або предмета,\
+    \ про події.\nОпис\nПро ознаки предмета або особи.\nРоздум\nПро причинно-наслідкові\
+    \ зв’язки між явища-\nми, діями, ознаками.\nОцінка \nпредмета \nабо явища\nПро\
+    \ ставлення до предмета або явища, його \nзначення.\nщо відбулося? що відбувається?\
+    \ що відбуватиметься?\nякий? яка? як"
+  section_title: Сторінка 21
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

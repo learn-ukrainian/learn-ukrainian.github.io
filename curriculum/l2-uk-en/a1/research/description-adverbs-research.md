@@ -1,32 +1,63 @@
 # Дослідження: Description: Adverbs
 
 ## State Standard Reference
-§1.3.2 (Письмо) та §1.4.2 (Говоріння): "елементарний опис людей, місць, предметів, ознак і дій."
-Alignment: Adverbs of manner and frequency fulfill the mandatory A1 requirement to provide an elementary description of actions ("дій") and signs/attributes ("ознак"). Although adverbs are not explicitly cataloged under A1 morphology in the mapping, they are essential for standard A1 communicative tasks like describing daily routines and locations.
+§1.3.1: "focus on elementary description of actions and signs" (and Catalog A spatial/temporal markers).
+Alignment: This module introduces fundamental adverbs of manner, time, frequency, and space, fulfilling the standard's requirement to describe how, when, and where actions occur in simple sentence structures.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| добре | Top 100 (High) | дуже добре, все добре, добре знати; acts as universal "OK" |
-| швидко | High | швидко йти, швидко читати, дуже швидко |
-| часто | Medium-High | як часто?, досить часто, дуже часто |
-| ніколи | High | REQUIRES double negation: я ніколи не був |
-| дуже | High | дуже добре, дуже швидко, дуже цікаво |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| добре | High frequency (Top 100); universal "OK/Agreed" marker | дуже добре, все добре |
+| швидко | High frequency | швидко йти, дуже швидко |
+| ніколи | High frequency; requires double negation | ніколи не бачив |
+| зазвичай | Medium frequency | як зазвичай, зазвичай вранці |
 
 ## Cultural Hooks
-1. **The Universal «Добре»**: In Ukrainian, «добре» functions as an adverb of manner (well) but is overwhelmingly used as an interjection meaning "Okay," "Agreed," or "Good." It is a cultural linchpin for affirmative responses.
-2. **Proverbial Wisdom**: «Повільно їдеш — далі будеш» (Literally: You drive slowly, you will be further; meaning: Haste makes waste). This proverb reflects traditional values of measured, deliberate action over rushing.
+1. The proverb «Повільно їдеш — далі будеш» (Slow and steady wins the race / Haste makes waste) highlights traditional Ukrainian values of patience and careful action.
 
 ## Common Learner Errors
-1. **Adjective instead of Adverb** → *Він говорить хороший (instead of Він говорить добре). Why: English L1 interference where words like "fast" serve as both adjective and adverb, leading beginners to apply the Який? form to actions.
-2. **Missing Double Negation** → *Я ніколи був (instead of Я ніколи не був). Why: Direct translation of the English "I have never been". Ukrainian requires «не» before the verb.
-3. **Misplaced Intensifiers** → *Це добре дуже (instead of Це дуже добре). Why: Syntax interference. In Ukrainian, the intensifier MUST precede the adverb or adjective.
+1. Adjectives for actions → *Він говорить хороший vs. Він говорить добре — English speakers often mistakenly use adjectives instead of adverbs to describe verbs.
+2. Missing double negation → *Я ніколи був vs. Я ніколи не був — English uses single negation ("I never..."), while Ukrainian strictly requires "ніколи не + verb".
+3. Wrong intensifier placement → *Це добре дуже vs. Це дуже добре — "Дуже" must immediately precede the modified word, not follow it.
 
 ## Cross-References
 - Builds on: a1-11 (Describing Things - Adjectives), a1-12 (Colors and Clothing)
-- Prepares for: a1-29 (Weather and Seasons), a1-30 (Checkpoint Consolidation)
+- Prepares for: a1-43 (Weather & Nature), a1-54 (Checkpoint: Communication)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Frame the `-о` derivation as a beautifully simple, native mechanism of the Ukrainian language. Do not contrast it with Russian equivalents. 
-- **Scaffolding**: Since this is an A1 module (10-50% immersion target), heavy English scaffolding is required for all grammar explanations, especially for the double negation rule and the derivation mechanics.
-- **Tone**: Patient Supportive Tutor. Use the "Food Critic" persona for practice examples (describing how someone cooks or eats).
+- A1 Level: Apply heavy English scaffolding (10-50% immersion) to explain grammar concepts clearly before showing Ukrainian examples.
+- M15+ Module Sequence Constraint: DO NOT use imperative forms (e.g., Слухайте!, Читайте!). Imperatives are strictly forbidden before M47. Use English for instructions or indirect requests.
+- Adopt the "Patient Supportive Tutor" persona and use a "Food Critic" roleplay to model adverbs of manner in an engaging, daily-life context.
+- Use visual tables to map adjective-to-adverb derivation (-ий to -о) and frequency scales.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [Ukrainian Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) (ukrainianlessons.com)
+- [Adverbs of Frequency in Ukrainian](https://www.ukrainianlessons.com/adverbs-frequency/) (ukrainianlessons.com)
+- [Adverbs of Location in Ukrainian](https://www.ukrainianlessons.com/adverbs-location/) (ukrainianlessons.com)
+- [Dobra Forma: Adverbs (Formation from Adjectives)](https://opentext.ku.edu/dobraforma/chapter/30-1/) (dobraforma)
+- [Dobra Forma: Using Adverbs](https://opentext.ku.edu/dobraforma/chapter/30-2/) (dobraforma)
+
+### Textbook References (RAG)
+- Grade 4, Сторінка 190: Змінювання дієслів минулого часу
+за родами (в однині) й числами........................................
+- Grade 3, Сторінка 65: 65
+Частини основи — префікс, корінь, суфікс —  на письмі 
+позначаються так: 
+підводн ий  .
+	 	
+3   ...
+- Grade 4, Сторінка 86: 86
+209.		Розгляньте таблицю та обговоріть її зміст.
+	 Склади п’ять  речень із правильними формулами ...
+- Grade 5, Сторінка 48: 45
+Будова слова.  
+Орфографія
+10. ОСНОВА СЛОВА ТА ЗАКІНЧЕННЯ.  
+ЗМІННІ І НЕЗМІННІ СЛОВА
+Про те, з як...
+- Grade 10, Сторінка 141: За лексичними й морфо-
+логічними ознаками поділяються на власні 
+й загальні, конкретні й абстрактні,...

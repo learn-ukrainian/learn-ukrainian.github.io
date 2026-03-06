@@ -1,7 +1,7 @@
 # Audit Report: M41 — at-the-cafe.md
 **Level:** A1 | **Module:** M41 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-06 02:27:46
+**Generated:** 2026-03-06 02:53:30
 
 ## Configuration
 **Type:** A1
@@ -35,20 +35,29 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2019/1200 (raw: 2287)
+- **Words:** ✅ 1656/1200 (raw: 2049)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.2% (target 35-55% (M41))
+- **Immersion:** 🇺🇦 38.1% (target 35-55% (M41))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -57,8 +66,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **At the Café** | ✅ | 29 | Included in Core |
-| **Вступ** | ✅ | 320 | Included in Core |
-| **Презентація** | ✅ | 495 | Included in Core |
-| **Практика** | ✅ | 603 | Included in Core |
-| **Продукція та Підсумок** | ✅ | 572 | Included in Core |
+| **At the Café** | ✅ | 27 | Included in Core |
+| **Вступ (Introduction)** | ✅ | 342 | Included in Core |
+| **Презентація (Presentation)** | ✅ | 466 | Included in Core |
+| **Практика (Practice)** | ✅ | 405 | Included in Core |
+| **Продукція та Підсумок (Production and Summary)** | ➖ | 360 | Excluded Type |
+| **Summary** | ✅ | 56 | Included in Core |

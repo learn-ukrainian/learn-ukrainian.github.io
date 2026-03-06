@@ -1,32 +1,71 @@
 # Дослідження: Travel and Transport
 
 ## State Standard Reference
-§3: "Тематика спілкування: подорожі, місто" (lines 479-556)
-§4.2.4.2: "Наказовий спосіб — 2-га особа" (lines 721-725)
-Alignment: The module addresses the communicative themes of travel and city navigation. It teaches 2nd-person plural imperatives for giving directions (поверніть, ідіть), which complies exactly with the A1 verb form limits.
-*Note on standard discrepancy*: The module plan introduces "до + Genitive" for destinations and "Instrumental without prepositions" for transport means (автобусом). According to the provided `state-standard-2024-mapping.yaml`, the Genitive and Instrumental cases formally belong to the A2 level. In this A1 module, these must be treated as fixed lexical chunks ("chunks of language") for high-frequency travel communication rather than broad grammatical paradigms.
+§3: "Thematic catalogue: подорожі, місто, транспорт" and §4.2.4.2: "Imperative mood — 2nd person only at A1".
+Alignment: Introduces essential vocabulary for travel and city navigation, utilizing 2nd person imperatives for giving directions. It also introduces the lexical use of the instrumental case for transport means (потягом, автобусом), taught functionally at A1.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| автобус | High (daily life) | їхати автобусом, чекати на автобус |
-| метро | High (urban) | станція метро, їхати в метро |
-| потяг | High (intercity) | квиток на потяг, їхати потягом |
-| квиток | Medium (travel) | купити квиток, квиток туди й назад |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| автобус | Most common public transport | їхати автобусом, чекати на автобус |
+| метро | Indeclinable neuter noun | їхати на метро, станція метро |
+| вокзал | Usually implies train station | залізничний вокзал |
+| квиток | Essential for travel | купити квиток, квиток на потяг |
+| наліво / направо | Basic direction adverbs | повернути наліво, йти направо |
 
 ## Cultural Hooks
-1. **Укрзалізниця (Ukrainian Railways):** Train travel is the cultural and logistical backbone of intercity transport in Ukraine. It is highly reliable, culturally significant, and deeply integrated into the Ukrainian experience.
-2. **Маршрутка Culture:** Minibuses (маршрутки) are a ubiquitous part of the Ukrainian urban transit ecosystem. They are uniquely characteristic of daily commutes in cities and suburbs.
+1. "Укрзалізниця" (Ukrainian Railways) is the dominant and highly relied-upon mode of intercity travel in Ukraine.
+2. The "маршрутка" (minibus) is a uniquely ubiquitous form of transport in Ukrainian cities, where passengers traditionally pass fare money forward to the driver.
 
 ## Common Learner Errors
-1. **Using prepositions for vehicles:** English speakers often translate "on the bus" as "на автобусі", but Ukrainian elegantly uses the bare Instrumental case for the means of transport (їхати автобусом).
-2. **Declining indeclinable nouns:** Learners might attempt to decline foreign loanwords like "метро" or "таксі". They need to be clearly marked as indeclinable neuter nouns (їхати в метро, а не в метрі).
+1. Declining "метро" or "таксі" → "в метрi" / "на таксю" — These are indeclinable neuter nouns and do not change form.
+2. Using "іти" (to go on foot) instead of "їхати" (to go by vehicle) for transport → "Я іду автобусом" instead of "Я їду автобусом".
+3. Confusing station types → Assuming "вокзал" alone means a bus station; it almost exclusively refers to the train station, while bus stations are explicitly "автовокзал".
 
 ## Cross-References
-- Builds on: a1-51 (Leisure and Hobbies)
+- Builds on: a1-51 (Leisure and Hobbies), prepositions modules (a1-27, a1-28 for до + Genitive)
 - Prepares for: a1-53 (At the Restaurant), a1-56 (Buying Tickets)
 
 ## Notes for Content Writing
-- Frame the bare Instrumental case for transport positively: highlight it as an elegant, efficient feature of the Ukrainian language (using one word instead of needing a prepositional phrase).
-- Ensure English scaffolding is heavily utilized for grammatical explanations, adhering to the A1 10-50% immersion policy.
-- Strictly differentiate the verbs of motion: emphasize the difference between riding/driving (їхати) and walking (іти).
+- M52 follows M47, meaning 2nd-person imperative forms are allowed. Use "Поверніть..." and "Ідіть..." freely.
+- The use of the instrumental case for transport means (автобусом, потягом, літаком) is formally an A2 standard; present these forms as fixed lexical chunks rather than teaching the full instrumental declension paradigm.
+- Maintain appropriate A1 English scaffolding for instructions and grammar explanations.
+
+## Resource Discovery
+
+
+### Blog Articles
+- [How to talk about transport in Ukrainian](https://www.ukrainianlessons.com/fmu5/) (ukrainianlessons.com)
+- [Talking about traveling — Past tense in Ukrainian](https://www.ukrainianlessons.com/episode26/) (ukrainianlessons.com)
+- [Traveling in Ukraine in winter — More Past tense](https://www.ukrainianlessons.com/episode27/) (ukrainianlessons.com)
+- [Review 21-29 — My travels in Ukrainian](https://www.ukrainianlessons.com/episode30/) (ukrainianlessons.com)
+- [Travel plan (Voice message №4)](https://www.ukrainianlessons.com/episode99/) (ukrainianlessons.com)
+
+### Textbook References (RAG)
+- Grade 5, Сторінка 59: трамвай
+трамва-єм
+автобус
+автобус-ом
+тролейбус
+тролейбус-ом
+поїзд/потяг
+поїзд-ом/ потяг-ом
+метро
+на ...
+- Grade 1, Сторінка 16: 16
+Знайди слово — підпис до малюнка. 
+Відшукай слово до схеми.
+	 маки	
+море	
+міст	
+місце
+	 маски	
+мо...
+- Grade 2, Сторінка 80: НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ 
+З ДІЄСЛОВАМИ
+Прочитайте речення. Простежте, 
+які різні дії означає слово ...
+- Grade 8, Сторінка 173: Á	Міський транспорт перевозить пасажирів і школярів. В	Нагородили юристів, учителів, економістів, лі...
+- Grade 5, Сторінка 206: 206
+Відомості із синтаксису й пунктуації. Види речень за емоційним забарвленням
+Види речень за емоці...

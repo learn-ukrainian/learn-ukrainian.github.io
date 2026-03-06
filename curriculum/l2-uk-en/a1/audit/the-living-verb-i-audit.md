@@ -1,7 +1,7 @@
 # Audit Report: M15 — the-living-verb-i.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-06 02:27:22
+**Generated:** 2026-03-06 02:35:48
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,7 +45,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1842/1200 (raw: 2002)
+- **Words:** ✅ 1833/1200 (raw: 1993)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.8% (target 25-40% (M15))
+- **Immersion:** 🇺🇦 37.7% (target 25-40% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -69,6 +69,6 @@
 | **The Living Verb I** | ✅ | 42 | Included in Core |
 | **Вступ (Introduction)** | ✅ | 355 | Included in Core |
 | **Презентація (Presentation)** | ✅ | 388 | Included in Core |
-| **Практика (Practice)** | ✅ | 706 | Included in Core |
+| **Практика (Practice)** | ✅ | 697 | Included in Core |
 | **Культурний аспект та підсумок (Cultural Insight and Summary)** | ✅ | 324 | Included in Core |
 | **Summary** | ✅ | 27 | Included in Core |

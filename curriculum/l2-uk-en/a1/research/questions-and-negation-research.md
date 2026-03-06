@@ -1,18 +1,34 @@
-## Research Notes
+# Дослідження: Questions & Negation
 
-**1. Textbook Approach:**
-Standard A1 Ukrainian textbooks (e.g., "Крок-1", "Яблуко") introduce negation very early by establishing the contrast between the standalone response «Так/Ні» and the verbal negation particle «не» + verb. For questions, the primary focus is initially on intonation (as it mimics natural speech), followed closely by the 5W question words (що, хто, де, коли). The question particle «чи» is typically introduced slightly later as a formal alternative for yes/no questions, ensuring learners don't over-rely on it in casual speech.
+## State Standard Reference
+§4.3.1: "Simple sentences — SVO, questions (хто? що? де? коли?), negation (не, ні)"
+Alignment: This module directly fulfills the core A1 requirement for basic interrogative and negative syntax, introducing the primary question words and negation particles.
 
-**2. Common Errors for English Speakers:**
-- **The "Do Trap":** English speakers instinctively look for a translation of "do/does" to form questions and negations (e.g., trying to say "Я роблю не знаю" instead of "Я не знаю").
-- **Confusing Ні and Не:** Using "ні" (no) instead of "не" (not) before a verb (e.g., "Я ні розумію").
-- **Flat Intonation:** Failing to raise the pitch sufficiently on the focus word during intonation-only questions, resulting in a statement rather than a question.
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| що (шо) | Top 10 word. Spoken variant "шо" is ubiquitous in casual speech. | Що це? Що ти робиш? |
+| хто | Top 50 word. | Хто це? Хто там? |
+| де | High frequency adverb. Essential for basic navigation. | Де ти? Де кава? |
+| не | Top 5 particle. Must always be placed directly before the verb. | не знаю, не розумію |
+| чи | Standard polite question marker. Marks formal register. | Чи ви розумієте? Чи є цукор? |
 
-**3. Cultural Hook:**
-The 1990s TV show *ALF* has a legendary Ukrainian dub that remains highly popular and memeable. ALF's famous quote: «Ти не любиш котів? Ти просто не вмієш їх готувати!» (You don't like cats? You just don't know how to cook them!) serves as a perfect, culturally resonant example of rhetorical negation and intonation in Ukrainian.
+## Cultural Hooks
+1. **ALF in Ukraine**: The 1990s Ukrainian dub of the sitcom *ALF* is legendary and considered a masterpiece of translation. His famous quote "Ти не любиш котів? Ти просто не вмієш їх готувати!" (You don't like cats? You just don't know how to cook them!) is a memorable example of negation and dark humor.
+2. **"Шо" on the street**: While "що" is the standard written form, recognizing the ubiquitous spoken pronunciation "шо" is a crucial survival skill for listening comprehension in Ukraine.
 
-**4. Cross-References:**
-This module heavily relies on present-tense verbs introduced in **a1-15 (The Living Verb I)**. It builds a foundation for **a1-16 (The Living Verb II)** and prepares learners directly for practical communicative scenarios in **a1-41 (At the Café)** by teaching them how to ask for locations and prices.
+## Common Learner Errors
+1. **The "Do Trap"** → Trying to translate "Do you..." directly by searching for an equivalent auxiliary verb, instead of simply using the verb with rising intonation or "чи" (e.g., "Ти знаєш?").
+2. **Confusing "Ні" and "Не"** → Saying "Ні знаю" instead of the correct "Я не знаю" (I do not know) or "Ні, я не знаю" (No, I do not know). "Ні" is the standalone answer, "не" negates the verb.
+3. **Flat Intonation** → Failing to use a sharp pitch rise (↗) for yes/no questions without "чи", causing them to sound exactly like declarative statements.
+
+## Cross-References
+- Builds on: a1-15 (The Living Verb I)
+- Prepares for: a1-16 (The Living Verb II), a1-41 (At the Café)
+
+## Notes for Content Writing
+- **Constraint Check**: Imperative forms (Слухайте!, Читайте!, Пишіть!) are STRICTLY FORBIDDEN as they are not taught until M47. Use indirect requests or English for all exercise instructions.
+- Frame the lack of "do/does" as a major advantage—Ukrainian syntax is much simpler than English here. Use visual pitch arrows (↗ vs ↘) to make intonation concrete.
 
 ## Resource Discovery
 

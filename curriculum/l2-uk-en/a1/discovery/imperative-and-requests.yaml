@@ -1,0 +1,174 @@
+discovered_at: '2026-03-06T04:31:01.128079+00:00'
+query_keywords:
+- Imperative and Requests
+- Наказовий спосіб
+- Imperative mood
+- Вісім обов'язкових дієслів
+- Eight required verbs
+- Ввічливе прохання
+- Polite requests
+- Заборони
+- Prohibitions
+- Form imperatives from the 8 required verbs
+- Distinguish ти and ви imperative forms
+- Make polite requests using будь ласка and прошу
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode111/
+  title: Birthday presents + Imperative mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - phrases
+  - greetings
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 111
+- url: https://www.ukrainianlessons.com/episode112/
+  title: How to cook varenyky + Imperative mood of the second person plural
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - plural
+  - vocabulary
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 112
+- url: https://www.ukrainianlessons.com/episode113/
+  title: Ukrainian traditional embroidery masterclass + More about the Imperative
+    mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - phrases
+  - introductions
+  - culture
+  - traditions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 113
+- url: https://www.ukrainianlessons.com/episode114/
+  title: How to make pysanky + Imperative mood of the verbs in the first person plural
+    (Let’s…)
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - plural
+  - vocabulary
+  - idioms
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 114
+- url: https://www.ukrainianlessons.com/ph-needs/
+  title: 'Ukrainian Phrasebook: Needs'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - needs
+  - requests
+  - phrases
+rag_chunks:
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0216
+  text: "§ 101–102.\t Творення дієслів наказового способу\nA felszólító módú igealakok\
+    \ képzése\nНаказовий спосіб означає наказ, прохання і спону-\nкання до дії. \n\
+    Губами говори, а руками роби! (Нар. творчість)\nДієслова наказового способу змінюються\
+    \ за числа-\nми та особами.\nФорми дієслів наказового способу\nОсоба\nОднина\n\
+    Множина\n1\nкричімо, пробачмо\n2\nкричи, пробач \nкричіть, пробачте\n3\nхай кричить,\
+    \  \nхай пробачить\nхай кричать,  \nхай пробачать\n \a\nДієслово їсти має такі\
+    \ форми наказового способу: \nїж, ї ́жмо, ї ́жт"
+  section_title: Сторінка 218
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0072
+  text: "55\nНаказовий спосіб дієслова\nУ формі 2-ї особи множини паралельно із закінченням\
+    \ -іть можна вживати й закін-\nчення -іте (воно хоч і рідше вживане, але нормативне):\
+    \ ходіть — ходіте, несіть — несіте, \nлюбіть — любіте, окропіть — окропіте. Іноді\
+    \ один спосіб дієслова вживають у значенні іншого, наприклад: Чи не допоміг би\
+    \ \nти мені виконати завдання? (умовний спосіб у значенні наказового). У значенні\
+    \ наказово-\nго способу може бути й інфінітив, наприклад: Стояти струнко! 2. Утворіть\
+    \ усі можливі форми "
+  section_title: Сторінка 55
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0088
+  text: "77\nЗауважте!\nДієслова умовного та наказового способу, на відміну від дійсного,\
+    \ не ма-\nють часових форм. \n2.\t Запишіть дієслова в три колонки: 1) дійсного\
+    \ способу; 2) умовного спо-\nсобу; 3) наказового способу. \nДекламував, наріжмо,\
+    \ крикнув би, економте, освітлюватимеш, оброби-\nли б, ласуєш, обнімімося, назвала\
+    \ б, бережімо, екранізували б, їдьте, ді­\nстань, ігноруємо, маскувався б, йдете,\
+    \ емігруйте, шукаймо.\n\t\nЗ перших букв записаних слів складіть приказку.\n3.\t\
+    \ Перепишіть речення та виконайте завд"
+  section_title: Сторінка 80
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-betsa-2023_s0214
+  text: "§ 100.\t\nСпособи дієслів (дійсний, умовний, \nнаказовий). Творення дієслів\
+    \ умовного \nспособу\nAz igemódok (kijelentő, feltételes, felszólító). \nA feltételes\
+    \ módú igealakok képzése\nВ українській мові дієслова мають три способи: \nдійсний,\
+    \ умовний і наказовий.\nДійсний спосіб вказує на дію, яка дійсно відбу-\nвалася,\
+    \ відбувається та відбудеться. Він означає дію \nв минулому, теперішньому або\
+    \ майбутньому часі. \nДіти вчора вчилися, сьогодні читають, а завтра \nпідуть\
+    \ в цирк.\nДієслова дійсного способу змінюю"
+  section_title: Сторінка 216
+  grade: 6
+  author: betsa
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0063
+  text: "Морфологічна норма\n46\n § 9 \nПаралельні форми вираження наказового \n способу\
+    \ дієслів І та ІІ особи множини\n72. Прочитайте. Визначте дієслова у формі наказового\
+    \ способу, особу та число \nкожного дієслова.\nДо великого моменту\nБудь готовим\
+    \ кожний з вас —\nКожний може стать \n \nБогданом,\nЯк настане слушний час.\n\
+    Лиш борися, не мирися,\nІ даремно сил не трать,\nГордо стій і не корися,\nХоч\
+    \ пропадь, але не зрадь!\n(За І. Франком)\nШануймося, єднаймося та \n \nбудьмо!\n\
+    Тримаймося родинного стебла!\nЗабудьмо чвари і "
+  section_title: Сторінка 46
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []
