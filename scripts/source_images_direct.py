@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Find textbook images for l2-uk-direct module items via RAG search.
 
+Two-pass search:
+  1. Local RAG: search textbook images via Qdrant (10K+ images)
+  2. Pixabay fallback: search CC0 stock images for unmatched items
+
 Takes a module YAML, searches Qdrant for each item with `image_url: null`,
 and suggests best-matching textbook images with confidence scores.
 
@@ -16,10 +20,18 @@ Usage:
 
     # Process all modules in a directory
     .venv/bin/python scripts/source_images_direct.py curriculum/l2-uk-direct/a1/ --all
+
+    # Skip Pixabay (RAG only)
+    .venv/bin/python scripts/source_images_direct.py curriculum/l2-uk-direct/a1/ --all --skip-pixabay
 """
 
 import argparse
+import json
+import os
 import sys
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 import yaml
@@ -27,6 +39,53 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[0]))
 
 from rag.query import search_images
+
+# ── Pixabay fallback ─────────────────────────────────────────────────────────
+PIXABAY_API_URL = "https://pixabay.com/api/"
+PIXABAY_API_KEY = os.environ.get("PIXABAY_API_KEY", "")
+
+if not PIXABAY_API_KEY:
+    _vibe_env = Path.home() / "projects/vibe/.env"
+    if _vibe_env.exists():
+        for _line in _vibe_env.read_text().splitlines():
+            if _line.startswith("VITE_PIXABAY_API_KEY="):
+                PIXABAY_API_KEY = _line.split("=", 1)[1].strip()
+                break
+
+
+def search_pixabay(query: str, per_page: int = 3) -> list[dict]:
+    """Search Pixabay for CC0 images. Returns list of candidates."""
+    if not PIXABAY_API_KEY:
+        return []
+    params = urllib.parse.urlencode({
+        "key": PIXABAY_API_KEY,
+        "q": query,
+        "image_type": "photo",
+        "per_page": per_page,
+        "safesearch": "true",
+        "lang": "uk",
+    })
+    try:
+        req = urllib.request.Request(
+            f"{PIXABAY_API_URL}?{params}",
+            headers={"User-Agent": "learn-ukrainian/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+        return [
+            {
+                "source": "pixabay",
+                "image_path": hit["webformatURL"],
+                "preview": hit["previewURL"],
+                "tags": hit["tags"],
+                "page_url": hit["pageURL"],
+                "score": 0.5,  # nominal score for Pixabay results
+            }
+            for hit in data.get("hits", [])
+        ]
+    except Exception as e:
+        print(f"  Pixabay error for '{query}': {e}", file=sys.stderr)
+        return []
 
 
 def extract_search_items(module_data: dict) -> list[dict]:
@@ -92,6 +151,7 @@ def source_images_for_module(
     min_score: float = 0.2,
     limit: int = 3,
     apply: bool = False,
+    skip_pixabay: bool = False,
 ) -> dict:
     """Find matching images for a module's null image_url fields.
 
@@ -163,6 +223,35 @@ def source_images_for_module(
                 ],
             })
         else:
+            # Pixabay fallback
+            if not skip_pixabay and PIXABAY_API_KEY:
+                pixabay_hits = search_pixabay(item["query"])
+                time.sleep(0.7)  # Rate limit: 100 req/min
+                if pixabay_hits:
+                    best_px = pixabay_hits[0]
+                    matched += 1
+                    print(f"  -> PIXABAY MATCH")
+                    print(f"     URL: {best_px['image_path']}")
+                    print(f"     Tags: {best_px['tags']}")
+                    if len(pixabay_hits) > 1:
+                        print(f"     + {len(pixabay_hits) - 1} more candidates")
+                    suggestions.append({
+                        "path": item["path"],
+                        "query": item["query"],
+                        "best_match": {
+                            "source": "pixabay",
+                            "image_path": best_px["image_path"],
+                            "image_id": best_px.get("page_url", ""),
+                            "score": best_px["score"],
+                            "description_uk": best_px.get("tags"),
+                        },
+                        "alternatives": [
+                            {"image_path": h["image_path"], "score": h["score"], "source": "pixabay"}
+                            for h in pixabay_hits[1:]
+                        ],
+                    })
+                    continue
+
             unmatched += 1
             print(f"  -> NO MATCH (best score: {hits[0]['score']:.4f})" if hits else "  -> NO RESULTS")
 
@@ -238,6 +327,7 @@ def main():
     parser.add_argument("--min-score", type=float, default=0.2, help="Minimum similarity score (default: 0.2)")
     parser.add_argument("--limit", type=int, default=3, help="Max candidates per item (default: 3)")
     parser.add_argument("--apply", action="store_true", help="Auto-populate image_ref in YAML files")
+    parser.add_argument("--skip-pixabay", action="store_true", help="Skip Pixabay fallback (RAG only)")
 
     args = parser.parse_args()
     target = Path(args.path)
@@ -266,6 +356,7 @@ def main():
             min_score=args.min_score,
             limit=args.limit,
             apply=args.apply,
+            skip_pixabay=args.skip_pixabay,
         )
         total_matched += result["matched"]
         total_unmatched += result["unmatched"]
