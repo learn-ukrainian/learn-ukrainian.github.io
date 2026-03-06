@@ -19,7 +19,7 @@
 
 ## Language Quality (applies to ALL Ukrainian text in activities)
 
-- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий
+- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний, красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний
 - **No Russian characters**: ы, э, ё, ъ must NEVER appear
 - **No IPA**: NEVER include IPA symbols or `ipa` fields
 - **No Latin transliteration**: Reference Ukrainian words in Cyrillic, not Latin (ZhYty → Жити)

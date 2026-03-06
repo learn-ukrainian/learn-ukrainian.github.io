@@ -17,6 +17,8 @@
 
 {ITEM_MINIMUMS_TABLE}
 
+**CRITICAL — HARD FAIL if violated:** Each activity MUST meet the minimum item count for its type. Activities with fewer items than the minimum will cause an automatic validation failure. Check the minimums table above BEFORE submitting.
+
 {DECODABLE_VOCABULARY}
 
 ## Module Constraints (HARD FAIL if violated)
@@ -60,6 +62,21 @@ Still avoid: `cloze` (needs 14+ blanks), `error-correction`, `unjumble`
 **If constraints allow basic sentences:**
 Add: `unjumble`, `fill-in` with sentences, `translate`
 Still avoid: `cloze` (needs 14+ blanks)
+
+### unjumble (sentence word reordering — ONLY when sentences allowed)
+
+```yaml
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:  # minItems: 8
+    - words: ["книга", "Це", "нова"]
+      answer: "Це нова книга"
+    - words: ["великий", "дім", "Це"]
+      answer: "Це великий дім"
+```
+
+**CRITICAL**: Use `words` (array of strings) + `answer` (string). Do NOT use `sentence`, `jumbled`, or `scrambled` fields — those are WRONG and will fail schema validation.
 
 ### Do NOT Use Grammar Terminology
 

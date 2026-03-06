@@ -30,7 +30,11 @@ Read ALL files before writing.
 
 {DECODABLE_VOCABULARY}
 
+NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+
 {TEXTBOOK_EXAMPLES}
+
+{CHECKPOINT_GUIDANCE}
 
 ---
 
@@ -38,10 +42,12 @@ Read ALL files before writing.
 
 Write the lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
-- **Target**: approximately {WORD_TARGET} words
+- **Target**: {WORD_TARGET}–{WORD_CEILING} words (below {WORD_TARGET} = FAIL, above {WORD_CEILING} = overproduction that increases error surface)
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
-- **Structure**: Follow the content_outline from `{META_PATH}` — each section maps to an H2. **Write ALL sections. Do not skip any section, even short ones like Summary.** Missing sections fail validation.
+- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+
+{EXACT_SECTION_TITLES}
 
 ### Beginner Writing Style
 
@@ -124,6 +130,8 @@ This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrai
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
 
+{SELF_AUDIT_SNIPPET}
+
 ---
 
 ## Output Format
@@ -150,7 +158,7 @@ Not covered:
 
 # {SUMMARY_HEADING}
 
-{Summary + 3-4 self-check questions}
+{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
 
 ---
 
@@ -182,6 +190,7 @@ Total: {total} words (target: {WORD_TARGET})
 
 - Do NOT generate activities or vocabulary tables (separate phase)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
+- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than {WORD_TARGET} words
 - Do NOT use straight quotes "..." — always «...»

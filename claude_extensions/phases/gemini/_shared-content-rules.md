@@ -19,6 +19,21 @@ Scan your ENTIRE output for these. They cause automatic audit failure:
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
+### English Calque Checklist
+
+As an English-dominant model, you may produce English-to-Ukrainian calques. Check and avoid:
+
+| English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+|---|---|---|
+| "will have" | буду мати | матиму |
+| "do work" | робити роботу | працювати |
+| "save money" | зберегти гроші | заощадити гроші |
+| "make a decision" | зробити рішення | прийняти рішення |
+| "take a photo" | брати фото | фотографувати / робити фото |
+| "have attention" | мати увагу | звертати увагу |
+| "give an answer" | давати відповідь | відповідати |
+| "make sense" | робити сенс | мати сенс |
+
 ### Euphony / Милозвучність (WARNING if violated)
 
 Ukrainian prose must follow euphony rules:
