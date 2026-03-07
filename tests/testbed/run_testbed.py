@@ -1,0 +1,464 @@
+#!/usr/bin/env python3
+"""Testbed runner — build, audit, and review fixed modules for regression testing.
+
+Usage:
+    %(prog)s build                    # Build all testbed modules (sandbox → mdx)
+    %(prog)s build --restart-from content  # Rebuild from content phase
+    %(prog)s audit                    # Audit only (no builds, no reviews)
+    %(prog)s full                     # Build + audit + compare to baseline
+    %(prog)s report                   # Show latest results vs baseline
+    %(prog)s baseline                 # Save current results as the baseline
+
+Builds every module in config.yaml, runs audit, tracks grades in results/.
+Reviews (content-review + prompt-review) run as Claude subagent skills after build.
+
+Issue: #754
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+TESTBED_DIR = Path(__file__).resolve().parent
+ROOT_DIR = TESTBED_DIR.parent.parent
+SCRIPTS_DIR = ROOT_DIR / "scripts"
+CURDIR = ROOT_DIR / "curriculum" / "l2-uk-en"
+RESULTS_DIR = TESTBED_DIR / "core" / "results"
+GRADES_CSV = TESTBED_DIR / "core" / "grades.csv"
+BASELINE_JSON = TESTBED_DIR / "core" / "baseline.json"
+PYTHON = str(ROOT_DIR / ".venv" / "bin" / "python")
+
+sys.path.insert(0, str(SCRIPTS_DIR))
+
+
+def load_config(track_filter: str | None = None) -> list[dict]:
+    """Load testbed module list from config.yaml, optionally filtered by track."""
+    import yaml
+    config_path = TESTBED_DIR / "config.yaml"
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    modules = config.get("core_modules", [])
+    if track_filter:
+        modules = [m for m in modules if m["track"] == track_filter]
+    return modules
+
+
+def build_module(mod: dict, restart_from: str | None = None, full: bool = False) -> bool:
+    """Build a single module via build_module_v5.py. Returns True on success."""
+    track, num, slug = mod["track"], mod["num"], mod["slug"]
+    cmd = [PYTHON, str(SCRIPTS_DIR / "build_module_v5.py"), track, str(num)]
+    if full:
+        cmd += ["--rebuild"]
+    elif restart_from:
+        cmd += ["--restart-from", restart_from]
+    else:
+        # Default: restart from sandbox (skip research/discover if already done)
+        state_file = CURDIR / track / "orchestration" / slug / "state.json"
+        if state_file.exists():
+            cmd += ["--restart-from", "sandbox"]
+
+    print(f"\n{'='*60}", flush=True)
+    print(f"  BUILD: {track} M{num} ({slug})", flush=True)
+    print(f"  CMD: {' '.join(cmd)}", flush=True)
+    print(f"{'='*60}", flush=True)
+
+    t0 = time.time()
+    result = subprocess.run(cmd, cwd=str(ROOT_DIR))
+    elapsed = time.time() - t0
+    ok = result.returncode == 0
+    print(f"  {'PASS' if ok else 'FAIL'} in {elapsed:.0f}s", flush=True)
+    return ok
+
+
+def audit_module(mod: dict) -> dict:
+    """Run audit on a module, return structured results."""
+    track, num, slug = mod["track"], mod["num"], mod["slug"]
+    content_path = CURDIR / track / f"{slug}.md"
+
+    if not content_path.exists():
+        return {"slug": slug, "track": track, "num": num, "status": "NO_CONTENT"}
+
+    # Run audit_module.py and capture output
+    cmd = [PYTHON, str(SCRIPTS_DIR / "audit_module.py"), str(content_path)]
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT_DIR))
+    output = result.stdout + result.stderr
+
+    # Parse audit output
+    gates = {}
+    passed = "AUDIT PASSED" in output
+
+    for line in output.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        # Parse gate lines like: "Words        ✅ 1742/1200 (raw: 1827)"
+        if "✅" in line or "❌" in line:
+            parts = line.split(None, 1)
+            if len(parts) >= 2:
+                gate_name = parts[0].strip()
+                gate_pass = "✅" in line
+                gates[gate_name] = gate_pass
+
+    # Extract word count
+    words = 0
+    word_target = 0
+    for line in output.split("\n"):
+        if "Words" in line and ("✅" in line or "❌" in line):
+            import re
+            m = re.search(r"(\d+)/(\d+)", line)
+            if m:
+                words = int(m.group(1))
+                word_target = int(m.group(2))
+
+    # Check orchestration state for fix loop count and self-audit status
+    state_file = CURDIR / track / "orchestration" / slug / "state.json"
+    fix_attempts = 0
+    self_audited = False
+    if state_file.exists():
+        with open(state_file) as f:
+            state = json.load(f)
+        validate_phase = state.get("phases", {}).get("validate", {})
+        fix_attempts = validate_phase.get("attempts", 0)
+        self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
+
+    # Count failing gates
+    failing_gates = [g for g, v in gates.items() if not v]
+
+    # Parse existing reviews
+    content_review = parse_content_review(track, slug)
+    prompt_review = parse_prompt_review(track, slug)
+
+    return {
+        "slug": slug,
+        "track": track,
+        "num": num,
+        "status": "PASS" if passed else "FAIL",
+        "words": words,
+        "word_target": word_target,
+        "gates": gates,
+        "failing_gates": failing_gates,
+        "fix_attempts": fix_attempts,
+        "self_audited": self_audited,
+        "audit_passed": passed,
+        "content_review": content_review,
+        "prompt_review": prompt_review,
+    }
+
+
+def grade_module(audit_result: dict) -> str:
+    """Assign A/B/C/F grade based on audit results."""
+    if audit_result["status"] == "NO_CONTENT":
+        return "N/A"
+    if not audit_result["audit_passed"]:
+        return "F"
+
+    # A: passed, 0-1 fix attempts, words > 120% target
+    # B: passed, ≤2 fix attempts
+    # C: passed, >2 fix attempts
+    fix = audit_result["fix_attempts"]
+    words = audit_result["words"]
+    target = audit_result["word_target"]
+    word_ratio = words / target if target > 0 else 0
+
+    if fix <= 1 and word_ratio >= 1.1:
+        return "A"
+    elif fix <= 2:
+        return "B"
+    else:
+        return "C"
+
+
+def parse_content_review(track: str, slug: str) -> dict | None:
+    """Parse existing content-review file for grade and issue counts."""
+    import re
+    review_path = CURDIR / track / "audit" / f"{slug}-content-review.md"
+    if not review_path.exists():
+        return None
+
+    text = review_path.read_text()
+
+    # Parse grade: "**Grade: B**" or "Grade: A." or "**Grade: B+**"
+    grade_match = re.search(r"[Gg]rade:\s*([ABCF][+\-]?)", text)
+    grade = grade_match.group(1) if grade_match else "?"
+
+    # Count issues by severity
+    critical = len(re.findall(r"CRITICAL", text, re.IGNORECASE))
+    high = len(re.findall(r"\bHIGH\b", text))
+    medium = len(re.findall(r"\bMEDIUM\b", text))
+
+    return {
+        "grade": grade,
+        "critical": critical,
+        "high": high,
+        "medium": medium,
+        "path": str(review_path),
+    }
+
+
+def parse_prompt_review(track: str, slug: str) -> dict | None:
+    """Parse existing prompt-review file for template health and fix count."""
+    import re
+    review_path = CURDIR / track / "audit" / f"{slug}-prompt-review.md"
+    if not review_path.exists():
+        return None
+
+    text = review_path.read_text()
+
+    # Parse template health: "Template Health: GOOD/NEEDS_WORK/BROKEN"
+    health_match = re.search(r"[Tt]emplate\s+[Hh]ealth[:\s]+(\w+)", text)
+    health = health_match.group(1).upper() if health_match else "?"
+
+    # Count fix loops mentioned
+    fix_match = re.search(r"[Ff]ix\s+[Ll]oop[s]?[:\s]+(\d+)", text)
+    fix_loops = int(fix_match.group(1)) if fix_match else 0
+
+    # Count friction points
+    friction_count = len(re.findall(r"[Ff]riction", text))
+
+    return {
+        "health": health,
+        "fix_loops": fix_loops,
+        "friction_count": friction_count,
+        "path": str(review_path),
+    }
+
+
+def save_results(results: list[dict], run_id: str) -> Path:
+    """Save results to JSON and append to grades CSV."""
+    # Save detailed JSON
+    result_file = RESULTS_DIR / f"{run_id}.json"
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(result_file, "w") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+
+    # Append to grades CSV
+    csv_exists = GRADES_CSV.exists()
+    with open(GRADES_CSV, "a", newline="") as f:
+        writer = csv.writer(f)
+        if not csv_exists:
+            writer.writerow(["date", "run_id", "track", "num", "slug", "audit_grade",
+                             "review_grade", "status", "words", "target",
+                             "fix_attempts", "self_audited", "failing_gates"])
+        for r in results:
+            cr = r.get("content_review")
+            writer.writerow([
+                datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                run_id,
+                r["track"], r["num"], r["slug"],
+                r.get("grade", "?"),
+                cr["grade"] if cr else "-",
+                r["status"],
+                r.get("words", 0), r.get("word_target", 0),
+                r.get("fix_attempts", 0),
+                "Y" if r.get("self_audited") else "N",
+                ";".join(r.get("failing_gates", [])),
+            ])
+
+    return result_file
+
+
+def load_baseline() -> dict[str, dict] | None:
+    """Load baseline results for comparison."""
+    if not BASELINE_JSON.exists():
+        return None
+    with open(BASELINE_JSON) as f:
+        baseline = json.load(f)
+    return {f"{r['track']}-{r['slug']}": r for r in baseline}
+
+
+def save_baseline(results: list[dict]):
+    """Save current results as the baseline."""
+    with open(BASELINE_JSON, "w") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+    print(f"\nBaseline saved: {BASELINE_JSON}")
+
+
+def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
+    """Print summary table."""
+    grade_order = {"A": 0, "B": 1, "C": 2, "F": 3, "N/A": 4}
+
+    print(f"\n{'='*90}")
+    print(f"  TESTBED RESULTS — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"{'='*90}")
+    print(f"{'#':>3} {'Track':>5} {'Slug':<34} {'Audit':>5} {'Review':>6} {'Fix':>3} {'SA':>2} {'Words':>9} {'Delta':>6}")
+    print(f"{'-'*3:>3} {'-'*5:>5} {'-'*34:<34} {'-'*5:>5} {'-'*6:>6} {'-'*3:>3} {'-'*2:>2} {'-'*9:>9} {'-'*6:>6}")
+
+    a_count = 0
+    total = 0
+
+    for r in results:
+        grade = r.get("grade", "?")
+        key = f"{r['track']}-{r['slug']}"
+        delta = ""
+        if baseline and key in baseline:
+            old_grade = baseline[key].get("grade", "?")
+            if old_grade != grade:
+                old_ord = grade_order.get(old_grade, 9)
+                new_ord = grade_order.get(grade, 9)
+                if new_ord < old_ord:
+                    delta = f"+{old_grade}→{grade}"
+                elif new_ord > old_ord:
+                    delta = f"-{old_grade}→{grade}"
+                else:
+                    delta = "="
+            else:
+                delta = "="
+
+        # Content review grade
+        cr = r.get("content_review")
+        review_str = cr["grade"] if cr else "-"
+
+        words_str = f"{r.get('words', 0)}/{r.get('word_target', 0)}"
+        sa_str = "Y" if r.get("self_audited") else "-"
+        slug_short = r['slug'][:34]
+        print(f"{r['num']:>3} {r['track']:>5} {slug_short:<34} {grade:>5} {review_str:>6} {r.get('fix_attempts', 0):>3} {sa_str:>2} {words_str:>9} {delta:>6}")
+
+        if grade == "A":
+            a_count += 1
+        if r["status"] != "NO_CONTENT":
+            total += 1
+
+    print(f"\n  Audit: {a_count}/{total} A-grade", end="")
+    if baseline:
+        old_a = sum(1 for r in baseline.values() if r.get("grade") == "A")
+        old_total = sum(1 for r in baseline.values() if r.get("status") != "NO_CONTENT")
+        diff = a_count - old_a
+        print(f" (baseline: {old_a}/{old_total}, delta: {'+' if diff >= 0 else ''}{diff})", end="")
+
+    # Self-audit summary
+    sa_count = sum(1 for r in results if r.get("self_audited"))
+    if total:
+        print(f"\n  Self-audit: {sa_count}/{total} modules self-audited", end="")
+
+    # Review summary
+    reviewed = [r for r in results if r.get("content_review")]
+    if reviewed:
+        review_grades = [r["content_review"]["grade"] for r in reviewed]
+        a_reviews = sum(1 for g in review_grades if g.startswith("A"))
+        print(f"\n  Review: {a_reviews}/{len(reviewed)} A-grade (from content-review files)", end="")
+
+    # Prompt review summary
+    pr_modules = [r for r in results if r.get("prompt_review")]
+    if pr_modules:
+        healths = [r["prompt_review"]["health"] for r in pr_modules]
+        good = sum(1 for h in healths if h == "GOOD")
+        print(f"\n  Prompt: {good}/{len(pr_modules)} GOOD template health", end="")
+
+    print("\n")
+
+
+def cmd_build(args):
+    """Build all testbed modules."""
+    modules = load_config(track_filter=getattr(args, "track", None))
+    restart_from = getattr(args, "restart_from", None)
+    full = getattr(args, "full", False)
+
+    print(f"\nBuilding {len(modules)} module(s)...\n")
+    for mod in modules:
+        build_module(mod, restart_from=restart_from, full=full)
+
+
+def cmd_audit(args):
+    """Audit all testbed modules and report."""
+    modules = load_config(track_filter=getattr(args, "track", None))
+    results = []
+
+    for mod in modules:
+        r = audit_module(mod)
+        r["grade"] = grade_module(r)
+        results.append(r)
+
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    result_file = save_results(results, run_id)
+    baseline = load_baseline()
+    print_report(results, baseline)
+    print(f"  Results saved: {result_file}")
+
+    return results
+
+
+def cmd_full(args):
+    """Build + audit + report."""
+    cmd_build(args)
+    results = cmd_audit(args)
+
+    # Regression check
+    baseline = load_baseline()
+    if baseline:
+        for r in results:
+            key = f"{r['track']}-{r['slug']}"
+            if key in baseline:
+                old_grade = baseline[key].get("grade", "?")
+                new_grade = r.get("grade", "?")
+                grade_order = {"A": 0, "B": 1, "C": 2, "F": 3}
+                if grade_order.get(new_grade, 9) > grade_order.get(old_grade, 9):
+                    print(f"  ⚠️  REGRESSION: {r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}")
+
+
+def cmd_report(args):
+    """Show latest results vs baseline."""
+    # Find latest result file
+    result_files = sorted(RESULTS_DIR.glob("*.json"))
+    if not result_files:
+        print("No results yet. Run 'audit' or 'full' first.")
+        return
+
+    with open(result_files[-1]) as f:
+        results = json.load(f)
+
+    baseline = load_baseline()
+    print_report(results, baseline)
+
+
+def cmd_baseline(args):
+    """Save current audit results as baseline."""
+    results = cmd_audit(args)
+    save_baseline(results)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Testbed runner — regression testing for pipeline quality",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    # build
+    p_build = sub.add_parser("build", help="Build all testbed modules")
+    p_build.add_argument("--restart-from", help="Restart from phase (e.g., sandbox, content)")
+    p_build.add_argument("--full", action="store_true", help="Full rebuild from research (nuke state)")
+    p_build.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
+    p_build.set_defaults(func=cmd_build)
+
+    # audit
+    p_audit = sub.add_parser("audit", help="Audit only (no builds)")
+    p_audit.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
+    p_audit.set_defaults(func=cmd_audit)
+
+    # full
+    p_full = sub.add_parser("full", help="Build + audit + compare")
+    p_full.add_argument("--restart-from", help="Restart from phase")
+    p_full.add_argument("--full", action="store_true", help="Full rebuild from research")
+    p_full.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
+    p_full.set_defaults(func=cmd_full)
+
+    # report
+    p_report = sub.add_parser("report", help="Show latest results")
+    p_report.set_defaults(func=cmd_report)
+
+    # baseline
+    p_baseline = sub.add_parser("baseline", help="Save current results as baseline")
+    p_baseline.set_defaults(func=cmd_baseline)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()

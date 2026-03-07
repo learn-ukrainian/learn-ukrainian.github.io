@@ -266,6 +266,44 @@ class TestMarkComplete:
         assert disk_state["phases"]["research"]["status"] == "complete"
 
 
+class TestSelfAuditIntegration:
+    """End-to-end test: self_audited flag flows from content to validate."""
+
+    def test_self_audited_flag_readable_from_state(self, tmp_path):
+        """Validate phase reads self_audited from persisted state."""
+        ctx = _make_ctx(tmp_path)
+        state = {"mode": "v5", "track": "a1", "slug": "test", "phases": {}}
+        mark_complete(state, "content", ctx, self_audited=True)
+
+        # Simulate validate phase reading state from disk (fresh load)
+        loaded = load_state(ctx)
+        content_self_audited = loaded.get("phases", {}).get("content", {}).get("self_audited", False)
+        assert content_self_audited is True
+
+    def test_self_audited_false_by_default(self, tmp_path):
+        """Without self-audit, the flag should be absent/false."""
+        ctx = _make_ctx(tmp_path)
+        state = {"mode": "v5", "track": "a1", "slug": "test", "phases": {}}
+        mark_complete(state, "content", ctx)
+
+        loaded = load_state(ctx)
+        content_self_audited = loaded.get("phases", {}).get("content", {}).get("self_audited", False)
+        assert content_self_audited is False
+
+    def test_self_audited_survives_additional_marks(self, tmp_path):
+        """Marking other phases shouldn't lose the content self_audited flag."""
+        ctx = _make_ctx(tmp_path)
+        state = {"mode": "v5", "track": "a1", "slug": "test", "phases": {}}
+        mark_complete(state, "content", ctx, self_audited=True)
+        mark_complete(state, "activities", ctx)
+        mark_complete(state, "validate", ctx, attempts=1)
+
+        loaded = load_state(ctx)
+        assert loaded["phases"]["content"]["self_audited"] is True
+        assert loaded["phases"]["activities"]["status"] == "complete"
+        assert loaded["phases"]["validate"]["attempts"] == 1
+
+
 # =============================================================================
 # v5 guards in pipeline_lib.py
 # =============================================================================
