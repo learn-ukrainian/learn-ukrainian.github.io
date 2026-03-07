@@ -235,33 +235,6 @@ class TestFormatDiscovery:
 
 
 # ---------------------------------------------------------------------------
-# Phase registration (build_module.py integration)
-# ---------------------------------------------------------------------------
-
-class TestPhaseRegistration:
-    def test_discover_in_phase_sequence(self):
-        from scripts.build_module import PHASE_SEQUENCE_V4
-        assert "discover" in PHASE_SEQUENCE_V4
-        idx_r = PHASE_SEQUENCE_V4.index("research")
-        idx_d = PHASE_SEQUENCE_V4.index("discover")
-        idx_c = PHASE_SEQUENCE_V4.index("content")
-        assert idx_r < idx_d < idx_c
-
-    def test_discover_in_state_ids(self):
-        from scripts.build_module import _V4_PHASE_STATE_IDS
-        assert "discover" in _V4_PHASE_STATE_IDS
-
-    def test_discover_in_labels(self):
-        from scripts.build_module import PHASE_LABELS_V4
-        assert "discover" in PHASE_LABELS_V4
-
-    def test_discover_in_functions(self):
-        from scripts.build_module import PHASE_FUNCTIONS_V4
-        assert "discover" in PHASE_FUNCTIONS_V4
-        assert callable(PHASE_FUNCTIONS_V4["discover"])
-
-
-# ---------------------------------------------------------------------------
 # Keyword cleaning
 # ---------------------------------------------------------------------------
 
