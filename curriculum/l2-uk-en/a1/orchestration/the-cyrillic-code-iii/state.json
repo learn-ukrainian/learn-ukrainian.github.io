@@ -1,8 +1,35 @@
 {
-  "slug": "the-cyrillic-code-iii",
   "track": "a1",
-  "module_num": 3,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-05T17:34:15Z"
+  "slug": "the-cyrillic-code-iii",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T21:10:39Z",
+      "task_id": "v5-the-cyrillic-code-iii-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T21:11:11Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T21:11:13Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T21:15:07Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T21:17:03Z",
+      "task_id": "v5-the-cyrillic-code-iii-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T21:21:37Z",
+      "attempts": 1
+    }
+  }
 }

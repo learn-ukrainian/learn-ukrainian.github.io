@@ -229,7 +229,7 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
                         orch_dir = paths["md"].parent / "orchestration" / slug
                         want_review = getattr(args, "review", False) or getattr(args, "review_claude", False)
                         if want_review:
-                            v5_state = orch_dir / "state-v5.json"
+                            v5_state = orch_dir / "state.json"
                             review_done = False
                             if v5_state.exists():
                                 st = json.loads(v5_state.read_text("utf-8"))
@@ -266,7 +266,7 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
                     _rb_paths = get_module_paths(args.track, slug)
                     _rb_orch = _rb_paths["md"].parent / "orchestration" / slug
                     _needs_rebuild = False
-                    _rb_v5 = _rb_orch / "state-v5.json"
+                    _rb_v5 = _rb_orch / "state.json"
                     if _rb_v5.exists():
                         _rb_st = json.loads(_rb_v5.read_text("utf-8"))
                         for phase_key in ("review", "validate"):

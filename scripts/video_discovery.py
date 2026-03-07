@@ -6,7 +6,7 @@ ukrainianlessons.com and Dobra Forma against module topics.
 
 Non-blocking: all exceptions caught, returns empty/default results on failure.
 
-Used by phase_discover_v4() in build_module.py.
+Used by phase_discover() in pipeline_v5.py.
 """
 
 from __future__ import annotations

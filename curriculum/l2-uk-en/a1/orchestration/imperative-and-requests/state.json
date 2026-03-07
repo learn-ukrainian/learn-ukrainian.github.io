@@ -1,8 +1,36 @@
 {
-  "slug": "imperative-and-requests",
   "track": "a1",
-  "module_num": 47,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-06T05:14:48Z"
+  "slug": "imperative-and-requests",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T22:58:19Z",
+      "task_id": "v5-imperative-and-requests-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T22:59:19Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T22:59:22Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T23:04:42Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T23:06:42Z",
+      "task_id": "v5-imperative-and-requests-pC"
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-06T23:24:16Z",
+      "attempts": 4,
+      "note": "dedup-exhausted"
+    }
+  }
 }

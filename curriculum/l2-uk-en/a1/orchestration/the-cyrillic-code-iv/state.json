@@ -1,8 +1,35 @@
 {
-  "slug": "the-cyrillic-code-iv",
   "track": "a1",
-  "module_num": 4,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-05T19:42:03Z"
+  "slug": "the-cyrillic-code-iv",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T21:07:06Z",
+      "task_id": "v5-the-cyrillic-code-iv-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T21:07:41Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T21:07:44Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T21:13:36Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T21:15:21Z",
+      "task_id": "v5-the-cyrillic-code-iv-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T21:23:36Z",
+      "attempts": 2
+    }
+  }
 }

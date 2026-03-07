@@ -6,7 +6,7 @@ Imported by build_module_v5.py.
 
 Pipeline: research → discover → content → activities → validate → [review] → mdx
 
-State file: state-v5.json (plain phase keys, no "v4-" prefix).
+State file: state.json (plain phase keys, mode: "v5").
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ from pipeline_lib import (
     dispatch_gemini, log,
     # Phase helpers
     run_verify,
-    _build_fix_prompt, _apply_section_fixes, _identify_affected_sections,
+    # Fix-prompt helpers moved to pipeline_v5.py (section 2b)
     fill_template, _dispatch_prompt, _gemini_output_path,
     _run_with_heartbeat, _init_log, save_gemini_session,
     # Phase B content (archive check + fallback to phase_2_content)
@@ -147,29 +147,45 @@ _CALIBRATION_DIR = Path(__file__).resolve().parent.parent / "claude_extensions" 
 # ============================================================================
 
 def _state_file(ctx: ModuleContext) -> Path:
-    return ctx.orch_dir / "state-v5.json"
+    return ctx.orch_dir / "state.json"
 
 
 def load_state(ctx: ModuleContext) -> dict:
-    """Load v5 state with fallback: v5 → v4 (migrate) → fresh.
+    """Load v5 state with fallback: state.json → state-v5.json (migrate) → state-v4.json (migrate) → fresh.
 
     v3/v2 states are ignored — those modules start fresh in v5.
     """
-    # 1. v5 state — authoritative
+    # 1. state.json — authoritative
     sf = _state_file(ctx)
     if sf.exists():
         try:
-            return json.loads(sf.read_text("utf-8"))
+            data = json.loads(sf.read_text("utf-8"))
+            # Only accept v5 state files (mode == "v5"), skip legacy state.json
+            if data.get("mode") == "v5":
+                return data
+            logger.debug("state.json exists but mode=%s (not v5) — skipping", data.get("mode"))
         except Exception as e:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup = sf.with_suffix(f".corrupted.{ts}.json")
             sf.rename(backup)
             logger.warning(
-                "state-v5.json corrupted for %s/%s — backed up to %s, resetting. Error: %s",
+                "state.json corrupted for %s/%s — backed up to %s, resetting. Error: %s",
                 ctx.track, ctx.slug, backup.name, e,
             )
 
-    # 2. v4 state — migrate (strip "v4-" prefixes from phase keys)
+    # 2. state-v5.json — migrate (rename to state.json)
+    sf_v5_legacy = ctx.orch_dir / "state-v5.json"
+    if sf_v5_legacy.exists():
+        try:
+            data = json.loads(sf_v5_legacy.read_text("utf-8"))
+            sf_v5_legacy.unlink()
+            log(f"  State migration: state-v5.json → state.json (old file removed)")
+            return data
+        except Exception as e:
+            logger.warning("state-v5.json unreadable for %s/%s: %s — trying v4",
+                           ctx.track, ctx.slug, e)
+
+    # 3. state-v4.json — migrate (strip "v4-" prefixes from phase keys)
     sf_v4 = ctx.orch_dir / "state-v4.json"
     if sf_v4.exists():
         try:
@@ -179,7 +195,7 @@ def load_state(ctx: ModuleContext) -> dict:
             logger.warning("state-v4.json unreadable for %s/%s: %s — starting fresh",
                            ctx.track, ctx.slug, e)
 
-    # 3. Anything else — fresh state
+    # 4. Anything else — fresh state
     return _fresh_state(ctx)
 
 
@@ -208,7 +224,7 @@ def _migrate_v4_to_v5(v4_data: dict, ctx: ModuleContext) -> dict:
 
 
 def save_state(ctx: ModuleContext, state: dict) -> None:
-    """Atomically write state-v5.json."""
+    """Atomically write state.json."""
     sf = _state_file(ctx)
     sf.parent.mkdir(parents=True, exist_ok=True)
     content = json.dumps(state, indent=2, ensure_ascii=False)
@@ -230,7 +246,7 @@ def is_complete(state: dict, phase_id: str) -> bool:
 
 def mark_complete(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) -> None:
     """Mark a phase as complete in v5 state (thread-safe via file lock)."""
-    lock = _state_lock or FileLock(str(ctx.orch_dir / "state-v5.json.lock"))
+    lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
     with lock:
         phases = state.setdefault("phases", {})
         phases[phase_id] = {"status": "complete", "ts": _now_iso(), **extra}
@@ -239,7 +255,7 @@ def mark_complete(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) 
 
 def mark_failed(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) -> None:
     """Mark a phase as failed in v5 state (thread-safe via file lock)."""
-    lock = _state_lock or FileLock(str(ctx.orch_dir / "state-v5.json.lock"))
+    lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
     with lock:
         phases = state.setdefault("phases", {})
         phases[phase_id] = {"status": "failed", "ts": _now_iso(), **extra}
@@ -247,7 +263,7 @@ def mark_failed(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) ->
 
 
 # ============================================================================
-# 2. Shared helpers (identical logic from build_module.py)
+# 2. Shared helpers
 # ============================================================================
 
 # ---------------------------------------------------------------------------
@@ -2504,6 +2520,410 @@ def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
 
 
 # ============================================================================
+# 2b. Fix-prompt helpers (moved from pipeline_lib.py — only used by v5)
+# ============================================================================
+
+def _identify_affected_sections(audit_output: str, content_path: Path, content: str | None = None) -> list[str]:
+    """Parse audit output to identify which H2 sections have issues."""
+    if content is None:
+        if not content_path.exists():
+            return []
+        content = content_path.read_text(encoding="utf-8")
+    h2_headers = re.findall(r"^## (.+)$", content, re.MULTILINE)
+    if not h2_headers:
+        return []
+
+    affected = set()
+    audit_lower = audit_output.lower()
+    for header in h2_headers:
+        if header.lower() in audit_lower:
+            affected.add(header)
+
+    line_refs = re.findall(r"line\s+(\d+)", audit_output, re.IGNORECASE)
+    if line_refs:
+        lines = content.split("\n")
+        current_section = None
+        section_ranges: dict[str, tuple[int, int]] = {}
+        for i, line in enumerate(lines, 1):
+            m = re.match(r"^## (.+)$", line)
+            if m:
+                if current_section:
+                    section_ranges[current_section] = (section_ranges[current_section][0], i - 1)
+                current_section = m.group(1)
+                section_ranges[current_section] = (i, len(lines))
+        if current_section and current_section in section_ranges:
+            section_ranges[current_section] = (section_ranges[current_section][0], len(lines))
+        for ref in line_refs:
+            line_num = int(ref)
+            for header, (start, end) in section_ranges.items():
+                if start <= line_num <= end:
+                    affected.add(header)
+                    break
+
+    if 1 <= len(affected) <= 2:
+        return sorted(affected)
+    return []
+
+
+def _apply_section_fixes(content_path: Path, fix_output: str) -> None:
+    """Apply section-level fixes from delimited Gemini output."""
+    fixes = re.findall(
+        r"===SECTION_FIX_START===\s*\n(.*?)===SECTION_FIX_END===",
+        fix_output, re.DOTALL,
+    )
+    if not fixes:
+        return
+    content = content_path.read_text(encoding="utf-8")
+    for fix_block in fixes:
+        fix_block = fix_block.strip()
+        h2_match = re.match(r"^## (.+)$", fix_block, re.MULTILINE)
+        if not h2_match:
+            continue
+        section_title = h2_match.group(1).strip()
+        pattern = re.compile(
+            rf"(^## {re.escape(section_title)}\s*\n)"
+            rf"(.*?)"
+            rf"(?=^## |\Z)",
+            re.MULTILINE | re.DOTALL,
+        )
+        match = pattern.search(content)
+        if match:
+            replacement = fix_block + "\n\n"
+            content = content[:match.start()] + replacement + content[match.end():]
+            log(f"    Applied section fix: {section_title}")
+    content_path.write_text(content, encoding="utf-8")
+
+
+def _build_schema_hint(ctx: ModuleContext, audit_output: str) -> str:
+    """If audit output contains YAML_SCHEMA_VIOLATION, extract schema definitions."""
+    if "YAML_SCHEMA_VIOLATION" not in audit_output:
+        return ""
+    failing_types = list(dict.fromkeys(
+        m.group(1) for m in re.finditer(r"'type':\s*'([a-z_-]+)'", audit_output)
+    ))
+    if not failing_types:
+        return ""
+    track = ctx.track if hasattr(ctx, "track") else ""
+    schemas_dir = Path(__file__).parent.parent / "schemas"
+    schema_path = schemas_dir / f"activities-{track}.schema.json"
+    if not schema_path.exists():
+        level_code = track.split("-")[0] if "-" not in track else track
+        schema_path = schemas_dir / f"activities-{level_code}.schema.json"
+    if not schema_path.exists():
+        schema_path = schemas_dir / "activities-base.schema.json"
+    if not schema_path.exists():
+        return ""
+    try:
+        schema = json.loads(schema_path.read_text("utf-8"))
+        defs = schema.get("definitions", {})
+        hints = []
+        for failing_type in failing_types:
+            type_def = defs.get(f"{failing_type}-{track}") or defs.get(failing_type)
+            if not type_def:
+                continue
+            required = type_def.get("required", [])
+            props = list(type_def.get("properties", {}).keys())
+            additional = type_def.get("additionalProperties", True)
+            no_extra = additional is False
+            hints.append(
+                f"### `{failing_type}` (from {schema_path.name})\n"
+                f"**Required fields:** {', '.join(f'`{r}`' for r in required)}\n"
+                f"**Allowed fields:** {', '.join(f'`{p}`' for p in props)}\n"
+                f"**additionalProperties:** `{additional}`"
+                f"{' — ANY unlisted field = schema violation' if no_extra else ''}\n"
+            )
+        if not hints:
+            return ""
+        return "\n\n## Schema Reference (fix activities to match these)\n\n" + "\n".join(hints)
+    except Exception:
+        return ""
+
+
+def _extract_gate_failures(audit_output: str) -> list[dict]:
+    """Parse audit output to extract specific gate failures with values.
+
+    Returns list of dicts: {gate, status, current, required, detail}
+    Also extracts pedagogical violation details from the 📚 section.
+    """
+    failures = []
+    for line in audit_output.split("\n"):
+        # Match gate lines like: "Words        ❌ 1200/2000"
+        m = re.match(r"\s*([A-Za-z0-9_]+)\s+❌\s+(.*)", line)
+        if m:
+            gate = m.group(1).strip()
+            detail = m.group(2).strip()
+            failures.append({"gate": gate, "detail": detail})
+            continue
+        # Match YAML_SCHEMA_VIOLATION lines
+        if "YAML_SCHEMA_VIOLATION" in line:
+            failures.append({"gate": "YAML_SCHEMA", "detail": line.strip()})
+    return failures
+
+
+def _extract_pedagogy_violations(audit_output: str) -> list[dict]:
+    """Extract detailed pedagogical violations from audit output.
+
+    Parses the 📚 PEDAGOGICAL VIOLATIONS section to get type, issue, and fix.
+    These are NOT captured by _extract_gate_failures (which only sees the
+    gate summary line 'Pedagogy ❌ 3 violations').
+    """
+    violations = []
+    lines = audit_output.split("\n")
+    in_section = False
+    for line in lines:
+        stripped = line.strip()
+        if "📚 PEDAGOGICAL VIOLATIONS FOUND" in stripped:
+            in_section = True
+            continue
+        if in_section:
+            # End of section: next header (--- or emoji-prefixed or gate line)
+            if stripped.startswith("---") or re.match(r"^[^\[→\s].*[❌✅⚠]", stripped):
+                break
+            # Violation line: "  [TYPE] description"
+            m = re.match(r"\s*\[([^\]]+)\]\s+(.*)", stripped)
+            if m:
+                vtype = m.group(1)
+                # Skip noise from RAG/embedding model loading and progress bars
+                if vtype.lower() in ("embed", "info", "warning", "error", "debug"):
+                    continue
+                if any(noise in stripped for noise in (
+                    "Loading BGE", "BGE-M3 loaded", "Fetching", "it/s]",
+                    "XLMRoberta", "tokenizer",
+                )):
+                    continue
+                violations.append({
+                    "type": vtype,
+                    "issue": m.group(2),
+                    "fix": "",
+                })
+                continue
+            # Fix line: "     → FIX: description"
+            fm = re.match(r"\s*→\s*FIX:\s*(.*)", stripped)
+            if fm and violations:
+                violations[-1]["fix"] = fm.group(1)
+    return violations
+
+
+def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
+                      deterministic_issues: list[dict] | None = None) -> str:
+    """Build a surgical fix prompt with per-issue instructions.
+
+    Instead of dumping 60 lines of audit output, this extracts specific
+    failures and produces exact instructions Gemini can act on.
+    """
+    from pipeline_lib import get_pedagogical_constraints, get_decodable_vocabulary
+
+    det_issues = deterministic_issues or []
+    gate_failures = _extract_gate_failures(audit_output)
+    ped_violations = _extract_pedagogy_violations(audit_output)
+    schema_hint = _build_schema_hint(ctx, audit_output)
+
+    # Read content file once — reuse for line lookups and word count
+    content_text = ""
+    content_lines: list[str] = []
+    word_count = 0
+    if ctx.paths["md"].exists():
+        content_text = ctx.paths["md"].read_text("utf-8")
+        content_lines = content_text.split("\n")
+        word_count = len(content_text.split())
+
+    # Build per-issue fix instructions
+    fix_instructions: list[str] = []
+
+    # 1. Deterministic issues — inline the actual line content
+    for i, iss in enumerate(det_issues, 1):
+        issue_type = iss.get("type", "UNKNOWN")
+        lines_block: list[str] = [f"### Fix {i}: {issue_type}"]
+
+        # Try to find the actual line in content
+        location = iss.get("location", "")
+        matched_text = iss.get("text", "")
+        line_num = 0
+        loc_match = re.search(r"~?line\s*(\d+)", location, re.IGNORECASE)
+        if loc_match:
+            line_num = int(loc_match.group(1))
+
+        if issue_type == "LLM_FILLER":
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Line {line_num}:** `{actual_line}`")
+            elif matched_text:
+                lines_block.append(f"**Text:** `{matched_text}`")
+            lines_block.append(f"**Action:** Rephrase to remove \"{matched_text}\". "
+                             "Start the sentence with a concrete fact instead.")
+
+        elif issue_type == "RUSSIANISM":
+            fix_text = iss.get("fix", "")
+            lines_block.append(f"**Found:** `{matched_text}`")
+            if fix_text:
+                lines_block.append(f"**Replace with:** `{fix_text}` (preserve grammatical form)")
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+        elif issue_type in ("PEDAGOGICAL", "DECODABILITY"):
+            lines_block.append(f"**What:** {matched_text}")
+            fix_text = iss.get("fix", "")
+            if fix_text:
+                lines_block.append(f"**How to fix:** {fix_text}")
+            if line_num and line_num <= len(content_lines):
+                actual_line = content_lines[line_num - 1].strip()
+                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+        else:
+            if matched_text:
+                lines_block.append(f"**What:** {matched_text}")
+            fix_text = iss.get("fix", "")
+            if fix_text:
+                lines_block.append(f"**How to fix:** {fix_text}")
+            if location:
+                lines_block.append(f"**Where:** {location}")
+
+        fix_instructions.append("\n".join(lines_block))
+
+    # 2. Gate failures — specific action per gate
+    for gf in gate_failures:
+        gate = gf["gate"]
+        detail = gf["detail"]
+        lines_block = [f"### Fix: Gate `{gate}` FAIL — {detail}"]
+
+        if gate.lower() in ("words", "word_count"):
+            lines_block.append("**Action:** Expand content in the shortest sections. "
+                             "Add examples, explanations, or practice scenarios.")
+        elif gate.lower() == "immersion":
+            # Parse immersion gap to detect unfixable cases
+            imm_match = re.search(r"([\d.]+)%\s+LOW\s+\(target\s+(\d+)-(\d+)%", detail)
+            if imm_match:
+                current_imm = float(imm_match.group(1))
+                target_min = int(imm_match.group(2))
+                gap = target_min - current_imm
+                if gap > 15:
+                    lines_block.append(
+                        f"**⚠ SCOPE WARNING:** Immersion gap is {gap:.0f}% ({current_imm:.1f}% → {target_min}% min). "
+                        "This is too large for a fix pass. Focus on the EASIEST wins:\n"
+                        "1. Add Ukrainian section headers with English in parentheses\n"
+                        "2. Add 'Наприклад:' / 'Порівняйте:' before example blocks\n"
+                        "3. Add short Ukrainian phrases with (translations) in existing paragraphs\n"
+                        "Do NOT rewrite entire sections. Target +5-8% improvement max.")
+                else:
+                    lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
+                                     "Convert some English explanations to Ukrainian with English glosses.")
+            else:
+                lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
+                                 "Convert some English explanations to Ukrainian with English glosses.")
+        elif gate.lower() in ("activities", "unique_types"):
+            lines_block.append("**Action:** Add more activities or diversify activity types "
+                             "in the activities YAML file.")
+        elif gate.lower() == "engagement":
+            lines_block.append("**Action:** Add engagement boxes: `[!tip]`, `[!note]`, "
+                             "`[!cultural]`, `[!myth-buster]`.")
+        elif gate == "YAML_SCHEMA":
+            lines_block.append(f"**Action:** Fix the YAML schema violation: {detail}")
+
+        fix_instructions.append("\n".join(lines_block))
+
+    # 3. Pedagogical violations — extracted from the 📚 section
+    # The Pedagogy gate only says "3 violations" — this adds the actual details
+    for i, pv in enumerate(ped_violations, len(det_issues) + len(gate_failures) + 1):
+        lines_block = [f"### Fix {i}: PEDAGOGICAL_VIOLATION"]
+        lines_block.append(f"**What:** [{pv['type']}] {pv['issue']}")
+        if pv.get("fix"):
+            lines_block.append(f"**How to fix:** {pv['fix']}")
+        fix_instructions.append("\n".join(lines_block))
+
+    # Always append any unparsed ❌ failures not already covered by gate_failures
+    # This catches LINT errors, TEMPLATE COMPLIANCE, PEDAGOGICAL VIOLATIONS, etc.
+    parsed_gates = {gf["gate"] for gf in gate_failures}
+    audit_lines = audit_output.strip().split("\n")
+    unparsed_fails = [
+        ln.strip() for ln in audit_lines
+        if ("❌" in ln or "VIOLATION" in ln) and not any(g in ln for g in parsed_gates)
+    ]
+    if unparsed_fails:
+        fix_instructions.append("### Other Audit Failures\n\n```\n" + "\n".join(unparsed_fails[-20:]) + "\n```")
+
+    if not fix_instructions:
+        # Last resort: dump condensed fail lines so Gemini always sees WHY audit failed
+        fail_lines = [ln for ln in audit_lines if "❌" in ln or "FAIL" in ln or "VIOLATION" in ln]
+        if fail_lines:
+            fix_instructions.append("### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```")
+        else:
+            # Ultra-fallback: include the full audit tail so the fix prompt is never empty
+            tail = "\n".join(audit_lines[-30:])
+            fix_instructions.append(
+                "### Audit Output (no specific failures extracted — review raw output)\n\n"
+                f"```\n{tail}\n```"
+            )
+
+    # Pedagogical constraints (compact)
+    ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num)
+    ped_section = ""
+    if ped_constraints:
+        ped_section = f"\n## Constraints (do NOT violate while fixing)\n\n{ped_constraints}\n"
+
+    # Decodable vocabulary (compact)
+    decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
+    decodable_section = f"\n{decodable}\n" if decodable else ""
+
+    # Section-level fix for large modules
+    section_fix = ""
+    if content_text:
+        if word_count >= 3000:
+            affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"], content=content_text)
+            if affected_sections:
+                section_list = ", ".join(f'"{s}"' for s in affected_sections)
+                section_fix = textwrap.dedent(f"""\
+
+                    ## Large Module — Section-Level Output
+
+                    This module is {word_count} words. Fix ONLY sections: {section_list}
+
+                    **Output format:**
+                    ```
+                    ===SECTION_FIX_START===
+                    ## {{section title}}
+                    {{fixed section content}}
+                    ===SECTION_FIX_END===
+                    ```
+                """)
+
+    # Build file list
+    file_list = f"- Content: `{ctx.paths['md']}`"
+    if not content_only:
+        if ctx.paths.get("activities"):
+            file_list += f"\n- Activities: `{ctx.paths['activities']}`"
+        if ctx.paths.get("vocabulary"):
+            file_list += f"\n- Vocabulary: `{ctx.paths['vocabulary']}`"
+
+    fixes_text = "\n\n".join(fix_instructions)
+    total_fixes = len(det_issues) + len(gate_failures) + len(ped_violations)
+    # Never say "Fix 0 issues" — if we got here, something failed
+    if total_fixes == 0:
+        total_fixes = len(fix_instructions)
+
+    return textwrap.dedent(f"""\
+        # Fix {total_fixes} issue(s) in `{ctx.slug}`
+
+        {fixes_text}
+        {schema_hint}
+        {ped_section}
+        {decodable_section}
+
+        ## Files
+
+        {file_list}
+
+        ## Rules
+
+        1. Fix ONLY the issues listed above — do not rewrite working content
+        2. Preserve section structure and word counts
+        3. Do NOT add or remove sections
+        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
+        {section_fix}
+    """)
+
+
+# ============================================================================
 # 3. Phase implementations
 # ============================================================================
 
@@ -2909,7 +3329,6 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
     self_audited = getattr(ctx, "_self_audited", False)
     if self_audited:
         log("  content: Self-audit PASSED in content session — validate will use reduced fix iterations")
-        state.setdefault("phases", {}).setdefault("content", {})["self_audited"] = True
 
     # Post-content gates
     content_path = ctx.paths.get("md")
@@ -2943,7 +3362,8 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
             for v in critical[:3]:
                 log(f"    {v['type']}: {v['issue'][:100]}")
 
-    mark_complete(state, "content", ctx)
+    # mark_complete replaces the entire phase dict, so self_audited must go in as **extra
+    mark_complete(state, "content", ctx, **({"self_audited": True} if self_audited else {}))
     _invalidate_stale_artifacts(ctx)
     return True
 

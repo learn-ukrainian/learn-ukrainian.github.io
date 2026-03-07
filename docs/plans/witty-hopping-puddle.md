@@ -1,73 +1,81 @@
-# Plan: Single-Session Self-Audit Architecture
+# Plan: Kill the Dual State System
 
 ## Context
 
-The current pipeline generates content in one Gemini session, then runs audit externally, builds a fix prompt, and dispatches to a NEW Gemini session that has zero context about what it wrote or why. This causes 2-7 fix loop iterations per module, wasting tokens and degrading quality.
+`pipeline_v5.py` (the ONLY pipeline) calls functions from `pipeline_lib.py` (legacy v3/v4 code). They use **different state files** (`state-v5.json` vs `state.json`), **different phase keys** (`"content"` vs `"2"`), and **different mark functions** (`mark_complete` vs `mark_phase`). This caused the self-audit feature to silently fail for weeks — the flag was written to a dict that `mark_complete` immediately overwrote.
 
-The user's request: "when LLM finds errors he should fix it right away and don't loop for fix loops and give it more time."
+**Goal**: One state file, one naming system, one mark function. No more phantom state.json writes.
 
-**Goal**: Gemini generates content → runs audit → fixes issues → re-runs audit, all in ONE session with full context. Estimated savings: 3-40 minutes per module build.
+## Phase 1: Neutralize Legacy State Writes (do now)
 
-## Architecture
+Add `"v5"` to existing guards in `pipeline_lib.py`. Exact same pattern as the `"v4"` guard that already exists.
 
-Gemini already has FULL-EXECUTION mode (`allow_write=True` in `dispatch_gemini()`), which grants bash + read/write file access via `-y` flag. The validate fix loop already uses this mode. The change: use it for the **content phase** too, so Gemini can write content, run `audit_module.sh`, read audit output, fix in-place, and loop — all in one session.
+### Changes
 
-```
-BEFORE: Content (stdout) → Python audit → Fix prompt → NEW Gemini session → loop N times
-AFTER:  Content+SelfAudit (allow_write) → Write file → Run audit → Fix → Re-audit → Done
-        Validate phase becomes lightweight (just verify + activity/vocab fixes)
-```
+**`scripts/pipeline_lib.py`** — 3 changes:
 
-## Changes
+1. **`mark_phase()` (line 1187)**: Add v5 to the no-op guard
+   ```python
+   # BEFORE
+   if getattr(ctx, "mode", None) == "v4":
+       return
+   # AFTER
+   if getattr(ctx, "mode", None) in ("v4", "v5"):
+       return
+   ```
 
-### 1. New file: `claude_extensions/phases/gemini/_shared-self-audit.md`
+2. **`save_state()` (line 1124)**: Add v5 guard
+   ```python
+   def save_state(ctx: ModuleContext) -> None:
+       if getattr(ctx, "mode", None) in ("v4", "v5"):
+           return
+       # ... existing code
+   ```
 
-Self-audit instruction snippet injected via `{SELF_AUDIT_SNIPPET}` placeholder:
+3. **`is_phase_complete()` (line 1132)**: Add v5 guard (always returns False — v5 has its own `is_complete()`)
+   ```python
+   def is_phase_complete(ctx: ModuleContext, phase: str) -> bool:
+       if getattr(ctx, "mode", None) == "v5":
+           return False
+       # ... existing code
+   ```
 
-- Tells Gemini to write content to `{CONTENT_PATH}` using write_file
-- Run `scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
-- Parse audit output for PASS/FAIL
-- If FAIL: read violations, fix content in-place, re-run audit (max 2 iterations)
-- Output final content between `===CONTENT_START===`/`===CONTENT_END===` and audit result between `===SELF_AUDIT_START===`/`===SELF_AUDIT_END===`
+**`scripts/pipeline_v5.py`** — 1 change:
 
-### 2. Modify `claude_extensions/phases/gemini/beginner-content.md`
+4. **`phase_content()` (line ~2946)**: Pass `self_audited` through `mark_complete` kwargs (already done in this session, verify it's correct)
+   ```python
+   mark_complete(state, "content", ctx, **({"self_audited": True} if self_audited else {}))
+   ```
 
-Add `{SELF_AUDIT_SNIPPET}` between "Pre-Submission Checks" and "Output Format" sections. The Output Format section stays — Gemini writes to file AND outputs between delimiters for pipeline verification.
+### What This Fixes
+- `state.json` stops being written for v5 builds
+- `mark_phase` calls inside `phase_B_content` become no-ops — no more fighting state systems
+- `is_phase_complete(ctx, "2")` returns False — v5's own `is_complete(state, "content")` is the only authority
+- Self-audit flag survives `mark_complete` (passed as kwarg, not pre-written then overwritten)
 
-### 3. Modify `scripts/pipeline_lib.py` — `phase_2_content()`
+## Phase 2: Clean Up (later, separate PR)
 
-In the dispatch call (~line 3259):
-- Change from `stdout_only=True` (no write access) to `allow_write=True` (full execution)
-- Increase timeout from 600s to 1200s
-- Add `SELF_AUDIT_SNIPPET` to overrides dict (reads `_shared-self-audit.md`)
-- After dispatch, extract `===SELF_AUDIT_START===` content and log it
-- Set `self_audited` flag on state if audit passed
+1. Refactor `phase_B_content` to return a result dataclass (no internal state calls)
+2. Move fix-prompt helpers (`_build_fix_prompt`, `_apply_section_fixes`, `_identify_affected_sections` + deps) into `pipeline_v5.py` — only used by v5
+3. Stop loading `state.json` in `preflight_v2` for v5 mode
+4. Archive `build_module.py` to `scripts/retired/`
+5. Bulk-delete stale `state.json` files from orchestration dirs
 
-### 4. Modify `scripts/pipeline_v5.py`
+## Verification (Phase 1)
 
-- Add `TIMEOUT_CONTENT_SELFAUDIT = 1200` constant (20 min for generate+audit+fix)
-- In `phase_content()`: extract self-audit result, save to orchestration, mark state
-- In `phase_validate()`: if content was self-audited, reduce max fix iterations from 6 to 2
+1. Note current `state.json` timestamp for a1/orchestration/describing-things-adjectives/
+2. `.venv/bin/python scripts/build_module_v5.py a1 11 --restart-from content` — rebuild M11
+3. Verify: `state-v5.json` updated, `state.json` NOT updated
+4. Verify: `state-v5.json` contains `"self_audited": true` in `phases.content`
+5. Verify: validate phase logs "Content was self-audited — reducing max fix iterations"
 
-## Key Design Decisions
+## Files
 
-1. **Why still output between delimiters?** Pipeline needs stdout capture for word count verification and fallback if file write fails.
-2. **Why `--skip-activities --no-rag-verify`?** Activities don't exist yet during content phase. RAG is slow network I/O.
-3. **Why max 2 self-fix iterations?** Each audit+fix ~60-90s. 2 iterations keeps content phase under 15 min. Validate phase catches remaining issues.
-4. **Why keep validate phase?** It validates activities+vocab (generated after content), runs deterministic checks (more reliable than LLM self-checking), and serves as a safety net.
-
-## Files to Modify
-
-| File | Change |
-|------|--------|
-| `claude_extensions/phases/gemini/_shared-self-audit.md` | **NEW** — self-audit instructions |
-| `claude_extensions/phases/gemini/beginner-content.md` | Add `{SELF_AUDIT_SNIPPET}` placeholder |
-| `scripts/pipeline_lib.py` | `phase_2_content()`: `allow_write=True`, timeout, self-audit extraction |
-| `scripts/pipeline_v5.py` | `TIMEOUT_CONTENT_SELFAUDIT`, lighter validate when self-audited |
-
-## Verification
-
-1. Rebuild M11 with `--rebuild`: `.venv/bin/python scripts/build_module.py a1 11 --rebuild`
-2. Check orchestration folder for `self-audit-output.md`
-3. Verify validate phase skips/reduces fix loops
-4. Compare total build time vs previous builds
+| File | Phase | Change |
+|------|-------|--------|
+| `scripts/pipeline_lib.py` | 1 | Add `"v5"` guards to `mark_phase`, `save_state`, `is_phase_complete` |
+| `scripts/pipeline_v5.py` | 1 | Pass `self_audited` through `mark_complete` kwargs |
+| `scripts/pipeline_lib.py` | 2 | Refactor `phase_B_content` return type, remove dead state calls |
+| `scripts/pipeline_v5.py` | 2 | Move fix-prompt helpers in, update `phase_content` |
+| `scripts/build_module_v5.py` | 2 | Stop wiring `ctx.state` from `state.json` |
+| `scripts/build_module.py` | 2 | Archive to `scripts/retired/` |

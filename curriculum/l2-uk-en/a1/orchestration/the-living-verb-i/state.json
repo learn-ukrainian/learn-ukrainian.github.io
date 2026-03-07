@@ -1,8 +1,30 @@
 {
-  "slug": "the-living-verb-i",
   "track": "a1",
-  "module_num": 15,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-06T01:35:46Z"
+  "slug": "the-living-verb-i",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T22:00:24Z",
+      "task_id": "v5-the-living-verb-i-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T22:01:08Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T22:01:10Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T22:11:01Z"
+    },
+    "activities": {
+      "status": "failed",
+      "ts": "2026-03-06T22:16:36Z",
+      "note": "missing-files-act=False-voc=False"
+    }
+  }
 }

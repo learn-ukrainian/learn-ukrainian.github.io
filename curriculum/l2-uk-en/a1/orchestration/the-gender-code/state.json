@@ -1,8 +1,35 @@
 {
-  "slug": "the-gender-code",
   "track": "a1",
-  "module_num": 7,
-  "mode": "v4",
-  "phases": {},
-  "last_updated": "2026-03-05T21:21:02Z"
+  "slug": "the-gender-code",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T21:23:39Z",
+      "task_id": "v5-the-gender-code-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T21:24:32Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T21:24:35Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T21:31:33Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T21:34:15Z",
+      "task_id": "v5-the-gender-code-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T21:41:54Z",
+      "attempts": 2
+    }
+  }
 }

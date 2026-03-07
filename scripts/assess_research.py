@@ -371,14 +371,14 @@ def _render_refresh_queue(track_id: str, results: list[dict]):
     print("\u2550" * 70)
     if queue:
         print(f"{len(queue)} module(s) ready for content refresh")
-        print(f"Run: .venv/bin/python scripts/build_module.py {track_id} {{num}} --refresh")
+        print(f"Run: .venv/bin/python scripts/build_module_v5.py {track_id} {{num}} --refresh")
     else:
         print("No modules need content refresh.")
     print()
 
 
 def _process_refresh_queue(track_id: str, results: list[dict]):
-    """Process the refresh queue — run build_module.py --refresh for each module."""
+    """Process the refresh queue — run build_module_v5.py --refresh for each module."""
     import subprocess
 
     queue = _build_refresh_queue(results)
@@ -401,7 +401,7 @@ def _process_refresh_queue(track_id: str, results: list[dict]):
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module.py"),
+            str(SCRIPTS_DIR / "build_module_v5.py"),
             track_id, str(num), "--refresh",
         ]
         try:
@@ -524,7 +524,7 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
             # --rebuild: bypass ADOPT logic (skips content+meta existence check)
             cmd = [
                 str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-                str(SCRIPTS_DIR / "build_module.py"),
+                str(SCRIPTS_DIR / "build_module_v5.py"),
                 track_id, str(num), "--force-phase", "research", "--rebuild",
             ]
             try:
@@ -674,8 +674,8 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module.py"),
-            track_id, str(num), "--force-phase", "0.5",
+            str(SCRIPTS_DIR / "build_module_v5.py"),
+            track_id, str(num), "--force-phase", "research",
         ]
         try:
             result = subprocess.run(cmd, timeout=300)

@@ -8,6 +8,32 @@
 
 ---
 
+## How We Work (Mandatory Workflow)
+
+<critical>
+
+Every task follows this workflow. No exceptions for non-trivial changes.
+
+1. **Create GH issue** — describe the problem, draft a plan
+2. **Adversarial review of plan** — send to Gemini (`--model gemini-3.1-pro-preview`), incorporate feedback
+3. **Finalize ACs** — update issue with concrete acceptance criteria
+4. **Implement** — work through ACs one by one
+5. **Verify all ACs** — every AC checked and documented on the issue
+6. **Adversarial review of implementation** — send code to Gemini, fix findings
+7. **Close** — only when all ACs pass and review is clean
+
+**Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
+
+**Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken. This has happened multiple times — features built without issues were forgotten, broken, or contradicted later.
+
+**Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale. Current top priorities:
+1. **One pipeline** (#750) — v5 is the only pipeline, finish removing legacy code
+2. **Testbed** (#749, #754) — regression testing based on the v5 pipeline
+
+</critical>
+
+---
+
 ## Best Practices Reference
 
 Detailed standards in `docs/best-practices/`. Read the relevant doc before working in that area.
