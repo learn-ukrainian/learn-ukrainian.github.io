@@ -2814,6 +2814,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             f"RESEARCH-IDENTIFIED ERRORS (avoid these in content):\n{research_errors}"
             if research_errors else ""
         ),
+        "LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", ""),
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
         return False

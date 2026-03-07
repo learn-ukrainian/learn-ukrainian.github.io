@@ -3260,8 +3260,24 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase: content
+# Phase: sandbox + helpers
 # ---------------------------------------------------------------------------
+
+
+def _ensure_sandbox_loaded(ctx: ModuleContext) -> str:
+    """Load lexical sandbox into ctx if not already set. Returns the sandbox text."""
+    sandbox = getattr(ctx, "_lexical_sandbox", "")
+    if sandbox:
+        return sandbox
+    sandbox_path = ctx.orch_dir / "lexical-sandbox.md"
+    if sandbox_path.exists():
+        sandbox = sandbox_path.read_text(encoding="utf-8")
+        ctx._lexical_sandbox = sandbox
+        log(f"  sandbox: Loaded from disk ({len(sandbox)} chars)")
+    else:
+        ctx._lexical_sandbox = ""
+    return ctx._lexical_sandbox
+
 
 def phase_sandbox(ctx: ModuleContext, state: dict) -> bool:
     """Lexical Sandbox: build VESUM-validated word bank for content generation.
@@ -3274,6 +3290,7 @@ def phase_sandbox(ctx: ModuleContext, state: dict) -> bool:
     via the {LEXICAL_SANDBOX} placeholder.
     """
     if is_complete(state, "sandbox"):
+        _ensure_sandbox_loaded(ctx)
         log("  sandbox: SKIP (already complete)")
         return True
 
@@ -3324,6 +3341,7 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         log("  content: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
 
+    _ensure_sandbox_loaded(ctx)
     ok = phase_B_content(ctx)
 
     if not ok:
@@ -3470,7 +3488,9 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     prompt_file = ctx.orch_dir / "phase-C-prompt.md"
-    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+    _ensure_sandbox_loaded(ctx)
+    overrides = {"LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", "")}
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
         return False
 
     if ctx.dry_run:

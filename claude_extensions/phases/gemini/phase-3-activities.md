@@ -26,6 +26,12 @@ Keep both tables visible as you write. Every activity and vocab item must serve 
 
 {DECODABLE_VOCABULARY}
 
+## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)
+
+{LEXICAL_SANDBOX}
+
+> **Every Ukrainian word in your activities MUST come from the word bank above.** Using words outside this list causes VESUM validation failures and triggers fix loops. If you need a word that isn't listed, use English instead.
+
 ## Module Sequence Constraints (HARD FAIL if violated)
 
 {PEDAGOGICAL_CONSTRAINTS}
