@@ -163,7 +163,11 @@ def load_state(ctx: ModuleContext) -> dict:
             # Only accept v5 state files (mode == "v5"), skip legacy state.json
             if data.get("mode") == "v5":
                 return data
-            logger.debug("state.json exists but mode=%s (not v5) — skipping", data.get("mode"))
+            # Legacy state.json — back up and remove so we don't re-parse every run
+            legacy_backup = sf.with_suffix(".legacy.json")
+            sf.rename(legacy_backup)
+            logger.debug("state.json mode=%s (not v5) — moved to %s",
+                         data.get("mode"), legacy_backup.name)
         except Exception as e:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup = sf.with_suffix(f".corrupted.{ts}.json")
@@ -244,22 +248,23 @@ def is_complete(state: dict, phase_id: str) -> bool:
     return info.get("status") == "complete"
 
 
-def mark_complete(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) -> None:
-    """Mark a phase as complete in v5 state (thread-safe via file lock)."""
-    lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
+def _mark_phase(state: dict, phase_id: str, ctx: ModuleContext, status: str, **extra: Any) -> None:
+    """Mark a phase status in v5 state (thread-safe via file lock)."""
+    lock = _state_lock or FileLock(str(_state_file(ctx)) + ".lock")
     with lock:
         phases = state.setdefault("phases", {})
-        phases[phase_id] = {"status": "complete", "ts": _now_iso(), **extra}
+        phases[phase_id] = {"status": status, "ts": _now_iso(), **extra}
         save_state(ctx, state)
+
+
+def mark_complete(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) -> None:
+    """Mark a phase as complete in v5 state."""
+    _mark_phase(state, phase_id, ctx, "complete", **extra)
 
 
 def mark_failed(state: dict, phase_id: str, ctx: ModuleContext, **extra: Any) -> None:
-    """Mark a phase as failed in v5 state (thread-safe via file lock)."""
-    lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
-    with lock:
-        phases = state.setdefault("phases", {})
-        phases[phase_id] = {"status": "failed", "ts": _now_iso(), **extra}
-        save_state(ctx, state)
+    """Mark a phase as failed in v5 state."""
+    _mark_phase(state, phase_id, ctx, "failed", **extra)
 
 
 # ============================================================================

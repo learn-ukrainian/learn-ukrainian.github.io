@@ -19,11 +19,14 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import subprocess
+import yaml
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import MagicMock
 
 TESTBED_DIR = Path(__file__).resolve().parent
 ROOT_DIR = TESTBED_DIR.parent.parent
@@ -36,10 +39,11 @@ PYTHON = str(ROOT_DIR / ".venv" / "bin" / "python")
 
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+GRADE_ORDER = {"A": 0, "B": 1, "C": 2, "F": 3, "N/A": 4}
+
 
 def load_config(track_filter: str | None = None) -> list[dict]:
     """Load testbed module list from config.yaml, optionally filtered by track."""
-    import yaml
     config_path = TESTBED_DIR / "config.yaml"
     with open(config_path) as f:
         config = yaml.safe_load(f)
@@ -59,8 +63,8 @@ def build_module(mod: dict, restart_from: str | None = None, full: bool = False)
         cmd += ["--restart-from", restart_from]
     else:
         # Default: restart from sandbox (skip research/discover if already done)
-        state_file = CURDIR / track / "orchestration" / slug / "state.json"
-        if state_file.exists():
+        orch_dir = CURDIR / track / "orchestration" / slug
+        if (orch_dir / "state.json").exists():
             cmd += ["--restart-from", "sandbox"]
 
     print(f"\n{'='*60}", flush=True)
@@ -110,22 +114,23 @@ def audit_module(mod: dict) -> dict:
     word_target = 0
     for line in output.split("\n"):
         if "Words" in line and ("✅" in line or "❌" in line):
-            import re
+
             m = re.search(r"(\d+)/(\d+)", line)
             if m:
                 words = int(m.group(1))
                 word_target = int(m.group(2))
 
     # Check orchestration state for fix loop count and self-audit status
-    state_file = CURDIR / track / "orchestration" / slug / "state.json"
-    fix_attempts = 0
-    self_audited = False
-    if state_file.exists():
-        with open(state_file) as f:
-            state = json.load(f)
-        validate_phase = state.get("phases", {}).get("validate", {})
-        fix_attempts = validate_phase.get("attempts", 0)
-        self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
+    from pipeline_v5 import load_state as _load_v5_state
+    from pipeline_lib import ModuleContext as _MC
+    _ctx = MagicMock(spec=_MC)
+    _ctx.orch_dir = CURDIR / track / "orchestration" / slug
+    _ctx.track = track
+    _ctx.slug = slug
+    state = _load_v5_state(_ctx) if _ctx.orch_dir.exists() else {"phases": {}}
+    validate_phase = state.get("phases", {}).get("validate", {})
+    fix_attempts = validate_phase.get("attempts", 0)
+    self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
 
     # Count failing gates
     failing_gates = [g for g, v in gates.items() if not v]
@@ -145,7 +150,6 @@ def audit_module(mod: dict) -> dict:
         "failing_gates": failing_gates,
         "fix_attempts": fix_attempts,
         "self_audited": self_audited,
-        "audit_passed": passed,
         "content_review": content_review,
         "prompt_review": prompt_review,
     }
@@ -155,7 +159,7 @@ def grade_module(audit_result: dict) -> str:
     """Assign A/B/C/F grade based on audit results."""
     if audit_result["status"] == "NO_CONTENT":
         return "N/A"
-    if not audit_result["audit_passed"]:
+    if audit_result["status"] != "PASS":
         return "F"
 
     # A: passed, 0-1 fix attempts, words > 120% target
@@ -176,7 +180,7 @@ def grade_module(audit_result: dict) -> str:
 
 def parse_content_review(track: str, slug: str) -> dict | None:
     """Parse existing content-review file for grade and issue counts."""
-    import re
+
     review_path = CURDIR / track / "audit" / f"{slug}-content-review.md"
     if not review_path.exists():
         return None
@@ -203,7 +207,7 @@ def parse_content_review(track: str, slug: str) -> dict | None:
 
 def parse_prompt_review(track: str, slug: str) -> dict | None:
     """Parse existing prompt-review file for template health and fix count."""
-    import re
+
     review_path = CURDIR / track / "audit" / f"{slug}-prompt-review.md"
     if not review_path.exists():
         return None
@@ -281,7 +285,6 @@ def save_baseline(results: list[dict]):
 
 def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
     """Print summary table."""
-    grade_order = {"A": 0, "B": 1, "C": 2, "F": 3, "N/A": 4}
 
     print(f"\n{'='*90}")
     print(f"  TESTBED RESULTS — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -299,8 +302,8 @@ def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
         if baseline and key in baseline:
             old_grade = baseline[key].get("grade", "?")
             if old_grade != grade:
-                old_ord = grade_order.get(old_grade, 9)
-                new_ord = grade_order.get(grade, 9)
+                old_ord = GRADE_ORDER.get(old_grade, 9)
+                new_ord = GRADE_ORDER.get(grade, 9)
                 if new_ord < old_ord:
                     delta = f"+{old_grade}→{grade}"
                 elif new_ord > old_ord:
@@ -396,8 +399,7 @@ def cmd_full(args):
             if key in baseline:
                 old_grade = baseline[key].get("grade", "?")
                 new_grade = r.get("grade", "?")
-                grade_order = {"A": 0, "B": 1, "C": 2, "F": 3}
-                if grade_order.get(new_grade, 9) > grade_order.get(old_grade, 9):
+                if GRADE_ORDER.get(new_grade, 9) > GRADE_ORDER.get(old_grade, 9):
                     print(f"  ⚠️  REGRESSION: {r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}")
 
 
