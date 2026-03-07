@@ -197,7 +197,7 @@ def build_sandbox(
     sections: dict[str, list[dict]] = {
         "nouns": [], "adjectives": [], "verbs": [], "other": []
     }
-    verified_lemmas: set[str] = set()
+    verified_lemmas: set[tuple[str, str]] = set()
 
     for word in candidates:
         word_lower = word.lower()
@@ -212,15 +212,22 @@ def build_sandbox(
         if is_common:
             non_noun = [m for m in matches if m["pos"] not in ("noun",)]
             primary = non_noun[0] if non_noun else matches[0]
+        elif word_lower.endswith(("ти", "тися", "тись")):
+            # For words ending in infinitive markers, prefer verb over noun
+            # (e.g., "дати" = verb "дати", not noun "дата" genitive)
+            verb_matches = [m for m in matches if m["pos"] == "verb"]
+            primary = verb_matches[0] if verb_matches else matches[0]
         else:
             primary = matches[0]
 
         lemma = primary["lemma"]
         pos = primary["pos"]
 
-        if lemma in verified_lemmas:
+        # Track (lemma, pos) pairs to allow same-form different-POS entries
+        lemma_key = (lemma, pos)
+        if lemma_key in verified_lemmas:
             continue
-        verified_lemmas.add(lemma)
+        verified_lemmas.add(lemma_key)
 
         if is_common and pos not in ("adj", "noun"):
             # For function words (adv, conj, prep, part): just the word itself
@@ -262,8 +269,10 @@ def build_sandbox(
             sections["other"].append(entry)
 
     # 4. RAG textbook examples
+    # Extract just lemma strings for textbook search
+    lemma_strings = {lemma for lemma, _ in verified_lemmas}
     examples = _fetch_textbook_examples(
-        verified_lemmas, track, module_num, constraints, max_examples)
+        lemma_strings, track, module_num, constraints, max_examples)
 
     # 5. Build markdown
     return _format_sandbox(
@@ -397,8 +406,27 @@ def _format_sandbox(
         lines.append("|-------|--------|---------------|")
         for entry in sections["verbs"]:
             aspect = "imperf" if "imperf" in entry["forms"][0]["tags"] else "perf"
-            forms = sorted(set(f["word_form"] for f in entry["forms"]))
-            lines.append(f"| {entry['lemma']} | {aspect} | {', '.join(forms[:10])} |")
+            # Prioritize: imperative > present > infinitive > rest
+            # This prevents truncation from cutting critical forms
+            impr_forms = sorted(set(
+                f["word_form"] for f in entry["forms"] if "impr" in f["tags"]))
+            pres_forms = sorted(set(
+                f["word_form"] for f in entry["forms"]
+                if "pres" in f["tags"] and "impr" not in f["tags"]))
+            inf_forms = sorted(set(
+                f["word_form"] for f in entry["forms"] if "inf" in f["tags"]))
+            other_forms = sorted(set(
+                f["word_form"] for f in entry["forms"]
+                if "impr" not in f["tags"] and "pres" not in f["tags"]
+                and "inf" not in f["tags"]))
+            # Combine with priority order, dedup, cap at 15
+            seen: set[str] = set()
+            ordered: list[str] = []
+            for form in impr_forms + pres_forms + inf_forms + other_forms:
+                if form not in seen:
+                    seen.add(form)
+                    ordered.append(form)
+            lines.append(f"| {entry['lemma']} | {aspect} | {', '.join(ordered[:15])} |")
         lines.append("")
 
     # Other POS

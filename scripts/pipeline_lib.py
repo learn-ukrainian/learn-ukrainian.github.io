@@ -100,18 +100,23 @@ IMMERSION_RULES: dict[str, str] = {
     ),
     "a1-m11-20": (
         "TARGET: 25-40% Ukrainian, 60-75% English. "
-        "Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first "
-        "(2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. "
-        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
-        "Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. "
-        "Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary."
+        "Achieve immersion through STRUCTURED Ukrainian content: "
+        "(1) tables (vocabulary groups, gender sorting, declension patterns — all cells Ukrainian), "
+        "(2) example blocks with 2-4 short Ukrainian sentences + English gloss per line, "
+        "(3) bold inline Ukrainian words in English prose. "
+        "NEVER write a block of 5+ Ukrainian sentences followed by a single English translation paragraph. "
+        "Grammar RULES stay in English. A1 register only — simple concrete vocabulary."
     ),
     "a1-m21+": (
         "TARGET: 35-55% Ukrainian, 45-65% English. "
-        "Write ALL section content in Ukrainian first (max 10 words per sentence). "
-        "Then add English translation paragraphs for grammar explanations to bring Ukrainian down to 35-55%. "
-        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
-        "Grammar rules still anchored in English. A1 register — simple concrete vocabulary."
+        "Achieve immersion through STRUCTURED Ukrainian content, not text dumps. "
+        "Use: (1) paradigm/conjugation tables (all cells Ukrainian), "
+        "(2) pattern boxes showing transformations (читати → читай → читайте), "
+        "(3) mini-dialogues (2-4 lines, labeled speakers, English gloss per line), "
+        "(4) bold inline Ukrainian in English prose. "
+        "NEVER write a paragraph of 5+ Ukrainian sentences followed by italic English translation — "
+        "that is unreadable and pedagogically useless. "
+        "Grammar rules stay in English. A1 register — simple concrete vocabulary."
     ),
     "a2-m01-20": (
         "TARGET: 50-60% Ukrainian, 40-50% English. "
@@ -349,6 +354,16 @@ PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
         "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) "
         "apply in addition to this constraint."
     ),
+    "a1-m47": (
+        "SEQUENCE CONSTRAINTS (M47 — Imperative Mood):\n"
+        "This module TEACHES the imperative mood. Imperative forms are ALLOWED and REQUIRED.\n"
+        "Use imperative forms freely: читай/читайте, пиши/пишіть, скажи/скажіть, "
+        "дай/дайте, іди/ідіть, дивись/дивіться, стій/стійте, слухай/слухайте.\n\n"
+        "Both imperfective AND perfective verbs are allowed for imperatives.\n"
+        "Past tense and future tense are available (taught at M36/M37).\n\n"
+        "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, "
+        "EXCEPT: perfective aspect is ALLOWED for imperative forms."
+    ),
 }
 
 
@@ -420,6 +435,8 @@ def get_pedagogical_constraints(track: str, module_num: int) -> str:
         return PEDAGOGICAL_CONSTRAINTS["a1-m05-10"]
     elif module_num <= 14:
         return PEDAGOGICAL_CONSTRAINTS["a1-m11-14"]
+    elif module_num == 47:
+        return PEDAGOGICAL_CONSTRAINTS["a1-m47"]
     else:
         return PEDAGOGICAL_CONSTRAINTS["a1-m15+"]
 
@@ -955,6 +972,9 @@ def get_level_constraints(track: str, plan: dict | None = None) -> str:
             if any(kw in grammar_text for kw in ("subordinate", "підрядн", "який", "що-clause",
                                                    "коли", "якщо", "тому що", "бо", "щоб")):
                 relaxations.append("Subordinate clauses (plan teaches them)")
+            if any(kw in grammar_text for kw in ("perfective", "доконан", "imperative", "наказов",
+                                                   "сказати", "показати", "допомогти", "взяти")):
+                relaxations.append("Perfective aspect (plan teaches perfective verbs)")
 
             if relaxations:
                 relaxed_list = ", ".join(relaxations)
@@ -2080,9 +2100,12 @@ def _get_prompt_tier(track: str, module_num: int) -> str:
     return "core"
 
 
-def _get_content_template(track: str, module_num: int) -> str:
+def _get_content_template(track: str, module_num: int,
+                          full_build: bool = False, rag: bool = False) -> str:
     """Return the content prompt filename for the given tier."""
     tier = _get_prompt_tier(track, module_num)
+    if full_build and tier == "beginner":
+        return "beginner-full-rag.md" if rag else "beginner-full.md"
     if tier == "beginner":
         return "beginner-content.md"
     if tier == "seminar":
@@ -2164,6 +2187,9 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
         "WRITING_TONE_INSTRUCTION": _get_writing_tone(ctx.track, ctx.module_num),
         "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
+        "TEXTBOOK_ACTIVITY_EXAMPLES": _prefetch_textbook_activity_examples(ctx),
+        "TEXTBOOK_GRADE": _get_textbook_grade(ctx),
+        "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]),
         "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
         "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),
         "INTRO_HOOK": (
@@ -2730,6 +2756,172 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     return header + "\n\n".join(results[:6])
 
 
+def _get_textbook_grade(ctx: ModuleContext) -> str:
+    """Return the recommended textbook grade range for RAG searches."""
+    base = ctx.track.split("-")[0]
+    if base == "a1" and ctx.module_num <= 14:
+        return "1-2"
+    elif base == "a1":
+        return "2-3"
+    elif base == "a2":
+        return "3-4"
+    elif base == "b1":
+        return "5-7"
+    elif base == "b2":
+        return "7-8"
+    return "9-11"
+
+
+# Imperative verbs that signal exercise blocks (task instructions) in textbooks.
+# Grade 1-2 use bare imperatives; grade 3+ use formal/plural imperatives.
+_EXERCISE_MARKERS = (
+    # Singular (grade 1-4)
+    "знайди", "спиши", "визнач", "прочитай", "утвори", "добери",
+    "запиши", "виправ", "випиши", "підкресли", "розгадай", "склади",
+    "збери", "розглянь", "назви", "відшукай", "поміркуй", "пригадай",
+    # Plural formal (grade 5-11)
+    "спишіть", "визначте", "утворіть", "доберіть", "запишіть",
+    "виправте", "випишіть", "підкресліть", "перепишіть", "розберіть",
+    "відредагуйте", "скоригуйте", "установіть", "згрупуйте",
+    # Exercise markers
+    "вправа", "крок 1",
+)
+
+_EXERCISE_MARKER_RE = re.compile(
+    r'\b(' + '|'.join(re.escape(m) for m in _EXERCISE_MARKERS) + r')',
+    re.IGNORECASE,
+)
+
+
+def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
+    """Pre-fetch real textbook exercises (вправи) from RAG as activity inspiration.
+
+    Grade mapping (validated against textbook content analysis):
+    - A1 M1-M14 → grade 1-2 bukvar (letters, syllables, basic words)
+    - A1 M15+   → grade 2-3 (gender, number, basic parts of speech)
+    - A2        → grade 3-4 (cases, verb tenses, adj-noun agreement)
+    - B1        → grade 5-7 (morphology, word building, style)
+    - B2        → grade 7-8 (syntax, error correction, register)
+    - C1+       → grade 9-11 (complex syntax, stylistics)
+
+    Exercise labeling varies by grade:
+    - Grade 1: bare imperatives (Знайди, Збери, Утвори) — no "Вправа"
+    - Grade 2-4: sequential numbers (70., 195., 430.)
+    - Grade 5-7: "Вправа NNN" (Litvinova) or plain numbers (others)
+    - Grade 8-11: plain numbers + І./ІІ. sub-levels, А./Б./В. sub-tasks
+    """
+    try:
+        from rag.query import search_text
+    except ImportError:
+        return ""
+
+    base = ctx.track.split("-")[0]
+
+    # Grade mapping + subject + search focus per level
+    # Each entry: (grades, subject, focus_queries)
+    if base == "a1" and ctx.module_num <= 14:
+        grades = [1, 2]
+        subject = "bukvar"
+        # Grade 1-2 bukvar: bare imperative tasks, no "Вправа" numbering
+        focus_queries = [
+            "знайди слово букву склад",
+            "збери утвори визнач назви",
+        ]
+    elif base == "a1" and ctx.module_num >= 15:
+        grades = [2, 3]
+        subject = "ukrainska-mova"
+        # Grade 2-3: parts of speech, gender, number
+        focus_queries = [
+            "визнач рід іменників число",
+            "добери прикметник спиши",
+        ]
+    elif base == "a2":
+        grades = [3, 4]
+        subject = "ukrainska-mova"
+        # Grade 3-4: case declension, verb conjugation, agreement
+        focus_queries = [
+            "відмінок іменника називний родовий",
+            "дієслово час особа спиши",
+        ]
+    elif base == "b1":
+        grades = [5, 6, 7]
+        subject = "ukrainska-mova"
+        focus_queries = [
+            "спишіть визначте утворіть слова",
+            "суфікс префікс будова слова",
+        ]
+    elif base == "b2":
+        grades = [7, 8]
+        subject = "ukrainska-mova"
+        focus_queries = [
+            "спишіть речення підкресліть граматичні основи",
+            "відредагуйте речення виправте помилки",
+        ]
+    else:  # C1, C2
+        grades = [9, 10, 11]
+        subject = "ukrainska-mova"
+        focus_queries = [
+            "складнопідрядне речення підрядне",
+            "стилістичні засоби установіть відповідність",
+        ]
+
+    # Add topic-specific terms from plan keywords
+    search_terms = list(focus_queries)
+    plan_keywords = ctx.plan.get("keywords", [])
+    # Grade 1-2: no "вправа" prefix; grade 3+: add it for better relevance
+    prefix = "" if base == "a1" and ctx.module_num <= 14 else "вправа "
+    for kw in plan_keywords[:2]:
+        search_terms.append(f"{prefix}{kw}")
+
+    results: list[str] = []
+    seen_chunks: set[str] = set()
+
+    for term in search_terms:
+        if len(results) >= 5:
+            break
+        for grade in grades:
+            if len(results) >= 5:
+                break
+            try:
+                hits = search_text(term, grade=grade, subject=subject, limit=2)
+            except Exception:
+                continue
+            for hit in hits:
+                cid = hit.get("chunk_id", "")
+                if cid in seen_chunks:
+                    continue
+                seen_chunks.add(cid)
+                text = hit.get("text", "")[:600]
+                # Filter: must contain exercise instruction verbs (word boundary)
+                if not _EXERCISE_MARKER_RE.search(text):
+                    continue
+                author = hit.get("author", "")
+                hit_grade = hit.get("grade", "")
+                section = hit.get("section_title", hit.get("section", ""))
+                label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
+                results.append(
+                    f"**{label}** — {section}:\n```\n{text}\n```"
+                )
+
+    if not results:
+        return ""
+
+    translate_note = (
+        " Since your students are English-speaking adults, **translate exercise instructions "
+        "to English** while keeping Ukrainian content words. Adapt the pedagogical approach "
+        "(progressive difficulty, real-world context) but not the language of instruction."
+        if base in ("a1", "a2") else ""
+    )
+
+    return (
+        f"### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\n"
+        f"These are real exercises from Ukrainian school textbooks (grade {'/'.join(str(g) for g in grades)}). "
+        f"Study their **pedagogical patterns** — how they build progressively, "
+        f"use familiar vocabulary, and test specific skills.{translate_note}\n\n"
+        + "\n\n".join(results[:5])
+    )
+
+
 def phase_2_content(ctx: ModuleContext) -> bool:
     """Phase 2: Content (whole-module, single Gemini call)."""
     phase = "2"
@@ -2763,7 +2955,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
     # Tier-based content prompt dispatch
-    content_template_name = _get_content_template(ctx.track, ctx.module_num)
+    content_template_name = _get_content_template(
+        ctx.track, ctx.module_num,
+        full_build=getattr(ctx, "full_build", False),
+        rag=getattr(ctx, "rag", False),
+    )
     template = PHASES_DIR / content_template_name
     if not template.exists():
         # Fallback to monolithic prompt
@@ -2908,6 +3104,22 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
         log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
+
+        # Full-build mode: extract activities + vocabulary from same response
+        if getattr(ctx, "full_build", False) and raw:
+            for path_key, start, end, orch_name, label in (
+                ("activities", "===ACTIVITIES_START===", "===ACTIVITIES_END===",
+                 "phase-C-output-activities.yaml", "Activities"),
+                ("vocabulary", "===VOCABULARY_START===", "===VOCABULARY_END===",
+                 "phase-C-output-vocabulary.yaml", "Vocabulary"),
+            ):
+                text = _extract_delimited_content(raw, start, end)
+                target = ctx.paths.get(path_key) if text else None
+                if target:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text(text, encoding="utf-8")
+                    (ctx.orch_dir / orch_name).write_text(text, "utf-8")
+                    log(f"  Phase 2: {label} extracted from full-build → {target.name}")
 
         if total_words >= ctx.word_target * 0.75:
             mark_phase(ctx, phase, "complete", words=total_words, attempts=attempt)

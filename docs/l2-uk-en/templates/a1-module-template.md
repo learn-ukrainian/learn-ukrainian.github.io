@@ -3,7 +3,7 @@
 > **Level:** A1 (Beginner)
 > **Pedagogy:** PPP (Presentation-Practice-Production)
 > **Focus:** Cyrillic alphabet, basic vocabulary, simple phrases
-> **Immersion:** Graduated (M01-05: 20-30%, M06-20: 40-60%, M21-34: 60-80%)
+> **Immersion:** Graduated (M01-02: 5-15%, M03-05: 10-25%, M06-10: 15-35%, M11-20: 25-40%, M21+: 35-55%)
 
 <!--
 TEMPLATE_METADATA:
@@ -33,7 +33,7 @@ TEMPLATE_METADATA:
 Before submitting, verify:
 
 - [ ] Frontmatter complete (module, title, phase, pedagogy, objectives)
-- [ ] Word count meets target (2000+ words per config.py)
+- [ ] Word count meets target (1200+ words per config.py)
 - [ ] **NO Latin transliteration used (forbidden)**
 - [ ] 8+ activities with 6+ items each
 - [ ] 4+ unique activity types
@@ -54,7 +54,7 @@ version: '1.0'
 phase: 'A1.{1|2|3}'
 pedagogy: 'PPP'
 duration: '60 min'
-phonetics: 'ipa'
+phonetics: 'stress-marks'
 tags:
   - { topic1 }
   - { topic2 }
@@ -69,7 +69,7 @@ vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
-> ⚠️ **PHONETIC RULE:** Latin transliteration (e.g., "knyha") is **FORBIDDEN**. Use only IPA (e.g., /ˈknɪɦɑ/).
+> ⚠️ **PHONETIC RULE:** Latin transliteration (e.g., "knyha") and IPA are both **FORBIDDEN**. Use only stress marks (´) on the stressed vowel.
 
 ---
 
@@ -125,12 +125,12 @@ Introduce concept with:
 
 - Clear explanation in English (A1 allows English)
 - Table showing patterns
-- 3-5 example words/phrases with **IPA**
+- 3-5 example words/phrases with stress marks
 
 ```markdown
-| Letter  | Sound | Example | IPA     | English |
-| ------- | ----- | ------- | ------- | |
-| **А а** | /ɑ/   | мама    | /ˈmɑmɑ/ | mama    |
+| Letter  | Sound | Example | English |
+| ------- | ----- | ------- | ------- |
+| **А а** | like «a» in «father» | ма́ма | mom |
 ```
 
 #### ### {Subsection 2}
@@ -221,11 +221,9 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ```yaml
 items:
   - lemma: слово
-    ipa: /slɔwɔ/
     translation: word
     pos: noun
     gender: n
-    note: —
 ```
 
 ---
@@ -262,7 +260,7 @@ items:
 
 | Metric           | Target |
 | ---------------- | ------ |
-| Words            | 2000+  |
+| Words            | 1200+  |
 | Activities       | 8+     |
 | Items/activity   | 6+     |
 | Engagement boxes | 3+     |
@@ -281,7 +279,7 @@ version: '1.0'
 phase: 'A1.1'
 pedagogy: 'PPP'
 duration: '60 min'
-phonetics: 'ipa'
+phonetics: 'stress-marks'
 tags:
   - numbers
   - counting

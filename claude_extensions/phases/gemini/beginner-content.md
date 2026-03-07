@@ -56,19 +56,21 @@ Write the lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 Write for someone seeing Ukrainian for the first time. English is the scaffolding language — use it for explanations, instructions, and context. Ukrainian is the target content — letters, words, phrases being taught.
 
 **Do this:**
-- Introduce each new letter/word clearly with its sound and meaning
-- Use tables to show letter-sound mappings
-- Give real Ukrainian words as examples (from the decodable vocabulary only)
+- Write body paragraphs in ENGLISH with Ukrainian words **bolded inline**: "The informal command of **читати** (to read) is **читай**."
+- Use tables for conjugation paradigms, vocabulary groups, letter-sound mappings
+- Use pattern boxes to show transformations: `читати → читай → читайте`
+- Put example sentences AFTER the English explanation, not instead of it
 - Keep paragraphs short (3-5 sentences)
-- Use callout boxes for tips, fun facts, and warnings about visual traps
+- Use callout boxes for tips, fun facts, and warnings
+- Vary your immersion patterns — tables, inline bold, dialogues, pattern boxes. Don't repeat the same Ukrainian phrase pattern more than twice (e.g., avoid "Це склад", "Це слово", "Це правило" in every paragraph)
 
 **Do NOT do this:**
+- Write a Ukrainian sentence then translate it on the next line — this is bilingual ping-pong (BANNED). Write in English with Ukrainian words bolded inline instead.
 - Use Ukrainian grammar terminology (іменник, дієслово, голосний, приголосний) — students don't know these yet
 - Write long paragraphs of linguistic analysis
 - Include IPA transcriptions or phonetic brackets
 - Use vocabulary from future modules
 - Create practice sentences if the constraints say "no sentences"
-- Repeat the same Ukrainian phrase pattern more than twice (e.g. don't write "Це склад", "Це слово", "Це правило" in every paragraph — vary your immersion: use contextual labels like "Наприклад — For example", section bridges like "А тепер — And now", vocabulary callouts, or short dialogue snippets)
 
 ### Example of Good A1 Content (letter introduction)
 
