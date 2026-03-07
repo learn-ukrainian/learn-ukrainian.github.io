@@ -452,10 +452,12 @@ def main():
 
     # report
     p_report = sub.add_parser("report", help="Show latest results")
+    p_report.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
     p_report.set_defaults(func=cmd_report)
 
     # baseline
     p_baseline = sub.add_parser("baseline", help="Save current results as baseline")
+    p_baseline.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
     p_baseline.set_defaults(func=cmd_baseline)
 
     args = parser.parse_args()
