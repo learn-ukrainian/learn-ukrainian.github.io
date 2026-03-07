@@ -1,5 +1,5 @@
 <!-- SCOPE
-Covers: First Conjugation (-ати) verbs in the present tense, imperfective aspect, pro-drop feature.
+Covers: First Conjugation (-ати/-яти) in present tense, basic SVO sentences with inanimate objects.
 Not covered:
   - Second Conjugation verbs → a1-16
   - Questions and negation → a1-18
@@ -9,164 +9,212 @@ Not covered:
 
 > **Чому це важливо?**
 >
-> Verbs are the engine of any language. Mastering the basic conjugation pattern allows you to talk about your daily actions, habits, and routines. It moves you from pointing at objects to actually describing life in motion.
+> Learning verbs unlocks your ability to describe actions and routines. You can confidently say what you do every day. This is the foundation of fluency.
 
-## Вступ
+## Вступ (Introduction)
 
-Welcome! So far in our journey, we have looked at the world around us. We learned how to say what things are. We described our objects and our surroundings. Now, it is time to bring those objects to life. We are making a big jump today. We are moving from static descriptions to dynamic actions.
+**Ми вивча́ємо слова́. Ми вивча́ємо мо́ву. Тепе́р ми зна́ємо бага́то.**
+We study words. We study the language. Now we know a lot.
 
-We are shifting from saying what something is, to what we do. We are stepping into the exciting world of verbs. Verbs give our sentences energy and movement. Our next step is learning how to express daily actions.
+**Я чита́ю кни́гу. Ти чита́єш нови́ни. Вона́ чита́є текст. Ми чита́ємо.**
+I read a book. You read the news. She reads the text. We read.
 
-You will learn how to use some of the most common words in Ukrainian. We will look at how to say you read, work, and know things. This is a very important step forward.
+**Я вивча́ю. Ти вивча́єш. Вона́ вивча́є. Вони́ вивча́ють.**
+I study. You study. She studies. They study.
 
-Це дуже важливо.
-(This is very important.)
+**Я слу́хаю му́зику. Ти слу́хаєш. Вона́ слу́хає.**
+I listen to music. You listen. She listens.
 
-Ми читаємо.
-(We read.)
+**Ми працю́ємо ра́зом. Вони́ працю́ють.**
+We work together. They work.
 
-Ми працюємо.
-(We work.)
+In this lesson, you learn to describe your daily actions. A verb is an action word. In Ukrainian, verbs change their endings depending on who is doing the action. This is conjugation. 
 
-Ми вивчаємо мову.
-(We study the language.)
+You start with the First Conjugation. Most of these verbs end in **-ати**. This is the infinitive. For example, **чита́ти** is an infinitive. 
+
+The verb **зна́ти** belongs to this group. Another highly useful verb is **працюва́ти**. These verbs describe ongoing actions or daily habits. This concept is the imperfective aspect.
 
 > [!culture]
-> The verb **читати** (to read) holds a special place in Ukrainian history. In 1574, Ivan Fedorov printed the «Апостол» (The Apostle). It was the very first printed book in Ukraine. This event marked a deep-rooted tradition of literacy and education. When you say you read in Ukrainian, you are connecting to a centuries-old love for the printed word.
+> **Я чита́ю текст. Ми чита́ємо. Вони́ чита́ють.**
+> I read the text. We read. They read.
+> The verb **чита́ти** has deep roots. In 1574, Ivan Fedorov published the *Apostol* in Lviv. It was the first printed book in Ukraine. 
 
-Our focus today is on a specific group of verbs. These verbs share a common, predictable pattern. Once you learn this pattern, you unlock hundreds of new words. It is like finding a master key. We start with our first high-frequency verbs.
+We are starting an interesting language journey. 
 
-Я читаю книгу.
-(I read a book.)
+## Презентація (Presentation)
 
-Я працюю вдома.
-(I work at home.)
+**Я зна́ю пра́вило. Ми зна́ємо пра́вило. Ти зна́єш все. Вони́ зна́ють.**
+I know the rule. We know the rule. You know everything. They know.
 
-You will soon see how simple it is to build these action sentences. We will take it step by step, focusing on practical communication.
+To use a verb, you must change its ending. This tells the listener exactly who is performing the action. 
 
-## Презентація: The -ати Pattern
+Think of the infinitive form as having two parts: the stem and the ending. For **чита́ти**, the ending is **-ти**. The stem is **чита-**. 
 
-Most verbs in Ukrainian belong to clear families or classes. Today, we look at the most common family. This is the Class I pattern. You can easily recognize these verbs. Their dictionary form almost always ends in **-ати**.
+To conjugate the verb, drop the **-ти** and add a personal ending. These specific endings always match the personal pronouns.
 
-Take the verb **читати** (to read). The ending **-ти** simply shows that it is the dictionary form. To use the verb in a sentence, we drop the **-ти**. What is left is our stem. For our example, the stem is **чита-**.
-
-Now, we add personal endings to this stem. These endings tell us exactly who is doing the action. Observe the complete pattern for **читати**.
-
-| Pronoun | Stem | Ending | Verb Form | Meaning |
+| Pronoun | Stem | Ending | Full Verb | Meaning |
 |---|---|---|---|---|
-| **Я** (I) | чита- | **-ю** | **чита́ю** | I read |
-| **Ти** (You) | чита- | **-єш** | **чита́єш** | You read (informal) |
-| **Він / Вона / Воно** (He/She/It) | чита- | **-є** | **чита́є** | He/She/It reads |
-| **Ми** (We) | чита- | **-ємо** | **чита́ємо** | We read |
-| **Ви** (You) | чита- | **-єте** | **чита́єте** | You read (formal/plural) |
-| **Вони** (They) | чита- | **-ють** | **чита́ють** | They read |
+| **я** | чита- | **-ю** | **я чита́ю** | I read / I am reading |
+| **ти** | чита- | **-єш** | **ти чита́єш** | you read (singular) |
+| **він/вона** | чита- | **-є** | **він/вона чита́є** | he/she reads |
+| **ми** | чита- | **-ємо** | **ми чита́ємо** | we read |
+| **ви** | чита- | **-єте** | **ви чита́єте** | you read (plural) |
+| **вони** | чита- | **-ють** | **вони чита́ють** | they read |
+
+Notice the regular endings are **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, and **-ють**. This pattern is reliable. 
+
+Now apply this rule to the verb "to know".
+
+**Я зна́ю все. Він зна́є пра́вду. Ми не зна́ємо. Вони́ зна́ють пра́вило.**
+I know everything. He knows the truth. We do not know. They know the rule.
+
+**Я розумі́ю. Ти розумі́єш. Він розумі́є. Ми розумі́ємо. Вони́ розумі́ють.**
+I understand. You understand. He understands. We understand. They understand.
 
 > [!tip]
-> Notice how the ending changes for every single person. Because the ending itself clearly shows who is acting, we often drop the pronoun completely! This is a natural feature of Ukrainian grammar. Instead of saying «Я читаю», you can simply say «Читаю». The meaning remains perfectly clear, and your speech sounds much more authentic.
+> In Ukrainian, the verb ending itself tells us who is doing the action. The ending **-ю** means "I". You can often drop the pronoun completely. Saying **Чита́ю** is a perfectly natural way to say "I am reading" in everyday conversation.
 
-These verbs describe actions that are happening right now, or things you do regularly. This concept is called the imperfective aspect. It focuses on the ongoing process rather than a completed result. It tells us what you are doing at this very moment, or what you usually do every day.
+The verb "to work" has a small spelling change. The part "-юва-" shortens to just "-ю-". The personal endings remain standard.
 
-Він працює вдома.
-(He works at home.)
+**Я працю́ю. Ти працю́єш. Вона́ працю́є.**
+I work. You work. She works.
 
-Ми слухаємо радіо.
-(We listen to the radio.)
+**Ми працю́ємо ра́зом. Вони́ працю́ють бага́то. Він працю́є.**
+We work together. They work a lot. He works.
 
-Вони знають усе.
-(They know everything.)
+**Ми вивча́ємо слова́. Це нове́ пра́вило.**
+We study words. This is a new rule.
 
-We apply the exact same pattern to another essential verb: **знати** (to know). We drop **-ти** and get the stem **зна-**. Then, we add our new endings.
+**Він працю́є вдо́ма. Вони́ працю́ють.**
+He works at home. They work.
 
-Я зна́ю правду.
-(I know the truth.)
+These verbs neatly describe continuous processes. The present tense smoothly covers regular habits and current ongoing actions.
 
-Ти зна́єш.
-(You know.)
+## Практика (Practice)
 
-Вона зна́є усе.
-(She knows everything.)
+**Я слу́хаю му́зику. Ти слу́хаєш ува́жно. Ми слу́хаємо ра́діо. Вони́ слу́хають.**
+I listen to music. You listen carefully. We listen to the radio. They listen.
 
-The pattern is perfectly regular and reliable. By memorizing these six small endings, you can instantly conjugate hundreds of everyday verbs with total confidence.
+Many English speakers mistakenly use the infinitive. You must use the conjugated form. 
 
-## Практика та типові помилки
+When using the verb "to write", the form is slightly different.
+**Я пишу́. Він пи́ше. Ми пи́шемо. Вони́ пи́шуть.**
+I write. He writes. We write. They write.
 
-Now that you understand the core pattern, we build some real sentences. We will also look at common traps for English speakers so you can avoid them from the very beginning.
+Looking at the verb "to listen", the form uses the standard rule.
+**Я слу́хаю. Вона́ слу́хає. Ми слу́хаємо. Вони́ слу́хають.**
+I listen. She listens. We listen. They listen.
 
-The biggest trap is using the dictionary form in a sentence. In English, we say "I read" or "I work," which looks exactly like the base verb. In Ukrainian, you absolutely cannot do this. You must always use the conjugated form that matches the person performing the action.
+The verb "to play" uses the standard rule perfectly.
+**Я гра́ю. Ти гра́єш. Ми гра́ємо. Вони́ гра́ють.**
+I play. You play. We play. They play.
+
+While repeating the pronoun is correct, it sounds repetitive. We read the text without extra words.
+
+**Чита́ю нови́ни. Працю́ю. Відпочива́ю.**
+I read the news. I work. I rest.
+
+**Слу́хаю ра́діо. Ду́маю. Чека́ю.**
+I listen to the radio. I think. I wait.
+
+**Пишу́ лист. Чека́ю. Гра́ю.**
+I write a letter. I wait. I play.
 
 > [!warning]
-> Never say «Я читати» or «Я працювати». This literally sounds like "I to read" or "I to work" to a native speaker. It is a very common mistake. Always remember to drop the **-ти** and add the correct personal ending.
+> **Я пита́ю про це. Він пита́є про це. Ми пита́ємо.**
+> I ask about this. He asks about this. We ask.
+> The highly useful verb "to ask" is an exception in how it connects to other words. For now, only use it safely with the phrase "about this".
 
-We can practice the correct forms together. We will pair our verbs with simple objects.
+Let us build sentences with direct objects. Inanimate masculine and neuter objects do not change.
 
-Я читаю журнал.
-(I am reading a magazine.)
+**Я чита́ю журна́л. Ми чита́ємо текст. Вона́ чита́є.**
+I read a magazine. We read the text. She reads.
 
-Я слухаю радіо.
-(I am listening to the radio.)
+**Він пи́ше лист. Вони́ пи́шуть. Ти пи́шеш.**
+He writes a letter. They write. You write.
 
-Я пишу лист.
-(I am writing a letter.)
+**Ми слу́хаємо ра́діо. Вона́ слу́хає му́зику.**
+We listen to the radio. She listens to music.
 
-In these examples, we use inanimate objects like a magazine, a radio, or a letter. Notice how the structure flows beautifully. The sentence goes straight from the actor, to the action, to the object.
+You can freely describe your workday. Let us review the patterns.
 
-Another common habit for English speakers is using the pronoun **я** (I) in every single sentence. While it is not grammatically wrong, it sounds unnatural and robotic in Ukrainian. Since the verb ending **-ю** already means "I", repeating the pronoun constantly feels heavy.
+**Мій день.**
+My day.
 
-Native speakers usually talk about their daily routine differently. They drop the pronouns to create a smooth, elegant flow.
+**Я працю́ю вдо́ма. Я працю́ю бага́то.**
+I work at home. I work a lot.
 
-Працюю багато.
-(I work a lot.)
+**Ми працю́ємо ра́зом. Вона́ слу́хає му́зику.**
+We work together. She listens to music.
 
-Слухаю музику.
-(I listen to music.)
+**Ти слу́хаєш ра́діо. Вони́ слу́хають му́зику.**
+You listen to the radio. They listen to music.
 
-Пишу повідомлення.
-(I write a message.)
+**Я чита́ю нови́ни. Він чита́є текст.**
+I read the news. He reads the text.
 
-Відпочиваю вдома.
-(I am resting at home.)
+**Ми чита́ємо текст. Ти вивча́єш мо́ву.**
+We read the text. You study the language.
 
-This minor adjustment makes the language sound much more natural. Try combining our new verbs to describe a typical evening routine. Pay attention to how the verbs do all the heavy lifting.
+**Я вивча́ю слова́. Ми зна́ємо бага́то.**
+I study words. We know a lot.
 
-Я вдома.
-(I am at home.)
+**Я ду́маю. Ти розумі́єш. Вона́ зна́є пра́вду.**
+I think. You understand. She knows the truth.
 
-Слухаю радіо.
-(I am listening to the radio.)
+**Ми чека́ємо на авто́бус. Вони́ чека́ють.**
+We wait for the bus. They wait.
 
-Читаю новини.
-(I am reading the news.)
+**По́тім ми відпочива́ємо вдо́ма. Я гра́ю. Вони́ гра́ють.**
+Then we rest at home. I play. They play.
 
-Думаю про це.
-(I am thinking about it.)
+**Ти чека́єш. Я чека́ю. Ми чека́ємо.**
+You wait. I wait. We wait.
 
-By practicing these short, pronoun-free sentences, you will quickly build confidence. You are already creating dynamic action statements. Remember, the verb carries the weight of the sentence. Let the ending do the work for you.
+**Він відпочива́є. Вона́ відпочива́є. Я відпочива́ю.**
+He rests. She rests. I rest.
 
-## Підсумок
+By confidently combining these verbs with simple everyday objects, you can already communicate practical information.
 
-You have just unlocked a massive and essential part of the Ukrainian language. The **-ати** verb pattern is truly your master key. By learning just one set of endings, you now have the power to use a huge number of action words in your daily conversations.
+## Підсумок та культурний аспект (Summary and Cultural Insight)
 
-Here are the core rules we covered today. First, you find the verb stem by dropping the **-ти** from the dictionary form. Second, you attach the appropriate personal endings: **-ю, -єш, -є, -ємо, -єте, -ють**.
+**Я розумі́ю. Ти розумі́єш. Ми вивча́ємо мо́ву. Вони́ вивча́ють.**
+I understand. You understand. We study the language. They study.
 
-Ми розуміємо все.
-(We understand everything.)
+**Ми ду́маємо бага́то. Вони́ ду́мають бага́то. Ти ду́маєш.**
+We think a lot. They think a lot. You think.
 
-Ви чекаєте на автобус.
-(You are waiting for a bus.)
+You learned an important and highly useful rule today. The First Conjugation pattern instantly unlocks hundreds of new verbs. You simply learn the infinitive form, and you immediately know exactly how to correctly use it.
 
-Вони грають на гітарі.
-(They play the guitar.)
+You also learned that you can drop the pronouns because the verb ending effectively contains the subject information. 
 
-> [!did-you-know]
-> There is a famous Ukrainian proverb: «Птицю пізнати по пір'ю, а людину по мові». This translates beautifully to: A bird is known by its feathers, a person by their speech. Speaking accurately and using the correct verb endings shows care and respect for the rich Ukrainian language!
+> [!culture]
+> **Пти́цю пізна́ти по пі́р'ю. А люди́ну — по мо́ві.**
+> A bird is known by its feathers. And a person — by their speech.
+> There is a profound Ukrainian proverb about speaking properly. It reveals your true character. Learning correct endings shows respect. 
 
-Third, always remember the pro-drop rule. The verb ending alone tells us who is performing the action, so you do not need to repeat the pronoun every single time. This creates a natural and authentic rhythm in your speech.
+**Ми опису́ємо на́ші ді́ї. Ми опису́ємо наш день.**
+We describe our actions. We describe our day.
 
-Here are a few quick questions to check your understanding before we finish:
+**Ми говори́мо про на́ші зви́чки. Це вели́кий прогре́с.**
+We talk about our habits. This is big progress.
 
-1. What specific ending do we use for the pronoun **ми** (we)?
-2. Do you always need to include the pronoun **я** when you speak about your own actions?
-3. How do you find the stem for the verb **читати**?
-4. How do you correctly say "I am reading" in Ukrainian?
+You are describing dynamic actions. This represents a massive step forward in your journey. 
 
-Take a moment to answer these questions for yourself. You have made fantastic progress today. You are no longer just describing static things—you are finally talking about life in motion!
+Here are a few useful practical questions for thoroughly reviewing the material.
+
+1. What is the correct grammatical ending for the pronoun "we" in the First Conjugation? 
+Answer: The correct ending is "-ємо". For example:
+**Ми чита́ємо.**
+
+2. Do you always strictly need to use the pronoun "I" in a sentence? 
+Answer: No, the verb ending clearly indicates the exact subject, so you can smoothly drop the pronoun.
+
+3. How do you structurally form the base stem of the verb "to read"? 
+Answer: You drop the standard infinitive ending to safely get the stem.
+**Чита-**
+
+4. How do you correctly and naturally say "I am reading" in conversational Ukrainian? 
+**Я чита́ю.**
+Or simply:
+**Чита́ю.**

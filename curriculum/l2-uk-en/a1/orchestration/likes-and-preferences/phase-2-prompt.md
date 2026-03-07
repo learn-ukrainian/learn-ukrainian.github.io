@@ -31,127 +31,113 @@ Present tense verbs start at M15. Past tense at M36. Future at M37.
 
 KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
 
+BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+
+INSTEAD OF → USE:
+- Запам'ятайте → "Remember that..." (English)
+- Порівняйте → "Compare..." (English)
+- Зверніть увагу → "Notice that..." (English)
+- Подивіться → "Look at..." (English)
+- Спробуйте → "Try to..." (English)
+- Прочитайте → "Read..." (English)
+- Повторіть → "Repeat..." (English)
+
 The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
 
 
 
-## Textbook Reference Examples (from real Ukrainian буквар)
 
-These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration for style and difficulty level** — notice how they use simple syllable combinations, short words, and build progressively. Do NOT copy them verbatim, but match their pedagogical approach and simplicity.
 
-**Grade 1, zaharijchuk** — Сторінка 18:
+NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+
+## Textbook Reference (from Ukrainian grammar textbooks)
+
+These are explanations from Ukrainian school grammar textbooks. Use them as **reference** for grammar rules and examples. Adapt for adult A1 learners — keep explanations simple but maintain grammatical accuracy.
+
+**Grade 3, ponomarova** — Сторінка 160:
 ```
-16
-Й й
-Бачу Й, й (йот). Чую  [й].
-а й в а
- [ •  =   |  –• ]
-а й с т р и
-* а й в о р о
-а
-о
-и
-і
-Й
-га
-ми
-рі
-Й
-н о к
-лій- 
-	
-ліній-
-	
-май- 
-чай- 
-	
-гай- 
-	
-чай- 
-мий	
-лий 	
-чай	
-грай
-вимий	
-долий	
-чайник	
-зіграй
-ай
-ой
-ий
-ій
-а
-о
-і
-і
-ч
-й
-д
-м
-й
-Pidruchnyk.com.ua
+Пригадую знання про звуки і букви . . . . . . . . . . . . . . . . . . . . . . . . . . .4
+Спостерігаю за значенням слів  . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+Досліджую будову слова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+Дізнаюся більше про іменники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+Досліджую прикметники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92
+Розпізнаю числівники  . . . . . . . . . . . 
 ```
 
-**Grade 1, zaharijchuk** — Сторінка 60:
+**Grade 3, vashulenko** — Сторінка 5:
 ```
-58
-Бачу В, в (ве).  Чую [в].
-в і н о *
-* * и в и
-в и * н і
-[  = •  | –  • – ]  
-[ –   –•| – •]  
-ви-
-а
-о
-у
-и
-і
-В
-ва
-во
-ву
-ви
-ві
-а
-о
-у
-и
-і
-ав
-ов
-ув
-ив
-ів
-В
--во
-ва-
-ві-
-во-ни
-	
-  він 	
-              во-на 	
-	
-  во-но
-ни
-ва
-ва
-ми
-вав
-вов
-вув
-вив
-вів
-мо
-ва
-ви
-но
-ви
-ви
-на
-ни
-В в
+5
+ЩО  Я  ЛЮБЛЮ
+Люблю я маму, люблю тата.
+Люблю я свою рідну хату.
+Люблю...
+	 	
+4   Склади невеликий текст «Що я люблю робити», запиши його 
+і підготуйся прочитати у класі.
+3   Прочитай. Чи можна цей запис назвати завершеним висловлюванням? 
+Чому ти так думаєш?
+	 	
+2   З поданих пазлів склади і запиши прислів’я. Поясни, як ти його 
+розумієш. Чи можна назвати твоє висловлювання текстом?
+Пригадай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Зв’язані за змістом речення 
+становлять текст. До текс
 ```
+
+**Grade 3, vashulenko** — Сторінка 35:
+```
+35
+Книжки треба шанувати. Не можна 
+їх бруднити, рвати. Пошкоджені книжки 
+слід полагодити.
+Прочитай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Якщо речення вимовляють з особ­
+ливим почуттям, із підсилювальною 
+інтонацією, то вони стають оклич-
+ними. У кінці окличних речень став-
+лять знак оклику.
+2   Прочитай текст. Визнач, які це речення 
+за метою висловлювання.
+	 	
+3   Розгляньте малюнки. Складіть за одним із них невеликий 
+текст, використовуючи окличні речення. Прочитайте його 
+з потріб
+```
+
+**Grade 3, vashulenko** — Сторінка 126:
+```
+126
+ЯК ЗАХОЧЕШ — БУДЕ ВСЕ!
+Заявив я вчора тату:
+— Я страшенно хочу мати
+годівницю на вікні.
+Хай птахи свистять мені!
+— Що ж! — примружив тато очі. —
+Непогана думка, син.
+Буде все, як дуже схочеш, —
+це давно відомо всім…
+З того часу я ходив —
+і хотів, хотів, хотів.
+Їв — хотів. Співав — хотів.
+Навіть спав — і теж хотів.
+Зранку зиркав у вікно,
+як робив зарядку,
+думав: «Буде, як в кіно:
+клац! — і все в порядку!»
+Але скільки не дивився
+не з’являлась годівниця.
+І тоді я так сказав:
+— Тато помилився!
+К
+```
+
+
 
 ---
 
@@ -159,10 +145,20 @@ Pidruchnyk.com.ua
 
 Write the lesson prose for **Likes and Preferences** (a1 track).
 
-- **Target**: approximately 1200 words
+- **Target**: 1200–1800 words (below 1200 = FAIL, above 1800 = overproduction that increases error surface)
 - **Immersion**: TARGET: 25-40% Ukrainian, 60-75% English. Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first (2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary.
 - **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than 3 callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
-- **Structure**: Follow the content_outline from `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/likes-and-preferences.yaml` — each section maps to an H2. **Write ALL sections. Do not skip any section, even short ones like Summary.** Missing sections fail validation.
+- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+
+## REQUIRED H2 Sections (use EXACT titles)
+
+Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
+
+- `## Мені подобається (I like)` (~300 words)
+- `## Я люблю (I love)` (~300 words)
+- `## Я хочу (I want)` (~250 words)
+- `## Порівняння (Comparing Likes)` (~200 words)
+- `## Підсумок (Summary)` (~150 words)
 
 ### Beginner Writing Style
 
@@ -262,6 +258,21 @@ Scan your ENTIRE output for these. They cause automatic audit failure:
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
+### English Calque Checklist
+
+As an English-dominant model, you may produce English-to-Ukrainian calques. Check and avoid:
+
+| English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+|---|---|---|
+| "will have" | буду мати | матиму |
+| "do work" | робити роботу | працювати |
+| "save money" | зберегти гроші | заощадити гроші |
+| "make a decision" | зробити рішення | прийняти рішення |
+| "take a photo" | брати фото | фотографувати / робити фото |
+| "have attention" | мати увагу | звертати увагу |
+| "give an answer" | давати відповідь | відповідати |
+| "make sense" | робити сенс | мати сенс |
+
 ### Euphony / Милозвучність (WARNING if violated)
 
 Ukrainian prose must follow euphony rules:
@@ -345,6 +356,59 @@ Prefer: «Ви можете використати...», «Ми застосов
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
 
+## Self-Audit (Run BEFORE Final Output)
+
+After writing all content, you MUST run the audit and fix any issues — all within this session.
+
+### Step 1: Write Content to Disk
+
+Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+```bash
+cat > {CONTENT_PATH} << 'CONTENT_EOF'
+... your content here ...
+CONTENT_EOF
+```
+
+### Step 2: Run Audit
+
+```bash
+bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+```
+
+This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion %.
+
+### Step 3: Parse Results
+
+- If you see `AUDIT PASSED` — proceed to output.
+- If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run the audit.
+
+### Step 4: Fix Loop (max 2 iterations)
+
+If the audit fails:
+1. Read the specific gate failures and violation details from the audit output
+2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms, add callout boxes, etc.)
+3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+4. If still failing after 2 fix attempts, proceed to output anyway — the validate phase will handle remaining issues.
+
+### Step 5: Report Self-Audit Result
+
+After audit (pass or fail), include this block in your output:
+
+```
+===SELF_AUDIT_START===
+status: PASS | FAIL
+iterations: {number of audit runs}
+final_word_count: {word count from last audit}
+gates_passed: {list of passed gates}
+gates_failed: {list of failed gates, or "none"}
+fixes_applied: {brief description of what you fixed, or "none"}
+===SELF_AUDIT_END===
+```
+
+**IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual command and report real output.
+
+
 ---
 
 ## Output Format
@@ -371,7 +435,7 @@ Not covered:
 
 # Підсумок
 
-{Summary + 3-4 self-check questions}
+{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
 
 ---
 
@@ -403,6 +467,7 @@ Total: {total} words (target: 1200)
 
 - Do NOT generate activities or vocabulary tables (separate phase)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
+- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than 1200 words
 - Do NOT use straight quotes "..." — always «...»

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T05:42:42.403794+00:00'
+discovered_at: '2026-03-06T21:56:31.842157+00:00'
 query_keywords:
 - Likes and Preferences
 - Мені подобається
@@ -13,43 +13,9 @@ query_keywords:
 - Express love and enjoyment using Я люблю with Accusative
 - Express wants using Я хочу with infinitive or Accusative
 error: null
-warning: null
-videos:
-- url: https://www.youtube.com/watch?v=aGjzy5CancU
-  channel: Listen & Read
-  title: '[#91] ⚔ Wojny Klonów!!! #2 ⚔💈🤜🤛💈MERKUR Progress 500, Merkur Progress Clone,  ⚔
-    Battle Razors #13'
-  relevance_score: 0.1
-  relevance_note: The video uses target vocabulary 'подобається' (like) and 'хочу'
-    (want) in a natural context, but the overall content is about comparing razors,
-    which is entirely unrelated to the module's topic of 'Likes and Preferences.'
-    It offers no pedagogical value for understanding the concept itself, only for
-    observing the words in use.
-  transcript_excerpt: Кожен, кому він подобається — і я їх зараз розумію, особисто
-    я його недооцінював — знає, що Mercury Progress 500 має неймовірний потенціал.
-    Сьогодні я хочу відповісти на одне запитання.
-  embed_suggestion: After Підсумок (Summary) — as an optional, brief 'real-world usage'
-    example for advanced learners, with a disclaimer about its off-topic nature.
-- url: https://www.youtube.com/watch?v=hC-BizRFr-c
-  channel: Listen & Read
-  title: REHALEROS Y AGARRES:¿DE QUIEN ES EL TROFEO? LOS CALIBRES PRC SON UNA BUENA
-    ELECCION? SON NECESARIOS?
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-blogs:
-- url: https://www.ukrainianlessons.com/episode14/
-  title: Likes and dislikes — common verbs in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - grammar
-  - verbs
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 14
+warning: No videos found across channels
+videos: []
+blogs: []
 rag_chunks:
 - score: 0.25
   chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0071

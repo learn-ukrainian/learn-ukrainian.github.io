@@ -2,15 +2,15 @@
   "module": "food-vocabulary",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-06T01:49:33.086075Z",
+  "last_audit": "2026-03-07T00:01:06.138629Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T01:41:58.040525Z",
-    "meta": "2026-03-06T01:46:12.436651Z",
-    "activities": "2026-03-06T01:41:58.041535Z",
-    "vocabulary": "2026-03-06T01:41:58.042362Z",
+    "md": "2026-03-07T00:00:50.265363Z",
+    "meta": "2026-03-06T23:29:31.085423Z",
+    "activities": "2026-03-06T23:58:41.045415Z",
+    "vocabulary": "2026-03-06T23:56:12.816101Z",
     "plan": "2026-03-05T10:20:01.546565Z",
-    "research": "2026-03-06T00:38:46.420670Z"
+    "research": "2026-03-06T23:30:06.515193Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "4105/1200 (raw: 4538) | pedagogy: 16 violations | immersion: 32.5% LOW (target 35-55% (M39))"
+      "status": "pass",
+      "violations": 0,
+      "message": "1529/1200 (raw: 1595)"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 1
   }
 }

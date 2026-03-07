@@ -13,6 +13,7 @@ REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
 WORD_TARGET: '1200'
+WORD_CEILING: '1800'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -26,7 +27,10 @@ LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10
   \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
   \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
   \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
-  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ M1 (reading drill word, not grammar)\n  Exception (M19 likes-and-preferences):\
+  \ Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n    ONLY in the fixed construction\
+  \ «Мені подобається + noun/infinitive». Teach as a memorized\n    chunk — do NOT\
+  \ explain dative case rules or paradigms.\n- Instrumental case FORBIDDEN (no з другом,\
   \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
   \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
   \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
@@ -39,6 +43,28 @@ PEDAGOGICAL_CONSTRAINTS: 'SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
   KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught
   until M47 (imperative-and-requests). Before M47, use indirect requests or English
   for instructions.
+
+
+  BANNED IMPERATIVE FORMS (non-exhaustive): Запам''ятайте, Уявіть, Порівняйте, Зверніть
+  увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть,
+  Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+
+
+  INSTEAD OF → USE:
+
+  - Запам''ятайте → "Remember that..." (English)
+
+  - Порівняйте → "Compare..." (English)
+
+  - Зверніть увагу → "Notice that..." (English)
+
+  - Подивіться → "Look at..." (English)
+
+  - Спробуйте → "Try to..." (English)
+
+  - Прочитайте → "Read..." (English)
+
+  - Повторіть → "Repeat..." (English)
 
 
   The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only)
@@ -100,49 +126,69 @@ EXPANSION_METHOD: '**Don''t just write more — write deeper.** For EVERY concep
 WRITING_TONE_INSTRUCTION: Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE}
   words. Avoid verbose prose — students are beginners. Focus on practical examples
   over theory.
-TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian буквар)\n\n\
-  These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
-  \ for style and difficulty level** — notice how they use simple syllable combinations,\
-  \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, bolshakova** — Сторінка 30:\n\
-  ```\n30\nЗнайди слово до схеми. \n\t\nїжа\t\nї-жа-чи-ха\t\nї-хав\t\nКи-їв\n\t їжак\t\
-  \nї-жа-че-ня\t\nпо-ї-хав\t\nУ-кра-ї-на\n\t їжаки\t си-ро-їж-ка\t\nпо-їзд\t\nу-кра-їн-ці\n\
-  \b\n\t Один — багато\nЯкі слова називають багато предметів?\n\t гай — гаї\t\nмузей\
-  \ — музеї\n\t чай — чаї\t\nтрамвай — трамваї \n\b\nЗаголовок. Передбачення \nЧому\
-  \ їжачок колючий? Що було б, якби він був без голок? \nОдяг для їжачка\nУ сім’ї\
-  \ їжаків на-ро-ди-ло-ся їжаченя. Ма-\nлень-ке, пу-хна-сте, зовсім без голок. Їжак\
-  \ та \nї-жа-чи-ха су-му-ва-ли. З’їсть лисичка ї-жа-че-ня. \n\n```\n\n**Grade 1,\
-  \ zaharijchuk** — Сторінка 38:\n```\n36\nБачу  Ї, ї. Чую  [й], [і].\nЇ ї\nу к р\
-  \ а ї\nУ к р а\nК и ї в\nї\n*\nн\nн а\nі\n [ –•| = •– ] \nсво\nтво\nмо\nЇ\nм\nж\n\
-  жа\nжак\nсти\nїжа\t\t\n\t\n  мої   \t \t\nдоїхав   \n [ =•|–• ] \n [ –•| =•]  \n\
-  \ [ –•| =•|–•– ] \nЇжак, їжаченя\nЇздять по гриби щодня.\nЇжачиха помагає —\nСироїжки\
-  \ їм збирає (нар. тв.).\nСкоромовка\n\t\nПрочитай скоромовку.\n\t Які звуки позначає\
-  \ буква, виділена червоним \nкольором? Вимов ці звуки. \nPidruchnyk.com.ua\n```\n\
-  \n**Grade 1, zaharijchuk** — Сторінка 76:\n```\n74\nп * * * * *\nс о п і л к а\n\
-  п і в * н\nа\nо\nу\nи\nі\nП\nпа\nпо\nпу\nпи\nпі\nа\nо\nу\nи\nі\nап\nоп\nуп\nип\n\
-  іп\nП\nБачу  П, п (пе). Чую  [п].\n*\nпа\nва\nска\nпо\nніс\nси-пав\nпи\nла\nсан-ка\n\
-  пі\nпо\nпа\nКо-ло  сли-ви  ма-ма,  Пав-лик  і  По-лі-на.\nПав-лик:\n— Ма-мо,  он\
-  \  слив-ка!  Во-на  ки-сла?\nМа-ма:\n— Ні,  си-ну!  Слив-ка  спі-ла  і  ______ !\
-  \ \n [ –•  |  –  •  =  ]\n [  = • |  –  • = ]\nП п\n```\n\n**Grade 1, zaharijchuk**\
-  \ — Сторінка 18:\n```\n16\nЙ й\nБачу Й, й (йот). Чую  [й].\nа й в а\n [ •  =   |\
-  \  –• ]\nа й с т р и\n* а й в о р о\nа\nо\nи\nі\nЙ\nга\nми\nрі\nЙ\nн о к\nлій- \n\
-  \t\nліній-\n\t\nмай- \nчай- \n\t\nгай- \n\t\nчай- \nмий\t\nлий \t\nчай\t\nграй\n\
-  вимий\t\nдолий\t\nчайник\t\nзіграй\nай\nой\nий\nій\nа\nо\nі\nі\nч\nй\nд\nм\nй\n\
-  Pidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 101:\n```\n99\nПовторюємо\
-  \ разом\nСлова — назви пред-\nметів. Слова, які ма-\nють кілька значень\n \n\t\
-  \ Доповни речення, відповідаючи на запитання.\n\t Хто зібрався на леваді? Це — істоти.\n\
-  На леваді зібралися: метелик, бабка, … .\n\t Що росло на леваді? Це — неістоти.\n\
-  На леваді росли ромашка, конюшина, \n… .\n\t Хто був балакучим?\nБалакучим був …\
-  \ .\n\t Розглянь малюнки.\n\t Скільки значень мають слова коник, дзвоник, \nсонечко?\n\
-  \t Добери до слова бабка інші значення.\n\t Прочитай текст.\nЖило собі кошеня: товстеньке,\
-  \ сі-\nреньке,\n```\n\n**Grade 1, bolshakova** — Сторінка 19:\n```\n19\nТекст. Заголовок.\
-  \ Послідовність подій\nНа галявині росли листяні дерева: ясен, топо-\nля, яблуня.\
-  \ На яблуні червоніли яблука. У траві \nвиднілися ягідки сунички. \nЗелена ящірка\
-  \ сховалася в густій траві. Вона \nчекала на здобич. Раптом із трави ви-стри-бнув\
-  \ \nконик. Стрибнув перед нею. Ящірка випустила \nдовгий язик і  піймала коника.\
-  \ У траві знову за-\nшур-хо-ті-ло. До ящірки тихо повзла змія. \nХрусь! З яблуні\
-  \ впало яблучко. Ящірка зляка-\nлася і втекла. Я радів, що ящірка вря-ту-ва-ла-ся.\n\
-  Установи п\n```"
+TEXTBOOK_EXAMPLES: "## Textbook Reference (from Ukrainian grammar textbooks)\n\nThese\
+  \ are explanations from Ukrainian school grammar textbooks. Use them as **reference**\
+  \ for grammar rules and examples. Adapt for adult A1 learners — keep explanations\
+  \ simple but maintain grammatical accuracy.\n\n**Grade 3, kravtsova** — Сторінка\
+  \ 25:\n```\n25\n68.\n1.\t Прочитай.\nПоловина населення земної кулі харчується \n\
+  рисом. Жоден обід не обходиться без хліба. Науці \nстало відомо, що найдавніший\
+  \ хліб був із жолудів. \nРис — болотяна рослина. У хлібі є всі речовини, \nнеобхідні\
+  \ для життя людини. Багато відкриттів \nі знахідок було зроблено для отримання сучасного\
+  \ \nхліба. З рису отримують крупи, борошно, крохмаль. \n2.\t Виконай завдання на\
+  \ вибір.\n\t Спиши речення про рис. Знайди форми слова рис та познач у \nних закінчення.\n\
+  \t Спиши речення про хліб. Знай\n```\n\n**Grade 3, kravtsova** — Сторінка 46:\n\
+  ```\n46\n2.\t За допомогою префіксів утвори та запиши дієслова, пов’язані \nза змістом\
+  \ зі словом апетит.\nАпетит (що робить?) ..ходить, ..більшується, ..меншу-\nється,\
+  \ ..никає, ..’являється.\n3.\t Перевірте завдання одні в одних. Доведіть, що префікси\
+  \ \nдібрані правильно / неправильно. Обґрунтуйте свою думку.\n129.\t Прочитай текст.\
+  \ Якими ягодами харчуються птахи взимку?\nБіло, як біло, все біло… \nАж сліпить\
+  \ очі!.. Е-е ні, не все: \nось — та ось же! — на розмальо-\nване інеєм безлисте\
+  \ дерево, не \nпоспішаючи, всід\n```\n\n**Grade 3, ponomarova** — Сторінка 55:\n\
+  ```\n55\n2. Спиши повідомлення Читалочки. Підкресли службові\nслова.  Знайди слова\
+  \  з  префіксами  й  познач  їх.\nПрефікс — це частина слова. Його пишемо разом\n\
+  зі словом.\nСлужбові слова пишемо окремо від інших слів.\nУ Кам’янці-Подільському\
+  \ побудований найви-\nщий міст в Україні — «Стрімка лань». З мосту\nбезстрашні сміливці\
+  \ стрибають на канатах униз.\n4. Скористайся порадою Ґаджика і запиши сполучення\
+  \ слів \nбез дужок.\nМіж службовим і наступним словом можна встави-\nти ще одне\
+  \ слово. Наприклад: за дерево — \n```\n\n**Grade 3, ponomarova** — Сторінка 9:\n\
+  ```\n9\n6. Родзинка знайшла цікаву інформацію про джерела.\nПрочитай її.\n6\nНа\
+  \ Львівщині є цілющі джерела. Із них б’є, \nдзюрчить, дзвенить дзеркально чиста\
+  \ міне-\nральна вода. Вона має лікувальні властивості. \nПр\n8. Разом з однокласниками/однокласницями\
+  \ розгляньте\nетикетку з пляшки мінеральної води. Знайдіть на ній\nвідповіді  на\
+  \  запитання  Щебетунчика.\n10. Спиши текст. Допиши, чи доводилося тобі пити воду\
+  \ з \nджерела. Побудуй звукові схеми виділених слів.\n1. Як називається вода? Де\
+  \ її видобувають?\n2. Яка\n```\n\n**Grade 3, vashulenko** — Сторінка 63:\n```\n\
+  63\nЧаклунка (огидно сміється, потираючи руки).\n\t\nЦе я зраділа, тому і сміюся.\n\
+  \t\nМаю-бо гостю, хоч рання пора!\n\t\nПрошу ласкаво: купуй, вибирай.\n\t\nЄ й пиріжок,\
+  \ і калач, і пампушка —\n\t\nвсе, що захочеш, моя щебетушко! \n\t\nДеко за деком\
+  \ — у піч та із печі.\n\t\nТут, біля печі, я ранок і вечір.\nДжоан (співчутливо).\n\
+  \t\nЧим вам, тітусю, і як підсобити?\nЧаклунка (удає байдужість).\n\t\nДопоможи\
+  \ переставить корито...\n\t\n(Багатозначно.)\n\t\nВ діжку заглянь, чи вже тісто\
+  \ зійшло.\nДжоан виконує прохання Чаклунки, яка ув\n```\n\n**Grade 3, vashulenko**\
+  \ — Сторінка 106:\n```\n106\nВесняний дощ не зайвий.\nА от вівсянка і досі не йме\
+  \ віри, що настала весна. Сидить \nна сосновій гілці і все перепитує: «Чи це так?\
+  \ Чи це так?». \n«Так, так, так», — відповідає їй дятел. «Угу, угу», — під-\nтакує\
+  \ горлиця. Здається, пернате населення лісу шаленіє від \nп’янкого повітря, світла,\
+  \ тепла.\nЙду лісовою стежкою і скрізь бачу прикмети весни. Серед \nчагарників пурхає\
+  \ метелик — кропив’янка. На крильцях — \nсправжня веселка: чорні, жовті, коричневі\
+  \ розводи на чер-\nвоному тлі, блакитна мережк\n```"
+CHECKPOINT_GUIDANCE: ''
+EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
+
+
+  Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently,
+  or add creative subtitles. The audit will reject any section with a different title.
+
+
+  - `## Їжа (Food)` (~275 words)
+
+  - `## Напої (Drinks)` (~250 words)
+
+  - `## Паляниця (The Shibboleth Bread)` (~175 words)
+
+  - `## Мені подобається / Я не їм (Preferences)` (~250 words)
+
+  - `## Практика (Practice)` (~250 words)'
 INTRO_HOOK: Чому це важливо?
 SUMMARY_HEADING: Підсумок
 SELF_CHECK_HEADING: 'Перевірте себе:'
@@ -736,7 +782,12 @@ VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items
 
 
   Do NOT add vocabulary items beyond this list unless they are decodable from the
-  module''s letter set and appear in the lesson content.'
+  module''s letter set and appear in the lesson content.
+
+
+  **VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints MUST appear
+  at least once in the module content. Orphaned vocabulary (listed but never used
+  in content) is a validation failure.'
 VIDEO_DISCOVERY: (No video discoveries available)
 PRONUNCIATION_VIDEOS: ''
 SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
@@ -775,6 +826,34 @@ SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
 
   Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
   text.
+
+
+  ### English Calque Checklist
+
+
+  As an English-dominant model, you may produce English-to-Ukrainian calques. Check
+  and avoid:
+
+
+  | English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+
+  |---|---|---|
+
+  | "will have" | буду мати | матиму |
+
+  | "do work" | робити роботу | працювати |
+
+  | "save money" | зберегти гроші | заощадити гроші |
+
+  | "make a decision" | зробити рішення | прийняти рішення |
+
+  | "take a photo" | брати фото | фотографувати / робити фото |
+
+  | "have attention" | мати увагу | звертати увагу |
+
+  | "give an answer" | давати відповідь | відповідати |
+
+  | "make sense" | робити сенс | мати сенс |
 
 
   ### Euphony / Милозвучність (WARNING if violated)
@@ -919,8 +998,9 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
   \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
   \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
-  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
-  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний,\
+  \ красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний\n\
+  - **No Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
   \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
   \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
   \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
@@ -942,6 +1022,101 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
   - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
   \ skills or delegate to Claude\n"
+SELF_AUDIT_SNIPPET: '## Self-Audit (Run BEFORE Final Output)
+
+
+  After writing all content, you MUST run the audit and fix any issues — all within
+  this session.
+
+
+  ### Step 1: Write Content to Disk
+
+
+  Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+
+  ```bash
+
+  cat > {CONTENT_PATH} << ''CONTENT_EOF''
+
+  ... your content here ...
+
+  CONTENT_EOF
+
+  ```
+
+
+  ### Step 2: Run Audit
+
+
+  ```bash
+
+  bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+
+  ```
+
+
+  This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion
+  %.
+
+
+  ### Step 3: Parse Results
+
+
+  - If you see `AUDIT PASSED` — proceed to output.
+
+  - If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run
+  the audit.
+
+
+  ### Step 4: Fix Loop (max 2 iterations)
+
+
+  If the audit fails:
+
+  1. Read the specific gate failures and violation details from the audit output
+
+  2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms,
+  add callout boxes, etc.)
+
+  3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+
+  4. If still failing after 2 fix attempts, proceed to output anyway — the validate
+  phase will handle remaining issues.
+
+
+  ### Step 5: Report Self-Audit Result
+
+
+  After audit (pass or fail), include this block in your output:
+
+
+  ```
+
+  ===SELF_AUDIT_START===
+
+  status: PASS | FAIL
+
+  iterations: {number of audit runs}
+
+  final_word_count: {word count from last audit}
+
+  gates_passed: {list of passed gates}
+
+  gates_failed: {list of failed gates, or "none"}
+
+  fixes_applied: {brief description of what you fixed, or "none"}
+
+  ===SELF_AUDIT_END===
+
+  ```
+
+
+  **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual
+  command and report real output.
+
+  '
+LEXICAL_SANDBOX: ''
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'

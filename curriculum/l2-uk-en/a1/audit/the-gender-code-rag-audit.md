@@ -1,34 +1,15 @@
 # RAG Verification: the-gender-code
 
-**Date:** 2026-03-05 21:21 UTC | **Words checked:** 152 | **VESUM coverage:** 143/152 (94.1%)
+**Date:** 2026-03-06 21:42 UTC | **Words checked:** 94 | **VESUM coverage:** 94/94 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 143
-- ⚠️ Partial (RAG only): 7
-- ❌ Not found: 2
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| земля-мати | prose | ✗ | ✗ | ✗ |
-| татою | prose | ✗ | ✗ | ✗ |
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| Андрій | prose | ✗ | ✗ | ✓ |
-| Анна | prose | ✗ | ✓ | ✗ |
-| Запоріжжя | prose | ✗ | ✓ | ✗ |
-| Микола | prose | ✗ | ✓ | ✗ |
-| Одеса | prose | ✗ | ✓ | ✗ |
-| Олег | prose | ✗ | ✓ | ✗ |
-| Олена | prose | ✗ | ✓ | ✗ |
+- ✅ Verified (VESUM): 94
+- ⚠️ Partial (RAG only): 0
+- ❌ Not found: 0
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 146 | 137 | 2 |
-| Activities (.yaml) | 6 | 6 | 0 |
+| Prose (.md) | 77 | 77 | 0 |
+| Activities (.yaml) | 17 | 17 | 0 |

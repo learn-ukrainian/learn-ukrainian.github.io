@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T04:31:01.128079+00:00'
+discovered_at: '2026-03-06T22:58:19.677268+00:00'
 query_keywords:
 - Imperative and Requests
 - Наказовий спосіб
@@ -19,86 +19,37 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode111/
   title: Birthday presents + Imperative mood in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.6
-  topics:
-  - grammar
-  - verbs
-  - imperative
-  - conjugation
-  - phrases
-  - greetings
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 111
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode112/
   title: How to cook varenyky + Imperative mood of the second person plural
   source: ukrainianlessons.com
-  relevance_score: 0.6
-  topics:
-  - grammar
-  - verbs
-  - imperative
-  - conjugation
-  - plural
-  - vocabulary
-  - housing
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 112
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode113/
   title: Ukrainian traditional embroidery masterclass + More about the Imperative
     mood in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.6
-  topics:
-  - grammar
-  - verbs
-  - imperative
-  - conjugation
-  - phrases
-  - introductions
-  - culture
-  - traditions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 113
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode114/
   title: How to make pysanky + Imperative mood of the verbs in the first person plural
     (Let’s…)
   source: ukrainianlessons.com
-  relevance_score: 0.6
-  topics:
-  - grammar
-  - verbs
-  - imperative
-  - conjugation
-  - plural
-  - vocabulary
-  - idioms
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 114
-- url: https://www.ukrainianlessons.com/ph-needs/
-  title: 'Ukrainian Phrasebook: Needs'
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/111/
+  title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood
+    in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.5
+  relevance_score: 0.7
   topics:
-  - needs
-  - requests
-  - phrases
+  - ULP
+  - Season 3
+  content_type: podcast_episode
+  series: 3
+  season: 3
+  episode: 111
 rag_chunks:
 - score: 0.25
   chunk_id: 6-klas-ukrmova-betsa-2023_s0216

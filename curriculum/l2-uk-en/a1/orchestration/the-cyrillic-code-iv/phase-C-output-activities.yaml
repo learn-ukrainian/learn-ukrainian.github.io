@@ -1,0 +1,275 @@
+- type: watch-and-repeat
+  title: "Watch and Repeat: New Letters"
+  instruction: "Watch the video for each new letter and repeat the sound and word aloud."
+  items:
+    - letter: "Й"
+      word: "йогурт"
+      video: "https://www.youtube.com/watch?v=aq0cjB90s3w"
+    - letter: "Щ"
+      word: "щітка"
+      video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
+    - letter: "Я"
+      word: "яблуко"
+      video: "https://www.youtube.com/watch?v=yhSAf41LX8I"
+    - letter: "Ю"
+      word: "юнак"
+      video: "https://www.youtube.com/watch?v=9JdIBYCTWGw"
+    - letter: "Є"
+      word: "єнот"
+      video: "https://www.youtube.com/watch?v=O0bwRyyBQSc"
+    - letter: "Ь"
+      word: "сіль"
+      video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
+    - letter: "Ї"
+      word: "їжак"
+      video: "https://www.youtube.com/watch?v=UcjdjQXhAY8"
+    - letter: "Ц"
+      word: "цибуля"
+      video: "https://www.youtube.com/watch?v=u44eCjR2Oz8"
+    - letter: "Ф"
+      word: "фламінго"
+      video: "https://www.youtube.com/watch?v=haHRsFFZRQI"
+    - letter: "Ґ"
+      word: "ґанок"
+      video: "https://www.youtube.com/watch?v=gNjHqjTW9WQ"
+
+- type: classify
+  title: "Classify: Vowels"
+  instruction: "Sort the letters into basic vowels and iotated vowels."
+  categories:
+    - label: "Basic Vowels"
+      symbol_hint: "vowel"
+      items: ["А", "Е", "И", "І", "О", "У"]
+    - label: "Iotated Vowels"
+      symbol_hint: "vowel"
+      items: ["Я", "Ю", "Є", "Ї"]
+
+- type: classify
+  title: "Classify: The Full Alphabet"
+  instruction: "Sort all 33 letters of the Ukrainian alphabet into vowels, consonants, and the special modifier symbol."
+  categories:
+    - label: "Vowels (Голосні)"
+      symbol_hint: "vowel"
+      items: ["А", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я"]
+    - label: "Consonants (Приголосні)"
+      symbol_hint: "consonant"
+      items: ["Б", "В", "Г", "Ґ", "Д", "Ж", "З", "Й", "К", "Л", "М", "Н", "П", "Р", "С", "Т", "Ф", "Х", "Ц", "Ч", "Ш", "Щ"]
+    - label: "Special Symbol"
+      symbol_hint: "special"
+      items: ["Ь"]
+
+- type: image-to-letter
+  title: "Image to Letter"
+  instruction: "Look at the emoji and select the letter the word starts with."
+  items:
+    - emoji: "🧅"
+      answer: "Ц"
+      distractors: ["Ч", "Щ"]
+    - emoji: "🪥"
+      answer: "Щ"
+      distractors: ["Ш", "Ц"]
+    - emoji: "🦩"
+      answer: "Ф"
+      distractors: ["В", "Х"]
+    - emoji: "🍎"
+      answer: "Я"
+      distractors: ["А", "Ю"]
+    - emoji: "🧑"
+      answer: "Ю"
+      distractors: ["У", "Я"]
+    - emoji: "🦝"
+      answer: "Є"
+      distractors: ["Е", "Ї"]
+    - emoji: "🦔"
+      answer: "Ї"
+      distractors: ["І", "Й"]
+    - emoji: "🥛"
+      answer: "М"
+      distractors: ["Й", "І"]
+    - emoji: "🧂"
+      answer: "С"
+      distractors: ["Ц", "З"]
+    - emoji: "⛲"
+      answer: "Д"
+      distractors: ["Ж", "З"]
+    - emoji: "🔔"
+      answer: "Д"
+      distractors: ["З", "Ц"]
+    - emoji: "🚪"
+      answer: "Д"
+      distractors: ["Ґ", "Г"]
+
+- type: group-sort
+  title: "Group the Letters"
+  instruction: "Sort the letters and symbols into the correct categories."
+  groups:
+    - name: "Affricates & Digraphs"
+      items: ["Ц", "Щ", "ДЖ", "ДЗ"]
+    - name: "Iotated Vowels"
+      items: ["Я", "Ю", "Є", "Ї"]
+    - name: "Modifiers"
+      items: ["Ь", "'"]
+
+- type: quiz
+  title: "Check Your Knowledge"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "Which letter always makes two sounds (yi)?"
+      explanation: "The letter Ї is the exception and never softens a consonant; it always makes two sounds."
+      options:
+        - text: "Ї"
+          correct: true
+        - text: "Є"
+          correct: false
+        - text: "Ю"
+          correct: false
+        - text: "Я"
+          correct: false
+    - question: "What does the apostrophe (') do in a Ukrainian word?"
+      explanation: "The apostrophe blocks softening and keeps the full 'y' sound in the following iotated vowel."
+      options:
+        - text: "It blocks softening"
+          correct: true
+        - text: "It softens the consonant"
+          correct: false
+        - text: "It acts as a vowel"
+          correct: false
+        - text: "It makes the sound longer"
+          correct: false
+    - question: "Which letter represents a blend of the T and S sounds?"
+      explanation: "The letter Ц is an affricate, blending T and S into a single sound."
+      options:
+        - text: "Ц"
+          correct: true
+        - text: "Ч"
+          correct: false
+        - text: "Ш"
+          correct: false
+        - text: "С"
+          correct: false
+    - question: "What is the function of the soft sign (Ь)?"
+      explanation: "The soft sign softens the consonant that comes directly before it."
+      options:
+        - text: "It softens the preceding consonant"
+          correct: true
+        - text: "It acts as a hard consonant"
+          correct: false
+        - text: "It separates two vowels"
+          correct: false
+        - text: "It makes a short 'i' sound"
+          correct: false
+    - question: "Which letter represents the two sounds SH and CH crammed together?"
+      explanation: "The letter Щ represents the sound 'sh-ch'."
+      options:
+        - text: "Щ"
+          correct: true
+        - text: "Ш"
+          correct: false
+        - text: "Ч"
+          correct: false
+        - text: "Ц"
+          correct: false
+    - question: "Which digraph sounds exactly like the English J sound in 'jungle'?"
+      explanation: "The digraph ДЖ makes the English 'j' sound."
+      options:
+        - text: "ДЖ"
+          correct: true
+        - text: "ДЗ"
+          correct: false
+        - text: "Ж"
+          correct: false
+        - text: "З"
+          correct: false
+    - question: "Which letter is the voiceless partner of В and sounds like the English F?"
+      explanation: "The letter Ф makes the 'f' sound."
+      options:
+        - text: "Ф"
+          correct: true
+        - text: "П"
+          correct: false
+        - text: "Т"
+          correct: false
+        - text: "Х"
+          correct: false
+    - question: "Which rare letter represents the hard G sound like in 'go'?"
+      explanation: "The letter Ґ represents the hard G sound and is quite rare."
+      options:
+        - text: "Ґ"
+          correct: true
+        - text: "Г"
+          correct: false
+        - text: "К"
+          correct: false
+        - text: "Х"
+          correct: false
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide if the statement about the alphabet is true or false."
+  items:
+    - statement: "The letter Щ makes a plain, simple 'sh' sound."
+      correct: false
+      explanation: "False. Щ represents two sounds: a firm SH followed immediately by a CH."
+    - statement: "The apostrophe prevents the preceding consonant from becoming soft."
+      correct: true
+      explanation: "True. It acts as a shield, keeping the consonant hard."
+    - statement: "The soft sign (Ь) has its own distinct vowel sound."
+      correct: false
+      explanation: "False. The soft sign is not a letter with its own sound; it only modifies the preceding consonant."
+    - statement: "The letter Ї always represents two distinct sounds."
+      correct: true
+      explanation: "True. Ї is an exception and always makes the sounds 'y+i'."
+    - statement: "The digraph ДЖ is pronounced as two completely separate consonant sounds."
+      correct: false
+      explanation: "False. A digraph is a pair of letters that combine to make one single unified sound."
+    - statement: "The letter Ґ is extremely common in native Ukrainian words."
+      correct: false
+      explanation: "False. Ґ is quite rare and appears in only about four hundred native words today."
+    - statement: "The letter Є sounds like 'ye' at the beginning of a word."
+      correct: true
+      explanation: "True. Like in the word Європа."
+    - statement: "The letter Й never forms a syllable on its own."
+      correct: true
+      explanation: "True. Й is a short consonant and is usually next to other vowels."
+
+- type: match-up
+  title: "Match the Letter to its Rule"
+  instruction: "Match each letter or symbol to its correct description."
+  pairs:
+    - left: "Ц"
+      right: "Blend of T and S"
+    - left: "Щ"
+      right: "SH and CH together"
+    - left: "Ї"
+      right: "Always two sounds (yi)"
+    - left: "Ь"
+      right: "Softens the preceding consonant"
+    - left: "'"
+      right: "Blocks softening"
+    - left: "Ґ"
+      right: "Hard G sound"
+    - left: "Ф"
+      right: "Sounds like English F"
+    - left: "ДЖ"
+      right: "Sounds like English J"
+
+- type: anagram
+  title: "Unscramble the Words"
+  instruction: "Rearrange the letters to form correct Ukrainian words."
+  items:
+    - scrambled: "й а ч"
+      answer: "чай"
+    - scrambled: "е щ"
+      answer: "ще"
+    - scrambled: "ж ї а"
+      answer: "їжа"
+    - scrambled: "н д е ь"
+      answer: "день"
+    - scrambled: "б я у к л о"
+      answer: "яблуко"
+    - scrambled: "к а ф т"
+      answer: "факт"
+    - scrambled: "р ц е н т"
+      answer: "центр"
+    - scrambled: "з д ж а"
+      answer: "джаз"

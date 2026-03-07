@@ -1,61 +1,79 @@
 items:
-  - lemma: 'кава'
-    translation: 'coffee'
-    pos: 'noun'
-  - lemma: 'чай'
-    translation: 'tea'
-    pos: 'noun'
-  - lemma: 'вода'
-    translation: 'water'
-    pos: 'noun'
-  - lemma: 'сік'
-    translation: 'juice'
-    pos: 'noun'
-  - lemma: 'молоко'
-    translation: 'milk'
-    pos: 'noun'
-  - lemma: 'цукор'
-    translation: 'sugar'
-    pos: 'noun'
-  - lemma: 'меню'
-    translation: 'menu'
-    pos: 'noun'
-  - lemma: 'рахунок'
-    translation: 'bill'
-    pos: 'noun'
-  - lemma: 'офіціант'
-    translation: 'waiter'
-    pos: 'noun'
-  - lemma: 'тістечко'
-    translation: 'pastry'
-    pos: 'noun'
-  - lemma: 'картка'
-    translation: 'card'
-    pos: 'noun'
-  - lemma: 'готівка'
-    translation: 'cash'
-    pos: 'noun'
-  - lemma: 'чайові'
-    translation: 'tip'
-    pos: 'noun'
-  - lemma: 'замовляти'
-    translation: 'to order'
-    pos: 'verb'
-  - lemma: 'бажати'
-    translation: 'to desire'
-    pos: 'verb'
-  - lemma: 'великий'
-    translation: 'large'
-    pos: 'adj'
-  - lemma: 'малий'
-    translation: 'small'
-    pos: 'adj'
-  - lemma: 'гарячий'
-    translation: 'hot'
-    pos: 'adj'
-  - lemma: 'холодний'
-    translation: 'cold'
-    pos: 'adj'
-  - lemma: 'будь ласка'
-    translation: 'please'
-    pos: 'phrase'
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+    gender: "m"
+  - lemma: "меню"
+    translation: "menu"
+    pos: "noun"
+    gender: "n"
+  - lemma: "рахунок"
+    translation: "bill"
+    pos: "noun"
+    gender: "m"
+  - lemma: "офіціант"
+    translation: "waiter"
+    pos: "noun"
+    gender: "m"
+  - lemma: "замовляти"
+    translation: "to order"
+    pos: "verb"
+    aspect: "imperf"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+  - lemma: "будь ласка"
+    translation: "please"
+    pos: "phrase"
+  - lemma: "тістечко"
+    translation: "pastry"
+    pos: "noun"
+    gender: "n"
+  - lemma: "картка"
+    translation: "card"
+    pos: "noun"
+    gender: "f"
+  - lemma: "готівка"
+    translation: "cash"
+    pos: "noun"
+    gender: "f"
+  - lemma: "чайові"
+    translation: "tip"
+    pos: "noun"
+    notes: "plural only"
+  - lemma: "принести"
+    translation: "to bring"
+    pos: "verb"
+    aspect: "perf"
+  - lemma: "цукор"
+    translation: "sugar"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сік"
+    translation: "juice"
+    pos: "noun"
+    gender: "m"
+  - lemma: "лимон"
+    translation: "lemon"
+    pos: "noun"
+    gender: "m"
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+    gender: "n"
+  - lemma: "смачний"
+    translation: "tasty"
+    pos: "adj"
+  - lemma: "платити"
+    translation: "to pay"
+    pos: "verb"
+    aspect: "imperf"
+  - lemma: "чек"
+    translation: "receipt"
+    pos: "noun"
+    gender: "m"

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T01:09:45.614919+00:00'
+discovered_at: '2026-03-06T23:04:25.056033+00:00'
 query_keywords:
 - At the Café
 - food and drinks at a café
@@ -13,34 +13,14 @@ query_keywords:
 - чай
 - меню
 error: null
-warning: null
-videos:
-- url: https://www.youtube.com/watch?v=fKAkWRAO6B0
-  channel: Listen & Read
-  title: My Family Forced Me to Marry a Pregnant Woman… I Walked Away and Became a
-    Billionaire
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=LRJXMKZ4wOw
-  channel: Listen & Read
-  title: 36 English Phrases For Professional Customer Service (FREE PDF Guide)
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
+warning: No videos found across channels
+videos: []
 blogs:
-- url: https://www.ukrainianlessons.com/episode165/
-  title: Ukrainian Lessons Podcast Season 5
-  source: ukrainianlessons.com
-  relevance_score: 0.2
-  topics:
-  - general
-  content_type: podcast_episode
-  series: ULP
-  season: 5
-  episode: 165
+- url: https://www.ukrainianlessons.com/episode12/
+  title: ULP 1-12 | Ordering Food
+  source: Restaurant ordering + culture tips
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 5-klas-ukrmova-litvinova-2022_s0209
@@ -70,7 +50,7 @@ rag_chunks:
   author: zabolotnyi
   page: ''
   trust_tier: 1
-- score: 0.125
+- score: 0.1111111119389534
   chunk_id: 5-klas-ukrmova-golub-2022_s0200
   text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
     \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
@@ -84,21 +64,7 @@ rag_chunks:
   author: golub
   page: ''
   trust_tier: 1
-- score: 0.20000000298023224
-  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0267
-  text: "216\nШановні відвідувачі! \nВідповідно до діючого законодавства України,\
-    \ ми не продаємо  \nтютюнові вироби та алкогольні напої, уключаючи  \nслабоалкогольні,\
-    \ особам, які не досягли 18 років.\nІІ. Напишіть оголошення (2–3 речення) для\
-    \ розміщення в торгових цент­рах, \nкав’ярнях, кінотеатрах чи парках відпочинку,\
-    \ використавши відокремлений до-\nдаток і звертання.  \n492\t І. Спишіть речення,\
-    \ розкриваючи дужки й розставляючи пропущені розділові \nзнаки. Підкресліть відокремлені\
-    \ додатки. \n1. Там замість житеч"
-  section_title: Сторінка 220
-  grade: 8
-  author: zabolotnyi
-  page: ''
-  trust_tier: 1
-- score: 0.1428571492433548
+- score: 0.125
   chunk_id: 7-klas-ukrmova-avramenko-2024_s0010
   text: "РОЗВИТОК\nМОВЛЕННЯ\n6\n1.\tПрочитайте діалог «У громадському транспорті»\
     \ та виконайте завдання. \n— Жінко в червоній сукні, ви виходите на наступній\
@@ -110,6 +76,20 @@ rag_chunks:
   section_title: Сторінка 9
   grade: 7
   author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0267
+  text: "216\nШановні відвідувачі! \nВідповідно до діючого законодавства України,\
+    \ ми не продаємо  \nтютюнові вироби та алкогольні напої, уключаючи  \nслабоалкогольні,\
+    \ особам, які не досягли 18 років.\nІІ. Напишіть оголошення (2–3 речення) для\
+    \ розміщення в торгових цент­рах, \nкав’ярнях, кінотеатрах чи парках відпочинку,\
+    \ використавши відокремлений до-\nдаток і звертання.  \n492\t І. Спишіть речення,\
+    \ розкриваючи дужки й розставляючи пропущені розділові \nзнаки. Підкресліть відокремлені\
+    \ додатки. \n1. Там замість житеч"
+  section_title: Сторінка 220
+  grade: 8
+  author: zabolotnyi
   page: ''
   trust_tier: 1
 rag_images: []

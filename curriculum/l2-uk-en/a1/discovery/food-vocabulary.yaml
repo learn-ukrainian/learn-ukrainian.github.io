@@ -1,4 +1,4 @@
-discovered_at: '2026-03-05T23:38:08.088210+00:00'
+discovered_at: '2026-03-06T22:29:31.255246+00:00'
 query_keywords:
 - Food and Drink
 - Їжа
@@ -19,66 +19,28 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode12/
   title: Ordering food in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
-  topics:
-  - vocabulary
-  - food
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 12
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode13/
   title: More about food in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
-  topics:
-  - vocabulary
-  - food
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 13
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/fmu16/
   title: How to ORDER at the restaurant in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7000000000000001
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - vocabulary
-  - food
-  - phrases
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 16
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/ph-food/
   title: 'Ukrainian Phrasebook: Food and Restaurants'
   source: ukrainianlessons.com
-  relevance_score: 0.6000000000000001
-  topics:
-  - food
-  - restaurant
-  - ordering
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode47/
   title: Food festivals + Genitive case
   source: ukrainianlessons.com
-  relevance_score: 0.6
-  topics:
-  - grammar
-  - cases
-  - genitive
-  - vocabulary
-  - food
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 47
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.3333333432674408
   chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0066
@@ -132,7 +94,7 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.125
+- score: 0.1111111119389534
   chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0062
   text: "63\nЗнайди слово — підпис до малюнка. \nВідшукай слово до схеми.\n \nчо-бо-ти\
     \ \nчовник \nжучок \nніч\n че-ре-ви-ки \nчасник \nрачок \nпіч\n си-ни-чка \nкабачок\

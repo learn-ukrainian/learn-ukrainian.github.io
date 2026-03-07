@@ -6,12 +6,12 @@ content_outline:
   slug: introduction-world-of-adjectives
   words: 250
   points:
-  - 'Scaffolding: Use English to explain the concept of adjective agreement, emphasizing
-    that adjectives must match the noun''s gender and number.'
-  - 'Bridge: Briefly review the ''Gender Code'' (masculine, feminine, neuter) introduced
-    in module a1-07.'
-  - 'Introduction: Introduce the question words ''Який? Яка? Яке? Які?'' using verb-free
-    phrases like ''Який це дім?''.'
+  - 'Scaffolding: Use English to explain adjective agreement (matching noun gender
+    and number).'
+  - 'Bridge: Quickly review the ''Gender Code'' (masculine, feminine, neuter) from
+    A1-07.'
+  - 'Introduction: Present the question words ''Який? Яка? Яке? Які?'' using verb-free
+    phrases like ''Який це дім?'''
   - 'Cultural Hook: Mention St. Sophia''s Cathedral as an example to demonstrate ''старий''
     and ''великий'' without using verbs.'
 - title: 'Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)'
@@ -23,7 +23,7 @@ content_outline:
   - 'Examples: Provide high-frequency, verb-free examples such as ''новий дім'', ''нова
     книга'', ''нове вікно''.'
   - 'Error Correction: Explicitly warn against using the dictionary form for all nouns,
-    contrasting the incorrect *новий машина* with the correct ''нова машина''.'
+    contrasting incorrect *новий машина* with ''нова машина''.'
   - 'Usage: Explain adjective placement by contrasting attributive (''гарна погода'')
     with predicative (''Погода — гарна'') positions, keeping examples strictly verb-free.'
 - title: 'Презентація 2: М''яка група та множина (Presentation: Soft Stem and Plurals)'
@@ -32,8 +32,8 @@ content_outline:
   points:
   - 'Paradigm: Introduce the Soft Stem endings (-ій, -я, -є, -і) using ''синій'' as
     the primary anchor, referencing the ''синя лінія'' of the Kyiv Metro.'
-  - 'Orthography Note: Address the common spelling error of writing ''-ий'' instead
-    of ''-ій'' after soft consonants (e.g., incorrect *синий*).'
+  - 'Orthography Note: Address the spelling error of writing ''-ий'' instead of ''-ій''
+    after soft consonants (e.g., incorrect *синий*).'
   - 'Plural Consistency: Emphasize that all plural adjectives take ''-і'' regardless
     of gender, supported by verb-free examples like ''нові дні'' and ''великі міста''.'
 - title: 'Практика: Люди і місця (Practice: People and Places)'
@@ -43,8 +43,8 @@ content_outline:
   - 'Cultural Practice: Describe the folklore figure Mavka using feminine adjectives
     like ''молода'', ''гарна'', and ''цікава''.'
   - 'Roleplay Context: Adopt a Real Estate Agent persona to describe a ''нова квартира''
-    or ''великий будинок'', reinforcing descriptive vocabulary in a functional setting
-    using phrases like ''Це велика квартира''.'
+    or ''великий будинок'', reinforcing descriptive vocabulary in a functional verb-free
+    setting.'
 - title: Підсумок (Summary & Self-Check)
   slug: summary-self-check
   words: 100

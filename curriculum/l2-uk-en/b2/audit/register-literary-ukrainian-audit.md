@@ -1,7 +1,7 @@
-# Audit Report: M22 — register-literary-ukrainian.md
-**Level:** B2 | **Module:** M22 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M30 — register-literary-ukrainian.md
+**Level:** B2 | **Module:** M30 | **Phase:** B2.3 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:40
+**Generated:** 2026-03-06 21:43:07
 
 ## Configuration
 **Type:** B2-grammar
@@ -10,26 +10,48 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** cloze, error-correction, fill-in, unjumble
-**Required Types:** essay-response, reading, true-false
+**Required Types:** error-correction, essay-response, fill-in, group-sort, match-up, quiz
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз літературного уривка | 4 | 3 | ✅ |
+| 2 | true-false | Перевірка розуміння: Літературний стиль | 10 | 8 | ✅ |
+| 3 | quiz | Засоби виразності та словник | 10 | 8 | ✅ |
+| 4 | match-up | Знайдіть пару: Терміни та їх значення | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть слова за походженням та вжитком | 14 | 14 | ✅ |
+| 6 | mark-the-words | Знайдіть метафори та епітети | 6 | 6 | ✅ |
+| 7 | fill-in | Вставте правильні терміни | 10 | 8 | ✅ |
+| 8 | unjumble | Відновіть правильний порядок слів у реченнях | 8 | 6 | ✅ |
+| 9 | error-correction | Виправте стилістичні помилки та кальки | 8 | 6 | ✅ |
+| 10 | select | Оберіть правильні варіанти відповідей | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть англійські терміни | 8 | 6 | ✅ |
+| 12 | essay-response | Стилістична трансформація: Від факту до образу | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 3/4 (error-correction, fill-in, unjumble) ✅
+- Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4404/4000 (raw: 4850)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,0 +1,356 @@
+- type: quiz
+  title: 'Grammar Check: Direct Objects'
+  instruction: "Choose the correct answer for each question."
+  items:
+    - question: "When an object receives an action, which case do we use in Ukrainian?"
+      options:
+        - text: "Nominative"
+          correct: false
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+    - question: "What happens to inanimate masculine and neuter nouns in the Accusative case?"
+      options:
+        - text: "They take the -у ending"
+          correct: false
+        - text: "They change completely"
+          correct: false
+        - text: "They do not change"
+          correct: true
+        - text: "They add the letter a"
+          correct: false
+    - question: "Which ending replaces -а for feminine nouns in the Accusative case?"
+      options:
+        - text: "-у"
+          correct: true
+        - text: "-ю"
+          correct: false
+        - text: "-і"
+          correct: false
+        - text: "-о"
+          correct: false
+    - question: "If a feminine noun ends in -я, what does it change to in the Accusative case?"
+      options:
+        - text: "-у"
+          correct: false
+        - text: "-ю"
+          correct: true
+        - text: "-і"
+          correct: false
+        - text: "-о"
+          correct: false
+    - question: "Which of these words is a feminine noun that changes in the Accusative case?"
+      options:
+        - text: "книга"
+          correct: true
+        - text: "хліб"
+          correct: false
+        - text: "вікно"
+          correct: false
+        - text: "стіл"
+          correct: false
+    - question: "Which of these words does NOT change in the Accusative case?"
+      options:
+        - text: "кава"
+          correct: false
+        - text: "гречка"
+          correct: false
+        - text: "проблема"
+          correct: false
+        - text: "пакет"
+          correct: true
+    - question: "What is the Conceptual Nominative error?"
+      options:
+        - text: "Changing masculine words"
+          correct: false
+        - text: "Not changing feminine words receiving an action"
+          correct: true
+        - text: "Changing word order"
+          correct: false
+        - text: "Using the wrong verb"
+          correct: false
+    - question: "In the sentence 'Я бачу стіл', why is 'стіл' unchanged?"
+      options:
+        - text: "It is masculine inanimate"
+          correct: true
+        - text: "It is feminine"
+          correct: false
+        - text: "It is the subject"
+          correct: false
+        - text: "It is plural"
+          correct: false
+
+- type: fill-in
+  title: "Feminine Nouns in Action"
+  instruction: "Complete the sentence with the correct form of the word."
+  items:
+    - sentence: "Я читаю ___."
+      answer: "книгу"
+      options: ["книга", "книгу", "книго", "книги"]
+    - sentence: "Я хочу ___."
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+    - sentence: "Вона купує ___."
+      answer: "гречку"
+      options: ["гречка", "гречку", "гречці", "гречкою"]
+    - sentence: "Ми бачимо ___."
+      answer: "проблему"
+      options: ["проблема", "проблему", "проблемі", "проблемою"]
+    - sentence: "Він чує ___."
+      answer: "музику"
+      options: ["музика", "музику", "музиці", "музикою"]
+    - sentence: "Я бачу ___."
+      answer: "кімнату"
+      options: ["кімната", "кімнату", "кімнаті", "кімнатою"]
+    - sentence: "Я відкриваю ___."
+      answer: "книгу"
+      options: ["книга", "книгу", "книзі", "книгою"]
+    - sentence: "Ти любиш ___?"
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+
+- type: fill-in
+  title: "Masculine and Neuter Nouns"
+  instruction: "Select the correct form. Remember the rules for masculine and neuter inanimate objects!"
+  items:
+    - sentence: "Я бачу ___."
+      answer: "стіл"
+      options: ["стіл", "стола", "столу", "стілу"]
+    - sentence: "Він відкриває ___."
+      answer: "вікно"
+      options: ["вікна", "вікну", "вікном", "вікно"]
+    - sentence: "Я хочу купити ___."
+      answer: "хліб"
+      options: ["хліба", "хліб", "хлібу", "хлібом"]
+    - sentence: "Ви шукаєте ___?"
+      answer: "вихід"
+      options: ["вихіду", "вихода", "вихід", "виходом"]
+    - sentence: "Мені потрібен ___."
+      answer: "пакет"
+      options: ["пакет", "пакета", "пакету", "пакетом"]
+    - sentence: "Я маю ___."
+      answer: "час"
+      options: ["час", "часу", "часа", "часом"]
+    - sentence: "Він чує ___."
+      answer: "голос"
+      options: ["голос", "голоса", "голосу", "голосом"]
+    - sentence: "Я купую ___."
+      answer: "одяг"
+      options: ["одягу", "одяга", "одяг", "одягом"]
+
+- type: fill-in
+  title: "Mixed Practice"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - sentence: "Я п'ю ___."
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+    - sentence: "Я купую ___."
+      answer: "продукти"
+      options: ["продукти", "продуктів", "продуктам", "продуктами"]
+    - sentence: "Він шукає ___."
+      answer: "кімнату"
+      options: ["кімната", "кімнату", "кімнаті", "кімнатою"]
+    - sentence: "Я маю ___."
+      answer: "рацію"
+      options: ["рація", "рацію", "рації", "рацією"]
+    - sentence: "Вона знаходить ___."
+      answer: "час"
+      options: ["час", "часу", "часа", "часом"]
+    - sentence: "Ми бачимо ___."
+      answer: "вікно"
+      options: ["вікно", "вікна", "вікну", "вікном"]
+    - sentence: "Ти хочеш ___?"
+      answer: "гречку"
+      options: ["гречка", "гречку", "гречці", "гречкою"]
+    - sentence: "Я беру ___."
+      answer: "трубку"
+      options: ["трубка", "трубку", "трубці", "трубкою"]
+
+- type: true-false
+  title: "Is the Grammar Correct?"
+  instruction: "Determine if the sentence uses the correct case ending for the object."
+  items:
+    - statement: "Я читаю книга."
+      correct: false
+      explanation: "This is the Conceptual Nominative error. The word книга must change to книгу because it receives the action."
+    - statement: "Вона купує хліб."
+      correct: true
+      explanation: "Correct! 'Хліб' is an inanimate masculine noun, so it does not change in the Accusative case."
+    - statement: "Я хочу кава."
+      correct: false
+      explanation: "The feminine word 'кава' must change to 'каву' in the Accusative case."
+    - statement: "Він бачить вікно."
+      correct: true
+      explanation: "Correct! 'Вікно' is a neuter noun, so it does not change."
+    - statement: "Ми купуємо гречку."
+      correct: true
+      explanation: "Correct! The feminine word 'гречка' correctly changes to 'гречку'."
+    - statement: "Я шукаю стола."
+      correct: false
+      explanation: "This is Masculine Inanimate Confusion. 'Стіл' is masculine and inanimate, so it should not change."
+    - statement: "Я маю можливість."
+      correct: true
+      explanation: "Correct! This is a common and natural phrase."
+    - statement: "Ти бачиш проблему."
+      correct: true
+      explanation: "Correct! The feminine noun 'проблема' correctly changes to 'проблему'."
+
+- type: match-up
+  title: "Common Phrases"
+  instruction: "Match the verbs with their common objects to form natural phrases."
+  pairs:
+    - left: "мати"
+      right: "рацію"
+    - left: "брати"
+      right: "трубку"
+    - left: "хотіти"
+      right: "їсти"
+    - left: "чути"
+      right: "голос"
+    - left: "бачити"
+      right: "проблему"
+    - left: "купувати"
+      right: "продукти"
+    - left: "відкривати"
+      right: "вікно"
+    - left: "шукати"
+      right: "вихід"
+
+- type: unjumble
+  title: "Sentence Builder"
+  instruction: "Arrange the words to form correct Ukrainian sentences."
+  items:
+    - words: ["Я", "хочу", "каву"]
+      answer: "Я хочу каву"
+    - words: ["Він", "купує", "хліб"]
+      answer: "Він купує хліб"
+    - words: ["Ми", "бачимо", "проблему"]
+      answer: "Ми бачимо проблему"
+    - words: ["Я", "маю", "час"]
+      answer: "Я маю час"
+    - words: ["Вона", "читає", "книгу"]
+      answer: "Вона читає книгу"
+    - words: ["Ти", "шукаєш", "вихід"]
+      answer: "Ти шукаєш вихід"
+    - words: ["Я", "беру", "пакет"]
+      answer: "Я беру пакет"
+    - words: ["Ви", "відкриваєте", "вікно"]
+      answer: "Ви відкриваєте вікно"
+
+- type: fill-in
+  title: "Store Vocabulary"
+  instruction: "Complete the sentences about shopping in a supermarket."
+  items:
+    - sentence: "У супермаркеті я купую ___."
+      answer: "продукти"
+      options: ["продукти", "продуктам", "продуктів", "продуктами"]
+    - sentence: "Я хочу купити ___."
+      answer: "хліб"
+      options: ["хліба", "хлібу", "хліб", "хлібом"]
+    - sentence: "Також я беру ___."
+      answer: "гречку"
+      options: ["гречка", "гречку", "гречці", "гречкою"]
+    - sentence: "На касі мене запитують: '___ потрібен?'"
+      answer: "Пакет"
+      options: ["Пакета", "Пакету", "Пакет", "Пакетом"]
+    - sentence: "Я кажу, що хочу ___."
+      answer: "пакет"
+      options: ["пакета", "пакету", "пакетом", "пакет"]
+    - sentence: "Я дуже люблю ___."
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+    - sentence: "Тому я шукаю ___."
+      answer: "каву"
+      options: ["кава", "каву", "каві", "кавою"]
+    - sentence: "Я хочу купити ___."
+      answer: "воду"
+      options: ["вода", "воду", "воді", "водою"]
+
+- type: quiz
+  title: "Verbs and Objects"
+  instruction: "Select the correct translation or form."
+  items:
+    - question: "How do you say 'I am reading a book' in Ukrainian?"
+      options:
+        - text: "Я читаю книгу"
+          correct: true
+        - text: "Я читаю книга"
+          correct: false
+        - text: "Я читати книгу"
+          correct: false
+        - text: "Я книга читаю"
+          correct: false
+    - question: "Which phrase means 'to have an opportunity'?"
+      options:
+        - text: "мати можливість"
+          correct: true
+        - text: "мати час"
+          correct: false
+        - text: "мати рацію"
+          correct: false
+        - text: "шукати можливість"
+          correct: false
+    - question: "What does 'брати трубку' mean?"
+      options:
+        - text: "To pick up the phone"
+          correct: true
+        - text: "To take a bag"
+          correct: false
+        - text: "To buy bread"
+          correct: false
+        - text: "To want to eat"
+          correct: false
+    - question: "If you want to say 'I see a table', what is the correct sentence?"
+      options:
+        - text: "Я бачу стіл"
+          correct: true
+        - text: "Я бачу стола"
+          correct: false
+        - text: "Я бачити стіл"
+          correct: false
+        - text: "Я бачу столу"
+          correct: false
+    - question: "Which verb means 'to buy'?"
+      options:
+        - text: "купувати"
+          correct: true
+        - text: "хотіти"
+          correct: false
+        - text: "шукати"
+          correct: false
+        - text: "знаходити"
+          correct: false
+    - question: "What is the nominative (dictionary) form of 'каву'?"
+      options:
+        - text: "кава"
+          correct: true
+        - text: "каві"
+          correct: false
+        - text: "кавою"
+          correct: false
+        - text: "каво"
+          correct: false
+    - question: "Which phrase is correct for 'I want to eat'?"
+      options:
+        - text: "Я хочу їсти"
+          correct: true
+        - text: "Я хочу їжа"
+          correct: false
+        - text: "Я хочу їсту"
+          correct: false
+        - text: "Я хотіти їсти"
+          correct: false
+    - question: "What does 'бачити проблему' mean?"
+      options:
+        - text: "To see a problem"
+          correct: true
+        - text: "To have a problem"
+          correct: false
+        - text: "To find a problem"
+          correct: false
+        - text: "To hear a problem"
+          correct: false

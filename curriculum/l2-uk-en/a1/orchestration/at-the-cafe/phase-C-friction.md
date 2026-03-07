@@ -2,5 +2,5 @@
 **Step**: Full YAML generation
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Replaced imperative verb `принести` with `молоко` in vocabulary to strictly adhere to the M41 constraint "Imperative forms are NOT taught until M47". Kept activities focused on the polite `Можна` request pattern. Single quotes were used to wrap YAML values to avoid conflicts with guillemets or colons.
+**Self-Correction**: Verified group-sort totals hit ≥10 combined items per schema documentation, to ensure tests do not fail. Ensured strictly no imperative instructional forms in Ukrainian were used (instead using English instructions as required by Level A1 module constraints). Confirmed exact match for vocabulary items.
 **Proposed Tooling Fix**: N/A

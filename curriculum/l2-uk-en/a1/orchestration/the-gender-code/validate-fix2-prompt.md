@@ -1,20 +1,9 @@
-        # Fix 2 issue(s) in `the-gender-code`
+        # Fix 1 issue(s) in `the-gender-code`
 
-        ### Fix 1: LOW_ENGAGEMENT
-**What:** Only 0 engagement boxes (minimum: 3 for A1)
-**How to fix:** Add 3 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
-**Where:** (whole module)
-
-### Fix 2: PLAN_SECTION_MISSING
-**What:** Missing 4 plan section(s): Презентація правил (Presentation of Rules), Практичні вправи (Practice Exercises), Самостійна робота (Independent Work/Production), Культурний код та підсумок (Cultural Code and Summary)
+        ### Fix 1: PLAN_SECTION_MISSING
+**What:** Missing 2 plan section(s): Самостійна робота (Independent Work/Production), Культурний код та підсумок (Cultural Code and Summary)
 **How to fix:** Add content for the missing plan sections or update section headings to match plan.
 **Where:** (plan vs content)
-
-### Other Audit Failures
-
-```
-❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-gender-code-audit.log for details)
-```
 
 
 ## Constraints (do NOT violate while fixing)
@@ -27,8 +16,26 @@ GRAMMAR STATUS:
 - FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases except nominative
   Exception (M6 stress): Conjugated verb forms allowed ONLY as stress pattern examples (e.g., писа́ти → пишу́ → пи́шеш to show stress mobility). Do not teach conjugation rules.
   Exception (M7 gender): Adjective agreement examples allowed to demonstrate what gender does (e.g., великий стіл, нова книга, чисте вікно). Do not teach agreement rules.
-- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо — always use English equivalents (Let us look at, Let's talk about, Let's review)
+  Exception (M8 greetings): Memorized conversational phrases with conjugated verbs allowed as fixed chunks (e.g., 'Як справи?', 'Що ти робиш?'). Present as whole phrases, not conjugation patterns.
+- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо, Скажіть — always use English equivalents (Let us look at, Let's talk about, Let's review, Please tell me)
+- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+  INSTEAD OF → USE:
+  - Запам'ятайте → "Remember that..." (English)
+  - Порівняйте → "Compare..." (English)
+  - Зверніть увагу → "Notice that..." (English)
+  - Подивіться → "Look at..." (English)
+  - Спробуйте → "Try to..." (English)
+  - Прочитайте → "Read..." (English)
+  - Повторіть → "Repeat..." (English)
 - Use English for all classroom instructions
+
+VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):
+- Це + noun: «Це кіт», «Це стіл»
+- Question particles: «Хто це?», «Що це?»
+- Noun listings with gender: «стіл (він), книга (вона), вікно (воно)»
+- Contextual labels: «Наприклад — For example», «А тепер — And now»
+DO NOT use: conjugated verbs, imperatives, infinitives.
+Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.
 
 METALANGUAGE: English-first, Ukrainian term in parentheses on first use
 
@@ -45,4 +52,5 @@ METALANGUAGE: English-first, Ukrainian term in parentheses on first use
         1. Fix ONLY the issues listed above — do not rewrite working content
         2. Preserve section structure and word counts
         3. Do NOT add or remove sections
+        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
 

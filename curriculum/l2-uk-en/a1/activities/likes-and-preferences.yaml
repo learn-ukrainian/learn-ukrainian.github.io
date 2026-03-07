@@ -1,420 +1,439 @@
 - type: quiz
-  title: "Choose the Correct Phrase"
-  instruction: "Select the most appropriate expression for each situation."
+  title: 'Choose the Right Word'
+  instruction: 'Select the correct word to complete the sentence.'
   items:
-    - question: "How do you say 'I like coffee' using the 'appeals to me' structure?"
-      explanation: "You use 'Мені подобається' to say something appeals to you."
+    - question: '___ подобається ця цікава книга.'
       options:
-        - text: "Мені подобається кава."
+        - text: 'Мені'
           correct: true
-        - text: "Я подобаюсь кава."
+        - text: 'Я'
           correct: false
-        - text: "Мені люблю кава."
+        - text: 'Ми'
           correct: false
-        - text: "Я подобається кава."
+        - text: 'Ти'
           correct: false
-    - question: "Which phrase implies a strong, passionate love for something?"
-      explanation: "Use 'Я люблю' for deep passion or active enjoyment."
+    - question: 'Я дуже ___ цей смачний борщ.'
       options:
-        - text: "Я люблю"
+        - text: 'люблю'
           correct: true
-        - text: "Мені подобається"
+        - text: 'подобається'
           correct: false
-        - text: "Я хочу"
+        - text: 'хочеш'
           correct: false
-        - text: "Я подобаюсь"
+        - text: 'любить'
           correct: false
-    - question: "How do you correctly say 'I want to eat'?"
-      explanation: "Combine 'Я хочу' with the infinitive 'їсти'."
+    - question: 'Вона дуже ___ снідати тут сьогодні.'
       options:
-        - text: "Я хочу їсти."
+        - text: 'хоче'
           correct: true
-        - text: "Мені хочеться їсти."
+        - text: 'хочу'
           correct: false
-        - text: "Я люблю їсти."
+        - text: 'хочеш'
           correct: false
-        - text: "Я хочу пити."
+        - text: 'хочемо'
           correct: false
-    - question: "How do you ask 'Do you love music?'"
-      explanation: "'Ти' means 'you', paired with 'любиш'."
+    - question: 'Мені дуже ___ мої красиві квіти.'
       options:
-        - text: "Ти любиш музику."
+        - text: 'подобаються'
           correct: true
-        - text: "Ти любити музика."
+        - text: 'подобається'
           correct: false
-        - text: "Мені любиш музику."
+        - text: 'люблю'
           correct: false
-        - text: "Ти подобається музика."
+        - text: 'хочу'
           correct: false
-    - question: "Which verb changes the ending of feminine nouns ending in -а to -у?"
-      explanation: "Both 'любити' and 'хотіти' require the Accusative case (-у for feminine objects)."
+    - question: 'Ми дуже ___ їсти смачний борщ.'
       options:
-        - text: "Both люблю and хочу"
+        - text: 'хочемо'
           correct: true
-        - text: "Only подобається"
+        - text: 'хоче'
           correct: false
-        - text: "Only хочу"
+        - text: 'хочуть'
           correct: false
-        - text: "Only люблю"
+        - text: 'хочете'
           correct: false
-    - question: "How do you say 'I love music'?"
-      explanation: "You are doing the action, so use 'Я люблю' and change 'музика' to 'музику'."
+    - question: 'Ти ___ цей мій хороший фільм?'
       options:
-        - text: "Я люблю музику."
+        - text: 'любиш'
           correct: true
-        - text: "Я люблю музика."
+        - text: 'любить'
           correct: false
-        - text: "Мені люблю музику."
+        - text: 'люблю'
           correct: false
-        - text: "Я подобається музику."
+        - text: 'любите'
           correct: false
-    - question: "How do you politely ask 'And you?' after stating your preference?"
-      explanation: "Use 'А ти?' to smoothly turn the question back to the other person."
+    - question: '___ дуже подобається це цікаве кіно?'
       options:
-        - text: "А ти?"
+        - text: 'Тобі'
           correct: true
-        - text: "І ти?"
+        - text: 'Ти'
           correct: false
-        - text: "Та ти?"
+        - text: 'Ви'
           correct: false
-        - text: "Чи ти?"
+        - text: 'Я'
           correct: false
-    - question: "If the things you like are plural (e.g., flowers), how does 'подобається' change?"
-      explanation: "It changes to 'подобаються' (adds a -ю-)."
+    - question: 'Я ___ цей мій хороший фільм.'
       options:
-        - text: "It becomes подобаються."
+        - text: 'хочу'
           correct: true
-        - text: "It stays подобається."
+        - text: 'хоче'
           correct: false
-        - text: "It becomes подобають."
+        - text: 'хочуть'
           correct: false
-        - text: "It becomes подобаєте."
+        - text: 'хочемо'
+          correct: false
+    - question: 'Вони ___ їсти цей смачний борщ.'
+      options:
+        - text: 'хочуть'
+          correct: true
+        - text: 'хоче'
+          correct: false
+        - text: 'хочемо'
+          correct: false
+        - text: 'хочу'
+          correct: false
+    - question: 'Мені дуже подобається цікаве кіно. А ___?'
+      options:
+        - text: 'тобі'
+          correct: true
+        - text: 'ти'
+          correct: false
+        - text: 'ви'
+          correct: false
+        - text: 'я'
           correct: false
 
 - type: fill-in
-  title: "Complete the Sentence"
-  instruction: "Choose the correct missing word to complete the sentence."
+  title: 'Complete the Sentence'
+  instruction: 'Fill in the blank with the correct form.'
   items:
-    - sentence: "___ подобається кава."
-      answer: "Мені"
+    - sentence: 'Я дуже ___ читати цікаві книги.'
+      answer: 'люблю'
       options:
-        - "Мені"
-        - "Я"
-        - "Моя"
-        - "Мене"
-    - sentence: "Я люблю ___."
-      answer: "музику"
+        - 'люблю'
+        - 'любить'
+        - 'любиш'
+        - 'любимо'
+    - sentence: 'Мені ___ цікава музика.'
+      answer: 'подобається'
       options:
-        - "музику"
-        - "музика"
-        - "музики"
-        - "музикою"
-    - sentence: "Він ___ цікаву книгу."
-      answer: "хоче"
+        - 'подобається'
+        - 'подобаються'
+        - 'люблю'
+        - 'хочу'
+    - sentence: 'Ми ___ читати цікаві книги.'
+      answer: 'хочемо'
       options:
-        - "хоче"
-        - "хочу"
-        - "хочеш"
-        - "хочемо"
-    - sentence: "Ми ___ смачний борщ."
-      answer: "любимо"
+        - 'хочемо'
+        - 'хочуть'
+        - 'хоче'
+        - 'хочу'
+    - sentence: '___ подобається читати цікаві книги?'
+      answer: 'Тобі'
       options:
-        - "любимо"
-        - "люблю"
-        - "любить"
-        - "люблять"
-    - sentence: "___ дуже подобається читати."
-      answer: "Мені"
+        - 'Тобі'
+        - 'Ти'
+        - 'Ми'
+        - 'Я'
+    - sentence: 'Він ___ піти їсти борщ.'
+      answer: 'хоче'
       options:
-        - "Мені"
-        - "Ти"
-        - "Твоя"
-        - "Тебе"
-    - sentence: "Я хочу ___."
-      answer: "піти"
+        - 'хоче'
+        - 'хочеш'
+        - 'хочу'
+        - 'хочуть'
+    - sentence: 'Мені ___ ці красиві квіти.'
+      answer: 'подобаються'
       options:
-        - "піти"
-        - "піду"
-        - "йде"
-        - "підемо"
-    - sentence: "Мені ___ квіти."
-      answer: "подобаються"
+        - 'подобаються'
+        - 'подобається'
+        - 'люблю'
+        - 'любить'
+    - sentence: 'Ти ___ цей цікавий фільм?'
+      answer: 'любиш'
       options:
-        - "подобаються"
-        - "подобається"
-        - "люблю"
-        - "любить"
-    - sentence: "Ти ___ цікаву книгу?"
-      answer: "хочеш"
+        - 'любиш'
+        - 'любити'
+        - 'люблю'
+        - 'любить'
+    - sentence: 'Вони ___ їсти смачний борщ.'
+      answer: 'хочуть'
       options:
-        - "хочеш"
-        - "хоче"
-        - "хочу"
-        - "хочете"
+        - 'хочуть'
+        - 'хоче'
+        - 'хочеш'
+        - 'хочемо'
 
 - type: match-up
-  title: "Match the Meaning"
-  instruction: "Connect the Ukrainian phrase with its English equivalent."
+  title: 'Match the Meaning'
+  instruction: 'Connect the Ukrainian phrase with its English meaning.'
   pairs:
-    - left: "Мені подобається кава."
-      right: "I like coffee."
-    - left: "Я люблю каву."
-      right: "I love coffee."
-    - left: "Я хочу каву."
-      right: "I want coffee."
-    - left: "Мені подобається музика."
-      right: "I like music."
-    - left: "Ти любиш читати?"
-      right: "Do you love to read?"
-    - left: "Ми хочемо піти."
-      right: "We want to go."
-    - left: "Він любить смачний борщ."
-      right: "He loves tasty borscht."
-    - left: "Мені подобаються квіти."
-      right: "I like flowers."
+    - left: 'Мені подобається кава'
+      right: 'I like coffee'
+    - left: 'Я люблю читати'
+      right: 'I love to read'
+    - left: 'Я хочу їсти'
+      right: 'I want to eat'
+    - left: 'Тобі подобається?'
+      right: 'Do you like it?'
+    - left: 'Ти любиш?'
+      right: 'Do you love it?'
+    - left: 'Мені подобається читати'
+      right: 'I like to read'
+    - left: 'Я хочу піти'
+      right: 'I want to go'
+    - left: 'Цікавий фільм'
+      right: 'Interesting movie'
+    - left: 'Нудне кіно'
+      right: 'Boring cinema'
+    - left: 'Смачний борщ'
+      right: 'Tasty borsch'
 
 - type: unjumble
-  title: "Build the Sentence"
-  instruction: "Put the words in the correct order to form a sentence."
+  title: 'Make a Sentence'
+  instruction: 'Put the words in the correct order.'
   items:
     - words:
-        - "Мені"
-        - "подобається"
-        - "цікава"
-        - "книга."
-      answer: "Мені подобається цікава книга."
+        - 'Мені'
+        - 'подобається'
+        - 'ця'
+        - 'кава'
+      answer: 'Мені подобається ця кава'
     - words:
-        - "Я"
-        - "люблю"
-        - "смачний"
-        - "борщ."
-      answer: "Я люблю смачний борщ."
+        - 'Я'
+        - 'люблю'
+        - 'смачний'
+        - 'борщ'
+      answer: 'Я люблю смачний борщ'
     - words:
-        - "Ми"
-        - "хочемо"
-        - "читати"
-        - "книгу."
-      answer: "Ми хочемо читати книгу."
+        - 'Ми'
+        - 'хочемо'
+        - 'піти'
+        - 'їсти'
+      answer: 'Ми хочемо піти їсти'
     - words:
-        - "Мені"
-        - "не"
-        - "подобається"
-        - "лекція."
-      answer: "Мені не подобається лекція."
+        - 'Тобі'
+        - 'подобається'
+        - 'цікава'
+        - 'музика'
+      answer: 'Тобі подобається цікава музика'
     - words:
-        - "Він"
-        - "хоче"
-        - "їсти"
-        - "борщ."
-      answer: "Він хоче їсти борщ."
+        - 'Вона'
+        - 'любить'
+        - 'читати'
+        - 'книги'
+      answer: 'Вона любить читати книги'
     - words:
-        - "Я"
-        - "люблю"
-        - "каву,"
-        - "а"
-        - "ти?"
-      answer: "Я люблю каву, а ти?"
+        - 'Я'
+        - 'хочу'
+        - 'їсти'
+        - 'борщ'
+      answer: 'Я хочу їсти борщ'
+    - words:
+        - 'Це'
+        - 'моя'
+        - 'хороша'
+        - 'книга'
+      answer: 'Це моя хороша книга'
+    - words:
+        - 'Мені'
+        - 'подобаються'
+        - 'ці'
+        - 'квіти'
+      answer: 'Мені подобаються ці квіти'
 
 - type: true-false
-  title: "Grammar Check: True or False?"
-  instruction: "Read the statements about Ukrainian grammar and decide if they are true or false."
+  title: 'Grammar Facts'
+  instruction: 'Determine if the statement is true or false.'
   items:
-    - statement: "To say 'I like', you use the word 'Я' as the subject."
+    - statement: 'Use "Мені подобається" for strong, active enjoyment like "I love".'
       correct: false
-      explanation: "You use the word 'Мені' (to me) and the thing you like is the subject."
-    - statement: "The verb 'подобається' literally means 'appeals to'."
+      explanation: 'Use "Я люблю" for strong love. "Мені подобається" is for milder aesthetic appeal.'
+    - statement: 'When using "Я хочу" to state an action, follow it with an infinitive.'
       correct: true
-      explanation: "That is why we say 'Мені подобається' (it appeals to me)."
-    - statement: "If you like multiple things, 'подобається' changes to 'подобаються'."
+      explanation: 'Yes, you use the infinitive form, like "Я хочу їсти".'
+    - statement: 'The verb "подобається" matches the object you like, not you.'
       correct: true
-      explanation: "The verb must match the plural subject (e.g., квіти)."
-    - statement: "When using 'Я люблю', a feminine noun ending in -а changes to -у."
-      correct: true
-      explanation: "This is the Accusative case for direct objects (e.g., кава -> каву)."
-    - statement: "You can combine 'Мені подобається' directly with an action word (infinitive)."
-      correct: true
-      explanation: "For example, 'Мені подобається читати' is perfectly correct."
-    - statement: "Saying 'Я хочу' in Ukrainian is considered rude and demanding."
+      explanation: 'In this construction, the object you like is the grammatical subject.'
+    - statement: 'We say "Я подобається" to mean "I like".'
       correct: false
-      explanation: "In Ukrainian culture, stating 'Я хочу' is standard and polite."
-    - statement: "The verb 'хотіти' (to want) follows completely regular conjugation rules."
+      explanation: 'It must be "Мені подобається" (it is pleasing to me).'
+    - statement: 'To ask a friend what they like, use "Тобі подобається?".'
+      correct: true
+      explanation: '"Тобі" is the "to you" form of "ти".'
+    - statement: 'The word "хочу" is the "I" form of the verb to want.'
+      correct: true
+      explanation: '"Я хочу" means "I want".'
+    - statement: 'We use "подобаються" when we like only one thing.'
       correct: false
-      explanation: "It is an irregular verb with unique forms like 'хочу', 'хочеш', etc."
-    - statement: "When using 'Я хочу' with an object, feminine words do not change their endings."
-      correct: false
-      explanation: "Just like with 'люблю', feminine words ending in -а change to -у."
+      explanation: '"Подобаються" is for plural things, like flowers (квіти).'
+    - statement: 'You can say "Я хочу читати" to mean "I want to read".'
+      correct: true
+      explanation: 'You can use an infinitive verb after "хочу".'
 
 - type: quiz
-  title: "Vocabulary in Context"
-  instruction: "Choose the correct Ukrainian translation for the missing word."
+  title: 'Vocabulary Check'
+  instruction: 'Choose the correct English meaning for the Ukrainian word.'
   items:
-    - question: "Мені подобається цікава ___ (book)."
-      explanation: "Книга means book."
+    - question: 'What is the correct English translation of "цікавий"?'
       options:
-        - text: "книга"
+        - text: 'interesting'
           correct: true
-        - text: "кава"
+        - text: 'boring'
           correct: false
-        - text: "квітка"
+        - text: 'tasty'
           correct: false
-        - text: "лекція"
+        - text: 'favorite'
           correct: false
-    - question: "Я люблю смачний ___ (borscht)."
-      explanation: "Борщ is a traditional soup."
+    - question: 'What is the correct English translation of "нудний"?'
       options:
-        - text: "борщ"
+        - text: 'boring'
           correct: true
-        - text: "чай"
+        - text: 'tasty'
           correct: false
-        - text: "смак"
+        - text: 'interesting'
           correct: false
-        - text: "суп"
+        - text: 'beautiful'
           correct: false
-    - question: "Він хоче ___ (to eat)."
-      explanation: "Їсти means to eat."
+    - question: 'What is the correct English translation of "смачний"?'
       options:
-        - text: "їсти"
+        - text: 'tasty'
           correct: true
-        - text: "піти"
+        - text: 'boring'
           correct: false
-        - text: "читати"
+        - text: 'bad'
           correct: false
-        - text: "любити"
+        - text: 'new'
           correct: false
-    - question: "Ми хочемо ___ (to go)."
-      explanation: "Піти means to go."
+    - question: 'What is the correct English translation of "хороший"?'
       options:
-        - text: "піти"
+        - text: 'good'
           correct: true
-        - text: "їсти"
+        - text: 'tasty'
           correct: false
-        - text: "читати"
+        - text: 'interesting'
           correct: false
-        - text: "хотіти"
+        - text: 'big'
           correct: false
-    - question: "Мені дуже подобається ця гарна ___ (music)."
-      explanation: "Музика means music."
+    - question: 'What is the correct English translation of "читати"?'
       options:
-        - text: "музика"
+        - text: 'to read'
           correct: true
-        - text: "кава"
+        - text: 'to eat'
           correct: false
-        - text: "квітка"
+        - text: 'to go'
           correct: false
-        - text: "лекція"
+        - text: 'to want'
           correct: false
-    - question: "Сьогодні ввечері я дуже хочу пити ___ (tea)."
-      explanation: "Чай means tea."
+    - question: 'What is the correct English translation of "їсти"?'
       options:
-        - text: "чай"
+        - text: 'to eat'
           correct: true
-        - text: "борщ"
+        - text: 'to read'
           correct: false
-        - text: "каву"
+        - text: 'to go'
           correct: false
-        - text: "музику"
+        - text: 'to like'
           correct: false
-    - question: "Мені дуже подобаються ці гарні весняні ___ (flowers)."
-      explanation: "Квіти is the plural form of квітка."
+    - question: 'What is the correct English translation of "хобі"?'
       options:
-        - text: "квіти"
+        - text: 'hobby'
           correct: true
-        - text: "квітка"
+        - text: 'cinema'
           correct: false
-        - text: "книги"
+        - text: 'coffee'
           correct: false
-        - text: "лекції"
+        - text: 'book'
           correct: false
-    - question: "Він любить читати цю нову ___ (interesting) книгу."
-      explanation: "Цікаву is the accusative form of цікава (interesting)."
+    - question: 'What is the correct English translation of "піти"?'
       options:
-        - text: "цікаву"
+        - text: 'to go'
           correct: true
-        - text: "нудну"
+        - text: 'to eat'
           correct: false
-        - text: "смачну"
+        - text: 'to read'
           correct: false
-        - text: "улюблену"
+        - text: 'to love'
           correct: false
+
+- type: group-sort
+  title: 'Sort the Verb Forms'
+  instruction: 'Group the verbs according to their base meaning.'
+  groups:
+    - name: 'To Want (хотіти)'
+      items:
+        - 'хочу'
+        - 'хочеш'
+        - 'хоче'
+        - 'хочемо'
+        - 'хочете'
+        - 'хочуть'
+    - name: 'To Love (любити)'
+      items:
+        - 'люблю'
+        - 'любиш'
+        - 'любить'
+        - 'любимо'
+        - 'любите'
+        - 'люблять'
 
 - type: fill-in
-  title: "Endings Challenge"
-  instruction: "Select the word with the correct case ending for the context."
+  title: 'Choose the Correct Verb'
+  instruction: 'Complete the sentences using verbs of preference.'
   items:
-    - sentence: "Мені подобається ___."
-      answer: "кава"
+    - sentence: 'Я дуже ___ читати цікаві книги.'
+      answer: 'люблю'
       options:
-        - "кава"
-        - "каву"
-        - "каві"
-        - "кавою"
-    - sentence: "Я люблю ___."
-      answer: "каву"
+        - 'люблю'
+        - 'любить'
+        - 'подобається'
+        - 'любимо'
+    - sentence: 'Мені ___ цей цікавий фільм.'
+      answer: 'подобається'
       options:
-        - "каву"
-        - "кава"
-        - "каві"
-        - "кавою"
-    - sentence: "Я хочу ___."
-      answer: "музику"
+        - 'подобається'
+        - 'подобаються'
+        - 'люблю'
+        - 'хочу'
+    - sentence: 'Вона дуже ___ цей цікавий фільм.'
+      answer: 'любить'
       options:
-        - "музику"
-        - "музика"
-        - "музики"
-        - "музикою"
-    - sentence: "Мені подобається ця ___."
-      answer: "музика"
+        - 'любить'
+        - 'любиш'
+        - 'подобається'
+        - 'люблю'
+    - sentence: 'Ми ___ їсти смачний борщ.'
+      answer: 'хочемо'
       options:
-        - "музика"
-        - "музику"
-        - "музики"
-        - "музикою"
-    - sentence: "Ми хочемо цікаву ___."
-      answer: "книгу"
+        - 'хочемо'
+        - 'хочу'
+        - 'хочете'
+        - 'хоче'
+    - sentence: 'Тобі ___ цікава музика?'
+      answer: 'подобається'
       options:
-        - "книгу"
-        - "книга"
-        - "книги"
-        - "книгою"
-    - sentence: "Мені подобається цікава ___."
-      answer: "книга"
+        - 'подобається'
+        - 'подобаються'
+        - 'любиш'
+        - 'хочеш'
+    - sentence: 'Він ___ піти їсти борщ.'
+      answer: 'хоче'
       options:
-        - "книга"
-        - "книгу"
-        - "книги"
-        - "книгою"
-    - sentence: "Він любить смачний ___."
-      answer: "борщ"
+        - 'хоче'
+        - 'хочуть'
+        - 'хочемо'
+        - 'хочу'
+    - sentence: 'Ти ___ цей цікавий фільм?'
+      answer: 'любиш'
       options:
-        - "борщ"
-        - "борщу"
-        - "борщем"
-        - "борщі"
-    - sentence: "Мені подобається смачний ___."
-      answer: "борщ"
+        - 'любиш'
+        - 'любить'
+        - 'люблю'
+        - 'подобається'
+    - sentence: 'Вони ___ їсти борщ.'
+      answer: 'хочуть'
       options:
-        - "борщ"
-        - "борщу"
-        - "борщем"
-        - "борщі"
-
-- type: match-up
-  title: "Match the Question to the Answer"
-  instruction: "Connect each question with its logical response."
-  pairs:
-    - left: "Ти любиш пити каву?"
-      right: "Так, я люблю каву."
-    - left: "Ти любиш читати?"
-      right: "Так, я люблю читати."
-    - left: "Ви хочете піти?"
-      right: "Ні, ми хочемо їсти."
-    - left: "Я люблю каву. А ти?"
-      right: "А я люблю чай."
-    - left: "Він любить слухати музику?"
-      right: "Так, він любить музику."
-    - left: "Я люблю читати, а ти?"
-      right: "А я люблю музику."
-    - left: "Він хоче читати?"
-      right: "Ні, він хоче піти."
-    - left: "Вони люблять борщ?"
-      right: "Так, вони люблять смачний борщ."
+        - 'хочуть'
+        - 'хочу'
+        - 'хочемо'
+        - 'хоче'

@@ -2,42 +2,39 @@ slug: food-vocabulary
 title: Food and Drink
 word_target: 1200
 content_outline:
-- section: Їжа (Food)
+- title: Їжа (Food Categories & Gender)
+  slug: food-categories
   words: 275
   points:
-  - 'Basic food categories: хліб, м''ясо, риба, овочі, фрукти, каша, суп, борщ. Organized by food group for memorization.'
-  - 'Gender of food nouns: masculine (хліб, суп, борщ, сир), feminine (каша, риба, картопля), neuter (м''ясо, яблуко, молоко).
-    Gender awareness for adjective agreement.'
-  - 'Collocations with adjectives: свіжий хліб, гаряча каша, смачний борщ, домашній суп. Building natural-sounding food descriptions.'
-- section: Напої (Drinks)
+  - 'Introduce basic food vocabulary: хліб, м''ясо, риба, овочі, фрукти, каша, суп,
+    борщ.'
+  - Explain gender grouping (masculine, feminine, neuter) to prepare for adjective
+    agreement.
+  - 'Demonstrate basic collocations: свіжий хліб, смачний борщ, гаряча каша.'
+- title: Напої (Drinks & Ordering)
+  slug: drinks-ordering
   words: 250
   points:
-  - 'Common drinks vocabulary: вода, чай, кава, сік, молоко, компот. Gender and typical modifiers: гаряча кава, холодна вода,
-    апельсиновий сік.'
-  - 'Ordering pattern: Я хочу каву (Accusative). Будь ласка, чай з молоком. Building on Accusative knowledge from earlier
-    modules.'
-  - 'Cultural note: Ukrainian tea culture (чай з медом, чай з лимоном) vs coffee culture (кава по-львівськи). Regional preferences
-    across Ukraine.'
-- section: Паляниця (The Shibboleth Bread)
+  - 'Introduce drinks vocabulary: вода, чай, кава, сік, молоко, компот.'
+  - Show ordering patterns with Accusative case (Я хочу каву, чай з молоком).
+  - Briefly touch on Ukrainian tea and coffee culture.
+- title: Мені подобається / Я не їм (Preferences)
+  slug: preferences
+  words: 250
+  points:
+  - 'Teach expressions of preference: Мені подобається борщ, Я люблю каву.'
+  - 'Teach restrictions and negation: Я не їм м''ясо (vegetarian), Я не п''ю молоко.'
+  - 'Provide simple phrases for allergies: У мене алергія на горіхи.'
+- title: Паляниця та хліб (Cultural Context)
+  slug: palianytsia-bread
   words: 175
   points:
-  - 'Cultural sidebar: Паляниця — the round wheat bread that became a linguistic shibboleth during 2022. The specific pronunciation
-    of пал-я-ни-ця is difficult for Russian speakers to reproduce.'
-  - 'Ukrainian bread traditions: хліб as sacred (never thrown away), the ''хліб-сіль'' (bread and salt) hospitality greeting.
-    Connection to the proverb «Хліб — усьому голова».'
-- section: Мені подобається / Я не їм (Preferences)
+  - Explain the cultural significance of хліб (bread) and the хліб-сіль tradition.
+  - Introduce паляниця as a traditional bread and a famous linguistic shibboleth.
+- title: Підсумок (Summary)
+  slug: summary
   words: 250
   points:
-  - 'Expressing food preferences: Мені подобається борщ (I like borscht). Я люблю каву з молоком (I love coffee with milk).
-    Review of подобатися + Dative construction.'
-  - 'Expressing dislikes and restrictions: Я не їм м''ясо (I don''t eat meat — vegetarian). Я не п''ю каву (I don''t drink
-    coffee). Negation with food verbs.'
-  - 'Allergies and dietary needs: У мене алергія на горіхи (I have an allergy to nuts). Я не можу їсти глютен. Practical survival
-    phrases for dietary restrictions.'
-- section: Практика (Practice)
-  words: 250
-  points:
-  - 'Food vocabulary drills: Categorization (їжа vs напої), gender sorting, adjective matching. Building automatic recall
-    of food terms.'
-  - 'Menu reading preview: Simple Ukrainian menu items. Recognizing food words in authentic format with prices.'
-  - 'Preference dialogues: Що ти любиш їсти? Яка твоя улюблена їжа? Conversational practice expressing food tastes.'
+  - Recap the difference between їжа and напої.
+  - Review key phrases for ordering and expressing preferences.
+  - Include 3-4 simple self-check questions (e.g., matching food to categories).

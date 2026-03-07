@@ -1,414 +1,319 @@
+- type: group-sort
+  title: "Food or Drink?"
+  instruction: "Let's organize our kitchen! Sort the items into the correct categories."
+  groups:
+    - name: "Їжа (Food)"
+      items:
+        - "хліб"
+        - "борщ"
+        - "м'ясо"
+        - "овочі"
+        - "риба"
+        - "сир"
+        - "каша"
+    - name: "Напої (Drinks)"
+      items:
+        - "вода"
+        - "кава"
+        - "чай"
+        - "молоко"
+        - "сік"
+        - "компот"
+
+- type: group-sort
+  title: "Sort by Gender"
+  instruction: "To cook well with words, we must know their gender. Sort the food and drinks into masculine, feminine, and neuter."
+  groups:
+    - name: "Masculine"
+      items:
+        - "хліб"
+        - "борщ"
+        - "чай"
+        - "сік"
+        - "сир"
+    - name: "Feminine"
+      items:
+        - "вода"
+        - "кава"
+        - "риба"
+        - "каша"
+        - "картопля"
+    - name: "Neuter"
+      items:
+        - "м'ясо"
+        - "молоко"
+        - "яблуко"
+        - "сало"
+
 - type: match-up
-  title: 'Translate the Food Words'
-  instruction: 'Match the Ukrainian word with its English translation.'
+  title: "Match the Ingredient"
+  instruction: "Match the Ukrainian food word to its English translation."
   pairs:
-    - left: 'хліб'
-      right: 'bread'
-    - left: 'борщ'
-      right: 'borscht'
-    - left: 'м''ясо'
-      right: 'meat'
-    - left: 'овочі'
-      right: 'vegetables'
-    - left: 'фрукти'
-      right: 'fruits'
-    - left: 'вода'
-      right: 'water'
-    - left: 'кава'
-      right: 'coffee'
-    - left: 'чай'
-      right: 'tea'
-    - left: 'молоко'
-      right: 'milk'
-    - left: 'сік'
-      right: 'juice'
-    - left: 'суп'
-      right: 'soup'
-    - left: 'риба'
-      right: 'fish'
+    - left: "хліб"
+      right: "bread"
+    - left: "борщ"
+      right: "traditional soup"
+    - left: "м'ясо"
+      right: "meat"
+    - left: "риба"
+      right: "fish"
+    - left: "овочі"
+      right: "vegetables"
+    - left: "фрукти"
+      right: "fruits"
+    - left: "вода"
+      right: "water"
+    - left: "кава"
+      right: "coffee"
 
 - type: quiz
-  title: 'Ordering and Preferences'
-  instruction: 'Choose the correct form to complete the sentence.'
+  title: "Culinary Quiz"
+  instruction: "Let's see what you remember about our menu and culture. Choose the correct answer."
   items:
-    - question: 'How do you say: I want coffee?'
-      explanation: 'Кава is a feminine noun. In the accusative case (after want/love), the ending -а changes to -у.'
+    - question: "What is a traditional Ukrainian soup?"
       options:
-        - text: 'Я хочу каву.'
+        - text: "борщ"
           correct: true
-        - text: 'Я хочу кава.'
+        - text: "каша"
           correct: false
-        - text: 'Я хочу каві.'
+        - text: "компот"
           correct: false
-        - text: 'Я хочу кавою.'
+        - text: "вода"
           correct: false
-    - question: 'How do you say: I want water?'
-      explanation: 'Вода is a feminine noun. In the accusative case, the ending -а changes to -у.'
+    - question: "What is a traditional sweet drink made from fruits?"
       options:
-        - text: 'Я хочу воду.'
+        - text: "сік"
+          correct: false
+        - text: "кава"
+          correct: false
+        - text: "компот"
           correct: true
-        - text: 'Я хочу вода.'
+        - text: "суп"
           correct: false
-        - text: 'Я хочу воді.'
-          correct: false
-        - text: 'Я хочу водою.'
-          correct: false
-    - question: 'How do you say: I want tea?'
-      explanation: 'Чай is a masculine noun. Masculine inanimate nouns do not change their ending in the accusative case.'
+    - question: "How do you say 'I want coffee'?"
+      explanation: "For feminine words like кава, the ending changes to -у in the Accusative case."
       options:
-        - text: 'Я хочу чай.'
+        - text: "Я хочу кава"
+          correct: false
+        - text: "Я хочу каву"
           correct: true
-        - text: 'Я хочу чаю.'
+        - text: "Я хочу каві"
           correct: false
-        - text: 'Я хочу чая.'
+        - text: "Я хочу кавою"
           correct: false
-        - text: 'Я хочу чаєм.'
-          correct: false
-    - question: 'How do you say: I love borscht?'
-      explanation: 'Борщ is a masculine inanimate noun and does not change.'
+    - question: "Which bread is a symbol of Ukrainian identity and hospitality?"
       options:
-        - text: 'Я люблю борщ.'
+        - text: "паляниця"
           correct: true
-        - text: 'Я люблю борщу.'
+        - text: "каша"
           correct: false
-        - text: 'Я люблю борща.'
+        - text: "сало"
           correct: false
-        - text: 'Я люблю борщем.'
+        - text: "сир"
           correct: false
-    - question: 'How do you say: I do not eat meat?'
-      explanation: 'The negative particle не goes before the verb.'
+    - question: "What does 'Я не їм м'ясо' mean?"
       options:
-        - text: 'Я не їм м''ясо.'
+        - text: "I love meat"
+          correct: false
+        - text: "I do not eat meat"
           correct: true
-        - text: 'Я їм не м''ясо.'
+        - text: "I eat meat every day"
           correct: false
-        - text: 'Я не м''ясо їм.'
+        - text: "Meat is my favorite food"
           correct: false
-        - text: 'Не я їм м''ясо.'
-          correct: false
-    - question: 'How do you say: I do not drink milk?'
-      explanation: 'The negative particle не goes before the verb.'
+    - question: "How do you express that you like borscht using the Dative phrase?"
       options:
-        - text: 'Я не п''ю молоко.'
+        - text: "Мені подобається борщ"
           correct: true
-        - text: 'Я п''ю не молоко.'
+        - text: "Я хочу борщ"
           correct: false
-        - text: 'Я не молоко п''ю.'
+        - text: "Я їм борщ"
           correct: false
-        - text: 'Не я п''ю молоко.'
+        - text: "Це смачний борщ"
           correct: false
-    - question: 'How do you say: I have an allergy to nuts?'
-      explanation: 'Use the phrase: У мене алергія на...'
+    - question: "Which word changes its ending when you order it (because it is feminine)?"
       options:
-        - text: 'У мене алергія на горіхи.'
+        - text: "сік"
+          correct: false
+        - text: "чай"
+          correct: false
+        - text: "борщ"
+          correct: false
+        - text: "вода"
           correct: true
-        - text: 'Я алергія на горіхи.'
-          correct: false
-        - text: 'Я не їм горіхи.'
-          correct: false
-        - text: 'Мій горіхи алергія.'
-          correct: false
-    - question: 'What does Я люблю рибу mean?'
-      explanation: 'Рибу is the accusative form of риба (fish).'
+    - question: "Which of the following is considered a feminine noun?"
       options:
-        - text: 'I love fish.'
+        - text: "хліб"
+          correct: false
+        - text: "сир"
+          correct: false
+        - text: "каша"
           correct: true
-        - text: 'I eat fish.'
-          correct: false
-        - text: 'I do not like fish.'
-          correct: false
-        - text: 'I want fish.'
-          correct: false
-    - question: 'How do you say: I want juice?'
-      explanation: 'Сік is masculine and does not change.'
-      options:
-        - text: 'Я хочу сік.'
-          correct: true
-        - text: 'Я хочу соку.'
-          correct: false
-        - text: 'Я хочу сока.'
-          correct: false
-        - text: 'Я хочу сіка.'
-          correct: false
-    - question: 'How do you say: I eat fresh bread?'
-      explanation: 'Хліб is masculine and does not change.'
-      options:
-        - text: 'Я їм свіжий хліб.'
-          correct: true
-        - text: 'Я їм свіжу хліб.'
-          correct: false
-        - text: 'Я їм свіже хліб.'
-          correct: false
-        - text: 'Я їм свіжі хліб.'
+        - text: "суп"
           correct: false
 
 - type: fill-in
-  title: 'Complete the Sentences'
-  instruction: 'Choose the correct word to complete the sentence.'
+  title: "Complete the Order"
+  instruction: "Fill in the blank with the correct word to make a delicious sentence."
   items:
-    - sentence: 'Мама готує смачний ___.'
-      answer: 'борщ'
+    - sentence: "Я люблю гарячий ___."
+      answer: "борщ"
       options:
-        - 'борщ'
-        - 'вода'
-        - 'кава'
-        - 'каша'
-    - sentence: 'Я хочу гарячу ___.'
-      answer: 'каву'
+        - "борщ"
+        - "борща"
+        - "борщу"
+        - "борщем"
+    - sentence: "Я п'ю гарячу ___."
+      answer: "каву"
       options:
-        - 'каву'
-        - 'борщ'
-        - 'суп'
-        - 'чай'
-    - sentence: 'На столі лежить свіжий ___.'
-      answer: 'хліб'
+        - "каву"
+        - "кава"
+        - "каві"
+        - "кавою"
+    - sentence: "Вона їсть свіжий ___."
+      answer: "хліб"
       options:
-        - 'хліб'
-        - 'вода'
-        - 'риба'
-        - 'кава'
-    - sentence: 'Я не п''ю ___.'
-      answer: 'молоко'
+        - "хліба"
+        - "хліб"
+        - "хлібу"
+        - "хлібом"
+    - sentence: "Дитина п'є свіже ___."
+      answer: "молоко"
       options:
-        - 'молоко'
-        - 'м''ясо'
-        - 'хліб'
-        - 'каша'
-    - sentence: 'Діти дуже люблять солодкі ___.'
-      answer: 'фрукти'
+        - "молоку"
+        - "молоком"
+        - "молоко"
+        - "молока"
+    - sentence: "Я хочу холодну ___."
+      answer: "воду"
       options:
-        - 'фрукти'
-        - 'овочі'
-        - 'суп'
-        - 'борщ'
-    - sentence: 'Я хочу холодну ___.'
-      answer: 'воду'
+        - "вода"
+        - "водою"
+        - "воду"
+        - "воді"
+    - sentence: "Мені подобається ця солодка ___."
+      answer: "каша"
       options:
-        - 'воду'
-        - 'каву'
-        - 'чай'
-        - 'сік'
-    - sentence: 'У мене алергія на ___.'
-      answer: 'молоко'
+        - "кашу"
+        - "каші"
+        - "кашею"
+        - "каша"
+    - sentence: "У ресторані я хочу міцну ___."
+      answer: "каву"
       options:
-        - 'молоко'
-        - 'суп'
-        - 'борщ'
-        - 'вода'
-    - sentence: 'Я люблю смажену ___.'
-      answer: 'рибу'
+        - "кава"
+        - "каві"
+        - "кавою"
+        - "каву"
+    - sentence: "Я не їм ___."
+      answer: "м'ясо"
       options:
-        - 'рибу'
-        - 'борщ'
-        - 'суп'
-        - 'хліб'
-
-- type: group-sort
-  title: 'Food or Drink?'
-  instruction: 'Sort the items into the correct categories: Food (Їжа) or Drinks (Напої).'
-  groups:
-    - name: 'Їжа'
-      items:
-        - 'хліб'
-        - 'борщ'
-        - 'суп'
-        - 'сир'
-        - 'м''ясо'
-        - 'каша'
-        - 'риба'
-    - name: 'Напої'
-      items:
-        - 'вода'
-        - 'кава'
-        - 'чай'
-        - 'сік'
-        - 'компот'
-        - 'молоко'
+        - "м'ясо"
+        - "м'яса"
+        - "м'ясу"
+        - "м'ясом"
 
 - type: true-false
-  title: 'True or False?'
-  instruction: 'Read the statement and decide if it is true or false.'
+  title: "Kitchen Facts: True or False?"
+  instruction: "Decide if the statement is true or false based on Ukrainian food culture."
   items:
-    - statement: 'The word суп (soup) is a masculine noun in Ukrainian.'
+    - statement: "Borscht is a traditional Ukrainian soup."
       correct: true
-      explanation: 'Суп ends in a hard consonant, which means it is masculine.'
-    - statement: 'In Ukrainian culture, soup is considered a drink.'
+      explanation: "Borscht is a very popular and traditional soup in Ukraine."
+    - statement: "Ukrainians often throw old bread in the trash."
       correct: false
-      explanation: 'Soup is thick and hearty, so Ukrainians always say they eat (їсти) soup, not drink it.'
-    - statement: 'The phrase Я не їм means I do not eat.'
+      explanation: "Bread is considered sacred, and throwing it in the trash is disrespectful."
+    - statement: "The word for water (вода) is masculine."
+      correct: false
+      explanation: "Words ending in -а like вода are typically feminine."
+    - statement: "You say 'Я п'ю суп' in Ukrainian."
+      correct: false
+      explanation: "In Ukrainian, you use the verb for eating (їсти) with soup, so it is 'Я їм суп'."
+    - statement: "Palianytsia is a traditional round wheat bread."
       correct: true
-      explanation: 'The negative particle не is placed directly before the verb.'
-    - statement: 'When ordering water, you should say Я хочу вода.'
-      correct: false
-      explanation: 'Вода is feminine, so you must use the accusative case and say Я хочу воду.'
-    - statement: 'Сало is a type of sweet fruit compote.'
-      correct: false
-      explanation: 'Сало is traditional cured fat. Компот is a fruit drink.'
-    - statement: 'When offering bread to a guest, it is traditionally accompanied by salt.'
+      explanation: "Palianytsia is a deeply cultural bread and a famous linguistic shibboleth."
+    - statement: "The phrase 'Я не їм м'ясо' means you are a vegetarian."
       correct: true
-      explanation: 'Bread and salt (хліб-сіль) is a traditional symbol of hospitality and friendship.'
-    - statement: 'The word паляниця is very easy for foreigners to pronounce.'
+      explanation: "It literally translates to 'I do not eat meat'."
+    - statement: "Coffee and tea are categorized as food (їжа)."
       correct: false
-      explanation: 'Паляниця is famously difficult to pronounce for non-native speakers because of its soft sounds and specific vowels.'
-    - statement: 'Я люблю is used to express that you like or love a certain food.'
+      explanation: "Coffee and tea are drinks (напої)."
+    - statement: "When you order coffee, 'кава' changes to 'каву'."
       correct: true
-      explanation: 'This verb is naturally used to describe your favorite meals.'
-
-- type: match-up
-  title: 'Phrases and Translation'
-  instruction: 'Match the English phrase to its Ukrainian equivalent.'
-  pairs:
-    - left: 'Я хочу воду'
-      right: 'I want water'
-    - left: 'Я люблю каву'
-      right: 'I love coffee'
-    - left: 'Я не їм м''ясо'
-      right: 'I do not eat meat'
-    - left: 'Я не п''ю молоко'
-      right: 'I do not drink milk'
-    - left: 'Свіжий хліб'
-      right: 'Fresh bread'
-    - left: 'Гарячий суп'
-      right: 'Hot soup'
-    - left: 'Холодна вода'
-      right: 'Cold water'
-    - left: 'Смачна риба'
-      right: 'Delicious fish'
+      explanation: "Feminine nouns ending in -а change to -у in the Accusative case when ordering."
 
 - type: unjumble
-  title: 'Sentence Builder'
-  instruction: 'Put the words in the correct order to form a sentence.'
+  title: "Prepare the Sentence"
+  instruction: "Put the words in the correct order, just like following a recipe!"
   items:
     - words:
-        - 'Я'
-        - 'хочу'
-        - 'гарячу'
-        - 'каву'
-      answer: 'Я хочу гарячу каву'
+        - "Я"
+        - "хочу"
+        - "холодну"
+        - "воду"
+      answer: "Я хочу холодну воду"
     - words:
-        - 'У'
-        - 'мене'
-        - 'алергія'
-        - 'на'
-        - 'молоко'
-      answer: 'У мене алергія на молоко'
+        - "Мені"
+        - "подобається"
+        - "гарячий"
+        - "борщ"
+      answer: "Мені подобається гарячий борщ"
     - words:
-        - 'Я'
-        - 'не'
-        - 'їм'
-        - 'свіже'
-        - 'м''ясо'
-      answer: 'Я не їм свіже м''ясо'
+        - "Вона"
+        - "не"
+        - "їсть"
+        - "м'ясо"
+      answer: "Вона не їсть м'ясо"
     - words:
-        - 'Ми'
-        - 'їмо'
-        - 'смачний'
-        - 'український'
-        - 'борщ'
-      answer: 'Ми їмо смачний український борщ'
+        - "Це"
+        - "дуже"
+        - "смачна"
+        - "каша"
+      answer: "Це дуже смачна каша"
     - words:
-        - 'Вона'
-        - 'дуже'
-        - 'любить'
-        - 'солодкі'
-        - 'фрукти'
-      answer: 'Вона дуже любить солодкі фрукти'
+        - "Я"
+        - "люблю"
+        - "каву"
+        - "з"
+        - "молоком"
+      answer: "Я люблю каву з молоком"
     - words:
-        - 'Я'
-        - 'хочу'
-        - 'холодну'
-        - 'воду'
-      answer: 'Я хочу холодну воду'
+        - "Дитина"
+        - "п'є"
+        - "свіжий"
+        - "сік"
+      answer: "Дитина п'є свіжий сік"
+    - words:
+        - "Що"
+        - "ти"
+        - "хочеш"
+        - "пити"
+      answer: "Що ти хочеш пити"
+    - words:
+        - "Ми"
+        - "дуже"
+        - "любимо"
+        - "свіжий"
+        - "хліб"
+      answer: "Ми дуже любимо свіжий хліб"
 
-- type: quiz
-  title: 'Identify the Gender'
-  instruction: 'Look at the final letter to determine the gender of the noun.'
-  items:
-    - question: 'Which word is masculine?'
-      explanation: 'Суп ends in a hard consonant.'
-      options:
-        - text: 'суп'
-          correct: true
-        - text: 'вода'
-          correct: false
-        - text: 'м''ясо'
-          correct: false
-        - text: 'каша'
-          correct: false
-    - question: 'Which word is feminine?'
-      explanation: 'Риба ends in а, which is typical for feminine nouns.'
-      options:
-        - text: 'риба'
-          correct: true
-        - text: 'хліб'
-          correct: false
-        - text: 'сало'
-          correct: false
-        - text: 'сік'
-          correct: false
-    - question: 'Which word is neuter?'
-      explanation: 'Молоко ends in о, which is typical for neuter nouns.'
-      options:
-        - text: 'молоко'
-          correct: true
-        - text: 'сир'
-          correct: false
-        - text: 'борщ'
-          correct: false
-        - text: 'кава'
-          correct: false
-    - question: 'Which word is masculine?'
-      explanation: 'Сир ends in a hard consonant.'
-      options:
-        - text: 'сир'
-          correct: true
-        - text: 'риба'
-          correct: false
-        - text: 'вода'
-          correct: false
-        - text: 'м''ясо'
-          correct: false
-    - question: 'Which word is feminine?'
-      explanation: 'Вода ends in а.'
-      options:
-        - text: 'вода'
-          correct: true
-        - text: 'чай'
-          correct: false
-        - text: 'компот'
-          correct: false
-        - text: 'хліб'
-          correct: false
-    - question: 'Which word is masculine?'
-      explanation: 'Борщ ends in a consonant.'
-      options:
-        - text: 'борщ'
-          correct: true
-        - text: 'каша'
-          correct: false
-        - text: 'риба'
-          correct: false
-        - text: 'вода'
-          correct: false
-    - question: 'Which word is feminine?'
-      explanation: 'Кава ends in а.'
-      options:
-        - text: 'кава'
-          correct: true
-        - text: 'сік'
-          correct: false
-        - text: 'чай'
-          correct: false
-        - text: 'сир'
-          correct: false
-    - question: 'Which word is neuter?'
-      explanation: 'Сало ends in о.'
-      options:
-        - text: 'сало'
-          correct: true
-        - text: 'суп'
-          correct: false
-        - text: 'риба'
-          correct: false
-        - text: 'кава'
-          correct: false
+- type: match-up
+  title: "Flavor Pairings"
+  instruction: "Match the descriptive adjective to the correct food or drink."
+  pairs:
+    - left: "свіжий"
+      right: "хліб"
+    - left: "смачний"
+      right: "борщ"
+    - left: "гаряча"
+      right: "кава"
+    - left: "холодна"
+      right: "вода"
+    - left: "солодка"
+      right: "каша"
+    - left: "апельсиновий"
+      right: "сік"
+    - left: "коров'яче"
+      right: "молоко"
+    - left: "свіжа"
+      right: "риба"

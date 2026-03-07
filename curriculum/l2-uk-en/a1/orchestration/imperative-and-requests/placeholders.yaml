@@ -13,6 +13,7 @@ REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
 WORD_TARGET: '1200'
+WORD_CEILING: '1800'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -26,7 +27,10 @@ LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10
   \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
   \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
   \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
-  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ M1 (reading drill word, not grammar)\n  Exception (M19 likes-and-preferences):\
+  \ Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n    ONLY in the fixed construction\
+  \ «Мені подобається + noun/infinitive». Teach as a memorized\n    chunk — do NOT\
+  \ explain dative case rules or paradigms.\n- Instrumental case FORBIDDEN (no з другом,\
   \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
   \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
   \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
@@ -39,6 +43,28 @@ PEDAGOGICAL_CONSTRAINTS: 'SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
   KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught
   until M47 (imperative-and-requests). Before M47, use indirect requests or English
   for instructions.
+
+
+  BANNED IMPERATIVE FORMS (non-exhaustive): Запам''ятайте, Уявіть, Порівняйте, Зверніть
+  увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть,
+  Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+
+
+  INSTEAD OF → USE:
+
+  - Запам''ятайте → "Remember that..." (English)
+
+  - Порівняйте → "Compare..." (English)
+
+  - Зверніть увагу → "Notice that..." (English)
+
+  - Подивіться → "Look at..." (English)
+
+  - Спробуйте → "Try to..." (English)
+
+  - Прочитайте → "Read..." (English)
+
+  - Повторіть → "Repeat..." (English)
 
 
   The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only)
@@ -100,47 +126,63 @@ EXPANSION_METHOD: '**Don''t just write more — write deeper.** For EVERY concep
 WRITING_TONE_INSTRUCTION: Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE}
   words. Avoid verbose prose — students are beginners. Focus on practical examples
   over theory.
-TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian буквар)\n\n\
-  These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
-  \ for style and difficulty level** — notice how they use simple syllable combinations,\
-  \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 76:\n\
-  ```\n74\nп * * * * *\nс о п і л к а\nп і в * н\nа\nо\nу\nи\nі\nП\nпа\nпо\nпу\nпи\n\
-  пі\nа\nо\nу\nи\nі\nап\nоп\nуп\nип\nіп\nП\nБачу  П, п (пе). Чую  [п].\n*\nпа\nва\n\
-  ска\nпо\nніс\nси-пав\nпи\nла\nсан-ка\nпі\nпо\nпа\nКо-ло  сли-ви  ма-ма,  Пав-лик\
-  \  і  По-лі-на.\nПав-лик:\n— Ма-мо,  он  слив-ка!  Во-на  ки-сла?\nМа-ма:\n— Ні,\
-  \  си-ну!  Слив-ка  спі-ла  і  ______ ! \n [ –•  |  –  •  =  ]\n [  = • |  –  •\
-  \ = ]\nП п\n```\n\n**Grade 1, zaharijchuk** — Сторінка 105:\n```\n103\n\t\nВизнач,\
-  \ що не так на малюнку.\n\t Хто один, а кого на малюнку зображено бага-\nто?\n\t\
-  \ Вимов слова — назви намальованих пред-\nметів, у яких є ь.\nАпельсин      _____\
-  \ ,   ______ ,     _______ ,    ______.\n12345678      6 7 8       2 3 8 5     \
-  \   6 1 8 7       4 7 2 1\n\t Утвори нові слова. Запиши.\n\t\nПоміркуй, хто куди\
-  \ спішить.\n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n```\n79\nЯ вивчаю українську\
-  \ мову . . . . . . . 4\nУсне і писемне мовлення . . . . . . . 5\nСлова — назви предметів\
-  \ . . . . . . . 6\nСлова — назви дій . . . . . . . . . . . . . 7\nСлово і речення\
-  \ . . . . . . . . . . . . . . . . 8\nСлово і речення . . . . . . . . . . . . . .\
-  \ . . 9\nЗвуки  . . . . . . . . . . . . . . . . . . . . . . . . 10\nБукви  . . .\
-  \ . . . . . . . . . . . . . . . . . . . . . 11\nА а  . . . . . . . . . . . . . .\
-  \ . . . . . . . . . . . . 12\nО о . . . . . . . . . . . . . . . . . . . . . . .\
-  \ . . \n```\n\n**Grade 1, bolshakova** — Сторінка 7:\n```\n7\nСЛОВА — НАЗВИ ДІЙ\n\
-  Кожну дію ти можеш назвати словом.\nЩО РОБИТЬ?\nбігає\nстрибає\nсидить\nчитає\n\
-  спить\nДіти на подвір’ї. Олена стрибає. Тарас бігає. \nАлла сидить на лаві. Ганна\
-  \ читає книжку. \nКіт Нявчик спить.\nЩо робить кожен хлопчик? Вибери правильну відповідь.\n\
-  \ \n Малює картину.\n Читає книжку.\n Грає на барабані.\n Миє посуд.\n Готує\
-  \ бутерброд.\n П’є чай.\n1\n```\n\n**Grade 1, zaharijchuk** — Сторінка 97:\n```\n\
-  95\n—\t Доб-ро-го ран-ку! — мов-лю за \nзви-ча-єм. \n—\t Доб-ро-го ран-ку! — кож-но-му\
-  \ \nзи-чу  я. \n—\t Доб-ро-го  дня! — лю-дям ба-\nжа-ю.\n—\t Ве-чо-ра  доб-ро-го!\
-  \ — стріч-\nних  ві-та-ю.\nІ  ус-мі-ха-ють-ся   в   від-по-відь  лю-\nди  — доб-рі\
-  \  сло-ва  ж  бо  для  кож-\nно-го лю-бі.\n                                    \
-  \               Вадим Бі­рюков \n\t Як ми називаємо виділені слова?\n\t Добери до\
-  \ кожної ситуації слова ввічливості.\n```\n\n**Grade 1, bolshakova** — Сторінка\
-  \ 64:\n```\n64\nЗнайди слово — підпис до малюнка.\n\t\nтерен\t\nтрава\t\nталант\t\
-  \nТарас\n\t теремок\t\nтропа\t\nтанок\t\nТетяна\n\t\nтерези\t\nтруба\t\nтарілка\t\
-  \nТимофій\n\b\nВірш. Тема вірша. Головна думка\nЛиш телефон задзеленчить,\nІванко\
-  \ в слухавку кричить:\n— Алло! Привіт! Іван на дроті!\nЩо? Татусеві по роботі?..\n\
-  Так, знаю я, що мамі й тату\nТеж можуть телефонувати.\nЧого я вам сказав «привіт»?\n\
-  Напевно, так робить не слід...\nДорослим незнайомцям діти\nТак не повинні говорити.\n\
-  Заждіть хвилиночку лишень...\nПробачте, прошу... Добрий день!\n```"
+TEXTBOOK_EXAMPLES: "## Textbook Reference (from Ukrainian grammar textbooks)\n\nThese\
+  \ are explanations from Ukrainian school grammar textbooks. Use them as **reference**\
+  \ for grammar rules and examples. Adapt for adult A1 learners — keep explanations\
+  \ simple but maintain grammatical accuracy.\n\n**Grade 3, vashulenko** — Сторінка\
+  \ 35:\n```\n35\nКнижки треба шанувати. Не можна \nїх бруднити, рвати. Пошкоджені\
+  \ книжки \nслід полагодити.\nПрочитай і розкажи \nу класі.\nЯ — учителька\nЯ — учитель\n\
+  Якщо речення вимовляють з особ­\nливим почуттям, із підсилювальною \nінтонацією,\
+  \ то вони стають оклич-\nними. У кінці окличних речень став-\nлять знак оклику.\n\
+  2   \aПрочитай текст. Визнач, які це речення \nза метою висловлювання.\n\t \t\n\
+  3   \aРозгляньте малюнки. Складіть за одним із них невеликий \nтекст, використовуючи\
+  \ окличні речення. Прочитайте його \nз потріб\n```\n\n**Grade 3, ponomarova** —\
+  \ Сторінка 102:\n```\n102\nДовідка: неспокійне, розбурхане, суворе, \nсамотній,\
+  \ беззахисний, великі, небезпечні, \nбезпощадні,  тривожний.\nДовідка: радісний,\
+  \ задоволений, похнюплений, \nсумний, щасливий, пригнічений.\n10. Склади про одного\
+  \ з хлопчиків розповідь (3–4 речення) \nі запиши. Використай прикметники.\n1\n4.\
+  \ Прочитай  розповідь  Ґаджика про картину І. Айвазов-\nського.  Чи  зрозуміло,\
+  \  яку  саме  картину  він  описав?\n7. Якою частиною мови є вставлені в розповідь\
+  \ Ґаджика сло-\nва? Зроби висновок про роль прикметників \n```\n\n**Grade 3, kravtsova**\
+  \ — Сторінка 8:\n```\n8\nПРАВИЛЬНА ВИМОВА СЛІВ \nЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]\n\
+  15.\n1.\t Утворіть пари слів: що робити? — що роблю?\nСидіти — \t\t\n\t\nБудити\
+  \ —\t \t\nРадити — \t\nХодити — \t\t\n\t\nВодити — \t \t\nСадити —\nЗразок. Їздити\
+  \ — їжджу.\n2.\t Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].\n\
+  \t\n\t\nпоса-джені\t \t\nза-дзвенів\n\t\n\t\nпосадже-ні\t \t\nзадзве-нів\n3.\t Запишіть\
+  \ утворені слова, поділивши їх для переносу. Пере-\nвірте роботу одні в одних. \n\
+  16.\n1.\t Прочитай і відгадай загадку. \nЖивим зерном народжений, \nживу я на землі.\
+  \ \nЩо\n```\n\n**Grade 3, kravtsova** — Сторінка 6:\n```\n6\n7.\n1.\t Розгляньте\
+  \ малюнки. У назвах яких предметів став-\nлять апостроф? Запишіть ці слова.\n2.\t\
+  \ Доведіть одні одним, що апостроф ставити потрібно  /  не \nпотрібно. Своє доведення\
+  \ починайте так:\nУ цьому слові потрібно  /  не потрібно ставити апостроф, \nоскільки\
+  \ …\n3.\t Складіть за малюнками речення, використовуючи слова \nз апострофом. \n\
+  8.\n1.\t Розглянь зображення, назвиѳ їх.\n2.\t Виконай завдання на вибір.\n\t Запиши\
+  \ наѳзви зображень. \n\t Склади і запиши речення, використовуючи якомога більше\
+  \ \nслів з а\n```\n\n**Grade 3, kravtsova** — Сторінка 44:\n```\n44\n2.\t Добери\
+  \ з поданих заголовків найбільш вдалий. Поясни вибір.\n\t Щедрий Ведмідь і вдячна\
+  \ Мишка.\n\t Милосердний Ведмідь і вдячна Мишка.\n\t Справжні друзі. \n124.\t Вправа\
+  \ \n«Квест».\n4 5\n5 6 7\n1 2 5\nдиреѳктор\n3.\t Запишіть свої розповіді на окремих\
+  \ аркушах. На їх основі \nстворіть книжку.\n123.\t 1.\t Пригадай ситуацію, коли:\n\
+  \t ти проявив / проявила милосердя; \n\t до тебе проявили милосердя;\n\t ти був\
+  \ вдячним / вдячною;\n\t тобі були вдячні за послугу.\nСЛОВА З ПРЕФІКСАМИ РОЗ-,\
+  \ БЕЗ-\n1.\t Прочитай текст. Як ти \n```"
+CHECKPOINT_GUIDANCE: ''
+EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
+
+
+  Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently,
+  or add creative subtitles. The audit will reject any section with a different title.
+
+
+  - `## Наказовий спосіб - Imperative mood` (~300 words)
+
+  - `## Вісім обов''язкових дієслів - Eight required verbs` (~300 words)
+
+  - `## Ввічливе прохання - Polite requests` (~250 words)
+
+  - `## Заборони - Prohibitions` (~175 words)
+
+  - `## Практика - Practice` (~175 words)'
 INTRO_HOOK: Чому це важливо?
 SUMMARY_HEADING: Підсумок
 SELF_CHECK_HEADING: 'Перевірте себе:'
@@ -726,7 +768,12 @@ VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items
 
 
   Do NOT add vocabulary items beyond this list unless they are decodable from the
-  module''s letter set and appear in the lesson content.'
+  module''s letter set and appear in the lesson content.
+
+
+  **VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints MUST appear
+  at least once in the module content. Orphaned vocabulary (listed but never used
+  in content) is a validation failure.'
 VIDEO_DISCOVERY: (No video discoveries available)
 PRONUNCIATION_VIDEOS: ''
 SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
@@ -765,6 +812,34 @@ SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
 
   Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
   text.
+
+
+  ### English Calque Checklist
+
+
+  As an English-dominant model, you may produce English-to-Ukrainian calques. Check
+  and avoid:
+
+
+  | English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+
+  |---|---|---|
+
+  | "will have" | буду мати | матиму |
+
+  | "do work" | робити роботу | працювати |
+
+  | "save money" | зберегти гроші | заощадити гроші |
+
+  | "make a decision" | зробити рішення | прийняти рішення |
+
+  | "take a photo" | брати фото | фотографувати / робити фото |
+
+  | "have attention" | мати увагу | звертати увагу |
+
+  | "give an answer" | давати відповідь | відповідати |
+
+  | "make sense" | робити сенс | мати сенс |
 
 
   ### Euphony / Милозвучність (WARNING if violated)
@@ -909,8 +984,9 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
   \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
   \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
-  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
-  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний,\
+  \ красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний\n\
+  - **No Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
   \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
   \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
   \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
@@ -932,6 +1008,101 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
   - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
   \ skills or delegate to Claude\n"
+SELF_AUDIT_SNIPPET: '## Self-Audit (Run BEFORE Final Output)
+
+
+  After writing all content, you MUST run the audit and fix any issues — all within
+  this session.
+
+
+  ### Step 1: Write Content to Disk
+
+
+  Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+
+  ```bash
+
+  cat > {CONTENT_PATH} << ''CONTENT_EOF''
+
+  ... your content here ...
+
+  CONTENT_EOF
+
+  ```
+
+
+  ### Step 2: Run Audit
+
+
+  ```bash
+
+  bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+
+  ```
+
+
+  This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion
+  %.
+
+
+  ### Step 3: Parse Results
+
+
+  - If you see `AUDIT PASSED` — proceed to output.
+
+  - If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run
+  the audit.
+
+
+  ### Step 4: Fix Loop (max 2 iterations)
+
+
+  If the audit fails:
+
+  1. Read the specific gate failures and violation details from the audit output
+
+  2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms,
+  add callout boxes, etc.)
+
+  3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+
+  4. If still failing after 2 fix attempts, proceed to output anyway — the validate
+  phase will handle remaining issues.
+
+
+  ### Step 5: Report Self-Audit Result
+
+
+  After audit (pass or fail), include this block in your output:
+
+
+  ```
+
+  ===SELF_AUDIT_START===
+
+  status: PASS | FAIL
+
+  iterations: {number of audit runs}
+
+  final_word_count: {word count from last audit}
+
+  gates_passed: {list of passed gates}
+
+  gates_failed: {list of failed gates, or "none"}
+
+  fixes_applied: {brief description of what you fixed, or "none"}
+
+  ===SELF_AUDIT_END===
+
+  ```
+
+
+  **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual
+  command and report real output.
+
+  '
+LEXICAL_SANDBOX: ''
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'

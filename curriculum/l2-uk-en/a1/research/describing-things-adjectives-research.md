@@ -2,35 +2,35 @@
 
 ## State Standard Reference
 §4.2.1.2: "Adjective declension — hard/soft groups, gender agreement"
-Alignment: Introduces Nominative case agreement for hard and soft stem adjectives across all three genders and plural, perfectly aligning with A1 requirements.
+Alignment: This module directly addresses the requirement by introducing foundational adjective agreement for masculine, feminine, neuter, and plural nouns in the nominative case, covering both hard (-ий) and soft (-ій) stem groups.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| новий | Top 100 high-frequency adjective | новий дім, нова книга |
-| великий | Essential for scale and basic descriptions | велике місто, велика родина |
+| новий | Top 100 high-frequency adjective | новий дім, нова книга, нове життя |
 | гарний | High-frequency social descriptor | гарна погода, гарний день |
-| синій | Primary anchor for soft stem (-ій) | синя лінія, синє море |
-| старий | Used for describing historical objects | старий собор, старе місто |
+| великий | Essential for scale | велике місто, велика родина |
+| синій | Primary example for soft stem | синя лінія (Kyiv Metro) |
 
 ## Cultural Hooks
-1. **St. Sophia's Cathedral (Софійський собор)**: Used as a real-world example to demonstrate the adjectives *старий* (ancient) and *великий* (grand).
-2. **Mavka (Мавка)**: The Ukrainian folklore figure from Lesya Ukrainka's "Forest Song," used to practice feminine adjectives like *молода*, *гарна*, and *зелена*.
-3. **Kyiv Metro**: The *синя лінія* (Blue Line) serves as a practical, memorable anchor for the soft-stem adjective *синій*.
+1. St. Sophia's Cathedral (Софійський собор) can be used to demonstrate «старий» (ancient) and «великий» (grand).
+2. The folklore figure Mavka (Мавка) from Lesya Ukrainka's "Forest Song" provides an anchor for practicing feminine adjectives like «молода», «гарна», and «зелена».
+3. The Kyiv Metro's "синя лінія" (Blue Line) serves as a practical real-world mnemonic for the soft stem adjective "синій".
 
 ## Common Learner Errors
-1. **Dictionary Form Defaulting** → *нова машина* (not *новий машина*) — Learners often fail to agree the adjective with the noun, using the masculine nominative dictionary form for everything.
-2. **Phonetic Misspelling of Soft Stems** → *синій* (not *синий*) — English speakers often miss the soft "і" after soft consonants and spell it with "и".
-3. **Singular Adjectives for Plural Nouns** → *гарні дні* (not *гарна дні*) — Learners forget that plural nouns require the plural adjective ending "-і" regardless of their original gender.
+1. Dictionary Form Defaulting → Correcting *«новий машина»* to «нова машина» — Learners often use the masculine dictionary form for all nouns instead of applying the gender-matching ending.
+2. Orthographic Interference → Correcting *«синий»* to «синій» — Learners misspell the soft stem ending due to phonetic similarities or primary language interference.
+3. Singular for Plural → Correcting *«гарна вікна»* to «гарні вікна» — Learners forget to apply the universal «-і» ending for all plural adjectives regardless of noun gender.
 
 ## Cross-References
 - Builds on: a1-07 (The Gender Code), a1-38 (My Daily Routine)
 - Prepares for: a1-12 (Colors and Clothing), a1-42 (Description: Adverbs)
 
 ## Notes for Content Writing
-- **Verb-Free Mandate**: Absolute strict adherence to verb-free Ukrainian patterns. Use "Це нова книга", "Який це дім?", "гарна погода". Do NOT use conjugated verbs.
-- **Metalanguage**: Use English for all explanations and instructions. Ban on Ukrainian imperatives (e.g., do not use *Запам'ятайте*, use "Remember that...").
-- **Pedagogy**: Follow the PPP structure (Presentation-Practice-Production) clearly outlined in the meta section. Maintain the Real Estate Agent persona during practice.
+- MUST use verb-free patterns exclusively for Ukrainian examples (e.g., «Це велика книга», «Який це дім?»). Do not use conjugated verbs (є, має), infinitives, or imperatives in Ukrainian.
+- English scaffolding is mandatory for explaining grammar rules before providing examples.
+- Use English equivalents for all classroom instructions instead of banned Ukrainian imperatives (e.g., "Look at the table..." instead of "Подивіться...").
+- Keep sentences short (max 8-10 Ukrainian words per sentence) and ensure every new grammatical term is defined.
 
 ## Resource Discovery
 

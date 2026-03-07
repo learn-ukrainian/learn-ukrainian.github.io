@@ -1,282 +1,234 @@
 <!-- SCOPE
-Covers: The final 10 letters of the alphabet (Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ), digraphs ДЖ/ДЗ, and the apostrophe.
+Covers: The final 10 letters of the alphabet, digraphs, apostrophe, and palatalization concepts.
 Not covered:
-  - Syllables and Word Division → a1-05
+  - Syllables and Word Division -> a1-05
 -->
 
 # The Cyrillic Code IV
 
 > **Why does this matter?**
 >
-> You are incredibly close to a major milestone. Mastering the complete Cyrillic alphabet unlocks your ability to read any Ukrainian text natively.
+> You are at the absolute finish line! Це оста́ння части́на! (This is the final part!) You already know twenty-three letters of the Ukrainian alphabet. Now, we are going to learn the final ten letters, two special digraphs, and the apostrophe. Тут десять нови́х лі́тер. (Here are ten new letters.) By the end of this lesson, you will have cracked the entire Cyrillic code and be able to read any Ukrainian word you see. Час для чита́ння! (Time for reading!)
 
 ## Вступ — Introduction
 
-Welcome back! You already know twenty-three letters of the Ukrainian alphabet. That is an amazing achievement. We have only ten final letters, two special letter combinations, and one unique symbol left to cover. The finish line is truly in sight. Once you complete this module, you will have cracked the entire Cyrillic code, and every single Ukrainian word will be decodable for you. 
+Приві́т! (Hello!) Welcome to the final stage of your alphabet journey! Це вели́ка перемога! (This is a big victory!) You already know 23 of the 33 letters in the Ukrainian alphabet. Only ten letters, two double-letter sounds, and one special symbol remain. Let's learn these final characters so you can read any word in Ukrainian. 
 
-Before we dive into the final set, let us do a quick diagnostic check. Try reading these five words out loud. They use only the letters you have already mastered:
+Тест! (Test!) Before we learn the final pieces of the puzzle, let us do a quick diagnostic check. Can you read these five familiar words using the letters you have already learned? Please read slowly.
 
 | Word | Meaning |
 |------|---------|
 | **ма́ма** | mom |
+| **кіт** | cat |
+| **дім** | house |
 | **брат** | brother |
 | **сестра́** | sister |
-| **дім** | house |
-| **кіт** | cat |
 
-Were you able to read them? Excellent! For this final stage, the explanations about the new letters will be entirely in English, while the examples will be in Ukrainian. Let us learn the final pieces of the puzzle and complete your alphabet journey!
+Ду́же до́бре! (Very good!) If you can read those words easily, you are perfectly ready for this final step. This lesson explains the grammar and mechanics in English, but features plenty of real Ukrainian examples for practice. Let us jump into the final set of letters and complete your alphabet once and for all!
 
-### Практика читання — Reading Practice
-Let us practice some simple phrases using the letters you already know:
-*   **Це мама і тато.** (This is mom and dad.)
-*   **Там брат і сестра.** (There are brother and sister.)
-*   **Це дім, а там кіт.** (This is a house, and there is a cat.)
+## Злиті звуки та рідкісні букви — Affricates, Digraphs & Ґ
 
-## Злиті звуки та рідкісні букви — Affricates, Digraphs & Ґ (hard G)
+Now we will look at some unique consonants. Some of these represent blended sounds (two sounds pronounced as one), while others are rare in the language. Це ціка́во! (This is interesting!) Два спеціа́льні зву́ки. (Two special sounds.)
 
-Let us start with some unique letters. The Ukrainian alphabet has characters that combine two distinct sounds into a single crisp burst. We also have combinations of two letters that make one unified sound.
+### Літера Ц
 
-First, meet **Ц** (ts). This letter is an affricate, which means it is pronounced as a single, quick sound. It sounds exactly like the «ts» at the end of the English word «cats». Your brain might want to read it as two separate consonants, but in Ukrainian, it is always a unified sound.
+Це лі́тера Ц. (This is the letter Ц.) The letter **Ц** represents an affricate. Це оди́н звук. (This is one sound.) This means it is a blend of the T and S sounds, pronounced together smoothly as one single sound. It sounds exactly like the "ts" at the end of the English word "cats" or "boots". It is crucial that you do not pronounce it as two completely separate consonants. Це ду́же важли́во. (This is very important.)
 
-[Anna Ohoiko — Ukrainian Lessons — Ц](https://www.youtube.com/watch?v=u44eCjR2Oz8)
+Please watch the video: [Anna Ohoiko — Ukrainian Lessons — Ц](https://www.youtube.com/watch?v=u44eCjR2Oz8)
+
+You will see the letter **Ц** very often in word endings and right in the middle of words. Це це́нтр. (This is a center.)
 
 | Word | Meaning |
 |------|---------|
+| **це** | this is |
 | **це́нтр** | center |
-| **цу́кор** | sugar |
 
-**Приклади — Examples:**
-*   **Це центр.** (This is the center.)
-*   **Це цукор.** (This is sugar.)
+### Літера Щ
 
-Next is **Щ**. This is a uniquely Ukrainian letter that represents two sounds spoken at once. It is a double sound, merging the sound of English «sh» with the sound of «ch». It is much stronger than **Ш**, which is just a single sound.
+Це лі́тера Щ. (This is the letter Щ.) The letter **Щ** represents a unique combination: a firm SH sound followed immediately by a CH sound. Це два зву́ки ра́зом. (These are two sounds together.) Do not confuse it with the letter **Ш**, which is just the plain, simple SH sound. 
 
-[Anna Ohoiko — Ukrainian Lessons — Щ](https://www.youtube.com/watch?v=QmBLieIuf6Q)
+Please listen: [Anna Ohoiko — Ukrainian Lessons — Щ](https://www.youtube.com/watch?v=QmBLieIuf6Q)
+
+Listen carefully to the distinct double sound when you read these high-frequency words. Це ща́стя. (This is happiness.) Ще! (More!)
 
 | Word | Meaning |
 |------|---------|
 | **ще** | more, still |
 | **ща́стя** | happiness |
 
-**Приклади — Examples:**
-*   **Ще борщ!** (More borscht!)
-*   **Це щастя.** (This is happiness.)
+> [!warning]
+> Обере́жно! (Careful!) Be careful not to pronounce the letter **Щ** as a simple "sh" sound. It is always a distinct double sound: sh+ch. Saying the word **ще** should sound distinctly like "sh-che".
 
-Now let us look at **Ф**. This letter sounds just like the English letter «f». You will rarely see it in native Ukrainian vocabulary. It appears mostly in words borrowed from other languages.
+### Літера Ф
 
-[Anna Ohoiko — Ukrainian Lessons — Ф](https://www.youtube.com/watch?v=haHRsFFZRQI)
+Це лі́тера Ф. (This is the letter Ф.) The letter **Ф** sounds exactly like the English F sound. It is the voiceless partner to the letter В. The letter **Ф** is quite rare in native Ukrainian words. You will find it mostly in words borrowed from other languages, which makes them easy to recognize. Це ле́гко! (This is easy!) Це ка́фе. (This is a cafe.)
+
+Please watch the video: [Anna Ohoiko — Ukrainian Lessons — Ф](https://www.youtube.com/watch?v=haHRsFFZRQI)
 
 | Word | Meaning |
 |------|---------|
 | **факт** | fact |
-| **фо́то** | photo |
+| **ка́фе** | cafe |
 
-**Приклади — Examples:**
-*   **Це факт.** (This is a fact.)
-*   **Там фото.** (There is a photo.)
+### Digraphs ДЖ and ДЗ
 
-Ukrainian also uses two digraphs. A digraph is a pair of letters that creates one single sound.
-The first is **ДЖ**. This combination sounds like the «j» in the English word «jungle». 
+ДЖ і ДЗ — це дигра́фи. (ДЖ and ДЗ are digraphs.) A digraph is a pair of letters that combine to make one single unified sound. Ukrainian has two very important digraphs that you need to know. Це оди́н звук. (This is one sound.)
+
+The combination **ДЖ** sounds exactly like the English J sound you hear in words like "jungle" or "jump". Це оди́н звук. (This is one sound.)
 
 | Word | Meaning |
 |------|---------|
-| **джем** | jam |
 | **джаз** | jazz |
 
-**Приклади — Examples:**
-*   **Це джем.** (This is jam.)
-*   **Це джаз.** (This is jazz.)
-
-The second digraph is **ДЗ**. There is no exact English equivalent for this sound, but it is similar to the buzzing noise you make if you say the letters «d» and «z» very quickly together.
+The combination **ДЗ** is a tight blend of D and Z into one single sound. There is no exact English equivalent, but you can hear a similar sound in the middle of the word "pads". Це украї́нський звук. (This is a Ukrainian sound.)
 
 | Word | Meaning |
 |------|---------|
 | **дзвін** | bell |
 
-**Приклади — Examples:**
-*   **Там дзвін.** (There is a bell.)
+### Літера Ґ
 
-Finally, we have the letter **Ґ** (hard G). This is the hard sound, just like the «g» in the English word «go». It is extremely rare and only appears in a few hundred native words.
+Це лі́тера Ґ. (This is the letter Ґ.) The letter **Ґ** represents the hard G sound, exactly like the G in the English word "go" or "good". Вона́ ду́же рідкісна. (It is very rare.)
 
-[Anna Ohoiko — Ukrainian Lessons — Ґ (hard G)](https://www.youtube.com/watch?v=gNjHqjTW9WQ)
+Please listen carefully: [Anna Ohoiko — Ukrainian Lessons — Ґ](https://www.youtube.com/watch?v=gNjHqjTW9WQ)
+
+> [!history-bite]
+> The letter **Ґ** is widely known as the repressed letter. It was officially removed from the Ukrainian alphabet by Soviet authorities in the year 1933 to artificially bring the Ukrainian language closer to Russian. It was proudly and officially restored to the alphabet in 1990! Це на́ша істо́рія. (This is our history.)
+
+Because of this specific history, **Ґ** is extremely rare. There are only about four hundred native words that use it today. Це ґа́нок. (This is a porch.) 
 
 | Word | Meaning |
 |------|---------|
 | **ґа́нок** | porch |
 
-**Приклади — Examples:**
-*   **Це ґанок.** (This is a porch.)
-
-> [!history-bite] Історичний факт — Historical Fact
-> Ukrainians know the letter **Ґ** (hard G) as the repressed letter. Soviet authorities officially removed it from the Ukrainian alphabet in 1933, and the independent government only restored it in 1990!
-
 ## Йотовані голосні — Iotated Vowels Я, Ю, Є, Ї, Й
 
-The next group of letters is fascinating. We call them iotated vowels. Only three of these letters — **Я**, **Ю**, and **Є** — share a unique «dual nature». The letter **Ї** belongs to this group but follows its own strict rule and never softens a consonant.
+Я, Ю, Є, Ї — це йотова́ні голосні́. (Я, Ю, Є, Ї are iotated vowels.) These letters have a special "dual nature." At the very beginning of a word or directly after another vowel, they represent TWO separate sounds (a Y-sound plus a vowel). Це два зву́ки. (These are two sounds.) However, when they come directly after a consonant, they represent ONE single sound and soften the consonant right before them. Але́ пі́сля при́голосного — оди́н звук. (But after a consonant — one sound.) Це пра́вило. (This is a rule.)
 
-What does «dual nature» mean? At the beginning of a word, or after another vowel, these letters represent two sounds: the consonant sound of English «y» plus a vowel. However, when they appear right after a consonant, they only make their vowel sound, but they do something very special: they soften the consonant that comes before them.
+### Літера Я
 
-Let us explore them one by one.
+Це лі́тера Я. (This is the letter Я.) The letter **Я** sounds exactly like "ya" (as in "yacht") when it starts a word. Це я́блуко. (This is an apple.) 
 
-The letter **Я** represents a sound similar to the beginning of the English word «yard». It is a very high-frequency letter. Not only is it used inside words, but standing alone, the letter **Я** is the pronoun for the word «I» in Ukrainian.
-
-[Anna Ohoiko — Ukrainian Lessons — Я](https://www.youtube.com/watch?v=yhSAf41LX8I)
+Please watch the video: [Anna Ohoiko — Ukrainian Lessons — Я](https://www.youtube.com/watch?v=yhSAf41LX8I)
 
 | Word | Meaning |
 |------|---------|
 | **я** | I |
 | **я́блуко** | apple |
 
-**Приклади — Examples:**
-*   **Я тут.** (I am here.)
-*   **Це яблуко.** (This is an apple.)
+When **Я** follows a consonant, it does not make the "y" sound at all. Instead, it softens the preceding consonant and just makes a simple "a" sound.
 
-The letter **Ю** represents a sound much like the English word «you». It is crucial for many vocabulary words and will be very important when we start learning how words change their endings.
+### Літера Ю
 
-[Anna Ohoiko — Ukrainian Lessons — Ю](https://www.youtube.com/watch?v=9JdIBYCTWGw)
+Це лі́тера Ю. (This is the letter Ю.) The letter **Ю** sounds exactly like "you" (as in "youth") when it begins a word.
+
+Please listen: [Anna Ohoiko — Ukrainian Lessons — Ю](https://www.youtube.com/watch?v=9JdIBYCTWGw)
 
 | Word | Meaning |
 |------|---------|
 | **юна́к** | young man |
-| **ю́шка** | fish soup |
+| **суп-пюре́** | puree soup |
 
-**Приклади — Examples:**
-*   **Там юнак.** (There is a young man.)
-*   **Це юшка.** (This is broth/soup.)
+Just like the letter **Я**, when **Ю** follows a consonant, it immediately softens that consonant and simply makes an "oo" sound.
 
-The letter **Є** represents a sound similar to the beginning of the English word «yellow». It serves as a strong cultural anchor for Ukrainians today. You will hear it in many important geographic and political names, reminding us of the country's European identity.
+### Літера Є
 
-[Anna Ohoiko — Ukrainian Lessons — Є](https://www.youtube.com/watch?v=O0bwRyyBQSc)
+Це лі́тера Є. (This is the letter Є.) The letter **Є** sounds exactly like "ye" (as in "yellow") at the beginning of a word.
+
+Please watch the video: [Anna Ohoiko — Ukrainian Lessons — Є](https://www.youtube.com/watch?v=O0bwRyyBQSc)
 
 | Word | Meaning |
 |------|---------|
 | **Євро́па** | Europe |
 
-**Приклади — Examples:**
-*   **Це Європа.** (This is Europe.)
-*   **Там Європа.** (There is Europe.)
+> [!culture]
+> The word **Євро́па** (Europe) is central to modern Ukrainian identity and political direction, as powerfully demonstrated during the Revolution of Dignity (Euromaidan). Це Євро́па! (This is Europe!)
 
-The letter **Ї** is the strict exception to the dual nature rule. It represents a sound similar to the English word «yeast». It ALWAYS makes two sounds, no matter where it stands in a word. It never softens a preceding consonant.
+It is relatively rare to find **Є** immediately after a consonant, but when you do, it softens the consonant and makes a simple "e" sound.
 
-[Anna Ohoiko — Ukrainian Lessons — Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8)
+### Літера Ї
+
+Це лі́тера Ї. (This is the letter Ї.) The letter **Ї** is the strict exception to the dual nature rule. Це ви́няток. (This is an exception.) Це за́вжди два зву́ки. (These are always two sounds.) It ALWAYS makes two distinct sounds: "yi" (as in "yield"). It NEVER softens a consonant under any circumstances. Це ї́жа. (This is food.) 
+
+Please listen: [Anna Ohoiko — Ukrainian Lessons — Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8)
 
 | Word | Meaning |
 |------|---------|
 | **ї́жа** | food |
 | **Ки́їв** | Kyiv |
 
-**Приклади — Examples:**
-*   **Це їжа.** (This is food.)
-*   **Це Київ.** (This is Kyiv.)
+> [!fact]
+> The letter **Ї** is beautifully and uniquely Ukrainian. During the full-scale invasion, drawing the letter **Ї** in occupied territories became a powerful, defiant symbol of Ukrainian resistance and national identity. Це перемога! (This is a victory!)
 
-> [!culture] Українська культура — Ukrainian Culture
-> The letter **Ї** is uniquely Ukrainian. During times of occupation, it became a powerful symbol of Ukrainian resistance and identity, secretly painted as graffiti on city walls to show defiance.
+### Літера Й
 
-Finally, we have **Й**. Unlike the others in this group, **Й** is a very short consonant. It makes a brief sound, like the «y» in the English word «boy». Remember to keep this sound incredibly short. It never forms a syllable on its own and is very common at the very end of words to cleanly finish a vowel sound.
+Це лі́тера Й. (This is the letter Й.) Це коро́ткий при́голосний. (This is a short consonant.) The letter **Й** is a very short, quick consonant sound. It sounds exactly like the "y" in the English words "boy" or "toy".
 
-[Anna Ohoiko — Ukrainian Lessons — Й](https://www.youtube.com/watch?v=aq0cjB90s3w)
+Please watch the video: [Anna Ohoiko — Ukrainian Lessons — Й](https://www.youtube.com/watch?v=aq0cjB90s3w)
+
+Unlike the vowels we just learned, **Й** is a consonant and never forms a syllable on its own. You will find it frequently at the end of words or next to vowels.
 
 | Word | Meaning |
 |------|---------|
 | **чай** | tea |
 | **мій** | my |
 
-**Приклади — Examples:**
-*   **Це мій чай.** (This is my tea.)
-*   **Мій дім тут.** (My house is here.)
-
 ## М'який знак та апостроф — Soft Sign & Apostrophe
 
-We have covered the letters that make sounds. Now we must look at two symbols that do not make a sound of their own, but instead change how other letters behave.
+We have talked extensively about consonants becoming "soft" or palatalized in Ukrainian. Ukrainian actually has two special symbols that perfectly control this softening process: the soft sign and the apostrophe. І оди́н си́мвол. (And one symbol.) Це ду́же важли́во! (This is very important!)
 
-The first is the soft sign: **Ь** (soft sign).
-This is not a vowel, and it is not a regular consonant. It is a modifier. Its entire job is to soften the consonant that comes immediately before it. If you see a soft sign, you smile slightly and make the preceding consonant very soft, gentle, and airy. English speakers sometimes try to pronounce the soft sign as an extra tiny vowel, but you must avoid this trap. It only modifies what is already there.
+### М'який знак (Ь)
 
-[Anna Ohoiko — Ukrainian Lessons — Ь](https://www.youtube.com/watch?v=cJlal8XKBxo)
+Це м'яки́й знак. (This is the soft sign.) The soft sign **Ь** is not actually a letter with its own distinct sound. It is a powerful modifier. М'яки́й знак — це лише́ си́мвол. (The soft sign is just a symbol.) Це м'яки́й звук. (This is a soft sound.) Its only job in the entire language is to soften the consonant that comes directly before it.
+
+Please listen carefully: [Anna Ohoiko — Ukrainian Lessons — Ь](https://www.youtube.com/watch?v=cJlal8XKBxo)
+
+Because it has no sound of its own, it acts as a modifier that changes the quality of the preceding consonant, making it sound softer (pronounced closer to the roof of the mouth).
 
 | Word | Meaning |
 |------|---------|
 | **день** | day |
-| **Львів** | Lviv (city) |
+| **Львів** | Lviv |
 
-**Приклади — Examples:**
-*   **Добрий день!** (Good day!)
-*   **Це Львів.** (This is Lviv.)
+In the word **день**, the **Ь** smoothly makes the final N sound soft. In the famous city name **Львів**, the **Ь** effectively makes the L sound soft. 
 
-> [!warning] Важливе правило — Important Rule
-> The word **день** is only one syllable! Do not say «de-ne». The soft sign only changes the sound of the letter **н** and does not create a new syllable.
+### Апостроф (')
 
-The second symbol is the apostrophe: **'**.
-Think of the apostrophe as a strict blocker or a solid brick wall. When it appears between a hard consonant and an iotated vowel, it completely stops the vowel from softening the consonant. It creates a tiny, hard pause in the middle of the word, forcing the vowel to keep its full two-sound pronunciation. This pause is short but very noticeable when native speakers talk.
+Це апо́строф. (This is an apostrophe.) The apostrophe serves the exact opposite purpose in Ukrainian writing. Апо́строф — це бар'є́р. (The apostrophe is a barrier.) It acts as a strong blocker or a protective shield. It clearly separates a hard consonant from a following iotated vowel (**Я**, **Ю**, **Є**, **Ї**). 
+
+Normally, an iotated vowel automatically softens the consonant directly before it. The apostrophe prevents this softening and forces the iotated vowel to keep its full "y" sound (two sounds: y + vowel). 
 
 | Word | Meaning |
 |------|---------|
-| **м'яч** | ball |
 | **сім'я́** | family |
+| **м'яч** | ball |
 
-**Приклади — Examples:**
-*   **Це м'яч.** (This is a ball.)
-*   **Це моя сім'я.** (This is my family.)
+In the word **сім'я́**, the apostrophe strictly stops the **М** from becoming soft and perfectly ensures the **Я** is pronounced fully as "ya". 
 
-Here is the core rule to remember: the soft sign (**Ь**) softens the letter that comes before it, while the apostrophe (**'**) acts as a wall that blocks softening completely.
-
-> [!culture] Ваше перше віршоване читання — Your First Poetry Reading
-> Now that you know the rules, try reading this famous snippet by Taras Shevchenko (Тарас Шевченко). Do not worry about meaning; just focus on decoding the sounds:
-> 
-> **Садок вишневий коло хати,** (A cherry orchard by the house,)
-> **Хрущі над вишнями гудуть,** (Beetles hum above the cherry trees,)
-> **Плугатарі з плугами йдуть,** (Ploughmen with ploughs go by,)
-> **Співають ідучи дівчата,** (Girls sing as they go,)
-> **А матері вечерять ждуть.** (And mothers wait to have supper.)
+> [!tip]
+> Memorize this incredibly simple core rule: The soft sign (**Ь**) softens what comes BEFORE it. The apostrophe (**'**) BLOCKS softening and fiercely keeps the "y" sound in the following iotated vowel. Це пра́вило. (This is a rule.)
 
 ## Підсумок: Весь алфавіт — The Full Alphabet
 
-Congratulations! You have reached a massive milestone in your language journey. You now know all thirty-three letters of the Ukrainian Cyrillic alphabet. Let us look at the complete sequence:
+Ось і все! (That is all!) Це весь алфаві́т! (This is the whole alphabet!) Чудо́во! (Excellent!) You have now learned every letter and special symbol needed to read Ukrainian.
 
-**А а, Б б, В в, Г г, Ґ ґ, Д д, Е е, Є є, Ж ж, З з, И и, І і, Ї ї, Й й, К к, Л л, М м, Н н, О о, П п, Р р, С с, Т т, У у, Ф ф, Х х, Ц ц, Ч ч, Ш ш, Щ щ, Ь ь, Ю ю, Я я**
+Here is the complete thirty-three letter Ukrainian alphabet in its traditional order:
 
-It consists of:
-* **10 голосні (vowels):** А, Е, И, І, О, У + 4 йотовані (Є, Ї, Ю, Я)
-*   **22 приголосні (consonants)**
-*   **1 special symbol:** Ь
-*   **1 apostrophe:** '
-*   **2 digraphs:** ДЖ, ДЗ
+**А - Б - В - Г - Ґ - Д - Е - Є - Ж - З - И - І - Ї - Й - К - Л - М - Н - О - П - Р - С - Т - У - Ф - Х - Ц - Ч - Ш - Щ - Ь - Ю - Я**
 
-### Практика читання — Reading Practice
+The alphabet is made up of ten vowels (including the four iotated vowels), twenty-two consonants, and one soft sign modifier. We also use two digraphs (ДЖ, ДЗ) and the apostrophe symbol. 
 
-Now that you know every letter, practice reading these common Ukrainian words out loud. You can now decode all of them!
+Your next step will be to learn about syllables and word division.
 
-**Люди та сім'я — People & Family:**
-мама (mom), тато (dad), син (son), брат (brother), сестра (sister).
+---
 
-**Їжа та напої — Food & Drinks:**
-борщ (borscht), сало (salo), хліб (bread), вода (water), чай (tea).
+## Summary
 
-**Міста та місця — Cities & Places:**
-Київ (Kyiv), Львів (Lviv), дім (house), школа (school), місто (city).
+You have successfully learned the final characters of the Ukrainian alphabet. You now completely know the affricates, the rare letters, the interesting dual nature of iotated vowels, and exactly how the soft sign and apostrophe deeply change pronunciation. You are finally ready to read absolutely any Ukrainian word you encounter!
 
-**Речі — Things:**
-стіл (table), вікно (window), телефон (phone), книга (book).
+- Символ для м'якого звуку? (Symbol for a soft sound?) — М'який знак (Ь) / The soft sign (Ь)
+- Літера для двох звуків? (Letter for two sounds?) — Ї / Ї
+- Літера для звуків Ш та Ч? (Letter for sounds SH and CH?) — Щ / Щ
+- Функція апострофа? (Function of the apostrophe?) — Бар'єр для м'якості / Barrier for softness
 
-**Тварини — Animals:**
-кіт (cat), собака (dog), птах (bird), миша (mouse).
-
-> [!example] Додатковий текст — Bonus Text
-> **Моє місто (My city)**
-> Це Київ. Київ — велике місто. Тут центр, кафе та школи. Сьогодні гарний день. На вулиці сонце.
-> *(This is Kyiv. Kyiv is a big city. Here are the center, cafes, and schools. Today is a good day. The sun is outside.)*
-> 
-> **Моя сім'я (My family)**
-> Це моя сім'я. Тут мама, тато, брат і сестра. Там кіт і собака. Це борщ і сало.
-> *(This is my family. Here are mom, dad, brother, and sister. There are a cat and a dog. This is borscht and salo.)*
-
-Before moving on, review these self-check questions to test your knowledge:
-
-1. **Яка буква завжди має два звуки? (Which letter always makes two sounds and never softens a consonant?)**
-   It is **Ї**.
-2. **Яка функція апострофа? (What is the exact function of the apostrophe?)**
-   It acts as a strict blocker to prevent the softening of the consonant before an iotated vowel.
-3. **Чим буква Щ відрізняється від Ш? (How is the letter Щ different from the letter Ш?)**
-   The letter **Щ** is a double sound (merging the sounds of English «sh» and «ch»), while **Ш** is a single sound.
-
-You are now ready to read any word in the Ukrainian language. In the next module, we will explore syllables and word division.
+---

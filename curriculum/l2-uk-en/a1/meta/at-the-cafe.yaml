@@ -2,17 +2,17 @@ slug: at-the-cafe
 title: At the Café
 word_target: 1200
 content_outline:
-- section: Вступ (Introduction)
+- title: Вступ (Introduction)
   slug: vtsup
   words: 300
   points:
-  - Introduce the 'Chatty Barista' persona using English scaffolding to set the context
-    of polite ordering.
+  - Introduce the 'Chatty Barista' persona using English scaffolding to set a welcoming
+    context for polite ordering.
   - 'Cultural Hook: Share the tradition of Lviv coffee culture and the brief legend
-    of Yuriy Kulchytsky to ground the lesson.'
+    of Yuriy Kulchytsky.'
   - 'Vocabulary Presentation: Introduce essential cafe vocabulary (кава, чай, вода,
-    меню, офіціант) in a table, with IPA on the first occurrence.'
-- section: Презентація (Presentation)
+    меню, рахунок) in a table, with IPA on the first occurrence.'
+- title: Презентація (Presentation)
   slug: prezentatsiya
   words: 400
   points:
@@ -20,28 +20,28 @@ content_outline:
     focusing on feminine -а/-я changing to -у/-ю.'
   - 'Provide clear examples in H3 subsections: «вода» → «воду», «кава» → «каву», and
     the unchanged masculine «сік» → «сік».'
-  - 'Polite Phrases: Contrast direct ''Я хочу'' with the culturally polite ''Мені,
-    будь ласка...'' and ''Я буду...''.'
-  - 'Lexical Chunks: Teach ''з молоком'' and ''без цукру'' as fixed vocabulary phrases,
-    without explaining Instrumental or Genitive case theory.'
-- section: Практика (Practice)
+  - 'Polite Phrases: Contrast direct «Я хочу» with the culturally polite «Мені, будь
+    ласка...» and «Я буду...».'
+  - 'Lexical Chunks: Teach «з молоком» and «без цукру» as fixed vocabulary phrases,
+    without explaining Instrumental or Genitive cases.'
+- title: Практика (Practice)
   slug: praktyka
   words: 300
   points:
-  - 'Indirect Requests: Teach ''Можна [noun], будь ласка?'' as the primary way to
-    ask for things, strictly avoiding imperative verbs.'
-  - 'Vocabulary Usage: Explicitly contrast ''рахунок'' (the bill to pay) with ''чек''
+  - 'Indirect Requests: Teach «Можна [noun], будь ласка?» as the primary way to ask
+    for things, strictly avoiding imperative verbs.'
+  - 'Vocabulary Usage: Explicitly contrast «рахунок» (the bill to pay) with «чек»
     (the receipt), framing it as a common learner trap.'
-  - 'Payment Methods: Introduce ''карткою'' and ''готівкою'' as fixed chunks for paying.'
+  - 'Payment Methods: Introduce «карткою» and «готівкою» as fixed chunks for paying.'
   - 'Mini-Dialogue: A realistic exchange featuring ordering and clarification (e.g.,
-    ''Яку каву?'').'
-- section: Продукція та Підсумок (Production and Summary)
+    «Яку каву?»).'
+- title: Продукція та Підсумок (Production and Summary)
   slug: pidsumok
   words: 200
   points:
   - 'Roleplay Text: A short reading scenario simulating a full café visit, from greeting
     to paying the bill.'
   - 'Grammar Recap: A concise visual table reviewing the Accusative noun endings for
-    food/drinks.'
-  - 'Self-Check: 3-4 simple comprehension questions to verify understanding of ''рахунок''
-    vs ''чек'' and Accusative transformation.'
+    food and drinks.'
+  - 'Self-Check: 3-4 simple comprehension questions to verify understanding of «рахунок»
+    vs «чек» and Accusative transformation.'

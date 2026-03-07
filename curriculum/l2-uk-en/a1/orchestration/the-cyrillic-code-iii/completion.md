@@ -2,9 +2,9 @@ PASS: pipeline a1 3
 
   Module:   the-cyrillic-code-iii
   Track:    a1
-  Mode:     v4
-  Words:    1598 (target: 1200)
+  Mode:     v5
+  Words:    1643 (target: 1200)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-05T17:34:17Z
+  Date:     2026-03-06T21:21:39Z

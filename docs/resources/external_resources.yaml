@@ -183,6 +183,22 @@ resources:
       url: https://www.ukrainianlessons.com/episode22/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma 21.1: Present Tense (Читати Type)'
+      url: https://opentext.ku.edu/dobraforma/chapter/21-1/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 21.2: Present Tense (Працювати Type)'
+      url: https://opentext.ku.edu/dobraforma/chapter/21-2/
+      relevance: high
+      source: University of Kansas
+    - title: Verb Tenses Overview
+      url: https://www.ukrainianlessons.com/ukrainian-tenses/
+      relevance: high
+      source: Downloadable conjugation chart
+    - title: 'Grammar Point: Verb conjugations in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu57/
+      relevance: high
+      source: ukrainianlessons.com
   a1-the-living-verb-ii:
     youtube:
     - title: Ukrainian Present Tense. The First Conjugation Group.
@@ -305,6 +321,18 @@ resources:
       source: Complete guide with tables and examples
     - title: 'Grammar point: Accusative case / Direct object in Ukrainian'
       url: https://www.ukrainianlessons.com/fmu15/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Shopping for clothes — Accusative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode32/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Talking about books in Ukrainian — Accusative case of people
+      url: https://www.ukrainianlessons.com/episode33/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Asking for advice + Accusative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode56/
       relevance: high
       source: ukrainianlessons.com
   a1-the-accusative-ii-people:
@@ -562,6 +590,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode114/
       relevance: high
       source: ukrainianlessons.com
+    - title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood in Ukrainian
+      url: https://www.ukrainianlessons.com/lesson/111/
+      relevance: high
+      source: ukrainianlessons.com
   a1-body-and-health:
     articles:
     - title: Body Parts Vocabulary
@@ -760,36 +792,11 @@ resources:
       url: https://www.ukrainianlessons.com/episode43/
       relevance: high
       source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Plural of Ukrainian Nouns — Special Forms
       url: https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/
       relevance: high
       source: ukrainianlessons.com
-  a2-plural-adjective-declension:
-    articles:
-    - title: My Room – Plural nouns in Ukrainian
-      url: https://www.ukrainianlessons.com/episode42/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: My pets + Special plural forms
-      url: https://www.ukrainianlessons.com/episode44/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Looking for an apartment + Special plural forms
-      url: https://www.ukrainianlessons.com/episode43/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Plural of Ukrainian Nouns — Special Forms
-      url: https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/
-      relevance: high
-      source: ukrainianlessons.com
+  a2-plural-adjective-declension: {}
   a2-all-cases-practice:
     websites:
     - title: 'Dobra Forma 4-1: Locative Case (в and у)'
@@ -821,40 +828,7 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-cases-chart/
       relevance: high
       source: Unknown
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-at-the-post-office-and-bank:
-    articles:
-    - title: ULP 2-51 Electronics and technology + Dative case
-      url: https://www.ukrainianlessons.com/lesson/51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-52 Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/lesson/52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-53 Social Media in Ukrainian + Dative case
-      url: https://www.ukrainianlessons.com/lesson/53/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-56 Asking for an advice + Accusative case
-      url: https://www.ukrainianlessons.com/lesson/56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/lesson/57/
-      relevance: high
-      source: ukrainianlessons.com
+  a2-at-the-post-office-and-bank: {}
   a2-checkpoint-cases:
     youtube:
     - title: How I learnt my first 500 words in Ukrainian ...
@@ -877,10 +851,6 @@ resources:
       source: ukrainianlessons.com
     - title: Talking about books in Ukrainian — Accusative case of people
       url: https://www.ukrainianlessons.com/episode33/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: How to talk about transport in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu5/
       relevance: high
       source: ukrainianlessons.com
   a2-aspect-introduction:
@@ -907,10 +877,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
       relevance: high
       source: ukrainianlessons.com
-    - title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/92/
-      relevance: high
-      source: ukrainianlessons.com
   a2-the-completed-past:
     websites:
     - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
@@ -921,6 +887,14 @@ resources:
     - title: Ukrainian Lessons Podcast Season 4
       url: https://www.ukrainianlessons.com/episode157/
       relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 4
+      url: https://www.ukrainianlessons.com/episode132/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 4
+      url: https://www.ukrainianlessons.com/episode133/
+      relevance: medium
       source: ukrainianlessons.com
   a2-future-plans-and-promises:
     websites:
@@ -933,16 +907,8 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/97/
       relevance: high
       source: ukrainianlessons.com
-    - title: Past Tense in Ukrainian
-      url: https://www.ukrainianlessons.com/grammar-past-tense/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Future Tense in Ukrainian
       url: https://www.ukrainianlessons.com/grammar-future/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/26/
       relevance: high
       source: ukrainianlessons.com
   a2-aspect-morphology:
@@ -969,10 +935,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
       relevance: high
       source: ukrainianlessons.com
-    - title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/92/
-      relevance: high
-      source: ukrainianlessons.com
   a2-aspect-mastery-pairs:
     websites:
     - title: 'Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)'
@@ -988,10 +950,6 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
       relevance: high
       source: ukrainianlessons.com
-    - title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/92/
-      relevance: high
-      source: ukrainianlessons.com
     - title: 'Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs)'
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
       relevance: high
@@ -1002,45 +960,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/12-1/
       relevance: high
       source: University of Kansas
-    articles:
-    - title: ULP 2-51 Electronics and technology + Dative case
-      url: https://www.ukrainianlessons.com/lesson/51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-52 Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/lesson/52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-53 Social Media in Ukrainian + Dative case
-      url: https://www.ukrainianlessons.com/lesson/53/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-56 Asking for an advice + Accusative case
-      url: https://www.ukrainianlessons.com/lesson/56/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-reflexive-sebe:
-    articles:
-    - title: 'Dobra Forma: Present Tense of -ся Verbs (First Conjugation)'
-      url: https://opentext.ku.edu/dobraforma/chapter/23-1/
-      relevance: high
-      source: dobraforma
-    - title: 'Dobra Forma: Present Tense of -ся Verbs (Second Conjugation)'
-      url: https://opentext.ku.edu/dobraforma/chapter/23-2/
-      relevance: high
-      source: dobraforma
-    - title: 'Dobra Forma: Past Tense of -ся Verbs'
-      url: https://opentext.ku.edu/dobraforma/chapter/24-2/
-      relevance: high
-      source: dobraforma
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)'
-      url: https://opentext.ku.edu/dobraforma/chapter/13-2/
-      relevance: high
-      source: dobraforma
+  a2-reflexive-sebe: {}
   a2-bigger-better-stronger:
     websites:
     - title: 'Dobra Forma 20-1: Comparative Degree'
@@ -1055,15 +975,6 @@ resources:
       url: https://www.talkukrainian.com/adjectives-degrees-comparison/
       relevance: high
       source: Unknown
-    articles:
-    - title: Adjectives Guide
-      url: https://www.ukrainianlessons.com/vocabulary-adjectives/
-      relevance: high
-      source: Unknown
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
   a2-the-best-the-worst:
     websites:
     - title: 'Dobra Forma 20-3: Superlative Degree'
@@ -1074,11 +985,6 @@ resources:
       url: https://www.talkukrainian.com/adjectives-degrees-comparison/
       relevance: high
       source: Unknown
-    articles:
-    - title: Adjectives Guide
-      url: https://www.ukrainianlessons.com/vocabulary-adjectives/
-      relevance: high
-      source: Unknown
   a2-preferences-and-choices:
     websites:
     - title: 'Dobra Forma 20-1: Comparative Degree'
@@ -1086,14 +992,6 @@ resources:
       relevance: high
       source: University of Kansas
     articles:
-    - title: Nouns After Numbers
-      url: https://www.ukrainianlessons.com/nouns-after-numbers/
-      relevance: high
-      source: Unknown
-    - title: Numbers Guide
-      url: https://www.ukrainianlessons.com/numbers/
-      relevance: high
-      source: Unknown
     - title: Electronics and technology + Dative Case
       url: https://www.ukrainianlessons.com/episode51/
       relevance: high
@@ -1126,8 +1024,8 @@ resources:
       url: https://www.ukrainianlessons.com/nouns-after-numbers/
       relevance: high
       source: Ukrainian Lessons
-    - title: Plural of Ukrainian Nouns — Special Forms
-      url: https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/
+    - title: 'Grammar point: numeral / noun agreement in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu7/
       relevance: high
       source: ukrainianlessons.com
   a2-numeral-case-agreement:
@@ -1136,22 +1034,6 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/16-3/
       relevance: high
       source: dobraforma
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Syrnyky recipe + Genitive case
-      url: https://www.ukrainianlessons.com/episode49/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
-      relevance: high
-      source: ukrainianlessons.com
   a2-complete-imperative:
     websites:
     - title: 'Dobra Forma 29-1: Imperatives (Читай Type)'
@@ -1209,11 +1091,6 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/24-1/
       relevance: high
       source: University of Kansas
-    articles:
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
   a2-i-feel-like:
     websites:
     - title: Feelings and Emotions in Ukrainian
@@ -1225,58 +1102,8 @@ resources:
       url: https://www.ukrainianlessons.com/emotions/
       relevance: high
       source: Ukrainian Lessons
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/episode52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Social Media in Ukrainian + Dative Case
-      url: https://www.ukrainianlessons.com/episode53/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-which-one:
-    articles:
-    - title: ULP 2-51 Electronics and technology + Dative case
-      url: https://www.ukrainianlessons.com/lesson/51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-52 Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/lesson/52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-53 Social Media in Ukrainian + Dative case
-      url: https://www.ukrainianlessons.com/lesson/53/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-56 Asking for an advice + Accusative case
-      url: https://www.ukrainianlessons.com/lesson/56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/lesson/57/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-time-clauses:
-    articles:
-    - title: Prepositions of Time in Ukrainian
-      url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Dates in Ukrainian
-      url: https://www.ukrainianlessons.com/dates-in-ukrainian/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Dobra Forma: Genitive Case of Adjectives and Ordinal Numerals (Time Expressions)'
-      url: https://opentext.ku.edu/dobraforma/chapter/17-4/
-      relevance: high
-      source: dobraforma
+  a2-which-one: {}
+  a2-time-clauses: {}
   a2-health-and-body:
     articles:
     - title: Something Hurts — Health Vocabulary in Ukrainian
@@ -1287,16 +1114,8 @@ resources:
       url: https://www.ukrainianlessons.com/ph-health/
       relevance: high
       source: ukrainianlessons.com
-    - title: How to ask somebody on a date in Ukrainian
-      url: https://www.ukrainianlessons.com/fmu36/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Vocabulary booster! Body parts in Ukrainian
       url: https://www.ukrainianlessons.com/fmu52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Lessons Podcast Season 5
-      url: https://www.ukrainianlessons.com/episode170/
       relevance: high
       source: ukrainianlessons.com
   a2-checkpoint:
@@ -1305,23 +1124,6 @@ resources:
       url: https://www.talkukrainian.com/relative-pronouns-ukrainian/
       relevance: high
       source: Unknown
-    articles:
-    - title: Ukrainian Conjunctions Guide
-      url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
-      relevance: high
-      source: Unknown
-    - title: Something Hurts Podcast
-      url: https://www.ukrainianlessons.com/something-hurts/
-      relevance: high
-      source: Unknown
-    - title: Ukrainian Registers
-      url: https://www.ukrainianlessons.com/registers/
-      relevance: high
-      source: Детальний посібник зі стилістики
-    - title: Ukrainer
-      url: https://www.youtube.com/c/Ukrainer
-      relevance: high
-      source: автентичні українські матеріали
   a2-basic-motion-prefixes:
     websites:
     - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
@@ -1337,18 +1139,6 @@ resources:
       url: https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/
       relevance: high
       source: Audio examples and drills.
-    - title: 'Dobra Forma: Verbs of Motion (іти – їхати)'
-      url: https://opentext.ku.edu/dobraforma/chapter/28-1/
-      relevance: high
-      source: dobraforma
-    - title: 'Dobra Forma: Verbs of Motion (ходити – їздити)'
-      url: https://opentext.ku.edu/dobraforma/chapter/28-2/
-      relevance: high
-      source: dobraforma
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
   a2-advanced-motion-prefixes:
     youtube:
     - title: 'Learn verbs of movements # 96...'
@@ -1360,23 +1150,6 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/28-3/
       relevance: high
       source: University of Kansas
-    articles:
-    - title: 'Dobra Forma: Verbs of Motion (іти – їхати)'
-      url: https://opentext.ku.edu/dobraforma/chapter/28-1/
-      relevance: high
-      source: dobraforma
-    - title: 'Dobra Forma: Verbs of Motion (ходити – їздити)'
-      url: https://opentext.ku.edu/dobraforma/chapter/28-2/
-      relevance: high
-      source: dobraforma
-    - title: Ukrainian History Test – Review 71-79
-      url: https://www.ukrainianlessons.com/episode80/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Lviv Food Guide
-      url: https://www.ukrainianlessons.com/lviv-food-guide/
-      relevance: high
-      source: ukrainianlessons.com
   a2-action-verb-prefixes:
     youtube:
     - title: 'Prefix з-/с-: Which one to use? ...'
@@ -1447,22 +1220,6 @@ resources:
       url: https://www.ukrainianlessons.com/ph-house/
       relevance: high
       source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
-      relevance: high
-      source: ukrainianlessons.com
   a2-nature-and-weather:
     youtube:
     - title: Nature & Weather in Ukrainian...
@@ -1474,20 +1231,8 @@ resources:
       url: https://www.ukrainianlessons.com/fmu28/
       relevance: high
       source: ukrainianlessons.com
-    - title: Looking for an apartment + Special plural forms
-      url: https://www.ukrainianlessons.com/episode43/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Talking about weather in Ukrainian
       url: https://www.ukrainianlessons.com/episode16/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
       relevance: high
       source: ukrainianlessons.com
   a2-emotions-personality:
@@ -1499,22 +1244,6 @@ resources:
     articles:
     - title: Emotions and Feelings in Ukrainian
       url: https://www.ukrainianlessons.com/emotions-in-ukrainian/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Lessons Podcast Season 6
-      url: https://www.ukrainianlessons.com/episode215/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/episode52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Social Media in Ukrainian + Dative Case
-      url: https://www.ukrainianlessons.com/episode53/
       relevance: high
       source: ukrainianlessons.com
   a2-work-professions:
@@ -1554,38 +1283,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode53/
       relevance: high
       source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Making a hair appointment + Dates & Locative case with months in Ukrainian
-      url: https://www.ukrainianlessons.com/episode68/
-      relevance: high
-      source: ukrainianlessons.com
   a2-hobbies-leisure:
     articles:
     - title: Vocabulary booster! Hobbies in Ukrainian
       url: https://www.ukrainianlessons.com/fmu23/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Christmas dinner in Ukraine + Instrumental case
-      url: https://www.ukrainianlessons.com/episode61/
       relevance: high
       source: ukrainianlessons.com
   a2-education-learning:
@@ -1599,54 +1300,16 @@ resources:
       url: https://www.ukrainianlessons.com/ph-education/
       relevance: high
       source: ukrainianlessons.com
-  a2-checkpoint-full-grammar:
-    articles:
-    - title: My Room – Plural nouns in Ukrainian
-      url: https://www.ukrainianlessons.com/episode42/
+    - title: Your schedule in Ukrainian + Accusative case with prepositions
+      url: https://www.ukrainianlessons.com/episode57/
       relevance: high
       source: ukrainianlessons.com
-    - title: Looking for an apartment + Special plural forms
-      url: https://www.ukrainianlessons.com/episode43/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: My pets + Special plural forms
-      url: https://www.ukrainianlessons.com/episode44/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-asking-for-directions:
-    articles:
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
+  a2-checkpoint-full-grammar: {}
+  a2-asking-for-directions: {}
   a2-social-media-ukrainian:
     articles:
     - title: Social Media in Ukrainian + Dative Case
       url: https://www.ukrainianlessons.com/episode53/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: My Room – Plural nouns in Ukrainian
-      url: https://www.ukrainianlessons.com/episode42/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Review: 46-49 + What I eat in a day in Ukrainian'
-      url: https://www.ukrainianlessons.com/episode50/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 10 ways to express gratitude in Ukrainian
-      url: https://www.ukrainianlessons.com/episode54/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
       relevance: high
       source: ukrainianlessons.com
   a2-impersonal-passive:
@@ -1655,22 +1318,6 @@ resources:
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська
       relevance: high
       source: пошук відеоуроків
-    - title: My pets + Special plural forms
-      url: https://www.ukrainianlessons.com/episode44/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
   a1-food-and-shopping:
     youtube:
     - title: 20 Ukrainian Food Words You Need To Know
@@ -1777,6 +1424,23 @@ resources:
       url: https://www.youtube.com/watch?v=6B_GwMcttmU
       relevance: high
       channel: BenjaminAngwin
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode211/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode212/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode214/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode218/
+      relevance: medium
+      source: ukrainianlessons.com
   a2-shopping-services:
     youtube:
     - title: 'UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop'
@@ -1884,10 +1548,6 @@ resources:
       url: https://www.ukrainianlessons.com/intro-cases/
       relevance: high
       source: Overview of all 7 cases
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
-      relevance: high
-      source: ukrainianlessons.com
   a2-the-dative-ii-nouns:
     youtube:
     - title: Dative Case Practice
@@ -1916,33 +1576,12 @@ resources:
       url: https://www.ukrainianlessons.com/intro-cases/
       relevance: high
       source: Unknown
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
   a2-dative-verbs:
     websites:
     - title: 'Dobra Forma 11-1: Dative Case (Feminine)'
       url: https://opentext.ku.edu/dobraforma/chapter/11-1/
       relevance: high
       source: University of Kansas
-    articles:
-    - title: Electronics and technology + Dative Case
-      url: https://www.ukrainianlessons.com/episode51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/episode52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Vacation plans & the verbs of movement in Ukrainian
-      url: https://www.ukrainianlessons.com/episode59/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Social Media in Ukrainian + Dative Case
-      url: https://www.ukrainianlessons.com/episode53/
-      relevance: high
-      source: ukrainianlessons.com
   a2-the-instrumental-i-accompaniment:
     youtube:
     - title: Instrumental Case Explained
@@ -1978,18 +1617,6 @@ resources:
       relevance: high
       source: University of Kansas
     articles:
-    - title: Christmas dinner in Ukraine + Instrumental case
-      url: https://www.ukrainianlessons.com/episode61/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: New Year’s Eve in Ukraine + Instrumental case of Pronouns
-      url: https://www.ukrainianlessons.com/episode62/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Holiday Greetings
-      url: https://www.ukrainianlessons.com/episode63/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Review + My American (road) trip
       url: https://www.ukrainianlessons.com/episode65/
       relevance: high
@@ -2009,14 +1636,6 @@ resources:
       url: https://www.ukrainianlessons.com/episode61/
       relevance: high
       source: ukrainianlessons.com
-    - title: Ukrainian Holiday Greetings
-      url: https://www.ukrainianlessons.com/episode63/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Review + My American (road) trip
-      url: https://www.ukrainianlessons.com/episode65/
-      relevance: high
-      source: ukrainianlessons.com
   a2-spatial-prepositions:
     websites:
     - title: 'Dobra Forma 4-1: Locative Case (в and у)'
@@ -2032,20 +1651,8 @@ resources:
       url: https://www.ukrainianlessons.com/prepositions-cases/
       relevance: high
       source: Unknown
-    - title: Cases Overview
-      url: https://www.ukrainianlessons.com/intro-cases/
-      relevance: high
-      source: Unknown
-    - title: ULP 2-51 Electronics and technology + Dative case
-      url: https://www.ukrainianlessons.com/lesson/51/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Location and Destination Prepositions in Ukrainian
       url: https://www.ukrainianlessons.com/location-destination-prepositions/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
       relevance: high
       source: ukrainianlessons.com
   a2-logical-prepositions:
@@ -2067,19 +1674,6 @@ resources:
       url: https://talkukrainian.com/grammatical-cases/
       relevance: high
       source: Practice exercises
-    articles:
-    - title: Ukrainian Cases Overview
-      url: https://www.ukrainianlessons.com/intro-cases/
-      relevance: high
-      source: All 7 cases explained
-    - title: ULP 2-51 Electronics and technology + Dative case
-      url: https://www.ukrainianlessons.com/lesson/51/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
   b1-how-to-talk-about-grammar:
     youtube:
     - title: Ukrainian Cases Explained
@@ -3365,204 +2959,37 @@ resources:
       url: https://talkukrainian.com/indefinite-negative-pronouns/
       relevance: high
       source: talkukrainian
+    - title: Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian
+      url: https://www.ukrainianlessons.com/episode106/
+      relevance: high
+      source: ukrainianlessons.com
   a2-smart-shopping:
     articles:
     - title: Shopping for clothes — Accusative case in Ukrainian
       url: https://www.ukrainianlessons.com/episode32/
       relevance: high
       source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
     - title: 'Grammar point: Accusative case / Direct object in Ukrainian'
       url: https://www.ukrainianlessons.com/fmu15/
       relevance: high
       source: ukrainianlessons.com
-  a2-sports-fitness:
-    articles:
-    - title: Christmas dinner in Ukraine + Instrumental case
-      url: https://www.ukrainianlessons.com/episode61/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: New Year’s Eve in Ukraine + Instrumental case of Pronouns
-      url: https://www.ukrainianlessons.com/episode62/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-at-the-pharmacy:
-    articles:
-    - title: Ukrainian Holiday Greetings
-      url: https://www.ukrainianlessons.com/episode63/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Syrnyky recipe + Genitive case
-      url: https://www.ukrainianlessons.com/episode49/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-rental-accommodation:
-    articles:
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
+  a2-sports-fitness: {}
+  a2-at-the-pharmacy: {}
+  a2-rental-accommodation: {}
   a2-scheduling-appointments:
     articles:
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
     - title: Your schedule in Ukrainian + Accusative case with prepositions
       url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
       relevance: high
       source: ukrainianlessons.com
     - title: Telling time in Ukrainian + Ordinal numbers & Locative case
       url: https://www.ukrainianlessons.com/episode67/
       relevance: high
       source: ukrainianlessons.com
-  a2-giving-directions:
-    articles:
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: 'Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)'
-      url: https://opentext.ku.edu/dobraforma/chapter/13-2/
-      relevance: high
-      source: dobraforma
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-online-services:
-    articles:
-    - title: Asking for advice + Accusative case in Ukrainian
-      url: https://www.ukrainianlessons.com/episode56/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Your schedule in Ukrainian + Accusative case with prepositions
-      url: https://www.ukrainianlessons.com/episode57/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Sharing memories + Locative case with places
-      url: https://www.ukrainianlessons.com/episode66/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Telling time in Ukrainian + Ordinal numbers & Locative case
-      url: https://www.ukrainianlessons.com/episode67/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-participles-passive:
-    articles:
-    - title: Ukrainian Holiday Greetings
-      url: https://www.ukrainianlessons.com/episode63/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: At the grocery store + Genitive case
-      url: https://www.ukrainianlessons.com/episode46/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Food festivals + Genitive case
-      url: https://www.ukrainianlessons.com/episode47/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Eating habits + Genitive case
-      url: https://www.ukrainianlessons.com/episode48/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Syrnyky recipe + Genitive case
-      url: https://www.ukrainianlessons.com/episode49/
-      relevance: high
-      source: ukrainianlessons.com
-  a2-a2-final-exam:
-    articles:
-    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
-      url: https://www.ukrainianlessons.com/episode58/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Ukrainian Holiday Greetings
-      url: https://www.ukrainianlessons.com/episode63/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Buying a phone in Ukraine + Dative case
-      url: https://www.ukrainianlessons.com/episode52/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: Christmas dinner in Ukraine + Instrumental case
-      url: https://www.ukrainianlessons.com/episode61/
-      relevance: high
-      source: ukrainianlessons.com
-    - title: New Year’s Eve in Ukraine + Instrumental case of Pronouns
-      url: https://www.ukrainianlessons.com/episode62/
-      relevance: high
-      source: ukrainianlessons.com
+  a2-giving-directions: {}
+  a2-online-services: {}
+  a2-participles-passive: {}
+  a2-a2-final-exam: {}
   b1-checkpoint-aspect-mastery:
     articles:
     - title: Ukrainian Verb Prefixes
@@ -4012,3 +3439,23 @@ resources:
       relevance: high
       source: ukrainianlessons.com
   a1-syllables-and-word-division: {}
+  a2-because-and-although:
+    articles:
+    - title: Ukrainian Conjunctions — Basic Overview
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Ukrainian conjunctions'
+      url: https://talkukrainian.com/conjunctions/
+      relevance: medium
+      source: talkukrainian
+    - title: Ukrainian Conjunctions Guide — Advanced
+      url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
+      relevance: medium
+      source: ukrainianlessons.com
+  a2-in-order-to:
+    articles:
+    - title: Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
+      url: https://www.ukrainianlessons.com/episode118/
+      relevance: medium
+      source: ukrainianlessons.com

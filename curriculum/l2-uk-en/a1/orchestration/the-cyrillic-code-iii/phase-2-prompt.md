@@ -55,6 +55,10 @@ METALANGUAGE: English-first, Ukrainian in parentheses
 
 
 
+
+
+NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+
 ## Textbook Reference Examples (from real Ukrainian буквар)
 
 These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration for style and difficulty level** — notice how they use simple syllable combinations, short words, and build progressively. Do NOT copy them verbatim, but match their pedagogical approach and simplicity.
@@ -165,16 +169,29 @@ These are real exercises from Ukrainian 1st-grade primers. Use them as **inspira
 Е е  . . . . . .
 ```
 
+
+
 ---
 
 ## Writing Instructions
 
 Write the lesson prose for **The Cyrillic Code III** (a1 track).
 
-- **Target**: approximately 1200 words
+- **Target**: 1200–1800 words (below 1200 = FAIL, above 1800 = overproduction that increases error surface)
 - **Immersion**: TARGET: 10-25% Ukrainian, 75-90% English. ALL explanatory prose in English. Grammar explained in English. Ukrainian in examples and short phrases only — always with English translations. Callout text in English. Ukrainian sentences max 10 words.
-- **Engagement callouts**: 4+ across sections, at least 3 different types
-- **Structure**: Follow the content_outline from `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-iii.yaml` — each section maps to an H2
+- **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than 3 callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
+- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+
+## REQUIRED H2 Sections (use EXACT titles)
+
+Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
+
+- `## Вступ — Introduction` (~150 words)
+- `## Приголосні — Consonants Б, Д, П` (~250 words)
+- `## Приголосні — Consonants З, Г, Х` (~250 words)
+- `## Дзвінкі та глухі — Voiced and Voiceless Pairs` (~250 words)
+- `## Практика читання — Reading Practice` (~200 words)
+- `## Підсумок — Summary` (~100 words)
 
 ### Beginner Writing Style
 
@@ -193,6 +210,7 @@ Write for someone seeing Ukrainian for the first time. English is the scaffoldin
 - Include IPA transcriptions or phonetic brackets
 - Use vocabulary from future modules
 - Create practice sentences if the constraints say "no sentences"
+- Repeat the same Ukrainian phrase pattern more than twice (e.g. don't write "Це склад", "Це слово", "Це правило" in every paragraph — vary your immersion: use contextual labels like "Наприклад — For example", section bridges like "А тепер — And now", vocabulary callouts, or short dialogue snippets)
 
 ### Example of Good A1 Content (letter introduction)
 
@@ -250,7 +268,7 @@ This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrai
 - **Russianisms**: banned (кушати, получати, etc.)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear
 - **Euphony**: і/й, у/в alternation
-- **Engagement callouts**: 4+
+- **Engagement callouts**: 3+
 - **IPA/phonetic brackets**: BANNED
 
 ## Language Quality Rules (All Tiers)
@@ -273,6 +291,21 @@ Scan your ENTIRE output for these. They cause automatic audit failure:
 | прекрасне / прекрасний | чудовий / чудове |
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
+
+### English Calque Checklist
+
+As an English-dominant model, you may produce English-to-Ukrainian calques. Check and avoid:
+
+| English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+|---|---|---|
+| "will have" | буду мати | матиму |
+| "do work" | робити роботу | працювати |
+| "save money" | зберегти гроші | заощадити гроші |
+| "make a decision" | зробити рішення | прийняти рішення |
+| "take a photo" | брати фото | фотографувати / робити фото |
+| "have attention" | мати увагу | звертати увагу |
+| "give an answer" | давати відповідь | відповідати |
+| "make sense" | робити сенс | мати сенс |
 
 ### Euphony / Милозвучність (WARNING if violated)
 
@@ -357,6 +390,59 @@ Prefer: «Ви можете використати...», «Ми застосов
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
 
+## Self-Audit (Run BEFORE Final Output)
+
+After writing all content, you MUST run the audit and fix any issues — all within this session.
+
+### Step 1: Write Content to Disk
+
+Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+```bash
+cat > {CONTENT_PATH} << 'CONTENT_EOF'
+... your content here ...
+CONTENT_EOF
+```
+
+### Step 2: Run Audit
+
+```bash
+bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+```
+
+This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion %.
+
+### Step 3: Parse Results
+
+- If you see `AUDIT PASSED` — proceed to output.
+- If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run the audit.
+
+### Step 4: Fix Loop (max 2 iterations)
+
+If the audit fails:
+1. Read the specific gate failures and violation details from the audit output
+2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms, add callout boxes, etc.)
+3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+4. If still failing after 2 fix attempts, proceed to output anyway — the validate phase will handle remaining issues.
+
+### Step 5: Report Self-Audit Result
+
+After audit (pass or fail), include this block in your output:
+
+```
+===SELF_AUDIT_START===
+status: PASS | FAIL
+iterations: {number of audit runs}
+final_word_count: {word count from last audit}
+gates_passed: {list of passed gates}
+gates_failed: {list of failed gates, or "none"}
+fixes_applied: {brief description of what you fixed, or "none"}
+===SELF_AUDIT_END===
+```
+
+**IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual command and report real output.
+
+
 ---
 
 ## Output Format
@@ -383,7 +469,7 @@ Not covered:
 
 # Summary
 
-{Summary + 3-4 self-check questions}
+{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
 
 ---
 
@@ -415,6 +501,7 @@ Total: {total} words (target: 1200)
 
 - Do NOT generate activities or vocabulary tables (separate phase)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
+- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than 1200 words
 - Do NOT use straight quotes "..." — always «...»

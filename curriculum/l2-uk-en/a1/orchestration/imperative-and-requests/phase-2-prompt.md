@@ -31,174 +31,148 @@ Present tense verbs start at M15. Past tense at M36. Future at M37.
 
 KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
 
+BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+
+INSTEAD OF → USE:
+- Запам'ятайте → "Remember that..." (English)
+- Порівняйте → "Compare..." (English)
+- Зверніть увагу → "Notice that..." (English)
+- Подивіться → "Look at..." (English)
+- Спробуйте → "Try to..." (English)
+- Прочитайте → "Read..." (English)
+- Повторіть → "Repeat..." (English)
+
 The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
 
 
 
-## Textbook Reference Examples (from real Ukrainian буквар)
 
-These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration for style and difficulty level** — notice how they use simple syllable combinations, short words, and build progressively. Do NOT copy them verbatim, but match their pedagogical approach and simplicity.
 
-**Grade 1, zaharijchuk** — Сторінка 76:
+NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+
+## Textbook Reference (from Ukrainian grammar textbooks)
+
+These are explanations from Ukrainian school grammar textbooks. Use them as **reference** for grammar rules and examples. Adapt for adult A1 learners — keep explanations simple but maintain grammatical accuracy.
+
+**Grade 3, vashulenko** — Сторінка 35:
 ```
-74
-п * * * * *
-с о п і л к а
-п і в * н
-а
-о
-у
-и
-і
-П
-па
-по
-пу
-пи
-пі
-а
-о
-у
-и
-і
-ап
-оп
-уп
-ип
-іп
-П
-Бачу  П, п (пе). Чую  [п].
-*
-па
-ва
-ска
-по
-ніс
-си-пав
-пи
-ла
-сан-ка
-пі
-по
-па
-Ко-ло  сли-ви  ма-ма,  Пав-лик  і  По-лі-на.
-Пав-лик:
-— Ма-мо,  он  слив-ка!  Во-на  ки-сла?
-Ма-ма:
-— Ні,  си-ну!  Слив-ка  спі-ла  і  ______ ! 
- [ –•  |  –  •  =  ]
- [  = • |  –  • = ]
-П п
+35
+Книжки треба шанувати. Не можна 
+їх бруднити, рвати. Пошкоджені книжки 
+слід полагодити.
+Прочитай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Якщо речення вимовляють з особ­
+ливим почуттям, із підсилювальною 
+інтонацією, то вони стають оклич-
+ними. У кінці окличних речень став-
+лять знак оклику.
+2   Прочитай текст. Визнач, які це речення 
+за метою висловлювання.
+	 	
+3   Розгляньте малюнки. Складіть за одним із них невеликий 
+текст, використовуючи окличні речення. Прочитайте його 
+з потріб
 ```
 
-**Grade 1, zaharijchuk** — Сторінка 105:
+**Grade 3, ponomarova** — Сторінка 102:
 ```
-103
-	
-Визнач, що не так на малюнку.
-	 Хто один, а кого на малюнку зображено бага-
-то?
-	 Вимов слова — назви намальованих пред-
-метів, у яких є ь.
-Апельсин      _____ ,   ______ ,     _______ ,    ______.
-12345678      6 7 8       2 3 8 5        6 1 8 7       4 7 2 1
-	 Утвори нові слова. Запиши.
-	
-Поміркуй, хто куди спішить.
-```
-
-**Grade 1, bolshakova** — Сторінка 79:
-```
-79
-Я вивчаю українську мову . . . . . . . 4
-Усне і писемне мовлення . . . . . . . 5
-Слова — назви предметів . . . . . . . 6
-Слова — назви дій . . . . . . . . . . . . . 7
-Слово і речення . . . . . . . . . . . . . . . . 8
-Слово і речення . . . . . . . . . . . . . . . . 9
-Звуки  . . . . . . . . . . . . . . . . . . . . . . . . 10
-Букви  . . . . . . . . . . . . . . . . . . . . . . . . 11
-А а  . . . . . . . . . . . . . . . . . . . . . . . . . . 12
-О о . . . . . . . . . . . . . . . . . . . . . . . . . 
-```
-
-**Grade 1, bolshakova** — Сторінка 7:
-```
-7
-СЛОВА — НАЗВИ ДІЙ
-Кожну дію ти можеш назвати словом.
-ЩО РОБИТЬ?
-бігає
-стрибає
-сидить
-читає
-спить
-Діти на подвір’ї. Олена стрибає. Тарас бігає. 
-Алла сидить на лаві. Ганна читає книжку. 
-Кіт Нявчик спить.
-Що робить кожен хлопчик? Вибери правильну відповідь.
- 
- Малює картину.
- Читає книжку.
- Грає на барабані.
- Миє посуд.
- Готує бутерброд.
- П’є чай.
+102
+Довідка: неспокійне, розбурхане, суворе, 
+самотній, беззахисний, великі, небезпечні, 
+безпощадні,  тривожний.
+Довідка: радісний, задоволений, похнюплений, 
+сумний, щасливий, пригнічений.
+10. Склади про одного з хлопчиків розповідь (3–4 речення) 
+і запиши. Використай прикметники.
 1
+4. Прочитай  розповідь  Ґаджика про картину І. Айвазов-
+ського.  Чи  зрозуміло,  яку  саме  картину  він  описав?
+7. Якою частиною мови є вставлені в розповідь Ґаджика сло-
+ва? Зроби висновок про роль прикметників 
 ```
 
-**Grade 1, zaharijchuk** — Сторінка 97:
+**Grade 3, kravtsova** — Сторінка 8:
 ```
-95
-—	 Доб-ро-го ран-ку! — мов-лю за 
-зви-ча-єм. 
-—	 Доб-ро-го ран-ку! — кож-но-му 
-зи-чу  я. 
-—	 Доб-ро-го  дня! — лю-дям ба-
-жа-ю.
-—	 Ве-чо-ра  доб-ро-го! — стріч-
-них  ві-та-ю.
-І  ус-мі-ха-ють-ся   в   від-по-відь  лю-
-ди  — доб-рі  сло-ва  ж  бо  для  кож-
-но-го лю-бі.
-                                                   Вадим Бі­рюков 
-	 Як ми називаємо виділені слова?
-	 Добери до кожної ситуації слова ввічливості.
+8
+ПРАВИЛЬНА ВИМОВА СЛІВ 
+ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
+15.
+1.	 Утворіть пари слів: що робити? — що роблю?
+Сидіти — 		
+	
+Будити —	 	
+Радити — 	
+Ходити — 		
+	
+Водити — 	 	
+Садити —
+Зразок. Їздити — їжджу.
+2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
+	
+	
+поса-джені	 	
+за-дзвенів
+	
+	
+посадже-ні	 	
+задзве-нів
+3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
+вірте роботу одні в одних. 
+16.
+1.	 Прочитай і відгадай загадку. 
+Живим зерном народжений, 
+живу я на землі. 
+Що
 ```
 
-**Grade 1, bolshakova** — Сторінка 64:
+**Grade 3, kravtsova** — Сторінка 6:
 ```
-64
-Знайди слово — підпис до малюнка.
-	
-терен	
-трава	
-талант	
-Тарас
-	 теремок	
-тропа	
-танок	
-Тетяна
-	
-терези	
-труба	
-тарілка	
-Тимофій
-
-Вірш. Тема вірша. Головна думка
-Лиш телефон задзеленчить,
-Іванко в слухавку кричить:
-— Алло! Привіт! Іван на дроті!
-Що? Татусеві по роботі?..
-Так, знаю я, що мамі й тату
-Теж можуть телефонувати.
-Чого я вам сказав «привіт»?
-Напевно, так робить не слід...
-Дорослим незнайомцям діти
-Так не повинні говорити.
-Заждіть хвилиночку лишень...
-Пробачте, прошу... Добрий день!
+6
+7.
+1.	 Розгляньте малюнки. У назвах яких предметів став-
+лять апостроф? Запишіть ці слова.
+2.	 Доведіть одні одним, що апостроф ставити потрібно  /  не 
+потрібно. Своє доведення починайте так:
+У цьому слові потрібно  /  не потрібно ставити апостроф, 
+оскільки …
+3.	 Складіть за малюнками речення, використовуючи слова 
+з апострофом. 
+8.
+1.	 Розглянь зображення, назвиѳ їх.
+2.	 Виконай завдання на вибір.
+	 Запиши наѳзви зображень. 
+	 Склади і запиши речення, використовуючи якомога більше 
+слів з а
 ```
+
+**Grade 3, kravtsova** — Сторінка 44:
+```
+44
+2.	 Добери з поданих заголовків найбільш вдалий. Поясни вибір.
+	 Щедрий Ведмідь і вдячна Мишка.
+	 Милосердний Ведмідь і вдячна Мишка.
+	 Справжні друзі. 
+124.	 Вправа 
+«Квест».
+4 5
+5 6 7
+1 2 5
+диреѳктор
+3.	 Запишіть свої розповіді на окремих аркушах. На їх основі 
+створіть книжку.
+123.	 1.	 Пригадай ситуацію, коли:
+	 ти проявив / проявила милосердя; 
+	 до тебе проявили милосердя;
+	 ти був вдячним / вдячною;
+	 тобі були вдячні за послугу.
+СЛОВА З ПРЕФІКСАМИ РОЗ-, БЕЗ-
+1.	 Прочитай текст. Як ти 
+```
+
+
 
 ---
 
@@ -206,10 +180,20 @@ These are real exercises from Ukrainian 1st-grade primers. Use them as **inspira
 
 Write the lesson prose for **Imperative and Requests** (a1 track).
 
-- **Target**: approximately 1200 words
+- **Target**: 1200–1800 words (below 1200 = FAIL, above 1800 = overproduction that increases error surface)
 - **Immersion**: TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section content in Ukrainian first (max 10 words per sentence). Then add English translation paragraphs for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar rules still anchored in English. A1 register — simple concrete vocabulary.
 - **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than 3 callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
-- **Structure**: Follow the content_outline from `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/imperative-and-requests.yaml` — each section maps to an H2. **Write ALL sections. Do not skip any section, even short ones like Summary.** Missing sections fail validation.
+- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+
+## REQUIRED H2 Sections (use EXACT titles)
+
+Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
+
+- `## Наказовий спосіб - Imperative mood` (~300 words)
+- `## Вісім обов'язкових дієслів - Eight required verbs` (~300 words)
+- `## Ввічливе прохання - Polite requests` (~250 words)
+- `## Заборони - Prohibitions` (~175 words)
+- `## Практика - Practice` (~175 words)
 
 ### Beginner Writing Style
 
@@ -265,11 +249,11 @@ This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrai
 
 | Section | Target |
 |---------|--------|
-| Наказовий спосіб | 300 |
-| Вісім обов'язкових дієслів | 300 |
-| Ввічливе прохання | 250 |
-| Заборони | 175 |
-| Підсумок і Практика | 175 |
+| Наказовий спосіб (Imperative mood) | 300 |
+| Вісім обов'язкових дієслів (Eight required verbs) | 300 |
+| Ввічливе прохання (Polite requests) | 250 |
+| Заборони (Prohibitions) | 175 |
+| Практика та підсумок (Practice and Summary) | 175 |
 | **Total** | **1200** |
 
 ### Callout Types to Use
@@ -308,6 +292,21 @@ Scan your ENTIRE output for these. They cause automatic audit failure:
 | прекрасне / прекрасний | чудовий / чудове |
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
+
+### English Calque Checklist
+
+As an English-dominant model, you may produce English-to-Ukrainian calques. Check and avoid:
+
+| English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+|---|---|---|
+| "will have" | буду мати | матиму |
+| "do work" | робити роботу | працювати |
+| "save money" | зберегти гроші | заощадити гроші |
+| "make a decision" | зробити рішення | прийняти рішення |
+| "take a photo" | брати фото | фотографувати / робити фото |
+| "have attention" | мати увагу | звертати увагу |
+| "give an answer" | давати відповідь | відповідати |
+| "make sense" | робити сенс | мати сенс |
 
 ### Euphony / Милозвучність (WARNING if violated)
 
@@ -392,6 +391,59 @@ Prefer: «Ви можете використати...», «Ми застосов
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
 
+## Self-Audit (Run BEFORE Final Output)
+
+After writing all content, you MUST run the audit and fix any issues — all within this session.
+
+### Step 1: Write Content to Disk
+
+Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+```bash
+cat > {CONTENT_PATH} << 'CONTENT_EOF'
+... your content here ...
+CONTENT_EOF
+```
+
+### Step 2: Run Audit
+
+```bash
+bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+```
+
+This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion %.
+
+### Step 3: Parse Results
+
+- If you see `AUDIT PASSED` — proceed to output.
+- If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run the audit.
+
+### Step 4: Fix Loop (max 2 iterations)
+
+If the audit fails:
+1. Read the specific gate failures and violation details from the audit output
+2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms, add callout boxes, etc.)
+3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+4. If still failing after 2 fix attempts, proceed to output anyway — the validate phase will handle remaining issues.
+
+### Step 5: Report Self-Audit Result
+
+After audit (pass or fail), include this block in your output:
+
+```
+===SELF_AUDIT_START===
+status: PASS | FAIL
+iterations: {number of audit runs}
+final_word_count: {word count from last audit}
+gates_passed: {list of passed gates}
+gates_failed: {list of failed gates, or "none"}
+fixes_applied: {brief description of what you fixed, or "none"}
+===SELF_AUDIT_END===
+```
+
+**IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual command and report real output.
+
+
 ---
 
 ## Output Format
@@ -418,7 +470,7 @@ Not covered:
 
 # Підсумок
 
-{Summary + 3-4 self-check questions}
+{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
 
 ---
 
@@ -450,6 +502,7 @@ Total: {total} words (target: 1200)
 
 - Do NOT generate activities or vocabulary tables (separate phase)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
+- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than 1200 words
 - Do NOT use straight quotes "..." — always «...»

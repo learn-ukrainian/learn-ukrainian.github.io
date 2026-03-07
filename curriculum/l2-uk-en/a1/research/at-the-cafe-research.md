@@ -2,38 +2,39 @@
 
 ## State Standard Reference
 §4.2.3.2: "Accusative — direct object, with prepositions (в/у, на, за, через, про)"
-Alignment: Introduces the accusative case for ordering items (каву, воду) and addresses the thematic area of "ресторан" (§3).
+Alignment: Introduces the Accusative case for food and drink items in the context of ordering. Also aligns with thematic area §3 (ресторан, харчування).
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| кава | High frequency. Feminine noun (-а → -у in Accusative). | філіжанка кави, чорна кава |
-| меню | High frequency. Indeclinable neuter loanword. | подивитися меню |
-| рахунок | High frequency. Crucial to distinguish from "чек". | можна рахунок, оплатити рахунок |
-| будь ласка | Very High frequency. Used to soften all requests. | мені, будь ласка... |
+| кава (coffee) | High frequency | філіжанка кави, міцна кава, кава з молоком |
+| рахунок (bill) | High frequency, false friend trap | просити рахунок, оплатити рахунок (not "чек") |
+| будь ласка (please) | Very High frequency | скажіть, будь ласка; Мені, будь ласка... |
+| замовляти (to order) | High frequency | я замовлю каву, що ви замовите? |
 
 ## Cultural Hooks
-1. Lviv coffee culture: "Піти на каву" (going for coffee) is a central social ritual in Ukraine, not just a quick caffeine fix.
-2. Yuriy Kulchytsky: A Ukrainian hero of the 1683 Battle of Vienna who is credited with opening one of the first coffee houses in Europe, popularizing coffee with milk.
+1. Lviv coffee culture is a deep-rooted tradition where «Піти на каву» (going for coffee) is a key social ritual, not just consuming a drink.
+2. The legend of Yuriy Kulchytsky, a Ukrainian hero of the Battle of Vienna, who is credited with opening one of the first coffeehouses in Europe and creating "Viennese coffee".
 
 ## Common Learner Errors
-1. "Я хочу кава" → "Я буду каву" or "Мені, будь ласка, каву" — Learners often use the direct translation of "I want" and forget the Accusative case for the object being ordered.
-2. Asking for a "чек" to pay → "Можна рахунок?" — English speakers confuse "чек" (the printed receipt given *after* payment) with "рахунок" (the bill you ask for).
+1. «Я хочу...» → «Мені, будь ласка...» / «Я буду...» — English speakers often use direct translation of "I want", which sounds impolite.
+2. «Я буду кава» → «Я буду каву» — Forgetting to apply the Accusative case ending to direct objects when ordering.
+3. Asking for «чек» instead of «рахунок» — "Чек" is the printed receipt you get after paying, whereas "рахунок" is the bill you ask for to pay.
 
 ## Cross-References
 - Builds on: a1-39 (Food and Drink)
 - Prepares for: a1-53 (At the Restaurant), a1-54 (Checkpoint: Communication)
 
 ## Notes for Content Writing
-- **Critical Constraint:** Do NOT teach or use imperative forms (like "дайте" or "принесіть"). Replace them with indirect polite requests like "Можна меню, будь ласка?" or "Мені каву...".
-- Keep "з молоком" and "без цукру" as pure lexical chunks without explaining Instrumental/Genitive cases.
-- Use the "Chatty Barista" persona to guide the learner. English scaffolding is required for all grammar theory.
+- M41 constraint: Do NOT use direct imperative forms for instructions in Ukrainian (like "Читайте", "Слухайте") as they are not taught until M47. Use English for instructions or indirect Ukrainian requests.
+- Teach «з молоком» and «без цукру» purely as fixed lexical chunks. Do not introduce the Instrumental or Genitive case theory here.
+- Maintain the "Patient Supportive Tutor / Chatty Barista" persona to create a warm, low-anxiety environment.
 
 ## Resource Discovery
 
 
 ### Blog Articles
-- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode165/) (ukrainianlessons.com)
+- [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) (Restaurant ordering + culture tips)
 
 ### Textbook References (RAG)
 - Grade 5, Сторінка 204: 204
@@ -47,12 +48,12 @@ Alignment: Introduces the accusative case for ordering items (каву, воду
 Шукаємо відповіді на запитання:
 1   Що називають запрошенням?
 2   Кого, куди і як правильно запр...
-- Grade 8, Сторінка 220: 216
-Шановні відвідувачі! 
-Відповідно до діючого законодавства України, ми не продаємо  
-тютюнові вир...
 - Grade 7, Сторінка 9: РОЗВИТОК
 МОВЛЕННЯ
 6
 1.	Прочитайте діалог «У громадському транспорті» та виконайте завдання. 
 — Жінко...
+- Grade 8, Сторінка 220: 216
+Шановні відвідувачі! 
+Відповідно до діючого законодавства України, ми не продаємо  
+тютюнові вир...

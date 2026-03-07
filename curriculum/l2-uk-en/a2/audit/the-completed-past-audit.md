@@ -1,11 +1,11 @@
 # Audit Report: M15 — the-completed-past.md
-**Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+**Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:37:47
+**Generated:** 2026-03-06 21:43:00
 
 ## Configuration
 **Type:** A2-grammar
-**Word Target:** 3000 words
+**Word Target:** 2000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
@@ -49,7 +49,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4798/3000 (raw: 4975)
+- **Words:** ✅ 4798/2000 (raw: 4975)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/4 types

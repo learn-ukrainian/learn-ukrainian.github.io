@@ -1,38 +1,35 @@
 # Дослідження: Likes and Preferences
 
 ## State Standard Reference
-§4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II"
-§4.2.3.2: "Accusative — direct object"
-Alignment: Introduces present tense conjugations for verbs of preference (любити, хотіти) and their interaction with the Accusative case for direct objects. "Мені" and "тобі" are introduced as lexical chunks to bypass the A1 Dative restriction (§4.2.3 Dative is strictly an A2 requirement).
+§4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
+Alignment: Introduces the present tense of high-frequency verbs (*любити*, *хотіти*) and the reflexive verb *подобатися* to express preferences and desires. Also touches upon §4.2.3.2 (Accusative as direct object) as a lexical preview before formal instruction.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| подобатися | Taught as a chunk; do not explain Dative paradigm. | мені подобається, тобі подобається |
-| любити | Class II verb, requires Accusative object. | люблю каву, люблю читати |
-| хотіти | Irregular present conjugation. Very polite in daily use. | хочу їсти, хочу каву |
+| подобатися | Lexical chunk with Dative. | мені подобається, тобі подобається |
+| любити | Class II verb. Active enjoyment. | люблю каву, люблю читати |
+| хотіти | Irregular verb. Direct and common. | хочу їсти, хочу каву |
 
 ## Cultural Hooks
-1. Directness in Ukrainian: Saying "Я хочу" (I want) in a cafe or at home is perfectly polite and culturally standard, unlike the English "I want," which can sometimes sound overly demanding.
+1. In Ukrainian, saying "Я хочу..." (I want...) is standard, neutral, and perfectly polite for expressing desires or ordering (e.g., at a cafe), unlike in English where "I would like" is often preferred.
 
 ## Common Learner Errors
-1. "Я подобаюсь" instead of "Мені подобається" → English speakers default to "I" as the nominative subject, whereas Ukrainian uses the "to me" inversion.
-2. Forgetting Accusative endings with "люблю" → Learners often say "Я люблю музика" instead of "Я люблю музику," forgetting that the direct object requires a case change.
+1. Direct translation of "I like" → "Я подобаю..." — English speakers try to make "I" the subject instead of using the Dative "Мені". Correct form: *Мені подобається...*
+2. Confusion between *подобається* and *люблю* — Using *люблю* for a mild preference when it should be reserved for strong active enjoyment or love for people.
+3. Forgetting the accusative ending with *люблю* / *хочу* — Saying "Я люблю кава" instead of "Я люблю кав**у**".
 
 ## Cross-References
 - Builds on: a1-18 (Questions and Negation)
-- Prepares for: a1-20 (Mine and Yours)
+- Prepares for: a1-20 (Mine and Yours), formal Accusative case (a1-25)
 
 ## Notes for Content Writing
-- Remember the M47 constraint: Imperatives are forbidden. Use indirect requests for activities (e.g., "Let's read", "We can see") or rely on English instructions.
-- Ensure the Dative case is strictly treated as a set phrase (Мені/Тобі). Do not introduce full case paradigms.
-- Emphasize the semantic difference between "подобається" (appeal) and "люблю" (strong active enjoyment).
+- Dative pronouns (*мені, тобі*) and Accusative noun endings are introduced as **memorized chunks** only. Do not explain the full Dative or Accusative case paradigms here.
+- Maintain the A1 constraint: no imperative forms for instructions (e.g., use "Read..." instead of "Прочитайте...").
+- Keep explanations simple and English-scaffolded. Use tables to show the difference between the three constructions clearly.
 
 ## Resource Discovery
 
-
-### Blog Articles
-- [Likes and dislikes — common verbs in Ukrainian](https://www.ukrainianlessons.com/episode14/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 - Grade 2, Сторінка 73: б| Порівняйте предмети за однією ознакою і вставте 

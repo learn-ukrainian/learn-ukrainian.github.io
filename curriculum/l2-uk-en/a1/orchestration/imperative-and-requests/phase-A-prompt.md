@@ -31,6 +31,17 @@ Present tense verbs start at M15. Past tense at M36. Future at M37.
 
 KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
 
+BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+
+INSTEAD OF → USE:
+- Запам'ятайте → "Remember that..." (English)
+- Порівняйте → "Compare..." (English)
+- Зверніть увагу → "Notice that..." (English)
+- Подивіться → "Look at..." (English)
+- Спробуйте → "Try to..." (English)
+- Прочитайте → "Read..." (English)
+- Повторіть → "Repeat..." (English)
+
 The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
 
 

@@ -1,35 +1,15 @@
 # RAG Verification: food-vocabulary
 
-**Date:** 2026-03-06 00:50 UTC | **Words checked:** 602 | **VESUM coverage:** 592/602 (98.3%)
+**Date:** 2026-03-06 23:01 UTC | **Words checked:** 240 | **VESUM coverage:** 240/240 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 592
-- ⚠️ Partial (RAG only): 4
-- ❌ Not found: 5
-- ❓ RAG error (Qdrant unreachable): 1
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| борща | activities | ✗ | ✗ | ✗ |
-| Олено | prose | ✗ | ✗ | ✗ |
-| сока | activities | ✗ | ✗ | ✗ |
-| сіка | activities | ✗ | ✗ | ✗ |
-| чая | activities | ✗ | ✗ | ✗ |
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| Анна | prose | ✗ | ✓ | ✗ |
-| Марія | prose | ✗ | ✓ | ✗ |
-| Олена | prose | ✗ | ✓ | ✗ |
-| Іван | prose | ✗ | ✓ | ✗ |
+- ✅ Verified (VESUM): 240
+- ⚠️ Partial (RAG only): 0
+- ❌ Not found: 0
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 587 | 581 | 2 |
-| Activities (.yaml) | 15 | 11 | 4 |
+| Prose (.md) | 220 | 220 | 0 |
+| Activities (.yaml) | 20 | 20 | 0 |

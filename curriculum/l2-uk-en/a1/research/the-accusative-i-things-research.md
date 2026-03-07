@@ -1,41 +1,61 @@
-## Research Notes
+# Дослідження: The Accusative I: Things
 
-**Textbook approach:** Ukrainian beginner textbooks introduce the Accusative case for inanimate objects by connecting it to high-frequency transitive verbs (бачити, мати, хотіти, читати, купувати). The primary focus is on the feminine singular transformation (-а → -у, -я → -ю), as masculine and neuter inanimate nouns do not change (the "Safe Harbor").
+## State Standard Reference
+§4.2.3.2: "Accusative — direct object, with prepositions (в/у, на, за, через, про)"
+Alignment: This module introduces the core function of the Accusative case (direct object) for inanimate nouns, establishing the grammatical foundation for future prepositional use.
 
-**Common errors:**
-1. **"Conceptual Nominative":** English speakers often forget to change the noun ending because English relies on word order, leading to errors like "Я читаю книга" instead of "Я читаю книгу".
-2. **"Masculine Inanimate Confusion":** Learners sometimes over-apply accusative endings (adding -а/-я, which is for animate masculine nouns) to inanimate masculine objects, resulting in "Я бачу стола" instead of the correct "Я бачу стіл".
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| бачити (to see) | High frequency core verb | бачити проблему |
+| мати (to have) | Very high frequency (Core A1) | мати час, мати можливість |
+| книга (book) | Paradigm example for Feminine Accusative | читати цікаву книгу |
+| кава (coffee) | Feminine -а to -у pattern | пити каву, замовляти каву |
+| хліб (bread) | Masculine inanimate (no change) | купувати хліб |
 
-**Cultural hook:** The everyday checkout interaction "Пакет потрібен?" (Do you need a bag?). This perfectly highlights a masculine inanimate noun ("пакет") functioning as a direct object while introducing the cultural dynamics of a Ukrainian "супермаркет" versus a traditional "базар".
+## Cultural Hooks
+1. The checkout question «Пакет потрібен?» (Do you need a bag?) — a universal and ubiquitous phrase in Ukrainian supermarkets.
+2. The contrast between shopping at an impersonal «супермаркет» and the lively, social interaction at a «базар» (farmers' market).
 
-**Cross-references:** This module builds directly on "A1-06 (Verbs I)" by utilizing verbs like "бачити" and "мати" to trigger the Accusative case. It serves as the foundation for "A1-26 (The Accusative II: People)", where the more complex animate masculine transformations will be introduced.
+## Common Learner Errors
+1. Conceptual Nominative → "Я читаю книга" instead of "Я читаю книгу" — English speakers often forget that word endings must change to show the object role because English relies purely on word order.
+2. Masculine Inanimate Confusion → "Я бачу стола" instead of "Я бачу стіл" — Learners over-apply endings and incorrectly alter masculine inanimate nouns.
+
+## Cross-References
+- Builds on: a1-14 (Checkpoint: First Contact), a1-06 (Verbs I)
+- Prepares for: a1-26 (The Accusative II: People), a1-39 (Food and Drink)
+
+## Notes for Content Writing
+- M15+ sequence constraint: Present tense verbs are allowed. Imperative forms (like Слухайте, Читайте, Запам'ятайте) are strictly forbidden at this stage; use English instructions instead.
+- Follow A1 band immersion rules: English scaffolding is mandatory for explaining the grammar concepts (Subject vs. Direct Object) before showing Ukrainian examples.
+- Do not introduce animate accusative endings here; keep the focus strictly on inanimate things.
 
 ## Resource Discovery
 
 
 ### Blog Articles
+- [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) (Complete guide with tables and examples)
 - [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) (ukrainianlessons.com)
 - [Shopping for clothes — Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode32/) (ukrainianlessons.com)
 - [Talking about books in Ukrainian — Accusative case of people](https://www.ukrainianlessons.com/episode33/) (ukrainianlessons.com)
-- [How to ORDER at the restaurant in Ukrainian](https://www.ukrainianlessons.com/fmu16/) (ukrainianlessons.com)
-- [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) (ukrainianlessons.com)
+- [Asking for advice + Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode56/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
-- Grade 4, Сторінка 66: 66
-2. Пригадай назви відмінків іменників і їхні питання. Перевір
-себе за таблицею на с. 38. Познач в...
-- Grade 4, Сторінка 38: 38
-73. 
-1. Розгляньте таблицю. Зверніть увагу на назви від-
-мінків. На які питання відповідає кожен ...
 - Grade 6, Сторінка 186: 186
 1.	Прочитайте словосполучення та виконайте завдання. 
 нікого не оминути	
 мою увагу
 чимсь зайняти...
+- Grade 6, Сторінка 94: 94
+Iменник
+Іменник у формі називного відмінка означає того, хто виконує дію, 
+і в реченні виступає п...
+- Grade 11, Сторінка 145: Зробіть висновки й узагальнення, що випливають із зібраного 
+фактичного матеріалу. Послуговуйтесь вс...
 - Grade 6, Сторінка 205: § 42. Відмінювання прикметників  
 205
 4. Перш ніж когось засуджувати, спробуй виявити 
 причини … вчи...
-- Grade 11, Сторінка 145: Зробіть висновки й узагальнення, що випливають із зібраного 
-фактичного матеріалу. Послуговуйтесь вс...
+- Grade 6, Сторінка 120: 120
+288    І   Випишіть із тексту прикметники разом з іменниками, до яких 
+вони належать. Поставте п...

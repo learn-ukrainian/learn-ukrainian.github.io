@@ -4,33 +4,36 @@
 §4.1.1: "Ukrainian alphabet"
 §4.1.2: "Apostrophe usage"
 §4.1.3: "Soft sign (м'який знак)"
-Alignment: Covers the final 10 letters of the alphabet, digraphs ДЖ/ДЗ, the soft sign, and the apostrophe to complete foundational phonetics and graphics for A1.
+Alignment: Introduces the final 10 letters of the alphabet, digraphs, the apostrophe, and the concept of palatalization via the soft sign and iotated vowels. Completes the foundational literacy prerequisite for A1 phonetic competence.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| чай (tea) | Top 500 word; uses Й. | пити чай, чорний чай |
-| яблуко (apple) | High frequency; key word for Я. | червоне яблуко |
-| день (day) | Top 50 word; perfect example of Ь. | добрий день |
-| сім'я (family) | High frequency; demonstrates apostrophe. | моя сім'я |
-| ще (more/still) | High frequency function word; Щ. | ще ні |
+| чай | Top 500 word, simple CVC | пити чай, чорний чай |
+| день | Top 50 word, demonstrates Ь | добрий день |
+| ще | High-frequency function word, demonstrates Щ | ще раз, що ще |
+| сім'я | High-frequency, demonstrates apostrophe | моя сім'я |
+| Європа | High-frequency proper noun, demonstrates Є | жити в Європі |
+| факт | Internationalism, demonstrates Ф | цікавий факт |
 
 ## Cultural Hooks
-1. The letter **Ї** is uniquely Ukrainian and became a powerful symbol of resistance, painted as graffiti in occupied territories.
-2. The letter **Ґ** (hard G) was repressed and removed from the alphabet in 1933 by Soviet authorities, only to be officially restored in 1990. 
+1. **The Letter Ї as Resistance:** Ї is uniquely Ukrainian. During the full-scale invasion, drawing the letter Ї in occupied territories became a powerful symbol of resistance and Ukrainian identity.
+2. **The Repressed Letter Ґ:** The hard G (Ґ) was officially removed from the Ukrainian alphabet by Soviet authorities in 1933 to artificially bring Ukrainian closer to Russian. It was proudly restored in 1990.
 
 ## Common Learner Errors
-1. **Pronouncing Ь as a vowel** → It has no sound of its own; it only softens the preceding consonant (день is one syllable, not "de-ne").
-2. **Ignoring the apostrophe** → English speakers often soften the consonant before an iotated vowel instead of pausing. The apostrophe creates a hard break (сім'я is sim-ya, not si-mya).
-3. **Confusing Щ with Ш** → Щ is a double sound (ш + ч), while Ш is a single sound.
+1. **Iotated Vowels as Single Sounds Everywhere** → Learners often try to pronounce Я as [ja] even after consonants instead of letting it soften the preceding consonant. 
+2. **Confusing Ь and Apostrophe** → Using Ь to separate sounds or using the apostrophe to soften. The rule must be clear: Ь softens, Apostrophe blocks softening.
+3. **Mispronouncing Щ as Ш** → Pronouncing "ще" like "ше". Щ is always a double sound (sh+ch) in Ukrainian.
 
 ## Cross-References
 - Builds on: a1-03 (The Cyrillic Code III)
 - Prepares for: a1-05 (Syllables and Word Division)
 
 ## Notes for Content Writing
-- Remember the grammar ban: do not use verb conjugations or imperatives (no "look at", "read"). Use English for instructions.
-- Ensure all 33 letters are presented in order at the end of the module as a culminating milestone.
+- This is the final alphabet module. Frame it as a major victory — the learner is unlocking the full 33-letter alphabet!
+- English scaffolding is absolutely mandatory here to explain abstract concepts like palatalization (softening) and the "dual nature" of iotated vowels.
+- Avoid all verb conjugations or imperative forms. Keep examples strictly to basic nouns, noun phrases, or simple "Це + noun" previews.
+- Only provide IPA for the first occurrence of a new word.
 
 ## Resource Discovery
 
@@ -39,7 +42,6 @@ Alignment: Covers the final 10 letters of the alphabet, digraphs ДЖ/ДЗ, the 
 - [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) (ukrainianlessons.com)
 - [Ukrainian Alphabet: Full Guide with Examples and Pronunciation](https://www.ukrainianlessons.com/ukrainian-alphabet/) (ukrainianlessons.com)
 - [Talk Ukrainian: Ukrainian alphabet with pronunciation](https://talkukrainian.com/ukrainian-alphabet/) (talkukrainian)
-- [Ukrainian Lessons Podcast Season 5](https://www.ukrainianlessons.com/episode200/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 - Grade 2, Сторінка 128: 128

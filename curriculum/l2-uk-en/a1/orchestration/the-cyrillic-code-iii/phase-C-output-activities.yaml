@@ -1,0 +1,270 @@
+- type: watch-and-repeat
+  title: "Pronunciation Practice"
+  instruction: "Watch the videos from Anna Ohoiko and repeat the new sounds aloud."
+  items:
+    - letter: "Б"
+      word: "банан"
+      video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+    - letter: "Д"
+      word: "дім"
+      video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+    - letter: "П"
+      word: "павук"
+      video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
+    - letter: "З"
+      word: "зебра"
+      video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+    - letter: "Г"
+      word: "гора"
+      video: "https://www.youtube.com/watch?v=gVnclpSI0DU"
+    - letter: "Х"
+      word: "хліб"
+      video: "https://www.youtube.com/watch?v=vpr58zJSJKc"
+    - letter: "Ж"
+      word: "жук"
+      video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
+    - letter: "Ш"
+      word: "шапка"
+      video: "https://www.youtube.com/watch?v=1D-6MIw3OXY"
+    - letter: "Ч"
+      word: "черепаха"
+      video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
+
+- type: classify
+  title: "Voiced or Voiceless?"
+  instruction: "Place your hand on your throat. Sort these consonants based on whether your vocal cords vibrate (voiced) or not (voiceless)."
+  categories:
+    - label: "Дзвінкі (Voiced)"
+      items:
+        - "Б"
+        - "Д"
+        - "З"
+        - "Г"
+        - "Ж"
+    - label: "Глухі (Voiceless)"
+      items:
+        - "П"
+        - "Т"
+        - "С"
+        - "Х"
+        - "Ш"
+
+- type: match-up
+  title: "Consonant Pairs"
+  instruction: "Match the voiced consonant to its voiceless partner."
+  pairs:
+    - left: "Б (voiced)"
+      right: "П (voiceless)"
+    - left: "Д (voiced)"
+      right: "Т (voiceless)"
+    - left: "З (voiced)"
+      right: "С (voiceless)"
+    - left: "Г (voiced)"
+      right: "Х (voiceless)"
+    - left: "Ж (voiced)"
+      right: "Ш (voiceless)"
+    - left: "зуб (voiced end)"
+      right: "суп (voiceless end)"
+
+- type: image-to-letter
+  title: "First Letter Match"
+  instruction: "Look at the emoji and select the first letter of its Ukrainian word."
+  items:
+    - emoji: "🍌"
+      answer: "Б"
+      distractors: ["В", "Г"]
+      note: "банан"
+    - emoji: "🏠"
+      answer: "Д"
+      distractors: ["Т", "П"]
+      note: "дім"
+    - emoji: "🕷️"
+      answer: "П"
+      distractors: ["Р", "Б"]
+      note: "павук"
+    - emoji: "🦓"
+      answer: "З"
+      distractors: ["С", "Ж"]
+      note: "зебра"
+    - emoji: "⛰️"
+      answer: "Г"
+      distractors: ["Х", "К"]
+      note: "гора"
+    - emoji: "🍞"
+      answer: "Х"
+      distractors: ["Г", "К"]
+      note: "хліб"
+    - emoji: "🪲"
+      answer: "Ж"
+      distractors: ["Ш", "З"]
+      note: "жук"
+    - emoji: "🧢"
+      answer: "Ш"
+      distractors: ["Ж", "Ч"]
+      note: "шапка"
+    - emoji: "🐢"
+      answer: "Ч"
+      distractors: ["Ш", "С"]
+      note: "черепаха"
+
+- type: true-false
+  title: "Fact Check: The Cyrillic Code III"
+  instruction: "Determine if these statements about Ukrainian letters and sounds are true or false."
+  items:
+    - statement: "The letter Б and П are a voiced/voiceless pair."
+      correct: true
+      explanation: "Б is voiced (b), and П is its voiceless partner (p)."
+    - statement: "The letter П sounds like the English letter P, but it is pronounced with a strong puff of air."
+      correct: false
+      explanation: "Ukrainian П is unaspirated, meaning there is no extra puff of air."
+    - statement: "The letter Г is a hard 'g' sound, exactly like in the English word 'go'."
+      correct: false
+      explanation: "Г is a soft, throaty glottal fricative (like a heavy 'h'). The hard 'g' uses a different letter (Ґ)."
+    - statement: "The letter Х looks like an English X, but sounds like 'ch' in the Scottish 'loch'."
+      correct: true
+      explanation: "Х is a voiceless sound made by creating friction in the back of the throat."
+    - statement: "To make the sound for Ж, your vocal cords must vibrate."
+      correct: true
+      explanation: "Ж is a voiced consonant (like 's' in 'measure')."
+    - statement: "The letter Д is dental, meaning you place your tongue against the back of your upper teeth."
+      correct: true
+      explanation: "Unlike the English 'd' (which is alveolar), the Ukrainian Д requires your tongue to touch your teeth."
+    - statement: "The word 'зуб' starts with a voiceless consonant."
+      correct: false
+      explanation: "'зуб' starts with З, which is voiced."
+    - statement: "The letter Ш is the voiced partner of Ж."
+      correct: false
+      explanation: "It is the opposite: Ш is voiceless, and Ж is its voiced partner."
+
+- type: quiz
+  title: "Letter Recognition"
+  instruction: "Choose the correct letter or word."
+  items:
+    - question: "Which letter looks like a platform and sounds like 'p'?"
+      options:
+        - text: "П"
+          correct: true
+        - text: "Р"
+          correct: false
+        - text: "Б"
+          correct: false
+        - text: "Д"
+          correct: false
+      explanation: "П is 'p' (platform), whereas Р is 'r'."
+    - question: "Which word means 'bread'?"
+      options:
+        - text: "хліб"
+          correct: true
+        - text: "парк"
+          correct: false
+        - text: "дім"
+          correct: false
+        - text: "чай"
+          correct: false
+      explanation: "Хліб is bread."
+    - question: "Which pair of words contrasts the voiced З and the voiceless С?"
+      options:
+        - text: "зуб — суп"
+          correct: true
+        - text: "жар — шар"
+          correct: false
+        - text: "банк — парк"
+          correct: false
+        - text: "дім — том"
+          correct: false
+      explanation: "Зуб begins with З (voiced), and суп begins with С (voiceless)."
+    - question: "Which letter represents the 'sh' sound, like in 'ship'?"
+      options:
+        - text: "Ш"
+          correct: true
+        - text: "Ж"
+          correct: false
+        - text: "Ч"
+          correct: false
+        - text: "Х"
+          correct: false
+      explanation: "Ш makes the 'sh' sound."
+    - question: "What does the word 'школа' mean?"
+      options:
+        - text: "school"
+          correct: true
+        - text: "hat"
+          correct: false
+        - text: "newspaper"
+          correct: false
+        - text: "building"
+          correct: false
+      explanation: "Школа means school."
+    - question: "Which letter looks like a little bug and sounds like 'zh' in 'measure'?"
+      options:
+        - text: "Ж"
+          correct: true
+        - text: "Ш"
+          correct: false
+        - text: "З"
+          correct: false
+        - text: "Х"
+          correct: false
+      explanation: "Ж resembles a bug and is a voiced sibilant."
+    - question: "What is the voiced partner of the letter Х?"
+      options:
+        - text: "Г"
+          correct: true
+        - text: "З"
+          correct: false
+        - text: "Б"
+          correct: false
+        - text: "Ж"
+          correct: false
+      explanation: "Г (voiced) pairs with Х (voiceless)."
+    - question: "Which word starts with the letter Ч (ch sound)?"
+      options:
+        - text: "чай"
+          correct: true
+        - text: "шапка"
+          correct: false
+        - text: "жаба"
+          correct: false
+        - text: "гора"
+          correct: false
+      explanation: "Чай (tea) starts with Ч."
+
+- type: anagram
+  title: "Word Scramble"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "л х і б"
+      answer: "хліб"
+    - scrambled: "а к ш а п"
+      answer: "шапка"
+    - scrambled: "і д м"
+      answer: "дім"
+    - scrambled: "у з б"
+      answer: "зуб"
+    - scrambled: "р к а п"
+      answer: "парк"
+    - scrambled: "а ч с"
+      answer: "час"
+    - scrambled: "о ш а к л"
+      answer: "школа"
+    - scrambled: "т а з а е г"
+      answer: "газета"
+
+- type: group-sort
+  title: "Sorting Words by Starting Letter"
+  instruction: "Sort these words based on whether their first letter is voiced or voiceless."
+  groups:
+    - name: "Starts with Voiced Consonant (Дзвінкий)"
+      items:
+        - "банан"
+        - "дім"
+        - "зебра"
+        - "гора"
+        - "жук"
+    - name: "Starts with Voiceless Consonant (Глухий)"
+      items:
+        - "парк"
+        - "суп"
+        - "хліб"
+        - "шапка"
+        - "час"

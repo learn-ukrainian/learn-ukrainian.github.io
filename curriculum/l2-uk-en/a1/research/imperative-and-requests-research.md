@@ -2,31 +2,31 @@
 
 ## State Standard Reference
 §4.2.4.2: "Imperative mood — 2nd person only at A1"
-Alignment: Focuses exclusively on the allowed 2nd person singular ("ти") and plural/formal ("ви") imperative forms, satisfying A1 requirements while strictly avoiding 1st person plural or 3rd person forms.
+Alignment: Introduces basic 2nd person singular ("ти") and plural/formal ("ви") imperative forms, strictly avoiding 1st person plural and 3rd person forms.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| читати/читай | Regular vowel stem, core classroom verb | Читайте текст |
-| писати/пиши | Present stem mutation (с→ш), core classroom | Пишіть у зошиті |
-| сказати/скажи | Irregular mutation (к→ж) | Скажіть, будь ласка |
-| дати/дай | Irregular short form | Дайте, будь ласка |
+| дати / дай(те) | High frequency irregular | Дайте, будь ласка |
+| сказати / скажи(те) | Irregular consonant mutation (к→ж) | Скажіть, будь ласка |
+| читати / читай(те) | Standard classroom command | Читайте текст |
 
 ## Cultural Hooks
-1. Using direct imperatives is much more common and socially acceptable in Ukrainian than in English, where it often sounds "bossy". It is the standard, natural way to give instructions.
-2. The literal translation of "будь ласка" comes from "будьте ласкаві" (be kind), showing how politeness is deeply built into the language itself.
+1. In Ukrainian culture, "Будь ласка" is the universal magic word that softens direct commands, but it's always written as two separate words. 
+2. Teachers typically use the plural "ви" (читайте, слухайте) to address the whole class, but switch to the singular "ти" (читай, слухай) for individual students.
 
 ## Common Learner Errors
-1. Confusing infinitive with imperative ("Читати!" vs "Читай!") → "Читай!" — Infinitives are mostly used for impersonal public signs, while personal commands require the imperative.
-2. Over-regularizing irregular stems (e.g., *дайи instead of дай, *сказай instead of скажи) → Required verbs with mutations must be memorized as set forms early on.
+1. Confusing imperative with infinitive → Learner says "Читати!" instead of "Читай!". This happens because English "read" looks like an infinitive. In Ukrainian, the infinitive for commands is only used on public signs.
+2. Regularizing irregular stems → Learner forms "*дайи" or "*сказай" instead of "дай" and "скажи". This happens because they apply regular suffix rules to verbs that require memorization.
 
 ## Cross-References
 - Builds on: a1-46 (Must and Want)
-- Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
+- Prepares for: a1-48 (Body and Health)
 
 ## Notes for Content Writing
-- Stick strictly to the 2nd person imperative. Do not introduce "хай/нехай" or "давай" (these belong to A2).
-- Reassure learners that using imperatives does not make them sound rude in Ukrainian.
+- Remember the strict ban on Ukrainian imperative instructions in this module's own exercises (use "Read...", "Try to..." instead of "Прочитайте...", "Спробуйте...").
+- English scaffolding is mandatory for explaining the grammar before providing Ukrainian examples.
+- Keep sentences short (max 8-10 Ukrainian words per sentence) and ensure IPA is used only on the first occurrence of a new word.
 
 ## Resource Discovery
 
@@ -36,7 +36,7 @@ Alignment: Focuses exclusively on the allowed 2nd person singular ("ти") and p
 - [How to cook varenyky + Imperative mood of the second person plural](https://www.ukrainianlessons.com/episode112/) (ukrainianlessons.com)
 - [Ukrainian traditional embroidery masterclass + More about the Imperative mood in Ukrainian](https://www.ukrainianlessons.com/episode113/) (ukrainianlessons.com)
 - [How to make pysanky + Imperative mood of the verbs in the first person plural (Let’s…)](https://www.ukrainianlessons.com/episode114/) (ukrainianlessons.com)
-- [Ukrainian Phrasebook: Needs](https://www.ukrainianlessons.com/ph-needs/) (ukrainianlessons.com)
+- [ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood in Ukrainian](https://www.ukrainianlessons.com/lesson/111/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 - Grade 6, Сторінка 218: § 101–102.	 Творення дієслів наказового способу

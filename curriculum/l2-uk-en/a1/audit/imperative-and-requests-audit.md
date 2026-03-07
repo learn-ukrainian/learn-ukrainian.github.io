@@ -1,7 +1,7 @@
 # Audit Report: M47 — imperative-and-requests.md
 **Level:** A1 | **Module:** M47 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-06 06:14:53
+**Generated:** 2026-03-07 00:31:54
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Match the verb to its "ти" command | 8 | 8 | ✅ |
-| 2 | match-up | Match the verb to its "ви" command | 8 | 8 | ✅ |
-| 3 | group-sort | Sort by Form: Informal vs. Formal | 10 | 6 | ✅ |
-| 4 | quiz | Choose the Right Command | 8 | 8 | ✅ |
-| 5 | true-false | True or False: Rules of Commands | 8 | 8 | ✅ |
-| 6 | fill-in | Complete the Classroom Commands | 8 | 8 | ✅ |
-| 7 | unjumble | Build the Sentence | 8 | 6 | ✅ |
-| 8 | quiz | Negative Commands and Polite Requests | 8 | 8 | ✅ |
+| 1 | match-up | Match the Infinitive to the Informal Command | 8 | 8 | ✅ |
+| 2 | match-up | Match the Infinitive to the Formal Command | 8 | 8 | ✅ |
+| 3 | quiz | Choose the Correct Command | 8 | 8 | ✅ |
+| 4 | true-false | Rules of the Imperative Mood | 8 | 8 | ✅ |
+| 5 | fill-in | Complete the Sentences | 8 | 8 | ✅ |
+| 6 | group-sort | Sort the Verbs by Form | 12 | 6 | ✅ |
+| 7 | unjumble | Put the Words in Order | 6 | 6 | ✅ |
+| 8 | quiz | Prohibitions and Polite Phrases | 8 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1458/1200 (raw: 1523)
+- **Words:** ✅ 1410/1200 (raw: 1465)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.7% (target 35-55% (M47))
+- **Immersion:** 🇺🇦 40.2% (target 35-55% (M47))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -57,10 +57,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Imperative and Requests** | ✅ | 60 | Included in Core |
-| **Наказовий спосіб - Imperative mood** | ✅ | 411 | Included in Core |
-| **Вісім обов'язкових дієслів - Eight required verbs** | ✅ | 243 | Included in Core |
-| **Ввічливе прохання - Polite requests** | ✅ | 343 | Included in Core |
-| **Заборони - Prohibitions** | ✅ | 235 | Included in Core |
-| **Практика - Practice** | ✅ | 84 | Included in Core |
-| **Summary** | ✅ | 82 | Included in Core |
+| **Imperative and Requests** | ✅ | 59 | Included in Core |
+| **Наказовий спосіб (Imperative mood)** | ✅ | 278 | Included in Core |
+| **Вісім обов'язкових дієслів (Eight required verbs)** | ✅ | 327 | Included in Core |
+| **Ввічливе прохання (Polite requests)** | ✅ | 205 | Included in Core |
+| **Заборони (Prohibitions)** | ✅ | 260 | Included in Core |
+| **Практика та підсумок (Practice and Summary)** | ✅ | 268 | Included in Core |
+| **Summary** | ✅ | 13 | Included in Core |

@@ -62,6 +62,8 @@ METALANGUAGE: English-first, Ukrainian in parentheses
 
 
 
+
+
 NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
 
 ## Textbook Reference Examples (from real Ukrainian буквар)
@@ -148,9 +150,9 @@ Write the lesson prose for **Describing Things - Adjectives** (a1 track).
 
 Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
 
-- `## Вступ: Світ прикметників (Introduction: The World of Adjectives)` (~200 words)
-- `## Тверда група прикметників (Hard Stem Adjectives)` (~350 words)
-- `## М'яка група та множина (Soft Stem and Plurals)` (~350 words)
+- `## Вступ: Світ прикметників (Introduction: The World of Adjectives)` (~250 words)
+- `## Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)` (~350 words)
+- `## Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)` (~300 words)
 - `## Практика: Люди і місця (Practice: People and Places)` (~200 words)
 - `## Підсумок (Summary & Self-Check)` (~100 words)
 

@@ -2,7 +2,7 @@ slug: the-cyrillic-code-iii
 title: The Cyrillic Code III
 word_target: 1200
 content_outline:
-- section: Вступ — Introduction
+- title: Вступ — Introduction
   slug: vstup-introduction
   words: 150
   points:
@@ -12,7 +12,7 @@ content_outline:
     23 letters total.'
   - Briefly introduce the key concept of 'дзвінкі та глухі' (voiced and voiceless)
     pairs with English scaffolding.
-- section: Приголосні — Consonants Б, Д, П
+- title: Приголосні — Consonants Б, Д, П
   slug: consonants-b-d-p
   words: 250
   points:
@@ -21,7 +21,7 @@ content_outline:
     air).
   - 'Visual Trap Alert: Explicitly contrast the new letter П (/p/, looks like a platform)
     with the previously learned Р (/r/) using minimal pairs (палка vs ракета).'
-- section: Приголосні — Consonants З, Г, Х
+- title: Приголосні — Consonants З, Г, Х
   slug: consonants-z-g-kh
   words: 250
   points:
@@ -30,7 +30,7 @@ content_outline:
     NOT a hard English 'g'. Preview that the hard 'g' is coming in Code IV (Ґ).
   - Introduce Х (/x/, хліб) with articulatory guidance (like Scottish 'loch' or German
     'ach'). Mention the 'хліб-сіль' cultural tradition.
-- section: Дзвінкі та глухі — Voiced and Voiceless Pairs
+- title: Дзвінкі та глухі — Voiced and Voiceless Pairs
   slug: voiced-voiceless-pairs
   words: 250
   points:
@@ -38,7 +38,7 @@ content_outline:
     to feel the vibration for voiced sounds.'
   - 'Introduce the remaining sibilants and affricate: Ж (жук), Ш (шапка), Ч (черепаха).'
   - 'Summarize and map the voiced/voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ж↔Ш, З↔С.'
-- section: Практика читання — Reading Practice
+- title: Практика читання — Reading Practice
   slug: reading-practice
   words: 200
   points:
@@ -47,7 +47,7 @@ content_outline:
   - 'Voiced/voiceless minimal pair discrimination drills: зуб vs суп, жар vs шар.'
   - 'Read practical everyday vocabulary using the 23 known letters: школа, пошта,
     чай.'
-- section: Підсумок — Summary
+- title: Підсумок — Summary
   slug: pidsumok-summary
   words: 100
   points:

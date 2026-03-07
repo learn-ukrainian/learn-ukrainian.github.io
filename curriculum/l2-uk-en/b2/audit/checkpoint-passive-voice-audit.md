@@ -1,7 +1,7 @@
 # Audit Report: M10 — checkpoint-passive-voice.md
-**Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:45
+**Level:** B2 | **Module:** M10 | **Phase:** B2.1 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-03-06 21:43:05
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -16,20 +16,47 @@
 **Vocab Target:** ≥10 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерело: Інструкція з діловодства | 3 | 3 | ✅ |
+| 2 | essay-response | Есе: Стилістичний аналіз тексту | 1 | 1 | ✅ |
+| 3 | quiz | Тест: Ідентифікація граматичних форм | 10 | 8 | ✅ |
+| 4 | fill-in | Заповніть пропуски: Трансформація в пасив | 10 | 8 | ✅ |
+| 5 | error-correction | Редагування: Виправте стилістичний регістр | 8 | 6 | ✅ |
+| 6 | error-correction | Редагування: Усунення русизмів та непитомих дієприкметників | 8 | 6 | ✅ |
+| 7 | unjumble | Конструювання речень: Синтаксис пасиву | 8 | 6 | ✅ |
+| 8 | group-sort | Класифікація: Регістри та граматичні форми | 14 | 14 | ✅ |
+| 9 | true-false | Правда чи хиба: Правила пасивного стану | 10 | 8 | ✅ |
+| 10 | match-up | Відповідності: Уникнення русизмів | 12 | 8 | ✅ |
+| 11 | cloze | Текст з пропусками: Систематизація знань | 16 | 14 | ✅ |
+| 12 | select | Множинний вибір: Аналіз граматичних явищ | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 15-19) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Required types used: 4/4 (error-correction, essay-response, fill-in, quiz) ✅
+- Low density activities: 0
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- Activity count below minimum
+
 ## Gates
 - **Words:** ✅ 4349/4000 (raw: 4775)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ❌ 12/15
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/10
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -43,7 +70,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 8 | 8 | 100% | 25% | 25.0% |
+| activity_types | 11 | 8 | 100% | 25% | 25.0% |
 | review_sections | 38 | 3 | 100% | 20% | 20.0% |
 | variety | 0.98 | - | 98% | 15% | 14.7% |
 | engagement | 9 | 3 | 100% | 10% | 10.0% |

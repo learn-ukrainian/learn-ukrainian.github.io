@@ -1,86 +1,86 @@
 items:
-  - lemma: 'хліб'
-    translation: 'bread'
-    pos: 'noun'
-    gender: 'm'
-    notes: 'A sacred symbol in Ukrainian culture; used in хліб-сіль tradition.'
-  - lemma: 'борщ'
-    translation: 'borscht'
-    pos: 'noun'
-    gender: 'm'
-    notes: 'Traditional beetroot soup. Always eaten, not drunk.'
-  - lemma: 'м''ясо'
-    translation: 'meat'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'овочі'
-    translation: 'vegetables'
-    pos: 'noun'
-    gender: 'pl'
-  - lemma: 'фрукти'
-    translation: 'fruits'
-    pos: 'noun'
-    gender: 'pl'
-  - lemma: 'вода'
-    translation: 'water'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'кава'
-    translation: 'coffee'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'чай'
-    translation: 'tea'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'молоко'
-    translation: 'milk'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'сік'
-    translation: 'juice'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'суп'
-    translation: 'soup'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'паляниця'
-    translation: 'palianytsia'
-    pos: 'noun'
-    gender: 'f'
-    notes: 'Traditional round wheat bread; a linguistic shibboleth.'
-  - lemma: 'каша'
-    translation: 'porridge'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'компот'
-    translation: 'compote'
-    pos: 'noun'
-    gender: 'm'
-    notes: 'Traditional drink made by boiling fruit in water.'
-  - lemma: 'риба'
-    translation: 'fish'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'сир'
-    translation: 'cheese'
-    pos: 'noun'
-    gender: 'm'
-    notes: 'Refers to both hard cheese and cottage cheese (творог).'
-  - lemma: 'сало'
-    translation: 'salo (cured fat)'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'цибуля'
-    translation: 'onion'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'їсти'
-    translation: 'to eat'
-    pos: 'verb'
-    aspect: 'impf'
-  - lemma: 'пити'
-    translation: 'to drink'
-    pos: 'verb'
-    aspect: 'impf'
+  - lemma: "хліб"
+    translation: "bread"
+    pos: "noun"
+    gender: "m"
+    notes: "sacred symbol in Ukrainian culture"
+  - lemma: "борщ"
+    translation: "borscht"
+    pos: "noun"
+    gender: "m"
+    usage: "смачний борщ"
+  - lemma: "м'ясо"
+    translation: "meat"
+    pos: "noun"
+    gender: "n"
+    example: "Я не їм м'ясо."
+  - lemma: "овочі"
+    translation: "vegetables"
+    pos: "noun"
+  - lemma: "фрукти"
+    translation: "fruits"
+    pos: "noun"
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кава"
+    translation: "coffee"
+    pos: "noun"
+    gender: "f"
+    usage: "кава з молоком"
+  - lemma: "чай"
+    translation: "tea"
+    pos: "noun"
+    gender: "m"
+  - lemma: "молоко"
+    translation: "milk"
+    pos: "noun"
+    gender: "n"
+  - lemma: "сік"
+    translation: "juice"
+    pos: "noun"
+    gender: "m"
+    usage: "апельсиновий сік"
+  - lemma: "суп"
+    translation: "soup"
+    pos: "noun"
+    gender: "m"
+    notes: "Use with verb їсти (to eat), not пити (to drink)"
+  - lemma: "паляниця"
+    translation: "palianytsia (traditional round bread)"
+    pos: "noun"
+    gender: "f"
+    notes: "famous linguistic shibboleth"
+  - lemma: "каша"
+    translation: "porridge"
+    pos: "noun"
+    gender: "f"
+  - lemma: "компот"
+    translation: "compote"
+    pos: "noun"
+    gender: "m"
+  - lemma: "риба"
+    translation: "fish"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сир"
+    translation: "cheese"
+    pos: "noun"
+    gender: "m"
+  - lemma: "картопля"
+    translation: "potato"
+    pos: "noun"
+    gender: "f"
+  - lemma: "яблуко"
+    translation: "apple"
+    pos: "noun"
+    gender: "n"
+  - lemma: "помідор"
+    translation: "tomato"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сало"
+    translation: "pork fat"
+    pos: "noun"
+    gender: "n"

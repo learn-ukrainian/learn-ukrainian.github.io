@@ -1,0 +1,35 @@
+{
+  "track": "a1",
+  "slug": "the-accusative-i-things",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-06T22:22:46Z",
+      "task_id": "v5-the-accusative-i-things-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-06T22:23:07Z"
+    },
+    "sandbox": {
+      "status": "complete",
+      "ts": "2026-03-06T22:23:09Z"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-06T22:28:29Z"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-06T22:30:34Z",
+      "task_id": "v5-the-accusative-i-things-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-06T22:55:58Z",
+      "attempts": 2
+    }
+  }
+}

@@ -1,23 +1,31 @@
 # RAG Verification: at-the-cafe
 
-**Date:** 2026-03-06 01:54 UTC | **Words checked:** 251 | **VESUM coverage:** 248/251 (98.8%)
+**Date:** 2026-03-06 23:33 UTC | **Words checked:** 302 | **VESUM coverage:** 296/302 (98.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 248
-- ⚠️ Partial (RAG only): 3
-- ❌ Not found: 0
+- ✅ Verified (VESUM): 296
+- ⚠️ Partial (RAG only): 4
+- ❌ Not found: 2
+
+## ❌ Not Found (action required)
+
+| Word | Source | VESUM | Textbook | Literary |
+|------|--------|-------|----------|----------|
+| сіку | prose | ✗ | ✗ | ✗ |
+| Юрія | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Анна | prose | ✗ | ✓ | ✗ |
-| Анни | prose | ✗ | ✓ | ✗ |
+| Відень | prose | ✗ | ✗ | ✓ |
+| Львові | prose | ✗ | ✓ | ✗ |
 | Львів | prose | ✗ | ✓ | ✗ |
+| Марія | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 218 | 215 | 0 |
-| Activities (.yaml) | 33 | 33 | 0 |
+| Prose (.md) | 262 | 256 | 2 |
+| Activities (.yaml) | 40 | 40 | 0 |

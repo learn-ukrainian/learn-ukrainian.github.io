@@ -2,8 +2,8 @@ slug: the-cyrillic-code-iv
 title: The Cyrillic Code IV
 word_target: 1200
 content_outline:
-- slug: introduction
-  section: Вступ — Introduction
+- title: Вступ — Introduction
+  slug: introduction
   words: 150
   points:
   - 'Welcome the learner: they already know 23 letters. Only 10 letters, 2 digraphs,
@@ -12,8 +12,8 @@ content_outline:
     confidence.'
   - 'Set expectations: Grammar and mechanics will be explained in English, with examples
     in Ukrainian.'
-- slug: affricates-digraphs
-  section: Злиті звуки та рідкісні букви — Affricates, Digraphs & Ґ
+- title: Злиті звуки та рідкісні букви — Affricates, Digraphs & Ґ
+  slug: affricates-digraphs
   words: 300
   points:
   - 'Introduce Ц as a single ''ts'' sound (like cats), not two separate consonants.
@@ -24,8 +24,8 @@ content_outline:
   - 'Explain digraphs ДЖ (like ''jungle'') and ДЗ (no English equivalent). Examples:
     джаз, дзвін.'
   - 'Introduce Ґ as the hard ''g'', noting its rarity and history. Example: ґанок.'
-- slug: iotated-vowels
-  section: Йотовані голосні — Iotated Vowels Я, Ю, Є, Ї, Й
+- title: Йотовані голосні — Iotated Vowels Я, Ю, Є, Ї, Й
+  slug: iotated-vowels
   words: 350
   points:
   - 'Explain the ''dual nature'' principle: two sounds at the beginning or after a
@@ -36,8 +36,8 @@ content_outline:
     its use as a symbol of Ukrainian resistance.
   - 'Introduce Й as a short consonant that never forms a syllable alone. Example:
     чай.'
-- slug: modifiers
-  section: М'який знак та апостроф — Soft Sign & Apostrophe
+- title: М'який знак та апостроф — Soft Sign & Apostrophe
+  slug: modifiers
   words: 250
   points:
   - 'Define the soft sign (Ь) as a modifier that palatalizes the preceding consonant,
@@ -46,8 +46,8 @@ content_outline:
     /j/ in the following iotated vowel. Examples: сім''я, м''яч.'
   - 'Summarize the core rule: Ь softens what comes before it, while the apostrophe
     blocks softening.'
-- slug: summary-alphabet
-  section: 'Підсумок: Весь алфавіт — The Full Alphabet'
+- title: 'Підсумок: Весь алфавіт — The Full Alphabet'
+  slug: summary-alphabet
   words: 150
   points:
   - Present the complete 33-letter Cyrillic alphabet in proper order.

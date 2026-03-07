@@ -1,45 +1,46 @@
 # Дослідження: The Gender Code
 
 ## State Standard Reference
-§4.2.2: "Pronoun gender and number forms" and §4.2.1.1: "Noun case form formation — singular/plural, all 4 declensions basic"
-Alignment: Introduces the foundational three-gender system for nouns and establishes gender agreement using the possessive pronouns "мій/моя/моє" as primary diagnostic tools.
+§4.2.1.1: "Noun case form formation — singular/plural, all 4 declensions basic" and §4.2.2: "Pronoun gender and number forms"
+Alignment: This module establishes the foundational three-gender classification system and introduces possessive pronouns (мій, моя, моє) as basic diagnostic tools for gender agreement.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| тато | Natural gender overrides `-о` ending (Masculine) | мій тато |
-| сонце | Neuter noun; cultural personification | ясне сонце |
-| ім'я | Family 4 Neuter trap despite `-я` ending | моє ім'я |
-| ніч / день | High-frequency soft-sign minimal pair (F/M) | добра ніч, гарний день |
+| брат | High-frequency masculine family term; consonant ending. | мій брат, старший брат |
+| книга | High-frequency feminine; basic -а ending. | цікава книга, моя книга |
+| вікно | High-frequency neuter; basic -о ending. | велике вікно, чисте вікно |
+| тато | Masculine trap: natural gender overrides the -о ending. | мій тато |
+| ім'я | Neuter exception (Family 4): ends in -я but is neuter. | моє ім'я |
 
 ## Cultural Hooks
-1. The Neuter Sun (*сонце*): Unlike Romance languages where the sun is masculine, Ukrainian folklore treats the sun as an impartial, gentle life-giver, reflecting its neuter gender.
+1. The Neuter Sun (сонце): In Ukrainian folklore, the sun is an impartial, gentle life-giver (neuter), contrasting with the masculine or feminine suns in Romance languages.
+2. Personification of nature: Gendered language shapes the worldview, embedding natural elements with masculine or feminine traits (e.g., "земля-мати" — mother earth, feminine).
 
 ## Common Learner Errors
-1. The 'It' Trap → Using *воно* for all inanimate objects — English speakers assume gender only applies to biological sex.
-2. The 'Name' Trap (*ім'я*) → Assuming it is feminine because of the *-я* ending — It belongs to a special Neuter category (Family 4).
-3. The *тато* Override → Assuming it is neuter because of the *-о* ending — Biological sex trumps grammatical endings.
+1. The "It" Trap → English speakers naturally default to using neuter ("воно") for all inanimate objects (like a table). They must learn that inanimate objects have grammatical gender (e.g., "стіл" is "він" and "книга" is "вона").
+2. The "тато" Trap → Assuming "тато" is neuter because it ends in "-о". Natural gender overrides grammatical endings for biological males.
+3. The Soft Sign Ambiguity → Words ending in "-ь" can be either masculine (день) or feminine (ніч); there is no visible rule on the noun itself, so these require memorization.
 
 ## Cross-References
 - Builds on: a1-02 (The Cyrillic Code II)
 - Prepares for: a1-09 (This Is, I Am), a1-26 (Adjectives)
 
 ## Notes for Content Writing
-- Use English for all classroom instructions and grammar explanations. Scaffolding is mandatory at this stage.
-- Do not introduce cases or plurals; keep everything in Nominative singular.
-- Only show IPA for the first occurrence of each new vocabulary word.
-- Use color coding (Blue=M, Red=F, Yellow=N) as a visual mnemonic to ease cognitive load.
-- Remind learners that adjectives matching nouns is just an exposure exercise here; the core rule is about the noun ending.
+- Stick STRICTLY to verb-free examples (e.g., "Це стіл", "стіл (він)").
+- Do not introduce case declension yet; keep everything in the Nominative case.
+- English scaffolding is mandatory for explaining the abstract concept of grammatical gender.
+- Emphasize visual mnemonic categorization (e.g., color-coding hard consonants vs. open vowels).
 
 ## Resource Discovery
 
 
 ### Blog Articles
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) (Infographic with rules and exceptions)
+- [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) (8-minute grammar guide)
 - [Dobra Forma: Gender of Nouns](https://opentext.ku.edu/dobraforma/chapter/1-1/) (dobraforma)
 - [Dobra Forma: Gender of Nouns (Masculine and Feminine)](https://opentext.ku.edu/dobraforma/chapter/1-2/) (dobraforma)
 - [Dobra Forma: Gender of Nouns (Neuter)](https://opentext.ku.edu/dobraforma/chapter/1-3/) (dobraforma)
-- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) (ukrainianlessons.com)
-- [Ukrainian Lessons Podcast Season 4](https://www.ukrainianlessons.com/episode157/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 - Grade 11, Сторінка 144: Скористайтеся додатковими 
@@ -55,12 +56,10 @@ Alignment: Introduces the foundational three-gender system for nouns and establi
 Відомості із синтаксису й пунктуації. Речення з однорідними членами
 Вправа 367
 1. Виконайте завд...
-- Grade 7, Сторінка 71: Розділ 1  ДІЄСЛОВО
-68
-Вправа 104
- 
-Роздивіться фрагменти записів на дошці й  поміркуйте, до вивчення...
 - Grade 8, Сторінка 190: 103
 	
 Тестові завдання для підготовки  
 до тематичного контролю за розділом  ІІІ. . . . . . . . . . ...
+- Grade 11, Сторінка 222: . . . . . . . . . . . . . . . . . . . . . . 193
+§ 45 
+Вимоги до вживання синтаксичних одиниць у різн...

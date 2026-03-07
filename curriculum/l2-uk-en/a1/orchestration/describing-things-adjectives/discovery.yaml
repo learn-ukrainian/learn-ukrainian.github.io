@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T14:48:13.719894+00:00'
+discovered_at: '2026-03-06T21:43:32.448336+00:00'
 query_keywords:
 - Describing Things - Adjectives
 - Світ прикметників
@@ -39,8 +39,19 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode108/
   title: Kyiv tour + Participle in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.4
+  topics:
+  - grammar
+  - adjectives
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 108
 rag_chunks:
 - score: 0.1666666716337204
   chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0067

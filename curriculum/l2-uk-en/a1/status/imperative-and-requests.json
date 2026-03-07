@@ -2,15 +2,15 @@
   "module": "imperative-and-requests",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-06T06:14:53.628226Z",
+  "last_audit": "2026-03-07T00:31:54.200618Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T06:12:51.159267Z",
-    "meta": "2026-03-06T06:12:59.711960Z",
-    "activities": "2026-03-06T06:06:38.683317Z",
-    "vocabulary": "2026-03-06T05:53:36.747406Z",
+    "md": "2026-03-07T00:23:23.195019Z",
+    "meta": "2026-03-07T00:19:36.318937Z",
+    "activities": "2026-03-07T00:06:42.206816Z",
+    "vocabulary": "2026-03-07T00:06:42.300302Z",
     "plan": "2026-03-05T10:32:40.301459Z",
-    "research": "2026-03-06T05:31:28.043944Z"
+    "research": "2026-03-06T23:59:19.031566Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1458/1200 (raw: 1523)"
+      "message": "1410/1200 (raw: 1465)"
     },
     "activities": {
       "status": "pass",
@@ -44,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/imperative-and-requests-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/imperative-and-requests-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    ],
     "pass_count": 5,
-    "fail_count": 0,
-    "deferred_count": 1
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

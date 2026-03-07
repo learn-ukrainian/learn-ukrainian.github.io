@@ -4,68 +4,67 @@
 
 ## State Standard Reference
 §4.2.4.2: "Imperative mood — 2nd person only at A1"
-Alignment: Focuses exclusively on the allowed 2nd person singular ("ти") and plural/formal ("ви") imperative forms, satisfying A1 requirements while strictly avoiding 1st person plural or 3rd person forms.
+Alignment: Introduces basic 2nd person singular ("ти") and plural/formal ("ви") imperative forms, strictly avoiding 1st person plural and 3rd person forms.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| читати/читай | Regular vowel stem, core classroom verb | Читайте текст |
-| писати/пиши | Present stem mutation (с→ш), core classroom | Пишіть у зошиті |
-| сказати/скажи | Irregular mutation (к→ж) | Скажіть, будь ласка |
-| дати/дай | Irregular short form | Дайте, будь ласка |
+| дати / дай(те) | High frequency irregular | Дайте, будь ласка |
+| сказати / скажи(те) | Irregular consonant mutation (к→ж) | Скажіть, будь ласка |
+| читати / читай(те) | Standard classroom command | Читайте текст |
 
 ## Cultural Hooks
-1. Using direct imperatives is much more common and socially acceptable in Ukrainian than in English, where it often sounds "bossy". It is the standard, natural way to give instructions.
-2. The literal translation of "будь ласка" comes from "будьте ласкаві" (be kind), showing how politeness is deeply built into the language itself.
+1. In Ukrainian culture, "Будь ласка" is the universal magic word that softens direct commands, but it's always written as two separate words. 
+2. Teachers typically use the plural "ви" (читайте, слухайте) to address the whole class, but switch to the singular "ти" (читай, слухай) for individual students.
 
 ## Common Learner Errors
-1. Confusing infinitive with imperative ("Читати!" vs "Читай!") → "Читай!" — Infinitives are mostly used for impersonal public signs, while personal commands require the imperative.
-2. Over-regularizing irregular stems (e.g., *дайи instead of дай, *сказай instead of скажи) → Required verbs with mutations must be memorized as set forms early on.
+1. Confusing imperative with infinitive → Learner says "Читати!" instead of "Читай!". This happens because English "read" looks like an infinitive. In Ukrainian, the infinitive for commands is only used on public signs.
+2. Regularizing irregular stems → Learner forms "*дайи" or "*сказай" instead of "дай" and "скажи". This happens because they apply regular suffix rules to verbs that require memorization.
 
 ## Cross-References
 - Builds on: a1-46 (Must and Want)
-- Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
+- Prepares for: a1-48 (Body and Health)
 
 ## Notes for Content Writing
-- Stick strictly to the 2nd person imperative. Do not introduce "хай/нехай" or "давай" (these belong to A2).
-- Reassure learners that using imperatives does not make them sound rude in Ukrainian.
+- Remember the strict ban on Ukrainian imperative instructions in this module's own exercises (use "Read...", "Try to..." instead of "Прочитайте...", "Спробуйте...").
+- English scaffolding is mandatory for explaining the grammar before providing Ukrainian examples.
+- Keep sentences short (max 8-10 Ukrainian words per sentence) and ensure IPA is used only on the first occurrence of a new word.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - title: "Наказовий спосіб"
+  - title: "Наказовий спосіб (Imperative mood)"
     slug: nakazovyi-sposib
     words: 300
     points:
-      - "Formation rule: 2nd person singular and plural. Remove -ти ending, add imperative suffix. Pattern depends on conjugation type and stem final consonant."
-      - "Ти-form vs Ви-form: читай (ти) → читайте (ви), пиши (ти) → пишіть (ви), говори (ти) → говоріть (ви). Ви-form adds -те/-іть for politeness and plurality."
-      - "Learner error: confusing imperative with infinitive. 'Читати!' is a sign/rule (read!), 'Читай!' is a personal command. Context determines which form to use."
-  - title: "Вісім обов'язкових дієслів"
+      - "Formation rule: 2nd person singular and plural. Remove -ти ending, add imperative suffix."
+      - "Ти-form vs Ви-form: читай (ти) → читайте (ви), пиши (ти) → пишіть (ви). Explain adding -те/-іть for politeness and plurality."
+      - "Learner error: Explain that 'Читати!' is a sign/rule, while 'Читай!' is a personal command. Context determines which form to use."
+  - title: "Вісім обов'язкових дієслів (Eight required verbs)"
     slug: visim-oboviazkovykh-diesliv
     words: 300
     points:
-      - "State Standard §4.2.4.2 required verbs: читай(те), пиши(те), скажи(те), дай(те), іди(те), слухай(те), дивись(те), стій(те)."
-      - "Classroom commands context: Читайте текст (Read the text). Пишіть у зошиті (Write in your notebook). Слухайте уважно (Listen carefully). Дивіться на дошку (Look at the board)."
-      - "Irregular stems: дати → дай (not *дайи), сказати → скажи (consonant mutation к→ж), стояти → стій (stem vowel change). These must be memorized as set forms."
-  - title: "Ввічливе прохання"
+      - "Present the 8 verbs from State Standard §4.2.4.2: читай(те), пиши(те), скажи(те), дай(те), іди(те), слухай(те), дивись(те), стій(те)."
+      - "Provide classroom command contexts: Читайте текст. Пишіть у зошиті. Слухайте уважно."
+      - "Highlight irregular stems that must be memorized: дати → дай, сказати → скажи, стояти → стій."
+  - title: "Ввічливе прохання (Polite requests)"
     slug: vvichlyve-prokhannia
     words: 250
     points:
-      - "Будь ласка as universal softener: Дайте, будь ласка (Please give). Position flexibility: beginning, middle, or end of sentence. Most common after the verb."
-      - "Прошу вас + infinitive: Прошу вас сісти (Please sit down). More formal than будь ласка. Used in official or service contexts."
-      - "Indirect request pattern: Чи не могли б ви...? (Could you...?). Preview of conditional mood. Чи не могли б ви повторити? (Could you repeat?). Most polite option available at A1."
-  - title: "Заборони"
+      - "Explain 'Будь ласка' as a universal softener and its flexible sentence position (beginning, middle, or end)."
+      - "Introduce 'Прошу вас + infinitive' for slightly more formal or official service contexts."
+      - "Briefly preview the indirect request pattern 'Чи не могли б ви...?' as the most polite A1 option."
+  - title: "Заборони (Prohibitions)"
     slug: zaborony
     words: 175
     points:
-      - "Negative imperative: Не + imperative form. Не кури! (Do not smoke!). Не біжи! (Do not run!). Не чіпай! (Do not touch!). Same formation as positive, with не."
-      - "Preview connection to a1-55 (Prohibitions and Signs): Distinction between personal prohibition (Не чіпай!) and public sign prohibition (Не торкатися! — infinitive form). Both mean 'do not touch' but differ in register."
-  - title: "Підсумок і Практика"
-    slug: pidsumok-i-praktyka
+      - "Explain negative imperatives using 'Не' + imperative form (Не кури! Не біжи! Не чіпай!)."
+      - "Preview the distinction between a personal prohibition (Не чіпай!) and a public sign prohibition (Не торкатися!)."
+  - title: "Практика та підсумок (Practice and Summary)"
+    slug: summary
     words: 175
     points:
-      - "Command drills: Teacher gives situation, learner produces correct imperative form. Focus on the 8 required verbs in varied contexts."
-      - "Politeness escalation practice: Upgrading direct commands to polite requests. Дай → Дайте, будь ласка → Чи не могли б ви дати?"
-      - "Self-check summary questions to evaluate understanding of the imperative formation and usage."
+      - "Command drills focusing on the 8 required verbs and upgrading direct commands to polite requests."
+      - "Self-check: 3-4 summary questions verifying understanding of the 'ти/ви' distinction, irregular stems, and placement of 'будь ласка'."
 ===META_OUTLINE_END===

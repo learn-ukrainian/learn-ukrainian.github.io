@@ -1,4 +1,4 @@
-discovered_at: '2026-03-05T17:17:41.944268+00:00'
+discovered_at: '2026-03-06T21:10:39.471250+00:00'
 query_keywords:
 - The Cyrillic Code III
 - Приголосні
@@ -19,43 +19,18 @@ blogs:
 - url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
   title: Ukrainian Cyrillic Alphabet — Letters and Sounds
   source: ukrainianlessons.com
-  relevance_score: 0.6000000000000001
-  topics:
-  - alphabet
-  - cyrillic
-  - letters
-  - sounds
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/ukrainian-alphabet/
   title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - alphabet
-  - cyrillic
-  - pronunciation
-  - letters
+  relevance_score: 1.0
+  topics: []
 - url: https://talkukrainian.com/ukrainian-alphabet/
   title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
   source: talkukrainian
-  relevance_score: 0.5
-  topics:
-  - alphabet
-  - letters
-  - pronunciation
-  - cyrillic
-- url: https://www.ukrainianlessons.com/episode200/
-  title: Ukrainian Lessons Podcast Season 5
-  source: ukrainianlessons.com
-  relevance_score: 0.2
-  topics:
-  - grammar
-  - verbs
-  - future tense
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 5
-  episode: 200
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.3333333432674408
   chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0003
@@ -112,7 +87,29 @@ rag_chunks:
   author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.1666666716337204
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0006
+  text: '. . . . . 133
+
+    Звукове значення букв я, ю, є, ї та  щ. Звуки  [дж], [дз] . . . . . . . . . .
+    137
+
+    Вимова приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . 140
+
+    Уподібнення приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 143
+
+    За дзвінкістю . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 143
+
+    За глухістю . . . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 4
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
   chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0001
   text: 'ЗВУКИ І БУКВИ
 
@@ -178,27 +175,5 @@ rag_chunks:
   author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.5
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0006
-  text: '. . . . . 133
-
-    Звукове значення букв я, ю, є, ї та  щ. Звуки  [дж], [дз] . . . . . . . . . .
-    137
-
-    Вимова приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . 140
-
-    Уподібнення приголосних . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . 143
-
-    За дзвінкістю . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . 143
-
-    За глухістю . . . . . . . . . . . . . . . . . . . . . . . . . . . .'
-  section_title: Сторінка 4
-  grade: 5
-  author: litvinova
-  page: ''
-  trust_tier: 1
 rag_images: []
 rag_literary: []

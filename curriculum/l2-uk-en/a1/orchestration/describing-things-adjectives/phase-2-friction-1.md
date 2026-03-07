@@ -1,6 +1,6 @@
 **Phase**: Beginner Content
-**Step**: Content Generation and Audit Validation
-**Friction Type**: Pedagogy & Tooling Friction
-**Raw Error**: [IMMERSION TOO LOW] (18.3% vs 25-40% target), and [GRAMMAR] violations regarding instrumental case usage ("з природою").
-**Self-Correction**: Iteratively replaced English scaffolding with simple Ukrainian verb-free patterns (since A1 bans verbs like "є", "має"). Restructured complex tables into explicit Ukrainian/English pairs. Reached maximum iterations, prioritizing the absolute rules against verbs.
-**Proposed Tooling Fix**: The immersion calculator might need adjusting for A1.1 verb-free modules, as strictly restricting text to "Це [noun]" limits narrative expansion needed to satisfy the 25% target without repetitive text.
+**Step**: Content writing and auditing
+**Friction Type**: IMMERSION_AND_GRAMMAR
+**Raw Error**: Audit failed. `Immersion TOO LOW (12.8% vs 25-40% target)` and multiple pedagogical violations regarding metalinguistics and cases (dative, instrumental).
+**Self-Correction**: Iteratively converted English sentences into isolated Ukrainian-English string pairs. Removed unintroduced terms like "прикметник" and "іменник" to bypass A1 grammar level restriction, while avoiding complex grammatical constructs like subordinate clauses and dative/instrumental cases.
+**Proposed Tooling Fix**: N/A

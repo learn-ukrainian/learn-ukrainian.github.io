@@ -1,67 +1,89 @@
-        # Fix 13 issue(s) in `describing-things-adjectives`
+        # Fix 16 issue(s) in `describing-things-adjectives`
 
-        ### Fix 1: PEDAGOGICAL
-**What:** [NO_IMPERATIVES_EARLY_A1] 'Уявіть' — Imperative verb forms should not appear in early A1 modules (M1-46). Students haven't learned verb conjugation yet.
-**How to fix:** Replace imperative verbs with English instructions or simple noun phrases. E.g. 'Слухайте уважно!' → 'Listen carefully!' or 'Listening practice:'
-**Context (line 11):** `> Уявіть, що ви в кафе і хочете велику каву, а не маленьку. Або шукаєте новий телефон, а не старий. Прикметники допомагають нам точно описувати світ.`
+        ### Fix 1: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'вивчаємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'вивчаємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 16
 
-### Fix 2: PEDAGOGICAL
-**What:** [NO_IMPERATIVES_EARLY_A1] 'Уявімо' — Imperative verb forms should not appear in early A1 modules (M1-46). Students haven't learned verb conjugation yet.
-**How to fix:** Replace imperative verbs with English instructions or simple noun phrases. E.g. 'Слухайте уважно!' → 'Listen carefully!' or 'Listening practice:'
-**Context (line 163):** `Уявімо іншу ситуацію. Ми в агенції нерухомості.`
+### Fix 2: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'описують' (VESUM: verb:imperf:pres:p:3) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'описують' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 19
 
-### Fix 3: PEDAGOGICAL
-**What:** [NO_VERB_CONJUGATION_PRE_M15] 'використовуємо' — Conjugated Ukrainian verb forms should not appear before M15. Students are still learning the alphabet and basic words.
-**How to fix:** Replace conjugated verbs with English equivalents or noun phrases. E.g. 'Ми вивчаємо літери' → 'We are learning letters' / 'Вивчення літер'
-**Context (line 159):** `> В українській міфології Ма́вка — це дух лісу (a forest spirit). Її су́кня завжди зеле́на. Оскільки сло́во «су́кня» (dress) — це жіночий рід, ми використовуємо закінчення **-а**: зеле́н**а** су́кня.`
+### Fix 3: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'має' (VESUM: verb:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'має' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 34
 
-### Fix 4: PEDAGOGICAL
-**What:** [NO_VERB_CONJUGATION_PRE_M15] 'Уявімо' — Conjugated Ukrainian verb forms should not appear before M15. Students are still learning the alphabet and basic words.
-**How to fix:** Replace conjugated verbs with English equivalents or noun phrases. E.g. 'Ми вивчаємо літери' → 'We are learning letters' / 'Вивчення літер'
-**Context (line 163):** `Уявімо іншу ситуацію. Ми в агенції нерухомості.`
+### Fix 4: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'центрі' (locative, VESUM: noun:inanim:m:v_mis:xp1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'центрі' (locative) with its nominative form or use English equivalent.
+**Where:** ~line 49
 
-### Fix 5: PEDAGOGICAL
-**What:** [NO_VERB_CONJUGATION_PRE_M15] 'допомагають' — Conjugated Ukrainian verb forms should not appear before M15. Students are still learning the alphabet and basic words.
-**How to fix:** Replace conjugated verbs with English equivalents or noun phrases. E.g. 'Ми вивчаємо літери' → 'We are learning letters' / 'Вивчення літер'
-**Context (line 11):** `> Уявіть, що ви в кафе і хочете велику каву, а не маленьку. Або шукаєте новий телефон, а не старий. Прикметники допомагають нам точно описувати світ.`
+### Fix 5: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'закінчується' (VESUM: verb:rev:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'закінчується' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 75
 
-### Fix 6: PEDAGOGICAL
-**What:** [NO_VERB_CONJUGATION_PRE_M15] 'роблять' — Conjugated Ukrainian verb forms should not appear before M15. Students are still learning the alphabet and basic words.
-**How to fix:** Replace conjugated verbs with English equivalents or noun phrases. E.g. 'Ми вивчаємо літери' → 'We are learning letters' / 'Вивчення літер'
-**Context (line 68):** `> Студенти часто роблять помилку. Вони кажуть «нови́й маши́на». Це помилка! Маши́на — це жіночий рід.`
+### Fix 6: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'змінюємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'змінюємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 81
 
-### Fix 7: PEDAGOGICAL
-**What:** [NO_VERB_CONJUGATION_PRE_M15] 'має' — Conjugated Ukrainian verb forms should not appear before M15. Students are still learning the alphabet and basic words.
-**How to fix:** Replace conjugated verbs with English equivalents or noun phrases. E.g. 'Ми вивчаємо літери' → 'We are learning letters' / 'Вивчення літер'
-**Context (line 128):** `> У Київському метро є **си́ня лі́нія** (blue line) та **зеле́на лі́нія** (green line). «Зеле́на» має тверду основу (hard stem), тому закінчується на **-а**, а «си́ня» має м'яку основу (soft stem), тому закінчується на **-я**!`
+### Fix 7: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'інших' (genitive, VESUM: adj:p:v_rod:pron:def) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'інших' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 81
 
-### Fix: Gate `Pedagogy` FAIL — 3 violations
+### Fix 8: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'родів' (genitive, VESUM: noun:inanim:p:v_rod) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'родів' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 81
 
-### Fix: Gate `Immersion` FAIL — 22.8% LOW (target 25-40% (M11))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
+### Fix 9: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'маємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'маємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 93
 
-### Fix 10: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'ь, що в'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
+### Fix 10: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'перевіряйте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'перевіряйте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 137
 
-### Fix 11: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] Sentence too long for A1: 11 words (max 10)
-**How to fix:** Break into shorter sentences. First 5 words: 'Київському метро си ня лі...'
+### Fix 11: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'закінчується' (VESUM: verb:rev:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'закінчується' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 162
 
-### Fix 12: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] Sentence too long for A1: 16 words (max 10)
-**How to fix:** Break into shorter sentences. First 5 words: 'Зеле на має тверду основу...'
+### Fix 12: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'Києві' (dative, VESUM: noun:inanim:m:v_dav) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'Києві' (dative) with its nominative form or use English equivalent.
+**Where:** ~line 179
 
-### Fix 13: PEDAGOGICAL_VIOLATION
+### Fix 13: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'має' (VESUM: verb:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'має' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 183
+
+### Fix 14: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'Зверніть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Зверніть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 186
+
+### Fix 15: MORPHOLOGICAL_VIOLATION
+**What:** Non-nominative 'увагу' (accusative, VESUM: noun:inanim:f:v_zna) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'увагу' (accusative) with its nominative form or use English equivalent.
+**Where:** ~line 186
+
+### Fix 16: PEDAGOGICAL_VIOLATION
 **What:** [METALANGUAGE] Metalanguage terms used but not in vocabulary: множина
 **How to fix:** Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ### Other Audit Failures
 
 ```
+TOTAL                                                                        1169 / 1200  ❌ (-31)
 📚 PEDAGOGICAL VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/describing-things-adjectives-audit.log for details)
 ```
 
 

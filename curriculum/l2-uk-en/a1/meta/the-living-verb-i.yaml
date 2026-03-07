@@ -2,42 +2,43 @@ slug: the-living-verb-i
 title: The Living Verb I
 word_target: 1200
 content_outline:
-- section: Вступ (Introduction)
+- title: Вступ (Introduction)
   slug: introduction
   words: 250
   points:
-  - 'Transition from static descriptions to dynamic actions: moving from ''this is''
-    to ''I do''.'
-  - Introduce target high-frequency verbs (читати, працювати) in a simple context.
-  - 'Cultural hook: Connect the verb ''читати'' to the 1574 ''Apostol'' and Ukraine''s
-    literacy tradition.'
-- section: Презентація (Presentation)
-  slug: presentation-the-pattern
+  - 'Transition from static descriptions (from previous modules like ''My World'')
+    to dynamic action verbs: the shift from ''this is'' to ''I do''.'
+  - Introduce target high-frequency verbs (читати, працювати, знати) in a simple context.
+  - 'Historical hook: Connect the verb ''читати'' to the 1574 ''Apostol'' and Ukraine''s
+    rich literacy tradition.'
+- title: Презентація (Presentation)
+  slug: presentation
   words: 350
   points:
   - 'Visualize the Class I conjugation pattern (-ати): drop ''-ти'' and add personal
-    endings (-ю, -єш, -є, -ємо, -єте, -ють) using clear tables.'
+    endings (-ю, -єш, -є, -ємо, -єте, -ють) using clear ''Stem + Ending'' tables.'
   - 'Introduce the Pro-drop feature: explain that verb endings indicate the subject,
     so pronouns like ''я'' and ''ми'' can often be dropped.'
   - 'Explain the Imperfective Aspect simply: these verbs describe ongoing actions
     or habits (what you are doing now or usually do).'
-- section: Практика (Practice)
-  slug: practice-and-errors
+- title: Практика (Practice)
+  slug: practice
   words: 350
   points:
   - 'Error Correction 1 (Infinitive Abuse): Drill replacing the incorrect ''Я читати''
     with the conjugated ''Я читаю''.'
   - 'Error Correction 2 (Pronoun Overuse): Practice reading and forming short sentences
-    without constantly repeating ''я''.'
+    without constantly repeating pronouns.'
   - 'Contextual SVO Sentences: Practice combining target verbs with inanimate masculine/neuter
     objects (e.g., читаю журнал, слухаю радіо) to avoid Accusative case confusion.'
-- section: Культурний аспект та підсумок (Cultural Insight and Summary)
+- title: Підсумок та культурний аспект (Summary and Cultural Insight)
   slug: summary
   words: 250
   points:
   - 'The ''Master Key'' concept: summarize how this single pattern unlocks hundreds
     of everyday verbs.'
-  - Recap the conjugation table and the pro-drop rule.
+  - 'Cultural Proverb: ''Птицю пізнати по пір''ю, а людину по мові'' — linking grammatical
+    accuracy to personal character.'
   - 'Self-check questions: 1. What is the ''ми'' ending? 2. Do you always need to
     use ''я''? 3. How do you form the stem of ''читати''? 4. How do you say ''I am
     reading''?'

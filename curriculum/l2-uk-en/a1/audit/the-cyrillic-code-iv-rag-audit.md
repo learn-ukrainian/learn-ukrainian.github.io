@@ -1,10 +1,10 @@
 # RAG Verification: the-cyrillic-code-iv
 
-**Date:** 2026-03-05 19:42 UTC | **Words checked:** 124 | **VESUM coverage:** 118/124 (95.2%)
+**Date:** 2026-03-06 21:24 UTC | **Words checked:** 87 | **VESUM coverage:** 83/87 (95.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 118
-- ⚠️ Partial (RAG only): 5
+- ✅ Verified (VESUM): 83
+- ⚠️ Partial (RAG only): 3
 - ❌ Not found: 1
 
 ## ❌ Not Found (action required)
@@ -20,12 +20,10 @@
 | ДЖ | prose | ✗ | ✓ | ✗ |
 | ДЗ | prose | ✗ | ✓ | ✗ |
 | Львів | prose | ✗ | ✓ | ✗ |
-| Тарас | prose | ✗ | ✗ | ✓ |
-| Шевченко | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 122 | 116 | 1 |
-| Activities (.yaml) | 2 | 2 | 0 |
+| Prose (.md) | 73 | 69 | 1 |
+| Activities (.yaml) | 14 | 14 | 0 |
