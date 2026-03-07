@@ -93,32 +93,52 @@ def audit_module(mod: dict) -> dict:
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT_DIR))
     output = result.stdout + result.stderr
 
-    # Parse audit output
+    # Read structured status JSON (written by audit — authoritative source)
+    status_path = CURDIR / track / "status" / f"{slug}.json"
     gates = {}
-    passed = "AUDIT PASSED" in output
-
-    for line in output.split("\n"):
-        line = line.strip()
-        if not line:
-            continue
-        # Parse gate lines like: "Words        ✅ 1742/1200 (raw: 1827)"
-        if "✅" in line or "❌" in line:
-            parts = line.split(None, 1)
-            if len(parts) >= 2:
-                gate_name = parts[0].strip()
-                gate_pass = "✅" in line
-                gates[gate_name] = gate_pass
-
-    # Extract word count
+    passed = False
     words = 0
     word_target = 0
-    for line in output.split("\n"):
-        if "Words" in line and ("✅" in line or "❌" in line):
 
-            m = re.search(r"(\d+)/(\d+)", line)
-            if m:
-                words = int(m.group(1))
-                word_target = int(m.group(2))
+    if status_path.exists():
+        with open(status_path) as f:
+            status_data = json.load(f)
+        # Determine pass/fail based on content gates only (review is separate phase)
+        content_gates_ok = all(
+            g_info.get("status") != "fail"
+            for g_name, g_info in status_data.get("gates", {}).items()
+            if g_name != "review"
+        )
+        passed = content_gates_ok
+        for gate_name, gate_info in status_data.get("gates", {}).items():
+            status = gate_info.get("status", "")
+            # pass/info/deferred/skipped = not failing; only "fail" = failing
+            gates[gate_name] = status != "fail"
+        # Extract word count from lesson gate message: "1574/1200 (raw: 1638)"
+        lesson_msg = status_data.get("gates", {}).get("lesson", {}).get("message", "")
+        m = re.search(r"(\d+)/(\d+)", lesson_msg)
+        if m:
+            words = int(m.group(1))
+            word_target = int(m.group(2))
+    else:
+        # Fallback: parse stdout (status JSON not written on crash)
+        passed = "AUDIT PASSED" in output
+        for line in output.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            if "✅" in line or "❌" in line:
+                parts = line.split(None, 1)
+                if len(parts) >= 2 and parts[0][0].isalpha():
+                    gate_name = parts[0].strip()
+                    gate_pass = "✅" in line
+                    gates[gate_name] = gate_pass
+        for line in output.split("\n"):
+            if "Words" in line and ("✅" in line or "❌" in line):
+                m = re.search(r"(\d+)/(\d+)", line)
+                if m:
+                    words = int(m.group(1))
+                    word_target = int(m.group(2))
 
     # Check orchestration state for fix loop count and self-audit status
     from pipeline_v5 import load_state as _load_v5_state
@@ -132,8 +152,23 @@ def audit_module(mod: dict) -> dict:
     fix_attempts = validate_phase.get("attempts", 0)
     self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
 
-    # Count failing gates
-    failing_gates = [g for g, v in gates.items() if not v]
+    # Count failing gates (exclude review — it's a separate pipeline phase)
+    failing_gates = [g for g, v in gates.items() if not v and g != "review"]
+    # Track review status separately
+    review_gate_pass = gates.get("review", True)
+
+    # Extract naturalness score from meta.yaml
+    nat_score = None
+    meta_path = CURDIR / track / "meta" / f"{slug}.yaml"
+    if meta_path.exists():
+        try:
+            with open(meta_path) as f:
+                meta_data = yaml.safe_load(f) or {}
+            nat = meta_data.get("naturalness", {})
+            if isinstance(nat, dict) and nat.get("score"):
+                nat_score = nat["score"]
+        except Exception:
+            pass
 
     # Parse existing reviews
     content_review = parse_content_review(track, slug)
@@ -150,6 +185,7 @@ def audit_module(mod: dict) -> dict:
         "failing_gates": failing_gates,
         "fix_attempts": fix_attempts,
         "self_audited": self_audited,
+        "nat_score": nat_score,
         "content_review": content_review,
         "prompt_review": prompt_review,
     }
@@ -247,7 +283,7 @@ def save_results(results: list[dict], run_id: str) -> Path:
         writer = csv.writer(f)
         if not csv_exists:
             writer.writerow(["date", "run_id", "track", "num", "slug", "audit_grade",
-                             "review_grade", "status", "words", "target",
+                             "review_grade", "nat_score", "status", "words", "target",
                              "fix_attempts", "self_audited", "failing_gates"])
         for r in results:
             cr = r.get("content_review")
@@ -257,6 +293,7 @@ def save_results(results: list[dict], run_id: str) -> Path:
                 r["track"], r["num"], r["slug"],
                 r.get("grade", "?"),
                 cr["grade"] if cr else "-",
+                r.get("nat_score", "-"),
                 r["status"],
                 r.get("words", 0), r.get("word_target", 0),
                 r.get("fix_attempts", 0),
@@ -289,8 +326,8 @@ def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
     print(f"\n{'='*90}")
     print(f"  TESTBED RESULTS — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"{'='*90}")
-    print(f"{'#':>3} {'Track':>5} {'Slug':<34} {'Audit':>5} {'Review':>6} {'Fix':>3} {'SA':>2} {'Words':>9} {'Delta':>6}")
-    print(f"{'-'*3:>3} {'-'*5:>5} {'-'*34:<34} {'-'*5:>5} {'-'*6:>6} {'-'*3:>3} {'-'*2:>2} {'-'*9:>9} {'-'*6:>6}")
+    print(f"{'#':>3} {'Track':>5} {'Slug':<34} {'Audit':>5} {'Review':>6} {'Nat':>3} {'Fix':>3} {'SA':>2} {'Words':>9} {'Delta':>6}")
+    print(f"{'-'*3:>3} {'-'*5:>5} {'-'*34:<34} {'-'*5:>5} {'-'*6:>6} {'-'*3:>3} {'-'*3:>3} {'-'*2:>2} {'-'*9:>9} {'-'*6:>6}")
 
     a_count = 0
     total = 0
@@ -319,8 +356,9 @@ def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
 
         words_str = f"{r.get('words', 0)}/{r.get('word_target', 0)}"
         sa_str = "Y" if r.get("self_audited") else "-"
+        nat_str = str(r.get("nat_score", "-")) if r.get("nat_score") is not None else "-"
         slug_short = r['slug'][:34]
-        print(f"{r['num']:>3} {r['track']:>5} {slug_short:<34} {grade:>5} {review_str:>6} {r.get('fix_attempts', 0):>3} {sa_str:>2} {words_str:>9} {delta:>6}")
+        print(f"{r['num']:>3} {r['track']:>5} {slug_short:<34} {grade:>5} {review_str:>6} {nat_str:>3} {r.get('fix_attempts', 0):>3} {sa_str:>2} {words_str:>9} {delta:>6}")
 
         if grade == "A":
             a_count += 1
