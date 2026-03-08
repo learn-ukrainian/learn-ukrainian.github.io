@@ -59,7 +59,7 @@ def load_cache(jsonl_path: Path) -> dict:
     """Load embeddings from cache (upcast dense back to fp32)."""
     cp = cache_path_for(jsonl_path)
     with open(cp, "rb") as f:
-        data = pickle.load(f)
+        data = pickle.load(f)  # nosec B301 — loading our own embedding cache
     data["dense_vecs"] = data["dense_vecs"].astype(np.float32)
     return data
 
