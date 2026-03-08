@@ -24,6 +24,25 @@ from typing import Any
 
 import yaml
 
+# Import helpers — keyword building, blog/RAG search, formatting
+from video_discovery_helpers import (
+    _BLOG_STOPWORDS,
+    _build_search_terms,
+    _default_qdrant_check,
+    _extract_noun_phrases,
+    _LEVEL_GRADE_RANGES,
+    _score_article,
+    _search_blog_dbs,
+    _SEMINAR_TRACKS,
+    build_discovery_keywords,
+    build_search_keywords,
+    cap_query,
+    extract_lemmas_from_hints,
+    format_blog_discovery,
+    format_rag_discovery,
+    search_rag as _search_rag_impl,
+)
+
 logger = logging.getLogger(__name__)
 
 TRANSCRIPT_CAP = 50_000
@@ -43,211 +62,7 @@ SCORE_DB_PATH = _PROJECT_ROOT / "docs" / "resources" / "ukrainianlessons" / "res
 
 
 # ---------------------------------------------------------------------------
-# Keyword cleaning — extract clean lemmas from vocab hint strings
-# ---------------------------------------------------------------------------
-
-def extract_lemmas_from_hints(hints: list[str]) -> list[str]:
-    """Extract clean lemmas from vocabulary hint strings.
-
-    Input examples:
-        "цей / ця / це / ці (this) — High frequency"  → ["цей", "ця", "це", "ці"]
-        "книга (book)"  → ["книга"]
-        "ходити / йти (to walk/go)"  → ["ходити", "йти"]
-
-    Returns a flat list of individual Ukrainian words (lemmas).
-    """
-    lemmas: list[str] = []
-    for hint in hints:
-        if not hint or not isinstance(hint, str):
-            continue
-        # Strip everything after ( or — or - (when preceded by space)
-        clean = re.split(r'\s*[\(—]', hint)[0].strip()
-        # Also strip trailing " - description" patterns
-        clean = re.split(r'\s+[-–]\s+', clean)[0].strip()
-        # Split on / to get individual forms
-        parts = [p.strip() for p in clean.split("/")]
-        for part in parts:
-            # Only keep Ukrainian words (Cyrillic), skip English
-            words = part.split()
-            for w in words:
-                w = w.strip(",;.")
-                if w and re.match(r"^[а-яіїєґА-ЯІЇЄҐ''ʼ-]+$", w):
-                    lemmas.append(w)
-    return lemmas
-
-
-def build_search_keywords(
-    topic_title: str,
-    vocab_hints: list[str] | dict,
-    max_keywords: int = 8,
-) -> list[str]:
-    """Build clean keyword list for video/blog search.
-
-    Combines topic title with clean lemmas extracted from vocabulary hints.
-    Caps total keyword count and total query length.
-    """
-    keywords = [topic_title]
-
-    # Extract hints list
-    hints_list: list[str] = []
-    if isinstance(vocab_hints, dict):
-        hints_list = vocab_hints.get("required", [])[:10]
-    elif isinstance(vocab_hints, list):
-        hints_list = vocab_hints[:10]
-
-    lemmas = extract_lemmas_from_hints(hints_list)
-    # Deduplicate while preserving order
-    seen: set[str] = {topic_title.lower()}
-    for lemma in lemmas:
-        if lemma.lower() not in seen:
-            seen.add(lemma.lower())
-            keywords.append(lemma)
-        if len(keywords) >= max_keywords:
-            break
-
-    return keywords
-
-
-def _extract_noun_phrases(text: str) -> list[str]:
-    """Extract key noun phrases from objective strings.
-
-    Strips leading verb phrases like "Learner can recognize..." to get
-    the object, e.g., "6 Ukrainian letters" → "Ukrainian letters".
-    Also handles Ukrainian-language objectives.
-    """
-    phrases: list[str] = []
-    if not text:
-        return phrases
-    # Strip common objective prefixes (English)
-    cleaned = re.sub(
-        r"^(Learner\s+)?can\s+\w+\s+(and\s+\w+\s+)?",
-        "", text, flags=re.IGNORECASE,
-    ).strip()
-    # Strip Ukrainian prefixes: "Учень може..." / "Здатний..."
-    cleaned = re.sub(
-        r"^(Учень|Студент)\s+(може|здатний|вміє)\s+\w+\s+",
-        "", cleaned, flags=re.IGNORECASE,
-    ).strip()
-    if cleaned and len(cleaned) > 3:
-        # Remove leading numbers like "6 " or "40 "
-        cleaned = re.sub(r"^\d+\s+", "", cleaned)
-        phrases.append(cleaned)
-    return phrases
-
-
-def build_discovery_keywords(
-    plan: dict,
-    max_keywords: int = 12,
-) -> list[str]:
-    """Build keyword list for discovery from full plan metadata.
-
-    Extracts semantic keywords from multiple plan fields (title, content
-    outline, objectives, grammar, focus) to produce better search terms
-    than vocabulary lemmas alone.
-
-    Falls back to build_search_keywords() behavior if plan is empty.
-    """
-    if not plan:
-        return []
-
-    keywords: list[str] = []
-    seen: set[str] = set()
-
-    def _add(term: str) -> bool:
-        """Add term if not duplicate and under cap. Returns True if added."""
-        if len(keywords) >= max_keywords:
-            return False
-        key = term.lower().strip()
-        if not key or key in seen:
-            return False
-        seen.add(key)
-        keywords.append(term.strip())
-        return True
-
-    # 1. Topic title (always first)
-    title = plan.get("title", "")
-    if title:
-        _add(title)
-
-    # 2. Content outline section titles
-    # Generic PPP/structural labels that don't help discovery
-    _generic = {
-        "вступ", "підсумок", "introduction", "summary", "conclusion",
-        "презентація", "presentation", "практика", "practice",
-        "продукція", "production",
-        "продукція та підсумок", "production and summary",
-    }
-    for section in plan.get("content_outline", []):
-        section_title = section.get("section", "")
-        if not section_title:
-            continue
-        # Extract English part from parentheses if present
-        en_match = re.search(r"\(([^)]+)\)", section_title)
-        # Get the base (before parenthetical)
-        base = re.split(r"\s*[\(—]", section_title)[0].strip()
-        # Handle "Generic: Descriptive subtitle" pattern (e.g., "Презентація: Близька родина")
-        colon_parts = base.split(":", 1)
-        if len(colon_parts) == 2 and colon_parts[0].strip().lower() in _generic:
-            # Use the descriptive part after the colon
-            descriptive = colon_parts[1].strip()
-            if descriptive:
-                _add(descriptive)
-        elif base.lower() not in _generic:
-            _add(base)
-        # Also add English label from parens if descriptive
-        if en_match:
-            en_text = en_match.group(1).strip()
-            en_colon = en_text.split(":", 1)
-            if len(en_colon) == 2 and en_colon[0].strip().lower() in _generic:
-                descriptive = en_colon[1].strip()
-                if descriptive:
-                    _add(descriptive)
-            elif en_text.lower() not in _generic:
-                _add(en_text)
-
-    # 3. Objectives → extract noun phrases
-    for obj in plan.get("objectives", []):
-        if not isinstance(obj, str):
-            continue
-        for phrase in _extract_noun_phrases(obj):
-            _add(phrase)
-
-    # 4. Grammar topics
-    for gram in plan.get("grammar", []):
-        if isinstance(gram, str) and gram.strip():
-            _add(gram.strip())
-
-    # 5. Focus field
-    focus = plan.get("focus", "")
-    if focus and isinstance(focus, str):
-        _add(focus)
-
-    # 6. Vocabulary hints (lower priority — lemmas are specific words)
-    vocab_hints = plan.get("vocabulary_hints", {})
-    hints_list: list[str] = []
-    if isinstance(vocab_hints, dict):
-        hints_list = vocab_hints.get("required", [])[:10]
-    elif isinstance(vocab_hints, list):
-        hints_list = vocab_hints[:10]
-    for lemma in extract_lemmas_from_hints(hints_list):
-        _add(lemma)
-
-    return keywords
-
-
-def cap_query(keywords: list[str], max_len: int = MAX_QUERY_LENGTH) -> str:
-    """Join keywords into a query string, capping total length."""
-    query = ""
-    for kw in keywords:
-        candidate = f"{query} {kw}".strip() if query else kw
-        if len(candidate) > max_len:
-            break
-        query = candidate
-    return query or keywords[0][:max_len] if keywords else ""
-
-
-# ---------------------------------------------------------------------------
-# Blog discovery — static DB matching
+# Blog discovery — DB loading and curated/score search (stateful caches)
 # ---------------------------------------------------------------------------
 
 _blog_db_cache: list[dict] | None = None
@@ -270,7 +85,6 @@ def _load_blog_dbs() -> list[dict]:
         except Exception as e:
             logger.debug("Failed to load blog DB %s: %s", db_path, e)
 
-    # Podcast episodes (normalize to article format)
     if PODCAST_DB_PATH.exists():
         try:
             pod_data = json.loads(PODCAST_DB_PATH.read_text("utf-8"))
@@ -296,7 +110,7 @@ def _load_blog_dbs() -> list[dict]:
 
 
 def _load_score_db() -> dict:
-    """Load pre-computed module→resource score mappings."""
+    """Load pre-computed module->resource score mappings."""
     global _score_db_cache
     if _score_db_cache is not None:
         return _score_db_cache
@@ -368,110 +182,6 @@ def _search_score_db(module_slug, level, results, seen_urls):
                     })
 
 
-_BLOG_STOPWORDS = {
-    "ukrainian", "english", "language", "learn", "learning", "lesson",
-    "introduce", "introduction", "explain", "practice", "identify",
-    "demonstrate", "apply", "define", "understand", "review", "summary",
-    "module", "section", "chapter", "guide", "rule", "rules", "self",
-    "correctly", "fluently", "basic", "advanced", "common", "simple",
-    "using", "about", "with", "from", "that", "this", "what", "where",
-    "which", "have", "will", "they", "their", "your", "into", "also",
-    "when", "more", "most", "some", "other", "each", "both", "than",
-    "very", "only", "just", "make", "take", "give", "know", "help",
-    "read", "write", "open", "leave", "never",
-}
-
-
-def _build_search_terms(topic_title, keywords):
-    """Build search phrases and words from keywords, filtering stopwords."""
-    search_phrases: list[str] = [topic_title.lower()]
-    search_words: set[str] = set()
-    for kw in keywords:
-        kw_lower = kw.lower().strip()
-        if not kw_lower or kw_lower in _BLOG_STOPWORDS:
-            continue
-        if " " in kw_lower:
-            search_phrases.append(kw_lower)
-        else:
-            search_words.add(kw_lower)
-    for word in topic_title.lower().split():
-        if len(word) > 3 and word not in _BLOG_STOPWORDS:
-            search_words.add(word)
-    return search_phrases, search_words
-
-
-def _score_article(article, search_phrases, search_words, level_base):
-    """Score a single article against search terms. Returns score or None if below threshold."""
-    article_topics = {t.lower() for t in article.get("topics", [])}
-    article_title = article.get("title", "").lower()
-    article_title_words = set(article_title.split())
-    article_level = article.get("suggested_level", "").upper()
-    desc = article.get("description", "").lower()
-    desc_words = set(desc.split())
-
-    phrase_score = 0.0
-    for phrase in search_phrases:
-        if phrase in article_title or phrase in desc:
-            phrase_score += 0.5
-        elif any(phrase in t for t in article_topics):
-            phrase_score += 0.4
-
-    topic_overlap = len(search_words & article_topics)
-    title_overlap = len(search_words & article_title_words)
-    desc_overlap = len(search_words & desc_words)
-    level_match = 1 if article_level == level_base else 0
-
-    if phrase_score == 0 and topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
-        return None
-
-    score = phrase_score + topic_overlap * 0.25 + title_overlap * 0.1 + desc_overlap * 0.05 + level_match * 0.1
-
-    content_type = article.get("content_type", "")
-    if content_type in ("podcast_episode", "podcast_episode_short"):
-        score += 0.1
-
-    return score if score >= 0.3 else None
-
-
-def _search_blog_dbs(level, topic_title, keywords, results, seen_urls):
-    """Layer 2: Keyword matching against blog/podcast DBs."""
-    all_articles = _load_blog_dbs()
-    if not all_articles:
-        return
-
-    search_phrases, search_words = _build_search_terms(topic_title, keywords)
-    level_base = level.split("-")[0].upper()
-
-    for article in all_articles:
-        url = article.get("url", "")
-        if url in seen_urls:
-            continue
-
-        score = _score_article(article, search_phrases, search_words, level_base)
-        if score is None:
-            continue
-
-        seen_urls.add(url)
-        source = article.get("source", "ukrainianlessons.com")
-        if "dobraforma" in url or "opentext.ku.edu" in url:
-            source = "dobraforma"
-
-        entry: dict[str, Any] = {
-            "url": url,
-            "title": article.get("title", ""),
-            "source": source,
-            "relevance_score": min(score, 1.0),
-            "topics": article.get("topics", []),
-        }
-        content_type = article.get("content_type", "")
-        if content_type.startswith("podcast_episode"):
-            entry["content_type"] = content_type
-            entry["series"] = article.get("series", "")
-            entry["season"] = article.get("season", 0)
-            entry["episode"] = article.get("episode", 0)
-        results.append(entry)
-
-
 def search_blogs(
     module_slug: str,
     level: str,
@@ -482,7 +192,7 @@ def search_blogs(
     """Find relevant blog/podcast articles for a module.
 
     Three-layer approach:
-    0. Curated per-module resources (external_resources.yaml) — guaranteed matches
+    0. Curated per-module resources (external_resources.yaml)
     1. Pre-computed score DB (resource_module_scores_final.json)
     2. Keyword + topic matching against blog/podcast DBs
 
@@ -493,83 +203,19 @@ def search_blogs(
 
     _search_curated_resources(module_slug, results, seen_urls)
     _search_score_db(module_slug, level, results, seen_urls)
-    _search_blog_dbs(level, topic_title, keywords, results, seen_urls)
+    _search_blog_dbs(level, topic_title, keywords, results, seen_urls, _load_blog_dbs)
 
     results.sort(key=lambda r: r["relevance_score"], reverse=True)
     return results[:max_results]
 
 
-def format_blog_discovery(blogs: list[dict]) -> str:
-    """Format blog results as markdown for {BLOG_DISCOVERY} placeholder."""
-    if not blogs:
-        return "(No blog articles found)"
-
-    # Separate podcasts from blog articles for clearer presentation
-    podcasts = [b for b in blogs if b.get("content_type", "").startswith("podcast_episode")]
-    articles = [b for b in blogs if not b.get("content_type", "").startswith("podcast_episode")]
-
-    lines: list[str] = []
-
-    if podcasts:
-        lines.append("### Podcast Episodes")
-        lines.append("*Each episode has audio + transcript + vocabulary list — recommend to students as supplementary listening.*")
-        lines.append("")
-        for b in podcasts:
-            series = b.get("series", "ULP")
-            season = b.get("season", 0)
-            ep = b.get("episode", 0)
-            label = f"{series} S{season} Ep{ep}" if season else f"{series} Ep{ep}"
-            lines.append(f"- **{label}: {b['title']}**")
-            lines.append(f"  URL: {b['url']}")
-            lines.append(f"  Relevance: {b.get('relevance_score', 0):.1f}")
-            if b.get("topics"):
-                lines.append(f"  Topics: {', '.join(b['topics'][:5])}")
-            lines.append("")
-
-    if articles:
-        lines.append("### Blog Articles & Guides")
-        for b in articles:
-            lines.append(f"- **{b['title']}** ({b.get('source', 'unknown')})")
-            lines.append(f"  URL: {b['url']}")
-            lines.append(f"  Relevance: {b.get('relevance_score', 0):.1f}")
-            if b.get("topics"):
-                lines.append(f"  Topics: {', '.join(b['topics'][:5])}")
-            lines.append("")
-
-    return "\n".join(lines)
-
-
 # ---------------------------------------------------------------------------
-# RAG discovery — textbook chunks, literary sources, and images
+# RAG availability check
 # ---------------------------------------------------------------------------
-
-# Seminar tracks that benefit from literary primary source search
-_SEMINAR_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth"}
-
-# Rough mapping: learner level → school grade range for textbook search
-_LEVEL_GRADE_RANGES: dict[str, tuple[int, int]] = {
-    "A1": (1, 4),
-    "A2": (2, 6),
-    "B1": (4, 8),
-    "B2": (6, 11),
-    "C1": (7, 11),
-    "C2": (8, 11),
-}
-
 
 def _is_qdrant_available() -> bool:
     """Check if Qdrant is reachable without loading heavy models."""
-    try:
-        from qdrant_client import QdrantClient
-        client = QdrantClient(
-            host="localhost", grpc_port=6334,
-            prefer_grpc=True, check_compatibility=False,
-            timeout=3,
-        )
-        client.get_collections()
-        return True
-    except Exception:
-        return False
+    return _default_qdrant_check()
 
 
 def search_rag(
@@ -579,157 +225,17 @@ def search_rag(
     limit_text: int = 5,
     limit_images: int = 3,
     limit_literary: int = 3,
+    is_qdrant_available_fn=None,
 ) -> dict[str, list[dict]]:
-    """Search RAG collections for relevant content.
-
-    Returns dict with keys: text_chunks, images, literary.
-    Gracefully degrades if Qdrant is unavailable.
-    """
-    result: dict[str, list[dict]] = {
-        "text_chunks": [],
-        "images": [],
-        "literary": [],
-    }
-
-    if not _is_qdrant_available():
-        logger.debug("RAG: Qdrant not available, skipping")
-        return result
-
-    try:
-        from rag.query import search_images, search_literary, search_text
-    except ImportError:
-        logger.debug("RAG: rag.query not importable, skipping")
-        return result
-
-    query = cap_query(keywords)
-    if not query:
-        return result
-
-    base_track = track.split("-")[0].lower()
-    level_base = level.split("-")[0].upper() if level else ""
-
-    # 1. Textbook chunks — relevant for all tracks
-    try:
-        grade_range = _LEVEL_GRADE_RANGES.get(level_base)
-        # Search without grade filter to cast wide net, then prefer matching grades
-        text_hits = search_text(query, limit=limit_text * 2)
-        # Prefer chunks from appropriate grade levels and priority authors
-        # Priority authors: Tetiana-recommended + most widely used
-        _PRIORITY_AUTHORS = {
-            # Grades 1-2
-            "bolshakova", "vashulenko",
-            # Grades 5-11
-            "zabolotnyi", "avramenko",
-        }
-        if grade_range:
-            lo, hi = grade_range
-            # A1/A2 need stronger grade preference — otherwise grade 11
-            # literature outscores grade 1-4 bukvar content on semantic score alone
-            is_beginner = level_base in ("A1", "A2")
-            scored = []
-            for h in text_hits:
-                g = h.get("grade", 0)
-                source = h.get("source", "")
-                # Grade bonus
-                if lo <= g <= hi:
-                    grade_bonus = 0.3 if is_beginner else 0.1
-                elif g > 0 and is_beginner:
-                    distance = max(0, g - hi, lo - g)
-                    grade_bonus = -0.05 * distance
-                else:
-                    grade_bonus = 0.0
-                # Author bonus — prioritize trusted authors
-                author_bonus = 0.15 if any(a in source for a in _PRIORITY_AUTHORS) else 0.0
-                scored.append((h["score"] + grade_bonus + author_bonus, h))
-            scored.sort(key=lambda x: x[0], reverse=True)
-            result["text_chunks"] = [h for _, h in scored[:limit_text]]
-        else:
-            result["text_chunks"] = text_hits[:limit_text]
-    except Exception as e:
-        logger.debug("RAG text search failed: %s", e)
-
-    # 2. Textbook images — high/medium teaching value only
-    if limit_images > 0:
-        try:
-            img_hits = search_images(query, teaching_value="high", limit=limit_images)
-            if len(img_hits) < limit_images:
-                img_hits += search_images(
-                    query, teaching_value="medium",
-                    limit=limit_images - len(img_hits),
-                )
-            result["images"] = img_hits[:limit_images]
-        except Exception as e:
-            logger.debug("RAG image search failed: %s", e)
-
-    # 3. Literary sources — seminar tracks only
-    if base_track in _SEMINAR_TRACKS:
-        try:
-            lit_hits = search_literary(query, limit=limit_literary)
-            result["literary"] = lit_hits
-        except Exception as e:
-            logger.debug("RAG literary search failed: %s", e)
-
-    return result
+    """Search RAG collections. Wrapper that defaults to module-level _is_qdrant_available."""
+    return _search_rag_impl(
+        keywords, track, level, limit_text, limit_images, limit_literary,
+        is_qdrant_available_fn=is_qdrant_available_fn or _is_qdrant_available,
+    )
 
 
-def format_rag_discovery(
-    text_chunks: list[dict],
-    images: list[dict],
-    literary: list[dict],
-) -> str:
-    """Format RAG results as markdown for the content prompt."""
-    sections: list[str] = []
-
-    if text_chunks:
-        lines = ["### Textbook References"]
-        for ch in text_chunks:
-            section = ch.get("section_title", "")
-            grade = ch.get("grade", 0)
-            text = ch.get("text", "")[:200]
-            header = f"Grade {grade}" if grade else "Textbook"
-            if section:
-                header += f", {section}"
-            lines.append(f"- **{header}**")
-            lines.append(f"  {text}...")
-            lines.append("")
-        sections.append("\n".join(lines))
-
-    if images:
-        lines = ["### Textbook Images"]
-        for img in images:
-            desc = img.get("description_uk", "")
-            assoc = img.get("associated_text_uk", "")
-            tv = img.get("teaching_value", "")
-            grade = img.get("grade", 0)
-            path = img.get("image_path", "")
-            label = desc or assoc or "(no description)"
-            lines.append(f"- **Grade {grade}** [{tv}]: {label}")
-            if path:
-                lines.append(f"  Path: {path}")
-            lines.append("")
-        sections.append("\n".join(lines))
-
-    if literary:
-        lines = ["### Literary Primary Sources"]
-        for lit in literary:
-            work = lit.get("work", "")
-            year = lit.get("year", "")
-            genre = lit.get("genre", "")
-            text = lit.get("text", "")[:200]
-            lines.append(f"- **{work}** ({year}, {genre})")
-            lines.append(f"  {text}...")
-            lines.append("")
-        sections.append("\n".join(lines))
-
-    if not sections:
-        return "(No RAG content found)"
-    return "\n\n".join(sections)
-
-
-# Channel allowlist — categorized by track relevance.
-# tracks: ["*"] = all tracks, or specific track IDs.
+# Channel allowlist
 DEFAULT_CHANNELS: list[dict[str, Any]] = [
-    # Language learning (core A1-C2)
     {"name": "Ukrainian Lessons", "handle": "@UkrainianLessons", "tracks": ["*"]},
     {"name": "Anna Ohoiko", "handle": "@annaohoiko", "tracks": ["*"]},
     {"name": "Ukrainian with Olha", "handle": "@ukrainianwitholha", "tracks": ["*"]},
@@ -744,16 +250,13 @@ DEFAULT_CHANNELS: list[dict[str, Any]] = [
     {"name": "Listen & Read", "handle": "@listen-read", "tracks": ["*"]},
     {"name": "UkrainerNet", "handle": "@ukrainernet", "tracks": ["*"]},
     {"name": "Ukrainian Online School", "handle": "@ukrainian-online-school", "tracks": ["*"]},
-    # History (HIST, ISTORIO, BIO)
-    {"name": "Реальна Історія", "handle": "@realhistoryua", "tracks": ["hist", "istorio", "bio"]},
+    {"name": "\u0420\u0435\u0430\u043b\u044c\u043d\u0430 \u0406\u0441\u0442\u043e\u0440\u0456\u044f", "handle": "@realhistoryua", "tracks": ["hist", "istorio", "bio"]},
     {"name": "Harvard Ukrainian Research Institute", "handle": "@ukrainianresearchinstitute1041", "tracks": ["hist", "istorio", "bio", "lit"]},
-    {"name": "Комік Історик", "handle": "@komikistoryk", "tracks": ["hist", "istorio", "bio"]},
-    {"name": "ІМТГШ", "handle": "@imtgsh", "tracks": ["hist", "istorio"]},
-    # Historical linguistics (OES, RUTH)
-    {"name": "Історія Мови", "handle": "@Istoria-Movy", "tracks": ["oes", "ruth"]},
-    # Culture & documentary (B2+, LIT, cultural modules)
-    {"name": "Суспільне Культура", "handle": "@SuspilneKultura", "tracks": ["lit", "b2", "c1", "c2"]},
-    {"name": "Суспільне Док", "handle": "@SuspilneDoc", "tracks": ["hist", "bio", "lit", "b2", "c1"]},
+    {"name": "\u041a\u043e\u043c\u0456\u043a \u0406\u0441\u0442\u043e\u0440\u0438\u043a", "handle": "@komikistoryk", "tracks": ["hist", "istorio", "bio"]},
+    {"name": "\u0406\u041c\u0422\u0413\u0428", "handle": "@imtgsh", "tracks": ["hist", "istorio"]},
+    {"name": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u041c\u043e\u0432\u0438", "handle": "@Istoria-Movy", "tracks": ["oes", "ruth"]},
+    {"name": "\u0421\u0443\u0441\u043f\u0456\u043b\u044c\u043d\u0435 \u041a\u0443\u043b\u044c\u0442\u0443\u0440\u0430", "handle": "@SuspilneKultura", "tracks": ["lit", "b2", "c1", "c2"]},
+    {"name": "\u0421\u0443\u0441\u043f\u0456\u043b\u044c\u043d\u0435 \u0414\u043e\u043a", "handle": "@SuspilneDoc", "tracks": ["hist", "bio", "lit", "b2", "c1"]},
     {"name": "Repainted Fox", "handle": "@repaintedfox", "tracks": ["b1", "b2", "c1"]},
     {"name": "Klopotenko", "handle": "@klopotenko", "tracks": ["a2", "b1", "b2"]},
     {"name": "Radio Khartia", "handle": "@RadioKhartia", "tracks": ["lit", "c1", "c2"]},
@@ -871,7 +374,6 @@ def search_channel(keywords: list[str], channel_handle: str, max_results: int = 
         if result.returncode != 0:
             return []
         lines = [ln.strip() for ln in result.stdout.strip().splitlines() if ln.strip()]
-        # yt-dlp outputs title then id alternating
         videos = []
         for i in range(0, len(lines) - 1, 2):
             videos.append({
@@ -935,7 +437,7 @@ def score_candidates(
         "- video_url: \"...\"\n"
         "  relevance_score: 0.0-1.0\n"
         "  relevance_note: \"...\"\n"
-        "  embed_suggestion: \"After section X — reason\"\n"
+        "  embed_suggestion: \"After section X -- reason\"\n"
         "  transcript_excerpt: \"...\"\n"
         "===DISCOVERY_SCORES_END===\n"
     )
@@ -1001,7 +503,7 @@ def run_discovery(
     channels: list[dict[str, Any]] | None = None,
     max_per_channel: int = 2,
 ) -> DiscoveryResult:
-    """Search → transcript → score → rank. Non-blocking: always returns a result."""
+    """Search -> transcript -> score -> rank. Non-blocking: always returns a result."""
     result = DiscoveryResult(
         discovered_at=datetime.now(UTC).isoformat(),
         query_keywords=keywords,
@@ -1032,11 +534,9 @@ def run_discovery(
             result.warning = "No videos found across channels"
             return result
 
-        # Download transcripts (cap at 8 to limit network time)
         for c in all_candidates[:8]:
             c.transcript = download_transcript(c.url)
 
-        # Score candidates that have transcripts
         with_text = [c for c in all_candidates if c.transcript]
         if with_text:
             score_candidates(with_text, topic, outline, vocab, dispatch_fn)
@@ -1121,14 +621,13 @@ def format_discovery_for_template(result: DiscoveryResult) -> str:
     """Format as markdown for {VIDEO_DISCOVERY} placeholder."""
     sections: list[str] = []
 
-    # Videos
     relevant = [v for v in result.videos if v.relevance_score >= 0.5]
     if relevant:
         lines: list[str] = ["### Videos"]
         for v in relevant:
             lines.append(f"- **{v.title}** ({v.channel})")
             lines.append(f"  URL: {v.url}")
-            lines.append(f"  Score: {v.relevance_score:.1f} — {v.relevance_note}")
+            lines.append(f"  Score: {v.relevance_score:.1f} -- {v.relevance_note}")
             if v.embed_suggestion:
                 lines.append(f"  Suggested placement: {v.embed_suggestion}")
             if v.transcript_excerpt:
@@ -1136,11 +635,9 @@ def format_discovery_for_template(result: DiscoveryResult) -> str:
             lines.append("")
         sections.append("\n".join(lines))
 
-    # Blogs
     if result.blogs:
         sections.append(format_blog_discovery(result.blogs))
 
-    # RAG content
     if result.rag_chunks or result.rag_images or result.rag_literary:
         rag_text = format_rag_discovery(
             result.rag_chunks, result.rag_images, result.rag_literary,
