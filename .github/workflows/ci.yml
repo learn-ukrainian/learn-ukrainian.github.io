@@ -91,6 +91,7 @@ jobs:
             --cov=scripts \
             --cov-report=term-missing \
             --cov-report=xml:coverage.xml \
+            --cov-fail-under=30 \
             -v --tb=short \
             -k "not slow and not website" \
             --ignore=tests/test_rag.py \
