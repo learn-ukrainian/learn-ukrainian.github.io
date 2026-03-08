@@ -167,6 +167,67 @@ from .report import (
     save_status_cache,
 )
 
+from dataclasses import dataclass, field
+
+
+@dataclass
+class AuditContext:
+    """Immutable module identity + parsed data for the audit."""
+    file_path: str
+    content: str
+    body: str
+    frontmatter_str: str
+    meta_data: dict | None
+    plan_data: dict | None
+    vocab_data: list | None
+    vocab_error: str | None
+    level_code: str
+    module_num: int
+    track_code: str
+    display_level: str
+    module_focus: str | None
+    module_title: str
+    target: int
+    config: dict
+    section_map: dict
+    core_content: str
+    phase: str
+    pedagogy: str
+    skip_activities: bool
+    skip_review: bool
+    yaml_activities: list | None
+    use_yaml_activities: bool
+    yaml_file: Path = field(default_factory=lambda: Path('.'))
+
+
+@dataclass
+class AuditState:
+    """Mutable accumulator passed through audit phases."""
+    has_critical_failure: bool = False
+    critical_failure_reasons: list = field(default_factory=list)
+    results: dict = field(default_factory=dict)
+    pedagogical_violations: list = field(default_factory=list)
+    activity_count: int = 0
+    found_activity_types: list = field(default_factory=list)
+    valid_density_count: int = 0
+    total_activities: int = 0
+    low_density_activities: list = field(default_factory=list)
+    activity_details: list = field(default_factory=list)
+    table_rows: list = field(default_factory=list)
+    vocab_blocking: list = field(default_factory=list)
+    vocab_warnings: list = field(default_factory=list)
+    template_violations: list = field(default_factory=list)
+    total_words: int = 0
+    raw_words: int = 0
+    engagement_count: int = 0
+    audio_count: int = 0
+    lint_errors: list = field(default_factory=list)
+    richness_data: dict = field(default_factory=dict)
+
+    def fail(self, reason: str) -> None:
+        self.has_critical_failure = True
+        self.critical_failure_reasons.append(reason)
+
 
 def parse_frontmatter(content: str) -> tuple[str, str]:
     """Extract frontmatter and body from content."""
@@ -771,19 +832,11 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
     except Exception:
         return None
 
-def audit_module(file_path: str, skip_activities: bool = False,
-                 skip_review: bool = False) -> bool:
-    """
-    Orchestrates the audit process for a single module file.
-    Returns True on success, False on failure.
+def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) -> tuple[AuditContext, AuditState]:
+    """Load files, parse frontmatter, detect level/config, build AuditContext.
 
-    Args:
-        skip_activities: When True, defer activity/vocab gates (content-only audit
-                         for the otaman content sprint). Deferred gates return INFO
-                         status and do NOT cause critical failures.
-        skip_review: When True, defer review gate only (#606). Used by the v3 audit
-                     phase to validate content + activities but not the review file
-                     (which Phase D creates later).
+    Contains sys.exit() calls for fatal early aborts (missing file, missing frontmatter,
+    missing required metadata).
     """
     if not os.path.exists(file_path):
         print(f"Error: File {file_path} not found.")
@@ -792,9 +845,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
-    # Initialize failure tracking early (used throughout audit)
-    has_critical_failure = False
-    critical_failure_reasons = []
+    state = AuditState()
 
     # Try loading YAML sidecars
     meta_data = load_yaml_meta(file_path)
@@ -812,9 +863,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
             'prerequisites', 'connects_to', 'objectives', 'learning_outcomes',
             'grammar', 'module_type', 'sources', 'immersion', 'register', 'phase'
         ]
-        for field in PLAN_FIELDS_TO_MERGE:
-            if field in plan_data and field not in meta_data:
-                    meta_data[field] = plan_data[field]
+        for fld in PLAN_FIELDS_TO_MERGE:
+            if fld in plan_data and fld not in meta_data:
+                    meta_data[fld] = plan_data[fld]
 
     vocab_data, vocab_error = load_yaml_vocab(file_path)
 
@@ -830,9 +881,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     if not frontmatter_str:
         print("Error: No YAML frontmatter found (checked embedded and sidecar).")
-        critical_failure_reasons.append("No YAML frontmatter found")
+        state.fail("No YAML frontmatter found")
         print("\nCritical Failures:")
-        for reason in critical_failure_reasons:
+        for reason in state.critical_failure_reasons:
             print(f"  • {reason}")
         sys.exit(1)
 
@@ -881,9 +932,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
         if missing_meta:
             print(f"❌ AUDIT FAILED: Missing Frontmatter Fields: {', '.join(missing_meta)}")
             print("  -> These fields are REQUIRED for 'npm run generate'")
-            critical_failure_reasons.append(f"Missing Frontmatter Fields: {', '.join(missing_meta)}")
+            state.fail(f"Missing Frontmatter Fields: {', '.join(missing_meta)}")
             print("\nCritical Failures:")
-            for reason in critical_failure_reasons:
+            for reason in state.critical_failure_reasons:
                 print(f"  • {reason}")
             sys.exit(1)
 
@@ -902,83 +953,6 @@ def audit_module(file_path: str, skip_activities: bool = False,
             config['required_types'] = meta_required_types
             print(f"  📋 Required activity types from meta: {', '.join(sorted(meta_required_types))}")
 
-    vocab_target = config.get('min_vocab', 25)
-    transliteration_allowed = config.get('transliteration_allowed', True)
-
-    # Template Compliance (Issue #398, #389) - Gradual rollout level-by-level
-    TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']  # All Clean MD migrated levels
-
-    template_structure = None
-    template_violations = []
-
-    if level_code in TEMPLATE_COMPLIANCE_ENABLED_LEVELS:
-        try:
-            # Import template modules - use relative imports for package context
-            from . import template_parser
-            from .checks import template_compliance as tc_module
-
-            # Construct module ID for template mapping
-            # Extract full level including track suffix (hist, bio, lit)
-            module_slug = Path(file_path).stem
-            track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
-            full_level = track_match.group(1) if track_match else level_code.lower()
-            module_id_for_mapping = f"{full_level}-{module_slug}"
-
-            # Resolve which template this module should follow
-            meta_for_template = meta_data if meta_data else {}
-            template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
-            template_structure = template_parser.parse_template(template_path)
-
-            if template_structure is None:
-                print(f"  ℹ️  No template mapping for {module_id_for_mapping} (skipping template compliance)")
-            else:
-                print(f"  📋 Template: {template_path} (pedagogy: {template_structure.pedagogy})")
-
-                # Run compliance checks
-                template_violations = tc_module.check_template_compliance(
-                    content=content,
-                    meta=meta_for_template,
-                    template=template_structure
-                )
-
-            if template_violations:
-                critical_count = sum(1 for v in template_violations if v['severity'] == 'CRITICAL')
-                warning_count = sum(1 for v in template_violations if v['severity'] == 'WARNING')
-                info_count = sum(1 for v in template_violations if v['severity'] == 'INFO')
-
-                print(f"  ⚠️  Template violations: {critical_count} critical, {warning_count} warnings, {info_count} info")
-
-                # Show first 3 violations
-                for violation in template_violations[:3]:
-                    severity_icon = "🔴" if violation['severity'] == 'CRITICAL' else "⚠️" if violation['severity'] == 'WARNING' else "ℹ️"
-                    print(f"     {severity_icon} [{violation['type']}] {violation['issue']}")
-
-                if critical_count > 0:
-                    has_critical_failure = True
-                    critical_failure_reasons.append(f"{critical_count} Critical Template Violations")
-
-        except ImportError as e:
-            print(f"  ⚠️  Template compliance not available: {e}")
-        except Exception as e:
-            print(f"  ⚠️  Template resolution error: {e}")
-
-    # Check outline compliance (Issue #440: structural validation)
-    outline_violations = check_outline_compliance(file_path, level_code, module_num)
-    if outline_violations:
-        error_count = sum(1 for v in outline_violations if v['severity'] == 'error')
-        warning_count = sum(1 for v in outline_violations if v['severity'] == 'warning')
-        print(f"  ⚠️  Outline compliance: {error_count} errors, {warning_count} warnings")
-        for v in outline_violations[:3]:  # Show first 3
-            severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
-            print(f"     {severity_icon} [{v['type']}] {v['message'].split(chr(10))[0]}")  # First line only
-
-        if error_count > 0:
-            has_critical_failure = True
-            critical_failure_reasons.append(f"{error_count} Outline Compliance Errors")
-
-    # Show section word summary for hydration guidance
-    print_section_summary(file_path, word_target=target)
-
     # Extract pedagogy
     pedagogy = "Not Specified"
     pedagogy_match = re.search(r'^pedagogy:\s*(.+)$', frontmatter_str, re.MULTILINE)
@@ -988,142 +962,10 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # Parse sections
     section_map = parse_sections(body)
 
-    # Tone validation
-    tone_errors = validate_tone(content)
-    if tone_errors:
-        has_critical_failure = True
-        for err in tone_errors:
-            print(f"❌ Tone violation: {err}")
-            critical_failure_reasons.append(err)
-
-    # Summary check
-    struct_flags = check_structure(content)
-    has_summary = struct_flags['summary']
-    has_vocab_header = struct_flags['vocab_header']
-    has_vocab_table = struct_flags['vocab_table']
-    has_activities_header = struct_flags['activities_header']
-    has_resources_header = struct_flags['resources_header']
-
-    # Sidecar Data Presence
-    has_vocab_data = vocab_data is not None
-
-    # Check for activities YAML
-    activities_yaml_path = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
-    if not activities_yaml_path.exists():
-        activities_yaml_path = Path(file_path).with_suffix('.activities.yaml')
-    has_activities_data = activities_yaml_path.exists()
-
-    # Check for external resources in centralized YAML
-    has_resources_data = False
-    resources_path = Path('docs/resources/external_resources.yaml')
-    if resources_path.exists():
-        with resources_path.open('r', encoding='utf-8') as f:
-            try:
-                resources_data = yaml.safe_load(f)
-                all_resources = resources_data.get('resources', {})
-                module_slug = Path(file_path).stem
-                has_resources_data = module_slug in all_resources or f"{level_code.lower()}-{module_slug}" in all_resources
-            except Exception:
-                pass
-
-    # Metadata sidecar overrides for summary
-    if meta_data and (meta_data.get('summary') or meta_data.get('description')):
-        has_summary = True
-
-    # Final structure evaluation (Clean MD Standard)
-    # Applied to all production-ready levels that use sidecars
-    is_clean_md_standard = level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH')
-
-    # Clean MD Logic: headers are optional IF data exists in sidecars.
-    # However, Summary (# Підсумок) is ALWAYS required in Markdown.
-
-    structure_gate = evaluate_structure(
-        has_summary=has_summary,
-        has_vocab=has_vocab_header or has_vocab_data or skip_activities,
-        has_vocab_table=has_vocab_table or has_vocab_data or skip_activities,
-        has_activities=has_activities_header or has_activities_data or skip_activities,
-        has_resources=has_resources_header or has_resources_data,
-        is_a2_plus=is_clean_md_standard,
-        vocab_error=vocab_error,
-    )
-
-    if structure_gate.status == 'FAIL':
-        has_critical_failure = True
-        print(f"❌ Structure check failed: {structure_gate.msg}")
-        critical_failure_reasons.append(f"Structure: {structure_gate.msg}")
-
-    # Duplicate vocabulary check (B1+ should have YAML-only, not both)
-    if vocab_data and level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
-        # Check if markdown also has embedded vocab table
-        has_embedded_vocab = bool(re.search(r'^#\s*(Словник|Vocabulary)', content, re.MULTILINE))
-        if has_embedded_vocab:
-            # Check if there's actually a table after the header
-            vocab_section_match = re.search(r'^#\s*(Словник|Vocabulary)\s*\n(.*?)(?=^#|\Z)', content, re.MULTILINE | re.DOTALL)
-            if vocab_section_match:
-                vocab_section = vocab_section_match.group(2)
-                has_embedded_table = '|' in vocab_section and re.search(r'\|.*\|.*\|', vocab_section)
-                if has_embedded_table:
-                    print("⚠️  DUPLICATE VOCABULARY: Both YAML sidecar and embedded markdown table exist.")
-                    print(f"   → For {level_code}+ modules, vocabulary should be YAML-only.")
-                    print("   → Remove the '# Словник' section from the markdown file.")
-
-
-    # Checkpoint format validation
-    if module_focus == 'checkpoint':
-        checkpoint_errors = validate_checkpoint_format(content)
-        coverage_errors = validate_checkpoint_coverage(content, frontmatter_str)
-        checkpoint_errors.extend(coverage_errors)
-        if checkpoint_errors:
-            has_critical_failure = True
-            print("❌ CHECKPOINT FORMAT ERRORS:")
-            for err in checkpoint_errors:
-                print(f"  → {err}")
-            print("  See: docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md")
-            critical_failure_reasons.append("Checkpoint Format Errors")
-
-    # Fill-in options check
-    for title, text in section_map.items():
-        if title.lower().startswith('fill-in'):
-            if '> [!options]' not in text:
-                print(f"❌ AUDIT FAILED: Activity '{title}' missing mandatory > [!options] block.")
-                print("  -> ALL fill-in activities require explicit options/choices.")
-                sys.exit(1)
-            if not re.search(r'^\s*\d+\.', text, re.MULTILINE):
-                print(f"❌ AUDIT FAILED: Activity '{title}' missing numbered items (1. ...).")
-                print("  -> Parser requires fill-in items to be a numbered list to function.")
-                sys.exit(1)
-
     # Extract core content
     core_content = extract_core_content(body)
 
-    # Word count
-    raw_words = len(body.split())
-    core_lines = [line for line in core_content.split('\n') if not line.strip().startswith('|')]
-    core_no_tables = '\n'.join(core_lines)
-    core_cleaned = clean_for_stats(core_no_tables)
-    total_words = len(core_cleaned.split())
-
-    # Engagement pattern - includes B2+ history/cultural callouts
-    engagement_pattern = re.compile(
-        r'(>\s*[💡⚡🎬🎭📜⚔️🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮🎓🔍])|'
-        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography)\])'
-    )
-    engagement_count = len(engagement_pattern.findall(content))
-
-    # Audio count
-    audio_pattern = re.compile(r'\[🔊\]\(.*?\)')
-    audio_count = len(audio_pattern.findall(content))
-
-    # Process sections
-    activity_count = 0
-    found_activity_types = []
-    valid_density_count = 0
-    total_activities = 0
-    table_rows = []
-    low_density_activities = []  # Track activities with insufficient items
-    activity_details = []  # Track ALL activities for detailed report
-
-    # Check for YAML activities file using shared parser (Issue #394)
+    # Load YAML activities
     yaml_activities = None
     yaml_file = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
 
@@ -1144,10 +986,263 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
         use_yaml_activities = yaml_activities is not None
 
-    # Check YAML schema compliance (Issue #397: validate all activity types)
-    yaml_schema_violations = []
+    ctx = AuditContext(
+        file_path=file_path,
+        content=content,
+        body=body,
+        frontmatter_str=frontmatter_str,
+        meta_data=meta_data,
+        plan_data=plan_data,
+        vocab_data=vocab_data,
+        vocab_error=vocab_error,
+        level_code=level_code,
+        module_num=module_num,
+        track_code=track_code,
+        display_level=display_level,
+        module_focus=module_focus,
+        module_title=module_title,
+        target=target,
+        config=config,
+        section_map=section_map,
+        core_content=core_content,
+        phase=phase,
+        pedagogy=pedagogy,
+        skip_activities=skip_activities,
+        skip_review=skip_review,
+        yaml_activities=yaml_activities,
+        use_yaml_activities=use_yaml_activities,
+        yaml_file=yaml_file,
+    )
 
-    if not skip_activities:
+    return ctx, state
+
+
+def _check_template_compliance(ctx: AuditContext, state: AuditState) -> None:
+    """Check template compliance (Issue #398, #389) - Gradual rollout level-by-level."""
+    TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']  # All Clean MD migrated levels
+
+    if ctx.level_code not in TEMPLATE_COMPLIANCE_ENABLED_LEVELS:
+        return
+
+    try:
+        # Import template modules - use relative imports for package context
+        from . import template_parser
+        from .checks import template_compliance as tc_module
+
+        # Construct module ID for template mapping
+        # Extract full level including track suffix (hist, bio, lit)
+        module_slug = Path(ctx.file_path).stem
+        track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', ctx.file_path.lower())
+        full_level = track_match.group(1) if track_match else ctx.level_code.lower()
+        module_id_for_mapping = f"{full_level}-{module_slug}"
+
+        # Resolve which template this module should follow
+        meta_for_template = ctx.meta_data if ctx.meta_data else {}
+        template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
+        template_structure = template_parser.parse_template(template_path)
+
+        if template_structure is None:
+            print(f"  ℹ️  No template mapping for {module_id_for_mapping} (skipping template compliance)")
+        else:
+            print(f"  📋 Template: {template_path} (pedagogy: {template_structure.pedagogy})")
+
+            # Run compliance checks
+            state.template_violations = tc_module.check_template_compliance(
+                content=ctx.content,
+                meta=meta_for_template,
+                template=template_structure
+            )
+
+        if state.template_violations:
+            critical_count = sum(1 for v in state.template_violations if v['severity'] == 'CRITICAL')
+            warning_count = sum(1 for v in state.template_violations if v['severity'] == 'WARNING')
+            info_count = sum(1 for v in state.template_violations if v['severity'] == 'INFO')
+
+            print(f"  ⚠️  Template violations: {critical_count} critical, {warning_count} warnings, {info_count} info")
+
+            # Show first 3 violations
+            for violation in state.template_violations[:3]:
+                severity_icon = "🔴" if violation['severity'] == 'CRITICAL' else "⚠️" if violation['severity'] == 'WARNING' else "ℹ️"
+                print(f"     {severity_icon} [{violation['type']}] {violation['issue']}")
+
+            if critical_count > 0:
+                state.fail(f"{critical_count} Critical Template Violations")
+
+    except ImportError as e:
+        print(f"  ⚠️  Template compliance not available: {e}")
+    except Exception as e:
+        print(f"  ⚠️  Template resolution error: {e}")
+
+
+def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateResult:
+    """Check outline compliance, structure, tone, checkpoints, fill-in options.
+
+    Returns the structure_gate result for use in later gate evaluation.
+    """
+    # Check outline compliance (Issue #440: structural validation)
+    outline_violations = check_outline_compliance(ctx.file_path, ctx.level_code, ctx.module_num)
+    if outline_violations:
+        error_count = sum(1 for v in outline_violations if v['severity'] == 'error')
+        warning_count = sum(1 for v in outline_violations if v['severity'] == 'warning')
+        print(f"  ⚠️  Outline compliance: {error_count} errors, {warning_count} warnings")
+        for v in outline_violations[:3]:  # Show first 3
+            severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
+            print(f"     {severity_icon} [{v['type']}] {v['message'].split(chr(10))[0]}")  # First line only
+
+        if error_count > 0:
+            state.fail(f"{error_count} Outline Compliance Errors")
+
+    # Show section word summary for hydration guidance
+    print_section_summary(ctx.file_path, word_target=ctx.target)
+
+    # Tone validation
+    tone_errors = validate_tone(ctx.content)
+    if tone_errors:
+        for err in tone_errors:
+            print(f"❌ Tone violation: {err}")
+            state.fail(err)
+
+    # Summary check
+    struct_flags = check_structure(ctx.content)
+    has_summary = struct_flags['summary']
+    has_vocab_header = struct_flags['vocab_header']
+    has_vocab_table = struct_flags['vocab_table']
+    has_activities_header = struct_flags['activities_header']
+    has_resources_header = struct_flags['resources_header']
+
+    # Sidecar Data Presence
+    has_vocab_data = ctx.vocab_data is not None
+
+    # Check for activities YAML
+    activities_yaml_path = Path(ctx.file_path).parent / 'activities' / (Path(ctx.file_path).stem + '.yaml')
+    if not activities_yaml_path.exists():
+        activities_yaml_path = Path(ctx.file_path).with_suffix('.activities.yaml')
+    has_activities_data = activities_yaml_path.exists()
+
+    # Check for external resources in centralized YAML
+    has_resources_data = False
+    resources_path = Path('docs/resources/external_resources.yaml')
+    if resources_path.exists():
+        with resources_path.open('r', encoding='utf-8') as f:
+            try:
+                resources_data = yaml.safe_load(f)
+                all_resources = resources_data.get('resources', {})
+                module_slug = Path(ctx.file_path).stem
+                has_resources_data = module_slug in all_resources or f"{ctx.level_code.lower()}-{module_slug}" in all_resources
+            except Exception:
+                pass
+
+    # Metadata sidecar overrides for summary
+    if ctx.meta_data and (ctx.meta_data.get('summary') or ctx.meta_data.get('description')):
+        has_summary = True
+
+    # Final structure evaluation (Clean MD Standard)
+    # Applied to all production-ready levels that use sidecars
+    is_clean_md_standard = ctx.level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH')
+
+    # Clean MD Logic: headers are optional IF data exists in sidecars.
+    # However, Summary (# Підсумок) is ALWAYS required in Markdown.
+
+    structure_gate = evaluate_structure(
+        has_summary=has_summary,
+        has_vocab=has_vocab_header or has_vocab_data or ctx.skip_activities,
+        has_vocab_table=has_vocab_table or has_vocab_data or ctx.skip_activities,
+        has_activities=has_activities_header or has_activities_data or ctx.skip_activities,
+        has_resources=has_resources_header or has_resources_data,
+        is_a2_plus=is_clean_md_standard,
+        vocab_error=ctx.vocab_error,
+    )
+
+    if structure_gate.status == 'FAIL':
+        print(f"❌ Structure check failed: {structure_gate.msg}")
+        state.fail(f"Structure: {structure_gate.msg}")
+
+    # Duplicate vocabulary check (B1+ should have YAML-only, not both)
+    if ctx.vocab_data and ctx.level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        # Check if markdown also has embedded vocab table
+        has_embedded_vocab = bool(re.search(r'^#\s*(Словник|Vocabulary)', ctx.content, re.MULTILINE))
+        if has_embedded_vocab:
+            # Check if there's actually a table after the header
+            vocab_section_match = re.search(r'^#\s*(Словник|Vocabulary)\s*\n(.*?)(?=^#|\Z)', ctx.content, re.MULTILINE | re.DOTALL)
+            if vocab_section_match:
+                vocab_section = vocab_section_match.group(2)
+                has_embedded_table = '|' in vocab_section and re.search(r'\|.*\|.*\|', vocab_section)
+                if has_embedded_table:
+                    print("⚠️  DUPLICATE VOCABULARY: Both YAML sidecar and embedded markdown table exist.")
+                    print(f"   → For {ctx.level_code}+ modules, vocabulary should be YAML-only.")
+                    print("   → Remove the '# Словник' section from the markdown file.")
+
+
+    # Checkpoint format validation
+    if ctx.module_focus == 'checkpoint':
+        checkpoint_errors = validate_checkpoint_format(ctx.content)
+        coverage_errors = validate_checkpoint_coverage(ctx.content, ctx.frontmatter_str)
+        checkpoint_errors.extend(coverage_errors)
+        if checkpoint_errors:
+            print("❌ CHECKPOINT FORMAT ERRORS:")
+            for err in checkpoint_errors:
+                print(f"  → {err}")
+            print("  See: docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md")
+            state.fail("Checkpoint Format Errors")
+
+    # Fill-in options check
+    for title, text in ctx.section_map.items():
+        if title.lower().startswith('fill-in'):
+            if '> [!options]' not in text:
+                print(f"❌ AUDIT FAILED: Activity '{title}' missing mandatory > [!options] block.")
+                print("  -> ALL fill-in activities require explicit options/choices.")
+                sys.exit(1)
+            if not re.search(r'^\s*\d+\.', text, re.MULTILINE):
+                print(f"❌ AUDIT FAILED: Activity '{title}' missing numbered items (1. ...).")
+                print("  -> Parser requires fill-in items to be a numbered list to function.")
+                sys.exit(1)
+
+    return structure_gate
+
+
+def _count_words_and_engagement(ctx: AuditContext, state: AuditState) -> None:
+    """Count words, engagement boxes, and audio links."""
+    # Word count
+    state.raw_words = len(ctx.body.split())
+    core_lines = [line for line in ctx.core_content.split('\n') if not line.strip().startswith('|')]
+    core_no_tables = '\n'.join(core_lines)
+    core_cleaned = clean_for_stats(core_no_tables)
+    state.total_words = len(core_cleaned.split())
+
+    # Engagement pattern - includes B2+ history/cultural callouts
+    engagement_pattern = re.compile(
+        r'(>\s*[💡⚡🎬🎭📜⚔️🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮🎓🔍])|'
+        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography)\])'
+    )
+    state.engagement_count = len(engagement_pattern.findall(ctx.content))
+
+    # Audio count
+    audio_pattern = re.compile(r'\[🔊\]\(.*?\)')
+    state.audio_count = len(audio_pattern.findall(ctx.content))
+
+
+def _validate_yaml_activities(ctx: AuditContext, state: AuditState) -> tuple[list, list, list, list, list, list, list, list, list]:
+    """Run all YAML activity validation checks.
+
+    Returns tuples of violation lists needed by later phases:
+    (yaml_schema_violations, mark_words_violations, hint_violations,
+     error_correction_hint_violations, malformed_cloze_violations,
+     cloze_syntax_violations, error_correction_violations,
+     invalid_type_violations, forbidden_type_violations)
+    """
+    yaml_schema_violations = []
+    mark_words_violations = []
+    hint_violations = []
+    error_correction_hint_violations = []
+    malformed_cloze_violations = []
+    cloze_syntax_violations = []
+    error_correction_violations = []
+    invalid_type_violations = []
+    forbidden_type_violations = []
+
+    yaml_file = ctx.yaml_file
+
+    if not ctx.skip_activities:
         # Pre-parse Linting (Issue #403)
         if yaml_file.exists():
             lint_errors = lint_yaml_file(str(yaml_file))
@@ -1162,7 +1257,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                     sys.exit(1)
 
         if yaml_file.exists():
-            yaml_schema_violations = check_activity_yaml_schema(file_path, level_code, module_num)
+            yaml_schema_violations = check_activity_yaml_schema(ctx.file_path, ctx.level_code, ctx.module_num)
             if yaml_schema_violations:
                 print(f"  ❌ YAML schema violations: {len(yaml_schema_violations)}")
                 for v in yaml_schema_violations:
@@ -1171,27 +1266,24 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
         # Vocabulary integrity checking removed - naturalness gate catches bad vocabulary
     # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
-    mark_words_violations = []
-    if yaml_activities:
-        mark_words_violations = check_mark_the_words_format(yaml_activities)
+    if ctx.yaml_activities:
+        mark_words_violations = check_mark_the_words_format(ctx.yaml_activities)
         if mark_words_violations:
             print(f"  ⚠️  mark-the-words format violations: {len(mark_words_violations)}")
             for v in mark_words_violations:
                 print(f"     → {v['issue']}")
 
     # Check for hints in activities (all should be removed)
-    hint_violations = []
-    if yaml_activities:
-        hint_violations = check_hints_in_activities(yaml_activities)
+    if ctx.yaml_activities:
+        hint_violations = check_hints_in_activities(ctx.yaml_activities)
         if hint_violations:
             print(f"  ⚠️  hint violations: {len(hint_violations)}")
             for v in hint_violations:
                 print(f"     → {v['issue']}")
 
     # Check for error-correction activities with highlighted error words
-    error_correction_hint_violations = []
-    if yaml_activities:
-        error_correction_hint_violations = check_error_correction_hints(yaml_activities)
+    if ctx.yaml_activities:
+        error_correction_hint_violations = check_error_correction_hints(ctx.yaml_activities)
         if error_correction_hint_violations:
             print(f"  ❌  error-correction hint violations: {len(error_correction_hint_violations)}")
             for v in error_correction_hint_violations:
@@ -1199,144 +1291,137 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 print(f"     Fix: {v['fix']}")
 
     # Check for malformed cloze activities (dialogue lines as blanks)
-    malformed_cloze_violations = []
-    if yaml_activities:
-        malformed_cloze_violations = check_malformed_cloze_activities(yaml_activities)
+    if ctx.yaml_activities:
+        malformed_cloze_violations = check_malformed_cloze_activities(ctx.yaml_activities)
         if malformed_cloze_violations:
             print(f"  ⚠️  malformed cloze violations: {len(malformed_cloze_violations)}")
             for v in malformed_cloze_violations:
                 print(f"     → {v['issue']}")
 
     # Check for cloze syntax errors (colons inside blanks)
-    cloze_syntax_violations = []
-    if yaml_activities:
-        cloze_syntax_violations = check_cloze_syntax_errors(yaml_activities)
+    if ctx.yaml_activities:
+        cloze_syntax_violations = check_cloze_syntax_errors(ctx.yaml_activities)
         if cloze_syntax_violations:
             print(f"  ⚠️  cloze syntax violations: {len(cloze_syntax_violations)}")
             for v in cloze_syntax_violations:
                 print(f"     → {v['issue']}")
 
     # Check for malformed error-correction activities (placeholder syntax)
-    error_correction_violations = []
-    if yaml_activities:
-        error_correction_violations = check_error_correction_format(yaml_activities)
+    if ctx.yaml_activities:
+        error_correction_violations = check_error_correction_format(ctx.yaml_activities)
         if error_correction_violations:
             print(f"  ⚠️  malformed error-correction violations: {len(error_correction_violations)}")
             for v in error_correction_violations:
                 print(f"     → {v['issue']}")
 
     # Check for invalid activity types in YAML
-    invalid_type_violations = []
-    if yaml_activities:
-        invalid_type_violations = check_yaml_activity_types(yaml_activities)
+    if ctx.yaml_activities:
+        invalid_type_violations = check_yaml_activity_types(ctx.yaml_activities)
         if invalid_type_violations:
             print(f"  ⚠️  invalid activity types in YAML: {len(invalid_type_violations)}")
             for v in invalid_type_violations:
                 print(f"     → {v['issue']}")
 
     # Check for forbidden activity types (seminar tracks)
-    forbidden_type_violations = []
-    if yaml_activities:
-        forbidden_type_violations = check_forbidden_activity_types(yaml_activities, level_code, module_focus)
+    if ctx.yaml_activities:
+        forbidden_type_violations = check_forbidden_activity_types(ctx.yaml_activities, ctx.level_code, ctx.module_focus)
         if forbidden_type_violations:
             print(f"  🔴 FORBIDDEN activity types in seminar track: {len(forbidden_type_violations)}")
             for v in forbidden_type_violations:
                 print(f"     → {v['issue']}")
                 print(f"        Fix: {v['fix']}")
-            has_critical_failure = True
-            critical_failure_reasons.append(f"{len(forbidden_type_violations)} forbidden activity types (use --fix to remove)")
+            state.fail(f"{len(forbidden_type_violations)} forbidden activity types (use --fix to remove)")
+
+    return (yaml_schema_violations, mark_words_violations, hint_violations,
+            error_correction_hint_violations, malformed_cloze_violations,
+            cloze_syntax_violations, error_correction_violations,
+            invalid_type_violations, forbidden_type_violations)
+
+
+def _validate_activity_answers(ctx: AuditContext, state: AuditState) -> None:
+    """Check structural correctness of activity answers and external URLs."""
+    if not ctx.yaml_activities:
+        return
 
     # Check morpheme patterns (Issue #363: validate *morpheme*word patterns)
-    morpheme_violations = []
-    if yaml_activities:
-        morpheme_violations = check_morpheme_patterns(yaml_activities)
-        if morpheme_violations:
-            print(f"  ⚠️  morpheme pattern violations: {len(morpheme_violations)}")
-            for v in morpheme_violations:
-                print(f"     → {v['activity']}: {v['message']}")
+    morpheme_violations = check_morpheme_patterns(ctx.yaml_activities)
+    if morpheme_violations:
+        print(f"  ⚠️  morpheme pattern violations: {len(morpheme_violations)}")
+        for v in morpheme_violations:
+            print(f"     → {v['activity']}: {v['message']}")
 
     # Check morpheme pedagogy (detect vague/weak morpheme activities)
-    morpheme_pedagogy_violations = []
-    if yaml_activities:
-        morpheme_pedagogy_violations = check_morpheme_pedagogy(yaml_activities)
-        if morpheme_pedagogy_violations:
-            print(f"  ⚠️  pedagogically weak morpheme activities: {len(morpheme_pedagogy_violations)}")
-            for v in morpheme_pedagogy_violations:
-                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
-                print(f"     {severity} [{v['type']}] {v['activity']}")
-                print(f"        Issue: {v['message']}")
-                print(f"        Fix: {v['suggestion']}")
-                if 'pedagogical_issue' in v:
-                    print(f"        Why: {v['pedagogical_issue']}")
+    morpheme_pedagogy_violations = check_morpheme_pedagogy(ctx.yaml_activities)
+    if morpheme_pedagogy_violations:
+        print(f"  ⚠️  pedagogically weak morpheme activities: {len(morpheme_pedagogy_violations)}")
+        for v in morpheme_pedagogy_violations:
+            severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {severity} [{v['type']}] {v['activity']}")
+            print(f"        Issue: {v['message']}")
+            print(f"        Fix: {v['suggestion']}")
+            if 'pedagogical_issue' in v:
+                print(f"        Why: {v['pedagogical_issue']}")
 
     # Check for inappropriate English hints in A2+ activities
-    english_hint_violations = []
-    if yaml_activities:
-        english_hint_violations = check_english_hints_in_activities(yaml_activities, level_code, module_num)
-        if english_hint_violations:
-            print(f"  ⚠️  English hints in A2+ activities: {len(english_hint_violations)}")
-            for v in english_hint_violations:
-                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
-                print(f"     {severity} [{v['type']}] {v['activity']} ({v['activity_type']})")
-                print(f"        Issue: {v['message']}")
-                print(f"        Fix: {v['suggestion']}")
-                if 'pedagogical_issue' in v:
-                    print(f"        Why: {v['pedagogical_issue']}")
+    english_hint_violations = check_english_hints_in_activities(ctx.yaml_activities, ctx.level_code, ctx.module_num)
+    if english_hint_violations:
+        print(f"  ⚠️  English hints in A2+ activities: {len(english_hint_violations)}")
+        for v in english_hint_violations:
+            severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {severity} [{v['type']}] {v['activity']} ({v['activity_type']})")
+            print(f"        Issue: {v['message']}")
+            print(f"        Fix: {v['suggestion']}")
+            if 'pedagogical_issue' in v:
+                print(f"        Why: {v['pedagogical_issue']}")
 
     # Check for empty jumbled fields in unjumble activities (Issue #362)
-    unjumble_violations = []
-    if yaml_activities:
-        unjumble_violations = check_unjumble_empty_jumbled(yaml_activities)
-        if unjumble_violations:
-            print(f"  ⚠️  unjumble activities with empty jumbled fields: {len(unjumble_violations)}")
-            for v in unjumble_violations:
-                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
-                print(f"     {severity} [{v['type']}] {v['activity']}")
-                print(f"        Issue: {v['message']}")
-                print(f"        Fix: {v['suggestion']}")
+    unjumble_violations = check_unjumble_empty_jumbled(ctx.yaml_activities)
+    if unjumble_violations:
+        print(f"  ⚠️  unjumble activities with empty jumbled fields: {len(unjumble_violations)}")
+        for v in unjumble_violations:
+            severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {severity} [{v['type']}] {v['activity']}")
+            print(f"        Issue: {v['message']}")
+            print(f"        Fix: {v['suggestion']}")
 
     # Check for reading-analysis pairing in seminar tracks (Issue #425)
-    seminar_pairing_violations = []
-    if yaml_activities:
-        seminar_pairing_violations = check_seminar_reading_pairing(yaml_activities, level_code)
-        if seminar_pairing_violations:
-            print(f"  📚 Seminar reading-analysis pairing issues: {len(seminar_pairing_violations)}")
-            for v in seminar_pairing_violations:
-                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
-                print(f"     {severity} [{v['type']}] {v['activity']}")
-                print(f"        Issue: {v['message']}")
-                print(f"        Fix: {v['suggestion']}")
-            # Critical pairing violations fail the audit (Issue #425)
-            critical_pairing = [v for v in seminar_pairing_violations if v['severity'] == 'critical']
-            if critical_pairing:
-                has_critical_failure = True
+    seminar_pairing_violations = check_seminar_reading_pairing(ctx.yaml_activities, ctx.level_code)
+    if seminar_pairing_violations:
+        print(f"  📚 Seminar reading-analysis pairing issues: {len(seminar_pairing_violations)}")
+        for v in seminar_pairing_violations:
+            severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {severity} [{v['type']}] {v['activity']}")
+            print(f"        Issue: {v['message']}")
+            print(f"        Fix: {v['suggestion']}")
+        # Critical pairing violations fail the audit (Issue #425)
+        critical_pairing = [v for v in seminar_pairing_violations if v['severity'] == 'critical']
+        if critical_pairing:
+            state.has_critical_failure = True
 
     # Check structural correctness of activity answers (Issue #xxx)
     # These catch bugs the YAML schema cannot: min_correct mismatches, answer-not-in-options, etc.
     answer_correctness_violations = []
-    if yaml_activities:
-        answer_correctness_violations.extend(check_select_min_correct(yaml_activities))
-        answer_correctness_violations.extend(check_quiz_single_correct(yaml_activities))
-        answer_correctness_violations.extend(check_fill_in_answer_in_options(yaml_activities))
-        answer_correctness_violations.extend(check_translate_single_correct(yaml_activities))
-        answer_correctness_violations.extend(check_mark_the_words_answers_in_text(yaml_activities))
-        answer_correctness_violations.extend(check_unjumble_runon_answer(yaml_activities))
-        answer_correctness_violations.extend(check_unjumble_out_of_scope_dative(yaml_activities))
-        if answer_correctness_violations:
-            print(f"  🔴 Activity answer correctness issues: {len(answer_correctness_violations)}")
-            for v in answer_correctness_violations:
-                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
-                print(f"     {severity} [{v['type']}] {v.get('activity', 'Unknown')}")
-                print(f"        Issue: {v['message']}")
-                print(f"        Fix: {v['suggestion']}")
-            critical_answer = [v for v in answer_correctness_violations if v['severity'] == 'critical']
-            if critical_answer:
-                has_critical_failure = True
+    answer_correctness_violations.extend(check_select_min_correct(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_quiz_single_correct(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_fill_in_answer_in_options(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_translate_single_correct(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_mark_the_words_answers_in_text(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_unjumble_runon_answer(ctx.yaml_activities))
+    answer_correctness_violations.extend(check_unjumble_out_of_scope_dative(ctx.yaml_activities))
+    if answer_correctness_violations:
+        print(f"  🔴 Activity answer correctness issues: {len(answer_correctness_violations)}")
+        for v in answer_correctness_violations:
+            severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {severity} [{v['type']}] {v.get('activity', 'Unknown')}")
+            print(f"        Issue: {v['message']}")
+            print(f"        Fix: {v['suggestion']}")
+        critical_answer = [v for v in answer_correctness_violations if v['severity'] == 'critical']
+        if critical_answer:
+            state.has_critical_failure = True
 
     # Check external resource URLs in reading activities (Issue #430)
-    external_url_violations = []
-    if yaml_activities and level_code.lower() in ['lit', 'hist', 'istorio', 'bio']:
-        external_url_violations = check_external_resources(yaml_activities, module_title)
+    if ctx.level_code.lower() in ['lit', 'hist', 'istorio', 'bio']:
+        external_url_violations = check_external_resources(ctx.yaml_activities, ctx.module_title)
         if external_url_violations:
             print(f"  🔗 External URL validation issues: {len(external_url_violations)}")
             for v in external_url_violations:
@@ -1347,46 +1432,49 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 if v.get('suggested_url'):
                     print(f"        ✅ Suggested fix: {v['suggested_url']}")
                     # Auto-fix if we have a suggestion
-                    if yaml_file and v.get('suggested_url'):
-                        if fix_external_resource_url(yaml_file, v['url'], v['suggested_url']):
-                            print(f"        ✓ AUTO-FIXED: URL updated in {yaml_file.name}")
+                    if ctx.yaml_file and v.get('suggested_url'):
+                        if fix_external_resource_url(ctx.yaml_file, v['url'], v['suggested_url']):
+                            print(f"        ✓ AUTO-FIXED: URL updated in {ctx.yaml_file.name}")
                         else:
                             print(f"        Fix: {v['suggestion']}")
                 else:
                     print(f"        Fix: {v['suggestion']}")
             # External URL mismatches are critical
-            has_critical_failure = True
+            state.has_critical_failure = True
 
+
+def _process_activity_sections(ctx: AuditContext, state: AuditState) -> None:
+    """Process YAML and embedded markdown activities, build activity details and table rows."""
     # LLM review files removed (Issue #430 superseded)
     # Validation happens during /review-content, not via separate files
 
-    if use_yaml_activities:
-        print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
+    if ctx.use_yaml_activities:
+        print(f"  📋 Found YAML activities file ({len(ctx.yaml_activities)} activities)")
         # Process YAML activities
-        for activity in yaml_activities:
+        for activity in ctx.yaml_activities:
             act_type = activity.type.lower()
             if act_type in VALID_ACTIVITY_TYPES or act_type.replace('-', '') in [t.replace('-', '') for t in VALID_ACTIVITY_TYPES]:
-                activity_count += 1
-                total_activities += 1
-                found_activity_types.append(act_type)
+                state.activity_count += 1
+                state.total_activities += 1
+                state.found_activity_types.append(act_type)
 
                 # Use shared count_items (Issue #394)
                 items = count_items('', activity)
-                density_target = config['min_items_per_activity']
+                density_target = ctx.config['min_items_per_activity']
                 if act_type in ACTIVITY_COMPLEXITY:
                     # Try specific key first (e.g. history)
-                    specific_key = f"{level_code}-{module_focus}" if module_focus else level_code
+                    specific_key = f"{ctx.level_code}-{ctx.module_focus}" if ctx.module_focus else ctx.level_code
                     complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(specific_key)
 
                     # Fallback to base level key (e.g. B2)
                     if not complexity_rules:
-                        complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
+                        complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(ctx.level_code, {})
 
                     if 'min_items' in complexity_rules:
                         density_target = complexity_rules['min_items']
 
                 # Track ALL activity details for report
-                activity_details.append({
+                state.activity_details.append({
                     'title': getattr(activity, 'title', act_type),
                     'type': act_type,
                     'items': items,
@@ -1395,9 +1483,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 })
 
                 if items >= density_target:
-                    valid_density_count += 1
+                    state.valid_density_count += 1
                 else:
-                    low_density_activities.append({
+                    state.low_density_activities.append({
                         'title': getattr(activity, 'title', act_type),
                         'type': act_type,
                         'items': items,
@@ -1406,7 +1494,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
                 print(f"  > {getattr(activity, 'title', act_type)}: {items} items (min {density_target})")
 
-    for title, text in section_map.items():
+    for title, text in ctx.section_map.items():
         title_lower = title.lower()
 
         is_core = False
@@ -1420,7 +1508,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 is_activity = True
                 matched_act_type = act
         if is_activity:
-            found_activity_types.append(matched_act_type)
+            state.found_activity_types.append(matched_act_type)
 
         if not is_activity:
             for exc in EXCLUDE_KEYWORDS:
@@ -1439,21 +1527,21 @@ def audit_module(file_path: str, skip_activities: bool = False,
         status_icon = "⚪️"
         note = "Skipped"
 
-        if is_activity and not use_yaml_activities:
+        if is_activity and not ctx.use_yaml_activities:
             # Only count embedded MD activities if no YAML file
-            activity_count += 1
-            total_activities += 1
+            state.activity_count += 1
+            state.total_activities += 1
 
             items = count_items(text)
             # Use activity-specific minimum from complexity config if available
-            density_target = config['min_items_per_activity']
+            density_target = ctx.config['min_items_per_activity']
             if matched_act_type in ACTIVITY_COMPLEXITY:
-                 complexity_rules = ACTIVITY_COMPLEXITY[matched_act_type].get(level_code, {})
+                 complexity_rules = ACTIVITY_COMPLEXITY[matched_act_type].get(ctx.level_code, {})
                  if 'min_items' in complexity_rules:
                      density_target = complexity_rules['min_items']
 
             # Track ALL activity details for report
-            activity_details.append({
+            state.activity_details.append({
                 'title': title,
                 'type': matched_act_type,
                 'items': items,
@@ -1462,10 +1550,10 @@ def audit_module(file_path: str, skip_activities: bool = False,
             })
 
             if items >= density_target:
-                valid_density_count += 1
+                state.valid_density_count += 1
             else:
                 # Track low density activities for reporting
-                low_density_activities.append({
+                state.low_density_activities.append({
                     'title': title,
                     'type': matched_act_type,
                     'items': items,
@@ -1477,7 +1565,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             print(f"  > {title}: {items} items (min {density_target})")
             display_count = items
 
-        elif is_activity and use_yaml_activities:
+        elif is_activity and ctx.use_yaml_activities:
             # Skip embedded activities when using YAML
             status_icon = "⚪️"
             note = "Skipped (using YAML)"
@@ -1494,121 +1582,120 @@ def audit_module(file_path: str, skip_activities: bool = False,
         else:
             display_count = count
 
-        table_rows.append(f"| **{title}** | {status_icon} | {display_count} | {note} |")
+        state.table_rows.append(f"| **{title}** | {status_icon} | {display_count} | {note} |")
 
-    # Evaluate gates
-    results = {}
 
-    results['words'] = evaluate_word_count(total_words, target, raw_words)
-    if results['words'].status == 'FAIL':
-        has_critical_failure = True
+def _evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: GateResult) -> set:
+    """Evaluate word count, activity, engagement, vocab, structure, persona, lint gates.
+
+    Returns the unique_types set for use in later phases.
+    """
+    config = ctx.config
+    vocab_target = config.get('min_vocab', 25)
+
+    state.results['words'] = evaluate_word_count(state.total_words, ctx.target, state.raw_words)
+    if state.results['words'].status == 'FAIL':
+        state.has_critical_failure = True
 
     # Activity gates (deferred in content-only mode)
-    if skip_activities:
+    if ctx.skip_activities:
         deferred = GateResult('INFO', '⏳', "Deferred (content-only audit)")
-        results['activities'] = deferred
-        results['density'] = deferred
-        results['unique_types'] = deferred
-        results['priority'] = deferred
+        state.results['activities'] = deferred
+        state.results['density'] = deferred
+        state.results['unique_types'] = deferred
+        state.results['priority'] = deferred
         unique_types = set()
     else:
         act_target = config['min_activities']
-        results['activities'] = evaluate_activity_count(activity_count, act_target)
-        if results['activities'].status == 'FAIL':
-            has_critical_failure = True
+        state.results['activities'] = evaluate_activity_count(state.activity_count, act_target)
+        if state.results['activities'].status == 'FAIL':
+            state.has_critical_failure = True
 
-        failed_density = total_activities - valid_density_count
+        failed_density = state.total_activities - state.valid_density_count
         dens_threshold = config['min_items_per_activity']
-        results['density'] = evaluate_density(failed_density, total_activities, dens_threshold, act_target)
-        if results['density'].status == 'FAIL' and act_target > 0:
-            has_critical_failure = True
+        state.results['density'] = evaluate_density(failed_density, state.total_activities, dens_threshold, act_target)
+        if state.results['density'].status == 'FAIL' and act_target > 0:
+            state.has_critical_failure = True
             # Print which activities need more items
-            print_low_density_activities(low_density_activities)
+            print_low_density_activities(state.low_density_activities)
 
-        unique_types = set(found_activity_types)
+        unique_types = set(state.found_activity_types)
         type_target = config['min_types_unique']
-        results['unique_types'] = evaluate_unique_types(len(unique_types), type_target)
-        if results['unique_types'].status == 'FAIL':
-            has_critical_failure = True
+        state.results['unique_types'] = evaluate_unique_types(len(unique_types), type_target)
+        if state.results['unique_types'].status == 'FAIL':
+            state.has_critical_failure = True
 
-        results['priority'] = evaluate_priority_types(unique_types, config['priority_types'])
-        if results['priority'].status == 'FAIL':
-            has_critical_failure = True
+        state.results['priority'] = evaluate_priority_types(unique_types, config['priority_types'])
+        if state.results['priority'].status == 'FAIL':
+            state.has_critical_failure = True
 
         # Check required_types (from meta.yaml activity_hints)
         required_types = config.get('required_types', set())
         if required_types:
             missing_required = required_types - unique_types
             if missing_required:
-                has_critical_failure = True
-                critical_failure_reasons.append(
+                state.fail(
                     f"Missing required activity types: {', '.join(sorted(missing_required))}"
                 )
                 print(f"  ❌ Missing required activity types from meta.yaml: {', '.join(sorted(missing_required))}")
 
     eng_target = config.get('min_engagement', 3)
-    results['engagement'] = evaluate_engagement(engagement_count, eng_target)
-    if results['engagement'].status == 'FAIL':
-        has_critical_failure = True
+    state.results['engagement'] = evaluate_engagement(state.engagement_count, eng_target)
+    if state.results['engagement'].status == 'FAIL':
+        state.has_critical_failure = True
 
-    results['audio'] = evaluate_audio(audio_count)
+    state.results['audio'] = evaluate_audio(state.audio_count)
 
-    results['audio'] = evaluate_audio(audio_count)
+    state.results['audio'] = evaluate_audio(state.audio_count)
 
-    if skip_activities:
-        results['vocab'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
+    if ctx.skip_activities:
+        state.results['vocab'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
     else:
-        vocab_count = len(vocab_data) if vocab_data else count_vocab_rows(content)
+        vocab_count = len(ctx.vocab_data) if ctx.vocab_data else count_vocab_rows(ctx.content)
 
-        results['vocab'] = evaluate_vocab(vocab_count, vocab_target)
+        state.results['vocab'] = evaluate_vocab(vocab_count, vocab_target)
         # Note: vocab_count is a soft target (Issue #340) - don't fail audit
 
-    # If using YAML sidecar for vocab, we assume "table format" is "handled by schema",
-    # but we still want to check if the Markdown *links* or *displays* it...
-    # Actually, the Markdown file doesn't display it anymore. generate_mdx injects it.
-    # So we pass structure check if vocab_data exists.
-    has_vocab_table = True if vocab_data else has_vocab_table
-
-    results['structure'] = structure_gate
-    if results['structure'].status == 'FAIL':
-        has_critical_failure = True
+    state.results['structure'] = structure_gate
+    if state.results['structure'].status == 'FAIL':
+        state.has_critical_failure = True
 
     # Persona Gate (Deterministic Curriculum Standard v2.2)
-    has_persona = plan_data is not None and 'persona' in plan_data
-    has_voice = has_persona and 'voice' in plan_data['persona']
-    has_role = has_persona and 'role' in plan_data['persona']
-    results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
-    if results['persona'].status == 'FAIL':
-        has_critical_failure = True
+    has_persona = ctx.plan_data is not None and 'persona' in ctx.plan_data
+    has_voice = has_persona and 'voice' in ctx.plan_data['persona']
+    has_role = has_persona and 'role' in ctx.plan_data['persona']
+    state.results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
+    if state.results['persona'].status == 'FAIL':
+        state.has_critical_failure = True
 
     # Run lint checks
-    lint_errors = run_lint_checks(content, section_map, module_num)
-    results['lint'] = evaluate_lint(len(lint_errors))
-    if results['lint'].status == 'FAIL':
-        has_critical_failure = True
+    state.lint_errors = run_lint_checks(ctx.content, ctx.section_map, ctx.module_num)
+    state.results['lint'] = evaluate_lint(len(state.lint_errors))
+    if state.results['lint'].status == 'FAIL':
+        state.has_critical_failure = True
 
     # Run Meta YAML requirements check (Seminar modules)
-    meta_violations = check_seminar_meta_requirements(meta_data, level_code, pedagogy)
+    meta_violations = check_seminar_meta_requirements(ctx.meta_data, ctx.level_code, ctx.pedagogy)
 
     # Check for research file (seminar tracks only)
-    research_violations = check_research_file(file_path)
+    research_violations = check_research_file(ctx.file_path)
     meta_violations.extend(research_violations)
 
     # Research alignment gate — checks if content reflects current research
     try:
         from research_quality import assess_research_compat, find_research_path
-        _md_path = Path(file_path)
+        _md_path = Path(ctx.file_path)
         _bare_slug = to_bare_slug(_md_path.stem)
         _research_path = find_research_path(_md_path.parent, _bare_slug)
         _research_info = None
         if _research_path:
-            _research_info = assess_research_compat(_research_path, track_code.lower(), _md_path)
-        results['research'] = evaluate_research_alignment(_research_info, _md_path.exists())
+            _research_info = assess_research_compat(_research_path, ctx.track_code.lower(), _md_path)
+        state.results['research'] = evaluate_research_alignment(_research_info, _md_path.exists())
     except ImportError:
-        results['research'] = GateResult('INFO', 'ℹ️', "N/A (research_quality not available)")
+        state.results['research'] = GateResult('INFO', 'ℹ️', "N/A (research_quality not available)")
 
     # Run activity type validation for ALL modules with meta.yaml
-    activity_type_violations = check_activity_hints_valid(meta_data)
+    activity_type_violations = check_activity_hints_valid(ctx.meta_data)
     meta_violations.extend(activity_type_violations)
 
     if meta_violations:
@@ -1621,30 +1708,44 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
         # Add to main violations list but mark critical ones as blocking
         if any(v['severity'] == 'critical' for v in meta_violations):
-            has_critical_failure = True
-
-    # Run pedagogical checks (with context-specific complexity)
-    pedagogical_violations = run_pedagogical_checks(
-        content, core_content, level_code, module_num, pedagogy, yaml_activities, module_focus
-    )
+            state.has_critical_failure = True
 
     # Add meta violations to pedagogical violations for reporting
     for v in meta_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'error' if v['severity'] == 'critical' else 'warning',
             'issue': v['message'],
             'fix': v.get('fix', '')
         })
 
+    return unique_types
+
+
+def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
+                                         yaml_schema_violations: list,
+                                         mark_words_violations: list,
+                                         hint_violations: list,
+                                         error_correction_hint_violations: list,
+                                         malformed_cloze_violations: list,
+                                         cloze_syntax_violations: list,
+                                         error_correction_violations: list,
+                                         invalid_type_violations: list) -> None:
+    """Run pedagogical checks, content quality, vocabulary plan compliance, and activity violation aggregation."""
+    # Run pedagogical checks (with context-specific complexity)
+    ped_violations = run_pedagogical_checks(
+        ctx.content, ctx.core_content, ctx.level_code, ctx.module_num, ctx.pedagogy, ctx.yaml_activities, ctx.module_focus
+    )
+    state.pedagogical_violations.extend(ped_violations)
+
     # Run State Standard 2024 compliance checks
     # Note: immersion_score calculated later in the audit, so pass None here
     # Immersion compliance will be checked separately after immersion calculation
     state_standard_violations = check_state_standard_compliance(
-        level_code, module_num, content, immersion_pct=None
+        ctx.level_code, ctx.module_num, ctx.content, immersion_pct=None
     )
     for violation in state_standard_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': violation.code,
             'severity': 'blocking',
             'issue': violation.message,
@@ -1652,20 +1753,20 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # Run vocabulary integration checks (Issue #395)
-    integration_data = check_vocabulary_integration(content, level_code, module_num, yaml_activities)
+    integration_data = check_vocabulary_integration(ctx.content, ctx.level_code, ctx.module_num, ctx.yaml_activities)
     if integration_data['total'] > 0:
         print(f"  📊 Vocabulary Integration: Lesson {integration_data['lesson_rate']:.1f}%, Activities {integration_data['activity_rate']:.1f}%")
 
         # Add violations if below thresholds
         if integration_data['lesson_rate'] < 50:
-            pedagogical_violations.append({
+            state.pedagogical_violations.append({
                 'type': 'LOW_LESSON_INTEGRATION',
                 'severity': 'warning',
                 'issue': f"Only {integration_data['lesson_rate']:.1f}% of core vocabulary used in lesson text.",
                 'fix': f"Use more core words in the prose: {', '.join(integration_data['missing'][:5])}..."
             })
         if integration_data['activity_rate'] < 80:
-            pedagogical_violations.append({
+            state.pedagogical_violations.append({
                 'type': 'LOW_ACTIVITY_INTEGRATION',
                 'severity': 'warning',
                 'issue': f"Only {integration_data['activity_rate']:.1f}% of core vocabulary used in activities.",
@@ -1674,53 +1775,50 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Run vocabulary plan compliance checks
     # VOCAB_PLAN_MISSING is NON-BLOCKING (Issue #387) - shown as warning only
-    if vocab_data:
+    if ctx.vocab_data:
         # Extract set of words from vocab_data dicts
         vocab_words = set()
-        for item in vocab_data:
+        for item in ctx.vocab_data:
             uk = item.get('lemma', '') # YAML schema uses 'lemma'
             if uk:
                 vocab_words.add(uk.lower())
     else:
-        vocab_words = extract_vocab_from_section(content)
+        vocab_words = extract_vocab_from_section(ctx.content)
 
     # Only check vocab plan for A1/A2 - B1+ uses separate vocabulary YAML files
-    if level_code.upper() in ('A1', 'A2'):
+    if ctx.level_code.upper() in ('A1', 'A2'):
         plan_violations = check_vocab_matches_plan(
-            file_path, level_code, module_num, vocab_words
+            ctx.file_path, ctx.level_code, ctx.module_num, vocab_words
         )
 
         # Separate blocking violations (missing core vocab) from warnings
-        vocab_blocking = [v for v in plan_violations if v.get('blocking', True)]
-        vocab_warnings = [v for v in plan_violations if not v.get('blocking', True)]
+        state.vocab_blocking = [v for v in plan_violations if v.get('blocking', True)]
+        state.vocab_warnings = [v for v in plan_violations if not v.get('blocking', True)]
 
         # Missing core vocab is a blocking failure
-        if vocab_blocking:
-            has_critical_failure = True
-    else:
-        vocab_blocking = []
-        vocab_warnings = []
+        if state.vocab_blocking:
+            state.has_critical_failure = True
 
     # Run metalanguage scaffolding check
-    cumulative_vocab = get_cumulative_vocab(level_code, module_num - 1)
+    cumulative_vocab = get_cumulative_vocab(ctx.level_code, ctx.module_num - 1)
     metalang_violations = check_metalanguage_scaffolding(
-        content, vocab_words, level_code, module_num, cumulative_vocab
+        ctx.content, vocab_words, ctx.level_code, ctx.module_num, cumulative_vocab
     )
-    pedagogical_violations.extend(metalang_violations)
+    state.pedagogical_violations.extend(metalang_violations)
 
     # Run markdown format checks (pass track_code for track-aware checks like heading levels)
-    markdown_violations = check_markdown_format(content, track_code)
-    pedagogical_violations.extend(markdown_violations)
+    markdown_violations = check_markdown_format(ctx.content, ctx.track_code)
+    state.pedagogical_violations.extend(markdown_violations)
 
     # Run vocabulary table format checks
-    if not vocab_data:
-        vocab_format_violations = check_vocab_table_format(content, level_code)
-        pedagogical_violations.extend(vocab_format_violations)
+    if not ctx.vocab_data:
+        vocab_format_violations = check_vocab_table_format(ctx.content, ctx.level_code)
+        state.pedagogical_violations.extend(vocab_format_violations)
 
     # Run section order checks
-    section_order_violations = check_section_order(content)
+    section_order_violations = check_section_order(ctx.content)
     for v in section_order_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'].upper(),
             'severity': v['severity'],
             'issue': v['message'],
@@ -1729,13 +1827,13 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # Run content quality checks (LLM-based + deterministic purity checks)
-    content_quality_violations = check_content_quality(content, level_code, module_num, file_path)
+    content_quality_violations = check_content_quality(ctx.content, ctx.level_code, ctx.module_num, ctx.file_path)
 
     # Run content purity checks (Redundancy, Roboticness, Mirroring)
     yaml_content_str = ""
-    if yaml_file.exists():
-        yaml_content_str = yaml_file.read_text(encoding='utf-8')
-    purity_violations = check_content_purity(content, yaml_content_str)
+    if ctx.yaml_file.exists():
+        yaml_content_str = ctx.yaml_file.read_text(encoding='utf-8')
+    purity_violations = check_content_purity(ctx.content, yaml_content_str)
 
     if purity_violations:
         print(f"  ✨ Purity violations found: {len(purity_violations)}")
@@ -1745,7 +1843,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(purity_violations)
 
     # Run imperial terminology checks (Russian/Soviet framing)
-    imperial_violations = check_imperial_terminology(content, file_path)
+    imperial_violations = check_imperial_terminology(ctx.content, ctx.file_path)
     if imperial_violations:
         errors = [v for v in imperial_violations if v["severity"] == "error"]
         warnings = [v for v in imperial_violations if v["severity"] == "warning"]
@@ -1759,7 +1857,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(imperial_violations)
 
     # Run Russicism detection (lexical calques from Russian)
-    russicism_violations = check_russicisms(content, file_path)
+    russicism_violations = check_russicisms(ctx.content, ctx.file_path)
     if russicism_violations:
         for v in russicism_violations:
             sev_icon = "❌" if v['severity'] == 'critical' else "⚠️"
@@ -1767,7 +1865,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(russicism_violations)
 
     # Run colonial framing checks (Russian-as-baseline)
-    colonial_violations = check_colonial_framing(content, file_path)
+    colonial_violations = check_colonial_framing(ctx.content, ctx.file_path)
     if colonial_violations:
         print(f"  🏛️  Colonial framing warnings: {len(colonial_violations)}")
         for v in colonial_violations:
@@ -1775,7 +1873,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(colonial_violations)
 
     # Run euphony checks (і/й, у/в, з/із/зі, conjunction variety)
-    euphony_violations = check_euphony_violations(content, file_path)
+    euphony_violations = check_euphony_violations(ctx.content, ctx.file_path)
     if euphony_violations:
         print(f"  🎵 Euphony violations: {len(euphony_violations)}")
         for v in euphony_violations:
@@ -1783,7 +1881,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(euphony_violations)
 
     # Run prose quality checks (Drill blocks, Glossary lists, LLM fingerprints, Inline English)
-    prose_violations = check_prose_quality(content)
+    prose_violations = check_prose_quality(ctx.content)
 
     if prose_violations:
         print(f"  ✨ Prose quality violations found: {len(prose_violations)}")
@@ -1793,7 +1891,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(prose_violations)
 
     # Run content gaming detection (Issue #610)
-    gaming_violations = check_content_gaming(content, file_path)
+    gaming_violations = check_content_gaming(ctx.content, ctx.file_path)
 
     if gaming_violations:
         print(f"  🎭 Content gaming violations found: {len(gaming_violations)}")
@@ -1806,7 +1904,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # Convert purity violations to standard pedagogical violations for reporting
     # Only critical-severity violations block the audit; warnings are informational
     for v in content_quality_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'blocking': v['severity'] == 'critical',
@@ -1816,9 +1914,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Run activity content checks (Issue #235)
     # 1. Check if activities contain Ukrainian content (not just English)
-    ukrainian_content_violations = check_activity_ukrainian_content(content, level_code)
+    ukrainian_content_violations = check_activity_ukrainian_content(ctx.content, ctx.level_code)
     for v in ukrainian_content_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'error',
             'issue': v['issue'],
@@ -1826,9 +1924,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 2. Check if [!resources] callout appears before Activities section
-    resources_violations = check_resources_placement(content)
+    resources_violations = check_resources_placement(ctx.content)
     for v in resources_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'warning',
             'issue': v['issue'],
@@ -1836,9 +1934,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 3. Check if [!resources] callout exists at all
-    missing_resources_violations = check_resources_required(content)
+    missing_resources_violations = check_resources_required(ctx.content)
     for v in missing_resources_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'warning',
             'issue': v['issue'],
@@ -1846,9 +1944,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 4. Check if unjumble activities have matching words (jumbled words = answer words)
-    unjumble_violations = check_unjumble_word_match(content)
+    unjumble_violations = check_unjumble_word_match(ctx.content)
     for v in unjumble_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'error',  # Blocking - unsolvable activities are critical
             'issue': v['issue'],
@@ -1856,9 +1954,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 5. Check activity header format (must use "## type: Title" format for MDX generation)
-    header_violations = check_activity_header_format(content)
+    header_violations = check_activity_header_format(ctx.content)
     for v in header_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': 'error',  # Blocking - activities will be silently skipped
             'issue': v['issue'],
@@ -1867,7 +1965,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 6. Check mark-the-words format (Issue #361: malformed (correct)/(wrong) annotations)
     for v in mark_words_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1876,7 +1974,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 7. Check for hints in activities (all should be removed)
     for v in hint_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1885,7 +1983,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 7b. Check for error-correction activities with highlighted error words
     for v in error_correction_hint_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1894,7 +1992,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 8. Check for malformed cloze activities (dialogue lines as blanks)
     for v in malformed_cloze_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1903,7 +2001,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 9. Check for cloze syntax errors (colons inside blanks)
     for v in cloze_syntax_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1912,7 +2010,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 10. Check for malformed error-correction activities (placeholder syntax)
     for v in error_correction_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1921,7 +2019,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 11. Check for invalid activity types in YAML
     for v in invalid_type_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['issue'],
@@ -1930,7 +2028,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # 12. Check for YAML schema violations (Issue #397)
     for v in yaml_schema_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['message'],
@@ -1939,12 +2037,12 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 12. Check for missing advanced activities in C1/C2
-    if not skip_activities:
-        advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code, module_focus)
+    if not ctx.skip_activities:
+        advanced_presence_violations = check_advanced_activities_presence(state.found_activity_types, ctx.level_code, ctx.module_focus)
     else:
         advanced_presence_violations = []
     for v in advanced_presence_violations:
-        pedagogical_violations.append({
+        state.pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
             'blocking': v.get('blocking', True),
@@ -1952,65 +2050,68 @@ def audit_module(file_path: str, skip_activities: bool = False,
             'fix': v['fix']
         })
 
-    blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
-    results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
-    if results['pedagogy'].status == 'FAIL':
-        has_critical_failure = True
+    blocking_pedagogy = [v for v in state.pedagogical_violations if v.get('blocking', True)]
+    state.results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
+    if state.results['pedagogy'].status == 'FAIL':
+        state.has_critical_failure = True
 
+
+def _evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, int, int]:
+    """Evaluate immersion gate and return (immersion_score, min_imm, max_imm)."""
     # Immersion (includes Activities + Summary - full learner experience)
-    full_immersion_text = clean_for_immersion(body)
+    full_immersion_text = clean_for_immersion(ctx.body)
     immersion_score = calculate_immersion(full_immersion_text)
 
     # Immersion targets (phase-based for A1, A2, and B1 - check level directly)
     # CHECKPOINTS: No immersion gate - immersion should come naturally from practice
-    if module_focus == 'checkpoint':
+    if ctx.module_focus == 'checkpoint':
         min_imm, max_imm = 0, 100  # Skip gate - just report the value
         phase_label = " (checkpoint - no gate)"
-    elif level_code == 'A1':
-        min_imm, max_imm = get_a1_immersion_range(module_num)
-        phase_label = f" (M{module_num:02d})"
-    elif level_code == 'A2':
-        min_imm, max_imm = get_a2_immersion_range(module_num)
+    elif ctx.level_code == 'A1':
+        min_imm, max_imm = get_a1_immersion_range(ctx.module_num)
+        phase_label = f" (M{ctx.module_num:02d})"
+    elif ctx.level_code == 'A2':
+        min_imm, max_imm = get_a2_immersion_range(ctx.module_num)
         # Label the phase for clarity
-        if module_num <= 20:
+        if ctx.module_num <= 20:
             phase_label = " (A2.1)"
-        elif module_num <= 40:
+        elif ctx.module_num <= 40:
             phase_label = " (A2.2)"
         else:
             phase_label = " (A2.3)"
-    elif level_code == 'B1':
-        min_imm, max_imm = get_b1_immersion_range(module_num)
+    elif ctx.level_code == 'B1':
+        min_imm, max_imm = get_b1_immersion_range(ctx.module_num)
         # Label the phase for clarity
-        if module_num <= 5:
+        if ctx.module_num <= 5:
             phase_label = " (B1.0 Bridge)"
-        elif module_num <= 10:
+        elif ctx.module_num <= 10:
             phase_label = " (B1.1 Aspect)"
-        elif module_num <= 20:
+        elif ctx.module_num <= 20:
             phase_label = " (B1.2 Motion)"
-        elif module_num <= 45:
+        elif ctx.module_num <= 45:
             phase_label = " (B1.3-4 Complex)"
-        elif module_num <= 65:
+        elif ctx.module_num <= 65:
             phase_label = " (B1.5-6 Vocab)"
         else:
             phase_label = " (B1.7-8 Ukraine)"
     else:
         # B2, C1, C2 use type-based immersion from config
-        min_imm = config.get('min_immersion', 0)
-        max_imm = config.get('max_immersion', 100)
-        phase_label = f" ({module_focus})" if module_focus else ""
+        min_imm = ctx.config.get('min_immersion', 0)
+        max_imm = ctx.config.get('max_immersion', 100)
+        phase_label = f" ({ctx.module_focus})" if ctx.module_focus else ""
 
-    results['immersion'] = evaluate_immersion(immersion_score, min_imm, max_imm, phase_label)
-    if results['immersion'].status == 'FAIL':
-        has_critical_failure = True
-        print_immersion_fix_hints(immersion_score, min_imm, max_imm, level_code, module_focus)
+    state.results['immersion'] = evaluate_immersion(immersion_score, min_imm, max_imm, phase_label)
+    if state.results['immersion'].status == 'FAIL':
+        state.has_critical_failure = True
+        print_immersion_fix_hints(immersion_score, min_imm, max_imm, ctx.level_code, ctx.module_focus)
 
     # Run State Standard 2024 immersion compliance (B1+)
-    if level_code in ['B1', 'B2', 'C1', 'C2']:
+    if ctx.level_code in ['B1', 'B2', 'C1', 'C2']:
         immersion_violations = check_state_standard_compliance(
-            level_code, module_num, content, immersion_pct=immersion_score
+            ctx.level_code, ctx.module_num, ctx.content, immersion_pct=immersion_score
         )
         for violation in immersion_violations:
-            pedagogical_violations.append({
+            state.pedagogical_violations.append({
                 'type': violation.code,
                 'severity': 'warning',
                 'issue': violation.message,
@@ -2018,24 +2119,29 @@ def audit_module(file_path: str, skip_activities: bool = False,
             })
 
     # Hard failure for very low immersion
-    if immersion_score < 10.0 and module_num > 5:
-        has_critical_failure = True
+    if immersion_score < 10.0 and ctx.module_num > 5:
+        state.has_critical_failure = True
 
+    return immersion_score, min_imm, max_imm
+
+
+def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
+    """Evaluate richness, grammar, naturalness, activity quality, content-heavy, transliteration gates."""
     # Richness evaluation (B1+ only)
-    if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+    if ctx.level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
         # Pass YAML activity types for checkpoints so richness can count them
-        yaml_activity_types = set(found_activity_types) if use_yaml_activities else None
-        richness_result = calculate_richness_score(content, level_code, file_path, yaml_activity_types)
-        richness_flags = detect_dryness_flags(content, level_code, file_path)
-        results['richness'] = evaluate_richness(
+        yaml_activity_types = set(state.found_activity_types) if ctx.use_yaml_activities else None
+        richness_result = calculate_richness_score(ctx.content, ctx.level_code, ctx.file_path, yaml_activity_types)
+        richness_flags = detect_dryness_flags(ctx.content, ctx.level_code, ctx.file_path)
+        state.results['richness'] = evaluate_richness(
             richness_result['score'],
             richness_result['threshold'],
             richness_result.get('module_type', 'grammar'),
             richness_flags,
         )
-        if results['richness'].status == 'FAIL':
+        if state.results['richness'].status == 'FAIL':
             # Richness is a HARD gate - fail the audit
-            has_critical_failure = True
+            state.has_critical_failure = True
             print(f"\n⚠️  Richness below threshold ({richness_result['score']}% < {richness_result['threshold']}% min)")
             if richness_flags:
                 print("   Dryness flags:")
@@ -2043,7 +2149,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                     print(f"     - {flag}")
 
     # Grammar validation check - look for -grammar.yaml in audit folder
-    md_abs = Path(os.path.abspath(file_path))
+    md_abs = Path(os.path.abspath(ctx.file_path))
     grammar_file = str(_grammar_path(md_abs.parent, md_abs.stem))
     # Also check legacy path (numbered stem) during transition
     if not os.path.exists(grammar_file):
@@ -2060,7 +2166,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         except Exception:
             pass
 
-    results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
+    state.results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
 
     # Naturalness validation (Issue #415)
     # DECOMMISSIONED: Automated LLM check during audit is redundant and wastes resources.
@@ -2069,8 +2175,8 @@ def audit_module(file_path: str, skip_activities: bool = False,
     nat_status = "PENDING"
 
     # Check if naturalness already evaluated in meta.yaml
-    if meta_data and 'naturalness' in meta_data:
-        nat_val = meta_data['naturalness']
+    if ctx.meta_data and 'naturalness' in ctx.meta_data:
+        nat_val = ctx.meta_data['naturalness']
         if isinstance(nat_val, dict):
             nat_score = nat_val.get('score', 0) or 0
             nat_status = nat_val.get('status', 'PENDING') or 'PENDING'
@@ -2082,13 +2188,13 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # We no longer trigger external LLM calls for naturalness during the structural audit.
 
 
-    results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
-    if results['naturalness'].status == 'FAIL':
-        has_critical_failure = True
+    state.results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
+    if state.results['naturalness'].status == 'FAIL':
+        state.has_critical_failure = True
 
     # Activity quality validation check - look for -quality.md in audit folder
-    if skip_activities:
-        results['activity_quality'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
+    if ctx.skip_activities:
+        state.results['activity_quality'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
     else:
         quality_file = str(_quality_path(md_abs.parent, md_abs.stem))
         # Also check legacy path during transition
@@ -2117,63 +2223,64 @@ def audit_module(file_path: str, skip_activities: bool = False,
             except Exception:
                 pass
 
-        results['activity_quality'] = evaluate_activity_quality(
+        state.results['activity_quality'] = evaluate_activity_quality(
             os.path.exists(quality_file),
             quality_result,
             quality_failed_gates,
-            level_code
+            ctx.level_code
         )
 
     # Content-heavy module check (B2 history, C1 literature/biography/folk/arts)
-    if skip_activities:
-        results['content_heavy'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
+    if ctx.skip_activities:
+        state.results['content_heavy'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
     else:
-        is_content_heavy = is_content_heavy_module(level_code, module_num, module_focus or "")
+        is_content_heavy = is_content_heavy_module(ctx.level_code, ctx.module_num, ctx.module_focus or "")
         content_recall_violations = []
         if is_content_heavy:
             # Run all content recall checks (quiz patterns, fill-in years, cloze years)
             # Pass YAML activities if available for YAML-based detection
             content_recall_violations = run_all_content_recall_checks(
-                content, level_code, module_focus or "",
-                yaml_activities=yaml_activities
+                ctx.content, ctx.level_code, ctx.module_focus or "",
+                yaml_activities=ctx.yaml_activities
             )
 
         # Calculate limits for content-heavy gate
-        min_act = config.get('min_activities', 10)
+        min_act = ctx.config.get('min_activities', 10)
         # Use max_activities from config if available (e.g. LIT: 6), otherwise default buffer
-        max_act = config.get('max_activities', min_act + 4)
+        max_act = ctx.config.get('max_activities', min_act + 4)
 
-        results['content_heavy'] = evaluate_content_heavy(
+        state.results['content_heavy'] = evaluate_content_heavy(
             is_content_heavy,
-            activity_count,
+            state.activity_count,
             content_recall_violations,
             min_act=min_act,
             max_act=max_act
         )
 
     # Transliteration policy
+    transliteration_allowed = ctx.config.get('transliteration_allowed', True)
     if not transliteration_allowed:
         translit_ok = False
-        if meta_data:
+        if ctx.meta_data:
             # Meta sidecar: YAML `none` parses as Python None, which means "no transliteration"
             # If the field is absent, treat as "none" (default for levels that forbid it)
-            if 'transliteration' not in meta_data:
+            if 'transliteration' not in ctx.meta_data:
                 translit_ok = True  # Absent = default = no transliteration
             else:
-                val = meta_data['transliteration']
+                val = ctx.meta_data['transliteration']
                 translit_ok = (val is None or str(val).lower() == 'none')
         if not translit_ok:
             # Fallback: check frontmatter string (for legacy embedded frontmatter)
-            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', frontmatter_str))
+            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', ctx.frontmatter_str))
         if not translit_ok:
-            print(f"❌ AUDIT FAILED: Level {level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
-            has_critical_failure = True
+            print(f"❌ AUDIT FAILED: Level {ctx.level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
+            state.has_critical_failure = True
 
         # Detect track for academic context exemptions (Issue #557)
-        track_for_translit = detect_track_from_path(file_path)
+        track_for_translit = detect_track_from_path(ctx.file_path)
         # Bridge modules (B1 M01-M05) use English glosses intentionally — skip transliteration check
-        is_bridge_module = (level_code == 'B1' and module_num <= 5)
-        content_lines = content.split('\n')
+        is_bridge_module = (ctx.level_code == 'B1' and ctx.module_num <= 5)
+        content_lines = ctx.content.split('\n')
         for line_idx, line in enumerate(content_lines):
             if '___' in line or '[___:' in line:
                 continue
@@ -2192,92 +2299,97 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 if is_bridge_module:
                     continue
                 print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
-                has_critical_failure = True
+                state.has_critical_failure = True
                 break
 
+
+def _generate_output_and_report(ctx: AuditContext, state: AuditState,
+                                 immersion_score: float, min_imm: int, max_imm: int,
+                                 unique_types: set) -> bool:
+    """Print gates, generate report, run review validation, save status cache. Returns audit result."""
     # Output
-    print_gates(results, level_code)
-    print_lint_errors(lint_errors)
-    print_pedagogical_violations(pedagogical_violations)
-    print_template_violations(template_violations)
+    print_gates(state.results, ctx.level_code)
+    print_lint_errors(state.lint_errors)
+    print_pedagogical_violations(state.pedagogical_violations)
+    print_template_violations(state.template_violations)
 
     # Print vocab blocking errors (these fail the audit)
-    if vocab_blocking:
+    if state.vocab_blocking:
         print("\n❌ MISSING CORE VOCABULARY (blocking):")
-        for v in vocab_blocking:
+        for v in state.vocab_blocking:
             print(f"  [{v['type']}] {v['issue']}")
             print(f"     → FIX: {v['fix']}")
 
     # Print vocab warnings (informational only)
-    if vocab_warnings:
+    if state.vocab_warnings:
         print("\n⚠️  VOCABULARY WARNINGS (informational):")
-        for v in vocab_warnings:
+        for v in state.vocab_warnings:
             print(f"  [{v['type']}] {v['issue']}")
             print(f"     → FIX: {v['fix']}")
 
     # Recommendation - include all vocab issues in severity
-    all_violations_for_severity = pedagogical_violations + vocab_blocking + vocab_warnings + template_violations
+    all_violations_for_severity = state.pedagogical_violations + state.vocab_blocking + state.vocab_warnings + state.template_violations
     recommendation, reasons, severity = compute_recommendation(
-        all_violations_for_severity, lint_errors, results, immersion_score,
-        min_imm, max_imm, level_code
+        all_violations_for_severity, state.lint_errors, state.results, immersion_score,
+        min_imm, max_imm, ctx.level_code
     )
     print_recommendation(recommendation, reasons, severity)
 
     # Generate and save report (pedagogical, vocab, and template separated)
-    all_violations_for_report = pedagogical_violations + vocab_blocking + vocab_warnings
+    all_violations_for_report = state.pedagogical_violations + state.vocab_blocking + state.vocab_warnings
 
     # Get richness data for report (if available)
     richness_data = None
     richness_flags_for_report = None
-    if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
-        yaml_activity_types = set(found_activity_types) if use_yaml_activities else None
-        richness_data = calculate_richness_score(content, level_code, file_path, yaml_activity_types)
-        richness_flags_for_report = detect_dryness_flags(content, level_code, file_path)
+    if ctx.level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        yaml_activity_types = set(state.found_activity_types) if ctx.use_yaml_activities else None
+        richness_data = calculate_richness_score(ctx.content, ctx.level_code, ctx.file_path, yaml_activity_types)
+        richness_flags_for_report = detect_dryness_flags(ctx.content, ctx.level_code, ctx.file_path)
 
     # Get naturalness data from metadata
-    naturalness_data = meta_data.get('naturalness') if meta_data else None
+    naturalness_data = ctx.meta_data.get('naturalness') if ctx.meta_data else None
 
     report_content = generate_report(
-        file_path, phase, level_code, pedagogy, target,
-        has_critical_failure, results, table_rows,
-        lint_errors, all_violations_for_report,
+        ctx.file_path, ctx.phase, ctx.level_code, ctx.pedagogy, ctx.target,
+        state.has_critical_failure, state.results, state.table_rows,
+        state.lint_errors, all_violations_for_report,
         recommendation, reasons, severity,
-        low_density_activities,
+        state.low_density_activities,
         richness_data=richness_data,
         richness_flags=richness_flags_for_report,
-        template_violations=template_violations,
+        template_violations=state.template_violations,
         naturalness=naturalness_data,
-        module_num=module_num,
-        config=config,
-        activity_details=activity_details,
+        module_num=ctx.module_num,
+        config=ctx.config,
+        activity_details=state.activity_details,
         unique_types=unique_types,
-        module_focus=module_focus,
-        display_level=display_level
+        module_focus=ctx.module_focus,
+        display_level=ctx.display_level
     )
-    report_path = save_report(file_path, report_content)
+    report_path = save_report(ctx.file_path, report_content)
     print(f"\nReport: {report_path}")
 
     # Review Validation (final gate — only checked if all content gates pass)
     # Skipped in content-only mode (skip_activities) because Phase D creates the review
     review_violations = []
     review_gate_status = "skipped"
-    if skip_activities or skip_review:
+    if ctx.skip_activities or ctx.skip_review:
         review_gate_status = "deferred"
-    elif not has_critical_failure:
-        module_slug_for_review = Path(file_path).stem
-        review_violations = check_review_validity(file_path, level_code, module_slug_for_review)
+    elif not state.has_critical_failure:
+        module_slug_for_review = Path(ctx.file_path).stem
+        review_violations = check_review_validity(ctx.file_path, ctx.level_code, module_slug_for_review)
         if review_violations:
             criticals = [v for v in review_violations if v['severity'] == 'critical']
             warnings = [v for v in review_violations if v['severity'] == 'warning']
             print(f"  🕵️  Review Validation: {len(criticals)} critical, {len(warnings)} warnings")
             for v in criticals:
                 print(f"     ❌ [{v['type']}] {v['message']}")
-                critical_failure_reasons.append(v['message'])
+                state.critical_failure_reasons.append(v['message'])
             for v in warnings:
                 print(f"     ⚠️  [{v['type']}] {v['message']}")
             if criticals:
                 review_gate_status = "fail"
-                has_critical_failure = True
+                state.has_critical_failure = True
             else:
                 review_gate_status = "pass"
         else:
@@ -2286,7 +2398,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         # Review Gaming Detection (Issue #610)
         # Find and read the review file to run gaming checks
         from slug_utils import review_path as _review_path_fn
-        _review_base = Path(file_path).parent
+        _review_base = Path(ctx.file_path).parent
         _review_canonical = _review_path_fn(_review_base, module_slug_for_review)
         _review_file_path = None
         if _review_canonical.exists():
@@ -2301,7 +2413,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             try:
                 _review_text = _review_file_path.read_text(encoding='utf-8')
                 gaming_review_violations = check_review_gaming(
-                    _review_text, content, file_path, level_code, module_slug_for_review
+                    _review_text, ctx.content, ctx.file_path, ctx.level_code, module_slug_for_review
                 )
                 if gaming_review_violations:
                     g_crits = [v for v in gaming_review_violations if v['severity'] == 'critical']
@@ -2309,13 +2421,13 @@ def audit_module(file_path: str, skip_activities: bool = False,
                     print(f"  🎭 Review Gaming: {len(g_crits)} critical, {len(g_warns)} warnings")
                     for v in g_crits:
                         print(f"     ❌ [{v['type']}] {v['message']}")
-                        critical_failure_reasons.append(v['message'])
+                        state.critical_failure_reasons.append(v['message'])
                     for v in g_warns:
                         print(f"     ⚠️  [{v['type']}] {v['message']}")
                     review_violations.extend(gaming_review_violations)
                     if g_crits and review_gate_status == "pass":
                         review_gate_status = "fail"
-                        has_critical_failure = True
+                        state.has_critical_failure = True
             except OSError:
                 pass  # Can't read review file — skip gaming checks
     else:
@@ -2323,15 +2435,15 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Save Status Cache (V2 Architecture)
     try:
-        module_slug = Path(file_path).stem
-        plan_ver = meta_data.get('version', '2.0') if meta_data else '2.0'
+        module_slug = Path(ctx.file_path).stem
+        plan_ver = ctx.meta_data.get('version', '2.0') if ctx.meta_data else '2.0'
         cache_path = save_status_cache(
-            file_path,
-            level_code,
+            ctx.file_path,
+            ctx.level_code,
             module_slug,
-            results,
-            has_critical_failure,
-            critical_failure_reasons,
+            state.results,
+            state.has_critical_failure,
+            state.critical_failure_reasons,
             plan_version=plan_ver,
             review_violations=review_violations,
             review_gate_status=review_gate_status,
@@ -2340,13 +2452,73 @@ def audit_module(file_path: str, skip_activities: bool = False,
     except Exception as e:
         print(f"⚠️ Failed to save status cache: {e}")
 
-    if has_critical_failure:
+    if state.has_critical_failure:
         print("\n❌ AUDIT FAILED. Correct errors before proceeding.")
-        if critical_failure_reasons:
+        if state.critical_failure_reasons:
             print("\nCritical Failures:")
-            for reason in critical_failure_reasons:
+            for reason in state.critical_failure_reasons:
                 print(f"  • {reason}")
         return False
     else:
         print("\n✅ AUDIT PASSED.")
         return True
+
+
+def audit_module(file_path: str, skip_activities: bool = False,
+                 skip_review: bool = False) -> bool:
+    """
+    Orchestrates the audit process for a single module file.
+    Returns True on success, False on failure.
+
+    Args:
+        skip_activities: When True, defer activity/vocab gates (content-only audit
+                         for the otaman content sprint). Deferred gates return INFO
+                         status and do NOT cause critical failures.
+        skip_review: When True, defer review gate only (#606). Used by the v3 audit
+                     phase to validate content + activities but not the review file
+                     (which Phase D creates later).
+    """
+    # Phase 1: Load files, parse frontmatter, detect level/config
+    ctx, state = _load_and_resolve(file_path, skip_activities, skip_review)
+
+    # Phase 2: Template compliance
+    _check_template_compliance(ctx, state)
+
+    # Phase 3: Outline, structure, tone, checkpoint validation
+    structure_gate = _check_outline_and_structure(ctx, state)
+
+    # Phase 4: Word count and engagement metrics
+    _count_words_and_engagement(ctx, state)
+
+    # Phase 5: Validate YAML activity files (schema, lint, format checks)
+    (yaml_schema_violations, mark_words_violations, hint_violations,
+     error_correction_hint_violations, malformed_cloze_violations,
+     cloze_syntax_violations, error_correction_violations,
+     invalid_type_violations, forbidden_type_violations) = _validate_yaml_activities(ctx, state)
+
+    # Phase 6: Activity answer correctness and external URL validation
+    _validate_activity_answers(ctx, state)
+
+    # Phase 7: Process activity sections (YAML + embedded markdown)
+    _process_activity_sections(ctx, state)
+
+    # Phase 8: Evaluate core gates (words, activities, engagement, vocab, structure, persona, lint)
+    unique_types = _evaluate_core_gates(ctx, state, structure_gate)
+
+    # Phase 9: Pedagogical checks, content quality, vocabulary plan compliance
+    _run_pedagogical_and_content_checks(
+        ctx, state,
+        yaml_schema_violations, mark_words_violations, hint_violations,
+        error_correction_hint_violations, malformed_cloze_violations,
+        cloze_syntax_violations, error_correction_violations,
+        invalid_type_violations,
+    )
+
+    # Phase 10: Immersion evaluation
+    immersion_score, min_imm, max_imm = _evaluate_immersion(ctx, state)
+
+    # Phase 11: Advanced gates (richness, grammar, naturalness, activity quality, content-heavy, transliteration)
+    _evaluate_advanced_gates(ctx, state)
+
+    # Phase 12: Output, report generation, review validation, status cache
+    return _generate_output_and_report(ctx, state, immersion_score, min_imm, max_imm, unique_types)
