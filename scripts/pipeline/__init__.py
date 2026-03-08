@@ -42,6 +42,11 @@ from pipeline.fixes import (
     _clean_fix_text,
     _apply_find_replace_fixes,
 )
+from pipeline.screen import (
+    _run_deterministic_fixes,
+    _deterministic_screen,
+    _deterministic_fix_mtimes,
+)
 
 __all__ = [
     # state
@@ -60,4 +65,7 @@ __all__ = [
     "_module_file_paths", "_snapshot_module_files", "_count_diff_lines",
     "_log_d1_edits", "_apply_module_fixes", "_apply_fixes_with_rollback",
     "_clean_fix_text", "_apply_find_replace_fixes",
+    # screen
+    "_run_deterministic_fixes", "_deterministic_screen",
+    "_deterministic_fix_mtimes",
 ]

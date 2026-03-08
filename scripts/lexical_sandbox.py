@@ -116,6 +116,72 @@ def _get_all_forms(lemma: str, batch_size: int = 500) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Common function words (always available in sandbox)
+# ---------------------------------------------------------------------------
+
+COMMON_WORDS = [
+    # Pronouns
+    "я", "ти", "він", "вона", "воно", "ми", "ви", "вони",
+    # Demonstratives
+    "це", "той", "та", "те", "ті", "цей", "ця",
+    # Common particles/adverbs
+    "так", "ні", "не", "дуже", "тут", "там", "ось",
+    "також", "ще", "вже", "теж", "тільки",
+    # Conjunctions
+    "і", "а", "але", "або", "що", "як", "бо",
+    # Prepositions
+    "в", "у", "на", "з", "до", "для", "по",
+    # Question words
+    "хто", "що", "де", "коли", "чому", "як", "який", "яка", "яке", "які",
+    # Common nouns always needed
+    "людина", "слово", "мова", "день", "час",
+]
+
+
+def _collect_candidates(plan: dict, extra_words: list[str] | None = None) -> list[str]:
+    """Collect all candidate words from plan vocabulary_hints and extras.
+
+    Returns deduplicated list preserving insertion order.
+    """
+    candidates: list[str] = list(COMMON_WORDS)
+
+    vocab_hints = plan.get("vocabulary_hints", {})
+    if isinstance(vocab_hints, dict):
+        for _category, words in vocab_hints.items():
+            if isinstance(words, list):
+                for w in words:
+                    candidates.append(_extract_ukr_word(w) if isinstance(w, str) else w)
+            elif isinstance(words, str):
+                candidates.append(_extract_ukr_word(words))
+    elif isinstance(vocab_hints, list):
+        for item in vocab_hints:
+            if isinstance(item, str):
+                candidates.append(_extract_ukr_word(item))
+            elif isinstance(item, dict):
+                word = item.get("word") or item.get("uk") or item.get("lemma", "")
+                if word:
+                    candidates.append(word)
+
+    if extra_words:
+        candidates.extend(extra_words)
+
+    return list(dict.fromkeys(w.strip() for w in candidates if w.strip()))
+
+
+def _select_primary_match(
+    word_lower: str, matches: list[dict], is_common: bool
+) -> dict:
+    """Select the best VESUM match for a word based on POS preference."""
+    if is_common:
+        non_noun = [m for m in matches if m["pos"] not in ("noun",)]
+        return non_noun[0] if non_noun else matches[0]
+    if word_lower.endswith(("ти", "тися", "тись")):
+        verb_matches = [m for m in matches if m["pos"] == "verb"]
+        return verb_matches[0] if verb_matches else matches[0]
+    return matches[0]
+
+
+# ---------------------------------------------------------------------------
 # Sandbox builder
 # ---------------------------------------------------------------------------
 
@@ -140,52 +206,8 @@ def build_sandbox(
     """
     constraints = _get_constraints(track, module_num)
 
-    # Common function words that are always available
-    _COMMON_WORDS = [
-        # Pronouns
-        "я", "ти", "він", "вона", "воно", "ми", "ви", "вони",
-        # Demonstratives
-        "це", "той", "та", "те", "ті", "цей", "ця",
-        # Common particles/adverbs
-        "так", "ні", "не", "дуже", "тут", "там", "ось",
-        "також", "ще", "вже", "теж", "тільки",
-        # Conjunctions
-        "і", "а", "але", "або", "що", "як", "бо",
-        # Prepositions
-        "в", "у", "на", "з", "до", "для", "по",
-        # Question words
-        "хто", "що", "де", "коли", "чому", "як", "який", "яка", "яке", "які",
-        # Common nouns always needed
-        "людина", "слово", "мова", "день", "час",
-    ]
-
     # 1. Collect all candidate words
-    candidates: list[str] = list(_COMMON_WORDS)
-
-    # From plan vocabulary_hints
-    vocab_hints = plan.get("vocabulary_hints", {})
-    if isinstance(vocab_hints, dict):
-        for _category, words in vocab_hints.items():
-            if isinstance(words, list):
-                for w in words:
-                    candidates.append(_extract_ukr_word(w) if isinstance(w, str) else w)
-            elif isinstance(words, str):
-                candidates.append(_extract_ukr_word(words))
-    elif isinstance(vocab_hints, list):
-        for item in vocab_hints:
-            if isinstance(item, str):
-                candidates.append(_extract_ukr_word(item))
-            elif isinstance(item, dict):
-                word = item.get("word") or item.get("uk") or item.get("lemma", "")
-                if word:
-                    candidates.append(word)
-
-    # From extra words (Pass 1 resource request)
-    if extra_words:
-        candidates.extend(extra_words)
-
-    # Deduplicate, lowercase
-    candidates = list(dict.fromkeys(w.strip() for w in candidates if w.strip()))
+    candidates = _collect_candidates(plan, extra_words)
     if not candidates:
         return ""
 
@@ -199,27 +221,16 @@ def build_sandbox(
     }
     verified_lemmas: set[tuple[str, str]] = set()
 
+    common_lower = {w.lower() for w in COMMON_WORDS}
+
     for word in candidates:
         word_lower = word.lower()
         matches = vesum_results.get(word_lower, [])
         if not matches:
             continue
 
-        # For common function words, use the lookup matches directly (don't expand)
-        is_common = word_lower in {w.lower() for w in _COMMON_WORDS}
-
-        # Prefer non-noun POS for function words (e.g., "коли" = adv, not noun "кіл")
-        if is_common:
-            non_noun = [m for m in matches if m["pos"] not in ("noun",)]
-            primary = non_noun[0] if non_noun else matches[0]
-        elif word_lower.endswith(("ти", "тися", "тись")):
-            # For words ending in infinitive markers, prefer verb over noun
-            # (e.g., "дати" = verb "дати", not noun "дата" genitive)
-            verb_matches = [m for m in matches if m["pos"] == "verb"]
-            primary = verb_matches[0] if verb_matches else matches[0]
-        else:
-            primary = matches[0]
-
+        is_common = word_lower in common_lower
+        primary = _select_primary_match(word_lower, matches, is_common)
         lemma = primary["lemma"]
         pos = primary["pos"]
 

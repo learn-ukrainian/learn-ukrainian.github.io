@@ -21,10 +21,13 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from lexical_sandbox import (
+    COMMON_WORDS,
+    _collect_candidates,
     _extract_case,
     _extract_gender,
     _extract_ukr_word,
     _form_allowed,
+    _select_primary_match,
     extract_words_from_request,
     parse_resource_request,
 )
@@ -293,3 +296,113 @@ class TestExtractWordsFromRequest:
         words = extract_words_from_request(request)
         assert "собака" in words
         assert "кіт" in words
+
+
+# =============================================================================
+# _collect_candidates
+# =============================================================================
+
+class TestCollectCandidates:
+    def test_includes_common_words(self):
+        candidates = _collect_candidates({})
+        assert "я" in candidates
+        assert "він" in candidates
+        assert "це" in candidates
+
+    def test_dict_vocab_hints(self):
+        plan = {"vocabulary_hints": {"nouns": ["собака", "кіт"]}}
+        candidates = _collect_candidates(plan)
+        assert "собака" in candidates
+        assert "кіт" in candidates
+
+    def test_list_vocab_hints(self):
+        plan = {"vocabulary_hints": [
+            "хліб",
+            {"word": "молоко"},
+        ]}
+        candidates = _collect_candidates(plan)
+        assert "хліб" in candidates
+        assert "молоко" in candidates
+
+    def test_dict_vocab_hints_with_translations(self):
+        plan = {"vocabulary_hints": {"nouns": ["собака (dog)"]}}
+        candidates = _collect_candidates(plan)
+        assert "собака" in candidates
+
+    def test_extra_words(self):
+        candidates = _collect_candidates({}, extra_words=["додатковий"])
+        assert "додатковий" in candidates
+
+    def test_deduplicates(self):
+        plan = {"vocabulary_hints": {"a": ["я"], "b": ["я"]}}
+        candidates = _collect_candidates(plan)
+        assert candidates.count("я") == 1
+
+    def test_empty_plan(self):
+        candidates = _collect_candidates({})
+        # COMMON_WORDS has some duplicates (що, як) which get deduped
+        assert len(candidates) == len(set(COMMON_WORDS))
+
+    def test_strips_whitespace(self):
+        plan = {"vocabulary_hints": {"a": ["  собака  "]}}
+        candidates = _collect_candidates(plan)
+        assert "собака" in candidates
+
+    def test_list_hint_with_uk_key(self):
+        plan = {"vocabulary_hints": [{"uk": "вода"}]}
+        candidates = _collect_candidates(plan)
+        assert "вода" in candidates
+
+    def test_list_hint_with_lemma_key(self):
+        plan = {"vocabulary_hints": [{"lemma": "будинок"}]}
+        candidates = _collect_candidates(plan)
+        assert "будинок" in candidates
+
+
+# =============================================================================
+# _select_primary_match
+# =============================================================================
+
+class TestSelectPrimaryMatch:
+    def test_common_word_prefers_non_noun(self):
+        matches = [
+            {"pos": "noun", "lemma": "кіл", "tags": "noun:m:v_rod"},
+            {"pos": "adv", "lemma": "коли", "tags": "adv"},
+        ]
+        result = _select_primary_match("коли", matches, is_common=True)
+        assert result["pos"] == "adv"
+
+    def test_common_word_falls_back_to_noun(self):
+        matches = [{"pos": "noun", "lemma": "день", "tags": "noun:m:v_naz"}]
+        result = _select_primary_match("день", matches, is_common=True)
+        assert result["pos"] == "noun"
+
+    def test_verb_ending_prefers_verb(self):
+        matches = [
+            {"pos": "noun", "lemma": "дата", "tags": "noun:f:v_rod"},
+            {"pos": "verb", "lemma": "дати", "tags": "verb:perf:inf"},
+        ]
+        result = _select_primary_match("дати", matches, is_common=False)
+        assert result["pos"] == "verb"
+        assert result["lemma"] == "дати"
+
+    def test_verb_ending_falls_back_to_first(self):
+        matches = [{"pos": "noun", "lemma": "дата", "tags": "noun:f:v_rod"}]
+        result = _select_primary_match("дати", matches, is_common=False)
+        assert result["pos"] == "noun"
+
+    def test_regular_word_uses_first_match(self):
+        matches = [
+            {"pos": "noun", "lemma": "собака", "tags": "noun:f:v_naz"},
+            {"pos": "adj", "lemma": "собачий", "tags": "adj:m:v_naz"},
+        ]
+        result = _select_primary_match("собака", matches, is_common=False)
+        assert result["pos"] == "noun"
+
+    def test_tisia_ending_prefers_verb(self):
+        matches = [
+            {"pos": "noun", "lemma": "something", "tags": "noun:f:v_rod"},
+            {"pos": "verb", "lemma": "вчитися", "tags": "verb:imperf:inf"},
+        ]
+        result = _select_primary_match("вчитися", matches, is_common=False)
+        assert result["pos"] == "verb"
