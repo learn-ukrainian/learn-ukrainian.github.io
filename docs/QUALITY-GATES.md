@@ -54,5 +54,6 @@ CI enforces these gates on every push to `scripts/` or `tests/`.
 |--------|--------|---------|
 | F-grade functions | 0 (excl. legacy) | 1 legacy |
 | MI=C files | 0 (excl. legacy) | 3 legacy |
-| Test count | 1600+ | 1689 |
+| Test count | 3600+ | 3673 |
+| Test coverage | 40% | 40% |
 | Ruff violations | 0 | 0 |
