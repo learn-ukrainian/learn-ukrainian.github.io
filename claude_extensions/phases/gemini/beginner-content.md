@@ -45,63 +45,43 @@ NOTE: The textbook examples below are provided as INSPIRATION for the pedagogica
 Write the lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 - **Target**: {WORD_TARGET}–{WORD_CEILING} words (below {WORD_TARGET} = FAIL, above {WORD_CEILING} = overproduction that increases error surface)
-- **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: **{ENGAGEMENT_MIN}+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than {ENGAGEMENT_MIN} callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
 - **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
 
 {EXACT_SECTION_TITLES}
 
-### Beginner Writing Style
+### Immersion Target
 
-Write for someone seeing Ukrainian for the first time. English is the scaffolding language — use it for explanations, instructions, and context. Ukrainian is the target content — letters, words, phrases being taught.
+{IMMERSION_RULE}
 
-**Do this:**
-- Write body paragraphs in ENGLISH with Ukrainian words **bolded inline**: "The informal command of **читати** (to read) is **читай**."
-- Use tables for conjugation paradigms, vocabulary groups, letter-sound mappings
-- Use pattern boxes to show transformations: `читати → читай → читайте`
-- Put example sentences AFTER the English explanation, not instead of it
-- Keep paragraphs short (3-5 sentences)
-- Use callout boxes for tips, fun facts, and warnings
-- Vary your immersion patterns — tables, inline bold, dialogues, pattern boxes. Don't repeat the same Ukrainian phrase pattern more than twice (e.g., avoid "Це склад", "Це слово", "Це правило" in every paragraph)
+### Structural Containment (how to achieve immersion without code-switching)
 
-**Do NOT do this:**
-- Write a Ukrainian sentence then translate it on the next line — this is bilingual ping-pong (BANNED). Write in English with Ukrainian words bolded inline instead.
-- Use Ukrainian grammar terminology (іменник, дієслово, голосний, приголосний) — students don't know these yet
-- Write long paragraphs of linguistic analysis
-- Include IPA transcriptions or phonetic brackets
-- Use vocabulary from future modules
-- Create practice sentences if the constraints say "no sentences"
+**Three rules govern where each language appears:**
 
-### Example of Good A1 Content (letter introduction)
+1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The word **книга** (book) is feminine." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
 
-```markdown
-## Meet the Letters
+2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
+   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
+   - **Blockquote dialogues** — mini-conversations with labeled speakers
+   - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-### А — The Familiar One
+3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
 
-The first letter is easy: **А** looks exactly like English A and makes the same sound — /a/ as in "father."
+### Writing Style
 
-You'll find А in some of the first words you learn:
+Write for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
 
-| Word | Meaning |
-|------|---------|
-| **мА́ма** | mom |
-| **сУ́ма** | sum, amount |
+Follow the structural containment rules above. In each section:
+1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
+2. **Show** the pattern in a Ukrainian structural container (table, example list, dialogue, or pattern box)
+3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
-[!tip]
-> А is one of the "true friends" — letters that look AND sound the same in both alphabets. Enjoy these while they last!
+Keep paragraphs short (3-5 sentences). Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
 
-### Н — The First Visual Trap
+### Exemplar (follow this structural pattern)
 
-Here's where it gets interesting: **Н** looks like English H, but it's actually the /n/ sound.
-
-This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrainian it's always /n/.
-
-| Word | Meaning |
-|------|---------|
-| **нам** | to us |
-| **луна́** | echo |
-```
+{TIER_EXEMPLAR}
 
 ### Section Word Budgets
 

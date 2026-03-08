@@ -1,5 +1,7 @@
 # CLAUDE.md - Project Instructions
 
+> **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
+
 > **NON-NEGOTIABLE RULES** auto-loaded via `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`

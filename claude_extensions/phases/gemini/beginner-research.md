@@ -45,7 +45,8 @@ Beginner research is focused and practical — no literary analysis, no decoloni
 3. **Common errors**: 2-3 mistakes English speakers make with this topic (numbered list)
 4. **Cultural hook**: 1-2 verified cultural facts or fun connections (numbered list, keep it simple)
 5. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
-6. **Notes**: Any observations useful for the content writer
+6. **Teaching strategy**: How should this concept be introduced to a learner? Describe a concrete discovery exercise — a scenario, dialogue, or set of examples that lets the learner notice the pattern BEFORE you explain the rule. What real-life context makes this grammar point feel natural (classroom, café, market, directions)? What contrastive pairs would help disambiguation?
+7. **Notes**: Any observations useful for the content writer
 
 ### What NOT to research:
 
@@ -96,6 +97,11 @@ Alignment: {how this module addresses the standard}
 ## Cross-References
 - Builds on: {module slugs or "first module"}
 - Prepares for: {module slugs}
+
+## Teaching Strategy
+- **Discovery exercise**: {Concrete scenario/dialogue that introduces the pattern before explaining the rule}
+- **Best context**: {Real-life situation where this grammar appears naturally}
+- **Contrastive pairs**: {Examples that highlight the key distinction learners need to grasp}
 
 ## Notes for Content Writing
 - {Any observations for the content writer}

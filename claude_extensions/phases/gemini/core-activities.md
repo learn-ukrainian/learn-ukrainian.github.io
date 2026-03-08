@@ -18,6 +18,8 @@
 
 {ITEM_MINIMUMS_TABLE}
 
+{TEXTBOOK_ACTIVITY_EXAMPLES}
+
 {DECODABLE_VOCABULARY}
 
 ## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)

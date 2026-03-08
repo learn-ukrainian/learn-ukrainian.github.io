@@ -73,44 +73,35 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 
 **Rule:** Every Ukrainian word in your output — content AND activities — must come from this word bank. The "Allowed Forms" column shows exactly which inflected forms you may use. If a word isn't listed, express the concept in English.
 
-### Level Rules
+### Immersion Target
 
-- **Immersion**: {IMMERSION_RULE}
-- **How to achieve immersion through STRUCTURE** (ordered best → weakest):
-  1. **Tables** (BEST) — conjugation paradigms, vocabulary groups, gender sorting. Every cell is Ukrainian = highest immersion density with zero readability cost
-  2. **Pattern boxes** — `Наприклад: читати → читай → читайте` — show transformations clearly
-  3. **Inline bold** — weave Ukrainian INTO English prose: "The word **книга** (book) belongs to the feminine group." This is the DEFAULT for body paragraphs.
-  4. **Mini-dialogues** — 2-4 lines, labeled speakers (— Мама: / — Син:), with English gloss per line
-  5. **Example sentences** (USE SPARINGLY) — 2-4 per grammar point, each on its own line with English translation. Only for illustrating a rule AFTER explaining it in English.
-- **BANNED PATTERNS** (these cause automatic rewrites):
-  - **Bilingual ping-pong**: alternating bold Ukrainian sentence → italic English translation, line after line. This is NOT teaching — it's a parallel text dump.
-  - **Paragraph dump**: 5+ Ukrainian sentences followed by block English translation.
+{IMMERSION_RULE}
 
-  ```markdown
-  BAD (bilingual ping-pong — BANNED):
-  **Ми використовуємо наказовий спосіб.**
-  *We use the imperative mood.*
+### Structural Containment (how to achieve immersion without code-switching)
 
-  **Є дві форми.**
-  *There are two forms.*
+**Three rules govern where each language appears:**
 
-  GOOD (inline bold — DEFAULT for body text):
-  We use the imperative mood (**наказовий спосіб**). There are two forms: informal for **ти** and formal for **ви**.
+1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
 
-  GOOD (table — BEST for paradigms):
-  | Infinitive | ти-command | ви-command |
-  |---|---|---|
-  | читати | читай | читайте |
+2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
+   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
+   - **Blockquote dialogues** — mini-conversations with labeled speakers
+   - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-  GOOD (example sentences — AFTER explaining the rule):
-  **Читай цю книгу!** — Read this book! (informal)
-  **Читайте цю книгу!** — Read this book! (formal)
-  ```
+3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
+
+### Style Rules
+
 - Ukrainian section headers with English in parentheses: `## Наказовий спосіб (The Imperative Mood)`
 - **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
 - **No Russian characters**: ы, э, ё, ъ — never
 - **No IPA or phonetic brackets**
 - **Quotes**: Use «...» not "..."
+
+### Exemplar (follow this structural pattern)
+
+{TIER_EXEMPLAR}
 
 ---
 
@@ -133,20 +124,14 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
 
-**Do:**
-- Write body paragraphs in ENGLISH with Ukrainian words **bolded inline**: "The informal command of **читати** (to read) is **читай**."
-- Use tables for conjugation paradigms, vocabulary groups, and comparisons
-- Use pattern boxes to show transformations: `читати → читай → читайте`
-- Put example sentences AFTER the English explanation, not instead of it
-- Short paragraphs (3-5 sentences), plenty of callout boxes
-- Vary your immersion patterns — tables, inline bold, dialogues, pattern boxes
+Follow the structural containment rules above. In each section:
+1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
+2. **Show** the pattern in a Ukrainian structural container (table, example list, dialogue, or pattern box)
+3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
-**Don't:**
-- Bilingual ping-pong (see BANNED PATTERNS above)
-- Use grammar terminology (іменник, дієслово, голосний) — they don't know these
-- Use words outside the word bank
-- Write IPA or Latin transliteration
-- Create sentences if constraints forbid them
+Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
+
+Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT use words outside the word bank. Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
@@ -322,7 +307,7 @@ Rules for YAML:
 - [ ] {ENGAGEMENT_MIN}+ callout boxes?
 - [ ] No words outside the word bank?
 - [ ] No Russianisms, Russian characters, IPA?
-- [ ] No bilingual ping-pong? (Scan for bold Ukrainian sentence → italic English on next line. If you find 3+ instances, rewrite those paragraphs using inline bold instead.)
+- [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 
 ### Activity Checks
 - [ ] {ACTIVITY_MIN}–{ACTIVITY_MAX} activities?

@@ -19,6 +19,8 @@
 
 **CRITICAL — HARD FAIL if violated:** Each activity MUST meet the minimum item count for its type. Activities with fewer items than the minimum will cause an automatic validation failure. Check the minimums table above BEFORE submitting.
 
+{TEXTBOOK_ACTIVITY_EXAMPLES}
+
 {DECODABLE_VOCABULARY}
 
 ## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)

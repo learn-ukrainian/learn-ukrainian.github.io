@@ -13,21 +13,76 @@ Key files to analyze (not all will exist for every module):
 | File | Contains | Priority |
 |------|----------|----------|
 | `phase-2-prompt.md` | Content prompt sent to Gemini | **HIGH** -- the main instruction |
+| `phase-2-attempt-1-gemini-session.json` | Gemini's full session: prompt received + reasoning + output | **CRITICAL** -- the ground truth |
 | `phase-2-friction-1.md` | Gemini's friction/difficulty report | **HIGH** -- what Gemini struggled with |
 | `phase-A-prompt.md` | Research prompt | MEDIUM |
 | `phase-A-output.md` | Research results | MEDIUM |
 | `phase-C-prompt.md` | Activities prompt | MEDIUM |
+| `phase-C-gemini-session.json` | Activities Gemini session | **HIGH** |
 | `phase-C-friction.md` | Activities friction report | **HIGH** |
 | `placeholders.yaml` | Variables injected into prompts | **HIGH** -- what context was available |
 | `state-v5.json` / `state.json` | Pipeline state (attempts, phases) | MEDIUM |
 | `completion.md` | Final verdict (PASS/FAIL, word count) | LOW |
 | `validate-fix*-prompt.md` | Validation fix attempts | **HIGH** -- what went wrong |
+| `validate-fix*-gemini-session.json` | Fix attempt Gemini sessions | **HIGH** |
 | `screen-result.json` | VESUM screening results | MEDIUM |
 | `discovery.yaml` | Discovery phase output | LOW |
 
 Read ALL files in the orchestration folder. Missing files = that phase was skipped.
 
+### How to read Gemini session JSONs
+
+Session JSONs have this structure:
+```python
+{
+  "messages": [
+    {"type": "user", "content": [{"text": "...prompt..."}]},  # msg[0] = the full prompt
+    ... # intermediate empty streaming messages
+    {"type": "gemini", "content": ["c","h","a","r","s"]}  # last msg = streamed output (join chars)
+  ]
+}
+```
+
+To extract useful data:
+1. **Prompt received**: `messages[0]["content"][0]["text"]` -- the ACTUAL prompt Gemini saw (after placeholder injection)
+2. **Output produced**: `"".join(messages[-1]["content"])` -- Gemini's streamed response (chars joined)
+3. **Self-audit block**: Look for `===SELF_AUDIT_START===` in the output -- shows Gemini's internal iteration count, gates passed/failed, and what it tried to fix
+
 ## Analysis Framework
+
+### 0. CONTEXT ENGINEERING ANALYSIS (DO THIS FIRST)
+
+This is the most important step. Read the Gemini session JSON (`*-gemini-session.json`) and compare three things:
+
+#### A. What did the prompt INSTRUCT?
+Extract key instructions from `messages[0]["content"][0]["text"]`. Focus on:
+- Immersion target and structural rules
+- Word count targets
+- Specific constraints (grammar, vocabulary, formatting)
+- List the top 5 instructions by prominence/emphasis in the prompt
+
+#### B. What did Gemini UNDERSTAND and ATTEMPT?
+Extract the self-audit block from the output (`===SELF_AUDIT_START===`). This reveals:
+- How many internal iterations Gemini ran
+- Which gates it tried to satisfy
+- What it gave up on and why ("Reached iteration limit")
+- What fixes it attempted internally
+
+#### C. What did Gemini actually PRODUCE?
+Analyze the content between `===CONTENT_START===` and `===CONTENT_END===`:
+- **Paragraph analysis**: For each English paragraph, count sentences. Did it follow "max N sentences" instructions?
+- **Container analysis**: Count tables, bulleted lists, dialogues, pattern boxes. How many per section?
+- **Immersion measurement**: Estimate Ukrainian vs English word ratio per section
+- **Instruction compliance**: For each top-5 instruction from step A, did the output comply? If not, how specifically did it deviate?
+
+#### D. Find the GAP
+The gap between A→B→C is the root cause. Common patterns:
+- **Instruction ignored**: Prompt says X, output does not-X (e.g., "max 2 sentences" but paragraphs have 4)
+- **Instruction conflict**: Two instructions compete and Gemini optimized for the wrong one
+- **Instruction too weak**: Gemini understood it but its default behavior overrode a soft instruction
+- **Structural impossibility**: The instructions are mutually exclusive (e.g., "high immersion" + "paragraphs must be English" + "short containers")
+
+**Report the gap with SPECIFIC evidence**: quote the instruction, quote the output, show the mismatch.
 
 ### 1. PROMPT CLARITY
 
@@ -93,12 +148,37 @@ Based on all the above:
 ## Output Format
 
 ```markdown
-# Prompt Engineering Review: {slug}
+# Prompt & Context Engineering Review: {slug}
 
 **Track:** {track} | **Sequence:** {sequence}
-**Pipeline:** v3 / v4
+**Pipeline:** v5
 **Validate attempts:** {N}
 **Friction reports:** {count}
+**Gemini self-audit iterations:** {N}
+
+## Context Engineering Analysis
+
+### Instruction → Understanding → Output Gap
+| Instruction (from prompt) | What Gemini produced | Gap type | Evidence |
+|--------------------------|---------------------|----------|----------|
+| "max 2 sentences per concept" | 4-sentence paragraphs | instruction_ignored | Section 1 para 2: "In Ukrainian... You must... The first... The second..." |
+| ... | ... | ... | ... |
+
+### Gemini Self-Audit Findings
+- Iterations: {N}
+- Gates passed: ...
+- Gates failed: ... (with Gemini's own explanation)
+- What Gemini gave up on: ...
+
+### Immersion Breakdown (per section)
+| Section | English words | Ukrainian words | Ukrainian % | Containers used |
+|---------|-------------|----------------|-------------|----------------|
+| ... | N | N | N% | N tables, N lists, N dialogues |
+| TOTAL | N | N | N% | |
+
+### Root Cause Verdict
+**Primary gap**: [instruction_ignored / instruction_conflict / instruction_too_weak / structural_impossibility]
+**Explanation**: [1-2 sentences explaining WHY this happened based on evidence above]
 
 ## Prompt Clarity
 | Issue | Severity | Template File | Details |
