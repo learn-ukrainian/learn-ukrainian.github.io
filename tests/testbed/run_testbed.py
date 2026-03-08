@@ -462,6 +462,51 @@ def cmd_baseline(args):
     save_baseline(results)
 
 
+def cmd_check(args):
+    """CI-friendly check: audit existing content and compare vs baseline.
+
+    No builds, no API calls. Exits non-zero on regression.
+    """
+    baseline = load_baseline()
+    if not baseline:
+        print("ERROR: No baseline found. Run 'baseline' first.")
+        sys.exit(1)
+
+    modules = load_config(track_filter=getattr(args, "track", None))
+    results = []
+    for mod in modules:
+        r = audit_module(mod)
+        r["grade"] = grade_module(r)
+        results.append(r)
+
+    print_report(results, baseline)
+
+    # Check for regressions
+    regressions = []
+    for r in results:
+        key = f"{r['track']}-{r['slug']}"
+        if key not in baseline:
+            continue
+        old_grade = baseline[key].get("grade", "?")
+        new_grade = r.get("grade", "?")
+        old_ord = GRADE_ORDER.get(old_grade, 9)
+        new_ord = GRADE_ORDER.get(new_grade, 9)
+        if new_ord > old_ord:
+            regressions.append(
+                f"  {r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}"
+            )
+
+    if regressions:
+        print(f"\n{'='*60}")
+        print(f"  REGRESSION DETECTED ({len(regressions)} module(s))")
+        print(f"{'='*60}")
+        for line in regressions:
+            print(line)
+        sys.exit(1)
+    else:
+        print("  ✅ No regressions vs baseline")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Testbed runner — regression testing for pipeline quality",
@@ -497,6 +542,11 @@ def main():
     p_baseline = sub.add_parser("baseline", help="Save current results as baseline")
     p_baseline.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
     p_baseline.set_defaults(func=cmd_baseline)
+
+    # check (CI mode)
+    p_check = sub.add_parser("check", help="CI mode: audit + compare vs baseline (no builds)")
+    p_check.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
+    p_check.set_defaults(func=cmd_check)
 
     args = parser.parse_args()
     args.func(args)
