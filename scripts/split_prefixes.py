@@ -1,44 +1,12 @@
-import re
-
-with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', encoding='utf-8') as f:
-    text = f.read()
-
-prefixes = [
-    r"(Ця граматична структура є абсолютно життєво[^.]*?), (адже[^.]*\.)",
-    r"(Ми регулярно використовуємо сполучник «де»[^.]*?), (тоді як[^.]*\.)",
-    r"(Хоча це слово має дещо[^.]*?), (воно кардинально[^.]*\.)",
-    r"(Ці короткі динамічні слова найкращим[^.]*?), (яку ми[^.]*\.)",
-    r"(Якщо підрядне речення детально описує[^.]*?), (то ви[^.]*\.)",
-    r"(Спуск на платформу займає понад[^.]*?), (що робить[^.]*\.)",
-    r"(Захоплені іноземні туристи запитували), (звідки вони[^.]*\.)",
-    r"(Це саме те унікальне високогірне[^.]*?), (звідки традиційно[^.]*\.)",
-    r"(Такі вдумливі аналітичні вправи поступово[^.]*?допоможуть вам) назавжди (позбутися[^.]*\.)",
-    r"(Це мій персональний затишний тихий[^.]*?), (де я можу[^.]*\.)",
-    r"(Будь ласка, оберіть якесь одне[^.]*?), (куди ви[^.]*\.)",
-    r"(Ви повинні обов'язково описати в деталях), (звідки ви[^.]*\.)",
-    r"(У цьому великому важливому навчальному модулі ми[^.]*?просторові слова), (які відіграють[^.]*\.)"
-]
-
-for p in prefixes:
-    def replacer(match):
-        return match.group(1) + ". " + match.group(2).capitalize()
-
-    new_text = re.sub(p, replacer, text, flags=re.IGNORECASE | re.DOTALL)
-    if new_text == text:
-        print(f"Failed to match: {p}")
-    text = new_text
-
-# 'Такі вдумливі аналітичні вправи...' replacement is slightly custom in the replacer above. Let's fix if needed.
-# Let's fix 'Такі вдумливі...' specifically if it failed.
-p_taki = r"(Такі вдумливі аналітичні вправи поступово і дуже ефективно допоможуть вам) назавжди (позбутися дратівливої звички постійно і механічно перекладати кожне слово з англійської\.)"
-text = re.sub(p_taki, r"\1. Ви зможете назавжди \2", text)
-
-# LLM fingerprints
-text = re.sub(r'не просто\s+([^,.]+),\s*а\s+([^,.]+)', r'як \1, так і \2', text)
-text = re.sub(r'не просто\s+([^,.]+),\s*а\s+й\s+([^,.]+)', r'як \1, так і \2', text)
-text = re.sub(r'не лише\s+([^,.]+),\s*а\s+й\s+([^,.]+)', r'як \1, так і \2', text)
-
-with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', 'w', encoding='utf-8') as f:
-    f.write(text)
-
-print("Prefix-based split applied.")
+#!/usr/bin/env python3
+"""Stub: module moved to scripts/content/split_prefixes.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "content" / "split_prefixes.py"
+if __name__ == "__main__":
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("split_prefixes", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)

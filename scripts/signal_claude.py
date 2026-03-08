@@ -1,71 +1,12 @@
 #!/usr/bin/env python3
-"""
-DEPRECATED: Use ai_agent_bridge.py instead!
-
-This script now redirects to ai_agent_bridge.py for SQLite-based messaging.
-Kept for backwards compatibility - will send to SQLite AND trigger notification.
-
-Usage (PREFERRED):
-    .venv/bin/python scripts/ai_agent_bridge.py send "Your message" --type query --task-id task-id
-
-Usage (LEGACY - redirects to new system):
-    .venv/bin/python scripts/signal_claude.py "Your message"
-"""
-import argparse
-import os
-import subprocess
-import sys
-
-# Get project root
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRIDGE_SCRIPT = os.path.join(ROOT_DIR, "scripts", "ai_agent_bridge", "__main__.py")
-PYTHON = os.path.join(ROOT_DIR, ".venv", "bin", "python")
-
-
-def signal_claude(message: str, task_id: str | None = None, msg_type: str = "response"):
-    """
-    Send message via ai_agent_bridge.py (SQLite) and trigger macOS notification.
-    """
-    print("=" * 60)
-    print("DEPRECATION WARNING: signal_claude.py is deprecated!")
-    print("Please use: .venv/bin/python scripts/ai_agent_bridge.py send ...")
-    print("=" * 60)
-    print()
-
-    # Build command for ai_agent_bridge.py
-    cmd = [PYTHON, BRIDGE_SCRIPT, "send", message, "--type", msg_type]
-    if task_id:
-        cmd.extend(["--task-id", task_id])
-
-    try:
-        # Send via SQLite bridge
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        print(result.stdout)
-        if result.stderr:
-            print(result.stderr, file=sys.stderr)
-
-        if result.returncode != 0:
-            print("Error sending message via bridge", file=sys.stderr)
-            sys.exit(1)
-
-        # Trigger macOS notification (still useful for alerting human)
-        safe_message = message[:100].replace('"', '\\"')  # Truncate for notification
-        notification_cmd = f'display notification "{safe_message}..." with title "Gemini → Claude"'
-        subprocess.run(["osascript", "-e", notification_cmd], check=True)
-        print("Notification sent.")
-
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-
-
+"""Stub: module moved to scripts/tools/signal_claude.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "tools" / "signal_claude.py"
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="DEPRECATED: Send message to Claude. Use ai_agent_bridge.py instead."
-    )
-    parser.add_argument("message", help="The message to send to Claude.")
-    parser.add_argument("--task-id", help="Task ID for grouping messages")
-    parser.add_argument("--type", default="response", help="Message type (query, response, handoff)")
-    args = parser.parse_args()
-
-    signal_claude(args.message, args.task_id, args.type)
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("signal_claude", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)

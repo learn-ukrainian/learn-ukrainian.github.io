@@ -1,11 +1,12 @@
-with open('curriculum/l2-uk-en/a2/hobbies-leisure.md') as f:
-    lines = f.readlines()
-
-in_vocab = False
-for line in lines:
-    if '| Українською мовою | In English translation |' in line:
-        in_vocab = True
-    if in_vocab:
-        print(line.strip())
-        if line.strip() == '' and len(line) < 5:
-            break
+#!/usr/bin/env python3
+"""Stub: module moved to scripts/vocab/debug_vocab.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "vocab" / "debug_vocab.py"
+if __name__ == "__main__":
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("debug_vocab", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)

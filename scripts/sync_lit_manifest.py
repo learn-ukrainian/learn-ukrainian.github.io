@@ -1,33 +1,12 @@
-from pathlib import Path
-
-import yaml
-
-manifest_path = "curriculum/l2-uk-en/curriculum.yaml"
-with open(manifest_path) as f:
-    manifest = yaml.safe_load(f)
-
-levels = manifest.get("levels", {})
-
-new_tracks = ["lit-doc", "lit-drama", "lit-crimea", "lit-youth"]
-
-for track in new_tracks:
-    research_dir = Path("curriculum/l2-uk-en") / track / "research"
-    if not research_dir.exists():
-        continue
-
-    actual_slugs = [f.stem.replace("-research", "") for f in research_dir.glob("*-research.md")]
-
-    for slug in actual_slugs:
-        # Remove from any other track
-        for t_name, t_data in levels.items():
-            if t_name != track and slug in t_data.get("modules", []):
-                t_data["modules"].remove(slug)
-                print(f"Removed {slug} from {t_name}")
-
-        # Ensure it is in the target track
-        if slug not in levels[track].get("modules", []):
-            levels[track]["modules"].append(slug)
-            print(f"Added {slug} to {track}")
-
-with open(manifest_path, "w") as f:
-    yaml.dump(manifest, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+#!/usr/bin/env python3
+"""Stub: module moved to scripts/sync/sync_lit_manifest.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "sync" / "sync_lit_manifest.py"
+if __name__ == "__main__":
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("sync_lit_manifest", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)
