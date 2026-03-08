@@ -43,11 +43,20 @@ The full State Standard 2024 is at `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.
 
 Research **{TOPIC_TITLE}** for the **{LEVEL}** core track. Core tracks need lighter research than seminar tracks — focus on accuracy and State Standard alignment.
 
+### Your RAG Tools
+
+| Tool | When to use |
+|------|-------------|
+| `search_text` | Find how this topic is taught in Ukrainian textbooks |
+| `verify_words` | Check vocabulary exists in VESUM dictionary |
+| `query_grac` mode=`frequency` | Get word frequency data |
+| `query_wikipedia` mode=`summary` | Quick fact-check for cultural hooks |
+
 ### Research Requirements
 
 1. **State Standard Reference**: Look up the §section in `state-standard-2024-mapping.yaml`, then read ONLY that section from `UKRAINIAN-STATE-STANDARD-2024.txt`. Quote the relevant requirement.
-2. **Vocabulary Frequency**: For key vocabulary items in the plan, note frequency data and collocations. Use web search if available — do NOT rely on memory alone.
-3. **Cultural Hook**: Find 1-2 verified cultural facts to anchor the lesson.
+2. **Vocabulary Frequency**: Use `query_grac` (mode=`frequency`) for key vocabulary items. Do NOT rely on memory alone.
+3. **Cultural Hook**: Use `query_wikipedia` to find 1-2 verified cultural facts to anchor the lesson.
 4. **Cross-References**: Note which modules this builds on and prepares for (check the plan's `connects_to` field).
 5. **Common Errors**: Identify 2-3 common learner mistakes for this grammar point/topic.
 

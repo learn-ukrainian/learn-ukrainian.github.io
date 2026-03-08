@@ -18,6 +18,18 @@
 
 Read ALL four files before writing anything.
 
+## Your RAG Tools (USE THEM while writing)
+
+| Tool | When to use |
+|------|-------------|
+| `query_wikipedia` mode=`extract` | Verify facts, dates, names while writing |
+| `query_wikipedia` mode=`section` | Read a specific Wikipedia section for detail |
+| `search_literary` | Find primary source quotes to cite |
+| `verify_words` | Check Ukrainian words exist before using them |
+| `query_grac` mode=`frequency` | Check word frequency — prefer common forms |
+
+**Rule**: If you're unsure about a date, name spelling, or historical claim — look it up with `query_wikipedia` instead of guessing. Wrong facts are worse than no facts.
+
 ## Primary Source Excerpts (Cite These — Don't Invent Quotes)
 
 These passages were retrieved from indexed primary sources (litopys.org.ua). When you need to cite a primary source, prefer these verified passages over inventing quotes from memory. You may paraphrase or excerpt, but attribute correctly.
