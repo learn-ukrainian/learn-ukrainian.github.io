@@ -17,16 +17,16 @@ Usage:
 """
 import argparse
 import json
-import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
 import time
 from pathlib import Path
 
-from slug_utils import to_bare_slug, review_path as _review_path, status_path as _status_path
+from slug_utils import review_path as _review_path
+from slug_utils import status_path as _status_path
+from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent
 MAX_RETRIES = 3
@@ -407,7 +407,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["action"] = "needs Phase 5 review first"
             return result
 
-        print(f"    → No review found. Running Phase 5 review...")
+        print("    → No review found. Running Phase 5 review...")
         # Run audit first to get metrics
         run_audit(files["content"])
         prompt = assemble_review_prompt(files, level)
@@ -503,9 +503,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
                 debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
                 debug_path.write_text(debug_content)
             consecutive_no_changes += 1
-            print(f"    → No files changed by fix (Gemini found nothing to fix)")
+            print("    → No files changed by fix (Gemini found nothing to fix)")
             if consecutive_no_changes >= 2:
-                print(f"    → Breaking: fix produced no changes twice — needs manual intervention")
+                print("    → Breaking: fix produced no changes twice — needs manual intervention")
                 result["status"] = "STUCK"
                 result["score"] = existing_score
                 result["reason"] = "Fix phase produces no changes but score < 9.0"
@@ -519,7 +519,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         # Step 3: Run audit
         audit_pass = run_audit(files["content"])
         if not audit_pass:
-            print(f"    → Audit FAILED after fix. Retrying...")
+            print("    → Audit FAILED after fix. Retrying...")
             continue
 
         # Step 4: Assemble and send re-review
@@ -540,7 +540,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         review_output.unlink(missing_ok=True)
 
         if not review_text:
-            print(f"    → No delimited review in output. Retrying...")
+            print("    → No delimited review in output. Retrying...")
             continue
 
         new_score = extract_score(review_text)

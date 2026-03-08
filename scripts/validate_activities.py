@@ -3,7 +3,7 @@
 
 Checks activities at 3 levels:
 1. YAML Level - Structural validation
-2. MDX Level - Generation correctness  
+2. MDX Level - Generation correctness
 3. HTML Level - Browser rendering (requires dev server)
 
 Usage:
@@ -12,14 +12,12 @@ Usage:
     .venv/bin/python scripts/validate_activities.py l2-uk-en a1 --fix
 """
 
+import json
 import re
 import sys
-import json
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import yaml
-
 
 # Activity type validation rules
 ACTIVITY_TYPES = {
@@ -53,19 +51,19 @@ REQUIRED_FIELDS = {
 
 
 class ActivityValidator:
-    def __init__(self, curriculum: str, level: str, module_num: int = None):
+    def __init__(self, curriculum: str, level: str, module_num: int | None = None):
         self.curriculum = curriculum
         self.level = level
         self.module_num = module_num
         self.errors = []
         self.warnings = []
 
-    def validate_yaml(self, yaml_path: Path) -> Dict:
+    def validate_yaml(self, yaml_path: Path) -> dict:
         """Validate YAML activity file structure."""
         results = {'pass': True, 'errors': [], 'warnings': []}
 
         try:
-            with open(yaml_path, 'r', encoding='utf-8') as f:
+            with open(yaml_path, encoding='utf-8') as f:
                 data = yaml.safe_load(f)
         except yaml.YAMLError as e:
             results['pass'] = False
@@ -173,7 +171,7 @@ class ActivityValidator:
             )
             results['pass'] = False
 
-    def validate_mdx(self, mdx_path: Path) -> Dict:
+    def validate_mdx(self, mdx_path: Path) -> dict:
         """Validate MDX generation correctness."""
         results = {'pass': True, 'errors': [], 'warnings': []}
 
@@ -193,7 +191,7 @@ class ActivityValidator:
                 for item in items:
                     if 'jumbled' in item and not item['jumbled']:
                         results['errors'].append(
-                            f"Unjumble activity has empty 'jumbled' field (Issue #362)"
+                            "Unjumble activity has empty 'jumbled' field (Issue #362)"
                         )
                         results['pass'] = False
                         break
@@ -210,7 +208,7 @@ class ActivityValidator:
 
         return results
 
-    def run(self) -> Dict:
+    def run(self) -> dict:
         """Run validation pipeline."""
         if self.module_num:
             modules = [self.module_num]
@@ -262,7 +260,7 @@ class ActivityValidator:
                     print(f"     - {err}")
                 total_errors += len(yaml_results['errors'])
             else:
-                print(f"  ✅ YAML")
+                print("  ✅ YAML")
 
             if yaml_results['warnings']:
                 total_warnings += len(yaml_results['warnings'])
@@ -279,7 +277,7 @@ class ActivityValidator:
                     print(f"     - {err}")
                 total_errors += len(mdx_results['errors'])
             else:
-                print(f"  ✅ MDX")
+                print("  ✅ MDX")
 
             if mdx_results['warnings']:
                 total_warnings += len(mdx_results['warnings'])
@@ -294,7 +292,7 @@ class ActivityValidator:
             print(f"⚠️  WARNINGS: {total_warnings} warnings")
             return {'pass': True, 'errors': 0, 'warnings': total_warnings}
         else:
-            print(f"✅ ALL VALIDATIONS PASSED")
+            print("✅ ALL VALIDATIONS PASSED")
             return {'pass': True, 'errors': 0, 'warnings': 0}
 
 

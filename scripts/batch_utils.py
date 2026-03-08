@@ -10,8 +10,7 @@ import json
 import logging
 import os
 import random
-import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 log = logging.getLogger("batch")
@@ -129,9 +128,9 @@ class BatchLock:
                 # Process is dead — stale lock, clean up
                 log.info(f"Cleaning up stale lock for track '{self.track}' (PID {pid})")
                 self.lock_file.unlink(missing_ok=True)
-            except PermissionError:
+            except PermissionError as e:
                 # Process exists but belongs to another user — conflict
-                raise LockConflictError(self.track, pid, started)
+                raise LockConflictError(self.track, pid, started) from e
             except (json.JSONDecodeError, OSError):
                 # Corrupt lock file — remove it
                 self.lock_file.unlink(missing_ok=True)
@@ -140,7 +139,7 @@ class BatchLock:
         lock_data = json.dumps({
             "pid": os.getpid(),
             "track": self.track,
-            "started": datetime.now(timezone.utc).isoformat(),
+            "started": datetime.now(UTC).isoformat(),
         }, indent=2)
 
         try:
@@ -162,8 +161,8 @@ class BatchLock:
                     data.get("pid", 0),
                     data.get("started", "unknown"),
                 )
-            except (json.JSONDecodeError, OSError):
-                raise LockConflictError(self.track, 0, "unknown")
+            except (json.JSONDecodeError, OSError) as e:
+                raise LockConflictError(self.track, 0, "unknown") from e
 
         self._depth = 1
         return self

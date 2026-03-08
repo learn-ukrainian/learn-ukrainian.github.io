@@ -20,7 +20,7 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -84,8 +84,8 @@ def tokenize_all_ukrainian(text: str) -> list[tuple[str, str]]:
         original = match.group()
         clean = original.lower()
         # Strip trailing hyphens/apostrophes that regex may capture
-        clean = clean.rstrip("-'ʼ\u0027\u02BC")
-        original = original.rstrip("-'ʼ\u0027\u02BC")
+        clean = clean.rstrip("-'ʼ\u0027\u02BC")  # noqa: B005 — stripping individual chars
+        original = original.rstrip("-'ʼ\u0027\u02BC")  # noqa: B005
         if clean:
             tokens.append((original, clean))
     return tokens
@@ -384,7 +384,7 @@ def verify_module(md_path: Path, use_rag: bool = True,
     if hyphenated_misses:
         dehyphenated = [w.replace("-", "") for w in hyphenated_misses]
         dehyph_results = vesum_batch_lookup(dehyphenated)
-        for orig_w, dehyph_w in zip(hyphenated_misses, dehyphenated):
+        for orig_w, dehyph_w in zip(hyphenated_misses, dehyphenated, strict=False):
             if dehyph_results.get(dehyph_w):
                 # Mark the hyphenated form as found via its dehyphenated form
                 vesum_results[orig_w] = dehyph_results[dehyph_w]
@@ -479,7 +479,7 @@ def generate_report(slug: str, results: list[dict], stats: dict, output_path: Pa
     lines = [
         f"# RAG Verification: {slug}",
         "",
-        f"**Date:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} "
+        f"**Date:** {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')} "
         f"| **Words checked:** {total} "
         f"| **VESUM coverage:** {vesum_hits}/{total} ({coverage:.1f}%)",
         "",
@@ -590,17 +590,14 @@ def main() -> int:
     if args.json:
         output = {
             "slug": slug,
-            "date": datetime.now(timezone.utc).isoformat(),
+            "date": datetime.now(UTC).isoformat(),
             "stats": stats,
             "not_found": [r for r in results if r["status"] == "❌"],
             "partial": [r for r in results if r["status"] == "⚠️"],
         }
         print(json.dumps(output, ensure_ascii=False, indent=2))
     else:
-        if args.output_dir:
-            out_dir = args.output_dir
-        else:
-            out_dir = md_path.parent / "audit"
+        out_dir = args.output_dir or md_path.parent / "audit"
         report_path = out_dir / f"{slug}-rag-audit.md"
         generate_report(slug, results, stats, report_path)
         print(f"  Report: {report_path}", file=sys.stderr)

@@ -9,7 +9,7 @@ Each track has unique scoring criteria optimized for its content type:
 - LIT: Literary analysis, authentic text engagement, stylistic devices
 """
 
-from typing import TypedDict, Optional
+from typing import TypedDict
 
 
 class CriterionConfig(TypedDict):
@@ -18,8 +18,8 @@ class CriterionConfig(TypedDict):
     weight: float  # 0.0 to 1.0, must sum to 1.0 for track
     description: str
     measurement: str  # How this criterion is measured
-    auto_fail_threshold: Optional[float]  # Score below this = auto-fail
-    cap_conditions: Optional[dict]  # Conditions that cap this score
+    auto_fail_threshold: float | None  # Score below this = auto-fail
+    cap_conditions: dict | None  # Conditions that cap this score
 
 
 class TrackConfig(TypedDict):

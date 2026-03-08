@@ -28,8 +28,8 @@ Usage:
 import argparse
 import re
 import sys
-from pathlib import Path
 from dataclasses import dataclass, field
+from pathlib import Path
 
 # Combining double inverted breve (tie-bar)
 TIE = '\u0361'
@@ -73,9 +73,7 @@ def is_ipa_bracket(content: str, after_char: str) -> bool:
     if any(c in content for c in 'ʊɫ'):
         return True
     # Contains ʃ or ʒ (IPA-only)?
-    if 'ʃ' in content or 'ʒ' in content:
-        return True
-    return False
+    return bool('ʃ' in content or 'ʒ' in content)
 
 
 def find_brackets(line: str):
@@ -128,7 +126,7 @@ def lint_global(text: str, line_offset: int = 0) -> list[Issue]:
 
     for line_idx, line in enumerate(lines, start=1 + line_offset):
         # Simple string rules
-        for bad, fix, rule_id, desc in GLOBAL_RULES:
+        for bad, fix, rule_id, _desc in GLOBAL_RULES:
             col = 0
             while True:
                 pos = line.find(bad, col)
@@ -139,7 +137,7 @@ def lint_global(text: str, line_offset: int = 0) -> list[Issue]:
                 col = pos + 1
 
         # Regex rules
-        for pattern, fix_str, rule_id, desc in GLOBAL_REGEX_RULES:
+        for pattern, fix_str, rule_id, _desc in GLOBAL_REGEX_RULES:
             for m in pattern.finditer(line):
                 ctx = line[max(0, m.start()-15):m.end()+15]
                 issues.append(Issue(line_idx, m.start(), rule_id, m.group(), fix_str, ctx))
@@ -153,7 +151,7 @@ def lint_brackets(text: str) -> list[Issue]:
     lines = text.split('\n')
 
     for line_idx, line in enumerate(lines, start=1):
-        for bstart, bend, content, after in find_brackets(line):
+        for bstart, _bend, content, after in find_brackets(line):
             if not is_ipa_bracket(content, after):
                 continue
 
@@ -241,7 +239,7 @@ def apply_fixes(text: str) -> tuple[str, int]:
         new_line = _fix_brackets_in_line(line)
         if new_line != line:
             # Count changes (approximate)
-            count += sum(1 for a, b in zip(line, new_line) if a != b) // 2 or 1
+            count += sum(1 for a, b in zip(line, new_line, strict=False) if a != b) // 2 or 1
         new_lines.append(new_line)
 
     return '\n'.join(new_lines), count

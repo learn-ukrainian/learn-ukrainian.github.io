@@ -16,10 +16,11 @@ import logging
 import re
 import subprocess
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import yaml
 
@@ -587,7 +588,7 @@ def search_rag(
         return result
 
     try:
-        from rag.query import search_text, search_images, search_literary
+        from rag.query import search_images, search_literary, search_text
     except ImportError:
         logger.debug("RAG: rag.query not importable, skipping")
         return result
@@ -604,7 +605,14 @@ def search_rag(
         grade_range = _LEVEL_GRADE_RANGES.get(level_base)
         # Search without grade filter to cast wide net, then prefer matching grades
         text_hits = search_text(query, limit=limit_text * 2)
-        # Prefer chunks from appropriate grade levels
+        # Prefer chunks from appropriate grade levels and priority authors
+        # Priority authors: Tetiana-recommended + most widely used
+        _PRIORITY_AUTHORS = {
+            # Grades 1-2
+            "bolshakova", "vashulenko",
+            # Grades 5-11
+            "zabolotnyi", "avramenko",
+        }
         if grade_range:
             lo, hi = grade_range
             # A1/A2 need stronger grade preference — otherwise grade 11
@@ -613,15 +621,18 @@ def search_rag(
             scored = []
             for h in text_hits:
                 g = h.get("grade", 0)
+                source = h.get("source", "")
+                # Grade bonus
                 if lo <= g <= hi:
                     grade_bonus = 0.3 if is_beginner else 0.1
                 elif g > 0 and is_beginner:
-                    # Penalty for out-of-range grades at beginner levels
                     distance = max(0, g - hi, lo - g)
                     grade_bonus = -0.05 * distance
                 else:
                     grade_bonus = 0.0
-                scored.append((h["score"] + grade_bonus, h))
+                # Author bonus — prioritize trusted authors
+                author_bonus = 0.15 if any(a in source for a in _PRIORITY_AUTHORS) else 0.0
+                scored.append((h["score"] + grade_bonus + author_bonus, h))
             scored.sort(key=lambda x: x[0], reverse=True)
             result["text_chunks"] = [h for _, h in scored[:limit_text]]
         else:
@@ -724,6 +735,7 @@ DEFAULT_CHANNELS: list[dict[str, Any]] = [
     {"name": "Bright Kids Ukrainian", "handle": "@BrightKidsUkrainianOnlineSchool", "tracks": ["a1", "a2"]},
     {"name": "Listen & Read", "handle": "@listen-read", "tracks": ["*"]},
     {"name": "UkrainerNet", "handle": "@ukrainernet", "tracks": ["*"]},
+    {"name": "Ukrainian Online School", "handle": "@ukrainian-online-school", "tracks": ["*"]},
     # History (HIST, ISTORIO, BIO)
     {"name": "Реальна Історія", "handle": "@realhistoryua", "tracks": ["hist", "istorio", "bio"]},
     {"name": "Harvard Ukrainian Research Institute", "handle": "@ukrainianresearchinstitute1041", "tracks": ["hist", "istorio", "bio", "lit"]},
@@ -983,7 +995,7 @@ def run_discovery(
 ) -> DiscoveryResult:
     """Search → transcript → score → rank. Non-blocking: always returns a result."""
     result = DiscoveryResult(
-        discovered_at=datetime.now(timezone.utc).isoformat(),
+        discovered_at=datetime.now(UTC).isoformat(),
         query_keywords=keywords,
     )
 

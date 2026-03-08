@@ -43,21 +43,22 @@ import signal
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed, Future
-from datetime import datetime, timezone
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, VENV_PYTHON
-from audit.status_cache import read_status, get_source_paths
+from audit.status_cache import get_source_paths, read_status
 from batch_dispatcher_config import (
-    TRACKS, TRACK_BY_NAME,
     COOLDOWN_SECONDS,
+    TRACK_BY_NAME,
+    TRACKS,
     TrackState,
 )
+from batch_gemini_config import PROJECT_ROOT, VENV_PYTHON, get_module_index, get_module_paths
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -352,7 +353,7 @@ def load_state() -> dict:
             except (json.JSONDecodeError, OSError):
                 pass
     return {
-        "started": datetime.now(timezone.utc).isoformat(),
+        "started": datetime.now(UTC).isoformat(),
         "tracks": {},
         "history": [],
         "running_tracks": [],
@@ -367,7 +368,7 @@ def load_state() -> dict:
 def save_state(state: dict):
     """Save state atomically (with file lock for inter-process safety)."""
     with _state_lock:
-        state["last_updated"] = datetime.now(timezone.utc).isoformat()
+        state["last_updated"] = datetime.now(UTC).isoformat()
         STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         lock_path = _state_lockfile()
         try:
@@ -442,7 +443,7 @@ class BatchOtaman:
         daemon_lock_path = STATE_FILE.parent / "otaman_daemon.lock"
         STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         try:
-            self._daemon_lock_fd = open(daemon_lock_path, "w")
+            self._daemon_lock_fd = open(daemon_lock_path, "w")  # noqa: SIM115 — fd kept open for flock lifetime
             fcntl.flock(self._daemon_lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             self._daemon_lock_fd.write(str(os.getpid()))
             self._daemon_lock_fd.flush()
@@ -465,9 +466,7 @@ class BatchOtaman:
     def _should_include(self, track_name: str) -> bool:
         if track_name in self.exclude_tracks:
             return False
-        if self.include_tracks is not None and track_name not in self.include_tracks:
-            return False
-        return True
+        return not (self.include_tracks is not None and track_name not in self.include_tracks)
 
     def _runtime_exceeded(self) -> bool:
         if self.max_runtime_hours is None:
@@ -489,7 +488,7 @@ class BatchOtaman:
         """
         candidates = []
 
-        for _, track_name, _, _, deps in TRACKS:
+        for _, track_name, _, _, _deps in TRACKS:
             if not self._should_include(track_name):
                 continue
 
@@ -517,12 +516,12 @@ class BatchOtaman:
                 if cooldown_until:
                     try:
                         until = datetime.fromisoformat(cooldown_until)
-                        if datetime.now(timezone.utc) < until:
+                        if datetime.now(UTC) < until:
                             continue
                     except (ValueError, TypeError):
                         # Replace malformed timestamp with fresh cooldown to prevent permanent brick
                         fresh = datetime.fromtimestamp(
-                            time.time() + COOLDOWN_SECONDS, tz=timezone.utc
+                            time.time() + COOLDOWN_SECONDS, tz=UTC
                         ).isoformat()
                         log.warning(f"  [{track_name}] Malformed cooldown_until={cooldown_until!r}, reset to {fresh}")
                         ts["cooldown_until"] = fresh
@@ -683,7 +682,7 @@ class BatchOtaman:
                 for m in modules:
                     ts = get_track_state(self.state, m["track"])
                     ts["state"] = TrackState.RUNNING
-                    ts["last_dispatch"] = datetime.now(timezone.utc).isoformat()
+                    ts["last_dispatch"] = datetime.now(UTC).isoformat()
                     ts["last_slug"] = m["slug"]
                     ts["dispatches"] = ts.get("dispatches", 0) + 1
                     self.state["stats"]["total_dispatches"] += 1
@@ -715,7 +714,7 @@ class BatchOtaman:
                         "track": track,
                         "num": result["num"],
                         "slug": result["slug"],
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                         "success": result["success"],
                         "passed_after": result.get("passed_after", False),
                         "duration_s": result["duration_s"],
@@ -733,7 +732,7 @@ class BatchOtaman:
                     elif result.get("quota_hit"):
                         log.warning(f"  [{track}] {result['slug']}: QUOTA HIT ({result['duration_s']}s)")
                         cooldown_until = datetime.fromtimestamp(
-                            time.time() + COOLDOWN_SECONDS, tz=timezone.utc
+                            time.time() + COOLDOWN_SECONDS, tz=UTC
                         ).isoformat()
                         ts["state"] = TrackState.COOLDOWN
                         ts["cooldown_until"] = cooldown_until

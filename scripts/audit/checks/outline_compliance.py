@@ -19,16 +19,15 @@ Issue: #440
 
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Tuple, Optional
-import yaml
 
+import yaml
 
 # =============================================================================
 # SECTION EXTRACTION FROM MARKDOWN
 # =============================================================================
 
 
-def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
+def extract_markdown_sections(md_path: Path) -> dict[str, dict[str, any]]:
     """
     Extract section headers and word counts from markdown file.
 
@@ -40,7 +39,7 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
             "Шлях до великого княжіння": {"header": "Шлях до...", "words": 680, "line_num": 31}
         }
     """
-    with open(md_path, "r", encoding="utf-8") as f:
+    with open(md_path, encoding="utf-8") as f:
         content = f.read()
 
     sections = {}
@@ -125,7 +124,7 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
 # =============================================================================
 
 
-def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
+def load_content_outline(md_path: Path) -> list[dict] | None:
     """
     Load content_outline from meta YAML (Override) or plan YAML (Base).
 
@@ -137,7 +136,7 @@ def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
 
     if meta_file.exists():
         try:
-            with open(meta_file, "r", encoding="utf-8") as f:
+            with open(meta_file, encoding="utf-8") as f:
                 meta_data = yaml.safe_load(f)
             if meta_data and "content_outline" in meta_data:
                 return meta_data["content_outline"]
@@ -151,12 +150,12 @@ def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
         if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio']:
              # Fallback logic if needed, but standard structure is reliable
              pass
-        
+
         base_dir = md_path.parent.parent # curriculum/l2-uk-en
         plan_path = base_dir / 'plans' / level / f"{md_path.stem}.yaml"
-        
+
         if plan_path.exists():
-            with open(plan_path, "r", encoding="utf-8") as f:
+            with open(plan_path, encoding="utf-8") as f:
                 plan_data = yaml.safe_load(f)
             if plan_data and "content_outline" in plan_data:
                 return plan_data["content_outline"]
@@ -171,7 +170,7 @@ def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
         return None
 
     try:
-        with open(meta_file, "r", encoding="utf-8") as f:
+        with open(meta_file, encoding="utf-8") as f:
             meta_data = yaml.safe_load(f)
 
         if not meta_data or "content_outline" not in meta_data:
@@ -223,7 +222,7 @@ def normalize_section_name(name: str) -> str:
     return " ".join(words)
 
 
-def fuzzy_match_section(markdown_section: str, outline_sections: List[str]) -> Tuple[bool, str, float]:
+def fuzzy_match_section(markdown_section: str, outline_sections: list[str]) -> tuple[bool, str, float]:
     """
     Find best match for markdown section in outline sections.
 
@@ -263,7 +262,7 @@ def check_outline_compliance(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check structural compliance between markdown content and content_outline.
 
@@ -341,11 +340,12 @@ def check_outline_compliance(
         is_exempt = any(normalize_section_name(ex) == normalized_name for ex in EXEMPT_SECTIONS)
 
         # Try to find matching section in markdown
-        matched, md_match, score = fuzzy_match_section(section_name, list(md_sections.keys()))
+        matched, md_match, _score = fuzzy_match_section(section_name, list(md_sections.keys()))
+
+        if not matched and is_exempt:
+            continue
 
         if not matched:
-            if is_exempt:
-                continue
 
             violations.append(
                 {
@@ -403,7 +403,7 @@ def check_outline_compliance(
                 continue
 
             # Check if it fuzzy-matches any outline section
-            matched, _, score = fuzzy_match_section(md_sec_name, outline_section_names)
+            matched, _, _score = fuzzy_match_section(md_sec_name, outline_section_names)
             if not matched:
                 violations.append(
                     {
@@ -426,7 +426,7 @@ def check_outline_compliance(
 # =============================================================================
 
 
-def get_section_word_summary(file_path: str) -> Optional[Dict]:
+def get_section_word_summary(file_path: str) -> dict | None:
     """
     Get section-level word count summary for hydration guidance.
 
@@ -458,10 +458,7 @@ def get_section_word_summary(file_path: str) -> Optional[Dict]:
         # Find matching section
         matched, md_match, _ = fuzzy_match_section(section_name, list(md_sections.keys()))
 
-        if matched:
-            actual = md_sections[md_match]["words"]
-        else:
-            actual = 0
+        actual = md_sections[md_match]["words"] if matched else 0
 
         total_actual += actual
         diff = actual - expected
@@ -469,9 +466,7 @@ def get_section_word_summary(file_path: str) -> Optional[Dict]:
         # Determine status
         if actual == 0:
             status = "missing"
-        elif diff >= 0:
-            status = "ok"
-        elif abs(diff) / expected < 0.10:
+        elif diff >= 0 or abs(diff) / expected < 0.10:
             status = "ok"
         elif abs(diff) / expected < 0.20:
             status = "warning"
@@ -483,7 +478,7 @@ def get_section_word_summary(file_path: str) -> Optional[Dict]:
     return {"sections": sections, "total_expected": total_expected, "total_actual": total_actual, "hydrated": True}
 
 
-def print_section_summary(file_path: str, word_target: int = None) -> None:
+def print_section_summary(file_path: str, word_target: int | None = None) -> None:
     """Print section word summary table to stdout."""
     summary = get_section_word_summary(file_path)
 
@@ -495,7 +490,7 @@ def print_section_summary(file_path: str, word_target: int = None) -> None:
     if word_target and summary["total_expected"] < word_target * 0.95:
         print(f"\n  🔴 HYDRATION ERROR: Outline sums to {summary['total_expected']}, but word_target is {word_target}")
         print(f"     Missing {word_target - summary['total_expected']} words in outline budget!")
-        print(f"     → Run /architect to fix content_outline")
+        print("     → Run /architect to fix content_outline")
     elif word_target and summary["total_expected"] > word_target:
         print(f"\n  ⚠️ HYDRATION NOTE: Outline sums to {summary['total_expected']}, exceeding word_target {word_target}")
         print(f"     Additional {summary['total_expected'] - word_target} words (allowed for content depth)")

@@ -1,4 +1,4 @@
-with open('curriculum/l2-uk-en/a2/hobbies-leisure.md', 'r') as f:
+with open('curriculum/l2-uk-en/a2/hobbies-leisure.md') as f:
     lines = f.readlines()
 
 in_vocab = False

@@ -35,7 +35,7 @@ import sys
 import time
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urljoin
+from typing import ClassVar
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -344,8 +344,8 @@ class UkrlibTextExtractor(HTMLParser):
     """
 
     # CSS classes of noise divs inside <article> that should be skipped
-    _NOISE_CLASSES = {"post-right-zagolovok", "google-auto-placed", "readalser",
-                      "movie-fixed", "paginator"}
+    _NOISE_CLASSES: ClassVar[set[str]] = {"post-right-zagolovok", "google-auto-placed", "readalser",
+                                         "movie-fixed", "paginator"}
 
     def __init__(self):
         super().__init__()
@@ -379,9 +379,7 @@ class UkrlibTextExtractor(HTMLParser):
         if tag == "div":
             self._content_depth += 1
             css_class = dict(attrs).get("class", "")
-            if any(nc in css_class for nc in self._NOISE_CLASSES):
-                self._noise_depth += 1
-            elif self._noise_depth > 0:
+            if any(nc in css_class for nc in self._NOISE_CLASSES) or self._noise_depth > 0:
                 self._noise_depth += 1
             return
 
@@ -397,9 +395,7 @@ class UkrlibTextExtractor(HTMLParser):
 
         if tag in ("article", "section"):
             self._content_depth += 1
-        elif tag == "br":
-            self.text_parts.append("\n")
-        elif tag == "p":
+        elif tag == "br" or tag == "p":
             self.text_parts.append("\n")
         elif tag in ("h1", "h2", "h3", "h4"):
             self.text_parts.append("\n\n")
@@ -431,9 +427,7 @@ class UkrlibTextExtractor(HTMLParser):
             self._content_depth -= 1
             if self._content_depth <= 0:
                 self._in_content = False
-        elif tag == "p":
-            self.text_parts.append("\n\n")
-        elif tag in ("h1", "h2", "h3", "h4"):
+        elif tag == "p" or tag in ("h1", "h2", "h3", "h4"):
             self.text_parts.append("\n\n")
 
     def handle_data(self, data):
@@ -749,12 +743,10 @@ def main():
             print()
         return
 
-    if args.force:
-        # Clear progress markers
-        if PROGRESS_DIR.exists():
-            for f in PROGRESS_DIR.glob("*.done"):
-                f.unlink()
-            print("Cleared progress markers.")
+    if args.force and PROGRESS_DIR.exists():
+        for f in PROGRESS_DIR.glob("*.done"):
+            f.unlink()
+        print("Cleared progress markers.")
 
     if args.tid:
         # Single work mode

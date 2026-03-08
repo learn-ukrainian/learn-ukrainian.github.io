@@ -10,11 +10,10 @@ Usage (from any workflow - full-rebuild, manual, etc.):
 This updates batch_state/state_{track}.json so the playground monitor can track it.
 """
 
-import sys
-import json
 import argparse
+import json
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
 
 PROJECT_ROOT = Path(__file__).parent.parent
 STATE_DIR = PROJECT_ROOT / "batch_state"
@@ -36,12 +35,12 @@ def update_state(track: str, slug: str, status: str, duration: float | None = No
     if "batch" not in state:
         state["batch"] = track
         state["range"] = "manual"
-        state["started"] = datetime.now(timezone.utc).isoformat()
+        state["started"] = datetime.now(UTC).isoformat()
 
     if "modules" not in state:
         state["modules"] = {}
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     if status == "running":
         state["modules"][slug] = {

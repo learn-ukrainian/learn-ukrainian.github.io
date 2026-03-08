@@ -33,7 +33,7 @@ import json
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -45,7 +45,7 @@ def get_module_order_from_curriculum(level: str) -> list[str]:
     if not curriculum_path.exists():
         return []
 
-    with open(curriculum_path, 'r', encoding='utf-8') as f:
+    with open(curriculum_path, encoding='utf-8') as f:
         curriculum = yaml.safe_load(f)
 
     levels = curriculum.get('levels', {})
@@ -126,7 +126,7 @@ def find_module_files(level: str, module_filter: str | None = None) -> tuple[lis
             else:
                 missing_slugs.append(slug)
         # Add any files not in curriculum.yaml at the end (shouldn't happen normally)
-        for slug, path in file_map.items():
+        for _slug, path in file_map.items():
             if path not in slug_files:
                 slug_files.append(path)
     else:
@@ -197,10 +197,7 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False, skip_
     for i, file_path in enumerate(files, 1):
         # Extract module identifier for display
         match = re.match(r'^(\d+)-', file_path.name)
-        if match:
-            module_id = match.group(1)  # Numbered: "05"
-        else:
-            module_id = file_path.stem  # Slug-only: "afhanistan"
+        module_id = match.group(1) if match else file_path.stem
 
         slug = _extract_slug(file_path)
 
@@ -242,10 +239,10 @@ def sync_batch_state(level: str, slug_results: dict[str, str]) -> None:
     This keeps the batch monitor UI in sync with actual audit state.
     """
     state_file = Path(f"batch_state/state_{level}.json")
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     if state_file.exists():
-        with open(state_file, 'r', encoding='utf-8') as f:
+        with open(state_file, encoding='utf-8') as f:
             state = json.load(f)
     else:
         # Create new state file

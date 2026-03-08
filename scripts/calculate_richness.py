@@ -19,14 +19,14 @@ IMPORTANT: Richness criteria vary by MODULE TYPE, not just level.
 Returns exit code 0 if richness >= threshold, 1 otherwise.
 """
 
-import sys
-import re
+import contextlib
 import json
+import re
 import statistics
-import yaml
+import sys
 from pathlib import Path
-from typing import Union
 
+import yaml
 from slug_utils import to_bare_slug
 
 # Module type detection from pedagogy field
@@ -527,7 +527,7 @@ LEGACY_MARKERS = [
 ]
 
 
-def extract_level(file_path: Union[str, Path, None]) -> str:
+def extract_level(file_path: str | Path | None) -> str:
     """Extract level code from file path."""
     if not file_path:
         return 'B1'
@@ -540,7 +540,7 @@ def extract_level(file_path: Union[str, Path, None]) -> str:
     return 'B1'  # Default
 
 
-def extract_module_type(content: str, file_path: Union[str, Path, None] = None) -> str:
+def extract_module_type(content: str, file_path: str | Path | None = None) -> str:
     """Extract module type from frontmatter or YAML sidecar."""
     fm = None
 
@@ -548,10 +548,8 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
     if content.startswith('---'):
         parts = content.split('---', 2)
         if len(parts) >= 3:
-            try:
+            with contextlib.suppress(yaml.YAMLError):
                 fm = yaml.safe_load(parts[1])
-            except yaml.YAMLError:
-                pass
 
     # If no embedded frontmatter, try YAML sidecar
     if not fm and file_path:
@@ -560,9 +558,9 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         sidecar_path = path.parent / 'meta' / f'{slug}.yaml'
         if sidecar_path.exists():
             try:
-                with open(sidecar_path, 'r', encoding='utf-8') as f:
+                with open(sidecar_path, encoding='utf-8') as f:
                     fm = yaml.safe_load(f)
-            except (yaml.YAMLError, IOError):
+            except (OSError, yaml.YAMLError):
                 pass
 
     # Also check plan file for focus (plans take precedence for focus)
@@ -582,12 +580,12 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         for plan_path in plan_paths:
             if plan_path.exists():
                 try:
-                    with open(plan_path, 'r', encoding='utf-8') as f:
+                    with open(plan_path, encoding='utf-8') as f:
                         plan_data = yaml.safe_load(f)
                         if plan_data and plan_data.get('focus'):
                             plan_focus = str(plan_data['focus']).lower().strip()
                             break
-                except (yaml.YAMLError, IOError):
+                except (OSError, yaml.YAMLError):
                     pass
 
     # Check plan focus first (highest priority)
@@ -600,7 +598,7 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         tags = fm.get('tags', [])
         if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
             return 'bridge'
-        
+
         if fm.get('module_type') == 'bridge':
             return 'bridge'
 
@@ -659,7 +657,7 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         ]
         # Also check for numeric prefix 01-05
         num_prefix_match = re.match(r'^0?([1-5])-([a-z-]+)', slug)
-        
+
         if any(bs in slug for bs in bridge_slugs) or num_prefix_match:
             return 'bridge'
 
@@ -939,11 +937,11 @@ def count_register_notes(content: str) -> int:
 
 def count_analysis_sections(content: str) -> int:
     """Count analysis sections (literature modules).
-    
-    Counts ANY content section (H2/H3) that is not part of the standard 
+
+    Counts ANY content section (H2/H3) that is not part of the standard
     structural exclusions (Summary, Vocabulary, Activities, Intro).
-    
-    This matches the academic nature of LIT modules where headers are 
+
+    This matches the academic nature of LIT modules where headers are
     flexible (e.g. "The Role of Fate", "Character Arc").
     """
     # Exclude standard structural headers
@@ -956,24 +954,24 @@ def count_analysis_sections(content: str) -> int:
         r'practicum', r'практикум',
         r'essay', r'есе', r'твір',
     ]
-    
+
     # Get all H2/H3 headers
     headers = re.findall(r'^#{2,3}\s+([^\n]+)', content, re.MULTILINE)
-    
+
     count = 0
     for header in headers:
         header_lower = header.lower()
         is_excluded = False
-        
+
         # Check against exclusions
         for pattern in EXCLUDED_HEADERS:
             if re.search(pattern, header_lower):
                 is_excluded = True
                 break
-                
+
         if not is_excluded:
             count += 1
-            
+
     return min(count, 10)
 
 
@@ -996,7 +994,7 @@ def count_quotes(content: str) -> int:
 
 def count_essays(content: str) -> int:
     """Count essay prompts (literature modules).
-    
+
     Counts sections that look like writing assignments.
     """
     # Look for headers indicating writing tasks
@@ -1009,12 +1007,12 @@ def count_essays(content: str) -> int:
         r'аналітичний практикум',
         r'творче завдання',
     ]
-    
+
     header_count = 0
     # Scan matches to catch multiple tasks
     for pattern in writing_headers:
         header_count += len(re.findall(pattern, content, re.IGNORECASE))
-        
+
     # Also look for explicit instruction verbs at start of lines or sentences
     instruction_verbs = [
         r'напишіть',
@@ -1029,14 +1027,14 @@ def count_essays(content: str) -> int:
     # Heuristic: headers are strong signals (1 point), verbs are weak (0.5 point)
     # But to prevent overcounting, we take the MAX of headers or (verbs // 2)
     # Actually, headers like "Завдання: Есе" are the best indicators.
-    
+
     # Let's count specific "Task" blocks
     task_blocks = len(re.findall(r'Завдання \d+:', content))
-    
+
     # If we have "Tasks", use that count if it's supported by writing keywords
     if task_blocks > 0 and (header_count > 0 or verb_count > 0):
         return min(task_blocks, 5)
-        
+
     # Fallback to old heuristic if no clear tasks
     total_signals = header_count + (verb_count // 2)
     return min(int(total_signals), 5)
@@ -1108,36 +1106,36 @@ def calculate_paragraph_variety(content: str) -> float:
         return 0.5
 
 
-def count_external_yaml_resources(file_path: Union[Path, str]) -> int:
+def count_external_yaml_resources(file_path: Path | str) -> int:
     """Count resources defined in docs/resources/external_resources.yaml."""
     if not file_path:
         return 0
-    
+
     if isinstance(file_path, str):
         file_path = Path(file_path)
-    
+
     try:
         # Find project root from script location
         script_path = Path(__file__).resolve()
         project_root = script_path.parent.parent
         resource_yaml_path = project_root / 'docs' / 'resources' / 'external_resources.yaml'
-        
+
         if not resource_yaml_path.exists():
             return 0
-            
-        with open(resource_yaml_path, 'r', encoding='utf-8') as f:
+
+        with open(resource_yaml_path, encoding='utf-8') as f:
             data = yaml.safe_load(f)
-            
+
         if not data or 'resources' not in data:
             return 0
-            
+
         slug = file_path.stem
         # Also try removing numeric prefix for lookup
         clean_slug = to_bare_slug(slug) if slug else slug
-        
+
         resources = data['resources']
         count = 0
-        
+
         # Check entries for slug
         # print(f"DEBUG_RICHNESS: Checking slug {slug} in external_resources.yaml")
         for key in [slug, clean_slug]:
@@ -1151,14 +1149,14 @@ def count_external_yaml_resources(file_path: Union[Path, str]) -> int:
                 # If we found resources for one variant, stop (avoid double counting)
                 if count > 0:
                     break
-        
+
         # print(f"DEBUG_RICHNESS: Final external count for {slug}: {count}")
         return count
     except Exception:
         # print(f"DEBUG_RICHNESS: Error in count_external_yaml_resources: {e}")
         return 0
 
-def calculate_richness_score(content: str, level: str, file_path: Path = None, yaml_activity_types: set = None) -> dict:
+def calculate_richness_score(content: str, level: str, file_path: Path | None = None, yaml_activity_types: set | None = None) -> dict:
     """Calculate richness score and components based on module type.
 
     Args:
@@ -1256,13 +1254,8 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
         })
     elif module_type == 'checkpoint':
         # Use YAML activity types if provided (Preferred for YAML-First architecture)
-        activity_type_count = 0
-        if yaml_activity_types is not None:
-            activity_type_count = len(yaml_activity_types)
-        else:
-            # If yaml_activity_types is None, activities were skipped (--skip-activities).
-            # Assume target is met to avoid failing the prose-only richness check.
-            activity_type_count = 8
+        # Use YAML count if available; None means --skip-activities so assume target met
+        activity_type_count = len(yaml_activity_types) if yaml_activity_types is not None else 8
 
         raw.update({
             'activity_types': activity_type_count,
@@ -1297,7 +1290,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
     weight_sum = sum(weights.get(k, 0.05) for k in normalized)
     if weight_sum > 0:
         total = total / weight_sum
-        
+
     score = int(total * 100)
 
     # Return NORMALIZED weights so the report math works (sum of weights = 1.0)
@@ -1318,7 +1311,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
     }
 
 
-def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> list:
+def detect_dryness_flags(content: str, level: str, file_path: Path | None = None) -> list:
     """Detect dryness indicators based on module type."""
     flags = []
     prose = get_prose_content(content)
@@ -1420,9 +1413,8 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
             flags.append('ABSTRACT_ONLY')
 
     # Table check for grammar module types only (soft warning)
-    if module_type in ('grammar', 'bridge'):
-        if count_tables(prose) == 0:
-            flags.append('NO_TABLES')
+    if module_type in ('grammar', 'bridge') and count_tables(prose) == 0:
+        flags.append('NO_TABLES')
 
     # Cultural anchor check (B1+ grammar/vocab/content types) - need 2+ (50% of target 3)
     if module_type in ('grammar', 'vocabulary', 'content', 'cultural'):
@@ -1465,12 +1457,12 @@ def main():
         print("### Score Breakdown")
         print("| Metric | Count | Target | Score | Weight | Contribution |")
         print("|--------|-------|--------|-------|--------|--------------|")
-        
+
         total_contribution = 0.0
-        
+
         # Sort keys for consistent output (prioritize higher weights)
         sorted_keys = sorted(result['raw'].keys(), key=lambda k: weights.get(k, 0), reverse=True)
-        
+
         for key in sorted_keys:
             raw = result['raw'].get(key, 0)
             norm = result['normalized'].get(key, 0)
@@ -1478,7 +1470,7 @@ def main():
             weight = weights.get(key, 0.05)
             contribution = norm * weight * 100
             total_contribution += contribution
-            
+
             # Format columns
             if key in ('variety', 'paragraph_var'):
                 count_str = f"{raw:.2f}"
@@ -1486,9 +1478,9 @@ def main():
             else:
                 count_str = str(raw)
                 target_str = str(target)
-                
+
             print(f"| {key} | {count_str} | {target_str} | {norm:.0%} | {weight:.0%} | {contribution:.1f}% |")
-            
+
         print(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
         print()
 

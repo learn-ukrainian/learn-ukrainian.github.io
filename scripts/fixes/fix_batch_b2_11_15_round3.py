@@ -1,8 +1,8 @@
 
-import yaml
-import re
-import os
 import glob
+import re
+
+import yaml
 
 # Essays
 essay_activities = {
@@ -63,7 +63,7 @@ unjumble_map = {
     "Він говорив наче знав усе": "Він так впевнено говорив про це, наче він справді знав абсолютно усе.",
     "Я запізнився тому що був затор": "Я сьогодні сильно запізнився на роботу, тому що в центрі був великий затор.",
     "Після того як він пішов стало тихо": "Відразу після того як він пішов з кімнати, у домі стало дуже тихо.",
-    
+
     # M12
     "Можливо він прийде завтра": "Цілком можливо, що він прийде до нас у гості вже завтра вранці.",
     "На жаль ми пропустили зустріч": "На великий жаль, ми через затори пропустили цю важливу ділову зустріч.",
@@ -166,11 +166,11 @@ quiz_patterns = [
 
 def process_file(filepath, module_num):
     print(f"Processing {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         activities = yaml.safe_load(f)
-    
+
     modified = False
-    
+
     # 1. Expand Unjumble
     for act in activities:
         if act.get('type') == 'unjumble':
@@ -201,19 +201,17 @@ def process_file(filepath, module_num):
                             modified = True
                             break
                     # Fallback expansion if no regex match but still short
-                    if len(item['question'].split()) < 10 and "?" in q:
-                         if not q.startswith("Визначте") and not q.startswith("Укажіть"):
+                    if len(item['question'].split()) < 10 and "?" in q and not q.startswith("Визначте") and not q.startswith("Укажіть"):
                             new_q = "Будь ласка, визначте: " + q[0].lower() + q[1:]
                             if len(new_q.split()) >= 10:
                                 item['question'] = new_q
                                 modified = True
 
     # 3. Add Essay
-    if not any(a.get('type') == 'essay-response' for a in activities):
-        if str(module_num) in essay_activities:
-            activities.append(essay_activities[str(module_num)])
-            print("  Added essay.")
-            modified = True
+    if not any(a.get('type') == 'essay-response' for a in activities) and str(module_num) in essay_activities:
+        activities.append(essay_activities[str(module_num)])
+        print("  Added essay.")
+        modified = True
 
     if modified:
         with open(filepath, 'w') as f:
@@ -226,11 +224,11 @@ for i in range(11, 16):
     files = glob.glob(path)
     for f in files:
         process_file(f, i)
-    
+
     # Fix Markdown header
     md_files = glob.glob(f"curriculum/l2-uk-en/b2/{i}-*.md")
     for f in md_files:
-        with open(f, 'r') as file:
+        with open(f) as file:
             content = file.read()
         if "## Тест: Прочитайте текст" in content:
             content = content.replace("## Тест: Прочитайте текст", "## Вступ")

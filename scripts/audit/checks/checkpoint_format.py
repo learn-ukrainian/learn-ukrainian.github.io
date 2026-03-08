@@ -12,35 +12,34 @@ are flagged for rewrite.
 """
 
 import re
-from pathlib import Path
 
 
 def check_checkpoint_format(content: str, frontmatter: dict, level: str, module_num: int) -> list[dict]:
     """
     Validate checkpoint modules have correct Skill-based structure.
-    
+
     Returns list of violations if checkpoint format is incorrect.
     """
     violations = []
-    
+
     # Only check checkpoint modules
     focus = frontmatter.get('focus', '').lower()
     if focus != 'checkpoint':
         return violations
-    
+
     # Count Skill-based structure elements
     skill_count = len(re.findall(r'^## Skill\s*\d*:', content, re.MULTILINE))
     model_count = len(re.findall(r'^### Model:', content, re.MULTILINE))
     practice_count = len(re.findall(r'^### Practice:', content, re.MULTILINE))
-    self_check_count = len(re.findall(r'^### Self-Check', content, re.MULTILINE))
-    
+    len(re.findall(r'^### Self-Check', content, re.MULTILINE))
+
     # Check for alternative (incorrect) structure
     has_diagnostika = bool(re.search(r'^## Діагностика', content, re.MULTILINE))
     has_analiz = bool(re.search(r'^## Аналіз', content, re.MULTILINE))
     has_pogliblennya = bool(re.search(r'^## Поглиблення', content, re.MULTILINE))
-    
+
     alternative_structure = has_diagnostika or has_analiz or has_pogliblennya
-    
+
     # Checkpoint should have Skill sections
     if skill_count == 0 and alternative_structure:
         violations.append({
@@ -67,7 +66,7 @@ def check_checkpoint_format(content: str, frontmatter: dict, level: str, module_
                 'practice_count': practice_count,
             }
         })
-    
+
     # If has Skills but missing subsections
     if skill_count > 0:
         if model_count == 0:
@@ -78,7 +77,7 @@ def check_checkpoint_format(content: str, frontmatter: dict, level: str, module_
                 'fix': "Add ### Model: section under each Skill with annotated examples",
                 'details': {'skill_count': skill_count, 'model_count': model_count}
             })
-        
+
         if practice_count == 0:
             violations.append({
                 'type': 'checkpoint_format',
@@ -87,11 +86,11 @@ def check_checkpoint_format(content: str, frontmatter: dict, level: str, module_
                 'fix': "Add ### Practice: section under each Skill with exercises",
                 'details': {'skill_count': skill_count, 'practice_count': practice_count}
             })
-    
+
     # Check for bold-style headers (old format)
     bold_model = len(re.findall(r'^\*\*Model:', content, re.MULTILINE))
     bold_practice = len(re.findall(r'^\*\*Practice:', content, re.MULTILINE))
-    
+
     if bold_model > 0 or bold_practice > 0:
         violations.append({
             'type': 'checkpoint_format',
@@ -100,7 +99,7 @@ def check_checkpoint_format(content: str, frontmatter: dict, level: str, module_
             'fix': "Convert **Model:** → ### Model: and **Practice:** → ### Practice:",
             'details': {'bold_model': bold_model, 'bold_practice': bold_practice}
         })
-    
+
     return violations
 
 

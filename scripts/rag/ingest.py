@@ -34,8 +34,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.config import (
     BGE_M3_DENSE_DIM,
     CHUNKS_DIR,
-    IMAGES_DIR,
     IMAGE_COLLECTION,
+    IMAGES_DIR,
     LITERARY_COLLECTION,
     LITERARY_DIR,
     QDRANT_HOST,
@@ -174,7 +174,7 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
     print(f"\n[ingest] Loading chunks from {jsonl_path.name}...")
 
     chunks = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
             chunk = json.loads(line)
             # Only ingest clean chunks
@@ -201,7 +201,7 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
         # Convert sparse weights: {token_str: weight} → SparseVector
         sw = sparse_weights[i]
         if isinstance(sw, dict):
-            indices = list(int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sw.keys())
+            indices = list(int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sw)
             values = list(sw.values())
         else:
             indices, values = [], []
@@ -257,7 +257,7 @@ def load_annotations() -> dict[str, dict]:
     if not pairs_file.exists():
         return _annotation_cache
 
-    with open(pairs_file, "r", encoding="utf-8") as f:
+    with open(pairs_file, encoding="utf-8") as f:
         for line in f:
             if not line.strip():
                 continue
@@ -293,7 +293,7 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
     print(f"\n[ingest] Loading image metadata from {jsonl_path.name}...")
 
     records = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -471,7 +471,7 @@ def ingest_literary_chunks(
     print(f"[ingest] Ingesting literary chunks from {jsonl_path.name}...")
 
     chunks = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
             chunks.append(json.loads(line))
 
@@ -506,7 +506,7 @@ def ingest_literary_chunks(
         if isinstance(sw, dict):
             indices = list(
                 int(k) if isinstance(k, (int, float)) else hash(k) % (2**31)
-                for k in sw.keys()
+                for k in sw
             )
             values = list(sw.values())
         else:

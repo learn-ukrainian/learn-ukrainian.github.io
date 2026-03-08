@@ -3,8 +3,9 @@
 Fix B1 meta.yaml content_outline sections to match template structures.
 """
 
-import yaml
 from pathlib import Path
+
+import yaml
 
 # Modules that need fixing
 GRAMMAR_MODULES = [
@@ -106,7 +107,7 @@ def fix_meta_file(slug: str, is_checkpoint: bool = False):
         return
 
     # Load existing meta
-    with open(meta_path, 'r', encoding='utf-8') as f:
+    with open(meta_path, encoding='utf-8') as f:
         meta = yaml.safe_load(f)
 
     # Fix word_target
@@ -148,7 +149,7 @@ def main():
     for slug in CHECKPOINT_MODULES:
         fix_meta_file(slug, is_checkpoint=True)
 
-    print(f"\n✅ Fixed 16 meta.yaml files")
+    print("\n✅ Fixed 16 meta.yaml files")
     print("\nNext: Run audit to verify fixes")
 
 if __name__ == "__main__":

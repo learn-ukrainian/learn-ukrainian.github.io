@@ -17,7 +17,6 @@ import json
 import re
 from pathlib import Path
 
-
 # ---------------------------------------------------------------------------
 # VESUM tag reference
 # ---------------------------------------------------------------------------
@@ -41,6 +40,9 @@ _OBLIQUE_CASES = {"v_rod", "v_dav", "v_zna", "v_oru", "v_mis"}
 _CYRILLIC_TOKEN_RE = re.compile(
     r"[А-ЯҐЄІЇа-яґєіїʼ'\u0301]+", re.UNICODE
 )
+
+# Strikethrough content (~~wrong form~~) — deliberate errors to strip before checking
+_STRIKETHROUGH_RE = re.compile(r"~~[^~]+~~")
 
 # Stress mark (combining acute accent) — strip before VESUM lookup
 _STRESS_MARK = "\u0301"
@@ -83,10 +85,7 @@ def _is_in_allowed_chunk(word: str, line: str, chunks: set[str]) -> bool:
     """Check if a word appears as part of an allowed memorized chunk."""
     line_lower = line.lower()
     word_lower = word.lower()
-    for chunk in chunks:
-        if word_lower in chunk and chunk in line_lower:
-            return True
-    return False
+    return any(word_lower in chunk and chunk in line_lower for chunk in chunks)
 
 
 # ---------------------------------------------------------------------------
@@ -101,6 +100,9 @@ def _should_skip_line(line: str) -> bool:
     # Table rows
     if stripped.startswith("|"):
         return True
+    # HTML comment <!-- deliberate-error --> — skip entire line
+    if "<!-- deliberate-error" in stripped:
+        return True
     # Callout boxes — strip the > prefix and check the remaining text.
     # We validate callout content but strip callout markers first.
     if stripped.startswith(">"):
@@ -110,9 +112,7 @@ def _should_skip_line(line: str) -> bool:
             return True
         # Skip if no Cyrillic at all; otherwise validate
         cyrillic = sum(1 for c in inner if '\u0400' <= c <= '\u04ff')
-        if cyrillic == 0:
-            return True
-        return False  # Validate callout content
+        return cyrillic == 0  # Validate callout content only if it has Cyrillic
     # Code blocks
     if stripped.startswith("```"):
         return True
@@ -126,15 +126,13 @@ def _should_skip_line(line: str) -> bool:
     if stripped.startswith("#"):
         return True
     # Negative example markers
-    if any(marker in stripped for marker in ("WRONG:", "INCORRECT:", "❌", "~~")):
+    if any(marker in stripped for marker in ("WRONG:", "INCORRECT:", "❌")):
         return True
     # Pure English lines (no Ukrainian words to check)
     cyrillic = sum(1 for c in stripped if '\u0400' <= c <= '\u04ff')
-    if cyrillic == 0:
-        return True
     # Don't skip English-dominant lines — _CYRILLIC_TOKEN_RE already isolates
     # Ukrainian words, so even "The word **книгу** means..." gets checked.
-    return False
+    return cyrillic == 0
 
 
 # ---------------------------------------------------------------------------
@@ -221,15 +219,18 @@ def validate_morphology(
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-    from rag_batch_verify import vesum_batch_lookup, tokenize_all_ukrainian
+    from rag_batch_verify import vesum_batch_lookup
 
     constraints = _get_constraints(track, module_num)
     allowed_chunks = _get_allowed_chunks(module_num)
     issues: list[dict] = []
 
+    # Strip deliberate errors (~~wrong form~~) once for all checks
+    content_clean = _STRIKETHROUGH_RE.sub("", content)
+
     # 1. Extract words per line (preserving line context for chunk checking)
     word_lines: list[tuple[str, int, str]] = []  # (word, line_num, full_line)
-    lines = content.split("\n")
+    lines = content_clean.split("\n")
     for line_num, line in enumerate(lines, 1):
         if _should_skip_line(line):
             continue
@@ -416,7 +417,7 @@ def validate_morphology(
                         break
 
     # --- Russicism / replacement check (all modules) ---
-    replacement_issues = check_replacements(content, max_issues=max_issues - len(issues))
+    replacement_issues = check_replacements(content_clean, max_issues=max_issues - len(issues))
     issues.extend(replacement_issues)
 
     # --- Agreement check (all modules) ---
@@ -441,7 +442,7 @@ def _load_replacements() -> dict[str, dict]:
     global _LT_REPLACEMENTS
     if _LT_REPLACEMENTS is None:
         if _LT_PATH.exists():
-            with open(_LT_PATH, "r") as f:
+            with open(_LT_PATH) as f:
                 _LT_REPLACEMENTS = json.load(f)
         else:
             _LT_REPLACEMENTS = {}
@@ -463,7 +464,9 @@ def check_replacements(
     for line_num, line in enumerate(content.split("\n"), 1):
         if _should_skip_line(line):
             continue
-        tokens = _CYRILLIC_TOKEN_RE.findall(line)
+        # Strip deliberate errors (~~wrong form~~) before tokenizing
+        clean_line = _STRIKETHROUGH_RE.sub("", line)
+        tokens = _CYRILLIC_TOKEN_RE.findall(clean_line)
         for token in tokens:
             if len(issues) >= max_issues:
                 return issues

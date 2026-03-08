@@ -165,7 +165,7 @@ def main():
 
             missing = expected_norm - found_norm
             if missing:
-                print(f"\n  WARNING: Missing H2 sections from content_outline:", file=sys.stderr)
+                print("\n  WARNING: Missing H2 sections from content_outline:", file=sys.stderr)
                 for m in sorted(missing):
                     print(f"    - {m}", file=sys.stderr)
                 exit_code = max(exit_code, 2)

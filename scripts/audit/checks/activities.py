@@ -6,15 +6,24 @@ Validates activity sequencing, structure, variety, and level restrictions.
 
 import re
 import sys
-from pathlib import Path
 from collections import Counter
-from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES, REQUIRED_ADVANCED_TYPES, LEVEL_CONFIG
+from pathlib import Path
+
+from ..config import (
+    ACTIVITY_COMPLEXITY,
+    ACTIVITY_RESTRICTIONS,
+    LEVEL_CONFIG,
+    REQUIRED_ADVANCED_TYPES,
+    STAGE_ORDER,
+    VALID_ACTIVITY_TYPES,
+)
 
 # Add parent dir to path for imports
 SCRIPT_DIR = Path(__file__).parent.parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 from yaml_activities import Activity
+
 
 def check_activity_complexity(content: str, level_code: str, module_num: int = 1, yaml_activities: list[Activity] | None = None, module_focus: str | None = None) -> list[dict]:
     """
@@ -29,10 +38,10 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
     # Relax rules for A1 M01-M05 and B1 M01-M05 (bridge modules)
     is_a1_early = (level_code == 'A1' and module_num <= 5)
     is_b1_bridge = (level_code == 'B1' and module_num <= 5)
-    
+
     # 1. Parse all activities (Unified: supports both legacy MD and new YAML)
     parsed_activities = []
-    
+
     # Handle YAML activities (Preferred)
     if yaml_activities:
         for act in yaml_activities:
@@ -43,15 +52,15 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 'source': 'yaml',
                 'object': act
             })
-    
+
     # Legacy Markdown activities support removed (Issue #394)
-    
+
     for activity_data in parsed_activities:
         act_type = activity_data['type']
         title = activity_data['title']
         body = activity_data['body']
         act_obj = activity_data['object']
-        
+
         # Skip checking unknown activity types
         if act_type not in ACTIVITY_COMPLEXITY:
             continue
@@ -85,15 +94,14 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                     'issue': f"essay-response '{title}' missing mandatory > [!rubric]",
                     'fix': "All essay responses must include a rubric."
                 })
-        
-        if act_type in ('critical-analysis', 'comparative-study', 'authorial-intent'):
-             if not act_obj and '> [!model-answer]' not in body:
+
+        if act_type in ('critical-analysis', 'comparative-study', 'authorial-intent') and not act_obj and '> [!model-answer]' not in body:
                 violations.append({
                     'type': 'STRUCTURE_MISSING',
                     'issue': f"{act_type} '{title}' missing mandatory > [!model-answer]",
                     'fix': f"All {act_type} activities must include a model answer."
                 })
-            
+
         # Apply A1 Early Relaxations
         if is_a1_early:
             if act_type == 'quiz':
@@ -147,7 +155,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
             elif act_type == 'translate':
                 rules['min_len'] = 4
                 rules['max_len'] = 8
-        
+
         # --- Check Item Count ---
         items_count = count_items(body, act_obj)
         min_items = rules.get('min_items', 6)  # Default min 6 if not specified
@@ -162,17 +170,17 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 group_count = len([h for h in group_headers if not any(
                     skip in h.lower() for skip in ['note', 'explanation', 'hint', 'tip']
                 )])
-            
+
             min_groups = rules.get('groups_min', 2)
             max_groups = rules.get('groups_max', 4)
-            
+
             if not (min_groups <= group_count <= max_groups):
                 violations.append({
                     'type': 'COMPLEXITY',
                     'issue': f"group-sort '{title}' has {group_count} groups (target: {min_groups}-{max_groups})",
                     'fix': f"Adjust number of sorting categories to {min_groups}-{max_groups}."
                 })
-            
+
             min_sort_items = rules.get('items_min', 8)
             max_sort_items = rules.get('items_max', 20)
             if not (min_sort_items <= items_count <= max_sort_items):
@@ -181,11 +189,11 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                     'issue': f"group-sort '{title}' has {items_count} items (target: {min_sort_items}-{max_sort_items})",
                     'fix': f"Adjust number of items to sort to {min_sort_items}-{max_sort_items}."
                 })
-        
+
         elif act_type == 'match-up':
             min_pairs = rules.get('pairs_min', 8)
             max_pairs = rules.get('pairs_max', 18)
-            
+
             if not (min_pairs <= items_count <= max_pairs):
                 violations.append({
                     'type': 'COMPLEXITY',
@@ -201,7 +209,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
             })
 
         # --- Check Content Complexity (Word Counts / Options) ---
-        
+
         # Unjumble / Anagram Structure
         if act_type == 'unjumble':
             if not act_obj:
@@ -212,7 +220,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                         'issue': f"unjumble '{title}' items must use slash '/' separator",
                         'fix': "Split words with slashes, e.g. 'Я / люблю / каву'."
                     })
-            
+
             # Check word counts
             items_to_check = []
             if act_obj:
@@ -228,7 +236,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 words = len(re.findall(r'[\w\u0400-\u04FF]+', item))
                 min_w = rules.get('words_min', 4)
                 max_w = rules.get('words_max', 20)
-                
+
                 if words < min_w - 1 or words > max_w + 2:
                      violations.append({
                         'type': 'COMPLEXITY_WORD_COUNT',
@@ -248,7 +256,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                             'fix': "Use spaces between letters: 'л і т е р а'."
                         })
                         break
-        
+
         # Fill-in Structure
         elif act_type == 'fill-in':
             if not act_obj:
@@ -264,7 +272,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                         'issue': f"fill-in '{title}' missing mandatory [!options] block",
                         'fix': "All fill-in activities must provide [!options] for the user."
                     })
-        
+
         # Quiz Options Check
         elif act_type == 'quiz':
             quiz_items = []
@@ -285,7 +293,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
 
             min_len = rules.get('min_len', 5)
             max_len = rules.get('max_len', 30)
-            
+
             for i, q in enumerate(quiz_items, 1):
                 prompt = getattr(q, 'question', '')
                 prompt_words = len(re.findall(r'[\w\u0400-\u04FF]+', prompt))
@@ -295,11 +303,12 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                         'issue': f"quiz '{title}' Q{i} prompt length {prompt_words} (target: {min_len}-{max_len})",
                         'fix': f"Adjust prompt length to {min_len}-{max_len} words."
                     })
-                
+
                 options_count = len(q.options)
                 target_opts = rules.get('options', [4])
-                if isinstance(target_opts, int): target_opts = [target_opts]
-                
+                if isinstance(target_opts, int):
+                    target_opts = [target_opts]
+
                 if options_count > 0 and options_count not in target_opts and options_count < min(target_opts):
                      violations.append({
                         'type': 'COMPLEXITY_OPTIONS',
@@ -352,13 +361,12 @@ def check_activity_sequencing(content: str, pedagogy: str) -> list[dict]:
 
     # Check for production before presentation
     stages_set = set(activity_stages)
-    if 'free-production' in stages_set and 'presentation' not in content.lower():
-        if method == 'PPP':
-            violations.append({
-                'type': 'SEQUENCING',
-                'issue': "Free-production activity found but no Presentation section",
-                'fix': "Add Presentation section before Practice activities (PPP methodology)"
-            })
+    if 'free-production' in stages_set and 'presentation' not in content.lower() and method == 'PPP':
+        violations.append({
+            'type': 'SEQUENCING',
+            'issue': "Free-production activity found but no Presentation section",
+            'fix': "Add Presentation section before Practice activities (PPP methodology)"
+        })
 
     return violations
 
@@ -462,8 +470,7 @@ def check_matchup_misuse(content: str) -> list[dict]:
             for left, right in rows:
                 left_clean = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ]', '', left)
                 right_clean = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ]', '', right)
-                if len(left_clean) >= 3 and len(right_clean) >= 3:
-                    if left_clean[:3].lower() == right_clean[:3].lower():
+                if len(left_clean) >= 3 and len(right_clean) >= 3 and left_clean[:3].lower() == right_clean[:3].lower():
                         symmetric_pairs += 1
 
             if symmetric_pairs >= len(rows) * 0.5:
@@ -539,14 +546,14 @@ def check_activity_level_restrictions(content: str, level_code: str, module_num:
 
 def check_activity_focus_alignment(content: str, level_code: str, module_num: int, frontmatter_str: str) -> list[dict]:
     """Check if activities align with grammar vs vocabulary focus (B1/B2).
-    
+
     Checkpoints are exempt - they use quiz-heavy activity mix for comprehensive testing.
     """
     violations = []
 
     if level_code not in ['B1', 'B2']:
         return violations
-    
+
     # Skip checkpoint modules - they legitimately use more quiz activities for assessment
     if 'checkpoint' in frontmatter_str.lower() or 'контрольна точка' in frontmatter_str.lower():
         return violations
@@ -582,7 +589,6 @@ def check_activity_focus_alignment(content: str, level_code: str, module_num: in
     type_counts = Counter(activity_types)
 
     grammar_priority = ['error-correction', 'fill-in', 'unjumble', 'cloze']
-    vocab_priority = ['match-up', 'mark-the-words', 'translate', 'quiz']
     vocab_avoid = ['group-sort']
 
     if is_grammar:
@@ -613,17 +619,32 @@ def count_items(text: str, activity: Activity | None = None) -> int:
     if activity:
         # YAML Activity Object logic
         from yaml_activities import (
-            QuizActivity, MatchUpActivity, GroupSortActivity, FillInActivity,
-            ClozeActivity, UnjumbleActivity, ErrorCorrectionActivity,
-            MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
-            SelectActivity, TrueFalseActivity, EssayResponseActivity,
-            CriticalAnalysisActivity, ComparativeStudyActivity, AuthorialIntentActivity,
-            EtymologyTraceActivity, GrammarIdentifyActivity,
-            ImageToLetterActivity, WatchAndRepeatActivity, ClassifyActivity
+            AnagramActivity,
+            AuthorialIntentActivity,
+            ClassifyActivity,
+            ClozeActivity,
+            ComparativeStudyActivity,
+            CriticalAnalysisActivity,
+            ErrorCorrectionActivity,
+            EssayResponseActivity,
+            EtymologyTraceActivity,
+            FillInActivity,
+            GrammarIdentifyActivity,
+            GroupSortActivity,
+            ImageToLetterActivity,
+            MarkTheWordsActivity,
+            MatchUpActivity,
+            QuizActivity,
+            ReadingActivity,
+            SelectActivity,
+            TranslateActivity,
+            TrueFalseActivity,
+            UnjumbleActivity,
+            WatchAndRepeatActivity,
         )
-        
-        if isinstance(activity, (QuizActivity, FillInActivity, UnjumbleActivity, 
-                                 ErrorCorrectionActivity, TranslateActivity, AnagramActivity, 
+
+        if isinstance(activity, (QuizActivity, FillInActivity, UnjumbleActivity,
+                                 ErrorCorrectionActivity, TranslateActivity, AnagramActivity,
                                  SelectActivity, TrueFalseActivity,
                                  EtymologyTraceActivity, GrammarIdentifyActivity,
                                  ImageToLetterActivity, WatchAndRepeatActivity)):
@@ -847,10 +868,10 @@ def check_unjumble_word_match(content: str) -> list[dict]:
 def check_activity_ukrainian_content(content: str, level_code: str = 'A1', module_num: int = 1) -> list[dict]:
     """
     Check if activities contain Ukrainian content (not just English).
-    
+
     Activities that are 100% English (like quizzes asking about English sentences)
     are pedagogically useless for a Ukrainian language course.
-    
+
     Thresholds:
     - A1 M01-M02: EXEMPT (alphabet learning - letters themselves are the content)
     - A1 M03-M10: Allow up to 80% English (Cyrillic learning phase)
@@ -858,21 +879,21 @@ def check_activity_ukrainian_content(content: str, level_code: str = 'A1', modul
     - B1+: Require at least 30% Cyrillic
     """
     violations = []
-    
+
     # EXEMPT A1 M01-M02 (alphabet modules - letters themselves are the content)
     if level_code == 'A1' and module_num <= 2:
         return violations
-    
-    
+
+
     # Find all activity sections
     activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
     activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
-    
+
     # Determine threshold based on level
     min_cyrillic_ratio = 0.10  # Default: 10% Cyrillic minimum
     if level_code in ['B1', 'B2', 'C1', 'C2']:
         min_cyrillic_ratio = 0.20  # Higher levels need more Ukrainian
-    
+
     for act_type, title, body in activities:
         act_type_lower = act_type.lower()
 
@@ -883,34 +904,34 @@ def check_activity_ukrainian_content(content: str, level_code: str = 'A1', modul
         # Skip anagram activities (they're supposed to be letters only)
         if act_type_lower == 'anagram':
             continue
-            
+
         # Count Cyrillic vs total characters (excluding markdown/punctuation)
         text = title + ' ' + body
-        
+
         # Extract just text content (remove markdown syntax)
         clean_text = re.sub(r'\[[ xX]?\]', '', text)  # Remove checkboxes
         clean_text = re.sub(r'\|', '', clean_text)     # Remove table pipes
         clean_text = re.sub(r'[#*_>`~\-]', '', clean_text)  # Remove markdown
         clean_text = re.sub(r'\{[^}]+\}', '', clean_text)  # Remove cloze placeholders
-        
+
         # Count characters
         cyrillic_chars = len(re.findall(r'[а-яіїєґА-ЯІЇЄҐ]', clean_text))
         latin_chars = len(re.findall(r'[a-zA-Z]', clean_text))
         total_text_chars = cyrillic_chars + latin_chars
-        
+
         if total_text_chars < 20:
             # Too short to evaluate
             continue
-            
+
         cyrillic_ratio = cyrillic_chars / total_text_chars if total_text_chars > 0 else 0
-        
+
         if cyrillic_ratio < min_cyrillic_ratio:
             violations.append({
                 'type': 'NO_UKRAINIAN_CONTENT',
                 'issue': f"Activity '{act_type}: {title.strip()}' has only {cyrillic_ratio:.0%} Ukrainian content ({cyrillic_chars}/{total_text_chars} chars)",
                 'fix': "Activities must contain Ukrainian examples/sentences/words. Rewrite with Ukrainian content."
             })
-    
+
     return violations
 
 
@@ -987,30 +1008,30 @@ def check_activity_header_format(content: str) -> list[dict]:
 def check_mark_the_words_format(activities: list) -> list[dict]:
     """Check for malformed mark-the-words activities in YAML."""
     violations = []
-    
+
     if not activities or not isinstance(activities, list):
         return violations
-    
+
     for activity in activities:
         act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
         if act_type != 'mark-the-words':
             continue
-            
+
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
-            
+
         # Handle both dict (YAML) and object (parsed) representations
         # Schema-compliant: passage/correct_words (in YAML dict)
         # Object attributes: text/answers (in parsed object)
         passage = ''
         correct_words = []
-        
+
         if isinstance(activity, dict):
             # YAML dict - check for schema-compliant fields first
             passage = activity.get('passage', '')
             correct_words = activity.get('correct_words', [])
-            
+
             # Fallback to old field names for backwards compatibility
             if not passage:
                 passage = activity.get('text', '')
@@ -1028,7 +1049,7 @@ def check_mark_the_words_format(activities: list) -> list[dict]:
                 'issue': f"mark-the-words '{title}' is missing 'passage' field",
                 'fix': "Add 'passage' field with the content"
             })
-            
+
         if not correct_words and '*' not in passage:
              violations.append({
                 'type': 'MISSING_FIELD',
@@ -1036,7 +1057,7 @@ def check_mark_the_words_format(activities: list) -> list[dict]:
                 'issue': f"mark-the-words '{title}' is missing 'correct_words' array",
                 'fix': "Add 'correct_words' array with correct words"
             })
-        
+
         if '(correct)' in passage or '(wrong)' in passage:
             violations.append({
                 'type': 'MALFORMED_MARK_THE_WORDS',
@@ -1044,9 +1065,9 @@ def check_mark_the_words_format(activities: list) -> list[dict]:
                 'issue': f"mark-the-words '{title}' contains (correct)/(wrong) annotations",
                 'fix': "Remove (correct)/(wrong) annotations and use 'correct_words' array"
             })
-            
+
         # Verify correct_words are in passage
-        for idx, ans in enumerate(correct_words):
+        for _idx, ans in enumerate(correct_words):
             if ans not in passage:
                 violations.append({
                     'type': 'INVALID_ANSWER',
@@ -1085,17 +1106,9 @@ def check_hints_in_activities(activities: list) -> list[dict]:
         items = getattr(activity, 'items', [])
         if not items and isinstance(activity, dict):
             items = activity.get('items', [])
-            
+
         for idx, item in enumerate(items):
-            if hasattr(item, 'hint') and item.hint:
-                violations.append({
-                    'type': 'HINT_IN_ACTIVITY',
-                    'severity': 'critical',
-                    'issue': f"{act_type} activity '{title}' has item-level hint in item {idx + 1}",
-                    'fix': "Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)"
-                })
-                break
-            elif isinstance(item, dict) and 'hint' in item:
+            if (hasattr(item, 'hint') and item.hint) or (isinstance(item, dict) and 'hint' in item):
                 violations.append({
                     'type': 'HINT_IN_ACTIVITY',
                     'severity': 'critical',
@@ -1197,7 +1210,7 @@ def check_malformed_cloze_activities(activities: list) -> list[dict]:
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
-            
+
         passage = getattr(activity, 'passage', '')
         if not passage and isinstance(activity, dict):
             passage = activity.get('passage', '')
@@ -1264,7 +1277,7 @@ def check_cloze_syntax_errors(activities: list) -> list[dict]:
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
-            
+
         passage = getattr(activity, 'passage', '')
         if not passage and isinstance(activity, dict):
             passage = activity.get('passage', '')
@@ -1314,34 +1327,28 @@ def check_error_correction_format(activities: list) -> list[dict]:
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title') or activity.get('question') or 'Untitled'
-            
+
         items = getattr(activity, 'items', [])
         if not items and isinstance(activity, dict):
             items = activity.get('items', [])
 
         placeholder_count = 0
 
-        for idx, item in enumerate(items):
+        for _idx, item in enumerate(items):
             sentence = getattr(item, 'sentence', '')
             error = getattr(item, 'error', '')
             answer = getattr(item, 'answer', '')
-            
+
             if not sentence and isinstance(item, dict):
                 sentence = item.get('sentence', '')
                 error = item.get('error', '')
                 answer = item.get('answer', '')
 
             # Check if using placeholder syntax
-            if error == '___' or (isinstance(error, str) and error.strip() == ''):
-                placeholder_count += 1
-            # Check if sentence contains → ___ pattern (transformation exercise, not error-correction)
-            elif sentence and '→' in sentence and '___' in sentence:
+            if error == '___' or (isinstance(error, str) and error.strip() == '') or (sentence and '→' in sentence and '___' in sentence):
                 placeholder_count += 1
             # Allow 'none' or 'correct' as valid values for "no error" sentences
-            elif isinstance(error, str) and error.lower() in ('none', 'correct'):
-                continue
-            # Allow sentence transformation format
-            elif not sentence and error and answer and len(str(error).split()) >= 3 and len(str(answer).split()) >= 3:
+            elif (isinstance(error, str) and error.lower() in ('none', 'correct')) or (not sentence and error and answer and len(str(error).split()) >= 3 and len(str(answer).split()) >= 3):
                 continue
             # Check if error word is not in sentence (case-insensitive, quote-normalized)
             elif error and sentence:
@@ -1362,21 +1369,21 @@ def check_error_correction_format(activities: list) -> list[dict]:
     return violations
 
 
-def check_advanced_activities_presence(found_types: list[str], level_code: str, module_focus: str = None) -> list[dict]:
+def check_advanced_activities_presence(found_types: list[str], level_code: str, module_focus: str | None = None) -> list[dict]:
     """Check if advanced levels have required advanced activity types."""
     violations = []
-    
+
     # Only enforce for non-checkpoint modules
     if module_focus == 'checkpoint':
         return []
-        
-    # Required for B2+ 
+
+    # Required for B2+
     if level_code in ('B2', 'C1', 'C2', 'LIT'):
         # Get required types for this specific focus
         # Default to 'default' requirements if focus not found or None
         req_key = module_focus if module_focus in REQUIRED_ADVANCED_TYPES else 'default'
         required_types = REQUIRED_ADVANCED_TYPES.get(req_key, [])
-        
+
         for req_type in required_types:
             if req_type not in found_types:
                 violations.append({
@@ -1385,7 +1392,7 @@ def check_advanced_activities_presence(found_types: list[str], level_code: str, 
                     'issue': f"B2+ module (focus: {module_focus}) missing advanced activity type: {req_type}",
                     'fix': f"Add a {req_type} activity to meet advanced richness standards."
                 })
-                
+
     return violations
 
 
@@ -1428,7 +1435,7 @@ def check_yaml_activity_types(activities: list) -> list[dict]:
     return violations
 
 
-def check_forbidden_activity_types(activities: list, level_code: str, module_focus: str = None) -> list[dict]:
+def check_forbidden_activity_types(activities: list, level_code: str, module_focus: str | None = None) -> list[dict]:
     """Check if activities contain types forbidden for this level/track.
 
     Seminar tracks (HIST, ISTORIO, BIO, LIT) have strict activity type requirements.

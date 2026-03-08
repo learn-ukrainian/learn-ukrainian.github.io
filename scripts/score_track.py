@@ -18,10 +18,10 @@ from pathlib import Path
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from scoring.metrics import extract_all_module_metrics
 from scoring.aggregator import aggregate_track_metrics, calculate_track_score
+from scoring.config import get_track_config
+from scoring.metrics import extract_all_module_metrics
 from scoring.report import generate_track_report
-from scoring.config import get_all_track_ids, get_track_config
 
 
 def score_single_track(curriculum_path: Path, track_id: str, output_format: str) -> dict:

@@ -13,10 +13,9 @@ Usage:
 
 import argparse
 from pathlib import Path
-from typing import List
 
-from .parser import VocabularyParser
 from .analyzer import VocabularyAnalyzer
+from .parser import VocabularyParser
 from .reporter import VocabularyReporter
 
 
@@ -103,7 +102,7 @@ def main():
         print(report)
 
 
-def generate_duplicates_report(levels: List[str], vocab_parser, analyzer, reporter) -> str:
+def generate_duplicates_report(levels: list[str], vocab_parser, analyzer, reporter) -> str:
     """Generate duplicates report."""
     word_index = analyzer.build_word_index(levels, vocab_parser)
     duplicates = analyzer.find_duplicates(levels, word_index)
@@ -134,7 +133,7 @@ def generate_extra_report(level: str, vocab_parser, analyzer, reporter) -> str:
     return reporter.generate_extra_report(level.upper(), extra)
 
 
-def generate_comprehensive_report(levels: List[str], vocab_parser, analyzer, reporter) -> str:
+def generate_comprehensive_report(levels: list[str], vocab_parser, analyzer, reporter) -> str:
     """Generate comprehensive audit report."""
     # Get statistics
     stats = analyzer.get_vocabulary_stats(levels, vocab_parser)

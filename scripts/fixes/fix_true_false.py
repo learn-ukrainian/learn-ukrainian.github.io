@@ -4,7 +4,7 @@
 import yaml
 
 # Read activities
-with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml', 'r') as f:
+with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml') as f:
     activities = yaml.safe_load(f)
 
 # Fix activity 11 (true-false) - rename fields
@@ -15,7 +15,7 @@ for item in activities[11]['items']:
         item['correct'] = item.pop('answer')
 
 print(f"✅ Fixed {len(activities[11]['items'])} items in activity 11 (true-false)")
-print(f"   Renamed 'text' → 'statement', 'answer' → 'correct'")
+print("   Renamed 'text' → 'statement', 'answer' → 'correct'")
 
 # Write back
 with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml', 'w') as f:

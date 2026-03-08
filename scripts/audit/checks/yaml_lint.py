@@ -1,21 +1,22 @@
 import re
 
+
 def lint_yaml_file(file_path: str) -> list[dict]:
     """
     Lint a YAML file for common syntax errors that confuse parsers.
-    
+
     Checks for:
     1. Unquoted colons in values (e.g. question: What is it: answer)
     2. Tab indentation
     3. Trailing spaces (warning)
-    
+
     Returns:
         List of error dicts with keys: line, message, severity, fix
     """
     errors = []
-    
+
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             lines = f.readlines()
     except Exception as e:
         return [{
@@ -29,11 +30,11 @@ def lint_yaml_file(file_path: str) -> list[dict]:
         line_num = i + 1
         raw_line = line.rstrip('\n')
         stripped = raw_line.strip()
-        
+
         # Skip comments and empty lines
         if not stripped or stripped.startswith('#'):
             continue
-            
+
         # 1. Check for tab indentation
         if line.startswith('\t') or '  \t' in line:
             errors.append({
@@ -53,23 +54,14 @@ def lint_yaml_file(file_path: str) -> list[dict]:
         if match:
             # key = match.group(3)
             value = match.group(4)
-            
+
             # If value contains a colon
-            if ':' in value:
-                # Check if it starts with quote
-                if not (value.startswith('"') or value.startswith("'")):
-                    # It might be valid flow style like {a: b}, but for our content strings it's usually bad
-                    # Specifically check if the colon is " : " (spaced) or part of text that looks like a mapping
-                    # In YAML "key: value: subvalue" is a mapping if indented
-                    # But "key: text: text" is a syntax error if not quoted
-                    
-                    # Heuristic: if value has ": " followed by non-newline, it's risky
-                    if ': ' in value or value.strip().endswith(':'):
-                        errors.append({
-                            'line': line_num,
-                            'message': "Unquoted colon detected in value. YAML parsers may fail.",
-                            'severity': 'critical',
-                            'fix': f"Wrap the value in double quotes: \"{value.replace('\"', '\\\"')}\""
-                        })
+            if ':' in value and not (value.startswith('"') or value.startswith("'")) and (': ' in value or value.strip().endswith(':')):
+                errors.append({
+                    'line': line_num,
+                    'message': "Unquoted colon detected in value. YAML parsers may fail.",
+                    'severity': 'critical',
+                    'fix': f"Wrap the value in double quotes: \"{value.replace('\"', '\\\"')}\""
+                })
 
     return errors

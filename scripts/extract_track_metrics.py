@@ -14,15 +14,15 @@ Usage:
 import argparse
 import json
 import sys
-from pathlib import Path
 from dataclasses import asdict
+from pathlib import Path
 
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from scoring.metrics import extract_all_module_metrics, ModuleMetrics
 from scoring.aggregator import aggregate_track_metrics
 from scoring.config import get_all_track_ids, get_track_config
+from scoring.metrics import extract_all_module_metrics
 
 
 def main():

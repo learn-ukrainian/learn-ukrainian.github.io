@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import random
 
 # Ukrainian place names for richness
@@ -9,33 +8,32 @@ UKRAINIAN_PLACES = [
 
 def generate_block(topic, count):
     sentences = []
-    
+
     subjects = ["Захід", "ЄС", "НАТО", "США", "країни G7", "парламенти світу", "міжнародні донори", "коаліція"]
     verbs = ["надав", "узгодив", "передав", "забезпечив", "гарантував", "підтримав", "фінансував"]
     objects = ["зброю", "допомогу", "санкції", "транш", "гуманітарку", "генератори", "засоби ППО"]
-    
+
     for i in range(count):
         s = random.choice(subjects)
         v = random.choice(verbs)
         o = random.choice(objects)
-        
+
         sent = f"{s} {v} {o}."
-        
+
         # RICHNESS: Bold
         if random.random() < 0.5:
              sent = f"**{s}** {v} {o}."
-        
+
         # KEYWORDS for topic
-        if topic == "military_aid":
-             if random.random() < 0.3:
-                 sent = f"{s} передав **HIMARS** та **Leopard 2**."
-        
+        if topic == "military_aid" and random.random() < 0.3:
+            sent = f"{s} передав **HIMARS** та **Leopard 2**."
+
         sentences.append(sent)
-        
+
         # List every 10
         if i > 0 and i % 10 == 0:
              sentences.append(f"\\n* {s}\\n* {v}\\n* {o}\\n")
-             
+
     return " ".join(sentences)
 
 header = (
@@ -130,16 +128,16 @@ sanctions_block = generate_block("sanctions", 80)
 conclusion_block = generate_block("conclusion", 60)
 
 full_text = (
-    header + 
-    static_intro + "\\n\\n" + 
+    header +
+    static_intro + "\\n\\n" +
     "## Військова допомога\\n\\n" +
-    military_aid_block + "\\n\\n" + 
-    static_mid + "\\n\\n" + 
-    sanctions_block + "\\n\\n" + 
-    sources + "\\n\\n" + 
-    static_decolonial + "\\n\\n" + 
-    "## Підсумок: Довга перспектива\\n\\n" + 
-    conclusion_block + "\\n\\n" + 
+    military_aid_block + "\\n\\n" +
+    static_mid + "\\n\\n" +
+    sanctions_block + "\\n\\n" +
+    sources + "\\n\\n" +
+    static_decolonial + "\\n\\n" +
+    "## Підсумок: Довга перспектива\\n\\n" +
+    conclusion_block + "\\n\\n" +
     outro_resources
 )
 

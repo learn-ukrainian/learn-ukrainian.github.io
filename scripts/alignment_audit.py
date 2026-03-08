@@ -37,7 +37,7 @@ CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 def load_plan(plan_path: Path) -> dict | None:
     """Load a plan YAML, return None on failure."""
     try:
-        with open(plan_path, "r", encoding="utf-8") as f:
+        with open(plan_path, encoding="utf-8") as f:
             return yaml.safe_load(f)
     except Exception as e:
         print(f"  WARN: failed to load plan {plan_path.name}: {e}", file=sys.stderr)

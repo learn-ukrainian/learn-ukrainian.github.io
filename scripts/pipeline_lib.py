@@ -28,7 +28,7 @@ import threading
 import time
 import warnings
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -43,19 +43,16 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
-    CURRICULUM_DIR,
     FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
+    PRO_TRACKS,
     PROJECT_ROOT,
     SEMINAR_TRACKS,
-    PRO_TRACKS,
     VENV_PYTHON,
-    get_module_index,
     get_module_paths,
     get_track_config,
     slug_for_num,
-    CLAUDE_MODEL_FINAL_REVIEW,
 )
 
 # ============================================================================
@@ -83,71 +80,102 @@ TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
 
 IMMERSION_RULES: dict[str, str] = {
     "a1-m01-02": (
-        "TARGET: 5-15% Ukrainian, 85-95% English. ALL explanatory prose in English. "
-        "ALL grammar explanations in English. ALL callout text in English. Ukrainian appears ONLY in: "
-        "(1) example words/phrases in bold with stress mark and (English translation), (2) vocabulary items. "
-        "If you write a paragraph, it MUST be in English. Ukrainian sentences max 10 words."
+        "TARGET: 5-15% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: 100% English.\n"
+        "- UKRAINIAN CONTENT: Individual letters and words only — bolded inline in English prose "
+        "with translation in parentheses: \"The letter **Н** looks like H but sounds like N.\"\n"
+        "- TABLES: Simple letter-sound or word-meaning tables (Ukrainian in left column, English in right).\n"
+        "- STRUCTURAL RULE: Every paragraph is English. Ukrainian never appears as a standalone sentence.\n"
+        "Ukrainian sentences max 10 words."
     ),
     "a1-m03-05": (
-        "TARGET: 10-25% Ukrainian, 75-90% English. ALL explanatory prose in English. "
-        "Grammar explained in English. Ukrainian in examples and short phrases only — always with English translations. "
-        "Callout text in English. Ukrainian sentences max 10 words."
+        "TARGET: 10-25% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: 100% English.\n"
+        "- UKRAINIAN CONTENT: Words and short phrases bolded inline: \"The word **книга** (book) is feminine.\"\n"
+        "- TABLES: Vocabulary tables, letter groups, simple word families.\n"
+        "- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. "
+        "Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.\n"
+        "Ukrainian sentences max 10 words."
     ),
     "a1-m06-10": (
-        "TARGET: 15-35% Ukrainian, 65-85% English. Explanatory prose primarily in English. "
-        "Grammar concepts explained in English with Ukrainian terminology introduced (bolded, with translation on first use). "
-        "Examples increasingly in Ukrainian with translations. Callout text in English. Ukrainian sentences max 10 words."
+        "TARGET: 15-35% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.\n"
+        "- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists "
+        "or tables — each with English gloss on the same line.\n"
+        "- TABLES: Word families, vocabulary groups, simple paradigm tables.\n"
+        "- PATTERN BOXES: Show transformations: `слово → слова` (word → words).\n"
+        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. "
+        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.\n"
+        "Ukrainian sentences max 10 words."
     ),
     "a1-m11-20": (
-        "TARGET: 25-40% Ukrainian, 60-75% English. "
-        "Achieve immersion through STRUCTURED Ukrainian content: "
-        "(1) tables (vocabulary groups, gender sorting, declension patterns — all cells Ukrainian), "
-        "(2) example blocks with 2-4 short Ukrainian sentences + English gloss per line, "
-        "(3) bold inline Ukrainian words in English prose. "
-        "NEVER write a block of 5+ Ukrainian sentences followed by a single English translation paragraph. "
-        "Grammar RULES stay in English. A1 register only — simple concrete vocabulary."
+        "TARGET: 25-40% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
+        "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
+        "- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.\n"
+        "- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).\n"
+        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
+        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
+        "Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. "
+        "Never write a Ukrainian sentence followed by its English translation in a prose paragraph.\n"
+        "Ukrainian sentences max 10 words. Mix container types — don't use tables for everything."
     ),
     "a1-m21+": (
-        "TARGET: 35-55% Ukrainian, 45-65% English. "
-        "Achieve immersion through STRUCTURED Ukrainian content, not text dumps. "
-        "Use: (1) paradigm/conjugation tables (all cells Ukrainian), "
-        "(2) pattern boxes showing transformations (читати → читай → читайте), "
-        "(3) mini-dialogues (2-4 lines, labeled speakers, English gloss per line), "
-        "(4) bold inline Ukrainian in English prose. "
-        "NEVER write a paragraph of 5+ Ukrainian sentences followed by italic English translation — "
-        "that is unreadable and pedagogically useless. "
-        "Grammar rules stay in English. A1 register — simple concrete vocabulary."
+        "TARGET: 35-55% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. "
+        "You must explain grammar primarily by demonstrating it. Show, don't tell.\n"
+        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. "
+        "This is the highest-density immersion tool. Do not explain usage nuances in English prose — "
+        "instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) "
+        "that map out the nuances. Move the teaching logic inside the tables.\n"
+        "- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).\n"
+        "- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.\n"
+        "- PATTERN BOXES: Show transformations: `читати → читай → читайте`.\n"
+        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
+        "- IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial "
+        "Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words "
+        "demonstrating the concepts in context. If translations are needed, place them "
+        "in a separate table BELOW the blockquote.\n"
+        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
+        "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. "
+        "Vary your containers — never use the same type twice in a row.\n"
+        "Ukrainian sentences max 10 words."
     ),
     "a2-m01-20": (
-        "TARGET: 50-60% Ukrainian, 40-50% English. "
-        "APPROACH: Write ALL content in Ukrainian first — every paragraph, every explanation, every example. "
-        "Then add English translation paragraphs after Ukrainian paragraphs where needed for grammar theory, "
-        "to bring the balance to 50-60% Ukrainian / 40-50% English. "
-        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
-        "Ukrainian paragraph first, then English translation paragraph below it. Never 'Pronouns in the Dative case відкривають...'. "
-        "COMPLEXITY: A2 register ONLY. Concrete everyday vocabulary (їсти, ходити, купувати, подобатися). "
-        "NO literary/poetic language. NO abstract nouns (почуття, відчуття, стан, сутність). "
-        "NO metaphors or figurative speech. Write like a simple conversation, not an essay. "
+        "TARGET: 50-60% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.\n"
+        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
+        "- HEADERS: Ukrainian with English in parentheses.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. "
+        "Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.\n"
+        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. "
         "Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-m21-50": (
-        "TARGET: 60-75% Ukrainian, 25-40% English. "
-        "APPROACH: Write ALL content in Ukrainian first. "
-        "Then add English translation paragraphs ONLY for abstract grammar concepts "
-        "to bring the balance to 60-75% Ukrainian / 25-40% English. "
-        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
-        "Dialogues, cultural context, examples, section intros — all stay Ukrainian-only. "
-        "COMPLEXITY: A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
+        "TARGET: 60-75% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- PRIMARY: Ukrainian for all content — dialogues, examples, section intros, cultural context.\n"
+        "- ENGLISH: Only for abstract grammar concepts that need explicit explanation.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. "
+        "Dialogues, examples, section intros all stay Ukrainian-only.\n"
+        "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
         "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. "
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
     "a2-m51-70": (
-        "TARGET: 75-90% Ukrainian, 10-25% English. "
-        "APPROACH: Write ALL content in Ukrainian first. "
-        "Add English only in vocabulary tables and one-line grammar notes where absolutely needed. "
-        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
-        "COMPLEXITY: A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
+        "TARGET: 75-90% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- PRIMARY: Ukrainian for everything.\n"
+        "- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.\n"
+        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.\n"
+        "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
         "Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
     ),
@@ -516,10 +544,10 @@ def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
 
     lines = [
         f"DECODABLE VOCABULARY (M{module_num} — only letters: {letter_list}):",
-        f"Use ONLY these words in activities, reading drills, AND prose examples.",
-        f"Any word with a letter outside this set will FAIL the decodability audit gate.",
-        f"Video key words from the plan's pronunciation_videos section are exempt",
-        f"(they are heard, not read), but must NOT appear in prose reading examples.",
+        "Use ONLY these words in activities, reading drills, AND prose examples.",
+        "Any word with a letter outside this set will FAIL the decodability audit gate.",
+        "Video key words from the plan's pronunciation_videos section are exempt",
+        "(they are heard, not read), but must NOT appear in prose reading examples.",
         "",
         f"Available words: {', '.join(words)}",
         "",
@@ -724,9 +752,7 @@ def get_h3_word_range(track: str, module_num: int) -> str:
         return "30-50"
     elif base == "a1" and module_num <= 14:
         return "40-60"
-    elif base == "a1":
-        return "60-80"
-    elif base == "a2":
+    elif base == "a1" or base == "a2":
         return "60-80"
     else:
         return "80-100+"
@@ -1160,7 +1186,7 @@ def is_phase_complete(ctx: ModuleContext, phase: str) -> bool:
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # ============================================================================
@@ -1237,7 +1263,7 @@ def _init_log(slug: str) -> None:
     log_dir.mkdir(exist_ok=True)
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
     log_path = log_dir / f"build-{slug}-{ts}.log"
-    _log_fh = open(log_path, "a", encoding="utf-8")  # noqa: SIM115
+    _log_fh = open(log_path, "a", encoding="utf-8")  # noqa: SIM115 — module-level log fd, closed at exit
     _log_fh.write(f"=== pipeline — {slug} — {ts} ===\n")
     print(f"Log: {log_path}", flush=True)
 
@@ -1358,7 +1384,7 @@ MAX_FIX_ITERATIONS = 3
 
 def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> subprocess.CompletedProcess:
     """Run a script via .venv/bin/python with cwd=PROJECT_ROOT."""
-    cmd = [VENV_PYTHON] + args
+    cmd = [VENV_PYTHON, *args]
     return subprocess.run(
         cmd, cwd=str(PROJECT_ROOT), capture_output=capture,
         text=True, timeout=timeout,
@@ -1417,7 +1443,7 @@ def dispatch_gemini_raw(
     for attempt in range(1, max_retries + 1):
         try:
             result = _run_with_heartbeat(
-                [VENV_PYTHON] + args,
+                [VENV_PYTHON, *args],
                 label=f"Gemini {task_id}",
                 timeout=timeout,
                 cwd=str(PROJECT_ROOT), capture_output=True, text=True,
@@ -1589,7 +1615,7 @@ def extract_phase_output(
         "--attempt", str(attempt),
     ]
     if tags:
-        args.extend(["--tags"] + tags)
+        args.extend(["--tags", *tags])
         args.extend(["--phase", phase_key])
     else:
         args.extend(["--phase", phase_key])
@@ -2113,6 +2139,48 @@ def _get_content_template(track: str, module_num: int,
     return "core-content.md"
 
 
+def get_tier_exemplar(track: str, module_num: int) -> str:
+    """Return the content of the appropriate tier exemplar snippet.
+
+    Bands aligned with IMMERSION_RULES and curriculum.yaml:
+    A1 (64 modules):
+    - foundation:   A1 M01-10  (5-35%, letters/sounds/first words)
+    - emerging:     A1 M11-20  (25-40%, basic grammar, verbs intro)
+    - structured:   A1 M21-64  (35-55%, cases, tenses, imperatives)
+    A2 (76 modules):
+    - transitional: A2 M01-20  (50-60%, core grammar: cases, aspect)
+    - independent:  A2 M21-50  (60-75%, applied grammar, word formation)
+    A2 M51-76 (75-90%) and B1+ get no exemplar.
+    """
+    base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
+    if base == "a1":
+        if module_num <= 10:
+            band = "foundation"
+        elif module_num <= 20:
+            band = "emerging"
+        else:
+            band = "structured"
+    elif base == "a2":
+        if module_num <= 20:
+            band = "transitional"
+        elif module_num <= 50:
+            band = "independent"
+        else:
+            return ""  # A2 M51-76: 75-90% immersion, no exemplar needed
+    elif base == "b1":
+        if module_num <= 5:
+            band = "independent"  # B1 bridge: meta-language transition
+        else:
+            return ""  # B1 M6+: full Ukrainian immersion
+    else:
+        return ""  # B2+: full Ukrainian immersion
+
+    exemplar_path = PHASES_DIR / "exemplars" / f"band-{band}.md"
+    if exemplar_path.exists():
+        return exemplar_path.read_text("utf-8")
+    return ""
+
+
 def _get_activities_template(track: str, module_num: int) -> str:
     """Return the activities prompt filename for the given tier."""
     tier = _get_prompt_tier(track, module_num)
@@ -2207,6 +2275,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
             else "Перевірте себе — Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
             else "Перевірте себе:"
         ),
+        "TIER_EXEMPLAR": get_tier_exemplar(ctx.track, ctx.module_num),
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
         "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
         "SCORING_SECTION": _get_scoring_section(ctx.track),
@@ -2244,7 +2313,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
     discovery_path = ctx.orch_dir / "discovery.yaml"
     if discovery_path.exists():
         try:
-            from video_discovery import read_discovery_yaml, format_discovery_for_template
+            from video_discovery import format_discovery_for_template, read_discovery_yaml
             result = read_discovery_yaml(discovery_path)
             placeholders["VIDEO_DISCOVERY"] = format_discovery_for_template(result)
         except Exception:
@@ -2492,10 +2561,7 @@ def _build_phase2_expansion_prompt(
     research_path = ctx.paths.get("research", "")
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     # A1/A2: no overshoot, just hit the target. B1+: 1.5x.
-    if base_level in ('A1', 'A2') or had_truncation:
-        overshoot = ctx.word_target
-    else:
-        overshoot = int(ctx.word_target * 1.5)
+    overshoot = ctx.word_target if base_level in ('A1', 'A2') or had_truncation else int(ctx.word_target * 1.5)
     return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
 > **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
@@ -2947,10 +3013,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     engagement_min = ctx.meta.get("engagement_min", _cfg_engagement)
     example_min = ctx.meta.get("example_min", 8)
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
-    if base_level in ('A1', 'A2'):
-        overshoot = ctx.word_target  # No overshoot for A1/A2 — concise prose, activities teach
-    else:
-        overshoot = int(ctx.word_target * 1.5)
+    overshoot = ctx.word_target if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
 
     log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 

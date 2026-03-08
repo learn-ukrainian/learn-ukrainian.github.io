@@ -22,26 +22,25 @@ import re
 import statistics
 import sys
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-from slug_utils import to_bare_slug, review_path as _review_path
+import contextlib
+
+from slug_utils import review_path as _review_path
+from slug_utils import to_bare_slug
 
 # Reuse existing infrastructure from review_validation
 from .review_validation import (
     _detect_tier,
-    _count_perfect_scores,
     _extract_ukrainian_citations,
-    TIER_CONFIG,
 )
-
 
 # =============================================================================
 # HELPERS
 # =============================================================================
 
-def _find_review_file(file_path: str, module_slug: str) -> Optional[Path]:
+def _find_review_file(file_path: str, module_slug: str) -> Path | None:
     """Find the review file for a given module."""
     md_path = Path(file_path)
     base_dir = md_path.parent
@@ -63,18 +62,16 @@ def _find_review_file(file_path: str, module_slug: str) -> Optional[Path]:
     return None
 
 
-def _extract_all_scores(content: str) -> List[float]:
+def _extract_all_scores(content: str) -> list[float]:
     """Extract all dimension scores from a review."""
     scores = []
     for match in re.findall(r'\|\s*\w[^|]*\|\s*(\d+(?:\.\d+)?)/10\s*\|', content):
-        try:
+        with contextlib.suppress(ValueError):
             scores.append(float(match))
-        except ValueError:
-            pass
     return scores
 
 
-def _extract_h2_headers(content: str) -> List[str]:
+def _extract_h2_headers(content: str) -> list[str]:
     """Extract H2 header text from markdown content."""
     return re.findall(r'^##\s+(.+)', content, re.MULTILINE)
 
@@ -84,7 +81,7 @@ def _normalize_for_hash(text: str) -> str:
     return re.sub(r'\s+', ' ', text.lower().strip())
 
 
-def _get_all_review_files(track_dir: Path) -> List[Path]:
+def _get_all_review_files(track_dir: Path) -> list[Path]:
     """Get all review files in a track directory."""
     review_dir = track_dir / 'review'
     if review_dir.is_dir():
@@ -96,7 +93,7 @@ def _get_all_review_files(track_dir: Path) -> List[Path]:
 # CHECK 10: DIMENSION SCORE UNIFORMITY
 # =============================================================================
 
-def check_score_uniformity(review_content: str) -> List[Dict]:
+def check_score_uniformity(review_content: str) -> list[dict]:
     """
     Flag reviews where all dimension scores are uniformly high.
 
@@ -138,7 +135,7 @@ def check_citation_density(
     content_path: str,
     file_path: str,
     level_code: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Verify the review has enough Ukrainian citations relative to content length.
 
@@ -205,7 +202,7 @@ def check_citation_density(
 def check_review_section_coverage(
     review_content: str,
     content: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Verify the review mentions/covers sections from the content.
 
@@ -236,7 +233,7 @@ def check_review_section_coverage(
 
     # English equivalents for common Ukrainian section prefixes.
     # Fallback matching when reviews are written in English.
-    _SECTION_EN_EQUIVALENTS: Dict[str, List[str]] = {
+    _SECTION_EN_EQUIVALENTS: dict[str, list[str]] = {
         'вступ': ['introduction', 'intro'],
         'теорія': ['theory'],
         'практика': ['practice'],
@@ -348,7 +345,7 @@ def check_score_drift(
     review_content: str,
     file_path: str,
     module_slug: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Flag reviews whose mean score is a 2-sigma outlier above the track mean.
 
@@ -427,7 +424,7 @@ def check_review_boilerplate(
     review_content: str,
     file_path: str,
     module_slug: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Detect copy-pasted issue text across reviews.
 
@@ -541,7 +538,7 @@ def check_review_boilerplate(
 def check_review_section_references(
     review_content: str,
     content: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Verify that sections referenced in the review actually exist in content.
 
@@ -617,7 +614,7 @@ def check_review_section_references(
 def check_cross_agent_review(
     review_content: str,
     file_path: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Verify that the reviewer is not the same model that built the content.
 
@@ -644,7 +641,7 @@ def check_cross_agent_review(
     builder_model = None
     if state_v3.exists():
         try:
-            with open(state_v3, 'r', encoding='utf-8') as f:
+            with open(state_v3, encoding='utf-8') as f:
                 state = json.load(f)
             # Look for builder model in Phase B (prose generation)
             phases = state.get('phases', {})
@@ -688,7 +685,7 @@ def check_cross_agent_review(
     return violations
 
 
-def _model_family(model_id: str) -> Optional[str]:
+def _model_family(model_id: str) -> str | None:
     """Extract model family from model ID string."""
     model_lower = model_id.lower().strip()
 
@@ -712,7 +709,7 @@ def check_review_gaming(
     file_path: str,
     level_code: str,
     module_slug: str,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Run all review gaming detection checks.
 

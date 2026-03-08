@@ -3,8 +3,8 @@
 
 import json
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -41,7 +41,7 @@ def parse_word_count(message: str) -> tuple[int, int]:
         count = int(parts[0])
         target = int(parts[1].split()[0])
         return count, target
-    except:
+    except (ValueError, IndexError):
         return 0, 0
 
 
@@ -49,7 +49,7 @@ def parse_activity_count(message: str) -> int:
     """Extract activity count from message like '13/8'."""
     try:
         return int(message.split("/")[0])
-    except:
+    except (ValueError, IndexError):
         return 0
 
 
@@ -57,7 +57,7 @@ def parse_naturalness(message: str) -> int:
     """Extract naturalness score from message like '9/10 (High)'."""
     try:
         return int(message.split("/")[0])
-    except:
+    except (ValueError, IndexError):
         return 0
 
 
@@ -111,7 +111,7 @@ def load_level_status(level_info: dict) -> dict:
             filename = status_file.stem
             try:
                 num = int(filename.split("-")[0])
-            except:
+            except ValueError:
                 num = len(modules) + 1
 
             modules.append({

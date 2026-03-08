@@ -10,8 +10,6 @@ Usage:
 
 import argparse
 import base64
-import io
-import json
 import sys
 from pathlib import Path
 
@@ -154,7 +152,7 @@ def generate_html(pdf_path, page_num, page_png, images, text_blocks, pairs):
             img_b64 = base64.b64encode(img["img_bytes"]).decode()
             img_tag = f'<img src="data:image/png;base64,{img_b64}" style="max-width:200px;max-height:150px;border:1px solid #ccc;">'
         else:
-            img_tag = f'<div style="width:100px;height:60px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:11px;">no xref</div>'
+            img_tag = '<div style="width:100px;height:60px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:11px;">no xref</div>'
 
         # Text content
         text_html = "<br>".join(

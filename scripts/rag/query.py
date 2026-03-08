@@ -24,13 +24,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rag.config import (
-    BGE_M3_DENSE_DIM,
     ESU_COLLECTION,
     IMAGE_COLLECTION,
     LITERARY_COLLECTION,
     QDRANT_GRPC_PORT,
     QDRANT_HOST,
-    SIGLIP_DIM,
     TEXT_COLLECTION,
     VESUM_DB_PATH,
 )
@@ -93,7 +91,6 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
     from qdrant_client.models import (
         FusionQuery,
         Prefetch,
-        QueryRequest,
         SparseVector,
     )
 
@@ -106,7 +103,7 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
     sparse_w = result["lexical_weights"][0]
 
     if isinstance(sparse_w, dict):
-        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w.keys()]
+        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
         sparse_values = list(sparse_w.values())
     else:
         sparse_indices, sparse_values = [], []
@@ -219,7 +216,7 @@ def search_esu(query: str, letter: str | None = None, limit: int = 5) -> list[di
     sparse_w = result["lexical_weights"][0]
 
     if isinstance(sparse_w, dict):
-        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w.keys()]
+        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
         sparse_values = list(sparse_w.values())
     else:
         sparse_indices, sparse_values = [], []

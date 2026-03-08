@@ -11,10 +11,10 @@ Usage (PREFERRED):
 Usage (LEGACY - redirects to new system):
     .venv/bin/python scripts/signal_claude.py "Your message"
 """
-import sys
+import argparse
 import os
 import subprocess
-import argparse
+import sys
 
 # Get project root
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +22,7 @@ BRIDGE_SCRIPT = os.path.join(ROOT_DIR, "scripts", "ai_agent_bridge.py")
 PYTHON = os.path.join(ROOT_DIR, ".venv", "bin", "python")
 
 
-def signal_claude(message: str, task_id: str = None, msg_type: str = "response"):
+def signal_claude(message: str, task_id: str | None = None, msg_type: str = "response"):
     """
     Send message via ai_agent_bridge.py (SQLite) and trigger macOS notification.
     """
@@ -45,7 +45,7 @@ def signal_claude(message: str, task_id: str = None, msg_type: str = "response")
             print(result.stderr, file=sys.stderr)
 
         if result.returncode != 0:
-            print(f"Error sending message via bridge", file=sys.stderr)
+            print("Error sending message via bridge", file=sys.stderr)
             sys.exit(1)
 
         # Trigger macOS notification (still useful for alerting human)

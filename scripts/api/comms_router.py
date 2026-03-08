@@ -21,11 +21,9 @@ import os
 import re
 import sqlite3
 import time
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Optional
+from datetime import UTC, datetime
 
-from fastapi import APIRouter, Body, Query
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -62,9 +60,9 @@ def _get_rw_db() -> sqlite3.Connection | None:
 
 @router.get("/messages")
 async def list_messages(
-    agent: Optional[str] = Query(None, description="Filter by from_llm or to_llm"),
-    task_id: Optional[str] = Query(None),
-    msg_type: Optional[str] = Query(None),
+    agent: str | None = Query(None, description="Filter by from_llm or to_llm"),
+    task_id: str | None = Query(None),
+    msg_type: str | None = Query(None),
     unacked_only: bool = Query(False),
     limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
@@ -97,7 +95,7 @@ async def list_messages(
         f"substr(content, 1, 300) as preview, length(content) as content_len, "
         f"timestamp, acknowledged "
         f"FROM messages {where} ORDER BY id DESC LIMIT ? OFFSET ?",
-        params + [limit, offset],
+        [*params, limit, offset],
     ).fetchall()
     conn.close()
 
@@ -179,7 +177,7 @@ async def active_processes():
             if started:
                 try:
                     st = datetime.fromisoformat(started)
-                    age_min = (datetime.now(timezone.utc) - st).total_seconds() / 60
+                    age_min = (datetime.now(UTC) - st).total_seconds() / 60
                 except (ValueError, TypeError):
                     pass
 
@@ -213,7 +211,7 @@ async def detect_zombies(
     zombies = []
 
     if conn:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # 1. Stale unacked messages
         rows = conn.execute(
@@ -443,13 +441,13 @@ def _scan_preseed_logs() -> list[dict]:
         # Check if batch is complete
         batch_complete = "BATCH COMPLETE" in text
         batch_match = re.search(r"Passed:\s+(\d+)", text)
-        batch_total = int(batch_match.group(1)) if batch_match else passed
+        int(batch_match.group(1)) if batch_match else passed
 
         results.append({
             "track": track,
             "log_file": lf.name,
             "log_size_kb": round(stat.st_size / 1024, 1),
-            "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat(),
+            "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=UTC).isoformat(),
             "age_seconds": int(time.time() - stat.st_mtime),
             "passed": passed,
             "failed": failed,
@@ -573,12 +571,7 @@ async def batch_progress():
         if log and log["complete"]:
             health = "complete"
         elif proc:
-            if tp["recent_30min"] > 0:
-                health = "healthy"
-            elif log and log["age_seconds"] < 900:
-                health = "healthy"
-            else:
-                health = "stalled"
+            health = "healthy" if tp["recent_30min"] > 0 or (log and log["age_seconds"] < 900) else "stalled"
         elif log and not log["complete"] and log["age_seconds"] > 600:
             health = "dead"
         else:
@@ -592,7 +585,7 @@ async def batch_progress():
         }
 
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "running_processes": len(processes),
         "tracks": track_progress,
     }
@@ -615,7 +608,7 @@ async def batch_progress_track(track: str):
             timeline.append({
                 "slug": rf.stem.replace("-research", ""),
                 "created_ago_seconds": int(now - rf.stat().st_mtime),
-                "created_at": datetime.fromtimestamp(rf.stat().st_mtime, tz=timezone.utc).isoformat(),
+                "created_at": datetime.fromtimestamp(rf.stat().st_mtime, tz=UTC).isoformat(),
                 "size_kb": round(rf.stat().st_size / 1024, 1),
             })
 
@@ -719,7 +712,7 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
                 "type": "research",
                 "seconds_ago": int(now - mtime),
                 "size_kb": round(rf.stat().st_size / 1024, 1),
-                "timestamp": datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat(),
+                "timestamp": datetime.fromtimestamp(mtime, tz=UTC).isoformat(),
             })
 
     completions.sort(key=lambda c: c["seconds_ago"])
@@ -754,7 +747,7 @@ async def live_activity(minutes: int = Query(15, ge=1, le=120)):
             LIMIT 30
         """).fetchall()
         conn.close()
-        now_ts = datetime.now(timezone.utc)
+        now_ts = datetime.now(UTC)
         for r in rows:
             try:
                 ts = datetime.fromisoformat(r["timestamp"].replace("Z", "+00:00"))
@@ -772,7 +765,7 @@ async def live_activity(minutes: int = Query(15, ge=1, le=120)):
             })
 
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "in_progress": acts,
         "recent_completions": completions[:30],
         "recent_dispatches": dispatches,
@@ -793,7 +786,7 @@ async def cleanup_zombies(max_age_hours: float = Query(24.0)):
         cursor = conn.execute(
             "SELECT id, timestamp FROM messages WHERE acknowledged = 0"
         )
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         for row in cursor.fetchall():
             try:
                 ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
@@ -851,7 +844,7 @@ async def send_message(msg: SendMessageRequest):
     if not conn:
         return JSONResponse(status_code=500, content={"error": "DB not available"})
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     cursor = conn.execute(
         "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp, acknowledged) "
         "VALUES (?, ?, ?, ?, ?, ?, 0)",

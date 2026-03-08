@@ -16,16 +16,16 @@ import json
 import os
 import re
 import sys
-import yaml
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+
+import yaml
 
 # Add scripts dir to path for shared module imports
 SCRIPT_DIR = Path(__file__).parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
-from yaml_activities import ActivityParser, Activity
+from yaml_activities import Activity, ActivityParser
 
 # =============================================================================
 # CONFIGURATION
@@ -166,15 +166,22 @@ def parse_vocabulary(content: str) -> list[dict]:
 def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
     """Convert a YAML Activity object to Vibe JSON format."""
     from yaml_activities import (
-        QuizActivity, MatchUpActivity, GroupSortActivity, FillInActivity,
-        ClozeActivity, UnjumbleActivity, ErrorCorrectionActivity,
-        MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
-        SelectActivity
+        AnagramActivity,
+        ClozeActivity,
+        ErrorCorrectionActivity,
+        FillInActivity,
+        GroupSortActivity,
+        MarkTheWordsActivity,
+        MatchUpActivity,
+        QuizActivity,
+        SelectActivity,
+        TranslateActivity,
+        UnjumbleActivity,
     )
-    
+
     activity_type = act.type
     title = getattr(act, 'title', activity_type.replace('-', ' ').title())
-    
+
     vibe_act = {
         "id": f"act-{index}-{activity_type}",
         "type": activity_type,
@@ -184,7 +191,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
         "content": {},
         "tags": [activity_type],
     }
-    
+
     if isinstance(act, (QuizActivity, SelectActivity)):
         items = []
         for item in act.items:
@@ -198,18 +205,18 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "explanation": getattr(item, 'explanation', "")
             })
         vibe_act["content"] = {"items" if isinstance(act, SelectActivity) else "questions": items}
-        
+
     elif isinstance(act, MatchUpActivity):
         vibe_act["content"] = {
             "pairs": [{"left": p.left, "right": p.right} for p in act.pairs]
         }
-        
+
     elif isinstance(act, GroupSortActivity):
         groups = {}
         for group in act.groups:
             groups[group.name] = group.items
         vibe_act["content"] = {"groups": groups}
-        
+
     elif isinstance(act, FillInActivity):
         vibe_act["content"] = {
             "items": [{
@@ -219,7 +226,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "explanation": i.explanation
             } for i in act.items]
         }
-        
+
     elif isinstance(act, ClozeActivity):
         vibe_act["content"] = {
             "text": act.passage,
@@ -229,7 +236,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "options": b.options
             } for i, b in enumerate(act.blanks)]
         }
-        
+
     elif isinstance(act, UnjumbleActivity):
         vibe_act["content"] = {
             "items": [{
@@ -237,7 +244,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "answer": i.answer
             } for i in act.items]
         }
-        
+
     elif isinstance(act, ErrorCorrectionActivity):
         vibe_act["content"] = {
             "items": [{
@@ -248,13 +255,13 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "explanation": i.explanation
             } for i in act.items]
         }
-        
+
     elif isinstance(act, MarkTheWordsActivity):
         vibe_act["content"] = {
             "text": act.text,
             "answers": act.answers
         }
-        
+
     elif isinstance(act, TranslateActivity):
         vibe_act["content"] = {
             "items": [{
@@ -263,7 +270,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "explanation": i.explanation
             } for i in act.items]
         }
-        
+
     elif isinstance(act, AnagramActivity):
         vibe_act["content"] = {
             "items": [{
@@ -272,7 +279,7 @@ def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
                 "hint": i.hint
             } for i in act.items]
         }
-        
+
     return vibe_act
 
 # =============================================================================
@@ -298,12 +305,9 @@ def parse_module(content: str, level: str, module_num: int, yaml_activities: lis
 
     sections = parse_sections(body)
     vocabulary = parse_vocabulary(body)
-    
+
     # Use YAML activities if provided, otherwise parse from markdown
-    if yaml_activities:
-        activities = [yaml_activity_to_vibe(act, i+1) for i, act in enumerate(yaml_activities)]
-    else:
-        activities = parse_activities(body)
+    activities = [yaml_activity_to_vibe(act, i+1) for i, act in enumerate(yaml_activities)] if yaml_activities else []
 
     return {
         "frontmatter": frontmatter,
@@ -357,7 +361,7 @@ def render_vibe_json(parsed: dict, lang_pair: str, external_resources: dict | No
         external_resources: Optional external resources dict (from YAML)
     """
     fm = parsed["frontmatter"]
-    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    now = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     level = fm["level"]
     module_num = fm["module"]
@@ -499,7 +503,7 @@ def main():
     external_resources_file = ROOT_DIR / 'docs' / 'resources' / 'external_resources.yaml'
     all_resources = {}
     if external_resources_file.exists():
-        with open(external_resources_file, 'r', encoding='utf-8') as f:
+        with open(external_resources_file, encoding='utf-8') as f:
             resources_data = yaml.safe_load(f)
             all_resources = resources_data.get('resources', {})
         print(f'📚 Loaded {len(all_resources)} modules with external resources\n')
@@ -518,7 +522,7 @@ def main():
 
         lang_dir = CURRICULUM_DIR / lang_pair
         if not lang_dir.exists():
-            print(f"  ⚠ Language directory not found, skipping...")
+            print("  ⚠ Language directory not found, skipping...")
             continue
 
         # Find level folders
@@ -528,7 +532,7 @@ def main():
         ]
 
         if not level_folders:
-            print(f"  ⚠ No level folders found, skipping...")
+            print("  ⚠ No level folders found, skipping...")
             continue
 
         for level_folder in level_folders:
@@ -563,7 +567,7 @@ def main():
                     yaml_file = level_dir / 'activities' / (md_path.stem + '.yaml')
                     if not yaml_file.exists():
                         yaml_file = md_path.with_suffix('.activities.yaml')
-                    
+
                     if yaml_file.exists():
                         parser = ActivityParser()
                         try:

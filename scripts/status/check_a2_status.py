@@ -8,13 +8,13 @@ resource_files = []
 
 for f in files:
     path = os.path.join(a2_dir, f)
-    with open(path, "r") as file:
+    with open(path) as file:
         lines = file.readlines()
         if not lines:
             continue
         if lines[0].strip() == "---":
             frontmatter_files.append(f)
-        
+
         content = "".join(lines)
         if "[!resources]" in content:
             resource_files.append(f)

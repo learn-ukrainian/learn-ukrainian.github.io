@@ -1,16 +1,18 @@
 
-import pymorphy2
 import sys
+
+import pymorphy2
+
 
 def debug_pymorphy(words):
     morph = pymorphy2.MorphAnalyzer(lang='uk')
-    
+
     for word in words:
         print(f"\n--- Analyzing '{word}' ---")
         parses = morph.parse(word)
         for p in parses:
             print(f"Normal Form: {p.normal_form} | Tag: {p.tag} | Score: {p.score}")
-            
+
         if not parses:
             print("No parse found.")
 

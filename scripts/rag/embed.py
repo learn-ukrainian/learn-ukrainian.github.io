@@ -97,7 +97,6 @@ class ImageEncoder:
         if self._model is not None:
             return
         import open_clip
-        import torch
 
         print(f"[embed] Loading SigLIP 2 ({SIGLIP_MODEL})...")
         self._model, _, self._preprocess = open_clip.create_model_and_transforms(

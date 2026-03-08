@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -120,9 +119,8 @@ def filesystem_renames(old_slug: str, new_slug: str, config: dict, dry_run: bool
     for old_rel, new_rel in dir_pairs:
         src = PROJECT_ROOT / old_rel
         dst = PROJECT_ROOT / new_rel
-        if src.exists() and src.is_dir():
-            if git_mv(src, dst, dry_run):
-                count += 1
+        if src.exists() and src.is_dir() and git_mv(src, dst, dry_run):
+            count += 1
 
     # File renames
     file_pairs = [
@@ -141,9 +139,8 @@ def filesystem_renames(old_slug: str, new_slug: str, config: dict, dry_run: bool
     for old_rel, new_rel in file_pairs:
         src = PROJECT_ROOT / old_rel
         dst = PROJECT_ROOT / new_rel
-        if src.exists() and src.is_file():
-            if git_mv(src, dst, dry_run):
-                count += 1
+        if src.exists() and src.is_file() and git_mv(src, dst, dry_run):
+            count += 1
 
     return count
 
@@ -206,7 +203,7 @@ def content_replacements(old_slug: str, new_slug: str, config: dict, dry_run: bo
 
             if new_content != content:
                 lines_changed = sum(
-                    1 for a, b in zip(content.splitlines(), new_content.splitlines()) if a != b
+                    1 for a, b in zip(content.splitlines(), new_content.splitlines(), strict=False) if a != b
                 )
                 # Account for different line counts
                 lines_changed = max(lines_changed, abs(len(content.splitlines()) - len(new_content.splitlines())))
@@ -278,9 +275,9 @@ def main():
     print(f"  Lines changed:      {lines_changed}")
 
     if args.dry_run:
-        print(f"\n  Run without --dry-run to apply changes.")
+        print("\n  Run without --dry-run to apply changes.")
     else:
-        print(f"\n  Done. Review with 'git diff --stat' then commit.")
+        print("\n  Done. Review with 'git diff --stat' then commit.")
 
 
 if __name__ == "__main__":

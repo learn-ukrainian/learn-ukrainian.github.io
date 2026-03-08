@@ -186,9 +186,8 @@ def classify_element_type(
 
     # Nearly-perfect square, very small, no nearby text → QR code
     # Extremely conservative: only catches actual QR codes, not small illustrations
-    if 0.95 <= aspect <= 1.05 and 30 <= w <= 70 and 30 <= h <= 70:
-        if not nearest_text or nearest_dist > 150:
-            return "QR"
+    if 0.95 <= aspect <= 1.05 and 30 <= w <= 70 and 30 <= h <= 70 and (not nearest_text or nearest_dist > 150):
+        return "QR"
 
     return "illustration"
 
@@ -318,7 +317,7 @@ def annotate_page(
         all_nearby_texts.sort(key=lambda x: x[0])
         seen = set()
         unique_texts = []
-        for dist, text in all_nearby_texts:
+        for _dist, text in all_nearby_texts:
             if text not in seen:
                 seen.add(text)
                 unique_texts.append(text)
@@ -332,9 +331,7 @@ def annotate_page(
         description = ""
         for text in unique_texts:
             clean = text.strip()
-            if len(clean) <= 50 and not clean.isdigit():
-                # Prefer labels starting with uppercase letter
-                if clean and clean[0].isupper():
+            if len(clean) <= 50 and not clean.isdigit() and clean and clean[0].isupper():
                     description = clean
                     break
         # Fallback: first short text regardless of case
@@ -400,7 +397,7 @@ def annotate_book(pdf_stem: str, jsonl_path: Path) -> list[dict]:
     """
     # Load image records
     records = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line))
@@ -463,7 +460,7 @@ def print_stats():
         return
 
     records = []
-    with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line))
@@ -507,7 +504,7 @@ def print_stats():
         1 for r in records
         if _has_mojibake(r.get("description_uk", ""))
     )
-    print(f"\nQuality issues:")
+    print("\nQuality issues:")
     print(f"  Page number as description: {page_num_desc:5d} ({page_num_desc/len(records)*100:.1f}%)")
     print(f"  Mojibake in description:    {mojibake_desc:5d} ({mojibake_desc/len(records)*100:.1f}%)")
 
@@ -606,7 +603,7 @@ def main():
             print(f"\n  ({skipped} books already done, loading previous annotations)")
             # Reload all annotations from the existing file for previously completed books
             prev_ids = {a["image_id"] for a in all_annotations}
-            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            with open(OUTPUT_FILE, encoding="utf-8") as f:
                 for line in f:
                     if line.strip():
                         rec = json.loads(line)
@@ -614,7 +611,7 @@ def main():
                             all_annotations.append(rec)
 
         # Write atomically (temp file → rename)
-        tmp = tempfile.NamedTemporaryFile(
+        tmp = tempfile.NamedTemporaryFile(  # noqa: SIM115 — atomic write pattern: close then rename
             mode="w",
             dir=str(IMAGES_DIR),
             suffix=".jsonl.tmp",

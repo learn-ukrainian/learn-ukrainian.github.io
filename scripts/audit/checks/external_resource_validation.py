@@ -9,11 +9,10 @@ Issue: #430 (LLM self-validation and URL validation)
 """
 
 import re
-import urllib.request
 import urllib.error
 import urllib.parse
+import urllib.request
 from html.parser import HTMLParser
-from typing import Dict, List, Tuple, Optional
 from pathlib import Path
 
 
@@ -52,7 +51,7 @@ class SimpleHTMLParser(HTMLParser):
                 self.text_content.append(text)
 
 
-def fetch_url_content(url: str, timeout: int = 10) -> Tuple[bool, str, str]:
+def fetch_url_content(url: str, timeout: int = 10) -> tuple[bool, str, str]:
     """
     Fetch URL and extract text content.
 
@@ -112,7 +111,7 @@ def fetch_url_content(url: str, timeout: int = 10) -> Tuple[bool, str, str]:
         return False, "Error: Unknown exception during URL fetch", ""
 
 
-def extract_expected_keywords(activity_title: str, module_title: str = "") -> List[str]:
+def extract_expected_keywords(activity_title: str, module_title: str = "") -> list[str]:
     """Extract keywords we expect to find in the page content.
 
     Prioritizes surnames and compound names, filters out generic words.
@@ -177,7 +176,7 @@ def extract_expected_keywords(activity_title: str, module_title: str = "") -> Li
     return unique_keywords
 
 
-def search_correct_url(keywords: List[str], site: str = "ukrlib.com.ua") -> Optional[str]:
+def search_correct_url(keywords: list[str], site: str = "ukrlib.com.ua") -> str | None:
     """
     Search for the correct URL based on keywords.
 
@@ -212,7 +211,7 @@ def validate_reading_url(
     activity_title: str,
     module_title: str = "",
     auto_fix: bool = True
-) -> Dict:
+) -> dict:
     """
     Validate a reading activity URL.
 
@@ -278,7 +277,7 @@ def validate_reading_url(
     return result
 
 
-def check_external_resources(yaml_activities: list, module_title: str = "") -> List[Dict]:
+def check_external_resources(yaml_activities: list, module_title: str = "") -> list[dict]:
     """
     Check all external resource URLs in reading activities.
 
@@ -298,10 +297,7 @@ def check_external_resources(yaml_activities: list, module_title: str = "") -> L
             continue
 
         # Get resource URL
-        if hasattr(activity, 'resource'):
-            resource = activity.resource
-        else:
-            resource = activity.get('resource')
+        resource = activity.resource if hasattr(activity, 'resource') else activity.get('resource')
 
         if not resource:
             continue

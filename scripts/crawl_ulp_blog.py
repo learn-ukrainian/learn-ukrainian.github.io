@@ -13,7 +13,6 @@ Usage:
 from __future__ import annotations
 
 import json
-import re
 from datetime import date
 from pathlib import Path
 
@@ -333,10 +332,10 @@ def main():
         by_cat[a["category"]] = by_cat.get(a["category"], 0) + 1
         by_level[a["suggested_level"]] = by_level.get(a["suggested_level"], 0) + 1
 
-    print(f"\nBy category:")
+    print("\nBy category:")
     for cat, n in sorted(by_cat.items()):
         print(f"  {cat}: {n}")
-    print(f"\nBy level:")
+    print("\nBy level:")
     for level in ("A1", "A2", "B1", "B2", "C1"):
         if level in by_level:
             print(f"  {level}: {by_level[level]}")

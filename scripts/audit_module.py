@@ -11,11 +11,10 @@ Usage:
     python3 scripts/audit_module.py <file.md> [file2.md ...]
 """
 
-import sys
 import argparse
+import sys
+
 from audit import audit_module
-
-
 
 
 def auto_fix_ipa(file_path: str) -> tuple[int, list[str]]:
@@ -25,6 +24,7 @@ def auto_fix_ipa(file_path: str) -> tuple[int, list[str]]:
     Returns (num_fixes, list_of_messages).
     """
     from pathlib import Path
+
     from lint_ipa import apply_fixes
 
     md_path = Path(file_path)
@@ -55,9 +55,9 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
     Returns (num_fixes, list_of_messages).
     """
     from pathlib import Path
+
     from audit.checks.yaml_schema_validation import fix_yaml_file, remove_forbidden_activities
-    from audit.core import detect_level, detect_focus, load_yaml_meta
-    import re
+    from audit.core import detect_focus, detect_level, load_yaml_meta
 
     md_path = Path(file_path)
     slug = md_path.stem
@@ -77,7 +77,7 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
 
     # Detect level and focus for forbidden activity removal
     meta_data = load_yaml_meta(file_path)
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
     # Reconstruct frontmatter string for detection

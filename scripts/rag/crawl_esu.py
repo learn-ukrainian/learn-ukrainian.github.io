@@ -24,19 +24,18 @@ Output:
 """
 
 import argparse
-import hashlib
 import json
 import re
 import sys
 import time
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import quote, urljoin
+from urllib.parse import quote
 
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rag.config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, DATA_DIR
+from rag.config import CHUNK_MAX_TOKENS, DATA_DIR
 
 # ── Config ────────────────────────────────────────────────────────
 ESU_BASE = "https://esu.com.ua"
@@ -216,10 +215,11 @@ def run_discover(letters: list[str] | None = None):
         for letter in letters:
             if letter in done_letters:
                 # Count existing
-                existing = sum(
-                    1 for line in open(URLS_PATH, encoding="utf-8")
-                    if json.loads(line).get("letter") == letter
-                )
+                with open(URLS_PATH, encoding="utf-8") as _uf:
+                    existing = sum(
+                        1 for line in _uf
+                        if json.loads(line).get("letter") == letter
+                    )
                 print(f"[discover] Letter «{letter}» — skip ({existing} already discovered)")
                 total += existing
                 continue
@@ -481,7 +481,7 @@ def _fetch_parallel(remaining: list[dict], fetched_ids: set[int], workers: int) 
     rate_lock = threading.Lock()
     last_request_time = [0.0]  # mutable container for closure
 
-    f = open(ARTICLES_PATH, "a", encoding="utf-8")
+    f = open(ARTICLES_PATH, "a", encoding="utf-8")  # noqa: SIM115 — long-lived fd for concurrent writes
 
     def rate_limited_fetch(entry: dict) -> dict | None:
         # Wait for rate limit
@@ -496,9 +496,7 @@ def _fetch_parallel(remaining: list[dict], fetched_ids: set[int], workers: int) 
         with ThreadPoolExecutor(max_workers=workers) as pool:
             futures = {pool.submit(rate_limited_fetch, entry): i for i, entry in enumerate(remaining)}
 
-            done_count = 0
-            for fut in as_completed(futures):
-                done_count += 1
+            for done_count, fut in enumerate(as_completed(futures), 1):
                 article = fut.result()
                 with write_lock:
                     if article:
@@ -539,7 +537,12 @@ def _split_long_paragraph(para: str, max_tokens: int) -> list[str]:
 
 
 def chunk_article(article: dict) -> list[dict]:
-    """Split article text into chunks at paragraph boundaries."""
+    """Split article text into chunks at paragraph boundaries.
+
+    Every chunk gets the article title prepended to its text so that
+    the embedding model has topic context for semantic search.
+    """
+    title = article.get("title", "").strip()
     text = article["text"]
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
     if not paragraphs:
@@ -577,11 +580,19 @@ def chunk_article(article: dict) -> list[dict]:
         chunk_idx += 1
         current_text = ""
 
+    # Prepend title to the first chunk so it's embedded with topic context.
+    # Subsequent chunks also get the title prefix for standalone search hits.
+    title_prefix = f"{title}\n\n" if title else ""
+
     for para in expanded:
+        if not current_text:
+            current_text = title_prefix
+
         current_tokens = len(current_text) // 4
 
-        if current_tokens + len(para) // 4 > CHUNK_MAX_TOKENS and current_text:
+        if current_tokens + len(para) // 4 > CHUNK_MAX_TOKENS and current_text != title_prefix:
             _flush()
+            current_text = title_prefix
 
         current_text += para + "\n\n"
 
@@ -589,6 +600,99 @@ def chunk_article(article: dict) -> list[dict]:
     _flush()
 
     return chunks
+
+
+def run_recover():
+    """Re-fetch articles that are in urls.jsonl but missing from articles.jsonl."""
+    if not URLS_PATH.exists() or not ARTICLES_PATH.exists():
+        print("[recover] Need both urls.jsonl and articles.jsonl")
+        return 0
+
+    # Load discovered URLs
+    url_map: dict[int, dict] = {}
+    with open(URLS_PATH, encoding="utf-8") as f:
+        for line in f:
+            d = json.loads(line)
+            url_map[d["id"]] = d
+
+    # Load already-fetched IDs
+    fetched_ids: set[int] = set()
+    with open(ARTICLES_PATH, encoding="utf-8") as f:
+        for line in f:
+            try:
+                fetched_ids.add(json.loads(line)["id"])
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+    missing = [url_map[aid] for aid in sorted(url_map.keys() - fetched_ids)]
+    if not missing:
+        print("[recover] All discovered articles are already fetched.")
+        return 0
+
+    print(f"[recover] {len(missing)} articles to re-fetch")
+    fetched = 0
+    failed = 0
+    with open(ARTICLES_PATH, "a", encoding="utf-8") as f:
+        for i, entry in enumerate(missing):
+            time.sleep(CRAWL_DELAY)
+            article = fetch_article(entry["id"], entry["url"], entry["title"], entry.get("letter", ""))
+            if article:
+                f.write(json.dumps(article, ensure_ascii=False) + "\n")
+                fetched += 1
+            else:
+                failed += 1
+            if (i + 1) % 50 == 0:
+                f.flush()
+                print(f"  [{i + 1}/{len(missing)}] fetched={fetched} failed={failed}")
+
+    print(f"[recover] Done: {fetched} fetched, {failed} failed")
+    return fetched
+
+
+def run_from_sitemap():
+    """Discover articles from sitemap that are missing from urls.jsonl."""
+    ESU_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Fetch sitemap index
+    print("[sitemap] Fetching article sitemaps...")
+    xml1 = fetch(f"{ESU_BASE}/sitemap_articles_1_50000.xml")
+    xml2 = fetch(f"{ESU_BASE}/sitemap_articles_50001_100000.xml")
+
+    sitemap_ids: dict[int, str] = {}
+    for xml in [xml1, xml2]:
+        for m in re.finditer(r"<loc>([^<]*article-(\d+)[^<]*)</loc>", xml):
+            url, aid = m.group(1), int(m.group(2))
+            sitemap_ids[aid] = url
+
+    print(f"  Sitemap has {len(sitemap_ids)} articles")
+
+    # Load existing URLs
+    existing_ids: set[int] = set()
+    if URLS_PATH.exists():
+        with open(URLS_PATH, encoding="utf-8") as f:
+            for line in f:
+                existing_ids.add(json.loads(line)["id"])
+
+    missing = {aid: url for aid, url in sitemap_ids.items() if aid not in existing_ids}
+    if not missing:
+        print("[sitemap] All sitemap articles already in urls.jsonl")
+        return 0
+
+    print(f"  {len(missing)} new articles from sitemap")
+
+    # Append to urls.jsonl (we don't have titles yet — fetch will get them)
+    with open(URLS_PATH, "a", encoding="utf-8") as f:
+        for aid, url in sorted(missing.items()):
+            entry = {
+                "id": aid,
+                "url": url,
+                "title": "",  # Will be filled during fetch from JSON-LD
+                "letter": "",
+            }
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+    print(f"[sitemap] Added {len(missing)} URLs to urls.jsonl")
+    return len(missing)
 
 
 def run_chunk():
@@ -649,9 +753,25 @@ def main():
         "--workers", type=int, default=1,
         help="Number of parallel fetch workers (default 1)"
     )
+    parser.add_argument(
+        "--recover", action="store_true",
+        help="Re-fetch articles in urls.jsonl that are missing from articles.jsonl"
+    )
+    parser.add_argument(
+        "--from-sitemap", action="store_true",
+        help="Discover missing articles from ESU sitemap and add to urls.jsonl"
+    )
     args = parser.parse_args()
 
     ESU_DIR.mkdir(parents=True, exist_ok=True)
+
+    if args.from_sitemap:
+        run_from_sitemap()
+        return
+
+    if args.recover:
+        run_recover()
+        return
 
     if args.chunk_only:
         run_chunk()

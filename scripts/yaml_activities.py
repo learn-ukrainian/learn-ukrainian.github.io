@@ -10,12 +10,12 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 import yaml
 
 try:
-    import jsonschema
+    import jsonschema  # noqa: F401
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False
@@ -35,7 +35,7 @@ class QuizOption:
 class QuizItem:
     question: str
     options: list[QuizOption]
-    explanation: Optional[str] = None
+    explanation: str | None = None
 
 
 @dataclass
@@ -49,8 +49,8 @@ class QuizActivity:
 class SelectItem:
     question: str
     options: list[QuizOption]
-    min_correct: Optional[int] = None
-    explanation: Optional[str] = None
+    min_correct: int | None = None
+    explanation: str | None = None
 
 
 @dataclass
@@ -64,7 +64,7 @@ class SelectActivity:
 class TrueFalseItem:
     statement: str
     correct: bool
-    explanation: Optional[str] = None
+    explanation: str | None = None
 
 
 @dataclass
@@ -79,7 +79,7 @@ class FillInItem:
     sentence: str
     answer: str
     options: list[str]
-    explanation: Optional[str] = None
+    explanation: str | None = None
 
 
 @dataclass
@@ -178,7 +178,7 @@ class TranslateOption:
 class TranslateItem:
     source: str
     options: list[TranslateOption]
-    explanation: Optional[str] = None
+    explanation: str | None = None
 
 
 @dataclass
@@ -192,7 +192,7 @@ class TranslateActivity:
 class AnagramItem:
     scrambled: str
     answer: str
-    hint: Optional[str] = None
+    hint: str | None = None
 
 
 @dataclass
@@ -378,7 +378,7 @@ class SourceEvaluationActivity:
     title: str = ""
     instruction: str = ""
     source_text: str = ""
-    source_metadata: Optional[SourceMetadata] = None
+    source_metadata: SourceMetadata | None = None
     evaluation_criteria: list[str] = field(default_factory=list)  # authorship, date_and_context, etc.
     guiding_questions: list[str] = field(default_factory=list)
     model_evaluation: str = ""
@@ -458,7 +458,7 @@ class WatchAndRepeatActivity:
 
 
 # Type alias
-Activity = Union[
+Activity = Union[  # noqa: UP007
     QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
     ClozeActivity, MatchUpActivity, GroupSortActivity, UnjumbleActivity,
     ErrorCorrectionActivity, MarkTheWordsActivity,
@@ -475,8 +475,8 @@ Activity = Union[
 class ValidationError:
     path: str
     message: str
-    activity_type: Optional[str] = None
-    activity_title: Optional[str] = None
+    activity_type: str | None = None
+    activity_title: str | None = None
     severity: str = "error"
 
 
@@ -495,17 +495,18 @@ class ValidationResult:
 
 
 class ActivityParser:
-    def __init__(self, schemas_dir: Optional[Path] = None):
+    def __init__(self, schemas_dir: Path | None = None):
         if schemas_dir is None:
             schemas_dir = Path(__file__).parent.parent / "schemas"
         self.schemas_dir = schemas_dir
         self._schema_cache: dict[str, dict] = {}
 
-    def parse(self, yaml_path: Union[str, Path]) -> list[Activity]:
+    def parse(self, yaml_path: str | Path) -> list[Activity]:
         yaml_path = Path(yaml_path)
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             raw_data = yaml.safe_load(f)
-        if raw_data is None: return []
+        if raw_data is None:
+            return []
         if isinstance(raw_data, dict) and 'activities' in raw_data:
             raw_data = raw_data['activities']
         if not isinstance(raw_data, list):
@@ -513,10 +514,11 @@ class ActivityParser:
         activities = []
         for item in raw_data:
             activity = self._parse_activity(item)
-            if activity: activities.append(activity)
+            if activity:
+                activities.append(activity)
         return activities
 
-    def _parse_activity(self, data: dict) -> Optional[Activity]:
+    def _parse_activity(self, data: dict) -> Activity | None:
         activity_type = data.get('type')
         parsers = {
             'quiz': self._parse_quiz,
@@ -587,7 +589,8 @@ class ActivityParser:
         for item_data in data.get('items', []):
             statement = item_data.get('statement') or item_data.get('question', '')
             correct = item_data.get('correct')
-            if correct is None: correct = item_data.get('answer', False)
+            if correct is None:
+                correct = item_data.get('answer', False)
             items.append(TrueFalseItem(statement=statement, correct=correct, explanation=item_data.get('explanation')))
         return TrueFalseActivity(title=data.get('title', ''), items=items)
 
@@ -601,7 +604,7 @@ class ActivityParser:
     def _parse_cloze(self, data: dict) -> ClozeActivity:
         passage = data.get('passage', '')
         explicit_blanks = data.get('blanks', [])
-        
+
         # If explicit blanks are provided, use them
         if explicit_blanks:
             blanks = [ClozeBlank(id=b['id'], answer=b['answer'], options=b.get('options', [])) for b in explicit_blanks]
@@ -617,7 +620,7 @@ class ActivityParser:
                     answer = options[0]
                     blanks.append(ClozeBlank(id=blank_id, answer=answer, options=options))
                     blank_id += 1
-        
+
         return ClozeActivity(title=data.get('title', ''), passage=passage, blanks=blanks)
 
     def _parse_match_up(self, data: dict) -> MatchUpActivity:
@@ -632,9 +635,12 @@ class ActivityParser:
         items = []
         for item_data in data.get('items', []):
             words = item_data.get('words', [])
-            if not words and 'jumbled' in item_data: words = [w.strip() for w in item_data['jumbled'].split('/')]
-            if not words and 'prompt' in item_data: words = [w.strip() for w in item_data['prompt'].split('/')]
-            if not words and 'scrambled' in item_data: words = [w.strip() for w in item_data['scrambled'].split('/')]
+            if not words and 'jumbled' in item_data:
+                words = [w.strip() for w in item_data['jumbled'].split('/')]
+            if not words and 'prompt' in item_data:
+                words = [w.strip() for w in item_data['prompt'].split('/')]
+            if not words and 'scrambled' in item_data:
+                words = [w.strip() for w in item_data['scrambled'].split('/')]
             items.append(UnjumbleItem(words=words, answer=item_data['answer']))
         return UnjumbleActivity(title=data.get('title', ''), items=items)
 
@@ -646,10 +652,10 @@ class ActivityParser:
         # Support both old and new field names for backwards compatibility
         raw_text = data.get('passage') or data.get('text', '')
         correct_words = data.get('correct_words') or data.get('answers', [])
-        
+
         # Robust extraction from various markdown formats
         extracted_answers = []
-        
+
         def replace_match(match):
             word = match.group(1).strip()
             if word:
@@ -659,26 +665,26 @@ class ActivityParser:
         # 1. Handle [word](correct) or [word](wrong)
         clean_text = re.sub(r'\[([^\]]+)\]\(correct\)', replace_match, raw_text)
         clean_text = re.sub(r'\[([^\]]+)\]\(wrong\)', r'\1', clean_text)
-        
+
         # 2. Handle **word** (bold) - treat as correct
         clean_text = re.sub(r'\*\*([^*]+)\*\*', replace_match, clean_text)
-        
+
         # 3. Handle *word* (italics) - treat as correct
         clean_text = re.sub(r'\*([^*]+)\*', replace_match, clean_text)
-        
+
         # 4. Handle [word] (legacy brackets) - treat as correct
         clean_text = re.sub(r'\[([^\]]+)\]', replace_match, clean_text)
-        
+
         # If explicit answers provided, we prefer them (legacy), otherwise use extracted
         if not correct_words:
             # Filter out duplicates and empty strings
             seen = set()
             correct_words = [x for x in extracted_answers if not (x in seen or seen.add(x))]
-        
+
         return MarkTheWordsActivity(
-            title=data.get('title', ''), 
-            instruction=data.get('instruction', ''), 
-            text=clean_text, 
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            text=clean_text,
             answers=correct_words
         )
 
@@ -927,8 +933,10 @@ class ActivityParser:
 
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
-        if not text: return ""
-        if not isinstance(text, str): return str(text)
+        if not text:
+            return ""
+        if not isinstance(text, str):
+            return str(text)
         # Escape characters that break JSX string attributes (", \, and backticks)
         # Also escape newlines to keep the attribute on a single line in generated code
         res = text.replace('\\', '\\\\').replace('"', '&quot;').replace('\n', '\\n').replace('\r', '')
@@ -940,7 +948,7 @@ class ActivityParser:
         def json_serial(obj):
             if isinstance(obj, (datetime.datetime, datetime.date)):
                 return obj.isoformat()
-            raise TypeError ("Type %s not serializable" % type(obj))
+            raise TypeError (f"Type {type(obj)} not serializable")
 
         s = json.dumps(data, ensure_ascii=False, default=json_serial)
         # Escape backslashes first to avoid double escaping other chars
@@ -955,38 +963,67 @@ class ActivityParser:
         mdx_parts = []
         for activity in activities:
             mdx = self._activity_to_mdx(activity, is_ukrainian_forced)
-            if mdx: mdx_parts.append(mdx)
+            if mdx:
+                mdx_parts.append(mdx)
         return '\n\n'.join(mdx_parts)
 
     def _activity_to_mdx(self, activity: Activity, is_ukrainian_forced: bool = False) -> str:
-        if isinstance(activity, QuizActivity): return self._quiz_to_mdx(activity)
-        if isinstance(activity, SelectActivity): return self._select_to_mdx(activity)
-        if isinstance(activity, TrueFalseActivity): return self._true_false_to_mdx(activity)
-        if isinstance(activity, FillInActivity): return self._fill_in_to_mdx(activity)
-        if isinstance(activity, ClozeActivity): return self._cloze_to_mdx(activity)
-        if isinstance(activity, MatchUpActivity): return self._match_up_to_mdx(activity)
-        if isinstance(activity, GroupSortActivity): return self._group_sort_to_mdx(activity)
-        if isinstance(activity, UnjumbleActivity): return self._unjumble_to_mdx(activity)
-        if isinstance(activity, ErrorCorrectionActivity): return self._error_correction_to_mdx(activity)
-        if isinstance(activity, MarkTheWordsActivity): return self._mark_the_words_to_mdx(activity)
-        if isinstance(activity, TranslateActivity): return self._translate_to_mdx(activity)
-        if isinstance(activity, AnagramActivity): return self._anagram_to_mdx(activity)
-        if isinstance(activity, ReadingActivity): return self._reading_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, EssayResponseActivity): return self._essay_response_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, CriticalAnalysisActivity): return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, ComparativeStudyActivity): return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, AuthorialIntentActivity): return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, SourceEvaluationActivity): return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, DebateActivity): return self._debate_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, EtymologyTraceActivity): return self._etymology_trace_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, GrammarIdentifyActivity): return self._grammar_identify_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, TranscriptionActivity): return self._transcription_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, PaleographyAnalysisActivity): return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, DialectComparisonActivity): return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, TranslationCritiqueActivity): return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
-        if isinstance(activity, ClassifyActivity): return self._classify_to_mdx(activity)
-        if isinstance(activity, ImageToLetterActivity): return self._image_to_letter_to_mdx(activity)
-        if isinstance(activity, WatchAndRepeatActivity): return self._watch_and_repeat_to_mdx(activity)
+        if isinstance(activity, QuizActivity):
+            return self._quiz_to_mdx(activity)
+        if isinstance(activity, SelectActivity):
+            return self._select_to_mdx(activity)
+        if isinstance(activity, TrueFalseActivity):
+            return self._true_false_to_mdx(activity)
+        if isinstance(activity, FillInActivity):
+            return self._fill_in_to_mdx(activity)
+        if isinstance(activity, ClozeActivity):
+            return self._cloze_to_mdx(activity)
+        if isinstance(activity, MatchUpActivity):
+            return self._match_up_to_mdx(activity)
+        if isinstance(activity, GroupSortActivity):
+            return self._group_sort_to_mdx(activity)
+        if isinstance(activity, UnjumbleActivity):
+            return self._unjumble_to_mdx(activity)
+        if isinstance(activity, ErrorCorrectionActivity):
+            return self._error_correction_to_mdx(activity)
+        if isinstance(activity, MarkTheWordsActivity):
+            return self._mark_the_words_to_mdx(activity)
+        if isinstance(activity, TranslateActivity):
+            return self._translate_to_mdx(activity)
+        if isinstance(activity, AnagramActivity):
+            return self._anagram_to_mdx(activity)
+        if isinstance(activity, ReadingActivity):
+            return self._reading_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, EssayResponseActivity):
+            return self._essay_response_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, CriticalAnalysisActivity):
+            return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, ComparativeStudyActivity):
+            return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, AuthorialIntentActivity):
+            return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, SourceEvaluationActivity):
+            return self._source_evaluation_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, DebateActivity):
+            return self._debate_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, EtymologyTraceActivity):
+            return self._etymology_trace_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, GrammarIdentifyActivity):
+            return self._grammar_identify_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, TranscriptionActivity):
+            return self._transcription_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, PaleographyAnalysisActivity):
+            return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, DialectComparisonActivity):
+            return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, TranslationCritiqueActivity):
+            return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, ClassifyActivity):
+            return self._classify_to_mdx(activity)
+        if isinstance(activity, ImageToLetterActivity):
+            return self._image_to_letter_to_mdx(activity)
+        if isinstance(activity, WatchAndRepeatActivity):
+            return self._watch_and_repeat_to_mdx(activity)
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
@@ -1019,7 +1056,7 @@ class ActivityParser:
                 last_pos = match.end()
                 blank_idx += 1
             new_passage += passage[last_pos:]
-            
+
             # Use transformed passage if we found markers, otherwise trust original
             if blank_idx > 0:
                 passage = new_passage
@@ -1069,10 +1106,10 @@ class ActivityParser:
                     rows.append(f"| {r} | | |")
         if is_ukrainian_forced:
             if rows:
-                rubric_md = f"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(rows)
+                rubric_md = "\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(rows)
         else:
             if rows:
-                rubric_md = f"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
+                rubric_md = "\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
         # Using self._dump_safe_json for complex props might be safer than json.dumps inside {}
         # But here we are passing strings directly, not parsing JSON inside
         # Wait, the original code used json.dumps inside {}

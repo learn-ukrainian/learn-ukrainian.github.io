@@ -434,7 +434,6 @@ def validate_schema():
     valid = 0
     invalid = 0
     total_items = 0
-    issues = []
 
     for yaml_file in sorted(by_topic_dir.glob("*.yaml")):
         with open(yaml_file, encoding="utf-8") as f:
@@ -466,7 +465,7 @@ def validate_schema():
             valid += 1
 
     print(f"\n{valid} OK, {invalid} with issues, {total_items} total items")
-    print(f"Note: ZNO uses 5 options (А-Д). Convert to zno-* activity types for schema compliance.")
+    print("Note: ZNO uses 5 options (А-Д). Convert to zno-* activity types for schema compliance.")
 
 
 def main():

@@ -3,17 +3,18 @@ Gold Team API router — endpoints for the Gold (Gemini) batch monitor dashboard
 """
 
 import json
-from datetime import datetime, timezone
-from pathlib import Path
-from fastapi import APIRouter, HTTPException
-import yaml
-
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
 # Ensure scripts/ is importable
 import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
+import yaml
+from fastapi import APIRouter, HTTPException
+
+from .config import CURRICULUM_ROOT, PROJECT_ROOT
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from audit.status_cache import read_status
 
 router = APIRouter(tags=["gold"])
 
@@ -40,7 +41,8 @@ async def ground_truth():
 
     # 2. Hunt for status files in canonical folders
     for status_file in CURRICULUM_ROOT.rglob("status/*.json"):
-        if "_archive" in str(status_file): continue
+        if "_archive" in str(status_file):
+            continue
         slug = status_file.stem
         if slug in result:
             try:
@@ -48,7 +50,8 @@ async def ground_truth():
                     data = json.load(f)
                 result[slug]["status"] = data.get("overall", {}).get("status", "pending")
                 result[slug]["source"] = "canonical"
-            except Exception: pass
+            except Exception:
+                pass
 
     # 3. Hunt for 'in-flight' status files in orchestration folders
     # These often look like {slug}.json or contain audit data
@@ -62,11 +65,12 @@ async def ground_truth():
                 if "overall" in data and "status" in data["overall"]:
                     result[slug]["status"] = data["overall"]["status"]
                     result[slug]["source"] = "orchestration"
-            except Exception: pass
+            except Exception:
+                pass
 
     return {
         "modules": result,
-        "last_scan": datetime.now(timezone.utc).isoformat()
+        "last_scan": datetime.now(UTC).isoformat()
     }
 
 
@@ -101,14 +105,14 @@ async def union_stats():
             "passed_count": 0,
             "gaps": []
         }
-        
+
         track_dir = CURRICULUM_ROOT / track_id
         plans_dir = plans_root / track_id
-        
+
         for m_entry in track_modules:
             slug = m_entry.split("#")[0].strip() if isinstance(m_entry, str) else str(m_entry)
             stats["total_manifest"] += 1
-            
+
             # 1. Check Plan
             # Try both {slug}.yaml and bare-slug.yaml
             plan_file = plans_dir / f"{slug}.yaml"
@@ -116,14 +120,14 @@ async def union_stats():
             if has_plan:
                 track_stats["planned_count"] += 1
                 stats["total_planned"] += 1
-            
+
             # 2. Check Build (MD file)
             md_file = track_dir / f"{slug}.md"
             has_build = md_file.exists()
             if has_build:
                 track_stats["built_count"] += 1
                 stats["total_built"] += 1
-                
+
             # 3. Check Status
             status_file = track_dir / "status" / f"{slug}.json"
             has_status = status_file.exists()
@@ -137,11 +141,14 @@ async def union_stats():
                         # Estimate word count from status
                         msg = status_data.get("gates", {}).get("lesson", {}).get("message", "0/0")
                         stats["word_count_estimate"] += int(msg.split("/")[0])
-                except: pass
-            
+                except (json.JSONDecodeError, ValueError, OSError):
+                    pass
+
             # Identify Gaps
-            if not has_plan: track_stats["gaps"].append({"slug": slug, "type": "MISSING_PLAN"})
-            elif not has_build: track_stats["gaps"].append({"slug": slug, "type": "MISSING_BUILD"})
+            if not has_plan:
+                track_stats["gaps"].append({"slug": slug, "type": "MISSING_PLAN"})
+            elif not has_build:
+                track_stats["gaps"].append({"slug": slug, "type": "MISSING_BUILD"})
 
         stats["tracks"][track_id] = track_stats
 
@@ -158,14 +165,14 @@ async def plan_details(track_id: str):
     manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
-    
+
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
-    
+
     details = []
     for m_entry in track_modules:
         slug = m_entry.split("#")[0].strip() if isinstance(m_entry, str) else str(m_entry)
         plan_file = plans_dir / f"{slug}.yaml"
-        
+
         module_plan = {"slug": slug, "status": "unplanned"}
         if plan_file.exists():
             try:
@@ -181,9 +188,10 @@ async def plan_details(track_id: str):
                     "objectives": data.get("objectives", []),
                     "pedagogy": data.get("pedagogy", "N/A")
                 }
-            except: pass
+            except (yaml.YAMLError, OSError):
+                pass
         details.append(module_plan)
-        
+
     return details
 
 
@@ -204,7 +212,8 @@ async def inspect_module(track_id: str, slug: str):
         try:
             with open(plans_file) as f:
                 res["plan"] = yaml.safe_load(f)
-        except: pass
+        except (yaml.YAMLError, OSError):
+            pass
 
     # 2. Check Build
     md_path = CURRICULUM_ROOT / track_id / f"{slug}.md"
@@ -214,7 +223,7 @@ async def inspect_module(track_id: str, slug: str):
             "word_count": len(content.split()),
             "sections": content.count("\n## "),
             "callouts": content.count("> [!"),
-            "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=timezone.utc).isoformat(),
+            "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=UTC).isoformat(),
             "snippet": "\n".join(content.splitlines()[:15])
         }
 
@@ -229,10 +238,11 @@ async def inspect_module(track_id: str, slug: str):
                 try:
                     num = int(pf.name.split("-")[1])
                     max_phase = max(max_phase, num)
-                except: pass
+                except ValueError:
+                    pass
             res["phases"]["current"] = max_phase
             res["phases"]["status"] = "in-progress"
-            
+
         if (orch_dir / "phase-6-review.md").exists():
             res["phases"]["current"] = 6
             res["phases"]["status"] = "review"
@@ -254,13 +264,14 @@ async def orchestration_history(track_id: str, slug: str):
             artifacts.append({
                 "file": f.name,
                 "type": "audit" if "audit" in f.name else ("prompt" if "prompt" in f.name else "output"),
-                "timestamp": datetime.fromtimestamp(f.stat().st_mtime, tz=timezone.utc).isoformat(),
+                "timestamp": datetime.fromtimestamp(f.stat().st_mtime, tz=UTC).isoformat(),
                 "size": f.stat().st_size
             })
     return artifacts
 
 
 import sqlite3
+
 
 @router.get("/broker-messages")
 async def broker_messages():
@@ -275,8 +286,8 @@ async def broker_messages():
         cur = conn.cursor()
         # Get last 100 messages across all tasks
         cur.execute("""
-            SELECT id, task_id, from_llm, to_llm, message_type, content, timestamp, status 
-            FROM messages 
+            SELECT id, task_id, from_llm, to_llm, message_type, content, timestamp, status
+            FROM messages
             ORDER BY id DESC LIMIT 100
         """)
         rows = [dict(row) for row in cur.fetchall()]

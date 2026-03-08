@@ -9,18 +9,17 @@ Usage:
     python scripts/generate_level_status.py all              # All levels
 """
 
-import json
-import os
+import re
 import subprocess
 import sys
-import re
-import yaml
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import yaml
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from audit.status_cache import read_status, get_source_paths
+from audit.status_cache import get_source_paths, read_status
 
 # Project root
 ROOT = Path(__file__).parent.parent
@@ -115,7 +114,7 @@ def audit_module(md_file: Path) -> dict:
     """Run audit or read from cache."""
     level = md_file.parent.name
     slug = md_file.stem
-    
+
     # Try cache first
     cached = get_json_cache(level, slug, md_file)
     if cached:
@@ -136,14 +135,17 @@ def audit_module(md_file: Path) -> dict:
         actual_words = int(word_match.group(1)) if word_match else 0
         target_words = int(word_match.group(2)) if word_match else 0
         issues = []
-        if "HYDRATION ERROR" in output: issues.append("hydration")
+        if "HYDRATION ERROR" in output:
+            issues.append("hydration")
         if actual_words < 100:
             issues.append("empty")
             status = "📝 STUB"
         elif actual_words < target_words * 0.95:
             issues.append("word_count")
-        if "Missing required activity types" in output: issues.append("activities")
-        if "Structure" in output and "❌" in output: issues.append("structure")
+        if "Missing required activity types" in output:
+            issues.append("activities")
+        if "Structure" in output and "❌" in output:
+            issues.append("structure")
         return {
             "status": status,
             "actual_words": actual_words,
@@ -212,11 +214,16 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None)
             if i in existing_rows:
                 row = existing_rows[i]
                 module_rows.append(row)
-                if row["status"] == "✅ PASS": stats["pass"] += 1
-                elif row["status"] == "🔄 PROSE": stats["prose"] += 1
-                elif row["status"] == "📝 STUB": stats["stub"] += 1
-                elif row["status"] == "❌ FAIL": stats["fail"] += 1
-                else: stats["error"] += 1
+                if row["status"] == "✅ PASS":
+                    stats["pass"] += 1
+                elif row["status"] == "🔄 PROSE":
+                    stats["prose"] += 1
+                elif row["status"] == "📝 STUB":
+                    stats["stub"] += 1
+                elif row["status"] == "❌ FAIL":
+                    stats["fail"] += 1
+                else:
+                    stats["error"] += 1
             continue
         md_file = find_md_file(level, slug)
         if not md_file:
@@ -224,13 +231,18 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None)
             stats["error"] += 1
             continue
         audit_result = audit_module(md_file)
-        if audit_result["status"] == "✅ PASS": stats["pass"] += 1
-        elif audit_result["status"] == "🔄 PROSE": stats["prose"] += 1
-        elif audit_result["status"] == "📝 STUB": stats["stub"] += 1
-        elif audit_result["status"] == "❌ FAIL": stats["fail"] += 1
-        else: stats["error"] += 1
+        if audit_result["status"] == "✅ PASS":
+            stats["pass"] += 1
+        elif audit_result["status"] == "🔄 PROSE":
+            stats["prose"] += 1
+        elif audit_result["status"] == "📝 STUB":
+            stats["stub"] += 1
+        elif audit_result["status"] == "❌ FAIL":
+            stats["fail"] += 1
+        else:
+            stats["error"] += 1
         module_rows.append({"num": i, "slug": slug, **audit_result})
-    
+
     with open(output_file, 'w') as f:
         f.write(f"# {level_upper} Module Status\n\n")
         f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
@@ -248,7 +260,8 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None)
             f.write(f"- 🔄 **Prose-Only (awaiting enrichment):** {stats['prose']}/{len(modules)}\n")
         f.write(f"- ❌ **Failing:** {stats['fail']}/{len(modules)}\n")
         f.write(f"- 📝 **Stubs:** {stats['stub']}/{len(modules)}\n")
-        if stats['error'] > 0: f.write(f"- ⚠️ **Errors:** {stats['error']}/{len(modules)}\n")
+        if stats['error'] > 0:
+            f.write(f"- ⚠️ **Errors:** {stats['error']}/{len(modules)}\n")
         f.write("\n## Module Details\n\n")
         f.write("| # | Slug | Status | Words | Issues |\n")
         f.write("|---|------|--------|-------|--------|\n")

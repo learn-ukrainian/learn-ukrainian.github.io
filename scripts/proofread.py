@@ -42,16 +42,14 @@ from pathlib import Path
 SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+import yaml
 from batch_gemini_config import (
-    PRO_MODEL,
     PROJECT_ROOT,
     VENV_PYTHON,
     get_module_index,
     get_module_paths,
     slug_for_num,
 )
-
-import yaml
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -493,7 +491,7 @@ def proofread_module(
     low_count = len(issues) - high_count
     log(f"  FOUND: {len(issues)} issues ({high_count} HIGH, {low_count} LOW)")
 
-    for i, issue in enumerate(issues, 1):
+    for _i, issue in enumerate(issues, 1):
         severity = issue.get("severity", "?")
         itype = issue.get("type", "UNKNOWN")
         location = issue.get("location", "?")
@@ -538,21 +536,21 @@ def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content
         indexed_issues.append(indexed)
     findings_yaml = yaml.dump({"issues": indexed_issues}, allow_unicode=True, sort_keys=False)
     prompt = EVALUATE_PROMPT_TEMPLATE.replace("{content}", content).replace("{findings}", findings_yaml)
-    
+
     log(f"\n{'='*60}")
     log(f"Evaluating: {level}/{slug} (module {num})")
-    
+
     # 1. Dispatch Gemini Pro
     task_id_gem = f"eval-{slug}-gemini"
     log("  Dispatching to Gemini Pro...")
     ok_gem, out_gem = dispatch_gemini(prompt, task_id_gem, "gemini-3.1-pro-preview")
-    
+
     gemini_eval = None
     if ok_gem:
         parsed = _extract_delimiter_tolerant(out_gem, "===EVALUATE_START===", "===EVALUATE_END===")
         if isinstance(parsed, dict):
             gemini_eval = parsed
-    
+
     # 2. Dispatch Claude Opus
     task_id_claude = f"eval-{slug}-claude"
     log("  Dispatching to Claude Opus...")
@@ -560,48 +558,49 @@ def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content
         prompt, task_id_claude, "claude-opus-4-6", timeout=900,
         start_tag="===EVALUATE_START===", end_tag="===EVALUATE_END==="
     )
-    
+
     claude_eval = None
     if ok_claude:
         parsed = _extract_delimiter_tolerant(out_claude, "===EVALUATE_START===", "===EVALUATE_END===")
         if isinstance(parsed, dict):
             claude_eval = parsed
-            
+
     if claude_eval is None:
         log("  Opus unavailable or failed. Evaluating with Gemini only.")
 
     # 3. Print per-module summary table and aggregate metrics
     log(f"\n  === Evaluation: {level}/{slug} ===")
-    
+
     # Fix #4: Use :<2 for issue index to handle double digits
     log("  | #  | Type       | Sev  | Pro: Correct? | Pro: Apply? | Opus: Correct? | Opus: Apply? | Agreement |")
     log("  |----|------------|------|---------------|-------------|----------------|--------------|-----------|")
-    
+
     def get_eval_row(e_list, idx):
         """Fix #3: Cast both sides to str to handle LLM typing quirks (quoted vs unquoted ints)."""
-        if not e_list: return None
+        if not e_list:
+            return None
         for item in e_list:
             if str(item.get("issue_index")) == str(idx):
                 return item
         return None
-        
+
     metrics = {"correct": 0, "apply": 0, "safe": 0}
-    
+
     for i, issue in enumerate(issues, 1):
         itype = issue.get("type", "UNKNOWN")
         sev = issue.get("severity", "?")
-        
+
         gem_row = get_eval_row(gemini_eval.get("evaluations", []) if gemini_eval else [], i)
         cla_row = get_eval_row(claude_eval.get("evaluations", []) if claude_eval else [], i)
-        
+
         g_c = str(gem_row.get("correct_diagnosis", "n/a")).lower() if gem_row else "n/a"
         g_a = str(gem_row.get("rewrite_acceptable", "n/a")).lower() if gem_row else "n/a"
         g_s = str(gem_row.get("no_new_errors", "n/a")).lower() if gem_row else "n/a"
-        
+
         c_c = str(cla_row.get("correct_diagnosis", "n/a")).lower() if cla_row else "n/a"
         c_a = str(cla_row.get("rewrite_acceptable", "n/a")).lower() if cla_row else "n/a"
         c_s = str(cla_row.get("no_new_errors", "n/a")).lower() if cla_row else "n/a"
-        
+
         # Fix #2: Check all 3 dimensions for agreement (including safety)
         agreement = "AGREE"
         if g_c != "n/a" and c_c != "n/a":
@@ -616,38 +615,41 @@ def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content
             agreement = "N/A"
         else:
             agreement = "PARTIAL"
-            
+
         valid_evals = 0
         correct_yes = 0
         apply_yes = 0
         safe_yes = 0
-        
+
         for row in [gem_row, cla_row]:
             if row:
                 valid_evals += 1
-                if str(row.get("correct_diagnosis", "")).lower() in ["yes", "true", "1"]: correct_yes += 1
-                if str(row.get("rewrite_acceptable", "")).lower() in ["yes", "true", "1"]: apply_yes += 1
-                if str(row.get("no_new_errors", "")).lower() in ["yes", "true", "1"]: safe_yes += 1
-                
+                if str(row.get("correct_diagnosis", "")).lower() in ["yes", "true", "1"]:
+                    correct_yes += 1
+                if str(row.get("rewrite_acceptable", "")).lower() in ["yes", "true", "1"]:
+                    apply_yes += 1
+                if str(row.get("no_new_errors", "")).lower() in ["yes", "true", "1"]:
+                    safe_yes += 1
+
         if valid_evals > 0:
             metrics["correct"] += (correct_yes / valid_evals)
             metrics["apply"] += (apply_yes / valid_evals)
             metrics["safe"] += (safe_yes / valid_evals)
-            
+
         g_c_str = "yes" if g_c in ["yes", "true", "1"] else ("no" if g_c in ["no", "false", "0"] else g_c)
         g_a_str = "yes" if g_a in ["yes", "true", "1"] else ("no" if g_a in ["no", "false", "0"] else g_a)
         c_c_str = "yes" if c_c in ["yes", "true", "1"] else ("no" if c_c in ["no", "false", "0"] else c_c)
         c_a_str = "yes" if c_a in ["yes", "true", "1"] else ("no" if c_a in ["no", "false", "0"] else c_a)
-        
+
         short_itype = itype[:10] if len(itype) > 10 else itype
-        
+
         log(f"  | {i:<2} | {short_itype:<10} | {sev:<4} | {g_c_str:<13} | {g_a_str:<11} | {c_c_str:<14} | {c_a_str:<12} | {agreement:<9} |")
-        
+
     prec = (metrics["correct"] / len(issues)) * 100 if len(issues) > 0 else 0
     rewr = (metrics["apply"] / len(issues)) * 100 if len(issues) > 0 else 0
     safe = (metrics["safe"] / len(issues)) * 100 if len(issues) > 0 else 0
     log(f"\n  Precision: {prec:.0f}% | Rewrite quality: {rewr:.0f}% | Safety: {safe:.0f}%")
-        
+
     out_dir = PROJECT_ROOT / "tests" / "proofread-results"
     out_dir.mkdir(parents=True, exist_ok=True)
     res = {

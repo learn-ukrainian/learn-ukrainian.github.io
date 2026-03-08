@@ -1,6 +1,5 @@
+
 import yaml
-import re
-import os
 
 # Unjumble Replacements
 unjumble_replacements = {
@@ -87,7 +86,7 @@ quiz_replacements = {
     "Яке з поданих слів або словосполучень є офіційним синонімом до «мабуть»?": "Яке з поданих слів або словосполучень є стилістично офіційним синонімом до слова «мабуть»?",
     "Який вставний вираз зазвичай використовується для того, щоб логічно завершити перелік аргументів?": "Який вставний вираз зазвичай використовується для того, щоб логічно завершити перелік аргументів?",
     "Яке з наведених вставних слів найкраще вказує на логічний порядок?": "Яке з наведених вставних слів найкраще вказує на логічний порядок викладу думок?",
-    
+
     # M13
     "Яка основна функція інверсії в українській мові?": "Яка основна стилістична функція інверсії (зміни порядку слів) в українській мові?",
     "У якому регістрі інверсія найменш доречна?": "У якому функціональному стилі мовлення використання інверсії є найменш доречним?",
@@ -97,14 +96,14 @@ quiz_replacements = {
     "Для чого використовується фронтування обставини?": "Для якої комунікативної мети зазвичай використовується фронтування обставини в реченні?",
     "Що характерно для емфатичного порядку слів?": "Що є найбільш характерною рисою емфатичного порядку слів у реченні?",
     "Яка функція речення «Пролунав постріл»?": "Яку стилістичну функцію виконує інверсія присудка в реченні «Пролунав постріл»?",
-    
+
     # M14
     "Які речення містять послідовне підпорядкування?": "У якому з наведених складних речень наявне послідовне підпорядкування підрядних частин?",
     "Які сполучники є протиставними?": "Які з наведених сполучників належать до групи сурядних протиставних сполучників?",
     "Які речення не потребують коми перед «і»?": "У якому з наведених складносурядних речень не потрібно ставити кому перед сполучником «і»?",
     "Які типи підрядних відповідають на питання «чому?»": "Які типи підрядних речень відповідають на питання «чому?» або вказують на причину дії?",
     "Які речення є безсполучниковими?": "Яке з наведених складних речень є безсполучниковим (частини поєднані лише інтонацією)?",
-    
+
     # M15
     "Яке речення є стилістично невідповідним для офіційного документа?": "Яке з поданих речень є стилістично невідповідним та некоректним для використання в офіційному документі?",
     "Яка форма пасиву підкреслює процес, а не результат?": "Яка саме форма пасивного стану головним чином підкреслює тривалий процес дії?",
@@ -114,9 +113,9 @@ quiz_replacements = {
 
 def process_file(filepath):
     print(f"Processing {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         activities = yaml.safe_load(f)
-    
+
     modified = False
     for act in activities:
         # Update Unjumble
@@ -127,7 +126,7 @@ def process_file(filepath):
                 key = ans
                 if key not in unjumble_replacements and key.strip(".,!?;\"") in unjumble_replacements:
                     key = key.strip(".,!?;\"")
-                
+
                 if key in unjumble_replacements:
                     new_ans = unjumble_replacements[key]
                     item['answer'] = new_ans
@@ -144,9 +143,7 @@ def process_file(filepath):
                     modified = True
                 else:
                     # Generic expansion if very short (<8 words)
-                    if len(q.split()) < 8 and "?" in q:
-                        # Add "Визначте," or "Скажіть,"
-                        if not q.startswith("Визначте") and not q.startswith("Укажіть"):
+                    if len(q.split()) < 8 and "?" in q and not q.startswith("Визначте") and not q.startswith("Укажіть"):
                             new_q = "Визначте, " + q[0].lower() + q[1:]
                             if len(new_q.split()) >= 10:
                                 item['question'] = new_q
@@ -160,9 +157,9 @@ def process_file(filepath):
 # Process Markdown
 def fix_markdown(filepath):
     print(f"Checking markdown {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         content = f.read()
-    
+
     modified = False
     if "## Тест: Прочитайте текст" in content:
         content = content.replace("## Тест: Прочитайте текст", "## Вступ")
@@ -173,7 +170,7 @@ def fix_markdown(filepath):
         if len(parts) > 1:
             content = parts[0] + "\n\n## Вступ\n\n" + "## " + parts[1]
             modified = True
-            
+
     if modified:
         with open(filepath, 'w') as f:
             f.write(content)
@@ -181,11 +178,12 @@ def fix_markdown(filepath):
 
 # Iterate 12-15
 import glob
+
 for i in range(12, 16):
     yaml_files = glob.glob(f"curriculum/l2-uk-en/b2/activities/{i}-*.yaml")
     for f in yaml_files:
         process_file(f)
-    
+
     md_files = glob.glob(f"curriculum/l2-uk-en/b2/{i}-*.md")
     for f in md_files:
         fix_markdown(f)

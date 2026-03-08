@@ -5,8 +5,6 @@ Browse to http://localhost:8765 to view images with filtering.
 """
 
 import http.server
-import json
-import os
 import urllib.parse
 from pathlib import Path
 
@@ -75,8 +73,6 @@ def build_html(grade=None, max_size=None, min_size=None, page=0, per_page=100, s
     stats = get_image_stats()
 
     # Build navigation
-    grade_filter = grade or "all"
-    size_filter = f"max={max_size}" if max_size else "all sizes"
 
     nav_links = []
     for g in sorted(stats["grades"].keys()):

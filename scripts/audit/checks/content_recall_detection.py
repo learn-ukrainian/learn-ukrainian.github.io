@@ -9,8 +9,7 @@ See: docs/dev/CONTENT_MODULE_ENHANCEMENT.md
 """
 
 import re
-from typing import List, Dict, Any, Tuple
-
+from typing import Any
 
 # Patterns that indicate content recall (BAD - testing knowledge, not language)
 FORBIDDEN_PATTERNS = {
@@ -40,44 +39,44 @@ def check_content_recall_violations(
     content: str,
     level: str,
     module_type: str = "unknown"
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Check for content recall violations in quiz/true-false activities.
-    
+
     Content-heavy modules (B2 history, C1 literature/biography/folk/arts) should
     test Ukrainian language comprehension, not factual recall.
-    
+
     Args:
         content: Module content string
         level: Level code (e.g., 'B2', 'C1')
         module_type: Focus type (e.g., 'history', 'literature', 'biography')
-        
+
     Returns:
         List of violation dicts with type, severity, message, suggestion
     """
     violations = []
-    
+
     # Only check content-heavy modules
     content_heavy_types = ['history', 'literature', 'biography', 'folk-culture', 'fine-arts']
     if module_type not in content_heavy_types:
         return []
-    
+
     # Extract quiz and true-false activities
     activity_pattern = r'##\s*(quiz|true-false)[:\s].*?(?=\n##\s|\n#\s|$)'
-    activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
-    
+    re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
+
     # Get full activity blocks for analysis
     activity_blocks = re.finditer(
         r'(##\s*(quiz|true-false)[:\s][^\n]*\n)(.*?)(?=\n##\s|\n#\s|$)',
         content,
         re.DOTALL | re.IGNORECASE
     )
-    
+
     for match in activity_blocks:
         activity_header = match.group(1).strip()
-        activity_type = match.group(2).lower()
+        match.group(2).lower()
         activity_content = match.group(3)
-        
+
         # Check for forbidden patterns (content recall)
         for pattern_name, pattern in FORBIDDEN_PATTERNS.items():
             if re.search(pattern, activity_content, re.IGNORECASE):
@@ -87,68 +86,68 @@ def check_content_recall_violations(
                     if re.search(pattern, line, re.IGNORECASE):
                         line_with_pattern = line.strip()[:80]
                         break
-                
+
                 # Allow if preceded by text reference pattern
                 has_text_ref = any(
                     re.search(req_pattern, activity_content[:activity_content.find(line_with_pattern) if line_with_pattern else 0], re.IGNORECASE)
                     for req_pattern in REQUIRED_PATTERNS.values()
                 )
-                
+
                 if not has_text_ref:
                     violations.append({
                         'type': 'CONTENT_RECALL',
                         'severity': 'warning',
                         'activity': activity_header[:50],
                         'pattern': pattern_name,
-                        'message': f"Question appears to test content recall, not Ukrainian comprehension",
-                        'suggestion': f"Rewrite to start with 'Згідно з текстом, як автор...'",
+                        'message': "Question appears to test content recall, not Ukrainian comprehension",
+                        'suggestion': "Rewrite to start with 'Згідно з текстом, як автор...'",
                         'example': line_with_pattern or "See activity content"
                     })
-        
+
         # Check if quiz has any text reference patterns (for B2/C1)
         if level in ['B2', 'C1']:
             has_reference = any(
                 re.search(pattern, activity_content, re.IGNORECASE)
                 for pattern in REQUIRED_PATTERNS.values()
             )
-            
+
             # Count questions in the activity
             questions = re.findall(r'^\d+\.', activity_content, re.MULTILINE)
-            
+
             if not has_reference and len(questions) > 0:
                 violations.append({
                     'type': 'MISSING_TEXT_REFERENCE',
                     'severity': 'warning',
                     'activity': activity_header[:50],
-                    'message': f"Quiz should reference module text ('Згідно з текстом...')",
+                    'message': "Quiz should reference module text ('Згідно з текстом...')",
                     'suggestion': "Start questions with 'Згідно з текстом, як автор...'"
                 })
-    
+
     return violations
 
 
 def check_content_heavy_activity_count(
     activity_count: int,
     module_type: str
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Validate activity count for content-heavy modules.
-    
+
     Content-heavy modules should have 10-12 activities, not 14+.
-    
+
     Args:
         activity_count: Number of activities in module
         module_type: Focus type (e.g., 'history', 'literature')
-        
+
     Returns:
         List of violation dicts
     """
     violations = []
-    
+
     content_heavy_types = ['history', 'literature', 'biography', 'folk-culture', 'fine-arts']
     if module_type not in content_heavy_types:
         return []
-    
+
     if activity_count > 12:
         violations.append({
             'type': 'TOO_MANY_ACTIVITIES',
@@ -156,7 +155,7 @@ def check_content_heavy_activity_count(
             'message': f"Content-heavy modules should have 10-12 activities, found {activity_count}",
             'suggestion': "Reduce to 10-12 high-quality language-focused activities"
         })
-    
+
     if activity_count < 10:
         violations.append({
             'type': 'TOO_FEW_ACTIVITIES',
@@ -164,11 +163,11 @@ def check_content_heavy_activity_count(
             'message': f"Content-heavy modules should have 10-12 activities, found {activity_count}",
             'suggestion': "Add activities to reach 10-12 total"
         })
-    
+
     return violations
 
 
-def check_fill_in_year_answers(content: str, level: str, module_type: str) -> List[Dict[str, Any]]:
+def check_fill_in_year_answers(content: str, level: str, module_type: str) -> list[dict[str, Any]]:
     """
     Check for fill-in activities where the answer is a year (4-digit number).
 
@@ -221,7 +220,7 @@ def check_fill_in_year_answers(content: str, level: str, module_type: str) -> Li
     return violations
 
 
-def check_cloze_year_answers(content: str, level: str, module_type: str) -> List[Dict[str, Any]]:
+def check_cloze_year_answers(content: str, level: str, module_type: str) -> list[dict[str, Any]]:
     """
     Check for cloze activities where blanks are years.
 
@@ -314,7 +313,7 @@ def check_yaml_cloze_year_blanks(
     activities: list,
     level: str,
     module_type: str = "unknown"
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Check YAML cloze activities for year-based blanks.
     """
@@ -360,7 +359,7 @@ def check_yaml_fill_in_year_answers(
     activities: list,
     level: str,
     module_type: str = "unknown"
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Check YAML fill-in activities for year-based answers.
     """
@@ -404,8 +403,8 @@ def run_all_content_recall_checks(
     content: str,
     level: str,
     module_type: str = "unknown",
-    yaml_activities: list = None
-) -> List[Dict[str, Any]]:
+    yaml_activities: list | None = None
+) -> list[dict[str, Any]]:
     """
     Run all content recall detection checks.
     """

@@ -1,25 +1,25 @@
 
-import yaml
-import re
-import os
 import datetime
+import re
+
+import yaml
 
 yaml_path_19 = "curriculum/l2-uk-en/b2/activities/19-register-official-legal.yaml"
 
 # Schema Fix for M19
 def fix_m19_schema():
-    with open(yaml_path_19, 'r') as f:
+    with open(yaml_path_19) as f:
         # Load safely to avoid date conversion if possible, but PyYAML converts automatically.
         # We need to process the loaded data.
         activities = yaml.safe_load(f)
-    
+
     for act in activities:
         if act.get('title') == 'Основи офіційно-ділового стилю': # or relevant quiz
              for item in act.get('items', []):
                  for opt in item.get('options', []):
                      if isinstance(opt.get('text'), (datetime.date, datetime.datetime)):
                          opt['text'] = str(opt['text']) # Convert to string
-    
+
     with open(yaml_path_19, 'w') as f:
         yaml.dump(activities, f, allow_unicode=True, sort_keys=False)
     print("Fixed M19 schema (date).")
@@ -31,19 +31,19 @@ unjumble_expansions = {
     "З повагою, Марія Петренко.": "З повагою та найкращими побажаннями, менеджер Марія Петренко.",
     "До побачення, до зустрічі.": "До побачення! Сподіваюся на швидку та приємну зустріч найближчим часом.",
     "Шановна пані директоре!": "Шановна пані директоре! Вітаю Вас з професійним святом.",
-    
+
     # M17
     "Шановний пане директоре!": "Шановний пане директоре! Звертаюся до Вас із важливим питанням.",
     "З повагою Марія Петренко.": "З повагою та надією на відповідь, Марія Петренко.",
-    
+
     # M19
-    "З повагою, Марія Петренко.": "З повагою та найкращими побажаннями, директор Марія Петренко.",
+    "З повагою, Марія Петренко. (М19)": "З повагою та найкращими побажаннями, директор Марія Петренко.",
     "Долучено до матеріалів справи.": "Всі зазначені документи офіційно долучено до матеріалів кримінальної справи.",
-    "Шановний пане директоре!": "Шановний пане директоре! Прошу Вас розглянути мою заяву.",
+    "Шановний пане директоре! (М19)": "Шановний пане директоре! Прошу Вас розглянути мою заяву.",
     "Засідання оголошено закритим.": "Після голосування засідання ради було офіційно оголошено закритим.",
     "Слухали доповідь. Ухвалили.": "Слухали змістовну доповідь голови комісії. Ухвалили затвердити звіт.",
     "Кандидатуру обрано одноголосно.": "Запропоновану кандидатуру на посаду голови було обрано одноголосно.",
-    
+
     # M20
     "Запивайте таблетки водою.": "Запивайте ці таблетки великою кількістю чистої негазованої води.",
     "Дотримуйтесь ліжкового режиму.": "Будь ласка, суворо дотримуйтесь ліжкового режиму протягом трьох днів.",
@@ -71,11 +71,11 @@ quiz_patterns = [
 
 def process_file(filepath):
     print(f"Processing {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         activities = yaml.safe_load(f)
-    
+
     modified = False
-    
+
     # Unjumble
     for act in activities:
         if act.get('type') == 'unjumble':
@@ -92,14 +92,12 @@ def process_file(filepath):
             for item in act.get('items', []):
                 q = item.get('question', '')
                 if len(q.split()) < 10:
-                    matched = False
                     for pattern, repl in quiz_patterns:
                         if re.match(pattern, q):
                             item['question'] = re.sub(pattern, repl, q)
                             modified = True
-                            matched = True
                             break
-    
+
     if modified:
         with open(filepath, 'w') as f:
             yaml.dump(activities, f, allow_unicode=True, sort_keys=False)
@@ -109,6 +107,7 @@ def process_file(filepath):
 fix_m19_schema()
 
 import glob
+
 for i in range(16, 21):
     path = f"curriculum/l2-uk-en/b2/activities/{i}-*.yaml"
     files = glob.glob(path)

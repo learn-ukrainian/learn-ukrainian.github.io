@@ -25,6 +25,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import signal
 import subprocess
 import sys
@@ -55,10 +56,8 @@ def _signal_handler(sig, frame):
         print("\n[FORCE] Second Ctrl+C — killing active processes...", flush=True)
         with _lock:
             for p in _active_procs:
-                try:
+                with contextlib.suppress(Exception):
                     p.kill()
-                except Exception:
-                    pass
         sys.exit(1)
     _stop_requested = True
     print("\n[STOP] Ctrl+C received — finishing current module(s), then stopping.", flush=True)
@@ -159,7 +158,7 @@ def run_track(track: str, slot_name: str, log_file: Path,
             lf.flush()
 
             if dry_run:
-                lf.write(f"  DRY-RUN: would build\n")
+                lf.write("  DRY-RUN: would build\n")
                 passed += 1
                 continue
 
@@ -204,8 +203,8 @@ def run_track(track: str, slot_name: str, log_file: Path,
                 proc.kill()
                 proc.wait()
                 failed += 1
-                lf.write(f"  TIMEOUT (600s)\n")
-                print(f"    TIMEOUT", flush=True)
+                lf.write("  TIMEOUT (600s)\n")
+                print("    TIMEOUT", flush=True)
             except Exception as e:
                 failed += 1
                 lf.write(f"  ERROR: {e}\n")
@@ -250,7 +249,7 @@ def run_parallel(tracks: list[str], slots: int = DEFAULT_SLOTS,
         threads.append(t)
 
     print(f"\nStarting {len(threads)} slot(s), model={model}", flush=True)
-    print(f"Press Ctrl+C to stop after current module(s)\n", flush=True)
+    print("Press Ctrl+C to stop after current module(s)\n", flush=True)
 
     t0 = time.time()
     for t in threads:
@@ -268,7 +267,7 @@ def run_parallel(tracks: list[str], slots: int = DEFAULT_SLOTS,
     total_failed = sum(r["failed"] for r in all_results)
     print(f"  Passed: {total_passed}  Failed: {total_failed}", flush=True)
     if _stop_requested:
-        print(f"  (Stopped early by user)", flush=True)
+        print("  (Stopped early by user)", flush=True)
     for r in sorted(all_results, key=lambda x: x["track"]):
         status = "OK" if r["failed"] == 0 else "ISSUES"
         print(f"  {r['track']:25s}  passed={r['passed']:3d}  failed={r['failed']:3d}  [{status}]", flush=True)
@@ -331,10 +330,7 @@ Examples:
     if not args.tracks:
         parser.error("Specify track names or 'all' after wave2")
 
-    if "all" in args.tracks:
-        tracks = get_all_remaining_tracks()
-    else:
-        tracks = args.tracks
+    tracks = get_all_remaining_tracks() if "all" in args.tracks else args.tracks
 
     if not tracks:
         print("No tracks with remaining research!")
@@ -342,7 +338,7 @@ Examples:
 
     # Show plan
     print(f"\n{'='*60}", flush=True)
-    print(f"PRESEED RESEARCH RUNNER v2", flush=True)
+    print("PRESEED RESEARCH RUNNER v2", flush=True)
     print(f"Model: {args.model}", flush=True)
     print(f"Slots: {args.slots}", flush=True)
     print(f"{'='*60}", flush=True)
@@ -357,7 +353,7 @@ Examples:
     print(f"  {'TOTAL':25s} {total_remaining:4d} modules", flush=True)
 
     if args.dry_run:
-        print(f"\n  DRY RUN — no builds will execute\n", flush=True)
+        print("\n  DRY RUN — no builds will execute\n", flush=True)
 
     print(f"\nLogs: {LOG_DIR}/", flush=True)
     print(f"{'='*60}\n", flush=True)

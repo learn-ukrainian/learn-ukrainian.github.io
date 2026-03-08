@@ -21,30 +21,29 @@ Issue: #439
 """
 
 import re
-from pathlib import Path
-from typing import Dict, List, Set, Tuple
 from difflib import SequenceMatcher
-import yaml
+from pathlib import Path
 
+import yaml
 
 # =============================================================================
 # VOCABULARY LOADING
 # =============================================================================
 
-def load_module_vocabulary(md_path: Path) -> Set[str]:
+def load_module_vocabulary(md_path: Path) -> set[str]:
     """
     Load vocabulary from this module's YAML file.
-    
+
     Returns set of lemmas (lowercased).
     """
     vocab_dir = md_path.parent / 'vocabulary'
     vocab_file = vocab_dir / f"{md_path.stem}.yaml"
-    
+
     if not vocab_file.exists():
         return set()
-    
+
     try:
-        with open(vocab_file, 'r', encoding='utf-8') as f:
+        with open(vocab_file, encoding='utf-8') as f:
             data = yaml.safe_load(f)
 
         # Handle both old (bare list) and new (dict with 'items' key) formats
@@ -68,7 +67,7 @@ def load_module_vocabulary(md_path: Path) -> Set[str]:
         return set()
 
 
-def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
+def load_all_prior_vocabulary(md_path: Path, module_num: int) -> set[str]:
     """
     Load vocabulary from all prior modules in this level AND all prior levels.
 
@@ -95,7 +94,7 @@ def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
 
     # Get list of levels to load (prior levels + current level)
     prior_levels = level_hierarchy.get(current_level, [])
-    levels_to_load = prior_levels + [current_level]
+    levels_to_load = [*prior_levels, current_level]
 
     all_vocab = set()
 
@@ -109,7 +108,7 @@ def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
         # Load all vocabulary files from this level
         for vocab_file in sorted(level_vocab_dir.glob('*.yaml')):
             try:
-                with open(vocab_file, 'r', encoding='utf-8') as f:
+                with open(vocab_file, encoding='utf-8') as f:
                     data = yaml.safe_load(f)
 
                 # Handle both old (bare list) and new (dict with 'items' key) formats
@@ -129,7 +128,7 @@ def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
     return all_vocab
 
 
-def load_cumulative_vocabulary(md_path: Path, module_num: int) -> Set[str]:
+def load_cumulative_vocabulary(md_path: Path, module_num: int) -> set[str]:
     """
     Load vocabulary from this module + all prior modules.
     """
@@ -212,7 +211,7 @@ def fuzzy_match_word(word: str, lemma: str, threshold: float = 0.80) -> bool:
     return ratio >= threshold
 
 
-def smart_vocabulary_match(word: str, vocabulary: Set[str]) -> Tuple[bool, str]:
+def smart_vocabulary_match(word: str, vocabulary: set[str]) -> tuple[bool, str]:
     """
     Smart matching: check if word matches any vocabulary lemma.
 
@@ -251,10 +250,9 @@ def smart_vocabulary_match(word: str, vocabulary: Set[str]) -> Tuple[bool, str]:
     # Useful for: автомат → автоматів, військовий → військовими
     for lemma in vocabulary:
         # Check if one is a prefix of the other (minimum length 4 to avoid false positives)
-        if len(word_lower) >= 4 and len(lemma) >= 4:
-            if word_lower.startswith(lemma) or lemma.startswith(word_lower):
-                # Additional check: length difference shouldn't be too large
-                if abs(len(word_lower) - len(lemma)) <= 4:
+        if (len(word_lower) >= 4 and len(lemma) >= 4
+                and (word_lower.startswith(lemma) or lemma.startswith(word_lower))
+                and abs(len(word_lower) - len(lemma)) <= 4):
                     return (True, lemma)
 
     # 4. Fuzzy match (for close variations)
@@ -291,18 +289,18 @@ def smart_vocabulary_match(word: str, vocabulary: Set[str]) -> Tuple[bool, str]:
 # UKRAINIAN WORD EXTRACTION
 # =============================================================================
 
-def extract_ukrainian_words(text: str) -> Set[str]:
+def extract_ukrainian_words(text: str) -> set[str]:
     """
     Extract Ukrainian words from text (Cyrillic only).
-    
+
     Returns set of unique words (lowercased).
     """
     # Match Ukrainian words (Cyrillic + apostrophe/hyphen within words)
     words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ-]*", text)
-    
+
     # Lowercase and deduplicate
     unique_words = {word.lower() for word in words if len(word) >= 1}
-    
+
     # Filter out extremely common words that don't need to be in vocabulary
     exclude = {
         'на', 'до', 'від', 'за', 'по', 'під', 'над',
@@ -316,41 +314,41 @@ def extract_ukrainian_words(text: str) -> Set[str]:
         'не', 'ні', 'так', 'вже', 'ще', 'дуже', 'тільки', 'також', 'навіть',
         'там', 'тут', 'де', 'куди', 'звідки', 'чому'
     }
-    
+
     return unique_words - exclude
 
 
-def extract_words_from_activities(md_path: Path) -> Set[str]:
+def extract_words_from_activities(md_path: Path) -> set[str]:
     """
     Extract Ukrainian words from activities YAML file.
-    
+
     Scans all text fields in activities for Ukrainian words.
     """
     activities_dir = md_path.parent / 'activities'
     activities_file = activities_dir / f"{md_path.stem}.yaml"
-    
+
     if not activities_file.exists():
         return set()
-    
+
     try:
-        with open(activities_file, 'r', encoding='utf-8') as f:
+        with open(activities_file, encoding='utf-8') as f:
             data = yaml.safe_load(f)
-        
+
         if not isinstance(data, list):
             return set()
-        
+
         # Collect all text from activities
         all_text = []
-        
+
         for activity in data:
             if not isinstance(activity, dict):
                 continue
-            
+
             # Extract text from common fields
             for field in ['title', 'instruction', 'question', 'sentence', 'passage', 'text']:
                 if field in activity and isinstance(activity[field], str):
                     all_text.append(activity[field])
-            
+
             # Extract from nested structures
             if 'items' in activity and isinstance(activity['items'], list):
                 for item in activity['items']:
@@ -358,7 +356,7 @@ def extract_words_from_activities(md_path: Path) -> Set[str]:
                         for field in ['question', 'sentence', 'statement', 'text']:
                             if field in item and isinstance(item[field], str):
                                 all_text.append(item[field])
-                        
+
                         # Options in quiz/select
                         if 'options' in item and isinstance(item['options'], list):
                             for opt in item['options']:
@@ -366,7 +364,7 @@ def extract_words_from_activities(md_path: Path) -> Set[str]:
                                     all_text.append(opt['text'])
                                 elif isinstance(opt, str):
                                     all_text.append(opt)
-            
+
             # Match-up pairs
             if 'pairs' in activity and isinstance(activity['pairs'], list):
                 for pair in activity['pairs']:
@@ -374,7 +372,7 @@ def extract_words_from_activities(md_path: Path) -> Set[str]:
                         for field in ['left', 'right']:
                             if field in pair and isinstance(pair[field], str):
                                 all_text.append(pair[field])
-            
+
             # Group-sort groups
             if 'groups' in activity and isinstance(activity['groups'], list):
                 for group in activity['groups']:
@@ -383,15 +381,15 @@ def extract_words_from_activities(md_path: Path) -> Set[str]:
                             all_text.append(group['name'])
                         if 'items' in group and isinstance(group['items'], list):
                             all_text.extend([str(i) for i in group['items'] if isinstance(i, str)])
-            
+
             # Answers array (mark-the-words, etc.)
             if 'answers' in activity and isinstance(activity['answers'], list):
                 all_text.extend([str(a) for a in activity['answers'] if isinstance(a, str)])
-        
+
         # Extract Ukrainian words from all collected text
         combined_text = ' '.join(all_text)
         return extract_ukrainian_words(combined_text)
-    
+
     except Exception:
         return set()
 
@@ -404,28 +402,28 @@ def check_vocabulary_integrity(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check that words used in activities exist in vocabulary YAML files.
-    
+
     This is the main entry point called by the audit system.
-    
+
     Returns list of violation dicts with 'type', 'message', 'severity'.
     """
     violations = []
-    
+
     md_path = Path(file_path)
     slug = md_path.stem
-    
+
     # Load available vocabulary (this module + all prior)
     available_vocab = load_cumulative_vocabulary(md_path, module_num)
-    
-    
+
+
     if not available_vocab:
         # No vocabulary defined yet - skip check
         # This is common for skeleton modules
         return []
-    
+
     # Extract words from activities
     used_words = extract_words_from_activities(md_path)
 
@@ -438,7 +436,7 @@ def check_vocabulary_integrity(
     matched_count = 0
     fuzzy_matched = []  # Track fuzzy matches for informational purposes
 
-    for idx, word in enumerate(used_words):
+    for _idx, word in enumerate(used_words):
         matched, best_lemma = smart_vocabulary_match(word, available_vocab)
         if matched:
             matched_count += 1
@@ -458,12 +456,12 @@ def check_vocabulary_integrity(
 
         for idx, word in enumerate(sorted(truly_missing)):
             message = f"Word '{word}' used in activities but not found in vocabulary.\n"
-            message += f"  Checked: exact match, stem match, fuzzy match - all failed.\n"
+            message += "  Checked: exact match, stem match, fuzzy match - all failed.\n"
             message += f"  Add to: curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml\n"
-            message += f"  Example:\n"
+            message += "  Example:\n"
             message += f"  - lemma: {word}\n"
-            message += f"    translation: ''\n"
-            message += f"    pos: noun  # or verb, adj, adv"
+            message += "    translation: ''\n"
+            message += "    pos: noun  # or verb, adj, adv"
 
             # Add header only to first violation
             if idx == 0:
@@ -474,7 +472,7 @@ def check_vocabulary_integrity(
                 'message': message,
                 'severity': 'error',  # Now 'error' because smart matching reduces false positives
             })
-    
+
     return violations
 
 

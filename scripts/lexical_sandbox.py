@@ -16,20 +16,20 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
 # Reuse constraint definitions from morphological validator
 import sys
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from rag_batch_verify import vesum_batch_lookup
 from audit.checks.morphological_validator import (
+    _CASE_LABELS,
     GrammarConstraint,
     _get_constraints,
-    _CASE_LABELS,
 )
+from rag_batch_verify import vesum_batch_lookup
 
 # ---------------------------------------------------------------------------
 # VESUM form generation
@@ -165,7 +165,7 @@ def build_sandbox(
     # From plan vocabulary_hints
     vocab_hints = plan.get("vocabulary_hints", {})
     if isinstance(vocab_hints, dict):
-        for category, words in vocab_hints.items():
+        for _category, words in vocab_hints.items():
             if isinstance(words, list):
                 for w in words:
                     candidates.append(_extract_ukr_word(w) if isinstance(w, str) else w)
@@ -482,10 +482,7 @@ def parse_resource_request(raw_output: str) -> dict | None:
     else:
         # Try to find JSON block in output
         json_match = re.search(r'```json\s*(.*?)\s*```', raw_output, re.DOTALL)
-        if json_match:
-            json_str = json_match.group(1)
-        else:
-            json_str = raw_output.strip()
+        json_str = json_match.group(1) if json_match else raw_output.strip()
 
     try:
         data = json.loads(json_str)
@@ -500,7 +497,7 @@ def extract_words_from_request(request: dict) -> list[str]:
     words = []
     vocab = request.get("requested_vocabulary", {})
     if isinstance(vocab, dict):
-        for category, word_list in vocab.items():
+        for _category, word_list in vocab.items():
             if isinstance(word_list, list):
                 words.extend(word_list)
     elif isinstance(vocab, list):

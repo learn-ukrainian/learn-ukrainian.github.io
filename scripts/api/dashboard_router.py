@@ -6,24 +6,25 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 """
 
 import json
-import re
 import sqlite3
+import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, HTTPException
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT, SEMINAR_TRACK_IDS
-from .state_router import _detect_pipeline_version, _read_v4_state, _parse_v4_phase_status, V4_PHASE_ORDER
+from .state_router import V4_PHASE_ORDER, _detect_pipeline_version, _parse_v4_phase_status, _read_v4_state
 
-import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from audit.status_cache import read_status, get_source_paths
+import contextlib
+
+from audit.status_cache import get_source_paths, read_status
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
-from .review_parsing import extract_review_score, extract_review_verdict, extract_plan_verdict
+from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
 
 router = APIRouter(tags=["dashboard"])
 
@@ -61,7 +62,7 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
     track_dir = CURRICULUM_ROOT / track_path
     plans_dir = CURRICULUM_ROOT / "plans" / track_id
     status_dir = track_dir / "status"
-    meta_dir = track_dir / "meta"
+    track_dir / "meta"
 
     modules = []
     for idx, m_entry in enumerate(manifest_modules):
@@ -111,14 +112,10 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             lesson_msg = gates.get("lesson", {}).get("message", "")
             if "/" in str(lesson_msg):
                 parts = str(lesson_msg).split("/")
-                try:
+                with contextlib.suppress(ValueError, IndexError):
                     word_count = int(parts[0].strip().split()[-1]) if parts[0].strip() else 0
-                except (ValueError, IndexError):
-                    pass
-                try:
+                with contextlib.suppress(ValueError, IndexError):
                     word_target = int(parts[1].strip().split()[0]) if len(parts) > 1 else 0
-                except (ValueError, IndexError):
-                    pass
         elif has_md:
             overall_status = "unaudited"
             md_content = sp["md"].read_text() if sp.get("md") else ""
@@ -286,7 +283,7 @@ async def overview():
     return {
         "tracks": tracks,
         "totals": totals,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 
@@ -335,7 +332,7 @@ async def research_overview():
 
     return {
         "tracks": tracks,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 
@@ -404,7 +401,7 @@ async def module_detail(track_id: str, slug: str):
             "word_count": len(content.split()),
             "sections": sections,
             "last_modified": datetime.fromtimestamp(
-                md_path.stat().st_mtime, tz=timezone.utc
+                md_path.stat().st_mtime, tz=UTC
             ).isoformat(),
         }
     else:
@@ -476,7 +473,7 @@ async def module_detail(track_id: str, slug: str):
                     "file": f.name,
                     "size": f.stat().st_size,
                     "timestamp": datetime.fromtimestamp(
-                        f.stat().st_mtime, tz=timezone.utc
+                        f.stat().st_mtime, tz=UTC
                     ).isoformat(),
                 })
         result["orchestration"] = phases
@@ -557,8 +554,7 @@ async def pipeline_status():
                 # No status = needs otaman
                 md_exists = any(
                     (track_dir / f).exists()
-                    for f in [f"{slug}.md"]
-                    + [f"{idx+1:02d}-{slug}.md", f"{idx+1}-{slug}.md"]
+                    for f in [f"{slug}.md", f"{idx + 1:02d}-{slug}.md", f"{idx + 1}-{slug}.md"]
                 )
                 if not md_exists:
                     otaman_queue.append({"track": track_id, "slug": slug, "num": idx + 1})
@@ -623,7 +619,7 @@ async def pipeline_status():
         "final_review_queue_total": len(final_review_queue),
         "broker_messages": broker_messages,
         "dispatcher_state": dispatcher_state,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 
@@ -631,10 +627,10 @@ async def pipeline_status():
 async def activity_config():
     """Activity type reference: types, min items per level, forbidden types."""
     from audit.config import (
-        VALID_ACTIVITY_TYPES,
         ACTIVITY_COMPLEXITY,
         ACTIVITY_RESTRICTIONS,
         LEVEL_CONFIG,
+        VALID_ACTIVITY_TYPES,
     )
 
     # Build type info
@@ -731,7 +727,7 @@ async def comms_status():
         "recent_messages": [],
         "delivery_stats": {},
         "watcher_log_tail": [],
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
     conn = _get_broker_db()
@@ -973,7 +969,7 @@ async def comms_messages(
                    timestamp, acknowledged, status
             FROM messages {where_clause}
             ORDER BY id DESC LIMIT ? OFFSET ?""",
-        params + [limit, offset],
+        [*params, limit, offset],
     )
     messages = [
         {

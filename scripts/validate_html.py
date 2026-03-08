@@ -14,13 +14,14 @@ If server is not available, skips gracefully with info message.
 
 import asyncio
 import re
-import sys
-import subprocess
-import time
 import signal
-from pathlib import Path
+import subprocess
+import sys
+import time
 from dataclasses import dataclass, field
-from playwright.async_api import async_playwright, Page, ConsoleMessage
+from pathlib import Path
+
+from playwright.async_api import ConsoleMessage, Page, async_playwright
 
 # Add scripts directory to path for audit imports
 SCRIPT_DIR = Path(__file__).parent
@@ -76,7 +77,7 @@ def is_server_running() -> bool:
     try:
         urllib.request.urlopen(BASE_URL, timeout=5)
         return True
-    except:
+    except OSError:
         return False
 
 @dataclass
@@ -134,7 +135,7 @@ class DevServer:
         try:
             urllib.request.urlopen(BASE_URL, timeout=2)
             return True
-        except:
+        except OSError:
             return False
 
 async def validate_module(page: Page, level: str, module_num: int) -> ValidationResult:
@@ -336,7 +337,7 @@ async def main_async():
     try:
         urllib.request.urlopen(BASE_URL, timeout=5)
         print(f"  Server running at {BASE_URL}\n")
-    except Exception as e:
+    except Exception:
         print("ℹ️  Docusaurus dev server not running - skipping HTML validation")
         print("   To enable: cd docusaurus && pnpm start")
         sys.exit(0)  # Exit cleanly to not block pipeline

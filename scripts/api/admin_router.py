@@ -18,11 +18,12 @@ Endpoints:
 """
 
 import asyncio
+import contextlib
 import json
 import os
 import sqlite3
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
@@ -59,10 +60,8 @@ def _dir_size(path: Path) -> int:
     total = 0
     for dirpath, _dirnames, filenames in os.walk(path):
         for name in filenames:
-            try:
+            with contextlib.suppress(OSError):
                 total += os.path.getsize(os.path.join(dirpath, name))
-            except OSError:
-                pass
     return total
 
 
@@ -111,7 +110,7 @@ async def _qdrant_collection_details(names: list[str]) -> dict[str, dict | None]
     results = await asyncio.gather(
         *[_qdrant_get(f"/collections/{name}") for name in names]
     )
-    return dict(zip(names, results))
+    return dict(zip(names, results, strict=False))
 
 
 async def _docker_status(container: str) -> str:
@@ -170,16 +169,15 @@ async def create_qdrant_backup():
 
     # Stream download to avoid buffering entire snapshot in memory
     try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(300)) as client:
-            async with client.stream(
-                "GET",
-                f"{QDRANT_URL}/snapshots/{snapshot_name}",
-                follow_redirects=True,
-            ) as r:
-                r.raise_for_status()
-                with open(dest, "wb") as f:
-                    async for chunk in r.aiter_bytes(chunk_size=65536):
-                        f.write(chunk)
+        async with httpx.AsyncClient(timeout=httpx.Timeout(300)) as client, client.stream(
+            "GET",
+            f"{QDRANT_URL}/snapshots/{snapshot_name}",
+            follow_redirects=True,
+        ) as r:
+            r.raise_for_status()
+            with open(dest, "wb") as f:
+                async for chunk in r.aiter_bytes(chunk_size=65536):
+                    f.write(chunk)
     except Exception as e:
         dest.unlink(missing_ok=True)
         return JSONResponse(
@@ -194,7 +192,7 @@ async def create_qdrant_backup():
         "path": str(dest),
         "size_bytes": size,
         "size_human": _format_bytes(size),
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(UTC).isoformat(),
     }
 
 
@@ -225,7 +223,7 @@ async def list_backups():
             "filename": name,
             "size_bytes": size,
             "size_human": _format_bytes(size),
-            "created_at": datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat(),
+            "created_at": datetime.fromtimestamp(mtime, tz=UTC).isoformat(),
         })
 
     return {
@@ -247,8 +245,8 @@ async def delete_backup(filename: str):
     try:
         size = path.stat().st_size
         path.unlink()
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Backup not found")
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail="Backup not found") from e
 
     return {"deleted": filename, "freed_bytes": size, "freed_human": _format_bytes(size)}
 
@@ -261,7 +259,7 @@ async def unified_health():
     """Unified health check: Qdrant, broker, disk, uptime."""
     from .main import _SERVER_START
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     uptime = now - _SERVER_START
 
     # Run independent checks in parallel
@@ -561,10 +559,8 @@ async def verify_collections():
     if chunks_dir.exists():
         chunk_count = 0
         for f in chunks_dir.rglob("*.jsonl"):
-            try:
+            with contextlib.suppress(OSError):
                 chunk_count += sum(1 for line in f.open() if line.strip())
-            except OSError:
-                pass
         source_counts["textbook_chunks"] = chunk_count
 
     if IMAGE_DIR.exists():
@@ -581,10 +577,8 @@ async def verify_collections():
     if lit_dir.exists():
         lit_count = 0
         for f in lit_dir.rglob("*.jsonl"):
-            try:
+            with contextlib.suppress(OSError):
                 lit_count += sum(1 for line in f.open() if line.strip())
-            except OSError:
-                pass
         source_counts["literary_texts"] = lit_count
 
     # Fetch all collection details in parallel
@@ -609,5 +603,5 @@ async def verify_collections():
     return {
         "results": results,
         "source_counts": source_counts,
-        "verified_at": datetime.now(timezone.utc).isoformat(),
+        "verified_at": datetime.now(UTC).isoformat(),
     }

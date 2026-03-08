@@ -739,3 +739,82 @@ class TestModuleFilePaths:
         assert "md" in labels
         assert "activities" in labels
         assert "vocabulary" in labels
+
+
+# ============================================================================
+# Exemplar band selection (get_tier_exemplar)
+# ============================================================================
+
+class TestGetTierExemplar:
+    """get_tier_exemplar returns correct band for track + module_num.
+
+    Bands aligned with IMMERSION_RULES:
+    - foundation:   A1 M01-10
+    - emerging:     A1 M11-20
+    - structured:   A1 M21-64
+    - transitional: A2 M01-20
+    - independent:  A2 M21-50, B1 M01-05
+    - empty:        A2 M51+, B1 M06+, B2+
+    """
+
+    def test_a1_foundation(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a1", 1)
+        assert "Foundation Band" in result
+        result10 = get_tier_exemplar("a1", 10)
+        assert "Foundation Band" in result10
+
+    def test_a1_emerging(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a1", 11)
+        assert "Emerging Band" in result
+        result20 = get_tier_exemplar("a1", 20)
+        assert "Emerging Band" in result20
+
+    def test_a1_structured(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a1", 21)
+        assert "Structured Band" in result
+        result47 = get_tier_exemplar("a1", 47)
+        assert "Structured Band" in result47
+        result64 = get_tier_exemplar("a1", 64)
+        assert "Structured Band" in result64
+
+    def test_a2_transitional(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a2", 1)
+        assert "Transitional Band" in result
+        result20 = get_tier_exemplar("a2", 20)
+        assert "Transitional Band" in result20
+
+    def test_a2_independent(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a2", 21)
+        assert "Independent Band" in result
+        result50 = get_tier_exemplar("a2", 50)
+        assert "Independent Band" in result50
+
+    def test_a2_high_immersion_no_exemplar(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("a2", 51)
+        assert result == ""
+        result67 = get_tier_exemplar("a2", 67)
+        assert result67 == ""
+
+    def test_b1_bridge_uses_independent(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("b1", 1)
+        assert "Independent Band" in result
+        result5 = get_tier_exemplar("b1", 5)
+        assert "Independent Band" in result5
+
+    def test_b1_core_no_exemplar(self):
+        from pipeline_lib import get_tier_exemplar
+        result = get_tier_exemplar("b1", 6)
+        assert result == ""
+
+    def test_b2_no_exemplar(self):
+        from pipeline_lib import get_tier_exemplar
+        assert get_tier_exemplar("b2", 1) == ""
+        assert get_tier_exemplar("c1", 1) == ""
+        assert get_tier_exemplar("c2", 1) == ""

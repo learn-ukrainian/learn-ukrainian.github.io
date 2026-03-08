@@ -36,7 +36,7 @@ HEADERS = {
 
 
 def load_resources() -> dict:
-    with open(RESOURCES_FILE, "r", encoding="utf-8") as f:
+    with open(RESOURCES_FILE, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -98,7 +98,7 @@ def find_duplicates(entries: list[dict]) -> dict[str, list[str]]:
 def remove_dead_links(data: dict, dead_urls: set[str]) -> int:
     """Remove dead URLs from the resources dict. Returns count removed."""
     removed = 0
-    for module, categories in list(data.get("resources", {}).items()):
+    for _module, categories in list(data.get("resources", {}).items()):
         if not isinstance(categories, dict):
             continue
         for cat, items in list(categories.items()):
@@ -140,7 +140,7 @@ def main():
     domains: dict[str, int] = defaultdict(int)
     for url in unique_urls:
         domains[urlparse(url).netloc] += 1
-    print(f"\nTop domains:")
+    print("\nTop domains:")
     for domain, count in sorted(domains.items(), key=lambda x: -x[1])[:10]:
         print(f"  {domain}: {count}")
 
@@ -177,7 +177,7 @@ def main():
 
     # Summary
     print(f"\n{'='*60}")
-    print(f"Results:")
+    print("Results:")
     print(f"  Alive:      {len(unique_urls) - len(dead)}")
     print(f"  Dead:       {len(dead)}")
     print(f"  Redirected: {len(redirected)}")

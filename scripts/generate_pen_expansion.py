@@ -1,6 +1,6 @@
-import yaml
 from pathlib import Path
-import os
+
+import yaml
 
 data = {
     "lit-doc": [
@@ -77,7 +77,7 @@ plans_dir = curriculum_dir / "plans"
 for track, modules in data.items():
     for index, mod in enumerate(modules, start=10):
         slug = mod["slug"]
-        
+
         plan_content = {
             "slug": slug,
             "level": "c1",
@@ -86,14 +86,14 @@ for track, modules in data.items():
             "word_target": 5000,
             "focus": mod["focus"]
         }
-        
+
         plan_path = plans_dir / track / f"{slug}.yaml"
         plan_path.parent.mkdir(parents=True, exist_ok=True)
         with open(plan_path, "w", encoding="utf-8") as f:
             yaml.dump(plan_content, f, sort_keys=False, allow_unicode=True)
-            
+
         research_content = f"# Research Notes: {mod['title']}\n\n**Track**: {track} | **Module**: {slug} | **Researched**: 2026-02-24\n\n{mod['research']}\n\n## Seminar-Specific Analysis\n> [!analysis] Deep Dive: This module integrates contemporary PEN Ukraine voices, ensuring a decolonized, academically rigorous exploration of modern Ukrainian intellectual life.\n\n## Primary Sources\n- PEN Ukraine Member Profiles.\n- Native Ukrainian essays and documentary publications.\n"
-        
+
         research_dir = curriculum_dir / track / "research"
         research_dir.mkdir(parents=True, exist_ok=True)
         research_path = research_dir / f"{slug}-research.md"

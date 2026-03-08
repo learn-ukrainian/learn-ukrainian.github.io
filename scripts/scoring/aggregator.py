@@ -8,11 +8,10 @@ This module handles:
 """
 
 from dataclasses import dataclass, field
-from typing import Optional
 
-from .metrics import ModuleMetrics
-from .config import get_track_config, TrackConfig
 from .caps import apply_critical_caps
+from .config import TrackConfig, get_track_config
+from .metrics import ModuleMetrics
 
 
 @dataclass
@@ -497,11 +496,7 @@ def calculate_criterion_score(
             return min(10.0, variety_score)
         return 5.0
 
-    elif criterion_name == 'checkpoint_structure':
-        # Default to passing (manual verification)
-        return 8.0
-
-    elif criterion_name == 'state_standard_compliance':
+    elif criterion_name == 'checkpoint_structure' or criterion_name == 'state_standard_compliance':
         # Default to passing (manual verification)
         return 8.0
 
@@ -601,7 +596,7 @@ def calculate_track_score(
     )
 
     # Calculate raw scores for each criterion
-    for criterion_name, criterion_config in config['criteria'].items():
+    for criterion_name, _criterion_config in config['criteria'].items():
         score = calculate_criterion_score(criterion_name, track_metrics, config)
         result.raw_criterion_scores[criterion_name] = score
 

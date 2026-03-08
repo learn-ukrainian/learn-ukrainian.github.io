@@ -10,10 +10,10 @@ Status indicators:
 """
 
 import json
-import os
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 # Add scripts dir to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -68,7 +68,7 @@ LEVEL_NAMES_EN = {
 
 def load_level_status():
     """Load level status configuration."""
-    with open(LEVEL_STATUS_FILE, 'r', encoding='utf-8') as f:
+    with open(LEVEL_STATUS_FILE, encoding='utf-8') as f:
         return yaml.safe_load(f)
 
 
@@ -94,11 +94,11 @@ def get_module_files(level):
         mdx_file = mdx_dir / f"{mod.slug}.mdx"
         if mdx_file.exists():
             mdx_files[mod.local_num] = mdx_file
-            
+
         review_file = review_dir / f"{mod.slug}-review.md"
         if review_file.exists():
             review_files[mod.local_num] = review_file
-            
+
         audit_file = audit_dir / f"{mod.slug}-audit.md"
         if audit_file.exists():
             audit_files[mod.local_num] = audit_file
@@ -126,11 +126,11 @@ def get_track_module_files(level):
         mdx_path = mdx_dir / f"{mod.slug}.mdx"
         if mdx_path.exists():
             mdx_files[mod.local_num] = mdx_path
-            
+
         review_file = review_dir / f"{mod.slug}-review.md"
         if review_file.exists():
             review_files[mod.local_num] = review_file
-            
+
         audit_file = audit_dir / f"{mod.slug}-audit.md"
         if audit_file.exists():
             audit_files[mod.local_num] = audit_file
@@ -144,7 +144,7 @@ def get_track_module_files(level):
 def get_module_title(meta_file):
     """Extract title from meta YAML file."""
     try:
-        with open(meta_file, 'r', encoding='utf-8') as f:
+        with open(meta_file, encoding='utf-8') as f:
             data = yaml.safe_load(f)
             return data.get('title', 'Untitled'), data.get('subtitle', '')
     except Exception:
@@ -154,7 +154,7 @@ def get_module_title(meta_file):
 def build_level_landing(level, config, is_track=False):
     """Build landing page for a single level."""
     planned = config.get('planned', 0)
-    description = config.get('description', '')
+    config.get('description', '')
     introduction = config.get('introduction', '').strip()
 
     if is_track:
@@ -166,7 +166,7 @@ def build_level_landing(level, config, is_track=False):
     built_count = len(mdx_files)
     ready_count = len(review_files)
     qa_count = max(0, built_count - ready_count)
-    in_progress_count = len([n for n in meta_files if n not in mdx_files])
+    len([n for n in meta_files if n not in mdx_files])
 
     # Determine status emoji for header
     if ready_count == planned and planned > 0:

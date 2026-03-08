@@ -1,6 +1,6 @@
-import yaml
-import os
 from pathlib import Path
+
+import yaml
 
 manifest_path = "curriculum/l2-uk-en/curriculum.yaml"
 with open(manifest_path) as f:

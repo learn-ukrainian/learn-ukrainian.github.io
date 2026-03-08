@@ -8,153 +8,163 @@ and produces the final audit report.
 import os
 import re
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 # Add project root to path for shared module imports
 SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
-from yaml_activities import ActivityParser, Activity
-from slug_utils import to_bare_slug, grammar_path as _grammar_path, quality_path as _quality_path
+# Import richness calculation
+import sys
+from pathlib import Path
 
+from slug_utils import grammar_path as _grammar_path
+from slug_utils import quality_path as _quality_path
+from slug_utils import to_bare_slug
+from yaml_activities import ActivityParser
+
+from .checks import (
+    check_activity_header_format,
+    check_activity_ukrainian_content,
+    check_content_quality,
+    check_markdown_format,
+    check_resources_placement,
+    check_resources_required,
+    check_section_order,
+    check_unjumble_word_match,
+    count_items,
+    run_pedagogical_checks,
+)
+from .checks.activities import (
+    check_advanced_activities_presence,
+    check_cloze_syntax_errors,
+    check_error_correction_format,
+    check_error_correction_hints,
+    check_forbidden_activity_types,
+    check_hints_in_activities,
+    check_malformed_cloze_activities,
+    check_mark_the_words_format,
+    check_yaml_activity_types,
+)
+from .checks.activity_validation import (
+    check_english_hints_in_activities,
+    check_fill_in_answer_in_options,
+    check_mark_the_words_answers_in_text,
+    check_morpheme_patterns,
+    check_morpheme_pedagogy,
+    check_quiz_single_correct,
+    check_select_min_correct,
+    check_seminar_reading_pairing,
+    check_translate_single_correct,
+    check_unjumble_empty_jumbled,
+    check_unjumble_out_of_scope_dative,
+    check_unjumble_runon_answer,
+)
+from .checks.colonial_framing import check_colonial_framing
+from .checks.content_gaming import check_content_gaming
+from .checks.content_purity import check_content_purity
+from .checks.content_quality import (
+    ACADEMIC_LATIN_ALLOWLIST,
+    detect_track_from_path,
+    is_academic_latin_context,
+)
+from .checks.content_recall_detection import (
+    is_content_heavy_module,
+    run_all_content_recall_checks,
+)
+from .checks.euphony import check_euphony_violations
+from .checks.external_resource_validation import (
+    check_external_resources,
+    fix_external_resource_url,
+)
+from .checks.imperial_terminology import check_imperial_terminology
+from .checks.meta_validator import check_activity_hints_valid, check_research_file, check_seminar_meta_requirements
+
+# Vocabulary integrity checking removed - not needed (naturalness catches bad vocabulary)
+from .checks.outline_compliance import (
+    check_outline_compliance,
+    print_section_summary,
+)
+from .checks.prose_quality import check_prose_quality
+from .checks.review_gaming import check_review_gaming
+from .checks.review_validation import check_review_validity
+from .checks.russicism_detection import check_russicisms
+from .checks.state_standard_compliance import (
+    check_state_standard_compliance,
+)
+from .checks.vocabulary import (
+    check_metalanguage_scaffolding,
+    check_vocab_matches_plan,
+    check_vocab_table_format,
+    count_vocab_rows,
+    extract_vocab_from_section,
+    get_cumulative_vocab,
+)
+from .checks.vocabulary_integration import check_vocabulary_integration
+from .checks.yaml_lint import lint_yaml_file
+from .checks.yaml_schema_validation import (
+    check_activity_yaml_schema,
+)
+from .cleaners import (
+    calculate_immersion,
+    clean_for_immersion,
+    clean_for_stats,
+    extract_core_content,
+)
 from .config import (
-    LEVEL_CONFIG,
-    ACTIVITY_KEYWORDS,
-    CORE_KEYWORDS,
-    EXCLUDE_KEYWORDS,
-    VALID_ACTIVITY_TYPES,
-    AI_CONTAMINATION_PATTERNS,
-    REQUIRED_METADATA,
     ACTIVITY_COMPLEXITY,
+    ACTIVITY_KEYWORDS,
+    AI_CONTAMINATION_PATTERNS,
+    EXCLUDE_KEYWORDS,
+    LEVEL_CONFIG,
+    REQUIRED_METADATA,
+    VALID_ACTIVITY_TYPES,
     get_a1_immersion_range,
     get_a2_immersion_range,
     get_b1_immersion_range,
     get_level_config,
     get_word_target,
 )
-from .cleaners import (
-    clean_for_stats,
-    clean_for_immersion,
-    extract_core_content,
-    calculate_immersion,
-)
-from .checks import (
-    run_pedagogical_checks,
-    count_items,
-    check_markdown_format,
-    check_section_order,
-    check_section_order,
-    check_activity_ukrainian_content,
-    check_resources_placement,
-    check_resources_required,
-    check_unjumble_word_match,
-    check_content_quality,
-    check_activity_header_format,
-)
-from .checks.content_purity import check_content_purity
-from .checks.prose_quality import check_prose_quality
-from .checks.imperial_terminology import check_imperial_terminology
-from .checks.colonial_framing import check_colonial_framing
-from .checks.russicism_detection import check_russicisms
-from .checks.euphony import check_euphony_violations
-from .checks.content_quality import (
-    ACADEMIC_LATIN_ALLOWLIST,
-    HISTORICAL_TRACKS,
-    BIBLIOGRAPHY_HEADINGS,
-    is_academic_latin_context,
-    detect_track_from_path,
-)
-from .checks.outline_compliance import print_section_summary
-from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence, check_forbidden_activity_types
-from .checks.vocabulary_integration import check_vocabulary_integration
-from .checks.activity_validation import (
-    check_morpheme_patterns,
-    check_morpheme_pedagogy,
-    check_english_hints_in_activities,
-    check_unjumble_empty_jumbled,
-    check_mdx_unjumble_rendering,
-    check_seminar_reading_pairing,
-    check_select_min_correct,
-    check_quiz_single_correct,
-    check_fill_in_answer_in_options,
-    check_translate_single_correct,
-    check_mark_the_words_answers_in_text,
-    check_unjumble_runon_answer,
-    check_unjumble_out_of_scope_dative,
-)
-from .checks.external_resource_validation import (
-    check_external_resources,
-    fix_external_resource_url,
-)
-from .checks.meta_validator import check_seminar_meta_requirements, check_activity_hints_valid, check_research_file
-from .checks.yaml_schema_validation import (
-    check_activity_yaml_schema,
-)
-from .checks.yaml_lint import lint_yaml_file
-from .checks.state_standard_compliance import (
-    check_state_standard_compliance,
-)
-from .checks.review_validation import check_review_validity
-from .checks.content_gaming import check_content_gaming
-from .checks.review_gaming import check_review_gaming
-# Vocabulary integrity checking removed - not needed (naturalness catches bad vocabulary)
-from .checks.outline_compliance import (
-    check_outline_compliance,
-)
-from .checks.vocabulary import (
-    count_vocab_rows,
-    extract_vocab_items,
-    extract_vocab_from_section,
-    check_vocab_matches_plan,
-    check_metalanguage_scaffolding,
-    check_vocab_table_format,
-    get_cumulative_vocab,
-)
 from .gates import (
     GateResult,
-    evaluate_word_count,
-    evaluate_activity_count,
-    evaluate_density,
-    evaluate_unique_types,
-    evaluate_priority_types,
-    evaluate_engagement,
-    evaluate_audio,
-    evaluate_vocab,
-    evaluate_structure,
-    evaluate_lint,
-    evaluate_pedagogy,
-    evaluate_immersion,
-    evaluate_richness,
-    evaluate_grammar,
-    evaluate_activity_quality,
-    evaluate_content_heavy,
-    evaluate_naturalness,
-    evaluate_persona,
-    evaluate_research_alignment,
     compute_recommendation,
-)
-from .checks.content_recall_detection import (
-    is_content_heavy_module,
-    run_all_content_recall_checks,
+    evaluate_activity_count,
+    evaluate_activity_quality,
+    evaluate_audio,
+    evaluate_content_heavy,
+    evaluate_density,
+    evaluate_engagement,
+    evaluate_grammar,
+    evaluate_immersion,
+    evaluate_lint,
+    evaluate_naturalness,
+    evaluate_pedagogy,
+    evaluate_persona,
+    evaluate_priority_types,
+    evaluate_research_alignment,
+    evaluate_richness,
+    evaluate_structure,
+    evaluate_unique_types,
+    evaluate_vocab,
+    evaluate_word_count,
 )
 
-# Import richness calculation
-import sys
-from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from calculate_richness import calculate_richness_score, detect_dryness_flags
+
 from .report import (
     generate_report,
+    print_gates,
+    print_immersion_fix_hints,
+    print_lint_errors,
+    print_low_density_activities,
+    print_pedagogical_violations,
+    print_recommendation,
+    print_template_violations,
     save_report,
     save_status_cache,
-    print_gates,
-    print_lint_errors,
-    print_pedagogical_violations,
-    print_template_violations,
-    print_recommendation,
-    print_immersion_fix_hints,
-    print_low_density_activities,
 )
 
 
@@ -207,10 +217,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
             track_from_path = track_name.upper()
 
     # Use path-detected level if available
-    if phase == 'LIT':
-        level_code = 'LIT'
-    else:
-        level_code = level_from_path if level_from_path else phase.split('.')[0]
+    level_code = 'LIT' if phase == 'LIT' else level_from_path if level_from_path else phase.split('.')[0]
 
     if level_code not in LEVEL_CONFIG:
         if level_code.endswith('+'):
@@ -237,7 +244,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
                 m = re.search(r'module-LIT-(\d+)', basename)
                 if m:
                     module_num = int(m.group(1))
-    except:
+    except (ValueError, AttributeError):
         pass
 
     return level_code, module_num, track_code
@@ -346,17 +353,15 @@ def check_typography(content: str) -> list[str]:
 def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[str]:
     """Run markdown lint checks."""
     lint_errors = []
-    
+
     # Typography Check
     lint_errors.extend(check_typography(content))
-    
+
     lines_raw = content.split('\n')
 
     in_activities = False
     current_activity_type = None
     fill_in_needs_answer = False
-    fill_in_has_options = False
-    fill_in_item_line = 0
 
     for i, line in enumerate(lines_raw):
         line_num = i + 1
@@ -380,14 +385,12 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
                 current_activity_type = None
 
         # 1. Anagram Check
-        if current_activity_type == 'anagram':
-            if re.search(r'\w\s+/\s+\w\s+/', stripped):
-                lint_errors.append(f"Line {line_num}: Invalid Anagram format. Use spaces (a b c), not slashes.")
+        if current_activity_type == 'anagram' and re.search(r'\w\s+/\s+\w\s+/', stripped):
+            lint_errors.append(f"Line {line_num}: Invalid Anagram format. Use spaces (a b c), not slashes.")
 
         # 2. Activity YAML Check
-        if in_activities:
-            if stripped.startswith('type: ') or stripped.startswith('items:'):
-                lint_errors.append(f"Line {line_num}: YAML detected in Activities. Use markdown.")
+        if in_activities and (stripped.startswith('type: ') or stripped.startswith('items:')):
+            lint_errors.append(f"Line {line_num}: YAML detected in Activities. Use markdown.")
 
         # 3. Callout Check
         if "**Answer:**" in stripped or "**Option:**" in stripped:
@@ -414,9 +417,8 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
             lint_errors.append(f"Line {line_num}: Malformed Explanation. Contains '[!answer]' inside explanation block.")
 
         # 7. Checkbox Format Check
-        if stripped.startswith('- ['):
-            if not re.match(r'- \[[ xX]\]', stripped):
-                lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
+        if stripped.startswith('- [') and not re.match(r'- \[[ xX]\]', stripped):
+            lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
 
         # 8. AI Contamination Check
         for pat in AI_CONTAMINATION_PATTERNS:
@@ -439,22 +441,19 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
             lint_errors.append(f"Line {line_num}: Empty Header detected (Lonely '#'). Remove or add title.")
 
         # 11. True/False Strict Check
-        if current_activity_type == 'true-false':
-            if '> [!explanation]' in stripped:
-                lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
+        if current_activity_type == 'true-false' and '> [!explanation]' in stripped:
+            lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
 
         # 12. Transliteration Column Check (M21+)
         # Note: Only flag "transliteration" or "translit", NOT "translation"
-        if module_num >= 21:
-            if '|' in stripped:
+        if module_num >= 21 and '|' in stripped:
                 lower_stripped = stripped.lower()
                 # Check for transliteration columns but NOT translation or pronunciation (Вимова) columns
                 if '| translit' in lower_stripped:
                     lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
 
         # 13. Hint Detection (only in Activities)
-        if in_activities:
-            if re.search(r'\[Hint:.*?\]', stripped, re.IGNORECASE) or re.search(r'\(Hint:.*?\)', stripped, re.IGNORECASE) or re.search(r'\bHint:', stripped, re.IGNORECASE):
+        if in_activities and (re.search(r'\[Hint:.*?\]', stripped, re.IGNORECASE) or re.search(r'\(Hint:.*?\)', stripped, re.IGNORECASE) or re.search(r'\bHint:', stripped, re.IGNORECASE)):
                 lint_errors.append(f"Line {line_num}: Activity Hint detected. Policy: Remove all hints (e.g. [Hint: ...]) from activities.")
 
     return lint_errors
@@ -555,21 +554,21 @@ def validate_checkpoint_format(content: str) -> list[str]:
 
 def validate_checkpoint_coverage(content: str, frontmatter_str: str) -> list[str]:
     """Validate checkpoint covers expected skills from frontmatter grammar/objectives.
-    
+
     Checks that:
     1. frontmatter has grammar or objectives list
     2. Each grammar/objective topic appears in content (Skill sections or body)
-    
+
     This enables automated validation that checkpoints cover all required skills
     defined in the curriculum plan.
     """
     errors = []
-    
+
     # Extract grammar list from frontmatter
     grammar_match = re.search(r'^grammar:\s*\n((?:\s+-\s+.*\n?)+)', frontmatter_str, re.MULTILINE)
     if grammar_match:
         grammar_items = re.findall(r'-\s+"?([^"\n]+)"?', grammar_match.group(1))
-        
+
         # Check each grammar item appears somewhere in content
         for item in grammar_items:
             # Clean up the item for searching (take first few significant words)
@@ -577,27 +576,27 @@ def validate_checkpoint_coverage(content: str, frontmatter_str: str) -> list[str
             if keywords and not re.search(re.escape(keywords[:15]), content.lower()):
                 # Soft warning - might be covered under different wording
                 pass  # Don't fail for now, just log for future
-    
+
     # Extract objectives from frontmatter
     objectives_match = re.search(r'^objectives:\s*\n((?:\s+-\s+.*\n?)+)', frontmatter_str, re.MULTILINE)
     if objectives_match:
         objective_items = re.findall(r'-\s+"?([^"\n]+)"?', objectives_match.group(1))
-        
+
         # Count how many objectives are reflected in Skill sections (English or Ukrainian)
         skill_pattern = r'^## (?:Skill|Навичка)\s*\d*:'
         skill_count = len(re.findall(skill_pattern, content, re.MULTILINE))
         objective_count = len(objective_items)
-        
+
         # Warning if there are objectives but no corresponding skill sections
         if objective_count > 0 and skill_count < 1:
             errors.append(f"Checkpoint has {objective_count} objectives but no '## Skill N:' or '## Навичка N:' sections")
-    
+
     return errors
 
 
 def check_structure(content: str) -> dict[str, bool]:
     """Check for required structure elements.
-    
+
     Returns a dictionary of boolean flags for each section.
     """
     lines = content.split('\n')
@@ -605,9 +604,9 @@ def check_structure(content: str) -> dict[str, bool]:
     has_vocab = any(re.match(r'^#+\s+(Vocabulary|Словник)', l.strip(), re.IGNORECASE) for l in lines)
     has_activities = any(re.match(r'^#+\s+(Activities|Вправи)', l.strip(), re.IGNORECASE) for l in lines)
     has_resources = any(re.match(r'^#+\s+(External Resources|Зовнішні ресурси|Resources)', l.strip(), re.IGNORECASE) for l in lines)
-    
+
     has_vocab_table = any('| Word |' in l or 'Слово' in l or 'Термін' in l or '| Ukrainian |' in l for l in lines)
-    
+
     return {
         'summary': has_summary,
         'vocab_header': has_vocab,
@@ -630,7 +629,7 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
         if not yaml_path.exists():
             return None
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             return yaml.safe_load(f)
     except Exception as e:
         print(f"  ❌ YAML parse error in meta sidecar: {yaml_path}")
@@ -641,7 +640,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     """Load plan data from plans directory if exists (Split Architecture)."""
     from pathlib import Path
     md_path = Path(md_file_path)
-    
+
     # Determine level from path
     # e.g. curriculum/l2-uk-en/b1/01.md -> level=b1
     try:
@@ -659,7 +658,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
                      return None
              else:
                  return None
-    except:
+    except (ValueError, IndexError):
         return None
 
     # Construct plan path: curriculum/l2-uk-en/plans/{level}/{slug}.yaml
@@ -673,9 +672,9 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
         plan_path = base_dir / 'plans' / level / (md_path.stem + '.yaml')
         if not plan_path.exists():
             return None
-        
+
     try:
-        with open(plan_path, 'r', encoding='utf-8') as f:
+        with open(plan_path, encoding='utf-8') as f:
             return yaml.safe_load(f)
     except Exception as e:
         print(f"  ❌ YAML parse error in plan sidecar: {plan_path}")
@@ -696,7 +695,7 @@ def load_yaml_vocab(md_file_path: str) -> tuple[list[dict] | None, str | None]:
     if not yaml_path.exists():
         return None, None
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             data = yaml.safe_load(f)
             # Support both 'items' (legacy?) and 'vocabulary' (standard) keys
             if isinstance(data, list):
@@ -729,7 +728,7 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
         return None
 
     try:
-        with open(curriculum_yaml_path, 'r', encoding='utf-8') as f:
+        with open(curriculum_yaml_path, encoding='utf-8') as f:
             curriculum = yaml.safe_load(f)
 
         # Determine which level key to look under
@@ -745,10 +744,7 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
         # Check if file is in a track directory (hist, bio, etc.)
         track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path)
-        if track_match:
-            level_key = track_match.group(1)  # e.g., 'hist'
-        else:
-            level_key = level_key_map.get(level_code, level_code.lower())
+        level_key = track_match.group(1) if track_match else level_key_map.get(level_code, level_code.lower())
 
         # Get modules list for this level
         level_data = curriculum.get('levels', {}).get(level_key)
@@ -793,7 +789,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
         print(f"Error: File {file_path} not found.")
         sys.exit(1)
 
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
     # Initialize failure tracking early (used throughout audit)
@@ -803,7 +799,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # Try loading YAML sidecars
     meta_data = load_yaml_meta(file_path)
     plan_data = load_yaml_plan(file_path)
-    
+
     # Merge Plan data into Meta data (Split Architecture Support)
     # This allows existing checks to work seamlessly whether data is in meta.yaml or plans/*.yaml
     if meta_data and plan_data:
@@ -811,26 +807,24 @@ def audit_module(file_path: str, skip_activities: bool = False,
         # Copy plan fields to meta_data if not present (or overwrite if plan is authority)
         # Plan is AUTHORITY for these fields
         PLAN_FIELDS_TO_MERGE = [
-            'title', 'subtitle', 'content_outline', 'word_target', 
-            'vocabulary_hints', 'activity_hints', 'focus', 'pedagogy', 
+            'title', 'subtitle', 'content_outline', 'word_target',
+            'vocabulary_hints', 'activity_hints', 'focus', 'pedagogy',
             'prerequisites', 'connects_to', 'objectives', 'learning_outcomes',
             'grammar', 'module_type', 'sources', 'immersion', 'register', 'phase'
         ]
         for field in PLAN_FIELDS_TO_MERGE:
-            if field in plan_data:
-                # Allow Meta to override Plan (e.g. for refined activity_hints)
-                if field not in meta_data:
+            if field in plan_data and field not in meta_data:
                     meta_data[field] = plan_data[field]
 
     vocab_data, vocab_error = load_yaml_vocab(file_path)
-    
+
     # Parse frontmatter
     if meta_data:
         # Reconstruct frontmatter string for validation functions that expect it
         frontmatter_str = yaml.dump(meta_data, sort_keys=False, allow_unicode=True)
         # Content is the body (file is stripped) - No frontmatter in MD, whole file is body
         body = content
-        print(f"  📋 Loaded Metadata from YAML sidecar")
+        print("  📋 Loaded Metadata from YAML sidecar")
     else:
         frontmatter_str, body = parse_frontmatter(content)
 
@@ -870,7 +864,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     module_title = title_match.group(1).strip() if title_match else os.path.basename(file_path)
 
     print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
-    
+
     # Check word target — config is source of truth, but meta.yaml can override
     target = get_word_target(level_code, module_num, module_focus)
     if meta_data and 'word_target' in meta_data:
@@ -913,23 +907,23 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Template Compliance (Issue #398, #389) - Gradual rollout level-by-level
     TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']  # All Clean MD migrated levels
-    
+
     template_structure = None
     template_violations = []
-    
+
     if level_code in TEMPLATE_COMPLIANCE_ENABLED_LEVELS:
         try:
             # Import template modules - use relative imports for package context
             from . import template_parser
             from .checks import template_compliance as tc_module
-            
+
             # Construct module ID for template mapping
             # Extract full level including track suffix (hist, bio, lit)
             module_slug = Path(file_path).stem
             track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
             full_level = track_match.group(1) if track_match else level_code.lower()
             module_id_for_mapping = f"{full_level}-{module_slug}"
-            
+
             # Resolve which template this module should follow
             meta_for_template = meta_data if meta_data else {}
             template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
@@ -951,9 +945,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 critical_count = sum(1 for v in template_violations if v['severity'] == 'CRITICAL')
                 warning_count = sum(1 for v in template_violations if v['severity'] == 'WARNING')
                 info_count = sum(1 for v in template_violations if v['severity'] == 'INFO')
-                
+
                 print(f"  ⚠️  Template violations: {critical_count} critical, {warning_count} warnings, {info_count} info")
-                
+
                 # Show first 3 violations
                 for violation in template_violations[:3]:
                     severity_icon = "🔴" if violation['severity'] == 'CRITICAL' else "⚠️" if violation['severity'] == 'WARNING' else "ℹ️"
@@ -962,7 +956,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 if critical_count > 0:
                     has_critical_failure = True
                     critical_failure_reasons.append(f"{critical_count} Critical Template Violations")
-                    
+
         except ImportError as e:
             print(f"  ⚠️  Template compliance not available: {e}")
         except Exception as e:
@@ -1009,16 +1003,16 @@ def audit_module(file_path: str, skip_activities: bool = False,
     has_vocab_table = struct_flags['vocab_table']
     has_activities_header = struct_flags['activities_header']
     has_resources_header = struct_flags['resources_header']
-    
+
     # Sidecar Data Presence
     has_vocab_data = vocab_data is not None
-    
+
     # Check for activities YAML
     activities_yaml_path = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
     if not activities_yaml_path.exists():
         activities_yaml_path = Path(file_path).with_suffix('.activities.yaml')
     has_activities_data = activities_yaml_path.exists()
-    
+
     # Check for external resources in centralized YAML
     has_resources_data = False
     resources_path = Path('docs/resources/external_resources.yaml')
@@ -1035,14 +1029,14 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # Metadata sidecar overrides for summary
     if meta_data and (meta_data.get('summary') or meta_data.get('description')):
         has_summary = True
-        
+
     # Final structure evaluation (Clean MD Standard)
     # Applied to all production-ready levels that use sidecars
     is_clean_md_standard = level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH')
-    
+
     # Clean MD Logic: headers are optional IF data exists in sidecars.
     # However, Summary (# Підсумок) is ALWAYS required in Markdown.
-    
+
     structure_gate = evaluate_structure(
         has_summary=has_summary,
         has_vocab=has_vocab_header or has_vocab_data or skip_activities,
@@ -1069,9 +1063,9 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 vocab_section = vocab_section_match.group(2)
                 has_embedded_table = '|' in vocab_section and re.search(r'\|.*\|.*\|', vocab_section)
                 if has_embedded_table:
-                    print(f"⚠️  DUPLICATE VOCABULARY: Both YAML sidecar and embedded markdown table exist.")
+                    print("⚠️  DUPLICATE VOCABULARY: Both YAML sidecar and embedded markdown table exist.")
                     print(f"   → For {level_code}+ modules, vocabulary should be YAML-only.")
-                    print(f"   → Remove the '# Словник' section from the markdown file.")
+                    print("   → Remove the '# Словник' section from the markdown file.")
 
 
     # Checkpoint format validation
@@ -1134,7 +1128,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     yaml_file = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
 
     if skip_activities:
-        print(f"  ⏳ Content-only audit: activities/vocab gates DEFERRED")
+        print("  ⏳ Content-only audit: activities/vocab gates DEFERRED")
         use_yaml_activities = False
     else:
         # Check both new and legacy paths
@@ -1438,7 +1432,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             # This enables creative/thematic H2 headers.
             if not is_excluded:
                 is_core = True
-                
+
         cleaned_stats = clean_for_stats(text)
         count = len(cleaned_stats.split())
 
@@ -1564,25 +1558,16 @@ def audit_module(file_path: str, skip_activities: bool = False,
     if skip_activities:
         results['vocab'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
     else:
-        if vocab_data:
-            vocab_count = len(vocab_data)
-        else:
-            vocab_count = count_vocab_rows(content)
+        vocab_count = len(vocab_data) if vocab_data else count_vocab_rows(content)
 
         results['vocab'] = evaluate_vocab(vocab_count, vocab_target)
         # Note: vocab_count is a soft target (Issue #340) - don't fail audit
 
     # If using YAML sidecar for vocab, we assume "table format" is "handled by schema",
-    # but we still want to check if the Markdown *links* or *displays* it... 
+    # but we still want to check if the Markdown *links* or *displays* it...
     # Actually, the Markdown file doesn't display it anymore. generate_mdx injects it.
     # So we pass structure check if vocab_data exists.
-    if vocab_data:
-        has_vocab = True
-        has_vocab_table = True
-    else:
-        # Use flags already calculated above
-        has_vocab = has_vocab_header
-        has_vocab_table = has_vocab_table
+    has_vocab_table = True if vocab_data else has_vocab_table
 
     results['structure'] = structure_gate
     if results['structure'].status == 'FAIL':
@@ -1633,7 +1618,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
              print(f"     {severity_icon} [{v['type']}] {v['message']}")
              if v.get('fix'):
                  print(f"        Fix: {v['fix']}")
-        
+
         # Add to main violations list but mark critical ones as blocking
         if any(v['severity'] == 'critical' for v in meta_violations):
             has_critical_failure = True
@@ -1642,7 +1627,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     pedagogical_violations = run_pedagogical_checks(
         content, core_content, level_code, module_num, pedagogy, yaml_activities, module_focus
     )
-    
+
     # Add meta violations to pedagogical violations for reporting
     for v in meta_violations:
         pedagogical_violations.append({
@@ -1670,7 +1655,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     integration_data = check_vocabulary_integration(content, level_code, module_num, yaml_activities)
     if integration_data['total'] > 0:
         print(f"  📊 Vocabulary Integration: Lesson {integration_data['lesson_rate']:.1f}%, Activities {integration_data['activity_rate']:.1f}%")
-        
+
         # Add violations if below thresholds
         if integration_data['lesson_rate'] < 50:
             pedagogical_violations.append({
@@ -1694,7 +1679,8 @@ def audit_module(file_path: str, skip_activities: bool = False,
         vocab_words = set()
         for item in vocab_data:
             uk = item.get('lemma', '') # YAML schema uses 'lemma'
-            if uk: vocab_words.add(uk.lower())
+            if uk:
+                vocab_words.add(uk.lower())
     else:
         vocab_words = extract_vocab_from_section(content)
 
@@ -1738,19 +1724,19 @@ def audit_module(file_path: str, skip_activities: bool = False,
             'type': v['type'].upper(),
             'severity': v['severity'],
             'issue': v['message'],
-            'fix': f"Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary",
+            'fix': "Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary",
             'line': v.get('line', 0)
         })
-    
+
     # Run content quality checks (LLM-based + deterministic purity checks)
     content_quality_violations = check_content_quality(content, level_code, module_num, file_path)
-    
+
     # Run content purity checks (Redundancy, Roboticness, Mirroring)
     yaml_content_str = ""
     if yaml_file.exists():
         yaml_content_str = yaml_file.read_text(encoding='utf-8')
     purity_violations = check_content_purity(content, yaml_content_str)
-    
+
     if purity_violations:
         print(f"  ✨ Purity violations found: {len(purity_violations)}")
         for v in purity_violations:
@@ -1838,7 +1824,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             'issue': v['issue'],
             'fix': v['fix']
         })
-    
+
     # 2. Check if [!resources] callout appears before Activities section
     resources_violations = check_resources_placement(content)
     for v in resources_violations:
@@ -1848,7 +1834,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             'issue': v['issue'],
             'fix': v['fix']
         })
-    
+
     # 3. Check if [!resources] callout exists at all
     missing_resources_violations = check_resources_required(content)
     for v in missing_resources_violations:
@@ -2068,7 +2054,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     grammar_summary = None
     if os.path.exists(grammar_file):
         try:
-            with open(grammar_file, 'r', encoding='utf-8') as f:
+            with open(grammar_file, encoding='utf-8') as f:
                 grammar_data = yaml.safe_load(f)
                 grammar_summary = grammar_data.get('summary', {})
         except Exception:
@@ -2115,7 +2101,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
         if os.path.exists(quality_file):
             try:
-                with open(quality_file, 'r', encoding='utf-8') as f:
+                with open(quality_file, encoding='utf-8') as f:
                     quality_content = f.read()
                     # Parse result from report (look for "**Result:** ✅ PASS" or "**Result:** ❌ FAIL")
                     if '**Result:** ✅ PASS' in quality_content:

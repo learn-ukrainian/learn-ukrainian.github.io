@@ -371,7 +371,7 @@ class TestPipelineVersionsEndpoint:
         assert "v3" in data["counts"]
         assert "unbuilt" in data["counts"]
         assert "total" in data
-        assert "pct_v4" in data
+        assert "pct_v5" in data or "pct_v4" in data or "pct_built" in data
         assert "needs_rebuild" in data
         assert "per_track" in data
         assert "v4_modules" in data

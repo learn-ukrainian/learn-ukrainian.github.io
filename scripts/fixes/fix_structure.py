@@ -1,10 +1,10 @@
 import re
 import sys
-import glob
+
 
 def fix_file(file_path):
     print(f"Processing {file_path}...")
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
     # Parse headers
@@ -28,21 +28,21 @@ def fix_file(file_path):
     summary_block = None
     misplaced_analysis_blocks = []
     practice_block = None
-    
-    # State machine: 
+
+    # State machine:
     # 0: Intro (Before Summary)
     # 1: Summary found
     # 2: Practice found
     state = 0
-    
+
     for header, text in sections:
         if header == "START":
             intro_blocks.append((header, text))
             continue
-            
+
         is_summary = "# Підсумок" in header
         is_practice = "## Потрібно більше практики?" in header
-        
+
         if is_summary:
             state = 1
             summary_block = (header, text)
@@ -106,7 +106,7 @@ def fix_file(file_path):
         h, t = practice_block
         new_content += f"\n\n{h}\n"
         new_content += t
-        
+
     # 5. Post-Practice
     for h, t in post_practice_blocks:
         new_content += f"\n\n{h}\n"
@@ -115,7 +115,7 @@ def fix_file(file_path):
     # Write back
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(new_content.strip() + '\n')
-    
+
     print(f"Fixed {file_path}")
 
 if __name__ == "__main__":

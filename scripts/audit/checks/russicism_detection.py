@@ -12,17 +12,15 @@ Issue: #596
 """
 
 import re
-from typing import List, Dict
 
 from .prose_quality import _split_narrative_zones
-
 
 # ---------------------------------------------------------------------------
 # Russicism patterns: (regex, term, correct_form, note)
 # Ordered from most to least specific to avoid shorter patterns masking longer ones.
 # ---------------------------------------------------------------------------
 
-_RUSSICISMS: List[Dict] = [
+_RUSSICISMS: list[dict] = [
     {
         "pattern": r"\bприймати\s+участь",
         "term": "приймати участь",
@@ -184,13 +182,10 @@ def _is_in_quote_context(text: str, match_start: int) -> bool:
     # Check for blockquote line
     line_start = before.rfind('\n') + 1
     line = text[line_start:match_start].lstrip()
-    if line.startswith('>'):
-        return True
-
-    return False
+    return bool(line.startswith('>'))
 
 
-def check_russicisms(content: str, file_path: str = '') -> List[Dict]:
+def check_russicisms(content: str, file_path: str = '') -> list[dict]:
     """
     Detect common Russicisms in Ukrainian content.
 

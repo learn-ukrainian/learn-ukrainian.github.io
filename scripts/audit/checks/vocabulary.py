@@ -8,6 +8,7 @@ but not defined in the vocabulary table.
 import re
 import sqlite3
 from pathlib import Path
+
 from ..config import COMMON_WORDS
 
 # Level ordering for cumulative vocabulary lookup
@@ -19,7 +20,7 @@ def get_db_path() -> Path:
     return Path(__file__).parent.parent.parent.parent / "curriculum/l2-uk-en/vocabulary.db"
 
 
-def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_path: str = None) -> int:
+def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_path: str | None = None) -> int:
     """
     Sync vocabulary from a module to the database.
 
@@ -72,7 +73,7 @@ def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_pa
 
         conn.commit()
         conn.close()
-    except Exception as e:
+    except Exception:
         # Silently fail - don't break audit if DB sync fails
         pass
 
@@ -138,7 +139,7 @@ def generate_inflections(word: str) -> set[str]:
     return forms
 
 
-def get_cumulative_vocab(level: str, module_num: int, db_path: str = None) -> set[str]:
+def get_cumulative_vocab(level: str, module_num: int, db_path: str | None = None) -> set[str]:
     """
     Get all vocabulary words introduced up to and including the given module.
 
@@ -198,7 +199,7 @@ def get_cumulative_vocab(level: str, module_num: int, db_path: str = None) -> se
                         cumulative.add(word)
 
         conn.close()
-    except Exception as e:
+    except Exception:
         # If database access fails, return empty set (fall back to module-only check)
         pass
 
@@ -227,7 +228,7 @@ def extract_vocab_items(content: str) -> list[dict]:
             # Handle optional blockquote prefix
             if clean_line.startswith('>'):
                 clean_line = clean_line[1:].strip()
-                
+
             if clean_line.startswith('|') and '---' not in clean_line:
                 parts = [p.strip() for p in clean_line.split('|')]
                 # Remove empty parts from split
@@ -287,7 +288,7 @@ def check_vocab_violations(
     content: str,
     core_content: str,
     vocab_words: set[str],
-    cumulative_vocab: set[str] = None
+    cumulative_vocab: set[str] | None = None
 ) -> list[dict]:
     """Check if Ukrainian words in core content are in the vocabulary section.
 
@@ -472,15 +473,15 @@ def check_vocab_matches_plan(
 
     # Find missing words (in plan but not in module)
     missing = plan_vocab - module_vocab_lower
-    
+
     if missing:
         # Check if missing words are actually in the cumulative database
         cumulative_already = get_cumulative_vocab(level, module_num - 1)
         missing = missing - cumulative_already
-        
+
         # Filter out common words
         missing = missing - COMMON_WORDS
-        
+
         # FINAL FILTER: Simple stem check to catch inflections (nature vs природу)
         # If a missing word's stem matches a word in module_vocab, skip it.
         final_missing = set()
@@ -494,7 +495,7 @@ def check_vocab_matches_plan(
                     break
             if not has_match:
                 final_missing.add(m)
-        
+
         if final_missing and len(final_missing) > 0:
             sample = list(final_missing)[:5]
             # VOCAB_PLAN_MISSING is temporarily non-blocking (Issue #387 - separate vocab issue)
@@ -546,7 +547,7 @@ def check_metalanguage_scaffolding(
     vocab_words: set[str],
     level: str,
     module_num: int = 0,
-    cumulative_vocab: set[str] = None
+    cumulative_vocab: set[str] | None = None
 ) -> list[dict]:
     """
     Check if grammatical/linguistic terms used in instructions are taught first.
@@ -581,7 +582,7 @@ def check_metalanguage_scaffolding(
     # Find metalanguage terms used in content but not in current or cumulative vocabulary
     content_lower = content.lower()
     vocab_lower = {w.lower() for w in vocab_words}
-    
+
     # If cumulative_vocab is provided, merge it for the check
     known_vocab = vocab_lower.copy()
     if cumulative_vocab:
@@ -589,15 +590,13 @@ def check_metalanguage_scaffolding(
 
     used_but_not_taught = []
     for term in relevant_metalang:
-        if term in content_lower and term not in known_vocab:
-            # Check it's used in Ukrainian context
-            if re.search(rf'\b{term}\b', content_lower):
+        if term in content_lower and term not in known_vocab and re.search(rf'\b{term}\b', content_lower):
                 used_but_not_taught.append(term)
 
     if used_but_not_taught:
         # Determine if blocking based on level
         is_blocking = level_upper not in ('A1', 'A2') and 'CHECKPOINT' not in level_upper
-        
+
         violations.append({
             'type': 'METALANGUAGE',
             'issue': f"Metalanguage terms used but not in vocabulary: {', '.join(used_but_not_taught[:5])}",
@@ -632,9 +631,7 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
                 'issue': f"Level {level_upper} should use '# Vocabulary' header, but '# Словник' found.",
                 'fix': "Change '# Словник' to '# Vocabulary'."
             })
-    elif level_upper in ('B1', 'B2', 'C1', 'C2'):
-        # Should be '# Словник'
-        if re.search(r'^#{1,2}\s+Vocabulary', content, re.MULTILINE | re.IGNORECASE):
+    elif level_upper in ('B1', 'B2', 'C1', 'C2') and re.search(r'^#{1,2}\s+Vocabulary', content, re.MULTILINE | re.IGNORECASE):
             violations.append({
                 'type': 'VOCAB_HEADER',
                 'issue': f"Level {level_upper} should use '# Словник' header, but '# Vocabulary' found.",

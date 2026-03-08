@@ -5,13 +5,13 @@ This file stores track-level constants, model mappings, and pedagogical floors.
 It is the source of truth for the dispatcher, watcher, and audit scripts.
 """
 
-from typing import Dict, Any
+from typing import Any
 
 # =============================================================================
 # TRACK CONFIGURATION
 # =============================================================================
 
-TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
+TRACK_CONFIG: dict[str, dict[str, Any]] = {
     # --- Core Tracks (Beginner/Intermediate) ---
     "a1": {
         "model": "gemini-3-flash-preview",
@@ -37,7 +37,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "persona": "The Urbanist",
         "immersion_range": [0.95, 1.0],
     },
-    
+
     # --- Seminar Tracks (Advanced/Scholar) ---
     "hist": {
         "model": "gemini-3.1-pro-preview",
@@ -63,7 +63,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "persona": "The Stylistic Critic",
         "immersion_range": [1.0, 1.0],
     },
-    
+
     # --- Specialized Literature Tracks ---
     "lit-war": {
         "model": "gemini-3.1-pro-preview",
@@ -119,7 +119,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "persona": "The Crimean Narratologist",
         "immersion_range": [1.0, 1.0],
     },
-    
+
     # --- Scholar Tracks (Ancient/Professional) ---
     "ruth": {
         "model": "gemini-3.1-pro-preview",
@@ -179,7 +179,7 @@ def get_next_turn(current_turn: float) -> float:
         pass
     return None
 
-def get_config(track: str) -> Dict[str, Any]:
+def get_config(track: str) -> dict[str, Any]:
     """Retrieves config for a specific track, falling back to default core config."""
     return TRACK_CONFIG.get(track, {
         "model": "gemini-3-flash-preview",

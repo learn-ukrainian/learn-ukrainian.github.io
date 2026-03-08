@@ -17,7 +17,6 @@ Creates:
 
 import sqlite3
 import sys
-import os
 from pathlib import Path
 
 # Configuration
@@ -146,8 +145,8 @@ def main():
 
     # Verify tables
     cursor = conn.execute("""
-        SELECT name FROM sqlite_master 
-        WHERE type='table' 
+        SELECT name FROM sqlite_master
+        WHERE type='table'
         ORDER BY name
     """)
     tables = [row[0] for row in cursor.fetchall()]
@@ -159,8 +158,8 @@ def main():
 
     # Show indexes
     cursor = conn.execute("""
-        SELECT name FROM sqlite_master 
-        WHERE type='index' AND name NOT LIKE 'sqlite_%' 
+        SELECT name FROM sqlite_master
+        WHERE type='index' AND name NOT LIKE 'sqlite_%'
         ORDER BY name
     """)
     indexes = [row[0] for row in cursor.fetchall()]

@@ -7,9 +7,9 @@ Parses vocabulary from:
 """
 
 import re
-import yaml
 from pathlib import Path
-from typing import List, Dict, Tuple
+
+import yaml
 
 
 class VocabularyParser:
@@ -25,7 +25,7 @@ class VocabularyParser:
         self.curriculum_root = Path(curriculum_root)
         self.docs_root = Path('docs/l2-uk-en')
 
-    def parse_module_vocabulary(self, level: str) -> Dict[str, List[str]]:
+    def parse_module_vocabulary(self, level: str) -> dict[str, list[str]]:
         """
         Parse vocabulary from module YAML files.
 
@@ -47,7 +47,7 @@ class VocabularyParser:
             module_num = yaml_file.stem[:2]
 
             try:
-                with open(yaml_file, 'r', encoding='utf-8') as f:
+                with open(yaml_file, encoding='utf-8') as f:
                     data = yaml.safe_load(f)
 
                 words = []
@@ -64,7 +64,7 @@ class VocabularyParser:
 
         return module_vocab
 
-    def parse_plan_vocabulary(self, level: str) -> Dict[str, List[str]]:
+    def parse_plan_vocabulary(self, level: str) -> dict[str, list[str]]:
         """
         Parse vocabulary from curriculum plan markdown files.
 
@@ -81,7 +81,7 @@ class VocabularyParser:
         if not plan_file.exists():
             return {}
 
-        with open(plan_file, 'r', encoding='utf-8') as f:
+        with open(plan_file, encoding='utf-8') as f:
             content = f.read()
 
         # Check if this level has prescribed vocabulary
@@ -106,17 +106,15 @@ class VocabularyParser:
 
             # Match vocabulary line: **Vocabulary (35 words):**
             vocab_match = re.match(r'\*\*Vocabulary\s+\((\d+)\s+words?\):\*\*', line, re.IGNORECASE)
-            if vocab_match and current_module:
-                # Next line should contain comma-separated words
-                if i + 1 < len(lines):
-                    words_line = lines[i + 1].strip()
-                    # Split by comma and clean up spaces
-                    words = [w.strip() for w in words_line.split(',') if w.strip()]
-                    module_vocab[current_module] = words
+            if vocab_match and current_module and i + 1 < len(lines):
+                words_line = lines[i + 1].strip()
+                # Split by comma and clean up spaces
+                words = [w.strip() for w in words_line.split(',') if w.strip()]
+                module_vocab[current_module] = words
 
         return module_vocab
 
-    def get_all_words_by_level(self, level: str) -> Tuple[List[str], List[Tuple[str, str]]]:
+    def get_all_words_by_level(self, level: str) -> tuple[list[str], list[tuple[str, str]]]:
         """
         Get all vocabulary words for a level with their module locations.
 

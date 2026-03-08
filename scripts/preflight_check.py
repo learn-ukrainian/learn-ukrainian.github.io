@@ -11,12 +11,12 @@ Usage:
 """
 
 import sys
-import yaml
 from pathlib import Path
-from typing import Optional
+
+import yaml
 
 
-def load_yaml(path: Path) -> Optional[dict]:
+def load_yaml(path: Path) -> dict | None:
     """Load YAML file, return None if missing."""
     if not path.exists():
         return None
@@ -119,7 +119,7 @@ def check_module(md_path: Path) -> tuple[bool, list[str]]:
                 frontmatter = yaml.safe_load(fm)
                 if frontmatter:
                     issues.append("ℹ️ EXISTS: MD file has frontmatter")
-            except:
+            except (yaml.YAMLError, ValueError):
                 issues.append("⚠️ MD: Frontmatter parsing error")
         else:
             issues.append("⚠️ MD: No frontmatter in stub")
@@ -164,7 +164,7 @@ def main():
     else:
         md_path = Path(sys.argv[1])
 
-    if not md_path.suffix == '.md':
+    if md_path.suffix != '.md':
         print(f"❌ Expected .md file, got: {md_path}")
         sys.exit(1)
 

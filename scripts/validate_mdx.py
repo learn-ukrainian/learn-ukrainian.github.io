@@ -11,8 +11,8 @@ Usage:
 
 import re
 import sys
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 
 # Add scripts directory to path for audit imports
 SCRIPT_DIR = Path(__file__).parent
@@ -212,9 +212,8 @@ def validate_cloze_components(mdx_content: str) -> list[str]:
                 errors.append(f"Cloze '{title}': blank {i} options is not a list")
 
             # Validate answer is in options
-            if 'answer' in blank and 'options' in blank:
-                if blank['answer'] not in blank['options']:
-                    errors.append(f"Cloze '{title}': blank {i} answer '{blank['answer']}' not in options")
+            if 'answer' in blank and 'options' in blank and blank['answer'] not in blank['options']:
+                errors.append(f"Cloze '{title}': blank {i} answer '{blank['answer']}' not in options")
 
     return errors
 
@@ -283,13 +282,13 @@ def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
     # Check [!solution] callouts are converted to <details> elements (may have leading whitespace)
     md_solution_count = len(re.findall(r'^\s*>\s*\[!solution\]', md_content, re.IGNORECASE | re.MULTILINE))
     mdx_details_count = len(re.findall(r'<details\s+className=["\']solution-block["\']', mdx_content))
-    
+
     if md_solution_count > 0:
         if mdx_details_count == 0:
             errors.append(f"[!solution] callouts ({md_solution_count}) not converted to <details> elements")
         elif mdx_details_count < md_solution_count:
             warnings.append(f"Some [!solution] callouts may not be converted ({mdx_details_count}/{md_solution_count} found)")
-        
+
         # Verify balanced tags
         details_open = len(re.findall(r'<details\s', mdx_content))
         details_close = len(re.findall(r'</details>', mdx_content))

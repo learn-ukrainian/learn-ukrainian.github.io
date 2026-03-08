@@ -283,7 +283,7 @@ def process_pdf(pdf_path: Path, output_dir: Path | None = None,
 
     for section in sections:
         chunks = chunk_text(section["text"], section["title"])
-        for i, chunk in enumerate(chunks):
+        for _i, chunk in enumerate(chunks):
             is_clean, ratio = check_quality(chunk["text"])
 
             chunk_record = {

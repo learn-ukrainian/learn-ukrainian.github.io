@@ -6,12 +6,16 @@ and case government rules based on CEFR level.
 """
 
 import re
-from ..config import (
-    GRAMMAR_CONSTRAINTS, CASE_PATTERNS,
-    PARTICIPLE_EXCLUSIONS, NOMINATIVE_PLURAL_EXCLUSIONS,
-    FIXED_PHRASES_INSTRUMENTAL, FIXED_PHRASES_DATIVE
-)
+
 from ..cleaners import extract_ukrainian_sentences
+from ..config import (
+    CASE_PATTERNS,
+    FIXED_PHRASES_DATIVE,
+    FIXED_PHRASES_INSTRUMENTAL,
+    GRAMMAR_CONSTRAINTS,
+    NOMINATIVE_PLURAL_EXCLUSIONS,
+    PARTICIPLE_EXCLUSIONS,
+)
 
 
 def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
@@ -21,9 +25,7 @@ def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
 
     # Check if the match appears in any fixed phrase context
     for phrase in phrase_set:
-        if phrase in text_lower:
-            # Check if match is part of this phrase
-            if match_lower in phrase or any(word in match_lower for word in phrase.split()):
+        if phrase in text_lower and (match_lower in phrase or any(word in match_lower for word in phrase.split())):
                 return True
 
     # Special handling for dative pronouns near context words
@@ -151,6 +153,10 @@ def check_gender_agreement(content: str, level_code: str) -> list[dict]:
     """Check for noun-adjective gender agreement errors."""
     violations = []
 
+    # Strip deliberate errors (strikethrough ~~wrong form~~) before checking
+    from .morphological_validator import _STRIKETHROUGH_RE
+    content = _STRIKETHROUGH_RE.sub('', content)
+
     mismatch_patterns = [
         (r'\b(гарна|нова|стара|велика|мала|добра|погана)\s+(хлопець|чоловік|батько|брат|друг|студент|вчитель)\b',
          'Feminine adjective with masculine noun'),
@@ -181,7 +187,7 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
     1. These patterns are too simplistic (e.g., "на стіл" is valid accusative)
     2. A1 modules teach these very patterns, creating false positives
     3. Quiz wrong answers (intentional errors) trigger false positives
-    
+
     Also excludes error-correction sections which intentionally contain errors.
     """
     violations = []
@@ -198,7 +204,7 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
         content,
         flags=re.DOTALL | re.IGNORECASE
     )
-    
+
     # Also filter out quiz/translate wrong answer lines (marked with - [ ])
     # These intentionally contain incorrect options for learners to reject
     filtered_content = re.sub(

@@ -169,7 +169,8 @@ def scrape_text(text: dict, wave_num: int, dry_run: bool = False) -> int:
     output = Path(f"data/literary_texts/wave{wave_num}-{slug}.jsonl")
 
     if output.exists() and output.stat().st_size > 100:
-        count = sum(1 for _ in open(output))
+        with open(output) as _f:
+            count = sum(1 for _ in _f)
         print(f"  [skip] {slug} already exists ({count} chunks)")
         return 0
 
@@ -198,7 +199,8 @@ def scrape_text(text: dict, wave_num: int, dry_run: bool = False) -> int:
         return 0
 
     if output.exists():
-        count = sum(1 for _ in open(output))
+        with open(output) as _f:
+            count = sum(1 for _ in _f)
         print(f"    -> {count} chunks")
         return count
     return 0

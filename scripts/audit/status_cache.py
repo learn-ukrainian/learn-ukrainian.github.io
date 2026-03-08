@@ -13,7 +13,6 @@ Staleness logic:
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 
 @dataclass
@@ -63,7 +62,7 @@ class StatusResult:
         return f"StatusResult({self.module}@{self.level}, {self.status}, {freshness})"
 
 
-def get_source_paths(track_dir: Path, slug: str) -> dict[str, Optional[Path]]:
+def get_source_paths(track_dir: Path, slug: str) -> dict[str, Path | None]:
     """Resolve all source file paths for a module.
 
     Args:
@@ -83,10 +82,7 @@ def get_source_paths(track_dir: Path, slug: str) -> dict[str, Optional[Path]]:
         md_path = direct
     else:
         matches = list(track_dir.glob(f"*-{slug}.md"))
-        if matches:
-            md_path = matches[0]
-        else:
-            md_path = direct  # Return expected path even if missing
+        md_path = matches[0] if matches else direct  # Return expected path even if missing
 
     return {
         "md": md_path,
@@ -100,8 +96,8 @@ def get_source_paths(track_dir: Path, slug: str) -> dict[str, Optional[Path]]:
 
 def read_status(
     status_path: Path,
-    source_paths: Optional[dict[str, Optional[Path]]] = None,
-) -> Optional[StatusResult]:
+    source_paths: dict[str, Path | None] | None = None,
+) -> StatusResult | None:
     """Single access point for status cache. ALL consumers should use this.
 
     Freshness is determined by relative mtime comparison (Solution B from #561):

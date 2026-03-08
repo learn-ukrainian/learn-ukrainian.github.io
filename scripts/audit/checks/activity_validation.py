@@ -1,9 +1,7 @@
 """Activity validation check for audit system."""
 
-import re
 import json
-from pathlib import Path
-from typing import Dict, List
+import re
 
 
 def check_unjumble_empty_jumbled(yaml_activities: list) -> list:
@@ -56,7 +54,7 @@ def check_mdx_unjumble_rendering(mdx_content: str) -> list:
 
     # Find all Unjumble components
     unjumble_pattern = r'<Unjumble[^>]*title="([^"]*)"[^>]*items=\{JSON\.parse\(`([^`]+)`\)\}'
-    
+
     for match in re.finditer(unjumble_pattern, mdx_content):
         title = match.group(1)
         json_str = match.group(2)
@@ -92,11 +90,11 @@ def check_morpheme_patterns(yaml_activities: list) -> list:
         text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
         if not text and isinstance(activity, dict):
             text = activity.get('text', '') or activity.get('passage', '')
-            
+
         answers = getattr(activity, 'answers', [])
         if not answers and isinstance(activity, dict):
             answers = activity.get('answers', []) or activity.get('correct_words', [])
-            
+
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
@@ -139,7 +137,7 @@ def check_morpheme_patterns(yaml_activities: list) -> list:
                     'severity': 'error',
                     'activity': title,
                     'message': f'Morpheme "{morpheme}" not found in word "{full_word}"',
-                    'suggestion': f'Morpheme should be part of the word, e.g., "*при*йшов" or "Чит*ач*"'
+                    'suggestion': 'Morpheme should be part of the word, e.g., "*при*йшов" or "Чит*ач*"'
                 })
 
     return violations
@@ -157,7 +155,7 @@ def check_mark_the_words_format(activities: list) -> list:
         text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
         if not text and isinstance(activity, dict):
             text = activity.get('text', '') or activity.get('passage', '')
-            
+
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
@@ -192,7 +190,7 @@ def check_morpheme_pedagogy(activities: list) -> list:
         text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
         if not text and isinstance(activity, dict):
             text = activity.get('text', '') or activity.get('passage', '')
-            
+
         title = getattr(activity, 'title', 'Untitled')
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
@@ -312,13 +310,10 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
             items = getattr(activity, 'items', [])
             if not items and hasattr(activity, 'get'):
                 items = activity.get('items', [])
-            
+
             for item in items:
-                if isinstance(item, dict):
-                    sentence = item.get('sentence', '')
-                else:
-                    sentence = getattr(item, 'sentence', '')
-                
+                sentence = item.get('sentence', '') if isinstance(item, dict) else getattr(item, 'sentence', '')
+
                 text_to_check += sentence + '\n'
 
         if not text_to_check:
@@ -348,7 +343,7 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
                 'activity_type': act_type,
                 'message': f'Found {len(real_hints)} English hints: {", ".join(real_hints[:5])}{"..." if len(real_hints) > 5 else ""}',
                 'suggestion': 'Remove English hints - students should understand from context. For word formation activities, add Ukrainian context instead.',
-                'pedagogical_issue': f'English hints make it too easy and defeat the learning objective. Students match English→Ukrainian instead of understanding patterns.',
+                'pedagogical_issue': 'English hints make it too easy and defeat the learning objective. Students match English→Ukrainian instead of understanding patterns.',
                 'examples': real_hints[:10]
             })
 
@@ -465,7 +460,7 @@ def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
             'severity': 'warning',
             'activity': reading_title,
             'message': f'Reading "{reading_id}" is not referenced by any analytical activity',
-            'suggestion': 'Add source_reading: "{}" to an essay-response, critical-analysis, or comparative-study'.format(reading_id)
+            'suggestion': f'Add source_reading: "{reading_id}" to an essay-response, critical-analysis, or comparative-study'
         })
 
     return violations
@@ -509,9 +504,8 @@ def check_select_min_correct(yaml_activities: list) -> list:
                 if hasattr(opt, 'correct'):
                     if opt.correct:
                         actual_correct += 1
-                elif isinstance(opt, dict):
-                    if opt.get('correct', False):
-                        actual_correct += 1
+                elif isinstance(opt, dict) and opt.get('correct', False):
+                    actual_correct += 1
 
             if actual_correct != min_correct:
                 violations.append({
@@ -561,9 +555,8 @@ def check_quiz_single_correct(yaml_activities: list) -> list:
                 if hasattr(opt, 'correct'):
                     if opt.correct:
                         correct_count += 1
-                elif isinstance(opt, dict):
-                    if opt.get('correct', False):
-                        correct_count += 1
+                elif isinstance(opt, dict) and opt.get('correct', False):
+                    correct_count += 1
 
             if correct_count != 1:
                 violations.append({
@@ -856,20 +849,20 @@ def check_unjumble_out_of_scope_dative(yaml_activities: list) -> list:
 
 
 __all__ = [
-    'check_unjumble_empty_jumbled',
+    'check_english_hints_in_activities',
+    'check_fill_in_answer_in_options',
+    'check_mark_the_words_answers_in_text',
+    'check_mark_the_words_format',
     'check_mdx_unjumble_rendering',
     'check_morpheme_patterns',
-    'check_mark_the_words_format',
     'check_morpheme_pedagogy',
-    'check_english_hints_in_activities',
-    'check_seminar_reading_pairing',
-    # Unjumble quality checks
-    'check_unjumble_runon_answer',
-    'check_unjumble_out_of_scope_dative',
+    'check_quiz_single_correct',
     # New semantic correctness checks
     'check_select_min_correct',
-    'check_quiz_single_correct',
-    'check_fill_in_answer_in_options',
+    'check_seminar_reading_pairing',
     'check_translate_single_correct',
-    'check_mark_the_words_answers_in_text',
+    'check_unjumble_empty_jumbled',
+    'check_unjumble_out_of_scope_dative',
+    # Unjumble quality checks
+    'check_unjumble_runon_answer',
 ]

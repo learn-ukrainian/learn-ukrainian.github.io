@@ -113,7 +113,7 @@ def is_valid_vocab(vocab_path: Path) -> bool:
     if not vocab_path.exists():
         return False
     try:
-        with open(vocab_path, "r", encoding="utf-8") as f:
+        with open(vocab_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
         return isinstance(data, dict) and "items" in data and len(data["items"]) > 0
     except Exception:

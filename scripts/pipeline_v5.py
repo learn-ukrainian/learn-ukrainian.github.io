@@ -20,9 +20,8 @@ import subprocess
 import sys
 import tempfile
 import textwrap
-import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -37,42 +36,50 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 # ---------------------------------------------------------------------------
 # Imports from pipeline_lib (shared utilities — never duplicated)
 # ---------------------------------------------------------------------------
+import contextlib
+
 import pipeline_lib
+from batch_gemini_config import (
+    CLAUDE_MODEL_CORE_ACTIVITIES,
+    CLAUDE_MODEL_CORE_RESEARCH,
+    CLAUDE_MODEL_FINAL_REVIEW,
+    PHASES_DIR,
+    PRO_MODEL,
+    PRO_TRACKS,
+    PROJECT_ROOT,
+    SEMINAR_TRACKS,
+)
 from pipeline_lib import (
-    # Dispatch + logging
-    dispatch_gemini, log,
-    # Phase helpers
-    run_verify,
-    # Fix-prompt helpers moved to pipeline_v5.py (section 2b)
-    fill_template, _dispatch_prompt, _gemini_output_path,
-    _run_with_heartbeat, _init_log, save_gemini_session,
-    # Phase B content (archive check + fallback to phase_2_content)
-    phase_B_content,
-    # Preflight + completion
-    write_completion_report_v2,
-    # State helpers
-    _now_iso,
-    write_placeholders,
-    write_review_with_hash,
+    FileLock,
     ModuleContext,
+    _dispatch_prompt,
+    _gemini_output_path,
+    _get_activities_template,
+    # Tier-based prompt dispatch
+    _get_prompt_tier,
+    _get_scoring_output_table,
+    # Scoring helpers (for Gemini review)
+    _get_scoring_section,
+    _now_iso,
+    _run_with_heartbeat,
     # Thread-safe locks
-    _state_lock, FileLock,
+    _state_lock,
     # Validation
     _validate_activities_yaml,
-    # Tier-based prompt dispatch
-    _get_prompt_tier, _get_activities_template,
-    # Scoring helpers (for Gemini review)
-    _get_scoring_section, _get_scoring_output_table,
     # Bilingual section titles
     bilingualify_section_titles,
-)
-from batch_gemini_config import (
-    PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
-    SEMINAR_TRACKS, PRO_TRACKS, get_module_index, get_module_paths,
-    slug_for_num,
-    CLAUDE_MODEL_CORE_RESEARCH, CLAUDE_MODEL_CORE_ACTIVITIES,
-    CLAUDE_MODEL_SEMINAR_RESEARCH, CLAUDE_MODEL_SEMINAR_ACTIVITIES,
-    CLAUDE_MODEL_FINAL_REVIEW,
+    # Dispatch + logging
+    dispatch_gemini,
+    # Fix-prompt helpers moved to pipeline_v5.py (section 2b)
+    fill_template,
+    log,
+    # Phase B content (archive check + fallback to phase_2_content)
+    phase_B_content,
+    # Phase helpers
+    run_verify,
+    save_gemini_session,
+    # Preflight + completion
+    write_review_with_hash,
 )
 
 # ---------------------------------------------------------------------------
@@ -183,7 +190,7 @@ def load_state(ctx: ModuleContext) -> dict:
         try:
             data = json.loads(sf_v5_legacy.read_text("utf-8"))
             sf_v5_legacy.unlink()
-            log(f"  State migration: state-v5.json → state.json (old file removed)")
+            log("  State migration: state-v5.json → state.json (old file removed)")
             return data
         except Exception as e:
             logger.warning("state-v5.json unreadable for %s/%s: %s — trying v4",
@@ -415,6 +422,8 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                 logger.warning("Auto-fix: euphony failed: %s", e)
 
             # 1b. Demote extra H1 headings to H2
+            # Exception: Summary/Підсумок MUST stay H1 (audit spec requires it)
+            _H1_ALLOWED = {'summary', 'підсумок'}
             try:
                 lines = text.split('\n')
                 h1_count = 0
@@ -429,13 +438,16 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                     if line.startswith('# ') and not line.startswith('## '):
                         h1_count += 1
                         if h1_count > 1:
-                            lines[i] = '#' + line
-                            changed = True
+                            # Don't demote sections that spec requires as H1
+                            heading_text = line.lstrip('# ').strip().lower()
+                            if heading_text not in _H1_ALLOWED:
+                                lines[i] = '#' + line
+                                changed = True
                 if changed:
                     text = '\n'.join(lines)
                     dirty = True
                     total += 1
-                    log(f"    Auto-fix: demoted {h1_count - 1} extra H1 heading(s) to H2")
+                    log("    Auto-fix: demoted extra H1 heading(s) to H2 (preserved Summary/Підсумок)")
             except Exception as e:
                 logger.warning("Auto-fix: H1 demotion failed: %s", e)
 
@@ -448,6 +460,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                     }
                     if expected_titles:
                         from difflib import SequenceMatcher
+
                         from audit.checks.outline_compliance import normalize_section_name
                         new_lines = text.split('\n')
                         in_cb = False
@@ -539,10 +552,10 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     if act_path and act_path.exists():
         try:
             from audit.checks.yaml_schema_validation import remove_forbidden_activities
-            from audit.core import detect_level, detect_focus, load_yaml_meta
+            from audit.core import detect_focus, detect_level, load_yaml_meta
             meta_data = load_yaml_meta(str(content_path)) if content_path else {}
             if content_path and content_path.exists():
-                content = content_path.read_text("utf-8")
+                content_path.read_text("utf-8")
                 import yaml as yaml_lib
                 fm_str = yaml_lib.dump(meta_data, sort_keys=False, allow_unicode=True) if meta_data else ""
                 level_code, module_num, _ = detect_level(str(content_path), fm_str)
@@ -1242,7 +1255,7 @@ def _extract_delimiter_tolerant(
 def _compute_metrics_direct(ctx: ModuleContext) -> dict[str, str]:
     """Compute audit metrics WITHOUT running the audit subprocess."""
     import yaml
-    from audit.cleaners import clean_for_stats, clean_for_immersion, extract_core_content, calculate_immersion
+    from audit.cleaners import calculate_immersion, clean_for_immersion, clean_for_stats, extract_core_content
 
     metrics: dict[str, str] = {}
     content_path = ctx.paths.get("md")
@@ -1603,20 +1616,16 @@ def _parse_d1_review(raw_output: str) -> D1Result:
         )
         for dim_name, dim_score in dim_rows:
             key = dim_name.strip().lower().replace(" ", "_")
-            try:
+            with contextlib.suppress(ValueError):
                 scores[key] = float(dim_score)
-            except ValueError:
-                pass
 
         weighted_m = re.search(
             r'\*\*Weighted Overall:\*\*.*?=\s*\*\*([\d.]+)/10\*\*',
             scores_section.group(1),
         )
         if weighted_m:
-            try:
+            with contextlib.suppress(ValueError):
                 scores["weighted_overall"] = float(weighted_m.group(1))
-            except ValueError:
-                pass
 
     if not verdict and score > 0:
         verdict = "PASS" if score >= 9.0 else "FAIL"
@@ -1687,7 +1696,7 @@ def _parse_factual_review(raw_output: str) -> D1Result:
     disc_m = re.search(r'\*\*Discrepancies \[Tier 1\]:\*\*\s*(\d+)', review_text)
     discrepancy_count = int(disc_m.group(1)) if disc_m else 0
 
-    unv_m = re.search(r'\*\*Unverified:\*\*\s*(\d+)', review_text)
+    re.search(r'\*\*Unverified:\*\*\s*(\d+)', review_text)
 
     issues: list[dict] = []
 
@@ -1724,10 +1733,7 @@ def _parse_factual_review(raw_output: str) -> D1Result:
         issues.append(issue)
 
     if not verdict:
-        if discrepancy_count > 0 or plan_missing_count >= 3:
-            verdict = "FAIL"
-        else:
-            verdict = "PASS"
+        verdict = "FAIL" if discrepancy_count > 0 or plan_missing_count >= 3 else "PASS"
 
     return D1Result(
         ok=True,
@@ -1845,8 +1851,8 @@ def _build_d3_context(d1_review: str, repair_cycle: int) -> str:
 
 def _quick_review_quality_gate(review_text: str, content_path: Path) -> tuple[bool, str]:
     """Fast pre-save check: reject obviously shallow/fake reviews."""
-    from audit.checks.review_validation import _extract_ukrainian_citations
     from audit.checks.review_gaming import _extract_h2_headers
+    from audit.checks.review_validation import _extract_ukrainian_citations
 
     citations = _extract_ukrainian_citations(review_text)
     content_text = content_path.read_text("utf-8") if content_path.exists() else ""
@@ -1892,9 +1898,11 @@ def _quick_review_quality_gate(review_text: str, content_path: Path) -> tuple[bo
 # ---------------------------------------------------------------------------
 
 def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
-                  content_only: bool = True, primary_agent: str = "gemini") -> bool:
+                  content_only: bool = True, primary_agent: str = "gemini",
+                  skip_review: bool = False) -> bool:
     """Escalate a failed fix to the opposite agent."""
-    passed_retry, _ = run_verify(ctx.paths["md"], content_only=content_only)
+    passed_retry, _ = run_verify(ctx.paths["md"], content_only=content_only,
+                                 skip_review=skip_review)
     if passed_retry:
         log(f"  {phase_label}: Pre-escalation retry PASS — no escalation needed")
         return True
@@ -1914,10 +1922,9 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
             if match:
                 section_content += f"\n---\n{match.group(1).strip()}\n"
 
-    if not affected:
-        if content_path.exists():
-            all_lines = content_path.read_text("utf-8").split("\n")
-            section_content = "\n".join(all_lines[-200:])
+    if not affected and content_path.exists():
+        all_lines = content_path.read_text("utf-8").split("\n")
+        section_content = "\n".join(all_lines[-200:])
 
     prompt_text = textwrap.dedent(f"""\
         # Escalation Fix — {phase_label}
@@ -1999,7 +2006,8 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
         log(f"  {phase_label}: Escalation output missing SECTION_FIX delimiters — cannot apply")
         (ctx.orch_dir / f"{phase_label}-escalation-raw.md").write_text(output, "utf-8")
 
-    passed, _ = run_verify(ctx.paths["md"], content_only=content_only)
+    passed, _ = run_verify(ctx.paths["md"], content_only=content_only,
+                            skip_review=skip_review)
     if passed:
         escalation_agent = "Gemini" if primary_agent == "claude" else "Claude Opus"
         log(f"  {phase_label}: Escalation PASS — {escalation_agent} fixed the issues")
@@ -2020,10 +2028,7 @@ def _all_issues_diffuse(audit_output: str) -> bool:
         return False
 
     has_targeted = bool(failing_codes - _DIFFUSE_FAILURE_CODES)
-    if has_targeted:
-        return False
-
-    return True
+    return not has_targeted
 
 
 def _meta_has_oversized_sections(ctx: ModuleContext) -> bool:
@@ -2502,8 +2507,9 @@ def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
         for ch in result.rag_chunks[:5]:
             section = ch.get("section_title", "")
             grade = ch.get("grade", 0)
-            text_preview = ch.get("text", "")[:100]
-            lines.append(f"- Grade {grade}, {section}: {text_preview}...")
+            source = ch.get("source", "")
+            text_preview = ch.get("text", "")[:500]
+            lines.append(f"\n**Grade {grade}, {section}** ({source}):\n{text_preview}\n")
     if result.rag_images:
         lines.append("\n### Textbook Images (RAG)")
         for img in result.rag_images[:3]:
@@ -2716,7 +2722,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     Instead of dumping 60 lines of audit output, this extracts specific
     failures and produces exact instructions Gemini can act on.
     """
-    from pipeline_lib import get_pedagogical_constraints, get_decodable_vocabulary
+    from pipeline_lib import get_decodable_vocabulary, get_pedagogical_constraints
 
     det_issues = deterministic_issues or []
     gate_failures = _extract_gate_failures(audit_output)
@@ -2870,20 +2876,23 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
     decodable_section = f"\n{decodable}\n" if decodable else ""
 
-    # Section-level fix for large modules
+    # Section-level fix output format — used for ALL modules
     section_fix = ""
     if content_text:
-        if word_count >= 3000:
-            affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"], content=content_text)
-            if affected_sections:
-                section_list = ", ".join(f'"{s}"' for s in affected_sections)
-                section_fix = textwrap.dedent(f"""\
+        affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"], content=content_text)
+        if affected_sections:
+            section_list = ", ".join(f'"{s}"' for s in affected_sections)
+            if word_count >= 3000:
+                scope_note = f"This module is {word_count} words. Fix ONLY sections: {section_list}"
+            else:
+                scope_note = f"Fix the affected sections: {section_list}"
+            section_fix = textwrap.dedent(f"""\
 
-                    ## Large Module — Section-Level Output
+                    ## Output Format (MANDATORY)
 
-                    This module is {word_count} words. Fix ONLY sections: {section_list}
+                    {scope_note}
 
-                    **Output format:**
+                    **Wrap EACH fixed section in delimiters:**
                     ```
                     ===SECTION_FIX_START===
                     ## {{section title}}
@@ -2906,6 +2915,22 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     if total_fixes == 0:
         total_fixes = len(fix_instructions)
 
+    # RAG verification tools — always available via .gemini/settings.json MCP
+    vesum_section = textwrap.dedent("""\
+
+        ## Verification Tools (USE THEM)
+
+        You have MCP tools for Ukrainian language verification. **Use them before fixing.**
+
+        - `verify_words(["word1", "word2"])` — check words exist in VESUM (standard Ukrainian dictionary)
+        - `verify_lemma("word")` — get all inflected forms of a word
+
+        **Before replacing any Ukrainian word:**
+        1. Call `verify_words` with your replacement to confirm it exists
+        2. If NOT FOUND, call `verify_lemma` on the base form to find correct inflections
+        3. Never use a word that returns NOT FOUND — rephrase in English instead
+    """)
+
     return textwrap.dedent(f"""\
         # Fix {total_fixes} issue(s) in `{ctx.slug}`
 
@@ -2913,6 +2938,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         {schema_hint}
         {ped_section}
         {decodable_section}
+        {vesum_section}
 
         ## Files
 
@@ -2995,7 +3021,7 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
                 template_name = "phase-A-core.md"
                 log("  research: beginner-research.md not found, falling back to phase-A-core.md")
             else:
-                log(f"  research: Using beginner tier research prompt")
+                log("  research: Using beginner tier research prompt")
         else:
             template_name = "phase-A-core.md"
 
@@ -3188,13 +3214,12 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     from video_discovery import (
-        run_discovery,
-        write_discovery_yaml,
-        format_discovery_for_template,
-        build_search_keywords,
         build_discovery_keywords,
+        build_search_keywords,
+        run_discovery,
         search_blogs,
         search_rag,
+        write_discovery_yaml,
     )
 
     keywords = build_discovery_keywords(ctx.plan)
@@ -3360,7 +3385,7 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         raw = content_path.read_text("utf-8")
 
         # Deterministic heading fix: Summary must be H1
-        fixed = re.sub(r'^##\s+(Підсумок|Summary)\b', r'# \1', raw, flags=re.MULTILINE)
+        fixed = re.sub(r'^##\s+(Підсумок|Summary)\s*$', r'# \1', raw, flags=re.MULTILINE)
         if fixed != raw:
             content_path.write_text(fixed, "utf-8")
             log("  content: Fixed Summary/Підсумок heading level (## → #)")
@@ -3388,6 +3413,16 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
     # mark_complete replaces the entire phase dict, so self_audited must go in as **extra
     mark_complete(state, "content", ctx, **({"self_audited": True} if self_audited else {}))
     _invalidate_stale_artifacts(ctx)
+
+    # Full-build: if activities+vocab were extracted during content, mark activities done
+    if getattr(ctx, "full_build", False):
+        act_path = ctx.paths.get("activities")
+        voc_path = ctx.paths.get("vocabulary")
+        if (act_path and act_path.exists() and act_path.stat().st_size > 10
+                and voc_path and voc_path.exists() and voc_path.stat().st_size > 10):
+            mark_complete(state, "activities", ctx, note="extracted-from-full-build")
+            log("  content: Full-build activities+vocab adopted — skipping separate activities phase")
+
     return True
 
 
@@ -3440,40 +3475,39 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 
     # Fast path: activities exist but vocabulary missing (truncation recovery)
     if (act_path and act_path.exists() and act_path.stat().st_size > 10
-            and (not voc_path or not voc_path.exists())):
-        if _validate_activities_yaml(act_path):
-            log("  activities: Activities exist and valid, vocabulary missing — vocab-only dispatch")
-            use_claude = "C" in getattr(ctx, "use_claude", set())
-            vocab_prompt = _build_vocab_only_prompt(ctx)
-            if vocab_prompt:
-                vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
-                vocab_prompt_file.write_text(vocab_prompt, "utf-8")
-                if use_claude:
-                    claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
-                    vok, vraw = _dispatch_claude_phase(
-                        vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
-                    )
-                else:
-                    vok, vraw = dispatch_gemini(
-                        _dispatch_prompt(ctx, vocab_prompt_file),
-                        task_id=f"v5-{ctx.slug}-pC-vocab",
-                        model=ctx.model, stdout_only=True,
-                        output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
-                        timeout=300,
-                    )
-                if vok:
-                    vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
-                    if vocab_text and voc_path:
-                        voc_path.parent.mkdir(parents=True, exist_ok=True)
-                        voc_path.write_text(vocab_text, "utf-8")
-                        log(f"  activities: Vocabulary generated via fast-path → {voc_path.name}")
-                        if not _validate_activities_yaml(act_path):
-                            log("  activities: FAILED — activities YAML failed schema validation")
-                            mark_failed(state, "activities", ctx, note="activities-schema-invalid")
-                            return False
-                        mark_complete(state, "activities", ctx, task_id=f"v5-{ctx.slug}-pC-vocab")
-                        return True
-            log("  activities: Vocab fast-path failed — falling through to full dispatch")
+            and (not voc_path or not voc_path.exists())) and _validate_activities_yaml(act_path):
+        log("  activities: Activities exist and valid, vocabulary missing — vocab-only dispatch")
+        use_claude = "C" in getattr(ctx, "use_claude", set())
+        vocab_prompt = _build_vocab_only_prompt(ctx)
+        if vocab_prompt:
+            vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
+            vocab_prompt_file.write_text(vocab_prompt, "utf-8")
+            if use_claude:
+                claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
+                vok, vraw = _dispatch_claude_phase(
+                    vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
+                )
+            else:
+                vok, vraw = dispatch_gemini(
+                    _dispatch_prompt(ctx, vocab_prompt_file),
+                    task_id=f"v5-{ctx.slug}-pC-vocab",
+                    model=ctx.model, stdout_only=True,
+                    output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
+                    timeout=300,
+                )
+            if vok:
+                vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
+                if vocab_text and voc_path:
+                    voc_path.parent.mkdir(parents=True, exist_ok=True)
+                    voc_path.write_text(vocab_text, "utf-8")
+                    log(f"  activities: Vocabulary generated via fast-path → {voc_path.name}")
+                    if not _validate_activities_yaml(act_path):
+                        log("  activities: FAILED — activities YAML failed schema validation")
+                        mark_failed(state, "activities", ctx, note="activities-schema-invalid")
+                        return False
+                    mark_complete(state, "activities", ctx, task_id=f"v5-{ctx.slug}-pC-vocab")
+                    return True
+        log("  activities: Vocab fast-path failed — falling through to full dispatch")
 
     # Tier-based activities prompt dispatch
     activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
@@ -3551,7 +3585,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
             and "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION" not in friction
         )
         if is_real_truncation:
-            log(f"  activities: Gemini reported token limit truncation")
+            log("  activities: Gemini reported token limit truncation")
 
     # Vocabulary fallback
     if wrote_activities and not wrote_vocab and "===VOCABULARY_START===" in raw_output:
@@ -3594,7 +3628,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 
     # Post-C schema validation gate
     if act_path and act_path.exists() and not _validate_activities_yaml(act_path):
-        log(f"  activities: FAILED — activities YAML failed schema validation")
+        log("  activities: FAILED — activities YAML failed schema validation")
         mark_failed(state, "activities", ctx, note="activities-schema-invalid")
         return False
 
@@ -3733,7 +3767,7 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
     if content_self_audited and max_iters > 2:
         log(f"  validate: Content was self-audited — reducing max fix iterations from {max_iters} to 2")
         max_iters = 2
-    content_path = ctx.paths["md"]
+    ctx.paths["md"]
     prev_audit_output = screen.audit_output
 
     consecutive_failures = 0
@@ -3749,8 +3783,8 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
         _fix_count = fix_prompt.count("### Fix")
         _other_failures = "### Other Audit Failures" in fix_prompt
         if _fix_count == 0 and not _other_failures:
-            log(f"  validate: EMPTY fix prompt (no violations extracted), escalating directly")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+            log("  validate: EMPTY fix prompt (no violations extracted), escalating directly")
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
                 screen = _deterministic_screen(ctx, skip_review=_skip_review)
                 _save_screen_result(ctx, screen)
                 mark_complete(state, phase, ctx,
@@ -3765,8 +3799,8 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
         # Dedup: skip if we already sent an identical fix prompt
         _fix_hash = hashlib.sha256(fix_prompt.encode()).hexdigest()[:16]
         if _fix_hash in _seen_fix_hashes:
-            log(f"  validate: DEDUP — fix prompt identical to a previous attempt, escalating")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+            log("  validate: DEDUP — fix prompt identical to a previous attempt, escalating")
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
                 screen = _deterministic_screen(ctx, skip_review=_skip_review)
                 _save_screen_result(ctx, screen)
                 mark_complete(state, phase, ctx,
@@ -3818,7 +3852,7 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
         if attempt > 0 and screen.audit_output == prev_audit_output:
             log(f"  validate: WARNING — fix {attempt} made no progress")
             if screen.audit_passed:
-                log(f"  validate: Audit PASSES — exiting fix loop")
+                log("  validate: Audit PASSES — exiting fix loop")
                 _save_screen_result(ctx, screen)
                 mark_complete(state, phase, ctx, attempts=attempt,
                               note=f"pass-with-{len(screen.deterministic_issues)}-info-issues")
@@ -3834,7 +3868,7 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
 
         if attempt >= max_iters:
             log(f"  validate: EXHAUSTED — {max_iters} fix attempts")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
                 screen = _deterministic_screen(ctx, skip_review=_skip_review)
                 _save_screen_result(ctx, screen)
                 mark_complete(state, phase, ctx,
@@ -3886,7 +3920,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
     claude_model = getattr(ctx, "claude_model_D", CLAUDE_MODEL_REVIEW)
     review_timeout = _get_review_timeout(ctx.track)
 
-    log(f"  review: Preparing structured review prompt...")
+    log("  review: Preparing structured review prompt...")
 
     module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
     track_calibration = _get_track_calibration(ctx.track, module_num)
@@ -3972,7 +4006,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
     if n_d1_fixes > 0:
         log(f"  review: Applied {n_d1_fixes} inline fix(es) from review")
     elif "===SECTION_FIX_START===" in raw_output:
-        log(f"  review: Fix block found but 0 fixes matched — check review-raw-output.md")
+        log("  review: Fix block found but 0 fixes matched — check review-raw-output.md")
 
     _run_deterministic_fixes(ctx)
 
@@ -3984,9 +4018,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
     if not d1.verdict:
         _status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
         _score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
-        if _status_m and _status_m.group(1) == "FAIL":
-            review_says_fail = True
-        elif _score_m and float(_score_m.group(1)) < 9.0:
+        if (_status_m and _status_m.group(1) == "FAIL") or (_score_m and float(_score_m.group(1)) < 9.0):
             review_says_fail = True
 
     if passed and not review_says_fail:
@@ -4340,16 +4372,42 @@ def phase_review(ctx: ModuleContext, state: dict) -> bool:
 # Phase: mdx
 # ---------------------------------------------------------------------------
 
+_GENERIC_URL_PATTERNS = [
+    re.compile(r"^https?://(www\.)?ukrainianlessons\.com/?$"),
+    re.compile(r"^https?://ukrainianlessons\.com/?$"),
+    re.compile(r"^https?://(www\.)?ukrainianlessons\.com/podcast/?$"),
+    re.compile(r"^https?://(www\.)?ukrainianlessons\.com/the-podcast/?$"),
+    re.compile(r"youtube\.com/watch\?v=example"),
+    re.compile(r"^https?://sum\.in\.ua/?$"),
+    re.compile(r"^https?://slovnyk\.ua/?$"),
+    re.compile(r"^https?://pravopys\.net/?$"),
+    re.compile(r"^https?://r2u\.org\.ua/?$"),
+    re.compile(r"^https?://(www\.)?youtube\.com/@\w+/?$"),
+]
+
+_GENERIC_TITLES = {
+    "Ukrainian Lessons Podcast", "Ukrainian Lessons", "Ukrainian Grammar",
+    "Speak Ukrainian YouTube", "Colors Guide", "Verb Practice",
+}
+
+_RESOURCES_PATH = Path(__file__).resolve().parent.parent / "docs" / "resources" / "external_resources.yaml"
+
+
+def _is_generic_url(url: str) -> bool:
+    return any(p.search(url) for p in _GENERIC_URL_PATTERNS)
+
+
+def _is_generic_title(title: str) -> bool:
+    return title.strip() in _GENERIC_TITLES
+
+
 def _clean_external_resources(ctx: ModuleContext) -> None:
     """Remove garbage entries from this module's external_resources.yaml slot."""
-    from fix_external_resources import (
-        RESOURCES_PATH, _is_generic_url, _is_generic_title,
-    )
-    if not RESOURCES_PATH.exists():
+    if not _RESOURCES_PATH.exists():
         return
     try:
         import yaml
-        data = yaml.safe_load(RESOURCES_PATH.read_text("utf-8"))
+        data = yaml.safe_load(_RESOURCES_PATH.read_text("utf-8"))
         resources = data.get("resources", {})
     except Exception:
         return
@@ -4383,7 +4441,7 @@ def _clean_external_resources(ctx: ModuleContext) -> None:
                 del module_data[cat]
 
     if removed:
-        with open(RESOURCES_PATH, "w", encoding="utf-8") as f:
+        with open(_RESOURCES_PATH, "w", encoding="utf-8") as f:
             yaml.dump(data, f, allow_unicode=True, default_flow_style=False,
                       sort_keys=False, width=120)
         log(f"  mdx: Cleaned {removed} bad external resource entries")
@@ -4485,10 +4543,20 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
         remaining = PHASES[idx:]
         if not has_review:
             remaining = [p for p in remaining if p != "review"]
-        # Clear state for restarted phases
+        # Clear state AND output files for restarted phases
         phases = state.setdefault("phases", {})
+        _phase_outputs = {
+            "content": ["md"],
+            "activities": ["activities", "vocabulary"],
+            "research": ["research"],
+        }
         for pid in remaining:
             phases.pop(pid, None)
+            for path_key in _phase_outputs.get(pid, []):
+                p = ctx.paths.get(path_key)
+                if p and p.exists():
+                    p.unlink()
+                    log(f"  --restart-from: deleted {p.name}")
         save_state(ctx, state)
         if "research" in remaining:
             ctx.force_research = True  # type: ignore[attr-defined]

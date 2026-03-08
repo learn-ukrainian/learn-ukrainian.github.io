@@ -6,17 +6,17 @@ Removes scripts identified as safe by analyze_dead_code.py
 Supports dry-run mode and incremental removal by risk level.
 """
 
+import argparse
 import json
-import subprocess
 import sys
 from pathlib import Path
-import argparse
+
 
 def load_report():
     """Load the dead code analysis report"""
     report_path = '/tmp/dead_code_report.json'
     try:
-        with open(report_path, 'r') as f:
+        with open(report_path) as f:
             return json.load(f)
     except FileNotFoundError:
         print(f"Error: Report not found at {report_path}")
@@ -121,7 +121,7 @@ def main():
     removed, failed = remove_scripts(to_remove, dry_run=not args.execute)
 
     print(f"\n{'=' * 70}")
-    print(f"SUMMARY")
+    print("SUMMARY")
     print('=' * 70)
     print(f"Scripts removed: {len(removed)}")
     if failed:

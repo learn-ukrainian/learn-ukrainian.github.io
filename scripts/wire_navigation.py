@@ -20,7 +20,6 @@ GH issue: #702 (Tier 2)
 """
 
 import argparse
-import os
 import re
 import sys
 from pathlib import Path
@@ -143,7 +142,7 @@ def wire_level(level, slugs, dry_run=False):
             continue
 
         changed = False
-        seq = i + 1  # 1-indexed
+        i + 1  # 1-indexed
 
         # --- Prerequisites ---
         existing_prereqs = data.get("prerequisites")
@@ -224,18 +223,16 @@ def wire_seminar_level(level, slugs, dry_run=False):
         changed = False
 
         # --- Prerequisites ---
-        if not data.get("prerequisites"):
-            if i > 0:
-                data["prerequisites"] = [slugs[i - 1]]
-                changed = True
-                changes_count += 1
+        if not data.get("prerequisites") and i > 0:
+            data["prerequisites"] = [slugs[i - 1]]
+            changed = True
+            changes_count += 1
 
         # --- Connects_to ---
-        if not data.get("connects_to"):
-            if i < len(slugs) - 1:
-                data["connects_to"] = [slugs[i + 1]]
-                changed = True
-                changes_count += 1
+        if not data.get("connects_to") and i < len(slugs) - 1:
+            data["connects_to"] = [slugs[i + 1]]
+            changed = True
+            changes_count += 1
 
         if changed:
             files_modified += 1

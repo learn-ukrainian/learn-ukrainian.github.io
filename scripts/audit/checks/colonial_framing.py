@@ -17,13 +17,12 @@ Track exemptions:
 """
 
 import re
-from typing import List, Dict
 
 # Tracks where Russian references appear in historical/comparative context
 EXEMPT_TRACKS = {"oes", "ruth", "lit", "hist", "istorio", "bio"}
 
 # Patterns that indicate colonial framing (Russian-as-baseline)
-COLONIAL_PATTERNS: List[Dict] = [
+COLONIAL_PATTERNS: list[dict] = [
     {
         "pattern": r"(?i)\bunlike\s+(?:in\s+)?russian\b",
         "label": "Unlike-Russian comparison",
@@ -108,7 +107,7 @@ def _has_legitimate_context(lines: list, line_idx: int) -> bool:
     return any(marker in context for marker in LEGITIMATE_MARKERS)
 
 
-def check_colonial_framing(content: str, file_path: str = "") -> List[Dict]:
+def check_colonial_framing(content: str, file_path: str = "") -> list[dict]:
     """
     Scan content for colonial framing patterns (Russian-as-baseline).
 
@@ -122,7 +121,7 @@ def check_colonial_framing(content: str, file_path: str = "") -> List[Dict]:
     if _is_in_research_or_review(file_path):
         return []
 
-    violations: List[Dict] = []
+    violations: list[dict] = []
     lines = content.splitlines()
 
     for pat_def in COLONIAL_PATTERNS:

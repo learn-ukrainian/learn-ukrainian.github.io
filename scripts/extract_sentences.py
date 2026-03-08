@@ -1,9 +1,9 @@
 import re
 
-with open('curriculum/l2-uk-en/a2/audit/hobbies-leisure-audit.md', 'r') as f:
+with open('curriculum/l2-uk-en/a2/audit/hobbies-leisure-audit.md') as f:
     audit = f.read()
 
-with open('curriculum/l2-uk-en/a2/hobbies-leisure.md', 'r') as f:
+with open('curriculum/l2-uk-en/a2/hobbies-leisure.md') as f:
     text = f.read()
 
 prefixes = re.findall(r"First 5 words: '(.*?)'", audit)
@@ -14,8 +14,9 @@ sentences = re.split(r'(?<=[.!?])\s+', text)
 for prefix in prefixes:
     prefix_clean = prefix.replace('...', '').strip()
     prefix_words = prefix_clean.split()
-    if len(prefix_words) < 2: continue
-    
+    if len(prefix_words) < 2:
+        continue
+
     found = False
     for s in sentences:
         s_clean = s.replace('\n', ' ').strip()

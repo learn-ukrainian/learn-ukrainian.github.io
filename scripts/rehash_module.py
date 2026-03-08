@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-import sys
+import hashlib
 import os
 import re
-import hashlib
+import sys
 from pathlib import Path
 
-from slug_utils import to_bare_slug, review_path as _review_path
+from slug_utils import review_path as _review_path
+from slug_utils import to_bare_slug
 
 # Add scripts/ to path for internal imports to reach audit.cleaners
 SCRIPT_DIR = Path(__file__).parent
@@ -13,7 +14,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 
 try:
-    from audit.cleaners import extract_core_content, clean_for_stats
+    from audit.cleaners import clean_for_stats, extract_core_content
 except ImportError:
     # Fallback/Mock if imports fail (should not happen in project root)
     def extract_core_content(b): return b
@@ -21,9 +22,9 @@ except ImportError:
 
 def calculate_hash(file_path):
     """Calculate stable MD5 hash of instructional core (first 8 chars)."""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
-    
+
     # Use stable prose only (Issue #440)
     core_content = extract_core_content(content)
     stable_prose = clean_for_stats(core_content)
@@ -48,12 +49,12 @@ def update_review_file(md_file_path, new_hash):
                 break
         else:
             return False
-    
+
     try:
         content = review_file.read_text(encoding='utf-8')
         pattern = r'\*\*Content Hash:\*\*\s*[a-f0-9]{8}'
         replacement = f"**Content Hash:** {new_hash}"
-        
+
         if re.search(pattern, content):
             new_content = re.sub(pattern, replacement, content)
             review_file.write_text(new_content, encoding='utf-8')
@@ -82,13 +83,13 @@ def main():
         print("Usage: python3 scripts/rehash_module.py <file1.md> [dir1 ...]")
         print("Example: python3 scripts/rehash_module.py curriculum/l2-uk-en/hist/")
         sys.exit(1)
-    
+
     for arg in sys.argv[1:]:
         path = Path(arg)
         if not path.exists():
             print(f"Path not found: {arg}")
             continue
-            
+
         if path.is_dir():
             print(f"📂 Scanning directory: {arg}")
             for root, _, files in os.walk(arg):

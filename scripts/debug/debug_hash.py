@@ -1,12 +1,12 @@
 
-import sys
 import hashlib
-from pathlib import Path
+import sys
+
 
 def compute_hash(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
-    # Simulate what audit_module likely does. 
+    # Simulate what audit_module likely does.
     # If it uses audit.core.get_content_hash(file_path), let's try to import it.
     try:
         from audit.core import get_content_hash
@@ -19,6 +19,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python debug_hash.py <file>")
         sys.exit(1)
-    
+
     file_path = sys.argv[1]
     print(f"Hash for {file_path}: {compute_hash(file_path)}")

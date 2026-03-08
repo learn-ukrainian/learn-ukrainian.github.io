@@ -15,10 +15,11 @@ Usage:
 
 import argparse
 import sys
-from pathlib import Path
-import yaml
-from typing import Dict, List, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from slug_utils import quality_path as _quality_path
@@ -74,7 +75,7 @@ QUALITY_GATES = {
 }
 
 
-def calculate_quality_scores(queue_data: Dict) -> Dict[str, Any]:
+def calculate_quality_scores(queue_data: dict) -> dict[str, Any]:
     """
     Calculate aggregate quality scores from queue data.
 
@@ -153,9 +154,9 @@ def calculate_quality_scores(queue_data: Dict) -> Dict[str, Any]:
 
 
 def evaluate_quality_gates(
-    quality_scores: Dict,
+    quality_scores: dict,
     level: str
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Evaluate quality scores against CEFR gates.
 
@@ -175,8 +176,7 @@ def evaluate_quality_gates(
     failed_gates = []
 
     # Check each gate
-    if gates.get('min_naturalness_avg') and quality_scores.get('naturalness_avg'):
-        if quality_scores['naturalness_avg'] < gates['min_naturalness_avg']:
+    if gates.get('min_naturalness_avg') and quality_scores.get('naturalness_avg') and quality_scores['naturalness_avg'] < gates['min_naturalness_avg']:
             failed_gates.append({
                 'dimension': 'naturalness',
                 'required': gates['min_naturalness_avg'],
@@ -184,8 +184,7 @@ def evaluate_quality_gates(
                 'message': f"Naturalness {quality_scores['naturalness_avg']:.1f} < {gates['min_naturalness_avg']}"
             })
 
-    if gates.get('max_difficulty_inappropriate') and quality_scores.get('difficulty_inappropriate_pct'):
-        if quality_scores['difficulty_inappropriate_pct'] > gates['max_difficulty_inappropriate']:
+    if gates.get('max_difficulty_inappropriate') and quality_scores.get('difficulty_inappropriate_pct') and quality_scores['difficulty_inappropriate_pct'] > gates['max_difficulty_inappropriate']:
             failed_gates.append({
                 'dimension': 'difficulty',
                 'required': f"≤{gates['max_difficulty_inappropriate'] * 100:.0f}%",
@@ -193,8 +192,7 @@ def evaluate_quality_gates(
                 'message': f"Inappropriate difficulty {quality_scores['difficulty_inappropriate_pct']:.0%} > {gates['max_difficulty_inappropriate']:.0%}"
             })
 
-    if gates.get('min_engagement_avg') and quality_scores.get('engagement_avg'):
-        if quality_scores['engagement_avg'] < gates['min_engagement_avg']:
+    if gates.get('min_engagement_avg') and quality_scores.get('engagement_avg') and quality_scores['engagement_avg'] < gates['min_engagement_avg']:
             failed_gates.append({
                 'dimension': 'engagement',
                 'required': gates['min_engagement_avg'],
@@ -202,8 +200,7 @@ def evaluate_quality_gates(
                 'message': f"Engagement {quality_scores['engagement_avg']:.1f} < {gates['min_engagement_avg']}"
             })
 
-    if gates.get('min_distractor_quality') and quality_scores.get('distractor_quality_avg'):
-        if quality_scores['distractor_quality_avg'] < gates['min_distractor_quality']:
+    if gates.get('min_distractor_quality') and quality_scores.get('distractor_quality_avg') and quality_scores['distractor_quality_avg'] < gates['min_distractor_quality']:
             failed_gates.append({
                 'dimension': 'distractor_quality',
                 'required': gates['min_distractor_quality'],
@@ -211,8 +208,7 @@ def evaluate_quality_gates(
                 'message': f"Distractor quality {quality_scores['distractor_quality_avg']:.1f} < {gates['min_distractor_quality']}"
             })
 
-    if gates.get('min_variety_avg') and quality_scores.get('variety_avg'):
-        if quality_scores['variety_avg'] < gates['min_variety_avg']:
+    if gates.get('min_variety_avg') and quality_scores.get('variety_avg') and quality_scores['variety_avg'] < gates['min_variety_avg']:
             failed_gates.append({
                 'dimension': 'variety',
                 'required': f"{gates['min_variety_avg']}%",
@@ -230,9 +226,9 @@ def evaluate_quality_gates(
 
 
 def generate_report(
-    queue_data: Dict,
-    quality_scores: Dict,
-    gate_evaluation: Dict
+    queue_data: dict,
+    quality_scores: dict,
+    gate_evaluation: dict
 ) -> str:
     """
     Generate markdown audit report.
@@ -321,15 +317,15 @@ def generate_report(
         report += "### Required Actions\n\n"
         for gate in gate_evaluation['failed_gates']:
             if gate['dimension'] == 'naturalness':
-                report += f"- **Improve Naturalness:** Rewrite activities with robotic/translated phrasing (scores 1-2)\n"
+                report += "- **Improve Naturalness:** Rewrite activities with robotic/translated phrasing (scores 1-2)\n"
             elif gate['dimension'] == 'difficulty':
                 report += f"- **Fix Difficulty:** Adjust activities that are too easy or too hard for {level}\n"
             elif gate['dimension'] == 'engagement':
-                report += f"- **Increase Engagement:** Add cultural references, contemporary topics, or interesting contexts\n"
+                report += "- **Increase Engagement:** Add cultural references, contemporary topics, or interesting contexts\n"
             elif gate['dimension'] == 'distractor_quality':
-                report += f"- **Improve Distractors:** Ensure options target common errors and are plausible\n"
+                report += "- **Improve Distractors:** Ensure options target common errors and are plausible\n"
             elif gate['dimension'] == 'variety':
-                report += f"- **Add Variety:** Reduce mechanical repetition in sentence structures\n"
+                report += "- **Add Variety:** Reduce mechanical repetition in sentence structures\n"
         report += "\n"
 
     report += """
@@ -378,7 +374,7 @@ def finalize_quality(
     print(f"📄 Finalizing: {queue_file.name}")
 
     # Load queue
-    with open(queue_file, 'r', encoding='utf-8') as f:
+    with open(queue_file, encoding='utf-8') as f:
         queue_data = yaml.safe_load(f)
 
     # Calculate scores

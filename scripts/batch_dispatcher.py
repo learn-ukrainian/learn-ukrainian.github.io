@@ -42,23 +42,29 @@ import signal
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from batch_utils import atomic_write_json, BatchLock, LockConflictError, classify_error, ErrorCategory
-from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, SEMINAR_TRACKS, VENV_PYTHON
-from audit.status_cache import read_status, get_source_paths
+from audit.status_cache import get_source_paths, read_status
 from batch_dispatcher_config import (
-    TRACKS, TRACK_BY_NAME, TRACK_NAMES,
-    SCORING_WEIGHTS, COST_ESTIMATES,
-    COOLDOWN_SECONDS, SUBPROCESS_TIMEOUT_SECONDS, INTER_DISPATCH_PAUSE,
-    MAX_STALL_COUNT, STALLED_REVISIT_AFTER_ROTATION,
-    RUNNER_MAX_CONSECUTIVE_FAILURES, RUNNER_MAX_FAILURE_RATE,
-    TrackState, DISPATCHER_STATE_FILE,
+    COOLDOWN_SECONDS,
+    COST_ESTIMATES,
+    DISPATCHER_STATE_FILE,
+    INTER_DISPATCH_PAUSE,
+    MAX_STALL_COUNT,
+    RUNNER_MAX_CONSECUTIVE_FAILURES,
+    RUNNER_MAX_FAILURE_RATE,
+    SCORING_WEIGHTS,
+    SUBPROCESS_TIMEOUT_SECONDS,
+    TRACK_BY_NAME,
+    TRACKS,
+    TrackState,
 )
+from batch_gemini_config import PROJECT_ROOT, SEMINAR_TRACKS, VENV_PYTHON, get_module_index, get_module_paths
+from batch_utils import atomic_write_json
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -108,7 +114,7 @@ def scan_track(track_name: str, trust_cache: bool = False) -> dict:
         idx = get_module_index(track_name)
     except ValueError:
         return {"total": 0, "passed": 0, "failed": 0, "stale": 0, "unbuilt": 0,
-                "error": f"Track not in curriculum.yaml"}
+                "error": "Track not in curriculum.yaml"}
 
     total = idx["total"]
     passed = 0
@@ -304,7 +310,7 @@ def load_dispatcher_state(state_file: Path) -> dict:
             pass
 
     return {
-        "started": datetime.now(timezone.utc).isoformat(),
+        "started": datetime.now(UTC).isoformat(),
         "tracks": {},
         "dispatch_history": [],
         "stats": {
@@ -318,7 +324,7 @@ def load_dispatcher_state(state_file: Path) -> dict:
 
 def save_dispatcher_state(state: dict, state_file: Path):
     """Save dispatcher state atomically."""
-    state["last_updated"] = datetime.now(timezone.utc).isoformat()
+    state["last_updated"] = datetime.now(UTC).isoformat()
     state_file.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(state_file, state)
 
@@ -355,13 +361,7 @@ def dispatch_track(track_name: str, mode: str, extra_args: list[str],
         stderr: str (truncated)
         stdout_tail: str (last 2000 chars)
     """
-    cmd = [
-        VENV_PYTHON, BATCH_RUNNER, track_name,
-        "--mode", mode,
-        "--max-consecutive-failures", str(RUNNER_MAX_CONSECUTIVE_FAILURES),
-        "--max-failure-rate", str(RUNNER_MAX_FAILURE_RATE),
-        "--json-log",
-    ] + extra_args
+    cmd = [VENV_PYTHON, BATCH_RUNNER, track_name, "--mode", mode, "--max-consecutive-failures", str(RUNNER_MAX_CONSECUTIVE_FAILURES), "--max-failure-rate", str(RUNNER_MAX_FAILURE_RATE), "--json-log", *extra_args]
 
     log.info(f"  Dispatching: {' '.join(cmd[-6:])}")  # Show last args for readability
 
@@ -415,7 +415,7 @@ def dispatch_track(track_name: str, mode: str, extra_args: list[str],
 
 
 def dispatch_claude_fix(track_name: str, slug: str, module_num: int,
-                        failure_data: dict = None,
+                        failure_data: dict | None = None,
                         timeout: int = CLAUDE_FIX_TIMEOUT) -> dict:
     """Dispatch Claude Code to do a full rebuild of an escalated module.
 
@@ -565,9 +565,7 @@ class BatchDispatcher:
         """Check if track passes include/exclude filters."""
         if track_name in self.exclude_tracks:
             return False
-        if self.include_tracks is not None and track_name not in self.include_tracks:
-            return False
-        return True
+        return not (self.include_tracks is not None and track_name not in self.include_tracks)
 
     def _runtime_exceeded(self) -> bool:
         """Check if max runtime has been exceeded."""
@@ -579,7 +577,7 @@ class BatchDispatcher:
     def _scan_all_tracks(self) -> dict[str, dict]:
         """Scan all tracks and return their status."""
         scans = {}
-        for priority, track_name, expected, ttype, deps in TRACKS:
+        for _priority, track_name, _expected, _ttype, _deps in TRACKS:
             if not self._should_include_track(track_name):
                 continue
             scans[track_name] = scan_track(track_name, trust_cache=self.trust_cache)
@@ -587,9 +585,9 @@ class BatchDispatcher:
 
     def _update_track_states(self, track_scans: dict[str, dict]):
         """Update state machine for all tracks based on current scans."""
-        now = datetime.now(timezone.utc).isoformat()
+        datetime.now(UTC).isoformat()
 
-        for priority, track_name, expected, ttype, deps in TRACKS:
+        for _priority, track_name, _expected, _ttype, _deps in TRACKS:
             if not self._should_include_track(track_name):
                 continue
 
@@ -654,7 +652,7 @@ class BatchDispatcher:
                 if cooldown_until:
                     try:
                         until = datetime.fromisoformat(cooldown_until)
-                        if datetime.now(timezone.utc) >= until:
+                        if datetime.now(UTC) >= until:
                             dstate["state"] = TrackState.ELIGIBLE
                             log.info(f"  {track_name}: Cooldown expired, now ELIGIBLE")
                         else:
@@ -697,7 +695,7 @@ class BatchDispatcher:
 
         # Collect eligible tracks
         eligible = []
-        for priority, track_name, expected, ttype, deps in TRACKS:
+        for priority, track_name, _expected, _ttype, _deps in TRACKS:
             if not self._should_include_track(track_name):
                 continue
             dstate = get_track_dstate(self.state, track_name)
@@ -803,7 +801,7 @@ class BatchDispatcher:
 
             if result["success"]:
                 # Re-audit to confirm fix
-                scan_after = scan_track(track_name)
+                scan_track(track_name)
                 # Check if this specific module now passes
                 failure_file = Path(esc["_failure_file"])
                 if failure_file.exists():
@@ -829,7 +827,7 @@ class BatchDispatcher:
         lines.append(f"{'#':>2}  {'Track':<16}  {'State':<10}  {'Pass':>5}  {'Fail':>5}  {'Stale':>5}  {'New':>5}  {'Total':>5}  {'Rate':>6}  {'Esc':>4}  {'Score':>6}")
         lines.append("-" * 98)
 
-        for priority, track_name, expected, ttype, deps in TRACKS:
+        for priority, track_name, _expected, _ttype, _deps in TRACKS:
             if not self._should_include_track(track_name):
                 continue
 
@@ -932,7 +930,7 @@ class BatchDispatcher:
 
             # Step 6: Dispatch
             dstate["state"] = TrackState.RUNNING
-            dstate["last_dispatch"] = datetime.now(timezone.utc).isoformat()
+            dstate["last_dispatch"] = datetime.now(UTC).isoformat()
             dstate["dispatches"] = dstate.get("dispatches", 0) + 1
             self.state["stats"]["total_dispatches"] = self.state["stats"].get("total_dispatches", 0) + 1
             save_dispatcher_state(self.state, self.state_file)
@@ -951,7 +949,7 @@ class BatchDispatcher:
             dispatch_record = {
                 "track": track_name,
                 "mode": mode,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "duration_s": result["duration_s"],
                 "success": result["success"],
                 "quota_hit": result["quota_hit"],
@@ -1000,7 +998,7 @@ class BatchDispatcher:
             elif result["quota_hit"]:
                 # Quota hit → COOLDOWN
                 cooldown_until = datetime.fromtimestamp(
-                    time.time() + COOLDOWN_SECONDS, tz=timezone.utc
+                    time.time() + COOLDOWN_SECONDS, tz=UTC
                 ).isoformat()
                 dstate["state"] = TrackState.COOLDOWN
                 dstate["cooldown_until"] = cooldown_until
@@ -1009,7 +1007,7 @@ class BatchDispatcher:
             elif result["returncode"] == -1:
                 # Subprocess timeout → COOLDOWN
                 cooldown_until = datetime.fromtimestamp(
-                    time.time() + COOLDOWN_SECONDS, tz=timezone.utc
+                    time.time() + COOLDOWN_SECONDS, tz=UTC
                 ).isoformat()
                 dstate["state"] = TrackState.COOLDOWN
                 dstate["cooldown_until"] = cooldown_until
@@ -1235,7 +1233,7 @@ def main():
     p_scan.add_argument("--trust-cache", action="store_true", help="Skip freshness checks on status cache")
 
     # --- status ---
-    p_status = subparsers.add_parser("status", help="Show current dispatcher state")
+    subparsers.add_parser("status", help="Show current dispatcher state")
 
     # --- run ---
     p_run = subparsers.add_parser("run", help="Run dispatcher (continuous by default)")

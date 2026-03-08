@@ -204,10 +204,9 @@ def main():
 
         # Staleness detection: flag passes that may be outdated (#602)
         stale = False
-        if args.quick and classification in ("pass", "content-complete"):
-            if is_status_stale(status_file, content_file):
-                stale = True
-                problems.insert(0, "STALE: content modified after last audit")
+        if args.quick and classification in ("pass", "content-complete") and is_status_stale(status_file, content_file):
+            stale = True
+            problems.insert(0, "STALE: content modified after last audit")
 
         sidecar_missing = check_sidecar_files(track_dir, slug, args.full)
         if sidecar_missing:

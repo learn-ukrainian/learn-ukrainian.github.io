@@ -21,11 +21,12 @@ The skeleton includes:
 - Word count targets
 """
 
-import sys
 import re
-import yaml
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
+
+import yaml
 
 
 def slugify(text: str) -> str:
@@ -201,12 +202,12 @@ def generate_skeleton(
     curriculum: str,
     level: str,
     module_id: str, # changed from int module_num
-    output_path: Path = None
+    output_path: Path | None = None
 ) -> str:
     """Generate skeleton content."""
 
     level = level.upper()
-    
+
     # Handle int vs str module_id
     try:
         module_num = int(module_id)
@@ -217,26 +218,26 @@ def generate_skeleton(
 
     module_type = determine_module_type(level, module_num)
     template_path = get_template_path(level, module_type)
-    
+
     # Try Atomic YAML Plan first (V2)
     yaml_plan_path = None
     if slug_override:
         yaml_plan_path = Path(f"curriculum/{curriculum}/plans/{level.lower()}/{slug_override}.yaml")
-    
+
     if yaml_plan_path and yaml_plan_path.exists():
-        with open(yaml_plan_path, 'r', encoding='utf-8') as f:
+        with open(yaml_plan_path, encoding='utf-8') as f:
             plan_data = yaml.safe_load(f)
-        
+
         title = plan_data.get('title', f'Title for {slug_override}')
         focus = plan_data.get('focus', 'content')
         grammar = plan_data.get('grammar', '')
         vocab_notes = "See vocabulary YAML"
-        
+
         # Override targets from plan if available
         word_targets = get_word_targets(level, module_type)
         if 'word_target' in plan_data:
             word_targets['total'] = plan_data['word_target']
-            
+
     else:
         # Fallback to Markdown Plan (Legacy)
         plan_path = get_curriculum_plan_path(curriculum, level)
@@ -282,11 +283,11 @@ def generate_skeleton(
         pedagogy = 'TTT'
 
     # Generate slug
-    slug = slugify(title)
+    slugify(title)
 
     # Build skeleton
     skeleton = ""
-    
+
     # ONLY add frontmatter for A1/A2 legacy support. B1+ uses sidecars.
     if level in ('A1', 'A2'):
         skeleton += f'''---
@@ -323,8 +324,8 @@ vocabulary_count: <!-- N -->
     # Add Clean MD Note for B1+
     if level not in ('A1', 'A2'):
         skeleton += '''
-<!-- 
-  NOTE: Clean MD Architecture (B1+). 
+<!--
+  NOTE: Clean MD Architecture (B1+).
   - Metadata goes in meta/{slug}.yaml
   - Vocabulary goes in vocabulary/{slug}.yaml
   - Activities go in activities/{slug}.yaml
@@ -492,12 +493,12 @@ def main():
 
     curriculum = sys.argv[1]
     level = sys.argv[2].upper()
-    
+
     # Handle module ID (can be int or string slug)
     raw_id = sys.argv[3]
     try:
         module_num = int(raw_id)
-        slug = f"skeleton" 
+        slug = "skeleton"
     except ValueError:
         module_num = 0 # Placeholder for non-numeric
         slug = raw_id
@@ -510,17 +511,14 @@ def main():
     # Generate skeleton
     # If track is provided, treat it as the level for template/type determination
     effective_level = track.upper() if track else level
-    
+
     skeleton = generate_skeleton(curriculum, effective_level, raw_id)
 
     # Determine output path
     output_dir = Path(f'curriculum/{curriculum}/{level.lower()}')
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    if module_num > 0:
-        output_path = output_dir / f'{module_num:02d}-{slug}.md'
-    else:
-        output_path = output_dir / f'{slug}.md'
+    output_path = output_dir / f'{module_num:02d}-{slug}.md' if module_num > 0 else output_dir / f'{slug}.md'
 
     # Write skeleton
     output_path.write_text(skeleton, encoding='utf-8')

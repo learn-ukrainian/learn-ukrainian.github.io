@@ -1,7 +1,6 @@
-import re
 
 file_path = "curriculum/l2-uk-en/a2/logical-prepositions.md"
-with open(file_path, "r", encoding="utf-8") as f:
+with open(file_path, encoding="utf-8") as f:
     content = f.read()
 
 # Fix AI Contamination and Lint
@@ -34,7 +33,7 @@ A crucial distinction in Ukrainian grammar is the difference between *why* somet
 Коли ми хочемо пояснити мету (the purpose or goal), ми використовуємо прийменник **для** (for) або сполучник **щоб** (in order to). Вони дивляться в майбутнє. Ця різниця є фундаментальною в українській мові.
 
 ### Призначення предмета (Purpose and Benefit)
-According to the Ukrainian State Standard, a fundamental skill at this level is expressing the purpose or benefit of an action or an object. This is often done using the preposition **для** (for) followed by the Genitive case. 
+According to the Ukrainian State Standard, a fundamental skill at this level is expressing the purpose or benefit of an action or an object. This is often done using the preposition **для** (for) followed by the Genitive case.
 
 Ми вчимо українську мову для роботи.
 Спорт дуже корисний для здоров'я.
@@ -131,8 +130,8 @@ These conjunctions allow you to answer the important questions «Чому?» (Wh
 ## Культурний контекст та логічні пастки
 
 ### Культурний концепт: Піти по хліб
-Ukrainian prepositions carry deep cultural and logical nuances that might not be immediately obvious. A classic example is the phrase used when going to the store to buy something. 
-In Ukrainian, the correct and logically precise way to say "I am going to get bread" is **піти́ по хліб** (using the preposition «по» + Accusative). This preposition expresses the target or purpose of the movement. 
+Ukrainian prepositions carry deep cultural and logical nuances that might not be immediately obvious. A classic example is the phrase used when going to the store to buy something.
+In Ukrainian, the correct and logically precise way to say "I am going to get bread" is **піти́ по хліб** (using the preposition «по» + Accusative). This preposition expresses the target or purpose of the movement.
 
 Я йду в магазин по свіже молоко.
 Діти з радістю пішли в сад по солодкі яблука.
@@ -143,8 +142,8 @@ In Ukrainian, the correct and logically precise way to say "I am going to get br
 > You might hear some people say «піти за хлібом». However, from a strict logical standpoint in the Ukrainian language, «за» + Instrumental implies spatial position behind something, or following something. So, «піти за хлібом» literally conjures an image of walking physically behind a loaf of bread! The traditional, precise Ukrainian phrasing is always «піти по хліб».
 
 ### Усунення росіянізмів: «Із-за» проти «Через»
-One of the most persistent errors among learners (and sometimes even native speakers influenced by neighboring languages) is the misuse of the preposition **із-за**. 
-In Ukrainian, «із-за» has a strictly spatial meaning. It means movement from behind an object. It does NOT mean "because of". 
+One of the most persistent errors among learners (and sometimes even native speakers influenced by neighboring languages) is the misuse of the preposition **із-за**.
+In Ukrainian, «із-за» has a strictly spatial meaning. It means movement from behind an object. It does NOT mean "because of".
 
 Яскраве сонце несподівано вийшло із-за темних хмар.
 Наш чорний кіт швидко вистрибнув із-за великого дивана.
@@ -192,8 +191,8 @@ To discuss the sequence of events, the preposition **пі́сля** (after) is u
 Let's analyze a short story to see how these logical connectors weave ideas together. Read the following text and observe the highlighted prepositions and conjunctions. Зверніть увагу на те, як логічні зв'язки допомагають автору пояснити свої дії та мотивацію.
 
 > Шановний пане директоре,
-> 
-> Я пишу цей офіційний лист, **щоб** пояснити складну ситуацію, яка виникла вчора. **Через** дуже сильну бурю вчора ввечері, мій район несподівано залишився **без** електрики та зв'язку. **Тому що** домашній інтернет зовсім не працював, я фізично не міг відправити вам мій щомісячний звіт. Я наполегливо працював над цим документом **протягом** цілого тижня і хотів показати ідеальний результат. **Завдяки** моєму доброму колезі, який живе в іншому районі міста, я зміг безпечно зберегти всі важливі дані на флешку. **Після** сьогоднішнього обіду я особисто приїду в наш головний офіс, **щоб** передати вам усі матеріали. Я сподіваюся на ваше розуміння **стосовно** цієї проблеми. 
+>
+> Я пишу цей офіційний лист, **щоб** пояснити складну ситуацію, яка виникла вчора. **Через** дуже сильну бурю вчора ввечері, мій район несподівано залишився **без** електрики та зв'язку. **Тому що** домашній інтернет зовсім не працював, я фізично не міг відправити вам мій щомісячний звіт. Я наполегливо працював над цим документом **протягом** цілого тижня і хотів показати ідеальний результат. **Завдяки** моєму доброму колезі, який живе в іншому районі міста, я зміг безпечно зберегти всі важливі дані на флешку. **Після** сьогоднішнього обіду я особисто приїду в наш головний офіс, **щоб** передати вам усі матеріали. Я сподіваюся на ваше розуміння **стосовно** цієї проблеми.
 >
 > З повагою, ваш співробітник.
 
@@ -211,7 +210,7 @@ A great way to master logical prepositions is to practice transforming clauses w
 *Original:* Рейс до Києва затримали, **тому що** був густий туман.
 *Transformed:* Рейс до Києва затримали **через** густий туман.
 
-This transformation requires you to change a full subject-verb clause into a condensed noun phrase in the Accusative case following «через». It is a hallmark of more mature, concise, and elegant language use. 
+This transformation requires you to change a full subject-verb clause into a condensed noun phrase in the Accusative case following «через». It is a hallmark of more mature, concise, and elegant language use.
 
 ### Вибір відмінка: «крім», «замість», «щодо»
 As you expand your abstract vocabulary, you will encounter more specialized prepositions that help express complex relationships. All three of these common abstract prepositions require the Genitive case. Вони роблять вашу мову значно багатшою та точнішою.
@@ -256,7 +255,7 @@ Now let's observe a lively dialogue where two good friends negotiate their weeke
 — Чудово придумано! **Завдяки** твоєму швидкому плануванню, ми не втратили наш вихідний день.
 — Я все зробив, **щоб** ми добре і весело відпочили, незважаючи на дощ.
 
-Here, the speakers successfully navigate a sudden problem (через погоду), propose a logical alternative (замість гір), set a clear duration (протягом годин), plan a sequential step (після музею), discuss a specific topic (про вечерю), set an exact time (о сьомій), express warm gratitude (завдяки плануванню), and finally state their ultimate purpose (щоб ми відпочили). 
+Here, the speakers successfully navigate a sudden problem (через погоду), propose a logical alternative (замість гір), set a clear duration (протягом годин), plan a sequential step (після музею), discuss a specific topic (про вечерю), set an exact time (о сьомій), express warm gratitude (завдяки плануванню), and finally state their ultimate purpose (щоб ми відпочили).
 
 > [!fact] Цікавий факт про логіку мови
 > Notice how the entire direction and mood of a conversation can shift dramatically based purely on the choice between «через» and «завдяки». One frames the world as full of negative obstacles, the other frames it as full of positive support. Choosing your prepositions carefully shapes not just your grammatical correctness, but the entire emotional reality of your message.

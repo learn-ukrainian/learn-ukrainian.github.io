@@ -1,16 +1,16 @@
-import subprocess
 import os
+import subprocess
 
 modules = [
-    "trypillian-civilization", "scythians-sarmatians", "greeks-crimea-olbia", "sloviany-origins", "slavic-tribes", 
-    "zasnuvannia-kyieva", "khozary-i-sloviany", "syntez-vytoky-1", "oleh-ihor", "olha-sviatoslav", 
-    "volodymyr-khreshchennia", "yaroslav-wise", "ruska-pravda", "sofiya-kyivska", "volodymyr-monomakh", 
-    "kultura-kyivskoi-rusi", "kniazivski-usobiytsi", "ludy-rusi", "rus-ta-susidy", "syntez-kyivska-rus", 
-    "mongolska-navala", "mykhailo-chernigivskyi", "danylo-halytskyi", "galytsko-volynska-derzhava", 
-    "boiare-i-shliakhta", "kinets-halytsko-volyni", "krymske-khanstvo", "syntez-dvokniazivstvo", 
-    "velyke-kniazivstvo-lytovske", "ukrainski-zemli-u-vkl", "liublinska-uniia", "rich-pospolyta", 
-    "beresteyska-uniia", "pravoslavna-tserkva-17", "petro-mohyla", "bratstva-i-osvita", "bukovyna-zakarpattia", 
-    "slobozhanshchyna", "liudy-ricchi-pospolytoi", "syntez-lytva-polska", "kozatstvo-vytoky", 
+    "trypillian-civilization", "scythians-sarmatians", "greeks-crimea-olbia", "sloviany-origins", "slavic-tribes",
+    "zasnuvannia-kyieva", "khozary-i-sloviany", "syntez-vytoky-1", "oleh-ihor", "olha-sviatoslav",
+    "volodymyr-khreshchennia", "yaroslav-wise", "ruska-pravda", "sofiya-kyivska", "volodymyr-monomakh",
+    "kultura-kyivskoi-rusi", "kniazivski-usobiytsi", "ludy-rusi", "rus-ta-susidy", "syntez-kyivska-rus",
+    "mongolska-navala", "mykhailo-chernigivskyi", "danylo-halytskyi", "galytsko-volynska-derzhava",
+    "boiare-i-shliakhta", "kinets-halytsko-volyni", "krymske-khanstvo", "syntez-dvokniazivstvo",
+    "velyke-kniazivstvo-lytovske", "ukrainski-zemli-u-vkl", "liublinska-uniia", "rich-pospolyta",
+    "beresteyska-uniia", "pravoslavna-tserkva-17", "petro-mohyla", "bratstva-i-osvita", "bukovyna-zakarpattia",
+    "slobozhanshchyna", "liudy-ricchi-pospolytoi", "syntez-lytva-polska", "kozatstvo-vytoky",
     "zaporizka-sich", "dmytro-vyshnevetskyi", "kozatski-povstannia-16", "petro-sahaidachnyi"
 ]
 
@@ -42,17 +42,17 @@ for slug in modules:
                     break
                 if "❌ AUDIT FAILED" in line:
                      reason = "Audit Failed (General)"
-            
+
             # Truncate reason if too long
             if len(reason) > 40:
                 reason = reason[:37] + "..."
-            
+
             results.append((slug, "FAIL", reason))
             print(f"{slug:<35} | FAIL       | {reason}")
 
     except Exception as e:
         results.append((slug, "ERROR", str(e)))
-        print(f"{slug:<35} | ERROR      | {str(e)}")
+        print(f"{slug:<35} | ERROR      | {e!s}")
 
 print("-" * 80)
 pass_count = sum(1 for r in results if r[1] == "PASS")

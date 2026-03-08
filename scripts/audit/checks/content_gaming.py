@@ -16,23 +16,23 @@ No LLM calls — pure regex/hashing.
 Issue: #610
 """
 
+import contextlib
 import hashlib
 import json
 import os
 import re
 import tempfile
 from pathlib import Path
-from typing import List, Dict, Optional, Set
 
-# Reuse existing infrastructure
-from .prose_quality import _split_narrative_zones
 from .cross_file_integrity import (
-    load_module_vocabulary,
     extract_ukrainian_words,
     extract_words_from_activities,
+    load_module_vocabulary,
     smart_vocabulary_match,
 )
 
+# Reuse existing infrastructure
+from .prose_quality import _split_narrative_zones
 
 # =============================================================================
 # CHECK 4: FILLER PHRASE DENSITY
@@ -77,7 +77,7 @@ _FILLER_PATTERNS = [
 _ACADEMIC_LEVELS = {'C1', 'C2'}
 
 
-def _detect_level(content: str) -> Optional[str]:
+def _detect_level(content: str) -> str | None:
     """Detect CEFR level from frontmatter or path hints."""
     m = re.search(r'^level:\s*(a1|a2|b1|b2|c1|c2)', content, re.MULTILINE | re.IGNORECASE)
     if m:
@@ -85,7 +85,7 @@ def _detect_level(content: str) -> Optional[str]:
     return None
 
 
-def _detect_level_from_path(file_path: str) -> Optional[str]:
+def _detect_level_from_path(file_path: str) -> str | None:
     """Detect level from file path."""
     path_lower = file_path.lower()
     for lvl in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
@@ -94,7 +94,7 @@ def _detect_level_from_path(file_path: str) -> Optional[str]:
     return None
 
 
-def check_filler_phrases(content: str, file_path: str = '') -> List[Dict]:
+def check_filler_phrases(content: str, file_path: str = '') -> list[dict]:
     """
     Detect LLM filler/hedging phrases that pad word count without adding content.
 
@@ -164,7 +164,7 @@ _STRUCTURAL_HEADERS = {
 }
 
 
-def check_section_depth(content: str, file_path: str = '') -> List[Dict]:
+def check_section_depth(content: str, file_path: str = '') -> list[dict]:
     """
     Flag H2 sections with insufficient word count (header padding).
 
@@ -243,7 +243,7 @@ def check_section_depth(content: str, file_path: str = '') -> List[Dict]:
 # CHECK 6: SECTION BALANCE (MAX %)
 # =============================================================================
 
-def check_section_balance(content: str, file_path: str = '') -> List[Dict]:
+def check_section_balance(content: str, file_path: str = '') -> list[dict]:
     """
     Flag H2 sections that exceed 40% of total module word count.
 
@@ -327,7 +327,7 @@ def check_section_balance(content: str, file_path: str = '') -> List[Dict]:
     return violations
 
 
-def check_ipa_density(content: str, file_path: str = '') -> List[Dict]:
+def check_ipa_density(content: str, file_path: str = '') -> list[dict]:
     """IPA removed from curriculum. This check is now a no-op."""
     return []
 
@@ -336,7 +336,7 @@ def check_ipa_density(content: str, file_path: str = '') -> List[Dict]:
 # CHECK 2: CONTENT-VOCABULARY ALIGNMENT
 # =============================================================================
 
-def check_content_vocab_alignment(content: str, file_path: str) -> List[Dict]:
+def check_content_vocab_alignment(content: str, file_path: str) -> list[dict]:
     """
     Verify that vocabulary YAML words actually appear in content or activities.
 
@@ -428,14 +428,14 @@ def check_content_vocab_alignment(content: str, file_path: str) -> List[Dict]:
 # CHECK 3: EXAMPLE PATTERN DETECTION
 # =============================================================================
 
-def _tokenize_ukrainian(text: str) -> Set[str]:
+def _tokenize_ukrainian(text: str) -> set[str]:
     """Extract Ukrainian word tokens from text, including single-char words."""
     # Include single-character Ukrainian words (я, в, у, з, й, і, а)
     # and smart apostrophe (') alongside standard ʼ
     return set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ'-]*", text.lower()))
 
 
-def check_example_diversity(content: str, file_path: str = '') -> List[Dict]:
+def check_example_diversity(content: str, file_path: str = '') -> list[dict]:
     """
     Detect runs of template-identical examples (same structure, 1-2 words differ).
 
@@ -555,7 +555,7 @@ _ABBREV_PATTERN = re.compile(
 )
 
 
-def _split_sentences(text: str) -> List[str]:
+def _split_sentences(text: str) -> list[str]:
     """Split text into sentences, filtering out headers and short lines.
 
     Handles Ukrainian abbreviations (т. д., напр., м. Київ) by temporarily
@@ -590,7 +590,7 @@ def _load_sentence_cache(cache_path: Path) -> dict:
     """Load cached sentence hashes. Returns {filename: {mtime, hashes}}."""
     if cache_path.exists():
         try:
-            with open(cache_path, 'r', encoding='utf-8') as f:
+            with open(cache_path, encoding='utf-8') as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             pass
@@ -610,15 +610,13 @@ def _save_sentence_cache(cache_path: Path, cache: dict):
             os.replace(tmp_path, cache_path)
         except Exception:
             # Clean up temp file on failure
-            try:
+            with contextlib.suppress(OSError):
                 os.unlink(tmp_path)
-            except OSError:
-                pass
     except OSError:
         pass
 
 
-def _get_file_hashes(md_path: Path, cache: dict) -> List[str]:
+def _get_file_hashes(md_path: Path, cache: dict) -> list[str]:
     """
     Get sentence hashes for a file, using cache if file hasn't changed.
     Returns list of sentence hashes.
@@ -650,7 +648,7 @@ def _get_file_hashes(md_path: Path, cache: dict) -> List[str]:
     return hashes
 
 
-def check_cross_module_plagiarism(content: str, file_path: str) -> List[Dict]:
+def check_cross_module_plagiarism(content: str, file_path: str) -> list[dict]:
     """
     Detect sentences copied verbatim between modules in the same track.
 
@@ -760,7 +758,7 @@ def check_cross_module_plagiarism(content: str, file_path: str) -> List[Dict]:
 # PUBLIC ENTRY POINT
 # =============================================================================
 
-def check_content_gaming(content: str, file_path: str) -> List[Dict]:
+def check_content_gaming(content: str, file_path: str) -> list[dict]:
     """
     Run all content gaming detection checks.
 

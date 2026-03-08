@@ -26,9 +26,7 @@ import argparse
 import json
 import re
 import sys
-import time
 from datetime import date
-from html.parser import HTMLParser
 from pathlib import Path
 
 import httpx
@@ -507,7 +505,7 @@ def main() -> int:
             if missing:
                 print(f"  Missing episodes: {sorted(missing)}")
             else:
-                print(f"  Complete: all 240 episodes covered")
+                print("  Complete: all 240 episodes covered")
 
             # 4. Get FMU
             print("Fetching FMU episodes from iTunes API...")

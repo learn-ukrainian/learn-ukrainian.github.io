@@ -5,10 +5,8 @@ Ensures consistent section ordering across all modules and levels.
 Supports both English and Ukrainian section headers.
 """
 
-import re
-from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional
+from pathlib import Path
 
 # Section type aliases - maps various header names to canonical types
 SECTION_ALIASES = {
@@ -120,7 +118,7 @@ class Section:
     content: str  # Full section content including header
 
 
-def get_section_type(header: str) -> Optional[str]:
+def get_section_type(header: str) -> str | None:
     """Map a header to its canonical section type.
 
     Uses exact match against known aliases to avoid false positives
@@ -199,7 +197,7 @@ def parse_sections(content: str) -> list[Section]:
     return sections
 
 
-def check_section_order(content: str, file_path: Path = None) -> list[dict]:
+def check_section_order(content: str, file_path: Path | None = None) -> list[dict]:
     """
     Check if sections are in the correct order.
 
@@ -223,13 +221,11 @@ def check_section_order(content: str, file_path: Path = None) -> list[dict]:
 
     if actual_order != expected_order:
         # Find specific violations
-        for i, section in enumerate(end_sections_present):
+        for _i, section in enumerate(end_sections_present):
             expected_idx = expected_order.index(section.section_type)
             actual_idx = actual_order.index(section.section_type)
 
-            if expected_idx != actual_idx:
-                # Find what should come before this
-                if expected_idx > 0:
+            if expected_idx != actual_idx and expected_idx > 0:
                     should_come_after = expected_order[expected_idx - 1]
                     issues.append(
                         {

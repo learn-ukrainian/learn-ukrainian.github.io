@@ -11,7 +11,7 @@ UKRAINIAN_PLACES = [
 def generate_block(topic, count=65):
     if topic == "macro":
         subjects = [
-            "Національний банк України", "Міністерство фінансів", "Державний бюджет", 
+            "Національний банк України", "Міністерство фінансів", "Державний бюджет",
             "Макроекономічна стабільність", "Інфляційна динаміка", "Курсова політика",
             "Банківська система", "Золотовалютні резерви", "Зовнішній борг", "Податкова система",
             "Фіскальна політика", "Грошова маса", "Облікова ставка", "Міжнародна ліквідність",
@@ -50,7 +50,7 @@ def generate_block(topic, count=65):
             "в умовах облоги", "під тиском обставин", "за підтримки МВФ", "у режимі 24/7",
             "завдяки грантам ЄС", "за рахунок військових облігацій", "шляхом емісії", "в екстреному режимі"
         ]
-    
+
     elif topic == "micro":
         subjects = [
             "Малий бізнес", "Приватні підприємці", "Великі корпорації", "IT-сектор",
@@ -160,7 +160,7 @@ def generate_block(topic, count=65):
 
     elif topic == "decolonial":
         subjects = [
-            "Енергетична незалежність", "Відмова від російського газу", "Торговельне ембарго", 
+            "Енергетична незалежність", "Відмова від російського газу", "Торговельне ембарго",
             "Розрив зв'язків з агресором", "Економічний суверенітет", "Європейська інтеграція",
             "Диверсифікація постачання", "Паливний ринок", "Українська енергосистема",
             "Національний виробник", "Імпортозаміщення", "Санкційна політика", "Митний простір ЄС",
@@ -249,26 +249,26 @@ def generate_block(topic, count=65):
         v = verbs[i % len(verbs)]
         o = objects[i % len(objects)]
         c = contexts[i % len(contexts)]
-        
+
         # 3 simple structures cycled deterministically
         struct = (i % 3) + 1
-        
+
         sent = ""
         # Random adjectives allowed because they add variety
         adj = random.choice(["значний", "масштабний", "суттєвий", "критичний", "важливий", "вирішальний", "системний", "стратегічний", "потужний", "ефективний"])
-        
+
         if struct == 1:
             sent = f"{s} {v} {adj} {o} {c}."
         elif struct == 2:
             sent = f"{c.capitalize()}, {s} {v} {o}."
         elif struct == 3:
             sent = f"{s} {v} {o}."
-        
+
         # RICNESS INJECTION: Place names and Years (Random is okay here as it adds noise)
         if random.random() < 0.2:
             place = random.choice(UKRAINIAN_PLACES)
             sent = sent + f" (зокрема у місті {place})."
-            
+
         if random.random() < 0.15:
             sent = sent.replace("2022", "2022-2023").replace("року", "років")
             if "році" not in sent:
@@ -295,7 +295,7 @@ def generate_block(topic, count=65):
         if len(sentences) % 6 == 0:
             subj_title = random.choice(subjects).title() # Title can be random
             sentences.append(f"### {subj_title}")
-            
+
         # Every 8 sentences -> Quote/Visual (Timeline/Source) - MAX FREQUENCY
         if len(sentences) % 8 == 0:
             quote_type = random.choice(["quote", "history-bite", "note", "analysis", "context"])
@@ -314,7 +314,7 @@ def generate_block(topic, count=65):
         # Every 15 sentences -> Visual Context - MAX FREQUENCY
         if len(sentences) % 15 == 0:
              sentences.append(f"> [!context]\n> 🖼️ **Візуалізація:** {random.choice(subjects)} на тлі {random.choice(contexts)}.")
-            
+
     return "\n\n".join(sentences)
 
 header = """---
@@ -422,19 +422,19 @@ decolonial_block = generate_block("decolonial", 60)
 sources_analysis_block = generate_block("sources_analysis", 75) # Needs heft
 
 full_text = (
-    header + 
-    static_intro + "\n\n" + 
-    macro_block + "\n\n" + 
-    static_mid + "\n\n" + 
-    micro_block + "\n\n" + 
-    "## Адаптація та мобілізація\n\n" + 
-    society_block + "\n\n" + 
-    sources + "\n\n" + 
-    sources_analysis_block + "\n\n" + 
-    static_decolonial + "\n\n" + 
-    decolonial_block + "\n\n" + 
-    "## Підсумок: Відбудова майбутнього\n\n" + 
-    future_block + "\n\n" + 
+    header +
+    static_intro + "\n\n" +
+    macro_block + "\n\n" +
+    static_mid + "\n\n" +
+    micro_block + "\n\n" +
+    "## Адаптація та мобілізація\n\n" +
+    society_block + "\n\n" +
+    sources + "\n\n" +
+    sources_analysis_block + "\n\n" +
+    static_decolonial + "\n\n" +
+    decolonial_block + "\n\n" +
+    "## Підсумок: Відбудова майбутнього\n\n" +
+    future_block + "\n\n" +
     outro_resources
 )
 

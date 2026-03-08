@@ -27,7 +27,6 @@ Usage:
 """
 
 import argparse
-import json
 import logging
 import os
 import signal
@@ -35,10 +34,11 @@ import sqlite3
 import subprocess
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+
 
 # ---------------------------------------------------------------------------
 # Login shell environment (captures GITHUB_TOKEN, GOOGLE_API_KEY, etc.)
@@ -165,7 +165,7 @@ def _save_stuck_report(task_id: str, turn_count: int, last_msg: dict):
                 last_content = row[0][:500]  # Truncate to 500 chars
             conn.close()
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         report = f"""# Stuck: {task_id}
 
 **Date:** {now}
@@ -200,7 +200,7 @@ def get_db():
     return sqlite3.connect(DB_PATH)
 
 
-def get_unread_messages(for_agent: str = None):
+def get_unread_messages(for_agent: str | None = None):
     """Get unread messages, optionally filtered by recipient."""
     conn = get_db()
     if not conn:
@@ -279,7 +279,7 @@ def count_task_turns(task_id: str) -> int:
 def is_any_agent_active() -> bool:
     """Check if any agent has an active interactive session."""
     agents = load_agent_config()
-    for name, config in agents.items():
+    for _name, config in agents.items():
         pattern = config.get("process_pattern")
         if pattern:
             try:
@@ -294,7 +294,7 @@ def is_any_agent_active() -> bool:
     return False
 
 
-def trigger_agent(agent: str, message_id: int, task_id: str = None, from_agent: str = None) -> bool:
+def trigger_agent(agent: str, message_id: int, task_id: str | None = None, from_agent: str | None = None) -> bool:
     """Trigger an agent to process a message.
 
     Returns True if successful, False otherwise.
@@ -361,7 +361,7 @@ def run_watcher():
     logger.info("=" * 60)
 
     consecutive_errors = 0
-    last_activity = datetime.now(timezone.utc)
+    datetime.now(UTC)
 
     # Track blocked tasks (hit turn limit)
     blocked_tasks = set()
@@ -435,7 +435,7 @@ def run_watcher():
 
                 if success:
                     consecutive_errors = 0
-                    last_activity = datetime.now(timezone.utc)
+                    datetime.now(UTC)
                     processed = True
                     delivery_attempts.pop(msg['id'], None)
                     # Cooldown after successful trigger
@@ -477,7 +477,7 @@ def read_pid() -> int:
     if PID_FILE.exists():
         try:
             return int(PID_FILE.read_text().strip())
-        except:
+        except (ValueError, OSError):
             pass
     return None
 
@@ -542,13 +542,13 @@ def show_status():
 
     # Show recent log entries
     if LOG_FILE.exists():
-        print(f"\nRecent log entries:")
+        print("\nRecent log entries:")
         try:
             with open(LOG_FILE) as f:
                 lines = f.readlines()[-10:]
                 for line in lines:
                     print(f"  {line.rstrip()}")
-        except:
+        except OSError:
             pass
 
 

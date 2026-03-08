@@ -9,12 +9,11 @@ Part 1: Split meta.yaml files into:
 Part 2: Generate Status Cache (TODO)
 """
 
-import os
-import sys
-import yaml
-import shutil
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import yaml
+
 
 # Custom YAML representer to preserve formatting
 def str_representer(dumper, data):
@@ -63,7 +62,7 @@ BUILD_FIELDS = [
 def load_yaml(path: Path) -> dict:
     if not path.exists():
         return {}
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         return yaml.safe_load(f) or {}
 
 def save_yaml(path: Path, data: dict):
@@ -124,7 +123,7 @@ def migrate_module(level: str, meta_path: Path, dry_run: bool = False):
         if field in meta_data:
             build_data[field] = meta_data[field]
 
-    # Preserve any other fields in Build for now to avoid data loss, 
+    # Preserve any other fields in Build for now to avoid data loss,
     # but exclude Plan fields
     for k, v in meta_data.items():
         if k not in PLAN_FIELDS and k not in BUILD_FIELDS:
@@ -150,7 +149,7 @@ def migrate_module(level: str, meta_path: Path, dry_run: bool = False):
 def migrate_level(level: str, dry_run: bool = False):
     print(f"\n🚀 Migrating Level: {level}")
     meta_dir = BASE_PATH / level / "meta"
-    
+
     if not meta_dir.exists():
         print(f"❌ Meta directory not found: {meta_dir}")
         return
@@ -166,13 +165,13 @@ def main():
     parser = argparse.ArgumentParser(description="Migrate content to V2 Architecture")
     parser.add_argument("level", help="Level to migrate (e.g., b1, b2, all)")
     parser.add_argument("--dry-run", action="store_true", help="Simulate without changes")
-    
+
     args = parser.parse_args()
 
     levels = [args.level]
     if args.level == 'all':
         levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'hist', 'bio', 'istorio', 'lit']
-    
+
     for lvl in levels:
         migrate_level(lvl, args.dry_run)
 

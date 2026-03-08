@@ -4,11 +4,11 @@ Systematically fix all YAML schema violations across the curriculum.
 """
 
 import sys
-import yaml
 from pathlib import Path
 
 sys.path.insert(0, 'scripts')
-from audit.checks.yaml_schema_validation import validate_activity_yaml_file, fix_yaml_file
+from audit.checks.yaml_schema_validation import fix_yaml_file, validate_activity_yaml_file
+
 
 def scan_and_fix_all_levels():
     """Scan all levels and fix YAML violations."""
@@ -60,7 +60,7 @@ def scan_and_fix_all_levels():
                         print(f"      {msg}")
                 else:
                     results['failed'] += 1
-                    print(f"   ⚠️  Could not auto-fix")
+                    print("   ⚠️  Could not auto-fix")
 
                 results['details'].append({
                     'level': level,

@@ -17,23 +17,23 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
+from typing import Any
+
 import yaml
-from typing import Dict, List, Any
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from scripts.audit.checks.activity_quality import (
-    validate_activity_quality_deterministic,
     analyze_sentence_variety,
-    estimate_vocabulary_difficulty,
-    analyze_distractor_quality,
     check_natural_ukrainian_markers,
-    estimate_cognitive_load
+    estimate_cognitive_load,
+    estimate_vocabulary_difficulty,
+    validate_activity_quality_deterministic,
 )
 
 
-def extract_activity_text(activity: Dict, item: Dict = None) -> str:
+def extract_activity_text(activity: dict, item: dict | None = None) -> str:
     """
     Extract all Ukrainian text from an activity item for analysis.
 
@@ -106,7 +106,7 @@ def extract_activity_text(activity: Dict, item: Dict = None) -> str:
     return ' '.join(text_parts).strip()
 
 
-def extract_options(activity: Dict, item: Dict = None) -> tuple[List[str], str]:
+def extract_options(activity: dict, item: dict | None = None) -> tuple[list[str], str]:
     """
     Extract options and correct answer from activity item.
 
@@ -131,13 +131,7 @@ def extract_options(activity: Dict, item: Dict = None) -> tuple[List[str], str]:
                 if opt.get('correct'):
                     correct_answer = opt_text
 
-    elif activity_type == 'fill-in':
-        if 'options' in item:
-            options = item['options']
-        if 'answer' in item:
-            correct_answer = item['answer']
-
-    elif activity_type == 'error-correction':
+    elif activity_type == 'fill-in' or activity_type == 'error-correction':
         if 'options' in item:
             options = item['options']
         if 'answer' in item:
@@ -147,10 +141,10 @@ def extract_options(activity: Dict, item: Dict = None) -> tuple[List[str], str]:
 
 
 def run_deterministic_checks(
-    activity: Dict,
+    activity: dict,
     level_code: str,
     module_num: int
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Run all deterministic quality checks on an activity.
 
@@ -283,7 +277,7 @@ def generate_queue_file(
     print(f"📄 Processing: {activity_file.name}")
 
     # Load activities
-    with open(activity_file, 'r', encoding='utf-8') as f:
+    with open(activity_file, encoding='utf-8') as f:
         activities = yaml.safe_load(f)
 
     if not activities:

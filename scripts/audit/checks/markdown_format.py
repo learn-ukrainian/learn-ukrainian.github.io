@@ -16,19 +16,19 @@ import re
 def check_frontmatter_spacing(content: str) -> list[dict]:
     """
     Check that there's a blank line after YAML frontmatter.
-    
+
     YAML frontmatter is enclosed between two '---' lines. Markdown parsing
     requires a blank line after the closing '---' before content begins.
     Without this, the first heading may not render correctly.
     """
     violations = []
-    
+
     lines = content.split('\n')
-    
+
     # Find the closing --- of frontmatter
     frontmatter_start = -1
     frontmatter_end = -1
-    
+
     for i, line in enumerate(lines):
         if line.strip() == '---':
             if frontmatter_start == -1:
@@ -36,11 +36,11 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
             else:
                 frontmatter_end = i
                 break
-    
+
     # Check if there's content after frontmatter
     if frontmatter_end > 0 and frontmatter_end + 1 < len(lines):
         next_line = lines[frontmatter_end + 1]
-        
+
         # If the next line is not blank, it's a problem
         if next_line.strip() != '':
             violations.append({
@@ -49,11 +49,11 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
                 'issue': f"Missing blank line after YAML frontmatter (line {frontmatter_end + 1})",
                 'fix': "Add a blank line between the closing '---' and the first content/heading"
             })
-    
+
     return violations
 
 
-def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
+def check_heading_levels(content: str, level_code: str | None = None) -> list[dict]:
     """
     Check that section headings follow the hierarchy from docs/MARKDOWN-FORMAT.md.
 
@@ -78,10 +78,10 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
     # Summary and Підсумок are H1 only for core, H2 for seminar
     if not is_seminar:
         h1_required_sections.extend(['summary', 'підсумок'])
-    
+
     # Content sub-sections that SHOULD be H2 (##)
     h2_preferred_sections = [
-        'warm-up', 'presentation', 'practice', 'production', 
+        'warm-up', 'presentation', 'practice', 'production',
         'cultural', 'reading', 'grammar', 'діагностика', 'аналіз'
     ]
 
@@ -119,7 +119,7 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
             h1_count += 1
             # H1 is valid for title (first H1) or specific main sections
             is_main_section = any(s in heading_lower for s in h1_required_sections)
-            
+
             if h1_count > 1 and not is_main_section:
                 # This is a random H1 that shouldn't be one
                 violations.append({
@@ -128,7 +128,7 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
                     'issue': f"Non-standard H1 heading: '{clean_heading}' should be H2 (##)",
                     'fix': f"Only Title and Main Sections (Activities/Summary/Vocabulary) should be H1. Change '# {heading}' to '## {heading}'"
                 })
-        
+
         # Check for H2 compliance (Sections that should NOT be H1)
         # Only check if it's NOT the first H1 (which is the module title)
         if current_level == 1 and h1_count > 1:
@@ -155,7 +155,7 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
                         'fix': f"Change '## {heading}' to '# {heading}' for top-level TOC compliance"
                     })
                     break
-        
+
         # Special case: 'Exercises' as H2 is often a placeholder for '# Activities'
         if current_level == 2 and heading_lower == 'exercises':
              violations.append({
@@ -235,41 +235,41 @@ def check_table_column_consistency(content: str) -> list[dict]:
 def check_forbidden_headers(content: str) -> list[dict]:
     """
     Check that modules do not contain forbidden headers per Clean MD standard.
-    
+
     Per Issue #398 (Jan 2026), modules must NOT contain explicit:
     - ## Activities (or ## Вправи, ## Активності)
     - ## Vocabulary (or ## Словник)
     - ## External Resources (or ## Зовнішні ресурси)
-    
+
     These sections are auto-injected from YAML sidecars:
     - activities/{slug}.yaml
     - vocabulary/{slug}.yaml
     - docs/resources/external_resources.yaml
-    
+
     Rationale: Clean MD architecture separates content (MD) from structure (YAML).
     """
     violations = []
-    
+
     # Forbidden headers (H2 level) - both English and Ukrainian
     forbidden_patterns = [
         # Activities
         (r'^##\s+Activities\s*$', 'Activities', 'activities/{slug}.yaml'),
         (r'^##\s+Вправи\s*$', 'Вправи', 'activities/{slug}.yaml'),
         (r'^##\s+Активності\s*$', 'Активності', 'activities/{slug}.yaml'),
-        
+
         # Vocabulary
         (r'^##\s+Vocabulary\s*$', 'Vocabulary', 'vocabulary/{slug}.yaml'),
         (r'^##\s+Словник\s*$', 'Словник', 'vocabulary/{slug}.yaml'),
-        
+
         # External Resources
         (r'^##\s+External\s+Resources\s*$', 'External Resources', 'docs/resources/external_resources.yaml'),
         (r'^##\s+Зовнішні\s+ресурси\s*$', 'Зовнішні ресурси', 'docs/resources/external_resources.yaml'),
     ]
-    
+
     lines = content.split('\n')
     in_frontmatter = False
     frontmatter_count = 0
-    
+
     for line_num, line in enumerate(lines, 1):
         # Skip frontmatter
         if line.strip() == '---':
@@ -279,10 +279,10 @@ def check_forbidden_headers(content: str) -> list[dict]:
             elif frontmatter_count == 2:
                 in_frontmatter = False
             continue
-        
+
         if in_frontmatter:
             continue
-        
+
         # Check for forbidden headers
         for pattern, header_name, yaml_location in forbidden_patterns:
             if re.match(pattern, line.strip(), re.IGNORECASE):
@@ -293,11 +293,11 @@ def check_forbidden_headers(content: str) -> list[dict]:
                     'fix': f"Remove '## {header_name}' header. This section is auto-injected from {yaml_location} at build time. See docs/l2-uk-en/templates/ for correct pattern."
                 })
                 break
-    
+
     return violations
 
 
-def check_markdown_format(content: str, level_code: str = None) -> list[dict]:
+def check_markdown_format(content: str, level_code: str | None = None) -> list[dict]:
     """
     Run all markdown format validation checks.
 
@@ -314,7 +314,7 @@ def check_markdown_format(content: str, level_code: str = None) -> list[dict]:
     violations.extend(check_frontmatter_spacing(content))
     violations.extend(check_heading_levels(content, level_code))
     violations.extend(check_table_column_consistency(content))
-    
+
     # Clean MD Standard checks (Issue #398)
     violations.extend(check_forbidden_headers(content))
 

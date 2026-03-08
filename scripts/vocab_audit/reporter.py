@@ -8,7 +8,6 @@ Generates markdown reports for:
 4. Comprehensive audit report
 """
 
-from typing import Dict, List, Tuple
 from datetime import datetime
 
 
@@ -16,7 +15,7 @@ class VocabularyReporter:
     """Generate vocabulary audit reports."""
 
     @staticmethod
-    def generate_duplicates_report(duplicates: Dict[str, List[Tuple[str, str]]]) -> str:
+    def generate_duplicates_report(duplicates: dict[str, list[tuple[str, str]]]) -> str:
         """
         Generate markdown report for duplicate words.
 
@@ -48,7 +47,7 @@ class VocabularyReporter:
         return '\n'.join(report)
 
     @staticmethod
-    def generate_missing_report(level: str, missing: Dict[str, List[str]]) -> str:
+    def generate_missing_report(level: str, missing: dict[str, list[str]]) -> str:
         """
         Generate markdown report for missing words.
 
@@ -80,7 +79,7 @@ class VocabularyReporter:
         return '\n'.join(report)
 
     @staticmethod
-    def generate_extra_report(level: str, extra: Dict[str, List[str]]) -> str:
+    def generate_extra_report(level: str, extra: dict[str, list[str]]) -> str:
         """
         Generate markdown report for extra words.
 
@@ -113,10 +112,10 @@ class VocabularyReporter:
 
     @staticmethod
     def generate_comprehensive_report(
-        stats: Dict[str, Dict[str, int]],
-        duplicates: Dict[str, List[Tuple[str, str]]],
-        missing_by_level: Dict[str, Dict[str, List[str]]],
-        extra_by_level: Dict[str, Dict[str, List[str]]]
+        stats: dict[str, dict[str, int]],
+        duplicates: dict[str, list[tuple[str, str]]],
+        missing_by_level: dict[str, dict[str, list[str]]],
+        extra_by_level: dict[str, dict[str, list[str]]]
     ) -> str:
         """
         Generate comprehensive vocabulary audit report.

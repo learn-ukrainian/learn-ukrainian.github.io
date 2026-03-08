@@ -23,19 +23,17 @@ Output: data/literary_texts/wikisource-{author}.jsonl
 """
 
 import argparse
-import hashlib
 import html
 import json
 import re
 import sys
 import time
 from pathlib import Path
-from urllib.parse import quote
 
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rag.config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
+from rag.config import CHUNK_MAX_TOKENS, LITERARY_DIR
 
 API = "https://uk.wikisource.org/w/api.php"
 CRAWL_DELAY = 0.3

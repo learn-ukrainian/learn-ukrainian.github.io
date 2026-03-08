@@ -24,8 +24,10 @@ from pathlib import Path
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-from slug_utils import to_bare_slug, review_path as _review_path
+import contextlib
 
+from slug_utils import review_path as _review_path
+from slug_utils import to_bare_slug
 
 # --- Tier Configuration ---
 
@@ -139,7 +141,7 @@ def _detect_tier(file_path: str, level_code: str) -> int | None:
         if level_upper in cfg['levels']:
             # Exclude levels that are actually seminar tracks
             # e.g., C1 level but bio track → tier 3, not tier 4
-            if tier_num == 4 and any(t in path_lower for t in TIER_3_TRACKS):
+            if tier_num == 4 and any(t in path_parts for t in TIER_3_TRACKS):
                 continue
             return tier_num
 
@@ -263,10 +265,8 @@ def _verify_citations_against_source(citations: list[str], source_path: Path) ->
     for subdir in ('activities', 'vocabulary'):
         yaml_path = base_dir / subdir / f"{slug}.yaml"
         if yaml_path.exists():
-            try:
+            with contextlib.suppress(Exception):
                 source_parts.append(yaml_path.read_text(encoding='utf-8').lower())
-            except Exception:
-                pass
 
     source_text = '\n'.join(source_parts)
     # Strip markdown formatting from source too (bold, italic, links)
@@ -451,17 +451,16 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
 
         # 5. Rubber-stamp Detection: All perfect scores with no evidence
         perfect, total = _count_perfect_scores(content)
-        if total >= cfg['min_dimensions'] and perfect == total:
-            if not has_citations:
-                violations.append({
-                    'type': 'RUBBER_STAMP_REVIEW',
-                    'severity': 'critical',
-                    'message': (
-                        f"Review scores {perfect}/{total} dimensions as 10/10 but cites ZERO "
-                        f"Ukrainian sentences as evidence. A perfect score requires justification "
-                        f"— quote the specific text that earns each 10. {fix_prompt}"
-                    )
-                })
+        if total >= cfg['min_dimensions'] and perfect == total and not has_citations:
+            violations.append({
+                'type': 'RUBBER_STAMP_REVIEW',
+                'severity': 'critical',
+                'message': (
+                    f"Review scores {perfect}/{total} dimensions as 10/10 but cites ZERO "
+                    f"Ukrainian sentences as evidence. A perfect score requires justification "
+                    f"— quote the specific text that earns each 10. {fix_prompt}"
+                )
+            })
 
         # 6. Empty "Issues/Critique" section (matches natural variations)
         issues_match = re.search(
@@ -485,9 +484,7 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                 })
 
         # 7. No Ukrainian citations (tier 2+ only — tier 1 is mixed-language)
-        if cfg['require_ukr_citations'] and not has_citations:
-            # Only add if not already flagged as rubber-stamp
-            if not any(v['type'] == 'RUBBER_STAMP_REVIEW' for v in violations):
+        if cfg['require_ukr_citations'] and not has_citations and not any(v['type'] == 'RUBBER_STAMP_REVIEW' for v in violations):
                 violations.append({
                     'type': 'NO_EVIDENCE_REVIEW',
                     'severity': 'warning',

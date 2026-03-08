@@ -145,10 +145,7 @@ def _scan_track(track_id: str, manifest: dict) -> list[dict]:
         rp = find_research_path(track_dir, slug)
         content_path = _find_content_path(track_dir, slug)
 
-        if rp:
-            info = assess_research_compat(rp, track_id, content_path)
-        else:
-            info = None
+        info = assess_research_compat(rp, track_id, content_path) if rp else None
 
         results.append({
             "num": num,
@@ -271,10 +268,10 @@ def _render_coverage_only(track_id: str, results: list[dict]):
     print(f"\n{BOLD}{track_name} Research Coverage{RESET}")
     print("\u2550" * 50)
     print(f"Coverage: {len(researched)}/{total} ({pct}%)")
-    print(f"No quality rubric defined \u2014 complete research coverage first.")
+    print("No quality rubric defined \u2014 complete research coverage first.")
 
     if researched:
-        print(f"\nFiles found:")
+        print("\nFiles found:")
         for r in researched:
             words = r["info"].get("words", 0)
             print(f"  - {r['slug']}-research.md ({words}w)")
@@ -286,7 +283,7 @@ def _render_coverage_only(track_id: str, results: list[dict]):
 def _render_single_module(track_id: str, result: dict):
     """Render detailed output for a single module."""
     info = result["info"]
-    rubric_name = get_rubric(track_id)
+    get_rubric(track_id)
 
     print(f"\n{BOLD}#{result['num']:03d} {result['slug']}{RESET} ({track_id})")
     print("\u2500" * 50)
@@ -305,7 +302,7 @@ def _render_single_module(track_id: str, result: dict):
 
         dims = info.get("dimensions") or {}
         if dims:
-            print(f"\n  Dimensions:")
+            print("\n  Dimensions:")
             for dim_name, dim_data in dims.items():
                 label = DIMENSION_SHORT_LABELS.get(dim_name, dim_name)
                 bar = "\u2588" * dim_data["score"] + "\u2591" * (dim_data["max"] - dim_data["score"])
@@ -313,7 +310,7 @@ def _render_single_module(track_id: str, result: dict):
 
         gaps = info.get("gaps") or []
         if gaps:
-            print(f"\n  Gaps:")
+            print("\n  Gaps:")
             for g in gaps:
                 print(f"    - {g}")
 
@@ -324,7 +321,7 @@ def _render_single_module(track_id: str, result: dict):
                 for reason in alignment["reasons"]:
                     print(f"    \u26a0 {reason}")
             elif alignment.get("content_exists"):
-                print(f"\n  Content alignment: OK")
+                print("\n  Content alignment: OK")
     else:
         print(f"  Score:   {DIM}no rubric{RESET}")
 
@@ -543,7 +540,7 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
                             last_score = new_score
                             # Clear v3 Phase A so meta outline is regenerated from improved research
                             if _clear_v3_phase_a(track_id, slug):
-                                print(f"  v3 Phase A reset → meta outline will regenerate on next v3 run")
+                                print("  v3 Phase A reset → meta outline will regenerate on next v3 run")
                             break
                         elif attempt < max_attempts:
                             print(f" (below {min_score}, retrying...)")
@@ -599,7 +596,7 @@ def _render_all_overview(manifest: dict):
         researched = 0
         score_sum = 0
         scored_count = 0
-        for idx, m_entry in enumerate(modules_list):
+        for _idx, m_entry in enumerate(modules_list):
             slug = _parse_slug(m_entry)
             rp = find_research_path(track_dir, slug)
             if rp:

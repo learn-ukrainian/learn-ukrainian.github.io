@@ -20,7 +20,6 @@ Safety:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -60,10 +59,7 @@ def move_reviews(track_dir: Path, dry_run: bool) -> list[str]:
 
         # Determine bare slug from the review filename
         name = f.name
-        if name.endswith("-llm-review.md"):
-            slug_part = name[:-len("-llm-review.md")]
-        else:
-            slug_part = name[:-len("-review.md")]
+        slug_part = name[:-len("-llm-review.md")] if name.endswith("-llm-review.md") else name[:-len("-review.md")]
 
         bare = to_bare_slug(slug_part)
         dest = review_dir / f"{bare}-review.md"
@@ -220,7 +216,7 @@ def _update_status_module_field(json_path: Path, bare_slug: str):
         if data.get("module") != bare_slug:
             data["module"] = bare_slug
             json_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    except (json.JSONDecodeError, IOError):
+    except (OSError, json.JSONDecodeError):
         pass  # Skip corrupted files
 
 

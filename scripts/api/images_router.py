@@ -17,15 +17,11 @@ import asyncio
 import json
 import shutil
 import sys
-import time
 from collections import OrderedDict
 from datetime import datetime
-from functools import lru_cache
-from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from .config import PROJECT_ROOT
@@ -207,11 +203,11 @@ def _cache_page_render(key: str, png_bytes: bytes):
 # ── Request/Response models ──────────────────────────────────────────
 
 class AnnotationUpdate(BaseModel):
-    teaching_value: Optional[str] = None
-    element_type: Optional[str] = None
-    description_uk: Optional[str] = None
-    associated_text_uk: Optional[str] = None
-    position: Optional[str] = None
+    teaching_value: str | None = None
+    element_type: str | None = None
+    description_uk: str | None = None
+    associated_text_uk: str | None = None
+    position: str | None = None
 
 
 class BulkAnnotationUpdate(BaseModel):
@@ -278,7 +274,6 @@ async def list_textbooks():
 
         # Get page count from PDF
         try:
-            import pymupdf
             doc = await _pdf_pool.get(info["path"])
             page_count = len(doc)
         except Exception:
@@ -310,7 +305,7 @@ async def get_page_context(pdf_stem: str, page_num: int):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
 
     def _extract(doc, page_num):
-        from rag.poc_pair_page import extract_text_blocks, extract_images, SCALE
+        from rag.poc_pair_page import SCALE, extract_images, extract_text_blocks
         page = doc[page_num - 1]
         text_blocks = extract_text_blocks(page)
         images = extract_images(page)
@@ -396,11 +391,11 @@ async def render_page_png(pdf_stem: str, page_num: int):
 
 @router.get("/annotations")
 async def browse_annotations(
-    grade: Optional[int] = Query(None, description="Filter by grade"),
-    teaching_value: Optional[str] = Query(None, description="Filter by teaching_value"),
-    element_type: Optional[str] = Query(None, description="Filter by element_type"),
+    grade: int | None = Query(None, description="Filter by grade"),
+    teaching_value: str | None = Query(None, description="Filter by teaching_value"),
+    element_type: str | None = Query(None, description="Filter by element_type"),
     unannotated: bool = Query(False, description="Show only unannotated images"),
-    q: Optional[str] = Query(None, description="Search description_uk"),
+    q: str | None = Query(None, description="Search description_uk"),
     page: int = Query(0, ge=0),
     per_page: int = Query(50, ge=1, le=200),
 ):

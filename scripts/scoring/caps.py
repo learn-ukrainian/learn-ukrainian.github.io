@@ -7,7 +7,6 @@ cannot be hidden by high scores in other areas.
 """
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -18,8 +17,8 @@ class CapResult:
     capped_score: float
     cap_name: str
     cap_reason: str
-    threshold_value: Optional[float] = None
-    actual_value: Optional[float] = None
+    threshold_value: float | None = None
+    actual_value: float | None = None
 
 
 @dataclass

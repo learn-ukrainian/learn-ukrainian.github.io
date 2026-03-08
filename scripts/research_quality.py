@@ -14,7 +14,6 @@ Extensibility:
 import re
 from pathlib import Path
 
-
 # ==================== RUBRIC REGISTRY ====================
 
 RUBRIC_REGISTRY = {
@@ -78,16 +77,29 @@ DIMENSION_SHORT_LABELS = {
 # ==================== HELPERS ====================
 
 
+import contextlib
+
 from research_markdown_utils import (
-    extract_section as _extract_section,
-    count_urls as _count_urls,
-    count_numbered_items as _count_numbered_items,
     count_blockquotes as _count_blockquotes,
-    count_guillemet_quotes as _count_guillemet_quotes,
+)
+from research_markdown_utils import (
     count_dated_entries as _count_dated_entries,
+)
+from research_markdown_utils import (
+    count_guillemet_quotes as _count_guillemet_quotes,
+)
+from research_markdown_utils import (
     count_h3_subsections as _count_h3_subsections,
 )
-
+from research_markdown_utils import (
+    count_numbered_items as _count_numbered_items,
+)
+from research_markdown_utils import (
+    count_urls as _count_urls,
+)
+from research_markdown_utils import (
+    extract_section as _extract_section,
+)
 
 # ==================== SUBSTANCE SCORING ====================
 
@@ -568,9 +580,8 @@ def _check_content_alignment_history(dims: dict, content_text: str) -> dict:
             reasons.append(f"Research has 3+ quotes but content has {content_bq + content_gq}")
 
     sources_dim = dims.get("sources", {})
-    if sources_dim.get("score", 0) >= 3:
-        if _count_urls(content_text) == 0:
-            reasons.append("Research has 5+ sources but content cites 0")
+    if sources_dim.get("score", 0) >= 3 and _count_urls(content_text) == 0:
+        reasons.append("Research has 5+ sources but content cites 0")
 
     return {
         "content_exists": True,
@@ -809,10 +820,8 @@ def assess_research_compat(
     if content_path:
         content_path = Path(content_path)
         if content_path.exists():
-            try:
+            with contextlib.suppress(Exception):
                 content_text = content_path.read_text(encoding="utf-8")
-            except Exception:
-                pass
 
     # Auto-discover discovery.yaml from research path if not provided
     disc_path = Path(discovery_path) if discovery_path else None

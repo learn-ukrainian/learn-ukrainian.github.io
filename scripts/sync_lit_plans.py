@@ -1,5 +1,3 @@
-import os
-import shutil
 from pathlib import Path
 
 curriculum_dir = Path("curriculum/l2-uk-en")
@@ -9,10 +7,11 @@ new_tracks = ["lit-doc", "lit-drama", "lit-crimea", "lit-youth"]
 
 for track in new_tracks:
     research_dir = curriculum_dir / track / "research"
-    if not research_dir.exists(): continue
-    
+    if not research_dir.exists():
+        continue
+
     actual_slugs = [f.stem.replace("-research", "") for f in research_dir.glob("*-research.md")]
-    
+
     for slug in actual_slugs:
         # Move plans from old tracks
         for old_track in ["lit", "lit-essay", "lit-war"]:

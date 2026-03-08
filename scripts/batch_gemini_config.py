@@ -6,12 +6,12 @@ Module numbering source of truth: curriculum/l2-uk-en/curriculum.yaml
 Module N = levels.{track}.modules[N-1] (1-indexed position in the array).
 """
 
-import re
 from pathlib import Path
 
 import yaml
-
-from slug_utils import to_bare_slug, review_path as _review_path, status_path as _status_path
+from slug_utils import review_path as _review_path
+from slug_utils import status_path as _status_path
+from slug_utils import to_bare_slug
 
 # Base paths
 PROJECT_ROOT = Path(__file__).parent.parent

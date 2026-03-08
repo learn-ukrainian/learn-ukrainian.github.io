@@ -1,9 +1,9 @@
-import sys, re, yaml
+import re
 
 # Fix MD Quotes
 md_path = 'curriculum/l2-uk-en/c1/11-summary-paraphrase.md'
 try:
-    with open(md_path, 'r') as f:
+    with open(md_path) as f:
         md_content = f.read()
     md_content = re.sub(r'\"([^\"]*?)\"', r'«\1»', md_content)
     with open(md_path, 'w') as f:
@@ -15,46 +15,46 @@ except Exception as e:
 # Fix YAML
 yaml_path = 'curriculum/l2-uk-en/c1/activities/11-summary-paraphrase.yaml'
 try:
-    with open(yaml_path, 'r') as f:
+    with open(yaml_path) as f:
         lines = f.readlines()
-    
+
     new_lines = []
-    
+
     # Context counters
     processed_count = 0
-    
+
     current_type = ''
     in_options_block = False
-    
+
     for i, line in enumerate(lines):
         stripped = line.strip()
         indent = line[:line.find(stripped)] if stripped else ''
-        
+
         # Identify Type
         if '- type:' in line:
             current_type = line.split('type:')[1].strip()
         elif 'type:' in line and not stripped.startswith('-'):
              # Careful if it's an item property 'type' (unlikely)
              current_type = line.split('type:')[1].strip()
-             
+
         # Check blocks
         if stripped == 'options:' or stripped == 'pairs:' or stripped == 'groups:':
             in_options_block = True
         elif stripped.startswith('- id:') or stripped.startswith('- type:') or stripped.startswith('items:'):
             in_options_block = False
-            
+
         # 1. Fill-in Fix: replace '- text:' with '- sentence:' for items
         if current_type == 'fill-in' and stripped.startswith('- text:') and not in_options_block:
             new_lines.append(line.replace('text:', 'sentence:', 1))
             processed_count += 1
             continue
-            
+
         # 2. True-False Fix: replace 'answer:' with 'correct:'
         if current_type == 'true-false' and stripped.startswith('answer:'):
              new_lines.append(line.replace('answer:', 'correct:', 1))
              processed_count += 1
              continue
-             
+
         # 3. Quiz Missing Correct
         # Logic: If inside quiz options, and we have '- text:', check if next line is 'correct:'.
         if current_type == 'quiz' and stripped.startswith('- text:') and in_options_block:
@@ -80,7 +80,7 @@ try:
                     new_lines.append(indent + '  correct: false\n')
                     processed_count += 1
             continue
-            
+
         # 4. Mark-the-words correct_words extraction
         if current_type == 'mark-the-words' and stripped.startswith('passage:'):
             new_lines.append(line)
@@ -88,7 +88,7 @@ try:
             # Remove outer quotes if basic
             if (content.startswith('\'') and content.endswith('\'')) or (content.startswith('\"') and content.endswith('\"')):
                 content = content[1:-1]
-            
+
             matches = re.findall(r'\*([^*\s]+)\*', content)
             if matches:
                 new_lines.append(indent + 'correct_words:\n')
@@ -109,10 +109,10 @@ try:
             continue
 
         new_lines.append(line)
-        
+
     with open(yaml_path, 'w') as f:
         f.writelines(new_lines)
     print(f"Fixed YAML. Processed {processed_count} lines.")
-    
+
 except Exception as e:
     print(f"Error fixing YAML: {e}")

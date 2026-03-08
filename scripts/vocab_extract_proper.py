@@ -20,7 +20,7 @@ import argparse
 import re
 import sqlite3
 from pathlib import Path
-from typing import Dict, List, Set, Optional
+
 import yaml
 
 # =============================================================================
@@ -70,29 +70,29 @@ def stressed_to_ipa(stressed_word: str) -> str:
     """Convert stressed Ukrainian word to IPA notation."""
     if not stressed_word:
         return ''
-    
+
     ipa_chars = []
     stress_placed = False
     i = 0
-    
+
     while i < len(stressed_word):
         char = stressed_word[i].lower()
-        is_stressed = (i + 1 < len(stressed_word) and 
+        is_stressed = (i + 1 < len(stressed_word) and
                        stressed_word[i + 1] == STRESS_MARK)
-        
+
         if char == STRESS_MARK:
             i += 1
             continue
-        
+
         ipa = CYRILLIC_TO_IPA.get(char, char)
-        
+
         if is_stressed and not stress_placed:
             ipa_chars.append('ˈ')
             stress_placed = True
-        
+
         ipa_chars.append(ipa)
         i += 1
-    
+
     result = ''.join(ipa_chars)
     return f"/{result}/" if result else ''
 
@@ -130,7 +130,7 @@ STOPWORDS = {
     'хто', 'який', 'яка', 'яке', 'які', 'котрий', 'чий',
     # Particles & adverbs (very common)
     'не', 'ні', 'так', 'вже', 'ще', 'дуже', 'тільки', 'також', 'навіть',
-    'там', 'тут', 'де', 'коли', 'чому', 'куди', 'звідки', 'ось', 'он',
+    'там', 'тут', 'де', 'чому', 'куди', 'звідки', 'ось', 'он',
     'теж', 'лише', 'саме', 'майже', 'просто', 'зовсім',
     # Common verbs (auxiliary/modal)
     'бути', 'є', 'був', 'була', 'було', 'були', 'буде', 'будуть',
@@ -158,20 +158,20 @@ def extract_module_number(md_path: Path) -> int:
     match = re.match(r'(\d+)', md_path.name)
     if match:
         return int(match.group(1))
-    
+
     # 2. Try meta sidecar
     meta_path = md_path.parent / 'meta' / f"{md_path.stem}.yaml"
     if meta_path.exists():
         try:
-            with open(meta_path, 'r', encoding='utf-8') as f:
+            with open(meta_path, encoding='utf-8') as f:
                 content = f.read()
                 # Look for 'module: ...-XX'
                 match = re.search(r'module:.*-(\d+)', content)
                 if match:
                     return int(match.group(1))
-        except:
+        except (ValueError, OSError):
             pass
-            
+
     return 999  # Fallback
 
 
@@ -184,61 +184,61 @@ def extract_ukrainian_text(md_path: Path) -> str:
     - YAML callouts (> [!...])
     """
     content = md_path.read_text(encoding='utf-8')
-    
+
     lines = []
     in_frontmatter = False
     in_code_block = False
     frontmatter_count = 0
-    
+
     for line in content.split('\n'):
         stripped = line.strip()
-        
+
         # Toggle frontmatter
         if stripped == '---':
             frontmatter_count += 1
             if frontmatter_count <= 2:
                 in_frontmatter = not in_frontmatter
             continue
-        
+
         if in_frontmatter:
             continue
-        
+
         # Toggle code blocks
         if stripped.startswith('```'):
             in_code_block = not in_code_block
             continue
-        
+
         if in_code_block:
             continue
-        
+
         # Skip tables
         if stripped.startswith('|'):
             continue
-        
+
         # Skip callout markers but keep text
         if stripped.startswith('> [!'):
             continue
-        
+
         # Skip pure HTML
         if stripped.startswith('<') and stripped.endswith('>'):
             continue
-        
+
         # Remove markdown header markers but keep text
         if stripped.startswith('#'):
             stripped = re.sub(r'^#+\s*', '', stripped)
-        
+
         # Keep if contains Cyrillic
         if re.search(r'[\u0400-\u04FF]', stripped):
             lines.append(stripped)
-    
+
     return '\n'.join(lines)
 
 
-def get_known_lemmas(db_path: Path) -> Set[str]:
+def get_known_lemmas(db_path: Path) -> set[str]:
     """Get set of all unique lemmas already in the database."""
     if not db_path.exists():
         return set()
-    
+
     try:
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
@@ -251,52 +251,52 @@ def get_known_lemmas(db_path: Path) -> Set[str]:
         return set()
 
 
-def tokenize_and_lemmatize(text: str, known_lemmas: Optional[Set[str]] = None) -> Dict[str, Dict]:
+def tokenize_and_lemmatize(text: str, known_lemmas: set[str] | None = None) -> dict[str, dict]:
     """
     Tokenize Ukrainian text and lemmatize each word using pymorphy3.
-    
+
     Returns dict: {lemma: {pos, gender, count}}
     """
     morph = get_morph()
-    
+
     # Extract all Ukrainian word tokens
     words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ-]*", text)
-    
+
     lemma_data = {}
-    
+
     for word in words:
         word_lower = word.lower()
-        
+
         # Skip short words and stopwords
         if len(word_lower) <= 1:
             continue
         if word_lower in STOPWORDS:
             continue
-        
+
         # Analyze with pymorphy3
         parsed = morph.parse(word_lower)
         if not parsed:
             continue
-        
+
         best = parsed[0]
         lemma = best.normal_form
-        
+
         # Skip if lemma is a stopword
         if lemma in STOPWORDS:
             continue
-        
+
         # SKIP if already known (Delta Extraction)
         if known_lemmas and lemma in known_lemmas:
             continue
-        
+
         # Get POS
         pos = POS_MAP.get(best.tag.POS, 'noun')
-        
+
         # Get gender for nouns
         gender = None
         if pos == 'noun' and best.tag.gender:
             gender = GENDER_MAP.get(best.tag.gender)
-        
+
         # Update or create entry
         if lemma not in lemma_data:
             lemma_data[lemma] = {
@@ -305,42 +305,42 @@ def tokenize_and_lemmatize(text: str, known_lemmas: Optional[Set[str]] = None) -
                 'count': 0
             }
         lemma_data[lemma]['count'] += 1
-    
+
     return lemma_data
 
 
-def create_vocabulary_entries(lemma_data: Dict[str, Dict], min_count: int = 1) -> List[Dict]:
+def create_vocabulary_entries(lemma_data: dict[str, dict], min_count: int = 1) -> list[dict]:
     """
     Create vocabulary YAML entries from lemma data.
-    
+
     Filters by minimum occurrence count and adds IPA.
     """
     stressifier = get_stressifier()
     entries = []
-    
+
     for lemma, data in sorted(lemma_data.items()):
         if data['count'] < min_count:
             continue
-        
+
         # Get stressed form and IPA
         try:
             stressed = stressifier(lemma)
             ipa = stressed_to_ipa(stressed)
         except Exception:
             ipa = ''
-        
+
         entry = {
             'lemma': lemma,
             'ipa': ipa,
             'translation': '',  # To be filled manually or by LLM
             'pos': data['pos'],
         }
-        
+
         if data['gender']:
             entry['gender'] = data['gender']
-        
+
         entries.append(entry)
-    
+
     return entries
 
 
@@ -348,12 +348,12 @@ def create_vocabulary_entries(lemma_data: Dict[str, Dict], min_count: int = 1) -
 # MAIN
 # =============================================================================
 
-def process_module(md_path: Path, output_dir: Optional[Path] = None, 
+def process_module(md_path: Path, output_dir: Path | None = None,
                    dry_run: bool = False, min_count: int = 1,
-                   known_lemmas: Optional[Set[str]] = None) -> Dict:
+                   known_lemmas: set[str] | None = None) -> dict:
     """
     Process a single module markdown file.
-    
+
     Returns statistics dict.
     """
     # Try to detect level from path
@@ -366,14 +366,14 @@ def process_module(md_path: Path, output_dir: Optional[Path] = None,
     # Output to vocabulary/ subdirectory by default
     if output_dir is None:
         output_dir = md_path.parent / 'vocabulary'
-    
+
     output_path = output_dir / f"{md_path.stem}.yaml"
-    
+
     # Extract and process
     text = extract_ukrainian_text(md_path)
     lemma_data = tokenize_and_lemmatize(text, known_lemmas)
     entries = create_vocabulary_entries(lemma_data, min_count)
-    
+
     # Wrap in standard schema
     data = {
         'module': md_path.stem,
@@ -381,19 +381,19 @@ def process_module(md_path: Path, output_dir: Optional[Path] = None,
         'version': '2.0',
         'items': entries
     }
-    
+
     stats = {
         'module': md_path.name,
         'words_found': sum(d['count'] for d in lemma_data.values()),
         'unique_lemmas': len(lemma_data),
         'entries_created': len(entries),
     }
-    
+
     if not dry_run and entries:
         output_dir.mkdir(exist_ok=True)
         with open(output_path, 'w', encoding='utf-8') as f:
             yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-    
+
     return stats
 
 
@@ -409,31 +409,31 @@ def main():
                         help='Preview without writing files')
     parser.add_argument('--output-dir', type=Path,
                         help='Output directory (default: vocabulary/ subdir)')
-    
+
     args = parser.parse_args()
-    
+
     # Delta extraction check
     db_path = Path("curriculum/l2-uk-en/vocabulary.db")
     known_lemmas = get_known_lemmas(db_path) if db_path.exists() else set()
-    
+
     if known_lemmas:
         print(f"  🔍 Knowledge-Aware: Filtering against {len(known_lemmas):,} known lemmas")
-    
+
     print("=" * 60)
     print("📝 PROPER VOCABULARY EXTRACTION (with pymorphy3)")
     print("=" * 60)
-    
+
     total_words = 0
     total_lemmas = 0
     total_entries = 0
-    
+
     # Sort files numerically to ensure sequential extraction
-    files = sorted([f for f in args.files if f.exists() and not f.is_dir()], 
+    files = sorted([f for f in args.files if f.exists() and not f.is_dir()],
                    key=extract_module_number)
-    
+
     for md_path in files:
         stats = process_module(md_path, args.output_dir, args.dry_run, args.min_count, known_lemmas)
-        
+
         # CUMULATIVE UPDATE: Add newly found entries to known_lemmas for the next file in batch
         if known_lemmas is not None and not args.dry_run:
             # We need to re-extract the lemmas we just saved to YAML to update the set
@@ -443,23 +443,23 @@ def main():
             # Add these new ones to the set for the NEXT file
             for lemma in current_results:
                 known_lemmas.add(lemma)
-        
+
         total_words += stats['words_found']
         total_lemmas += stats['unique_lemmas']
         total_entries += stats['entries_created']
-        
+
         print(f"  ✓ {stats['module']}: {stats['words_found']} words → {stats['entries_created']} lemmas")
-    
+
     print("\n" + "=" * 60)
     print("📊 SUMMARY")
     print("=" * 60)
     print(f"  Total words processed: {total_words:,}")
     print(f"  Unique lemmas found:   {total_lemmas:,}")
     print(f"  Entries created:       {total_entries:,}")
-    
+
     if args.dry_run:
         print("\n  [DRY RUN - no files written]")
-    
+
     return 0
 
 

@@ -26,7 +26,7 @@ import json
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -39,8 +39,8 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-direct"
 MANIFEST_PATH = CURRICULUM_DIR / "manifest.yaml"
 PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases"
 sys.path.insert(0, str(SCRIPTS_DIR))
-from batch_gemini_config import PRO_MODEL, VENV_PYTHON  # noqa: E402
-from validate_direct import validate_file, ValidationResult  # noqa: E402
+from batch_gemini_config import PRO_MODEL, VENV_PYTHON
+from validate_direct import ValidationResult, validate_file
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 PHASES = ["enrich", "validate", "review", "mdx"]
@@ -135,7 +135,7 @@ class DirectModuleContext:
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def log(msg: str) -> None:
@@ -347,10 +347,7 @@ def phase_enrich(ctx: DirectModuleContext) -> bool:
     if raw_output.startswith("```"):
         lines = raw_output.split("\n")
         # Remove first line (```yaml or ```) and last line (```)
-        if lines[-1].strip() == "```":
-            lines = lines[1:-1]
-        else:
-            lines = lines[1:]
+        lines = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
         raw_output = "\n".join(lines)
 
     # Parse YAML
@@ -367,7 +364,7 @@ def phase_enrich(ctx: DirectModuleContext) -> bool:
         return False
 
     # Safety checks: critical fields must be preserved
-    for field in ("module", "track", "level", "type", "title"):
+    for field in ("module", "track", "level", "type", "title"):  # noqa: F402
         if enriched.get(field) != ctx.module_data.get(field):
             log(f"  [enrich] REJECTED: '{field}' changed from "
                 f"'{ctx.module_data.get(field)}' to '{enriched.get(field)}'")
@@ -537,7 +534,7 @@ def phase_mdx(ctx: DirectModuleContext) -> bool:
         mark_phase(ctx, "mdx", "failed", error="mdx_generation")
         return False
 
-    log(f"  [mdx] OK")
+    log("  [mdx] OK")
     if result.stdout:
         log(f"  {result.stdout.strip()}")
     mark_phase(ctx, "mdx", "complete")

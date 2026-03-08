@@ -1,7 +1,8 @@
 
-import yaml
-import re
 import os
+import re
+
+import yaml
 
 # Define Esssay Activities
 essay_activities = {
@@ -61,7 +62,7 @@ unjumble_replacements = {
     "Він говорив, наче знав усе.": "Він так впевнено говорив про це, наче він справді знав абсолютно усе.",
     "Я запізнився, тому що був затор.": "Я сьогодні сильно запізнився на роботу, тому що в центрі був великий затор.",
     "Після того як він пішов, стало тихо.": "Відразу після того як він пішов з кімнати, у домі стало дуже тихо.",
-    
+
     # M12
     "Можливо, він прийде завтра.": "Цілком можливо, що він прийде до нас у гості вже завтра вранці.",
     "На жаль, ми пропустили зустріч.": "На великий жаль, ми через затори пропустили цю важливу ділову зустріч.",
@@ -165,33 +166,33 @@ quiz_patterns = [
 # Function to fix a single module
 def fix_module(module_num):
     print(f"Processing Module {module_num}...")
-    
+
     # 1. Paths
     yaml_path = None
     md_path = None
-    
+
     # Find files
-    for root, dirs, files in os.walk("curriculum/l2-uk-en/b2"):
+    for root, _dirs, files in os.walk("curriculum/l2-uk-en/b2"):
         for file in files:
             if file.startswith(f"{module_num}-") and file.endswith(".yaml") and "activities" in root:
                 yaml_path = os.path.join(root, file)
             if file.startswith(f"{module_num}-") and file.endswith(".md") and "curriculum/l2-uk-en/b2" in root:
                 md_path = os.path.join(root, file)
-    
+
     if not yaml_path or not md_path:
         print(f"  Files not found for {module_num}. Skipping.")
         return
 
     # 2. Fix YAML
-    with open(yaml_path, 'r') as f:
+    with open(yaml_path) as f:
         activities = yaml.safe_load(f)
-    
+
     # Remove top-level ID
     forbidden_types = {'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort', 'unjumble', 'cloze', 'error-correction', 'mark-the-words', 'select', 'translate'}
     for act in activities:
         if act.get('type') in forbidden_types and 'id' in act:
             del act['id']
-            
+
     # Expand Unjumble
     for act in activities:
         if act.get('type') == 'unjumble':
@@ -215,7 +216,7 @@ def fix_module(module_num):
                     if re.match(pattern, q):
                         item['question'] = re.sub(pattern, repl, q)
                         break
-    
+
     # Fix Group Sort (M13 only)
     if str(module_num) == "13":
         for act in activities:
@@ -226,22 +227,21 @@ def fix_module(module_num):
                 })
 
     # Add Essay
-    if not any(a.get('type') == 'essay-response' for a in activities):
-        if str(module_num) in essay_activities:
-            activities.append(essay_activities[str(module_num)])
-            print("  Added essay.")
+    if not any(a.get('type') == 'essay-response' for a in activities) and str(module_num) in essay_activities:
+        activities.append(essay_activities[str(module_num)])
+        print("  Added essay.")
 
     with open(yaml_path, 'w') as f:
         yaml.dump(activities, f, allow_unicode=True, sort_keys=False)
-    
+
     # 3. Fix Markdown
-    with open(md_path, 'r') as f:
+    with open(md_path) as f:
         content = f.read()
-    
+
     # Header Fixes
     if "## Тест: Прочитайте текст" in content:
         content = content.replace("## Тест: Прочитайте текст", "## Вступ")
-    
+
     # Richness (Engagement Boxes) - check if count < 5
     box_count = content.count("> 💡") + content.count("> 🇺🇦") + content.count("> 🌍") + content.count("> 📚")
     if box_count < 5:
@@ -262,7 +262,7 @@ def fix_module(module_num):
 
     with open(md_path, 'w') as f:
         f.write(content)
-    
+
     print(f"  Fixed {module_num}.")
 
 # Run for 11-15

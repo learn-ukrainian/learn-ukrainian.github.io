@@ -14,21 +14,20 @@ Examples:
     python scripts/generate_mdx.py l2-uk-en --validate   # Generate + validate
 """
 
+import json
 import re
 import sys
-import json
-import yaml
-from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional
+from pathlib import Path
 
+import yaml
 from slug_utils import to_bare_slug
 
 # Add current dir to path for imports
 SCRIPT_DIR = Path(__file__).parent
 sys.path.append(str(SCRIPT_DIR))
-from yaml_activities import ActivityParser, Activity
 from manifest_utils import get_module_by_slug
+from yaml_activities import Activity, ActivityParser
 
 # Paths
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -145,7 +144,7 @@ class ComparativeStudyData:
 
 def escape_jsx(text: str) -> str:
     """Escape text for use in JSX strings (both template literals and double quotes).
-    
+
     Uses HTML entities for special chars to avoid JSX parsing errors.
     See issue #396 for details.
     """
@@ -315,9 +314,8 @@ def _parse_quiz_block(block: str) -> list[QuizQuestion]:
             options.append({"text": stripped[5:].strip(), "correct": True})
         elif stripped.startswith('- [ ]'):
             options.append({"text": stripped[5:].strip(), "correct": False})
-        elif not stripped.startswith('-'):
-            if not options:  # Still building question
-                question = (question + ' ' + stripped).strip()
+        elif not stripped.startswith('-') and not options:  # Still building question
+            question = (question + ' ' + stripped).strip()
 
     if options:
         return [QuizQuestion(question=question, options=options)]
@@ -721,7 +719,7 @@ def has_morpheme_patterns(content: str) -> bool:
 
     for match in matches:
         before = match.group(1)  # Character before opening *
-        inside = match.group(2)  # Content between * *
+        match.group(2)  # Content between * *
         after = match.group(3)   # Character after closing *
 
         # Check if Cyrillic letter touches either asterisk
@@ -799,22 +797,22 @@ def parse_essay_response(content: str) -> EssayResponseData:
     prompt_lines = []
     model_answer_lines = []
     rubric_lines = []
-    
+
     current_section = 'prompt'
-    
+
     lines = content.split('\n')
     for line in lines:
         if line.strip().startswith('> [!model-answer]'):
             current_section = 'model'
             # Skip the callout header itself? No, we might want to keep the content inside
-            # But the callout syntax is handled by convert_callouts? 
+            # But the callout syntax is handled by convert_callouts?
             # No, if we wrap it in a component, we want the RAW content inside the callout
             # to pass as a prop.
             continue
         elif line.strip().startswith('> [!rubric]'):
             current_section = 'rubric'
             continue
-            
+
         if current_section == 'prompt':
             prompt_lines.append(line)
         elif current_section == 'model':
@@ -824,7 +822,7 @@ def parse_essay_response(content: str) -> EssayResponseData:
         elif current_section == 'rubric':
             clean_line = re.sub(r'^>\s?', '', line)
             rubric_lines.append(clean_line)
-            
+
     return EssayResponseData(
         prompt='\n'.join(prompt_lines).strip(),
         modelAnswer='\n'.join(model_answer_lines).strip(),
@@ -834,31 +832,31 @@ def parse_essay_response(content: str) -> EssayResponseData:
 def parse_comparative_study(content: str) -> ComparativeStudyData:
     """Parse comparative-study activity."""
     # Split by Task/Assignment header if possible, or just extract model answer
-    # Structure: 
+    # Structure:
     # Content (Tables/Text)
     # **Task:** ...
     # > [!model-answer]
-    
+
     content_lines = []
     task_lines = []
     model_lines = []
-    
+
     current_section = 'content'
-    
+
     lines = content.split('\n')
     for line in lines:
         stripped = line.strip()
-        
+
         if stripped.startswith('> [!model-answer]'):
             current_section = 'model'
             continue
-        
+
         # Detect task header (bold "Task:" or "Завдання:")
         if current_section == 'content' and re.match(r'\*\*(Task|Завдання).*?:?\*\*', stripped, re.IGNORECASE):
             current_section = 'task'
             task_lines.append(line) # Keep the header line as part of task
             continue
-            
+
         if current_section == 'content':
             content_lines.append(line)
         elif current_section == 'task':
@@ -866,7 +864,7 @@ def parse_comparative_study(content: str) -> ComparativeStudyData:
         elif current_section == 'model':
             clean_line = re.sub(r'^>\s?', '', line)
             model_lines.append(clean_line)
-            
+
     return ComparativeStudyData(
         content='\n'.join(content_lines).strip(),
         task='\n'.join(task_lines).strip(),
@@ -961,7 +959,6 @@ CALLOUT_MAP = {
     'heritage': {'type': 'tip', 'icon': '💎', 'title': 'Heritage', 'uk_title': 'Спадщина'},
     'history': {'type': 'info', 'icon': '🕰️', 'title': 'History', 'uk_title': 'Історія'},
     'historical': {'type': 'info', 'icon': '🕰️', 'title': 'Historical Context', 'uk_title': 'Історичний контекст'},
-    'history-bite': {'type': 'info', 'icon': '🕰️', 'title': 'History Bite', 'uk_title': 'Історична довідка'},
     'narrative': {'type': 'note', 'icon': '📖', 'title': 'Narrative', 'uk_title': 'Розповідь'},
     'interactive': {'type': 'tip', 'icon': '🎮', 'title': 'Interactive', 'uk_title': 'Інтерактив'},
     'vocabulary': {'type': 'info', 'icon': '📚', 'title': 'Vocabulary', 'uk_title': 'Словник'},
@@ -996,7 +993,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
         # Check for callout start: any sequence of > and whitespace + [!type] or [\!type]
         callout_match = re.match(r'^(\s*)[>\s]*\[\\?!([\w-]+)\]\s*(.*)', line)
         if callout_match:
-            indent = callout_match.group(1)
+            callout_match.group(1)
             callout_type = callout_match.group(2).lower()
             title_extra = callout_match.group(3).strip()
 
@@ -1011,7 +1008,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
             elif 'title' in config:
                 eng_title = config['title']
                 uk_title = config.get('uk_title', eng_title)
-                
+
                 display_title = uk_title if is_ukrainian_forced else eng_title
                 title = f"{icon} {display_title}" if icon else display_title
             else:
@@ -1020,11 +1017,11 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
             # Collect callout content
             callout_lines = []
             i += 1
-            
+
             # Skip leading blank lines (lazy spacing)
             while i < len(lines) and not lines[i].strip():
                 i += 1
-                
+
             # Detect if content follows blockquote pattern
             if i < len(lines) and lines[i].strip().startswith('>'):
                 # Blockquote continuation
@@ -1070,7 +1067,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
 
             # Special handling for solution callouts
             if callout_type == 'solution':
-                result.append(f'<details className="solution-block">')
+                result.append('<details className="solution-block">')
                 result.append(f'<summary>{title}</summary>')
                 result.append('')
                 result.extend(callout_lines)
@@ -1145,8 +1142,7 @@ def process_story_sections(content: str) -> str:
                     next_is_dialog = next_stripped.startswith('—')
 
                     # Add blank line only if NOT both dialog lines
-                    if next_stripped and not any_header_pattern.match(next_stripped):
-                        if not (current_is_dialog and next_is_dialog):
+                    if next_stripped and not any_header_pattern.match(next_stripped) and not (current_is_dialog and next_is_dialog):
                             result.append('')
 
                 i += 1
@@ -1388,7 +1384,7 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
             if first_key in _YAML_META_KEYS:
                 heading_match = re.search(r'^#{1,2} ', body, flags=re.MULTILINE)
                 if heading_match and heading_match.start() > 0:
-                    print(f"  ⚠️  Stripping inline YAML preamble (missing --- delimiters)")
+                    print("  ⚠️  Stripping inline YAML preamble (missing --- delimiters)")
                     body = body[heading_match.start():]
     else:
         fm, body = parse_frontmatter(md_content)
@@ -1396,9 +1392,7 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
     # Determine if Ukrainian headers are forced
     is_ukrainian_forced = False
     lvl = level.lower()
-    if any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit']):
-        is_ukrainian_forced = True
-    elif lvl.startswith('b1') and module_num > 5:
+    if any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit']) or (lvl.startswith('b1') and module_num > 5):
         is_ukrainian_forced = True
 
     # Component imports
@@ -1900,14 +1894,14 @@ def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary")
         g_map = {'m': 'ч', 'f': 'ж', 'n': 'с', 'pl': 'pl', '-': '-', '': ''}
         raw_g = item.get('gender', '')
         g_val = g_map.get(raw_g, raw_g)
-        
+
         # Map POS propn -> name
         raw_p = item.get('pos', '')
         p_val = 'name' if raw_p == 'propn' else raw_p
-        
+
         line = f"| {item.get('lemma')} | {item.get('ipa','')} | {item.get('translation','')} | {p_val} | {g_val} | {item.get('usage','')} |"
         lines.append(line)
-        
+
     return '\n'.join(lines)
 
 def _b1_vocab_items_to_markdown(items: list[dict], header_text: str = "Словник") -> str:
@@ -1921,21 +1915,22 @@ def _b1_vocab_items_to_markdown(items: list[dict], header_text: str = "Слов�
     for item in items:
         # Map POS to Ukrainian abbreviation
         pos_map = {
-            'noun': 'ім', 'verb': 'дієсл', 'adj': 'прикм', 'adv': 'присл', 
+            'noun': 'ім', 'verb': 'дієсл', 'adj': 'прикм', 'adv': 'присл',
             'prep': 'прийм', 'conj': 'спол', 'pron': 'займ', 'phrase': 'фраза',
             'propn': 'назва'
         }
         raw_p = item.get('pos', '')
         p_val = pos_map.get(raw_p, raw_p)
-        
+
         line = f"| **{item.get('lemma')}** | {item.get('ipa','')} | {item.get('translation','')} | {p_val} | {item.get('usage','')} |"
         lines.append(line)
-        
+
     return '\n'.join(lines)
 
-from manifest_utils import load_manifest, get_module_by_slug, get_modules_for_level, Module, CORE_LEVELS, TRACKS
+from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level
 
-def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module]:
+
+def get_modules_from_manifest(target_level: str | None = None) -> list[Module]:
     """Get list of modules to process from manifest."""
     all_modules = []
 
@@ -1973,27 +1968,27 @@ def main():
             # Path format: curriculum/l2-uk-en/{level}/{slug}.md
             level_from_path = file_path.parent.name
             slug = to_bare_slug(file_path.stem)
-            
+
             # Find all modules with this slug from manifest
             all_available_modules = get_modules_from_manifest()
             matching_modules = [m for m in all_available_modules if m.slug == slug]
-            
+
             if not matching_modules:
                 print(f"  ⚠️  Could not find module with slug '{slug}' in manifest for: {args[0]}")
                 sys.exit(1)
-            
+
             # Filter by level from path
             mod_obj = None
             for m in matching_modules:
                 if m.level.lower() == level_from_path.lower():
                     mod_obj = m
                     break
-            
+
             # If no level match, take the first one (fallback)
             if not mod_obj:
                 mod_obj = matching_modules[0]
                 print(f"  ℹ️  Using fallback module mapping: {mod_obj.level}/{mod_obj.slug}")
-            
+
             process_modules = [mod_obj]
         else:
             lang_pair = args[0]
@@ -2004,13 +1999,13 @@ def main():
         process_modules = get_modules_from_manifest()
 
     print(f'Source: curriculum/{lang_pair}/', flush=True)
-    print(f'Output: starlight/src/content/docs/\n', flush=True)
+    print('Output: starlight/src/content/docs/\n', flush=True)
 
     # Load EXTERNAL RESOURCES
     external_resources_file = PROJECT_ROOT / 'docs' / 'resources' / 'external_resources.yaml'
     all_resources = {}
     if external_resources_file.exists():
-        with open(external_resources_file, 'r', encoding='utf-8') as f:
+        with open(external_resources_file, encoding='utf-8') as f:
             resources_data = yaml.safe_load(f)
             all_resources = resources_data.get('resources', {})
         print(f'📚 Loaded {len(all_resources)} modules with external resources\n', flush=True)
@@ -2029,7 +2024,7 @@ def main():
         # Find the physical file
         level_dir = CURRICULUM_DIR / lang_pair / mod.level
         md_file = level_dir / f"{mod.slug}.md"
-        
+
         if not md_file.exists():
             print(f"DEBUG: Checked path {md_file.absolute()}")
             print(f"  ⚠️  Physical file not found for slug '{mod.slug}' in {mod.level}")
@@ -2037,14 +2032,14 @@ def main():
 
         # Read and convert
         md_content = md_file.read_text(encoding='utf-8')
-        
+
         # Load META
         meta_file = level_dir / 'meta' / f"{mod.slug}.yaml"
-            
+
         meta_data = None
         if meta_file.exists():
             try:
-                with open(meta_file, 'r', encoding='utf-8') as f:
+                with open(meta_file, encoding='utf-8') as f:
                     meta_data = yaml.safe_load(f)
             except Exception as e:
                 print(f'\n❌ CRITICAL: Error parsing YAML metadata for {mod.slug}: {e}')
@@ -2054,28 +2049,26 @@ def main():
         plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
         if plan_file.exists():
             try:
-                with open(plan_file, 'r', encoding='utf-8') as f:
+                with open(plan_file, encoding='utf-8') as f:
                     plan_data = yaml.safe_load(f)
                     # Merge title/subtitle from plan into meta_data
                     if meta_data is None:
                         meta_data = {}
-                    if plan_data and 'title' in plan_data:
-                        if 'title' not in meta_data:
-                            meta_data['title'] = plan_data['title']
-                    if plan_data and 'subtitle' in plan_data:
-                        if 'subtitle' not in meta_data:
-                            meta_data['subtitle'] = plan_data['subtitle']
+                    if plan_data and 'title' in plan_data and 'title' not in meta_data:
+                        meta_data['title'] = plan_data['title']
+                    if plan_data and 'subtitle' in plan_data and 'subtitle' not in meta_data:
+                        meta_data['subtitle'] = plan_data['subtitle']
             except Exception as e:
                 print(f'\n❌ CRITICAL: Error parsing plan file for {mod.slug}: {e}')
                 sys.exit(1)
-                
+
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
-            
+
         vocab_items = None
         if vocab_file.exists():
             try:
-                with open(vocab_file, 'r', encoding='utf-8') as f:
+                with open(vocab_file, encoding='utf-8') as f:
                     v_data = yaml.safe_load(f)
                     if isinstance(v_data, list):
                         vocab_items = v_data
@@ -2087,7 +2080,7 @@ def main():
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
-        
+
         yaml_activities = None
         if yaml_file.exists():
             parser = ActivityParser()

@@ -5,9 +5,10 @@ Validates that modules meet the official State Standard 2024 requirements
 for grammar coverage, vocabulary targets, and pedagogical progression.
 """
 
-from typing import List, Dict, Any, Optional
-import yaml
 from pathlib import Path
+from typing import Any
+
+import yaml
 
 
 class StateStandardViolation:
@@ -19,7 +20,7 @@ class StateStandardViolation:
         self.reference = reference
         self.fix = fix
 
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self) -> dict[str, str]:
         return {
             'code': self.code,
             'message': self.message,
@@ -28,18 +29,18 @@ class StateStandardViolation:
         }
 
 
-def load_compliance_mapping() -> Dict[str, Any]:
+def load_compliance_mapping() -> dict[str, Any]:
     """Load the State Standard 2024 compliance mapping."""
     mapping_path = Path(__file__).parent.parent.parent.parent / 'docs' / 'l2-uk-en' / 'state-standard-2024-mapping.yaml'
 
     if not mapping_path.exists():
         return {}
 
-    with open(mapping_path, 'r', encoding='utf-8') as f:
+    with open(mapping_path, encoding='utf-8') as f:
         return yaml.safe_load(f)
 
 
-def check_reflexive_verbs_a1(module_num: int, content: str, mapping: Dict) -> List[StateStandardViolation]:
+def check_reflexive_verbs_a1(module_num: int, content: str, mapping: dict) -> list[StateStandardViolation]:
     """Check if M09 teaches reflexive verbs per §4.2.4.1."""
     violations = []
 
@@ -69,7 +70,7 @@ def check_reflexive_verbs_a1(module_num: int, content: str, mapping: Dict) -> Li
     return violations
 
 
-def check_imperative_complete_a2(module_num: int, content: str, mapping: Dict) -> List[StateStandardViolation]:
+def check_imperative_complete_a2(module_num: int, content: str, mapping: dict) -> list[StateStandardViolation]:
     """Check if M23 teaches complete imperative per §4.2.3.2."""
     violations = []
 
@@ -90,7 +91,7 @@ def check_imperative_complete_a2(module_num: int, content: str, mapping: Dict) -
     return violations
 
 
-def check_immersion_compliance(level: str, module_num: int, immersion_pct: float, mapping: Dict) -> List[StateStandardViolation]:
+def check_immersion_compliance(level: str, module_num: int, immersion_pct: float, mapping: dict) -> list[StateStandardViolation]:
     """Check if immersion percentage meets level requirements."""
     violations = []
 
@@ -135,8 +136,8 @@ def check_state_standard_compliance(
     level: str,
     module_num: int,
     content: str,
-    immersion_pct: Optional[float] = None
-) -> List[StateStandardViolation]:
+    immersion_pct: float | None = None
+) -> list[StateStandardViolation]:
     """
     Check if module meets Ukrainian State Standard 2024 requirements.
 

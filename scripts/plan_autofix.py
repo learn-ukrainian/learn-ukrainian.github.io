@@ -11,10 +11,8 @@ Version bumping: '4.0' → '4.0.1', '4.0.1' → '4.0.2'.
 
 from __future__ import annotations
 
-import copy
 import logging
-import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -138,7 +136,7 @@ def auto_fix_plan(
     # Add plan_fixes changelog
     fix_entry = {
         "version": new_version,
-        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "date": datetime.now(UTC).strftime("%Y-%m-%d"),
         "changes": [
             f"Removed VESUM-unverified word '{w}' from vocabulary_hints"
             for w in removed_words[:20]

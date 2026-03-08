@@ -13,8 +13,6 @@ Track exemptions: OES, RUTH (historical Ruthenian texts).
 Issue: #593
 """
 
-import re
-from typing import List, Dict
 
 # Tracks where historical texts may violate modern euphony rules
 EXEMPT_TRACKS = {"oes", "ruth"}
@@ -43,19 +41,19 @@ def _detect_track(file_path: str) -> str | None:
 
 def _ends_with_vowel(word: str) -> bool:
     """Check if word ends with a Ukrainian vowel."""
-    clean = word.rstrip(".,;:!?»\"')\u201d\u2019\u00bb")
+    clean = word.rstrip(".,;:!?»\"')\u201d\u2019\u00bb")  # noqa: B005 — stripping individual punctuation chars
     return bool(clean) and clean[-1].lower() in _VOWELS
 
 
 def _starts_with_vowel(word: str) -> bool:
     """Check if word starts with a Ukrainian vowel."""
-    clean = word.lstrip("«\"'(\u201c\u2018\u00ab")
+    clean = word.lstrip("«\"'(\u201c\u2018\u00ab")  # noqa: B005 — stripping individual punctuation chars
     return bool(clean) and clean[0].lower() in _VOWELS
 
 
 def _starts_with_consonant_cluster(word: str) -> bool:
     """Check if word starts with 2+ consonants (triggers в → у)."""
-    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()
+    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()  # noqa: B005
     if len(clean) < 2:
         return False
     return clean[0] not in _VOWELS and clean[1] not in _VOWELS
@@ -63,19 +61,19 @@ def _starts_with_consonant_cluster(word: str) -> bool:
 
 def _starts_with_v_or_f(word: str) -> bool:
     """Check if word starts with в or ф."""
-    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()
+    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()  # noqa: B005
     return bool(clean) and clean[0] in ("в", "ф")
 
 
 def _starts_with_z_or_s(word: str) -> bool:
     """Check if word starts with з, с, ш, or ч."""
-    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()
+    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()  # noqa: B005
     return bool(clean) and clean[0] in ("з", "с", "ш", "ч")
 
 
 def _starts_with_z_cluster(word: str) -> bool:
     """Check if word starts with a з-cluster (зб, зд, etc.)."""
-    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()
+    clean = word.lstrip("«\"'(\u201c\u2018\u00ab").lower()  # noqa: B005
     return len(clean) >= 2 and clean[:2] in _Z_CLUSTERS
 
 
@@ -111,21 +109,19 @@ def _skip_line(line: str) -> bool:
     if stripped.startswith("![") or stripped.startswith("[!"):
         return True
     # English text — euphony rules only apply to Ukrainian prose
-    if _is_predominantly_latin(stripped):
-        return True
-    return False
+    return bool(_is_predominantly_latin(stripped))
 
 
 def _clean_word(word: str) -> str:
     """Strip punctuation for phonetic analysis."""
-    return word.strip(".,;:!?«»\"'()\u201c\u201d\u2018\u2019\u00ab\u00bb—–-")
+    return word.strip(".,;:!?«»\"'()\u201c\u201d\u2018\u2019\u00ab\u00bb—–-")  # noqa: B005
 
 
 # ---------------------------------------------------------------------------
 # Rule checks
 # ---------------------------------------------------------------------------
 
-def _check_rule1_iy(words: list[str], line_num: int) -> List[Dict]:
+def _check_rule1_iy(words: list[str], line_num: int) -> list[dict]:
     """Rule 1: Conjunction і/й — й only between vowels."""
     violations = []
     for i, word in enumerate(words):
@@ -151,7 +147,7 @@ def _check_rule1_iy(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «{prev_word} і {next_word}» — "
                     f"і між голосними; має бути «й {next_word}»"
                 ),
-                "fix": f"Replace «і» with «й» (between vowels)",
+                "fix": "Replace «і» with «й» (between vowels)",
                 "line": line_num,
             })
         elif lower == "й" and not prev_vowel:
@@ -163,7 +159,7 @@ def _check_rule1_iy(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «{prev_word} й {next_word}» — "
                     f"й після приголосного; має бути «і {next_word}»"
                 ),
-                "fix": f"Replace «й» with «і» (й cannot follow a consonant)",
+                "fix": "Replace «й» with «і» (й cannot follow a consonant)",
                 "line": line_num,
             })
         # Note: й after vowel + before consonant (e.g., "вона й працює",
@@ -173,7 +169,7 @@ def _check_rule1_iy(words: list[str], line_num: int) -> List[Dict]:
     return violations
 
 
-def _check_rule2_uv(words: list[str], line_num: int) -> List[Dict]:
+def _check_rule2_uv(words: list[str], line_num: int) -> list[dict]:
     """Rule 2: Preposition у/в alternation."""
     violations = []
     for i, word in enumerate(words):
@@ -194,7 +190,7 @@ def _check_rule2_uv(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «у {next_word}» — "
                     f"у перед голосним; має бути «в {next_word}»"
                 ),
-                "fix": f"Replace «у» with «в» (before vowel)",
+                "fix": "Replace «у» with «в» (before vowel)",
                 "line": line_num,
             })
         elif lower == "в" and _starts_with_v_or_f(next_word):
@@ -206,7 +202,7 @@ def _check_rule2_uv(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «в {next_word}» — "
                     f"в перед в/ф; має бути «у {next_word}»"
                 ),
-                "fix": f"Replace «в» with «у» (before в or ф)",
+                "fix": "Replace «в» with «у» (before в or ф)",
                 "line": line_num,
             })
         elif lower == "в" and _starts_with_consonant_cluster(next_word):
@@ -218,14 +214,14 @@ def _check_rule2_uv(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «в {next_word}» — "
                     f"в перед збігом приголосних; має бути «у {next_word}»"
                 ),
-                "fix": f"Replace «в» with «у» (before consonant cluster)",
+                "fix": "Replace «в» with «у» (before consonant cluster)",
                 "line": line_num,
             })
 
     return violations
 
 
-def _check_rule3_ziz(words: list[str], line_num: int) -> List[Dict]:
+def _check_rule3_ziz(words: list[str], line_num: int) -> list[dict]:
     """Rule 3: Preposition з/із/зі alternation."""
     violations = []
     for i, word in enumerate(words):
@@ -246,7 +242,7 @@ def _check_rule3_ziz(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «з {next_word}» — "
                     f"з перед з/с/ш/ч; має бути «із {next_word}»"
                 ),
-                "fix": f"Replace «з» with «із» (before sibilant)",
+                "fix": "Replace «з» with «із» (before sibilant)",
                 "line": line_num,
             })
         elif _starts_with_z_cluster(next_word):
@@ -258,7 +254,7 @@ def _check_rule3_ziz(words: list[str], line_num: int) -> List[Dict]:
                     f"Line {line_num}: «з {next_word}» — "
                     f"з перед збігом приголосних; має бути «із {next_word}»"
                 ),
-                "fix": f"Replace «з» with «із» or «зі» (before consonant cluster)",
+                "fix": "Replace «з» with «із» or «зі» (before consonant cluster)",
                 "line": line_num,
             })
 
@@ -315,10 +311,7 @@ def _fix_line_rule2(words: list[str]) -> tuple[list[str], int]:
         if lower == "у" and _starts_with_vowel(next_word):
             result[i] = _swap_preserve_case(result[i], "у", "в")
             fixes += 1
-        elif lower == "в" and _starts_with_v_or_f(next_word):
-            result[i] = _swap_preserve_case(result[i], "в", "у")
-            fixes += 1
-        elif lower == "в" and _starts_with_consonant_cluster(next_word):
+        elif (lower == "в" and _starts_with_v_or_f(next_word)) or (lower == "в" and _starts_with_consonant_cluster(next_word)):
             result[i] = _swap_preserve_case(result[i], "в", "у")
             fixes += 1
     return result, fixes
@@ -399,7 +392,7 @@ def auto_fix_euphony(content: str, file_path: str = "") -> tuple[str, int]:
 # Main check
 # ---------------------------------------------------------------------------
 
-def check_euphony_violations(content: str, file_path: str = "") -> List[Dict]:
+def check_euphony_violations(content: str, file_path: str = "") -> list[dict]:
     """
     Scan Ukrainian prose for euphony rule violations.
 
@@ -410,7 +403,7 @@ def check_euphony_violations(content: str, file_path: str = "") -> List[Dict]:
     if track in EXEMPT_TRACKS:
         return []
 
-    violations: List[Dict] = []
+    violations: list[dict] = []
     lines = content.splitlines()
 
     # Track frontmatter state

@@ -20,4 +20,70 @@ markers = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py312"
+exclude = [
+    "scripts/retired/",
+    "scripts/_archived/",
+    "scripts/oneoff/",
+    ".venv/",
+    "node_modules/",
+    "starlight/",
+]
+
+[tool.ruff.lint]
+select = [
+    "F",     # Pyflakes (undefined names, unused imports/vars)
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "I",     # isort (import ordering)
+    "UP",    # pyupgrade (modernize syntax)
+    "B",     # flake8-bugbear (common bugs)
+    "SIM",   # flake8-simplify
+    "RUF",   # Ruff-specific rules
+]
+ignore = [
+    # Legitimate project-specific ignores (Ukrainian codebase)
+    "RUF001",  # ambiguous Unicode char in string — Ukrainian text is the product
+    "RUF002",  # ambiguous Unicode char in docstring — Ukrainian text
+    "RUF003",  # ambiguous Unicode char in comment — Ukrainian text
+    "E402",    # module import not at top — unavoidable with sys.path manipulation
+    "E501",    # line too long — too many existing, not worth enforcing now
+    "E741",    # ambiguous variable name — false positives with Ukrainian text vars
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
+"tests/*.py" = ["F841"]        # unused variables OK in tests
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "scripts/retired/",
+    "scripts/_archived/",
+    "scripts/expand_oun\\.py",
+    "starlight/",
+    "node_modules/",
+]
+# Gradual adoption: start with core files only
+files = [
+    "scripts/pipeline_v5.py",
+    "scripts/pipeline_lib.py",
+    "scripts/build_module_v5.py",
+    "scripts/audit/core.py",
+]
+
+[tool.coverage.run]
+source = ["scripts"]
+omit = [
+    "scripts/retired/*",
+    "scripts/_archived/*",
+    "scripts/expand_oun.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 0  # Start with baseline, increase over time

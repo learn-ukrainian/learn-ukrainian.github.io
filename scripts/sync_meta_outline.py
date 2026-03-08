@@ -7,15 +7,16 @@ and updates the 'content_outline' in the corresponding meta YAML file.
 Ensures 'points' field exists to satisfy strict seminar schemas.
 """
 
-import sys
 import re
-import yaml
+import sys
 from pathlib import Path
-from typing import Dict, List
 
-def extract_actual_sections(md_path: Path) -> List[Dict]:
+import yaml
+
+
+def extract_actual_sections(md_path: Path) -> list[dict]:
     """Extract section headers and word counts. MATCHES auditor logic."""
-    with open(md_path, "r", encoding="utf-8") as f:
+    with open(md_path, encoding="utf-8") as f:
         content = f.read()
 
     sections = {}
@@ -43,7 +44,7 @@ def extract_actual_sections(md_path: Path) -> List[Dict]:
                 continue
             if current_section:
                 sections[current_section] = current_words
-            
+
             name = header_match.group(1).strip()
             name = re.sub(r"\s*[—–:-]\s*.*$", "", name)
             name = re.sub(r"[📚🎯💡🔍]", "", name).strip()
@@ -64,11 +65,12 @@ def extract_actual_sections(md_path: Path) -> List[Dict]:
 
     return [{"section": k, "words": v, "points": []} for k, v in sections.items()]
 
-def update_meta_yaml(md_path: Path, new_outline: List[Dict]):
+def update_meta_yaml(md_path: Path, new_outline: list[dict]):
     meta_path = md_path.parent / "meta" / f"{md_path.stem}.yaml"
-    if not meta_path.exists(): return
+    if not meta_path.exists():
+        return
 
-    with open(meta_path, "r", encoding="utf-8") as f:
+    with open(meta_path, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
 
     # Preserve existing points if the section name matches
@@ -79,17 +81,18 @@ def update_meta_yaml(md_path: Path, new_outline: List[Dict]):
                 new_sec['points'] = old_outline[new_sec['section']]
 
     data["content_outline"] = new_outline
-    
+
     # Ensure ID exists (scholar requirement)
     if "id" not in data:
         data["id"] = f"{data.get('level', 'LIT').lower()}-{md_path.stem}"
 
     with open(meta_path, "w", encoding="utf-8") as f:
         yaml.dump(data, f, allow_unicode=True, sort_keys=False, width=1000)
-    
+
     print(f"✅ Successfully synced {meta_path.name} ({sum(s['words'] for s in new_outline)} words).")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2: sys.exit(1)
+    if len(sys.argv) < 2:
+        sys.exit(1)
     md_file = Path(sys.argv[1])
     update_meta_yaml(md_file, extract_actual_sections(md_file))

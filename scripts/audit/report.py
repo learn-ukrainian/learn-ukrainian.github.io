@@ -4,21 +4,17 @@ Report generation for module audits.
 Generates markdown reports and console output for audit results.
 """
 
-import os
-from datetime import datetime
-from typing import Optional
-
-
 import json
 import os
 import sys
 from datetime import datetime
-from typing import Optional
 from pathlib import Path
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from slug_utils import to_bare_slug, audit_report_path as _audit_report_path, status_path as _status_path
+from slug_utils import audit_report_path as _audit_report_path
+from slug_utils import status_path as _status_path
+from slug_utils import to_bare_slug
 
 
 def save_status_cache(
@@ -29,7 +25,7 @@ def save_status_cache(
     has_critical_failure: bool,
     critical_failure_reasons: list[str],
     plan_version: str = "2.0",
-    review_violations: list = None,
+    review_violations: list | None = None,
     review_gate_status: str = "skipped",
 ) -> str:
     """
@@ -46,15 +42,15 @@ def save_status_cache(
         review_violations: List of review validation violations (or None)
         review_gate_status: "pass", "fail", or "skipped"
     """
-    
+
     # 1. Gather Source Mtimes
     md_path = Path(file_path)
     base_path = md_path.parent # curriculum/l2-uk-en/{level}
-    
+
     meta_path = base_path / 'meta' / f"{module_slug}.yaml"
     activities_path = base_path / 'activities' / f"{module_slug}.yaml"
     vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
-    
+
     # Derive track directory from file path for plan lookup
     # base_path is e.g. curriculum/l2-uk-en/hist — use its name directly
     # so seminar tracks (hist, bio, etc.) resolve correctly
@@ -68,7 +64,7 @@ def save_status_cache(
             plan_path = alt_path
 
     source_mtimes = {}
-    
+
     def get_mtime(p: Path) -> str:
         if p.exists():
             return datetime.fromtimestamp(p.stat().st_mtime).isoformat() + "Z"
@@ -85,24 +81,25 @@ def save_status_cache(
 
     # 2. Serialize Gates
     gates = {}
-    
+
     # Map internal gate keys to schema keys
     # Internal: words, activities, density, unique_types, priority, engagement, audio, vocab, structure, lint, pedagogy, content_heavy, immersion, richness, grammar, naturalness
     # Schema: meta, lesson, activities, vocabulary, naturalness (aggregated)
-    
-    # We will dump ALL internal gates into the JSON for detail, grouped if possible, or just flat if schema allows "additionalProperties" 
+
+    # We will dump ALL internal gates into the JSON for detail, grouped if possible, or just flat if schema allows "additionalProperties"
     # (Schema is strict, so we must map to 'meta', 'lesson', 'activities', 'vocabulary', 'naturalness')
-    
+
     # MAPPING STRATEGY:
     # meta -> structure, lint
     # lesson -> words, engagement, audio, pedagogy, content_heavy, immersion, richness
     # activities -> activities, density, unique_types, priority, activity_quality
     # vocabulary -> vocab
     # naturalness -> naturalness
-    
+
     # Helper to serialize a result
     def serialize_gate(res):
-        if not res: return {"status": "skipped", "violations": 0}
+        if not res:
+            return {"status": "skipped", "violations": 0}
 
         status = "pass"
         if hasattr(res, 'status'):
@@ -163,7 +160,7 @@ def save_status_cache(
             gates['activities']['message'] += f" | {k}: {res.msg}"
 
     gates['vocabulary'] = serialize_gate(results.get('vocab'))
-    
+
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
 
     gates['research'] = serialize_gate(results.get('research'))
@@ -209,7 +206,7 @@ def save_status_cache(
         "gates": gates,
         "overall": overall
     }
-    
+
     # 5. Save File (merge with existing to preserve verification data)
     status_file = _status_path(base_path, module_slug)
     status_file.parent.mkdir(parents=True, exist_ok=True)
@@ -218,9 +215,9 @@ def save_status_cache(
     existing_data = {}
     if status_file.exists():
         try:
-            with open(status_file, 'r', encoding='utf-8') as f:
+            with open(status_file, encoding='utf-8') as f:
                 existing_data = json.load(f)
-        except (json.JSONDecodeError, IOError):
+        except (OSError, json.JSONDecodeError):
             pass  # If file is corrupted, start fresh
 
     # Preserve verification block from existing data
@@ -247,7 +244,7 @@ def _sync_batch_state(base_path: Path, module_slug: str, status: str):
         if not batch_state_file.exists():
             return
 
-        with open(batch_state_file, 'r', encoding='utf-8') as f:
+        with open(batch_state_file, encoding='utf-8') as f:
             state = json.load(f)
 
         bare = to_bare_slug(module_slug)
@@ -264,9 +261,9 @@ def set_verification(
     status_file: str,
     tier: str,
     reviewer: str,
-    score: float = None,
-    evidence: str = None,
-    critical_review: str = None
+    score: float | None = None,
+    evidence: str | None = None,
+    critical_review: str | None = None
 ) -> bool:
     """
     Set verification data on an existing status JSON file.
@@ -287,9 +284,9 @@ def set_verification(
         return False
 
     try:
-        with open(status_path, 'r', encoding='utf-8') as f:
+        with open(status_path, encoding='utf-8') as f:
             data = json.load(f)
-    except (json.JSONDecodeError, IOError):
+    except (OSError, json.JSONDecodeError):
         return False
 
     # Build verification block
@@ -310,7 +307,7 @@ def set_verification(
         with open(status_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
         return True
-    except IOError:
+    except OSError:
         return False
 
 
@@ -328,17 +325,17 @@ def generate_report(
     recommendation: str,
     reasons: list[str],
     severity: int,
-    low_density_activities: list[dict] = None,
-    richness_data: dict = None,
-    richness_flags: list = None,
-    template_violations: list[dict] = None,
-    naturalness: dict = None,
-    module_num: int = None,
-    config: dict = None,
-    activity_details: list[dict] = None,
-    unique_types: set = None,
-    module_focus: str = None,
-    display_level: str = None
+    low_density_activities: list[dict] | None = None,
+    richness_data: dict | None = None,
+    richness_flags: list | None = None,
+    template_violations: list[dict] | None = None,
+    naturalness: dict | None = None,
+    module_num: int | None = None,
+    config: dict | None = None,
+    activity_details: list[dict] | None = None,
+    unique_types: set | None = None,
+    module_focus: str | None = None,
+    display_level: str | None = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
@@ -358,7 +355,7 @@ def generate_report(
         meta_line += f" | **Module:** M{module_num:02d}"
     meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"
     report_lines.append(meta_line)
-    
+
     # Add Naturalness Score to header if available
     if naturalness:
         if isinstance(naturalness, dict):
@@ -525,15 +522,15 @@ def generate_report(
         normalized = richness_data.get('normalized', {})
         targets = richness_data.get('targets', {})
         weights = richness_data.get('weights', {})
-        
+
         if raw_counts:
             report_lines.append("| Metric | Count | Target | Score | Weight | Contribution |")
             report_lines.append("|--------|-------|--------|-------|--------|--------------|")
             total_contribution = 0
-            
+
             # Sort by weight (descending)
             sorted_metrics = sorted(raw_counts.keys(), key=lambda k: weights.get(k, 0), reverse=True)
-            
+
             for metric in sorted_metrics:
                 count = raw_counts[metric]
                 target = targets.get(metric, '-')
@@ -542,10 +539,7 @@ def generate_report(
                 contribution = norm_score * weight * 100
                 total_contribution += contribution
                 # Format values for readability
-                if isinstance(count, float):
-                    count_str = f"{count:.2f}"
-                else:
-                    count_str = str(count)
+                count_str = f"{count:.2f}" if isinstance(count, float) else str(count)
                 target_str = str(target) if target != 0 else '-'
                 report_lines.append(f"| {metric} | {count_str} | {target_str} | {norm_score:.0%} | {weight:.0%} | {contribution:.1f}% |")
             report_lines.append(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
@@ -685,7 +679,7 @@ Example: «Не кажи гоп, поки не перескочиш» — **пе
             for flag in richness_flags:
                 fix = flag_fixes.get(flag, 'Address this issue to improve richness score')
                 report_lines.append(f"- ❌ **{flag}**")
-                report_lines.append(f"  - FIX:")
+                report_lines.append("  - FIX:")
                 # Format multi-line fixes properly
                 for line in fix.split('\n'):
                     report_lines.append(f"    {line}")
@@ -829,33 +823,33 @@ def print_immersion_fix_hints(
     min_imm: int,
     max_imm: int,
     level_code: str,
-    module_focus: Optional[str] = None
+    module_focus: str | None = None
 ) -> None:
     """Print hints for fixing immersion issues."""
     if immersion_score < min_imm:
         print(f"\n📚 IMMERSION TOO LOW ({immersion_score:.1f}% vs {min_imm}-{max_imm}% target)")
-        print(f"   FIX: Convert simple explanations to Ukrainian")
-        print(f"   FIX: Add more Ukrainian narratives/dialogues")
-        print(f"   FIX: Use Ukrainian for engagement boxes (💡🎬🌍)")
+        print("   FIX: Convert simple explanations to Ukrainian")
+        print("   FIX: Add more Ukrainian narratives/dialogues")
+        print("   FIX: Use Ukrainian for engagement boxes (💡🎬🌍)")
         if level_code in ('B1', 'B2', 'C1', 'C2') or level_code.startswith('B') or level_code.startswith('C'):
-            print(f"   FIX: Write grammar rules in Ukrainian (not just examples)")
+            print("   FIX: Write grammar rules in Ukrainian (not just examples)")
 
     elif immersion_score > max_imm:
         print(f"\n📚 IMMERSION TOO HIGH ({immersion_score:.1f}% vs {min_imm}-{max_imm}% target)")
         if level_code == 'A1':
-            print(f"   FIX: Add English phonetic/alphabet explanations")
-            print(f"   FIX: Expand English grammar theory sections")
-            print(f"   FIX: Learner can't read Cyrillic yet - needs more English scaffolding")
+            print("   FIX: Add English phonetic/alphabet explanations")
+            print("   FIX: Expand English grammar theory sections")
+            print("   FIX: Learner can't read Cyrillic yet - needs more English scaffolding")
         elif level_code == 'A2':
-            print(f"   FIX: Add English explanations for case/aspect theory")
-            print(f"   FIX: Expand English scaffolding for complex grammar")
+            print("   FIX: Add English explanations for case/aspect theory")
+            print("   FIX: Expand English scaffolding for complex grammar")
         elif module_focus == 'grammar':
-            print(f"   FIX: Add English grammar theory (this is a grammar-focused module)")
-            print(f"   FIX: Explain complex concepts in English first, then Ukrainian examples")
-            print(f"   FIX: Add 🔗 Language Link boxes comparing Ukrainian/English")
+            print("   FIX: Add English grammar theory (this is a grammar-focused module)")
+            print("   FIX: Explain complex concepts in English first, then Ukrainian examples")
+            print("   FIX: Add 🔗 Language Link boxes comparing Ukrainian/English")
         else:
-            print(f"   FIX: Add English context where needed")
-            print(f"   FIX: Ensure translations are provided for complex passages")
+            print("   FIX: Add English context where needed")
+            print("   FIX: Ensure translations are provided for complex passages")
 
 
 def print_low_density_activities(low_density_activities: list[dict]) -> None:
@@ -863,7 +857,7 @@ def print_low_density_activities(low_density_activities: list[dict]) -> None:
     if not low_density_activities:
         return
 
-    print(f"\n📊 ACTIVITIES WITH LOW DENSITY:")
+    print("\n📊 ACTIVITIES WITH LOW DENSITY:")
     for act in low_density_activities:
         title = act['title']
         act_type = act['type']
@@ -925,10 +919,7 @@ def append_mdx_errors_to_report(
     file_name = os.path.basename(md_file_path)
     base_name = os.path.splitext(file_name)[0]
 
-    if not file_dir.endswith('audit'):
-        target_dir = os.path.join(file_dir, 'audit')
-    else:
-        target_dir = file_dir
+    target_dir = os.path.join(file_dir, 'audit') if not file_dir.endswith('audit') else file_dir
 
     report_path = os.path.join(target_dir, f"{base_name}-review.md")
 
@@ -943,7 +934,7 @@ def append_mdx_errors_to_report(
         return True
 
     # Read existing report
-    with open(report_path, 'r', encoding='utf-8') as f:
+    with open(report_path, encoding='utf-8') as f:
         content = f.read()
 
     # Remove existing MDX section if present
@@ -1019,10 +1010,7 @@ def append_html_errors_to_report(
     file_name = os.path.basename(md_file_path)
     base_name = os.path.splitext(file_name)[0]
 
-    if not file_dir.endswith('audit'):
-        target_dir = os.path.join(file_dir, 'audit')
-    else:
-        target_dir = file_dir
+    target_dir = os.path.join(file_dir, 'audit') if not file_dir.endswith('audit') else file_dir
 
     report_path = os.path.join(target_dir, f"{base_name}-review.md")
 
@@ -1037,7 +1025,7 @@ def append_html_errors_to_report(
         return True
 
     # Read existing report
-    with open(report_path, 'r', encoding='utf-8') as f:
+    with open(report_path, encoding='utf-8') as f:
         content = f.read()
 
     # Remove existing HTML section if present

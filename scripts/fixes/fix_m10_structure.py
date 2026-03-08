@@ -1,9 +1,8 @@
 import re
-import sys
 
 file_path = 'curriculum/l2-uk-en/hist/olha-sviatoslav.md'
 
-with open(file_path, 'r', encoding='utf-8') as f:
+with open(file_path, encoding='utf-8') as f:
     content = f.read()
 
 # Parse all H1/H2/H3 headers and their content into a list
@@ -42,7 +41,7 @@ for header, text in sections:
             "Святослав: Портрет лицаря Степу",
             "Хозарія: Знищення буфера",
             "Балканська епопея: Амбіція і катастрофа",
-            "Загибель: Уроки для нащадків", 
+            "Загибель: Уроки для нащадків",
             "Жінки у політиці Русі: Феномен Ольги",
             "Ольга і Святослав: Два шляхи розвитку України",
             "Спадщина для нащадків",
@@ -55,13 +54,13 @@ for header, text in sections:
             "Завершення епохи",
             "Археологічні свідчення епохи"
         ]
-        
+
         is_analysis = False
         for title in analysis_titles:
             if title in header:
                 is_analysis = True
                 break
-        
+
         if is_analysis:
             analysis_blocks.append((header, text))
         else:

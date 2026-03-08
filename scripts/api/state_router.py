@@ -1,11 +1,11 @@
 """
-State API router — v3/v4 pipeline state, research/review coverage, weak points, issues.
+State API router — v3/v4/v5 pipeline state, research/review coverage, weak points, issues.
 
 Mounted at /api/state/ in main.py.
 
 Endpoints:
   GET /api/state/summary              Full project snapshot
-  GET /api/state/pipeline/{track}     Per-module v3/v4 phase state for one track
+  GET /api/state/pipeline/{track}     Per-module v3/v4/v5 phase state for one track
   GET /api/state/ready-to-build       Phase A done, Phase B not started
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
@@ -27,29 +27,29 @@ Performance notes:
 import asyncio
 import json
 import re
+import sqlite3
+import sys
 import time
-import yaml
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
+import yaml
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
-import sqlite3
+from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB
 
-from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT, SEMINAR_TRACK_IDS
-
-import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import contextlib
+
 from research_quality import assess_research_compat, find_research_path
 
-from .review_parsing import extract_review_score, extract_review_verdict, extract_plan_verdict, count_review_issues
+from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
 
 router = APIRouter(tags=["state"])
 
 
-def _extract_content_hash(review_path: Path) -> Optional[str]:
+def _extract_content_hash(review_path: Path) -> str | None:
     """Extract content hash from review file header (#618).
 
     Reviews written by write_review_with_hash() start with:
@@ -57,7 +57,7 @@ def _extract_content_hash(review_path: Path) -> Optional[str]:
     Returns the hash string, or None if not found.
     """
     try:
-        with open(review_path, "r", encoding="utf-8") as f:
+        with open(review_path, encoding="utf-8") as f:
             first_line = f.readline()
         m = re.match(r"<!-- content-hash: ([a-f0-9]+) -->", first_line)
         return m.group(1) if m else None
@@ -65,7 +65,7 @@ def _extract_content_hash(review_path: Path) -> Optional[str]:
         return None
 
 
-def _is_review_stale(review_path: Path, content_path: Optional[Path]) -> bool:
+def _is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     """Check if a review file is stale relative to its content (#618).
 
     Uses content hash if available (robust, mtime-independent).
@@ -130,10 +130,7 @@ def _load_curriculum() -> dict:
     """Load curriculum.yaml once and cache."""
     global _curriculum_cache
     if _curriculum_cache is None:
-        if CURRICULUM_YAML.exists():
-            _curriculum_cache = yaml.safe_load(CURRICULUM_YAML.read_text()) or {}
-        else:
-            _curriculum_cache = {}
+        _curriculum_cache = yaml.safe_load(CURRICULUM_YAML.read_text()) or {} if CURRICULUM_YAML.exists() else {}
     return _curriculum_cache
 
 
@@ -206,18 +203,22 @@ def _read_v2_state(orch_dir: Path) -> dict:
 
 
 V4_PHASE_ORDER = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
+V5_PHASE_ORDER = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
 
 
 def _detect_pipeline_version(orch_dir: Path) -> str:
     """Detect pipeline version for a module.
 
-    Priority: state-v4.json > state-v3.json > state.json["mode"] > "unbuilt".
+    Priority: state.json mode=v5 > state-v4.json > state-v3.json > state.json["mode"] > "unbuilt".
     """
+    # v5 uses state.json with mode: "v5"
+    v2 = _read_v2_state(orch_dir)
+    if v2.get("mode") == "v5":
+        return "v5"
     if (orch_dir / "state-v4.json").exists():
         return "v4"
     if (orch_dir / "state-v3.json").exists():
         return "v3"
-    v2 = _read_v2_state(orch_dir)
     if v2.get("mode") == "v4":
         return "v4"
     if v2:
@@ -236,33 +237,44 @@ def _parse_v4_phase_status(v4_state: dict, phase_name: str) -> dict:
     }
 
 
+def _parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
+    """Extract status info for a v5 phase. V5 uses plain keys (no prefix)."""
+    phase = v5_state.get("phases", {}).get(phase_name, {})
+    if not phase:
+        return {"status": "pending"}
+    return {
+        "status": phase.get("status", "pending"),
+        "ts": phase.get("ts"),
+    }
+
+
 def _has_research_file(track_dir: Path, slug: str) -> bool:
     """Return True if a research file exists for this module."""
     return (track_dir / "research" / f"{slug}-research.md").exists()
 
 
-def _is_research_done(v3: dict, v2: dict, track_dir: Path = None, slug: str = None, v4: dict = None) -> bool:
-    """Research done if v4 research complete, v3 Phase A complete, v2 phase '1' complete, or research file exists."""
+def _is_research_done(v3: dict, v2: dict, track_dir: Path | None = None, slug: str | None = None, v4: dict | None = None, v5: dict | None = None) -> bool:
+    """Research done if v5/v4 research complete, v3 Phase A complete, v2 phase '1' complete, or research file exists."""
+    if v5 and v5.get("phases", {}).get("research", {}).get("status") == "complete":
+        return True
     if v4 and v4.get("phases", {}).get("v4-research", {}).get("status") == "complete":
         return True
     if v3.get("phases", {}).get("v3-A", {}).get("status") == "complete":
         return True
     if v2.get("phases", {}).get("1", {}).get("status") == "complete":
         return True
-    if track_dir is not None and slug is not None and _has_research_file(track_dir, slug):
+    return bool(track_dir is not None and slug is not None and _has_research_file(track_dir, slug))
+
+
+def _is_content_done(v3: dict, v2: dict, v4: dict | None = None, v5: dict | None = None) -> bool:
+    """Content done if v5/v4 content complete, v3 Phase B complete, OR v2 phase '2' complete."""
+    if v5 and v5.get("phases", {}).get("content", {}).get("status") == "complete":
         return True
-    return False
-
-
-def _is_content_done(v3: dict, v2: dict, v4: dict = None) -> bool:
-    """Content done if v4 content complete, v3 Phase B complete, OR v2 phase '2' complete."""
     if v4 and v4.get("phases", {}).get("v4-content", {}).get("status") == "complete":
         return True
     if v3.get("phases", {}).get("v3-B", {}).get("status") == "complete":
         return True
-    if v2.get("phases", {}).get("2", {}).get("status") == "complete":
-        return True
-    return False
+    return v2.get("phases", {}).get("2", {}).get("status") == "complete"
 
 
 def _find_content_file(track_dir: Path, slug: str) -> Path | None:
@@ -318,10 +330,8 @@ def _get_audit_status(track_dir: Path, slug: str) -> dict:
                     if md_candidate.is_file():
                         word_count = len(md_candidate.read_text().split())
                         break
-            try:
+            with contextlib.suppress(ValueError, IndexError):
                 word_target = int(parts[1].strip().split()[0]) if len(parts) > 1 else 0
-            except (ValueError, IndexError):
-                pass
 
         # Collect blocking issues (failed gates)
         blocking_issues = []
@@ -381,7 +391,7 @@ def _get_word_target_from_plan(track_id: str, slug: str) -> int:
 
 def _compute_summary() -> dict:
     """Synchronous summary computation — safe to run in asyncio.to_thread()."""
-    generated_at = datetime.now(timezone.utc).isoformat()
+    generated_at = datetime.now(UTC).isoformat()
     tracks_out = {}
     totals = {
         "total": 0, "research_done": 0, "content_done": 0,
@@ -407,15 +417,16 @@ def _compute_summary() -> dict:
         content_reviewed = 0
 
         audit_dir = track_dir / "audit"
-        for num, slug in plan_slugs:
+        for _num, slug in plan_slugs:
             orch_dir = track_dir / "orchestration" / slug
-            v4 = _read_v4_state(orch_dir)
-            v3 = _read_v3_state(orch_dir)
             v2 = _read_v2_state(orch_dir)
+            v5 = v2 if v2.get("mode") == "v5" else None
+            v4 = _read_v4_state(orch_dir) if not v5 else {}
+            v3 = _read_v3_state(orch_dir) if not v5 else {}
 
-            if _is_research_done(v3, v2, track_dir, slug, v4=v4):
+            if _is_research_done(v3, v2, track_dir, slug, v4=v4, v5=v5):
                 research_done += 1
-            if _is_content_done(v3, v2, v4=v4):
+            if _is_content_done(v3, v2, v4=v4, v5=v5):
                 content_done += 1
 
             audit = _get_audit_status(track_dir, slug)
@@ -476,7 +487,26 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
         if word_target == 0:
             word_target = _get_word_target_from_plan(track_id, slug)
 
-        if version == "v4":
+        if version == "v5":
+            v5 = _read_v2_state(orch_dir)  # v5 uses state.json
+            phases = {
+                name: _parse_v5_phase_status(v5, name)
+                for name in V5_PHASE_ORDER
+            }
+            modules.append({
+                "num": num,
+                "slug": slug,
+                "pipeline_version": "v5",
+                "needs_rebuild": False,
+                "phases": phases,
+                "audit": audit["status"],
+                "words": word_count,
+                "word_target": word_target,
+                "research_score": research_score,
+                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
+                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
+            })
+        elif version == "v4":
             v4 = _read_v4_state(orch_dir)
             phases = {
                 name: _parse_v4_phase_status(v4, name)
@@ -554,7 +584,7 @@ def _compute_research_coverage() -> dict:
         scores = []
         needs_upgrade = 0
 
-        for num, slug in plan_slugs:
+        for _num, slug in plan_slugs:
             rp = find_research_path(track_dir, slug)
             if not rp:
                 continue
@@ -583,7 +613,7 @@ def _compute_research_coverage() -> dict:
             "needs_upgrade": needs_upgrade,
         }
 
-    return {"generated_at": datetime.now(timezone.utc).isoformat(), "tracks": tracks_out}
+    return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks_out}
 
 
 def _compute_review_coverage() -> dict:
@@ -672,7 +702,7 @@ def _compute_review_coverage() -> dict:
             "plan_fail": plan_fail,
         }
 
-    return {"generated_at": datetime.now(timezone.utc).isoformat(), "tracks": tracks_out}
+    return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks_out}
 
 
 # ==================== ENDPOINTS ====================
@@ -706,11 +736,11 @@ async def pipeline_track(track_id: str):
 
 
 @router.get("/pipeline-versions")
-async def pipeline_versions(track: Optional[str] = Query(None)):
-    """All modules grouped by pipeline version. Quick overview of v4 migration progress."""
+async def pipeline_versions(track: str | None = Query(None)):
+    """All modules grouped by pipeline version."""
     def _compute():
-        counts = {"v4": 0, "v3": 0, "unbuilt": 0}
-        by_version: dict[str, list] = {"v4": [], "v3": [], "unbuilt": []}
+        counts = {"v5": 0, "v4": 0, "v3": 0, "unbuilt": 0}
+        by_version: dict[str, list] = {"v5": [], "v4": [], "v3": [], "unbuilt": []}
         per_track: dict[str, dict] = {}
 
         level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
@@ -722,7 +752,7 @@ async def pipeline_versions(track: Optional[str] = Query(None)):
                 continue
 
             track_dir = CURRICULUM_ROOT / level_cfg["path"]
-            track_counts = {"v4": 0, "v3": 0, "unbuilt": 0}
+            track_counts = {"v5": 0, "v4": 0, "v3": 0, "unbuilt": 0}
 
             for num, slug in plan_slugs:
                 orch_dir = track_dir / "orchestration" / slug
@@ -736,14 +766,17 @@ async def pipeline_versions(track: Optional[str] = Query(None)):
             per_track[track_id] = track_counts
 
         total = sum(counts.values())
+        built = counts["v5"] + counts["v4"]
         return {
             "total": total,
             "counts": counts,
-            "pct_v4": round(counts["v4"] / total * 100) if total else 0,
+            "pct_v5": round(counts["v5"] / total * 100) if total else 0,
+            "pct_built": round(built / total * 100) if total else 0,
             "needs_rebuild": counts["v3"] + counts["unbuilt"],
             "per_track": per_track,
+            "v5_modules": by_version["v5"],
             "v4_modules": by_version["v4"],
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     cache_key = f"pipeline_versions_{track or 'all'}"
@@ -756,7 +789,7 @@ async def pipeline_versions(track: Optional[str] = Query(None)):
 
 
 @router.get("/ready-to-build")
-async def ready_to_build(track: Optional[str] = Query(None)):
+async def ready_to_build(track: str | None = Query(None)):
     """Modules where Phase A is complete but Phase B hasn't started. The build queue."""
     def _compute():
         ready = []
@@ -802,7 +835,7 @@ async def ready_to_build(track: Optional[str] = Query(None)):
 
 @router.get("/weak-points")
 async def weak_points(
-    track: Optional[str] = Query(None),
+    track: str | None = Query(None),
     min_score: int = Query(7, ge=0, le=10),
     limit: int = Query(20, ge=1, le=500),
 ):
@@ -868,7 +901,7 @@ async def weak_points(
 
 
 @router.get("/failing")
-async def failing_modules(track: Optional[str] = Query(None)):
+async def failing_modules(track: str | None = Query(None)):
     """All modules with audit failures or phase failures."""
     def _compute():
         failing = []
@@ -944,12 +977,11 @@ async def research_detail(track_id: str, min_score: int = 9):
 
     def _compute():
         from research_quality import (
+            DIMENSION_SHORT_LABELS,
             assess_research_compat,
             find_research_path,
-            get_rubric,
             get_dimensions,
-            quality_label,
-            DIMENSION_SHORT_LABELS,
+            get_rubric,
         )
 
         track_dir = CURRICULUM_ROOT / level_cfg["path"]
@@ -1041,7 +1073,7 @@ async def research_detail(track_id: str, min_score: int = 9):
             "upgrade_count": len(upgrade_queue),
             "min_score_threshold": min_score,
             "modules": modules,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     result = await asyncio.to_thread(_compute)
@@ -1084,29 +1116,46 @@ async def build_status(track_id: str):
 
         for num, slug in plan_slugs:
             orch_dir = track_dir / "orchestration" / slug
-            v3 = _read_v3_state(orch_dir)
-            phases = v3.get("phases", {})
+            version = _detect_pipeline_version(orch_dir)
 
             # Determine furthest completed phase and any running phase
             furthest = None
             running_phase = None
             latest_ts = None
-            for pid in ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]:
-                p = phases.get(pid, {})
-                status = p.get("status")
-                if status == "complete":
-                    furthest = pid.replace("v3-", "")
-                    ts = p.get("ts")
-                    if ts:
-                        latest_ts = ts
-                elif status == "running":
-                    running_phase = pid.replace("v3-", "")
-                elif status == "failed":
-                    running_phase = pid.replace("v3-", "") + "(FAIL)"
 
-            # Check if fully built (at least through audit)
-            audit_phase = phases.get("v3-audit", {})
-            audit_status = audit_phase.get("status")
+            if version == "v5":
+                v5 = _read_v2_state(orch_dir)
+                phases = v5.get("phases", {})
+                phase_names = V5_PHASE_ORDER
+                for pid in phase_names:
+                    p = phases.get(pid, {})
+                    status = p.get("status")
+                    if status == "complete":
+                        furthest = pid
+                        ts = p.get("ts")
+                        if ts:
+                            latest_ts = ts
+                    elif status == "running":
+                        running_phase = pid
+                    elif status == "failed":
+                        running_phase = pid + "(FAIL)"
+                audit_status = phases.get("validate", {}).get("status")
+            else:
+                v3 = _read_v3_state(orch_dir)
+                phases = v3.get("phases", {})
+                for pid in ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]:
+                    p = phases.get(pid, {})
+                    status = p.get("status")
+                    if status == "complete":
+                        furthest = pid.replace("v3-", "")
+                        ts = p.get("ts")
+                        if ts:
+                            latest_ts = ts
+                    elif status == "running":
+                        running_phase = pid.replace("v3-", "")
+                    elif status == "failed":
+                        running_phase = pid.replace("v3-", "") + "(FAIL)"
+                audit_status = phases.get("v3-audit", {}).get("status")
 
             if audit_status == "complete":
                 done += 1
@@ -1155,7 +1204,7 @@ async def build_status(track_id: str):
             "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
             "currently_building": building_now[:5],  # Top 5 active
             "recent_completions": last_5,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     cache_key = f"build_status_{track_id}"
@@ -1205,7 +1254,7 @@ async def build_status_all():
             }
 
         return {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "tracks": tracks,
         }
 
@@ -1294,8 +1343,14 @@ async def module_detail(track_id: str, num: int):
 
         version = _detect_pipeline_version(orch_dir)
 
-        # Pipeline phases — v4 uses named phases, v3 uses letter-coded
-        if version == "v4":
+        # Pipeline phases — v5 uses plain keys, v4 uses v4- prefix, v3 uses letter-coded
+        if version == "v5":
+            v5 = _read_v2_state(orch_dir)
+            phases = {
+                name: _parse_v5_phase_status(v5, name)
+                for name in V5_PHASE_ORDER
+            }
+        elif version == "v4":
             v4 = _read_v4_state(orch_dir)
             phases = {
                 name: _parse_v4_phase_status(v4, name)
@@ -1365,7 +1420,7 @@ async def module_detail(track_id: str, num: int):
             "final_review": final_review,
             "enriched": enriched,
             "comms": comms,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     result = await asyncio.to_thread(_compute)
@@ -1435,7 +1490,7 @@ async def final_reviews_track(track_id: str):
             "issue_patterns": pattern_counts,
             "rejected_modules": rejected,
             "pending_modules": pending[:10],
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     cache_key = f"final_reviews_{track_id}"
@@ -1448,7 +1503,7 @@ async def final_reviews_track(track_id: str):
 
 
 @router.get("/enrichment-status")
-async def enrichment_status(track: Optional[str] = Query(None)):
+async def enrichment_status(track: str | None = Query(None)):
     """Which plans are enriched per track. Checks for .yaml.bak files in plans/."""
     def _compute():
         tracks = {}
@@ -1473,9 +1528,9 @@ async def enrichment_status(track: Optional[str] = Query(None)):
                 "enriched": enriched,
                 "pending": total - enriched,
                 "pct": round(enriched / total * 100) if total else 0,
-                "not_enriched": not_enriched[:10] if len(not_enriched) <= 10 else not_enriched[:5] + [f"...+{len(not_enriched)-5}"],
+                "not_enriched": not_enriched[:10] if len(not_enriched) <= 10 else [*not_enriched[:5], f"...+{len(not_enriched) - 5}"],
             }
-        return {"generated_at": datetime.now(timezone.utc).isoformat(), "tracks": tracks}
+        return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
     cached = _cache_get("enrichment_status", ttl=120.0)
     if cached is not None:
@@ -1616,7 +1671,7 @@ async def track_health(track_id: str):
                 ),
             },
             "attention": attention[:10],
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
     cache_key = f"track_health_{track_id}"
@@ -1630,8 +1685,8 @@ async def track_health(track_id: str):
 
 @router.get("/issues")
 async def outstanding_issues(
-    track: Optional[str] = Query(None),
-    severity: Optional[str] = Query(None),
+    track: str | None = Query(None),
+    severity: str | None = Query(None),
 ):
     """Aggregated outstanding issues from review files + audit failures."""
     def _compute():

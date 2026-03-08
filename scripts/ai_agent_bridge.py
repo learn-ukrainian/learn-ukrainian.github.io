@@ -2,8 +2,8 @@
 """
 AI Agent Bridge - Multi-agent communication bridge via MCP Message Broker
 
-This script allows AI agents (Gemini, Claude, etc.) to participate in a 
-bidirectional communication system by reading from and writing to the 
+This script allows AI agents (Gemini, Claude, etc.) to participate in a
+bidirectional communication system by reading from and writing to the
 same SQLite database that the MCP Message Broker uses.
 
 Usage:
@@ -28,6 +28,7 @@ Usage:
 
 import argparse
 import atexit
+import contextlib
 import json
 import os
 import re
@@ -35,7 +36,7 @@ import shutil
 import sqlite3
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # Database path (same as MCP server uses)
@@ -92,14 +93,14 @@ def _validate_file_writes(pre_snapshot: set[str], allowed_path: str) -> list[str
     return violations
 
 
-def _write_pid_file(agent: str, task_id: str, info: dict, pid: int = None):
+def _write_pid_file(agent: str, task_id: str, info: dict, pid: int | None = None):
     """Write a PID file for a running agent process."""
     PID_DIR.mkdir(parents=True, exist_ok=True)
     pid_file = PID_DIR / f"{agent}-{task_id}.json"
     pid_data = {
         "pid": pid or os.getpid(),
         "agent": agent,
-        "started": datetime.now(timezone.utc).isoformat(),
+        "started": datetime.now(UTC).isoformat(),
         **info,
     }
     pid_file.write_text(json.dumps(pid_data, indent=2))
@@ -133,7 +134,7 @@ def _is_task_locked(agent: str, task_id: str) -> bool:
         if started:
             try:
                 start_time = datetime.fromisoformat(started)
-                age_minutes = (datetime.now(timezone.utc) - start_time).total_seconds() / 60
+                age_minutes = (datetime.now(UTC) - start_time).total_seconds() / 60
                 if age_minutes > 30:
                     # PID exists but lock is old — verify process is actually ours
                     try:
@@ -192,7 +193,7 @@ def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
                     started = data.get("started", "")
                     if started:
                         start_time = datetime.fromisoformat(started)
-                        age_h = (datetime.now(timezone.utc) - start_time).total_seconds() / 3600
+                        age_h = (datetime.now(UTC) - start_time).total_seconds() / 3600
                         if age_h > max_age_hours:
                             print(f"  {action} stale PID: {pid_file.name} (alive but {age_h:.1f}h old)")
                             if not dry_run:
@@ -214,14 +215,14 @@ def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
     if DB_PATH.exists():
         db = sqlite3.connect(str(DB_PATH))
         db.row_factory = sqlite3.Row
-        cutoff = datetime.now(timezone.utc).isoformat()
+        datetime.now(UTC).isoformat()
         rows = db.execute(
             "SELECT id, task_id, from_llm, to_llm, timestamp FROM messages WHERE acknowledged=0"
         ).fetchall()
         for row in rows:
             try:
                 ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
-                age_h = (datetime.now(timezone.utc) - ts).total_seconds() / 3600
+                age_h = (datetime.now(UTC) - ts).total_seconds() / 3600
                 if age_h > max_age_hours:
                     print(f"  {action} stuck msg #{row['id']}: {row['from_llm']}→{row['to_llm']} "
                           f"task={row['task_id']} ({age_h:.1f}h old)")
@@ -383,7 +384,7 @@ def set_session(task_id: str, agent: str, session_id: str):
 
     conn = get_db()
     cursor = conn.cursor()
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
 
     # Upsert session
     cursor.execute("SELECT task_id FROM sessions WHERE task_id = ?", (task_id,))
@@ -480,7 +481,7 @@ def read_message(message_id: int, quiet: bool = False):
 
     return msg
 
-def send_message(content: str, task_id: str = None, msg_type: str = "response", data: str = None, from_llm: str = "gemini", to_llm: str = "claude", from_model: str = None, to_model: str = None, quiet: bool = False):
+def send_message(content: str, task_id: str | None = None, msg_type: str = "response", data: str | None = None, from_llm: str = "gemini", to_llm: str = "claude", from_model: str | None = None, to_model: str | None = None, quiet: bool = False):
     """Send a message between agents.
 
     Args:
@@ -493,14 +494,14 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     conn = get_db()
     cursor = conn.cursor()
 
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
 
     # Store model info in data as JSON if provided
     metadata = {}
     if data:
         try:
             metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
-        except:
+        except (json.JSONDecodeError, ValueError):
             metadata = {"raw": data}
     if from_model:
         metadata["from_model"] = from_model
@@ -537,7 +538,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     return msg_id
 
 
-def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data: str = None, new_session: bool = False, from_llm: str = "gemini", from_model: str = None, to_model: str = None):
+def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query", data: str | None = None, new_session: bool = False, from_llm: str = "gemini", from_model: str | None = None, to_model: str | None = None):
     """Send message to Claude AND invoke Claude to process it. One-step communication.
 
     Runs in sync mode by default (15 min timeout). Use --async flag for fire-and-forget.
@@ -560,14 +561,14 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
 def detect_sender() -> str:
     """Detect if the current process is running as Gemini or Claude."""
     # Check for Gemini environment markers
-    if (os.environ.get("GEMINI_SESSION") or 
-        os.environ.get("GOOGLE_API_KEY") or 
+    if (os.environ.get("GEMINI_SESSION") or
+        os.environ.get("GOOGLE_API_KEY") or
         Path(".gemini").exists()):
         return "gemini"
     return "claude"
 
 
-def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None, quiet: bool = False):
+def send_to_gemini(content: str, task_id: str | None = None, msg_type: str = "query", data: str | None = None, from_model: str | None = None, to_model: str | None = None, quiet: bool = False):
     """Send a message to Gemini with auto-detected sender."""
     return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model, quiet=quiet)
 
@@ -636,7 +637,7 @@ def _detect_model_error(stderr: str, model: str) -> str | None:
     return None
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None, skip_github: bool = False):
+def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query", data: str | None = None, model: str = "gemini-3-flash-preview", from_model: str | None = None, async_mode: bool = False, stdout_only: bool = False, output_path: str | None = None, extract_tags: list | None = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str | None = None, skip_github: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -669,8 +670,8 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
             age = _time.time() - cached_at
             if age < _MODEL_CACHE_TTL:
                 print(f"❌ Model '{model}' was unavailable {int(age)}s ago (cached). Skipping.")
-                print(f"💡 To switch accounts: run 'gemini auth login' or ask the user to switch.")
-                print(f"   To retry: --skip-model-check (clears cache)")
+                print("💡 To switch accounts: run 'gemini auth login' or ask the user to switch.")
+                print("   To retry: --skip-model-check (clears cache)")
                 return None
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
@@ -683,8 +684,8 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     issue_num = _extract_issue_number(task_id) if task_id else None
     if msg_type == "handoff" and len(content) > HANDOFF_WARNING_THRESHOLD and issue_num:
         print(f"⚠️  WARNING: Handoff message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
-        print(f"   For task handoffs, the GitHub issue should contain details.")
-        print(f"   Consider sending a SHORT message with issue reference only:")
+        print("   For task handoffs, the GitHub issue should contain details.")
+        print("   Consider sending a SHORT message with issue reference only:")
         print(f"   'Issue #{issue_num} is assigned to you. Read it for details.'")
         print()
 
@@ -694,7 +695,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only)
         acknowledge(msg_id, quiet=stdout_only)
         if not stdout_only:
-            print(f"   Pre-acknowledged (file output mode — no broker traffic)")
+            print("   Pre-acknowledged (file output mode — no broker traffic)")
     else:
         msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only)
 
@@ -708,7 +709,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     # Step 2: Invoke Gemini to process it (unless async mode)
     if async_mode:
         print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
-        print(f"   Gemini will see this in his inbox when he starts a session.")
+        print("   Gemini will see this in his inbox when he starts a session.")
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         if not stdout_only:
@@ -717,7 +718,8 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
 
         # Post-process: extract delimited content if --extract was used
         if extract_tags is not None and response:
-            from gemini_output import extract_delimited as _extract, find_complete_pairs, ALL_TAGS
+            from gemini_output import ALL_TAGS, find_complete_pairs
+            from gemini_output import extract_delimited as _extract
             tags = extract_tags if extract_tags else find_complete_pairs(response, ALL_TAGS)
             if tags:
                 print(f"\n{'═' * 40}")
@@ -905,7 +907,7 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
             return issue_num
         else:
             # Create new issue
-            title = f"Review: {task_id}" if task_id else f"Review: {datetime.now(timezone.utc).isoformat()}"
+            title = f"Review: {task_id}" if task_id else f"Review: {datetime.now(UTC).isoformat()}"
             first_body = _format_review_chunk(chunks[0], model, 1, total_parts)
 
             result = subprocess.run(
@@ -945,7 +947,7 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
         return None
 
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None, skip_github: bool = False):
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str | None = None, allow_write: bool = False, delimiters: str | None = None, skip_github: bool = False):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -1102,9 +1104,9 @@ Format your response clearly.
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / f"gemini-{task_key}.log"
 
-        print(f"\n🚀 Launching bridge in background (no timeout)...")
+        print("\n🚀 Launching bridge in background (no timeout)...")
         print(f"   Log: {log_file}")
-        print(f"   Bridge will capture Gemini's response and route it when done.")
+        print("   Bridge will capture Gemini's response and route it when done.")
 
         try:
             bridge_cmd = [
@@ -1113,7 +1115,7 @@ Format your response clearly.
                 "--model", model,
                 "--no-timeout"
             ]
-            lf = open(log_file, "w")
+            lf = open(log_file, "w")  # noqa: SIM115 — fd passed to Popen, closed after
             proc = subprocess.Popen(
                 bridge_cmd,
                 stdout=lf,
@@ -1199,15 +1201,15 @@ Format your response clearly.
                     _timed_out = False
                     _watchdog_timer = None
                     if timeout_val:
-                        def _kill_on_timeout():
+                        _proc_ref = proc  # Bind for closure (B023)
+
+                        def _kill_on_timeout(_p=_proc_ref):
                             nonlocal _timed_out
                             _timed_out = True
                             print(f"\n⏰ Gemini CLI timed out after {timeout_val}s — killing process")
                             sys.stdout.flush()
-                            try:
-                                proc.kill()
-                            except OSError:
-                                pass
+                            with contextlib.suppress(OSError):
+                                _p.kill()
                         import threading
                         _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
                         _watchdog_timer.daemon = True
@@ -1220,7 +1222,7 @@ Format your response clearly.
                             print(line, end='')  # Real-time to log file
                             sys.stdout.flush()
                             output_lines.append(line)
-                    except (IOError, ValueError):
+                    except (OSError, ValueError):
                         pass  # Pipe broken after kill
 
                     # Wait for process to finish, get stderr
@@ -1238,7 +1240,7 @@ Format your response clearly.
                         model_err = _detect_model_error(stderr, model)
                         if model_err:
                             print(f"\n❌ {model_err}")
-                            print(f"💡 To switch accounts: run 'gemini auth login'")
+                            print("💡 To switch accounts: run 'gemini auth login'")
                             return
                         # Detect quota/rate limit errors
                         if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
@@ -1264,7 +1266,7 @@ Format your response clearly.
                     if output_path and pre_snapshot is not None:
                         violations = _validate_file_writes(pre_snapshot, output_path)
                         if violations:
-                            print(f"\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
+                            print("\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
                             for v in violations:
                                 print(f"   - {v}")
                             sys.stdout.flush()
@@ -1282,7 +1284,7 @@ Format your response clearly.
                     if output_path:
                         # File output mode: NO broker message. Batch script reads the file directly.
                         if not stdout_only:
-                            print(f"   (no broker message — file output mode)")
+                            print("   (no broker message — file output mode)")
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
@@ -1452,9 +1454,9 @@ Do NOT use MCP tools to send your response - just output your response directly.
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / f"claude-{task_key}.log"
 
-        print(f"\n🚀 Launching bridge in background (no timeout)...")
+        print("\n🚀 Launching bridge in background (no timeout)...")
         print(f"   Log: {log_file}")
-        print(f"   Bridge will capture Claude's response and route it when done.")
+        print("   Bridge will capture Claude's response and route it when done.")
 
         try:
             bridge_cmd = [
@@ -1464,7 +1466,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
             ]
             if new_session:
                 bridge_cmd.append("--new-session")
-            lf = open(log_file, "w")
+            lf = open(log_file, "w")  # noqa: SIM115 — fd passed to Popen, closed after
             proc = subprocess.Popen(
                 bridge_cmd,
                 stdout=lf,
@@ -1529,10 +1531,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                     _timed_out = True
                     print(f"\n⏰ Claude CLI timed out after {timeout_val}s — killing process")
                     sys.stdout.flush()
-                    try:
+                    with contextlib.suppress(OSError):
                         proc.kill()
-                    except OSError:
-                        pass
                 import threading
                 _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
                 _watchdog_timer.daemon = True
@@ -1544,7 +1544,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
                     print(line, end='')
                     sys.stdout.flush()
                     output_lines.append(line)
-            except (IOError, ValueError):
+            except (OSError, ValueError):
                 pass  # Pipe broken after kill
 
             proc.wait()
@@ -1656,11 +1656,11 @@ def interactive_mode():
 
             if cmd.lower() in ["quit", "q", "exit"]:
                 break
-                
+
             # Simple parser for interactive mode
             parts = cmd.split()
             action = parts[0].lower()
-            
+
             if action == "inbox":
                 agent = parts[1] if len(parts) > 1 else "gemini"
                 check_inbox(agent)
@@ -1712,14 +1712,14 @@ def process_all_gemini(model: str = "gemini-3-flash-preview"):
     failed = 0
 
     for row in rows:
-        msg_id, task_id, from_llm, msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview = row
         preview = preview.replace('\n', ' ')[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
             process_and_respond(msg_id, model)
             success += 1
-            print(f"    ✅ Done\n")
+            print("    ✅ Done\n")
         except Exception as e:
             failed += 1
             print(f"    ❌ Failed: {e}\n")
@@ -1753,14 +1753,14 @@ def process_all_claude(new_session: bool = False):
     failed = 0
 
     for row in rows:
-        msg_id, task_id, from_llm, msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview = row
         preview = preview.replace('\n', ' ')[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
             process_for_claude(msg_id, new_session)
             success += 1
-            print(f"    ✅ Done\n")
+            print("    ✅ Done\n")
         except Exception as e:
             failed += 1
             print(f"    ❌ Failed: {e}\n")
@@ -1775,7 +1775,7 @@ def main():
 
     # inbox
     inbox_parser = subparsers.add_parser("inbox", help="Check inbox for messages")
-    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude'], 
+    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude'],
                              help="Check inbox for which agent (default: gemini)")
 
     # read

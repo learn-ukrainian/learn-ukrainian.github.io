@@ -30,6 +30,15 @@ from pathlib import Path
 SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+# Import v5 pipeline
+from batch_gemini_config import (
+    CURRICULUM_DIR,
+    PRO_TRACKS,
+    SEMINAR_TRACKS,
+    get_module_index,
+    get_module_paths,
+    slug_for_num,
+)
 from pipeline_lib import (
     ModuleContext,
     _init_log,
@@ -39,27 +48,14 @@ from pipeline_lib import (
     write_completion_report_v2,
     write_placeholders,
 )
-from batch_gemini_config import (
-    CURRICULUM_DIR,
-    SEMINAR_TRACKS,
-    PRO_TRACKS,
-    get_module_index,
-    get_module_paths,
-    slug_for_num,
-)
-
-# Import v5 pipeline
-import pipeline_v5
 from pipeline_v5 import (
-    PHASES,
-    PHASE_FUNCTIONS,
     CLAUDE_MODEL_ACTIVITIES,
     CLAUDE_MODEL_REVIEW,
-    is_complete,
+    PHASE_FUNCTIONS,
+    PHASES,
     load_state,
     run_pipeline,
 )
-
 
 # ============================================================================
 # Preflight
@@ -120,6 +116,19 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # --rebuild forces content regeneration
     if getattr(args, "rebuild", False):
         ctx.refresh = True  # type: ignore[attr-defined]
+
+    # --full-build: single-call mode (content + activities + vocabulary)
+    # Auto-enabled for beginner tier (A1, A2 M1-20, B1 M1-5) unless --no-full-build
+    from pipeline_lib import _get_prompt_tier
+    explicit_full = getattr(args, "full_build", False)
+    no_full = getattr(args, "no_full_build", False)
+    auto_full = _get_prompt_tier(ctx.track, ctx.module_num) == "beginner"
+    ctx.full_build = (explicit_full or auto_full) and not no_full  # type: ignore[attr-defined]
+
+    # RAG: auto-enabled when .gemini/settings.json exists (MCP tools available)
+    explicit_rag = getattr(args, "rag", False)
+    auto_rag = (SCRIPTS_DIR.parent / ".gemini" / "settings.json").exists()
+    ctx.rag = explicit_rag or auto_rag  # type: ignore[attr-defined]
 
     # --max-fix override
     ctx.max_fix = getattr(args, "max_fix", None)  # type: ignore[attr-defined]
@@ -235,13 +244,13 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
                                 st = json.loads(v5_state.read_text("utf-8"))
                                 review_done = st.get("phases", {}).get("review", {}).get("status") == "complete"
                             if not review_done:
-                                print(f"  PARTIAL: audit passes, needs review", flush=True)
+                                print("  PARTIAL: audit passes, needs review", flush=True)
                             else:
-                                print(f"  SKIP: passing audit + review done", flush=True)
+                                print("  SKIP: passing audit + review done", flush=True)
                                 skipped_list.append((n, slug))
                                 continue
                         else:
-                            print(f"  SKIP: already passing full audit", flush=True)
+                            print("  SKIP: already passing full audit", flush=True)
                             skipped_list.append((n, slug))
                             continue
             except (FileNotFoundError, ValueError, KeyError):
@@ -275,15 +284,15 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
                                 _needs_rebuild = True
                                 break
                     if _needs_rebuild:
-                        print(f"  AUTO-REBUILD: review exhausted — attempting rebuild...", flush=True)
+                        print("  AUTO-REBUILD: review exhausted — attempting rebuild...", flush=True)
                         rebuild_args = argparse.Namespace(**vars(single_args))
                         rebuild_args.rebuild = True
                         if _run_single_module(rebuild_args) == 0:
                             passed_list.append((n, slug))
-                            print(f"  AUTO-REBUILD: SUCCESS", flush=True)
+                            print("  AUTO-REBUILD: SUCCESS", flush=True)
                             _rebuilt_ok = True
                         else:
-                            print(f"  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
+                            print("  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
                 except Exception as _rbe:
                     print(f"  AUTO-REBUILD: error checking state — {_rbe}", flush=True)
             if not _rebuilt_ok:
@@ -382,6 +391,12 @@ def main() -> int:
     # Tuning
     parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",
                         help="Stop before this phase (e.g. --stop-before validate)")
+    parser.add_argument("--full-build", action="store_true", dest="full_build",
+                        help="Single-call mode: content + activities + vocabulary in one Gemini call (auto for beginner)")
+    parser.add_argument("--no-full-build", action="store_true", dest="no_full_build",
+                        help="Disable auto full-build for beginner tier")
+    parser.add_argument("--rag", action="store_true", dest="rag",
+                        help="RAG-enabled mode: Gemini searches textbooks/VESUM via MCP (auto when .gemini/settings.json exists)")
     parser.add_argument("--max-fix", type=int, default=None, dest="max_fix",
                         help="Override max fix iterations (default: 6 core, 8 seminar)")
 

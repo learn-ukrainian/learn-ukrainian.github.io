@@ -9,12 +9,9 @@ Generates formatted output showing:
 """
 
 from datetime import datetime
-from typing import Optional
 
 from .aggregator import TrackMetrics, TrackScore
 from .config import get_track_config
-from .caps import check_cap_violations
-from .sampling import calculate_sampling_metrics
 
 
 def format_metrics_table(track_metrics: TrackMetrics) -> str:
@@ -142,22 +139,22 @@ def _get_evidence_summary(criterion_name: str, track_score: TrackScore) -> str:
     score = track_score.final_criterion_scores.get(criterion_name, 0.0)
 
     evidence_map = {
-        'audit_pass_rate': lambda s: f"Based on status JSONs",
-        'primary_source_integration': lambda s: f"[!quote] callouts",
-        'historical_accuracy': lambda s: f"Naturalness gate",
-        'decolonization_perspective': lambda s: f"Myth+agency metrics",
-        'era_vocabulary': lambda s: f"Vocab file coverage",
-        'chronological_coherence': lambda s: f"Timeline verified",
-        'critical_analysis_skills': lambda s: f"Analysis activities",
-        'activity_coverage': lambda s: f"Activity files",
-        'vocabulary_coverage': lambda s: f"Vocab files",
-        'internal_consistency': lambda s: f"Cross-refs",
-        'literary_depth': lambda s: f"Devices+sections",
-        'authentic_text_engagement': lambda s: f"Citation ratio",
-        'biographical_accuracy': lambda s: f"Naturalness gate",
-        'source_reliability': lambda s: f"Quote diversity",
-        'significance_assessment': lambda s: f"Legacy sections",
-        'cultural_historical_context': lambda s: f"Context callouts",
+        'audit_pass_rate': lambda s: "Based on status JSONs",
+        'primary_source_integration': lambda s: "[!quote] callouts",
+        'historical_accuracy': lambda s: "Naturalness gate",
+        'decolonization_perspective': lambda s: "Myth+agency metrics",
+        'era_vocabulary': lambda s: "Vocab file coverage",
+        'chronological_coherence': lambda s: "Timeline verified",
+        'critical_analysis_skills': lambda s: "Analysis activities",
+        'activity_coverage': lambda s: "Activity files",
+        'vocabulary_coverage': lambda s: "Vocab files",
+        'internal_consistency': lambda s: "Cross-refs",
+        'literary_depth': lambda s: "Devices+sections",
+        'authentic_text_engagement': lambda s: "Citation ratio",
+        'biographical_accuracy': lambda s: "Naturalness gate",
+        'source_reliability': lambda s: "Quote diversity",
+        'significance_assessment': lambda s: "Legacy sections",
+        'cultural_historical_context': lambda s: "Context callouts",
     }
 
     if criterion_name in evidence_map:
@@ -218,8 +215,8 @@ def format_gaps_section(track_score: TrackScore, track_metrics: TrackMetrics) ->
         lines.append("  ✅ All criteria at 9+ (excellent)")
         return "\n".join(lines)
 
-    for name, score, weight, criterion_name in gaps[:5]:  # Top 5 gaps
-        lines.append(f"")
+    for name, score, _weight, criterion_name in gaps[:5]:  # Top 5 gaps
+        lines.append("")
         lines.append(f"  ❌ {name} ({score:.1f}/10):")
         fix = _get_fix_suggestion(criterion_name, track_metrics)
         lines.append(f"     → FIX: {fix}")
@@ -227,17 +224,17 @@ def format_gaps_section(track_score: TrackScore, track_metrics: TrackMetrics) ->
     # Calculate projected score if gaps fixed
     max_improvement = sum((10.0 - score) * weight for _, score, weight, _ in gaps)
     projected = min(10.0, track_score.total_weighted_score + max_improvement)
-    lines.append(f"")
+    lines.append("")
     lines.append(f"PROJECTED SCORE AFTER FIXES: {projected:.1f}/10")
 
     # Add Sampling Recommendations if coverage is low
     total = track_metrics.modules_found
     if total > 0 and (track_metrics.total_llm_verified + track_metrics.total_gold_standard) / total < 0.2:
-        lines.append(f"")
-        lines.append(f"SAMPLING RECOMMENDATIONS (Tier 2/3):")
+        lines.append("")
+        lines.append("SAMPLING RECOMMENDATIONS (Tier 2/3):")
         # Note: In a real scenario we'd need the raw module data here.
         # For now, we add a placeholder note that sampling is advised.
-        lines.append(f"  ⚠️  Validation coverage is low. Run validation pipeline on risk-prioritized modules.")
+        lines.append("  ⚠️  Validation coverage is low. Run validation pipeline on risk-prioritized modules.")
 
     return "\n".join(lines)
 
@@ -247,7 +244,7 @@ def _get_fix_suggestion(criterion_name: str, track_metrics: TrackMetrics) -> str
     fixes = {
         'audit_pass_rate': f"Fix {track_metrics.failing_modules} failing modules",
         'primary_source_integration': f"Add [!quote] callouts ({track_metrics.total_quote_callouts} currently)",
-        'decolonization_perspective': f"Add [!myth-buster] callouts, increase agency markers",
+        'decolonization_perspective': "Add [!myth-buster] callouts, increase agency markers",
         'era_vocabulary': f"Create vocabulary files for {track_metrics.total_modules - track_metrics.modules_with_vocabulary} modules",
         'activity_coverage': f"Add activity files for {track_metrics.total_modules - track_metrics.modules_with_activities} modules",
         'vocabulary_coverage': f"Add vocabulary files for {track_metrics.total_modules - track_metrics.modules_with_vocabulary} modules",
@@ -255,7 +252,7 @@ def _get_fix_suggestion(criterion_name: str, track_metrics: TrackMetrics) -> str
         'literary_depth': f"Add analysis sections ({track_metrics.total_analysis_sections} currently)",
         'authentic_text_engagement': f"Increase citation ratio (currently {track_metrics.avg_citation_ratio:.1%})",
         'significance_assessment': f"Add legacy/impact sections ({track_metrics.total_legacy_sections} currently)",
-        'critical_analysis_skills': f"Add critical-analysis activities",
+        'critical_analysis_skills': "Add critical-analysis activities",
     }
 
     return fixes.get(criterion_name, "Improve this criterion")

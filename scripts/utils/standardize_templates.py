@@ -1,6 +1,7 @@
 import os
-import yaml
 import re
+
+import yaml
 
 # Standard Aliases
 ALIASES = {
@@ -19,13 +20,13 @@ ALIASES = {
 def standardize_templates():
     template_dir = "docs/l2-uk-en/templates"
     updated_count = 0
-    
+
     for filename in os.listdir(template_dir):
         if filename.endswith(".md"):
             path = os.path.join(template_dir, filename)
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 content = f.read()
-            
+
             # Find the TEMPLATE_METADATA block
             match = re.search(r'TEMPLATE_METADATA:\s*\n(.*?)\n-->', content, re.DOTALL)
             if match:
@@ -46,21 +47,21 @@ def standardize_templates():
                                     new_sections.append(section)
                             else:
                                 new_sections.append(section)
-                        
+
                         if changed:
                             meta['required_sections'] = new_sections
                             # Convert back to YAML
                             new_meta_str = yaml.dump(meta, allow_unicode=True, sort_keys=False, default_flow_style=False)
                             indented_meta = "\n".join(["  " + line for line in new_meta_str.strip().split("\n")])
                             new_content = content[:match.start(1)] + indented_meta + content[match.end(1):]
-                            
+
                             with open(path, 'w', encoding='utf-8') as f:
                                 f.write(new_content)
                             updated_count += 1
                             print(f"Standardized {filename}")
                 except Exception as e:
                     print(f"Error in {filename}: {e}")
-    
+
     print(f"Finished. Standardized {updated_count} templates.")
 
 if __name__ == "__main__":

@@ -182,7 +182,7 @@ def main():
 
         grade_dir = OUTPUT_DIR / f"grade-{grade:02d}"
 
-        for i, pdf_info in enumerate(pdfs):
+        for _i, pdf_info in enumerate(pdfs):
             pdf_url = pdf_info["url"]
             # Use the filename from the URL
             filename = pdf_url.split("/")[-1]
@@ -203,7 +203,7 @@ def main():
         time.sleep(CRAWL_DELAY)
 
     print(f"\n{'='*60}")
-    print(f"SUMMARY")
+    print("SUMMARY")
     print(f"{'='*60}")
     print(f"Downloaded: {total_downloaded}")
     print(f"Skipped (exist): {total_skipped}")

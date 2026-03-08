@@ -6,7 +6,6 @@ and computes recommendations based on violations.
 """
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -25,7 +24,7 @@ def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> Ga
     - FAIL: 100+ words below target
     """
     min_words = target - 100   # Hard fail threshold
-    
+
     msg = f"{total_words}/{target}"
     if raw_words > total_words:
         msg += f" (raw: {raw_words})"
@@ -87,7 +86,7 @@ def evaluate_audio(count: int) -> GateResult:
 
 def evaluate_vocab(count: int, target: int) -> GateResult:
     """Evaluate vocabulary count gate.
-    
+
     Note: As of Issue #340, vocab_count is a SOFT TARGET (warning, not blocking).
     Content-driven vocabulary extraction means modules may have fewer explicit
     vocab table entries while vocabulary is used throughout content.
@@ -224,7 +223,7 @@ def evaluate_naturalness(score: int, status: str) -> GateResult:
         return GateResult('FAIL', '❌', "Not scored")
 
 
-def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateResult:
+def evaluate_grammar(grammar_file_exists: bool, summary: dict | None = None) -> GateResult:
     """Evaluate grammar validation status.
 
     Checks if the module has been grammar-validated by looking for
@@ -256,8 +255,8 @@ def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateRes
     return GateResult('PASS', '✅', "Validated")
 
 
-def evaluate_activity_quality(quality_file_exists: bool, result: str = None,
-                              failed_gates: int = 0, level: str = None) -> GateResult:
+def evaluate_activity_quality(quality_file_exists: bool, result: str | None = None,
+                              failed_gates: int = 0, level: str | None = None) -> GateResult:
     """Evaluate activity quality validation status (optional check).
 
     Checks if the module has been quality-validated by looking for
@@ -297,31 +296,31 @@ def evaluate_content_heavy(
     max_act: int = 12
 ) -> GateResult:
     """Evaluate content-heavy module compliance.
-    
+
     Content-heavy modules (B2 history, C1 literature/biography/folk/arts)
     should have appropriate activity counts and test language, not recall.
-    
+
     Args:
         is_content_heavy: Whether module is content-heavy type
         activity_count: Number of activities in module
         content_recall_violations: List of content recall violations
         min_act: Minimum required activities (default 10)
         max_act: Maximum allowed activities (default 12)
-        
+
     Returns:
         GateResult with content-heavy compliance status
     """
     if not is_content_heavy:
         return GateResult('INFO', 'ℹ️', "N/A (standard module)")
-    
+
     issues = []
-    
+
     # Check activity count
     if activity_count > max_act:
         issues.append(f"Too many activities: {activity_count} (target {min_act}-{max_act})")
     elif activity_count < min_act:
         issues.append(f"Too few activities: {activity_count} (target {min_act}-{max_act})")
-    
+
     # Check content recall violations
     recall_count = len([v for v in content_recall_violations if v.get('type') == 'CONTENT_RECALL'])
     ref_missing = len([v for v in content_recall_violations if v.get('type') == 'MISSING_TEXT_REFERENCE'])
@@ -336,15 +335,15 @@ def evaluate_content_heavy(
         issues.append(f"{year_cloze} cloze with year blanks")
     if year_fill_in > 0:
         issues.append(f"{year_fill_in} fill-in with year answers")
-    
+
     if issues:
         return GateResult('WARN', '⚠️', "; ".join(issues))
-    
+
     return GateResult('PASS', '✅', f"Content-heavy OK ({activity_count} activities)")
 
 
 def evaluate_research_alignment(
-    research_info: Optional[dict],
+    research_info: dict | None,
     content_exists: bool,
 ) -> GateResult:
     """Evaluate whether content reflects the current research quality.

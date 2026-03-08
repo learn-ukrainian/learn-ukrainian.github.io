@@ -12,8 +12,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # Decodable charsets — mirrors pipeline_lib._DECODABLE_CHARSETS but extended
@@ -63,10 +61,7 @@ def _get_charset_upper(module_num: int) -> set[str]:
 
 def _is_skip_line(line: str) -> bool:
     """Check if a line should be skipped for untranslated-word scanning."""
-    for pat in _SKIP_LINE_PATTERNS:
-        if pat.search(line):
-            return True
-    return False
+    return any(pat.search(line) for pat in _SKIP_LINE_PATTERNS)
 
 
 def _word_has_translation_after(line: str, match_end: int) -> bool:
@@ -88,16 +83,14 @@ def _word_has_translation_after(line: str, match_end: int) -> bool:
             return True
     # Check dash-separated translation: — English / - English
     dash_m = re.match(r"^[\s]*[—–\-]\s+([A-Za-z])", rest)
-    if dash_m:
-        return True
-    return False
+    return bool(dash_m)
 
 
 def _word_is_in_translation_context(line: str, match_start: int) -> bool:
     """Check if the word is inside a translation parenthetical like (Ukrainian — English)."""
     # Find if we're inside parentheses
     depth = 0
-    for i, c in enumerate(line[:match_start]):
+    for _i, c in enumerate(line[:match_start]):
         if c == "(":
             depth += 1
         elif c == ")":

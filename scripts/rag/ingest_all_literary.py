@@ -67,10 +67,16 @@ def load_cache(jsonl_path: Path) -> dict:
 def encode_file(encoder, jsonl_path: Path, batch_size: int = 32) -> dict:
     """Encode all texts in a JSONL file and return embeddings dict."""
     texts = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
             texts.append(json.loads(line)["text"])
     return encoder.encode(texts, batch_size=batch_size)
+
+
+def _count_lines(path):
+    """Count lines in a file."""
+    with open(path) as _fh:
+        return sum(1 for _ in _fh)
 
 
 def show_stats(jsonl_files: list[Path]):
@@ -81,7 +87,7 @@ def show_stats(jsonl_files: list[Path]):
     total_chunks = 0
 
     for jf in jsonl_files:
-        n_chunks = sum(1 for _ in open(jf))
+        n_chunks = _count_lines(jf)
         total_chunks += n_chunks
         if has_cache(jf):
             cached += 1
@@ -97,7 +103,7 @@ def show_stats(jsonl_files: list[Path]):
 
     if uncached > 0:
         uncached_chunks = sum(
-            sum(1 for _ in open(jf))
+            _count_lines(jf)
             for jf in jsonl_files
             if not has_cache(jf)
         )
@@ -122,7 +128,7 @@ def main():
         show_stats(jsonl_files)
         return
 
-    total_chunks = sum(sum(1 for _ in open(f)) for f in jsonl_files)
+    total_chunks = sum(_count_lines(f) for f in jsonl_files)
     to_encode = [jf for jf in jsonl_files if args.no_cache or not has_cache(jf)]
     cached_count = len(jsonl_files) - len(to_encode)
 
@@ -130,7 +136,7 @@ def main():
     print(f"  Cached: {cached_count}  |  To encode: {len(to_encode)}")
 
     if to_encode:
-        encode_chunks = sum(sum(1 for _ in open(f)) for f in to_encode)
+        encode_chunks = sum(_count_lines(f) for f in to_encode)
         est_min = encode_chunks / 5 / 60
         print(f"  Chunks to encode: {encode_chunks:,} (est. {est_min:.0f} min)")
 
@@ -144,7 +150,7 @@ def main():
         t0 = time.time()
 
         for i, jf in enumerate(to_encode, 1):
-            n_chunks = sum(1 for _ in open(jf))
+            n_chunks = _count_lines(jf)
             print(f"\n[{i}/{len(to_encode)}] {jf.name} ({n_chunks} chunks)...", flush=True)
             t1 = time.time()
             embeddings = encode_file(encoder, jf, batch_size=args.batch_size)

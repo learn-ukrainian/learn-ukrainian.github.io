@@ -7,8 +7,8 @@ for pedagogical validation.
 
 import re
 import sys
-from pathlib import Path
 from collections import Counter
+from pathlib import Path
 
 # Add parent dir to path for imports
 SCRIPT_DIR = Path(__file__).parent.parent.parent
@@ -16,31 +16,28 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 from yaml_activities import Activity
 
-from .grammar import (
-    check_grammar_violations,
-    check_sentence_complexity,
-    check_gender_agreement,
-    check_case_government,
-)
-from .vocabulary import (
-    extract_vocab_from_section,
-    extract_vocab_items,
-    check_vocab_violations,
-    get_cumulative_vocab,
-    sync_vocab_to_db,
-)
 from .activities import (
-    check_activity_sequencing,
-    check_answer_position_bias,
-    check_activity_variety,
-    check_matchup_misuse,
-    check_activity_level_restrictions,
-    check_activity_focus_alignment,
-    check_anagram_min_letters,
     check_activity_complexity,
+    check_activity_focus_alignment,
+    check_activity_level_restrictions,
+    check_activity_sequencing,
+    check_activity_variety,
+    check_anagram_min_letters,
+    check_answer_position_bias,
+    check_matchup_misuse,
 )
 from .content_quality import (
     check_content_quality,
+)
+from .grammar import (
+    check_case_government,
+    check_gender_agreement,
+    check_grammar_violations,
+    check_sentence_complexity,
+)
+from .vocabulary import (
+    extract_vocab_items,
+    sync_vocab_to_db,
 )
 
 

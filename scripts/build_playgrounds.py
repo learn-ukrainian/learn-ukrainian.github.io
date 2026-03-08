@@ -636,10 +636,10 @@ Activities: ${{m.activityCount}}
 Naturalness: ${{m.naturalness || 'Not scored'}}
 
 Gates:
-${{Object.entries(m.gates).map(([g, s]) => \`- ${{g}}: ${{s}}\`).join('\\n')}}`;
+${{Object.entries(m.gates).map(([g, s]) => \\`- ${{g}}: ${{s}}\\`).join('\\n')}}`;
 
         if (m.violations && m.violations.length > 0) {{
-          prompt += `\\n\\nViolations:\\n${{m.violations.map(v => \`- ${{v}}\`).join('\\n')}}`;
+          prompt += `\\n\\nViolations:\\n${{m.violations.map(v => \\`- ${{v}}\\`).join('\\n')}}`;
         }}
 
         if (m.status === 'fail') {{
@@ -653,16 +653,16 @@ ${{Object.entries(m.gates).map(([g, s]) => \`- ${{g}}: ${{s}}\`).join('\\n')}}`;
         const stats = levelIds.map(levelId => {{
           const level = LEVELS_DATA[levelId];
           if (!level || level.total === 0) return null;
-          return \`${{levelId.toUpperCase()}}: ${{level.pass_count}}/${{level.total}} passing (${{Math.round((level.pass_count / level.total) * 100)}}%)\`;
+          return \\`${{levelId.toUpperCase()}}: ${{level.pass_count}}/${{level.total}} passing (${{Math.round((level.pass_count / level.total) * 100)}}%)\\`;
         }}).filter(Boolean);
 
-        prompt = \`Curriculum Status Overview
+        prompt = \\`Curriculum Status Overview
 
 ${{stats.join('\\n')}}
 
 Filter: ${{state.selectedStatus === 'all' ? 'All statuses' : state.selectedStatus.toUpperCase() + ' only'}}
 
-Click a module cell to see detailed audit results.\`;
+Click a module cell to see detailed audit results.\\`;
       }}
 
       output.textContent = prompt;

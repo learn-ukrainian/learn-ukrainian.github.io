@@ -9,9 +9,7 @@ This script reads the actual module counts from the curriculum folder
 and generates an updated llms.txt file for AI discoverability.
 """
 
-import os
 from pathlib import Path
-from datetime import datetime
 
 # Configuration
 CURRICULUM_DIR = Path("curriculum/l2-uk-en")
@@ -68,7 +66,7 @@ def generate_llms_txt() -> str:
     # Count modules for each level
     module_counts = {}
     total_modules = 0
-    for level in LEVEL_INFO.keys():
+    for level in LEVEL_INFO:
         count = count_modules(level)
         module_counts[level] = count
         total_modules += count
@@ -136,7 +134,7 @@ def main():
 
     # Print summary
     print("\nModule counts:")
-    for level in LEVEL_INFO.keys():
+    for level in LEVEL_INFO:
         count = count_modules(level)
         print(f"  {level.upper()}: {count} modules")
 

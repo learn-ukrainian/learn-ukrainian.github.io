@@ -1,6 +1,8 @@
-import yaml
 import re
 from pathlib import Path
+
+import yaml
+
 
 def update_landing_pages():
     manifest_path = "curriculum/l2-uk-en/curriculum.yaml"
@@ -52,18 +54,18 @@ def update_landing_pages():
     for track_id, track_data in tracks.items():
         if not track_id.startswith("lit"):
             continue
-            
+
         track_dir = docs_base / track_id
         track_dir.mkdir(parents=True, exist_ok=True)
-        
+
         index_path = track_dir / "index.mdx"
-        
+
         md_dir = Path("curriculum/l2-uk-en") / track_id
         audit_dir = md_dir / "audit"
         review_dir = md_dir / "review"
-        
+
         modules = track_data.get("modules", [])
-        
+
         title = titles.get(track_id, track_id.upper())
         desc = descriptions.get(track_id, "Опис в розробці.")
         pos = sidebar_positions.get(track_id, 100)
@@ -72,25 +74,25 @@ def update_landing_pages():
         table = ""
         completed_count = 0
         qa_count = 0
-        
+
         for i, slug in enumerate(modules, 1):
             bare = re.sub(r"^\d+-", "", slug)
-            
+
             mdx_file = track_dir / f"{bare}.mdx"
             audit_file = audit_dir / f"{bare}-audit.md"
             review_file = review_dir / f"{bare}-review.md"
             final_review_file = review_dir / f"{bare}-final-review.md"
-            
+
             display_name = bare.replace("-", " ").title()
-            
+
             md_file = md_dir / f"{bare}.md"
             if md_file.exists():
-                with open(md_file, "r", encoding="utf-8") as mdf:
+                with open(md_file, encoding="utf-8") as mdf:
                     try:
                         line = mdf.readline()
                         if line.startswith("# "):
                             display_name = line[2:].strip()
-                    except:
+                    except OSError:
                         pass
 
             status = "🚧"
@@ -104,16 +106,16 @@ def update_landing_pages():
                 else:
                     status = "✅"
                     completed_count += 1
-            
+
             link_text = display_name
             if status in ["✅", "QA"]:
                 link_text = f"[{display_name}](./{bare})"
-            
+
             table += f"| {i} | {link_text} | {status} |\n"
 
         total = len(modules)
         percent = int((completed_count / total) * 100) if total > 0 else 0
-        
+
         footer = "\n---\n\n## Прогрес\n\n- **Готові модулі:** " + str(completed_count) + "\n- **Заплановані модулі:** " + str(total) + "\n- **Завершення:** " + str(percent) + "%\n"
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(header + table + footer)

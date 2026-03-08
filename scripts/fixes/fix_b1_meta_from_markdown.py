@@ -3,9 +3,10 @@
 Fix B1 meta.yaml content_outline to match actual markdown sections.
 """
 
-import yaml
 import re
 from pathlib import Path
+
+import yaml
 
 MODULES = [
     "06-aspect-complete-system",
@@ -25,16 +26,16 @@ MODULES = [
 
 def extract_sections(md_path: Path) -> list:
     """Extract H2 sections from markdown file."""
-    with open(md_path, 'r', encoding='utf-8') as f:
+    with open(md_path, encoding='utf-8') as f:
         content = f.read()
 
     # Find all H2 sections
     sections = re.findall(r'^## (.+)$', content, re.MULTILINE)
     return sections
 
-def count_words_in_section(md_path: Path, section: str, next_section: str = None) -> int:
+def count_words_in_section(md_path: Path, section: str, next_section: str | None = None) -> int:
     """Count words in a specific section."""
-    with open(md_path, 'r', encoding='utf-8') as f:
+    with open(md_path, encoding='utf-8') as f:
         content = f.read()
 
     # Find section content
@@ -92,7 +93,7 @@ def fix_meta_file(slug: str):
         return
 
     # Load existing meta
-    with open(meta_path, 'r', encoding='utf-8') as f:
+    with open(meta_path, encoding='utf-8') as f:
         meta = yaml.safe_load(f)
 
     # Fix word_target based on module type

@@ -157,7 +157,7 @@ def source_images_for_module(
 
     Returns summary dict with matched/unmatched counts and suggestions.
     """
-    with open(module_path, "r", encoding="utf-8") as f:
+    with open(module_path, encoding="utf-8") as f:
         module_data = yaml.safe_load(f)
 
     if not module_data:
@@ -230,7 +230,7 @@ def source_images_for_module(
                 if pixabay_hits:
                     best_px = pixabay_hits[0]
                     matched += 1
-                    print(f"  -> PIXABAY MATCH")
+                    print("  -> PIXABAY MATCH")
                     print(f"     URL: {best_px['image_path']}")
                     print(f"     Tags: {best_px['tags']}")
                     if len(pixabay_hits) > 1:
@@ -276,16 +276,10 @@ def _apply_suggestions(module_path: Path, module_data: dict, suggestions: list[d
         obj = module_data
         parts = _parse_path(path)
         for part in parts[:-1]:
-            if isinstance(part, int):
-                obj = obj[part]
-            else:
-                obj = obj[part]
+            obj = obj[part]
 
         last = parts[-1]
-        if isinstance(last, int):
-            target = obj[last]
-        else:
-            target = obj[last]
+        target = obj[last]
 
         # Set image_ref (relative path from project root)
         target["image_ref"] = best["image_path"]

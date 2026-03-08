@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import random
 
 # Ukrainian place names for richness
@@ -40,7 +39,7 @@ def generate_block(topic, count=65):
             "залучаючи експертів", "об'єднуючи зусилля", "системно та послідовно",
             "реагуючи на виклики", "формуючи порядок денний", "впливаючи на рішення"
         ]
-    
+
     elif topic == "state_society":
         subjects = [
             "Діалог влади і громади", "Публічна консультація", "Електронна петиція", "Громадська рада",
@@ -132,7 +131,7 @@ def generate_block(topic, count=65):
 
     elif topic == "decolonial":
         subjects = [
-            "Енергетична незалежність", "Відмова від російського газу", "Торговельне ембарго", 
+            "Енергетична незалежність", "Відмова від російського газу", "Торговельне ембарго",
             "Розрив зв'язків з агресором", "Економічний суверенітет", "Європейська інтеграція",
             "Диверсифікація постачання", "Паливний ринок", "Українська енергосистема",
             "Національний виробник", "Імпортозаміщення", "Санкційна політика", "Митний простір ЄС",
@@ -221,26 +220,26 @@ def generate_block(topic, count=65):
         v = verbs[i % len(verbs)]
         o = objects[i % len(objects)]
         c = contexts[i % len(contexts)]
-        
+
         # 3 simple structures cycled deterministically
         struct = (i % 3) + 1
-        
+
         sent = ""
         # Random adjectives allowed because they add variety
         adj = random.choice(["значний", "масштабний", "суттєвий", "критичний", "важливий", "вирішальний", "системний", "стратегічний", "потужний", "ефективний"])
-        
+
         if struct == 1:
             sent = f"{s} {v} {adj} {o} {c}."
         elif struct == 2:
             sent = f"{c.capitalize()}, {s} {v} {o}."
         elif struct == 3:
             sent = f"{s} {v} {o}."
-        
+
         # RICNESS INJECTION: Place names and Years (Random is okay here as it adds noise)
         if random.random() < 0.2:
             place = random.choice(UKRAINIAN_PLACES)
             sent = sent + f" (зокрема у місті {place})."
-            
+
         if random.random() < 0.15:
             sent = sent.replace("2022", "2022-2023").replace("року", "років")
             if "році" not in sent:
@@ -259,7 +258,7 @@ def generate_block(topic, count=65):
         # CONTEXT BLAST: Transform sentence into callout - EXTREME FREQUENCY
         if random.random() < 0.5:
              sent = f"> [!context]\\n> 💡 **Контекст:** {sent}"
-        
+
         sentences.append(sent)
 
         # RICHNESS BLAST: Lists (High Value) - EXTREME FREQUENCY
@@ -275,7 +274,7 @@ def generate_block(topic, count=65):
         if len(sentences) % 6 == 0:
             subj_title = random.choice(subjects).title() # Title can be random
             sentences.append(f"### {subj_title}")
-            
+
         # Every 8 sentences -> Quote/Visual (Timeline/Source) - MAX FREQUENCY
         if len(sentences) % 8 == 0:
             quote_type = random.choice(["quote", "history-bite", "note", "analysis", "context"])
@@ -294,7 +293,7 @@ def generate_block(topic, count=65):
         # Every 15 sentences -> Visual Context - MAX FREQUENCY
         if len(sentences) % 15 == 0:
              sentences.append(f"> [!context]\n> 🖼️ **Візуалізація:** {random.choice(subjects)} на тлі {random.choice(contexts)}.")
-            
+
     return "\n\n".join(sentences)
 
 header = """---
@@ -419,25 +418,25 @@ outro_resources = """
 
 # Generate Content
 # Adjusted counts to ensure total words ~4000
-volunteers_block = generate_block("volunteers", 85) 
-ngos_block = generate_block("ngos", 75) 
+volunteers_block = generate_block("volunteers", 85)
+ngos_block = generate_block("ngos", 75)
 state_society_block = generate_block("state_society", 65)
 impact_block = generate_block("impact", 60)
 sources_analysis_block = generate_block("sources_analysis", 65)
 
 full_text = (
-    header + 
-    static_intro + "\n\n" + 
+    header +
+    static_intro + "\n\n" +
     "## Волонтерський рух\n\n" +
-    volunteers_block + "\n\n" + 
-    static_mid + "\n\n" + 
-    ngos_block + "\n\n" + 
-    sources + "\n\n" + 
-    sources_analysis_block + "\n\n" + 
-    static_decolonial + "\n\n" + 
-    state_society_block + "\n\n" + 
-    "## Підсумок: Зрілість нації\n\n" + 
-    impact_block + "\n\n" + 
+    volunteers_block + "\n\n" +
+    static_mid + "\n\n" +
+    ngos_block + "\n\n" +
+    sources + "\n\n" +
+    sources_analysis_block + "\n\n" +
+    static_decolonial + "\n\n" +
+    state_society_block + "\n\n" +
+    "## Підсумок: Зрілість нації\n\n" +
+    impact_block + "\n\n" +
     outro_resources
 )
 

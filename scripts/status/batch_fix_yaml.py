@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, 'scripts')
-from audit.checks.yaml_schema_validation import validate_activity_yaml_file, fix_yaml_file
+from audit.checks.yaml_schema_validation import fix_yaml_file, validate_activity_yaml_file
+
 
 def main():
     levels_with_violations = []
@@ -27,7 +28,7 @@ def main():
 
             if not is_valid:
                 # Try to auto-fix
-                num_fixes, messages = fix_yaml_file(yaml_path, dry_run=False)
+                _num_fixes, _messages = fix_yaml_file(yaml_path, dry_run=False)
 
                 # Re-validate
                 is_valid_after, errors_after = validate_activity_yaml_file(yaml_path)

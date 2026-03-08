@@ -17,7 +17,6 @@ Track exemptions:
 """
 
 import re
-from typing import List, Dict
 
 # Tracks where historical imperial terms may appear legitimately
 EXEMPT_TRACKS = {"oes", "ruth"}
@@ -27,7 +26,7 @@ EXEMPT_TRACKS = {"oes", "ruth"}
 # ---------------------------------------------------------------------------
 
 # Always wrong — no valid educational use that requires the uncritical form
-ALWAYS_BANNED: List[Dict] = [
+ALWAYS_BANNED: list[dict] = [
     {
         "pattern": r"Велика\s+Вітчизняна\s+війна",
         "term": "Велика Вітчизняна війна",
@@ -57,7 +56,7 @@ ALWAYS_BANNED: List[Dict] = [
 
 # Suspicious — might appear in critical/educational context;
 # only flagged if NOT inside quotes or preceded by critical markers
-SUSPICIOUS: List[Dict] = [
+SUSPICIOUS: list[dict] = [
     {
         "pattern": r"возз['\u2019\u02bc]єднання",
         "term": "возз'єднання",
@@ -125,9 +124,7 @@ def _in_quotes(line: str, pos: int) -> bool:
     if before.count("\u201c") > before.count("\u201d"):
         return True
     # Straight ASCII double quotes " — odd count = inside a pair
-    if before.count('"') % 2 == 1:
-        return True
-    return False
+    return before.count('"') % 2 == 1
 
 
 def _has_critical_framing(line: str, pos: int) -> bool:
@@ -145,7 +142,7 @@ def _has_critical_framing(line: str, pos: int) -> bool:
 # Main check
 # ---------------------------------------------------------------------------
 
-def check_imperial_terminology(content: str, file_path: str = "") -> List[Dict]:
+def check_imperial_terminology(content: str, file_path: str = "") -> list[dict]:
     """
     Scan content for Russian/Soviet imperial framing terminology.
 
@@ -156,10 +153,10 @@ def check_imperial_terminology(content: str, file_path: str = "") -> List[Dict]:
     if track in EXEMPT_TRACKS:
         return []
 
-    violations: List[Dict] = []
+    violations: list[dict] = []
     lines = content.splitlines()
 
-    def _scan(term_list: List[Dict], always_error: bool) -> None:
+    def _scan(term_list: list[dict], always_error: bool) -> None:
         for term_def in term_list:
             rx = re.compile(term_def["pattern"], re.IGNORECASE)
             for line_num, line in enumerate(lines, 1):

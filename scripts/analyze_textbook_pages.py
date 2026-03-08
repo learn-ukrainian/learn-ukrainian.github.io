@@ -32,13 +32,14 @@ Usage:
 """
 
 import argparse
+import contextlib
 import json
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pymupdf
@@ -78,10 +79,8 @@ def parse_pdf_stem(pdf_path: Path) -> dict:
     stem = pdf_path.stem
     parts = stem.split("-")
     meta = {"pdf_stem": stem, "grade": 0, "subject": "", "author": "", "year": 0}
-    try:
+    with contextlib.suppress(ValueError, IndexError):
         meta["grade"] = int(parts[0])
-    except (ValueError, IndexError):
-        pass
     # Find author, year, subject from naming convention
     # {grade}-klas-{subject}-{author}-{year}[-{part}].pdf
     if len(parts) >= 4:
@@ -90,10 +89,8 @@ def parse_pdf_stem(pdf_path: Path) -> dict:
         try:
             meta["year"] = int(parts[-1])
         except ValueError:
-            try:
+            with contextlib.suppress(ValueError, IndexError):
                 meta["year"] = int(parts[-2])
-            except (ValueError, IndexError):
-                pass
     return meta
 
 
@@ -105,10 +102,8 @@ def load_processed_ids() -> set[str]:
     for line in ANALYSIS_FILE.read_text().strip().split("\n"):
         if not line:
             continue
-        try:
+        with contextlib.suppress(json.JSONDecodeError, KeyError):
             ids.add(json.loads(line)["page_id"])
-        except (json.JSONDecodeError, KeyError):
-            pass
     return ids
 
 
@@ -254,7 +249,7 @@ def analyze_page_via_cli(record: dict, tmp_dir: Path) -> dict | None:
                 "page_type": data.get("page_type", "unknown"),
                 "elements": data.get("elements", []),
                 "model": "gemini-cli-default",
-                "ts": datetime.now(timezone.utc).isoformat(),
+                "ts": datetime.now(UTC).isoformat(),
             }
 
         except subprocess.TimeoutExpired:
@@ -282,7 +277,7 @@ def run_analysis(pages: list[dict], processed_ids: set[str]):
         return
 
     print(f"Pages to analyze: {len(to_process)} (skipping {len(pages) - len(to_process)} already done)")
-    print(f"Model: gemini-cli default (Ultra auth)")
+    print("Model: gemini-cli default (Ultra auth)")
     print()
 
     ANALYSIS_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -340,10 +335,8 @@ def show_stats():
     for line in ANALYSIS_FILE.read_text().strip().split("\n"):
         if not line:
             continue
-        try:
+        with contextlib.suppress(json.JSONDecodeError):
             records.append(json.loads(line))
-        except json.JSONDecodeError:
-            pass
 
     if not records:
         print("No records found.")
@@ -626,7 +619,7 @@ def cleanup_junk(execute: bool = False):
         by_reason[reason] = by_reason.get(reason, 0) + 1
         total_size += path.stat().st_size
 
-    print(f"\nBy reason:")
+    print("\nBy reason:")
     for reason, count in sorted(by_reason.items(), key=lambda x: -x[1]):
         print(f"  {reason}: {count}")
     print(f"Total size: {total_size / 1024:.0f} KB")

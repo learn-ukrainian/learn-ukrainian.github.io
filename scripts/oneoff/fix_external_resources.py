@@ -22,7 +22,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-SCRIPTS_DIR = Path(__file__).resolve().parent
+SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = SCRIPTS_DIR.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
@@ -32,7 +32,7 @@ from batch_gemini_config import get_module_index
 RESOURCES_PATH = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
 BACKUP_PATH = RESOURCES_PATH.with_suffix(".yaml.bak")
 
-# URLs that are too generic to be useful per-module
+# Keep in sync with pipeline_v5._GENERIC_URL_PATTERNS
 _GENERIC_URL_PATTERNS = [
     re.compile(r"^https?://(www\.)?ukrainianlessons\.com/?$"),
     re.compile(r"^https?://ukrainianlessons\.com/?$"),
@@ -43,17 +43,13 @@ _GENERIC_URL_PATTERNS = [
     re.compile(r"^https?://slovnyk\.ua/?$"),
     re.compile(r"^https?://pravopys\.net/?$"),
     re.compile(r"^https?://r2u\.org\.ua/?$"),
-    re.compile(r"^https?://(www\.)?youtube\.com/@\w+/?$"),  # bare channel pages
+    re.compile(r"^https?://(www\.)?youtube\.com/@\w+/?$"),
 ]
 
-# Titles that indicate a placeholder, not a real curated resource
+# Keep in sync with pipeline_v5._GENERIC_TITLES
 _GENERIC_TITLES = {
-    "Ukrainian Lessons Podcast",
-    "Ukrainian Lessons",
-    "Ukrainian Grammar",
-    "Speak Ukrainian YouTube",
-    "Colors Guide",
-    "Verb Practice",
+    "Ukrainian Lessons Podcast", "Ukrainian Lessons", "Ukrainian Grammar",
+    "Speak Ukrainian YouTube", "Colors Guide", "Verb Practice",
 }
 
 # Max times a URL can appear across modules before it's considered generic

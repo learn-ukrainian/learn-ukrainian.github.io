@@ -11,9 +11,10 @@ Examples:
 """
 
 import sys
-from pathlib import Path
-import yaml
 from collections import Counter
+from pathlib import Path
+
+import yaml
 
 
 def validate_plan(plan_path: Path) -> list[dict]:
@@ -21,7 +22,7 @@ def validate_plan(plan_path: Path) -> list[dict]:
     issues = []
 
     try:
-        with open(plan_path, 'r', encoding='utf-8') as f:
+        with open(plan_path, encoding='utf-8') as f:
             plan = yaml.safe_load(f)
     except yaml.YAMLError as e:
         return [{'severity': 'error', 'type': 'YAML_PARSE_ERROR', 'message': str(e)}]
@@ -101,10 +102,7 @@ def main():
     plans_dir = Path('curriculum/l2-uk-en/plans')
 
     # Determine which levels to check
-    if len(sys.argv) > 1:
-        levels = [sys.argv[1]]
-    else:
-        levels = [d.name for d in plans_dir.iterdir() if d.is_dir()]
+    levels = [sys.argv[1]] if len(sys.argv) > 1 else [d.name for d in plans_dir.iterdir() if d.is_dir()]
 
     total_plans = 0
     total_errors = 0

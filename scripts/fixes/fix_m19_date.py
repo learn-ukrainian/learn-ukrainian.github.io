@@ -1,8 +1,7 @@
 
-import re
 
 path = "curriculum/l2-uk-en/b2/activities/19-register-official-legal.yaml"
-with open(path, 'r') as f:
+with open(path) as f:
     content = f.read()
 
 # Replace unquoted date

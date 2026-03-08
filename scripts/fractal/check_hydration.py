@@ -5,17 +5,17 @@ Usage: python scripts/fractal/check_hydration.py --hydrate [meta_file]
 Checks if a module has a 'content_outline'. If not, recommends the Architect Skill.
 """
 
-import sys
-import os
-import yaml
 import argparse
+import sys
 from pathlib import Path
+
+import yaml
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 def load_yaml(path):
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         return yaml.safe_load(f)
 
 def save_yaml(path, data):
@@ -26,7 +26,7 @@ def find_template(focus, level):
     """Locate the correct template based on focus and level."""
     # This logic mirrors the project conventions
     template_dir = Path("docs/l2-uk-en/templates")
-    
+
     # Priority 1: Specific Focus + Level (e.g., biography)
     candidates = [
         f"{level}-{focus}-module-template.md",
@@ -34,7 +34,7 @@ def find_template(focus, level):
         f"{level}-module-template.md",
         "module-template.md"
     ]
-    
+
     for c in candidates:
         path = template_dir / c
         if path.exists():
@@ -52,38 +52,38 @@ def hydrate_module(meta_path):
         sys.exit(1)
 
     data = load_yaml(path)
-    
+
     # Check if hydration is needed
-    if 'content_outline' in data and data['content_outline']:
+    if data.get('content_outline'):
         print(f"✅ Module {path.name} is already hydrated.")
         return
 
     print(f"⚠️  Module {path.name} needs hydration (missing content_outline).")
-    
+
     # Resolve details for Architect
     focus = data.get('focus', 'general')
     # Extract level from module ID or path (e.g., hist -> b2)
     level = "b2" # Default fallback
     if 'module' in data and '-' in data['module']:
         level = data['module'].split('-')[0]
-    
+
     template_path = find_template(focus, level)
-    
+
     if not template_path:
         print(f"❌ Error: Could not find template for focus='{focus}', level='{level}'")
         sys.exit(1)
-        
+
     print("\n=== ARCHITECT SKILL INSTRUCTIONS ===")
-    print(f"1. Activate Skill: 'architect'")
+    print("1. Activate Skill: 'architect'")
     print(f"2. Instruction: 'Hydrate {meta_path} using template {template_path}'")
     print("====================================\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fractal Orchestrator")
     parser.add_argument("--hydrate", help="Path to meta YAML file to check/hydrate")
-    
+
     args = parser.parse_args()
-    
+
     if args.hydrate:
         hydrate_module(args.hydrate)
     else:

@@ -39,7 +39,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rag.config import BGE_M3_DENSE_DIM, LITERARY_COLLECTION, LITERARY_DIR, QDRANT_HOST, QDRANT_REST_PORT
 
-
 # ══════════════════════════════════════════════════════════════════════
 # Wave definitions — all source texts organized by ingestion wave
 # ══════════════════════════════════════════════════════════════════════
@@ -469,7 +468,7 @@ def ensure_collection(client, recreate: bool = False):
             field_name=field,
             field_schema=schema_type,
         )
-    print(f"[ingest] Collection created with indexes.")
+    print("[ingest] Collection created with indexes.")
 
 
 def scrape_wave(wave_num: int, texts: list[dict]):
@@ -516,6 +515,7 @@ def scrape_wave(wave_num: int, texts: list[dict]):
 def ingest_wave(client, wave_num: int, batch_size: int = 32):
     """Ingest all JSONL files for a wave into Qdrant."""
     from qdrant_client.models import PointStruct, SparseVector
+
     from rag.embed import TextEncoder
 
     pattern = f"wave{wave_num}-*.jsonl"
@@ -531,7 +531,7 @@ def ingest_wave(client, wave_num: int, batch_size: int = 32):
         print(f"\n[wave{wave_num}] Ingesting {jsonl_path.name}...")
 
         chunks = []
-        with open(jsonl_path, "r", encoding="utf-8") as f:
+        with open(jsonl_path, encoding="utf-8") as f:
             for line in f:
                 chunks.append(json.loads(line))
 
@@ -669,7 +669,7 @@ def main():
 
         # Step 2: Ingest
         print(f"\n[wave{wave_num}] Step 2: Embedding & ingesting...")
-        total = ingest_wave(client, wave_num, batch_size=args.batch_size)
+        ingest_wave(client, wave_num, batch_size=args.batch_size)
 
         # Step 3: Verify
         info = client.get_collection(LITERARY_COLLECTION)

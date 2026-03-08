@@ -7,7 +7,6 @@ Analyzes vocabulary for:
 3. Extra words (in modules but not in plan)
 """
 
-from typing import Dict, List, Tuple, Set
 from collections import defaultdict
 
 
@@ -18,7 +17,7 @@ class VocabularyAnalyzer:
         """Initialize analyzer."""
         self.duplicate_index = defaultdict(list)  # word -> [(level, module), ...]
 
-    def find_duplicates(self, levels: List[str], word_locations: Dict[str, List[Tuple[str, str]]]) -> Dict[str, List[Tuple[str, str]]]:
+    def find_duplicates(self, levels: list[str], word_locations: dict[str, list[tuple[str, str]]]) -> dict[str, list[tuple[str, str]]]:
         """
         Find words that appear in multiple levels.
 
@@ -41,7 +40,7 @@ class VocabularyAnalyzer:
 
         return duplicates
 
-    def find_missing_words(self, plan_vocab: Dict[str, List[str]], module_vocab: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    def find_missing_words(self, plan_vocab: dict[str, list[str]], module_vocab: dict[str, list[str]]) -> dict[str, list[str]]:
         """
         Find words in curriculum plan but not in module YAML files.
 
@@ -63,7 +62,7 @@ class VocabularyAnalyzer:
 
         return missing
 
-    def find_extra_words(self, plan_vocab: Dict[str, List[str]], module_vocab: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    def find_extra_words(self, plan_vocab: dict[str, list[str]], module_vocab: dict[str, list[str]]) -> dict[str, list[str]]:
         """
         Find words in module YAML files but not in curriculum plan.
 
@@ -85,7 +84,7 @@ class VocabularyAnalyzer:
 
         return extra
 
-    def build_word_index(self, levels: List[str], parser) -> Dict[str, List[Tuple[str, str]]]:
+    def build_word_index(self, levels: list[str], parser) -> dict[str, list[tuple[str, str]]]:
         """
         Build a comprehensive word index across all levels.
 
@@ -106,7 +105,7 @@ class VocabularyAnalyzer:
 
         return dict(word_index)
 
-    def get_vocabulary_stats(self, levels: List[str], parser) -> Dict[str, Dict[str, int]]:
+    def get_vocabulary_stats(self, levels: list[str], parser) -> dict[str, dict[str, int]]:
         """
         Get vocabulary statistics for each level.
 
@@ -123,7 +122,7 @@ class VocabularyAnalyzer:
         stats = {}
 
         for level in levels:
-            unique_words, word_locations = parser.get_all_words_by_level(level)
+            unique_words, _word_locations = parser.get_all_words_by_level(level)
             module_vocab = parser.parse_module_vocabulary(level)
 
             total_modules = len(module_vocab)

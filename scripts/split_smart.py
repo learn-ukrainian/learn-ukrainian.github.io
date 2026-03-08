@@ -1,6 +1,6 @@
 import re
 
-with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', 'r', encoding='utf-8') as f:
+with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', encoding='utf-8') as f:
     text = f.read()
 
 # 1. Complex sentences

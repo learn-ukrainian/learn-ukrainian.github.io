@@ -1,7 +1,7 @@
-import yaml
-import re
-import os
 import glob
+import re
+
+import yaml
 
 # Essays
 essay_activities = {
@@ -64,11 +64,11 @@ unjumble_replacements = {
 
     # M17
     "Шановний пане директоре": "Шановний пане директоре! Звертаюся до Вас від імені нашої компанії.",
-    "Дозвольте звернутися до Вас": "Дозвольте звернутися до Вас із комерційною пропозицією щодо партнерства.",
+    "Дозвольте звернутися до Вас із": "Дозвольте звернутися до Вас із комерційною пропозицією щодо партнерства.",
     "Просимо надати інформацію": "Просимо надати повну інформацію про технічні характеристики вашої продукції.",
     "Заздалегідь вдячні за співпрацю": "Заздалегідь вдячні Вам за розуміння та майбутню плідну співпрацю.",
     "Чекаємо на Вашу відповідь": "Ми уважно розглядаємо пропозиції і чекаємо на Вашу швидку відповідь.",
-    "З повагою Марія Петренко": "З повагою, головний бухгалтер Марія Петренко. Гарного Вам дня!",
+    "З повагою Марія Петренко (М17)": "З повагою, головний бухгалтер Марія Петренко. Гарного Вам дня!",
     "Сподіваємося на подальшу співпрацю": "Ми щиро сподіваємося на подальшу успішну та взаємовигідну співпрацю.",
     "Маємо честь повідомити Вам": "Маємо честь офіційно повідомити Вам про відкриття нашого нового філіалу.",
     "Будьте ласкаві надіслати документи": "Будьте ласкаві надіслати підписані документи поштою або кур'єром.",
@@ -106,9 +106,9 @@ unjumble_replacements = {
     "На підставі статті 12": "Наказ видано на підставі статті 12 Кодексу законів про працю.",
     "Згідно з наказом від 01.01.2024": "Діяти згідно з наказом міністерства від 01.01.2024 року №5.",
     "Рішення було прийнято 2023 року": "Це важливе рішення було прийнято ще на початку 2023 року.",
-    "З повагою Марія Петренко": "З повагою, директор департаменту Марія Петренко.",
+    "З повагою Марія Петренко (М19)": "З повагою, директор департаменту Марія Петренко.",
     "Долучено до матеріалів справи": "Всі документи офіційно долучено до матеріалів кримінальної справи.",
-    "Шановний пане директоре": "Шановний пане директоре, прошу розглянути мою заяву.",
+    "Шановний пане директоре (М19)": "Шановний пане директоре, прошу розглянути мою заяву.",
     "У зв'язку з виробничою необхідністю": "Вас відкликано з відпустки у зв'язку з терміновою виробничою необхідністю.",
     "Засідання оголошено закритим": "Після голосування засідання ради було офіційно оголошено закритим.",
     "Договір укладено у двох примірниках": "Цей договір укладено у двох оригінальних примірниках, по одному для сторони.",
@@ -166,11 +166,11 @@ quiz_patterns = [
 
 def process_file(filepath, module_num):
     print(f"Processing {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         activities = yaml.safe_load(f)
-    
+
     modified = False
-    
+
     # 1. Expand Unjumble
     for act in activities:
         if act.get('type') == 'unjumble':
@@ -178,7 +178,7 @@ def process_file(filepath, module_num):
                 ans = item.get('answer', '')
                 # Normalize key by stripping punctuation and spaces
                 norm_ans = ans.replace('.', '').replace(',', '').replace('?', '').replace('!', '').strip()
-                
+
                 # Check direct match first
                 if ans in unjumble_replacements:
                     item['answer'] = unjumble_replacements[ans]
@@ -186,14 +186,12 @@ def process_file(filepath, module_num):
                     modified = True
                 else:
                     # Check normalized match
-                    found = False
                     for key, val in unjumble_replacements.items():
                         norm_key = key.replace('.', '').replace(',', '').replace('?', '').replace('!', '').strip()
                         if norm_ans == norm_key:
                             item['answer'] = val
                             item['words'] = [w.strip(".,!?; ") for w in val.split() if w.strip(".,!?; ")]
                             modified = True
-                            found = True
                             break
 
     # 2. Expand Quiz (Robust)
@@ -210,19 +208,17 @@ def process_file(filepath, module_num):
                             matched = True
                             break
                     # Fallback expansion if no regex match but still short
-                    if not matched and "?" in q:
-                         if not q.startswith("Визначте") and not q.startswith("Укажіть"):
+                    if not matched and "?" in q and not q.startswith("Визначте") and not q.startswith("Укажіть"):
                             new_q = "Визначте, будь ласка: " + q[0].lower() + q[1:]
                             if len(new_q.split()) >= 10:
                                 item['question'] = new_q
                                 modified = True
 
     # 3. Add Essay
-    if not any(a.get('type') == 'essay-response' for a in activities):
-        if str(module_num) in essay_activities:
-            activities.append(essay_activities[str(module_num)])
-            print("  Added essay.")
-            modified = True
+    if not any(a.get('type') == 'essay-response' for a in activities) and str(module_num) in essay_activities:
+        activities.append(essay_activities[str(module_num)])
+        print("  Added essay.")
+        modified = True
 
     if modified:
         with open(filepath, 'w') as f:
@@ -232,9 +228,9 @@ def process_file(filepath, module_num):
 # Process Markdown
 def fix_markdown(filepath):
     print(f"Checking markdown {filepath}...")
-    with open(filepath, 'r') as f:
+    with open(filepath) as f:
         content = f.read()
-    
+
     modified = False
     if "## Тест: Прочитайте текст" in content:
         content = content.replace("## Тест: Прочитайте текст", "## Вступ")
@@ -245,7 +241,7 @@ def fix_markdown(filepath):
         if len(parts) > 1:
             content = parts[0] + "\n\n## Вступ\n\n" + "## " + parts[1]
             modified = True
-            
+
     # Add Richness boxes if missing (simple check)
     if content.count("> 💡") < 3: # If fewer than 3 boxes
          # Add generic boxes to end of sections
@@ -268,12 +264,11 @@ def fix_markdown(filepath):
         print("  Updated markdown.")
 
 # Iterate 16-20
-import glob
 for i in range(16, 21):
     yaml_files = glob.glob(f"curriculum/l2-uk-en/b2/activities/{i}-*.yaml")
     for f in yaml_files:
         process_file(f, i)
-    
+
     md_files = glob.glob(f"curriculum/l2-uk-en/b2/{i}-*.md")
     for f in md_files:
         fix_markdown(f)

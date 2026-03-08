@@ -25,23 +25,23 @@ Examples:
 import argparse
 import subprocess
 import sys
-from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional
+from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
 
 sys.path.insert(0, str(SCRIPT_DIR))
-from batch_gemini_config import VENV_PYTHON  # noqa: E402
+from batch_gemini_config import VENV_PYTHON
+
 
 @dataclass
 class StepResult:
     step: str
     success: bool
     message: str
-    details: Optional[str] = None
+    details: str | None = None
 
 def run_command(cmd: list[str], capture: bool = True) -> tuple[int, str, str]:
     """Run a command and return exit code, stdout, stderr."""
@@ -56,7 +56,7 @@ def run_command(cmd: list[str], capture: bool = True) -> tuple[int, str, str]:
     except Exception as e:
         return 1, "", str(e)
 
-def step_validate_plans(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_validate_plans(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Step 0: Validate YAML plan files."""
     print("\n" + "="*60)
     print("🔍 Step 0: Validate Plans")
@@ -67,8 +67,8 @@ def step_validate_plans(lang_pair: str, level: Optional[str], module_num: Option
     cmd1 = [str(VENV_PYTHON), "scripts/validate_plans.py"]
     if level:
         cmd1.append(level)
-    
-    code1, stdout1, stderr1 = run_command(cmd1, capture=False)
+
+    code1, _stdout1, _stderr1 = run_command(cmd1, capture=False)
     if code1 != 0:
         return StepResult("validate_plans", False, "Plan structural validation failed")
 
@@ -77,14 +77,14 @@ def step_validate_plans(lang_pair: str, level: Optional[str], module_num: Option
     cmd2 = [str(VENV_PYTHON), "scripts/validate_plan_config.py"]
     if level:
         cmd2.append(level)
-    
-    code2, stdout2, stderr2 = run_command(cmd2, capture=False)
+
+    code2, _stdout2, _stderr2 = run_command(cmd2, capture=False)
     if code2 != 0:
         return StepResult("validate_plans", False, "Plan config consistency failed")
 
     return StepResult("validate_plans", True, "Plan validation passed")
 
-def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_lint(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Run MD audit/lint."""
     print("\n" + "="*60)
     print("📝 Step 1: Lint Markdown")
@@ -131,7 +131,7 @@ def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -
         all_passed = True
         failed_modules = []
         for md_file in module_files:
-            code, stdout, stderr = run_command([str(VENV_PYTHON), "scripts/audit_module.py", str(md_file)])
+            code, stdout, _stderr = run_command([str(VENV_PYTHON), "scripts/audit_module.py", str(md_file)])
             if code != 0 or "FAIL" in stdout:
                 all_passed = False
                 failed_modules.append(md_file.stem)
@@ -154,14 +154,14 @@ def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -
     else:
         return StepResult("lint", False, "Level required for lint step")
 
-    code, stdout, stderr = run_command(cmd)
+    code, stdout, _stderr = run_command(cmd)
 
     if code == 0 and "FAIL" not in stdout:
         return StepResult("lint", True, "Lint passed")
     else:
         return StepResult("lint", False, "Lint failed", details=stdout[:500])
 
-def step_generate(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_generate(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Generate MDX from MD."""
     print("\n" + "="*60)
     print("🔄 Step 2: Generate MDX")
@@ -173,14 +173,14 @@ def step_generate(lang_pair: str, level: Optional[str], module_num: Optional[int
     if module_num:
         cmd.append(str(module_num))
 
-    code, stdout, stderr = run_command(cmd, capture=False)
+    code, _stdout, stderr = run_command(cmd, capture=False)
 
     if code == 0:
         return StepResult("generate", True, "MDX generation complete")
     else:
         return StepResult("generate", False, "MDX generation failed", details=(stderr or "")[:500])
 
-def step_validate_mdx(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_validate_mdx(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Validate MDX against source MD."""
     print("\n" + "="*60)
     print("✅ Step 3: Validate MDX")
@@ -192,7 +192,7 @@ def step_validate_mdx(lang_pair: str, level: Optional[str], module_num: Optional
     if module_num:
         cmd.append(str(module_num))
 
-    code, stdout, stderr = run_command(cmd, capture=False)
+    code, _stdout, stderr = run_command(cmd, capture=False)
 
     if code == 0:
         return StepResult("validate_mdx", True, "MDX validation passed")
@@ -202,7 +202,7 @@ def step_validate_mdx(lang_pair: str, level: Optional[str], module_num: Optional
 # NOTE: Grammar queue step removed (Issue #352)
 # Grammar validation now available on-demand via /grammar-validate command
 
-def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_validate_html(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Validate HTML rendering with headless browser."""
     print("\n" + "="*60)
     print("🌐 Step 4: Validate HTML")
@@ -212,7 +212,7 @@ def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optiona
     import urllib.request
     try:
         urllib.request.urlopen("http://localhost:3000/", timeout=5)
-    except:
+    except OSError:
         print("  ⚠️ Docusaurus dev server not running")
         print("  Start with: cd docusaurus && pnpm start")
         return StepResult("validate_html", False, "Dev server not running")
@@ -223,20 +223,20 @@ def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optiona
     if module_num:
         cmd.append(str(module_num))
 
-    code, stdout, stderr = run_command(cmd, capture=False)
+    code, _stdout, stderr = run_command(cmd, capture=False)
 
     if code == 0:
         return StepResult("validate_html", True, "HTML validation passed")
     else:
         return StepResult("validate_html", False, "HTML validation failed", details=(stderr or "")[:500])
 
-def step_sync_landing(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+def step_sync_landing(lang_pair: str, level: str | None, module_num: int | None) -> StepResult:
     """Step 6: Sync landing pages with current stats."""
     print("\n📊 Step 6: Sync Landing Pages")
     print("-" * 40)
 
     cmd = [str(VENV_PYTHON), "scripts/sync_landing_pages.py"]
-    code, stdout, stderr = run_command(cmd, capture=False)
+    code, _stdout, stderr = run_command(cmd, capture=False)
 
     if code == 0:
         return StepResult("sync_landing", True, "Landing pages synced")
@@ -246,8 +246,8 @@ def step_sync_landing(lang_pair: str, level: Optional[str], module_num: Optional
 
 def run_pipeline(
     lang_pair: str,
-    level: Optional[str],
-    module_num: Optional[int],
+    level: str | None,
+    module_num: int | None,
     steps: list[str]
 ) -> bool:
     """Run the full pipeline."""

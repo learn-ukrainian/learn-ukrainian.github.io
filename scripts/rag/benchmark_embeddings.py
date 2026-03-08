@@ -42,10 +42,8 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rag.config import (
-    LITERARY_COLLECTION,
     QDRANT_GRPC_PORT,
     QDRANT_HOST,
-    TEXT_COLLECTION,
 )
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -390,7 +388,7 @@ def populate_ground_truth():
         sparse_w = result["sparse_weights"][0]
 
         if isinstance(sparse_w, dict):
-            sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w.keys()]
+            sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
             sparse_values = list(sparse_w.values())
         else:
             sparse_indices, sparse_values = [], []

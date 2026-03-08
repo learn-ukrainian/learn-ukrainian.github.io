@@ -5,8 +5,6 @@ and ports the browse logic from image_review_server.py.
 """
 
 import sys
-from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
@@ -47,9 +45,9 @@ def _qdrant_503():
 @router.get("/search_text")
 async def search_text(
     q: str = Query(..., description="Search query in Ukrainian"),
-    grade: Optional[int] = Query(None, description="Filter by grade (1-11)"),
-    subject: Optional[str] = Query(None, description="Filter by subject"),
-    trust_tier: Optional[int] = Query(None, description="Trust tier (1 or 2)"),
+    grade: int | None = Query(None, description="Filter by grade (1-11)"),
+    subject: str | None = Query(None, description="Filter by subject"),
+    trust_tier: int | None = Query(None, description="Trust tier (1 or 2)"),
     limit: int = Query(5, ge=1, le=20),
 ):
     if not _qdrant_available():
@@ -61,7 +59,7 @@ async def search_text(
 @router.get("/search_images")
 async def search_images(
     q: str = Query(..., description="Image search query in Ukrainian"),
-    grade: Optional[int] = Query(None, description="Filter by grade (1-11)"),
+    grade: int | None = Query(None, description="Filter by grade (1-11)"),
     limit: int = Query(5, ge=1, le=20),
 ):
     if not _qdrant_available():
@@ -73,9 +71,9 @@ async def search_images(
 @router.get("/search_literary")
 async def search_literary(
     q: str = Query(..., description="Search query in Ukrainian"),
-    work: Optional[str] = Query(None, description="Filter by work title"),
-    genre: Optional[str] = Query(None, description="Filter by genre"),
-    period: Optional[str] = Query(None, description="Filter by language period"),
+    work: str | None = Query(None, description="Filter by work title"),
+    genre: str | None = Query(None, description="Filter by genre"),
+    period: str | None = Query(None, description="Filter by language period"),
     limit: int = Query(5, ge=1, le=20),
 ):
     if not _qdrant_available():
@@ -97,12 +95,12 @@ async def collection_stats():
 
 @router.get("/browse_images")
 async def browse_images(
-    grade: Optional[str] = Query(None, description="Grade directory name, e.g. grade-03"),
+    grade: str | None = Query(None, description="Grade directory name, e.g. grade-03"),
     sort: str = Query("size", description="Sort by: size, name, grade"),
     page: int = Query(0, ge=0),
     per_page: int = Query(100, ge=1, le=500),
-    max_size: Optional[int] = Query(None, description="Max file size in bytes"),
-    min_size: Optional[int] = Query(None, description="Min file size in bytes"),
+    max_size: int | None = Query(None, description="Max file size in bytes"),
+    min_size: int | None = Query(None, description="Min file size in bytes"),
 ):
     """Browse textbook images on disk with filtering and pagination."""
     if grade:

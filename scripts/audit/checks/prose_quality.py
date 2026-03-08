@@ -10,7 +10,6 @@ but produce terrible reading quality:
 """
 
 import re
-from typing import List, Dict, Optional
 
 
 def _split_narrative_zones(content: str) -> list[str]:
@@ -52,7 +51,7 @@ def _split_narrative_zones(content: str) -> list[str]:
     return [text]
 
 
-def _detect_level_from_content(content: str) -> Optional[str]:
+def _detect_level_from_content(content: str) -> str | None:
     """Detect CEFR level from frontmatter."""
     m = re.search(r'^level:\s*(a1|a2|b1|b2|c1|c2)', content, re.MULTILINE | re.IGNORECASE)
     if m:
@@ -64,7 +63,7 @@ def _detect_level_from_content(content: str) -> Optional[str]:
     return None
 
 
-def check_drill_blocks(content: str) -> List[Dict]:
+def check_drill_blocks(content: str) -> list[dict]:
     """Detect _Приклади:_ / _Приклад:_ drill blocks in narrative prose.
 
     Drill blocks belong in activity YAML, not in narrative sections.
@@ -98,7 +97,7 @@ def check_drill_blocks(content: str) -> List[Dict]:
     return violations
 
 
-def check_glossary_lists(content: str) -> List[Dict]:
+def check_glossary_lists(content: str) -> list[dict]:
     """Detect glossary-style definition lists in narrative sections.
 
     Pattern: 3+ consecutive lines matching **word** — definition
@@ -148,7 +147,7 @@ def check_glossary_lists(content: str) -> List[Dict]:
     return violations
 
 
-def check_llm_fingerprints(content: str) -> List[Dict]:
+def check_llm_fingerprints(content: str) -> list[dict]:
     """Detect repetitive LLM fingerprint rhetorical patterns.
 
     Flags when formulaic patterns appear 4+ times — a sign of
@@ -187,7 +186,7 @@ def check_llm_fingerprints(content: str) -> List[Dict]:
     return violations
 
 
-def check_llm_persona_leaks(content: str) -> List[Dict]:
+def check_llm_persona_leaks(content: str) -> list[dict]:
     """Detect LLM persona / teacher voice leaking into content.
 
     Catches patterns like "I am your teacher", "I am so glad you are here",
@@ -216,7 +215,7 @@ def check_llm_persona_leaks(content: str) -> List[Dict]:
             line_num = _find_line_in_original(content, m.group(0))
             hits.append((label, m.group(0), line_num))
 
-    for label, matched, line_num in hits:
+    for _label, matched, line_num in hits:
         violations.append({
             'type': 'LLM_PERSONA_LEAK',
             'severity': 'critical',
@@ -228,7 +227,7 @@ def check_llm_persona_leaks(content: str) -> List[Dict]:
     return violations
 
 
-def check_inline_english(content: str, level: Optional[str] = None) -> List[Dict]:
+def check_inline_english(content: str, level: str | None = None) -> list[dict]:
     """Detect inline English translations in B1+ content.
 
     B1+ immersion target is 85%+; inline English like (English translation)
@@ -308,7 +307,7 @@ def _lexical_overlap(a: str, b: str) -> float:
     return len(intersection) / len(union)
 
 
-def check_structural_monotony(content: str, max_similar: int = 3) -> List[Dict]:
+def check_structural_monotony(content: str, max_similar: int = 3) -> list[dict]:
     """Detect monotonous section openers — H2/H3 sections starting the same way.
 
     Counts section openers (first non-empty line after header) sharing >70%
@@ -387,7 +386,7 @@ def check_structural_monotony(content: str, max_similar: int = 3) -> List[Dict]:
     return violations
 
 
-def check_prose_quality(content: str, yaml_content: dict | None = None) -> List[Dict]:
+def check_prose_quality(content: str, yaml_content: dict | None = None) -> list[dict]:
     """Main entry point for prose quality checks.
 
     Args:

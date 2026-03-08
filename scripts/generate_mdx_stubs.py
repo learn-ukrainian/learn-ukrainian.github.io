@@ -11,11 +11,12 @@ Usage:
 
 import argparse
 import sys
-import yaml
 from pathlib import Path
 
+import yaml
+
 sys.path.insert(0, str(Path(__file__).parent))
-from manifest_utils import load_manifest, CURRICULUM_PATH
+from manifest_utils import CURRICULUM_PATH, load_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STARLIGHT_DOCS = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"

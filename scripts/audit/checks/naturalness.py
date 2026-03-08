@@ -3,12 +3,13 @@ Ukrainian text naturalness checker using Claude/Gemini via prompt.
 Evaluates content for natural flow, coherence, and authenticity.
 """
 
+import contextlib
 import json
 import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
 
 
 def extract_ukrainian_content(markdown_content: str) -> str:
@@ -56,7 +57,7 @@ def has_cyrillic(text: str) -> bool:
     return bool(re.search(r'[а-яА-ЯіїєґІЇЄҐ]', text))
 
 
-def check_naturalness_claude(content: str, level: str, context: str = "module") -> Dict[str, Any]:
+def check_naturalness_claude(content: str, level: str, context: str = "module") -> dict[str, Any]:
     """
     Check naturalness using Gemini/Claude via prompt.
 
@@ -131,10 +132,8 @@ def check_naturalness_claude(content: str, level: str, context: str = "module") 
             json_end = output.find('```', json_start)
             if json_end > json_start:
                 json_str = output[json_start:json_end].strip()
-                try:
+                with contextlib.suppress(json.JSONDecodeError):
                     json_match = json.loads(json_str)
-                except json.JSONDecodeError:
-                    pass
 
         # Try generic code block if json block failed
         if not json_match and '```' in output:
@@ -145,17 +144,13 @@ def check_naturalness_claude(content: str, level: str, context: str = "module") 
                 # Skip language identifier if present (e.g., "json\n{...")
                 if '\n' in json_str and not json_str.startswith('{'):
                     json_str = json_str[json_str.find('\n'):].strip()
-                try:
+                with contextlib.suppress(json.JSONDecodeError):
                     json_match = json.loads(json_str)
-                except json.JSONDecodeError:
-                    pass
 
         # Last resort: try parsing entire output
         if not json_match:
-            try:
+            with contextlib.suppress(json.JSONDecodeError):
                 json_match = json.loads(output)
-            except json.JSONDecodeError:
-                pass
 
         if json_match:
             # Ensure status is set correctly based on score
@@ -186,7 +181,7 @@ def check_naturalness_claude(content: str, level: str, context: str = "module") 
     }
 
 
-def check_naturalness(markdown_file: Path, level: str) -> Optional[Dict[str, Any]]:
+def check_naturalness(markdown_file: Path, level: str) -> dict[str, Any] | None:
     """
     Main entry point for naturalness checking.
 
@@ -219,7 +214,7 @@ def check_naturalness(markdown_file: Path, level: str) -> Optional[Dict[str, Any
         return {
             "score": 0,
             "status": "ERROR",
-            "issues": [f"Naturalness check failed: {str(e)}"],
+            "issues": [f"Naturalness check failed: {e!s}"],
             "recommendation": "Check error logs",
             "rewrite_needed": False
         }

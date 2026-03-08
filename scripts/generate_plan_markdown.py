@@ -11,12 +11,12 @@ This allows comparing new YAML-based plans with old markdown plans.
 
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 
-from slug_utils import to_bare_slug
 import yaml
-import subprocess
+from slug_utils import to_bare_slug
 
 
 def load_yaml(path: Path) -> dict:
@@ -27,7 +27,7 @@ def load_yaml(path: Path) -> dict:
 
 def get_modules_in_phase(phase: dict, module_plans: dict) -> list:
     """Get module plans that belong to a phase."""
-    start, end = phase.get('modules', [0, 0])
+    _start, _end = phase.get('modules', [0, 0])
     # We need to match by module number - but YAML files don't have numbers
     # We'll need to infer from the level plan or meta files
     return []
@@ -114,7 +114,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
     track_name = level_plan.get('track', level).title()
     lines.append(f"# {level.upper()} Curriculum Plan: {track_name} Track")
     lines.append("")
-    lines.append(f"**Generated from YAML plans**")
+    lines.append("**Generated from YAML plans**")
     lines.append(f"**Modules:** {len(meta_files)} module meta files found")
 
     # Try multiple locations for prerequisites
@@ -185,7 +185,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
         module_range = phase.get('modules', [0, 0])
         start, end = module_range if len(module_range) == 2 else (0, 0)
         focus = phase.get('focus', '')
-        era = phase.get('era', '')
+        phase.get('era', '')
 
         # Format phase header: use ID if available, otherwise just name
         if phase_id:
@@ -246,7 +246,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
     total_objectives = 0
     modules_with_outline = 0
 
-    for slug, plan in module_plans.items():
+    for _slug, plan in module_plans.items():
         if plan.get('word_target'):
             total_words += plan['word_target']
         if plan.get('content_outline'):

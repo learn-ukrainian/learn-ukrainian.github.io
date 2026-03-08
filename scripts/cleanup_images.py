@@ -230,7 +230,7 @@ def main():
         # Save delete list for reference
         delete_list_path = BASE_DIR / "data" / "images_to_delete.txt"
         with open(delete_list_path, "w") as f:
-            for grade_dir, results in all_to_delete.items():
+            for _grade_dir, results in all_to_delete.items():
                 for r in results:
                     f.write(f"{r['path']}\t{r['reason']}\n")
         print(f"Delete list saved to: {delete_list_path}")

@@ -14,7 +14,6 @@ Usage:
 """
 
 import re
-from typing import Optional
 
 import yaml
 
@@ -43,7 +42,7 @@ ALL_TAGS: list[str] = sorted(
 _LEGACY_END_MARKERS = ["---END---"]
 
 
-def extract_delimited(text: str, tag: str) -> Optional[str]:
+def extract_delimited(text: str, tag: str) -> str | None:
     """Extract content between ===TAG_START=== and ===TAG_END=== delimiters.
 
     Also supports ===ARTIFACT_START=== as a fallback if the specific tag is missing.
@@ -81,7 +80,7 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
     return None
 
 
-def extract_yaml(text: str, tag: str) -> Optional[dict | list]:
+def extract_yaml(text: str, tag: str) -> dict | list | None:
     """Extract delimited content and parse as YAML.
 
     Args:
@@ -102,7 +101,7 @@ def extract_yaml(text: str, tag: str) -> Optional[dict | list]:
 
 def has_complete_pair(text: str, tag: str) -> bool:
     """Check if text contains a complete START/END delimiter pair for tag.
-    
+
     Checks for both specific ===TAG_START=== and generic ===ARTIFACT_START===.
     """
     if f"==={tag}_START===" in text and f"==={tag}_END===" in text:
@@ -133,10 +132,7 @@ def has_any_end_marker(text: str) -> bool:
     for tag in ALL_TAGS:
         if f"==={tag}_END===" in text:
             return True
-    for marker in _LEGACY_END_MARKERS:
-        if marker in text:
-            return True
-    return False
+    return any(marker in text for marker in _LEGACY_END_MARKERS)
 
 
 def validate_output(

@@ -30,12 +30,11 @@ import yaml
 sys.path.insert(0, str(Path(__file__).parent))
 from audit.config import get_word_target
 
-
 # Tolerance for word_target mismatch (e.g., 5% variance allowed)
 WORD_TARGET_TOLERANCE = 0.05
 
 
-def get_config_target(level: str, sequence: int = 1, focus: str = None) -> int:
+def get_config_target(level: str, sequence: int = 1, focus: str | None = None) -> int:
     """Get the authoritative word target from config.py."""
     # Map plan level names to LEVEL_CONFIG keys
     # Note: LEVEL_CONFIG uses 'istorio' not 'ISTORIO'
@@ -60,7 +59,7 @@ def validate_plan(plan_path: Path, level: str) -> list:
     errors = []
 
     try:
-        with open(plan_path, 'r', encoding='utf-8') as f:
+        with open(plan_path, encoding='utf-8') as f:
             plan = yaml.safe_load(f)
     except Exception as e:
         return [f"Failed to parse YAML: {e}"]
@@ -197,7 +196,7 @@ def main():
         sys.exit(0)
     else:
         print(f"❌ {total_invalid} plans have errors")
-        print(f"\nRun: .venv/bin/python scripts/fix_plan_word_targets.py --fix")
+        print("\nRun: .venv/bin/python scripts/fix_plan_word_targets.py --fix")
         sys.exit(1)
 
 

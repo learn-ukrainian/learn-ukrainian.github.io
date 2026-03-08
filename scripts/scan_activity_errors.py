@@ -12,22 +12,22 @@ Usage:
     .venv/bin/python scripts/scan_activity_errors.py --fix-report   # output fixable errors only
 """
 
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 # Ensure project root is on path
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / 'scripts'))
 
-from yaml_activities import ActivityParser
 from audit.checks.activity_validation import (
-    check_select_min_correct,
-    check_quiz_single_correct,
     check_fill_in_answer_in_options,
-    check_translate_single_correct,
     check_mark_the_words_answers_in_text,
+    check_quiz_single_correct,
+    check_select_min_correct,
+    check_translate_single_correct,
 )
+from yaml_activities import ActivityParser
 
 # All known tracks (directories under curriculum/l2-uk-en/)
 ALL_TRACKS = [

@@ -11,14 +11,14 @@ Usage:
     .venv/bin/python scripts/validate_activities_schema.py --all
 """
 
-import sys
 import json
-import yaml
+import sys
 from pathlib import Path
-from typing import Any
+
+import yaml
 
 try:
-    from jsonschema import Draft7Validator, ValidationError
+    from jsonschema import Draft7Validator
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False

@@ -29,6 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rag.config import BGE_M3_DENSE_DIM, DATA_DIR, ESU_COLLECTION, QDRANT_HOST, QDRANT_REST_PORT
+
 ESU_DIR = DATA_DIR / "esu"
 CHUNKS_PATH = ESU_DIR / "chunks.jsonl"
 
@@ -90,7 +91,7 @@ def load_chunks() -> list[dict]:
         sys.exit(1)
 
     chunks = []
-    with open(CHUNKS_PATH, "r", encoding="utf-8") as f:
+    with open(CHUNKS_PATH, encoding="utf-8") as f:
         for line in f:
             try:
                 chunks.append(json.loads(line))
@@ -131,9 +132,11 @@ def get_existing_point_ids(client) -> set[int]:
     return existing
 
 
-def ingest(client, chunks: list[dict], batch_size: int = 32, resume: bool = True):
+def ingest(client, chunks: list[dict], batch_size: int = 32, resume: bool = True,
+           device: str | None = None):
     """Embed chunks with BGE-M3 and upsert into Qdrant."""
     from qdrant_client.models import PointStruct, SparseVector
+
     from rag.embed import TextEncoder
 
     # Resume support: skip chunks already in Qdrant
@@ -147,8 +150,12 @@ def ingest(client, chunks: list[dict], batch_size: int = 32, resume: bool = True
                 print("[resume] Nothing to do — all chunks already ingested.")
                 return 0
 
-    encoder = TextEncoder()
+    encoder = TextEncoder(device=device)
     total_ingested = 0
+
+    # Sort by text length to minimize padding waste within batches.
+    # Short chunks get batched together and pad to ~100 tokens, not 512.
+    chunks.sort(key=lambda c: len(c["text"]))
 
     # Process in batches to manage memory
     for start in range(0, len(chunks), batch_size):
@@ -226,6 +233,8 @@ def main():
                        help="Embedding batch size (default 32)")
     parser.add_argument("--no-resume", action="store_true",
                        help="Don't skip already-ingested chunks (re-embed everything)")
+    parser.add_argument("--device", type=str, default=None,
+                       help="Torch device for embedding (e.g., 'mps', 'cpu', 'cuda')")
     args = parser.parse_args()
 
     # Load chunks
@@ -251,7 +260,8 @@ def main():
 
     # Ingest (resumable by default — safe to Ctrl+C and restart)
     print(f"[ingest] Embedding and ingesting {len(chunks)} chunks...")
-    total = ingest(client, chunks, batch_size=args.batch_size, resume=not args.no_resume)
+    ingest(client, chunks, batch_size=args.batch_size, resume=not args.no_resume,
+                   device=args.device)
 
     # Verify
     info = client.get_collection(ESU_COLLECTION)

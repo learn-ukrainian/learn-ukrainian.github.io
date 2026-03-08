@@ -25,10 +25,9 @@ Usage:
 """
 
 import re
-import time
 from html.parser import HTMLParser
-from typing import Any
-from urllib.parse import quote, urlencode
+from typing import Any, ClassVar
+from urllib.parse import quote
 
 import requests
 
@@ -301,7 +300,7 @@ class _UlifParadigmParser(HTMLParser):
     We collect all tables, then keep only the one with case data.
     """
 
-    CASE_LABELS = {"називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"}
+    CASE_LABELS: ClassVar[set[str]] = {"називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"}
 
     def __init__(self):
         super().__init__()

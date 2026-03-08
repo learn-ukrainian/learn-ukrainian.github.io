@@ -11,11 +11,9 @@ These checks complement manual semantic validation for full quality coverage.
 
 import re
 from collections import Counter
-from typing import List, Dict, Tuple
-from ..config import GRAMMAR_CONSTRAINTS
 
 
-def analyze_sentence_variety(sentences: List[str]) -> Dict:
+def analyze_sentence_variety(sentences: list[str]) -> dict:
     """
     Detect repetitive sentence patterns.
 
@@ -122,10 +120,10 @@ def estimate_vocabulary_difficulty(text: str, level_code: str) -> str:
 
 def analyze_distractor_quality(
     correct_answer: str,
-    distractors: List[str],
+    distractors: list[str],
     activity_type: str,
     level_code: str
-) -> Dict:
+) -> dict:
     """
     Analyze distractor quality for multiple-choice activities.
 
@@ -142,7 +140,7 @@ def analyze_distractor_quality(
     issues = []
     suggestions = []
 
-    all_options = [correct_answer] + distractors
+    all_options = [correct_answer, *distractors]
 
     # Check 1: Same word class (basic heuristic using endings)
     # Ukrainian verb endings: -ти, -ть, -ю, -єш, -є, -имо, -ете, -ють
@@ -159,7 +157,7 @@ def analyze_distractor_quality(
     adj_count = sum(1 for opt in all_options if re.search(adj_endings, opt.lower()))
 
     # If mixed word classes (not all same type)
-    total_options = len(all_options)
+    len(all_options)
     if verb_count > 0 and noun_count > 0:
         issues.append(f"Mixed word classes: {verb_count} verbs, {noun_count} nouns")
         suggestions.append("Use same word class for all options")
@@ -172,7 +170,7 @@ def analyze_distractor_quality(
     avg_len = sum(lengths) / len(lengths)
 
     # If any option is drastically different length (2x shorter/longer)
-    for i, opt in enumerate(all_options):
+    for _i, opt in enumerate(all_options):
         if len(opt) < avg_len / 2 or len(opt) > avg_len * 2:
             issues.append(f"Option '{opt}' length unusual ({len(opt)} chars vs {avg_len:.0f} avg)")
 
@@ -215,7 +213,7 @@ def analyze_distractor_quality(
     }
 
 
-def check_natural_ukrainian_markers(text: str) -> Dict:
+def check_natural_ukrainian_markers(text: str) -> dict:
     """
     Check for natural Ukrainian constructions vs unnatural/robotic patterns.
 
@@ -347,9 +345,9 @@ def validate_activity_quality_deterministic(
     text: str,
     activity_type: str,
     level_code: str,
-    options: List[str] = None,
-    correct_answer: str = None
-) -> Dict:
+    options: list[str] | None = None,
+    correct_answer: str | None = None
+) -> dict:
     """
     Run all deterministic quality checks on an activity.
 

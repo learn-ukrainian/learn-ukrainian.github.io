@@ -7,8 +7,6 @@ Usage:
     .venv/bin/python scripts/batch_research.py a1 --from 14 --to 44 --dry-run
 """
 import argparse
-import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -234,8 +232,6 @@ IMPORTANT CONSTRAINTS:
 Write your COMPLETE output to: {output_path}
 
 Use markdown format with clear headers for each section."""
-
-    return prompt
 
 
 def research_module(level: str, num: int, model: str, dry_run: bool = False) -> dict:

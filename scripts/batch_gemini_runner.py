@@ -9,37 +9,47 @@ Modes:
   auto  - If .md exists and >500 bytes, use fix mode; otherwise build
 """
 
+import argparse
+import json
 import logging
 import os
+import re
 import shutil
-import sys
-import json
-import yaml
 import subprocess
-import argparse
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
-import re
+
+import yaml
 
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from slug_utils import to_bare_slug, review_path as _review_path
+from audit.status_cache import read_status
 from batch_gemini_config import (
-    get_track_config, get_module_paths, get_module_index, slug_for_num,
-    num_for_slug, PROJECT_ROOT, VENV_PYTHON,
-)
-from gemini_output import (
-    extract_delimited, extract_yaml, has_any_end_marker,
-    find_complete_pairs,
+    PROJECT_ROOT,
+    get_module_index,
+    get_module_paths,
+    get_track_config,
+    num_for_slug,
 )
 from batch_utils import (
-    atomic_write, atomic_write_json, ExponentialBackoff,
-    BatchLock, LockConflictError, classify_error, ErrorCategory,
+    BatchLock,
+    ErrorCategory,
+    ExponentialBackoff,
+    LockConflictError,
+    atomic_write_json,
+    classify_error,
 )
-from audit.status_cache import read_status
-from ai_agent_bridge import send_message as broker_send
+from gemini_output import (
+    extract_delimited,
+    extract_yaml,
+    find_complete_pairs,
+    has_any_end_marker,
+)
+from slug_utils import review_path as _review_path
+from slug_utils import to_bare_slug
 
 # Constants
 GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
@@ -442,7 +452,7 @@ class BatchRunner:
 
     def _load_state(self):
         if self.state_file.exists():
-            with open(self.state_file, "r", encoding="utf-8") as f:
+            with open(self.state_file, encoding="utf-8") as f:
                 return json.load(f)
         return {
             "batch": self.track,
@@ -457,7 +467,7 @@ class BatchRunner:
 
     def _load_checkpoint(self):
         if self.checkpoint_file.exists() and self.resume:
-            with open(self.checkpoint_file, "r", encoding="utf-8") as f:
+            with open(self.checkpoint_file, encoding="utf-8") as f:
                 return json.load(f)
         return {"completed": [], "failed": []}
 
@@ -561,7 +571,7 @@ class BatchRunner:
         """Read a file, returning empty string if missing or unreadable."""
         if path and Path(path).exists():
             try:
-                with open(path, "r", encoding="utf-8") as f:
+                with open(path, encoding="utf-8") as f:
                     return f.read()
             except (OSError, UnicodeDecodeError) as e:
                 log.warning(f"Failed to read {path}: {e}")
@@ -807,10 +817,7 @@ Please fix these issues and regenerate the content."""
             }
             self._save_state()
 
-            if effective_mode == "fix":
-                success = self.process_module_fix(slug)
-            else:
-                success = self.process_module(slug)
+            success = self.process_module_fix(slug) if effective_mode == "fix" else self.process_module(slug)
 
             duration = (
                 datetime.now()
@@ -1054,9 +1061,8 @@ Please fix these issues and regenerate the content."""
 
         # In build mode, delete existing review upfront so audit doesn't fail
         # on a stale/fake review during content/activity phases.
-        if 5 in self.config["phases"]:
-            if self._delete_review_files(paths, slug):
-                log.info("  Removing existing review (will be regenerated in phase 5)")
+        if 5 in self.config["phases"] and self._delete_review_files(paths, slug):
+            log.info("  Removing existing review (will be regenerated in phase 5)")
 
         for phase in self.config["phases"]:
             log.info(f"  Phase {phase}...")
@@ -1424,17 +1430,16 @@ Please fix these issues and regenerate the content."""
         failure_file = failures_dir / f"{slug}.json"
 
         # Check if already escalated — don't spam the broker on re-failures
-        already_escalated = False
         if failure_file.exists():
             try:
                 prev = json.loads(failure_file.read_text(encoding="utf-8"))
-                already_escalated = prev.get("escalated", False)
+                prev.get("escalated", False)
             except Exception:
                 pass
 
         # Disable automatic escalation — stay in Gemini fix loop
-        failure["escalated"] = False 
-        
+        failure["escalated"] = False
+
         # Diagnostic print
         log.error(f"  GIVING UP on {slug} after {failure['iterations_used']} iterations.")
         log.error(f"  Reason: Failed gates: {', '.join(failed_gates.keys())}")
@@ -1646,7 +1651,7 @@ Please fix these issues and regenerate the content."""
             if content:
                 meta_data = {}
                 if paths["meta"].exists():
-                    with open(paths["meta"], "r", encoding="utf-8") as f:
+                    with open(paths["meta"], encoding="utf-8") as f:
                         meta_data = yaml.safe_load(f) or {}
 
                 try:
@@ -1705,7 +1710,7 @@ Please fix these issues and regenerate the content."""
                 if len(new_content) >= 100:
                     with open(paths["md"], "w", encoding="utf-8") as f:
                         f.write(new_content)
-                    log.info(f"    Applied content fixes.")
+                    log.info("    Applied content fixes.")
                 else:
                     log.warning(f"    Content fix too short ({len(new_content)} chars), skipping.")
 
@@ -1719,7 +1724,7 @@ Please fix these issues and regenerate the content."""
                         paths["activities"].parent.mkdir(parents=True, exist_ok=True)
                         with open(paths["activities"], "w", encoding="utf-8") as f:
                             yaml.dump(act_data, f, allow_unicode=True, sort_keys=False)
-                        log.info(f"    Applied activities fixes.")
+                        log.info("    Applied activities fixes.")
                     except yaml.YAMLError as e:
                         log.error(f"    Failed to parse fixed activities YAML: {e}")
                 else:
@@ -1735,7 +1740,7 @@ Please fix these issues and regenerate the content."""
                         paths["vocabulary"].parent.mkdir(parents=True, exist_ok=True)
                         with open(paths["vocabulary"], "w", encoding="utf-8") as f:
                             yaml.dump(vocab_data, f, allow_unicode=True, sort_keys=False)
-                        log.info(f"    Applied vocabulary fixes.")
+                        log.info("    Applied vocabulary fixes.")
                     except yaml.YAMLError as e:
                         log.error(f"    Failed to parse fixed vocabulary YAML: {e}")
                 else:

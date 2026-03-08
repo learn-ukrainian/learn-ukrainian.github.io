@@ -10,9 +10,11 @@ Usage:
 """
 
 import re
-import yaml
-from pathlib import Path
 from collections import OrderedDict
+from pathlib import Path
+
+import yaml
+
 
 # Custom YAML representer for ordered output
 def represent_ordereddict(dumper, data):

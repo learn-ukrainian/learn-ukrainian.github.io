@@ -11,9 +11,9 @@ Usage:
 """
 
 import sqlite3
-from datetime import datetime
 from pathlib import Path
-from flask import Flask, render_template_string, request, jsonify
+
+from flask import Flask, jsonify, render_template_string
 
 app = Flask(__name__)
 
@@ -416,8 +416,8 @@ def api_stats():
     return jsonify(get_stats(messages))
 
 if __name__ == '__main__':
-    print(f"📬 Message Viewer starting...")
+    print("📬 Message Viewer starting...")
     print(f"   Database: {DB_PATH}")
     print(f"   Outbox: {OUTBOX_PATH}")
-    print(f"\n   Open: http://localhost:5055\n")
+    print("\n   Open: http://localhost:5055\n")
     app.run(host='0.0.0.0', port=5055, debug=True)

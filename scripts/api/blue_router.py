@@ -6,17 +6,18 @@ Mounted at /api/blue/ in main.py. Gold team cannot conflict with these endpoints
 
 import json
 import subprocess
-from datetime import datetime, timezone
+
+# Import #561 status cache layer
+import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
-# Import #561 status cache layer
-import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from audit.status_cache import read_status, get_source_paths
+from audit.status_cache import get_source_paths, read_status
 from slug_utils import to_bare_slug
 
 router = APIRouter(tags=["blue"])
@@ -162,7 +163,7 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
         if not md_path.exists():
             raise HTTPException(status_code=404, detail=f"Module file not found: {md_path}")
         audit_script = PROJECT_ROOT / "scripts" / "audit_module.sh"
-        result = subprocess.run(
+        subprocess.run(
             [str(audit_script), str(md_path)],
             capture_output=True, text=True, cwd=PROJECT_ROOT
         )
@@ -180,7 +181,7 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
         with open(status_file) as f:
             data = json.load(f)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to read status: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to read status: {e}") from e
 
     # Surface the most important info at the top level
     overall = data.get("overall", {})
@@ -222,13 +223,16 @@ async def get_activity_errors(track_id: str, slug: str):
         return {"track": track_id, "slug": slug, "error": "No activities file found", "violations": []}
 
     try:
-        from yaml_activities import ActivityParser
         from audit.checks.activity_validation import (
-            check_select_min_correct, check_quiz_single_correct,
-            check_fill_in_answer_in_options, check_translate_single_correct,
+            check_fill_in_answer_in_options,
             check_mark_the_words_answers_in_text,
-            check_unjumble_runon_answer, check_unjumble_out_of_scope_dative,
+            check_quiz_single_correct,
+            check_select_min_correct,
+            check_translate_single_correct,
+            check_unjumble_out_of_scope_dative,
+            check_unjumble_runon_answer,
         )
+        from yaml_activities import ActivityParser
         parser = ActivityParser()
         activities = parser.parse(activities_path)
 
@@ -298,9 +302,9 @@ async def get_final_review_summary(track_id: str, slug: str):
             }
             if data.get("last_audit"):
                 try:
-                    from datetime import datetime, timezone
+                    from datetime import datetime
                     last = datetime.fromisoformat(data["last_audit"].replace("Z", "+00:00"))
-                    audit_age_seconds = max(0, int((datetime.now(timezone.utc) - last).total_seconds()))
+                    audit_age_seconds = max(0, int((datetime.now(UTC) - last).total_seconds()))
                 except Exception:
                     pass
         except Exception as e:
@@ -323,13 +327,16 @@ async def get_final_review_summary(track_id: str, slug: str):
     activities_path = track_dir / "activities" / f"{bare}.yaml"
     if activities_path.exists():
         try:
-            from yaml_activities import ActivityParser
             from audit.checks.activity_validation import (
-                check_select_min_correct, check_quiz_single_correct,
-                check_fill_in_answer_in_options, check_translate_single_correct,
+                check_fill_in_answer_in_options,
                 check_mark_the_words_answers_in_text,
-                check_unjumble_runon_answer, check_unjumble_out_of_scope_dative,
+                check_quiz_single_correct,
+                check_select_min_correct,
+                check_translate_single_correct,
+                check_unjumble_out_of_scope_dative,
+                check_unjumble_runon_answer,
             )
+            from yaml_activities import ActivityParser
             activities = ActivityParser().parse(activities_path)
             violations = (
                 check_select_min_correct(activities)

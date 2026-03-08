@@ -13,30 +13,29 @@ import asyncio
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
 
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
-from .config import (
-    BATCH_STATE_DIR,
-    CURRICULUM_ROOT,
-    PLAYGROUNDS_DIR,
-    LEVELS,
-    PROJECT_ROOT,
-)
+from .admin_router import router as admin_router
 
 # Team routers
 from .blue_router import router as blue_router
-from .gold_router import router as gold_router
-from .dashboard_router import router as dashboard_router
-from .state_router import router as state_router
 from .comms_router import router as comms_router
-from .rag_router import router as rag_router
+from .config import (
+    BATCH_STATE_DIR,
+    CURRICULUM_ROOT,
+    LEVELS,
+    PLAYGROUNDS_DIR,
+    PROJECT_ROOT,
+)
+from .dashboard_router import router as dashboard_router
+from .gold_router import router as gold_router
 from .images_router import router as images_router
-from .admin_router import router as admin_router
+from .rag_router import router as rag_router
+from .state_router import router as state_router
 
 app = FastAPI(
     title="Playground API",
@@ -73,7 +72,7 @@ app.include_router(admin_router, prefix="/api/admin")
 
 
 # Server start time for uptime calculation
-_SERVER_START = datetime.now(timezone.utc)
+_SERVER_START = datetime.now(UTC)
 
 
 # ==================== SHARED ENDPOINTS ====================
@@ -81,7 +80,7 @@ _SERVER_START = datetime.now(timezone.utc)
 @app.get("/api/health")
 async def health_check():
     """Root health check — returns server status, version, uptime."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     uptime = now - _SERVER_START
     return {
         "status": "ok",
@@ -213,15 +212,15 @@ _MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
 async def serve_image(path: str):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
     file_path = _IMAGE_DIR / path
-    if not file_path.suffix.lower() in _ALLOWED_IMG_EXT:
+    if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:
         raise HTTPException(status_code=403, detail="Forbidden file type")
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(status_code=404)
     # Prevent path traversal
     try:
         file_path.resolve().relative_to(_IMAGE_DIR.resolve())
-    except ValueError:
-        raise HTTPException(status_code=403, detail="Path traversal not allowed")
+    except ValueError as e:
+        raise HTTPException(status_code=403, detail="Path traversal not allowed") from e
     return FileResponse(
         file_path,
         media_type=_MIME_TYPES.get(file_path.suffix.lower(), "application/octet-stream"),

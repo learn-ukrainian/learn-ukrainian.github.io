@@ -11,13 +11,12 @@ Analyzes:
 Output: JSON report with removal candidates categorized by risk level
 """
 
-import subprocess
 import json
-from pathlib import Path
-from datetime import datetime
 import re
-import ast
-import sys
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
 
 class DeadCodeAnalyzer:
     def __init__(self, project_root):
@@ -46,7 +45,7 @@ class DeadCodeAnalyzer:
                 date_str = result.stdout.strip().split()[0]
                 return datetime.strptime(date_str, '%Y-%m-%d')
             return None
-        except Exception as e:
+        except Exception:
             return None
 
     def count_external_references(self, script_name):
@@ -66,7 +65,7 @@ class DeadCodeAnalyzer:
 
             files = [f for f in result.stdout.strip().split('\n') if f]
             return len(files), files
-        except Exception as e:
+        except Exception:
             return 0, []
 
     def find_python_imports(self, script_name):
@@ -78,7 +77,7 @@ class DeadCodeAnalyzer:
             result = subprocess.run(
                 ['rg', '-l', f'(from|import).*{name_no_ext}',
                  '--type', 'py',
-                 '--glob', '!scripts/{}'.format(script_name)],  # Exclude the script itself
+                 '--glob', f'!scripts/{script_name}'],  # Exclude the script itself
                 capture_output=True,
                 text=True,
                 cwd=self.project_root
@@ -86,7 +85,7 @@ class DeadCodeAnalyzer:
 
             files = [f for f in result.stdout.strip().split('\n') if f]
             return len(files), files
-        except Exception as e:
+        except Exception:
             return 0, []
 
     def categorize_by_pattern(self, script_name):
@@ -186,7 +185,7 @@ class DeadCodeAnalyzer:
         medium_risk = []
         high_risk = []
 
-        for name, analysis in self.results.items():
+        for _name, analysis in self.results.items():
             # Remove non-serializable fields
             if '_last_modified_obj' in analysis:
                 del analysis['_last_modified_obj']
@@ -266,8 +265,8 @@ def main():
     # Print summary
     analyzer.print_summary(report)
 
-    print(f"\nTo remove low-risk scripts, run:")
-    print(f"  python3 scripts/remove_dead_code.py --low-risk")
+    print("\nTo remove low-risk scripts, run:")
+    print("  python3 scripts/remove_dead_code.py --low-risk")
 
 if __name__ == '__main__':
     main()

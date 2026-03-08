@@ -14,7 +14,6 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
-
 # Type alias for custom check functions
 CustomCheckFn = Callable[["ValidationRule", str, str, int], list[dict]]
 
@@ -178,9 +177,8 @@ RULES: list[ValidationRule] = [
 def _rule_applies(rule: ValidationRule, level_code: str, module_num: int,
                   track_code: str) -> bool:
     """Check if a rule applies to this module."""
-    if rule.levels is not None:
-        if level_code.upper() not in [lv.upper() for lv in rule.levels]:
-            return False
+    if rule.levels is not None and level_code.upper() not in [lv.upper() for lv in rule.levels]:
+        return False
     if rule.module_range is not None:
         lo, hi = rule.module_range
         if not (lo <= module_num <= hi):
@@ -355,7 +353,7 @@ def _check_self_check_english(rule: ValidationRule, content: str,
         return []
 
     latin_re = re.compile(r"[A-Za-z]")
-    for section_name, section_text, start_line in sections:
+    for _section_name, section_text, start_line in sections:
         lines = section_text.split("\n")
         for j, line in enumerate(lines):
             stripped = line.strip()

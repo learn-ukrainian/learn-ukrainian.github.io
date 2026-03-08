@@ -4,7 +4,7 @@
 import yaml
 
 # Read activities
-with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml', 'r') as f:
+with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml') as f:
     activities = yaml.safe_load(f)
 
 # Fix activity 9 (fill-in) - rename fields
@@ -15,7 +15,7 @@ for item in activities[9]['items']:
         del item['blank']  # Remove blank field - not in schema
 
 print(f"✅ Fixed {len(activities[9]['items'])} items in activity 9 (fill-in)")
-print(f"   Renamed 'text' → 'sentence', removed 'blank' field")
+print("   Renamed 'text' → 'sentence', removed 'blank' field")
 
 # Write back
 with open('curriculum/l2-uk-en/b2/activities/94-b2-final-exam.yaml', 'w') as f:

@@ -40,6 +40,7 @@ import sys
 import time
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import ClassVar
 from urllib.parse import urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -54,7 +55,7 @@ class HTMLTextExtractor(HTMLParser):
     """
 
     # Navigation link text to skip (inside dop3 but not content)
-    _NAV_TEXTS = {"Попередня", "Головна", "Наступна", "ІЗБОРНИК"}
+    _NAV_TEXTS: ClassVar[set[str]] = {"Попередня", "Головна", "Наступна", "ІЗБОРНИК"}
 
     def __init__(self, parallel: bool = False):
         super().__init__()
@@ -111,9 +112,8 @@ class HTMLTextExtractor(HTMLParser):
             self._td_count += 1
         elif tag in ("h1", "h2", "h3"):
             self._in_heading = True
-        elif tag in ("p", "br"):
-            if not self._in_table:
-                self.text_parts.append("\n")
+        elif tag in ("p", "br") and not self._in_table:
+            self.text_parts.append("\n")
 
     def handle_endtag(self, tag):
         tag = tag.lower()
@@ -145,9 +145,8 @@ class HTMLTextExtractor(HTMLParser):
         elif tag in ("h1", "h2", "h3"):
             self._in_heading = False
             self.text_parts.append("\n\n")
-        elif tag == "p":
-            if not self._in_table:
-                self.text_parts.append("\n\n")
+        elif tag == "p" and not self._in_table:
+            self.text_parts.append("\n\n")
 
     def handle_data(self, data):
         if self._skip_depth > 0:

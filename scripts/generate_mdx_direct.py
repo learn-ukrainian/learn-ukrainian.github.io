@@ -108,7 +108,7 @@ def escape_jsx_string(s: str) -> str:
 
 def load_module(path: Path) -> dict:
     """Load and validate a l2-uk-direct module YAML."""
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     if not isinstance(data, dict):
@@ -800,7 +800,7 @@ def generate_mdx(data: dict, order: int = 1) -> str:
     """Generate a complete MDX string from a module data dict."""
     module_type = data["type"]
     title = data["title"]
-    slug = data["module"]
+    data["module"]
 
     # Collect imports
     import_lines = collect_imports(data)
@@ -809,13 +809,13 @@ def generate_mdx(data: dict, order: int = 1) -> str:
     frontmatter = [
         "---",
         f'title: "{escape_jsx_string(title)}"',
-        f"sidebar:",
+        "sidebar:",
         f"  order: {order}",
     ]
 
     # Add description from standard_ref if present
     if data.get("standard_ref"):
-        frontmatter.append(f'  badge:')
+        frontmatter.append('  badge:')
         frontmatter.append(f'    text: "{data["level"].upper()}"')
 
     frontmatter.append("---")
@@ -921,7 +921,7 @@ def load_manifest(level: str) -> list[str]:
             [p.stem for p in level_dir.glob("*.yaml") if p.stem != "manifest"],
         )
 
-    with open(manifest_path, "r", encoding="utf-8") as f:
+    with open(manifest_path, encoding="utf-8") as f:
         manifest = yaml.safe_load(f)
 
     if not manifest:

@@ -11,22 +11,20 @@ Returns exit code 0 on PASS, 1 on FAIL.
 Agent has NO discretion to override FAIL.
 """
 
-import sys
 import re
+import sys
 from pathlib import Path
 
 # Add scripts to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
+import yaml
 from audit.config import (
+    VALID_ACTIVITY_TYPES,
+    get_b1_immersion_range,
     get_level_config,
     get_word_target,
-    get_b1_immersion_range,
-    LEVEL_CONFIG,
-    VALID_ACTIVITY_TYPES,
 )
-
-import yaml
 
 
 def parse_frontmatter(content: str) -> dict:
@@ -49,7 +47,7 @@ def extract_level_and_module(file_path: Path) -> tuple[str, int]:
     level = None
     module_num = 0
 
-    for i, part in enumerate(parts):
+    for _i, part in enumerate(parts):
         if part in ('a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit'):
             level = part.upper()
             break
@@ -142,7 +140,7 @@ def count_dialogues(content: str) -> int:
     return count // 2  # Pairs
 
 
-def count_activities(content: str, file_path: Path = None) -> tuple[int, set]:
+def count_activities(content: str, file_path: Path | None = None) -> tuple[int, set]:
     """Count activities and unique types from inline markdown and/or YAML file."""
     # Build pattern from all valid activity types
     all_types = '|'.join(re.escape(t) for t in VALID_ACTIVITY_TYPES)
@@ -160,7 +158,7 @@ def count_activities(content: str, file_path: Path = None) -> tuple[int, set]:
             yaml_file = file_path.with_suffix('.activities.yaml')
         if yaml_file.exists():
             try:
-                with open(yaml_file, 'r', encoding='utf-8') as f:
+                with open(yaml_file, encoding='utf-8') as f:
                     activities = yaml.safe_load(f)
                 if isinstance(activities, list):
                     for act in activities:
@@ -233,7 +231,6 @@ def check_skeleton_gate(file_path: Path, content: str) -> tuple[bool, list[str]]
                 failures.append(f"Missing frontmatter key: {key}")
 
     # 2. Required sections present
-    required_sections = ['# ', '## ']  # At least main title and subsections
     if not re.search(r'^#\s+\w', content, re.MULTILINE):
         failures.append("Missing main title (# heading)")
 
@@ -315,7 +312,7 @@ def check_activities_gate(file_path: Path, content: str) -> tuple[bool, list[str
     """Check activities stage gate."""
     failures = []
 
-    level, module_num = extract_level_and_module(file_path)
+    level, _module_num = extract_level_and_module(file_path)
     if not level:
         failures.append(f"Cannot determine level from path: {file_path}")
         return False, failures

@@ -10,10 +10,9 @@ Checks if the lesson content is:
 Also includes context-aware character validation for historical quotes (Issue #498).
 """
 
+import json
 import os
 import re
-import json
-from typing import Optional
 
 # Check if LLM evaluation is enabled
 CONTENT_QUALITY_ENABLED = os.getenv('AUDIT_CONTENT_QUALITY', 'false').lower() == 'true'
@@ -112,10 +111,7 @@ def is_inside_quoted_string(line: str, char_pos: int) -> bool:
     # Check guillemets (Ukrainian/Russian quote marks)
     open_guillemet = text_before.count('«')
     close_guillemet = text_before.count('»')
-    if open_guillemet > close_guillemet:
-        return True
-
-    return False
+    return open_guillemet > close_guillemet
 
 
 def is_historical_quote_line(line: str) -> bool:
@@ -130,12 +126,8 @@ def is_historical_quote_line(line: str) -> bool:
     """
     stripped = line.strip()
 
-    # Must be a blockquote
-    if not stripped.startswith('>'):
-        return False
-
-    # All blockquotes in historical tracks are considered historical quotes
-    return True
+    # Must be a blockquote — all blockquotes in historical tracks are considered historical quotes
+    return stripped.startswith('>')
 
 
 def is_historical_context_block(lines: list[str], line_idx: int) -> bool:
@@ -217,10 +209,7 @@ def is_in_bibliography_section(lines: list[str], line_idx: int) -> bool:
         # Match ## Джерела, ## Бібліографія, etc.
         if line.startswith('#'):
             heading_text = line.lstrip('#').strip()
-            for bib_heading in BIBLIOGRAPHY_HEADINGS:
-                if bib_heading in heading_text:
-                    return True
-            return False  # Found a heading but not a bibliography one
+            return any(bib_heading in heading_text for bib_heading in BIBLIOGRAPHY_HEADINGS)  # Found a heading but not a bibliography one
     return False
 
 
@@ -252,10 +241,7 @@ def is_in_academic_callout_block(lines: list[str], line_idx: int) -> bool:
 def contains_only_allowlisted_latin(text: str) -> bool:
     """Check if all Latin words in text are in the academic allowlist (Issue #557)."""
     latin_words = re.findall(r'[A-Za-z]+', text)
-    for word in latin_words:
-        if word.upper() not in ACADEMIC_LATIN_ALLOWLIST:
-            return False
-    return True
+    return all(word.upper() in ACADEMIC_LATIN_ALLOWLIST for word in latin_words)
 
 
 def is_academic_latin_context(line: str, lines: list[str], line_idx: int, track: str | None) -> bool:
@@ -288,10 +274,7 @@ def is_academic_latin_context(line: str, lines: list[str], line_idx: int, track:
     # 5. Latin in parentheses follows a proper noun pattern (capitalized)
     #    e.g., Тімоті Снайдер (Timothy Snyder) — standard academic name citation
     paren_matches = re.findall(r'\(([A-Z][A-Za-z\s\.\-]+)\)', line)
-    if paren_matches:
-        return True
-
-    return False
+    return bool(paren_matches)
 
 
 # YAML fields that allow historical characters
@@ -319,7 +302,7 @@ def validate_yaml_vocabulary(yaml_content: str, file_path: str = "") -> list[dic
         List of violations
     """
     violations = []
-    track = detect_track_from_path(file_path)
+    detect_track_from_path(file_path)
 
     # Parse line by line to identify field context
     lines = yaml_content.split('\n')
@@ -517,11 +500,7 @@ def extract_lesson_content(content: str) -> str:
             content,
             re.MULTILINE
         )
-        if vocab_match:
-            lesson_content = content[:vocab_match.start()]
-        else:
-            # Take everything
-            lesson_content = content
+        lesson_content = content[:vocab_match.start()] if vocab_match else content
 
     # Remove frontmatter
     frontmatter_match = re.match(r'^---\n.*?\n---\n', lesson_content, re.DOTALL)
@@ -563,7 +542,7 @@ def extract_module_metadata(content: str) -> dict:
     return metadata
 
 
-def call_gemini_api(lesson_content: str, metadata: dict) -> Optional[dict]:
+def call_gemini_api(lesson_content: str, metadata: dict) -> dict | None:
     """Call Gemini API to evaluate content quality."""
     try:
         import google.generativeai as genai
@@ -629,7 +608,7 @@ Respond with ONLY valid JSON, no markdown fences or explanations."""
         return None
 
 
-def call_claude_api(lesson_content: str, metadata: dict) -> Optional[dict]:
+def call_claude_api(lesson_content: str, metadata: dict) -> dict | None:
     """Call Claude API to evaluate content quality."""
     try:
         import anthropic

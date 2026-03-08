@@ -25,9 +25,9 @@ from pathlib import Path
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from yaml_activities import ActivityParser
 # Import the new schema validation function
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
+from yaml_activities import ActivityParser
 
 
 def detect_level(file_path: Path) -> str:
@@ -50,7 +50,7 @@ def format_warning(warning) -> str:
     return f"  \033[33mWARN\033[0m: {warning}"
 
 
-def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> bool:
+def validate_file(yaml_path: Path, level: str | None = None, verbose: bool = False) -> bool:
     """
     Validate a single YAML activity file.
 
@@ -80,7 +80,7 @@ def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> 
         print(f"\033[32m✓\033[0m {yaml_path} ({len(activities)} activities, level={level})")
 
         if verbose:
-            print(f"\n  Activities:")
+            print("\n  Activities:")
             for i, act in enumerate(activities, 1):
                 item_count = len(getattr(act, 'items', getattr(act, 'pairs', getattr(act, 'groups', getattr(act, 'blanks', getattr(act, 'lines', []))))))
                 print(f"    {i}. {act.type}: {act.title} ({item_count} items)")
@@ -100,7 +100,7 @@ def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> 
         return False
 
 
-def validate_directory(dir_path: Path, level: str = None, verbose: bool = False) -> tuple[int, int]:
+def validate_directory(dir_path: Path, level: str | None = None, verbose: bool = False) -> tuple[int, int]:
     """
     Validate all .activities.yaml files in a directory.
 
@@ -124,7 +124,7 @@ def validate_directory(dir_path: Path, level: str = None, verbose: bool = False)
     return passed, failed
 
 
-def validate_all(base_path: Path = None, verbose: bool = False) -> tuple[int, int]:
+def validate_all(base_path: Path | None = None, verbose: bool = False) -> tuple[int, int]:
     """
     Validate all .activities.yaml files in the curriculum.
 

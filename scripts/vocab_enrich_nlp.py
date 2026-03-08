@@ -21,9 +21,8 @@ This script:
 """
 
 import argparse
-import re
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+
 import yaml
 
 # Lazy imports for heavy dependencies
@@ -100,10 +99,10 @@ GENDER_MAP = {
 }
 
 
-def analyze_word(word: str) -> Dict:
+def analyze_word(word: str) -> dict:
     """
     Analyze a Ukrainian word using pymorphy2.
-    
+
     Returns:
         {
             'lemma': '...',  # dictionary form
@@ -113,30 +112,30 @@ def analyze_word(word: str) -> Dict:
     """
     morph = get_morph()
     parsed = morph.parse(word)
-    
+
     if not parsed:
         return {'lemma': word, 'pos': 'noun', 'gender': None}
-    
+
     # Take the most likely parse
     best = parsed[0]
-    
+
     result = {
         'lemma': best.normal_form,
         'pos': POS_MAP.get(best.tag.POS, 'noun'),
         'gender': None
     }
-    
+
     # Get gender for nouns
     if best.tag.gender:
         result['gender'] = GENDER_MAP.get(best.tag.gender)
-    
+
     return result
 
 
 def get_stressed_form(word: str) -> str:
     """
     Get the stressed form of a Ukrainian word.
-    
+
     Returns the word with a combining acute accent on the stressed vowel.
     """
     try:
@@ -157,7 +156,7 @@ def setup_yaml():
     yaml.Dumper.ignore_aliases = lambda *args: True
 
 
-def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
+def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> dict:
     """
     Enrich a vocabulary YAML file with lemmas, POS, and IPA.
 
@@ -176,7 +175,7 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
     }
 
     # Load existing YAML
-    with open(yaml_path, 'r', encoding='utf-8') as f:
+    with open(yaml_path, encoding='utf-8') as f:
         data = yaml.safe_load(f)
 
     # Handle both wrapper format and bare list format
@@ -200,32 +199,32 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
     stats['original_count'] = len(items)
     data = items  # Use items for processing
     print(f"  Processing {len(data)} entries...")
-    
+
     # Process and deduplicate
-    seen_lemmas: Set[str] = set()
-    enriched_entries: List[Dict] = []
-    
+    seen_lemmas: set[str] = set()
+    enriched_entries: list[dict] = []
+
     for i, entry in enumerate(data):
         if not isinstance(entry, dict) or 'lemma' not in entry:
             continue
-        
+
         original_word = entry['lemma']
-        
+
         # Analyze with pymorphy2
         analysis = analyze_word(original_word)
         true_lemma = analysis['lemma']
-        
+
         # Skip if we've already seen this lemma
         if true_lemma.lower() in seen_lemmas:
             continue
         seen_lemmas.add(true_lemma.lower())
-        
+
         # Track corrections
         if true_lemma != original_word:
             stats['lemmas_corrected'] += 1
         if analysis['pos'] != entry.get('pos'):
             stats['pos_corrected'] += 1
-        
+
         # Get stressed form and IPA
         ipa = entry.get('ipa', '')
         if not ipa:
@@ -233,7 +232,7 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
             ipa = stressed_to_ipa(stressed)
             if ipa:
                 stats['ipa_added'] += 1
-        
+
         # Build enriched entry
         enriched = {
             'lemma': true_lemma,
@@ -241,17 +240,17 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> Dict:
             'translation': entry.get('translation', ''),
             'pos': analysis['pos'],
         }
-        
+
         # Add gender for nouns
         if analysis['pos'] == 'noun' and analysis['gender']:
             enriched['gender'] = analysis['gender']
-        
+
         enriched_entries.append(enriched)
-        
+
         # Progress indicator
         if (i + 1) % 500 == 0:
             print(f"    Processed {i + 1}/{len(data)} entries...")
-    
+
     stats['deduplicated_count'] = len(enriched_entries)
 
     # Write back if not dry run
@@ -282,36 +281,36 @@ def main():
     parser = argparse.ArgumentParser(
         description='Enrich Ukrainian vocabulary with lemmas, POS, and IPA using NLP tools'
     )
-    parser.add_argument('yaml_file', type=Path, 
+    parser.add_argument('yaml_file', type=Path,
                         help='Path to vocabulary YAML file')
     parser.add_argument('--dry-run', action='store_true',
                         help='Show what would be done without writing files')
-    
+
     args = parser.parse_args()
-    
+
     if not args.yaml_file.exists():
         print(f"Error: File not found: {args.yaml_file}")
         return 1
-    
+
     setup_yaml()
-    
+
     print(f"\n🔧 Enriching vocabulary: {args.yaml_file.name}")
     print("=" * 60)
-    
+
     stats = enrich_vocabulary(args.yaml_file, dry_run=args.dry_run)
-    
+
     print("\n📊 Statistics:")
     print(f"  Original entries:    {stats['original_count']}")
     print(f"  After deduplication: {stats['deduplicated_count']}")
     print(f"  Lemmas corrected:    {stats['lemmas_corrected']}")
     print(f"  POS corrected:       {stats['pos_corrected']}")
     print(f"  IPA added:           {stats['ipa_added']}")
-    
+
     reduction = stats['original_count'] - stats['deduplicated_count']
     if reduction > 0:
         pct = (reduction / stats['original_count']) * 100
         print(f"\n  🎯 Reduced by {reduction} entries ({pct:.1f}% deduplication)")
-    
+
     return 0
 
 

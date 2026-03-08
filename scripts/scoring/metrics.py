@@ -6,11 +6,9 @@ They extract quantitative metrics from module content files.
 """
 
 import re
-import json
 import sys
-from pathlib import Path
-from typing import Optional
 from dataclasses import dataclass, field
+from pathlib import Path
 
 # Ensure scripts/ is importable for audit.status_cache
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -32,7 +30,7 @@ class ModuleMetrics:
 
     # Audit status (from status JSON)
     audit_status: str = 'unknown'  # pass, fail, unknown
-    naturalness_score: Optional[float] = None
+    naturalness_score: float | None = None
     validation_tier: str = 'automated'  # automated, llm-verified, gold-standard
 
     # Word counts
@@ -432,7 +430,7 @@ def analyze_activities(activities_path: Path) -> dict:
 
     try:
         import yaml
-        with open(activities_path, 'r', encoding='utf-8') as f:
+        with open(activities_path, encoding='utf-8') as f:
             activities = yaml.safe_load(f)
 
         if not activities:
@@ -498,7 +496,7 @@ def analyze_vocabulary(vocab_path: Path) -> dict:
 
     try:
         import yaml
-        with open(vocab_path, 'r', encoding='utf-8') as f:
+        with open(vocab_path, encoding='utf-8') as f:
             vocab = yaml.safe_load(f)
 
         if not vocab:
@@ -654,7 +652,7 @@ def extract_module_metrics(
     if metrics.meta_exists:
         try:
             import yaml
-            with open(meta_path, 'r', encoding='utf-8') as f:
+            with open(meta_path, encoding='utf-8') as f:
                 meta_data = yaml.safe_load(f)
                 if meta_data:
                     metrics.validation_tier = meta_data.get('validation_tier', 'automated')
@@ -664,7 +662,7 @@ def extract_module_metrics(
     # Extract from markdown content
     if metrics.md_exists:
         try:
-            with open(md_path, 'r', encoding='utf-8') as f:
+            with open(md_path, encoding='utf-8') as f:
                 content = f.read()
 
             # Callout counts

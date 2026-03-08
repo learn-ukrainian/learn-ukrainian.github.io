@@ -10,7 +10,7 @@ Issue: #397
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Any
 
 try:
     import jsonschema
@@ -19,7 +19,6 @@ except ImportError:
     HAS_JSONSCHEMA = False
 
 import yaml
-
 
 # =============================================================================
 # DUPLICATE KEY DETECTION
@@ -72,7 +71,7 @@ DuplicateKeyLoader.add_constructor(
 )
 
 
-def safe_load_with_duplicate_check(content: str) -> Tuple[Any, List[str]]:
+def safe_load_with_duplicate_check(content: str) -> tuple[Any, list[str]]:
     """
     Load YAML content and check for duplicate keys.
 
@@ -105,17 +104,17 @@ def get_schemas_dir() -> Path:
     return Path(__file__).parent.parent.parent.parent / "schemas"
 
 
-def load_base_schema() -> Dict:
+def load_base_schema() -> dict:
     """Load the base activities schema with all activity type definitions."""
     schema_path = get_schemas_dir() / "activities-base.schema.json"
     if not schema_path.exists():
         raise FileNotFoundError(f"Schema not found: {schema_path}")
-    
-    with open(schema_path, 'r', encoding='utf-8') as f:
+
+    with open(schema_path, encoding='utf-8') as f:
         return json.load(f)
 
 
-def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]:
+def get_activity_schema(activity_type: str, base_schema: dict) -> dict | None:
     """Get the schema definition for a specific activity type.
 
     Checks for track-specific definitions first (e.g., reading-istorio),
@@ -135,10 +134,10 @@ def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]
 # =============================================================================
 
 def generate_actionable_error(
-    activity: Dict,
+    activity: dict,
     error: 'jsonschema.ValidationError',
-    type_schema: Dict,
-    activity_index: Optional[int] = None
+    type_schema: dict,
+    activity_index: int | None = None
 ) -> str:
     """
     Generate an actionable, human-friendly error message from a schema validation error.
@@ -153,7 +152,7 @@ def generate_actionable_error(
     activity_title = activity.get('title', 'Untitled')
 
     # Build activity identifier
-    activity_id = f"Activity"
+    activity_id = "Activity"
     if activity_index is not None:
         activity_id = f"Activity #{activity_index + 1}"
     activity_id += f" ({activity_type})"
@@ -185,7 +184,7 @@ def generate_actionable_error(
         parts.append(f"  💡 Required field '{missing_field}' is missing")
     elif "Additional properties are not allowed" in error_message:
         # Extra field that shouldn't be there
-        parts.append(f"  💡 Remove unexpected properties or check for typos in field names")
+        parts.append("  💡 Remove unexpected properties or check for typos in field names")
     elif "is not of type" in error_message:
         # Wrong type
         parts.append(f"  💡 Check the data type - expected {error.schema.get('type', 'unknown')}")
@@ -193,7 +192,7 @@ def generate_actionable_error(
     # Add example fix for common errors
     example = _generate_example_fix(activity_type, error, type_schema)
     if example:
-        parts.append(f"\n  Example fix:")
+        parts.append("\n  Example fix:")
         for line in example.split('\n'):
             parts.append(f"  {line}")
 
@@ -204,7 +203,7 @@ def generate_actionable_error(
     return '\n'.join(parts)
 
 
-def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError', type_schema: Dict) -> Optional[str]:
+def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError', type_schema: dict) -> str | None:
     """Generate a minimal example fix for common schema errors."""
 
     # For missing required fields, show minimal valid structure
@@ -259,27 +258,27 @@ def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError
 # VALIDATION
 # =============================================================================
 
-def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optional[int] = None) -> List[str]:
+def validate_activity(activity: dict, base_schema: dict, activity_index: int | None = None) -> list[str]:
     """
     Validate a single activity against its schema.
-    
+
     Returns a list of validation error messages (empty if valid).
     """
     errors = []
-    
+
     if not HAS_JSONSCHEMA:
         return ["jsonschema library not installed - cannot validate schemas"]
-    
+
     activity_type = activity.get('type')
     if not activity_type:
         return ["Activity missing 'type' field"]
-    
+
     # Get schema for this activity type
     type_schema = get_activity_schema(activity_type, base_schema)
     if not type_schema:
         # Unknown type - might be valid but not in base schema
         return [f"Unknown activity type: '{activity_type}' (not in schema)"]
-    
+
     # Validate against the schema
     try:
         jsonschema.validate(instance=activity, schema=type_schema)
@@ -299,7 +298,7 @@ def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optiona
 
         # Check for blank lines in passage (causes MDX/HTML rendering issues)
         if '\n\n' in passage:
-            errors.append(f"cloze: passage contains blank lines (\\n\\n) which break MDX rendering. Use single newlines only.")
+            errors.append("cloze: passage contains blank lines (\\n\\n) which break MDX rendering. Use single newlines only.")
 
         # Check for full-sentence options in cloze blanks (indicates wrong activity type)
         if has_curly_braces and has_pipe_format:
@@ -321,18 +320,18 @@ def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optiona
 
         if has_curly_braces and not has_blanks_array and not has_pipe_format:
             # Passage has {word} markers but no way to present options
-            errors.append(f"cloze: passage has {{word}} markers but no 'blanks' array or '|' options format")
+            errors.append("cloze: passage has {word} markers but no 'blanks' array or '|' options format")
         elif has_curly_braces and not has_pipe_format and has_blanks_array:
             # Has blanks array - markers should be {1}, {2}, etc.
             markers = re.findall(r'\{([^}]+)\}', passage)
             non_numeric = [m for m in markers if not m.isdigit()]
             if non_numeric:
-                errors.append(f"cloze: when using 'blanks' array, passage markers must be {{1}}, {{2}}, etc. (not words)")
+                errors.append("cloze: when using 'blanks' array, passage markers must be {1}, {2}, etc. (not words)")
 
     return errors
 
 
-def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
+def validate_activity_yaml_file(yaml_path: Path) -> tuple[bool, list[str]]:
     """
     Validate all activities in a YAML file against the schema.
 
@@ -356,13 +355,13 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     if level_match:
         # Check for level-specific schema (e.g., activities-c1.schema.json)
         schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
-        
+
         # Fallback to B1 schema if specific one doesn't exist (B1 is the baseline for B1+)
         if not schema_path.exists():
             schema_path = get_schemas_dir() / "activities-b1.schema.json"
 
         if schema_path.exists():
-            with open(schema_path, 'r', encoding='utf-8') as f:
+            with open(schema_path, encoding='utf-8') as f:
                 level_schema = json.load(f)
 
     # Load base schema for individual activity validation
@@ -373,7 +372,7 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
 
     # Load activities from YAML with duplicate key detection
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             content = f.read()
         data, duplicate_errors = safe_load_with_duplicate_check(content)
 
@@ -442,16 +441,16 @@ def check_activity_yaml_schema(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check that activity YAML files conform to the JSON schema.
-    
+
     This is the main entry point called by the audit system.
-    
+
     Returns list of violation dicts with 'type', 'message', 'severity'.
     """
     violations = []
-    
+
     if not HAS_JSONSCHEMA:
         # Warn but don't fail if jsonschema not installed
         violations.append({
@@ -460,27 +459,27 @@ def check_activity_yaml_schema(
             'severity': 'warning'
         })
         return violations
-    
+
     # Find the activities YAML file
     md_path = Path(file_path)
     slug = md_path.stem
     activities_dir = md_path.parent / "activities"
     yaml_path = activities_dir / f"{slug}.yaml"
-    
+
     if not yaml_path.exists():
         # No YAML file - that's OK, module might use embedded activities
         return []
-    
+
     # Validate
-    is_valid, errors = validate_activity_yaml_file(yaml_path)
-    
+    _is_valid, errors = validate_activity_yaml_file(yaml_path)
+
     for error in errors:
         violations.append({
             'type': 'YAML_SCHEMA_VIOLATION',
             'message': f"Schema error in {yaml_path.name}: {error}",
             'severity': 'error',
         })
-    
+
     return violations
 
 
@@ -488,7 +487,7 @@ def check_activity_yaml_schema(
 # AUTO-FIX FUNCTIONS
 # =============================================================================
 
-def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, List[str]]:
+def fix_activity_violations(activity: dict, base_schema: dict) -> tuple[bool, list[str]]:
     """
     Automatically fix common YAML schema violations in an activity.
 
@@ -528,18 +527,17 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
         modified = True
 
     # Fix 2: mark-the-words - extract answers from text if marked with *asterisks*
-    if activity_type == 'mark-the-words':
-        if 'text' in activity and 'answers' not in activity:
-            text = activity['text']
-            # Extract words marked with *asterisks* (if any)
-            import re
-            marked_words = re.findall(r'\*([^\*]+)\*', text)
-            if marked_words:
-                activity['answers'] = marked_words
-                # Remove asterisks from text
-                activity['text'] = re.sub(r'\*([^\*]+)\*', r'\1', text)
-                fixes.append(f"Extracted answers from text ({len(marked_words)} words)")
-                modified = True
+    if activity_type == 'mark-the-words' and 'text' in activity and 'answers' not in activity:
+        text = activity['text']
+        # Extract words marked with *asterisks* (if any)
+        import re
+        marked_words = re.findall(r'\*([^\*]+)\*', text)
+        if marked_words:
+            activity['answers'] = marked_words
+            # Remove asterisks from text
+            activity['text'] = re.sub(r'\*([^\*]+)\*', r'\1', text)
+            fixes.append(f"Extracted answers from text ({len(marked_words)} words)")
+            modified = True
 
     # Fix 3: unjumble - convert scrambled to words array
     if activity_type == 'unjumble' and 'items' in activity:
@@ -554,10 +552,7 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
                 elif 'scrambled' in item and 'words' not in item:
                     scrambled = item['scrambled']
                     # Split by ' / ' or whitespace
-                    if ' / ' in scrambled:
-                        words = [w.strip() for w in scrambled.split(' / ')]
-                    else:
-                        words = scrambled.split()
+                    words = [w.strip() for w in scrambled.split(' / ')] if ' / ' in scrambled else scrambled.split()
                     item['words'] = words
                     del item['scrambled']
                     fixes.append(f"Converted 'scrambled' to 'words' array in unjumble item {i+1}")
@@ -657,12 +652,11 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
     # Fix 7: fill-in - rename text→sentence
     if activity_type == 'fill-in' and 'items' in activity:
         for i, item in enumerate(activity['items']):
-            if isinstance(item, dict):
-                if 'text' in item and 'sentence' not in item:
-                    item['sentence'] = item['text']
-                    del item['text']
-                    fixes.append(f"Renamed 'text' to 'sentence' in fill-in item {i+1}")
-                    modified = True
+            if isinstance(item, dict) and 'text' in item and 'sentence' not in item:
+                item['sentence'] = item['text']
+                del item['text']
+                fixes.append(f"Renamed 'text' to 'sentence' in fill-in item {i+1}")
+                modified = True
 
     # Fix 8: error-correction - ensure sentence property exists and type coercion
     if activity_type == 'error-correction' and 'items' in activity:
@@ -688,21 +682,18 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
     # Fix 9: group-sort - rename title→name in groups
     if activity_type == 'group-sort' and 'groups' in activity:
         for group in activity['groups']:
-            if isinstance(group, dict):
-                if 'title' in group and 'name' not in group:
-                    group['name'] = group['title']
-                    del group['title']
-                    fixes.append(f"Renamed 'title' to 'name' in group-sort group")
-                    modified = True
+            if isinstance(group, dict) and 'title' in group and 'name' not in group:
+                group['name'] = group['title']
+                del group['title']
+                fixes.append("Renamed 'title' to 'name' in group-sort group")
+                modified = True
 
     # Fix 10: select - try property renames only (structural fixes need manual review)
     # Note: flat format (items with question+correct bool) vs proper format (items with question+options array)
     # are semantically different. Flat format needs manual regeneration, not auto-fix.
     if activity_type == 'select' and 'items' in activity:
         for i, item in enumerate(activity['items']):
-            if isinstance(item, dict):
-                # Only try simple property renames if 'options' exists
-                if 'options' not in item:
+            if isinstance(item, dict) and 'options' not in item:
                     if 'answers' in item:
                         item['options'] = item['answers']
                         del item['answers']
@@ -746,13 +737,13 @@ def fix_activity_violations(activity: Dict, base_schema: Dict) -> Tuple[bool, Li
             while '\n\n' in fixed_passage:
                 fixed_passage = fixed_passage.replace('\n\n', '\n')
             activity['passage'] = fixed_passage
-            fixes.append(f"Removed blank lines from cloze passage (fixes MDX rendering)")
+            fixes.append("Removed blank lines from cloze passage (fixes MDX rendering)")
             modified = True
 
     return modified, fixes
 
 
-def fix_raw_yaml_text(content: str) -> Tuple[str, List[str]]:
+def fix_raw_yaml_text(content: str) -> tuple[str, list[str]]:
     """
     Fix YAML issues at the raw text level (before parsing).
 
@@ -824,7 +815,7 @@ def fix_raw_yaml_text(content: str) -> Tuple[str, List[str]]:
     return '\n'.join(fixed_lines), fixes
 
 
-def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: str = None, dry_run: bool = False) -> Tuple[int, List[str]]:
+def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: str | None = None, dry_run: bool = False) -> tuple[int, list[str]]:
     """
     Remove forbidden activity types from a YAML activity file.
 
@@ -857,7 +848,7 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
         return 0, ["No forbidden types defined for this level/track"]
 
     # Load activities from YAML
-    with open(yaml_path, 'r', encoding='utf-8') as f:
+    with open(yaml_path, encoding='utf-8') as f:
         raw_content = f.read()
 
     try:
@@ -909,7 +900,7 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
     return removed_count, all_messages
 
 
-def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str]]:
+def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> tuple[int, list[str]]:
     """
     Auto-fix schema violations in a YAML activity file.
 
@@ -940,7 +931,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
                            'b2-pro', 'c1-pro'):
             track_path = get_schemas_dir() / f"activities-{parent.name}.schema.json"
             if track_path.exists():
-                with open(track_path, 'r', encoding='utf-8') as f:
+                with open(track_path, encoding='utf-8') as f:
                     track_schema = json.load(f)
             break
 
@@ -948,7 +939,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     fix_schema = track_schema if track_schema else base_schema
 
     # Pre-fix: Fix raw text issues that prevent YAML parsing
-    with open(yaml_path, 'r', encoding='utf-8') as f:
+    with open(yaml_path, encoding='utf-8') as f:
         raw_content = f.read()
 
     fixed_content, raw_fixes = fix_raw_yaml_text(raw_content)
@@ -967,7 +958,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
             # Duplicates cannot be auto-fixed - report them
             all_fixes.extend([f"⚠️ CANNOT AUTO-FIX: {err}" for err in duplicate_errors])
     except yaml.YAMLError as e:
-        return total_fixes, all_fixes + [f"YAML parse error (cannot auto-fix): {e}"]
+        return total_fixes, [*all_fixes, f"YAML parse error (cannot auto-fix): {e}"]
 
     if not data:
         return 0, []
@@ -976,7 +967,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     if isinstance(data, dict) and 'activities' in data:
         activities = data['activities']
         # Strip metadata keys (module, level, etc.) and unwrap to bare list
-        stripped_keys = [k for k in data.keys() if k != 'activities']
+        stripped_keys = [k for k in data if k != 'activities']
         if stripped_keys:
             all_fixes.append(f"✓ Stripped metadata keys from YAML: {', '.join(stripped_keys)}")
         all_fixes.append("✓ Unwrapped `activities:` dictionary to bare list (required format)")
@@ -1019,7 +1010,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
 # PLAN / META / VOCABULARY SCHEMA CHECK FUNCTIONS
 # =============================================================================
 
-def _validate_yaml_against_schema(yaml_path: Path, schema_name: str) -> List[str]:
+def _validate_yaml_against_schema(yaml_path: Path, schema_name: str) -> list[str]:
     """
     Generic helper: load a YAML file and validate it against a named JSON schema.
 
@@ -1035,11 +1026,11 @@ def _validate_yaml_against_schema(yaml_path: Path, schema_name: str) -> List[str
     if not schema_path.exists():
         return [f"Schema not found: {schema_path}"]
 
-    with open(schema_path, 'r', encoding='utf-8') as f:
+    with open(schema_path, encoding='utf-8') as f:
         schema = json.load(f)
 
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             data = yaml.safe_load(f)
     except yaml.YAMLError as e:
         return [f"YAML parse error: {e}"]
@@ -1063,7 +1054,7 @@ def check_plan_yaml_schema(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check that a plan YAML file conforms to module-plan.schema.json.
 
@@ -1099,7 +1090,7 @@ def check_meta_yaml_schema(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check that a meta YAML file conforms to meta-module.schema.json.
 
@@ -1135,7 +1126,7 @@ def check_vocabulary_yaml_schema(
     file_path: str,
     level: str,
     module_num: int,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Check that a vocabulary YAML file conforms to vocabulary.schema.json.
 
@@ -1169,13 +1160,13 @@ def check_vocabulary_yaml_schema(
 
 __all__ = [
     'check_activity_yaml_schema',
-    'check_plan_yaml_schema',
     'check_meta_yaml_schema',
+    'check_plan_yaml_schema',
     'check_vocabulary_yaml_schema',
-    'validate_activity_yaml_file',
-    'validate_activity',
     'fix_activity_violations',
     'fix_raw_yaml_text',
     'fix_yaml_file',
     'remove_forbidden_activities',
+    'validate_activity',
+    'validate_activity_yaml_file',
 ]

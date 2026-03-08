@@ -187,7 +187,7 @@ def main():
     cur = conn.cursor()
     count = cur.execute("SELECT COUNT(*) FROM forms").fetchone()[0]
     lemma_count = cur.execute("SELECT COUNT(DISTINCT lemma) FROM forms").fetchone()[0]
-    print(f"\nVerification:")
+    print("\nVerification:")
     print(f"  Total forms: {count:,}")
     print(f"  Distinct lemmas: {lemma_count:,}")
 

@@ -28,7 +28,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import yaml
-
 from gemini_output import PHASE_TAGS, extract_delimited, validate_output
 
 # Tags whose content should be valid YAML (bare list at root)
@@ -66,7 +65,7 @@ def _strip_dict_wrapper(text: str, tag: str) -> tuple[str, str | None]:
         return text, None
 
     if isinstance(data, dict) and len(data) == 1:
-        key = list(data.keys())[0]
+        key = next(iter(data.keys()))
         value = data[key]
         if isinstance(value, list):
             # Re-serialize as bare list

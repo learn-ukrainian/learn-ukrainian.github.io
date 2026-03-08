@@ -25,11 +25,11 @@ Manifest format (RFC #410):
 """
 
 import re
-import yaml
-from pathlib import Path
-from functools import lru_cache
 from dataclasses import dataclass
-from typing import Optional
+from functools import lru_cache
+from pathlib import Path
+
+import yaml
 
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -51,9 +51,9 @@ class Module:
     track: str  # 'core' or track name
     local_num: int
     global_num: int
-    phase: Optional[str] = None
-    focus: Optional[str] = None
-    tags: Optional[list[str]] = None
+    phase: str | None = None
+    focus: str | None = None
+    tags: list[str] | None = None
 
     @property
     def path(self) -> str:
@@ -149,7 +149,7 @@ def _load_meta_file(level: str, slug: str) -> dict:
     return result
 
 
-def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
+def parse_numbered_slug(slug: str) -> tuple[int | None, str]:
     """Parse a numbered slug into (number, base_slug).
 
     Only strips 1-2 digit prefixes (module ordering numbers like '01-').
@@ -161,7 +161,7 @@ def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
     return None, slug
 
 
-def get_module_by_slug(slug: str) -> Optional[Module]:
+def get_module_by_slug(slug: str) -> Module | None:
     """Find module by slug across core and tracks."""
     manifest = load_manifest()
 
@@ -241,7 +241,7 @@ def get_modules_for_level(level: str) -> list[Module]:
     return modules
 
 
-def get_module_by_number(level: str, num: int) -> Optional[Module]:
+def get_module_by_number(level: str, num: int) -> Module | None:
     """Get module by level and local number."""
     modules = get_modules_for_level(level)
     if 1 <= num <= len(modules):
@@ -284,7 +284,7 @@ def validate_manifest() -> list[str]:
     return errors
 
 
-def validate_filesystem_match(level: str = None) -> list[str]:
+def validate_filesystem_match(level: str | None = None) -> list[str]:
     """Validate that manifest matches filesystem state.
 
     Checks:
@@ -406,13 +406,13 @@ def main():
     elif cmd == 'stats':
         stats = get_manifest_stats()
         print(f"Manifest version: {stats['version']}")
-        print(f"\nCore modules by level:")
+        print("\nCore modules by level:")
         for level, count in stats['levels'].items():
             print(f"  {level.upper()}: {count}")
         print(f"\nTotal core: {stats['total_modules']}")
 
         if stats['tracks']:
-            print(f"\nTracks:")
+            print("\nTracks:")
             for track, count in stats['tracks'].items():
                 print(f"  {track}: {count}")
 

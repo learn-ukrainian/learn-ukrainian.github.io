@@ -34,7 +34,8 @@ def analyze_and_clean(dry_run: bool = True, grades: list[int] | None = None):
             continue
 
         for jsonl in sorted(grade_dir.glob("*-images.jsonl")):
-            records = [json.loads(line) for line in open(jsonl)]
+            with open(jsonl) as _jf:
+                records = [json.loads(line) for line in _jf]
             if not records:
                 continue
 

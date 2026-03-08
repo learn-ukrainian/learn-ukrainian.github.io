@@ -1,6 +1,6 @@
 import re
 
-with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', 'r', encoding='utf-8') as f:
+with open('curriculum/l2-uk-en/b1/relative-clauses-de-kudy-zvidky.md', encoding='utf-8') as f:
     text = f.read()
 
 prefixes = [
@@ -22,7 +22,7 @@ prefixes = [
 for p in prefixes:
     def replacer(match):
         return match.group(1) + ". " + match.group(2).capitalize()
-    
+
     new_text = re.sub(p, replacer, text, flags=re.IGNORECASE | re.DOTALL)
     if new_text == text:
         print(f"Failed to match: {p}")

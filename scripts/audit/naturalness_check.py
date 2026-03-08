@@ -13,10 +13,10 @@ import json
 import re
 import subprocess
 import sys
-import yaml
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Tuple, Optional, Dict
+
+import yaml
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
@@ -47,7 +47,7 @@ RESPOND WITH ONLY THIS JSON (no markdown, no explanation outside JSON):
 
 def extract_ukrainian_content(md_file_path: str, max_chars: int = 4000) -> str:
     """Extract Ukrainian text content from markdown file."""
-    with open(md_file_path, 'r', encoding='utf-8') as f:
+    with open(md_file_path, encoding='utf-8') as f:
         content = f.read()
 
     # Remove YAML frontmatter
@@ -84,7 +84,7 @@ def extract_ukrainian_content(md_file_path: str, max_chars: int = 4000) -> str:
     return result
 
 
-def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
+def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
     """Call Gemini and return raw response + parsed JSON."""
     try:
         result = subprocess.run(
@@ -143,7 +143,7 @@ def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
         return str(e), {"score": 0, "status": "ERROR", "feedback_uk": f"Error: {e}", "issues": []}
 
 
-def call_claude_headless(prompt: str, task_id: str) -> Tuple[str, Dict]:
+def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
     """
     Call headless Claude via gemini_bridge ask-claude command.
     Returns raw response + parsed JSON.
@@ -222,8 +222,8 @@ def call_claude_headless(prompt: str, task_id: str) -> Tuple[str, Dict]:
         return str(e), {"score": 0, "status": "ERROR", "feedback_uk": f"Error: {e}", "issues": []}
 
 
-def append_to_audit(audit_path: Path, gemini_raw: str, gemini_parsed: Dict,
-                    claude_raw: str, claude_parsed: Dict, timestamp: str) -> None:
+def append_to_audit(audit_path: Path, gemini_raw: str, gemini_parsed: dict,
+                    claude_raw: str, claude_parsed: dict, timestamp: str) -> None:
     """Append naturalness results to audit review file."""
 
     section = f"""
@@ -290,7 +290,7 @@ def update_meta_naturalness(meta_path: Path, score: int, status: str, feedback: 
     if not meta_path.exists():
         return
 
-    with open(meta_path, 'r', encoding='utf-8') as f:
+    with open(meta_path, encoding='utf-8') as f:
         meta = yaml.safe_load(f) or {}
 
     meta['naturalness'] = {
@@ -309,7 +309,7 @@ def check_naturalness(
     md_file_path: str,
     update_meta: bool = True,
     force: bool = False
-) -> Tuple[int, str]:
+) -> tuple[int, str]:
     """
     Check naturalness with dual AI validation.
 
@@ -322,7 +322,7 @@ def check_naturalness(
     # Check if already evaluated (unless force)
     if not force and meta_path.exists():
         try:
-            with open(meta_path, 'r', encoding='utf-8') as f:
+            with open(meta_path, encoding='utf-8') as f:
                 meta = yaml.safe_load(f)
             if meta and 'naturalness' in meta:
                 nat = meta['naturalness']
@@ -332,33 +332,33 @@ def check_naturalness(
         except Exception:
             pass
 
-    print(f"  🔍 Checking naturalness (dual AI)...")
+    print("  🔍 Checking naturalness (dual AI)...")
 
     # Extract content
     content = extract_ukrainian_content(md_file_path)
     if len(content) < 100:
-        print(f"  ⚠️ Insufficient content for naturalness check")
+        print("  ⚠️ Insufficient content for naturalness check")
         return 0, "PENDING"
 
     # Build prompt
     prompt = NATURALNESS_PROMPT.format(content=content)
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
     task_id = f"naturalness-{md_path.stem}-{int(datetime.now().timestamp())}"
 
     # Call Gemini
-    print(f"  📤 Sending to Gemini...")
+    print("  📤 Sending to Gemini...")
     gemini_raw, gemini_parsed = call_gemini(prompt, task_id)
     print(f"  📥 Gemini: {gemini_parsed.get('score', '?')}/10 - {gemini_parsed.get('status', '?')}")
 
     # Call Claude (headless)
-    print(f"  📤 Sending to Claude (headless)...")
+    print("  📤 Sending to Claude (headless)...")
     claude_task_id = f"naturalness-claude-{md_path.stem}-{int(datetime.now().timestamp())}"
     claude_raw, claude_parsed = call_claude_headless(prompt, claude_task_id)
     print(f"  📥 Claude: {claude_parsed.get('score', '?')}/10 - {claude_parsed.get('status', '?')}")
 
     # Append to audit file
     if audit_path.exists():
-        print(f"  📝 Appending to audit file...")
+        print("  📝 Appending to audit file...")
         append_to_audit(audit_path, gemini_raw, gemini_parsed, claude_raw, claude_parsed, timestamp)
 
     # Use Gemini score as primary

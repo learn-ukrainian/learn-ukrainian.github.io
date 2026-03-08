@@ -142,7 +142,7 @@ def main():
 
 def _fail_verdict(slug, problems):
     print(f"{'─'*60}")
-    print(f"  VERDICT: FAIL")
+    print("  VERDICT: FAIL")
     print(f"  Module:  {slug}")
     print(f"{'─'*60}")
     for p in problems:
@@ -157,7 +157,7 @@ def _pass_verdict(slug, gates):
     info_count = sum(1 for g in gates.values() if g.get("status") == "info")
 
     print(f"{'─'*60}")
-    print(f"  VERDICT: PASS")
+    print("  VERDICT: PASS")
     print(f"  Module:  {slug}")
     print(f"  Gates:   {pass_count} pass, {info_count} info")
     print(f"{'─'*60}")

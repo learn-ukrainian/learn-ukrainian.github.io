@@ -16,11 +16,11 @@ Examples:
 """
 
 import argparse
-import sqlite3
-import yaml
 import re
+import sqlite3
 from pathlib import Path
-from typing import Set, Dict, List
+
+import yaml
 
 # Configuration
 CURRICULUM_DIR = Path("curriculum/l2-uk-en")
@@ -60,7 +60,7 @@ def slugify(text: str) -> str:
     slug = re.sub(r'-+', '-', slug)
     return slug.strip('-')
 
-def determine_entry_type(item: Dict) -> str:
+def determine_entry_type(item: dict) -> str:
     """Determine if item is a lemma or expression."""
     pos = item.get('pos', '')
     lemma = item.get('lemma', '')
@@ -75,14 +75,14 @@ def determine_entry_type(item: Dict) -> str:
 
     return 'lemma'
 
-def process_yaml_file(yaml_path: Path, level: str, known_words: Set[str]) -> Dict:
+def process_yaml_file(yaml_path: Path, level: str, known_words: set[str]) -> dict:
     """
     Process a single YAML vocabulary file.
 
     Returns:
         Dictionary with 'lemmas', 'expressions', and 'module_num'
     """
-    with open(yaml_path, 'r', encoding='utf-8') as f:
+    with open(yaml_path, encoding='utf-8') as f:
         data = yaml.safe_load(f)
 
     if not data or 'items' not in data:
@@ -127,7 +127,7 @@ def process_yaml_file(yaml_path: Path, level: str, known_words: Set[str]) -> Dic
         'module_num': module_num
     }
 
-def populate_database(levels: List[str], force: bool = False):
+def populate_database(levels: list[str], force: bool = False):
     """Populate database from YAML files."""
 
     # Check if database exists
@@ -138,7 +138,7 @@ def populate_database(levels: List[str], force: bool = False):
 
     # Remove existing database if force
     if DB_PATH.exists() and force:
-        print(f"🗑️  Removing existing database...")
+        print("🗑️  Removing existing database...")
         DB_PATH.unlink()
 
     # Initialize fresh database
@@ -149,7 +149,7 @@ def populate_database(levels: List[str], force: bool = False):
     ], capture_output=True, text=True)
 
     if result.returncode != 0:
-        print(f"❌ Failed to initialize database")
+        print("❌ Failed to initialize database")
         print(result.stderr)
         return
 
@@ -281,7 +281,7 @@ def populate_database(levels: List[str], force: bool = False):
 
     # Final statistics
     print(f"\n{'='*60}")
-    print(f"✅ Vocabulary database rebuilt successfully!")
+    print("✅ Vocabulary database rebuilt successfully!")
     print(f"{'='*60}")
     print(f"  📝 Lemmas added: {stats['lemmas_added']}")
     print(f"  📚 Expressions added: {stats['expressions_added']}")

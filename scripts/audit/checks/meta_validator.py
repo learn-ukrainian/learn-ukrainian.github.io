@@ -5,9 +5,9 @@ Also validates activity_hints types against VALID_ACTIVITY_TYPES for all modules
 """
 
 import json
-import os
 import sys
 from pathlib import Path
+
 import jsonschema
 
 # Ensure scripts/ is importable
@@ -145,11 +145,11 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
         }]
 
     try:
-        with open(schema_path, 'r', encoding='utf-8') as f:
+        with open(schema_path, encoding='utf-8') as f:
             schema = json.load(f)
-        
+
         jsonschema.validate(instance=meta_data, schema=schema)
-        
+
     except jsonschema.ValidationError as e:
         # Format the validation error for readability
         path = " -> ".join(str(p) for p in e.path) if e.path else "root"
@@ -163,7 +163,7 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
         return [{
             'type': 'SCHEMA_ERROR',
             'severity': 'critical',
-            'message': f"Schema validation error: {str(e)}",
+            'message': f"Schema validation error: {e!s}",
             'fix': 'Check schema JSON validity.'
         }]
 

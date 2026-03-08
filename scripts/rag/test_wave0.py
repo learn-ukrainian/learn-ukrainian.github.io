@@ -30,7 +30,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.config import LITERARY_COLLECTION, LITERARY_DIR, QDRANT_HOST, QDRANT_REST_PORT
 from rag.ingest import create_literary_collection, ingest_literary_chunks
 
-
 # ── Wave 0 test texts ────────────────────────────────────────────
 WAVE0_TEXTS = [
     {
@@ -129,7 +128,7 @@ TEST_QUERIES = [
 
 def scrape_test_texts():
     """Scrape Wave 0 test texts."""
-    from rag.scrape_litopys import scrape_work, save_chunks
+    from rag.scrape_litopys import save_chunks, scrape_work
 
     LITERARY_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -156,7 +155,6 @@ def scrape_test_texts():
 
 def run_quality_tests(client):
     """Run retrieval quality tests against the literary collection."""
-    from qdrant_client.models import NamedSparseVector, NamedVector, SparseVector
     from rag.embed import TextEncoder
 
     encoder = TextEncoder()
@@ -183,16 +181,15 @@ def run_quality_tests(client):
         dense_vec = emb["dense_vecs"][0].tolist()
         sw = emb["lexical_weights"][0]
         if isinstance(sw, dict):
-            sparse_indices = list(
+            list(
                 int(k) if isinstance(k, (int, float)) else hash(k) % (2**31)
-                for k in sw.keys()
+                for k in sw
             )
-            sparse_values = list(sw.values())
+            list(sw.values())
         else:
-            sparse_indices, sparse_values = [], []
+            _sparse_indices, _sparse_values = [], []
 
         # Search with RRF (dense + sparse)
-        from qdrant_client.models import Prefetch, Query
 
         # Dense search
         dense_results = client.query_points(
@@ -228,9 +225,9 @@ def run_quality_tests(client):
 
         if hit:
             passed_tests += 1
-            print(f"  → PASS")
+            print("  → PASS")
         else:
-            print(f"  → FAIL (expected work not in top-3)")
+            print("  → FAIL (expected work not in top-3)")
 
         results.append({
             "query": test["query"],

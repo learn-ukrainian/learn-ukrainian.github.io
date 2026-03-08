@@ -9,8 +9,7 @@ Activities are SUPPOSED to use lesson content, so no cross-file checks.
 """
 
 import re
-from typing import List, Dict
-from pathlib import Path
+
 
 def get_word_set(text: str) -> set:
     """Extract set of unique words from text."""
@@ -20,7 +19,7 @@ def get_word_set(text: str) -> set:
     # Keep words > 3 chars to ignore common particles
     return {w for w in words if len(w) > 3}
 
-def check_duplicate_sentences(content: str, yaml_content: str = "") -> List[Dict]:
+def check_duplicate_sentences(content: str, yaml_content: str = "") -> list[dict]:
     """
     Find sentences with high word overlap within lesson content.
     Activities are SUPPOSED to use lesson content, so no cross-file check.
@@ -35,9 +34,10 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> List[Dict
     seen_sets = []
     for idx, s in enumerate(lesson_sentences):
         words = get_word_set(s)
-        if len(words) < 5: continue
+        if len(words) < 5:
+            continue
 
-        for prev_idx, prev_raw, prev_words in seen_sets:
+        for prev_idx, _prev_raw, prev_words in seen_sets:
             intersection = words.intersection(prev_words)
             union = words.union(prev_words)
             similarity = len(intersection) / len(union) if union else 0
@@ -56,27 +56,27 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> List[Dict
 
     return violations
 
-def check_robotic_structure(content: str) -> List[Dict]:
+def check_robotic_structure(content: str) -> list[dict]:
     """
     Detects robotic repetition of sentence structures.
     """
     violations = []
     body = re.sub(r'^---.*?---\n', '', content, flags=re.DOTALL)
-    
+
     sentences = re.split(r'(?<=[.!?])\s+', body)
     clean_sentences = []
     for s in sentences:
         s = s.strip()
         # Ignore list items, headers, short lines, AND TABLES
-        if (len(s) < 20 or s.startswith('-') or s.startswith('>') or s.startswith('*') or 
-            s.startswith('#') or s.startswith('|') or s.startswith('(') or 
+        if (len(s) < 20 or s.startswith('-') or s.startswith('>') or s.startswith('*') or
+            s.startswith('#') or s.startswith('|') or s.startswith('(') or
             s.startswith('—') or s.startswith('_') or s.startswith('→') or
             s.startswith('"') or s.startswith('«') or s.startswith("'") or
             re.match(r'^\d+[.)]', s) or  # Ignore numbered lists 1. or 1)
             s.lower().startswith('practice') or s.lower().startswith('you are')):
             continue
         clean_sentences.append(re.sub(r'^[-*—_]\s+', '', s).strip())
-    
+
     window_size = 4
     for i in range(len(clean_sentences) - window_size):
         window = clean_sentences[i : i+window_size]
@@ -89,7 +89,7 @@ def check_robotic_structure(content: str) -> List[Dict]:
                 if starter.startswith("це ") or starter.startswith("я ") or starter.startswith("він ") or starter.startswith("вона "):
                     continue
                 starters.append(starter)
-        
+
         if len(starters) >= 3:
             from collections import Counter
             counts = Counter(starters)
@@ -102,10 +102,10 @@ def check_robotic_structure(content: str) -> List[Dict]:
                         'issue': f"Robotic structure: {count} sentences start with '{most_common}...'.",
                         'fix': "Vary sentence structure."
                     })
-                    break 
+                    break
     return violations
 
-def check_content_purity(content: str, yaml_content: str = "") -> List[Dict]:
+def check_content_purity(content: str, yaml_content: str = "") -> list[dict]:
     """Main entry point for purity checks."""
     violations = []
     violations.extend(check_duplicate_sentences(content, yaml_content))

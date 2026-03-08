@@ -173,9 +173,8 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
         # Skip lines that are mostly single Cyrillic words (vocab drills)
         # These are short lines with 1-3 Cyrillic words and no sentence structure
         cyrillic_words = re.findall(r'[\u0400-\u04ff]{2,}', stripped)
-        if 1 <= len(cyrillic_words) <= 3 and len(stripped) < 50:
-            # Check if it looks like a drill item (no verbs/sentence markers)
-            if not re.search(r'\b(є|був|була|було|буде|можна|треба|потрібно)\b', stripped, re.IGNORECASE):
+        if (1 <= len(cyrillic_words) <= 3 and len(stripped) < 50
+                and not re.search(r'\b(є|був|була|було|буде|можна|треба|потрібно)\b', stripped, re.IGNORECASE)):
                 continue
         prose_lines.append(line)
 
