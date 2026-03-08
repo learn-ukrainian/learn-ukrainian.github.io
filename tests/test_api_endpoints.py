@@ -164,25 +164,25 @@ class TestReadYamlFile:
     """_read_yaml_file safely reads YAML files."""
 
     def test_reads_valid_yaml(self, tmp_path):
-        from scripts.api.dashboard_router import _read_yaml_file
+        from scripts.api.dashboard_helpers import read_yaml_file
 
         f = tmp_path / "test.yaml"
         f.write_text("key: value\nnum: 42")
-        result = _read_yaml_file(f)
+        result = read_yaml_file(f)
         assert result == {"key": "value", "num": 42}
 
     def test_returns_none_for_missing_file(self, tmp_path):
-        from scripts.api.dashboard_router import _read_yaml_file
+        from scripts.api.dashboard_helpers import read_yaml_file
 
-        result = _read_yaml_file(tmp_path / "nonexistent.yaml")
+        result = read_yaml_file(tmp_path / "nonexistent.yaml")
         assert result is None
 
     def test_returns_none_for_invalid_yaml(self, tmp_path):
-        from scripts.api.dashboard_router import _read_yaml_file
+        from scripts.api.dashboard_helpers import read_yaml_file
 
         f = tmp_path / "bad.yaml"
         f.write_text(":\n  - :\n    [invalid")
-        result = _read_yaml_file(f)
+        result = read_yaml_file(f)
         assert result is None
 
 
@@ -190,7 +190,7 @@ class TestExtractWordCountFromStatus:
     """_extract_word_count_from_status parses lesson gate message."""
 
     def test_parses_word_count_and_target(self):
-        from scripts.api.dashboard_router import _extract_word_count_from_status
+        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
             data = {
@@ -206,7 +206,7 @@ class TestExtractWordCountFromStatus:
         assert la == "2026-03-01T00:00:00Z"
 
     def test_returns_zeros_for_none(self):
-        from scripts.api.dashboard_router import _extract_word_count_from_status
+        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         wc, wt, dc, la = _extract_word_count_from_status(None)
         assert wc == 0
@@ -215,7 +215,7 @@ class TestExtractWordCountFromStatus:
         assert la is None
 
     def test_returns_zeros_for_empty_data(self):
-        from scripts.api.dashboard_router import _extract_word_count_from_status
+        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
             data = None
@@ -224,7 +224,7 @@ class TestExtractWordCountFromStatus:
         assert wc == 0
 
     def test_handles_deferred_count(self):
-        from scripts.api.dashboard_router import _extract_word_count_from_status
+        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
 
         class FakeResult:
             data = {
@@ -241,7 +241,7 @@ class TestComputeTrackStats:
     """_compute_track_stats aggregates module data."""
 
     def test_counts_statuses(self):
-        from scripts.api.dashboard_router import _compute_track_stats
+        from scripts.api.dashboard_helpers import compute_track_stats as _compute_track_stats
 
         modules = [
             {"status": "pass", "has_review": True, "has_final_review": False,
@@ -259,7 +259,7 @@ class TestComputeTrackStats:
         assert stats["plan_pass"] == 1
 
     def test_empty_modules(self):
-        from scripts.api.dashboard_router import _compute_track_stats
+        from scripts.api.dashboard_helpers import compute_track_stats as _compute_track_stats
 
         stats = _compute_track_stats([], "a1")
         assert stats["pass"] == 0
@@ -270,7 +270,7 @@ class TestDefaultResearchInfo:
     """_default_research_info returns correct structure."""
 
     def test_has_required_keys(self):
-        from scripts.api.dashboard_router import _default_research_info
+        from scripts.api.dashboard_helpers import default_research_info as _default_research_info
 
         info = _default_research_info("a1")
         assert info["exists"] is False
@@ -283,7 +283,7 @@ class TestExtractReviewInfo:
     """_extract_review_info reads review files."""
 
     def test_no_reviews_exist(self, tmp_path):
-        from scripts.api.dashboard_router import _extract_review_info
+        from scripts.api.dashboard_helpers import extract_review_info as _extract_review_info
 
         (tmp_path / "review").mkdir()
         (tmp_path / "audit").mkdir()
@@ -293,7 +293,7 @@ class TestExtractReviewInfo:
         assert info["review_score"] is None
 
     def test_review_exists_but_empty(self, tmp_path):
-        from scripts.api.dashboard_router import _extract_review_info
+        from scripts.api.dashboard_helpers import extract_review_info as _extract_review_info
 
         review_dir = tmp_path / "review"
         review_dir.mkdir()
@@ -307,7 +307,7 @@ class TestGetOrchestrationInfo:
     """_get_orchestration_info collects phase data."""
 
     def test_missing_dir(self, tmp_path):
-        from scripts.api.dashboard_router import _get_orchestration_info
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
 
         info = _get_orchestration_info(tmp_path / "nonexistent")
         assert info["orchestration"] == []
@@ -316,7 +316,7 @@ class TestGetOrchestrationInfo:
         assert info["friction_count"] == 0
 
     def test_existing_dir_with_files(self, tmp_path):
-        from scripts.api.dashboard_router import _get_orchestration_info
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
 
         orch = tmp_path / "orch"
         orch.mkdir()
@@ -327,7 +327,7 @@ class TestGetOrchestrationInfo:
         assert info["friction_count"] == 0
 
     def test_friction_files_counted(self, tmp_path):
-        from scripts.api.dashboard_router import _get_orchestration_info
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
 
         orch = tmp_path / "orch"
         orch.mkdir()
@@ -342,14 +342,14 @@ class TestClassifyModuleQueue:
     """_classify_module_queue routes modules to the right queue."""
 
     def test_missing_status_no_md_returns_otaman(self, tmp_path):
-        from scripts.api.dashboard_router import _classify_module_queue
+        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         status_file = tmp_path / "status" / "test.json"
         result = _classify_module_queue("a1", tmp_path, "test", 0, status_file)
         assert result == "otaman"
 
     def test_missing_status_with_md_returns_none(self, tmp_path):
-        from scripts.api.dashboard_router import _classify_module_queue
+        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         (tmp_path / "test.md").write_text("content")
         status_file = tmp_path / "nonexistent.json"
@@ -357,7 +357,7 @@ class TestClassifyModuleQueue:
         assert result is None
 
     def test_content_complete_returns_hetman(self, tmp_path):
-        from scripts.api.dashboard_router import _classify_module_queue
+        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "content-complete", "deferred_count": 0}}))
@@ -365,7 +365,7 @@ class TestClassifyModuleQueue:
         assert result == "hetman"
 
     def test_pass_without_final_review_returns_final_review(self, tmp_path):
-        from scripts.api.dashboard_router import _classify_module_queue
+        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "pass", "deferred_count": 0}}))
@@ -373,7 +373,7 @@ class TestClassifyModuleQueue:
         assert result == "final_review"
 
     def test_pass_with_final_review_returns_none(self, tmp_path):
-        from scripts.api.dashboard_router import _classify_module_queue
+        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "pass", "deferred_count": 0}}))

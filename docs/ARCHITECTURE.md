@@ -57,6 +57,8 @@ The sole build pipeline. v3/v4 are retired.
 
 Non-blocking phases: discover, sandbox, validate, review.
 
+See: [`docs/best-practices/prompt-engineering.md`](best-practices/prompt-engineering.md), [`docs/best-practices/context-engineering.md`](best-practices/context-engineering.md)
+
 Supporting modules:
 - `scripts/pipeline/state.py` — State machine (phase tracking, restarts)
 - `scripts/pipeline/parsing.py` — Markdown/YAML parsing
@@ -92,6 +94,8 @@ scripts/audit/
 ```
 
 **Key gates**: Words ≥ target, activities ≥ minimum, unique types, engagement boxes, vocab count, naturalness ≥ 8/10.
+
+See: [`docs/best-practices/audit-standards.md`](best-practices/audit-standards.md), [`docs/best-practices/module-content-quality.md`](best-practices/module-content-quality.md)
 
 ### 3. RAG System (`scripts/rag/` + `.mcp/servers/rag/`)
 **~8K LOC** | MCP server at `.mcp/servers/rag/server.py`
@@ -264,6 +268,48 @@ L1-agnostic Ukrainian (A1→B2). Separate schemas, no English. See `docs/l2-uk-d
 | **Russicism Detection** | Rule-based | Yes (blocking) | Part of validate phase |
 | **Content Quality** | LLM-based | No (informational) | `scripts/audit/checks/content_quality_pipeline.py` |
 | **Naturalness** | LLM-based | Yes (≥8/10) | `scripts/audit/naturalness_check.py` |
+
+## Cross-Subsystem Dependencies
+
+```
+Pipeline ──► Audit (validate phase runs audit gates)
+Pipeline ──► RAG (research + sandbox phases query Qdrant/VESUM)
+Pipeline ──► Agent Bridge (review phase calls Claude/Gemini)
+Audit ──► RAG (morphological validator uses VESUM SQLite)
+Audit ──► Scoring (gates.py calls scoring for recommendations)
+API ──► Audit (dashboard runs audit_module for live status)
+API ──► Pipeline (state_router reads pipeline state files)
+Batch ──► Pipeline (dispatches build_module_v5 per module)
+Codegen ──► Audit (MDX gen reads status for frontmatter)
+```
+
+Shared config files (single source of truth):
+- `scripts/audit/config.py` — level thresholds, word targets, gate minimums
+- `schemas/*.json` — activity/vocabulary/plan validation schemas
+- `docs/resources/trusted_sources.yaml` — approved reference sources
+
+## Storage Overview
+
+| Store | Technology | Location | Purpose |
+|-------|-----------|----------|---------|
+| Curriculum content | YAML + Markdown | `curriculum/` | Plans, lessons, activities, vocab |
+| Audit cache | JSON | `{level}/status/*.json` | Cached audit results |
+| VESUM dictionary | SQLite | `data/vesum/vesum.db` | 415K lemmas, ~6M word forms |
+| Textbook chunks | Qdrant (local) | `data/qdrant/` | 1.2K embedded textbook chunks |
+| Literary sources | Qdrant (local) | `data/qdrant/` | Primary source embeddings |
+| Pipeline state | JSON | `{level}/orchestration/*/state.json` | Build phase tracking |
+| Build metadata | YAML | `{level}/meta/*.yaml` | Naturalness scores, timestamps |
+
+## Deployment Topology
+
+Local-only development environment (no cloud deployment):
+
+- **macOS workstation** — 16GB RAM, pyenv Python 3.12.8
+- **Qdrant** — local vector DB (Docker or binary), default port 6333
+- **RAG MCP server** — standalone daemon on port 8766 (`./services.sh start rag`)
+- **API server** — FastAPI on port 8765 (`./services.sh start api`)
+- **Starlight dev server** — Astro on port 4321 (`./services.sh start starlight`)
+- **Service management** — `./services.sh {start|stop|restart|status} [service ...]`
 
 ## Key Design Decisions
 

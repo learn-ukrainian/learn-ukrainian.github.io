@@ -4,39 +4,32 @@ import json
 import re
 
 
+def _has_unjumble_content(item) -> bool:
+    """Check if an unjumble/anagram item has content in any valid field."""
+    if hasattr(item, 'words'):
+        return bool(item.words)
+    if hasattr(item, 'scrambled'):
+        return bool(item.scrambled)
+    # Legacy dictionary
+    if isinstance(item, dict):
+        return any(item.get(f) for f in ('words', 'jumbled', 'prompt', 'scrambled'))
+    return False
+
+
 def check_unjumble_empty_jumbled(yaml_activities: list) -> list:
     """Check for unjumble activities with empty jumbled fields (Issue #362)."""
     violations = []
 
     for activity in yaml_activities:
-        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
-        if act_type not in ['unjumble', 'anagram']:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type not in ('unjumble', 'anagram'):
             continue
 
-        title = activity.title if hasattr(activity, 'title') else activity.get('title', 'Untitled')
-        items = activity.items if hasattr(activity, 'items') else activity.get('items', [])
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
 
         for item_idx, item in enumerate(items, 1):
-            # Check if item has none of the valid field formats
-            # Handle both dataclass object and dictionary
-            if hasattr(item, 'words'):
-                has_words = bool(item.words)
-                has_jumbled = False
-                has_prompt = False
-                has_scrambled = False
-            elif hasattr(item, 'scrambled'):
-                has_words = False
-                has_jumbled = False
-                has_prompt = False
-                has_scrambled = bool(item.scrambled)
-            else:
-                # Legacy dictionary
-                has_words = 'words' in item and item['words']
-                has_jumbled = 'jumbled' in item and item['jumbled']
-                has_prompt = 'prompt' in item and item['prompt']
-                has_scrambled = 'scrambled' in item and item['scrambled']
-
-            if not (has_words or has_jumbled or has_prompt or has_scrambled):
+            if not _has_unjumble_content(item):
                 violations.append({
                     'type': 'EMPTY_UNJUMBLE_CONTENT',
                     'severity': 'critical',
@@ -78,67 +71,68 @@ def check_mdx_unjumble_rendering(mdx_content: str) -> list:
     return violations
 
 
+def _get_mark_text_and_answers(activity) -> tuple[str, list, str]:
+    """Get text, answers, and title from a mark-the-words activity."""
+    title = _get_activity_attr(activity, 'title', 'Untitled')
+    text = _get_activity_attr(activity, 'text', '') or _get_activity_attr(activity, 'passage', '')
+    answers = _get_activity_attr(activity, 'answers', [])
+    if not answers:
+        answers = _get_activity_attr(activity, 'correct_words', [])
+    return text, answers or [], title
+
+
+_MORPHEME_PATTERN = re.compile(r'([а-яіїєґА-ЯІЇЄҐ]*)\*([а-яіїєґА-ЯІЇЄҐ]+)\*([а-яіїєґА-ЯІЇЄҐ]*)')
+
+
+def _validate_morpheme_match(match, text: str, title: str) -> list:
+    """Validate a single morpheme pattern match."""
+    violations = []
+    prefix, morpheme, suffix = match.group(1), match.group(2), match.group(3)
+    full_word = prefix + morpheme + suffix
+
+    if not full_word or full_word == morpheme:
+        return violations
+
+    plain_text = re.sub(
+        r'[а-яіїєґА-ЯІЇЄҐ]*\*([а-яіїєґА-ЯІЇЄҐ]+)\*[а-яіїєґА-ЯІЇЄҐ]*',
+        lambda m: m.group(0).replace('*', ''), text)
+
+    if full_word.lower() not in plain_text.lower():
+        violations.append({
+            'type': 'INVALID_MORPHEME_WORD',
+            'severity': 'error',
+            'activity': title,
+            'message': f'Morpheme pattern "{prefix}*{morpheme}*{suffix}" constructs word "{full_word}" which is not found in the text',
+            'suggestion': f'Verify morpheme pattern is correct or word "{full_word}" exists in text'
+        })
+
+    if morpheme.lower() not in full_word.lower():
+        violations.append({
+            'type': 'INVALID_MORPHEME_POSITION',
+            'severity': 'error',
+            'activity': title,
+            'message': f'Morpheme "{morpheme}" not found in word "{full_word}"',
+            'suggestion': 'Morpheme should be part of the word, e.g., "*при*йшов" or "Чит*ач*"'
+        })
+
+    return violations
+
+
 def check_morpheme_patterns(yaml_activities: list) -> list:
     """Check for valid morpheme patterns in mark-the-words activities (Issue #363)."""
     violations = []
 
     for activity in yaml_activities:
-        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
-        if act_type != 'mark-the-words':
+        if _get_activity_attr(activity, 'type', '') != 'mark-the-words':
             continue
 
-        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
-        if not text and isinstance(activity, dict):
-            text = activity.get('text', '') or activity.get('passage', '')
-
-        answers = getattr(activity, 'answers', [])
-        if not answers and isinstance(activity, dict):
-            answers = activity.get('answers', []) or activity.get('correct_words', [])
-
-        title = getattr(activity, 'title', 'Untitled')
-        if not title and isinstance(activity, dict):
-            title = activity.get('title', 'Untitled')
+        text, answers, title = _get_mark_text_and_answers(activity)
 
         if answers and '*' not in text:
-            # If using answers array and no asterisks, it's not a morpheme activity
             continue
 
-        # Pattern: (prefix)*morpheme*(suffix)
-        morpheme_pattern = r'([а-яіїєґА-ЯІЇЄҐ]*)\*([а-яіїєґА-ЯІЇЄҐ]+)\*([а-яіїєґА-ЯІЇЄҐ]*)'
-        matches = list(re.finditer(morpheme_pattern, text))
-
-        if not matches:
-            continue
-
-        for match in matches:
-            prefix = match.group(1)
-            morpheme = match.group(2)
-            suffix = match.group(3)
-            full_word = prefix + morpheme + suffix
-
-            if not full_word or full_word == morpheme:
-                continue
-
-            plain_text = re.sub(r'[а-яіїєґА-ЯІЇЄҐ]*\*([а-яіїєґА-ЯІЇЄҐ]+)\*[а-яіїєґА-ЯІЇЄҐ]*',
-                               lambda m: m.group(0).replace('*', ''), text)
-
-            if full_word.lower() not in plain_text.lower():
-                violations.append({
-                    'type': 'INVALID_MORPHEME_WORD',
-                    'severity': 'error',
-                    'activity': title,
-                    'message': f'Morpheme pattern "{prefix}*{morpheme}*{suffix}" constructs word "{full_word}" which is not found in the text',
-                    'suggestion': f'Verify morpheme pattern is correct or word "{full_word}" exists in text'
-                })
-
-            if morpheme.lower() not in full_word.lower():
-                violations.append({
-                    'type': 'INVALID_MORPHEME_POSITION',
-                    'severity': 'error',
-                    'activity': title,
-                    'message': f'Morpheme "{morpheme}" not found in word "{full_word}"',
-                    'suggestion': 'Morpheme should be part of the word, e.g., "*при*йшов" or "Чит*ач*"'
-                })
+        for match in _MORPHEME_PATTERN.finditer(text):
+            violations.extend(_validate_morpheme_match(match, text, title))
 
     return violations
 
@@ -148,22 +142,13 @@ def check_mark_the_words_format(activities: list) -> list:
     violations = []
 
     for activity in activities:
-        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
-        if act_type != 'mark-the-words':
+        if _get_activity_attr(activity, 'type', '') != 'mark-the-words':
             continue
 
-        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
-        if not text and isinstance(activity, dict):
-            text = activity.get('text', '') or activity.get('passage', '')
+        text = _get_activity_attr(activity, 'text', '') or _get_activity_attr(activity, 'passage', '')
+        title = _get_activity_attr(activity, 'title', 'Untitled')
 
-        title = getattr(activity, 'title', 'Untitled')
-        if not title and isinstance(activity, dict):
-            title = activity.get('title', 'Untitled')
-
-        # Check for old bracket format: [word](category)
         has_brackets = bool(re.search(r'\[([^\]]+)\]\([^)]+\)', text))
-
-        # Check for new morpheme format: *morpheme*word
         has_morphemes = bool(re.search(r'\*[а-яіїєґА-ЯІЇЄҐ]+\*', text))
 
         if has_brackets and has_morphemes:
@@ -178,49 +163,70 @@ def check_mark_the_words_format(activities: list) -> list:
     return violations
 
 
+_VAGUE_MORPHEME_PATTERNS = [
+    re.compile(r'prefix,?\s+suffix,?\s+(or|and)\s+root', re.IGNORECASE),
+    re.compile(r'root,?\s+prefix,?\s+(or|and)\s+suffix', re.IGNORECASE),
+    re.compile(r'suffix,?\s+prefix,?\s+(or|and)\s+root', re.IGNORECASE),
+    re.compile(r'click\s+on\s+(any|all)\s+(word\s+parts?|morphemes?)', re.IGNORECASE),
+    re.compile(r'find\s+(any|all)\s+(word\s+parts?|morphemes?)', re.IGNORECASE),
+]
+
+
+def _check_vague_instruction(text: str, title: str) -> list:
+    """Check if the instruction text is too vague for morpheme identification."""
+    instruction = text.split('\n\n')[0] if '\n\n' in text else text.split('\n')[0]
+    for pattern in _VAGUE_MORPHEME_PATTERNS:
+        if pattern.search(instruction):
+            return [{
+                'type': 'VAGUE_MORPHEME_INSTRUCTION',
+                'severity': 'critical',
+                'activity': title,
+                'message': f'Vague instruction detected: "{instruction[:100]}"',
+                'suggestion': 'Use specific instruction like "Click on all prefixes" or "Click on roots showing place names"',
+                'pedagogical_issue': 'Students cannot determine what specific pattern to identify'
+            }]
+    return []
+
+
+def _check_morpheme_consistency(text: str, title: str, morpheme_count: int) -> list:
+    """Check if morpheme marking is consistent (all full words or all fragments)."""
+    marked_items = re.findall(r'\*([а-яіїєґА-ЯІЇЄҐ]+)\*([а-яіїєґА-ЯІЇЄҐ]*)', text)
+    has_full_words = False
+    has_fragments = False
+
+    for morpheme, rest in marked_items:
+        if rest:
+            has_fragments = True
+        else:
+            if re.search(rf'\*{re.escape(morpheme)}\*[\s\.,!?\u2014;:]', text):
+                has_full_words = True
+
+    if has_full_words and has_fragments and morpheme_count >= 3:
+        return [{
+            'type': 'INCONSISTENT_MORPHEME_TYPES',
+            'severity': 'warning',
+            'activity': title,
+            'message': 'Activity mixes full words and morpheme fragments',
+            'suggestion': 'Use consistent marking: either all full words (*читач*) or all fragments (*при*йшов)',
+            'pedagogical_issue': 'Inconsistent marking confuses the pattern students should learn'
+        }]
+    return []
+
+
 def check_morpheme_pedagogy(activities: list) -> list:
     """Check for pedagogically weak morpheme activities."""
     violations = []
 
     for activity in activities:
-        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
-        if act_type != 'mark-the-words':
+        if _get_activity_attr(activity, 'type', '') != 'mark-the-words':
             continue
 
-        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
-        if not text and isinstance(activity, dict):
-            text = activity.get('text', '') or activity.get('passage', '')
+        text = _get_activity_attr(activity, 'text', '') or _get_activity_attr(activity, 'passage', '')
+        title = _get_activity_attr(activity, 'title', 'Untitled')
 
-        title = getattr(activity, 'title', 'Untitled')
-        if not title and isinstance(activity, dict):
-            title = activity.get('title', 'Untitled')
+        violations.extend(_check_vague_instruction(text, title))
 
-        # Check for vague instructions (case-insensitive)
-        vague_patterns = [
-            r'prefix,?\s+suffix,?\s+(or|and)\s+root',
-            r'root,?\s+prefix,?\s+(or|and)\s+suffix',
-            r'suffix,?\s+prefix,?\s+(or|and)\s+root',
-            r'click\s+on\s+(any|all)\s+(word\s+parts?|morphemes?)',
-            r'find\s+(any|all)\s+(word\s+parts?|morphemes?)',
-        ]
-
-        instruction_text = text.split('\n\n')[0] if '\n\n' in text else text.split('\n')[0]
-
-        for pattern in vague_patterns:
-            if re.search(pattern, instruction_text, re.IGNORECASE):
-                violations.append({
-                    'type': 'VAGUE_MORPHEME_INSTRUCTION',
-                    'severity': 'critical',
-                    'activity': title,
-                    'message': f'Vague instruction detected: "{instruction_text[:100]}"',
-                    'suggestion': 'Use specific instruction like "Click on all prefixes" or "Click on roots showing place names"',
-                    'pedagogical_issue': 'Students cannot determine what specific pattern to identify'
-                })
-                break
-
-        # Count marked morphemes (asterisk patterns)
         morpheme_count = len(re.findall(r'\*[а-яіїєґА-ЯІЇЄҐ]+\*', text))
-
         if morpheme_count > 10:
             violations.append({
                 'type': 'TOO_MANY_MORPHEMES',
@@ -231,108 +237,78 @@ def check_morpheme_pedagogy(activities: list) -> list:
                 'pedagogical_issue': 'Too many examples can overwhelm students and dilute learning objective'
             })
 
-        # Analyze morpheme consistency (check if mixing full words vs fragments)
-        marked_items = re.findall(r'\*([а-яіїєґА-ЯІЇЄҐ]+)\*([а-яіїєґА-ЯІЇЄҐ]*)', text)
-
-        has_full_words = False  # *word* with no continuation
-        has_fragments = False   # *prefix*rest or *root*suffix
-
-        for morpheme, rest in marked_items:
-            if rest:  # *morpheme*rest - fragment
-                has_fragments = True
-            else:  # *word* - full word
-                # Check if this is truly a standalone word (followed by space or punctuation)
-                pattern = rf'\*{re.escape(morpheme)}\*[\s\.,!?—;:]'
-                if re.search(pattern, text):
-                    has_full_words = True
-
-        if has_full_words and has_fragments and morpheme_count >= 3:
-            violations.append({
-                'type': 'INCONSISTENT_MORPHEME_TYPES',
-                'severity': 'warning',
-                'activity': title,
-                'message': 'Activity mixes full words and morpheme fragments',
-                'suggestion': 'Use consistent marking: either all full words (*читач*) or all fragments (*при*йшов)',
-                'pedagogical_issue': 'Inconsistent marking confuses the pattern students should learn'
-            })
+        violations.extend(_check_morpheme_consistency(text, title, morpheme_count))
 
     return violations
+
+
+_ENGLISH_HINT_PATTERN = re.compile(r'\([a-z][a-z\s/]+\)')
+_GRAMMAR_ANNOTATION_PATTERN = re.compile(r'\([a-z]{2,4}\.\)')
+
+# Allowed hints for gender agreement testing (possessives)
+_GENDER_AGREEMENT_HINTS = {
+    '(my)', '(your)', '(his)', '(her)', '(its)', '(our)', '(their)',
+    '(your informal)', '(your formal)', '(your formal/plural)',
+    '(my book)', '(his car)', '(her house)',
+}
+
+_A1_A2_SCAFFOLDING_HINTS = {
+    '(example)', '(hint)', '(listen)', '(repeat)', '(choose)',
+    '(say)', '(read)', '(write)', '(match)', '(correct)',
+    '(true)', '(false)', '(yes)', '(no)', '(answer)',
+    '(singular)', '(plural)', '(masculine)', '(feminine)', '(neuter)',
+}
+
+
+def _collect_activity_text(activity, act_type: str) -> str:
+    """Collect checkable text from an activity based on its type."""
+    if act_type == 'cloze':
+        return _get_activity_attr(activity, 'passage', '') or ''
+    if act_type in ('fill-in', 'error-correction'):
+        items = _get_activity_attr(activity, 'items', [])
+        parts = []
+        for item in items:
+            sentence = item.get('sentence', '') if isinstance(item, dict) else getattr(item, 'sentence', '')
+            parts.append(sentence)
+        return '\n'.join(parts)
+    return ''
+
+
+def _filter_real_hints(hints: list[str], allowed_scaffolding: set) -> list[str]:
+    """Filter out grammar annotations and allowed hints from a list of hint matches."""
+    real = []
+    for hint in hints:
+        hint_lower = hint.lower()
+        if _GRAMMAR_ANNOTATION_PATTERN.match(hint):
+            continue
+        if hint_lower in _GENDER_AGREEMENT_HINTS:
+            continue
+        if hint_lower in allowed_scaffolding:
+            continue
+        real.append(hint)
+    return real
 
 
 def check_english_hints_in_activities(yaml_activities: list, level: str, module_num: int) -> list:
     """Check for inappropriate English hints in activities."""
     violations = []
 
-    # Pattern for English hint: (lowercase word or phrase)
-    # Excludes grammar annotations: (nom.), (acc.), (pl.), etc.
-    english_hint_pattern = r'\([a-z][a-z\s/]+\)'  # (word) or (multiple words)
-    grammar_annotation_pattern = r'\([a-z]{2,4}\.\)'  # (nom.), (acc.), etc.
-
-    # Level-aware thresholds: A1/A2 activities legitimately use English
-    # for instructions/explanations (phase-3 requires it)
     base_level = level.split('-')[0].upper() if level else ''
-    if base_level in ('A1', 'A2'):
-        critical_threshold = 15
-        severity_floor = 'info'
-    else:
-        critical_threshold = 5
-        severity_floor = 'warning'
-
-    # Allowed hints for gender agreement testing (possessives)
-    # These are needed to indicate WHICH possessive, when testing gender form
-    gender_agreement_hints = {
-        '(my)', '(your)', '(his)', '(her)', '(its)', '(our)', '(their)',
-        '(your informal)', '(your formal)', '(your formal/plural)',
-        '(my book)', '(his car)', '(her house)',  # Common examples
-    }
-
-    # A1/A2 scaffolding hints — legitimate pedagogical English
-    a1_a2_scaffolding_hints = {
-        '(example)', '(hint)', '(listen)', '(repeat)', '(choose)',
-        '(say)', '(read)', '(write)', '(match)', '(correct)',
-        '(true)', '(false)', '(yes)', '(no)', '(answer)',
-        '(singular)', '(plural)', '(masculine)', '(feminine)', '(neuter)',
-    } if base_level in ('A1', 'A2') else set()
+    is_beginner = base_level in ('A1', 'A2')
+    critical_threshold = 15 if is_beginner else 5
+    severity_floor = 'info' if is_beginner else 'warning'
+    scaffolding = _A1_A2_SCAFFOLDING_HINTS if is_beginner else set()
 
     for activity in yaml_activities:
-        act_type = activity.type if hasattr(activity, 'type') else activity.get('type', '')
-        title = activity.title if hasattr(activity, 'title') else activity.get('title', 'Untitled')
+        act_type = _get_activity_attr(activity, 'type', '')
+        title = _get_activity_attr(activity, 'title', 'Untitled')
 
-        # Check different activity structures
-        text_to_check = ''
-
-        if act_type == 'cloze':
-            text_to_check = getattr(activity, 'passage', '')
-            if not text_to_check and hasattr(activity, 'get'):
-                text_to_check = activity.get('passage', '')
-        elif act_type in ('fill-in', 'error-correction'):
-            # Check all items
-            items = getattr(activity, 'items', [])
-            if not items and hasattr(activity, 'get'):
-                items = activity.get('items', [])
-
-            for item in items:
-                sentence = item.get('sentence', '') if isinstance(item, dict) else getattr(item, 'sentence', '')
-
-                text_to_check += sentence + '\n'
-
+        text_to_check = _collect_activity_text(activity, act_type)
         if not text_to_check:
             continue
 
-        # Find all potential English hints
-        hints = re.findall(english_hint_pattern, text_to_check)
-
-        # Filter out grammar annotations and allowed gender agreement hints
-        real_hints = []
-        for hint in hints:
-            hint_lower = hint.lower()
-            if re.match(grammar_annotation_pattern, hint):
-                continue  # Grammar annotation - OK
-            if hint_lower in gender_agreement_hints:
-                continue  # Gender agreement hint - allowed
-            if hint_lower in a1_a2_scaffolding_hints:
-                continue  # A1/A2 scaffolding hint - allowed
-            real_hints.append(hint)
+        hints = _ENGLISH_HINT_PATTERN.findall(text_to_check)
+        real_hints = _filter_real_hints(hints, scaffolding)
 
         if real_hints:
             severity = 'critical' if len(real_hints) > critical_threshold else severity_floor
@@ -343,7 +319,7 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
                 'activity_type': act_type,
                 'message': f'Found {len(real_hints)} English hints: {", ".join(real_hints[:5])}{"..." if len(real_hints) > 5 else ""}',
                 'suggestion': 'Remove English hints - students should understand from context. For word formation activities, add Ukrainian context instead.',
-                'pedagogical_issue': 'English hints make it too easy and defeat the learning objective. Students match English→Ukrainian instead of understanding patterns.',
+                'pedagogical_issue': 'English hints make it too easy and defeat the learning objective. Students match English\u2192Ukrainian instead of understanding patterns.',
                 'examples': real_hints[:10]
             })
 
@@ -363,107 +339,110 @@ def _get_activity_attr(activity, attr: str, default=None):
     return default
 
 
-def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
-    """
-    Check that seminar track activities have proper reading-analysis pairing.
+_SEMINAR_TRACKS = {'lit', 'hist', 'istorio', 'bio', 'bio-seminar'}
+_ANALYTICAL_TYPES = {'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'}
 
-    Validation rules:
-    1. Every reading activity should have an id field
-    2. Analytical activities (essay-response, critical-analysis, comparative-study,
-       authorial-intent) should have source_reading linking to a reading id
-    3. Orphan readings (not referenced by any analysis) trigger WARNING
-    4. Orphan analyses (missing or invalid source_reading) trigger ERROR
 
-    Only applies to seminar tracks: LIT, HIST, ISTORIO, BIO
-    """
-    violations = []
-
-    # Seminar tracks that require reading-analysis pairing
-    seminar_tracks = {'lit', 'hist', 'istorio', 'bio', 'bio-seminar'}
-    level_lower = level.lower() if level else ''
-
-    # Skip if not a seminar track
-    if level_lower not in seminar_tracks:
-        return violations
-
-    # Collect reading IDs
+def _collect_reading_ids(yaml_activities: list) -> tuple[set, list]:
+    """Collect reading IDs and titles of readings missing IDs."""
     reading_ids = set()
-    readings_without_id = []
-
+    missing_id_titles = []
     for idx, activity in enumerate(yaml_activities):
-        act_type = _get_activity_attr(activity, 'type', '')
-        title = _get_activity_attr(activity, 'title', f'Activity {idx+1}')
-
-        if act_type == 'reading':
+        if _get_activity_attr(activity, 'type', '') == 'reading':
             act_id = _get_activity_attr(activity, 'id')
             if act_id:
                 reading_ids.add(act_id)
             else:
-                readings_without_id.append(title)
+                missing_id_titles.append(
+                    _get_activity_attr(activity, 'title', f'Activity {idx+1}'))
+    return reading_ids, missing_id_titles
 
-    # Check for readings without ID
-    for title in readings_without_id:
+
+def _check_analytical_sources(yaml_activities: list, reading_ids: set) -> tuple[set, list]:
+    """Check analytical activities for valid source_reading references."""
+    referenced = set()
+    violations = []
+    for idx, activity in enumerate(yaml_activities):
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type not in _ANALYTICAL_TYPES:
+            continue
+        title = _get_activity_attr(activity, 'title', f'Activity {idx+1}')
+        source_reading = _get_activity_attr(activity, 'source_reading')
+
+        if source_reading:
+            referenced.add(source_reading)
+            if source_reading not in reading_ids:
+                violations.append({
+                    'type': 'INVALID_SOURCE_READING', 'severity': 'critical',
+                    'activity': title,
+                    'message': f'source_reading "{source_reading}" not found in module readings',
+                    'suggestion': f'Valid reading IDs: {", ".join(sorted(reading_ids)) if reading_ids else "(none defined)"}'
+                })
+        else:
+            violations.append({
+                'type': 'MISSING_SOURCE_READING', 'severity': 'critical',
+                'activity': title, 'activity_type': act_type,
+                'message': f'{act_type} activity lacks source_reading link',
+                'suggestion': 'Add source_reading: "reading-XX" to link this analysis to its source text'
+            })
+    return referenced, violations
+
+
+def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
+    """Check that seminar track activities have proper reading-analysis pairing."""
+    level_lower = level.lower() if level else ''
+    if level_lower not in _SEMINAR_TRACKS:
+        return []
+
+    violations = []
+    reading_ids, missing_id_titles = _collect_reading_ids(yaml_activities)
+
+    for title in missing_id_titles:
         violations.append({
-            'type': 'READING_MISSING_ID',
-            'severity': 'critical',
+            'type': 'READING_MISSING_ID', 'severity': 'critical',
             'activity': title,
             'message': 'Reading activity missing required "id" field',
             'suggestion': 'Add id: "reading-01" (or similar) to link with analytical activities'
         })
 
-    # Collect referenced readings from analytical activities
-    referenced_readings = set()
-    analytical_types = {'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'}
+    referenced, analytical_violations = _check_analytical_sources(yaml_activities, reading_ids)
+    violations.extend(analytical_violations)
 
-    for idx, activity in enumerate(yaml_activities):
-        act_type = _get_activity_attr(activity, 'type', '')
-        title = _get_activity_attr(activity, 'title', f'Activity {idx+1}')
-
-        if act_type in analytical_types:
-            source_reading = _get_activity_attr(activity, 'source_reading')
-
-            if source_reading:
-                referenced_readings.add(source_reading)
-                # Check if source_reading points to valid reading
-                if source_reading not in reading_ids:
-                    violations.append({
-                        'type': 'INVALID_SOURCE_READING',
-                        'severity': 'critical',
-                        'activity': title,
-                        'message': f'source_reading "{source_reading}" not found in module readings',
-                        'suggestion': f'Valid reading IDs: {", ".join(sorted(reading_ids)) if reading_ids else "(none defined)"}'
-                    })
-            else:
-                # Missing source_reading - CRITICAL for seminar tracks (required, not optional)
-                violations.append({
-                    'type': 'MISSING_SOURCE_READING',
-                    'severity': 'critical',
-                    'activity': title,
-                    'activity_type': act_type,
-                    'message': f'{act_type} activity lacks source_reading link',
-                    'suggestion': 'Add source_reading: "reading-XX" to link this analysis to its source text'
-                })
-
-    # Check for orphan readings (defined but never referenced)
-    orphan_readings = reading_ids - referenced_readings
-    for reading_id in orphan_readings:
-        # Find the reading title
+    for reading_id in reading_ids - referenced:
         reading_title = reading_id
         for activity in yaml_activities:
-            act_id = _get_activity_attr(activity, 'id')
-            if act_id == reading_id:
+            if _get_activity_attr(activity, 'id') == reading_id:
                 reading_title = _get_activity_attr(activity, 'title', reading_id)
                 break
-
         violations.append({
-            'type': 'ORPHAN_READING',
-            'severity': 'warning',
+            'type': 'ORPHAN_READING', 'severity': 'warning',
             'activity': reading_title,
             'message': f'Reading "{reading_id}" is not referenced by any analytical activity',
             'suggestion': f'Add source_reading: "{reading_id}" to an essay-response, critical-analysis, or comparative-study'
         })
 
     return violations
+
+
+def _get_item_options(item) -> list:
+    """Get options list from an activity item (object or dict)."""
+    if hasattr(item, 'options'):
+        return item.options or []
+    if isinstance(item, dict):
+        return item.get('options', [])
+    return []
+
+
+def _count_correct_options(options: list) -> int:
+    """Count how many options are marked correct: true."""
+    count = 0
+    for opt in options:
+        if hasattr(opt, 'correct'):
+            if opt.correct:
+                count += 1
+        elif isinstance(opt, dict) and opt.get('correct', False):
+            count += 1
+    return count
 
 
 def check_select_min_correct(yaml_activities: list) -> list:
@@ -486,27 +465,12 @@ def check_select_min_correct(yaml_activities: list) -> list:
         items = _get_activity_attr(activity, 'items', [])
 
         for idx, item in enumerate(items, 1):
-            if hasattr(item, 'options'):
-                options = item.options or []
-                min_correct = getattr(item, 'min_correct', None)
-            elif isinstance(item, dict):
-                options = item.get('options', [])
-                min_correct = item.get('min_correct', None)
-            else:
-                continue
-
+            options = _get_item_options(item)
+            min_correct = _get_activity_attr(item, 'min_correct', None)
             if min_correct is None:
                 continue
 
-            # Count actual correct options
-            actual_correct = 0
-            for opt in options:
-                if hasattr(opt, 'correct'):
-                    if opt.correct:
-                        actual_correct += 1
-                elif isinstance(opt, dict) and opt.get('correct', False):
-                    actual_correct += 1
-
+            actual_correct = _count_correct_options(options)
             if actual_correct != min_correct:
                 violations.append({
                     'type': 'SELECT_MIN_CORRECT_MISMATCH',
@@ -543,21 +507,11 @@ def check_quiz_single_correct(yaml_activities: list) -> list:
         items = _get_activity_attr(activity, 'items', [])
 
         for idx, item in enumerate(items, 1):
-            if hasattr(item, 'options'):
-                options = item.options or []
-            elif isinstance(item, dict):
-                options = item.get('options', [])
-            else:
+            options = _get_item_options(item)
+            if not options:
                 continue
 
-            correct_count = 0
-            for opt in options:
-                if hasattr(opt, 'correct'):
-                    if opt.correct:
-                        correct_count += 1
-                elif isinstance(opt, dict) and opt.get('correct', False):
-                    correct_count += 1
-
+            correct_count = _count_correct_options(options)
             if correct_count != 1:
                 violations.append({
                     'type': 'QUIZ_CORRECT_COUNT',
@@ -591,14 +545,8 @@ def check_fill_in_answer_in_options(yaml_activities: list) -> list:
         items = _get_activity_attr(activity, 'items', [])
 
         for idx, item in enumerate(items, 1):
-            if hasattr(item, 'answer'):
-                answer = item.answer
-                options = getattr(item, 'options', []) or []
-            elif isinstance(item, dict):
-                answer = item.get('answer', '')
-                options = item.get('options', []) or []
-            else:
-                continue
+            answer = _get_activity_attr(item, 'answer', '')
+            options = _get_item_options(item)
 
             if not answer or not options:
                 continue
@@ -633,19 +581,11 @@ def check_translate_single_correct(yaml_activities: list) -> list:
         items = _get_activity_attr(activity, 'items', [])
 
         for idx, item in enumerate(items, 1):
-            if hasattr(item, 'options'):
-                options = item.options or []
-            elif isinstance(item, dict):
-                options = item.get('options', [])
-            else:
+            options = _get_item_options(item)
+            if not options:
                 continue
 
-            correct_count = sum(
-                1 for opt in options
-                if (hasattr(opt, 'correct') and opt.correct)
-                or (isinstance(opt, dict) and opt.get('correct', False))
-            )
-
+            correct_count = _count_correct_options(options)
             if correct_count != 1:
                 violations.append({
                     'type': 'TRANSLATE_CORRECT_COUNT',
@@ -662,31 +602,14 @@ def check_translate_single_correct(yaml_activities: list) -> list:
 
 
 def check_mark_the_words_answers_in_text(yaml_activities: list) -> list:
-    """
-    Check that every answer string in mark-the-words activities is actually
-    present in the activity text.
-
-    Extends the existing check_mark_the_words_format which handles dict-based
-    activities; this handles both parsed objects and raw dicts, and provides
-    clearer error messages.
-    """
+    """Check that every answer in mark-the-words activities exists in the text."""
     violations = []
 
     for activity in yaml_activities:
-        act_type = _get_activity_attr(activity, 'type', '')
-        if act_type != 'mark-the-words':
+        if _get_activity_attr(activity, 'type', '') != 'mark-the-words':
             continue
 
-        title = _get_activity_attr(activity, 'title', 'Untitled')
-
-        # Support both parsed objects (text/answers) and raw dicts (text/answers or passage/correct_words)
-        if isinstance(activity, dict):
-            text = activity.get('text', '') or activity.get('passage', '')
-            answers = activity.get('answers', []) or activity.get('correct_words', [])
-        else:
-            text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
-            answers = getattr(activity, 'answers', []) or getattr(activity, 'correct_words', [])
-
+        text, answers, title = _get_mark_text_and_answers(activity)
         if not text or not answers:
             continue
 
@@ -697,10 +620,8 @@ def check_mark_the_words_answers_in_text(yaml_activities: list) -> list:
                     'severity': 'critical',
                     'activity': title,
                     'message': f'Answer "{ans}" not found in activity text.',
-                    'suggestion': (
-                        f'Either add "{ans}" to the text or remove it from answers. '
-                        f'Students cannot mark what is not in the text.'
-                    ),
+                    'suggestion': f'Either add "{ans}" to the text or remove it from answers. '
+                                  f'Students cannot mark what is not in the text.',
                 })
 
     return violations

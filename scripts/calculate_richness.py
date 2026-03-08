@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Calculate richness score for module content.
+"""Calculate richness score for module content.
 
 Richness measures how engaging and alive the content is beyond basic counts.
 This is primarily for B1+ modules where full immersion enables rich content.
@@ -19,1191 +18,94 @@ IMPORTANT: Richness criteria vary by MODULE TYPE, not just level.
 Returns exit code 0 if richness >= threshold, 1 otherwise.
 """
 
-import contextlib
 import json
 import re
-import statistics
 import sys
 from pathlib import Path
 
-import yaml
-from slug_utils import to_bare_slug
+from calculate_richness_config import (
+    DEFAULT_WEIGHTS,
+    MODULE_TYPE_TARGETS,
+    MODULE_TYPE_WEIGHTS,
+)
+from calculate_richness_counters import (
+    calculate_paragraph_variety,
+    calculate_variety_score,
+    count_analysis_sections,
+    count_citations,
+    count_collocations,
+    count_cultural_refs,
+    count_decolonization,
+    count_dialogues,
+    count_engagement_boxes,
+    count_essays,
+    count_examples,
+    count_external_yaml_resources,
+    count_legacy_refs,
+    count_mermaid_diagrams,
+    count_primary_sources,
+    count_proverbs,
+    count_questions,
+    count_quotes,
+    count_realworld,
+    count_register_notes,
+    count_resources,
+    count_tables,
+    count_timeline_markers,
+    count_video_embeds,
+    count_visual_elements,
+)
+from calculate_richness_types import (
+    extract_level,
+    extract_module_type,
+    get_prose_content,
+)
 
-# Module type detection from pedagogy field
-MODULE_TYPE_MAP = {
-    # Grammar types
-    'ttt': 'grammar',
-    'ppp': 'grammar',
-    'grammar': 'grammar',
-    # Vocabulary types
-    'vocabulary': 'vocabulary',
-    'vocab': 'vocabulary',
-    'lexical': 'vocabulary',
-    # Cultural types
-    'cultural': 'cultural',
-    'culture': 'cultural',  # Alias for cultural
-    'cbi': 'content',  # Can be history, biography, or cultural
-    # History types
-    'history': 'history',
-    'historical': 'history',
-    'synthesis': 'history',
-    # Phraseology types
-    'phraseology': 'phraseology',
-    'idioms': 'phraseology',
-    # Biography types
-    'biography': 'biography',
-    'biographical': 'biography',
-    # Academic types
-    'academic': 'academic',
-    'sociolinguistics': 'academic',
-    # Style types
-    'style': 'style',
-    'stylistics': 'style',
-    'creative production': 'style',
-    # Professional types
-    'professional': 'professional',
-    'specialized': 'professional',
-    # Skills types
-    'skills': 'skills',
-    'communication': 'skills',
-    # Literature types
-    'literature': 'literature',
-    'literary': 'literature',
-    'lit': 'literature',
-    # Bridge types (Metalanguage)
-    'bridge': 'bridge',
-    'metalanguage': 'bridge',
-    # Checkpoint types
-    'checkpoint': 'checkpoint',
-    'review': 'checkpoint',
-    'assessment': 'checkpoint',
-}
-
-# Richness targets by MODULE TYPE (not just level)
-MODULE_TYPE_TARGETS = {
-    'grammar': {
-        'engagement': 5,
-        'examples': 24,
-        'dialogues': 4,
-        'cultural': 3,
-        'realworld': 3,
-        'questions': 5,
-        'proverbs': 1,
-        'visual': 3,
-        'tables': 2,
-        'threshold': 95,
-    },
-    'vocabulary': {
-        'engagement': 4,
-        'collocations': 20,
-        'usage_examples': 15,
-        'register_notes': 5,
-        'cultural': 3,
-        'visual': 3,
-        'threshold': 95,
-    },
-    'cultural': {
-        'engagement': 6,
-        'authentic_refs': 3,
-        'regional_refs': 5,
-        'contemporary': 3,
-        'cultural': 5,
-        'visual': 4,
-        'questions': 4,
-        'threshold': 95,
-    },
-    'history': {
-        'engagement': 6,
-        'primary_sources': 3,
-        'timeline_markers': 10,
-        'decolonization': 2,
-        'cultural': 4,
-        'visual': 4,
-        'questions': 3,
-        'threshold': 95,
-    },
-    'phraseology': {
-        'engagement': 4,
-        'idiom_contexts': 15,
-        'etymology': 5,
-        'register_notes': 5,
-        'contrastive': 5,
-        'visual': 3,
-        'threshold': 95,
-    },
-    'biography': {
-        'engagement': 6,
-        'primary_sources': 4,
-        'quotes': 3,
-        'timeline_markers': 8,
-        'legacy': 2,
-        'cultural': 4,
-        'visual': 4,
-        'questions': 3,
-        'threshold': 95,
-    },
-    'academic': {
-        'engagement': 5,
-        'citations': 5,
-        'data_refs': 3,
-        'frameworks': 2,
-        'case_studies': 2,
-        'visual': 5,
-        'questions': 4,
-        'threshold': 95,
-    },
-    'style': {
-        'engagement': 5,
-        'exemplar_texts': 2,
-        'model_answers': 3,
-        'register_analysis': 5,
-        'transformations': 2,
-        'visual': 4,
-        'threshold': 95,
-    },
-    'professional': {
-        'engagement': 4,
-        'domain_terms': 20,
-        'document_examples': 3,
-        'register_notes': 3,
-        'scenarios': 3,
-        'visual': 3,
-        'threshold': 95,
-    },
-    'bridge': {
-        'engagement': 5,
-        'examples': 20,
-        'cultural': 2,
-        'realworld': 2,
-        'questions': 4,
-        'visual': 4,
-        'tables': 2,
-        'threshold': 90,
-    },
-    'literature': {
-        'engagement': 4,
-        'analysis_sections': 5,
-        'literary_citations': 5,
-        'historical_context': 3,
-        'essays': 2,
-        'resources': 3,
-        'visual': 1,
-        'threshold': 90,
-    },
-    'checkpoint': {
-        'engagement': 3,
-        'activity_types': 8,
-        'review_sections': 3,
-        'visual': 3,
-        'threshold': 85,  # Checkpoints focus on variety, lower threshold
-    },
-    'beginner': {  # A1/A2 modules — alphabet, basic grammar, first words
-        'engagement': 3,
-        'examples': 12,
-        'dialogues': 0,
-        'cultural': 1,
-        'realworld': 1,
-        'questions': 2,
-        'tables': 1,
-        'video_embeds': 2,
-        'threshold': 70,  # Tier-1 guidance: A1 richness minimum 70%
-    },
-    'skills': {  # Communication skills modules (M85-93)
-        'engagement': 5,
-        'examples': 15,
-        'realworld': 3,
-        'visual': 2,
-        'questions': 4,
-        'threshold': 80,  # Skills modules focus on practical application, not cultural anchoring
-    },
-    'content': {  # Generic CBI fallback
-        'engagement': 5,
-        'examples': 15,
-        'cultural': 4,
-        'realworld': 3,
-        'visual': 4,
-        'questions': 4,
-        'threshold': 95,
-    },
-}
-
-# Module type weights - what matters for each type
-MODULE_TYPE_WEIGHTS = {
-    'grammar': {
-        'engagement': 0.15,
-        'examples': 0.20,
-        'dialogues': 0.15,
-        'variety': 0.10,
-        'cultural': 0.10,
-        'realworld': 0.10,
-        'questions': 0.05,
-        'proverbs': 0.03,
-        'visual': 0.05,
-        'paragraph_var': 0.03,
-        'tables': 0.04,
-    },
-    'history': {
-        'engagement': 0.15,
-        'primary_sources': 0.25,
-        'timeline_markers': 0.15,
-        'decolonization': 0.15,
-        'cultural': 0.10,
-        'visual': 0.10,
-        'variety': 0.05,
-        'paragraph_var': 0.05,
-    },
-    'biography': {
-        'engagement': 0.15,
-        'primary_sources': 0.20,
-        'quotes': 0.15,
-        'timeline_markers': 0.10,
-        'legacy': 0.10,
-        'cultural': 0.10,
-        'visual': 0.10,
-        'variety': 0.05,
-        'paragraph_var': 0.05,
-    },
-    'style': {
-        'engagement': 0.15,
-        'exemplar_texts': 0.25,
-        'model_answers': 0.20,
-        'register_analysis': 0.15,
-        'transformations': 0.10,
-        'visual': 0.10,
-        'variety': 0.05,
-    },
-    'literature': {
-        'engagement': 0.15,
-        'analysis_sections': 0.20,
-        'literary_citations': 0.20,
-        'historical_context': 0.15,
-        'essays': 0.15,
-        'resources': 0.10,
-        'variety': 0.05,
-    },
-    'vocabulary': {
-        'engagement': 0.15,
-        'collocations': 0.25,
-        'usage_examples': 0.20,
-        'register_notes': 0.10,
-        'cultural': 0.10,
-        'visual': 0.10,
-        'variety': 0.05,
-        'paragraph_var': 0.05,
-    },
-    'cultural': {
-        'engagement': 0.15,
-        'cultural': 0.25,
-        'authentic_refs': 0.15,
-        'regional_refs': 0.15,
-        'contemporary': 0.10,
-        'visual': 0.10,
-        'variety': 0.05,
-        'paragraph_var': 0.05,
-    },
-    'checkpoint': {
-        # Checkpoint modules are assessments - emphasis on activity variety
-        'engagement': 0.10,
-        'activity_types': 0.25,  # Variety of activity types is key
-        'variety': 0.15,  # Sentence variety in review sections
-        'cultural': 0.10,
-        'visual': 0.10,
-        'review_sections': 0.20,  # Comprehensive review coverage
-        'paragraph_var': 0.10,
-    },
-    'beginner': {
-        # A1/A2: emphasis on examples, tables, video embeds, engagement
-        'engagement': 0.15,
-        'examples': 0.20,
-        'tables': 0.15,
-        'video_embeds': 0.15,
-        'variety': 0.10,
-        'cultural': 0.05,
-        'realworld': 0.05,
-        'questions': 0.05,
-        'visual': 0.05,
-        'paragraph_var': 0.05,
-    },
-    'skills': {
-        # Skills modules focus on practical application with examples
-        'engagement': 0.19,  # Engagement boxes for tips and warnings
-        'examples': 0.25,    # Practical examples are critical
-        'variety': 0.12,
-        'realworld': 0.12,   # Real-world scenarios and applications
-        'visual': 0.06,
-        'questions': 0.06,
-        'paragraph_var': 0.06,
-        'cultural': 0.12,    # Some cultural context but not primary focus
-    },
-    'phraseology': {
-        'engagement': 0.15,
-        'collocations': 0.25,
-        'usage_examples': 0.20,
-        'register_notes': 0.15,
-        'cultural': 0.10,
-        'variety': 0.10,
-        'paragraph_var': 0.05,
-    },
-    'academic': {
-        'engagement': 0.10,
-        'citations': 0.25,
-        'data_refs': 0.20,
-        'questions': 0.15,
-        'visual': 0.15,
-        'variety': 0.10,
-        'paragraph_var': 0.05,
-    },
-    'bridge': {
-        'engagement': 0.20,
-        'examples': 0.30,
-        'cultural': 0.10,
-        'realworld': 0.10,
-        'visual': 0.10,
-        'variety': 0.10,
-        'paragraph_var': 0.05,
-        'tables': 0.05,
-    },
-}
-
-# Fallback weights for types not explicitly defined
-DEFAULT_WEIGHTS = {
-    'engagement': 0.15,
-    'examples': 0.20,
-    'dialogues': 0.15,
-    'variety': 0.10,
-    'cultural': 0.10,
-    'realworld': 0.10,
-    'questions': 0.05,
-    'proverbs': 0.05,
-    'visual': 0.05,
-    'paragraph_var': 0.05,
-}
-
-# Ukrainian place names for cultural reference detection
-UKRAINIAN_PLACES = {
-    'Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро', 'Запоріжжя',
-    'Карпати', 'Крим', 'Буковина', 'Закарпаття', 'Волинь', 'Поділля',
-    'Полтава', 'Чернігів', 'Суми', 'Вінниця', 'Житомир', 'Рівне',
-    'Тернопіль', 'Івано-Франківськ', 'Чернівці', 'Ужгород', 'Луцьк',
-    'Хрещатик', 'Майдан', 'Софія', 'Лавра', 'Андріївський',
-    'Бесарабський', 'Подол', 'Поштова', 'Говерла', 'Дністер',
-}
-
-# Cultural terms and traditions
-CULTURAL_TERMS = {
-    'вишиванка', 'писанка', 'борщ', 'вареники', 'галушки', 'сало',
-    'козак', 'гетьман', 'кобзар', 'бандура', 'трембіта', 'гопак',
-    'калина', 'верба', 'рушник', 'вінок', 'коровай', 'весілля',
-    'Різдво', 'Великдень', 'Купала', 'Маланка', 'колядки', 'щедрівки',
-    'Шевченко', 'Франко', 'Леся', 'Котляревський', 'Сковорода',
-    'Мазепа', 'Хмельницький', 'Грушевський', 'Бандера',
-    # Traditions and folk culture
-    'толока', 'вечорниці', 'обжинки', 'досвітки', 'колядування',
-    # Art and crafts
-    'петриківський', 'Петриківка', 'косівська', 'опішнянська',
-    # Historical figures and chronicles
-    'Нестор', 'літопис', 'Повість минулих літ',
-    'Карпенко-Карий', 'Стельмах',
-}
-
-# Proverb/idiom markers
-PROVERB_MARKERS = [
-    r'кажуть[:\s]',
-    r'приказка',
-    r'прислів\'я',
-    r'ідіома',
-    r'вислів',
-    r'«[^»]{10,}»',  # Quoted phrases longer than 10 chars
-    r'як кажуть',
-    r'є вираз',
-]
-
-# Primary source markers (for history/biography)
-PRIMARY_SOURCE_MARKERS = [
-    r'📜',  # Primary source emoji
-    r'\[!quote\]',  # Quote callout
-    r'писав:',
-    r'казав:',
-    r'свідчить:',
-    r'згадує:',
-    r'у листі',
-    r'у мемуарах',
-    r'у спогадах',
-    r'цитата:',
-    r'документ',
-    r'джерело:',
-    r'«[^»]{30,}»',  # Long quotes (30+ chars)
-]
-
-# Timeline markers (for history/biography)
-TIMELINE_MARKERS = [
-    r'\b1[0-9]{3}\b',  # Years 1000-1999
-    r'\b20[0-2][0-9]\b',  # Years 2000-2029
-    r'\b[IVX]+\s*ст\.?',  # Roman numeral centuries
-    r'\b\d+\s*ст\.?',  # Arabic numeral centuries
-    r'століття',
-    r'епоха',
-    r'період',
-    r'доба',
-    r'рік',
-    r'роки',
-    r'році',
-]
-
-# Decolonization markers
-DECOLONIZATION_MARKERS = [
-    r'імпер',
-    r'колоніал',
-    r'русифікац',
-    r'національн',
-    r'спротив',
-    r'незалежн',
-    r'автоном',
-    r'самовизначен',
-    r'деколоніз',
-    r'українськ\w+\s+перспектив',
-]
-
-# Academic citation markers
-CITATION_MARKERS = [
-    r'\(\d{4}\)',  # (Year) format
-    r'за\s+\w+\s*\(\d{4}\)',  # "за Author (Year)"
-    r'дослідження\s+показ',
-    r'згідно\s+з',
-    r'науков\w+\s+джерел',
-    r'статистик',
-    r'\d+\s*%',  # Percentages
-]
-
-# Collocation markers (for vocabulary modules)
-COLLOCATION_PATTERNS = [
-    r'\+\s*[А-ЯІЇЄҐа-яіїєґ]+',  # + noun/verb patterns
-    r'типов\w+\s+сполучен',
-    r'колокаці',
-    r'вживається\s+з',
-    r'поєднується\s+з',
-]
-
-# Register markers
-REGISTER_MARKERS = [
-    r'розмовн\w+',
-    r'формальн\w+',
-    r'офіційн\w+',
-    r'нейтральн\w+',
-    r'книжн\w+',
-    r'літературн\w+',
-    r'просторічн\w+',
-    r'регістр',
-    r'діалект\w+',
-    r'архаїзм\w+',
-    r'жаргон\w+',
-    r'сленг\w+',
-    r'суржик',
-]
-
-# Analysis section markers (for LIT modules)
-ANALYSIS_MARKERS = [
-    r'аналіз',
-    r'інтерпретаці',
-    r'символ\w+',
-    r'образ\w+',
-    r'мотив',
-    r'тема',
-    r'стиль\w+',
-    r'поетик',
-    r'наратив',
-]
-
-# Legacy markers (for biography)
-LEGACY_MARKERS = [
-    r'спадщина',
-    r'вплив',
-    r'значення',
-    r'внесок',
-    r'пам\'ят',
-    r'вшануван',
-    r'сьогодні',
-    r'сучасн',
+# Re-export for backward compatibility
+__all__ = [
+    # Config
+    'DEFAULT_WEIGHTS',
+    'MODULE_TYPE_TARGETS',
+    'MODULE_TYPE_WEIGHTS',
+    # Types
+    'extract_level',
+    'extract_module_type',
+    'get_prose_content',
+    # Counters
+    'calculate_paragraph_variety',
+    'calculate_variety_score',
+    'count_analysis_sections',
+    'count_citations',
+    'count_collocations',
+    'count_cultural_refs',
+    'count_decolonization',
+    'count_dialogues',
+    'count_engagement_boxes',
+    'count_essays',
+    'count_examples',
+    'count_external_yaml_resources',
+    'count_legacy_refs',
+    'count_mermaid_diagrams',
+    'count_primary_sources',
+    'count_proverbs',
+    'count_questions',
+    'count_quotes',
+    'count_realworld',
+    'count_register_notes',
+    'count_resources',
+    'count_tables',
+    'count_timeline_markers',
+    'count_video_embeds',
+    'count_visual_elements',
+    # Scoring
+    'calculate_richness_score',
+    'detect_dryness_flags',
 ]
 
 
-def extract_level(file_path: str | Path | None) -> str:
-    """Extract level code from file path."""
-    if not file_path:
-        return 'B1'
-    if isinstance(file_path, str):
-        file_path = Path(file_path)
-    parts = file_path.parts
-    for part in parts:
-        if part.upper() in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT'):
-            return part.upper()
-    return 'B1'  # Default
-
-
-def _parse_frontmatter(content: str) -> dict | None:
-    """Try to parse embedded frontmatter from markdown content."""
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            with contextlib.suppress(yaml.YAMLError):
-                return yaml.safe_load(parts[1])
-    return None
-
-
-def _load_sidecar_meta(file_path: Path) -> dict | None:
-    """Try to load YAML sidecar meta file."""
-    slug = file_path.stem
-    sidecar_path = file_path.parent / 'meta' / f'{slug}.yaml'
-    if sidecar_path.exists():
-        try:
-            with open(sidecar_path, encoding='utf-8') as f:
-                return yaml.safe_load(f)
-        except (OSError, yaml.YAMLError):
-            pass
-    return None
-
-
-def _load_plan_focus(file_path: Path) -> str | None:
-    """Try to load focus field from plan file."""
-    level_dir = file_path.parent.name.lower()
-    slug = file_path.stem
-    clean_slug = to_bare_slug(slug)
-    plan_paths = [
-        file_path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
-        file_path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
-    ]
-    for plan_path in plan_paths:
-        if plan_path.exists():
-            try:
-                with open(plan_path, encoding='utf-8') as f:
-                    plan_data = yaml.safe_load(f)
-                    if plan_data and plan_data.get('focus'):
-                        return str(plan_data['focus']).lower().strip()
-            except (OSError, yaml.YAMLError):
-                pass
-    return None
-
-
-def _type_from_frontmatter(fm: dict) -> str | None:
-    """Determine module type from frontmatter fields."""
-    # Check for bridge indicator in tags or module_type
-    tags = fm.get('tags', [])
-    if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
-        return 'bridge'
-
-    if fm.get('module_type') == 'bridge':
-        return 'bridge'
-
-    # Check focus field (highest priority)
-    focus = str(fm.get('focus', '')).lower().strip()
-    if focus in MODULE_TYPE_MAP:
-        return MODULE_TYPE_MAP[focus]
-
-    # Then check pedagogy field
-    pedagogy = str(fm.get('pedagogy', '')).lower().strip()
-    if pedagogy in MODULE_TYPE_MAP:
-        return MODULE_TYPE_MAP[pedagogy]
-
-    # Check phase field for hints
-    phase = str(fm.get('phase', '')).lower()
-    if 'history' in phase:
-        return 'history'
-    elif 'biography' in phase or 'biographies' in phase:
-        return 'biography'
-    elif 'style' in phase or 'stylistic' in phase:
-        return 'style'
-    elif 'academic' in phase or 'sociolinguistic' in phase:
-        return 'academic'
-    elif 'checkpoint' in phase:
-        return 'checkpoint'
-
-    return None
-
-
-def _type_from_path(file_path: str | Path | None) -> str | None:
-    """Infer module type from file path."""
-    if not file_path:
-        return None
-    path_str = str(file_path).lower()
-    if '/lit/' in path_str:
-        return 'literature'
-    if '/hist/' in path_str or '/istorio/' in path_str:
-        return 'history'
-    if '/bio/' in path_str:
-        return 'biography'
-    return None
-
-
-def _type_from_level(file_path: str | Path | None) -> str:
-    """Determine default module type based on level and slug."""
-    level = extract_level(file_path)
-
-    if level in ('A1', 'A2'):
-        return 'beginner'
-
-    # Special Case: B1 Bridge Modules (M01-05)
-    if level == 'B1' and file_path:
-        slug = Path(file_path).stem
-        bridge_slugs = [
-            'how-to-talk-about-grammar',
-            'language-about-verbs',
-            'sentence-structure',
-            'parts-of-speech-depth',
-            'case-system-logic',
-            'verb-categories-metalanguage',
-            'syntax-and-sentence-structure'
-        ]
-        num_prefix_match = re.match(r'^0?([1-5])-([a-z-]+)', slug)
-        if any(bs in slug for bs in bridge_slugs) or num_prefix_match:
-            return 'bridge'
-
-    if level in ('B1', 'B2'):
-        return 'grammar'
-    elif level in ('C1', 'C2'):
-        return 'content'
-
-    return 'grammar'
-
-
-def extract_module_type(content: str, file_path: str | Path | None = None) -> str:
-    """Extract module type from frontmatter or YAML sidecar."""
-    fm = _parse_frontmatter(content)
-
-    # If no embedded frontmatter, try YAML sidecar
-    if not fm and file_path:
-        path = Path(file_path) if isinstance(file_path, str) else file_path
-        fm = _load_sidecar_meta(path)
-
-    # Check plan file for focus (plans take precedence)
-    if file_path:
-        path = Path(file_path) if isinstance(file_path, str) else file_path
-        plan_focus = _load_plan_focus(path)
-        if plan_focus and plan_focus in MODULE_TYPE_MAP:
-            return MODULE_TYPE_MAP[plan_focus]
-
-    # Process frontmatter (from either source)
-    if fm:
-        result = _type_from_frontmatter(fm)
-        if result:
-            return result
-
-    # Fallback: infer from path
-    result = _type_from_path(file_path)
-    if result:
-        return result
-
-    # Default based on level
-    return _type_from_level(file_path)
-
-
-def get_prose_content(content: str) -> str:
-    """Extract prose content (excluding activities and vocab)."""
-    # Remove frontmatter (--- delimited)
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            content = parts[2]
-    # Remove bare YAML frontmatter (no --- delimiters, starts with YAML key)
-    elif re.match(r'^[a-z_]+:', content):
-        # Find where markdown prose starts (first heading)
-        heading_match = re.search(r'^#\s', content, re.MULTILINE)
-        if heading_match:
-            content = content[heading_match.start():]
-
-    # Remove activities section
-    for section in ['Activities', 'Вправи']:
-        match = re.search(rf'^#\s*{section}\s*$', content, re.MULTILINE)
-        if match:
-            content = content[:match.start()]
-            break
-
-    # Remove vocabulary section
-    for section in ['Vocabulary', 'Словник']:
-        match = re.search(rf'^#\s*{section}\s*$', content, re.MULTILINE)
-        if match:
-            content = content[:match.start()]
-            break
-
-    return content
-
-
-def count_engagement_boxes(content: str) -> int:
-    """Count engagement boxes (💡🎬🌍🎯🎮 and callouts).
-
-    Includes B2+ history/cultural callout types.
-    """
-    patterns = [
-        # Standard callouts
-        r'>\s*\[!tip\]',
-        r'>\s*\[!note\]',
-        r'>\s*\[!observe\]',
-        r'>\s*\[!warning\]',
-        r'>\s*\[!caution\]',
-        r'>\s*\[!important\]',
-        r'>\s*\[!cultural\]',
-        # B2+ history/cultural callouts
-        r'>\s*\[!history-bite\]',
-        r'>\s*\[!myth-buster\]',
-        r'>\s*\[!quote\]',
-        r'>\s*\[!context\]',
-        r'>\s*\[!analysis\]',
-        r'>\s*\[!source\]',
-        r'>\s*\[!legacy\]',
-        r'>\s*\[!reflection\]',
-        # Emoji patterns
-        r'💡\s*\*\*',
-        r'🎬\s*\*\*',
-        r'🌍\s*\*\*',
-        r'🎯\s*\*\*',
-        r'🎮\s*\*\*',
-        r'🎭\s*\*\*',
-        r'📝\s*\*\*',
-        r'🔍\s*\*\*',
-        r'📚\s*\*\*',
-        r'🎓\s*\*\*',
-        r'⚠️\s*\*\*',
-        r'🗣️\s*\*\*',
-    ]
-    count = 0
-    for pattern in patterns:
-        count += len(re.findall(pattern, content, re.MULTILINE))
-    return count
-
-
-def count_examples(content: str) -> int:
-    """Count Ukrainian example sentences.
-
-    Matches various example formats used in curriculum:
-    - Bold sentences: **Це приклад.**
-    - Bulleted items: - Це приклад.
-    - Numbered items: 1. Це приклад.
-    - Labeled examples: *Приклад:* "Це приклад."
-    - Blockquote examples: > *Приклад:* Це приклад.
-    - Guillemet quotes: «Це приклад.»
-    - Definition format: *   **Word** — definition with example.
-    - Inline examples with highlighted words in sentences
-    """
-    patterns = [
-        r'\*\*[А-ЯІЇЄҐа-яіїєґ][^*]{5,}[.!?]\*\*',  # Bold Ukrainian sentences
-        r'^\s*[-–—]\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Bulleted Ukrainian
-        r'^\s*[-–—]\s*_[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]_',  # Bulleted Italic Ukrainian
-        r'^\s*\d+\.\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Numbered Ukrainian
-        r'\*[Пп]риклад[и|:]?\*[:\s]+[«"]?[А-ЯІЇЄҐа-яіїєґ]',  # *Приклад:* or *приклад:* labels
-        r'>\s*\*[Пп]риклад',  # Blockquote example labels
-        r'«[А-ЯІЇЄҐа-яіїєґ][^»]{10,}[.!?]?»',  # Guillemet-quoted sentences (10+ chars)
-        r'^\s*\*\s+\*\*[А-ЯІЇЄҐа-яіїєґ]+\*\*\s*[—–-]',  # * **Word** — definition format
-        r'"[А-ЯІЇЄҐа-яіїєґ][^"]{10,}[.!?]"',  # Double-quoted Ukrainian sentences
-    ]
-    count = 0
-    for pattern in patterns:
-        count += len(re.findall(pattern, content, re.MULTILINE))
-    return min(count, 100)  # Cap to avoid overcounting
-
-
-def count_dialogues(content: str) -> int:
-    """Count mini-dialogues.
-
-    Detects dialogue lines in these formats:
-    - А: / Б: / В: (plain or bold)
-    - — Speaker text (em-dash, plain or in blockquote)
-    - **Speaker:** text (bold speaker name, in blockquote only — outside blockquotes
-      this pattern matches too many section subheaders)
-    - Speaker: text (plain speaker name)
-
-    Lines are counted then divided by 2 to get dialogue pairs.
-    """
-    patterns = [
-        r'^[АБВ]:\s',                                       # А: text
-        r'^\*\*[АБВ]:\*\*\s',                               # **А:** text
-        r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',                          # — Speaker text
-        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',                      # > — Speaker text (blockquote)
-        r'^>\s*\*\*[А-ЯІЇЄҐа-яіїєґ][^*]*?:\*\*\s',         # > **Speaker (desc):** text (blockquote)
-        r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',       # Speaker: text (plain)
-    ]
-    count = 0
-    for pattern in patterns:
-        count += len(re.findall(pattern, content, re.MULTILINE))
-    return count // 2  # Pairs
-
-
-def calculate_variety_score(content: str) -> float:
-    """Calculate sentence starter variety (0.0-1.0)."""
-    # Extract sentences
-    sentences = re.findall(r'[А-ЯІЇЄҐа-яіїєґA-Za-z][^.!?]*[.!?]', content)
-    if len(sentences) < 5:
-        return 0.5  # Not enough data
-
-    # Get first 3 words of each sentence
-    starters = []
-    for sent in sentences:
-        words = sent.split()[:3]
-        if words:
-            starters.append(' '.join(words).lower())
-
-    if not starters:
-        return 0.5
-
-    unique = len(set(starters))
-    total = len(starters)
-    return unique / total
-
-
-def count_cultural_refs(content: str) -> int:
-    """Count cultural references (places, traditions, people)."""
-    count = 0
-
-    # Check for place names
-    for place in UKRAINIAN_PLACES:
-        if place in content:
-            count += 1
-
-    # Check for cultural terms
-    for term in CULTURAL_TERMS:
-        if term.lower() in content.lower():
-            count += 1
-
-    return min(count, 20)  # Cap
-
-
-def count_realworld(content: str) -> int:
-    """Count real-world context markers."""
-    patterns = [
-        r'уявіть',
-        r'наприклад',
-        r'у реальному житті',
-        r'на практиці',
-        r'коли ви',
-        r'якщо ви',
-        r'у магазині',
-        r'на роботі',
-        r'у ресторані',
-        r'на вулиці',
-        r'в аеропорту',
-        r'на вокзалі',
-        r'у лікарні',
-        r'в університеті',
-        r'imagine',
-        r'for example',
-        r'in real life',
-        r'when you',
-        r'at the',
-    ]
-    count = 0
-    for pattern in patterns:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 20)
-
-
-def count_questions(content: str) -> int:
-    """Count interactive questions in prose."""
-    # Questions ending with ?
-    questions = re.findall(r'[А-ЯІЇЄҐа-яіїєґA-Za-z][^.!?]*\?', content)
-    return len(questions)
-
-
-def count_proverbs(content: str) -> int:
-    """Count proverbs and idioms."""
-    count = 0
-    for pattern in PROVERB_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 10)
-
-
-def count_primary_sources(content: str) -> int:
-    """Count primary source references (history/biography)."""
-    count = 0
-    for pattern in PRIMARY_SOURCE_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 15)
-
-
-def count_timeline_markers(content: str) -> int:
-    """Count timeline/date references (history/biography)."""
-    count = 0
-    for pattern in TIMELINE_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 30)
-
-
-def count_decolonization(content: str) -> int:
-    """Count decolonization perspective markers."""
-    count = 0
-    for pattern in DECOLONIZATION_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 15)
-
-
-def count_citations(content: str) -> int:
-    """Count academic citations and data references."""
-    count = 0
-    for pattern in CITATION_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 20)
-
-
-def count_collocations(content: str) -> int:
-    """Count collocation patterns (vocabulary modules)."""
-    count = 0
-    for pattern in COLLOCATION_PATTERNS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    # Also count table rows in collocation tables
-    colloc_table = re.search(r'колокаці[їй]|сполучен', content, re.IGNORECASE)
-    if colloc_table:
-        # Count table rows after the match
-        count += len(re.findall(r'^[> ]*\|[^|]+\|', content[colloc_table.start():], re.MULTILINE)) // 2
-    return min(count, 30)
-
-
-def count_register_notes(content: str) -> int:
-    """Count register/style markers."""
-    count = 0
-    for pattern in REGISTER_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 15)
-
-
-def count_analysis_sections(content: str) -> int:
-    """Count analysis sections (literature modules).
-
-    Counts ANY content section (H2/H3) that is not part of the standard
-    structural exclusions (Summary, Vocabulary, Activities, Intro).
-
-    This matches the academic nature of LIT modules where headers are
-    flexible (e.g. "The Role of Fate", "Character Arc").
-    """
-    # Exclude standard structural headers
-    EXCLUDED_HEADERS = [
-        r'summary', r'підсумок',
-        r'vocabulary', r'словник',
-        r'activities', r'вправи',
-        r'intro', r'вступ',
-        r'resources', r'джерела', r'читальна зала',
-        r'practicum', r'практикум',
-        r'essay', r'есе', r'твір',
-    ]
-
-    # Get all H2/H3 headers
-    headers = re.findall(r'^#{2,3}\s+([^\n]+)', content, re.MULTILINE)
-
-    count = 0
-    for header in headers:
-        header_lower = header.lower()
-        is_excluded = False
-
-        # Check against exclusions
-        for pattern in EXCLUDED_HEADERS:
-            if re.search(pattern, header_lower):
-                is_excluded = True
-                break
-
-        if not is_excluded:
-            count += 1
-
-    return min(count, 10)
-
-
-def count_legacy_refs(content: str) -> int:
-    """Count legacy/impact references (biography)."""
-    count = 0
-    for pattern in LEGACY_MARKERS:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count, 15)
-
-
-def count_quotes(content: str) -> int:
-    """Count direct quotes (biography/history)."""
-    # Ukrainian quotes in guillemets
-    quotes = re.findall(r'«[^»]{20,}»', content)
-    # Also count blockquote callouts
-    blockquotes = re.findall(r'>\s*\[!quote\]', content)
-    return min(len(quotes) + len(blockquotes), 15)
-
-
-def count_essays(content: str) -> int:
-    """Count essay prompts (literature modules).
-
-    Counts sections that look like writing assignments.
-    """
-    # Look for headers indicating writing tasks
-    writing_headers = [
-        r'есе',
-        r'твір',
-        r'critical writing',
-        r'debate club',
-        r'short response',
-        r'аналітичний практикум',
-        r'творче завдання',
-    ]
-
-    header_count = 0
-    # Scan matches to catch multiple tasks
-    for pattern in writing_headers:
-        header_count += len(re.findall(pattern, content, re.IGNORECASE))
-
-    # Also look for explicit instruction verbs at start of lines or sentences
-    instruction_verbs = [
-        r'напишіть',
-        r'аргументуйте',
-        r'проаналізуйте',
-        r'порівняйте',
-    ]
-    verb_count = 0
-    for pattern in instruction_verbs:
-        verb_count += len(re.findall(pattern, content, re.IGNORECASE))
-
-    # Heuristic: headers are strong signals (1 point), verbs are weak (0.5 point)
-    # But to prevent overcounting, we take the MAX of headers or (verbs // 2)
-    # Actually, headers like "Завдання: Есе" are the best indicators.
-
-    # Let's count specific "Task" blocks
-    task_blocks = len(re.findall(r'Завдання \d+:', content))
-
-    # If we have "Tasks", use that count if it's supported by writing keywords
-    if task_blocks > 0 and (header_count > 0 or verb_count > 0):
-        return min(task_blocks, 5)
-
-    # Fallback to old heuristic if no clear tasks
-    total_signals = header_count + (verb_count // 2)
-    return min(int(total_signals), 5)
-
-
-def count_resources(content: str) -> int:
-    """Count external resource references (literature/cultural)."""
-    patterns = [
-        r'https?://',
-        r'ukrlib',
-        r'читальня',
-        r'бібліотек',
-        r'\[!resources\]',
-    ]
-    count = 0
-    for pattern in patterns:
-        matches = len(re.findall(pattern, content, re.IGNORECASE))
-        count += matches
-        # print(f"DEBUG: Pattern {pattern} found {matches} times.")
-    return min(count, 10)
-
-
-def count_visual_elements(content: str) -> int:
-    """Count visual elements (callouts, code blocks, mermaid). Tables scored separately."""
-    callouts = len(re.findall(r'>\s*\[!', content, re.MULTILINE))
-    mermaid = len(re.findall(r'```mermaid', content))
-    code_fences = len(re.findall(r'```', content, re.MULTILINE))
-    code_blocks = max(0, (code_fences - mermaid * 2) // 2)
-    return callouts + code_blocks + mermaid
-
-
-def count_tables(content: str) -> int:
-    """Count distinct markdown tables (by separator rows)."""
-    return len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
-
-
-def count_video_embeds(content: str) -> int:
-    """Count YouTube video links and Starlight youtubeVideo embeds."""
-    youtube_links = len(re.findall(r'youtube\.com/watch', content))
-    youtube_components = len(re.findall(r'\{%\s*youtubeVideo\s', content))
-    # Also count MDX-style YouTube components
-    mdx_youtube = len(re.findall(r'<YouTubeVideo\b', content, re.IGNORECASE))
-    return youtube_links + youtube_components + mdx_youtube
-
-
-def count_mermaid_diagrams(content: str) -> int:
-    """Count mermaid diagram blocks."""
-    return len(re.findall(r'```mermaid', content))
-
-
-def calculate_paragraph_variety(content: str) -> float:
-    """Calculate paragraph length variety (0.0-1.0)."""
-    # Split into paragraphs
-    paragraphs = re.split(r'\n\s*\n', content)
-    lengths = []
-    for p in paragraphs:
-        words = len(p.split())
-        if words > 5:  # Ignore very short paragraphs
-            lengths.append(words)
-
-    if len(lengths) < 3:
-        return 0.5  # Not enough data
-
-    try:
-        std_dev = statistics.stdev(lengths)
-        # Normalize: 20+ std dev = perfect variety
-        return min(std_dev / 20, 1.0)
-    except statistics.StatisticsError:
-        return 0.5
-
-
-def count_external_yaml_resources(file_path: Path | str) -> int:
-    """Count resources defined in docs/resources/external_resources.yaml."""
-    if not file_path:
-        return 0
-
-    if isinstance(file_path, str):
-        file_path = Path(file_path)
-
-    try:
-        # Find project root from script location
-        script_path = Path(__file__).resolve()
-        project_root = script_path.parent.parent
-        resource_yaml_path = project_root / 'docs' / 'resources' / 'external_resources.yaml'
-
-        if not resource_yaml_path.exists():
-            return 0
-
-        with open(resource_yaml_path, encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-
-        if not data or 'resources' not in data:
-            return 0
-
-        slug = file_path.stem
-        # Also try removing numeric prefix for lookup
-        clean_slug = to_bare_slug(slug) if slug else slug
-
-        resources = data['resources']
-        count = 0
-
-        # Check entries for slug
-        # print(f"DEBUG_RICHNESS: Checking slug {slug} in external_resources.yaml")
-        for key in [slug, clean_slug]:
-            if key and key in resources:
-                # print(f"DEBUG_RICHNESS: Found {key} in resources")
-                module_res = resources[key]
-                if module_res and isinstance(module_res, dict):
-                    for cat_list in module_res.values():
-                        if isinstance(cat_list, list):
-                            count += len(cat_list)
-                # If we found resources for one variant, stop (avoid double counting)
-                if count > 0:
-                    break
-
-        # print(f"DEBUG_RICHNESS: Final external count for {slug}: {count}")
-        return count
-    except Exception:
-        # print(f"DEBUG_RICHNESS: Error in count_external_yaml_resources: {e}")
-        return 0
-
-def calculate_richness_score(content: str, level: str, file_path: Path | None = None, yaml_activity_types: set | None = None) -> dict:
-    """Calculate richness score and components based on module type.
-
-    Args:
-        content: Markdown content of the module
-        level: CEFR level (A1, A2, B1, B2, C1, C2)
-        file_path: Path to the module file (for type detection)
-        yaml_activity_types: Set of activity types from YAML file (optional)
-    """
-    # Determine module type for type-specific criteria
-    module_type = extract_module_type(content, file_path) if file_path else 'grammar'
-    # Override to beginner for A1/A2 — these levels have fundamentally different
-    # richness expectations (no dialogues, lower example counts, video embeds matter)
-    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
-        module_type = 'beginner'
-    targets = MODULE_TYPE_TARGETS.get(module_type, MODULE_TYPE_TARGETS['grammar'])
-    weights = MODULE_TYPE_WEIGHTS.get(module_type, DEFAULT_WEIGHTS)
-
-    prose = get_prose_content(content)
-
-    # Calculate base components (all module types)
+def _collect_raw_counts(module_type: str, prose: str, file_path: Path | None,
+                        yaml_activity_types: set | None) -> dict:
+    """Collect raw content counts based on module type."""
     raw = {
         'engagement': count_engagement_boxes(prose),
         'variety': calculate_variety_score(prose),
@@ -1212,7 +114,6 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
         'paragraph_var': calculate_paragraph_variety(prose),
     }
 
-    # Add type-specific components based on module type
     if module_type == 'beginner':
         raw.update({
             'examples': count_examples(prose),
@@ -1255,12 +156,12 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
     elif module_type == 'academic':
         raw.update({
             'citations': count_citations(prose),
-            'data_refs': count_citations(prose),  # Reuse for data
+            'data_refs': count_citations(prose),
             'questions': count_questions(prose),
         })
     elif module_type == 'style':
         raw.update({
-            'exemplar_texts': count_quotes(prose),  # Extended quotes as exemplars
+            'exemplar_texts': count_quotes(prose),
             'model_answers': count_examples(prose),
             'register_analysis': count_register_notes(prose),
         })
@@ -1280,26 +181,33 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
             'tables': count_tables(prose),
         })
     elif module_type == 'checkpoint':
-        # Use YAML activity types if provided (Preferred for YAML-First architecture)
-        # Use YAML count if available; None means --skip-activities so assume target met
-        activity_type_count = len(yaml_activity_types) if yaml_activity_types is not None else 8
-
+        activity_type_count = (
+            len(yaml_activity_types) if yaml_activity_types is not None else 8
+        )
         raw.update({
             'activity_types': activity_type_count,
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),
         })
-    else:  # 'content' or 'cultural' - generic fallback
+    else:
         raw.update({
             'examples': count_examples(prose),
             'realworld': count_realworld(prose),
             'questions': count_questions(prose),
         })
 
-    # Calculate normalized scores (0.0-1.0)
+    return raw
+
+
+def _compute_weighted_score(raw: dict, targets: dict, weights: dict) -> tuple[int, dict, dict]:
+    """Compute normalized scores and weighted total.
+
+    Returns:
+        Tuple of (score_int, normalized_dict, final_weights_dict).
+    """
     normalized = {}
     for key in raw:
         if key in ('variety', 'paragraph_var'):
-            normalized[key] = raw[key]  # Already 0-1
+            normalized[key] = raw[key]
         else:
             target = targets.get(key, 1)
             if target > 0:
@@ -1307,24 +215,48 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
             else:
                 normalized[key] = 1.0 if raw[key] == 0 else 0.5
 
-    # Calculate weighted total using type-specific weights
     total = 0.0
     for k in normalized:
-        weight = weights.get(k, 0.05)  # Default weight for unlisted components
+        weight = weights.get(k, 0.05)
         total += normalized[k] * weight
 
-    # Normalize if weights don't sum to 1.0
     weight_sum = sum(weights.get(k, 0.05) for k in normalized)
     if weight_sum > 0:
         total = total / weight_sum
 
     score = int(total * 100)
 
-    # Return NORMALIZED weights so the report math works (sum of weights = 1.0)
     final_weights = {}
     for k in normalized:
         raw_weight = weights.get(k, 0.05)
         final_weights[k] = raw_weight / weight_sum if weight_sum > 0 else 0
+
+    return score, {k: round(v, 2) for k, v in normalized.items()}, final_weights
+
+
+def calculate_richness_score(
+    content: str,
+    level: str,
+    file_path: Path | None = None,
+    yaml_activity_types: set | None = None,
+) -> dict:
+    """Calculate richness score and components based on module type.
+
+    Args:
+        content: Markdown content of the module
+        level: CEFR level (A1, A2, B1, B2, C1, C2)
+        file_path: Path to the module file (for type detection)
+        yaml_activity_types: Set of activity types from YAML file (optional)
+    """
+    module_type = extract_module_type(content, file_path) if file_path else 'grammar'
+    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
+        module_type = 'beginner'
+    targets = MODULE_TYPE_TARGETS.get(module_type, MODULE_TYPE_TARGETS['grammar'])
+    weights = MODULE_TYPE_WEIGHTS.get(module_type, DEFAULT_WEIGHTS)
+
+    prose = get_prose_content(content)
+    raw = _collect_raw_counts(module_type, prose, file_path, yaml_activity_types)
+    score, normalized, final_weights = _compute_weighted_score(raw, targets, weights)
 
     return {
         'score': score,
@@ -1332,7 +264,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
         'passed': score >= targets.get('threshold', 95),
         'module_type': module_type,
         'raw': raw,
-        'normalized': {k: round(v, 2) for k, v in normalized.items()},
+        'normalized': normalized,
         'targets': {k: targets.get(k, 0) for k in raw if k not in ('variety', 'paragraph_var')},
         'weights': final_weights,
     }
@@ -1358,102 +290,66 @@ def _universal_dryness_flags(prose: str, module_type: str) -> list[str]:
     return flags
 
 
-def _beginner_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for beginner (A1/A2) modules."""
+def _type_specific_dryness_flags(prose: str, module_type: str, level: str,
+                                 file_path: Path | None) -> list[str]:
+    """Check dryness flags specific to a module type."""
     flags = []
-    if count_examples(prose) < 6:
-        flags.append('NO_EXAMPLES')
-    return flags
 
+    if module_type == 'beginner':
+        if count_examples(prose) < 6:
+            flags.append('NO_EXAMPLES')
+    elif module_type == 'bridge':
+        if count_examples(prose) < 10:
+            flags.append('NO_EXAMPLES')
+        if count_realworld(prose) < 1:
+            flags.append('ABSTRACT_ONLY')
+    elif module_type == 'grammar':
+        dialogue_count = count_dialogues(prose)
+        if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:
+            flags.append('LOW_DIALOGUE' if dialogue_count > 0 else 'NO_DIALOGUE')
+        if count_examples(prose) < 12:
+            flags.append('NO_EXAMPLES')
+        if count_realworld(prose) < 2:
+            flags.append('ABSTRACT_ONLY')
+        if level in ('B1', 'B2') and count_proverbs(prose) == 0:
+            flags.append('NO_PROVERBS')
+    elif module_type == 'vocabulary':
+        if count_collocations(prose) < 5:
+            flags.append('NO_COLLOCATIONS')
+        if count_register_notes(prose) < 2:
+            flags.append('NO_REGISTER_NOTES')
+    elif module_type == 'history':
+        if count_primary_sources(prose) < 2:
+            flags.append('NO_PRIMARY_SOURCES')
+        if count_timeline_markers(prose) < 5:
+            flags.append('NO_TIMELINE')
+        if count_decolonization(prose) == 0:
+            flags.append('NO_DECOLONIZATION_PERSPECTIVE')
+    elif module_type == 'biography':
+        if count_quotes(prose) < 2:
+            flags.append('NO_QUOTES')
+        if count_legacy_refs(prose) < 1:
+            flags.append('NO_LEGACY_DISCUSSION')
+        if count_timeline_markers(prose) < 5:
+            flags.append('NO_TIMELINE')
+    elif module_type == 'literature':
+        if count_analysis_sections(prose) < 3:
+            flags.append('NO_ANALYSIS')
+        if count_quotes(prose) < 3:
+            flags.append('NO_LITERARY_CITATIONS')
+        if count_resources(prose) + count_external_yaml_resources(file_path) < 2:
+            flags.append('NO_RESOURCES')
+    elif module_type == 'style':
+        if count_quotes(prose) < 2:
+            flags.append('NO_EXEMPLAR_TEXTS')
+        if count_register_notes(prose) < 3:
+            flags.append('NO_REGISTER_ANALYSIS')
+    elif module_type in ('content', 'cultural'):
+        if count_examples(prose) < 8:
+            flags.append('NO_EXAMPLES')
+        if count_realworld(prose) == 0:
+            flags.append('ABSTRACT_ONLY')
 
-def _bridge_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for bridge modules."""
-    flags = []
-    if count_examples(prose) < 10:
-        flags.append('NO_EXAMPLES')
-    if count_realworld(prose) < 1:
-        flags.append('ABSTRACT_ONLY')
-    return flags
-
-
-def _grammar_dryness_flags(prose: str, level: str) -> list[str]:
-    """Check dryness flags for grammar modules."""
-    flags = []
-    dialogue_count = count_dialogues(prose)
-    if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:
-        flags.append('LOW_DIALOGUE' if dialogue_count > 0 else 'NO_DIALOGUE')
-    if count_examples(prose) < 12:
-        flags.append('NO_EXAMPLES')
-    if count_realworld(prose) < 2:
-        flags.append('ABSTRACT_ONLY')
-    if level in ('B1', 'B2') and count_proverbs(prose) == 0:
-        flags.append('NO_PROVERBS')
-    return flags
-
-
-def _vocabulary_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for vocabulary modules."""
-    flags = []
-    if count_collocations(prose) < 5:
-        flags.append('NO_COLLOCATIONS')
-    if count_register_notes(prose) < 2:
-        flags.append('NO_REGISTER_NOTES')
-    return flags
-
-
-def _history_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for history modules."""
-    flags = []
-    if count_primary_sources(prose) < 2:
-        flags.append('NO_PRIMARY_SOURCES')
-    if count_timeline_markers(prose) < 5:
-        flags.append('NO_TIMELINE')
-    if count_decolonization(prose) == 0:
-        flags.append('NO_DECOLONIZATION_PERSPECTIVE')
-    return flags
-
-
-def _biography_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for biography modules."""
-    flags = []
-    if count_quotes(prose) < 2:
-        flags.append('NO_QUOTES')
-    if count_legacy_refs(prose) < 1:
-        flags.append('NO_LEGACY_DISCUSSION')
-    if count_timeline_markers(prose) < 5:
-        flags.append('NO_TIMELINE')
-    return flags
-
-
-def _literature_dryness_flags(prose: str, file_path: Path | None) -> list[str]:
-    """Check dryness flags for literature modules."""
-    flags = []
-    if count_analysis_sections(prose) < 3:
-        flags.append('NO_ANALYSIS')
-    if count_quotes(prose) < 3:
-        flags.append('NO_LITERARY_CITATIONS')
-    if count_resources(prose) + count_external_yaml_resources(file_path) < 2:
-        flags.append('NO_RESOURCES')
-    return flags
-
-
-def _style_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for style modules."""
-    flags = []
-    if count_quotes(prose) < 2:
-        flags.append('NO_EXEMPLAR_TEXTS')
-    if count_register_notes(prose) < 3:
-        flags.append('NO_REGISTER_ANALYSIS')
-    return flags
-
-
-def _content_cultural_dryness_flags(prose: str) -> list[str]:
-    """Check dryness flags for content/cultural modules."""
-    flags = []
-    if count_examples(prose) < 8:
-        flags.append('NO_EXAMPLES')
-    if count_realworld(prose) == 0:
-        flags.append('ABSTRACT_ONLY')
     return flags
 
 
@@ -1464,34 +360,12 @@ def detect_dryness_flags(content: str, level: str, file_path: Path | None = None
     if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
         module_type = 'beginner'
 
-    # Universal flags
     flags = _universal_dryness_flags(prose, module_type)
+    flags.extend(_type_specific_dryness_flags(prose, module_type, level, file_path))
 
-    # Type-specific flags
-    if module_type == 'beginner':
-        flags.extend(_beginner_dryness_flags(prose))
-    elif module_type == 'bridge':
-        flags.extend(_bridge_dryness_flags(prose))
-    elif module_type == 'grammar':
-        flags.extend(_grammar_dryness_flags(prose, level))
-    elif module_type == 'vocabulary':
-        flags.extend(_vocabulary_dryness_flags(prose))
-    elif module_type == 'history':
-        flags.extend(_history_dryness_flags(prose))
-    elif module_type == 'biography':
-        flags.extend(_biography_dryness_flags(prose))
-    elif module_type == 'literature':
-        flags.extend(_literature_dryness_flags(prose, file_path))
-    elif module_type == 'style':
-        flags.extend(_style_dryness_flags(prose))
-    elif module_type in ('content', 'cultural'):
-        flags.extend(_content_cultural_dryness_flags(prose))
-
-    # Table check for grammar module types only (soft warning)
     if module_type in ('grammar', 'bridge') and count_tables(prose) == 0:
         flags.append('NO_TABLES')
 
-    # Cultural anchor check (B1+ grammar/vocab/content types) - need 2+ (50% of target 3)
     if module_type in ('grammar', 'vocabulary', 'content', 'cultural'):
         cultural_count = count_cultural_refs(prose)
         if level in ('B1', 'B2', 'C1', 'C2') and cultural_count < 2:
@@ -1500,7 +374,39 @@ def detect_dryness_flags(content: str, level: str, file_path: Path | None = None
     return flags
 
 
+def _print_score_breakdown(result: dict, weights: dict) -> None:
+    """Print formatted score breakdown table."""
+    print("### Score Breakdown")
+    print("| Metric | Count | Target | Score | Weight | Contribution |")
+    print("|--------|-------|--------|-------|--------|--------------|")
+
+    total_contribution = 0.0
+    sorted_keys = sorted(
+        result['raw'].keys(), key=lambda k: weights.get(k, 0), reverse=True
+    )
+
+    for key in sorted_keys:
+        raw = result['raw'].get(key, 0)
+        norm = result['normalized'].get(key, 0)
+        target = result['targets'].get(key, '\u2014')
+        weight = weights.get(key, 0.05)
+        contribution = norm * weight * 100
+        total_contribution += contribution
+
+        if key in ('variety', 'paragraph_var'):
+            count_str = f"{raw:.2f}"
+            target_str = "-"
+        else:
+            count_str = str(raw)
+            target_str = str(target)
+
+        print(f"| {key} | {count_str} | {target_str} | {norm:.0%} | {weight:.0%} | {contribution:.1f}% |")
+
+    print(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
+
+
 def main():
+    """CLI entry point for richness scoring."""
     if len(sys.argv) < 2:
         print("Usage: .venv/bin/python scripts/calculate_richness.py <file> [--json]")
         sys.exit(1)
@@ -1527,46 +433,19 @@ def main():
 
         print(f"Module Type: {module_type}")
         print(f"Richness Score: {result['score']}/100 (threshold: {result['threshold']})")
-        print(f"Status: {'✅ PASS' if result['passed'] else '❌ FAIL'}")
+        print(f"Status: {'PASS' if result['passed'] else 'FAIL'}")
         print()
-        print("### Score Breakdown")
-        print("| Metric | Count | Target | Score | Weight | Contribution |")
-        print("|--------|-------|--------|-------|--------|--------------|")
-
-        total_contribution = 0.0
-
-        # Sort keys for consistent output (prioritize higher weights)
-        sorted_keys = sorted(result['raw'].keys(), key=lambda k: weights.get(k, 0), reverse=True)
-
-        for key in sorted_keys:
-            raw = result['raw'].get(key, 0)
-            norm = result['normalized'].get(key, 0)
-            target = result['targets'].get(key, '—')
-            weight = weights.get(key, 0.05)
-            contribution = norm * weight * 100
-            total_contribution += contribution
-
-            # Format columns
-            if key in ('variety', 'paragraph_var'):
-                count_str = f"{raw:.2f}"
-                target_str = "-"
-            else:
-                count_str = str(raw)
-                target_str = str(target)
-
-            print(f"| {key} | {count_str} | {target_str} | {norm:.0%} | {weight:.0%} | {contribution:.1f}% |")
-
-        print(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
+        _print_score_breakdown(result, weights)
         print()
 
         if flags:
             print("### Dryness Flags")
             for flag in flags:
-                print(f"- ⚠️ {flag}")
+                print(f"- {flag}")
             if len(flags) >= 2:
                 print()
                 print("> [!WARNING]")
-                print("> ❌ 2+ flags: Content needs REWRITE, not just fix")
+                print("> 2+ flags: Content needs REWRITE, not just fix")
         else:
             print("Dryness Flags: None")
 

@@ -14,7 +14,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from slug_utils import audit_report_path as _audit_report_path
 from slug_utils import status_path as _status_path
-from slug_utils import to_bare_slug
+
+from .report_helpers import (
+    DRYNESS_FLAG_FIXES,
+    LOW_DENSITY_SUGGESTIONS,
+    build_gates_dict,
+    compute_overall_status,
+    gather_source_mtimes,
+    sync_batch_state,
+)
 
 
 def save_status_cache(
@@ -28,144 +36,12 @@ def save_status_cache(
     review_violations: list | None = None,
     review_gate_status: str = "skipped",
 ) -> str:
-    """
-    Save status cache to {level}/status/{slug}.json.
-
-    Args:
-        file_path: Path to the markdown source file
-        level_code: Level identifier (b1, b2, etc.)
-        module_slug: Module slug
-        results: Dictionary of gate results
-        has_critical_failure: Overall pass/fail status
-        critical_failure_reasons: List of blocking issues
-        plan_version: Version of the plan
-        review_violations: List of review validation violations (or None)
-        review_gate_status: "pass", "fail", or "skipped"
-    """
-
-    # 1. Gather Source Mtimes
+    """Save status cache to {level}/status/{slug}.json."""
     md_path = Path(file_path)
-    base_path = md_path.parent # curriculum/l2-uk-en/{level}
+    source_mtimes = gather_source_mtimes(md_path, module_slug)
+    gates = build_gates_dict(results)
 
-    meta_path = base_path / 'meta' / f"{module_slug}.yaml"
-    activities_path = base_path / 'activities' / f"{module_slug}.yaml"
-    vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
-
-    # Derive track directory from file path for plan lookup
-    # base_path is e.g. curriculum/l2-uk-en/hist — use its name directly
-    # so seminar tracks (hist, bio, etc.) resolve correctly
-    track_dir_name = base_path.name  # e.g., "hist", "a1", "b1"
-    plan_path = base_path.parent / 'plans' / track_dir_name / f"{module_slug}.yaml"
-    if not plan_path.exists():
-        # Try bare slug (strip numeric prefix) for seminar tracks
-        bare = to_bare_slug(module_slug)
-        alt_path = base_path.parent / 'plans' / track_dir_name / f"{bare}.yaml"
-        if alt_path.exists():
-            plan_path = alt_path
-
-    source_mtimes = {}
-
-    def get_mtime(p: Path) -> str:
-        if p.exists():
-            return datetime.fromtimestamp(p.stat().st_mtime).isoformat() + "Z"
-        return None
-
-    source_mtimes['md'] = get_mtime(md_path)
-    source_mtimes['meta'] = get_mtime(meta_path)
-    source_mtimes['activities'] = get_mtime(activities_path)
-    source_mtimes['vocabulary'] = get_mtime(vocab_path)
-    source_mtimes['plan'] = get_mtime(plan_path)
-
-    research_path = base_path / 'research' / f"{module_slug}-research.md"
-    source_mtimes['research'] = get_mtime(research_path)
-
-    # 2. Serialize Gates
-    gates = {}
-
-    # Map internal gate keys to schema keys
-    # Internal: words, activities, density, unique_types, priority, engagement, audio, vocab, structure, lint, pedagogy, content_heavy, immersion, richness, grammar, naturalness
-    # Schema: meta, lesson, activities, vocabulary, naturalness (aggregated)
-
-    # We will dump ALL internal gates into the JSON for detail, grouped if possible, or just flat if schema allows "additionalProperties"
-    # (Schema is strict, so we must map to 'meta', 'lesson', 'activities', 'vocabulary', 'naturalness')
-
-    # MAPPING STRATEGY:
-    # meta -> structure, lint
-    # lesson -> words, engagement, audio, pedagogy, content_heavy, immersion, richness
-    # activities -> activities, density, unique_types, priority, activity_quality
-    # vocabulary -> vocab
-    # naturalness -> naturalness
-
-    # Helper to serialize a result
-    def serialize_gate(res):
-        if not res:
-            return {"status": "skipped", "violations": 0}
-
-        status = "pass"
-        if hasattr(res, 'status'):
-            status = res.status.lower()
-        elif isinstance(res, dict):
-            status = res.get('status', 'pass').lower()
-
-        # INFO status with "Deferred" in message = content-only audit deferral
-        # Other INFO statuses (e.g., naturalness PENDING) stay as "info"
-        if status == 'info':
-            raw_msg = ""
-            if hasattr(res, 'msg'):
-                raw_msg = res.msg
-            elif isinstance(res, dict):
-                raw_msg = res.get('msg', '')
-            if 'Deferred' in raw_msg or 'content-only' in raw_msg.lower():
-                status = 'deferred'
-
-        msg = ""
-        if hasattr(res, 'msg'):
-            msg = res.msg
-        elif isinstance(res, dict):
-            msg = res.get('msg', '')
-
-        # Parse violations/issues from msg or other fields if available
-        # Simple heuristic: if fail, assume 1 violation unless parsed
-        violations = 1 if status == 'fail' else 0
-
-        return {
-            "status": status,
-            "violations": violations,
-            "message": msg
-        }
-
-    gates['meta'] = serialize_gate(results.get('structure')) # also lint
-    # Merge lint into meta status
-    lint_res = results.get('lint')
-    if lint_res and lint_res.status == 'FAIL':
-        gates['meta']['status'] = 'fail'
-        gates['meta']['violations'] += 1 # Rough count
-        gates['meta']['message'] += f" | Lint: {lint_res.msg}"
-
-    gates['lesson'] = serialize_gate(results.get('words'))
-    # Merge other lesson gates
-    for k in ['engagement', 'audio', 'pedagogy', 'content_heavy', 'immersion', 'richness']:
-        res = results.get(k)
-        if res and hasattr(res, 'status') and res.status == 'FAIL':
-            gates['lesson']['status'] = 'fail'
-            gates['lesson']['violations'] += 1
-            gates['lesson']['message'] += f" | {k}: {res.msg}"
-
-    gates['activities'] = serialize_gate(results.get('activities'))
-    for k in ['density', 'unique_types', 'priority', 'activity_quality']:
-        res = results.get(k)
-        if res and hasattr(res, 'status') and res.status == 'FAIL':
-            gates['activities']['status'] = 'fail'
-            gates['activities']['violations'] += 1
-            gates['activities']['message'] += f" | {k}: {res.msg}"
-
-    gates['vocabulary'] = serialize_gate(results.get('vocab'))
-
-    gates['naturalness'] = serialize_gate(results.get('naturalness'))
-
-    gates['research'] = serialize_gate(results.get('research'))
-
-    # Review gate (final gate — only checked when content gates pass)
+    # Review gate
     if review_violations is None:
         review_violations = []
     review_criticals = [v for v in review_violations if v.get('severity') == 'critical']
@@ -175,86 +51,40 @@ def save_status_cache(
         "message": review_criticals[0]['message'] if review_criticals else "",
     }
 
-    # 3. Overall Status
-    pass_count = sum(1 for g in gates.values() if g['status'] == 'pass')
-    fail_count = sum(1 for g in gates.values() if g['status'] == 'fail')
-    deferred_count = sum(1 for g in gates.values() if g['status'] == 'deferred')
+    overall = compute_overall_status(gates, has_critical_failure, critical_failure_reasons)
 
-    if has_critical_failure or fail_count > 0:
-        overall_status = "fail"
-    elif deferred_count > 0:
-        overall_status = "content-complete"
-    else:
-        overall_status = "pass"
-
-    overall = {
-        "status": overall_status,
-        "blocking_issues": critical_failure_reasons,
-        "pass_count": pass_count,
-        "fail_count": fail_count,
-        "deferred_count": deferred_count,
-    }
-
-    # 4. Construct Cache Object
     cache_data = {
         "module": module_slug,
         "level": level_code,
         "plan_version": plan_version,
         "last_audit": datetime.now().isoformat() + "Z",
-        "audit_duration_ms": 0, # TODO: Track duration
+        "audit_duration_ms": 0,
         "source_mtimes": source_mtimes,
         "gates": gates,
         "overall": overall
     }
 
-    # 5. Save File (merge with existing to preserve verification data)
+    # Save file (merge with existing to preserve verification data)
+    base_path = md_path.parent
     status_file = _status_path(base_path, module_slug)
     status_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Merge with existing data to preserve verification block
     existing_data = {}
     if status_file.exists():
         try:
             with open(status_file, encoding='utf-8') as f:
                 existing_data = json.load(f)
         except (OSError, json.JSONDecodeError):
-            pass  # If file is corrupted, start fresh
+            pass
 
-    # Preserve verification block from existing data
     if 'verification' in existing_data:
         cache_data['verification'] = existing_data['verification']
 
     with open(status_file, 'w', encoding='utf-8') as f:
         json.dump(cache_data, f, indent=2)
 
-    # 6. Sync batch_state if it exists (keeps batch manager dashboard in sync)
-    _sync_batch_state(base_path, module_slug, overall.get("status", "fail"))
-
+    sync_batch_state(base_path, module_slug, overall.get("status", "fail"))
     return str(status_file)
-
-
-def _sync_batch_state(base_path: Path, module_slug: str, status: str):
-    """Update batch_state/state_{track}.json if it exists.
-
-    Keeps the batch manager dashboard in sync when audits run outside batch.
-    """
-    try:
-        track = base_path.name  # e.g., "a1", "hist"
-        batch_state_file = base_path.parent.parent.parent / "batch_state" / f"state_{track}.json"
-        if not batch_state_file.exists():
-            return
-
-        with open(batch_state_file, encoding='utf-8') as f:
-            state = json.load(f)
-
-        bare = to_bare_slug(module_slug)
-        modules = state.get("modules", {})
-        if bare in modules:
-            modules[bare]["status"] = status
-            with open(batch_state_file, 'w', encoding='utf-8') as f:
-                json.dump(state, f, indent=2)
-    except Exception:
-        pass  # Non-critical — don't break audit if batch_state sync fails
 
 
 def set_verification(
@@ -429,137 +259,7 @@ def _report_activity_breakdown(activity_details: list[dict], config: dict | None
     return lines
 
 
-# Mapping from dryness flag names to fix instructions
-_DRYNESS_FLAG_FIXES = {
-    'NO_ENGAGEMENT': '''Add 2+ engagement boxes. Use this exact format:
-
-> 💡 **Чи знали ви?**
->
-> [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-
-> 🇺🇦 **Культурний момент**
->
-> [Cultural context connecting grammar to Ukrainian life/places]
-
-> 🌍 **У реальному житті**
->
-> [Practical scenario where this grammar is used]''',
-
-    'WALL_OF_TEXT': 'Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.',
-
-    'REPETITIVE_STARTERS': 'Vary sentence starters. Instead of repeating "Доконаний вид...", use: "Коли...", "Якщо...", "Зверніть увагу:", "Порівняйте:", questions, examples.',
-
-    'NO_DIALOGUE': '''Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
-
-Use ONE of these formats (blockquote is required for detection):
-
-Format 1 — Bold speaker in blockquote (PREFERRED):
-> **Студент:** Чому тут знахідний відмінок?
-> **Викладач:** Бо дієслово «бачити» вимагає знахідного.
-> **Студент:** А якщо це заперечення?
-> **Викладач:** Тоді родовий: «не бачу **книжки**».
-
-Format 2 — Em-dash in blockquote:
-> — Чому тут знахідний?
-> — Бо дієслово вимагає знахідного.
-
-Format 3 — Plain А:/Б: speakers:
-А: Чому тут знахідний?
-Б: Бо дієслово вимагає знахідного.
-
-IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
-Place dialogues inside [!dialogue] callouts or blockquotes.''',
-
-    'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
-
-Use this format (blockquote required):
-> **Студент:** Як правильно сказати?
-> **Викладач:** Вживайте форму «збігатися», а не «співпадати».
-
-Or em-dash format:
-> — Як правильно сказати?
-> — Вживайте «збігатися».
-
-IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.''',
-
-    'NO_EXAMPLES': 'Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.',
-
-    'ABSTRACT_ONLY': '''Add 3+ real-world boxes. Use this exact format:
-
-> 🌍 **У реальному житті**
->
-> [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-> [Example sentence showing grammar in that context]''',
-
-    'NO_COLLOCATIONS': 'Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)',
-
-    'NO_REGISTER_NOTES': 'Add register notes: Mark words as (розм.) for colloquial, (офіц.) for formal, (книжн.) for literary.',
-
-    'NO_PRIMARY_SOURCES': '''Add 2+ primary source quotes. Use this format:
-
-> «[Exact quote from historical document]»
-> — *[Source name], [year]*''',
-
-    'NO_TIMELINE': 'Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).',
-
-    'NO_DECOLONIZATION_PERSPECTIVE': 'Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.',
-
-    'NO_QUOTES': '''Add 2+ direct quotes from the subject. Use this format:
-
-> «[Exact quote from the person]»
-> — *[Person name], [context/year]*''',
-
-    'NO_LEGACY': 'Add a "Спадщина" or "Вплив" section discussing lasting influence on Ukrainian culture/literature/language.',
-
-    'NO_ANALYSIS': '''Add 3+ analysis section headers. Use keywords in headers:
-
-## 1. Аналіз [topic]: [subtitle]
-## 2. Інтерпретація [aspect]: [subtitle]
-## 3. Символіка [element]: [subtitle]''',
-
-    'NO_LITERARY_CITATIONS': '''Add 3+ literary citations. Use this exact format:
-
-«[Quote from the literary work, minimum 20 characters]»
-
-Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»''',
-
-    'NO_RESOURCES': '''Add 2+ resource blocks. Use this format:
-
-> [!resources] Додаткові ресурси
->
-> - [Resource 1 with link or description]
-> - [Resource 2 with link or description]''',
-
-    'NO_EXEMPLAR_TEXTS': '''Add 2+ exemplar text excerpts. Use this format:
-
-**Зразок [style type]:**
-
-> «[Extended quote showing the style, 50+ words]»
-> — *[Source]*''',
-
-    'NO_REGISTER_ANALYSIS': 'Add 3+ register analysis notes explaining when to use formal vs informal, written vs spoken variants.',
-
-    'NO_CULTURAL_ANCHOR': '''Add 3+ cultural references. Use this exact format:
-
-> 🇺🇦 **Культурний момент**
->
-> [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
-> [How it connects to the grammar/vocabulary being taught]
-> [Example sentence using the grammar with cultural context]''',
-
-    'LOW_CULTURAL_ANCHOR': '''Add more cultural references (need 3+ total). Include:
-- Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-- Ukrainian traditions or customs
-- Contemporary Ukrainian life examples''',
-
-    'NO_PROVERBS': '''Add 1+ Ukrainian proverb. Use this format:
-
-Українці кажу|ть: «[Proverb in Ukrainian]»
-
-Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-
-Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.''',
-}
+_DRYNESS_FLAG_FIXES = DRYNESS_FLAG_FIXES  # Re-export for backward compatibility
 
 
 def _report_richness_section(richness_data: dict, richness_flags: list | None) -> list[str]:
@@ -875,42 +575,11 @@ def print_low_density_activities(low_density_activities: list[dict]) -> None:
 
     print("\n📊 ACTIVITIES WITH LOW DENSITY:")
     for act in low_density_activities:
-        title = act['title']
-        act_type = act['type']
-        items = act['items']
-        target = act['target']
-        missing = target - items
-
-        print(f"  ❌ {title}")
-        print(f"     Current: {items} items | Required: {target} | Add: {missing} more")
-
-        # Type-specific suggestions
-        if act_type == 'fill-in':
-            print(f"     → Add {missing} more gap-fill sentences with [blank] placeholders")
-        elif act_type == 'match-up':
-            print(f"     → Add {missing} more matching pairs (Ukrainian ↔ English)")
-        elif act_type == 'quiz':
-            print(f"     → Add {missing} more multiple-choice questions")
-        elif act_type == 'true-false':
-            print(f"     → Add {missing} more true/false statements")
-        elif act_type == 'unjumble':
-            print(f"     → Add {missing} more sentences to unscramble")
-        elif act_type == 'group-sort':
-            print(f"     → Add {missing} more items to sort into categories")
-        elif act_type == 'error-correction':
-            print(f"     → Add {missing} more sentences with errors to find")
-        elif act_type == 'cloze':
-            print(f"     → Add {missing} more blanks in the passage")
-        elif act_type == 'anagram':
-            print(f"     → Add {missing} more words to unscramble")
-        elif act_type == 'translate':
-            print(f"     → Add {missing} more translation items")
-        elif act_type == 'mark-the-words':
-            print(f"     → Add {missing} more words to mark in the text")
-        elif act_type == 'select':
-            print(f"     → Add {missing} more multi-select questions")
-        else:
-            print(f"     → Add {missing} more items to this activity")
+        missing = act['target'] - act['items']
+        print(f"  ❌ {act['title']}")
+        print(f"     Current: {act['items']} items | Required: {act['target']} | Add: {missing} more")
+        suggestion = LOW_DENSITY_SUGGESTIONS.get(act['type'], 'items to this activity')
+        print(f"     → Add {missing} more {suggestion}")
     print("")
 
 
