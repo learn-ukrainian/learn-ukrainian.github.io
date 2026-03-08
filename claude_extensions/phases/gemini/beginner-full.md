@@ -63,10 +63,6 @@ Read ALL files before writing anything.
 - **No IPA or phonetic brackets**
 - **Quotes**: Use «...» not "..."
 
-### Exemplar (follow this structural pattern)
-
-{TIER_EXEMPLAR}
-
 ---
 
 ## 3. Write the Lesson Content

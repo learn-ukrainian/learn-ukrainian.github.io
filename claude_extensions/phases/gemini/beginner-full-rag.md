@@ -99,10 +99,6 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 - **No IPA or phonetic brackets**
 - **Quotes**: Use «...» not "..."
 
-### Exemplar (follow this structural pattern)
-
-{TIER_EXEMPLAR}
-
 ---
 
 ## 4. Write the Lesson Content

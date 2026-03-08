@@ -79,10 +79,6 @@ Follow the structural containment rules above. In each section:
 
 Keep paragraphs short (3-5 sentences). Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
 
-### Exemplar (follow this structural pattern)
-
-{TIER_EXEMPLAR}
-
 ### Section Word Budgets
 
 {SECTION_BUDGET_TABLE}

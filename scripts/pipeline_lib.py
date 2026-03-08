@@ -2139,47 +2139,6 @@ def _get_content_template(track: str, module_num: int,
     return "core-content.md"
 
 
-def get_tier_exemplar(track: str, module_num: int) -> str:
-    """Return the content of the appropriate tier exemplar snippet.
-
-    Bands aligned with IMMERSION_RULES and curriculum.yaml:
-    A1 (64 modules):
-    - foundation:   A1 M01-10  (5-35%, letters/sounds/first words)
-    - emerging:     A1 M11-20  (25-40%, basic grammar, verbs intro)
-    - structured:   A1 M21-64  (35-55%, cases, tenses, imperatives)
-    A2 (76 modules):
-    - transitional: A2 M01-20  (50-60%, core grammar: cases, aspect)
-    - independent:  A2 M21-50  (60-75%, applied grammar, word formation)
-    A2 M51-76 (75-90%) and B1+ get no exemplar.
-    """
-    base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
-    if base == "a1":
-        if module_num <= 10:
-            band = "foundation"
-        elif module_num <= 20:
-            band = "emerging"
-        else:
-            band = "structured"
-    elif base == "a2":
-        if module_num <= 20:
-            band = "transitional"
-        elif module_num <= 50:
-            band = "independent"
-        else:
-            return ""  # A2 M51-76: 75-90% immersion, no exemplar needed
-    elif base == "b1":
-        if module_num <= 5:
-            band = "independent"  # B1 bridge: meta-language transition
-        else:
-            return ""  # B1 M6+: full Ukrainian immersion
-    else:
-        return ""  # B2+: full Ukrainian immersion
-
-    exemplar_path = PHASES_DIR / "exemplars" / f"band-{band}.md"
-    if exemplar_path.exists():
-        return exemplar_path.read_text("utf-8")
-    return ""
-
 
 def _get_activities_template(track: str, module_num: int) -> str:
     """Return the activities prompt filename for the given tier."""
@@ -2275,7 +2234,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
             else "Перевірте себе — Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
             else "Перевірте себе:"
         ),
-        "TIER_EXEMPLAR": get_tier_exemplar(ctx.track, ctx.module_num),
+        "TIER_EXEMPLAR": "",  # Removed — structural rules work better than exemplars
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
         "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
         "SCORING_SECTION": _get_scoring_section(ctx.track),
