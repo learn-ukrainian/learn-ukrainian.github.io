@@ -122,13 +122,13 @@ All in `_retired/`. Do not reference in new code.
 
 ```bash
 # Lint all prompt templates (blocks deploy on errors)
-.venv/bin/python scripts/lint_prompts.py
+.venv/bin/python scripts/lint/lint_prompts.py
 
 # Also check curriculum research files
-.venv/bin/python scripts/lint_prompts.py --curriculum
+.venv/bin/python scripts/lint/lint_prompts.py --curriculum
 
 # Auto-fix persona contamination
-.venv/bin/python scripts/lint_prompts.py --fix
+.venv/bin/python scripts/lint/lint_prompts.py --fix
 ```
 
 CI runs `lint_prompts.py` on every push to `claude_extensions/phases/` or `gemini_extensions/skills/`.

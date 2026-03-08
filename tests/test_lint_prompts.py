@@ -1,7 +1,9 @@
 """Tests for scripts/lint/lint_prompts.py — prompt template linting."""
 from __future__ import annotations
 
+import re
 import sys
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -27,13 +29,11 @@ class TestRules:
 
     def _check_text(self, text: str, filename: str = "test.md") -> list[dict]:
         """Helper: write text to a temp file and run check_line_rules."""
-        tmp = Path("/tmp/lint_test_prompt.md")
-        tmp.write_text(text)
-        try:
-            with patch("lint_prompts.PROJECT_ROOT", Path("/tmp")):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir) / filename
+            tmp.write_text(text)
+            with patch("lint_prompts.PROJECT_ROOT", Path(tmpdir)):
                 return check_line_rules(tmp)
-        finally:
-            tmp.unlink(missing_ok=True)
 
     def test_helpful_neighbor_caught(self):
         violations = self._check_text("Use the Helpful Neighbor voice.")
@@ -65,7 +65,6 @@ class TestResearchRules:
 
     def _check_research(self, text: str) -> list[dict]:
         """Check text against research rules."""
-        import re
         violations = []
         lines = text.splitlines()
         for rule_id, severity, description, pattern, exception in RESEARCH_RULES:

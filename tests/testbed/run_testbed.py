@@ -462,6 +462,20 @@ def cmd_baseline(args):
     save_baseline(results)
 
 
+def find_regressions(results: list[dict], baseline: dict) -> list[str]:
+    """Compare audit results against baseline, return list of regression descriptions."""
+    regressions = []
+    for r in results:
+        key = f"{r['track']}-{r['slug']}"
+        if key not in baseline:
+            continue
+        old_grade = baseline[key].get("grade", "?")
+        new_grade = r.get("grade", "?")
+        if GRADE_ORDER.get(new_grade, 9) > GRADE_ORDER.get(old_grade, 9):
+            regressions.append(f"{r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}")
+    return regressions
+
+
 def cmd_check(args):
     """CI-friendly check: audit existing content and compare vs baseline.
 
@@ -481,21 +495,7 @@ def cmd_check(args):
 
     print_report(results, baseline)
 
-    # Check for regressions
-    regressions = []
-    for r in results:
-        key = f"{r['track']}-{r['slug']}"
-        if key not in baseline:
-            continue
-        old_grade = baseline[key].get("grade", "?")
-        new_grade = r.get("grade", "?")
-        old_ord = GRADE_ORDER.get(old_grade, 9)
-        new_ord = GRADE_ORDER.get(new_grade, 9)
-        if new_ord > old_ord:
-            regressions.append(
-                f"  {r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}"
-            )
-
+    regressions = find_regressions(results, baseline)
     if regressions:
         print(f"\n{'='*60}")
         print(f"  REGRESSION DETECTED ({len(regressions)} module(s))")
