@@ -6,11 +6,17 @@ on:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
+      - 'claude_extensions/phases/**/*.md'
+      - 'claude_extensions/skills/**/*.md'
+      - 'gemini_extensions/skills/**/*.md'
   pull_request:
     paths:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
+      - 'claude_extensions/phases/**/*.md'
+      - 'claude_extensions/skills/**/*.md'
+      - 'gemini_extensions/skills/**/*.md'
   workflow_dispatch:
 
 jobs:
@@ -67,6 +73,19 @@ jobs:
             exit 1
           fi
           echo "✅ No MI=C files (excluding known legacy)"
+
+  lint-prompts:
+    name: Lint Prompts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Lint prompt templates
+        run: python scripts/lint/lint_prompts.py
 
   scripts-root-guard:
     name: No new root scripts
