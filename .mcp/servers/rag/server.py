@@ -755,11 +755,48 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
-async def main():
-    """Run the MCP RAG server."""
+async def main_stdio():
+    """Run the MCP RAG server via stdio (spawned by Claude Code)."""
     async with stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
+async def main_sse(host: str = "127.0.0.1", port: int = 8766):
+    """Run the MCP RAG server as a standalone SSE daemon."""
+    from mcp.server.sse import SseServerTransport
+    from starlette.applications import Starlette
+    from starlette.routing import Route, Mount
+    import uvicorn
+
+    sse = SseServerTransport("/messages/")
+
+    async def handle_sse(request):
+        async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
+            await server.run(streams[0], streams[1], server.create_initialization_options())
+
+    app = Starlette(
+        routes=[
+            Route("/sse", endpoint=handle_sse),
+            Mount("/messages/", app=sse.handle_post_message),
+        ],
+    )
+
+    print(f"RAG MCP Server (SSE) running on http://{host}:{port}")
+    print(f"  SSE endpoint: http://{host}:{port}/sse")
+    print(f"  Messages: http://{host}:{port}/messages/")
+    sys.stdout.flush()
+
+    config = uvicorn.Config(app, host=host, port=port, log_level="warning")
+    srv = uvicorn.Server(config)
+    await srv.serve()
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    if "--standalone" in sys.argv:
+        port = 8766
+        for i, arg in enumerate(sys.argv):
+            if arg == "--port" and i + 1 < len(sys.argv):
+                port = int(sys.argv[i + 1])
+        asyncio.run(main_sse(port=port))
+    else:
+        asyncio.run(main_stdio())

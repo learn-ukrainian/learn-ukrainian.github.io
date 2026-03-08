@@ -1,9 +1,7 @@
 {
   "mcpServers": {
     "rag": {
-      "command": ".venv/bin/python",
-      "args": [".mcp/servers/rag/server.py"],
-      "env": {}
+      "url": "http://127.0.0.1:8766/sse"
     }
   }
 }
