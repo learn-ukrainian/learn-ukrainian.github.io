@@ -63,79 +63,22 @@ class TestRuleApplies:
 
 
 # ---------------------------------------------------------------------------
-# Rule 1: NO_IMPERATIVES_EARLY_A1
+# Rules 1-2: DEPRECATED — replaced by VESUM morphological validator (#753)
+# These rules are marked deprecated=True and skipped by run_rule_engine.
 # ---------------------------------------------------------------------------
 
-class TestNoImperatives:
-    def test_catches_common_imperatives(self):
+class TestDeprecatedRulesSkipped:
+    """Verify deprecated rules produce zero matches."""
+
+    def test_imperatives_deprecated(self):
         content = "Слухайте уважно! Читайте текст. Повторюйте за мною."
         issues = run_rule_engine(content, "A1", 5, "a1")
         matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
-        assert len(matched) >= 3
-
-    def test_catches_first_person_plural_imperatives(self):
-        content = "Почитаймо разом! Послухаймо пісню."
-        issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
-        assert len(matched) >= 2
-
-    def test_catches_general_imperative_endings(self):
-        content = "Напишіть відповідь. Запам'ятайте це слово."
-        issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
-        assert len(matched) >= 2
-
-    def test_skips_outside_module_range(self):
-        content = "Слухайте уважно! Читайте текст."
-        issues = run_rule_engine(content, "A1", 47, "a1")
-        matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
         assert len(matched) == 0
 
-    def test_skips_non_a1_levels(self):
-        content = "Слухайте уважно! Читайте текст."
-        issues = run_rule_engine(content, "A2", 5, "a2")
-        matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
-        assert len(matched) == 0
-
-    def test_max_hits_cap(self):
-        content = "\n".join(f"Слухайте {i}!" for i in range(20))
-        issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_IMPERATIVES" in i["text"]]
-        assert len(matched) <= 5
-
-
-# ---------------------------------------------------------------------------
-# Rule 2: NO_VERB_CONJUGATION_PRE_M15
-# ---------------------------------------------------------------------------
-
-class TestNoVerbConjugation:
-    def test_catches_first_plural(self):
+    def test_verb_conjugation_deprecated(self):
         content = "Ми вивчаємо літери. Ми читаємо книгу."
         issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_VERB_CONJUGATION" in i["text"]]
-        assert len(matched) >= 2
-
-    def test_catches_third_person_plural(self):
-        content = "Діти малюють картини. Вони працюють разом."
-        issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_VERB_CONJUGATION" in i["text"]]
-        assert len(matched) >= 2
-
-    def test_catches_third_person_singular(self):
-        content = "Він читає книгу. Вона співає пісню."
-        issues = run_rule_engine(content, "A1", 5, "a1")
-        matched = [i for i in issues if "NO_VERB_CONJUGATION" in i["text"]]
-        assert len(matched) >= 2
-
-    def test_skips_m15_and_above(self):
-        content = "Ми вивчаємо літери."
-        issues = run_rule_engine(content, "A1", 15, "a1")
-        matched = [i for i in issues if "NO_VERB_CONJUGATION" in i["text"]]
-        assert len(matched) == 0
-
-    def test_skips_non_a1(self):
-        content = "Ми вивчаємо літери."
-        issues = run_rule_engine(content, "B1", 5, "b1-grammar")
         matched = [i for i in issues if "NO_VERB_CONJUGATION" in i["text"]]
         assert len(matched) == 0
 

@@ -80,8 +80,8 @@ class TestVocabTableFormat:
         header_violations = [v for v in violations if v['type'] == 'VOCAB_HEADER']
         assert len(header_violations) == 0
 
-    def test_a1_requires_6_columns(self):
-        """A1 vocabulary table must have 6 columns."""
+    def test_a1_requires_5_columns(self):
+        """A1 vocabulary table must have 5 columns (IPA removed)."""
         content = """
 # Vocabulary
 
@@ -92,16 +92,16 @@ class TestVocabTableFormat:
         violations = check_vocab_table_format(content, 'A1')
         format_violations = [v for v in violations if v['type'] == 'VOCAB_FORMAT']
         assert len(format_violations) == 1
-        assert '6 columns' in format_violations[0]['issue']
+        assert '5 columns' in format_violations[0]['issue']
 
-    def test_a1_valid_6_columns(self):
-        """A1 with 6 columns should pass."""
+    def test_a1_valid_5_columns(self):
+        """A1 with 5 columns should pass."""
         content = """
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | noun | n | - |
+| Word | English | POS | Gender | Note |
+|------|---------|-----|--------|------|
+| слово | word | noun | n | - |
 """
         violations = check_vocab_table_format(content, 'A1')
         format_violations = [v for v in violations if v['type'] == 'VOCAB_FORMAT']
@@ -133,8 +133,8 @@ class TestVocabTableFormat:
         format_violations = [v for v in violations if v['type'] == 'VOCAB_FORMAT']
         assert len(format_violations) == 0
 
-    def test_b1_rejects_4_columns(self):
-        """B1 vocabulary with wrong column count should fail."""
+    def test_b1_accepts_4_columns(self):
+        """B1 vocabulary with 4 columns should pass (3-5 accepted)."""
         content = """
 # Словник
 
@@ -144,8 +144,7 @@ class TestVocabTableFormat:
 """
         violations = check_vocab_table_format(content, 'B1')
         format_violations = [v for v in violations if v['type'] == 'VOCAB_FORMAT']
-        assert len(format_violations) == 1
-        assert '4' in format_violations[0]['issue']
+        assert len(format_violations) == 0
 
 
 # =============================================================================
@@ -155,24 +154,22 @@ class TestVocabTableFormat:
 class TestVocabExtraction:
     """Test vocabulary item extraction from content."""
 
-    def test_extract_from_6_column_table(self):
-        """Should extract items from A1/A2 6-column table."""
+    def test_extract_from_5_column_table(self):
+        """Should extract items from A1/A2 5-column table (no IPA)."""
         content = """
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | noun | n | - |
-| книга | /ˈknɪɦa/ | book | noun | f | - |
-| читати | /tʃɪˈtatɪ/ | to read | verb | - | impf |
+| Word | English | POS | Gender | Note |
+|------|---------|-----|--------|------|
+| слово | word | noun | n | - |
+| книга | book | noun | f | - |
+| читати | to read | verb | - | impf |
 """
         items = extract_vocab_items(content)
-        # Function may skip some rows based on implementation
         assert len(items) >= 2
-        # Check that extracted items have expected structure
+        # Check that extracted items have expected structure (no ipa field)
         for item in items:
             assert 'uk' in item
-            assert 'ipa' in item
             assert 'en' in item
 
     def test_extract_from_3_column_table(self):

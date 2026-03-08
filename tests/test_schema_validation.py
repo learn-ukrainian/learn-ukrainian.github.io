@@ -80,7 +80,6 @@ def valid_vocab_data():
         "items": [
             {
                 "lemma": "привіт",
-                "ipa": "/prɪʋˈit/",
                 "translation": "hello",
                 "pos": "noun",
                 "gender": "m",

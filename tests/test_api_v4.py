@@ -386,6 +386,6 @@ class TestPipelineVersionsEndpoint:
         data = r.json()
         # Should only have a1 in per_track
         assert "a1" in data["per_track"]
-        # total should match a1 counts
+        # total should match sum of all a1 pipeline versions
         a1 = data["per_track"]["a1"]
-        assert data["total"] == a1["v4"] + a1["v3"] + a1["unbuilt"]
+        assert data["total"] == a1.get("v5", 0) + a1.get("v4", 0) + a1.get("v3", 0) + a1.get("unbuilt", 0)

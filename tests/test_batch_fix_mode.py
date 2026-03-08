@@ -754,7 +754,8 @@ class TestSchemaFilterVerification:
             'etymology-trace', 'grammar-identify', 'phonology-lab',
             'grammar-lab', 'parallel-text', 'paleography-analysis',
             'historical-writing', 'register-identify', 'loanword-trace',
-            'comparative-style',
+            'comparative-style', 'watch-and-repeat', 'classify',
+            'image-to-letter',
         }
 
         missing = set()
