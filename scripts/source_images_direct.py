@@ -70,7 +70,7 @@ def search_pixabay(query: str, per_page: int = 3) -> list[dict]:
             f"{PIXABAY_API_URL}?{params}",
             headers={"User-Agent": "learn-ukrainian/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310 — URL built from hardcoded HTTPS base
             data = json.loads(resp.read())
         return [
             {

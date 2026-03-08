@@ -11,6 +11,7 @@ Usage:
 import argparse
 import base64
 import sys
+import tempfile
 from pathlib import Path
 
 import pymupdf
@@ -322,7 +323,7 @@ def main():
     else:
         page_nums = [int(args.pages)]
 
-    out_dir = Path(args.out) if args.out else Path("/tmp/page-pairs")
+    out_dir = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="page-pairs-"))
     out_dir.mkdir(parents=True, exist_ok=True)
 
     doc = pymupdf.open(str(pdf_path))

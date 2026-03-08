@@ -61,6 +61,11 @@ def fetch_url_content(url: str, timeout: int = 10) -> tuple[bool, str, str]:
     try:
         # Handle non-ASCII characters in URL
         parts = urllib.parse.urlsplit(url)
+
+        # Validate URL scheme to prevent SSRF (B310)
+        if parts.scheme not in ("http", "https"):
+            return False, "", f"Blocked URL with scheme: {parts.scheme!r}"
+
         url = urllib.parse.urlunsplit((
             parts.scheme,
             parts.netloc,
@@ -73,7 +78,7 @@ def fetch_url_content(url: str, timeout: int = 10) -> tuple[bool, str, str]:
             url,
             headers={'User-Agent': 'Mozilla/5.0 (compatible; LearnUkrainian/1.0)'}
         )
-        with urllib.request.urlopen(req, timeout=timeout) as response:
+        with urllib.request.urlopen(req, timeout=timeout) as response:  # nosec B310 — scheme validated above
             raw_html = response.read()
 
             # Try to detect encoding from Content-Type header

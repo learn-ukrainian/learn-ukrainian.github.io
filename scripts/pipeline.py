@@ -211,7 +211,7 @@ def step_validate_html(lang_pair: str, level: str | None, module_num: int | None
     # Check if dev server is running
     import urllib.request
     try:
-        urllib.request.urlopen("http://localhost:3000/", timeout=5)
+        urllib.request.urlopen("http://localhost:3000/", timeout=5)  # nosec B310 — hardcoded localhost URL
     except OSError:
         print("  ⚠️ Docusaurus dev server not running")
         print("  Start with: cd docusaurus && pnpm start")

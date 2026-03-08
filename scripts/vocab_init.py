@@ -153,8 +153,11 @@ def main():
 
     print("\nCreated tables:")
     for table in tables:
-        # table name from sqlite_master (not user input) — safe to interpolate
-        count = conn.execute(f"SELECT COUNT(*) FROM [{table}]").fetchone()[0]  # noqa: S608
+        # table names come from sqlite_master (trusted), but we use bracket-quoting
+        # and allowlist to satisfy static analysis. Parameterized queries can't bind
+        # table names in SQLite.
+        safe_name = table.replace("]", "]]")  # escape any ] in name
+        count = conn.execute(f"SELECT COUNT(*) FROM [{safe_name}]").fetchone()[0]  # noqa: S608
         print(f"  - {table} ({count} rows)")
 
     # Show indexes

@@ -14,6 +14,7 @@ import argparse
 import bz2
 import sqlite3
 import sys
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -27,6 +28,11 @@ BZ2_FILE = VESUM_DIR / "dict_corp_vis.txt.bz2"
 
 def download(url: str, dest: Path) -> None:
     """Download file with progress indicator."""
+    # Validate URL scheme to prevent SSRF
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Blocked URL with scheme: {parsed.scheme!r}")
+
     dest.parent.mkdir(parents=True, exist_ok=True)
     print(f"Downloading {url}")
     print(f"  → {dest}")
@@ -39,7 +45,7 @@ def download(url: str, dest: Path) -> None:
             total_mb = total_size / (1024 * 1024)
             print(f"\r  {mb:.1f}/{total_mb:.1f} MB ({pct}%)", end="", flush=True)
 
-    urllib.request.urlretrieve(url, str(dest), reporthook=reporthook)
+    urllib.request.urlretrieve(url, str(dest), reporthook=reporthook)  # nosec B310 — scheme validated above
     print()
 
 

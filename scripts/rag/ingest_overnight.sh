@@ -17,7 +17,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
-LOG="/tmp/rag-overnight.log"
+LOG="${TMPDIR:-/tmp}/rag-overnight.log"
 BATCH_SIZE=4
 
 echo "[$(date)] Starting overnight ingestion" | tee "$LOG"

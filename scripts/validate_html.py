@@ -75,7 +75,7 @@ def is_server_running() -> bool:
     """Check if dev server is available."""
     import urllib.request
     try:
-        urllib.request.urlopen(BASE_URL, timeout=5)
+        urllib.request.urlopen(BASE_URL, timeout=5)  # nosec B310 — hardcoded localhost URL
         return True
     except OSError:
         return False
@@ -133,7 +133,7 @@ class DevServer:
         """Check if server is responding."""
         import urllib.request
         try:
-            urllib.request.urlopen(BASE_URL, timeout=2)
+            urllib.request.urlopen(BASE_URL, timeout=2)  # nosec B310 — hardcoded localhost URL
             return True
         except OSError:
             return False
@@ -335,7 +335,7 @@ async def main_async():
     # Check dev server - skip gracefully if not available
     import urllib.request
     try:
-        urllib.request.urlopen(BASE_URL, timeout=5)
+        urllib.request.urlopen(BASE_URL, timeout=5)  # nosec B310 — hardcoded localhost URL
         print(f"  Server running at {BASE_URL}\n")
     except Exception:
         print("ℹ️  Docusaurus dev server not running - skipping HTML validation")

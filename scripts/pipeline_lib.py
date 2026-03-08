@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import textwrap
 import threading
 import time
@@ -1378,7 +1379,7 @@ def clean_phase_artifacts(ctx: ModuleContext, phase_id: str, forward: bool = Fal
 # 9. Gemini Dispatch Helpers
 # ============================================================================
 
-TMP_DIR = Path("/tmp")
+TMP_DIR = Path(tempfile.gettempdir())
 MAX_FIX_ITERATIONS = 3
 
 

@@ -57,5 +57,5 @@ SEMINAR_TRACK_IDS = {
 BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
 
 # Server settings
-API_HOST = "0.0.0.0"
+API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only
 API_PORT = 8765

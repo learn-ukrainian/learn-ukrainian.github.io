@@ -8,9 +8,8 @@ from pathlib import Path
 def run_command(command, cwd=None):
     try:
         result = subprocess.run(
-            command,
+            command.split() if isinstance(command, str) else command,
             cwd=cwd,
-            shell=True,
             capture_output=True,
             text=True
         )

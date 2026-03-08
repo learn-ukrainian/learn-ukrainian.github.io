@@ -49,7 +49,7 @@ def setup_logging():
 def api_get(path: str) -> dict | None:
     try:
         req = Request(f"{API_BASE}/{path}", method="GET")
-        with urlopen(req, timeout=10) as resp:
+        with urlopen(req, timeout=10) as resp:  # nosec B310 — hardcoded localhost URL
             return json.loads(resp.read())
     except (URLError, json.JSONDecodeError, OSError) as e:
         logging.error(f"API GET {path} failed: {e}")
@@ -60,7 +60,7 @@ def api_post(path: str) -> dict | None:
     try:
         req = Request(f"{API_BASE}/{path}", method="POST")
         req.add_header("Content-Type", "application/json")
-        with urlopen(req, timeout=10) as resp:
+        with urlopen(req, timeout=10) as resp:  # nosec B310 — hardcoded localhost URL
             return json.loads(resp.read())
     except (URLError, json.JSONDecodeError, OSError) as e:
         logging.error(f"API POST {path} failed: {e}")
