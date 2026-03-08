@@ -111,65 +111,69 @@ class TestParseV4PhaseStatus:
         assert result["status"] == "pending"
 
 
-class TestIsResearchDoneV4:
-    """_is_research_done checks v4 state first."""
+class TestIsResearchDone:
+    """_is_research_done uses unified v5 state format."""
 
-    def test_v4_research_complete(self):
+    def test_research_complete(self):
         from scripts.api.state_router import _is_research_done
 
-        v4 = {"phases": {"v4-research": {"status": "complete"}}}
-        assert _is_research_done({}, {}, v4=v4) is True
+        state = {"mode": "v5", "phases": {"research": {"status": "complete"}}}
+        assert _is_research_done(state) is True
 
-    def test_v4_research_not_complete(self):
+    def test_research_not_complete(self):
         from scripts.api.state_router import _is_research_done
 
-        v4 = {"phases": {"v4-research": {"status": "running"}}}
-        assert _is_research_done({}, {}, v4=v4) is False
+        state = {"mode": "v5", "phases": {"research": {"status": "running"}}}
+        assert _is_research_done(state) is False
 
-    def test_falls_back_to_v3(self):
+    def test_empty_state(self):
         from scripts.api.state_router import _is_research_done
 
-        v3 = {"phases": {"v3-A": {"status": "complete"}}}
-        assert _is_research_done(v3, {}, v4={}) is True
+        assert _is_research_done({"mode": "v5", "phases": {}}) is False
 
-    def test_no_v4_no_v3(self):
+    def test_no_phases(self):
         from scripts.api.state_router import _is_research_done
 
-        assert _is_research_done({}, {}, v4={}) is False
+        assert _is_research_done({}) is False
 
 
-class TestIsContentDoneV4:
-    """_is_content_done checks v4 state first."""
+class TestIsContentDone:
+    """_is_content_done uses unified v5 state format."""
 
-    def test_v4_content_complete(self):
+    def test_content_complete(self):
         from scripts.api.state_router import _is_content_done
 
-        v4 = {"phases": {"v4-content": {"status": "complete"}}}
-        assert _is_content_done({}, {}, v4=v4) is True
+        state = {"mode": "v5", "phases": {"content": {"status": "complete"}}}
+        assert _is_content_done(state) is True
 
-    def test_v4_content_not_complete(self):
+    def test_content_not_complete(self):
         from scripts.api.state_router import _is_content_done
 
-        v4 = {"phases": {"v4-content": {"status": "running"}}}
-        assert _is_content_done({}, {}, v4=v4) is False
+        state = {"mode": "v5", "phases": {"content": {"status": "running"}}}
+        assert _is_content_done(state) is False
 
-    def test_falls_back_to_v3(self):
+    def test_empty_state(self):
         from scripts.api.state_router import _is_content_done
 
-        v3 = {"phases": {"v3-B": {"status": "complete"}}}
-        assert _is_content_done(v3, {}, v4={}) is True
+        assert _is_content_done({"mode": "v5", "phases": {}}) is False
 
 
-class TestV4PhaseOrder:
-    """V4_PHASE_ORDER is correct."""
+class TestPipelinePhaseOrder:
+    """V5_PHASE_ORDER imported from pipeline_v5."""
 
-    def test_phase_order(self):
-        from scripts.api.state_router import V4_PHASE_ORDER
+    def test_phase_order_includes_sandbox(self):
+        from scripts.api.state_router import V5_PHASE_ORDER
 
-        assert V4_PHASE_ORDER == [
-            "research", "discover", "content", "activities",
+        assert "sandbox" in V5_PHASE_ORDER
+        assert V5_PHASE_ORDER == [
+            "research", "discover", "sandbox", "content", "activities",
             "validate", "review", "mdx",
         ]
+
+    def test_v4_phase_order_no_sandbox(self):
+        from scripts.api.state_router import V4_PHASE_ORDER
+
+        assert "sandbox" not in V4_PHASE_ORDER
 
 
 # ==================== generate_mdx helpers ====================

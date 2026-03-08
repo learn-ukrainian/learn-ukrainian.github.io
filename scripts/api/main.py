@@ -93,7 +93,13 @@ async def health_check():
 
 @app.get("/api/config")
 async def get_config():
-    return {"levels": LEVELS, "api_version": app.version}
+    # Import pipeline phase config — single source of truth
+    try:
+        from pipeline_v5 import PHASES, PHASE_LABELS
+        pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
+    except ImportError:
+        pipeline_info = {}
+    return {"levels": LEVELS, "api_version": app.version, "pipeline": pipeline_info}
 
 
 @app.get("/api/batch/dispatcher")

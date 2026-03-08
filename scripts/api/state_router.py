@@ -42,9 +42,18 @@ from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import contextlib
 
+from pipeline.state import is_complete as _phase_complete
+from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
 
 from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
+
+# Import canonical phase list from pipeline — single source of truth
+try:
+    from pipeline_v5 import PHASES as _PIPELINE_PHASES, PHASE_LABELS as _PIPELINE_PHASE_LABELS
+except ImportError:
+    _PIPELINE_PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
+    _PIPELINE_PHASE_LABELS = {}
 
 router = APIRouter(tags=["state"])
 
@@ -169,6 +178,60 @@ def _get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
     return []
 
 
+class _StateCtx:
+    """Lightweight context for pipeline.state.load_state (needs .track, .slug, .orch_dir)."""
+    __slots__ = ("track", "slug", "orch_dir")
+
+    def __init__(self, track: str, slug: str, orch_dir: Path):
+        self.track = track
+        self.slug = slug
+        self.orch_dir = orch_dir
+
+
+def _load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
+    """Load unified pipeline state for a module via pipeline.state.
+
+    Returns v5-format state dict with mode="v5" and plain phase keys.
+    Handles v4→v5 migration automatically.
+    """
+    ctx = _StateCtx(track, slug, orch_dir)
+    try:
+        return _load_pipeline_state(ctx)
+    except Exception:
+        return {"track": track, "slug": slug, "mode": "v5", "phases": {}}
+
+
+def _detect_pipeline_version(orch_dir: Path) -> str:
+    """Detect pipeline version for a module.
+
+    Priority: state.json mode=v5 > state-v4.json > state-v3.json > state.json["mode"] > "unbuilt".
+    """
+    state_file = orch_dir / "state.json"
+    if state_file.exists():
+        try:
+            data = json.loads(state_file.read_text())
+            if data.get("mode") == "v5":
+                return "v5"
+        except Exception:
+            pass
+    if (orch_dir / "state-v4.json").exists():
+        return "v4"
+    if (orch_dir / "state-v3.json").exists():
+        return "v3"
+    if state_file.exists():
+        try:
+            data = json.loads(state_file.read_text())
+            if data.get("mode") == "v4":
+                return "v4"
+            if data:
+                return "v3"
+        except Exception:
+            pass
+    return "unbuilt"
+
+
+# --- Backward-compat helpers (used by endpoints not yet migrated) ---
+
 def _read_v4_state(orch_dir: Path) -> dict:
     """Read state-v4.json, return {} if missing or invalid."""
     state_file = orch_dir / "state-v4.json"
@@ -202,39 +265,12 @@ def _read_v2_state(orch_dir: Path) -> dict:
         return {}
 
 
-V4_PHASE_ORDER = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
-V5_PHASE_ORDER = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
-
-
-def _detect_pipeline_version(orch_dir: Path) -> str:
-    """Detect pipeline version for a module.
-
-    Priority: state.json mode=v5 > state-v4.json > state-v3.json > state.json["mode"] > "unbuilt".
-    """
-    # v5 uses state.json with mode: "v5"
-    v2 = _read_v2_state(orch_dir)
-    if v2.get("mode") == "v5":
-        return "v5"
-    if (orch_dir / "state-v4.json").exists():
-        return "v4"
-    if (orch_dir / "state-v3.json").exists():
-        return "v3"
-    if v2.get("mode") == "v4":
-        return "v4"
-    if v2:
-        return "v3"
-    return "unbuilt"
-
-
 def _parse_v4_phase_status(v4_state: dict, phase_name: str) -> dict:
     """Extract status info for a v4 phase (e.g. 'research', 'content')."""
     phase = v4_state.get("phases", {}).get(f"v4-{phase_name}", {})
     if not phase:
         return {"status": "pending"}
-    return {
-        "status": phase.get("status", "pending"),
-        "ts": phase.get("ts"),
-    }
+    return {"status": phase.get("status", "pending"), "ts": phase.get("ts")}
 
 
 def _parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
@@ -242,10 +278,42 @@ def _parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
     phase = v5_state.get("phases", {}).get(phase_name, {})
     if not phase:
         return {"status": "pending"}
+    return {"status": phase.get("status", "pending"), "ts": phase.get("ts")}
+
+
+V4_PHASE_ORDER = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
+V5_PHASE_ORDER = _PIPELINE_PHASES  # Canonical source from pipeline_v5
+
+
+def _parse_phase_status(v3_state: dict, phase_key: str) -> dict:
+    """Extract status info for a v3 phase key (e.g. 'v3-A')."""
+    phase = v3_state.get("phases", {}).get(phase_key, {})
+    if not phase:
+        return {"status": "pending"}
     return {
         "status": phase.get("status", "pending"),
+        "mode": phase.get("mode"),
         "ts": phase.get("ts"),
+        "attempts": phase.get("attempts"),
     }
+
+
+# --- End backward-compat helpers ---
+
+
+def _parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
+    """Extract status info for a phase from unified v5 state."""
+    phase = state.get("phases", {}).get(phase_name, {})
+    if not phase:
+        return {"status": "pending"}
+    result = {"status": phase.get("status", "pending")}
+    if phase.get("ts"):
+        result["ts"] = phase["ts"]
+    if phase.get("mode"):
+        result["mode"] = phase["mode"]
+    if phase.get("attempts"):
+        result["attempts"] = phase["attempts"]
+    return result
 
 
 def _has_research_file(track_dir: Path, slug: str) -> bool:
@@ -253,28 +321,16 @@ def _has_research_file(track_dir: Path, slug: str) -> bool:
     return (track_dir / "research" / f"{slug}-research.md").exists()
 
 
-def _is_research_done(v3: dict, v2: dict, track_dir: Path | None = None, slug: str | None = None, v4: dict | None = None, v5: dict | None = None) -> bool:
-    """Research done if v5/v4 research complete, v3 Phase A complete, v2 phase '1' complete, or research file exists."""
-    if v5 and v5.get("phases", {}).get("research", {}).get("status") == "complete":
-        return True
-    if v4 and v4.get("phases", {}).get("v4-research", {}).get("status") == "complete":
-        return True
-    if v3.get("phases", {}).get("v3-A", {}).get("status") == "complete":
-        return True
-    if v2.get("phases", {}).get("1", {}).get("status") == "complete":
+def _is_research_done(state: dict, track_dir: Path | None = None, slug: str | None = None) -> bool:
+    """Research done if pipeline state has research phase complete, or research file exists."""
+    if _phase_complete(state, "research"):
         return True
     return bool(track_dir is not None and slug is not None and _has_research_file(track_dir, slug))
 
 
-def _is_content_done(v3: dict, v2: dict, v4: dict | None = None, v5: dict | None = None) -> bool:
-    """Content done if v5/v4 content complete, v3 Phase B complete, OR v2 phase '2' complete."""
-    if v5 and v5.get("phases", {}).get("content", {}).get("status") == "complete":
-        return True
-    if v4 and v4.get("phases", {}).get("v4-content", {}).get("status") == "complete":
-        return True
-    if v3.get("phases", {}).get("v3-B", {}).get("status") == "complete":
-        return True
-    return v2.get("phases", {}).get("2", {}).get("status") == "complete"
+def _is_content_done(state: dict) -> bool:
+    """Content done if pipeline state has content phase complete."""
+    return _phase_complete(state, "content")
 
 
 def _find_content_file(track_dir: Path, slug: str) -> Path | None:
@@ -362,19 +418,6 @@ def _get_research_score(track_dir: Path, slug: str, track_id: str) -> int | None
     return None
 
 
-def _parse_phase_status(v3_state: dict, phase_key: str) -> dict:
-    """Extract status info for a v3 phase key (e.g. 'v3-A')."""
-    phase = v3_state.get("phases", {}).get(phase_key, {})
-    if not phase:
-        return {"status": "pending"}
-    return {
-        "status": phase.get("status", "pending"),
-        "mode": phase.get("mode"),
-        "ts": phase.get("ts"),
-        "attempts": phase.get("attempts"),
-    }
-
-
 def _get_word_target_from_plan(track_id: str, slug: str) -> int:
     """Try to read word_target from the individual plan YAML file."""
     plan_file = PLANS_ROOT / track_id / f"{slug}.yaml"
@@ -419,14 +462,11 @@ def _compute_summary() -> dict:
         audit_dir = track_dir / "audit"
         for _num, slug in plan_slugs:
             orch_dir = track_dir / "orchestration" / slug
-            v2 = _read_v2_state(orch_dir)
-            v5 = v2 if v2.get("mode") == "v5" else None
-            v4 = _read_v4_state(orch_dir) if not v5 else {}
-            v3 = _read_v3_state(orch_dir) if not v5 else {}
+            state = _load_module_state(track_id, slug, orch_dir)
 
-            if _is_research_done(v3, v2, track_dir, slug, v4=v4, v5=v5):
+            if _is_research_done(state, track_dir, slug):
                 research_done += 1
-            if _is_content_done(v3, v2, v4=v4, v5=v5):
+            if _is_content_done(state):
                 content_done += 1
 
             audit = _get_audit_status(track_dir, slug)
@@ -478,6 +518,7 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
     for num, slug in plan_slugs:
         orch_dir = track_dir / "orchestration" / slug
         version = _detect_pipeline_version(orch_dir)
+        state = _load_module_state(track_id, slug, orch_dir)
 
         audit = _get_audit_status(track_dir, slug)
         research_score = _get_research_score(track_dir, slug, track_id)
@@ -487,82 +528,25 @@ def _compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
         if word_target == 0:
             word_target = _get_word_target_from_plan(track_id, slug)
 
-        if version == "v5":
-            v5 = _read_v2_state(orch_dir)  # v5 uses state.json
-            phases = {
-                name: _parse_v5_phase_status(v5, name)
-                for name in V5_PHASE_ORDER
-            }
-            modules.append({
-                "num": num,
-                "slug": slug,
-                "pipeline_version": "v5",
-                "needs_rebuild": False,
-                "phases": phases,
-                "audit": audit["status"],
-                "words": word_count,
-                "word_target": word_target,
-                "research_score": research_score,
-                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
-                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
-            })
-        elif version == "v4":
-            v4 = _read_v4_state(orch_dir)
-            phases = {
-                name: _parse_v4_phase_status(v4, name)
-                for name in V4_PHASE_ORDER
-            }
-            modules.append({
-                "num": num,
-                "slug": slug,
-                "pipeline_version": "v4",
-                "needs_rebuild": False,
-                "phases": phases,
-                "audit": audit["status"],
-                "words": word_count,
-                "word_target": word_target,
-                "research_score": research_score,
-                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
-                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
-            })
-        else:
-            v3 = _read_v3_state(orch_dir)
-            v2 = _read_v2_state(orch_dir)
+        # All modules get v5-format phases (load_state handles migration)
+        phases = {
+            name: _parse_phase_status_from_state(state, name)
+            for name in _PIPELINE_PHASES
+        }
 
-            # For phase chip display: if v3-A is empty but v2 phase 1 is complete,
-            # synthesise a v3-A entry so the chip shows correctly.
-            if not v3.get("phases", {}).get("v3-A") and v2.get("phases", {}).get("1", {}).get("status") == "complete":
-                v3.setdefault("phases", {})["v3-A"] = {
-                    "status": "complete",
-                    "mode": "v2-adopted",
-                    "ts": v2["phases"]["1"].get("timestamp"),
-                }
-            if not v3.get("phases", {}).get("v3-B") and v2.get("phases", {}).get("2", {}).get("status") == "complete":
-                v3.setdefault("phases", {})["v3-B"] = {
-                    "status": "complete",
-                    "mode": "v2-adopted",
-                    "ts": v2["phases"]["2"].get("timestamp"),
-                }
-
-            modules.append({
-                "num": num,
-                "slug": slug,
-                "pipeline_version": "v3" if version == "v3" else "unbuilt",
-                "needs_rebuild": True,
-                "phases": {
-                    "A": _parse_phase_status(v3, "v3-A"),
-                    "B": _parse_phase_status(v3, "v3-B"),
-                    "C": _parse_phase_status(v3, "v3-C"),
-                    "audit": _parse_phase_status(v3, "v3-audit"),
-                    "D": _parse_phase_status(v3, "v3-D"),
-                },
-                "audit": audit["status"],
-                "words": word_count,
-                "word_target": word_target,
-                "research_score": research_score,
-                "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
-                "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
-            })
+        modules.append({
+            "num": num,
+            "slug": slug,
+            "pipeline_version": version,
+            "needs_rebuild": version not in ("v5", "v4"),
+            "phases": phases,
+            "audit": audit["status"],
+            "words": word_count,
+            "word_target": word_target,
+            "research_score": research_score,
+            "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
+            "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
+        })
 
     return {"track": track_id, "total": len(modules), "modules": modules}
 
