@@ -13,6 +13,14 @@ import re
 import sys
 from pathlib import Path
 
+# Ensure scripts/ and scripts/generate_mdx/ are on sys.path
+_scripts_dir = str(Path(__file__).resolve().parent.parent)
+_pkg_dir = str(Path(__file__).resolve().parent)
+if _scripts_dir not in sys.path:
+    sys.path.insert(0, _scripts_dir)
+if _pkg_dir not in sys.path:
+    sys.path.insert(0, _pkg_dir)
+
 import yaml
 
 from generate_mdx_direct_content import (
