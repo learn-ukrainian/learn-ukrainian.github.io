@@ -32,7 +32,7 @@ WebFetch: zakon.rada.gov.ua/laws/show/[standard]
 
 | Meta-Skill | Resources |
 |------------|-----------|
-| **Terminology Acquisition** | esu.com.ua, sum.in.ua (dictionaries) |
+| **Terminology Acquisition** | sum.in.ua (dictionaries) |
 | **Document Production** | zakon.rada.gov.ua (ДСТУ standards) |
 | **Professional Reading** | nbuv.gov.ua, domain journals |
 | **Cross-Domain Communication** | Popular science sites, TED-Ed UA |

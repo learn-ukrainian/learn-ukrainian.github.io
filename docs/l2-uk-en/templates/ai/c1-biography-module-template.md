@@ -14,13 +14,12 @@
 Biographical content requires verified facts.
 
 DO:
-1. WebSearch: "[Figure name] site:esu.com.ua"  # PRIMARY SOURCE
+1. WebSearch: "[Figure name] site:uk.wikipedia.org"
 2. WebSearch: "[Figure name] site:memory.gov.ua"  # 20th century figures
 3. WebSearch: "[Figure name] біографія site:.gov.ua"
-4. WebFetch: https://esu.com.ua/article-[id]
+4. WebSearch: "[Figure name] site:history.org.ua"
 
 DO NOT:
-- Use Wikipedia as primary source (information warfare risk)
 - Invent birth/death dates
 - Generate quotes from memory
 - Invent family members, teachers, associates
@@ -257,9 +256,9 @@ VOCABULARY (in YAML):
 - [ ] 3-column format (lemma, translation, note)
 
 SOURCES:
-- [ ] Dates verified from ЕСУ or .gov.ua
+- [ ] Dates verified from .gov.ua or academic sources
 - [ ] Quotes from actual documented sources
-- [ ] No Wikipedia-only claims
+- [ ] Key claims cross-referenced across sources
 ```
 
 ### Step 5.2: Run Audit
@@ -276,11 +275,11 @@ SOURCES:
 
 | Domain | Primary Resources |
 |--------|-------------------|
-| **Literature** | esu.com.ua, litopys.org.ua, ukrlib.com.ua |
-| **Politics/Military** | memory.gov.ua, history.org.ua, esu.com.ua |
-| **Science/Academia** | nas.gov.ua, esu.com.ua |
-| **Arts/Culture** | esu.com.ua, namu.kiev.ua |
-| **Religious figures** | risu.ua, esu.com.ua |
+| **Literature** | uk.wikipedia.org, litopys.org.ua, ukrlib.com.ua |
+| **Politics/Military** | memory.gov.ua, history.org.ua |
+| **Science/Academia** | nas.gov.ua, uk.wikipedia.org |
+| **Arts/Culture** | uk.wikipedia.org, namu.kiev.ua |
+| **Religious figures** | risu.ua, uk.wikipedia.org |
 | **Contemporary** | ukrinform.ua, president.gov.ua |
 
 ### Activity Question Guide

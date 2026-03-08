@@ -288,7 +288,6 @@ SOURCES:
 | Institute of History NANU | history.org.ua | Scholarly articles |
 | National Library | nbuv.gov.ua | Academic journals |
 | Hrushevsky Digital | hrushevsky.nbuv.gov.ua | Foundational historiography |
-| ЕСУ | esu.com.ua | Conceptual articles |
 | UINP | memory.gov.ua | 20th century, decolonization |
 
 ### Anti-Hallucination Rules

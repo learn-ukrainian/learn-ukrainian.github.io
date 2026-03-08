@@ -3,7 +3,7 @@
 This workflow is the mandatory standard for rebuilding or creating modules in "Seminar" tracks: `hist`, `bio`, `istorio`, `lit`, `oes`, and `ruth`. It prioritizes research-driven, decolonized, and linguistically rich content.
 
 ## Phase 0: Research-First Mandate
-- **Sniper Search**: Use `google_web_search` with `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` for academic accuracy.
+- **Sniper Search**: Use `google_web_search` with `site:history.org.ua OR site:elib.nlu.org.ua OR site:uk.wikipedia.org` for academic accuracy.
 - **Source Filter**: STRICTLY Ukrainian-language sources only; Russian sources are prohibited.
 - **Notes**: Capture chronology, primary quotes, and decolonization angles. Save to `curriculum/l2-uk-en/{track}/research/{slug}-research.md`.
 - **Engagement Mapping**: Identify at least 5 engagement hooks (`[!myth-buster]`, `[!history-bite]`, `[!context]`, `[!quote]`) from research data.

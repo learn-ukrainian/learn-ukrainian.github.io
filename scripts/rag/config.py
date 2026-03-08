@@ -26,7 +26,6 @@ QDRANT_GRPC_PORT = 6334
 TEXT_COLLECTION = "textbook_chunks"
 IMAGE_COLLECTION = "textbook_images"
 LITERARY_COLLECTION = "literary_texts"
-ESU_COLLECTION = "esu_encyclopedia"
 
 # ── Literary text paths ───────────────────────────────────────────
 LITERARY_DIR = DATA_DIR / "literary_texts"

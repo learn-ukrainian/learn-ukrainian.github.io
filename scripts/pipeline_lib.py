@@ -2627,7 +2627,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
 
     - A1/A2: searches bukvar (grade 1-2) for letter/syllable exercises
     - B1+ core: searches ukrainska-mova for grammar explanations
-    - Seminar (HIST/BIO/ISTORIO/LIT/OES/RUTH): searches ESU encyclopedia for factual grounding
+    - Seminar (HIST/BIO/ISTORIO/LIT/OES/RUTH): searches textbooks for factual grounding
     Returns formatted examples Gemini can use as reference material.
     """
     base = ctx.track.split("-")[0]
@@ -2655,7 +2655,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     results = []
     seen_chunks = set()
 
-    # --- Seminar tracks: search textbooks (history, literature) + ESU if available ---
+    # --- Seminar tracks: search textbooks (history, literature) ---
     if is_seminar:
         try:
             from rag.query import search_text as _st
@@ -2682,26 +2682,6 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
                         f"**{source}** — {section}:\n```\n{text}\n```"
                     )
 
-        # Also try ESU encyclopedia if available
-        try:
-            from rag.query import search_esu
-            for term in search_terms[:2]:
-                try:
-                    hits = search_esu(term, limit=2)
-                except Exception:
-                    continue
-                for hit in hits:
-                    cid = hit.get("chunk_id", "")
-                    if cid in seen_chunks:
-                        continue
-                    seen_chunks.add(cid)
-                    title = hit.get("title", "")
-                    text = hit.get("text", "")[:500]
-                    results.append(
-                        f"**{title}** (ESU):\n```\n{text}\n```"
-                    )
-        except Exception:
-            pass  # ESU not available yet
 
         if results:
             header = (

@@ -137,11 +137,10 @@ Before writing content, research note must include:
 
 | Domain | Purpose | Example Query |
 |--------|---------|---------------|
-| `esu.com.ua` | Encyclopedia of Modern Ukraine | `Марія Павлова біографія site:esu.com.ua` |
 | `history.org.ua` | Institute of History | `Данило Апостол site:history.org.ua` |
 | `zbruc.eu` | Zbruc cultural portal | `Леся Українка site:zbruc.eu` |
 | `elib.nlu.org.ua` | National Library Archives | `Марія Занковецька листи site:elib.nlu.org.ua` |
-| `wikipedia.org` | Ukrainian Wikipedia only | `site:uk.wikipedia.org NOT site:ru.wikipedia.org` |
+| `uk.wikipedia.org` | Ukrainian Wikipedia only | `site:uk.wikipedia.org NOT site:ru.wikipedia.org` |
 
 ### Query Engineering Examples
 
@@ -153,8 +152,8 @@ Mariya Pavlova biography
 
 ✅ **Sniper Query** (domain-filtered):
 ```
-Марія Павлова біографія site:esu.com.ua OR site:history.org.ua OR site:zbruc.eu
-→ Returns Encyclopedia entries, Institute articles, cultural portals
+Марія Павлова біографія site:history.org.ua OR site:zbruc.eu OR site:uk.wikipedia.org
+→ Returns Institute articles, cultural portals, Wikipedia entries
 ```
 
 ✅ **Primary Source Query** (archival):
@@ -248,7 +247,6 @@ Gemini: "Processing M27-28..."
 | **Електронна бібліотека** | `elib.nlu.org.ua` | National library digitized texts |
 | **Лексика** | `lcorp.ulif.org.ua` | Linguistic corpus |
 | **Словники України** | `sum.in.ua`, `slovnyk.ua` | Ukrainian dictionaries |
-| **Енциклопедія сучасної України** | `esu.com.ua` | Encyclopedia |
 | **Chytomo** | `chytomo.com` | Literary analysis |
 | **Читанка** | `chtyvo.org.ua` | Ukrainian literature |
 | **Українська правда** | `pravda.com.ua` | Contemporary context |
@@ -271,7 +269,7 @@ When using `WebSearch`, always include domain restrictions:
 # CORRECT — Ukrainian sources only
 WebSearch(
     query="Іван Мазепа гетьман",
-    allowed_domains=["uk.wikipedia.org", "litopys.org.ua", "history.org.ua", "esu.com.ua"]
+    allowed_domains=["uk.wikipedia.org", "litopys.org.ua", "history.org.ua"]
 )
 
 # WRONG — Opens Russian results
@@ -324,7 +322,7 @@ Complex historical and literary modules were failing because:
 
 **Required steps:**
 1. **Search Ukrainian Wikipedia** (`uk.wikipedia.org`) for the figure — NEVER `ru.wikipedia.org`
-2. **Search academic sources** — `history.org.ua`, `esu.com.ua`, `litopys.org.ua`
+2. **Search academic sources** — `history.org.ua`, `litopys.org.ua`
 3. List all major life events, achievements, quotes, controversies
 4. Find primary source quotes (their own words, contemporaries) — in Ukrainian
 5. Identify connections to other Ukrainian figures (for cross-references)
@@ -335,7 +333,7 @@ Complex historical and literary modules were failing because:
 # For biographical research
 WebSearch(
     query="Леся Українка біографія життєпис",
-    allowed_domains=["uk.wikipedia.org", "esu.com.ua", "chytomo.com"]
+    allowed_domains=["uk.wikipedia.org", "chytomo.com"]
 )
 
 # For historical events

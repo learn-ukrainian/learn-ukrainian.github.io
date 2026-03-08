@@ -24,7 +24,6 @@ WebSearch: "[stylistic topic] стилістика site:nbuv.gov.ua"
 **Step 2: Academic Resources**
 ```
 WebFetch: https://nbuv.gov.ua/... (National Library)
-WebFetch: https://esu.com.ua/... (Encyclopedia)
 ```
 
 ### Key Resources (Prioritize .gov.ua and academic)
@@ -34,7 +33,6 @@ WebFetch: https://esu.com.ua/... (Encyclopedia)
 | **UkrLib** | [ukrlib.com.ua](https://ukrlib.com.ua) | Literary texts, author biographies |
 | **Litopys.org.ua** | [litopys.org.ua](https://litopys.org.ua) | Historical texts, chronicles |
 | **National Library** | [nbuv.gov.ua](https://nbuv.gov.ua) | Stylistic studies, academic works |
-| **ЕСУ** | [esu.com.ua](https://esu.com.ua) | Authors, movements, terminology |
 
 > ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia is contested territory subject to information warfare. **Verify all claims against academic sources.**
 
@@ -42,7 +40,7 @@ WebFetch: https://esu.com.ua/... (Encyclopedia)
 
 1. **NEVER invent literary quotes** — find actual texts on UkrLib or Litopys
 2. **NEVER generate stylistic analyses from memory** — verify patterns in academic sources
-3. **NEVER fabricate author biographical details** — verify in ЕСУ
+3. **NEVER fabricate author biographical details** — verify in academic sources
 4. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
 
 ---

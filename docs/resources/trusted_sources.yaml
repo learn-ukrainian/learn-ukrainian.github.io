@@ -35,17 +35,6 @@ sources:
     coverage: X-XXI century literary works
     mcp_tool: search_literary
 
-  - id: esu
-    name: Encyclopedia of Modern Ukraine (ESU)
-    type: rag
-    collection: esu_encyclopedia
-    url: https://esu.com.ua
-    description: >
-      81,000+ authoritative articles by NAS Ukraine scholars.
-      Covers history, biography, culture, geography, science.
-    coverage: All domains of Ukrainian knowledge
-    mcp_tool: search_esu
-
   - id: vesum
     name: VESUM morphological dictionary
     type: rag

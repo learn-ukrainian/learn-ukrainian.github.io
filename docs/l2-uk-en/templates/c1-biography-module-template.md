@@ -17,15 +17,14 @@
 **Step 1: Use WebSearch for Initial Research**
 ```
 WebSearch: "[Figure name] Ukrainian Wikipedia"
-WebSearch: "[Figure name] Encyclopedia of Modern Ukraine"
 WebSearch: "[Figure name] біографія"
+WebSearch: "[Figure name] site:history.org.ua"
 ```
 
 **Step 2: Verify with WebFetch**
 After finding URLs, use WebFetch to extract content:
 ```
 WebFetch: https://uk.wikipedia.org/wiki/[Figure_name]
-WebFetch: https://esu.com.ua/article-[id]
 ```
 
 **Step 3: Find Primary Sources**
@@ -39,20 +38,20 @@ WebSearch: "[Figure name] цитати site:uk.wikiquote.org"
 
 | Domain | Primary Resources (SAFE) | Secondary |
 |--------|--------------------------|-----------|
-| **Literature** | esu.com.ua, litopys.org.ua, ukrlib.com.ua | — |
-| **Politics/Military** | memory.gov.ua, history.org.ua, esu.com.ua | — |
-| **Science/Academia** | nas.gov.ua, esu.com.ua | — |
-| **Arts/Culture** | esu.com.ua, namu.kiev.ua | — |
-| **Religious figures** | risu.ua, esu.com.ua | — |
+| **Literature** | uk.wikipedia.org, litopys.org.ua, ukrlib.com.ua | — |
+| **Politics/Military** | memory.gov.ua, history.org.ua | — |
+| **Science/Academia** | nas.gov.ua, uk.wikipedia.org | — |
+| **Arts/Culture** | uk.wikipedia.org, namu.kiev.ua | — |
+| **Religious figures** | risu.ua, uk.wikipedia.org | — |
 | **Contemporary** | ukrinform.ua, president.gov.ua | — |
 
-> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia (uk.wikipedia.org) is a contested space subject to information warfare. **ALWAYS verify Wikipedia claims against .gov.ua or academic sources.** Prefer ЕСУ (esu.com.ua) for biographical facts.
+> ⚠️ **Source Verification:** When using Ukrainian Wikipedia (uk.wikipedia.org), cross-reference key claims against .gov.ua or academic sources where possible.
 
 ### Primary Academic Sources (PRIORITIZE THESE)
 
 | Source | URL | Coverage |
 |--------|-----|----------|
-| **Енциклопедія Сучасної України (ЕСУ)** | [esu.com.ua](https://esu.com.ua) | 81,000+ peer-reviewed articles |
+| **Українська Вікіпедія** | [uk.wikipedia.org](https://uk.wikipedia.org) | General biographical research |
 | **Institute of National Memory** | [memory.gov.ua](https://memory.gov.ua) | 20th century, dissidents, Holodomor |
 | **Institute of History NANU** | [history.org.ua](https://history.org.ua) | Academic historical research |
 | **National Library of Ukraine** | [nbuv.gov.ua](https://nbuv.gov.ua) | Dissertations, academic works |
@@ -61,7 +60,6 @@ WebSearch: "[Figure name] цитати site:uk.wikiquote.org"
 
 | Source | Use For |
 |--------|---------|
-| ЕСУ biographical articles | Verified dates, achievements, context |
 | Поліщук О. "Творці української нації" (2024) | Decolonization perspective on key figures |
 | UINP biographical databases | Dissidents, Executed Renaissance, Holodomor witnesses |
 
@@ -69,14 +67,14 @@ WebSearch: "[Figure name] цитати site:uk.wikiquote.org"
 1. **SYNTHESIZE, don't copy** — use encyclopedias for facts, write original narrative
 2. **Quote properly** — if using figure's own words, use `> [!quote]` with attribution
 3. **Add language learning value** — encyclopedias inform, we teach Ukrainian through biography
-4. **Decolonize** — even ЕСУ may have Soviet-era remnants in older articles
+4. **Decolonize** — even academic sources may have Soviet-era remnants in older articles
 
 ### Anti-Hallucination Rules
 
-1. **NEVER invent birth/death dates** — verify from ЕСУ or .gov.ua sources
+1. **NEVER invent birth/death dates** — verify from .gov.ua or academic sources
 2. **NEVER generate quotes from memory** — find actual documented quotes in academic sources
-3. **NEVER invent family members, teachers, or associates** — verify names in ЕСУ
-4. **PREFER ЕСУ over Wikipedia** — [esu.com.ua](https://esu.com.ua) is peer-reviewed by NANU scholars
+3. **NEVER invent family members, teachers, or associates** — verify names in academic sources
+4. **Cross-reference Wikipedia** — verify key claims against .gov.ua or academic sources
 5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
 
 ### URL Verification (MANDATORY)
@@ -86,7 +84,7 @@ Before using any external URL in reading activities:
 2. Verify the page is about the correct person (common name collisions!)
 3. Check the page contains substantial biographical content
 
-> 💡 **Tip:** [Енциклопедія Сучасної України](https://esu.com.ua) (ЕСУ) is the authoritative source — 81,000+ peer-reviewed articles from NANU and NTSh scholars. **Avoid relying solely on Wikipedia** due to information warfare concerns.
+> 💡 **Tip:** Use Ukrainian Wikipedia ([uk.wikipedia.org](https://uk.wikipedia.org)) as a starting point, then cross-reference with .gov.ua or academic sources for key biographical facts.
 
 ---
 

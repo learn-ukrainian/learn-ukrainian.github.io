@@ -98,7 +98,7 @@ Read the activities YAML and check:
 
 ### HISTORY/BIO/ISTORIO MODE
 
-- [ ] **Factual accuracy** -- Spot-check 3-5 factual claims using `mcp__rag__search_esu` or `mcp__rag__query_wikipedia`. Flag errors as **HIGH**.
+- [ ] **Factual accuracy** -- Spot-check 3-5 factual claims using `mcp__rag__query_wikipedia`. Flag errors as **HIGH**.
 - [ ] **Decolonization stance** -- Ukrainian agency centered, not passive objects of Russian/Soviet history. Flag imperial framing as **HIGH**.
 - [ ] **Analytical, not encyclopedic** -- Content drives analysis and critical thinking, not just narrates facts. Flag purely descriptive sections as **MEDIUM**.
 

@@ -2,19 +2,17 @@
 
 You are reviewing a Ukrainian language course plan YAML file for seminar tracks (HIST, BIO, ISTORIO, LIT and subtracks, OES, RUTH). Your job is to find errors, weaknesses, and gaps BEFORE content is built from this plan.
 
-**Key difference from core reviews:** Seminar tracks have NO State Standard mapping. Authority comes from external knowledge sources (ESU, Wikipedia, Literary RAG) and domain expertise, not government curriculum documents.
+**Key difference from core reviews:** Seminar tracks have NO State Standard mapping. Authority comes from external knowledge sources (Wikipedia, Literary RAG) and domain expertise, not government curriculum documents.
 
 ## Authority Sources
 
-You have FOUR authority sources. Use ALL of them:
+You have THREE authority sources. Use ALL of them:
 
-1. **ESU (Encyclopedia of Modern Ukraine)** — Use `mcp__rag__search_esu` to verify people, events, dates, places. ESU is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian.
+1. **Wikipedia (Ukrainian)** — Use `mcp__rag__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian.
 
-2. **Wikipedia (Ukrainian)** — Use `mcp__rag__query_wikipedia` to cross-reference dates, events, biographical facts. Use as a secondary check when ESU doesn't cover a topic or for broader context.
+2. **Literary RAG** — Use `mcp__rag__search_literary` to verify primary source references. The RAG contains chronicles, poetry, legal texts, and other primary Ukrainian literary sources. For plans that cite specific works (Povist mynulykh lit, Kobzar, Ruska Pravda, etc.), verify the citations exist in the corpus.
 
-3. **Literary RAG** — Use `mcp__rag__search_literary` to verify primary source references. The RAG contains chronicles, poetry, legal texts, and other primary Ukrainian literary sources. For plans that cite specific works (Povist mynulykh lit, Kobzar, Ruska Pravda, etc.), verify the citations exist in the corpus.
-
-4. **VESUM + GRAC** — Use `mcp__rag__verify_word` for vocabulary existence, `mcp__rag__query_grac` for frequency, `mcp__rag__query_r2u` for Russicism checks. Same as core reviews.
+3. **VESUM + GRAC** — Use `mcp__rag__verify_word` for vocabulary existence, `mcp__rag__query_grac` for frequency, `mcp__rag__query_r2u` for Russicism checks. Same as core reviews.
 
 **Textbook RAG** (`mcp__rag__search_text`) is also available for grammar concepts if the plan includes grammar teaching. Search in Ukrainian.
 
@@ -55,8 +53,8 @@ Flag as **CRITICAL**.
 
 For each factual claim in `content_outline`, `objectives`, and `vocabulary_hints`:
 
-- [ ] **Verify people** — Use `mcp__rag__search_esu` for every named person. Verify: correct name spelling, correct dates, correct role/title. Ghost people (invented or confused identities) are **CRITICAL**.
-- [ ] **Verify events** — Use `mcp__rag__search_esu` and `mcp__rag__query_wikipedia` for every named event. Verify: correct date, correct location, correct participants. Wrong dates are **HIGH**.
+- [ ] **Verify people** — Use `mcp__rag__query_wikipedia` for every named person. Verify: correct name spelling, correct dates, correct role/title. Ghost people (invented or confused identities) are **CRITICAL**.
+- [ ] **Verify events** — Use `mcp__rag__query_wikipedia` for every named event. Verify: correct date, correct location, correct participants. Wrong dates are **HIGH**.
 - [ ] **Verify places** — Named locations should be historically accurate for the period discussed. Anachronistic place names are **MEDIUM** (e.g., using modern city names for medieval locations without noting the historical name).
 - [ ] **Verify primary sources** — If the plan references specific documents (chronicles, letters, legal codes), use `mcp__rag__search_literary` to check they exist. Ghost sources (invented documents) are **CRITICAL**.
 
@@ -109,7 +107,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 
 #### BIO (Biography)
 - [ ] Life arc present (birth → development → achievement → legacy)
-- [ ] Person's dates verifiable via ESU
+- [ ] Person's dates verifiable via Wikipedia
 - [ ] Connection to broader Ukrainian history/culture shown
 
 #### ISTORIO (Historiography)
@@ -119,7 +117,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 
 #### LIT and subtracks (lit-drama, lit-essay, lit-doc, lit-crimea, lit-fantastika, lit-hist-fic, lit-humor, lit-war, lit-youth)
 - [ ] Literary analysis, not plot summary
-- [ ] Author/work verifiable via ESU or Literary RAG
+- [ ] Author/work verifiable via Wikipedia or Literary RAG
 - [ ] Intertextual connections mentioned
 
 #### OES (Old East Slavic)
@@ -153,8 +151,8 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ## Factual Accuracy
 | Claim | Source Used | Verified? | Notes |
 |-------|------------|-----------|-------|
-| Person: X (dates) | ESU / Wikipedia | YES/NO | ... |
-| Event: Y (date) | ESU / Wikipedia | YES/NO | ... |
+| Person: X (dates) | Wikipedia | YES/NO | ... |
+| Event: Y (date) | Wikipedia | YES/NO | ... |
 | Source: Z | Literary RAG | YES/NO | ... |
 
 ## Decolonization Check
@@ -202,7 +200,7 @@ for each plan in plans/{track}/*.yaml:
 
 ### Efficiency Notes
 
-- **Batch ESU lookups**: For plans about the same person/event across tracks (e.g., Shevchenko in BIO and LIT), cache the ESU result mentally
+- **Batch Wikipedia lookups**: For plans about the same person/event across tracks (e.g., Shevchenko in BIO and LIT), cache the Wikipedia result mentally
 - **Prioritize CRITICAL**: If a CRITICAL issue is found, still complete the review but mark verdict as FAIL immediately
 - **Search in Ukrainian**: "Тарас Шевченко" not "Taras Shevchenko", "Голодомор" not "Holodomor"
 - **Track context matters**: A plan about Holodomor in HIST needs different checks than the same topic in ISTORIO (which focuses on historiographical method)

@@ -25,7 +25,7 @@ ELSE
 
 DO:
 1. WebSearch: "[topic] site:history.org.ua"
-2. WebSearch: "[topic] site:esu.com.ua"
+2. WebSearch: "[topic] site:uk.wikipedia.org"
 3. WebSearch: "[topic] site:memory.gov.ua" (for 20th c.)
 4. WebFetch: [URLs found above]
 
@@ -246,7 +246,7 @@ SOURCES:
 |-----|--------|
 | Ancient/Medieval | `site:history.org.ua`, `site:litopys.org.ua` |
 | Cossack | `site:litopys.org.ua` (chronicles) |
-| Imperial | `site:esu.com.ua` |
+| Imperial | `site:uk.wikipedia.org`, `site:history.org.ua` |
 | Soviet/20th c. | `site:memory.gov.ua`, `site:uinp.gov.ua` |
 | Independence | `site:ukrinform.ua` |
 

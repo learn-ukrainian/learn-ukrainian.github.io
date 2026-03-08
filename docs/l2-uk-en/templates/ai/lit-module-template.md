@@ -46,9 +46,8 @@ DO NOT: Copy-paste verbatim — adapt to this template
 
 DO:
 1. WebSearch: "[author name] site:ukrlib.com.ua"
-2. WebSearch: "[author name] біографія site:esu.com.ua"
+2. WebSearch: "[author name] біографія site:uk.wikipedia.org"
 3. WebFetch: https://www.ukrlib.com.ua/bio/printit.php?tid=[ID]
-4. WebFetch: https://esu.com.ua/article-[id]
 
 Common UkrLib author IDs (VERIFY before using):
 - Котляревський: tid=1672
@@ -58,7 +57,6 @@ Common UkrLib author IDs (VERIFY before using):
 - Франко: tid=71
 
 DO NOT:
-- Use Wikipedia (information warfare risk)
 - Generate quotes from memory
 - Invent dates or facts
 ```

@@ -100,7 +100,7 @@ Only for slugs containing "cyrillic-code":
 ### 8. CONTENT ACCURACY
 
 - [ ] **Grammar rules cited correctly** — Verify against textbooks using `mcp__rag__search_text` (search in Ukrainian).
-- [ ] **Cultural claims accurate** — Verify via `mcp__rag__query_wikipedia` or `mcp__rag__search_esu`.
+- [ ] **Cultural claims accurate** — Verify via `mcp__rag__query_wikipedia`.
 - [ ] **No false Russicism claims** — If the plan claims a word is Russian/Surzhyk, verify with `mcp__rag__verify_word` and `mcp__rag__query_r2u`. False Russicism claims are **HIGH**.
 
 ---

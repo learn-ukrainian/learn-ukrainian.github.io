@@ -24,7 +24,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rag.config import (
-    ESU_COLLECTION,
     IMAGE_COLLECTION,
     LITERARY_COLLECTION,
     QDRANT_GRPC_PORT,
@@ -194,66 +193,6 @@ def search_literary(query: str, work: str | None = None, genre: str | None = Non
         if payload.get("original_text"):
             hit["original_text"] = payload["original_text"][:300]
         hits.append(hit)
-    return hits
-
-
-def search_esu(query: str, letter: str | None = None, limit: int = 5) -> list[dict]:
-    """Search ESU encyclopedia articles via hybrid dense+sparse vectors."""
-    from qdrant_client.models import (
-        FieldCondition,
-        Filter,
-        FusionQuery,
-        MatchValue,
-        Prefetch,
-        SparseVector,
-    )
-
-    client = get_client()
-    encoder = get_text_encoder()
-
-    result = encoder.encode([query])
-    dense_vec = result["dense_vecs"][0].tolist()
-    sparse_w = result["lexical_weights"][0]
-
-    if isinstance(sparse_w, dict):
-        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
-        sparse_values = list(sparse_w.values())
-    else:
-        sparse_indices, sparse_values = [], []
-
-    conditions = []
-    if letter:
-        conditions.append(FieldCondition(key="letter", match=MatchValue(value=letter)))
-    qfilter = Filter(must=conditions) if conditions else None
-
-    results = client.query_points(
-        collection_name=ESU_COLLECTION,
-        prefetch=[
-            Prefetch(query=dense_vec, using="dense", limit=limit * 3, filter=qfilter),
-            Prefetch(
-                query=SparseVector(indices=sparse_indices, values=sparse_values),
-                using="sparse", limit=limit * 3, filter=qfilter,
-            ),
-        ],
-        query=FusionQuery(fusion="rrf"),
-        limit=limit,
-        with_payload=True,
-    )
-
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
-        hits.append({
-            "score": point.score if hasattr(point, "score") else 0,
-            "chunk_id": payload.get("chunk_id", ""),
-            "text": payload.get("text", "")[:500],
-            "title": payload.get("title", ""),
-            "article_id": payload.get("article_id", 0),
-            "url": payload.get("url", ""),
-            "letter": payload.get("letter", ""),
-            "author": payload.get("author", ""),
-            "keywords": payload.get("keywords", ""),
-        })
     return hits
 
 
@@ -438,7 +377,7 @@ def collection_stats() -> dict:
     """Get stats for all RAG collections."""
     client = get_client()
     stats = {}
-    for coll_name in [TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION, ESU_COLLECTION]:
+    for coll_name in [TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION]:
         try:
             info = client.get_collection(coll_name)
             stats[coll_name] = {

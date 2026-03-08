@@ -145,34 +145,6 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
-            name="search_esu",
-            description=(
-                "Search the Encyclopedia of Modern Ukraine (ESU, esu.com.ua) — "
-                "81K+ authoritative articles by NAS Ukraine. Covers history, biography, "
-                "culture, geography, science. Use for factual grounding of research claims. "
-                "Returns text chunks with article title, URL, author, and keywords."
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "Search query in Ukrainian (e.g., 'Богдан Хмельницький', 'Київська Русь')"
-                    },
-                    "letter": {
-                        "type": "string",
-                        "description": "Filter by first letter (Ukrainian lowercase, e.g., 'б'). Optional."
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "Max results to return (default 5, max 20)",
-                        "default": 5
-                    }
-                },
-                "required": ["query"]
-            },
-        ),
-        Tool(
             name="get_full_text",
             description=(
                 "Load the full text of a short literary work from the RAG database. "
@@ -424,8 +396,6 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_search_images(arguments)
         elif name == "search_literary":
             return await handle_search_literary(arguments)
-        elif name == "search_esu":
-            return await handle_search_esu(arguments)
         elif name == "get_full_text":
             return await handle_get_full_text(arguments)
         elif name == "get_chunk_context":
@@ -507,30 +477,6 @@ async def handle_search_literary(args: dict) -> list[TextContent]:
 
     return [TextContent(type="text", text="\n".join(lines))]
 
-
-async def handle_search_esu(args: dict) -> list[TextContent]:
-    query = args["query"]
-    letter = args.get("letter")
-    limit = min(args.get("limit", 5), 20)
-
-    from rag.query import search_esu
-    hits = await asyncio.to_thread(search_esu, query, letter, limit)
-
-    if not hits:
-        return [TextContent(type="text", text="No ESU results found.")]
-
-    lines = [f"Found {len(hits)} ESU results for: \"{query}\"\n"]
-    for i, hit in enumerate(hits, 1):
-        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
-        lines.append(f"- **Article**: {hit['title']}")
-        lines.append(f"- **URL**: {hit['url']}")
-        lines.append(f"- **Author**: {hit['author']}")
-        lines.append(f"- **Keywords**: {hit['keywords'][:150]}")
-        lines.append(f"- **Chunk ID**: `{hit['chunk_id']}`")
-        lines.append(f"- **Text**:\n{hit['text']}")
-        lines.append("")
-
-    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def handle_get_full_text(args: dict) -> list[TextContent]:

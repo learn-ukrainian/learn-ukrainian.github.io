@@ -64,9 +64,8 @@ Every history and biography module must actively counter imperial and Soviet fra
 - Wikipedia in Russian as primary source
 
 ### Preferred sources
-- `esu.com.ua` (Encyclopedia of Modern Ukraine)
-- `history.org.ua` (Institute of History)
 - `uk.wikipedia.org` (Ukrainian Wikipedia)
+- `history.org.ua` (Institute of History)
 - `litopys.org.ua` (primary sources)
 - `iananu.org.ua` (archaeology)
 

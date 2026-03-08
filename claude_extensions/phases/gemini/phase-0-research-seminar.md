@@ -23,7 +23,7 @@ Research **{TOPIC_TITLE}** for the **{TRACK}** track. Produce structured researc
 
 ### Research Requirements
 
-1. **Sources**: Find 3+ Ukrainian-language academic sources (esu.com.ua, history.org.ua, uk.wikipedia.org, litopys.org.ua). Russian-language sources are PROHIBITED.
+1. **Sources**: Find 3+ Ukrainian-language academic sources (history.org.ua, uk.wikipedia.org, litopys.org.ua). Russian-language sources are PROHIBITED.
 2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.
 3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).
 4. **Engagement Hooks**: Identify 6+ engagement hooks mapped to specific content sections:

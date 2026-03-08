@@ -19,7 +19,7 @@
 **Step 1: Use WebSearch for Initial Research**
 ```
 WebSearch: "[Historical topic] Ukrainian Wikipedia"
-WebSearch: "[Historical topic] Encyclopedia of Modern Ukraine"
+WebSearch: "[Historical topic] site:history.org.ua"
 WebSearch: "[Historical event/figure] Інститут історії України"
 ```
 
@@ -27,12 +27,10 @@ WebSearch: "[Historical event/figure] Інститут історії Украї
 After finding URLs, use WebFetch to extract content:
 ```
 WebFetch: https://uk.wikipedia.org/wiki/[Topic]
-WebFetch: https://esu.com.ua/article-[id]
 ```
 
 **Step 3: Cross-Reference Sources**
 - Ukrainian Wikipedia (uk.wikipedia.org) — good starting point
-- Encyclopedia of Modern Ukraine (esu.com.ua) — authoritative
 - Institute of History of Ukraine (history.org.ua) — academic
 - Litopys.org.ua — primary sources
 
@@ -40,13 +38,13 @@ WebFetch: https://esu.com.ua/article-[id]
 
 | Era | Primary Resources (SAFE) |
 |-----|--------------------------|
-| **Ancient/Medieval** | history.org.ua, esu.com.ua, litopys.org.ua |
-| **Cossack** | litopys.org.ua (chronicles), esu.com.ua |
-| **Imperial** | esu.com.ua, history.org.ua |
-| **Soviet/20th c.** | memory.gov.ua, uinp.gov.ua, esu.com.ua |
+| **Ancient/Medieval** | history.org.ua, litopys.org.ua, uk.wikipedia.org |
+| **Cossack** | litopys.org.ua (chronicles), uk.wikipedia.org |
+| **Imperial** | history.org.ua, uk.wikipedia.org |
+| **Soviet/20th c.** | memory.gov.ua, uinp.gov.ua |
 | **Independence** | ukrinform.ua, president.gov.ua |
 
-> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia (uk.wikipedia.org) is a contested space subject to Russian information warfare. **ALWAYS verify Wikipedia claims against .gov.ua or academic sources.** Prefer ЕСУ (esu.com.ua) and Institute of History (history.org.ua) for historical facts.
+> ⚠️ **Source Verification:** When using Ukrainian Wikipedia (uk.wikipedia.org), cross-reference key claims against .gov.ua or academic sources where possible.
 
 ### Anti-Hallucination Rules
 
@@ -71,7 +69,7 @@ This curriculum aligns with Ukrainian school textbooks:
 3. **Add value** — our modules must include decolonization perspective textbooks may lack
 4. **Transform for language learning** — textbooks teach history, we teach Ukrainian through history
 
-> 💡 **Tip:** Use `WebSearch: "[topic] site:history.org.ua"` or `site:esu.com.ua` to search within trusted academic sources. **Avoid relying solely on Wikipedia** due to information warfare.
+> 💡 **Tip:** Use `WebSearch: "[topic] site:history.org.ua"` to search within trusted academic sources. Cross-reference with Ukrainian Wikipedia for broader context.
 
 ---
 

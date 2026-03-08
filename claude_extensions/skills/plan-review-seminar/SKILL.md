@@ -1,6 +1,6 @@
 ---
 name: plan-review-seminar
-description: Review SEMINAR track plans (HIST, BIO, ISTORIO, LIT, OES, RUTH) using ESU + Wikipedia + Literary RAG + VESUM. Finds factual errors, ghost sources, decolonization issues.
+description: Review SEMINAR track plans (HIST, BIO, ISTORIO, LIT, OES, RUTH) using Wikipedia + Literary RAG + VESUM. Finds factual errors, ghost sources, decolonization issues.
 argument-hint: <track> [modules: all | 1 | 5-10 | slug-name]
 ---
 

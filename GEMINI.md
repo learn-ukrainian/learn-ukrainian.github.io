@@ -63,6 +63,6 @@ curriculum/l2-uk-en/
 ## Research (Seminar Tracks)
 
 Required for: hist, bio, istorio, lit, oes, ruth.
-- Ukrainian sources ONLY (esu.com.ua, history.org.ua, uk.wikipedia.org, litopys.org.ua)
+- Ukrainian sources ONLY (history.org.ua, uk.wikipedia.org, litopys.org.ua)
 - Russian sources STRICTLY FORBIDDEN
 - Debunk imperial/Soviet framing; highlight Ukrainian agency

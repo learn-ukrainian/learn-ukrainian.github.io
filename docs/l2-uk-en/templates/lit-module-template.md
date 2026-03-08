@@ -435,7 +435,7 @@ Common UkrLib author IDs (verify before using):
 - Нечуй-Левицький: tid=1646
 - Франко: tid=71
 
-> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia is contested territory subject to Russian information warfare. **For author facts, ALWAYS prefer UkrLib and ЕСУ (esu.com.ua) over Wikipedia.**
+> ⚠️ **Source Verification:** When using Ukrainian Wikipedia (uk.wikipedia.org), cross-reference key claims against UkrLib or academic sources where possible.
 
 </critical>
 

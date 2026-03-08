@@ -148,7 +148,7 @@ def _get_substance_tier(track_id: str) -> str:
 # Known good domains for Ukrainian language resources
 KNOWN_GOOD_DOMAINS = {
     # Official / institutional
-    "mon.gov.ua", "zakon.rada.gov.ua", "esu.com.ua",
+    "mon.gov.ua", "zakon.rada.gov.ua",
     "nbuv.gov.ua", "irbis-nbuv.gov.ua",
     # Academic / encyclopedic
     "uk.wikipedia.org", "uk.wikisource.org", "uk.wiktionary.org",

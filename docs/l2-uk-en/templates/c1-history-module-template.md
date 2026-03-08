@@ -44,10 +44,10 @@ WebSearch: "[source title] site:litopys.org.ua"
 | **Institute of History NANU** | [history.org.ua](https://history.org.ua) | Scholarly articles, historiographical reviews |
 | **National Library** | [nbuv.gov.ua](https://nbuv.gov.ua) | Academic journals, dissertations |
 | **Hrushevsky Digital** | [hrushevsky.nbuv.gov.ua](https://hrushevsky.nbuv.gov.ua) | Hrushevsky's complete works |
-| **ЕСУ** | [esu.com.ua](https://esu.com.ua) | Biographical and conceptual articles |
+| **Українська Вікіпедія** | [uk.wikipedia.org](https://uk.wikipedia.org) | General research starting point |
 | **UINP** | [memory.gov.ua](https://memory.gov.ua) | 20th century, decolonization |
 
-> ⚠️ **Wikipedia Warning:** Ukrainian Wikipedia (uk.wikipedia.org) is contested territory subject to Russian information warfare. **For historiography, NEVER rely on Wikipedia.** Use .gov.ua and academic sources only.
+> ⚠️ **Source Verification:** For historiographical analysis, cross-reference Ukrainian Wikipedia with .gov.ua and academic sources where possible.
 
 ### Reference Works (Use, Don't Copy!)
 

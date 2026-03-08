@@ -39,7 +39,6 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 
 | Tool | When to use |
 |------|------------|
-| `search_esu` | Factual claims that need authoritative backing |
 | `query_pravopys` | Spelling or grammar rules you're explaining |
 | `query_grac` | Check if a word/phrase is actually used (frequency data) |
 | `search_images` | Find relevant textbook illustrations |
