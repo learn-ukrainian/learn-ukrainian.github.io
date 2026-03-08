@@ -2643,7 +2643,13 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     for section in ctx.content_outline[:3]:
         section_name = section.get("section") or section.get("title", "")
         if section_name:
-            uk_part = section_name.split("—")[0].strip() if "—" in section_name else section_name
+            # Strip English translations in parentheses or after em-dash
+            uk_part = section_name.split("(")[0].strip() if "(" in section_name else section_name
+            if "—" in uk_part:
+                parts = uk_part.split("—", 1)
+                # Pick whichever side has Cyrillic (handles English-first titles)
+                has_cyr = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
+                uk_part = parts[0].strip() if has_cyr(parts[0]) else parts[1].strip()
             search_terms.append(uk_part)
     if not search_terms:
         topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
@@ -2717,7 +2723,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     elif base == "a1" and ctx.module_num >= 15:
         # M15+: grammar textbooks (verbs, cases, tenses) — bukvar is irrelevant
         subject = "ukrainska-mova"
-        grade = None
+        grade = [3, 5, 6, 7]  # Grammar topics taught across grades 3-7
         header = (
             "## Textbook Reference (from Ukrainian grammar textbooks)\n\n"
             "These are explanations from Ukrainian school grammar textbooks. "
@@ -2737,24 +2743,28 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
             "Adapt for adult learners but keep the grammatical accuracy.\n\n"
         )
 
+    # Normalize grade to a list for iteration
+    grade_list = grade if isinstance(grade, list) else ([grade] if grade is not None else [None])
+
     for term in search_terms:
-        try:
-            hits = search_text(term, grade=grade, subject=subject, limit=2)
-        except Exception:
-            continue
-        for hit in hits:
-            cid = hit.get("chunk_id", "")
-            if cid in seen_chunks:
+        for g in grade_list:
+            try:
+                hits = search_text(term, grade=g, subject=subject, limit=2)
+            except Exception:
                 continue
-            seen_chunks.add(cid)
-            author = hit.get("author", "")
-            hit_grade = hit.get("grade", "")
-            section = hit.get("section_title", hit.get("section", ""))
-            text = hit.get("text", "")[:500]
-            label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
-            results.append(
-                f"**{label}** — {section}:\n```\n{text}\n```"
-            )
+            for hit in hits:
+                cid = hit.get("chunk_id", "")
+                if cid in seen_chunks:
+                    continue
+                seen_chunks.add(cid)
+                author = hit.get("author", "")
+                hit_grade = hit.get("grade", "")
+                section = hit.get("section_title", hit.get("section", ""))
+                text = hit.get("text", "")[:500]
+                label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
+                results.append(
+                    f"**{label}** — {section}:\n```\n{text}\n```"
+                )
 
     if not results:
         return ""
@@ -2768,7 +2778,7 @@ def _get_textbook_grade(ctx: ModuleContext) -> str:
     if base == "a1" and ctx.module_num <= 14:
         return "1-2"
     elif base == "a1":
-        return "2-3"
+        return "3-7"
     elif base == "a2":
         return "3-4"
     elif base == "b1":
@@ -2834,13 +2844,20 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
             "збери утвори визнач назви",
         ]
     elif base == "a1" and ctx.module_num >= 15:
-        grades = [2, 3]
+        grades = [3, 5, 6, 7]  # Grammar topics taught across grades 3-7
         subject = "ukrainska-mova"
-        # Grade 2-3: parts of speech, gender, number
-        focus_queries = [
-            "визнач рід іменників число",
-            "добери прикметник спиши",
-        ]
+        # Use plan section titles as search terms (topic-specific)
+        focus_queries = []
+        for section in ctx.content_outline[:3]:
+            section_name = section.get("section") or section.get("title", "")
+            if section_name:
+                uk_part = section_name.split("(")[0].strip()
+                focus_queries.append(uk_part)
+        if not focus_queries:
+            focus_queries = [
+                "визнач рід іменників число",
+                "добери прикметник спиши",
+            ]
     elif base == "a2":
         grades = [3, 4]
         subject = "ukrainska-mova"
@@ -2882,10 +2899,11 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
     results: list[str] = []
     seen_chunks: set[str] = set()
 
+    grade_list = grades if grades is not None else [None]
     for term in search_terms:
         if len(results) >= 5:
             break
-        for grade in grades:
+        for grade in grade_list:
             if len(results) >= 5:
                 break
             try:
@@ -2921,7 +2939,7 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
 
     return (
         f"### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\n"
-        f"These are real exercises from Ukrainian school textbooks (grade {'/'.join(str(g) for g in grades)}). "
+        f"These are real exercises from Ukrainian school textbooks{' (grade ' + '/'.join(str(g) for g in grades) + ')' if grades else ''}. "
         f"Study their **pedagogical patterns** — how they build progressively, "
         f"use familiar vocabulary, and test specific skills.{translate_note}\n\n"
         + "\n\n".join(results[:5])
