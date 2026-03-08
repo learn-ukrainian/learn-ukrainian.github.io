@@ -68,6 +68,33 @@ jobs:
           fi
           echo "✅ No MI=C files (excluding known legacy)"
 
+  scripts-root-guard:
+    name: No new root scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for non-stub scripts in scripts/ root
+        run: |
+          # Allowed non-stub files at scripts/ root
+          allowed="__init__.py|batch_gemini_runner.py|config.py|generate_mdx.py|manifest_direct.py|manifest_utils.py|paths.py|pipeline_lib.py|slug_utils.py|yaml_activities.py"
+          violations=""
+          for f in scripts/*.py; do
+            [ ! -f "$f" ] && continue
+            basename=$(basename "$f")
+            # Skip allowed files
+            echo "$basename" | grep -qE "^($allowed)$" && continue
+            # Skip re-export stubs
+            grep -q "Stub: module moved" "$f" && continue
+            violations="$violations $f"
+          done
+          if [ -n "$violations" ]; then
+            echo "::error::New non-stub scripts found in scripts/ root (move to a subdirectory):"
+            echo "$violations" | tr ' ' '\n' | grep .
+            exit 1
+          fi
+          echo "✅ No new root-level scripts"
+
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest

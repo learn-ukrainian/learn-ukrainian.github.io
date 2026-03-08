@@ -3,7 +3,10 @@
 This document describes all scripts and workflows for module creation, validation, and generation.
 
 > **Housekeeping (2026-02-21):** 189 unused/one-off scripts archived to `scripts/_archived/`.
-> 81 active scripts remain in `scripts/`. See [#616](https://github.com/krisztiankoos/learn-ukrainian/issues/616).
+> **Organization (2026-03-08):** 125 scripts moved from `scripts/` root to 14 themed subdirectories
+> (`audit/`, `batch/`, `build/`, `content/`, `crawl/`, `generate_mdx/`, `lint/`, `migrate/`,
+> `oneoff/`, `rag/`, `research/`, `scoring/`, `sync/`, `tools/`, `validate/`, `vocab/`).
+> Re-export stubs at old paths preserve backward compatibility. See [#779](https://github.com/krisztiankoos/learn-ukrainian/issues/779).
 
 > **🚀 Module Creation Workflow:**
 >
