@@ -18,7 +18,7 @@ import sys
 
 # Get project root
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRIDGE_SCRIPT = os.path.join(ROOT_DIR, "scripts", "ai_agent_bridge.py")
+BRIDGE_SCRIPT = os.path.join(ROOT_DIR, "scripts", "ai_agent_bridge", "__main__.py")
 PYTHON = os.path.join(ROOT_DIR, ".venv", "bin", "python")
 
 

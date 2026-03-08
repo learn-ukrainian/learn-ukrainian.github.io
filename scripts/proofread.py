@@ -249,7 +249,7 @@ def dispatch_gemini(prompt: str, task_id: str, model: str, timeout: int = 1800) 
     """Dispatch prompt to Gemini via ai_agent_bridge.py ask-gemini (stdin pipe)."""
     args = [
         VENV_PYTHON,
-        str(SCRIPTS_DIR / "ai_agent_bridge.py"), "ask-gemini",
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
         "-",  # read prompt from stdin
         "--task-id", task_id,
         "--model", model,

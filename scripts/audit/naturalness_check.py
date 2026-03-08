@@ -90,7 +90,7 @@ def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
         result = subprocess.run(
             [
                 sys.executable,
-                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
+                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
                 "ask-gemini",
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
@@ -152,7 +152,7 @@ def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
         result = subprocess.run(
             [
                 sys.executable,
-                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
+                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
                 "ask-claude",
                 prompt,
                 "--task-id", task_id,

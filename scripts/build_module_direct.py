@@ -316,7 +316,7 @@ def phase_enrich(ctx: DirectModuleContext) -> bool:
 
     args = [
         VENV_PYTHON,
-        str(SCRIPTS_DIR / "ai_agent_bridge.py"), "ask-gemini",
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
         "-",
         "--task-id", task_id,
         "--model", PRO_MODEL,
@@ -458,7 +458,7 @@ def phase_review(ctx: DirectModuleContext) -> bool:
 
     args = [
         VENV_PYTHON,
-        str(SCRIPTS_DIR / "ai_agent_bridge.py"), "ask-gemini",
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
         "-",
         "--task-id", task_id,
         "--model", "claude-opus-4-6",

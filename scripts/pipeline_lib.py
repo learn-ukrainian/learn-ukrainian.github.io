@@ -1429,7 +1429,7 @@ def dispatch_gemini_raw(
     Returns (success, raw_output_text).
     """
     args = [
-        str(SCRIPTS_DIR / "ai_agent_bridge.py"), "ask-gemini",
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
         "-",  # read prompt from stdin
         "--task-id", task_id,
         "--model", model,

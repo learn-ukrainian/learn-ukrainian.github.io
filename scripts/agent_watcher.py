@@ -70,7 +70,7 @@ LOGIN_ENV = _get_login_env()
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.pid"
 LOG_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.log"
-BRIDGE_SCRIPT = Path(__file__).parent / "ai_agent_bridge.py"
+BRIDGE_SCRIPT = Path(__file__).parent / "ai_agent_bridge" / "__main__.py"
 
 # Timing configuration
 POLL_INTERVAL_SECONDS = 5  # How often to check for new messages
