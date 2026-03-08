@@ -1,30 +1,67 @@
-# Beginner Content: Write the Lesson
+# Full Module Build: Content + Activities + Vocabulary (RAG-enabled)
 
-> **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
+> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
+>
+> **Your task:** Build a complete beginner module — lesson content, practice activities, and vocabulary — in one pass.
+> Writing content and activities together ensures consistency: the same words, the same gender pairings, the same phrases appear in both.
+>
+> **Output capacity: 65,000+ tokens.** Do NOT truncate.
 
-> **Your task: Write approximately 1200 words of clear, beginner-friendly content.**
-> Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE} words. Avoid verbose prose — students are beginners. Focus on practical examples over theory.
+---
 
-> **Output capacity: You can generate 65,000+ tokens per response.** Do NOT preemptively truncate.
+## 1. Read These Files
 
-## Files to Read
+| File | What to extract |
+|------|----------------|
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/describing-things-adjectives-research.md` | Background knowledge, engagement hooks |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/describing-things-adjectives.yaml` | Section titles + word allocations, activity count targets |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/describing-things-adjectives.yaml` | Objectives, vocabulary_hints (source of truth) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion band |
+| `schemas/activities-a1.schema.json` | Activity field definitions (`additionalProperties: false`) |
 
-| File | Purpose |
-|------|---------|
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/describing-things-adjectives-research.md` | Research notes |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/describing-things-adjectives.yaml` | Content outline with section word allocations |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/describing-things-adjectives.yaml` | Objectives, vocabulary_hints |
-| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion % |
+Read ALL files before writing anything.
 
-Read ALL files before writing.
+---
 
-## Resource Discoveries
+## 2. Your RAG Tools (USE THEM)
 
-(No video discoveries available)
+You have access to Ukrainian language tools via MCP. **Use them throughout your work** — not just at the start.
 
+### Essential Tools (use for EVERY module)
 
+| Tool | When to use | Example |
+|------|------------|---------|
+| `search_text` | Find how this topic is taught in real textbooks | `search_text("знахідний відмінок", grade=3)` |
+| `verify_words` | Check Ukrainian words exist in VESUM before using them | `verify_words(["книга", "великий", "гарний"])` |
+| `verify_lemma` | Get all inflected forms of a word | `verify_lemma("книга")` → nom/gen/dat/acc/... |
 
-## Module Constraints (HARD FAIL if violated)
+### Optional Tools (use when relevant)
+
+| Tool | When to use |
+|------|------------|
+| `search_esu` | Factual claims that need authoritative backing |
+| `query_pravopys` | Spelling or grammar rules you're explaining |
+| `query_grac` | Check if a word/phrase is actually used (frequency data) |
+| `search_images` | Find relevant textbook illustrations |
+
+### Your Workflow
+
+1. **RESEARCH FIRST**: Before writing, search textbooks for how this topic is taught at grade 1-2 level:
+   - Search for the topic keywords: `search_text("", grade=1-2)`
+   - Search for exercise patterns: `search_text("вправа ", grade=1-2)`
+   - Study the pedagogical progression — how do real textbooks introduce this concept?
+
+2. **VERIFY AS YOU WRITE**: Before using any Ukrainian word not in the word bank below, call `verify_words` to check it exists. Empty result = the word doesn't exist in standard Ukrainian. Do NOT use it.
+
+3. **VERIFY ACTIVITIES**: After creating activities, batch-verify all Ukrainian words in your activity items with `verify_words`.
+
+> **Since your students are English-speaking adults**, translate textbook exercise instructions to English while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+
+---
+
+## 3. Constraints (apply to EVERYTHING you write)
+
+### Grammar Constraints (HARD FAIL if violated)
 
 SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):
 Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.
@@ -60,178 +97,177 @@ Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring
 
 METALANGUAGE: English-first, Ukrainian in parentheses
 
+### Word Bank (MANDATORY)
 
 
 
+## Lexical Sandbox for M11
 
-NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+**FORBIDDEN at M11:** ALL verbs, imperative forms, oblique cases (only nominative/vocative)
 
-## Textbook Reference Examples (from real Ukrainian буквар)
+### Nouns
 
-These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration for style and difficulty level** — notice how they use simple syllable combinations, short words, and build progressively. Do NOT copy them verbatim, but match their pedagogical approach and simplicity.
+| Lemma | Gender | Allowed Forms |
+|-------|--------|---------------|
+| я | ? | я |
+| ти | ? | ти |
+| він | masculine | він |
+| вона | feminine | вона |
+| воно | neuter | воно |
+| ми | plural | ми |
+| ви | plural | ви |
+| вони | plural | вони |
+| хто | masculine | хто |
+| людина | feminine | люди, людина, людини, людино |
+| слово | neuter | слова, слово |
+| мова | feminine | мова, мови, мово |
+| день | masculine | день, дню, дні |
+| час | masculine | час, часе, часи |
 
-**Grade 1, zaharijchuk** — Сторінка 15:
-```
-13
-	 Вимов голосні звуки в словах — назвах предме-
-тів.   
-	 Вимов приголосні звуки в словах — назвах 
-предметів.
-	 Який у тебе сьогодні настрій? Вибери.
-Мовні звуки: голосні та приголосні
-[•]
-[•]
- [ – ]
- [ – ]
- [ – ]
- [ – ]
-	 Вимов перший звук у словах — назвах предме-
-тів. Який це звук? Приголосний звук позначає-
-мо так: [–].
-	 Вимов перший звук у словах — назвах предметів. 
-Який це звук? Голосний звук позначаємо так: [•].
-```
+### Adjectives
 
-**Grade 1, zaharijchuk** — Сторінка 17:
-```
-15
-Приголосні тверді та м’які
-	 Вимов звуки, які ти чуєш на початку слів — 
-назв намальованих предметів.
-	 Порівняй вимову перших звуків у словах — на-
-звах предметів. У яких словах перші звуки ви-
-мовляємо м’яко? М’які звуки позначай так: [ =].
-	 Який у тебе сьогодні настрій? Вибери.
- [      ] 
- [      ] 
- [      ] 
- [      ] 
- [      ] 
- [      ] 
- [ = ]  
- [ = ]  
- [ = ]  
- [ – ] 
- [ – ] 
- [ – ] 
-	 Хто неправильно поділив слово — назву нама-
-льованого предмета на склади?
-```
+| Lemma | Masculine | Feminine | Neuter | Plural |
+|-------|-----------|----------|--------|--------|
+| той | той | та | те | ті |
+| цей | цей | ця | це | ці |
+| який | який | яка | яке | які |
+| новий | новий | нова | нове | нові |
+| старий | старий | стара | старе | старі |
+| гарний | гарний | гарна | гарне | гарні |
+| великий | великий | велика | велике | великі |
+| малий | малий | мала | мале | малі |
+| добрий | добрий | добра | добре | добрі |
+| поганий | поганий | погана | погане | погані |
+| цікавий | цікавий | цікава | цікаве | цікаві |
+| синій | синій | синя | сине | сині |
+| червоний | червоний | червона | червоне | червоні |
+| молодий | молодий | молода | молоде | молоді |
+| дорогий | дорогий | дорога | дороге | дорогі |
+| дешевий | дешевий | дешева | дешеве | дешеві |
+| смачний | смачний | смачна | смачне | смачні |
+| зелений | зелений | зелена | зелене | зелені |
 
-**Grade 1, bolshakova** — Сторінка 79:
-```
-. . . . . . . . . . . . . . . . . . 44
-Т т . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
-Тверді і пом’якшені  
-приголосні звуки . . . . . . . . . . . . . . 45
-Г г . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
-Г г . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
-Тверді і пом’якшені  
-приголосні звуки . . . . . . . . . . . . . . 47
-Ґ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
-Ґ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 49
-Е е  . . . . . .
-```
+### Other Words
+
+- **це** (Particle)
+- **та** (Conjunction)
+- **так** (Adverb)
+- **ні** (Particle)
+- **не** (Particle)
+- **дуже** (Adverb)
+- **тут** (Adverb)
+- **там** (Adverb)
+- **ось** (Particle)
+- **також** (Adverb)
+- **ще** (Adverb)
+- **вже** (Adverb)
+- **теж** (Adverb)
+- **тільки** (Adverb)
+- **і** (Conjunction)
+- **а** (Conjunction)
+- **але** (Conjunction)
+- **або** (Conjunction)
+- **що** (Conjunction)
+- **як** (Adverb)
+- **бо** (Conjunction)
+- **в** (Preposition)
+- **у** (Preposition)
+- **на** (Interjection)
+- **з** (Preposition)
+- **до** (Preposition)
+- **для** (Preposition)
+- **по** (Preposition)
+- **де** (Adverb)
+- **коли** (Adverb)
+- **чому** (Adverb)
+
+### Verified Example Sentences (from textbooks)
+
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
+  *Source: unknown*
+- І якраз у яму 
+втрапить. А ми вже вириємо, постараємося.
+  *Source: unknown*
+- з якої причини? з якої причини? з якої причини? 249
+250
+незважаючи на що?
+  *Source: unknown*
+- Ти ж маєш мету, правда? – Я хочу ходити. – Тобі сказали, що це неможливо? Чому Ярина не пристала 
+на пропозицію Сашка? Чого вона боялася?
+  *Source: unknown*
+
+### Usage Rules
+
+- **MANDATORY**: Every Ukrainian word in your output MUST appear in the tables above
+- You may use any allowed form listed for each lemma
+- You may use the verified example sentences directly or as templates
+- Do NOT invent Ukrainian words outside this sandbox — use English instead
+- English text is unrestricted — use freely for explanations
+- Memorized chunks (до побачення, як справи, etc.) are always allowed
+- Common function words (це, так, ні, він, вона, воно, вони, я, ти, ми, ви) are always allowed
 
 
+**Rule:** Every Ukrainian word in your output — content AND activities — must come from this word bank. The "Allowed Forms" column shows exactly which inflected forms you may use. If a word isn't listed, express the concept in English.
+
+### Level Rules
+
+- **Immersion**: TARGET: 25-40% Ukrainian, 60-75% English. Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first (2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary.
+- **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
+- **No Russian characters**: ы, э, ё, ъ — never
+- **No IPA or phonetic brackets**
+- **Quotes**: Use «...» not "..."
 
 ---
 
-## Writing Instructions
+## 4. Write the Lesson Content
 
-Write the lesson prose for **Describing Things - Adjectives** (a1 track).
+Write **Describing Things - Adjectives** for the a1 track.
 
-- **Target**: 1200–1800 words (below 1200 = FAIL, above 1800 = overproduction that increases error surface)
-- **Immersion**: TARGET: 25-40% Ukrainian, 60-75% English. Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first (2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary.
-- **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than 3 callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
-- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+**Targets:**
+- 1200–1800 words (under 1200 = FAIL)
+- 3+ callout boxes (`[!tip]`, `[!warning]`, `[!did-you-know]`, `[!culture]`)
+- EXACT H2 titles from the outline below — missing/renamed sections fail validation
 
 ## REQUIRED H2 Sections (use EXACT titles)
 
 Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
 
 - `## Вступ: Світ прикметників (Introduction: The World of Adjectives)` (~250 words)
-- `## Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)` (~350 words)
-- `## Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)` (~300 words)
+- `## Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives)` (~350 words)
+- `## Презентація 2: М'яка група та множина (Presentation 2: Soft Stem and Plurals)` (~300 words)
 - `## Практика: Люди і місця (Practice: People and Places)` (~200 words)
 - `## Підсумок (Summary & Self-Check)` (~100 words)
-
-### Beginner Writing Style
-
-Write for someone seeing Ukrainian for the first time. English is the scaffolding language — use it for explanations, instructions, and context. Ukrainian is the target content — letters, words, phrases being taught.
-
-**Do this:**
-- Introduce each new letter/word clearly with its sound and meaning
-- Use tables to show letter-sound mappings
-- Give real Ukrainian words as examples (from the decodable vocabulary only)
-- Keep paragraphs short (3-5 sentences)
-- Use callout boxes for tips, fun facts, and warnings about visual traps
-
-**Do NOT do this:**
-- Use Ukrainian grammar terminology (іменник, дієслово, голосний, приголосний) — students don't know these yet
-- Write long paragraphs of linguistic analysis
-- Include IPA transcriptions or phonetic brackets
-- Use vocabulary from future modules
-- Create practice sentences if the constraints say "no sentences"
-- Repeat the same Ukrainian phrase pattern more than twice (e.g. don't write "Це склад", "Це слово", "Це правило" in every paragraph — vary your immersion: use contextual labels like "Наприклад — For example", section bridges like "А тепер — And now", vocabulary callouts, or short dialogue snippets)
-
-### Example of Good A1 Content (letter introduction)
-
-```markdown
-## Meet the Letters
-
-### А — The Familiar One
-
-The first letter is easy: **А** looks exactly like English A and makes the same sound — /a/ as in "father."
-
-You'll find А in some of the first words you learn:
-
-| Word | Meaning |
-|------|---------|
-| **мА́ма** | mom |
-| **сУ́ма** | sum, amount |
-
-[!tip]
-> А is one of the "true friends" — letters that look AND sound the same in both alphabets. Enjoy these while they last!
-
-### Н — The First Visual Trap
-
-Here's where it gets interesting: **Н** looks like English H, but it's actually the /n/ sound.
-
-This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrainian it's always /n/.
-
-| Word | Meaning |
-|------|---------|
-| **нам** | to us |
-| **луна́** | echo |
-```
 
 ### Section Word Budgets
 
 | Section | Target |
 |---------|--------|
 | Вступ: Світ прикметників (Introduction: The World of Adjectives) | 250 |
-| Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives) | 350 |
-| Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals) | 300 |
+| Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives) | 350 |
+| Презентація 2: М'яка група та множина (Presentation 2: Soft Stem and Plurals) | 300 |
 | Практика: Люди і місця (Practice: People and Places) | 200 |
 | Підсумок (Summary & Self-Check) | 100 |
 | **Total** | **1200** |
 
-### Callout Types to Use
+### Writing Style
 
-- `[!tip]` — practical advice for learners
-- `[!warning]` — visual traps, common mistakes
-- `[!did-you-know]` — fun facts about Ukrainian
-- `[!culture]` — cultural connections
+You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
 
-### Audit Gates (your content will be checked for)
+**Do:**
+- Introduce each new word clearly with meaning
+- Use tables for letter-sound mappings or vocabulary groups
+- Give real examples from the word bank
+- Short paragraphs (3-5 sentences), plenty of callout boxes
+- Vary your immersion patterns — don't repeat "Це X" in every paragraph
 
-- **Word count**: minimum 1200 words
-- **Russianisms**: banned (кушати, получати, etc.)
-- **Russian characters**: ы, э, ё, ъ must NEVER appear
-- **Euphony**: і/й, у/в alternation
-- **Engagement callouts**: 3+
-- **IPA/phonetic brackets**: BANNED
+**Don't:**
+- Use grammar terminology (іменник, дієслово, голосний) — they don't know these
+- Use words outside the word bank
+- Write IPA or Latin transliteration
+- Create sentences if constraints forbid them
+
+**Deliberate errors (showing common mistakes):**
+When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
 
 ## Language Quality Rules (All Tiers)
 
@@ -343,14 +379,174 @@ Avoid: «Це може бути використано...», «Правило з
 Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
 
 
+(No video discoveries available)
+
+
+
+
+
 ---
 
-## Pre-Submission Checks
+## 5. Create Activities (from YOUR content above)
 
-1. **Plan compliance**: Does every point in the content_outline have dedicated prose?
-2. **Word count**: Does the total meet 1200?
-3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
-4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
+After writing the content, create activities that practice the Ukrainian you just taught. This is why we do both in one pass — you know exactly which words, phrases, and gender pairings you used.
+
+**Before creating activities:** Search textbooks for exercise examples matching the activity types you need:
+- `search_text("знайди визнач добери", grade=1-2)` for exercise patterns
+- Study how real textbooks test this specific skill
+
+**Targets:**
+- 8–15 activities
+- Required types: 
+- 20 vocabulary items
+
+### Item Minimums (HARD FAIL if under)
+
+| Type | Minimum |
+|------|--------|
+| quiz | ≥8 items |
+| true-false | ≥8 items |
+| fill-in | ≥8 items |
+| match-up | ≥8 pairs |
+| anagram | ≥8 items |
+| unjumble | ≥6 items |
+| group-sort | ≥8 items |
+| watch-and-repeat | ≥1 items |
+| classify | ≥1 items |
+| image-to-letter | ≥5 items |
+
+### Which Activity Types to Use
+
+**ALLOWED:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+**FORBIDDEN:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+
+Choose types based on what the constraints allow:
+
+| Constraint level | Use these | Avoid these |
+|-----------------|-----------|-------------|
+| Letters/syllables only (M1-M10) | quiz, match-up, group-sort, anagram, true-false | fill-in, unjumble, cloze, translate |
+| Words + simple phrases | + fill-in, match-up with phrases | unjumble, cloze |
+| Basic sentences allowed | + unjumble, fill-in with sentences, translate | cloze (needs 14+ blanks) |
+
+### Language Rules (A1/A2)
+
+- **Questions, instructions, explanations** → English (students can't read Ukrainian metalanguage)
+- **Content being practiced** → Ukrainian (words, letters, phrases from the lesson)
+- **Options** → Ukrainian when choosing Ukrainian words, English when choosing concepts
+- Never use grammar terms like іменник, дієслово, відмінок
+
+### Consistency Rules (the whole point of single-pass)
+
+1. **Same words**: Every Ukrainian word in activities must appear in your content above
+2. **Correct agreement in answers**: Activity `answer` fields must have correct adj-noun gender agreement. If you wrote `великий стіл` in content, the correct answer in activities must also be `великий стіл` — NOT `велика стіл`
+3. **Wrong forms are OK as distractors**: In `options` arrays, wrong gender/case forms are expected — they're the incorrect choices. Example: `options: ["нова", "новий", "нове", "нові"]` for a feminine noun — only `нова` is correct, the rest are intentional distractors
+4. **Same forms**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive is in the word bank
+
+### Activity Schemas (EXACT field structures — any unlisted field = FAIL)
+
+**quiz** — English questions, Ukrainian options:
+```yaml
+- type: quiz
+  title: "Check Your Knowledge"
+  instruction: Choose the correct answer.   # optional
+  items:  # minItems: 6
+    - question: "What does мама mean?"      # ≥5 words
+      explanation: "Мама means mom."        # at QUESTION level, NOT inside options
+      options:                              # exactly 4, exactly 1 correct
+        - text: "mom"
+          correct: true
+        - text: "dad"
+          correct: false
+        - text: "sister"
+          correct: false
+        - text: "brother"
+          correct: false
+```
+
+**anagram** — letter scramble (M1-M10 ONLY, not M11+):
+```yaml
+- type: anagram
+  title: "Unscramble the Word"
+  instruction: "Rearrange the letters."     # optional
+  items:  # minItems: 8
+    - scrambled: "А М А М"                  # SPACE-SEPARATED, same letters as answer
+      answer: "МАМА"
+```
+
+**unjumble** — sentence word reorder (M11+ ONLY, not M1-M10):
+```yaml
+- type: unjumble
+  title: "Put the Words in Order"
+  items:  # minItems: 8
+    - words: ["книга", "Це", "нова"]        # array of strings
+      answer: "Це нова книга"               # single string
+```
+Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
+
+**match-up**:
+```yaml
+- type: match-up
+  title: "Match the Pairs"
+  pairs:  # minItems: 6, use "pairs:" NOT "items:"
+    - left: "книга"
+      right: "book"
+```
+
+**fill-in** — MUST include `options`:
+```yaml
+- type: fill-in
+  title: "Complete the Sentence"
+  items:  # minItems: 6
+    - sentence: "Це ___ стіл."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]  # exactly 4, answer must be in list
+```
+
+**group-sort**:
+```yaml
+- type: group-sort
+  title: "Sort by Gender"
+  groups:  # 2-4 groups
+    - name: "Masculine"
+      items: ["стіл", "брат", "дім"]
+    - name: "Feminine"
+      items: ["книга", "мама", "мова"]
+```
+
+**true-false**:
+```yaml
+- type: true-false
+  title: "True or False?"
+  items:  # minItems: 8
+    - statement: "The letter Н makes the same sound as English H."
+      correct: false
+      explanation: "Н looks like H but sounds like N."
+```
+
+### Vocabulary YAML
+
+- **Object with `items:` wrapper** (not bare list)
+- Each entry: `lemma`, `translation`, `pos` (required); `gender`, `notes`, `usage`, `example` (optional)
+- NO `ipa` field
+- Include ALL words from `vocabulary_hints` in the plan
+
+### YAML Formatting (HARD FAIL)
+
+**Content** uses Ukrainian quotes «...». **YAML values** must NOT use «» — they break parsing with colons.
+
+```yaml
+❌ WRONG:  title: «Знайдіть пару: термін»
+✅ RIGHT:  title: 'Знайдіть пару: термін'
+```
+
+Rules for YAML:
+1. Never use `«»` — use plain text or single/double quotes
+2. Quote any value containing `:` with single quotes
+3. No IPA, no Latin transliteration in YAML values
+
+---
+
+## 6. Self-Audit Before Output
 
 ## Self-Audit (Run BEFORE Final Output)
 
@@ -405,10 +601,37 @@ fixes_applied: {brief description of what you fixed, or "none"}
 **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual command and report real output.
 
 
+### Content Checks
+- [ ] Word count ≥ 1200?
+- [ ] Every plan section has prose?
+- [ ] 3+ callout boxes?
+- [ ] No words outside the word bank?
+- [ ] No Russianisms, Russian characters, IPA?
+
+### Activity Checks
+- [ ] 8–15 activities?
+- [ ] Every Ukrainian word also appears in content?
+- [ ] Adjective-noun pairings match content?
+- [ ] Quiz: exactly 1 `correct: true`, `explanation` at question level?
+- [ ] Anagram: scrambled letters = answer letters?
+- [ ] Fill-in: `answer` appears in `options`?
+- [ ] Match-up: uses `pairs:` not `items:`?
+- [ ] No extra fields (schema is `additionalProperties: false`)?
+- [ ] No `hint` fields in any activity items?
+
+### VESUM Verification (RAG-specific)
+- [ ] Called `verify_words` on all Ukrainian words in activities?
+- [ ] No words with empty VESUM results in final output?
+
 ---
 
-## Output Format
+## 7. Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
+
+Output FOUR blocks in this exact order:
+
+**Block 1: Content**
 ```
 ===CONTENT_START===
 
@@ -431,13 +654,14 @@ Not covered:
 
 # Підсумок — Summary
 
-{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
+{Summary + 3-4 self-check questions. Each question includes English translation.}
 
 ---
 
 ===CONTENT_END===
 ```
 
+**Block 2: Word Counts**
 ```
 ===WORD_COUNTS===
 Section "{name}": {count} words (minimum: {allocation})
@@ -446,24 +670,45 @@ Total: {total} words (target: 1200)
 ===WORD_COUNTS===
 ```
 
-## Friction Report (MANDATORY)
+**Block 3: Activities (BARE LIST — no `activities:` wrapper)**
+```
+===ACTIVITIES_START===
 
+- type: quiz
+  title: "..."
+  items:
+    ...
+
+- type: match-up
+  title: "..."
+  pairs:
+    ...
+
+===ACTIVITIES_END===
+```
+
+**Block 4: Vocabulary (object with `items:` wrapper)**
+```
+===VOCABULARY_START===
+
+items:
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+
+===VOCABULARY_END===
+```
+
+**Block 5: Friction Report (MANDATORY)**
 ```
 ===FRICTION_START===
-**Phase**: Beginner Content
-**Step**: {what you were doing}
-**Friction Type**: NONE | ...
+**Phase**: Full Build (Content + Activities + Vocabulary)
+**Step**: {what you were doing when friction occurred, or "Complete build"}
+**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | WORD_BANK_LIMITATION | ...
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if applicable, or "N/A"}
+**RAG Tools Used**: {list tools called and what you found useful}
 ===FRICTION_END===
 ```
-
-## Boundaries
-
-- Do NOT generate activities or vocabulary tables (separate phase)
-- Do NOT add vocabulary outside the plan's vocabulary_hints
-- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
-- Do NOT skip sections from the content_outline
-- Do NOT write fewer than 1200 words
-- Do NOT use straight quotes "..." — always «...»

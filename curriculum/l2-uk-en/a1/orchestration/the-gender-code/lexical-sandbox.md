@@ -84,7 +84,9 @@
 
 ### Verified Example Sentences (from textbooks)
 
-- Хи м к а (сміючись). Ну, тепер уже піде баталія.
+- з якої причини? з якої причини? з якої причини? 249
+250
+незважаючи на що?
   *Source: unknown*
 
 ### Usage Rules

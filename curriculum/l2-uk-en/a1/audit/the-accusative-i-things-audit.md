@@ -1,7 +1,7 @@
 # Audit Report: M25 — the-accusative-i-things.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 00:31:52
+**Generated:** 2026-03-07 15:17:27
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,28 +19,27 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Grammar Check: Direct Objects | 8 | 8 | ✅ |
-| 2 | fill-in | Feminine Nouns in Action | 8 | 8 | ✅ |
-| 3 | fill-in | Masculine and Neuter Nouns | 8 | 8 | ✅ |
-| 4 | fill-in | Mixed Practice | 8 | 8 | ✅ |
-| 5 | true-false | Is the Grammar Correct? | 8 | 8 | ✅ |
-| 6 | match-up | Common Phrases | 8 | 8 | ✅ |
-| 7 | unjumble | Sentence Builder | 8 | 6 | ✅ |
-| 8 | fill-in | Store Vocabulary | 8 | 8 | ✅ |
-| 9 | quiz | Verbs and Objects | 8 | 8 | ✅ |
+| 1 | fill-in | Complete the Sentence: In the Store | 8 | 8 | ✅ |
+| 2 | fill-in | Choose the Correct Verb | 8 | 8 | ✅ |
+| 3 | quiz | Understanding the Accusative Case | 8 | 8 | ✅ |
+| 4 | true-false | True or False: Grammar and Culture | 8 | 8 | ✅ |
+| 5 | match-up | Match the Verbs to Objects | 8 | 8 | ✅ |
+| 6 | group-sort | Which Words Change? | 10 | 6 | ✅ |
+| 7 | unjumble | Build the Sentence | 8 | 6 | ✅ |
+| 8 | match-up | Vocabulary Match | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/8 (fill-in, match-up, quiz, unjumble) ✅
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1685/1200 (raw: 1771)
-- **Activities:** ✅ 9/8
+- **Words:** ✅ 1663/1200 (raw: 1725)
+- **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 5/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
@@ -58,9 +57,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Accusative I: Things** | ✅ | 37 | Included in Core |
-| **Вступ: Що я бачу? (Introduction)** | ✅ | 219 | Included in Core |
-| **Презентація: Знахідний відмінок (Presentation)** | ✅ | 579 | Included in Core |
-| **Практика: Запобігання помилкам (Practice)** | ✅ | 425 | Included in Core |
-| **Виробництво та Культура: У супермаркеті (Production and Culture)** | ➖ | 311 | Excluded Type |
-| **Підсумок** | ✅ | 114 | Included in Core |
+| **The Accusative I: Things** | ✅ | 43 | Included in Core |
+| **Вступ: Що я бачу? (Introduction)** | ✅ | 262 | Included in Core |
+| **Презентація: Знахідний відмінок (Presentation)** | ✅ | 486 | Included in Core |
+| **Практика: Запобігання помилкам (Practice)** | ✅ | 428 | Included in Core |
+| **Виробництво та Культура: У супермаркеті (Production and Culture)** | ➖ | 338 | Excluded Type |
+| **Підсумок** | ✅ | 106 | Included in Core |

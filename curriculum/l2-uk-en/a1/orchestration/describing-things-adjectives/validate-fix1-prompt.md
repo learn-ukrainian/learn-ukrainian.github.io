@@ -1,89 +1,49 @@
-        # Fix 16 issue(s) in `describing-things-adjectives`
+        # Fix 9 issue(s) in `describing-things-adjectives`
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'вивчаємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'вивчаємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 16
+**What:** Non-nominative 'нас' (genitive, VESUM: noun:anim:p:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'нас' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 40
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'описують' (VESUM: verb:imperf:pres:p:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'описують' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 19
+**What:** Non-nominative 'нас' (genitive, VESUM: noun:anim:p:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'нас' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 119
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'має' (VESUM: verb:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'має' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 34
+**What:** Non-nominative 'нас' (genitive, VESUM: noun:anim:p:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'нас' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 187
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'центрі' (locative, VESUM: noun:inanim:m:v_mis:xp1) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'центрі' (locative) with its nominative form or use English equivalent.
-**Where:** ~line 49
+**What:** Non-nominative 'мене' (genitive, VESUM: noun:anim:s:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'мене' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 206
 
-### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'закінчується' (VESUM: verb:rev:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'закінчується' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 75
+### Fix: Gate `Pedagogy` FAIL — 1 violations
 
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'змінюємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'змінюємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 81
+### Fix: Gate `Immersion` FAIL — 20.3% LOW (target 25-40% (M11))
+**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
 
-### Fix 7: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'інших' (genitive, VESUM: adj:p:v_rod:pron:def) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'інших' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 81
+### Fix 7: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Subordinate clause marker at A1: 'Бо в'
+**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
 
-### Fix 8: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'родів' (genitive, VESUM: noun:inanim:p:v_rod) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'родів' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 81
-
-### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'маємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'маємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 93
-
-### Fix 10: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'перевіряйте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'перевіряйте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 137
-
-### Fix 11: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'закінчується' (VESUM: verb:rev:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'закінчується' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 162
-
-### Fix 12: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'Києві' (dative, VESUM: noun:inanim:m:v_dav) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'Києві' (dative) with its nominative form or use English equivalent.
-**Where:** ~line 179
-
-### Fix 13: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'має' (VESUM: verb:imperf:pres:s:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'має' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 183
-
-### Fix 14: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Зверніть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Зверніть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 186
-
-### Fix 15: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'увагу' (accusative, VESUM: noun:inanim:f:v_zna) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'увагу' (accusative) with its nominative form or use English equivalent.
-**Where:** ~line 186
-
-### Fix 16: PEDAGOGICAL_VIOLATION
+### Fix 8: PEDAGOGICAL_VIOLATION
 **What:** [METALANGUAGE] Metalanguage terms used but not in vocabulary: множина
 **How to fix:** Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+### Fix 9: PEDAGOGICAL_VIOLATION
+**What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'what kind...'.
+**How to fix:** Vary sentence structure.
 
 ### Other Audit Failures
 
 ```
-TOTAL                                                                        1169 / 1200  ❌ (-31)
+❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'what kind...'.
 📚 PEDAGOGICAL VIOLATIONS FOUND:
+❌ AUDIT FAILED. Correct errors before proceeding.
+❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/describing-things-adjectives-audit.log for details)
 ```
 
 
@@ -123,6 +83,19 @@ Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring
 
 METALANGUAGE: English-first, Ukrainian in parentheses
 
+
+
+## Verification Tools (USE THEM)
+
+You have MCP tools for Ukrainian language verification. **Use them before fixing.**
+
+- `verify_words(["word1", "word2"])` — check words exist in VESUM (standard Ukrainian dictionary)
+- `verify_lemma("word")` — get all inflected forms of a word
+
+**Before replacing any Ukrainian word:**
+1. Call `verify_words` with your replacement to confirm it exists
+2. If NOT FOUND, call `verify_lemma` on the base form to find correct inflections
+3. Never use a word that returns NOT FOUND — rephrase in English instead
 
 
         ## Files

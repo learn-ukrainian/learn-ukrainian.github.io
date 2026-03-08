@@ -1,84 +1,48 @@
-        # Fix 18 issue(s) in `imperative-and-requests`
+        # Fix 9 issue(s) in `imperative-and-requests`
 
-        ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'неформальна' (f) + 'форми' (f/p)
-**How to fix:** Change 'неформальна' to match the gender/case of 'форми', or vice versa.
-**Where:** ~line 17
+        ### Fix 1: IPA_BANNED
+**What:** Banned IPA transcription: [it]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 111
 
-### Fix 2: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'формальна' (f) + 'ви' (p)
-**How to fix:** Change 'формальна' to match the gender/case of 'ви', or vice versa.
-**Where:** ~line 17
+### Fix 2: ACTIVITY_VESUM_FAIL
+**What:** Activity answers contain VESUM-failed words: стояй
+**How to fix:** Fix spelling or replace these words — students will practice non-existent forms.
+**Where:** imperative-and-requests.yaml
 
-### Fix 3: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'корисних' (p) + 'кілька' (f)
-**How to fix:** Change 'корисних' to match the gender/case of 'кілька', or vice versa.
-**Where:** ~line 110
+### Fix: Gate `Words` FAIL — 1011/1200 (raw: 1495)
+**Action:** Expand content in the shortest sections. Add examples, explanations, or practice scenarios.
 
-### Fix 4: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'ввічливим' (m/n/p) + 'прохання' (n/p)
-**How to fix:** Change 'ввічливим' to match the gender/case of 'прохання', or vice versa.
-**Where:** ~line 127
+### Fix: Gate `Activities` FAIL — 5/8
+**Action:** Add more activities or diversify activity types in the activities YAML file.
 
-### Fix 5: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'можна' (f) + 'слово' (n)
-**How to fix:** Change 'можна' to match the gender/case of 'слово', or vice versa.
-**Where:** ~line 127
+### Fix: Gate `Pedagogy` FAIL — 3 violations
 
-### Fix 6: PLAN_SECTION_MISSING
-**What:** Missing 2 plan section(s): Вісім обов'язкових дієслів (Eight required verbs), Ввічливе прохання (Polite requests)
-**How to fix:** Add content for the missing plan sections or update section headings to match plan.
-**Where:** (plan vs content)
+### Fix: Gate `Immersion` FAIL — 23.1% LOW (target 35-55% (M47))
+**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
 
-### Fix: Gate `Structure` FAIL — Missing '## Summary'
-
-### Fix: Gate `Pedagogy` FAIL — 10 violations
-
-### Fix 9: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Dative case used at A1: 'мові'
+### Fix 7: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Dative case used at A1: 'мені'
 **How to fix:** Dative case not allowed until A2 (M31+). Restructure sentence.
 
-### Fix 10: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Instrumental case used at A1: 'перед дієсловом'
-**How to fix:** Instrumental case not allowed until A2 (M36+). Restructure sentence.
+### Fix 8: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Dative case used at A1: 'мені'
+**How to fix:** Dative case not allowed until A2 (M31+). Restructure sentence.
 
-### Fix 11: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: ', які в'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 12: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'б
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 13: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'Щоб у'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 14: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'щоб п'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 15: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'Щоб з'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 16: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] Sentence too long for A1: 12 words (max 10)
-**How to fix:** Break into shorter sentences. First 5 words: 'Коли ми даємо інструкції або...'
-
-### Fix 17: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] Sentence too long for A1: 11 words (max 10)
-**How to fix:** Break into shorter sentences. First 5 words: 'Для форми ви просто додайте...'
-
-### Fix 18: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] Sentence too long for A1: 12 words (max 10)
-**How to fix:** Break into shorter sentences. First 5 words: 'Ось вісім дуже важливих дієслів...'
+### Fix 9: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Dative case used at A1: 'мені'
+**How to fix:** Dative case not allowed until A2 (M31+). Restructure sentence.
 
 ### Other Audit Failures
 
 ```
-Практика та підсумок (Practice and Summary)          79 /  175  ❌ (-96)
-TOTAL                                              1123 / 1200  ❌ (-77)
+❌ [SECTION_LENGTH_MISMATCH] Section 'Наказовий спосіб (Imperative Mood)' is under target word count.
+❌ [SECTION_LENGTH_MISMATCH] Section 'Вісім обов'язкових дієслів (Eight Required Verbs)' is under target word count.
+❌ [SECTION_LENGTH_MISMATCH] Section 'Практика і підсумок (Summary and Practice)' is under target word count.
+Наказовий спосіб (Imperative Mood)                  223 /  300  ❌ (-77)
+Вісім обов'язкових дієслів (Eight Required Verbs)   250 /  350  ❌ (-100)
+Практика і підсумок (Summary and Practice)           97 /  150  ❌ (-53)
+TOTAL                                              1061 / 1200  ❌ (-139)
 📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log for details)
@@ -87,24 +51,28 @@ TOTAL                                              1123 / 1200  ❌ (-77)
 
 ## Constraints (do NOT violate while fixing)
 
-SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
-Present tense verbs start at M15. Past tense at M36. Future at M37.
+SEQUENCE CONSTRAINTS (M47 — Imperative Mood):
+This module TEACHES the imperative mood. Imperative forms are ALLOWED and REQUIRED.
+Use imperative forms freely: читай/читайте, пиши/пишіть, скажи/скажіть, дай/дайте, іди/ідіть, дивись/дивіться, стій/стійте, слухай/слухайте.
 
-KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
+Both imperfective AND perfective verbs are allowed for imperatives.
+Past tense and future tense are available (taught at M36/M37).
 
-BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
+The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: perfective aspect is ALLOWED for imperative forms.
 
-INSTEAD OF → USE:
-- Запам'ятайте → "Remember that..." (English)
-- Порівняйте → "Compare..." (English)
-- Зверніть увагу → "Notice that..." (English)
-- Подивіться → "Look at..." (English)
-- Спробуйте → "Try to..." (English)
-- Прочитайте → "Read..." (English)
-- Повторіть → "Repeat..." (English)
 
-The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
 
+## Verification Tools (USE THEM)
+
+You have MCP tools for Ukrainian language verification. **Use them before fixing.**
+
+- `verify_words(["word1", "word2"])` — check words exist in VESUM (standard Ukrainian dictionary)
+- `verify_lemma("word")` — get all inflected forms of a word
+
+**Before replacing any Ukrainian word:**
+1. Call `verify_words` with your replacement to confirm it exists
+2. If NOT FOUND, call `verify_lemma` on the base form to find correct inflections
+3. Never use a word that returns NOT FOUND — rephrase in English instead
 
 
         ## Files

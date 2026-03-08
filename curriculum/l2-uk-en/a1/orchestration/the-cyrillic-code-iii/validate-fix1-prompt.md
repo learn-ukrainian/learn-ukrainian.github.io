@@ -1,80 +1,119 @@
-        # Fix 16 issue(s) in `the-cyrillic-code-iii`
+        # Fix 23 issue(s) in `the-cyrillic-code-iii`
 
-        ### Fix 1: LLM_FILLER
-**Line 24:** `Excellent job recognizing those shapes! You're ready for the next step. In this lesson, we will learn nine new consonants: **Б**, **Д**, **П**, **З**, **Г**, **Х**, **Ж**, **Ш**, and **Ч**. Since these appear in almost every Ukrainian sentence, mastering them will help you read everyday signs and vocabulary much faster.`
-**Action:** Rephrase to remove "In this lesson, we will". Start the sentence with a concrete fact instead.
+        ### Fix 1: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'Подивіться' (VESUM: verb:rev:perf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Подивіться' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 77
 
-### Fix 2: LLM_FILLER
-**Line 24:** `Excellent job recognizing those shapes! You're ready for the next step. In this lesson, we will learn nine new consonants: **Б**, **Д**, **П**, **З**, **Г**, **Х**, **Ж**, **Ш**, and **Ч**. Since these appear in almost every Ukrainian sentence, mastering them will help you read everyday signs and vocabulary much faster.`
-**Action:** Rephrase to remove "In this lesson, we will learn". Start the sentence with a concrete fact instead.
+### Fix 2: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'Слухайте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Слухайте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 89
 
-### Fix 3: DECODABILITY
-**What:** [DECODABILITY_M3] 'чай' in 'Reading Practice' contains unknown letter(s): й
-**How to fix:** Replace words containing unknown letters with words using only А, О, У, М, Л, Н, С, К, И, І, Р, В, Т, Е, Б, Д, П, З, Г, Х, Ж, Ш, Ч. Or move the content to a later module.
-**Context (line 214):** `* **ша́пка** (hat)`
+### Fix 3: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'звучить' (VESUM: verb:imperf:pres:s:3) in pre-verb module M3. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'звучить' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 125
 
-### Fix 4: DECODABILITY
-**What:** [DECODABILITY_M3] 'ткий' in 'Reading Practice' contains unknown letter(s): й
-**How to fix:** Replace words containing unknown letters with words using only А, О, У, М, Л, Н, С, К, И, І, Р, В, Т, Е, Б, Д, П, З, Г, Х, Ж, Ш, Ч. Or move the content to a later module.
-**Context (line 216):** ``
+### Fix 4: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'трима́ти' (VESUM: verb:imperf:inf) in pre-verb module M3. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'трима́ти' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 194
 
 ### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'відчуваєте' (VESUM: verb:imperf:pres:p:2) in pre-verb module M3. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'відчуваєте' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 232
+**What:** Verb 'можете' (VESUM: verb:imperf:pres:p:2) in pre-verb module M3. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'можете' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 202
 
 ### Fix 6: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'відчути' (VESUM: verb:perf:inf) in pre-verb module M3. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'відчути' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 202
+
+### Fix 7: MORPHOLOGICAL_VIOLATION
 **What:** Verb 'вимовляєте' (VESUM: verb:imperf:pres:p:2) in pre-verb module M3. Verbs are forbidden before M15.
 **How to fix:** Replace verb 'вимовляєте' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 234
+**Where:** ~line 204
 
-### Fix 7: UNTRANSLATED_NON_DECODABLE
-**What:** 'відчуваєте' has letters {'Є'} not yet learned (M3)
-**How to fix:** Add English translation after the word: відчуваєте (English meaning)
-**Where:** ~line 232
+### Fix 8: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'бі́лий' (m) + 'сіль' (f)
+**How to fix:** Change 'бі́лий' to match the gender/case of 'сіль', or vice versa.
+**Where:** ~line 111
 
-### Fix 8: UNTRANSLATED_NON_DECODABLE
-**What:** 'вібрацію' has letters {'Ц', 'Ю'} not yet learned (M3)
-**How to fix:** Add English translation after the word: вібрацію (English meaning)
-**Where:** ~line 232
-
-### Fix 9: UNTRANSLATED_NON_DECODABLE
-**What:** 'Яка' has letters {'Я'} not yet learned (M3)
-**How to fix:** Add English translation after the word: Яка (English meaning)
-**Where:** ~line 233
+### Fix 9: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'те́плий' (m) + 'ша́пка' (f)
+**How to fix:** Change 'те́плий' to match the gender/case of 'ша́пка', or vice versa.
+**Where:** ~line 146
 
 ### Fix 10: UNTRANSLATED_NON_DECODABLE
-**What:** 'візуальна' has letters {'Ь'} not yet learned (M3)
-**How to fix:** Add English translation after the word: візуальна (English meaning)
-**Where:** ~line 233
+**What:** 'для' has letters {'Я'} not yet learned (M3)
+**How to fix:** Add English translation after the word: для (English meaning)
+**Where:** ~line 34
 
 ### Fix 11: UNTRANSLATED_NON_DECODABLE
-**What:** 'різниця' has letters {'Ц', 'Я'} not yet learned (M3)
-**How to fix:** Add English translation after the word: різниця (English meaning)
-**Where:** ~line 233
+**What:** 'Подивіться' has letters {'Я', 'Ь'} not yet learned (M3)
+**How to fix:** Add English translation after the word: Подивіться (English meaning)
+**Where:** ~line 77
 
 ### Fix 12: UNTRANSLATED_NON_DECODABLE
-**What:** 'Як' has letters {'Я'} not yet learned (M3)
-**How to fix:** Add English translation after the word: Як (English meaning)
-**Where:** ~line 234
+**What:** 'Слухайте' has letters {'Й'} not yet learned (M3)
+**How to fix:** Add English translation after the word: Слухайте (English meaning)
+**Where:** ~line 89
 
 ### Fix 13: UNTRANSLATED_NON_DECODABLE
-**What:** 'вимовляєте' has letters {'Я', 'Є'} not yet learned (M3)
-**How to fix:** Add English translation after the word: вимовляєте (English meaning)
-**Where:** ~line 234
+**What:** 'Ось' has letters {'Ь'} not yet learned (M3)
+**How to fix:** Add English translation after the word: Ось (English meaning)
+**Where:** ~line 102
 
-### Fix: Gate `Density` FAIL — 1 < 6
+### Fix 14: UNTRANSLATED_NON_DECODABLE
+**What:** 'як' has letters {'Я'} not yet learned (M3)
+**How to fix:** Add English translation after the word: як (English meaning)
+**Where:** ~line 125
+
+### Fix 15: UNTRANSLATED_NON_DECODABLE
+**What:** 'звучить' has letters {'Ь'} not yet learned (M3)
+**How to fix:** Add English translation after the word: звучить (English meaning)
+**Where:** ~line 125
+
+### Fix 16: UNTRANSLATED_NON_DECODABLE
+**What:** 'теплий' has letters {'Й'} not yet learned (M3)
+**How to fix:** Add English translation after the word: теплий (English meaning)
+**Where:** ~line 146
+
+### Fix 17: UNTRANSLATED_NON_DECODABLE
+**What:** 'Остання' has letters {'Я'} not yet learned (M3)
+**How to fix:** Add English translation after the word: Остання (English meaning)
+**Where:** ~line 150
+
+### Fix 18: UNTRANSLATED_NON_DECODABLE
+**What:** 'Ф' has letters {'Ф'} not yet learned (M3)
+**How to fix:** Add English translation after the word: Ф (English meaning)
+**Where:** ~line 165
 
 ### Fix: Gate `Pedagogy` FAIL — 1 violations
 
-### Fix 16: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY] match-up 'Consonant Pairs' has 6 pairs (target: 8-15)
-**How to fix:** Adjust number of pairs to 8-15.
+### Fix 20: PEDAGOGICAL_VIOLATION
+**What:** [CONTENT_REDUNDANCY] Redundant information detected in lesson (74% overlap): "Відео для літери Ш (Video for letter Ш):
+**How to fix:** Remove redundant paragraphs. Ensure each section adds new unique value.
+
+### Fix 21: PEDAGOGICAL_VIOLATION
+**What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'the letter...'.
+**How to fix:** Vary sentence structure.
+
+### Fix 22: PEDAGOGICAL_VIOLATION
+**What:** [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (32 occurrences): (This is milk), (There is a cat), (This is a city) — breaks immersion target
+**How to fix:** Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+
+### Fix 23: PEDAGOGICAL_VIOLATION
+**What:** [HINT_IN_ACTIVITY] anagram activity 'Unscramble the Words' has item-level hint in item 1
+**How to fix:** Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ### Other Audit Failures
 
 ```
-❌ Consonant Pairs
+❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (74% overlap): "Відео для літери Ш (Video for letter Ш):
+❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'the letter...'.
+❌ [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (32 occurrences): (This is milk), (There is a cat), (This is a city) — breaks immersion target
 📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-audit.log for details)

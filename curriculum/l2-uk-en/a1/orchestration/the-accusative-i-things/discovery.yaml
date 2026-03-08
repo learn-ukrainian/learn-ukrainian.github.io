@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T22:22:46.726467+00:00'
+discovered_at: '2026-03-07T02:59:10.973251+00:00'
 query_keywords:
 - 'The Accusative I: Things'
 - Знахідний відмінок
@@ -30,44 +30,17 @@ blogs:
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - vocabulary
-  - clothing
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 32
+  topics: []
 - url: https://www.ukrainianlessons.com/episode33/
   title: Talking about books in Ukrainian — Accusative case of people
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 33
+  topics: []
 - url: https://www.ukrainianlessons.com/episode56/
   title: Asking for advice + Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - adjectives
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 56
+  topics: []
 rag_chunks:
 - score: 0.3333333432674408
   chunk_id: 6-klas-ukrmova-avramenko-2023_s0194

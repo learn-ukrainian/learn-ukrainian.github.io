@@ -1,38 +1,46 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1215",
+    "COMPUTED_WORD_COUNT": "2495",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "101.2",
+    "COMPUTED_WORD_PERCENT": "207.9",
     "COMPUTED_ACTIVITY_COUNT": "8",
-    "COMPUTED_VOCAB_COUNT": "21",
-    "COMPUTED_ENGAGEMENT_COUNT": "4",
-    "COMPUTED_IMMERSION_PERCENT": "26.4",
+    "COMPUTED_VOCAB_COUNT": "20",
+    "COMPUTED_ENGAGEMENT_COUNT": "5",
+    "COMPUTED_IMMERSION_PERCENT": "25.2",
     "COMPUTED_IMMERSION_TARGET": "25-40%",
-    "COMPUTED_RICHNESS_SCORE": "53",
+    "COMPUTED_RICHNESS_SCORE": "82",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 1/3, examples: 9/24, dialogues: 0/4, proverbs: 0/1",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3, proverbs: 0/1",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [],
+  "deterministic_issues": [
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 269",
+      "text": "Non-nominative 'нас' (genitive, VESUM: noun:anim:p:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.",
+      "fix": "Replace 'нас' (genitive) with its nominative form or use English equivalent."
+    }
+  ],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/describing-things-adjectives.md\nSaving log to: curriculum/l2-uk-en/a1/audit/describing-things-adjectives-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/describing-things-adjectives.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M11 — Describing Things - Adjectives\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/describing-things-adjectives.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Світ прикметників (Introduction: The World of Adjectives)              230 /  250  ✅ (-20)\n     Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)   320 /  350  ✅ (-30)\n     Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)   297 /  300  ✅ (-3)\n     Практика: Люди і місця (Practice: People and Places)                          197 /  200  ✅ (-3)\n     Підсумок (Summary & Self-Check)                                               123 /  100  ✅ (+23)\n     ────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                        1167 / 1200  ❌ (-33)\n  📋 Found YAML activities file (8 activities)\n  > Word Meanings: Adjectives: 8 items (min 8)\n  > Choose the Right Ending: 8 items (min 8)\n  > The Magic of Plurals: 8 items (min 8)\n  > Asking the Right Question: 8 items (min 8)\n  > Grammar Facts: 8 items (min 8)\n  > Sort by Gender and Number: 16 items (min 6)\n  > Build the Phrase: 8 items (min 6)\n  > Opposites Match: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1215/1200 (raw: 1482)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 21/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 26.4% (target 25-40% (M11))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/describing-things-adjectives.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: describing-things-adjectives.md\n  VESUM misses: 4 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 9554.22it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 155 | VESUM: 151 (97.4%) | RAG: 2 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 151/155 (97%) verified\n⚠️ VESUM not found (4): ий, синий, слова-питання, ій",
-  "h2_sections": "1. Вступ: Світ прикметників (Introduction: The World of Adjectives)\n2. Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)\n3. Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)\n4. Практика: Люди і місця (Practice: People and Places)\n5. Підсумок (Summary & Self-Check)",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/describing-things-adjectives.md\nSaving log to: curriculum/l2-uk-en/a1/audit/describing-things-adjectives-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/describing-things-adjectives.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M11 — Describing Things - Adjectives\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/describing-things-adjectives.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Світ прикметників (Introduction: The World of Adjectives)                347 /  250  ✅ (+97)\n     Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives)              603 /  350  ✅ (+253)\n     Презентація 2: М'яка група та множина (Presentation 2: Soft Stem and Plurals)   368 /  300  ✅ (+68)\n     Практика: Люди і місця (Practice: People and Places)                            913 /  200  ✅ (+713)\n     Підсумок (Summary & Self-Check)                                                 145 /  100  ✅ (+45)\n     ──────────────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                          2376 / 1200  ✅ (+1176)\n  📋 Found YAML activities file (8 activities)\n  > Masculine Descriptions: 8 items (min 8)\n  > Feminine Descriptions: 8 items (min 8)\n  > Neuter Descriptions: 8 items (min 8)\n  > Sort by Gender Ending: 16 items (min 6)\n  > Check the Agreement: 8 items (min 8)\n  > Build the Description: 8 items (min 6)\n  > Match the Meaning: 8 items (min 8)\n  > Knowledge Check: Adjectives: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2495/1200 (raw: 2694)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 5/3\nAudio        ℹ️ No audio\nVocab        ✅ 20/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 25.2% (target 25-40% (M11))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [METALANGUAGE] Metalanguage terms used but not in vocabulary: множина\n     → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 1 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/describing-things-adjectives.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: describing-things-adjectives.md\n  VESUM misses: 3 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 45181.01it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 136 | VESUM: 133 (97.8%) | RAG: 2 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 133/136 (98%) verified\n⚠️ VESUM not found (3): ий, синий, ій",
+  "h2_sections": "1. Вступ: Світ прикметників (Introduction: The World of Adjectives)\n2. Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives)\n3. Презентація 2: М'яка група та множина (Presentation 2: Soft Stem and Plurals)\n4. Практика: Люди і місця (Practice: People and Places)\n5. Підсумок (Summary & Self-Check)",
   "vesum_stats": {
-    "total": 155,
-    "vesum_hits": 151,
+    "total": 136,
+    "vesum_hits": 133,
     "rag_hits": 0,
-    "not_found": 4,
+    "not_found": 3,
     "rag_errors": 0,
     "by_source": {
-      "prose": {
-        "total": 136,
-        "vesum_hits": 132,
-        "not_found": 4
-      },
       "activities": {
-        "total": 19,
-        "vesum_hits": 19,
+        "total": 10,
+        "vesum_hits": 10,
         "not_found": 0
+      },
+      "prose": {
+        "total": 126,
+        "vesum_hits": 123,
+        "not_found": 3
       }
     }
   },
@@ -58,16 +66,6 @@
       "status": "❌"
     },
     {
-      "original": "слова-питання",
-      "clean": "слова-питання",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
       "original": "ій",
       "clean": "ій",
       "source": "prose",
@@ -78,5 +76,5 @@
       "status": "❌"
     }
   ],
-  "content_hash": "8961060a54c35182"
+  "content_hash": "0935b33c9f2a2ca8"
 }

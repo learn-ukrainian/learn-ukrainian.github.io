@@ -1,7 +1,7 @@
 # Audit Report: M07 — the-gender-code.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 00:31:33
+**Generated:** 2026-03-07 15:17:24
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort | Sort by Gender | 12 | 6 | ✅ |
-| 2 | quiz | Identify Gender by Ending | 8 | 8 | ✅ |
-| 3 | true-false | Exceptions and Rules | 8 | 8 | ✅ |
-| 4 | fill-in | Choose the Correct Pronoun | 8 | 8 | ✅ |
-| 5 | anagram | Unscramble the Nouns | 8 | 8 | ✅ |
-| 6 | match-up | Match Word to Translation | 8 | 8 | ✅ |
-| 7 | group-sort | Sort the Words by Ending | 9 | 6 | ✅ |
-| 8 | true-false | True or False: Word Genders | 8 | 8 | ✅ |
+| 1 | group-sort | Sort the Words by Group | 9 | 6 | ✅ |
+| 2 | true-false | True or False: Word Groups | 8 | 8 | ✅ |
+| 3 | match-up | Match the Word to its Translation | 8 | 8 | ✅ |
+| 4 | anagram | Unscramble the Words | 8 | 8 | ✅ |
+| 5 | quiz | Choose the Correct Pronoun | 8 | 8 | ✅ |
+| 6 | fill-in | Complete the Phrase | 8 | 8 | ✅ |
+| 7 | anagram | Unscramble More Words | 8 | 8 | ✅ |
+| 8 | quiz | Vocabulary Check | 8 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅
@@ -36,19 +36,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2056/1200 (raw: 2114)
+- **Words:** ✅ 2079/1200 (raw: 2146)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 16.7% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 16.3% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -57,9 +57,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Gender Code** | ✅ | 61 | Included in Core |
-| **Вступ (Introduction)** | ✅ | 273 | Included in Core |
-| **Презентація правил (Presentation of Rules)** | ✅ | 433 | Included in Core |
-| **Практичні вправи (Practice Exercises)** | ✅ | 583 | Included in Core |
-| **Самостійна робота (Independent Work/Production)** | ➖ | 509 | Excluded Type |
-| **Підсумок: Культурний код та підсумок (Cultural Code and Summary)** | ✅ | 197 | Included in Core |
+| **The Gender Code** | ✅ | 50 | Included in Core |
+| **Вступ (Introduction: The Three Genders)** | ✅ | 376 | Included in Core |
+| **Презентація правил (Decoding the Endings)** | ✅ | 538 | Included in Core |
+| **Практичні вправи (Exceptions and Families)** | ✅ | 447 | Included in Core |
+| **Самостійна робота (Beating the 'It' Trap)** | ✅ | 316 | Included in Core |
+| **Культурний код та підсумок (Summary and Self-Check)** | ➖ | 254 | Excluded Type |
+| **Підсумок — Summary** | ✅ | 98 | Included in Core |

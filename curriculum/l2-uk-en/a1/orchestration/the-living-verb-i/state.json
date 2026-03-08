@@ -5,26 +5,32 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-06T22:00:24Z",
+      "ts": "2026-03-07T02:38:03Z",
       "task_id": "v5-the-living-verb-i-pA",
       "mode": "full"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-06T22:01:08Z"
+      "ts": "2026-03-07T02:38:44Z"
     },
     "sandbox": {
       "status": "complete",
-      "ts": "2026-03-06T22:01:10Z"
+      "ts": "2026-03-07T02:38:48Z"
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-06T22:11:01Z"
+      "ts": "2026-03-07T02:43:14Z",
+      "self_audited": true
     },
     "activities": {
-      "status": "failed",
-      "ts": "2026-03-06T22:16:36Z",
-      "note": "missing-files-act=False-voc=False"
+      "status": "complete",
+      "ts": "2026-03-07T02:45:08Z",
+      "task_id": "v5-the-living-verb-i-pC"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-07T02:56:50Z",
+      "attempts": 2
     }
   }
 }

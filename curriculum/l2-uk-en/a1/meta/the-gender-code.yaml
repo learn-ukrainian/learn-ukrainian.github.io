@@ -2,50 +2,50 @@ slug: the-gender-code
 title: The Gender Code
 word_target: 1200
 content_outline:
-- title: 'Вступ (Introduction)'
+- title: 'Вступ (Introduction: The Three Genders)'
   slug: introduction-three-genders
   words: 200
   points:
-  - Introduce the concept of grammatical gender versus natural gender; explain that
-    all nouns in Ukrainian have a gender.
-  - 'Introduce the three categories: Masculine (він), Feminine (вона), and Neuter
-    (воно).'
-  - 'Cultural Hook: Discuss the Neuter Sun (сонце) as an impartial life-giver in Ukrainian
-    folklore.'
-- title: 'Презентація правил (Presentation of Rules)'
+  - 'Introduce grammatical vs. natural gender: explain that in Ukrainian, every noun
+    belongs to one of three genders (Masculine, Feminine, Neuter).'
+  - 'Cultural Hook: The Neuter Sun (сонце) as an impartial, gentle life-giver.'
+  - Provide basic verb-free examples using 'Це' (e.g., Це стіл, Це вікно).
+- title: Презентація правил (Decoding the Endings)
   slug: decoding-the-endings
   words: 350
   points:
-  - 'Present the baseline rules: Masculine ends in a consonant (стіл, дім), Feminine
-    ends in -а/-я (книга, земля), Neuter ends in -о/-е (вікно, море).'
-  - 'Introduce the visual mnemonic framework: categorizing by hard/consonant, open/A-ending,
-    and round/O-E-ending.'
-  - Introduce possessive pronouns (мій, моя, моє) as a practical diagnostic tool to
-    test gender agreement.
-- title: 'Практичні вправи (Practice Exercises)'
+  - 'Establish the baseline rules: Masculine = consonant (стіл, дім); Feminine = -а/-я
+    (книга, земля); Neuter = -о/-е (вікно, море).'
+  - 'Introduce the diagnostic tool: possessive pronouns (мій для чоловічого, моя для
+    жіночого, моє для середнього).'
+  - 'Visual mnemonic framework: Categorize by hard/consonant (Masculine), open (Feminine),
+    and round (Neuter) endings.'
+- title: Практичні вправи (Exceptions and Families)
   slug: exceptions-and-families
-  words: 350
+  words: 300
   points:
-  - 'The Natural Gender Override: Explain why ''тато'' (father) is Masculine (мій
-    тато) despite ending in -о.'
-  - 'The Soft Sign Ambiguity: Contrast ''день'' (Masculine) and ''ніч'' (Feminine);
-    explain that -ь words require memorization.'
-  - 'Declension Family 4 Overview: Explain that ''ім''я'' (name) is a special Neuter
-    word despite ending in -я.'
-- title: 'Самостійна робота (Independent Work/Production)'
+  - 'The Natural Gender Override: Why ''тато'' is Masculine (мій тато) despite the
+    -о ending.'
+  - 'The Soft Sign Ambiguity: Contrast ''день'' (Masculine) and ''ніч'' (Feminine),
+    explaining that words ending in -ь require memorization.'
+  - 'Declension Family 4 Intro: Explain the special case of ''ім''я'' (name) as a
+    Neuter word despite its -я ending.'
+- title: Самостійна робота (Beating the 'It' Trap)
   slug: beating-it-trap
-  words: 150
+  words: 200
   points:
-  - 'Directly address the English ''It'' Trap: emphasize that inanimate objects have
-    gender and are not automatically ''воно''.'
-  - Provide a verb-free drill classifying basic objects and S.T.A.L.K.E.R. vocabulary
-    (артефакт, зона, укриття).
-- title: 'Культурний код та підсумок (Cultural Code and Summary)'
+  - 'Directly address the English ''It'' Trap: inanimate objects have gender and are
+    not automatically ''воно''.'
+  - Verb-free drill categorizing basic objects (стіл = він, книга = вона).
+  - Incorporate modern vocabulary anchors (артефакт = M, зона = F, укриття = N) to
+    show gender rules apply to everything.
+- title: Культурний код та підсумок (Summary and Self-Check)
   slug: summary-gender-mastery
   words: 150
   points:
-  - Summarize the 95% predictability rule for endings and recap the core exceptions.
-  - 'Self-Check Question 1: What gender is a noun ending in a consonant?'
-  - 'Self-Check Question 2: Why is ''тато'' masculine?'
-  - 'Self-Check Question 3: Which possessive pronoun matches ''вікно''?'
-  - 'Self-Check Question 4: What is the gender of ''ім''я''?'
+  - Summarize the 95% predictability rule for endings and the core exceptions (тато,
+    soft sign, ім'я).
+  - 'Self-Check 1: What gender is a noun ending in a consonant?'
+  - 'Self-Check 2: Why is ''тато'' masculine?'
+  - 'Self-Check 3: Which possessive pronoun matches ''вікно''?'
+  - 'Self-Check 4: What is the gender of ''ім''я''?'

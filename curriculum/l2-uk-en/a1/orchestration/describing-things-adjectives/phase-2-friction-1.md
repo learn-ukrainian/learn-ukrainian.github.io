@@ -1,6 +1,7 @@
-**Phase**: Beginner Content
-**Step**: Content writing and auditing
-**Friction Type**: IMMERSION_AND_GRAMMAR
-**Raw Error**: Audit failed. `Immersion TOO LOW (12.8% vs 25-40% target)` and multiple pedagogical violations regarding metalinguistics and cases (dative, instrumental).
-**Self-Correction**: Iteratively converted English sentences into isolated Ukrainian-English string pairs. Removed unintroduced terms like "прикметник" and "іменник" to bypass A1 grammar level restriction, while avoiding complex grammatical constructs like subordinate clauses and dative/instrumental cases.
-**Proposed Tooling Fix**: N/A
+**Phase**: Full Build (Content + Activities + Vocabulary)
+**Step**: Content drafting and immersion check
+**Friction Type**: WORD_BANK_LIMITATION
+**Raw Error**: Immersion 6.3% LOW (target 25-40% (M11))
+**Self-Correction**: Re-wrote the content to dramatically increase Ukrainian sentence density using repetitive structures strictly drawn from the extremely small A1 32-word Lexical Sandbox. Removed embedded English translations within parenthesis to prevent `INLINE_ENGLISH_IN_PROSE` errors. Wrote large paragraphs of comprehensible input translated block-by-block.
+**Proposed Tooling Fix**: Immersion ratio gates for A1 (25-40%) are incredibly difficult to hit organically without sounding completely repetitive when the module operates with an absolute hard prohibition on any Ukrainian words outside of a 32-word lexical sandbox. The tooling either needs a more relaxed immersion gate or a slightly wider sandbox that includes environmental nouns (e.g. дім, книга, машина, телефон) to pair with the new adjectives being taught.
+**RAG Tools Used**: search_text (grade 2, for adjectival query words), verify_words (to double-check final vocabulary alignment).

@@ -1,74 +1,18 @@
-        # Fix 13 issue(s) in `describing-things-adjectives`
+        # Fix 2 issue(s) in `describing-things-adjectives`
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'Київ' (genitive, VESUM: noun:inanim:p:v_rod) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'Київ' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 49
+**What:** Non-nominative 'нас' (genitive, VESUM: noun:anim:p:v_rod:pron:pers:1) in M11. Only nominative case allowed before M25.
+**How to fix:** Replace 'нас' (genitive) with its nominative form or use English equivalent.
+**Where:** ~line 269
 
-### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'Київ' (genitive, VESUM: noun:inanim:p:v_rod) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'Київ' (genitive) with its nominative form or use English equivalent.
-**Where:** ~line 180
-
-### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'робить' (VESUM: verb:imperf:inf:short) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'робить' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 220
-
-### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'простішим' (instrumental, VESUM: adj:m:v_oru:compc) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'простішим' (instrumental) with its nominative form or use English equivalent.
-**Where:** ~line 220
-
-### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'маємо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'маємо' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 232
-
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Уявіть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Уявіть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 247
-
-### Fix 7: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'ситуацію' (accusative, VESUM: noun:inanim:f:v_zna) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'ситуацію' (accusative) with its nominative form or use English equivalent.
-**Where:** ~line 247
-
-### Fix 8: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'показуєте' (VESUM: verb:imperf:pres:p:2) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'показуєте' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 250
-
-### Fix 9: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Зверніть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Зверніть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 253
-
-### Fix 10: MORPHOLOGICAL_VIOLATION
-**What:** Non-nominative 'увагу' (accusative, VESUM: noun:inanim:f:v_zna) in M11. Only nominative case allowed before M25.
-**How to fix:** Replace 'увагу' (accusative) with its nominative form or use English equivalent.
-**Where:** ~line 253
-
-### Fix 11: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'змінюються' (VESUM: verb:rev:imperf:pres:p:3) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'змінюються' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 253
-
-### Fix 12: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'знаєте' (VESUM: verb:imperf:pres:p:2) in pre-verb module M11. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'знаєте' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 294
-
-### Fix 13: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'новий' (m) + 'машина' (f)
-**How to fix:** Change 'новий' to match the gender/case of 'машина', or vice versa.
-**Where:** ~line 132
+### Fix 2: PEDAGOGICAL_VIOLATION
+**What:** [METALANGUAGE] Metalanguage terms used but not in vocabulary: множина
+**How to fix:** Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ### Other Audit Failures
 
 ```
-TOTAL                                                                        1165 / 1200  ❌ (-35)
+📚 PEDAGOGICAL VIOLATIONS FOUND:
 ```
 
 
@@ -108,6 +52,19 @@ Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring
 
 METALANGUAGE: English-first, Ukrainian in parentheses
 
+
+
+## Verification Tools (USE THEM)
+
+You have MCP tools for Ukrainian language verification. **Use them before fixing.**
+
+- `verify_words(["word1", "word2"])` — check words exist in VESUM (standard Ukrainian dictionary)
+- `verify_lemma("word")` — get all inflected forms of a word
+
+**Before replacing any Ukrainian word:**
+1. Call `verify_words` with your replacement to confirm it exists
+2. If NOT FOUND, call `verify_lemma` on the base form to find correct inflections
+3. Never use a word that returns NOT FOUND — rephrase in English instead
 
 
         ## Files

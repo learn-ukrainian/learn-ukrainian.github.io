@@ -1,9 +1,9 @@
         # Fix 1 issue(s) in `the-accusative-i-things`
 
         ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'цього' (m/n) + 'ми' (p)
-**How to fix:** Change 'цього' to match the gender/case of 'ми', or vice versa.
-**Where:** ~line 135
+**What:** Agreement mismatch: 'Станда́ртна' (f) + 'кни́жку' (f)
+**How to fix:** Change 'Станда́ртна' to match the gender/case of 'кни́жку', or vice versa.
+**Where:** ~line 15
 
 
 ## Constraints (do NOT violate while fixing)

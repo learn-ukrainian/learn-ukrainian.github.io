@@ -1,164 +1,145 @@
 <!-- SCOPE
-Covers: The three-gender system, declension families overview, gender prediction rules
+Covers: Noun gender classification, ending patterns, core exceptions
 Not covered:
-  - Adjectives matching in detail → a1-26
-  - Verb conjugation
+  - Adjective agreement rules -> a1-26
+  - Plural forms -> a1-15
 -->
 
 # The Gender Code
 
 > **Чому це важливо? — Why does this matter?**
 >
-> In Ukrainian, every single object has a gender, not just people. Knowing a word's gender is the master key to building sentences, as it changes the shape of the words that describe it. Once you know the ending of a noun, you know its gender and how to use it!
+> In Ukrainian, every noun belongs to one of three grammatical categories, often called genders. Knowing a noun's gender is the essential first step to building correct sentences, as it acts like a foundation for everything else in the language.
 
-## Вступ: Welcome to the Three Genders
+## Вступ (Introduction: The Three Genders)
 
-Welcome to grammatical gender! In English, we use "he" for a man, "she" for a woman, and "it" for objects. 
+When you hear the word gender, you might immediately think of natural gender — the biological difference between male and female people or animals. However, grammatical gender is a much broader system. It is simply a way to categorize every single noun in the language into one of three groups. In Ukrainian, these three groups are traditionally called Masculine, Feminine, and Neuter. 
 
-However, the Ukrainian language has a completely different approach. Every single noun — whether it is a person, an animal, or a completely inanimate object — belongs to one of three distinct categories. These categories are Masculine (**він** — he), Feminine (**вона** — she), and Neuter (**воно** — it).
+You must understand that this classification applies to absolutely everything. People, animals, objects, abstract ideas, and places all belong to one of these three categories. A table has a gender. A book has a gender. A window has a gender. This is not about human characteristics; it is just a structural filing system that the language uses to keep words organized and to ensure that sentences stick together correctly. 
 
-Наприклад — For example, a table is not an "it" in Ukrainian. It is a "he". A book is a "she", and a window is an "it". This is a structural system. Once you understand the hidden logic, predicting the gender of a new word becomes incredibly easy.
+> [!culture] The Impartial Sun
+> In many Romance languages, the sun is classified as masculine (like *el sol* or *le soleil*), often associated with strong, active force. In Ukrainian folklore, **сонце** (the sun) is Neuter. It is viewed as an impartial, gentle life-giver that shines equally on everyone, rather than a fierce warrior. This reflects a deep cultural connection to nature as a balanced, nurturing presence.
 
-> [!culture]
-> **The Neuter Sun**
-> In Ukrainian folklore, the sun (**сонце**) is viewed as an impartial, gentle life-giver. Because of this, it is classified as Neuter (**воно**), unlike the masculine or feminine suns found in Romance languages. Conversely, when Ukrainians talk about the earth (**земля**), they often use the feminine gender, calling it "Mother Earth". 
+To give you an idea of how this looks in practice, we can use the simple pointing word **це** (this is) to introduce nouns from different categories. Notice how the nouns look different at the end. Look at these examples:
+- **Це стіл. Стіл — він. Він там.** (This is a table. Table is Masculine. He is there.)
+- **Це дім. Дім — він. Він тут.** (This is a house. House is Masculine. He is here.)
+- **Це книга. Книга — вона. Вона там.** (This is a book. Book is Feminine. She is there.)
+- **Це мама. Мама — вона. Вона тут.** (This is mom. Mom is Feminine. She is here.)
+- **Це вікно. Вікно — воно. Воно там.** (This is a window. Window is Neuter. It is there.)
+- **Це місто. Місто — воно. Воно тут.** (This is a city. City is Neuter. It is here.)
 
-To make this easier to remember, we can use a visual framework. Think of Masculine as a cool blue color (hard consonant endings), Feminine as a warm red color (open vowel endings), and Neuter as a bright yellow color (round vowel endings).
+By the end of this lesson, you will be able to look at almost any Ukrainian noun and instantly know which category it belongs to, simply by checking its final letter.
 
-## Презентація: Decoding the Endings
+## Презентація правил (Decoding the Endings)
 
-How do you know if a word is "he", "she", or "it"? You simply look at its ending. In Ukrainian, the last letter of a noun explicitly tells you its gender.
+The Ukrainian gender system is highly logical. You do not need to guess or memorize the gender of every single word you learn. Instead, the final letter of a noun acts as a clear tag, telling you exactly which group the word belongs to. Let us break down the baseline rules for the three categories.
 
-Here is the highly reliable rule for predicting gender from the last letter. А тепер — And now, let us look at the groups:
+The first group is the Masculine gender. Words in this category almost always end in a consonant letter. Think of consonant endings as "hard" or abrupt stops. When you see a word ending in a consonant, it is a very safe bet that it belongs to the Masculine group. Here are some examples:
+- **Це дім. Дім — він. Цей дім.** (House ends in M.)
+- **Це стіл. Стіл — він. Цей стіл.** (Table ends in L.)
+- **Це брат. Брат — він. Хто це? Це брат. Він тут.** (Brother ends in T.)
+- **Це час. Час — він. Цей час.** (Time ends in S.)
 
-**1. Masculine (**він** — he)**
-Masculine words almost always end in a consonant. They have a hard, firm ending sound.
-- **брат** — brother — **він**
-- **дім** — house — **він**
-- **стіл** — table — **він**
-- **артефакт** — artifact — **він**
-- **день** — day — **він**
-- **суп** — soup — **він**
-- **борщ** — borscht — **він**
-- **сир** — cheese — **він**
+The second group is the Feminine gender. These nouns typically end in the vowel **-а** or the letter **-я**. You can think of these as "open" endings, where the sound flows outward without a consonant blocking it. 
+- **Це книга. Книга — вона. Ця книга. Вона тут.** (Book ends in A.)
+- **Це мама. Мама — вона. Хто це? Це мама. Вона тут.** (Mom ends in A.)
+- **Це земля. Земля — вона. Ця земля.** (Earth ends in YA.)
+- **Це мова. Мова — вона. Ця мова.** (Language ends in A.)
 
-Notice that "brother", a person, and "table", a piece of furniture, both end in consonants. They share the exact same masculine gender.
+The third group is the Neuter gender. Items in this category usually end in the vowels **-о** or **-е**. A helpful visual mnemonic is to think of the letter **-о** as a "round" ending, which fits the Neuter category perfectly.
+- **Це вікно. Вікно — воно. Це вікно. Воно там.** (Window ends in O.)
+- **Це місто. Місто — воно. Це місто.** (City ends in O.)
+- **Це море. Море — воно. Це море.** (Sea ends in E.)
+- **Це слово. Слово — воно. Це слово.** (Word ends in O.)
+- **Це серце. Серце — воно. Це серце.** (Heart ends in E.)
+- **Це сонце. Сонце — воно. Це сонце.** (Sun ends in E.)
 
-**2. Feminine (**вона** — she)**
-Feminine words usually end in the open vowels **-а** or **-я**. If you see these letters at the end of a word, it is almost certainly a "she".
-- **мама** — mother — **вона**
-- **сестра** — sister — **вона**
-- **книга** — book — **вона**
-- **зона** — zone — **вона**
-- **земля** — earth — **вона**
-- **вода** — water — **вона**
-- **кава** — coffee — **вона**
-- **риба** — fish — **вона**
+> [!tip] The Diagnostic Tool
+> To test and reinforce gender, you can pair nouns with pointing words like "this". For Masculine, use **цей**; for Feminine, use **ця**; and for Neuter, use **це** (when acting as a descriptive word). 
+> - **цей дім, цей стіл, цей брат** (this house, this table, this brother)
+> - **ця книга, ця мама, ця земля** (this book, this mom, this earth)
+> - **це вікно, це місто, це море** (this window, this city, this sea)
 
-**3. Neuter (**воно** — it)**
-Neuter words typically end in the round vowels **-о** or **-е**.
-- **вікно** — window — **воно**
-- **місто** — city — **воно**
-- **море** — sea — **воно**
-- **серце** — heart — **воно**
-- **сонце** — sun — **воно**
-- **молоко** — milk — **воно**
-- **вино** — wine — **воно**
-- **пиво** — beer — **воно**
+It is vital to master these endings because gender dictates the form of other words in the sentence. Adjectives and pronouns must change their endings to match the gender of the noun they describe. This is called syntactic agreement. If you have a Masculine noun, the describing word must take a Masculine form. If the noun is Feminine, the describing word becomes Feminine.
 
-> [!tip]
-> **Possessive Pronouns as Diagnostic Tools**
-> The most practical way to test a word's gender is to use possessive pronouns (my). In Ukrainian, the word "my" acts like a chameleon; it changes to perfectly match the gender of the noun.
-> - **мій** is used for Masculine (**мій брат** — my brother, **мій дім** — my house)
-> - **моя** is used for Feminine (**моя мама** — my mother, **моя книга** — my book)
-> - **моє** is used for Neuter (**моє місто** — my city, **моє вікно** — my window)
+Let us look at some identity and family vocabulary to see this in high-frequency contexts. You can identify **брат** as Masculine because of the consonant. **Сестра** ends in **-а**, making it Feminine. **Мама** also ends in **-а** and is Feminine. By paying attention to these final letters, you will quickly decode the language's structure.
 
-Gender also dictates the form of adjectives. Adjectives must always match the noun they describe. Наприклад — For example:
-- **Це великий стіл.** — This is a big table.
-- **Це цікава книга.** — This is an interesting book.
-- **Це чисте вікно.** — This is a clean window.
+## Практичні вправи (Exceptions and Families)
 
-## Практика: Exceptions and Families
+While the rules of ending letters work for about ninety-five percent of Ukrainian nouns, there are a few important exceptions and special families you need to be aware of. These exceptions are common, so learning them early will save you a lot of confusion later.
 
-While the baseline rule covers the vast majority of words, there are a few very important exceptions. Let us explore the main traps that beginners often face.
+The first major exception is the Natural Gender Override. Sometimes, the biological reality of a person is stronger than their grammatical ending. The most common example of this trap is **тато** (dad). If you follow the strict visual rule, you would see the **-о** ending and assume it is a Neuter noun, just like **місто** or **вікно**. However, because a dad is a male person, the biological reality overrides the grammar rule. Therefore, **тато** is strictly Masculine. 
+- **Хто це? Це тато. Тато — він. Цей тато тут. Він тут.** (Who is this? This is dad. Dad is Masculine. This dad is here.)
+- **Хто це? Це собака. Собака — вона. Ця собака тут. Вона тут.** (Who is this? This is a dog. Dog is Feminine. This dog is here.)
 
-**The Natural Gender Override Trap**
-Look at the common word for father: **тато**. Based on our established rule, the **-о** ending suggests it should be categorized as Neuter. However, biological sex always overrides the grammatical ending. Because a father is a male person, the word **тато** is strictly Masculine.
-- **мій тато** — my dad — Masculine, despite the ending.
-- **моє місто** — my city — Neuter, because it is an inanimate object ending in -о.
-- **дядько** — uncle — Masculine, natural gender overrides -о ending.
-- **дід** — grandfather — Masculine.
+> [!warning] The Natural Gender Rule
+> Always prioritize biological gender over the ending when dealing with people. If a term clearly refers to a male person, it is Masculine, even if it ends in a vowel.
 
-> [!warning]
-> **The Soft Sign Ambiguity**
-> Some words end in a soft sign (**-ь**). The soft sign is technically considered a consonant, but words ending in it can be either Masculine or Feminine! You simply have to memorize their gender.
-> Наприклад — For example:
-> - **день** — day — is Masculine (**мій день** — my day)
-> - **ніч** — night — is Feminine (**моя ніч** — my night)
+The second area of complexity involves words that end in a soft sign. The soft sign is not a sound itself; it just softens the consonant before it. Words ending in a soft sign can be either Masculine or Feminine, and unfortunately, there is no strict visual rule to tell them apart. You simply have to memorize their gender when you learn them. Let us look at a high-frequency minimal pair to illustrate this ambiguity:
+- **Це день. День — він. Цей день. Він тут. День — він.** (Day ends in a soft sign and is Masculine. You would say **цей день**.)
+- **Це ніч. Ніч — вона. Ця ніч. Вона там. Ніч — вона.** (Night ends in a consonant sound, but historically belongs to a Feminine category, so it is Feminine. You would say **ця ніч**.)
 
-**The Name Trap and Family 4**
-Another tricky word is the word for name: **ім'я**. Because it ends in **-я**, you might assume it is Feminine, just like the word **земля**. However, **ім'я** is a special historical exception. It belongs to Declension Family 4. These specific words are actually Neuter.
-- **моє ім'я** — my name — Neuter
-- **моя земля** — my earth — Feminine
+Finally, we have a special group of words often referred to as Declension Family 4. The most important example in this group for beginners is **ім'я** (name). Looking at the **-я** ending, your first instinct might be to classify it as Feminine, just like **земля**. However, **ім'я** is a Neuter word. It belongs to an ancient group of nouns that follow their own unique historical patterns. It is crucial to memorize that **ім'я** is Neuter, so you know to treat it like **місто** or **вікно** when describing it. 
+- **Це ім'я. Ім'я — воно. Це ім'я. Воно тут.** (This is a name. Name is Neuter. This name. It is here.)
 
-Let us categorize some nouns. Looking at **чоловік** — man, the consonant ending and natural gender make it Masculine. Next, **жінка** — woman — ends in **-а** and is biologically female, making it Feminine. Finally, **місто** — city — ends in **-о**, which means it is Neuter.
+## Самостійна робота (Beating the 'It' Trap)
 
-Even unpredictable words have rules. For instance, **собака** — dog — ends in **-а**. While you might sometimes hear it used colloquially as Masculine, grammatically it is treated as Feminine. Therefore, you say **моя собака** — my dog.
+One of the biggest hurdles for English speakers is what we call the "It" Trap. In English, we use "he" for a man, "she" for a woman, and "it" for absolutely every object, idea, or inanimate thing. Because of this, English speakers instinctively want to use the Neuter pronoun **воно** (it) for every object in Ukrainian. You must break this habit immediately.
 
-Наприклад — For example, let us practice phrases:
-- **Це мій брат.** — This is my brother.
-- **Це моя мама.** — This is my mother.
-- **Це моє місто.** — This is my city.
-- **Це моя сестра.** — This is my sister. **Сестра — вона.** — Sister is she.
-- **Це мій дім.** — This is my house. **Дім — він.** — House is he.
-- **Це кіт.** — This is a cat. **Кіт — він.** — Cat is he.
-- **Це собака.** — This is a dog. **Собака — вона.** — Dog is she.
-- **Це сонце.** — This is the sun. **Сонце — воно.** — Sun is it.
+In Ukrainian, objects are not automatically Neuter. An object takes the pronoun that matches its grammatical gender. 
+- **Це стіл. Стіл — він. Він там. Цей стіл тут.** (This is a table. Table is Masculine. He is there. This table is here.)
+- **Це книга. Книга — вона. Вона тут. Ця книга там.** (This is a book. Book is Feminine. She is here. This book is there.)
+- **Це вікно. Вікно — воно. Воно там. Це вікно тут.** (This is a window. Window is Neuter. It is there. This window is here.)
 
-## Застосування: Beating the 'It' Trap
+To see how universal this rule is, let us map gender to some modern contexts. Imagine you are exploring a post-apocalyptic world and come across various items and locations. The gender rules apply to these words just as they do to ancient vocabulary.
+- **Що це? Це артефакт. Артефакт — він. Цей артефакт. Він тут.** (Artifact ends in a consonant. It is Masculine. It is **він**.)
+- **Що це? Це зона. Зона — вона. Ця зона. Вона там.** (Zone ends in **-а**. It is Feminine. It is **вона**.)
+- **Що це? Це укриття. Укриття — воно. Це укриття. Воно тут.** (Shelter ends in **-я** but belongs to a Neuter pattern. It is Neuter. It is **воно**.)
 
-The absolute most common mistake English speakers make is falling into the "It" trap. Because we instinctively use "it" for objects in English, your brain will naturally want to use the Neuter pronoun **воно** for everything that is not a living person.
+> [!note] Pronoun Matching
+> Whenever you learn a new noun, immediately practice pairing it with its correct pronoun (**він**, **вона**, or **воно**) in your head. This builds the reflex to avoid the "It" Trap.
 
-You must retrain your brain to see the gender tags. A table is definitely not "it". A book is definitely not "it". 
-- **Хто це? Це брат. Брат — він.** — Who is this? This is a brother. Brother is he.
-- **Хто це? Це сестра. Сестра — вона.** — Who is this? This is a sister. Sister is she.
-- **Що це? Це стіл. Стіл — він.** — What is this? This is a table. Table is he.
-- **Що це? Це книга. Книга — вона.** — What is this? This is a book. Book is she.
-- **Що це? Це вікно. Вікно — воно.** — What is this? This is a window. Window is it.
+Try to mentally categorize the basic objects around you right now. Look at a table, a book, or a window, and consciously assign them their Ukrainian gender labels. This continuous, verb-free drill will solidify the concept in your mind better than any chart. 
 
-Here is a list of simple sentences. Read them out loud to practice:
-- **Це мій брат.** — This is my brother. **Він тут.** — He is here.
-- **Це моя мама.** — This is my mother. **Вона там.** — She is there.
-- **Це моє місто.** — This is my city. **Воно велике.** — It is big.
-- **Це великий дім.** — This is a big house. **Він новий.** — It is new.
-- **Це нова книга.** — This is a new book. **Вона нова.** — It is new.
-- **Це чисте вікно.** — This is a clean window. **Воно велике.** — It is big.
-- **Це мій добрий тато.** — This is my good dad. **Він тут.** — He is here.
-- **Це моя люба мама.** — This is my dear mom. **Вона там.** — She is there.
-- **Це моє гарне місто.** — This is my beautiful city. **Воно велике.** — It is big.
-- **Це мій старий дім.** — This is my old house. **Він тут.** — He is here.
-- **Це моя нова зона.** — This is my new zone. **Вона там.** — She is there.
+- **Стіл — він. Дім — він. Брат — він. День — він.**
+- **Книга — вона. Земля — вона. Сестра — вона. Ніч — вона.**
+- **Вікно — воно. Місто — воно. Море — воно. Слово — воно.**
+- **Тато — він. Мама — вона. Сонце — воно. Серце — воно.**
+- **Хто він? Хто вона? Що воно? Він, вона, воно.**
 
-Let us classify thematic words from the S.T.A.L.K.E.R. universe.
-- **артефакт** — artifact — clearly ends in a hard consonant. Therefore, it is definitively Masculine.
-- **зона** — zone — ends in the open vowel **-а**. Therefore, it is definitively Feminine.
-- **укриття** — shelter — is a Neuter noun that happens to end in **-я** due to a specific stem change. It remains Neuter: **моє укриття** — my shelter.
+## Культурний код та підсумок (Summary and Self-Check)
 
-When building descriptions, always verify and match the grammatical gender. If you want to say "my new house", you must use Masculine forms: **мій новий дім**. If you want to say "my new zone", you must use Feminine forms: **моя нова зона**.
+You have now uncovered the foundation of the Ukrainian noun system. Remember the ninety-five percent predictability rule: consonant endings mean Masculine, **-а** or **-я** endings mean Feminine, and **-о** or **-е** endings mean Neuter. Always keep an eye out for the core exceptions: the natural gender override for words like **тато**, the ambiguity of soft sign words like **день**, and the special Neuter status of **ім'я**. 
 
-## Підсумок: Gender Mastery
+Mastering these patterns allows you to see the language not as a chaotic list of words, but as an organized, logical structure.
 
-Understanding noun gender is an absolutely crucial step in your Ukrainian language journey. The system is highly predictable and logical if you consistently focus on the final letter of the word.
+Let us test your understanding with a quick self-check.
+1. What gender is a noun ending in a consonant? (It is Masculine).
+2. Why is **тато** masculine? (Because biological male gender overrides the **-о** ending).
+3. Which pointing word matches **вікно**? (The word is **це**).
+4. What is the gender of **ім'я**? (It is Neuter, despite ending in **-я**).
 
-To summarize the core identification rules:
-- Masculine words usually finish with a firm consonant.
-- Feminine nouns generally end with the open vowels **-а** or **-я**.
-- Neuter words usually conclude with the round vowels **-о** or **-е**.
+Keep practicing these categories as you build your vocabulary!
 
-Always remember the natural gender override, where words describing male people like **тато** — father — remain Masculine despite their potentially confusing ending. Keep a close eye out for the ambiguous soft sign (**-ь**), which strictly requires memorization, and special historical Neuter exceptions like the word **ім'я** — name.
+Let us review the words once more:
+- **Дім — він. Стіл — він. Брат — він. День — він. Тато — він. Артефакт — він. Час — він.**
+- **Книга — вона. Мама — вона. Земля — вона. Мова — вона. Сестра — вона. Ніч — вона. Зона — вона. Собака — вона.**
+- **Вікно — воно. Місто — воно. Море — воно. Слово — воно. Ім'я — воно. Укриття — воно. Серце — воно. Сонце — воно.**
 
-**Self-Check Questions:**
-1. Який? (Which?) — What gender is a noun ending in a firm consonant? / Masculine (**він**).
-2. Який? (Which?) — Why is **тато** (father) masculine despite ending in the round vowel -о? / Because biological male gender always overrides the grammatical ending.
-3. Який? (Which?) — Which possessive pronoun correctly matches the noun **вікно** (window)? / **моє** (Neuter).
-4. Який? (Which?) — What is the grammatical gender of the word **ім'я** (name)? / Neuter (**воно**).
+---
+
+# Підсумок — Summary
+
+In this module, you learned how to classify Ukrainian nouns into three genders based on their endings.
+
+- Masculine words typically end in consonants: **дім, стіл, брат**.
+- Feminine words typically end in -а or -я: **книга, земля, мама**.
+- Neuter words typically end in -о or -е: **вікно, місто, море**.
+- Exceptions include natural gender (**тато** is Masculine) and special words (**ім'я** is Neuter).
+
+**Self-Check:**
+1. What gender is **стіл**? — It is Masculine (**він**).
+2. What gender is **книга**? — It is Feminine (**вона**).
+3. Why is **тато** Masculine? — Biological gender overrides the vowel ending.
+
+---

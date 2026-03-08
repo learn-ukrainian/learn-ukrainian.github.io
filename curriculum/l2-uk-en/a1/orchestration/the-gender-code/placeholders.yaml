@@ -119,16 +119,87 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
   \ for style and difficulty level** — notice how they use simple syllable combinations,\
   \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 6:\n\
-  ```\nЮю\nАа\nОо\nУу\nИи\nМм\nМм\nІі\nНн\nНн\nВв\nВв\nЛл\nСс\nКк\nПп\nРр\nТт\nЕе\n\
-  Дд\nЗз\nь\nБб\nАа\n```\n\n**Grade 1, zaharijchuk** — Сторінка 92:\n```\n90\nЕ е\n\
-  Бачу Е, е. Чую [е].\nО-ле-сик  і  та-то  по-ві-си-ли на  гіл-\nку  кле-на \n. \n\
-  \ У \n на-си-па-ли \n, \n і \n .\nПри-ле-ті-ли \n, \n, \n.\nле- \n         ле-\n\
-  \      \n    ве- \n     ек-\nле- \n         ле-\n      \n    ве- \n     ек-\n* е\
-  \ р е * а\nк л е н\n [ –•  |  –• |  – •]\nм\nн\nс\nл\nр\nЕ\nем\nен\nес\nел\nер\n\
-  м\nн\nс\nл\nр\nме\nне\nсе\nле\nре\nЕ\nе * е л * в\nс\n*\nе\n [ –  –•  – ]\n```"
+  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 108:\n\
+  ```\n106\nб і л к а\nк у л ь б\nб у з о к\nБачу Б, б (бе). Чую  [б].\nб\nа\nа\n\
+  Бі-лі ко-ти си-\nді-ли в бі-ло-му \nбу-дин-ку. У-се-ре-\nди-ні все бу-ло бі-\nле.\
+  \ Бі-лі сто-ли з \nбі-ли-ми ска-тер-\nти-на-ми. \nа\nо\nу\nи\nі\nБ\nба\nбо\nбу\n\
+  би\nбі\nа\nо\nу\nи\nі\nаб\nоб\nуб\nиб\nіб\nБ\nба\nбу\nбе\nба\nлет\nлкон\nбу\nква\n\
+  квар\nбі\nлизна\nла\n [  = •   –  | –•]\n [ –• | –  • – ]\nБ б\n```\n\n**Grade 1,\
+  \ bolshakova** — Сторінка 3:\n```\n3\nДорогий друже!\nТи хочеш учитися читати?\n\
+  Ти прагнеш спілкуватися?\nТи любиш фантазувати?\nТоді ця книга саме для тебе! \n\
+  Вона допоможе тобі навчитися читати, \nвисловлювати думки й почуття, спілкуватися.\n\
+  Умовні позначення:\n \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю\
+  \ малюнок\n \n — спілкуюся \n \n— мислю критично\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 96:\n```\n94\nБачу Д, д (де). Чую [д], [д'].\nд р і * д\nд * т е л\n\
+  дро-ва\nдве-рі\nдо-ріж-ка схо-ди\nве-ран-да\nл е * і д *\n [ –    =  • –  – ]\n\
+  \ [ = • |  –•  – ]\n [ – • |  =•  =  ]\nа\nо\nу\nи\nі\nД\nда\nдо\nду\nди\nді\nа\n\
+  о\nу\nи\nі\nад\nод\nуд\nид\nід\nД\nбу-ди-нок\nпід-ві-кон-ня\nдах\nди-мар\nД д\n\
+  ```\n\n**Grade 1, zaharijchuk** — Сторінка 93:\n```\n91\nЗнайди «загублені» склади\
+  \ в словах — назвах \nнамальованих предметів. \n\t Розглянь клавіатуру. Назви букви,\
+  \ які ти зна-\nєш. Які звуки вони позначають?\nЕ-дель-вейс — чу-до-ва  квіт-ка,\
+  \ \nЩо  цві-те  в  го-рах  у-літ-ку.\nТи  на-ді-єш-ся  знай-ти?\nТак  ще  тре-ба\
+  \  під-ро-сти!\nА  без   ма-ми  і  без та-та\nТо  не-ма  чо-го  шу-ка-ти!\n    \
+  \                                                     Надія Дичка\n__ - __ -ві-зор\t\
+  \n-та,  те-,  -ло,  -ле- \n__- __  -лик  \t\n-ма,  ме-,  -то,  -те-\n__ - __ -ка\
+  \  \t\n-ло,\n```\n\n**Grade 1, zaharijchuk** — Сторінка 12:\n```\n10\nЯ допомагаю\
+  \ своїй родині  \nХоч на зріст я ще маленька, \nВ мене й кіска ще тоненька,\nТа\
+  \ робити дещо вмію — \nОсь тарілочку помию,\nОсь кімнату замітаю,\nВранці квіти\
+  \ поливаю,\nВсього я сама навчусь,\nБо роботи не боюсь.\n                      \
+  \    Олена Журлива\n\t Повтори вірш за вчителем / учителькою.\n\t Розкажи, що роблять\
+  \ люди.\n\t Вимов наголошений склад.\n```\n\n**Grade 1, zaharijchuk** — Сторінка\
+  \ 8:\n```\n6\nЯ  і  моя  родина\nПоділюся з вами я:\nВ мене дружна є сім’я.\nЛюба\
+  \ мама і татусь,\nБабця Віра і дідусь, \nМурка, Барсик, Оля, я  —\nОт і вся моя\
+  \ сім’я.\n                    Марія Братко\n\t Намалюй свою родину на аркуші з альбому.\n\
+  \t Повтори вірш за вчителем / учителькою.\n```"
+TEXTBOOK_ACTIVITY_EXAMPLES: "### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\
+  \nThese are real exercises from Ukrainian school textbooks (grade 1/2). Study their\
+  \ **pedagogical patterns** — how they build progressively, use familiar vocabulary,\
+  \ and test specific skills. Since your students are English-speaking adults, **translate\
+  \ exercise instructions to English** while keeping Ukrainian content words. Adapt\
+  \ the pedagogical approach (progressive difficulty, real-world context) but not\
+  \ the language of instruction.\n\n**Grade 1, zaharijchuk** — Сторінка 73:\n```\n\
+  71\n\t\nВідшукай предмети, у назвах яких є буква ї, \nзвуки [йа], звук [дз].\nВийди,\
+  \ вийди, ... ,\nНа дідове ... ,\nНа бабине ... ,\nНа наше ... ,\nНа весняні ...\
+  \ ,\nНа маленькі ... .\nполечко\nзіллячко\n квіточки\nсонечко\nподвір’ячко\n діточки\n\
+  \t\nЗнайди «загублений» склад у словах — на-\nзвах намальованих предметів. \n\t\n\
+  Прочитай слова в рамках. Розмісти їх у по-\nтрібних місцях у закличці. Прочитай\
+  \ її. \n__ -мін-го\t\nфук-,\t\nфла-,\t\nфут-\n__ -ре-ло\t\nдзе-,\t\nджи-,\t\nдже-\n\
+  лі- __ -на\t\n-ши-,\t\n-щи-,\t\n-чи-\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 11:\n```\n9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t\
+  \ Що «зайве»? Поділи слова на склади. Визнач \nнаголошений склад.\n        \n  \
+  \      \n        \n\t Який у тебе сьогодні настрій? Вибери.\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 30:\n```\n28\nВшниі, шаркептик, шмкруаа, \nшшпииан, аачкш.\n\t\n«Збери»\
+  \ слова — назви намальованих пред-\nметів. Поділи на склади слово, у якому дві\
+  \ \nбукви ш (усно).\nБачу Ш, ш (ша). Чую [ш].\nш и н ш и\nш и ш к\nк о м и ш\nи\n\
+  а\nл\nа\nо\nу\nи\nі\nШ\nша\nшо\nшу\nши\nші\nа\nо\nу\nи\nі\nаш\nош\nуш\nиш\nіш\n\
+  Ш\nша-                  \nшо-                       шпа-                   \nши\n\
+  шка\nна\nшу\nм\nміти\nше\nлест\nрех\n [  –  •–  |  –•|  –•] \n [  –  •|  –  •– ]\
+  \ \nШ ш\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 24:\n```\n\
+  22\n\t Утвори слова — нáзви предметів.\nХ\n\t\nЩо тобі відомо про персонажів казки\
+  \ «Ко-\nтигорошко»?  Роз­кажи.\n\t\nПрочитай склади. Знайди слова із цими \nскладами.\n\
+  \t\nРозділи речення на слова, прочитай при­\nслів’я. У при­слі­в’ї є 4, 5 чи 6 слів?\
+  \ Вибери \nправильну відповідь.\n\t\nЗимабезснігу — літобезхліба.\n\t\nЯкі букви\
+  \ нагадують ці предмети?\nхвилина\nмухомор\nгоріхи\nгорох\nхви-\n-хо-\n-рох\n-хи\n\
+  Pidruchnyk.com.ua\n```"
+TEXTBOOK_GRADE: 1-2
+TOPIC_KEYWORDS: ''
 CHECKPOINT_GUIDANCE: ''
-EXACT_SECTION_TITLES: ''
+EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
+
+
+  Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently,
+  or add creative subtitles. The audit will reject any section with a different title.
+
+
+  - `## Вступ (Introduction: The Three Genders)` (~200 words)
+
+  - `## Презентація правил (Decoding the Endings)` (~350 words)
+
+  - `## Практичні вправи (Exceptions and Families)` (~300 words)
+
+  - `## Самостійна робота (Beating the ''It'' Trap)` (~200 words)
+
+  - `## Культурний код та підсумок (Summary and Self-Check)` (~150 words)'
 INTRO_HOOK: Чому це важливо? — Why does this matter?
 SUMMARY_HEADING: Підсумок — Summary
 SELF_CHECK_HEADING: 'Перевірте себе — Check yourself:'

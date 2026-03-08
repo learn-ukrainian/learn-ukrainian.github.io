@@ -4,33 +4,34 @@
 
 ## State Standard Reference
 §4.1.1: "Ukrainian alphabet" and §4.1.4: "Vowel and consonant sounds"
-Alignment: Introduces 9 new consonant letters (Б, Д, П, З, Г, Х, Ж, Ш, Ч) and develops phonetic awareness of voiced and voiceless consonant pairs.
+Alignment: Introduces 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч) and the foundational phonetic concept of voiced vs. voiceless pairs to build reading fluency and pronunciation accuracy.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| хліб | Cultural staple, high frequency | білий хліб, свіжий хліб |
-| школа | Top 200 word, essential location | |
-| будинок | High frequency building/home concept | великий будинок |
-| парк | Internationalism, easy reading | |
+| хліб | Cultural staple, demonstrates Х | білий хліб, свіжий хліб |
+| школа | Top 200 high-frequency word, demonstrates Ш | — |
+| будинок | High-frequency noun, demonstrates Б and Д | великий будинок |
+| шапка | Demonstrates Ш | зимова шапка |
+| парк | Internationalism, builds confidence, demonstrates П | — |
 
 ## Cultural Hooks
-1. "Хліб-сіль" (Bread and salt) — bread is a central cultural symbol of hospitality in Ukraine, making "хліб" a perfect anchor word for the letter 'Х'.
+1. "Хліб-сіль" (bread and salt) is a traditional Ukrainian symbol of hospitality, making "хліб" a culturally significant first word to learn.
+2. The letter Ж physically resembles a beetle (жук), which is also its keyword and a very helpful visual mnemonic device for learners.
 
 ## Common Learner Errors
-1. Visual confusion (П vs Р) → Learners correctly read 'П' as an English 'P', but then mistakenly read the Cyrillic 'Р' (/r/) as a 'P' as well. Must explicitly contrast the platform 'П' with the rounded 'Р'.
-2. Aspiration on 'П' → English speakers often add a puff of air when pronouncing 'P'. Ukrainian 'П' is unaspirated.
-3. Pronouncing 'Г' as hard English 'G' → The Ukrainian 'Г' is a soft glottal fricative (/ɦ/). The hard 'g' sound is represented by 'Ґ', which will be introduced in Code IV.
+1. Pronouncing П as /r/ → П is /p/ — Learners confuse it with the Cyrillic Р (/r/) from Code II, requiring explicit visual contrast and minimal pair practice.
+2. Pronouncing Г as a hard English "g" → Г is a soft glottal /ɦ/ — English speakers naturally default to a hard 'g', missing the unique throaty characteristic of the Ukrainian letter.
+3. Over-aspirating П → Ukrainian П is unaspirated — English speakers tend to puff air on 'p', whereas Ukrainian consonants are typically crisper.
 
 ## Cross-References
 - Builds on: a1-02 (The Cyrillic Code II)
 - Prepares for: a1-04 (The Cyrillic Code IV)
 
 ## Notes for Content Writing
-- DECODABILITY constraint: Still no verbs or verb conjugations. No imperative sentences. Use English for all instructions.
-- Keep all Ukrainian reading examples restricted exclusively to the 23 known letters.
-- The "Voiced/Voiceless" physical throat vibration test is crucial for this module. Frame it as an interactive exercise.
-- Use explicit visual anchors (emoji or vivid descriptions) to help cement unfamiliar shapes like Ж (bug), Ш (comb/hat), and Ч (upside down h/chair).
+- **Decodability constraint:** Only 23 letters are known. Avoid words using Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ, ДЖ, ДЗ unless an English translation is explicitly provided.
+- **Grammar ban:** Strictly no verbs and no imperative forms. Use English for all instructional text. Only bare nouns and noun phrases are allowed.
+- Emphasize the tactile "hand on the throat" trick for teaching voiced and voiceless pairs, as it is highly effective for A1 learners.
 
 ===RESEARCH_END===
 
@@ -56,7 +57,7 @@ content_outline:
     points:
       - "Introduce З (/z/, зебра, зуб) as the voiced partner to the already known С."
       - "Introduce Г (/ɦ/, гора, газета) as a soft, throaty glottal fricative, explicitly NOT a hard English 'g'. Preview that the hard 'g' is coming in Code IV (Ґ)."
-      - "Introduce Х (/x/, хліб) with articulatory guidance (like Scottish 'loch' or German 'ach'). Mention the 'хліб-сіль' cultural tradition."
+      - "Introduce Х (/x/, хліб) with articulatory guidance (like Scottish 'loch' or German 'ach'). Mention the 'хліб-сіль' tradition."
   - title: "Дзвінкі та глухі — Voiced and Voiceless Pairs"
     slug: voiced-voiceless-pairs
     words: 250

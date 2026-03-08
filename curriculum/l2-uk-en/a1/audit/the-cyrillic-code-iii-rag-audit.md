@@ -1,9 +1,9 @@
 # RAG Verification: the-cyrillic-code-iii
 
-**Date:** 2026-03-06 21:21 UTC | **Words checked:** 76 | **VESUM coverage:** 76/76 (100.0%)
+**Date:** 2026-03-07 01:47 UTC | **Words checked:** 80 | **VESUM coverage:** 80/80 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 76
+- ✅ Verified (VESUM): 80
 - ⚠️ Partial (RAG only): 0
 - ❌ Not found: 0
 
@@ -11,5 +11,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 72 | 72 | 0 |
-| Activities (.yaml) | 4 | 4 | 0 |
+| Prose (.md) | 78 | 78 | 0 |
+| Activities (.yaml) | 2 | 2 | 0 |

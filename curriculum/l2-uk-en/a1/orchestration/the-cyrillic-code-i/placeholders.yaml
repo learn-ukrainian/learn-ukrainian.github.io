@@ -13,6 +13,7 @@ REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a
 QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
 SCHEMA_PATH: schemas/activities-a1.schema.json
 WORD_TARGET: '1200'
+WORD_CEILING: '1800'
 SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
@@ -26,7 +27,10 @@ LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10
   \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
   \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
   \ їм, -ові/-еві endings)\n  Exception: нам is taught as decodable vocabulary in\
-  \ M1 (reading drill word, not grammar)\n- Instrumental case FORBIDDEN (no з другом,\
+  \ M1 (reading drill word, not grammar)\n  Exception (M19 likes-and-preferences):\
+  \ Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n    ONLY in the fixed construction\
+  \ «Мені подобається + noun/infinitive». Teach as a memorized\n    chunk — do NOT\
+  \ explain dative case rules or paradigms.\n- Instrumental case FORBIDDEN (no з другом,\
   \ з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause,\
   \ коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect\
   \ verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from\
@@ -140,21 +144,89 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   These are real exercises from Ukrainian 1st-grade primers. Use them as **inspiration\
   \ for style and difficulty level** — notice how they use simple syllable combinations,\
   \ short words, and build progressively. Do NOT copy them verbatim, but match their\
-  \ pedagogical approach and simplicity.\n\n**Grade 1, bolshakova** — Сторінка 31:\n\
-  ```\n31\nк а з|к и\nЩо відбувається? У назвах яких предметів є звук [и]?\nПрочитай\
-  \ або послухай слова. Визнач місце букви и \nв цих словах. Яких предметів немає\
-  \ на малюнку? \nЯк ці чарівні предмети використовуються в казках? Які \nще чарівні\
-  \ предмети ти знаєш?\n \nТекст. Заголовок. Театралізуємо\nЗа-ду-ма-ли-ся чарівні\
-  \ предмети: який із них \nнайбільш корисний? «Я, — сказав чарівний ки-\nлим, — можу\
-  \ швидко долетіти куди завгодно». \n«Я, — сказала чарівна торбинка, — усіх нагодую\
-  \ \nв будь-який час». «Я, — сказала\n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n\
-  ```\n79\nЗміСТ\nАбетка  . . . . . . . . . . . . . . . . . . . . . . . . 4\nАбетка\
-  \  . . . . . . . . . . . . . . . . . . . . . . . . 5\nC c . . . . . . . . . . .\
-  \ . . . . . . . . . . . . . . . . 6\nC c . . . . . . . . . . . . . . . . . . . .\
-  \ . . . . . . . 7\nО о . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
-  О о . . . . . . . . . . . . . . . . . . . . . . . . . . . 9\nА а  . . . . . . .\
-  \ . . . . . . . . . . . . . . . . . . . 10\nА а  . . . . . . . . . . . . . . . .\
-  \ . . . . . . . . . . 11\nБ б . . . . . .\n```"
+  \ pedagogical approach and simplicity.\n\n**Grade 1, zaharijchuk** — Сторінка 96:\n\
+  ```\n94\nБачу Д, д (де). Чую [д], [д'].\nд р і * д\nд * т е л\nдро-ва\nдве-рі\n\
+  до-ріж-ка схо-ди\nве-ран-да\nл е * і д *\n [ –    =  • –  – ]\n [ = • |  –•  – ]\n\
+  \ [ – • |  =•  =  ]\nа\nо\nу\nи\nі\nД\nда\nдо\nду\nди\nді\nа\nо\nу\nи\nі\nад\nод\n\
+  уд\nид\nід\nД\nбу-ди-нок\nпід-ві-кон-ня\nдах\nди-мар\nД д\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 113:\n```\n111\n\t Запиши слова, добираючи до кожного відпо-\nвідну\
+  \ схему.\n   півень          ялинка               джміль\n[ – =  = ]           \
+  \ [ =  |–  = ]            [ =  |–  – |–  ]\n\t Розглянь малюнки.\n\t Запиши слова\
+  \ — назви намальованих пред-\nметів за групами: овочі та шкільне приладдя.\n\t\
+  \ Розглянь малюнки.\n\t Запиши слова — назви намальованих пред-\nметів, які відповідають\
+  \ на питання хто?\n\t Прочитай текст.\nВЕСНА\nНастала весна. Прилетіли птахи. На\
+  \ \nберезі шпаки.\n\t Випиши речення, яке відповідає схемі.\n    \n```\n\n**Grade\
+  \ 1, bolshakova** — Сторінка 24:\n```\n24\nЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ\nТи вимовляєш\
+  \ різні звуки: голосні і приголосні. \nГолосні звуки утворюються за допомогою голосу.\n\
+  Голосні почуєш в пісні,\nІ у темному у лісі, \nІ коли дивуєшся,\nІ коли милуєшся.\n\
+  Легко вимовляються, \nВесело співаються! \nПрочитай. Назви букви, які позначають\
+  \ голосні звуки.\nал – ам – ан \nла – ма – на \nул – ум – ун\nол – ом – он \nло\
+  \ – мо – но \nлу – му – ну\n \nПриголосні звуки утворюються \nза допомогою голосу\
+  \ і шуму.\nПриголосні деренчать\nІ тихенько шелестять, \nГолосно свистя\n```\n\n\
+  **Grade 1, zaharijchuk** — Сторінка 78:\n```\n76\nЗа мотивами казки Е. Мозера\n\
+  Повторюємо разом\nПриголосні звуки: \nтверді та глухі\n\t Прочитай імена головних\
+  \ героїнь, чітко ви-\nмовляючи перші звуки.\nЗося, Сюзі.\n\t Чи вони справжні подруги?\
+  \ Як одна з них до-\nпомогла іншій? Знайди та прочитай про це. \n\t Який із цих\
+  \ звуків вимовляємо дзвінко, з го-\nлосом? А який — тільки із шумом? \n\t Перепиши\
+  \ виділене блакитним кольором ре-\nчення. Підкресли букви, які позначають при-\n\
+  голосні звуки. Вимов їх. \n— Так, але я \nсама не зможу.\n— Дякую. Ти \nсправжня\
+  \ моя \n```\n\n**Grade 1, bolshakova** — Сторінка 79:\n```\n. . . . . . . . . .\
+  \ . . . . . . . . 44\nТ т . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+  \ 45\nТверді і пом’якшені  \nприголосні звуки . . . . . . . . . . . . . . 45\nГ\
+  \ г . . . . . . . . . . . . . . . . . . . . . . . . . . . 46\nГ г . . . . . . .\
+  \ . . . . . . . . . . . . . . . . . . . . 47\nТверді і пом’якшені  \nприголосні\
+  \ звуки . . . . . . . . . . . . . . 47\nҐ ґ . . . . . . . . . . . . . . . . . .\
+  \ . . . . . . . . . 48\nҐ ґ . . . . . . . . . . . . . . . . . . . . . . . . . .\
+  \ . 49\nЕ е  . . . . . .\n```"
+TEXTBOOK_ACTIVITY_EXAMPLES: "### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\
+  \nThese are real exercises from Ukrainian school textbooks (grade 1/2). Study their\
+  \ **pedagogical patterns** — how they build progressively, use familiar vocabulary,\
+  \ and test specific skills. Since your students are English-speaking adults, **translate\
+  \ exercise instructions to English** while keeping Ukrainian content words. Adapt\
+  \ the pedagogical approach (progressive difficulty, real-world context) but not\
+  \ the language of instruction.\n\n**Grade 1, zaharijchuk** — Сторінка 73:\n```\n\
+  71\n\t\nВідшукай предмети, у назвах яких є буква ї, \nзвуки [йа], звук [дз].\nВийди,\
+  \ вийди, ... ,\nНа дідове ... ,\nНа бабине ... ,\nНа наше ... ,\nНа весняні ...\
+  \ ,\nНа маленькі ... .\nполечко\nзіллячко\n квіточки\nсонечко\nподвір’ячко\n діточки\n\
+  \t\nЗнайди «загублений» склад у словах — на-\nзвах намальованих предметів. \n\t\n\
+  Прочитай слова в рамках. Розмісти їх у по-\nтрібних місцях у закличці. Прочитай\
+  \ її. \n__ -мін-го\t\nфук-,\t\nфла-,\t\nфут-\n__ -ре-ло\t\nдзе-,\t\nджи-,\t\nдже-\n\
+  лі- __ -на\t\n-ши-,\t\n-щи-,\t\n-чи-\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 11:\n```\n9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t\
+  \ Що «зайве»? Поділи слова на склади. Визнач \nнаголошений склад.\n        \n  \
+  \      \n        \n\t Який у тебе сьогодні настрій? Вибери.\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 30:\n```\n28\nВшниі, шаркептик, шмкруаа, \nшшпииан, аачкш.\n\t\n«Збери»\
+  \ слова — назви намальованих пред-\nметів. Поділи на склади слово, у якому дві\
+  \ \nбукви ш (усно).\nБачу Ш, ш (ша). Чую [ш].\nш и н ш и\nш и ш к\nк о м и ш\nи\n\
+  а\nл\nа\nо\nу\nи\nі\nШ\nша\nшо\nшу\nши\nші\nа\nо\nу\nи\nі\nаш\nош\nуш\nиш\nіш\n\
+  Ш\nша-                  \nшо-                       шпа-                   \nши\n\
+  шка\nна\nшу\nм\nміти\nше\nлест\nрех\n [  –  •–  |  –•|  –•] \n [  –  •|  –  •– ]\
+  \ \nШ ш\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 24:\n```\n\
+  22\n\t Утвори слова — нáзви предметів.\nХ\n\t\nЩо тобі відомо про персонажів казки\
+  \ «Ко-\nтигорошко»?  Роз­кажи.\n\t\nПрочитай склади. Знайди слова із цими \nскладами.\n\
+  \t\nРозділи речення на слова, прочитай при­\nслів’я. У при­слі­в’ї є 4, 5 чи 6 слів?\
+  \ Вибери \nправильну відповідь.\n\t\nЗимабезснігу — літобезхліба.\n\t\nЯкі букви\
+  \ нагадують ці предмети?\nхвилина\nмухомор\nгоріхи\nгорох\nхви-\n-хо-\n-рох\n-хи\n\
+  Pidruchnyk.com.ua\n```"
+TEXTBOOK_GRADE: 1-2
+TOPIC_KEYWORDS: ''
+CHECKPOINT_GUIDANCE: ''
+EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
+
+
+  Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently,
+  or add creative subtitles. The audit will reject any section with a different title.
+
+
+  - `## Вступ — Introduction` (~200 words)
+
+  - `## Голосні — Vowels` (~300 words)
+
+  - `## Приголосні — Consonants` (~300 words)
+
+  - `## Склади і слова — Syllables and Words` (~300 words)
+
+  - `## Підсумок — Summary` (~100 words)'
 INTRO_HOOK: Why does this matter?
 SUMMARY_HEADING: Summary
 SELF_CHECK_HEADING: 'Check yourself:'
@@ -746,8 +818,39 @@ VOCAB_HINTS: '### Vocabulary from Plan (MANDATORY — include ALL required items
 
 
   Do NOT add vocabulary items beyond this list unless they are decodable from the
-  module''s letter set and appear in the lesson content.'
-VIDEO_DISCOVERY: (No video discoveries available)
+  module''s letter set and appear in the lesson content.
+
+
+  **VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints MUST appear
+  at least once in the module content. Orphaned vocabulary (listed but never used
+  in content) is a validation failure.'
+VIDEO_DISCOVERY: "### Podcast Episodes\n*Each episode has audio + transcript + vocabulary\
+  \ list — recommend to students as supplementary listening.*\n\n- **ULP S5 Ep200:\
+  \ Ukrainian Lessons Podcast Season 5**\n  URL: https://www.ukrainianlessons.com/episode200/\n\
+  \  Relevance: 0.2\n  Topics: grammar, verbs, future tense, listening\n\n### Blog\
+  \ Articles & Guides\n- **Ukrainian Alphabet: Full Guide with Examples and Pronunciation**\
+  \ (ukrainianlessons.com)\n  URL: https://www.ukrainianlessons.com/ukrainian-alphabet/\n\
+  \  Relevance: 0.9\n\n- **Ukrainian Cyrillic Alphabet — Letters and Sounds** (ukrainianlessons.com)\n\
+  \  URL: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/\n  Relevance:\
+  \ 0.6\n  Topics: alphabet, cyrillic, letters, sounds\n\n- **Talk Ukrainian: Ukrainian\
+  \ alphabet with pronunciation** (talkukrainian)\n  URL: https://talkukrainian.com/ukrainian-alphabet/\n\
+  \  Relevance: 0.5\n  Topics: alphabet, letters, pronunciation, cyrillic\n\n\n###\
+  \ Textbook References\n- **Grade 2, Сторінка 43**\n  43\nЧи відповідають підписи\
+  \ малюнкам? Чому? Як потрібно було \nзаписати слова? Як ми позначаємо м’які приголосні\
+  \ звуки \nна письмі?\n          \n           \n            \nлук\nрис\nлис\nНа письмі\
+  \ м’які приголо...\n\n- **Grade 1, Сторінка 79**\n  . . . . . . . . . . . . . .\
+  \ . . . . . . . . . 60\nМ’який приголосний звук [й]  . . . 61\nСлова — назви ознак\
+  \ . . . . . . . . . . 61\nЧ ч . . . . . . . . . . . . . . . . . . . . . . . . .\
+  \ . . 62\nЧ ч . . ....\n\n- **Grade 2, Сторінка 6**\n  6\n11.\t\n1.\t Чи пам’ятаєш\
+  \ ти алфавіт? Назви́ всі букви укра-\nїнської мови в алфавітному порядку. Проскануй\
+  \ \nQR-код та прослухай пісню про алфавіт.\nУкраїнський алфавіт\nЗразок. Каштан.\n\
+  2.\t Дослідиѳ алфаві...\n\n- **Grade 5, Сторінка 90**\n  90\n228   Розгляньте таблицю.\
+  \ Поставте два-три запитання за змістом \nтаблиці. Доберіть по два власні приклади\
+  \ для ілюстрування \nправил таблиці.\nПишемо І, У:\nНа початку слова або речення.\
+  \ \nПеред буквою ...\n\n- **Grade 2, Сторінка 3**\n  ЗВУКИ І БУКВИ\nк\nі\n<\nЗВУКИ\n\
+  СКЛАД^\nУ розділі ти будеш вивчати:\nБУКВИ\nНАГОЛОС\nДізнаєшся про:\nк\n1\nг\nл\n\
+  І\n1\nнаголошені\nГОЛОСНІ ЗВУКИ\n____________________\nненаголошені\nдзвінкі, глухі\n\
+  г\nтверді, м'які\n^ПРИГОЛО...\n"
 PRONUNCIATION_VIDEOS: '### Per-Letter Pronunciation Videos (from plan — MANDATORY
   embeds)
 
@@ -813,6 +916,34 @@ SHARED_CONTENT_RULES: '## Language Quality Rules (All Tiers)
 
   Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian
   text.
+
+
+  ### English Calque Checklist
+
+
+  As an English-dominant model, you may produce English-to-Ukrainian calques. Check
+  and avoid:
+
+
+  | English Pattern | WRONG Ukrainian | CORRECT Ukrainian |
+
+  |---|---|---|
+
+  | "will have" | буду мати | матиму |
+
+  | "do work" | робити роботу | працювати |
+
+  | "save money" | зберегти гроші | заощадити гроші |
+
+  | "make a decision" | зробити рішення | прийняти рішення |
+
+  | "take a photo" | брати фото | фотографувати / робити фото |
+
+  | "have attention" | мати увагу | звертати увагу |
+
+  | "give an answer" | давати відповідь | відповідати |
+
+  | "make sense" | робити сенс | мати сенс |
 
 
   ### Euphony / Милозвучність (WARNING if violated)
@@ -957,8 +1088,9 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ `:`** with single quotes: `'text: with colon'`\n3. **Double-check** every `title`,\
   \ `question`, `sentence`, `explanation`, and `text` field\n\n## Language Quality\
   \ (applies to ALL Ukrainian text in activities)\n\n- **No Russianisms**: кушати→їсти,\
-  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий\n- **No\
-  \ Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
+  \ приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, красивий→гарний,\
+  \ красива→гарна, прекрасний→чудовий, відноситися→стосуватися, слідуючий→наступний\n\
+  - **No Russian characters**: ы, э, ё, ъ must NEVER appear\n- **No IPA**: NEVER include\
   \ IPA symbols or `ipa` fields\n- **No Latin transliteration**: Reference Ukrainian\
   \ words in Cyrillic, not Latin (ZhYty → Жити)\n\n## Vocabulary YAML Rules\n\n1.\
   \ **Object with `items:` wrapper** — NOT a bare list\n2. **Follow plan's vocabulary_hints**\
@@ -980,6 +1112,101 @@ SHARED_ACTIVITY_RULES: "## YAML Formatting Rules (HARD FAIL if violated)\n\n**Do
   \ and vocabulary\n- Do NOT add fields not in the schema (check schema carefully!)\n\
   - Do NOT wrap in `activities:` or `vocabulary:` dictionary keys\n- Do NOT request\
   \ skills or delegate to Claude\n"
+SELF_AUDIT_SNIPPET: '## Self-Audit (Run BEFORE Final Output)
+
+
+  After writing all content, you MUST run the audit and fix any issues — all within
+  this session.
+
+
+  ### Step 1: Write Content to Disk
+
+
+  Write your complete content to `{CONTENT_PATH}` using write_file or bash:
+
+
+  ```bash
+
+  cat > {CONTENT_PATH} << ''CONTENT_EOF''
+
+  ... your content here ...
+
+  CONTENT_EOF
+
+  ```
+
+
+  ### Step 2: Run Audit
+
+
+  ```bash
+
+  bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify
+
+  ```
+
+
+  This checks: word count, Russianisms, engagement callouts, euphony, structure, immersion
+  %.
+
+
+  ### Step 3: Parse Results
+
+
+  - If you see `AUDIT PASSED` — proceed to output.
+
+  - If you see `AUDIT FAILED` — read the violations, fix content in-place, and re-run
+  the audit.
+
+
+  ### Step 4: Fix Loop (max 2 iterations)
+
+
+  If the audit fails:
+
+  1. Read the specific gate failures and violation details from the audit output
+
+  2. Edit `{CONTENT_PATH}` to fix each issue (add words if under target, remove Russianisms,
+  add callout boxes, etc.)
+
+  3. Re-run: `bash scripts/audit_module.sh {CONTENT_PATH} --skip-activities --no-rag-verify`
+
+  4. If still failing after 2 fix attempts, proceed to output anyway — the validate
+  phase will handle remaining issues.
+
+
+  ### Step 5: Report Self-Audit Result
+
+
+  After audit (pass or fail), include this block in your output:
+
+
+  ```
+
+  ===SELF_AUDIT_START===
+
+  status: PASS | FAIL
+
+  iterations: {number of audit runs}
+
+  final_word_count: {word count from last audit}
+
+  gates_passed: {list of passed gates}
+
+  gates_failed: {list of failed gates, or "none"}
+
+  fixes_applied: {brief description of what you fixed, or "none"}
+
+  ===SELF_AUDIT_END===
+
+  ```
+
+
+  **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual
+  command and report real output.
+
+  '
+LEXICAL_SANDBOX: ''
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'

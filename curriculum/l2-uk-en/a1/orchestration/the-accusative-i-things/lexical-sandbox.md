@@ -83,6 +83,11 @@
 - **коли** (Adverb)
 - **чому** (Adverb)
 
+### Verified Example Sentences (from textbooks)
+
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
+  *Source: unknown*
+
 ### Usage Rules
 
 - **MANDATORY**: Every Ukrainian word in your output MUST appear in the tables above

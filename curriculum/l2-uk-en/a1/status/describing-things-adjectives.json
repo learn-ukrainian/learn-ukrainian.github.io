@@ -2,15 +2,15 @@
   "module": "describing-things-adjectives",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T00:31:34.824226Z",
+  "last_audit": "2026-03-07T15:54:26.428146Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T22:55:42.055813Z",
-    "meta": "2026-03-06T22:43:32.326963Z",
-    "activities": "2026-03-06T22:50:56.418632Z",
-    "vocabulary": "2026-03-06T22:52:55.167535Z",
+    "md": "2026-03-07T15:45:34.129892Z",
+    "meta": "2026-03-07T15:27:53.595738Z",
+    "activities": "2026-03-07T15:38:12.181723Z",
+    "vocabulary": "2026-03-07T15:45:34.135219Z",
     "plan": "2026-03-05T10:20:01.530912Z",
-    "research": "2026-03-06T22:44:28.885266Z"
+    "research": "2026-03-07T15:28:33.820227Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1215/1200 (raw: 1482)"
+      "message": "2492/1200 (raw: 2691)"
     },
     "activities": {
       "status": "pass",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

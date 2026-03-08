@@ -30,7 +30,258 @@
 
 **CRITICAL — HARD FAIL if violated:** Each activity MUST meet the minimum item count for its type. Activities with fewer items than the minimum will cause an automatic validation failure. Check the minimums table above BEFORE submitting.
 
+### Real Textbook Exercises (вправи) — Pedagogical Inspiration
 
+These are real exercises from Ukrainian school textbooks (grade 1/2). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+
+**Grade 1, zaharijchuk** — Сторінка 73:
+```
+71
+	
+Відшукай предмети, у назвах яких є буква ї, 
+звуки [йа], звук [дз].
+Вийди, вийди, ... ,
+На дідове ... ,
+На бабине ... ,
+На наше ... ,
+На весняні ... ,
+На маленькі ... .
+полечко
+зіллячко
+ квіточки
+сонечко
+подвір’ячко
+ діточки
+	
+Знайди «загублений» склад у словах — на-
+звах намальованих предметів. 
+	
+Прочитай слова в рамках. Розмісти їх у по-
+трібних місцях у закличці. Прочитай її. 
+__ -мін-го	
+фук-,	
+фла-,	
+фут-
+__ -ре-ло	
+дзе-,	
+джи-,	
+дже-
+лі- __ -на	
+-ши-,	
+-щи-,	
+-чи-
+Pidruchnyk.com.ua
+```
+
+**Grade 1, zaharijchuk** — Сторінка 11:
+```
+9
+Склад слова.  
+Наголошені та ненаголошені склади
+	 Що «зайве»? Поділи слова на склади. Визнач 
+наголошений склад.
+        
+        
+        
+	 Який у тебе сьогодні настрій? Вибери.
+```
+
+**Grade 1, zaharijchuk** — Сторінка 30:
+```
+28
+Вшниі, шаркептик, шмкруаа, 
+шшпииан, аачкш.
+	
+«Збери» слова — назви намальованих пред-
+метів. Поділи на склади слово, у якому дві 
+букви ш (усно).
+Бачу Ш, ш (ша). Чую [ш].
+ш и н ш и
+ш и ш к
+к о м и ш
+и
+а
+л
+а
+о
+у
+и
+і
+Ш
+ша
+шо
+шу
+ши
+ші
+а
+о
+у
+и
+і
+аш
+ош
+уш
+иш
+іш
+Ш
+ша-                  
+шо-                       шпа-                   
+ши
+шка
+на
+шу
+м
+міти
+ше
+лест
+рех
+ [  –  •–  |  –•|  –•] 
+ [  –  •|  –  •– ] 
+Ш ш
+Pidruchnyk.com.ua
+```
+
+**Grade 1, zaharijchuk** — Сторінка 24:
+```
+22
+	 Утвори слова — нáзви предметів.
+Х
+	
+Що тобі відомо про персонажів казки «Ко-
+тигорошко»?  Роз­кажи.
+	
+Прочитай склади. Знайди слова із цими 
+складами.
+	
+Розділи речення на слова, прочитай при­
+слів’я. У при­слі­в’ї є 4, 5 чи 6 слів? Вибери 
+правильну відповідь.
+	
+Зимабезснігу — літобезхліба.
+	
+Які букви нагадують ці предмети?
+хвилина
+мухомор
+горіхи
+горох
+хви-
+-хо-
+-рох
+-хи
+Pidruchnyk.com.ua
+```
+
+
+
+## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)
+
+## Lexical Sandbox for M11
+
+**FORBIDDEN at M11:** ALL verbs, imperative forms, oblique cases (only nominative/vocative)
+
+### Nouns
+
+| Lemma | Gender | Allowed Forms |
+|-------|--------|---------------|
+| я | ? | я |
+| ти | ? | ти |
+| він | masculine | він |
+| вона | feminine | вона |
+| воно | neuter | воно |
+| ми | plural | ми |
+| ви | plural | ви |
+| вони | plural | вони |
+| хто | masculine | хто |
+| людина | feminine | люди, людина, людини, людино |
+| слово | neuter | слова, слово |
+| мова | feminine | мова, мови, мово |
+| день | masculine | день, дню, дні |
+| час | masculine | час, часе, часи |
+
+### Adjectives
+
+| Lemma | Masculine | Feminine | Neuter | Plural |
+|-------|-----------|----------|--------|--------|
+| той | той | та | те | ті |
+| цей | цей | ця | це | ці |
+| який | який | яка | яке | які |
+| новий | новий | нова | нове | нові |
+| старий | старий | стара | старе | старі |
+| гарний | гарний | гарна | гарне | гарні |
+| великий | великий | велика | велике | великі |
+| малий | малий | мала | мале | малі |
+| добрий | добрий | добра | добре | добрі |
+| поганий | поганий | погана | погане | погані |
+| цікавий | цікавий | цікава | цікаве | цікаві |
+| синій | синій | синя | сине | сині |
+| червоний | червоний | червона | червоне | червоні |
+| молодий | молодий | молода | молоде | молоді |
+| дорогий | дорогий | дорога | дороге | дорогі |
+| дешевий | дешевий | дешева | дешеве | дешеві |
+| смачний | смачний | смачна | смачне | смачні |
+| зелений | зелений | зелена | зелене | зелені |
+
+### Other Words
+
+- **це** (Particle)
+- **та** (Conjunction)
+- **так** (Adverb)
+- **ні** (Particle)
+- **не** (Particle)
+- **дуже** (Adverb)
+- **тут** (Adverb)
+- **там** (Adverb)
+- **ось** (Particle)
+- **також** (Adverb)
+- **ще** (Adverb)
+- **вже** (Adverb)
+- **теж** (Adverb)
+- **тільки** (Adverb)
+- **і** (Conjunction)
+- **а** (Conjunction)
+- **але** (Conjunction)
+- **або** (Conjunction)
+- **що** (Conjunction)
+- **як** (Adverb)
+- **бо** (Conjunction)
+- **в** (Preposition)
+- **у** (Preposition)
+- **на** (Interjection)
+- **з** (Preposition)
+- **до** (Preposition)
+- **для** (Preposition)
+- **по** (Preposition)
+- **де** (Adverb)
+- **коли** (Adverb)
+- **чому** (Adverb)
+
+### Verified Example Sentences (from textbooks)
+
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
+  *Source: unknown*
+- І якраз у яму 
+втрапить. А ми вже вириємо, постараємося.
+  *Source: unknown*
+- з якої причини? з якої причини? з якої причини? 249
+250
+незважаючи на що?
+  *Source: unknown*
+- Ти ж маєш мету, правда? – Я хочу ходити. – Тобі сказали, що це неможливо? Чому Ярина не пристала 
+на пропозицію Сашка? Чого вона боялася?
+  *Source: unknown*
+
+### Usage Rules
+
+- **MANDATORY**: Every Ukrainian word in your output MUST appear in the tables above
+- You may use any allowed form listed for each lemma
+- You may use the verified example sentences directly or as templates
+- Do NOT invent Ukrainian words outside this sandbox — use English instead
+- English text is unrestricted — use freely for explanations
+- Memorized chunks (до побачення, як справи, etc.) are always allowed
+- Common function words (це, так, ні, він, вона, воно, вони, я, ти, ми, ви) are always allowed
+
+
+> **Every Ukrainian word in your activities MUST come from the word bank above.** Using words outside this list causes VESUM validation failures and triggers fix loops. If you need a word that isn't listed, use English instead.
 
 ## Module Constraints (HARD FAIL if violated)
 

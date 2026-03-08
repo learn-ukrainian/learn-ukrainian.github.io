@@ -1,7 +1,7 @@
 # Audit Report: M10 — checkpoint-passive-voice.md
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-06 21:43:05
+**Generated:** 2026-03-07 15:17:32
 
 ## Configuration
 **Type:** B2-checkpoint

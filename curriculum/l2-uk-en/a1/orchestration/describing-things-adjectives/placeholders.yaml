@@ -139,6 +139,38 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   Тверді і пом’якшені  \nприголосні звуки . . . . . . . . . . . . . . 47\nҐ ґ . .\
   \ . . . . . . . . . . . . . . . . . . . . . . . . . 48\nҐ ґ . . . . . . . . . .\
   \ . . . . . . . . . . . . . . . . . 49\nЕ е  . . . . . .\n```"
+TEXTBOOK_ACTIVITY_EXAMPLES: "### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\
+  \nThese are real exercises from Ukrainian school textbooks (grade 1/2). Study their\
+  \ **pedagogical patterns** — how they build progressively, use familiar vocabulary,\
+  \ and test specific skills. Since your students are English-speaking adults, **translate\
+  \ exercise instructions to English** while keeping Ukrainian content words. Adapt\
+  \ the pedagogical approach (progressive difficulty, real-world context) but not\
+  \ the language of instruction.\n\n**Grade 1, zaharijchuk** — Сторінка 73:\n```\n\
+  71\n\t\nВідшукай предмети, у назвах яких є буква ї, \nзвуки [йа], звук [дз].\nВийди,\
+  \ вийди, ... ,\nНа дідове ... ,\nНа бабине ... ,\nНа наше ... ,\nНа весняні ...\
+  \ ,\nНа маленькі ... .\nполечко\nзіллячко\n квіточки\nсонечко\nподвір’ячко\n діточки\n\
+  \t\nЗнайди «загублений» склад у словах — на-\nзвах намальованих предметів. \n\t\n\
+  Прочитай слова в рамках. Розмісти їх у по-\nтрібних місцях у закличці. Прочитай\
+  \ її. \n__ -мін-го\t\nфук-,\t\nфла-,\t\nфут-\n__ -ре-ло\t\nдзе-,\t\nджи-,\t\nдже-\n\
+  лі- __ -на\t\n-ши-,\t\n-щи-,\t\n-чи-\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 11:\n```\n9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t\
+  \ Що «зайве»? Поділи слова на склади. Визнач \nнаголошений склад.\n        \n  \
+  \      \n        \n\t Який у тебе сьогодні настрій? Вибери.\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 30:\n```\n28\nВшниі, шаркептик, шмкруаа, \nшшпииан, аачкш.\n\t\n«Збери»\
+  \ слова — назви намальованих пред-\nметів. Поділи на склади слово, у якому дві\
+  \ \nбукви ш (усно).\nБачу Ш, ш (ша). Чую [ш].\nш и н ш и\nш и ш к\nк о м и ш\nи\n\
+  а\nл\nа\nо\nу\nи\nі\nШ\nша\nшо\nшу\nши\nші\nа\nо\nу\nи\nі\nаш\nош\nуш\nиш\nіш\n\
+  Ш\nша-                  \nшо-                       шпа-                   \nши\n\
+  шка\nна\nшу\nм\nміти\nше\nлест\nрех\n [  –  •–  |  –•|  –•] \n [  –  •|  –  •– ]\
+  \ \nШ ш\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 24:\n```\n\
+  22\n\t Утвори слова — нáзви предметів.\nХ\n\t\nЩо тобі відомо про персонажів казки\
+  \ «Ко-\nтигорошко»?  Роз­кажи.\n\t\nПрочитай склади. Знайди слова із цими \nскладами.\n\
+  \t\nРозділи речення на слова, прочитай при­\nслів’я. У при­слі­в’ї є 4, 5 чи 6 слів?\
+  \ Вибери \nправильну відповідь.\n\t\nЗимабезснігу — літобезхліба.\n\t\nЯкі букви\
+  \ нагадують ці предмети?\nхвилина\nмухомор\nгоріхи\nгорох\nхви-\n-хо-\n-рох\n-хи\n\
+  Pidruchnyk.com.ua\n```"
+TEXTBOOK_GRADE: 1-2
+TOPIC_KEYWORDS: ''
 CHECKPOINT_GUIDANCE: ''
 EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
 
@@ -149,10 +181,10 @@ EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
 
   - `## Вступ: Світ прикметників (Introduction: The World of Adjectives)` (~250 words)
 
-  - `## Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)`
-  (~350 words)
+  - `## Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives)` (~350
+  words)
 
-  - `## Презентація 2: М''яка група та множина (Presentation: Soft Stem and Plurals)`
+  - `## Презентація 2: М''яка група та множина (Presentation 2: Soft Stem and Plurals)`
   (~300 words)
 
   - `## Практика: Люди і місця (Practice: People and Places)` (~200 words)

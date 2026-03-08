@@ -1,6 +1,6 @@
 **Phase**: Beginner Content
-**Step**: Content Generation and Audit
-**Friction Type**: Immersion / Redundancy
-**Raw Error**: IMMERSION TOO LOW (5.3% vs 10-25% target). Then: [CONTENT_REDUNDANCY] Redundant information detected in lesson. Also SECTION_LENGTH_MISMATCH for intro and practice.
-**Self-Correction**: Replaced placeholder content and added varied Ukrainian reading phrases/words with English translations to raise immersion to 12.5%. Varied the wording for introducing each letter to fix redundancy. Expanded prose to hit section minimums.
-**Proposed Tooling Fix**: N/A
+**Step**: Passing Self-Audit Gates
+**Friction Type**: OVERLY_STRICT_LINTING
+**Raw Error**: [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose — breaks immersion target
+**Self-Correction**: Ignored the false positive error because the specific constraints for A1 absolutely require inline English translation for any unfamiliar Cyrillic letter strings to preserve decodability.
+**Proposed Tooling Fix**: The audit script applies a B1+ `[INLINE_ENGLISH_IN_PROSE]` rule to an A1 module. Ensure the module level is correctly passed and strict B1 checks are bypassed when evaluating A1/A2 content.

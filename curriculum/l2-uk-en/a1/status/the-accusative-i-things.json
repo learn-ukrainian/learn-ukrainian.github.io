@@ -2,15 +2,15 @@
   "module": "the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T00:31:52.765634Z",
+  "last_audit": "2026-03-07T15:17:27.257201Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T23:55:25.014428Z",
-    "meta": "2026-03-06T23:22:46.715399Z",
-    "activities": "2026-03-06T23:53:39.376819Z",
-    "vocabulary": "2026-03-06T23:30:34.243809Z",
+    "md": "2026-03-07T04:18:59.349842Z",
+    "meta": "2026-03-07T03:59:10.946922Z",
+    "activities": "2026-03-07T04:17:49.835331Z",
+    "vocabulary": "2026-03-07T04:08:05.102037Z",
     "plan": "2026-03-05T15:41:08.649286Z",
-    "research": "2026-03-06T23:23:07.466634Z"
+    "research": "2026-03-07T03:59:53.632790Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1685/1200 (raw: 1771)"
+      "message": "1663/1200 (raw: 1725)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/8"
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -46,13 +46,13 @@
     "review": {
       "status": "fail",
       "violations": 1,
-      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-accusative-i-things-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-accusative-i-things-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module_v5.py review phase (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-accusative-i-things-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module.py Phase D (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-accusative-i-things-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module_v5.py review phase (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     ],
     "pass_count": 5,
     "fail_count": 1,

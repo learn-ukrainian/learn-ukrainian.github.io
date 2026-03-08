@@ -1,36 +1,34 @@
 # Дослідження: The Gender Code
 
 ## State Standard Reference
-§4.2.1.1: "Noun case form formation — singular/plural, all 4 declensions basic" and §4.2.2: "Pronoun gender and number forms"
-Alignment: This module establishes the foundational three-gender classification system and introduces possessive pronouns (мій, моя, моє) as basic diagnostic tools for gender agreement.
+§4.2.2: "Pronoun gender and number forms"
+§4.2.1.1: "Noun case form formation — singular/plural, all 4 declensions basic"
+Alignment: Introduces noun gender classification and uses possessive pronouns (мій, моя, моє) as the primary diagnostic tool for identifying gender agreement, setting the foundation for declension patterns.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| брат | High-frequency masculine family term; consonant ending. | мій брат, старший брат |
-| книга | High-frequency feminine; basic -а ending. | цікава книга, моя книга |
-| вікно | High-frequency neuter; basic -о ending. | велике вікно, чисте вікно |
-| тато | Masculine trap: natural gender overrides the -о ending. | мій тато |
-| ім'я | Neuter exception (Family 4): ends in -я but is neuter. | моє ім'я |
+| тато | Natural gender overrides -о ending (Masculine trap) | мій тато |
+| вікно | High-frequency neuter | чисте вікно |
+| ім'я | Neuter exception (Family 4) despite -я ending | моє ім'я |
+| день / ніч | Minimal pair for soft sign (-ь) ambiguity | гарний день / добра ніч |
 
 ## Cultural Hooks
-1. The Neuter Sun (сонце): In Ukrainian folklore, the sun is an impartial, gentle life-giver (neuter), contrasting with the masculine or feminine suns in Romance languages.
-2. Personification of nature: Gendered language shapes the worldview, embedding natural elements with masculine or feminine traits (e.g., "земля-мати" — mother earth, feminine).
+1. The Neuter Sun (сонце): In Ukrainian folklore, the sun is seen as an impartial, gentle life-giver. This reflects its neuter grammatical gender, providing a fascinating contrast to the masculine sun in Romance languages (el sol / le soleil).
 
 ## Common Learner Errors
-1. The "It" Trap → English speakers naturally default to using neuter ("воно") for all inanimate objects (like a table). They must learn that inanimate objects have grammatical gender (e.g., "стіл" is "він" and "книга" is "вона").
-2. The "тато" Trap → Assuming "тато" is neuter because it ends in "-о". Natural gender overrides grammatical endings for biological males.
-3. The Soft Sign Ambiguity → Words ending in "-ь" can be either masculine (день) or feminine (ніч); there is no visible rule on the noun itself, so these require memorization.
+1. The "It" Trap → English speakers often assume all inanimate objects are "воно" (neuter). They must learn to apply grammatical gender rules instead (e.g., стіл = він, книга = вона).
+2. The Over-generalization Trap → Assuming "тато" is neuter because it ends in -о. Learners need to understand that natural gender (biological sex) overrides the standard ending rules.
+3. The "ім'я" Trap → Assuming "ім'я" is feminine because it ends in -я. It belongs to a special class of neuter nouns (Declension Family 4).
 
 ## Cross-References
 - Builds on: a1-02 (The Cyrillic Code II)
 - Prepares for: a1-09 (This Is, I Am), a1-26 (Adjectives)
 
 ## Notes for Content Writing
-- Stick STRICTLY to verb-free examples (e.g., "Це стіл", "стіл (він)").
-- Do not introduce case declension yet; keep everything in the Nominative case.
-- English scaffolding is mandatory for explaining the abstract concept of grammatical gender.
-- Emphasize visual mnemonic categorization (e.g., color-coding hard consonants vs. open vowels).
+- Rely heavily on English scaffolding to explain the underlying grammar mechanics; Ukrainian should be used for simple, clear examples.
+- Verbs are completely forbidden at this stage! Use verb-free structures from the pattern bank: "Це стіл", "Хто це?", "Що це?".
+- Use possessive pronouns (мій, моя, моє) as the core diagnostic tool instead of adjectives.
 
 ## Resource Discovery
 

@@ -1,276 +1,294 @@
-# Beginner Content: Write the Lesson
+# Full Module Build: Content + Activities + Vocabulary
 
-> **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
+> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
+>
+> **Your task:** Build a complete beginner module — lesson content, practice activities, and vocabulary — in one pass.
+> Writing content and activities together ensures consistency: the same words, the same gender pairings, the same phrases appear in both.
+>
+> **Output capacity: 65,000+ tokens.** Do NOT truncate.
 
-> **Your task: Write approximately 1200 words of clear, beginner-friendly content.**
-> Keep explanations clear and direct. Every H3 gets {H3_WORD_RANGE} words. Avoid verbose prose — students are beginners. Focus on practical examples over theory.
+---
 
-> **Output capacity: You can generate 65,000+ tokens per response.** Do NOT preemptively truncate.
+## 1. Read These Files
 
-## Files to Read
+| File | What to extract |
+|------|----------------|
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/imperative-and-requests-research.md` | Background knowledge, engagement hooks |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/imperative-and-requests.yaml` | Section titles + word allocations, activity count targets |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/imperative-and-requests.yaml` | Objectives, vocabulary_hints (source of truth) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion band |
+| `schemas/activities-a1.schema.json` | Activity field definitions (`additionalProperties: false`) |
 
-| File | Purpose |
-|------|---------|
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/imperative-and-requests-research.md` | Research notes |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/imperative-and-requests.yaml` | Content outline with section word allocations |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/imperative-and-requests.yaml` | Objectives, vocabulary_hints |
-| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion % |
+Read ALL files before writing anything.
 
-Read ALL files before writing.
+---
 
-## Resource Discoveries
+## 2. Constraints (apply to EVERYTHING you write)
 
-(No video discoveries available)
+### Grammar Constraints (HARD FAIL if violated)
 
+SEQUENCE CONSTRAINTS (M47 — Imperative Mood):
+This module TEACHES the imperative mood. Imperative forms are ALLOWED and REQUIRED.
+Use imperative forms freely: читай/читайте, пиши/пишіть, скажи/скажіть, дай/дайте, іди/ідіть, дивись/дивіться, стій/стійте, слухай/слухайте.
 
+Both imperfective AND perfective verbs are allowed for imperatives.
+Past tense and future tense are available (taught at M36/M37).
 
-## Module Constraints (HARD FAIL if violated)
+The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: perfective aspect is ALLOWED for imperative forms.
 
-SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
-Present tense verbs start at M15. Past tense at M36. Future at M37.
-
-KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
-
-BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
-
-INSTEAD OF → USE:
-- Запам'ятайте → "Remember that..." (English)
-- Порівняйте → "Compare..." (English)
-- Зверніть увагу → "Notice that..." (English)
-- Подивіться → "Look at..." (English)
-- Спробуйте → "Try to..." (English)
-- Прочитайте → "Read..." (English)
-- Повторіть → "Repeat..." (English)
-
-The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
+### Word Bank (MANDATORY)
 
 
 
+## Lexical Sandbox for M47
+
+### Nouns
+
+| Lemma | Gender | Allowed Forms |
+|-------|--------|---------------|
+| я | ? | мене, мені, мною, я |
+| ти | ? | тебе, ти, тобою, тобі |
+| він | masculine | він, його, йому, ним, нього, ньому, нім |
+| вона | feminine | вона, нею, неї, ній, їй, її |
+| воно | neuter | воно, його, йому, ним, нього, ньому |
+| ми | plural | ми, нам, нами, нас |
+| ви | plural | вам, вами, вас, ви |
+| вони | plural | вони, ними, них, їм, їми, їх |
+| хто | masculine | ким, кого, кому, кім, хто |
+| людина | feminine | людей, люди, людин, людина, людинам, людинами, людинах, людини |
+| слово | neuter | слова, словам, словами, словах, слово, словом, слову, слові |
+| мова | feminine | мов, мова, мовам, мовами, мовах, мови, мово, мовою |
+| день | masculine | день, дневі, днем, дню, дня, дням, днями, днях |
+| час | masculine | час, часам, часами, часах, часе, часи, часові, часом |
+
+### Adjectives
+
+| Lemma | Allowed Forms |
+|-------|---------------|
+| той | та, те, тим, тими, тих, того, той, тому, тою, тої, ту, ті |
+| цей | це, цей, цим, цими, цих, цього, цьому, цю, ця, ці, цій, цім |
+| який | яка, яке, який, яким, якими, яких, якого, якому, якою, якої, яку, які |
+
+### Verbs
+
+| Lemma | Aspect | Allowed Forms |
+|-------|--------|---------------|
+| читати | imperf | читай, читаймо, читайте, читаю, читають, читає, читаєм, читаємо, читаєте, читаєш, читати, читав, читала, читали, читало |
+| писати | imperf | пиши, пишім, пишімо, пишіть, пише, пишем, пишемо, пишете, пишеш, пишу, пишуть, писати, писав, писала, писали |
+| сказати | perf | скажи, скажім, скажімо, скажіть, сказати, скаже, скажем, скажемо, скажете, скажеш, скажу, скажуть, сказав, сказала, сказали |
+| дати | perf | дай, даймо, дайте, дати, дав, дадуть, дала, дали, дало, дам, дамо, дано, даси, дасиш, дасте |
+| іти | imperf | іди, ідім, ідімо, ідіть, іде, ідем, ідемо, ідете, ідеш, іду, ідуть, іти, ітиме, ітимем, ітимемо |
+| слухати | imperf | слухай, слухаймо, слухайте, слухаю, слухають, слухає, слухаєм, слухаємо, слухаєте, слухаєш, слухати, слухав, слухала, слухали, слухало |
+| дивитися | imperf | дивись, дивися, дивімось, дивімося, дивімся, дивіться, дивимось, дивимося, дивимся, дивитесь, дивитеся, дивиться, дивишся, дивлюсь, дивлюся |
+| стояти | imperf | стій, стіймо, стійте, стою, стоять, стоїм, стоїмо, стоїте, стоїть, стоїш, стояти, стояв, стояла, стояли, стояло |
+| показати | perf | покажи, покажім, покажімо, покажіть, показати, покаже, покажем, покажемо, покажете, покажеш, покажу, покажуть, показав, показала, показали |
+| допомогти | perf | допоможи, допоможім, допоможімо, допоможіть, допомогти, допомогла, допомогли, допомогло, допоможе, допоможем, допоможемо, допоможено, допоможете, допоможеш, допоможу |
+| взяти | perf | візьми, візьмім, візьмімо, візьміть, взяти, взяв, взяла, взяли, взяло, взято, візьме, візьмем, візьмемо, візьмете, візьмеш |
+| чекати | imperf | чекай, чекаймо, чекайте, чекаю, чекають, чекає, чекаєм, чекаємо, чекаєте, чекаєш, чекати, чекав, чекала, чекали, чекало |
+
+### Other Words
+
+- **це** (Particle)
+- **та** (Conjunction)
+- **так** (Adverb)
+- **ні** (Particle)
+- **не** (Particle)
+- **дуже** (Adverb)
+- **тут** (Adverb)
+- **там** (Adverb)
+- **ось** (Particle)
+- **також** (Adverb)
+- **ще** (Adverb)
+- **вже** (Adverb)
+- **теж** (Adverb)
+- **тільки** (Adverb)
+- **і** (Conjunction)
+- **а** (Conjunction)
+- **але** (Conjunction)
+- **або** (Conjunction)
+- **що** (Conjunction)
+- **як** (Adverb)
+- **бо** (Conjunction)
+- **в** (Preposition)
+- **у** (Preposition)
+- **на** (Interjection)
+- **з** (Preposition)
+- **до** (Preposition)
+- **для** (Preposition)
+- **по** (Preposition)
+- **де** (Adverb)
+- **коли** (Adverb)
+- **чому** (Adverb)
+
+### Verified Example Sentences (from textbooks)
+
+- з якої причини? з якої причини? з якої причини? 249
+250
+незважаючи на що?
+  *Source: unknown*
+- Що мені робити? – Сиди-спокійно-й-чекай.
+  *Source: unknown*
+
+### Usage Rules
+
+- **MANDATORY**: Every Ukrainian word in your output MUST appear in the tables above
+- You may use any allowed form listed for each lemma
+- You may use the verified example sentences directly or as templates
+- Do NOT invent Ukrainian words outside this sandbox — use English instead
+- English text is unrestricted — use freely for explanations
+- Memorized chunks (до побачення, як справи, etc.) are always allowed
+- Common function words (це, так, ні, він, вона, воно, вони, я, ти, ми, ви) are always allowed
 
 
-NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+**Rule:** Every Ukrainian word in your output — content AND activities — must come from this word bank. The "Allowed Forms" column shows exactly which inflected forms you may use. If a word isn't listed, express the concept in English.
 
-## Textbook Reference (from Ukrainian grammar textbooks)
+### Immersion Target
 
-These are explanations from Ukrainian school grammar textbooks. Use them as **reference** for grammar rules and examples. Adapt for adult A1 learners — keep explanations simple but maintain grammatical accuracy.
+TARGET: 35-55% Ukrainian.
+LANGUAGE ROLES:
+- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. You must explain grammar primarily by demonstrating it. Show, don't tell.
+- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. This is the highest-density immersion tool. Do not explain usage nuances in English prose — instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) that map out the nuances. Move the teaching logic inside the tables.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- PATTERN BOXES: Show transformations: `читати → читай → читайте`.
+- INLINE: Ukrainian words/phrases bolded in English prose.
+- IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words demonstrating the concepts in context. If translations are needed, place them in a separate table BELOW the blockquote.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. Vary your containers — never use the same type twice in a row.
+Ukrainian sentences max 10 words.
 
-**Grade 3, vashulenko** — Сторінка 35:
-```
-35
-Книжки треба шанувати. Не можна 
-їх бруднити, рвати. Пошкоджені книжки 
-слід полагодити.
-Прочитай і розкажи 
-у класі.
-Я — учителька
-Я — учитель
-Якщо речення вимовляють з особ­
-ливим почуттям, із підсилювальною 
-інтонацією, то вони стають оклич-
-ними. У кінці окличних речень став-
-лять знак оклику.
-2   Прочитай текст. Визнач, які це речення 
-за метою висловлювання.
-	 	
-3   Розгляньте малюнки. Складіть за одним із них невеликий 
-текст, використовуючи окличні речення. Прочитайте його 
-з потріб
-```
+### Structural Containment (how to achieve immersion without code-switching)
 
-**Grade 3, ponomarova** — Сторінка 102:
-```
-102
-Довідка: неспокійне, розбурхане, суворе, 
-самотній, беззахисний, великі, небезпечні, 
-безпощадні,  тривожний.
-Довідка: радісний, задоволений, похнюплений, 
-сумний, щасливий, пригнічений.
-10. Склади про одного з хлопчиків розповідь (3–4 речення) 
-і запиши. Використай прикметники.
-1
-4. Прочитай  розповідь  Ґаджика про картину І. Айвазов-
-ського.  Чи  зрозуміло,  яку  саме  картину  він  описав?
-7. Якою частиною мови є вставлені в розповідь Ґаджика сло-
-ва? Зроби висновок про роль прикметників 
-```
+**Three rules govern where each language appears:**
 
-**Grade 3, kravtsova** — Сторінка 8:
-```
-8
-ПРАВИЛЬНА ВИМОВА СЛІВ 
-ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
-15.
-1.	 Утворіть пари слів: що робити? — що роблю?
-Сидіти — 		
-	
-Будити —	 	
-Радити — 	
-Ходити — 		
-	
-Водити — 	 	
-Садити —
-Зразок. Їздити — їжджу.
-2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
-	
-	
-поса-джені	 	
-за-дзвенів
-	
-	
-посадже-ні	 	
-задзве-нів
-3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
-вірте роботу одні в одних. 
-16.
-1.	 Прочитай і відгадай загадку. 
-Живим зерном народжений, 
-живу я на землі. 
-Що
-```
+1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
 
-**Grade 3, kravtsova** — Сторінка 6:
-```
-6
-7.
-1.	 Розгляньте малюнки. У назвах яких предметів став-
-лять апостроф? Запишіть ці слова.
-2.	 Доведіть одні одним, що апостроф ставити потрібно  /  не 
-потрібно. Своє доведення починайте так:
-У цьому слові потрібно  /  не потрібно ставити апостроф, 
-оскільки …
-3.	 Складіть за малюнками речення, використовуючи слова 
-з апострофом. 
-8.
-1.	 Розглянь зображення, назвиѳ їх.
-2.	 Виконай завдання на вибір.
-	 Запиши наѳзви зображень. 
-	 Склади і запиши речення, використовуючи якомога більше 
-слів з а
-```
+2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
+   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
+   - **Blockquote dialogues** — mini-conversations with labeled speakers
+   - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-**Grade 3, kravtsova** — Сторінка 44:
-```
-44
-2.	 Добери з поданих заголовків найбільш вдалий. Поясни вибір.
-	 Щедрий Ведмідь і вдячна Мишка.
-	 Милосердний Ведмідь і вдячна Мишка.
-	 Справжні друзі. 
-124.	 Вправа 
-«Квест».
-4 5
-5 6 7
-1 2 5
-диреѳктор
-3.	 Запишіть свої розповіді на окремих аркушах. На їх основі 
-створіть книжку.
-123.	 1.	 Пригадай ситуацію, коли:
-	 ти проявив / проявила милосердя; 
-	 до тебе проявили милосердя;
-	 ти був вдячним / вдячною;
-	 тобі були вдячні за послугу.
-СЛОВА З ПРЕФІКСАМИ РОЗ-, БЕЗ-
-1.	 Прочитай текст. Як ти 
-```
+3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
 
+### Style Rules
+
+- Ukrainian section headers with English in parentheses: `## Наказовий спосіб (The Imperative Mood)`
+- **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
+- **No Russian characters**: ы, э, ё, ъ — never
+- **No IPA or phonetic brackets**
+- **Quotes**: Use «...» not "..."
+
+### Exemplar (follow this structural pattern)
+
+# Exemplar: Structured Band (A1 M21-47)
+
+> Immersion 35-55%. English explanations are MAX 2 sentences per concept — show, don't tell. Each H2 section ends with a substantial Ukrainian immersion block (dialogue or narrative, 80-150 words). Full Ukrainian sentences live in tables, dialogues, or example lists — never in flowing prose.
+
+## Example Section: Teaching Verb Forms
+
+The imperative mood has two forms: informal for **ти** and formal for **ви**. The formal command adds **-те** to the informal form.
+
+| Infinitive | ти-form | ви-form | Usage context |
+|-----------|---------|---------|--------------|
+| **читати** | **читай** | **читайте** | classroom, reading aloud |
+| **слухати** | **слухай** | **слухайте** | classroom, paying attention |
+| **чекати** | **чекай** | **чекайте** | asking someone to wait |
+| **писати** | **пиши** | **пишiть** | classroom, taking notes |
+| **iти** | **iди** | **iдiть** | giving directions |
+| **дати** | **дай** | **дайте** | requesting objects |
+
+> [!warning]
+> Do not use the infinitive as a personal command. You cannot say ~~Читати!~~ to a person — use **Читай!** or **Читайте!**
+
+Some verbs change their stem entirely:
+
+| Infinitive | ти-form | ви-form | Usage context |
+|-----------|---------|---------|--------------|
+| **дати** | **дай** | **дайте** | requesting objects |
+| **сказати** | **скажи** | **скажiть** | asking someone to speak |
+| **стояти** | **стiй** | **стiйте** | asking someone to stop |
+| **дивитися** | **дивись** | **дивiться** | drawing attention |
+
+Here is the immersion block — a classroom scene using these commands in context:
+
+> — **Вчитель:** Читайте текст, будь ласка. Слухайте слова. Пишiть слова тут.
+> — **Студент:** Добре. Я читаю. Я слухаю. Я пишу тут.
+> — **Вчитель:** Дуже добре! Тепер дивiться на дошку. Читайте це слово.
+> — **Студент:** Я дивлюся. Я читаю це слово.
+> — **Вчитель:** Скажiть це слово, будь ласка.
+> — **Студент:** Я кажу це слово. Чекайте, будь ласка.
+> — **Вчитель:** Добре, я чекаю. Iдiть сюди, будь ласка.
+> — **Студент:** Я iду. Дайте, будь ласка, книгу.
+> — **Вчитель:** Ось книга. Читай тут.
+
+| Ukrainian | English |
+|-----------|---------|
+| Читайте текст, будь ласка. | Please read the text. |
+| Слухайте слова. | Listen to the words. |
+| Пишiть слова тут. | Write the words here. |
+| Дивiться на дошку. | Look at the board. |
+| Скажiть це слово. | Say this word. |
+| Iдiть сюди, будь ласка. | Come here, please. |
+| Дайте, будь ласка, книгу. | Please give a book. |
+
+> [!culture]
+> Adding **будь ласка** (please) after a command softens it significantly. In Ukraine, using the bare imperative without "please" can sound blunt or even rude outside of close family.
 
 
 ---
 
-## Writing Instructions
+## 3. Write the Lesson Content
 
-Write the lesson prose for **Imperative and Requests** (a1 track).
+Write **Imperative and Requests** for the a1 track.
 
-- **Target**: 1200–1800 words (below 1200 = FAIL, above 1800 = overproduction that increases error surface)
-- **Immersion**: TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section content in Ukrainian first (max 10 words per sentence). Then add English translation paragraphs for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar rules still anchored in English. A1 register — simple concrete vocabulary.
-- **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types. Content with fewer than 3 callout boxes (> [!tip], > [!warning], etc.) FAILS validation.
-- **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
+**Targets:**
+- 1200–1800 words (under 1200 = FAIL)
+- 3+ callout boxes (`[!tip]`, `[!warning]`, `[!did-you-know]`, `[!culture]`)
+- EXACT H2 titles from the outline below — missing/renamed sections fail validation
 
 ## REQUIRED H2 Sections (use EXACT titles)
 
 Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
 
-- `## Наказовий спосіб - Imperative mood` (~300 words)
-- `## Вісім обов'язкових дієслів - Eight required verbs` (~300 words)
-- `## Ввічливе прохання - Polite requests` (~250 words)
-- `## Заборони - Prohibitions` (~175 words)
-- `## Практика - Practice` (~175 words)
-
-### Beginner Writing Style
-
-Write for someone seeing Ukrainian for the first time. English is the scaffolding language — use it for explanations, instructions, and context. Ukrainian is the target content — letters, words, phrases being taught.
-
-**Do this:**
-- Introduce each new letter/word clearly with its sound and meaning
-- Use tables to show letter-sound mappings
-- Give real Ukrainian words as examples (from the decodable vocabulary only)
-- Keep paragraphs short (3-5 sentences)
-- Use callout boxes for tips, fun facts, and warnings about visual traps
-
-**Do NOT do this:**
-- Use Ukrainian grammar terminology (іменник, дієслово, голосний, приголосний) — students don't know these yet
-- Write long paragraphs of linguistic analysis
-- Include IPA transcriptions or phonetic brackets
-- Use vocabulary from future modules
-- Create practice sentences if the constraints say "no sentences"
-- Repeat the same Ukrainian phrase pattern more than twice (e.g. don't write "Це склад", "Це слово", "Це правило" in every paragraph — vary your immersion: use contextual labels like "Наприклад — For example", section bridges like "А тепер — And now", vocabulary callouts, or short dialogue snippets)
-
-### Example of Good A1 Content (letter introduction)
-
-```markdown
-## Meet the Letters
-
-### А — The Familiar One
-
-The first letter is easy: **А** looks exactly like English A and makes the same sound — /a/ as in "father."
-
-You'll find А in some of the first words you learn:
-
-| Word | Meaning |
-|------|---------|
-| **мА́ма** | mom |
-| **сУ́ма** | sum, amount |
-
-[!tip]
-> А is one of the "true friends" — letters that look AND sound the same in both alphabets. Enjoy these while they last!
-
-### Н — The First Visual Trap
-
-Here's where it gets interesting: **Н** looks like English H, but it's actually the /n/ sound.
-
-This is a "visual trap" — your brain sees H and wants to say "h", but in Ukrainian it's always /n/.
-
-| Word | Meaning |
-|------|---------|
-| **нам** | to us |
-| **луна́** | echo |
-```
+- `## Наказовий спосіб (Imperative Mood)` (~300 words)
+- `## Вісім обов'язкових дієслів (Eight Required Verbs)` (~350 words)
+- `## Ввічливе прохання (Polite Requests)` (~250 words)
+- `## Заборони (Prohibitions)` (~150 words)
+- `## Практика і підсумок (Summary and Practice)` (~150 words)
 
 ### Section Word Budgets
 
 | Section | Target |
 |---------|--------|
-| Наказовий спосіб (Imperative mood) | 300 |
-| Вісім обов'язкових дієслів (Eight required verbs) | 300 |
-| Ввічливе прохання (Polite requests) | 250 |
-| Заборони (Prohibitions) | 175 |
-| Практика та підсумок (Practice and Summary) | 175 |
+| Наказовий спосіб (Imperative Mood) | 300 |
+| Вісім обов'язкових дієслів (Eight Required Verbs) | 350 |
+| Ввічливе прохання (Polite Requests) | 250 |
+| Заборони (Prohibitions) | 150 |
+| Практика і підсумок (Summary and Practice) | 150 |
 | **Total** | **1200** |
 
-### Callout Types to Use
+### Writing Style
 
-- `[!tip]` — practical advice for learners
-- `[!warning]` — visual traps, common mistakes
-- `[!did-you-know]` — fun facts about Ukrainian
-- `[!culture]` — cultural connections
+You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
 
-### Audit Gates (your content will be checked for)
+Follow the structural containment rules above. Each H2 section MUST follow this sequence:
 
-- **Word count**: minimum 1200 words
-- **Russianisms**: banned (кушати, получати, etc.)
-- **Russian characters**: ы, э, ё, ъ must NEVER appear
-- **Euphony**: і/й, у/в alternation
-- **Engagement callouts**: 3+
-- **IPA/phonetic brackets**: BANNED
+1. **DISCOVER** — Start with a Ukrainian dialogue or example set that demonstrates the pattern. NO English explanation yet. Let the learner notice the pattern themselves. Use a blockquote dialogue (4-8 lines) or a set of contrastive pairs in a table.
+2. **UNDERSTAND** — Now explain the pattern in 1-2 English sentences MAX. Use a paradigm table to show the system.
+3. **PRACTICE** — A second, different dialogue or scenario using the same pattern in a new context. End the section with a callout box (tip, warning, culture note, or fun fact).
+
+**FORBIDDEN patterns (HARD FAIL):**
+- Starting a section with an English grammar explanation (must start with Ukrainian examples)
+- Bulleted example lists longer than 5 items (spam — use a dialogue or table instead)
+- Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
+- Listing random permutations of the same verb forms as separate bullets
+
+Keep paragraphs short (3-5 sentences). Use 3+ callout boxes spread across sections.
+
+Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT use words outside the word bank. Do NOT write IPA or Latin transliteration.
+
+**Deliberate errors (showing common mistakes):**
+When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
 
 ## Language Quality Rules (All Tiers)
 
@@ -382,14 +400,486 @@ Avoid: «Це може бути використано...», «Правило з
 Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
 
 
+(No video discoveries available)
+
+
+
+## Textbook Reference (from Ukrainian grammar textbooks)
+
+These are explanations from Ukrainian school grammar textbooks. Use them as **reference** for grammar rules and examples. Adapt for adult A1 learners — keep explanations simple but maintain grammatical accuracy.
+
+**Grade 3, vashulenko** — Сторінка 35:
+```
+35
+Книжки треба шанувати. Не можна 
+їх бруднити, рвати. Пошкоджені книжки 
+слід полагодити.
+Прочитай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Якщо речення вимовляють з особ­
+ливим почуттям, із підсилювальною 
+інтонацією, то вони стають оклич-
+ними. У кінці окличних речень став-
+лять знак оклику.
+2   Прочитай текст. Визнач, які це речення 
+за метою висловлювання.
+	 	
+3   Розгляньте малюнки. Складіть за одним із них невеликий 
+текст, використовуючи окличні речення. Прочитайте його 
+з потріб
+```
+
+**Grade 3, ponomarova** — Сторінка 102:
+```
+102
+Довідка: неспокійне, розбурхане, суворе, 
+самотній, беззахисний, великі, небезпечні, 
+безпощадні,  тривожний.
+Довідка: радісний, задоволений, похнюплений, 
+сумний, щасливий, пригнічений.
+10. Склади про одного з хлопчиків розповідь (3–4 речення) 
+і запиши. Використай прикметники.
+1
+4. Прочитай  розповідь  Ґаджика про картину І. Айвазов-
+ського.  Чи  зрозуміло,  яку  саме  картину  він  описав?
+7. Якою частиною мови є вставлені в розповідь Ґаджика сло-
+ва? Зроби висновок про роль прикметників 
+```
+
+**Grade 3, kravtsova** — Сторінка 8:
+```
+8
+ПРАВИЛЬНА ВИМОВА СЛІВ 
+ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
+15.
+1.	 Утворіть пари слів: що робити? — що роблю?
+Сидіти — 		
+	
+Будити —	 	
+Радити — 	
+Ходити — 		
+	
+Водити — 	 	
+Садити —
+Зразок. Їздити — їжджу.
+2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
+	
+	
+поса-джені	 	
+за-дзвенів
+	
+	
+посадже-ні	 	
+задзве-нів
+3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
+вірте роботу одні в одних. 
+16.
+1.	 Прочитай і відгадай загадку. 
+Живим зерном народжений, 
+живу я на землі. 
+Що
+```
+
+**Grade 3, kravtsova** — Сторінка 6:
+```
+6
+7.
+1.	 Розгляньте малюнки. У назвах яких предметів став-
+лять апостроф? Запишіть ці слова.
+2.	 Доведіть одні одним, що апостроф ставити потрібно  /  не 
+потрібно. Своє доведення починайте так:
+У цьому слові потрібно  /  не потрібно ставити апостроф, 
+оскільки …
+3.	 Складіть за малюнками речення, використовуючи слова 
+з апострофом. 
+8.
+1.	 Розглянь зображення, назвиѳ їх.
+2.	 Виконай завдання на вибір.
+	 Запиши наѳзви зображень. 
+	 Склади і запиши речення, використовуючи якомога більше 
+слів з а
+```
+
+**Grade 3, vashulenko** — Сторінка 39:
+```
+39
+— Зробіть мені, тату, золотий човник 
+та срібне весельце. Буду я рибку ловити та 
+вас годувати.
+— Куди тобі, синку? Ти ще маленький!
+Сестра, мама, пан, добродій, Марія Миколаївна, Петро 
+Васильович, сусід, сусідка.
+Спи ж ти, малесенький,
+пізній бо час.
+Леся Українка
+Нащо ж ти віченьки знову розкрив?
+Спи, моя пташко, то вітер завив.
+Олександр Олесь
+	 	
+3   Подані слова запишіть у формі звертання.
+4   Прочитай. Поміркуй, що спільного в цих двох уривках із віршів.
+	 	
+5   Розіграйте уривок із
+```
+
+
+
 ---
 
-## Pre-Submission Checks
+## 4. Create Activities (from YOUR content above)
 
-1. **Plan compliance**: Does every point in the content_outline have dedicated prose?
-2. **Word count**: Does the total meet 1200?
-3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
-4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
+After writing the content, create activities that practice the Ukrainian you just taught. This is why we do both in one pass — you know exactly which words, phrases, and gender pairings you used.
+
+**Targets:**
+- 8–15 activities
+- Required types: 
+- 20 vocabulary items
+
+### Item Minimums (HARD FAIL if under)
+
+| Type | Minimum |
+|------|--------|
+| quiz | ≥8 items |
+| true-false | ≥8 items |
+| fill-in | ≥8 items |
+| match-up | ≥8 pairs |
+| anagram | ≥8 items |
+| unjumble | ≥6 items |
+| group-sort | ≥8 items |
+| watch-and-repeat | ≥1 items |
+| classify | ≥1 items |
+| image-to-letter | ≥5 items |
+
+### Real Textbook Exercises (вправи) — Pedagogical Inspiration
+
+These are real exercises from Ukrainian school textbooks (grade 2/3). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+
+**Grade 3, vashulenko** — Сторінка 110:
+```
+110
+Навчаюся визначати рід іменників
+34
+Рід іменників:  
+чоловічий, жіночий, середній
+	 	
+1   Визначте, істоту якого роду називає 
+кожний іменник.
+	 	
+3   Допишіть пари слів за зразком.
+2   Прочитай, уставляючи замість крапок слова мій, моя, моє, він, 
+вона, воно. Визнач рід іменників і поясни свою відповідь. Запиши 
+утворені речення.
+мати — тато
+дочка — син
+малюк — маля
+Іменники бувають чоловічого, 
+жіночого і середнього роду. 
+Досліди, як визнача-
+ють рід іменників.
+Я — дослідник
+Я — дослід
+```
+
+**Grade 3, vashulenko** — Сторінка 112:
+```
+112
+Спостерігаю за закінченнями 
+іменників різних родів
+Пригадай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Чоловічий рід
+можна додати  
+слова мій, він,  
+закінчення -о  
+або нульове
+ тато, Петро
+ вечір, Артем
+Жіночий рід
+можна додати  
+слова моя, вона,  
+закінчення -а, -я 
+або нульове
+ мама, Оксана
+ земля, Юлія
+ тінь, заметіль
+Середній рід
+можна додати  
+слова моє, воно,  
+закінчення  
+-о, -е, -а, -я
+ літо
+ сонце
+ курча
+ маля
+6   Прочитай. Наведи власні приклади іменників. 
+учень
+школя
+```
+
+**Grade 3, kravtsova** — Сторінка 78:
+```
+78
+220.	 1.	 Знайди й запиши в стовпчик прикметники.
+а с
+о
+н
+я
+ч
+н а
+о
+к
+у
+р
+п
+р
+і
+к
+у
+о
+с
+я й
+н
+а
+и
+щ
+р
+ф а н
+т
+а
+с
+т
+и
+ч
+н
+а
+м
+у
+і
+с
+т
+о р
+и
+ч
+н
+а
+з
+м
+е
+д
+н у
+ї
+с
+т
+і
+в
+н
+а
+й
+ц
+у
+к
+ї
+х
+а
+л и ф
+в
+е
+л
+и
+ч
+н
+а
+л
+і
+т
+о
+і
+к
+р а
+с
+и
+в
+а
+п
+я а
+к
+т
+у
+а
+л ь
+н
+а
+ч
+с
+м
+2.	 Добери до прикметників іменники та запиши їх через риску.
+221.	 1.	 Склади з перших букв прикметників із попередньої вправи 
+слово. Пригадай, що ти знаєш про Софіївку. 
+2.	 Зіскануй QR-код та переглянь відео.
+Старанно виводить диво-
+ви
+```
+
+**Grade 3, vashulenko** — Сторінка 132:
+```
+132
+Навчаюся розпізнавати форми прикметника  
+за іменником, з яким він зв’язаний, питанням, 
+закінченням
+Веснянагалявинапорослабарвистимиквітами.
+Прочитай і розкажи 
+у класі.
+Я — учителька
+Я — учитель
+Форми прикметника можна роз-
+пізнати за іменником, з яким він 
+зв’язаний; за питанням і закін­
+ченням.
+Утворіть речення і запишіть. Підкресліть 
+прикметники. Як ви їх розрізняєте?
+6   Прочитай вірш Михайла Стельмаха, 
+розкриваючи дужки. Запиши вірш. 
+Визнач число і рід прикметників.
+Що допомагає 
+
+```
+
+### Which Activity Types to Use
+
+**ALLOWED:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+**FORBIDDEN:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+
+Choose types based on what the constraints allow:
+
+| Constraint level | Use these | Avoid these |
+|-----------------|-----------|-------------|
+| Letters/syllables only (M1-M10) | quiz, match-up, group-sort, anagram, true-false | fill-in, unjumble, cloze, translate |
+| Words + simple phrases | + fill-in, match-up with phrases | unjumble, cloze |
+| Basic sentences allowed | + unjumble, fill-in with sentences, translate | cloze (needs 14+ blanks) |
+
+### Language Rules (A1/A2)
+
+- **Questions, instructions, explanations** → English (students can't read Ukrainian metalanguage)
+- **Content being practiced** → Ukrainian (words, letters, phrases from the lesson)
+- **Options** → Ukrainian when choosing Ukrainian words, English when choosing concepts
+- Never use grammar terms like іменник, дієслово, відмінок
+
+### Consistency Rules (the whole point of single-pass)
+
+1. **Same words**: Every Ukrainian word in activities must appear in your content above
+2. **Correct agreement in answers**: Activity `answer` fields must have correct adj-noun gender agreement. If you wrote `великий стіл` in content, the correct answer in activities must also be `великий стіл` — NOT `велика стіл`
+3. **Wrong forms are OK as distractors**: In `options` arrays, wrong gender/case forms are expected — they're the incorrect choices. Example: `options: ["нова", "новий", "нове", "нові"]` for a feminine noun — only `нова` is correct, the rest are intentional distractors
+4. **Same forms**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive is in the word bank
+
+### Activity Schemas (EXACT field structures — any unlisted field = FAIL)
+
+**quiz** — English questions, Ukrainian options:
+```yaml
+- type: quiz
+  title: "Check Your Knowledge"
+  instruction: Choose the correct answer.   # optional
+  items:  # minItems: 6
+    - question: "What does мама mean?"      # ≥5 words
+      explanation: "Мама means mom."        # at QUESTION level, NOT inside options
+      options:                              # exactly 4, exactly 1 correct
+        - text: "mom"
+          correct: true
+        - text: "dad"
+          correct: false
+        - text: "sister"
+          correct: false
+        - text: "brother"
+          correct: false
+```
+
+**anagram** — letter scramble (M1-M10 ONLY, not M11+):
+```yaml
+- type: anagram
+  title: "Unscramble the Word"
+  instruction: "Rearrange the letters."     # optional
+  items:  # minItems: 8
+    - scrambled: "А М А М"                  # SPACE-SEPARATED, same letters as answer
+      answer: "МАМА"
+```
+
+**unjumble** — sentence word reorder (M11+ ONLY, not M1-M10):
+```yaml
+- type: unjumble
+  title: "Put the Words in Order"
+  items:  # minItems: 8
+    - words: ["книга", "Це", "нова"]        # array of strings
+      answer: "Це нова книга"               # single string
+```
+Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
+
+**match-up**:
+```yaml
+- type: match-up
+  title: "Match the Pairs"
+  pairs:  # minItems: 6, use "pairs:" NOT "items:"
+    - left: "книга"
+      right: "book"
+```
+
+**fill-in** — MUST include `options`:
+```yaml
+- type: fill-in
+  title: "Complete the Sentence"
+  items:  # minItems: 6
+    - sentence: "Це ___ стіл."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]  # exactly 4, answer must be in list
+```
+
+**group-sort**:
+```yaml
+- type: group-sort
+  title: "Sort by Gender"
+  groups:  # 2-4 groups
+    - name: "Masculine"
+      items: ["стіл", "брат", "дім"]
+    - name: "Feminine"
+      items: ["книга", "мама", "мова"]
+```
+
+**true-false**:
+```yaml
+- type: true-false
+  title: "True or False?"
+  items:  # minItems: 8
+    - statement: "The letter Н makes the same sound as English H."
+      correct: false
+      explanation: "Н looks like H but sounds like N."
+```
+
+### Vocabulary YAML
+
+- **Object with `items:` wrapper** (not bare list)
+- Each entry: `lemma`, `translation`, `pos` (required); `gender`, `notes`, `usage`, `example` (optional)
+- NO `ipa` field
+- Include ALL words from `vocabulary_hints` in the plan
+
+### YAML Formatting (HARD FAIL)
+
+**Content** uses Ukrainian quotes «...». **YAML values** must NOT use «» — they break parsing with colons.
+
+```yaml
+❌ WRONG:  title: «Знайдіть пару: термін»
+✅ RIGHT:  title: 'Знайдіть пару: термін'
+```
+
+Rules for YAML:
+1. Never use `«»` — use plain text or single/double quotes
+2. Quote any value containing `:` with single quotes
+3. No IPA, no Latin transliteration in YAML values
+
+---
+
+## 5. Self-Audit Before Output
 
 ## Self-Audit (Run BEFORE Final Output)
 
@@ -444,10 +934,34 @@ fixes_applied: {brief description of what you fixed, or "none"}
 **IMPORTANT**: Do NOT skip the audit. Do NOT fabricate audit results. Run the actual command and report real output.
 
 
+### Content Checks
+- [ ] Word count ≥ 1200?
+- [ ] Every plan section has prose?
+- [ ] 3+ callout boxes?
+- [ ] No words outside the word bank?
+- [ ] No Russianisms, Russian characters, IPA?
+- [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
+
+### Activity Checks
+- [ ] 8–15 activities?
+- [ ] Every Ukrainian word also appears in content?
+- [ ] Adjective-noun pairings match content?
+- [ ] Quiz: exactly 1 `correct: true`, `explanation` at question level?
+- [ ] Anagram: scrambled letters = answer letters?
+- [ ] Fill-in: `answer` appears in `options`?
+- [ ] Match-up: uses `pairs:` not `items:`?
+- [ ] No extra fields (schema is `additionalProperties: false`)?
+- [ ] No `hint` fields in any activity items?
+
 ---
 
-## Output Format
+## 6. Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
+
+Output FOUR blocks in this exact order:
+
+**Block 1: Content**
 ```
 ===CONTENT_START===
 
@@ -470,13 +984,14 @@ Not covered:
 
 # Підсумок
 
-{Summary + 3-4 self-check questions. Each question MUST include an English translation if the question is in Ukrainian. Format: "Який? (Which?) — answer / відповідь"}
+{Summary + 3-4 self-check questions. Each question includes English translation.}
 
 ---
 
 ===CONTENT_END===
 ```
 
+**Block 2: Word Counts**
 ```
 ===WORD_COUNTS===
 Section "{name}": {count} words (minimum: {allocation})
@@ -485,24 +1000,44 @@ Total: {total} words (target: 1200)
 ===WORD_COUNTS===
 ```
 
-## Friction Report (MANDATORY)
+**Block 3: Activities (BARE LIST — no `activities:` wrapper)**
+```
+===ACTIVITIES_START===
 
+- type: quiz
+  title: "..."
+  items:
+    ...
+
+- type: match-up
+  title: "..."
+  pairs:
+    ...
+
+===ACTIVITIES_END===
+```
+
+**Block 4: Vocabulary (object with `items:` wrapper)**
+```
+===VOCABULARY_START===
+
+items:
+  - lemma: "книга"
+    translation: "book"
+    pos: "noun"
+    gender: "f"
+
+===VOCABULARY_END===
+```
+
+**Block 5: Friction Report (MANDATORY)**
 ```
 ===FRICTION_START===
-**Phase**: Beginner Content
-**Step**: {what you were doing}
-**Friction Type**: NONE | ...
+**Phase**: Full Build (Content + Activities + Vocabulary)
+**Step**: {what you were doing when friction occurred, or "Complete build"}
+**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | WORD_BANK_LIMITATION | ...
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if applicable, or "N/A"}
 ===FRICTION_END===
 ```
-
-## Boundaries
-
-- Do NOT generate activities or vocabulary tables (separate phase)
-- Do NOT add vocabulary outside the plan's vocabulary_hints
-- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
-- Do NOT skip sections from the content_outline
-- Do NOT write fewer than 1200 words
-- Do NOT use straight quotes "..." — always «...»

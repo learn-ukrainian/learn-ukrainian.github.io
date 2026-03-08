@@ -1,4 +1,4 @@
-discovered_at: '2026-03-06T22:58:19.677268+00:00'
+discovered_at: '2026-03-07T22:15:44.521161+00:00'
 query_keywords:
 - Imperative and Requests
 - Наказовий спосіб
@@ -42,14 +42,8 @@ blogs:
   title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood
     in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7
-  topics:
-  - ULP
-  - Season 3
-  content_type: podcast_episode
-  series: 3
-  season: 3
-  episode: 111
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.25
   chunk_id: 6-klas-ukrmova-betsa-2023_s0216

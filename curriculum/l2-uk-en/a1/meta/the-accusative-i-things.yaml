@@ -6,47 +6,39 @@ content_outline:
   slug: vstup-shcho-ya-bachu
   words: 250
   points:
-  - 'English Scaffolding: Clearly define the grammatical concepts of Subject (підмет),
-    Verb/Action (присудок), and Direct Object (додаток) using English explanations.'
-  - Explain that while English uses strict word order to show 'who does what to whom',
-    Ukrainian uses word endings.
-  - 'Warm-up: ''Що я бачу в кімнаті?'' (Nominative review) to anchor concrete objects
-    before introducing the case change. Prime the structure with ''бачити''.'
+  - 'English Scaffolding: Define Subject (підмет), Verb/Action (присудок), and Direct
+    Object (додаток).'
+  - Explain that Ukrainian uses word endings rather than strict word order to show
+    'who does what to whom'.
+  - 'Warm-up: ''Що я бачу в кімнаті?'' (Nominative review) to anchor concrete objects.
+    Prime the structure with ''бачити''.'
 - title: 'Презентація: Знахідний відмінок (Presentation)'
   slug: prezentatsiya-znakhidnyy-vidminok
   words: 400
   points:
-  - 'H3 for Feminine Singular: Teach the mandatory transformation (-а → -у, -я → -ю)
-    using high-frequency words (книга → книгу, кава → каву). Warn against the ''Conceptual
-    Nominative'' error.'
-  - 'H3 for Masculine and Neuter ''Safe Harbor'': Explain that inanimate masculine
-    and neuter nouns do NOT change (стіл → стіл, вікно → вікно). Explicitly warn against
-    ''Masculine Inanimate Confusion''.'
-  - 'H3 for Trigger Verbs: Introduce core action verbs that demand the Accusative:
-    мати, хотіти, брати, чути, бачити, купувати. Provide simple SVO sentences for
-    each.'
+  - 'Feminine Singular: Teach the mandatory transformation (-а → -у, -я → -ю) using
+    high-frequency words (книга → книгу, кава → каву).'
+  - 'Masculine and Neuter ''Safe Harbor'': Explain that inanimate masculine and neuter
+    nouns do NOT change (стіл → стіл, вікно → вікно).'
+  - 'Trigger Verbs: Introduce core action verbs that demand the Accusative: мати,
+    хотіти, брати, чути, бачити, купувати.'
 - title: 'Практика: Запобігання помилкам (Practice)'
   slug: praktyka-zapobihannya-pomylkam
   words: 300
   points:
-  - 'H3: Transformation drills contrasting the changing Feminine forms with the stable
-    Masculine/Neuter inanimate nouns.'
-  - 'H3: Targeted Error Prevention. Explicitly correct ''Я читаю книга'' to ''Я читаю
-    книгу'' and explain why.'
-  - 'Introduce high-frequency collocations using research-backed items: ''бачити проблему'',
-    ''чути голос'', ''брати трубку'', ''мати можливість''.'
-  - Provide a simple matching or fill-in-the-blank text structure for learners to
-    mentally practice the endings.
+  - Transformation drills contrasting changing Feminine forms with stable Masculine/Neuter
+    inanimate nouns.
+  - 'Targeted Error Prevention: Correct ''Я читаю книга'' to ''Я читаю книгу'' and
+    explain why the ''Conceptual Nominative'' is wrong.'
+  - 'Introduce high-frequency collocations: ''бачити проблему'', ''чути голос'', ''брати
+    трубку'', ''мати можливість''.'
 - title: 'Виробництво та Культура: У супермаркеті (Production and Culture)'
   slug: vyrobnytstvo-ta-kultura-u-supermarketi
   words: 250
   points:
-  - 'H3: Cultural Hook — The ''Пакет потрібен?'' checkout meme. Discuss shopping dynamics:
-    the impersonal ''супермаркет'' vs. the lively ''базар''.'
-  - 'H3: Creating a shopping list. Practice using ''Я хочу купити...'' with cultural
-    staples like ''хліб'' (masculine, no change) and ''гречка'' (feminine, changes
-    to гречку).'
-  - Describe items in a Ukrainian store context using 'Я бачу...' and 'Я купую...',
-    integrating all learned vocabulary.
-  - 'Summary: Conclude with 3-4 self-check questions to verify understanding of the
-    new rules.'
+  - 'Cultural Hook: The ''Пакет потрібен?'' checkout meme. Supermarket vs. bazaar
+    dynamics.'
+  - 'Production: Create a shopping list (''Я хочу купити...'') using staples like
+    ''хліб'' (masculine, no change) and ''гречка'' (feminine, changes to гречку).'
+  - 'Summary: Conclude with 3-4 self-check questions to verify understanding of inanimate
+    direct objects and feminine endings.'

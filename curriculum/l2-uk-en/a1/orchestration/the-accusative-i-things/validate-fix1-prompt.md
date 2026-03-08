@@ -1,64 +1,69 @@
-        # Fix 13 issue(s) in `the-accusative-i-things`
+        # Fix 15 issue(s) in `the-accusative-i-things`
 
-        ### Fix 1: IPA_BANNED
-**What:** Banned IPA transcription: [accusative]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 38
+        ### Fix 1: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'Зверні́ть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Зверні́ть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 54
 
-### Fix 2: IPA_BANNED
-**What:** Banned IPA transcription: [accusative]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 43
+### Fix 2: MORPHOLOGICAL_VIOLATION
+**What:** Imperative 'Уяві́ть' (VESUM: verb:perf:impr:p:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Уяві́ть' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 83
 
-### Fix 3: IPA_BANNED
-**What:** Banned IPA transcription: [in nominative]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 49
+### Fix 3: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'фіксо́ваний' (m) + 'слів' (p)
+**How to fix:** Change 'фіксо́ваний' to match the gender/case of 'слів', or vice versa.
+**Where:** ~line 15
 
-### Fix 4: IPA_BANNED
-**What:** Banned IPA transcription: [accusative]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 175
+### Fix 4: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'цьо́го' (m/n) + 'ми' (p)
+**How to fix:** Change 'цьо́го' to match the gender/case of 'ми', or vice versa.
+**Where:** ~line 15
 
-### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'запам'ятовуйте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'запам'ятовуйте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 135
+### Fix 5: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'Початко́ва' (f) + 'кни́жку' (f)
+**How to fix:** Change 'Початко́ва' to match the gender/case of 'кни́жку', or vice versa.
+**Where:** ~line 15
 
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'описуйте' (VESUM: verb:imperf:impr:p:2) — imperatives not taught until M47.
-**How to fix:** Replace 'описуйте' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 180
+### Fix 6: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'Суча́сний' (m) + 'мі́сцях' (p)
+**How to fix:** Change 'Суча́сний' to match the gender/case of 'мі́сцях', or vice versa.
+**Where:** ~line 83
 
 ### Fix 7: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'ідеальне' (n) + 'Магазин' (m)
-**How to fix:** Change 'ідеальне' to match the gender/case of 'Магазин', or vice versa.
-**Where:** ~line 149
+**What:** Agreement mismatch: 'потрі́бен' (m) + 'Сло́во' (n)
+**How to fix:** Change 'потрі́бен' to match the gender/case of 'Сло́во', or vice versa.
+**Where:** ~line 83
 
-### Fix 8: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'жіночого' (m/n) + 'гречка' (f)
-**How to fix:** Change 'жіночого' to match the gender/case of 'гречка', or vice versa.
-**Where:** ~line 175
-
-### Fix 9: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'вашою' (f) + 'відмінок' (m)
-**How to fix:** Change 'вашою' to match the gender/case of 'відмінок', or vice versa.
-**Where:** ~line 180
-
-### Fix 10: PLAN_SECTION_MISSING
-**What:** Missing 4 plan section(s): Вступ (Introduction), Презентація: Знахідний відмінок (Presentation: Accusative Case), Практика та запобігання помилкам (Practice and Error Prevention), Виробництво та культура (Production and Culture)
-**How to fix:** Add content for the missing plan sections or update section headings to match plan.
-**Where:** (plan vs content)
-
-### Fix 11: ACTIVITY_VESUM_FAIL
-**What:** Activity answers contain VESUM-failed words: вихода, вихіду, голоса, стілу, часа, їсту
+### Fix 8: ACTIVITY_VESUM_FAIL
+**What:** Activity answers contain VESUM-failed words: молокі
 **How to fix:** Fix spelling or replace these words — students will practice non-existent forms.
 **Where:** the-accusative-i-things.yaml
 
-### Fix: Gate `Pedagogy` FAIL — 1 violations
+### Fix: Gate `Pedagogy` FAIL — 6 violations
+
+### Fix 10: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Participle used before B1: 'ваний'
+**How to fix:** Participles not allowed until B1. Use relative clauses or simple sentences.
+
+### Fix 11: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Subordinate clause marker at A1: 'ь, що в'
+**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
+
+### Fix 12: PEDAGOGICAL_VIOLATION
+**What:** [COMPLEXITY] Sentence too long for A1: 11 words (max 10)
+**How to fix:** Break into shorter sentences. First 5 words: 'слова кни га та робо...'
 
 ### Fix 13: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY_WORD_COUNT] quiz 'Grammar Check: Direct Objects' Q4 prompt length 16 (target: 5-10)
+**What:** [COMPLEXITY] Sentence too long for A1: 14 words (max 10)
+**How to fix:** Break into shorter sentences. First 5 words: 'Це ду же важли ве...'
+
+### Fix 14: PEDAGOGICAL_VIOLATION
+**What:** [COMPLEXITY] Sentence too long for A1: 11 words (max 10)
+**How to fix:** Break into shorter sentences. First 5 words: 'Украї ні за звичай ро...'
+
+### Fix 15: PEDAGOGICAL_VIOLATION
+**What:** [COMPLEXITY_WORD_COUNT] quiz 'Understanding the Accusative Case' Q4 prompt length 4 (target: 5-10)
 **How to fix:** Adjust prompt length to 5-10 words.
 
 ### Other Audit Failures

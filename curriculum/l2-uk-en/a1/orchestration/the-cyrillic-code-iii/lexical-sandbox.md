@@ -77,8 +77,7 @@
 
 ### Verified Example Sentences (from textbooks)
 
-- Хати убрані в клечінь сокови­
-ту (А. Луценко).
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
   *Source: unknown*
 
 ### Usage Rules

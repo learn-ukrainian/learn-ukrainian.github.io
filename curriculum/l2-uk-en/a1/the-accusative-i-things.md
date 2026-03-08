@@ -1,192 +1,113 @@
 <!-- SCOPE
-Covers: Accusative case for inanimate objects, core trigger verbs
+Covers: Accusative case for inanimate nouns, direct objects, key trigger verbs
 Not covered:
-  - Accusative for animate nouns (people/animals) → a1-26
+  - Accusative case for people (animate) → a1-26 (The Accusative II: People)
 -->
 
 # The Accusative I: Things
 
 > **Чому це важливо?**
 >
-> Англійська мова використовує порядок слів. (English uses word order.) Українська мова використовує закінчення слів. (Ukrainian uses word endings.) Ви використовуєте знахідний відмінок для предметів. (You use the Accusative case for objects.)
+> In English, word order tells us who is doing what to whom. In Ukrainian, the ends of the words change to show the direct object. This is how we know what you are buying, reading, or seeing.
 
 ## Вступ: Що я бачу? (Introduction)
 
-In English, strict word order tells us who is doing what. Ukrainian works differently: it changes the endings of words instead. These new endings act like little flags, showing that an object's role has changed and it is now receiving the action.
+Я ба́чу стіл. Я ба́чу вікно́. Це кімна́та. Що я ба́чу тут? В англі́йській мо́ві поря́док слів є ста́лий. В украї́нській мо́ві він ві́льний. Тому́ ми змі́нюємо закінчення слів. Ці закінчення пока́зують роль сло́ва. Ві́ра чита́є ціка́ву кни́жку. Початко́ва фо́рма — це сло́во «кни́жка». Воно́ змі́нюється на «кни́жку». Це Знахі́дний відмі́нок. Я ба́чу пробле́му. Він шука́є ви́хід. Він ба́чить пробле́му. Вона́ ба́чить стіл. Ми ба́чимо мі́сто. Ти шука́єш ви́хід. Я чита́ю кни́жку. Він чита́є кни́жку. Ми шука́ємо ви́хід. Ти ба́чиш вікно́. Я ба́чу мі́сто. Ми ба́чимо кімна́ту. Ти шука́єш кни́жку.
 
-The person or thing doing the action is the subject. You already know how to handle subjects: they use the **Nominative case** (називний відмінок). This is the basic dictionary form of the word. When a word is the subject, you don't change its ending — it is your foundation.
-
-Я бачу кімнату. (I see a room.)
-Я бачу стіл. (I see a table.)
-Я бачу вікно. (I see a window.)
-
-Предмет отримує дію. (An object receives an action.) Це прямий додаток. (This is the direct object.) Прямий додаток вимагає знахідного відмінка. (A direct object requires the Accusative case.) Знахідний відмінок показує об'єкт дії. (The Accusative case shows the object of an action.) Ми будемо змінювати слова. (We will change words.)
-
-Сьогодні ми говоримо тільки про неживі предмети. (Today we talk only about inanimate objects.) Ми говоримо про речі, не про людей. (We are talking about things, not people.) Ми вчимося говорити про речі. (We learn to speak about things.) Ми бачимо ці речі. (We see these things.) Ми хочемо і купуємо їх. (We want and buy them.)
+I see a table. I see a window. This is a room. What do I see here?
+In English, there is a strict word order. The subject comes first, then the verb, and then the direct object. For example, in the sentence «Vira reads a book», Vira is the subject and a book is the direct object.
+In Ukrainian, word order is flexible. Instead, we change the endings of words. These endings show the role of the word. We use the Accusative case when we do something directly to an object. We see it, we want it, we have it, or we buy it. The changed ending tells us clearly which word is the direct object.
+Vira is reading an interesting book. The original word is «кни́жка». It changes to «кни́жку» because it receives the action. This is the Accusative case.
+I see a problem. He is looking for an exit.
+Some words completely change their ending. Other words stay the same as in the dictionary. We start with inanimate objects today.
 
 ## Презентація: Знахідний відмінок (Presentation)
 
-Знахідний відмінок залежить від роду. (The Accusative case depends on the gender.) Правила для неживих предметів дуже прості. (The rules for inanimate objects are very simple.) Багато слів взагалі не змінюються. (Many words do not change at all.) Ми почнемо зі слів зі змінами. (We will start with words with changes.)
+Час ви́вчити пра́вила відмі́нка. Ми розгляда́ємо ре́чі. Це кни́га. Я чита́ю кни́гу. Це ка́ва. Я п'ю ка́ву. Це обов'язко́ва змі́на. Це іде́я. Я ма́ю іде́ю. Це гре́чка. Я купу́ю гре́чку. Ці змі́ни важли́ві. Хоро́ші нови́ни! Деякі слова́ не змі́нюються. Це стіл. Я ба́чу стіл. Це хліб. Я купу́ю хліб. Це вікно́. Я відкрива́ю вікно́. Це мі́сто. Я люблю́ мі́сто. Бага́то дієслі́в вимага́ють відмі́нка. Я ма́ю час. Я ма́ю мо́жливість. Ти хо́чеш ї́сти? Я хо́чу ка́ву. Він бере́ слу́хавку. Я беру́ уча́сть. Ми чу́ємо му́зику. Ти чу́єш го́лос. Я ба́чу пробле́му. Вона́ купу́є хліб. Ми купу́ємо проду́кти. Ми хо́чемо ї́сти. Ти ма́єш ра́цію. Вона́ ма́є час. Він купу́є хліб. Я відкрива́ю вікно́. Ми п'ємо́ ка́ву. Я люблю́ мі́сто. Він шука́є ви́хід. Вона́ бере́ слу́хавку. Ти бере́ш уча́сть. Ми знахо́димо час. Я чу́ю го́лос. Я ма́ю іде́ю. Вона́ ма́є ра́цію. Ми хо́чемо ка́ву. Ти купу́єш гре́чку. Він відкрива́є вікно́. Я ба́чу стіл. Ми ба́чимо мі́сто. Вона́ шука́є робо́ту. Ти чу́єш му́зику. Ми бере́мо уча́сть. Він бере́ слу́хавку. Я знахо́джу час.
 
-### Жіночий рід
-
-Слова жіночого роду майже завжди змінюються. (Feminine words almost always change.) Feminine words almost always change when they receive an action. If a feminine noun ends in **-а**, the ending changes to **-у**. If it ends in **-я**, it changes to **-ю**. English speakers often forget this and leave the word in its dictionary form — but in Ukrainian, this change is mandatory!
-
-Я маю книгу. (I have a book.)
-Я читаю цікаву книгу. (I am reading an interesting book.)
-
-Слово **книга** змінюється на **книгу**. (The word book changes to its accusative form.) Це показує нову роль. (This shows the new role.) Книга отримує дію. (The book receives the action.) 
-
-Я хочу каву. (I want coffee.)
-Я люблю каву. (I love coffee.)
-
-Слово **кава** стає **каву**. (The word coffee becomes its accusative form.) Ця зміна відбувається завжди. (This change happens always.) Жіноче слово на **а** отримує дію. (A feminine word ending in a receives an action.)
-
-Я бачу проблему. (I see a problem.)
-Я маю можливість. (I have an opportunity.)
+Time to learn the rules of the case. We look at things, not people.
+This is a book. I am reading a book. This is coffee. I am drinking coffee.
+For feminine words that end in the letter -а, we change the ending to -у. This is a mandatory change.
+This is an idea. I have an idea. This is buckwheat. I am buying buckwheat.
+If a feminine word ends in the letter -я, we change the ending to -ю. These changes are very important. If you do not change the ending, the sentence means the book is reading you!
 
 > [!warning]
-> Найбільша помилка — це говорити «Я читаю книга». (The biggest mistake is saying "I read book" in the nominative.) Закінчення має змінюватися! (The ending must change!)
+> The Nominative case is only for the subject.
+> A very common mistake is saying «Я читаю книга».
+> English-speaking students often forget to change the ending.
+> You must always change the feminine ending for a direct object.
 
-### Чоловічий та середній рід
+Good news! Some words do not change. For inanimate objects, masculine and neuter words stay the same.
+This is a table. I see a table. This is bread. I am buying bread.
+Masculine inanimate words do not change in the Accusative case. You must not add the ending -a to them.
+This is a window. I am opening a window. This is a city. I love the city.
+Neuter words also do not change. They stay in the dictionary form.
 
-Є чудова новина для чоловічого та середнього роду. (There is excellent news for masculine and neuter genders.) Неживі предмети цих родів не змінюються. (Inanimate objects of these genders do not change.) Їхній знахідний відмінок такий самий. (Their accusative case is the same.) Ви не вчите нові закінчення. (You do not learn new endings.)
-
-Я бачу стіл. (I see a table.)
-Я відкриваю вікно. (I am opening a window.)
-
-Тут **стіл** (table) is masculine, and **вікно** (window) is neuter. There is great news for these words: when they represent inanimate objects (things, not people), they do not change at all! Their Accusative form is exactly the same as their dictionary form.
-
-Я купую хліб. (I am buying bread.)
-Я шукаю вихід. (I am looking for an exit.)
-Пакет потрібен? (Do you need a bag?)
-
-### Основні слова дії
-
-Деякі слова завжди вимагають знахідного відмінка. (Some words always require the accusative case.) Це дії. (These are actions.) Вони спрямовані на предмет. (They are directed at an object.)
-
-Слово **мати** дуже важливе. (The word to have is very important.) 
-
-Я маю час. (I have time.)
-Я маю рацію. (I am right.)
-
-Слово **хотіти** виражає ваше бажання. (The word to want expresses your desire.)
-
-Я хочу їсти. (I want to eat.)
-Я хочу спати. (I want to sleep.)
-
-Слово **брати** використовується дуже часто. (The word to take is used very often.)
-
-Я беру участь. (I am participating.)
-Я беру таксі. (I am taking a taxi.)
-Я беру каву. (I am taking coffee.)
-
-Слова **бачити** та **чути** є основними. (The words to see and to hear are fundamental.)
-
-Я бачу проблему. (I see a problem.)
-Я чую музику. (I hear music.)
-Я чую голос. (I hear a voice.)
-
-Слово **купувати** потрібне для магазину. (The word to buy is necessary for the store.)
-
-Я купую продукти. (I am buying groceries.)
-Я купую одяг. (I am buying clothes.)
-
-> [!tip]
-> Notice when a new word appears. Does the action act on an object? Then you need the Accusative case.
+Many core verbs require the Accusative case. These are verbs of action and desire. They act as triggers.
+I have time. I have an opportunity. Do you want to eat? I want coffee.
+He takes the phone. I am taking part. We hear music. You hear a voice.
+I see a problem. She is buying bread. We are buying groceries.
+These verbs are used every day. It is important to always think about the gender of the object. Is it feminine? Then the ending changes. Is it masculine or neuter? Then the ending stays the same.
 
 ## Практика: Запобігання помилкам (Practice)
 
-Зараз час практикувати ці нові моделі. (Now is the time to practice these new patterns.) Ваша мета — звикнути до знахідного відмінка. (Your goal is to get used to the accusative case.)
+Час практикува́ти но́ві слова́. Я знахо́джу кни́гу. Я знахо́джу час. Вона́ шука́є робо́ту. Вона́ шука́є ви́хід. Тут є важли́вий контра́ст. Слова́ «кни́га» та «робо́та» змі́нюються. Слова́ «час» і «ви́хід» не змі́нюються. Це ду́же важли́ве пра́вило. Воно́ допомага́є уника́ти помило́к. За́раз ми практику́ємо фра́зи. Я ба́чу пробле́му. Ми чу́ємо го́лос. Він бере́ слу́хавку. Я ма́ю мо́жливість. Ти ма́єш ра́цію. Я хо́чу спа́ти. Ці фра́зи звуча́ть приро́дно. Я знахо́джу іде́ю. Ти знахо́диш пробле́му. Ми знахо́димо ви́хід. Він шука́є робо́ту. Вона́ шука́є кни́жку. Я ба́чу стіл. Я ба́чу вікно́. Ти купу́єш ка́ву. Ти купу́єш хліб. Ми п'ємо́ во́ду. Вони́ п'ють молоко́. Я ма́ю іде́ю. Я ма́ю час. Ти ма́єш ра́цію. Вона́ ма́є мо́жливість. Ми ма́ємо час. Я ба́чу стіл. Ти ба́чиш вікно́. Він купу́є хліб. Вона́ купу́є ка́ву. Ми шука́ємо ви́хід. Я знахо́джу кни́жку. Ти знахо́диш робо́ту.
 
-### Контраст форм
-
-Найкращий спосіб — це порівнювати. (The best way is to compare.) Жіночі слова порівнюємо із чоловічими та середніми. (We compare feminine words with masculine and neuter ones.) 
-
-Я відкриваю книгу. (I am opening a book.)
-Я відкриваю вікно. (I am opening a window.)
-
-Жіноче слово змінюється, а середнє слово залишається без змін. (The feminine word changes, but the neuter word remains unchanged.) 
-
-Я шукаю книгу. (I am looking for a book.)
-Я шукаю вихід. (I am looking for an exit.)
-
-Тут знову видно контраст. (Here the contrast is visible again.) Жіночий предмет має закінчення **у**. (The feminine object has the u ending.) Чоловічий предмет не змінюється. (The masculine object does not change.)
-
-### Уникнення типових помилок
-
-The most common mistake English speakers make is using the dictionary form for everything. If you say «Я читаю книга» (I read book), it sounds grammatically incorrect to a Ukrainian ear. Because **книга** is in the Nominative case, it sounds like the book is the one doing the reading! Since the book is the object receiving the action, you must change the ending: «Я читаю книг**у**».
-
-Така ж логіка діє для інших слів. (The same logic applies to other words.) 
-
-Я замовляю каву. (I am ordering coffee.)
-Я люблю каву. (I love coffee.)
-
-Ви кажете «Я люблю кава». (You say "I love coffee".) Це звучить дуже неприродно. (This sounds very unnatural.) 
-
-Також ми повинні уникати додавання закінчень до чоловічих слів. (Also we must avoid adding endings to masculine words.)
-
-Я купую хліб. (I am buying bread.)
-
-Ми не кажемо «Я купую хліба». (We do not say "I am buying bread+a".) Слово **хліб** є неживим предметом. (The word bread is an inanimate object.) Воно не змінюється. (It does not change.)
-
-### Популярні фрази
-
-Ви хочете говорити природно. (You want to speak naturally.) Тому ми вчимо популярні фрази. (Therefore we learn popular phrases.) Носії мови використовують їх постійно. (Native speakers use them constantly.)
-
-Я маю можливість. (I have an opportunity.)
-Я бачу проблему. (I see a problem.)
-Я знаходжу час. (I find time.)
-Я знаходжу відповідь. (I find an answer.)
-
-Ці словосполучення неймовірно корисні. (These collocations are incredibly useful.) Ви можете практикувати їх вголос. (You can practice them out loud.)
+Time to practice new words.
+I find a book. I find time. She is looking for a job. She is looking for an exit.
+There is an important contrast here. The feminine words «кни́га» and «робо́та» changed to «кни́гу» and «робо́ту». The masculine words «час» and «ви́хід» did not change. This is a very important rule.
 
 > [!tip]
-> Don't just memorize endings — memorize entire useful phrases! Collocations like **мати рацію** (to be right, literally "to have reason") use the Accusative case and will instantly make your Ukrainian sound more natural.
+> Always learn the gender of a new noun.
+> If it's feminine, you must change the ending for the Accusative case. If it's masculine (and inanimate) or neuter, it stays exactly the same as the dictionary form.
+
+A very common mistake for English speakers is to leave the word in its dictionary form. If you say «Я читаю книга», it sounds like "I read book" without the grammatical connection. You must use the Accusative ending for the object receiving the action.
+Wrong: Я чита́ю кни́га.
+Right: Я чита́ю кни́гу. (I am reading a book.)
+Wrong: Я п'ю во́да.
+Right: Я п'ю во́ду. (I am drinking water.)
+
+For masculine inanimate words, the mistake is the opposite: adding an ending when you shouldn't. Remember that masculine inanimate objects (like стіл or хліб) do not change their form in the Accusative case.
+Wrong: Я ба́чу стола́.
+Right: Я ба́чу стіл. (I see a table.)
+Wrong: Я купу́ю хлі́ба.
+Right: Я купу́ю хліб. (I am buying bread.)
+
+These masculine and neuter words remain stable and keep their dictionary form.
+Now let's practice some common phrases you will often hear in Ukrainian conversations.
+I see a problem. We hear a voice. He takes the phone. I have an opportunity. You are right. I want to sleep.
+These phrases sound natural. The word «ра́ція» changes to «ра́цію» after the verb «ма́ти». The word «пробле́ма» changes to «пробле́му» after the verb «ба́чити».
 
 ## Виробництво та Культура: У супермаркеті (Production and Culture)
 
-Магазин — ідеальний приклад для знахідного відмінка. (A store is a perfect example for the accusative case.) Ви постійно купуєте речі. (You constantly buy things.) 
+Час застосува́ти ва́ші знання́. За́раз ми в магази́ні. Ми купу́ємо проду́кти у двох мі́сцях. Це база́р і суперма́ркет. Суча́сний суперма́ркет — швидки́й і зру́чний. Традиці́йний база́р — жва́вий і галасли́вий. На ка́сі каси́р пита́є: «Паке́т потрі́бен?». Тут сло́во «паке́т» не змі́нюється. За́раз ми ро́бимо спи́сок. Я хо́чу купи́ти хліб. Ми купу́ємо гре́чку. Вона́ шука́є ка́ву. Я беру́ молоко́. Ми йдемо́ мі́ж ряда́ми. Я ба́чу проду́кти. Я беру́ хліб. Я беру́ гре́чку. Я купу́ю проду́кти. Тепе́р ви зна́єте пра́вила. Я хо́чу паке́т. Ти хо́чеш паке́т. Ми купу́ємо хліб. Ви купу́єте ка́ву. Я знахо́джу молоко́. Вона́ знахо́дить гре́чку. Я ба́чу суперма́ркет. Ти ба́чиш база́р. Я ма́ю спи́сок. Ми ма́ємо спи́сок. Він купу́є хліб. Вона́ купу́є молоко́. Я хо́чу гре́чку. Ти хо́чеш молоко́. Ми купу́ємо проду́кти. Вона́ бере́ паке́т. Він бере́ хліб. Я знахо́джу ка́ву. Ти знахо́диш паке́т. Я ба́чу мі́сто. Ти ба́чиш суперма́ркет. Ми ма́ємо проду́кти. Ви ма́єте хліб.
 
-### Досвід на касі
+Time to apply your knowledge. Imagine you are standing in a store.
+In Ukraine, grocery shopping usually happens in two places. The modern «суперма́ркет» is fast and convenient. The traditional «база́р» (market) is lively. At a supermarket checkout, you will always hear one question:
+«Паке́т потрі́бен?» (Do you need a bag?)
+The word «паке́т» does not change. It is a masculine inanimate word. It means a plastic or paper shopping bag.
+Now we make a list.
+I want to buy bread. We are buying buckwheat. She is looking for coffee. I take milk.
+«Хліб» is masculine, so it did not change. «Гре́чка» is feminine, so it changed to «гре́чку». «Ка́ва» changed to «ка́ву». «Молоко́» is neuter, so it stayed exactly the same.
 
-У великому українському магазині ви завжди почуєте одне запитання. (In a large Ukrainian store you will always hear one question.)
+> [!culture]
+> Buckwheat is a huge cultural staple in Ukraine.
+> It is a very common side dish.
+> It is almost always on the shopping list!
 
-Пакет потрібен? (Do you need a bag?)
-
-Це важлива культурна деталь. (This is an important cultural detail.) Касир запитує про пластиковий пакет. (The cashier asks about a plastic bag.) Слово **пакет** — це неживий чоловічий рід. (The word bag is inanimate masculine gender.) 
-
-Я хочу пакет. (I want a bag.)
-
-Слово **пакет** не змінюється. (The word bag does not change.) 
-
-Shopping in a large **супермаркет** is fast: you simply take the items and pay. But at a traditional **базар** (market), shopping is a social experience. You talk with the sellers, choose your items, and practice your Accusative case out loud: «Я купую яблука» (I am buying apples) or «Я хочу картоплю» (I want potatoes).
-
-### Складання списку покупок
-
-Ми можемо уявити список покупок. (We can imagine a shopping list.) Ми будемо використовувати слово **купувати**. (We will use the word to buy.) 
-
-Я хочу купити хліб. (I want to buy bread.)
-
-Хліб — це чоловічий рід. (Bread is masculine.) Він не змінюється. (It does not change.)
-
-Я хочу купити гречку. (I want to buy buckwheat.)
-
-Гречка — це важливий український продукт. (Buckwheat is an important Ukrainian product.) Слово «гречка» має жіночий рід. (The word "buckwheat" has feminine gender.) Тому ми кажемо **гречку**. (Therefore we say it in the accusative.)
-
-Я купую продукти. (I am buying groceries.)
-Я купую каву. (I am buying coffee.)
-
-Ви йдете до магазину. Ви можете описувати покупки подумки. (You go to the store. You can describe purchases mentally.) Ви дивитеся на свій кошик і називаєте предмети. (You look at your basket and name the objects.) Це допомагає розуміти знахідний відмінок. (This helps to understand the accusative case.)
+You walk through the aisles.
+I see groceries. I take bread. I take buckwheat. I am buying groceries.
+Now you know the rules. You can navigate a Ukrainian store and build your own shopping list using the correct direct object forms.
 
 ---
 
 ## Підсумок
 
-Ви тепер розумієте знахідний відмінок для неживих предметів. (You now understand the accusative case for inanimate objects.) Жіночі слова на **а** та **я** змінюють закінчення. (Feminine words ending in a and ya change endings.) Чоловічі та середні слова залишаються без змін. (Masculine and neuter words remain without changes.) Ви також вивчили ці слова: **мати**, **бачити**, і **купувати**. (You have also learned these words: to have, to see, and to buy.)
+We use the Accusative case for direct objects. Feminine inanimate nouns change their endings. The letter -а changes to -у. The letter -я changes to -ю. Masculine and neuter inanimate nouns do not change. We use this case after verbs like ба́чити, чу́ти, бра́ти, ма́ти, хоті́ти, and купува́ти.
 
-Що ви бачите? (What do you see?) — Я бачу кімнату. (I see a room.)
-Що ви хочете? (What do you want?) — Я хочу каву. (I want coffee.)
-Що ви купуєте? (What are you buying?) — Я купую хліб. (I am buying bread.)
+1. Що я ба́чу? (What do I see?) — Стіл. (A table.)
+2. Що ти купу́єш? (What are you buying?) — Я купу́ю хліб. (I am buying bread.)
+3. Що вона́ бере́? (What does she take?) — Вона́ бере́ ка́ву. (She takes coffee.)
+4. Що ми ма́ємо? (What do we have?) — Ми ма́ємо час. (We have time.)
 
 ---

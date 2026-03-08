@@ -1,28 +1,33 @@
 # RAG Verification: the-living-verb-i
 
-**Date:** 2026-03-06 21:54 UTC | **Words checked:** 251 | **VESUM coverage:** 243/251 (96.8%)
+**Date:** 2026-03-07 02:57 UTC | **Words checked:** 246 | **VESUM coverage:** 238/246 (96.7%)
 
 ## Summary
-- ✅ Verified (VESUM): 243
-- ⚠️ Partial (RAG only): 0
-- ❌ Not found: 8
+- ✅ Verified (VESUM): 238
+- ⚠️ Partial (RAG only): 2
+- ❌ Not found: 6
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
 | ати | prose | ✗ | ✗ | ✗ |
-| розуміт | activities | ✗ | ✗ | ✗ |
-| слова-дії | prose | ✗ | ✗ | ✗ |
+| ити | prose | ✗ | ✗ | ✗ |
 | ють | prose | ✗ | ✗ | ✗ |
-| яти | prose | ✗ | ✗ | ✗ |
 | ємо | prose | ✗ | ✗ | ✗ |
 | єте | prose | ✗ | ✗ | ✗ |
 | єш | prose | ✗ | ✗ | ✗ |
+
+## ⚠️ Partial Match (human review)
+
+| Word | Source | VESUM | Textbook | Literary |
+|------|--------|-------|----------|----------|
+| Федоров | prose | ✗ | ✓ | ✗ |
+| Іван | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 216 | 209 | 7 |
-| Activities (.yaml) | 35 | 34 | 1 |
+| Prose (.md) | 198 | 190 | 6 |
+| Activities (.yaml) | 48 | 48 | 0 |

@@ -2,36 +2,36 @@
   "module": "the-living-verb-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T00:31:51.047681Z",
+  "last_audit": "2026-03-07T15:17:26.318490Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-06T23:11:01.160376Z",
-    "meta": "2026-03-06T23:00:24.743806Z",
-    "activities": null,
-    "vocabulary": null,
+    "md": "2026-03-07T03:55:52.314003Z",
+    "meta": "2026-03-07T03:38:03.243212Z",
+    "activities": "2026-03-07T03:52:38.235332Z",
+    "vocabulary": "2026-03-07T03:45:08.392034Z",
     "plan": "2026-03-05T15:41:08.651060Z",
-    "research": "2026-03-06T23:01:08.214043Z"
+    "research": "2026-03-07T03:38:44.538748Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Activities' header OR activities sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1311/1200 (raw: 1461) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1585/1200 (raw: 1770)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/8 | density: 0 < 6 | unique_types: 0/4 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/8"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,19 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-living-verb-i-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module_v5.py review phase (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Structure: Missing '## Activities' header OR activities sidecar",
-      "Missing required activity types: fill-in, match-up"
+      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-living-verb-i-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run build_module_v5.py review phase (tier-1-beginner) using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence and stress mark, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     ],
-    "pass_count": 1,
-    "fail_count": 3,
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -1,295 +1,326 @@
 - type: group-sort
-  title: Sort by Gender
+  title: "Sort the Words by Group"
+  instruction: "Categorize each word into its correct pronoun group: He, She, or It."
   groups:
-  - name: Masculine (він)
-    items:
-    - брат
-    - дім
-    - стіл
-    - тато
-  - name: Feminine (вона)
-    items:
-    - сестра
-    - мама
-    - книга
-    - зона
-  - name: Neuter (воно)
-    items:
-    - вікно
-    - місто
-    - море
-    - сонце
-  instruction: Розподіліть елементи за групами.
-- type: quiz
-  title: Identify Gender by Ending
-  instruction: Choose the correct answer.
-  items:
-  - question: Which gender does a noun ending in a firm consonant usually belong to?
-    explanation: Masculine words almost always end in a consonant.
-    options:
-    - text: Masculine
-      correct: true
-    - text: Feminine
-      correct: false
-    - text: Neuter
-      correct: false
-    - text: Plural
-      correct: false
-  - question: What gender is the word книга?
-    explanation: Words ending in -а or -я are usually Feminine.
-    options:
-    - text: Feminine
-      correct: true
-    - text: Masculine
-      correct: false
-    - text: Neuter
-      correct: false
-    - text: Plural
-      correct: false
-  - question: What gender is the word вікно?
-    explanation: Words ending in -о or -е are usually Neuter.
-    options:
-    - text: Neuter
-      correct: true
-    - text: Masculine
-      correct: false
-    - text: Feminine
-      correct: false
-    - text: Plural
-      correct: false
-  - question: Why is the word тато (father) Masculine despite ending in -о?
-    explanation: Biological sex always overrides the grammatical ending.
-    options:
-    - text: Biological sex overrides the ending
-      correct: true
-    - text: It is a soft sign exception
-      correct: false
-    - text: It is a loanword
-      correct: false
-    - text: It belongs to Declension Family 4
-      correct: false
-  - question: What gender is the word місто?
-    explanation: Words ending in -о or -е are usually Neuter.
-    options:
-    - text: Neuter
-      correct: true
-    - text: Masculine
-      correct: false
-    - text: Feminine
-      correct: false
-    - text: Plural
-      correct: false
-  - question: Which possessive pronoun correctly matches the word мама?
-    explanation: Мама is Feminine, so you must use моя.
-    options:
-    - text: моя
-      correct: true
-    - text: мій
-      correct: false
-    - text: моє
-      correct: false
-    - text: мої
-      correct: false
-  - question: Which possessive pronoun correctly matches the word брат?
-    explanation: Брат is Masculine, so you must use мій.
-    options:
-    - text: мій
-      correct: true
-    - text: моя
-      correct: false
-    - text: моє
-      correct: false
-    - text: мої
-      correct: false
-  - question: What gender is the word ім'я?
-    explanation: Ім'я is a special historical exception (Family 4) and is Neuter.
-    options:
-    - text: Neuter
-      correct: true
-    - text: Masculine
-      correct: false
-    - text: Feminine
-      correct: false
-    - text: Plural
-      correct: false
+    - name: "He"
+      items:
+        - "стіл"
+        - "дім"
+        - "брат"
+    - name: "She"
+      items:
+        - "книга"
+        - "мова"
+        - "ніч"
+    - name: "It"
+      items:
+        - "вікно"
+        - "слово"
+        - "місто"
+
 - type: true-false
-  title: Exceptions and Rules
+  title: "True or False: Word Groups"
+  instruction: "Decide if the statement about the word's group is true or false."
   items:
-  - statement: All words ending in -о are Neuter, including the word тато.
-    correct: false
-    explanation: Biological sex overrides the grammatical ending. Тато (father) is
-      strictly Masculine.
-  - statement: The word сонце is Neuter in Ukrainian because it ends in -е.
-    correct: true
-    explanation: Neuter words typically end in the round vowels -о or -е.
-  - statement: The word ім'я is Feminine because it ends in -я.
-    correct: false
-    explanation: Ім'я is a special historical exception. It belongs to Declension
-      Family 4 and is actually Neuter.
-  - statement: Masculine words almost always end in a consonant.
-    correct: true
-    explanation: Masculine words have a hard, firm ending sound.
-  - statement: The word дім is a Masculine noun.
-    correct: true
-    explanation: It ends in a firm consonant, so it is definitively Masculine.
-  - statement: English 'it' directly translates to Neuter 'воно' for all inanimate
-      objects in Ukrainian.
-    correct: false
-    explanation: This is the 'It' Trap. Inanimate objects can be Masculine (стіл)
-      or Feminine (книга) depending on their ending.
-  - statement: Words ending in a soft sign (-ь) can be either Masculine or Feminine.
-    correct: true
-    explanation: The soft sign is ambiguous. For example, день is Masculine, but ніч
-      is Feminine.
-  - statement: The word стіл is Neuter because it is an inanimate object.
-    correct: false
-    explanation: Стіл ends in a consonant, so it is Masculine (він). Inanimate objects
-      have gender in Ukrainian.
-  instruction: Визначте, чи твердження правильне.
-- type: fill-in
-  title: Choose the Correct Pronoun
-  items:
-  - sentence: Це ___ дім.
-    answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    - він
-  - sentence: Це ___ книга.
-    answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    - вона
-  - sentence: Це ___ вікно.
-    answer: моє
-    options:
-    - мій
-    - моя
-    - моє
-    - воно
-  - sentence: Це ___ тато.
-    answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    - він
-  - sentence: Це ___ місто.
-    answer: моє
-    options:
-    - мій
-    - моя
-    - моє
-    - воно
-  - sentence: Це ___ сестра.
-    answer: моя
-    options:
-    - мій
-    - моя
-    - моє
-    - вона
-  - sentence: Це ___ брат.
-    answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    - він
-  - sentence: Це ___ ім'я.
-    answer: моє
-    options:
-    - мій
-    - моя
-    - моє
-    - воно
-  instruction: Оберіть правильне слово для заповнення пропуску.
-- type: anagram
-  title: Unscramble the Nouns
-  instruction: Rearrange the letters to form the correct Ukrainian word.
-  items:
-  - scrambled: о т а т
-    answer: тато
-  - scrambled: а м а м
-    answer: мама
-  - scrambled: м і д
-    answer: дім
-  - scrambled: о н і в к
-    answer: вікно
-  - scrambled: а и г к н
-    answer: книга
-  - scrambled: о м і т с
-    answer: місто
-  - scrambled: л і с т
-    answer: стіл
-  - scrambled: т а р б
-    answer: брат
+    - statement: "The word книга belongs to the She group."
+      correct: true
+      explanation: "книга ends in -а, so it is feminine (She)."
+    - statement: "The word дім belongs to the It group."
+      correct: false
+      explanation: "дім ends in a consonant, so it is masculine (He)."
+    - statement: "The word вікно belongs to the It group."
+      correct: true
+      explanation: "вікно ends in -о, so it is neuter (It)."
+    - statement: "The word сестра belongs to the He group."
+      correct: false
+      explanation: "сестра ends in -а, so it is feminine (She)."
+    - statement: "The word брат belongs to the He group."
+      correct: true
+      explanation: "брат ends in a consonant, so it is masculine (He)."
+    - statement: "The word слово belongs to the She group."
+      correct: false
+      explanation: "слово ends in -о, so it is neuter (It)."
+    - statement: "The word місто belongs to the It group."
+      correct: true
+      explanation: "місто ends in -о, so it is neuter (It)."
+    - statement: "The word стіл belongs to the She group."
+      correct: false
+      explanation: "стіл ends in a consonant, so it is masculine (He)."
+
 - type: match-up
-  title: Match Word to Translation
+  title: "Match the Word to its Translation"
+  instruction: "Match each Ukrainian word on the left with its English meaning on the right."
   pairs:
-  - left: тато
-    right: father
-  - left: мама
-    right: mother
-  - left: місто
-    right: city
-  - left: вікно
-    right: window
-  - left: книга
-    right: book
-  - left: стіл
-    right: table
-  - left: сонце
-    right: sun
-  - left: дім
-    right: house
-  instruction: З'єднайте відповідні елементи.
-- type: group-sort
-  title: Sort the Words by Ending
-  groups:
-  - name: Consonant (Masculine)
-    items:
-    - брат
-    - стіл
-    - артефакт
-  - name: -а or -я (Feminine)
-    items:
-    - сестра
-    - земля
-    - зона
-  - name: -о or -е (Neuter)
-    items:
-    - серце
-    - вікно
-    - море
-  instruction: Розподіліть елементи за групами.
-- type: true-false
-  title: 'True or False: Word Genders'
+    - left: "дім"
+      right: "house"
+    - left: "місто"
+      right: "city"
+    - left: "книга"
+      right: "book"
+    - left: "слово"
+      right: "word"
+    - left: "час"
+      right: "time"
+    - left: "стіл"
+      right: "table"
+    - left: "вікно"
+      right: "window"
+    - left: "мова"
+      right: "language"
+
+- type: anagram
+  title: "Unscramble the Words"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
   items:
-  - statement: The word брат is Masculine.
-    correct: true
-    explanation: Брат ends in a firm consonant and refers to a male.
-  - statement: The word сестра is Neuter.
-    correct: false
-    explanation: Сестра ends in -а, making it Feminine.
-  - statement: The word море is Neuter.
-    correct: true
-    explanation: Море ends in -е, which is a round vowel indicating Neuter gender.
-  - statement: The word собака is Masculine grammatically.
-    correct: false
-    explanation: Собака grammatically is treated as Feminine because it ends in -а.
-  - statement: The word артефакт is Feminine.
-    correct: false
-    explanation: Артефакт ends in a firm consonant, so it is definitively Masculine.
-  - statement: The word зона is Feminine.
-    correct: true
-    explanation: Зона ends in the open vowel -а, making it definitively Feminine.
-  - statement: The word укриття is Neuter.
-    correct: true
-    explanation: Укриття is a Neuter noun that ends in -я due to a specific stem change.
-  - statement: The word мама is Neuter.
-    correct: false
-    explanation: Мама ends in -а and refers to a female, making it Feminine.
-  instruction: Визначте, чи твердження правильне.
+    - scrambled: "о в о л с"
+      answer: "слово"
+    - scrambled: "а г и н к"
+      answer: "книга"
+    - scrambled: "о н к і в"
+      answer: "вікно"
+    - scrambled: "о т с і м"
+      answer: "місто"
+    - scrambled: "а м а м"
+      answer: "мама"
+    - scrambled: "о т а т"
+      answer: "тато"
+    - scrambled: "л і т с"
+      answer: "стіл"
+    - scrambled: "а в о м"
+      answer: "мова"
+
+- type: quiz
+  title: "Choose the Correct Pronoun"
+  instruction: "Select the pronoun that correctly replaces the given word."
+  items:
+    - question: "Which pronoun replaces the word сонце?"
+      explanation: "сонце ends in -е, so it is neuter."
+      options:
+        - text: "воно"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "вона"
+          correct: false
+        - text: "вони"
+          correct: false
+    - question: "Which pronoun replaces the word людина?"
+      explanation: "людина ends in -а, so it is feminine."
+      options:
+        - text: "вона"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "воно"
+          correct: false
+        - text: "ми"
+          correct: false
+    - question: "Which pronoun replaces the word собака?"
+      explanation: "собака is a special masculine word."
+      options:
+        - text: "він"
+          correct: true
+        - text: "вона"
+          correct: false
+        - text: "воно"
+          correct: false
+        - text: "вони"
+          correct: false
+    - question: "Which pronoun replaces the word земля?"
+      explanation: "земля ends in -я, so it is feminine."
+      options:
+        - text: "вона"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "воно"
+          correct: false
+        - text: "я"
+          correct: false
+    - question: "Which pronoun replaces the word артефакт?"
+      explanation: "артефакт ends in a consonant, so it is masculine."
+      options:
+        - text: "він"
+          correct: true
+        - text: "вона"
+          correct: false
+        - text: "воно"
+          correct: false
+        - text: "ти"
+          correct: false
+    - question: "Which pronoun replaces the word укриття?"
+      explanation: "укриття ends in -я, but it is neuter."
+      options:
+        - text: "воно"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "вона"
+          correct: false
+        - text: "ви"
+          correct: false
+    - question: "Which pronoun replaces the word зона?"
+      explanation: "зона ends in -а, so it is feminine."
+      options:
+        - text: "вона"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "воно"
+          correct: false
+        - text: "вони"
+          correct: false
+    - question: "Which pronoun replaces the word ім'я?"
+      explanation: "ім'я is a special neuter word."
+      options:
+        - text: "воно"
+          correct: true
+        - text: "він"
+          correct: false
+        - text: "вона"
+          correct: false
+        - text: "ми"
+          correct: false
+
+- type: fill-in
+  title: "Complete the Phrase"
+  instruction: "Choose the correct word to complete the phrase. Pay attention to the groups."
+  items:
+    - sentence: "тут ___ брат."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "там ___ сестра."
+      answer: "ця"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "ось ___ вікно."
+      answer: "це"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "тут ___ дім."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "там ___ книга."
+      answer: "ця"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "ось ___ місто."
+      answer: "це"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "тут ___ стіл."
+      answer: "цей"
+      options: ["цей", "ця", "це", "ці"]
+    - sentence: "там ___ мова."
+      answer: "ця"
+      options: ["цей", "ця", "це", "ці"]
+
+- type: anagram
+  title: "Unscramble More Words"
+  instruction: "Rearrange the letters to form a correct Ukrainian word."
+  items:
+    - scrambled: "р а т б"
+      answer: "брат"
+    - scrambled: "с е р с т а"
+      answer: "сестра"
+    - scrambled: "е ц р е с"
+      answer: "серце"
+    - scrambled: "ц е н о с"
+      answer: "сонце"
+    - scrambled: "о р е м"
+      answer: "море"
+    - scrambled: "н е д ь"
+      answer: "день"
+    - scrambled: "а ч с"
+      answer: "час"
+    - scrambled: "м е з я л"
+      answer: "земля"
+
+- type: quiz
+  title: "Vocabulary Check"
+  instruction: "Choose the correct Ukrainian word for the English meaning."
+  items:
+    - question: "What is the Ukrainian word for city?"
+      explanation: "місто means city."
+      options:
+        - text: "місто"
+          correct: true
+        - text: "дім"
+          correct: false
+        - text: "стіл"
+          correct: false
+        - text: "море"
+          correct: false
+    - question: "What is the Ukrainian word for language?"
+      explanation: "мова means language."
+      options:
+        - text: "мова"
+          correct: true
+        - text: "слово"
+          correct: false
+        - text: "час"
+          correct: false
+        - text: "день"
+          correct: false
+    - question: "What is the Ukrainian word for word?"
+      explanation: "слово means word."
+      options:
+        - text: "слово"
+          correct: true
+        - text: "мова"
+          correct: false
+        - text: "книга"
+          correct: false
+        - text: "місто"
+          correct: false
+    - question: "What is the Ukrainian word for house?"
+      explanation: "дім means house."
+      options:
+        - text: "дім"
+          correct: true
+        - text: "стіл"
+          correct: false
+        - text: "вікно"
+          correct: false
+        - text: "серце"
+          correct: false
+    - question: "What is the Ukrainian word for time?"
+      explanation: "час means time."
+      options:
+        - text: "час"
+          correct: true
+        - text: "день"
+          correct: false
+        - text: "ніч"
+          correct: false
+        - text: "сонце"
+          correct: false
+    - question: "What is the Ukrainian word for day?"
+      explanation: "день means day."
+      options:
+        - text: "день"
+          correct: true
+        - text: "час"
+          correct: false
+        - text: "ніч"
+          correct: false
+        - text: "земля"
+          correct: false
+    - question: "What is the Ukrainian word for night?"
+      explanation: "ніч means night."
+      options:
+        - text: "ніч"
+          correct: true
+        - text: "день"
+          correct: false
+        - text: "сонце"
+          correct: false
+        - text: "море"
+          correct: false
+    - question: "What is the Ukrainian word for table?"
+      explanation: "стіл means table."
+      options:
+        - text: "стіл"
+          correct: true
+        - text: "дім"
+          correct: false
+        - text: "вікно"
+          correct: false
+        - text: "артефакт"
+          correct: false

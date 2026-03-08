@@ -1,16 +1,30 @@
-        # Fix 2 issue(s) in `the-gender-code`
+        # Fix 5 issue(s) in `the-gender-code`
 
-        ### Fix 1: PLAN_SECTION_MISSING
-**What:** Missing 2 plan section(s): Самостійна робота (Independent Work/Production), Культурний код та підсумок (Cultural Code and Summary)
-**How to fix:** Add content for the missing plan sections or update section headings to match plan.
-**Where:** (plan vs content)
+        ### Fix 1: PEDAGOGICAL
+**What:** [SELF_CHECK_NEEDS_ENGLISH] Question has no English: '- **Дім — він. Стіл — він. Брат — він. День — він. Тато — ві'
+**How to fix:** Add English translation so pre-literate students can understand the question.
+**Context (line 138):** `Let us review the words once more:`
 
-### Fix: Gate `Immersion` FAIL — 14.9% LOW (target 15-35% (M07))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
+### Fix 2: PEDAGOGICAL
+**What:** [SELF_CHECK_NEEDS_ENGLISH] Question has no English: '- **Книга — вона. Мама — вона. Земля — вона. Мова — вона. Се'
+**How to fix:** Add English translation so pre-literate students can understand the question.
+**Context (line 139):** `- **Дім — він. Стіл — він. Брат — він. День — він. Тато — він. Артефакт — він. Час — він.**`
+
+### Fix 3: PEDAGOGICAL
+**What:** [SELF_CHECK_NEEDS_ENGLISH] Question has no English: '- **Вікно — воно. Місто — воно. Море — воно. Слово — воно. І'
+**How to fix:** Add English translation so pre-literate students can understand the question.
+**Context (line 140):** `- **Книга — вона. Мама — вона. Земля — вона. Мова — вона. Сестра — вона. Ніч — вона. Зона — вона. Собака — вона.**`
+
+### Fix: Gate `Pedagogy` FAIL — 1 violations
+
+### Fix 5: PEDAGOGICAL_VIOLATION
+**What:** [LEVEL_RESTRICTION] Activity 'unjumble' not appropriate for A1 M01-M10 (current: M07)
+**How to fix:** A1 M01-M10 students are still learning letters. Use anagram (letter scramble) instead of unjumble (sentence reorder).
 
 ### Other Audit Failures
 
 ```
+📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/the-gender-code-audit.log for details)
 ```

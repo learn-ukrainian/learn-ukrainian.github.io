@@ -5,31 +5,27 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-06T21:43:32Z",
+      "ts": "2026-03-07T14:27:53Z",
       "task_id": "v5-describing-things-adjectives-pA",
       "mode": "full"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-06T21:44:28Z"
+      "ts": "2026-03-07T14:28:33Z"
     },
     "sandbox": {
       "status": "complete",
-      "ts": "2026-03-06T21:44:32Z"
+      "ts": "2026-03-07T14:28:36Z"
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-06T21:49:11Z"
+      "ts": "2026-03-07T14:36:15Z",
+      "self_audited": true
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-06T21:50:56Z",
+      "ts": "2026-03-07T14:38:12Z",
       "task_id": "v5-describing-things-adjectives-pC"
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-06T21:57:46Z",
-      "attempts": 2
     }
   }
 }

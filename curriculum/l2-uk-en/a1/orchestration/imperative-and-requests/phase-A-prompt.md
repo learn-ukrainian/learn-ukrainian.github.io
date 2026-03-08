@@ -26,23 +26,14 @@ Read the level quick-ref for constraints:
 
 ## Module Sequence Constraints
 
-SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):
-Present tense verbs start at M15. Past tense at M36. Future at M37.
+SEQUENCE CONSTRAINTS (M47 — Imperative Mood):
+This module TEACHES the imperative mood. Imperative forms are ALLOWED and REQUIRED.
+Use imperative forms freely: читай/читайте, пиши/пишіть, скажи/скажіть, дай/дайте, іди/ідіть, дивись/дивіться, стій/стійте, слухай/слухайте.
 
-KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) are NOT taught until M47 (imperative-and-requests). Before M47, use indirect requests or English for instructions.
+Both imperfective AND perfective verbs are allowed for imperatives.
+Past tense and future tense are available (taught at M36/M37).
 
-BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, Давайте розглянемо, Розглянемо.
-
-INSTEAD OF → USE:
-- Запам'ятайте → "Remember that..." (English)
-- Порівняйте → "Compare..." (English)
-- Зверніть увагу → "Notice that..." (English)
-- Подивіться → "Look at..." (English)
-- Спробуйте → "Try to..." (English)
-- Прочитайте → "Read..." (English)
-- Повторіть → "Repeat..." (English)
-
-The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) apply in addition to this constraint.
+The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: perfective aspect is ALLOWED for imperative forms.
 
 
 

@@ -2,35 +2,34 @@
 
 ## State Standard Reference
 §4.2.1.2: "Adjective declension — hard/soft groups, gender agreement"
-Alignment: This module directly addresses the requirement by introducing foundational adjective agreement for masculine, feminine, neuter, and plural nouns in the nominative case, covering both hard (-ий) and soft (-ій) stem groups.
+Alignment: Introduces basic adjective endings for masculine, feminine, neuter nouns and plural forms in the nominative case.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| новий | Top 100 high-frequency adjective | новий дім, нова книга, нове життя |
-| гарний | High-frequency social descriptor | гарна погода, гарний день |
-| великий | Essential for scale | велике місто, велика родина |
-| синій | Primary example for soft stem | синя лінія (Kyiv Metro) |
+| новий | Top 100 high-frequency adjective. | нова книга, новий дім |
+| великий | Essential for scale and descriptions. | велике місто, велика родина |
+| добрий | Essential for greetings and character. | добрий день, добрий вечір |
+| синій | Primary example for soft stem (-ій). | синя лінія, синє море |
 
 ## Cultural Hooks
-1. St. Sophia's Cathedral (Софійський собор) can be used to demonstrate «старий» (ancient) and «великий» (grand).
-2. The folklore figure Mavka (Мавка) from Lesya Ukrainka's "Forest Song" provides an anchor for practicing feminine adjectives like «молода», «гарна», and «зелена».
-3. The Kyiv Metro's "синя лінія" (Blue Line) serves as a practical real-world mnemonic for the soft stem adjective "синій".
+1. St. Sophia's Cathedral (Софійський собор) — demonstrates "старий" and "великий" in a natural, historical context.
+2. Mavka (Мавка) from Lesya Ukrainka's folklore — provides a cultural portrait to practice "молода", "гарна", and "зелена".
+3. Kyiv Metro (Київське метро) — uses the "синя лінія" (Blue Line) as a mnemonic anchor for soft stem adjectives.
 
 ## Common Learner Errors
-1. Dictionary Form Defaulting → Correcting *«новий машина»* to «нова машина» — Learners often use the masculine dictionary form for all nouns instead of applying the gender-matching ending.
-2. Orthographic Interference → Correcting *«синий»* to «синій» — Learners misspell the soft stem ending due to phonetic similarities or primary language interference.
-3. Singular for Plural → Correcting *«гарна вікна»* to «гарні вікна» — Learners forget to apply the universal «-і» ending for all plural adjectives regardless of noun gender.
+1. Gender Mismatch → *новий машина* instead of *нова машина* — Learners often default to the masculine dictionary form.
+2. Orthography Error → *синий* instead of *синій* — Influenced by phonetic spelling and hard stem patterns.
+3. Plural Disagreement → *гарний квіти* instead of *гарні квіти* — Forgetting that plural adjectives take "-і" regardless of gender.
 
 ## Cross-References
 - Builds on: a1-07 (The Gender Code), a1-38 (My Daily Routine)
 - Prepares for: a1-12 (Colors and Clothing), a1-42 (Description: Adverbs)
 
 ## Notes for Content Writing
-- MUST use verb-free patterns exclusively for Ukrainian examples (e.g., «Це велика книга», «Який це дім?»). Do not use conjugated verbs (є, має), infinitives, or imperatives in Ukrainian.
-- English scaffolding is mandatory for explaining grammar rules before providing examples.
-- Use English equivalents for all classroom instructions instead of banned Ukrainian imperatives (e.g., "Look at the table..." instead of "Подивіться...").
-- Keep sentences short (max 8-10 Ukrainian words per sentence) and ensure every new grammatical term is defined.
+- Rely exclusively on verb-free Ukrainian patterns (e.g., "Це нова книга", "великий дім"). Conjugated verbs like "є" or "має" are strictly forbidden.
+- Use English for instructional language and grammatical explanations. Avoid banned imperative forms like "Запам'ятайте" or "Зверніть увагу".
+- Include a clear visual scaffold/table for the gender endings (Blue/Red/Yellow/Green).
 
 ## Resource Discovery
 

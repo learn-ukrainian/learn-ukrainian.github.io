@@ -1,308 +1,334 @@
 <!-- SCOPE
-Covers: Adjective agreement in gender and number, hard vs. soft stems.
+Covers: Adjective agreement in gender and number, hard and soft stems, high-frequency descriptive adjectives.
 Not covered:
-  - Colors → a1-12 (Colors and Clothing)
-  - Plural noun declension details → a1-13
+  - Adjective declension in other cases (only Nominative is covered here)
+  - Comparative and superlative forms
 -->
 
 # Describing Things - Adjectives
 
 > **Чому це важливо? — Why does this matter?**
 >
-> To talk about the world around you, you need words that describe things—like big, small, new, or old. In Ukrainian, these words change their shape to match the things they describe. Learning these patterns is the key to expressing your opinions and observations.
+> Adjectives bring your language to life. By learning how to match describing words with nouns, you unlock the ability to express opinions, share observations, and describe the world around you accurately and naturally. This is the key to moving beyond basic identification into true expression.
 
 ## Вступ: Світ прикметників (Introduction: The World of Adjectives)
 
-Привіт! Сьогодні — нові слова.
-Hello! Today, new words.
+In our previous lessons, we learned that every noun in Ukrainian is masculine, feminine, or neuter. Now, we will use that foundation to start describing things.
 
-Наприклад: новий, добрий, цікавий.
-For example: new, good, interesting.
+In Ukrainian, adjectives must perfectly match the gender of the noun they describe. This means that a single word, like "new" or "good," will change its ending depending on whether it describes a masculine, feminine, or neuter word. This grammatical agreement is a core feature of the language. 
 
-What is the difference? In English, descriptive words are simple. 
+To ask someone for a description, we must use specific question words. Just like the adjectives themselves, these question words also change their form based on the gender of the noun we are asking about. Memorize these four variations:
 
-Нове авто і новий дім — це одне слово "new".
-A "new" car and a "new" house use the exact same word "new". 
+Який?
+This form is used for masculine concepts.
 
-Але українська мова цікавіша.
-But Ukrainian is more interesting. 
+Яка?
+We use this specifically for feminine words.
 
-Every noun has a gender: masculine (він), feminine (вона), or neuter (воно). 
+Яке?
+This applies to neuter concepts.
 
-The descriptive word always repeats the gender of the noun. 
+Які?
+Reach for this when talking about plurals.
 
-Це — чоловічий рід. Тому слово — теж чоловічий рід.
-This is masculine gender. So the word also has masculine gender.
+Ось нові слова. Це дуже гарні слова. Вони нові та цікаві. Який це день? Яка це мова? Яке це слово? Які це люди?
+Here are new words. These are very beautiful words. They are new and interesting. How is this day? What language is this? What word is this? Who are these people?
 
-We call this agreement.
+Хто це? Це нові люди. Які вони? Вони дуже добрі.
+Who is this? Behold these new people. What are they like? They are very kind.
 
-Ось спеціальні слова-питання.
-Here are the special question words.
+Цей день — дуже гарний. Той день — дуже поганий. Який це текст? Цей текст дуже новий. Це новий текст.
+This day is very beautiful. That day is very bad. What is this text like? This text is very new. This is a new text.
 
-*   **Який?** (Which / What kind of? — Masculine)
-*   **Яка?** (Which / What kind of? — Feminine)
-*   **Яке?** (Which / What kind of? — Neuter)
-*   **Які?** (Which / What kind of? — Plural)
-
-> [!culture] **Софійський собор (St. Sophia's Cathedral)**
->
-> Це Софійський собор. Це гарне місто.
-> This is St. Sophia's Cathedral. This is a beautiful city.
+> [!culture] **Cultural Anchor: St. Sophia's Cathedral**
+> When you visit Kyiv, one of the most famous historical sights you will encounter is St. Sophia's Cathedral (**Софійський собор**). Since "собор" is masculine, we can describe it using masculine adjectives: 
 > 
-> Це старий собор. Це великий собор.
-> It is an ancient cathedral. It is a grand cathedral.
->
-> The word "собор" is masculine. Therefore we use the masculine form of the descriptive word.
-
-А тепер запитання!
-And now, questions!
-
-**Який це дім?**
-What kind of house is it?
-
-**Яка це книга?**
-What kind of book is it?
-
-**Яке це місто?**
-What kind of city is it?
-
-We do not use verbs in these questions. We simply place "це".
-
-## Презентація: Тверда група прикметників (Presentation: Hard Stem Adjectives)
-
-Most descriptive words belong to the "Hard Stem" group. 
-
-Словникова форма: **-ий**.
-The dictionary form ends in **-ий**.
-
-Це завжди чоловічий рід.
-This is always the masculine form.
-
-Жіночий та середній рід — це інші закінчення.
-Feminine and neuter genders — these are different endings. 
-The system is very logical and consistent. When the noun changes its gender category, the descriptive word changes its ending to match perfectly.
-
-Here is the pattern for Hard Stem adjectives:
-
-| Gender / Number | Question | Ending | Example: **новий** (new) | Example: **гарний** (beautiful/nice) |
-| :--- | :--- | :--- | :--- | :--- |
-| Masculine (він) | **Який?** | **-ий** | **новий** дім (a new house) | **гарний** день (a beautiful day) |
-| Feminine (вона) | **Яка?** | **-а** | **нова** книга (a new book) | **гарна** дівчина (a beautiful girl) |
-| Neuter (воно) | **Яке?** | **-е** | **нове** вікно (a new window) | **гарне** місто (a beautiful city) |
-| Plural (вони) | **Які?** | **-і** | **нові** столи (new tables) | **гарні** слова (beautiful words) |
-
-А тепер приклади! Наприклад, великий і малий.
-And now examples! For instance, big and small.
-
-**великий** (big/grand) vs. **малий** (small):
-
-Це великий привіт.
-Here is a big hello.
-
-Це малий бізнес.
-A small business.
-
-Це велика родина.
-A large family.
-
-Це мале дитя.
-A small child.
-
-А також добрий і поганий.
-And also good and bad.
-
-**добрий** (good/kind) vs. **поганий** (bad):
-
-Це добрий вечір.
-Good evening.
-
-Це погана погода.
-Bad weather.
-
-Це поганий настрій.
-A bad mood.
-
-Це добра людина.
-A kind person.
-
-> [!warning] **The Dictionary Trap**
->
-> A very common mistake for beginners is grabbing the word from the dictionary and using it for everything. 
+> Це дуже старий собор. Він великий і гарний. Тут цікаві люди. Це дуже гарне місце.
+> This is a very old cathedral. It is big and beautiful. There are interesting people here. This is a very beautiful place.
 > 
-> ❌ WRONG: Using "новий" for a feminine noun.
-> Dictionary form used with a feminine noun.
->
-> ✅ RIGHT: Це нова машина.
-> The ending matches the feminine noun.
-> 
-> Рід — це важливо!
-> Gender is important!
+> Simple descriptions like these let you share your impressions of historical landmarks right away.
 
-Where does the descriptive word stand?
+## Презентація 1: Тверда група (Presentation 1: Hard Stem Adjectives)
 
-Usually it stands before the noun.
+Most Ukrainian adjectives belong to the "Hard Stem" group. This means they end in a standard set of vowels that clearly show their gender. Learning this single pattern will let you use hundreds of common describing words.
 
-Це гарна погода.
-Here we have beautiful weather.
+Here is the essential paradigm for Hard Stem adjectives. Please notice how the final vowel ending perfectly signals the grammatical gender:
 
-But it can also stand after the noun. 
-
-Even when the word comes after the noun, its gender ending does not change!
-
-Погода — гарна.
-The weather is beautiful.
-
-## Презентація 2: М'яка група та множина (Presentation: Soft Stem and Plurals)
-
-Тепер м'яка група.
-Now for the "Soft Stem" group.
-
-Вони менш популярні.
-They are less common.
-
-Словникова форма: **-ій**.
-The dictionary form ends in **-ій**.
-
-Закінчення трохи інші.
-The endings are slightly different.
-
-Here is the pattern for Soft Stem adjectives, using our primary example: **синій** (blue).
-
-| Gender / Number | Question | Ending | Example: **синій** (blue) |
+| Gender | Ending | Example | Translation |
 | :--- | :--- | :--- | :--- |
-| Masculine (він) | **Який?** | **-ій** | **синій** олівець (a blue pencil) |
-| Feminine (вона) | **Яка?** | **-я** | **синя** ручка (a blue pen) |
-| Neuter (воно) | **Яке?** | **-є** | **синє** море (a blue sea) |
-| Plural (вони) | **Які?** | **-і** | **сині** зошити (blue notebooks) |
+| Masculine (Blue) | **-ий** | **новий** | new |
+| Feminine (Red) | **-а** | **нова** | new |
+| Neuter (Yellow) | **-е** | **нове** | new |
+| Plural (Green) | **-і** | **нові** | new |
 
-> [!tip] **The Kyiv Metro Mnemonic**
+Let's see these adjectives in action. We will use simple sentences so you can focus on the endings:
+
+Це новий день. Він дуже добрий і великий.
+Here is a new day. It is very good and big.
+
+Це нова мова. Вона гарна та цікава.
+Here is a new language. It is beautiful and interesting.
+
+Це нове слово. Воно також дуже цікаве.
+Look at this new word. It is also very interesting.
+
+Це нові люди. Вони молоді і дуже добрі.
+Behold these new people. They are young and very kind.
+
+Вона гарна людина. Він добрий. Вони дуже цікаві.
+She is a beautiful person. He is kind. They are very interesting.
+
+Яка це людина? Вона цікава. Вона дуже гарна людина. Яке це слово? Воно нове. Це нове слово. Які це дні? Ці дні дуже добрі і нові.
+What is this person like? That woman is interesting. A very beautiful person. How is this word? It is new. It is a new word. How are these days? These days are very good and new.
+
+Ця книга нова. Це нова книга. Книга дуже цікава.
+Here we have a new book. It is a fresh publication. The text inside is very engaging.
+
+Це вікно. Воно нове. Це нове вікно.
+Look at that window. It appears new. A brand new installation.
+
+Це ліс. Цей ліс великий. Це великий ліс.
+Over there is a forest. The woods are large. What a big forest.
+
+> [!warning] **Common Learner Error: Gender Mismatch**
+> English speakers frequently make the mistake of using the dictionary form (the masculine **-ий** ending) for absolutely everything because English adjectives never change their forms. This is a very noticeable error in spoken Ukrainian. 
+> 
+> For example, when describing a feminine word like language, you must never say: ~~новий мова~~. 
+> You must actively change the ending to match the feminine noun.
 >
-> Це метро. Це синя лінія.
-> This is the metro. This is the blue line.
->
-> To remember the soft stem feminine ending, think of the Kyiv Metro. One of its main routes is the Blue Line. 
-> Слово "лінія" — це жіночий рід. Тому слово — теж жіночий рід.
-> The word "лінія" is feminine. Therefore the descriptive word is also feminine.
+> Це нова мова. Мова тут гарна і цікава.
+> Here is a new language. The language here is beautiful and interesting.
+> 
+> Always train yourself to pause briefly and check the gender of the noun before attaching the adjective!
 
-Орфографія — це важливо!
-Spelling is important! 
+Ukrainian has flexible word order. You can place the adjective directly before the noun, or you can use it after the noun (like saying "the language is beautiful"). In both cases, the adjective ending remains exactly the same:
 
-English speakers often try to spell soft words with hard endings. 
+Гарна мова. Ця мова гарна. Вона дуже гарна.
+A beautiful language. This language is beautiful. It is very beautiful.
 
-❌ WRONG spelling: *синий*
-✅ RIGHT spelling: **синій**
+Добрий час. Цей час добрий. Він дуже добрий.
+A good time. This time is good. It is very good.
 
-Remember that the soft stem masculine ending always needs the "dotted i".
+Нове слово. Це слово нове. Воно теж нове.
+A new word. This word is new. It is also new.
 
-### The Magic of Plurals
+Let's expand our vocabulary with some essential opposites. These pairs are very common in daily conversation:
+*   **великий** (big) versus **малий** (small)
+*   **добрий** (good or kind) versus **поганий** (bad)
 
-Ось гарні новини.
-Here is some excellent news. 
+Великий день. Це великий і добрий день.
+A big day. A big and good day awaits.
 
-When it comes to plurals, these descriptive words become very simple. Whether the noun was originally masculine, feminine, or neuter, the plural ending is almost always **-і**. 
+Малий дім. Цей дім малий, але добрий.
+A small house. This house is small, but good.
 
-It does not matter what gender the noun had in the singular form. Once it becomes plural, the word takes the universal plural marker.
+Добрий день. Добрі люди тут і там.
+A good day. Good people are here and there.
 
-Look at these verb-free examples of plural consistency.
+Поганий час. Це дуже поганий час.
+A bad time. This is a very bad time.
 
-Це гарні дні.
-These are beautiful days (originally masculine 'день').
+## Презентація 2: М'яка група та множина (Presentation 2: Soft Stem and Plurals)
 
-Це гарні дівчата.
-Beautiful girls (originally feminine 'дівчина').
+While the Hard Stem group is the most common, Ukrainian also features a "Soft Stem" group. These adjectives have slightly different vowel endings to reflect a softer consonant sound before the ending.
 
-Це гарні вікна.
-Beautiful windows (originally neuter 'вікно').
+The most important and frequently used example of a Soft Stem adjective is the color blue, which is **синій**. 
 
-Це нові міста.
-New cities (originally neuter 'місто').
+Please review the complete Soft Stem paradigm carefully:
 
-Це універсальне закінчення — просте і гарне.
-This universal ending is simple and nice.
+| Gender | Ending | Example | Translation |
+| :--- | :--- | :--- | :--- |
+| Masculine | **-ій** | **синій** | blue |
+| Feminine | **-я** | **синя** | blue |
+| Neuter | **-є** | **синє** | blue |
+| Plural | **-і** | **сині** | blue |
+
+Цей день синій. Ця мова синя. Це слово синє. Ці дні сині.
+This day is blue. This language is blue. This word is blue. These days are blue.
+
+> [!tip] **Mnemonic: The Blue Line**
+> If you visit the Kyiv Metro, you will notice the famous Blue Line. Because the word for "line" (**лінія**) is feminine, it is called **синя лінія**. You can use this to remember that **синій** takes the soft **-я** ending for feminine words!
+
+> [!warning] **Orthography Note: Avoid Russian Spellings**
+> Because the endings **-ий** and **-ій** sound similar, learners sometimes misspell the word for blue as ~~синий~~. This is actually the Russian spelling! In Ukrainian, the underlying stem is soft, so it requires the soft **-ій** marker. Always write **синій**.
+
+Now, let's look at plural forms. The good news is that plural adjectives are incredibly consistent. Regardless of the noun's gender or whether the adjective is hard or soft, all plural adjectives end in **-і**. 
+
+Let us observe this wonderful plural consistency in action across different genders:
+
+Цікавий день. Цікаві дні. Дні дуже цікаві.
+An interesting day. Interesting days. Days are very interesting.
+
+Гарна людина. Гарні люди. Люди дуже гарні.
+A beautiful person. Beautiful people. People are very beautiful.
+
+Велике слово. Великі слова. Слова дуже великі.
+A big word. Big words. Words are very big.
+
+Синій день. Сині дні. Ці дні сині.
+A blue day. Blue days. These days are blue.
+
+Notice how the plural marker **-і** acts as a grammatical equalizer. If you are talking about multiple things, you simply use the **-і** ending!
+
+Це мій дім. Цей дім старий і гарний.
+My house stands here. The building is old and beautiful.
+
+Це яблуко. Воно зелене і смачне. Це зелене яблуко.
+An apple is on the table. It looks green and tasty. A perfectly green fruit.
 
 ## Практика: Люди і місця (Practice: People and Places)
 
-Час для практики!
-Time for practice!
+Let's put this into practice by describing people and places.
 
-> [!culture] **Мавка (Mavka)**
->
-> In Ukrainian folklore, specifically in Lesya Ukrainka's famous play "Forest Song", Мавка is a forest spirit. How would we describe her?
+> [!culture] **Cultural Portrait: Mavka**
+> Mavka is a famous figure from Ukrainian folklore, popularized in Lesya Ukrainka's play "The Forest Song" (Лісова пісня). She is a magical spirit of the forest. We can describe her using feminine adjectives: 
 > 
-> Мавка — це жіночий персонаж. Тому тут жіночі закінчення.
-> Mavka is a feminine character. So we see feminine endings here.
+> Вона молода. Вона дуже гарна. Вона цікава людина.
+> Mavka is young. The spirit is very beautiful. An interesting person indeed.
+> 
+> Because she is a forest spirit, she is associated with the color green. We can describe her forest:
 >
-> Мавка — молода.
-> Mavka is young.
->
-> Мавка — гарна.
-> Mavka is beautiful.
->
-> Мавка — цікава.
-> Mavka is interesting.
->
-> Мавка — зелена.
-> Mavka is green (referring to her connection with nature).
+> Це зелений ліс. Він великий і дуже гарний.
+> This is a green forest. It is big and very beautiful.
 
-Нова ситуація.
-A new situation. 
+Let's try a practical exercise. Imagine you are discussing a new store (магазин - masculine) with a friend.
 
-Ви — агент з нерухомості. Це ваші квартири.
-You are a real estate agent. These are your apartments. 
+Ось новий магазин. Він тут.
+Here is a new store. It is here.
 
-Notice that the words are different!
-Слова — інші.
+Який він? Цей магазин цікавий?
+What is it like? Is this store interesting?
 
-Який це будинок?
-What kind of house is it?
+Він великий та новий. Він дуже цікавий.
+It is big and new. It is very interesting.
 
-Це новий будинок.
-A new house.
+Це дорогий магазин? Цей магазин дорогий?
+Is this an expensive store? Is this store expensive?
 
-Це дорогий будинок.
-An expensive house.
+Ні, це дешевий магазин. Він дуже дешевий.
+No, this is a cheap store. It is very cheap.
 
-Це великий будинок.
-A big house.
+Це гарний магазин. Ми тут.
+This is a good store. We are here.
 
-А тепер жіночий рід.
-And now feminine gender.
+Це кіт. Цей кіт великий. Це великий кіт.
+Behold the cat. That animal is quite large. A truly big feline.
 
-Яка це квартира?
-What kind of apartment is it?
+Це місто. Це гарне місто. Місто дуже гарне.
+We are looking at a city. The urban area is beautiful. Extremely scenic streets.
 
-Це нова квартира.
-A new apartment.
+Notice how the specific adjectives **дорогий** (expensive) and **дешевий** (cheap) perfectly and seamlessly match the grammatical gender of the concept they are actively describing. When talking about a conceptually masculine item, we use **дорогий**. If we were describing a feminine concept instead, we would immediately switch to the feminine form **дорога**. 
 
-Це дорога квартира.
-An expensive apartment.
+Let's practice with a common scenario: tasting local food like Ukrainian borsch (борщ - masculine).
 
-Це велика квартира.
-A large apartment.
+Це смачний борщ! Він червоний і добрий.
+This is tasty borsch! It is red and good.
 
-А це дешева квартира.
-And this is a cheap apartment.
+Так, це дуже добрий борщ. Він гарячий і новий.
+Yes, this is very good borsch. It is hot and new.
 
-Далі, щось смачне.
-Next, something delicious.
+Тут цікаві люди. Вони добрі і привітні.
+There are interesting people here. They are kind and welcoming.
 
-Який це борщ? Це смачний борщ!
-What kind of borscht is it? It is tasty borscht!
+Це дуже цікавий ресторан. Тут нові люди і гарна атмосфера.
+This is a very interesting restaurant. There are new people here and a good atmosphere.
+
+Який цей суп? Він дуже смачний.
+How is this soup? It is very tasty.
+
+Що це? Це нова страва. Вона дуже гарна і цікава.
+What is this? This is a new dish. It is very beautiful and interesting.
+
+Червоний борщ. Смачні страви. Зелений чай. Це дешевий ресторан, але дуже добрий.
+Red borsch. Tasty dishes. Green tea. This is a cheap restaurant, but a very good one.
+
+Де ми? Ми тут. Там старий ресторан. А тут новий ресторан. Ось він. Ось цей новий і гарний ресторан.
+Where are we? We are here. Over there is the old restaurant. And here is the new restaurant. Here it is. Here is this new and beautiful restaurant.
+
+Цей ресторан цікавий. Він новий. Які тут люди? Вони цікаві.
+This restaurant is interesting. It is new. What are the people like here? They are interesting.
+
+By matching the adjective to the noun's gender, you are building a strong foundation in Ukrainian.
+
+
+
+Діалог 1 (Dialogue 1):
+— Який це день? (What day is it?)
+— Це новий день. Він дуже гарний. (A new day. It is quite beautiful.)
+— Які це люди? (Who are these people?)
+— Це цікаві люди. Вони дуже добрі. (Interesting folks. They are very kind.)
+
+Діалог 2 (Dialogue 2):
+— Яка це мова? (What language do we hear?)
+— Це українська мова. Вона дуже гарна. (The Ukrainian language. It sounds very beautiful.)
+— Яке це місто? (Which city is that?)
+— Це старе місто. Але воно дуже цікаве. (An old city. But extremely fascinating.)
+
+Діалог 3 (Dialogue 3):
+— Які ці слова? (How are these words?)
+— Ці слова нові. Це нові слова. (These words are new. They are new words.)
+— Цей текст важкий? (Is the text hard?)
+— Ні, цей текст дуже цікавий. (No, the passage is highly interesting.)
+
+
+
+Діалог 4 (Dialogue 4):
+— Яке це слово? (Which word is that?)
+— Це цікаве слово. (A fascinating word.)
+— Які це дні? (How are these days?)
+— Це теплі дні. Вони дуже добрі. (These are warm days. Very pleasant ones.)
+— Яка ця книга? (What is this book like?)
+— Це нова книга. Дуже гарна книга. (A new book. Extremely beautiful text.)
+
+Діалог 5 (Dialogue 5):
+— Це добрий чоловік? (Is this a good man?)
+— Так, він дуже добрий чоловік. (Yes, he is a very kind man.)
+— А яка ця дівчина? (And what is this girl like?)
+— Вона дуже розумна і гарна. (She is very smart and beautiful.)
+
+
+
+Діалог 6 (Dialogue 6):
+— Це цікава людина? (Is this person interesting?)
+— Так, це дуже цікава і гарна людина. (Yes, this is a very interesting and beautiful person.)
+— А хто це? (And who is this?)
+— Це новий студент. (This is a new student.)
+— Який він? (What is he like?)
+— Він дуже добрий. (He is very kind.)
+
+Діалог 7 (Dialogue 7):
+— Яка це книга? (Which book is this?)
+— Це дуже стара книга. Але вона цікава. (This is a very old book. But it is interesting.)
+— А яка це мова? (And which language is this?)
+— Це українська мова. Вона дуже гарна. (This is the Ukrainian language. It is very beautiful.)
+
+Слова, слова, слова:
+Великий дім, малий дім.
+Нове вікно, старе вікно.
+Молода людина, стара людина.
+Добрий день, поганий день.
+Синя лінія, червона лінія.
+Зелений чай, чорний чай.
+Смачний борщ, гарячий борщ.
+Дешевий магазин, дорогий магазин.
+
 
 ## Підсумок (Summary & Self-Check)
 
-Ці слова — легкі!
-These words are easy!
+Congratulations on reaching this milestone! You have taken a truly massive step forward in your Ukrainian language journey by learning how to accurately and descriptively paint the world around you. 
 
-Remember the core principle: descriptive words must always agree with the noun they describe in gender (masculine, feminine, neuter) and number (singular or plural). 
-
-To ask for a description, use the correct question word: **Який? Яка? Яке? Які?**
-
-Both hard and soft stems change their final letter to match the noun. And the best part? All plural forms end in **-і**, regardless of the original gender!
+Let us systematically recap the core grammar rules:
+1. Adjectives must always perfectly match both the gender and the number of the noun they describe.
+2. Hard Stem adjectives take the standard endings: **-ий**, **-а**, **-е**, **-і**.
+3. Soft Stem adjectives (such as **синій**) take the softer endings: **-ій**, **-я**, **-є**, **-і**.
+4. All plural adjectives, regardless of gender or stem type, reliably take the **-і** ending.
 
 **Self-Check:**
+Select the correct form of **новий** for the masculine word "phone".
+Identify the correct form of **великий** for the feminine word "book".
+Find the correct form of **синій** for the neuter word "sea".
+Choose the correct plural form of **гарний** for the plural word "flowers".
 
-1. Новий телефон. Який це телефон? (What kind of phone is it?) — **новий**
-2. Велика книга. Яка це книга? (What kind of book is it?) — **велика**
-3. Синє море. Яке це море? (What kind of sea is it?) — **синє**
-4. Гарні квіти. Які це квіти? (What kind of flowers are they?) — **гарні**
+*Answers: 1. новий, 2. велика, 3. синє, 4. гарні.*
+
+---

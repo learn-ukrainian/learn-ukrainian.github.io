@@ -5,32 +5,18 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-06T22:58:19Z",
+      "ts": "2026-03-07T22:15:44Z",
       "task_id": "v5-imperative-and-requests-pA",
       "mode": "full"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-06T22:59:19Z"
+      "ts": "2026-03-07T22:16:19Z"
     },
     "sandbox": {
       "status": "complete",
-      "ts": "2026-03-06T22:59:22Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-06T23:04:42Z"
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-06T23:06:42Z",
-      "task_id": "v5-imperative-and-requests-pC"
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-06T23:24:16Z",
-      "attempts": 4,
-      "note": "dedup-exhausted"
+      "ts": "2026-03-07T22:16:24Z"
     }
-  }
+  },
+  "last_updated": "2026-03-08T00:35:47Z"
 }

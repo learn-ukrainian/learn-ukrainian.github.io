@@ -1,50 +1,51 @@
 slug: imperative-and-requests
+level: A1
 title: Imperative and Requests
 word_target: 1200
 content_outline:
-- title: Наказовий спосіб (Imperative mood)
-  slug: nakazovyi-sposib
+- title: Наказовий спосіб (Imperative Mood)
+  slug: imperative-mood-intro
   words: 300
   points:
-  - 'Formation rule: 2nd person singular and plural. Remove -ти ending, add imperative
-    suffix.'
-  - 'Ти-form vs Ви-form: читай (ти) → читайте (ви), пиши (ти) → пишіть (ви). Explain
-    adding -те/-іть for politeness and plurality.'
-  - 'Learner error: Explain that ''Читати!'' is a sign/rule, while ''Читай!'' is a
-    personal command. Context determines which form to use.'
-- title: Вісім обов'язкових дієслів (Eight required verbs)
-  slug: visim-oboviazkovykh-diesliv
-  words: 300
+  - Introduce the concept of giving commands and instructions using English scaffolding.
+  - 'Explain the formation rule for the informal singular ''ти'' form: drop the ''-ти''
+    ending from the infinitive.'
+  - 'Explain the formal/plural ''ви'' form: add ''-те'' or ''-іть'' to the ''ти''
+    command.'
+  - Address the common error of confusing personal commands with general infinitive
+    forms.
+- title: Вісім обов'язкових дієслів (Eight Required Verbs)
+  slug: eight-required-verbs
+  words: 350
   points:
-  - 'Present the 8 verbs from State Standard §4.2.4.2: читай(те), пиши(те), скажи(те),
-    дай(те), іди(те), слухай(те), дивись(те), стій(те).'
-  - 'Provide classroom command contexts: Читайте текст. Пишіть у зошиті. Слухайте
-    уважно.'
-  - 'Highlight irregular stems that must be memorized: дати → дай, сказати → скажи,
-    стояти → стій.'
-- title: Ввічливе прохання (Polite requests)
-  slug: vvichlyve-prokhannia
+  - 'Introduce the 8 essential A1 verbs: читай(те), пиши(те), скажи(те), дай(те),
+    іди(те), слухай(те), дивись(те), стій(те).'
+  - Highlight the irregular stems that must be memorized as set phrases (дати → дай,
+    сказати → скажи, стояти → стій).
+  - Provide clear, short examples in classroom and daily contexts (e.g., Читайте текст,
+    Слухайте уважно).
+- title: Ввічливе прохання (Polite Requests)
+  slug: polite-requests
   words: 250
   points:
-  - Explain 'Будь ласка' as a universal softener and its flexible sentence position
-    (beginning, middle, or end).
-  - Introduce 'Прошу вас + infinitive' for slightly more formal or official service
-    contexts.
-  - Briefly preview the indirect request pattern 'Чи не могли б ви...?' as the most
-    polite A1 option.
+  - Introduce 'будь ласка' (please) as the universal politeness marker to soften direct
+    commands.
+  - Demonstrate its flexible placement in a sentence (beginning, middle, or end).
+  - Present 'Прошу вас' + infinitive for more formal, service-oriented situations.
 - title: Заборони (Prohibitions)
-  slug: zaborony
-  words: 175
+  slug: prohibitions
+  words: 150
   points:
-  - Explain negative imperatives using 'Не' + imperative form (Не кури! Не біжи! Не
-    чіпай!).
-  - Preview the distinction between a personal prohibition (Не чіпай!) and a public
-    sign prohibition (Не торкатися!).
-- title: Практика (Practice)
-  slug: summary
-  words: 175
+  - Explain how to form negative commands by simply placing 'Не' before the imperative
+    verb (e.g., Не біжи!, Не кури!).
+  - Briefly note the difference between a personal spoken prohibition ('Не чіпай!')
+    and a public sign prohibition ('Не торкатися!').
+- title: Практика і підсумок (Summary and Practice)
+  slug: summary-and-practice
+  words: 150
   points:
-  - Command drills focusing on the 8 required verbs and upgrading direct commands
-    to polite requests.
-  - 'Self-check: 3-4 summary questions verifying understanding of the ''ти/ви'' distinction,
-    irregular stems, and placement of ''будь ласка''.'
+  - Recap the 'ти' vs 'ви' endings and the critical role of 'будь ласка'.
+  - 'Self-check 1: How do you change a ''ти'' command to a ''ви'' command?'
+  - 'Self-check 2: What are the imperative forms of the irregular verbs ''дати'' and
+    ''сказати''?'
+  - 'Self-check 3: How do you make a command negative?'

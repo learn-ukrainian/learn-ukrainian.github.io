@@ -1,0 +1,362 @@
+- type: match-up
+  title: "Match the Pronoun to the Verb Form"
+  instruction: "Match each pronoun to the correct form of the verb читати (to read) or працювати (to work)."
+  pairs:
+    - left: "я (I)"
+      right: "читаю"
+    - left: "ти (you, singular)"
+      right: "читаєш"
+    - left: "він (he)"
+      right: "читає"
+    - left: "ми (we)"
+      right: "читаємо"
+    - left: "ви (you, plural)"
+      right: "читаєте"
+    - left: "вони (they)"
+      right: "читають"
+    - left: "вона (she)"
+      right: "працює"
+    - left: "воно (it)"
+      right: "знає"
+
+- type: quiz
+  title: "Check Your Knowledge: Meanings"
+  instruction: "Choose the correct Ukrainian translation for each English phrase."
+  items:
+    - question: "How do you say 'to read' in Ukrainian?"
+      options:
+        - text: "читати"
+          correct: true
+        - text: "писати"
+          correct: false
+        - text: "знати"
+          correct: false
+        - text: "слухати"
+          correct: false
+      explanation: "Читати is the infinitive form meaning to read."
+    - question: "What does the verb 'писати' mean?"
+      options:
+        - text: "to write"
+          correct: true
+        - text: "to play"
+          correct: false
+        - text: "to work"
+          correct: false
+        - text: "to think"
+          correct: false
+      explanation: "Писати means to write."
+    - question: "How do you say 'I work'?"
+      options:
+        - text: "працюю"
+          correct: true
+        - text: "працюєш"
+          correct: false
+        - text: "працює"
+          correct: false
+        - text: "працюють"
+          correct: false
+      explanation: "The ending -ю is for the pronoun я (I)."
+    - question: "How do you say 'we know'?"
+      options:
+        - text: "знаємо"
+          correct: true
+        - text: "знаю"
+          correct: false
+        - text: "знає"
+          correct: false
+        - text: "знають"
+          correct: false
+      explanation: "The ending -ємо is for the pronoun ми (we)."
+    - question: "What is the meaning of the verb 'слухати'?"
+      options:
+        - text: "to listen"
+          correct: true
+        - text: "to wait"
+          correct: false
+        - text: "to ask"
+          correct: false
+        - text: "to rest"
+          correct: false
+      explanation: "Слухати means to listen."
+    - question: "What is the meaning of the verb 'чекати'?"
+      options:
+        - text: "to wait"
+          correct: true
+        - text: "to study"
+          correct: false
+        - text: "to read"
+          correct: false
+        - text: "to understand"
+          correct: false
+      explanation: "Чекати means to wait."
+    - question: "How do you say 'they play'?"
+      options:
+        - text: "грають"
+          correct: true
+        - text: "граємо"
+          correct: false
+        - text: "грає"
+          correct: false
+        - text: "граю"
+          correct: false
+      explanation: "The ending -ють is for the pronoun вони (they)."
+    - question: "How do you say 'you ask' (informal, singular)?"
+      options:
+        - text: "питаєш"
+          correct: true
+        - text: "питаю"
+          correct: false
+        - text: "питаєте"
+          correct: false
+        - text: "питає"
+          correct: false
+      explanation: "The ending -єш is for the pronoun ти (you, informal)."
+
+- type: fill-in
+  title: "Complete the Sentence with the Correct Verb Form"
+  instruction: "Select the correct conjugated verb to complete the sentence."
+  items:
+    - sentence: "Я ___ книгу."
+      answer: "читаю"
+      options: ["читаю", "читаєш", "читає", "читаємо"]
+      explanation: "The pronoun я takes the -ю ending."
+    - sentence: "Він ___ музику."
+      answer: "слухає"
+      options: ["слухає", "слухаю", "слухаєш", "слухають"]
+      explanation: "The pronoun він takes the -є ending."
+    - sentence: "Вона ___ вдома."
+      answer: "працює"
+      options: ["працює", "працюю", "працюємо", "працюють"]
+      explanation: "The pronoun вона takes the -є ending."
+    - sentence: "Ми ___ слова."
+      answer: "вивчаємо"
+      options: ["вивчаємо", "вивчаю", "вивчає", "вивчають"]
+      explanation: "The pronoun ми takes the -ємо ending."
+    - sentence: "Ви ___ все."
+      answer: "розумієте"
+      options: ["розумієте", "розумію", "розуміє", "розуміють"]
+      explanation: "The pronoun ви takes the -єте ending."
+    - sentence: "Вони ___ на автобус."
+      answer: "чекають"
+      options: ["чекають", "чекаю", "чекає", "чекаємо"]
+      explanation: "The pronoun вони takes the -ють ending."
+    - sentence: "Ти ___ багато."
+      answer: "думаєш"
+      options: ["думаєш", "думаю", "думає", "думають"]
+      explanation: "The pronoun ти takes the -єш ending."
+    - sentence: "Я ___ влітку."
+      answer: "відпочиваю"
+      options: ["відпочиваю", "відпочиваєш", "відпочиває", "відпочивають"]
+      explanation: "The pronoun я takes the -ю ending."
+
+- type: true-false
+  title: "Grammar Rules: True or False?"
+  instruction: "Read the statement about Ukrainian verbs and decide if it is true or false."
+  items:
+    - statement: "You must always write the word я before the verb when talking about yourself."
+      correct: false
+      explanation: "Because of the pro-drop rule, you can often omit the pronoun я. The ending -ю tells the listener who is performing the action."
+    - statement: "The ending of the verb changes depending on who is performing the action."
+      correct: true
+      explanation: "This rule is called conjugation. Each person has a specific ending."
+    - statement: "The phrase 'Я читаю' can mean both 'I read' and 'I am reading'."
+      correct: true
+      explanation: "Ukrainian present tense describes both ongoing actions and habitual actions."
+    - statement: "The infinitive form читати means 'I read'."
+      correct: false
+      explanation: "The infinitive читати means 'to read'. You must change the ending to -ю to say 'I read' (читаю)."
+    - statement: "For the pronoun ми (we), the correct verb ending is -ємо."
+      correct: true
+      explanation: "The ending for we is -ємо, for example, читаємо."
+    - statement: "To say 'they work', you use the ending -ють."
+      correct: true
+      explanation: "The ending for they is -ють, for example, працюють."
+    - statement: "You need a separate tense to describe actions happening right now in Ukrainian."
+      correct: false
+      explanation: "The present tense is used for both habitual actions and actions happening right now."
+    - statement: "'Я читати' is the correct and natural way to say 'I read'."
+      correct: false
+      explanation: "This is a common mistake called Infinitive Abuse. You must conjugate the verb: Я читаю."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["Я", "читаю", "книгу"]
+      answer: "Я читаю книгу"
+    - words: ["Ми", "слухаємо", "радіо"]
+      answer: "Ми слухаємо радіо"
+    - words: ["Він", "працює", "вдома"]
+      answer: "Він працює вдома"
+    - words: ["Вони", "розуміють", "все"]
+      answer: "Вони розуміють все"
+    - words: ["Ви", "вивчаєте", "мову"]
+      answer: "Ви вивчаєте мову"
+    - words: ["Ти", "чекаєш", "на", "автобус"]
+      answer: "Ти чекаєш на автобус"
+    - words: ["Вона", "пише", "листа"]
+      answer: "Вона пише листа"
+    - words: ["Я", "граю", "в", "ігри"]
+      answer: "Я граю в ігри"
+
+- type: group-sort
+  title: "Sort the Verb Forms"
+  instruction: "Sort the verbs into the correct group based on the pronoun they belong to."
+  groups:
+    - name: "Я (I)"
+      items: ["читаю", "знаю", "працюю", "слухаю"]
+    - name: "Ми (We)"
+      items: ["читаємо", "знаємо", "працюємо", "слухаємо"]
+    - name: "Вони (They)"
+      items: ["читають", "знають", "працюють", "слухають"]
+
+- type: match-up
+  title: "Match the Verb to the Object"
+  instruction: "Match each verb with its logical ending to form a common phrase."
+  pairs:
+    - left: "читати"
+      right: "книгу"
+    - left: "писати"
+      right: "листа"
+    - left: "слухати"
+      right: "музику"
+    - left: "чекати на"
+      right: "автобус"
+    - left: "грати в"
+      right: "ігри"
+    - left: "вивчати"
+      right: "мову"
+    - left: "працювати"
+      right: "вдома"
+    - left: "знати"
+      right: "правду"
+
+- type: fill-in
+  title: "Find the Missing Pronoun"
+  instruction: "Look at the verb ending and select the correct pronoun for the sentence."
+  items:
+    - sentence: "___ читаю новини."
+      answer: "Я"
+      options: ["Я", "Ти", "Він", "Ми"]
+      explanation: "The ending -ю goes with Я."
+    - sentence: "___ знаєш все."
+      answer: "Ти"
+      options: ["Ти", "Я", "Вона", "Вони"]
+      explanation: "The ending -єш goes with Ти."
+    - sentence: "___ працює багато."
+      answer: "Він"
+      options: ["Він", "Я", "Ми", "Ви"]
+      explanation: "The ending -є goes with Він (or Вона/Воно)."
+    - sentence: "___ слухаємо радіо."
+      answer: "Ми"
+      options: ["Ми", "Я", "Ти", "Вони"]
+      explanation: "The ending -ємо goes with Ми."
+    - sentence: "___ розумієте це."
+      answer: "Ви"
+      options: ["Ви", "Я", "Вона", "Ми"]
+      explanation: "The ending -єте goes with Ви."
+    - sentence: "___ чекають на відповідь."
+      answer: "Вони"
+      options: ["Вони", "Я", "Ти", "Він"]
+      explanation: "The ending -ють goes with Вони."
+    - sentence: "___ пишу повідомлення."
+      answer: "Я"
+      options: ["Я", "Ти", "Ми", "Ви"]
+      explanation: "The ending -у goes with Я."
+    - sentence: "___ граємо на гітарі."
+      answer: "Ми"
+      options: ["Ми", "Я", "Ти", "Вона"]
+      explanation: "The ending -ємо goes with Ми."
+
+- type: quiz
+  title: "Quick Translation Quiz"
+  instruction: "Select the correct one-word translation for the English phrase."
+  items:
+    - question: "How do you say 'I am resting'?"
+      options:
+        - text: "Відпочиваю"
+          correct: true
+        - text: "Відпочиваєш"
+          correct: false
+        - text: "Відпочиває"
+          correct: false
+        - text: "Відпочивають"
+          correct: false
+      explanation: "The -ю ending means 'I am resting'."
+    - question: "How do you say 'We are studying'?"
+      options:
+        - text: "Вивчаємо"
+          correct: true
+        - text: "Вивчаю"
+          correct: false
+        - text: "Вивчає"
+          correct: false
+        - text: "Вивчаєте"
+          correct: false
+      explanation: "The -ємо ending means 'we'."
+    - question: "How do you say 'He asks'?"
+      options:
+        - text: "Питає"
+          correct: true
+        - text: "Питаю"
+          correct: false
+        - text: "Питаєш"
+          correct: false
+        - text: "Питають"
+          correct: false
+      explanation: "The -є ending means 'he/she/it'."
+    - question: "How do you say 'They think'?"
+      options:
+        - text: "Думають"
+          correct: true
+        - text: "Думаю"
+          correct: false
+        - text: "Думає"
+          correct: false
+        - text: "Думаємо"
+          correct: false
+      explanation: "The -ють ending means 'they'."
+    - question: "How do you say 'You understand' (informal, singular)?"
+      options:
+        - text: "Розумієш"
+          correct: true
+        - text: "Розумію"
+          correct: false
+        - text: "Розуміє"
+          correct: false
+        - text: "Розумієте"
+          correct: false
+      explanation: "The -єш ending is for the informal 'you' (ти)."
+    - question: "How do you say 'I play'?"
+      options:
+        - text: "Граю"
+          correct: true
+        - text: "Граєш"
+          correct: false
+        - text: "Грає"
+          correct: false
+        - text: "Граємо"
+          correct: false
+      explanation: "The -ю ending is for 'I'."
+    - question: "How do you say 'She writes'?"
+      options:
+        - text: "Пише"
+          correct: true
+        - text: "Пишу"
+          correct: false
+        - text: "Пишеш"
+          correct: false
+        - text: "Пишуть"
+          correct: false
+      explanation: "The -є ending is for 'he/she/it'."
+    - question: "How do you say 'We wait'?"
+      options:
+        - text: "Чекаємо"
+          correct: true
+        - text: "Чекаю"
+          correct: false
+        - text: "Чекає"
+          correct: false
+        - text: "Чекають"
+          correct: false
+      explanation: "The -ємо ending means 'we'."

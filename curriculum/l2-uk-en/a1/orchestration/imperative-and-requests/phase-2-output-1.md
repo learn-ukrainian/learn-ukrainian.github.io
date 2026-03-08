@@ -1,285 +1,350 @@
 <!-- SCOPE
-Covers: Imperative mood formation, polite requests, prohibitions
+Covers: The imperative mood, giving commands, making polite requests, and forming prohibitions.
 Not covered:
-  - Complex conditional requests
+  - 1st person plural and 3rd person imperative forms
+  - Public sign prohibitions using infinitives -> a1-55
 -->
 
 # Imperative and Requests
 
 > **Чому це важливо?**
 >
-> Ви вже знаєте багато слів. Ви можете говорити про факти. Але як просити про допомогу? Як давати інструкції? Наказовий спосіб дуже потрібний у житті. 
-> 
-> You already know many words and can state facts. But how do you ask for help or give instructions? The imperative mood is essential for daily life.
+> The imperative mood lets you give commands, directions, and polite requests in Ukrainian. 
 
-## Наказовий спосіб
+## Наказовий спосіб (Imperative Mood)
 
-Ми даємо інструкції. Ми використовуємо спеціальну форму дієслова. Ця форма називається так: наказовий спосіб. Тут є дві форми: неформальна та формальна. 
+In Ukrainian, the command form changes depending on who you are talking to. We have one form for the informal singular pronoun **ти** and another form for the formal or plural pronoun **ви**.
 
-We give instructions. We use a special verb form. This form is called the imperative mood. There are two forms here: informal and formal.
+To form an informal command, start with the infinitive, drop the ending, and add a new suffix. For the formal command, add **-те**.
 
-Ви говорите. Це ваш друг. Ви використовуєте форму «ти». Ви говорите. Це група людей. Ви використовуєте форму «ви». 
-
-You are speaking. This is your friend. You use the "ти" form. You are speaking. This is a group of people. You use the "ви" form.
-
-Як утворити форму «ти»? Візьміть дієслово. Додайте спеціальний суфікс. Наприклад, дієслово «читати». Форма «ти» — це «читай». 
-
-How to form the "ти" command? Take the verb. Add a special suffix. For example, for the verb to read, the informal command is "читай".
-
-Як утворити форму «ви»? Це також дуже просто. Додайте закінчення «-те» або «-іть» до форми «ти». Форма «ви» — це «читайте». 
-
-How to form the formal command? This is also very simple. Add the ending "-те" or "-іть" to the informal command. The formal command is "читайте".
+| Infinitive | ти-form | ви-form |
+|-----------|---------|---------|
+| **читати** | **читай** | **читайте** |
+| **слухати** | **слухай** | **слухайте** |
+| **чекати** | **чекай** | **чекайте** |
 
 > [!warning]
-> Learner error alert! Because the English command "read" looks exactly like the infinitive "to read", many learners try to use the Ukrainian infinitive **чита́ти** when giving an order. Do not do this! In Ukrainian, the infinitive for commands is only used on public signs and written rules. When talking to a person, always use the active command forms like **чита́й** or **чита́йте**.
+> Do not use the infinitive as a personal command. You cannot say ~~Читати!~~ to a person. Always use specific command forms like **Читай!** or **Читайте!**
 
-Ось кілька прикладів. 
-Here are a few examples.
+Here are some examples of these commands in action.
 
-Я читаю текст. 
-I am reading the text.
+- **Читай слова!**
+- **Слухай!**
+- **Чекай там!**
+- **Читайте слова!**
+- **Слухайте!**
+- **Чекайте там!**
+- **Читай ще!**
+- **Слухайте також!**
+- **Чекай тут!**
+- **Читайте це слово!**
+- **Читай це слово також!**
+- **Слухай мене тут!**
+- **Чекай мене там!**
+- **Читайте слова ще!**
+- **Слухайте мене також!**
+- **Чекайте слова там!**
+- **Читайте це тут!**
+- **Слухай це там!**
+- **Чекай слова тут!**
+- **Слухайте це дуже!**
+- **Слухай мене!**
+- **Читайте це слово!**
+- **Чекай мене!**
+- **Чекайте тут!**
+- **Читай це!**
 
-Читай текст. 
-Read the text.
+Let's look at a dialogue.
 
-Пиши тут. 
-Write here.
+> — **Вона:** Ти тут?
+> — **Він:** Так, я тут.
+> — **Вона:** Слухай! Чекай там.
+> — **Він:** Я слухаю. Я чекаю.
+> — **Вона:** Читай це слово.
+> — **Він:** Я читаю це слово.
+> — **Вона:** Дуже добре. Читай ще.
+> — **Він:** Я читаю ще.
+> — **Вона:** Слухай. Чекай тут.
+> — **Він:** Я слухаю. Я чекаю.
+> — **Вона:** Читай!
+> — **Він:** Я читаю.
 
-Пишіть тут. 
-Write here, please all of you.
+| Ukrainian | English |
+|-----------|---------|
+| Ти тут? Так, я тут. | Are you here? Yes, I am here. |
+| Слухай! Чекай там. | Listen! Wait there. |
+| Я слухаю. Я чекаю. | I am listening. I am waiting. |
+| Читай це слово. | Read this word. |
+| Я читаю це слово. | I am reading this word. |
+| Дуже добре. Читай ще. | Very good. Read more. |
+| Я читаю ще. | I am reading more. |
+| Слухай. Чекай тут. | Listen. Wait here. |
 
-Дуже важливо практикувати ці дві форми. 
-It is very important to practice these two forms.
+## Вісім обов'язкових дієслів (Eight Required Verbs)
 
-## Вісім обов'язкових дієслів
+You need to master eight essential verbs in their imperative forms. Some follow the regular pattern. 
 
-Є вісім дуже важливих дієслів. Ви будете чути їх кожен день. Треба знати ці форми. Вони дуже допомагають. Ми використовуємо їх вдома. Ми використовуємо їх на роботі.
+| Infinitive | ти-form | ви-form |
+|---------|---------|---------|
+| **писати** | **пиши** | **пишіть** |
+| **іти** | **іди** | **ідіть** |
 
-There are eight very important verbs. You will hear them every day. It is necessary to know these forms. They help very much. We use them at home. We use them at work.
+Others have completely irregular stems. These verbs change significantly. 
 
-Спочатку ми маємо дієслова про читання та письмо. Це дуже корисно для уроку.
-First, we have verbs about reading and writing. This is very useful for the lesson.
-
-Читайте текст. 
-Read the text.
-
-Читай швидко.
-Read fast.
-
-Пишіть у зошиті. 
-Write in the notebook.
-
-Пиши тут.
-Write here.
-
-Тепер ми маємо дієслова про слухання та бачення. Вчитель часто каже ці слова.
-Now we have verbs for listening and looking. The teacher often says these words.
-
-Слухайте уважно. 
-Listen carefully.
-
-Слухай мене.
-Listen to me.
-
-Дивіться на дошку. 
-Look at the board.
-
-Дивись туди.
-Look there.
-
-Також ми маємо дієслова про рух. Ці слова показують дію.
-Also we have verbs about movement. These words show action.
-
-Ідіть сюди. 
-Go here.
-
-Іди швидко.
-Go fast.
-
-Стійте! 
-Stop!
-
-Стій там.
-Stand there.
-
-Нарешті, ми маємо два дуже важливих неправильних дієслова. Форма дієслова «дати» — це «дай» або «дайте». Це коротке слово. Воно не має правильного суфікса.
-
-Finally, we have two very important irregular verbs. The form for "to give" is "дай" or "дайте". This is a short, sharp word. It does not have a regular suffix like other verbs. Do not try to make it regular like "дайи". It is simply "дай".
-
-Форма дієслова «сказати» — це «скажи» або «скажіть». Літера змінюється на «ж». Це правило. Запам'ятайте цю зміну.
-
-The form for "to say" or "to tell" is "скажи" or "скажіть". The consonant letter changes to "ж". This is a phonetic rule in Ukrainian. You will see this pattern often.
+| Infinitive | ти-form | ви-form |
+|---------|---------|---------|
+| **дати** | **дай** | **дайте** |
+| **сказати** | **скажи** | **скажіть** |
+| **стояти** | **стій** | **стійте** |
+| **дивитися** | **дивись** | **дивіться** |
 
 > [!tip]
-> Memorize these eight verbs as set forms. You will use **скажі́ть** (tell) and **да́йте** (give) almost every time you ask a question or buy something in a shop. They are your absolute survival tools for daily life! Do not hesitate to use them.
+> Memorize the irregular commands as set phrases. Do not try to apply the regular rule to them. Saying ~~дати~~ instead of **дайте** is a very common beginner mistake.
 
-Ось ще кілька корисних дієслів. Вони роблять вашу мову кращою. Вони допомагають у різних ситуаціях.
-Here are a few more useful verbs that we highly recommend learning right now. They make your speech sound much more natural and they help in many different common situations.
+There are three more verbs that are incredibly useful. 
 
-Покажіть це. 
-Show this.
+| Infinitive | ти-form | ви-form |
+|---------|---------|---------|
+| **показати** | **покажи** | **покажіть** |
+| **допомогти** | **допоможи** | **допоможіть** |
+| **взяти** | **візьми** | **візьміть** |
 
-Допоможіть! 
-Help!
+Imagine a teacher giving instructions to students.
 
-Візьміть це. 
-Take this.
+- **Пишіть слова тут!**
+- **Ідіть там!**
+- **Стійте тут!**
+- **Дайте це!**
+- **Скажіть це слово!**
+- **Дивіться там!**
+- **Покажіть слово!**
+- **Допоможіть!**
+- **Візьміть це!**
+- **Пиши це тут!**
+- **Іди до мене!**
+- **Стій тут!**
+- **Дай це!**
+- **Скажи це слово!**
+- **Дивись там!**
+- **Покажи слово!**
+- **Допоможи!**
+- **Візьми це!**
+- **Дайте це слово!**
+- **Скажіть це також!**
+- **Дивіться тут!**
+- **Пишіть також!**
+- **Стійте!**
+- **Дайте!**
 
-Зачекайте хвилинку. 
-Wait a minute.
+Here is an example of a dialogue using these verbs.
 
-## Ввічливе прохання
+> — **Він:** Ідіть до мене. Стійте там.
+> — **Вона:** Я стою там.
+> — **Він:** Дивіться там. Читайте ці слова.
+> — **Вона:** Я читаю ці слова.
+> — **Він:** Так. Пишіть ці слова.
+> — **Вона:** Я пишу.
+> — **Він:** Покажіть слова.
+> — **Вона:** Я покажу.
+> — **Він:** Візьміть це.
+> — **Вона:** Я взяла це.
+> — **Він:** Скажіть це слово.
+> — **Вона:** Я скажу.
+> — **Він:** Дуже добре. Дайте це.
+> — **Вона:** Я даю.
 
-Іноді наказовий спосіб звучить занадто прямо. Треба використовувати слова для ввічливості. Найкраще слово — це «будь ласка». 
+| Ukrainian | English |
+|-----------|---------|
+| Ідіть до мене. Стійте там. | Come to me. Stand there. |
+| Я стою там. | I am standing there. |
+| Дивіться там. Читайте ці слова. | Look there. Read these words. |
+| Я читаю ці слова. | I am reading these words. |
+| Так. Пишіть ці слова. | Yes. Write these words. |
+| Я пишу. | I am writing. |
+| Покажіть слова. Я покажу. | Show the words. I will show. |
+| Візьміть це. Я взяла це. | Take this. I took this. |
+| Скажіть це слово. Я скажу. | Say this word. I will say. |
+| Дайте це. Я даю. | Give this. I give. |
 
-Sometimes the imperative mood sounds too direct. You need to use politeness words. The best word is "please".
+## Ввічливе прохання (Polite Requests)
 
-Ви можете поставити це слово на початку речення. Ви можете поставити його в кінці. 
-You can place this word at the beginning of the sentence. You can place it at the end.
+To transform an order into a polite request, you must add **будь ласка**. This phrase is the universal softener for any command. Its placement is flexible.
 
-Дайте, будь ласка. 
-Please give.
-
-Скажіть, будь ласка. 
-Please tell.
-
-Покажіть, будь ласка. 
-Please show.
-
-В офіційній ситуації ми використовуємо іншу фразу. Це фраза «Прошу вас». Після неї йде інфінітив. 
-
-In a formal situation, we use another phrase "Прошу вас". It is followed by the infinitive.
-
-Прошу вас сісти. 
-Please sit down.
-
-Прошу вас чекати. 
-Please wait.
-
-Для найбільш ввічливих ситуацій є ще одна конструкція. Вона дуже схожа на англійську фразу. 
-
-For the most polite situations, there is another construction. It is very similar to the English phrase.
-
-Ви можете сказати: Чи не могли б ви повторити? 
-You can say: Could you repeat?
-
-Також можна запитати: Чи не могли б ви дати це? 
-Also you can ask: Could you give this?
-
-Ще один варіант: Чи не могли б ви допомогти? 
-Another option: Could you help?
+- **Дайте, будь ласка.**
+- **Будь ласка, слухай.**
+- **Чекайте, будь ласка, там.**
+- **Скажіть ці слова, будь ласка.**
+- **Пишіть, будь ласка.**
+- **Ідіть, будь ласка.**
+- **Будь ласка, допоможіть!**
+- **Покажіть, будь ласка, це.**
+- **Візьміть, будь ласка.**
+- **Будь ласка, дивіться.**
+- **Стійте, будь ласка.**
+- **Будь ласка, читайте.**
+- **Будь ласка, пишіть тут.**
+- **Дай це, будь ласка.**
+- **Скажи, будь ласка!**
+- **Допоможіть, будь ласка!**
 
 > [!culture]
-> In Ukrainian culture, teachers usually use the plural formal commands like **чита́йте** (read) or **слу́хайте** (listen) to address the whole class together. But when speaking to one individual student, they will often switch to the informal singular command like **чита́й** or **слу́хай**. This shows a warm, supportive environment.
+> Using the formal command form without adding a polite word can still sound demanding. Always include the word for "please" when asking a stranger for assistance to maintain a friendly and respectful tone.
 
-## Заборони
+If you need to be even more formal, you can use a formal phrase meaning "I ask you" followed by the infinitive verb. We write this as **прошу вас**.
 
-Як сказати людині не робити щось? Це дуже просто. Це називається заборона. 
+- **Прошу вас читати.**
+- **Прошу вас писати.**
+- **Прошу вас чекати.**
+- **Прошу вас сказати.**
+- **Прошу вас дати.**
+- **Прошу вас допомогти.**
 
-How do you tell someone not to do something? It is very simple. This is called a prohibition.
+You can also use an indirect request pattern. To say "Could you", you use the phrase **чи не могли б ви**.
 
-Треба просто додати слово «не». Це слово стоїть тут. Форма дієслова залишається такою ж. 
+- **Чи не могли б ви допомогти?**
+- **Чи не могли б ви показати?**
+- **Чи не могли б ви сказати?**
+- **Чи не могли б ви дати?**
+- **Чи не могли б ви взяти?**
 
-You just need to add the word "not". This word stands before the verb. The verb form remains the same.
+Let's look at a short interaction showing a polite request.
 
-Не пиши. 
-Do not write.
+> — **Він:** Покажіть це слово, будь ласка.
+> — **Вона:** Ось це слово. Дивіться.
+> — **Він:** Допоможіть також, будь ласка.
+> — **Вона:** Так, я допоможу.
+> — **Він:** Дайте це, будь ласка.
+> — **Вона:** Я даю. Візьміть.
 
-Не читай. 
-Do not read.
+| Ukrainian | English |
+|-----------|---------|
+| Покажіть це слово, будь ласка. | Please show this word. |
+| Ось це слово. Дивіться. | Here is this word. Look. |
+| Допоможіть також, будь ласка. | Help too, please. |
+| Так, я допоможу. | Yes, I will help. |
+| Дайте це, будь ласка. | Give this, please. |
+| Я даю. Візьміть. | I give. Take. |
 
-Не дивись. 
-Do not look.
+## Заборони (Prohibitions)
 
-Не слухайте. 
-Do not listen.
+Creating a negative command in Ukrainian is simple. You just place the negative particle **не** directly in front of the imperative verb. The form of the verb itself does not change.
 
-> [!did-you-know]
-> There is a difference between a personal prohibition and a public sign. If a parent tells a child not to touch something, they will say **Не чіпай!** (Do not touch!). This is a personal command. But if you see a sign in a museum, it will use the infinitive form. It will say **Не торкатися!** (Do not touch!). Both phrases mean "do not touch", but they differ in register. The infinitive is for general public rules, while the imperative is for direct communication.
+| Positive | Negative |
+|----------|----------|
+| **дивись** | **не дивись** |
+| **дивіться** | **не дивіться** |
+| **слухай** | **не слухай** |
+| **слухайте**| **не слухайте**|
+| **іди** | **не іди** |
+| **ідіть** | **не ідіть** |
+| **пиши** | **не пиши** |
+| **пишіть** | **не пишіть** |
+| **читай** | **не читай** |
+| **читайте** | **не читайте** |
+| **чекай** | **не чекай** |
+| **чекайте** | **не чекайте** |
+| **стій** | **не стій** |
+| **стійте** | **не стійте** |
 
-Ось ще кілька прикладів для заборон. 
-Here are more examples for prohibitions.
+Here are some examples of negative commands.
 
-Не кури! 
-Do not smoke!
+- **Не дивись там!**
+- **Не слухайте це!**
+- **Не ідіть!**
+- **Не пиши тут!**
+- **Не чекай!**
+- **Не стійте!**
+- **Не читайте це!**
+- **Не дивіться тут!**
+- **Не пишіть там!**
+- **Не іди!**
+- **Не слухай це!**
+- **Не чекайте тут!**
+- **Не стій там!**
+- **Не читай це!**
+- **Не скажи!**
+- **Не дай!**
+- **Не дайте!**
+- **Не покажіть!**
+- **Не візьміть!**
 
-Не біжи! 
-Do not run!
+> [!tip]
+> A personal prohibition like **Не стій тут!** (Do not stand here!) is used when speaking directly to someone. Public signs use a different form with the infinitive to say "No standing." We will explore public signs in a future lesson.
 
-Не йди. 
-Do not go.
+Let's look at a quick dialogue involving prohibitions.
 
-Не стійте. 
-Do not stand.
+> — **Він:** Я іду.
+> — **Вона:** Не іди! Стій!
+> — **Він:** Чому?
+> — **Вона:** Не дивись там. Не іди.
+> — **Він:** Так. Я стою тут.
+> — **Вона:** Не пиши це. Не читай.
+> — **Він:** Я не пишу і не читаю.
+> — **Вона:** Дуже добре. Чекай тут.
 
-Не чекай. 
-Do not wait.
+| Ukrainian | English |
+|-----------|---------|
+| Я іду. | I am going. |
+| Не іди! Стій! | Do not go! Stop! |
+| Чому? | Why? |
+| Не дивись там. Не іди. | Do not look there. Do not go. |
+| Так. Я стою тут. | Yes. I am standing here. |
+| Не пиши це. Не читай. | Do not write this. Do not read. |
+| Я не пишу і не читаю. | I am not writing and not reading. |
+| Дуже добре. Чекай тут. | Very good. Wait here. |
 
-## Практика та підсумок
+## Практика і підсумок (Summary and Practice)
 
-Тепер час для практики. Уявіть ситуацію. Ви вчитель. Використовуйте форму «ви». 
+You have learned how to form commands and make polite requests in Ukrainian. Remember that giving a command requires choosing between the formal and informal forms. 
 
-Now it is time for practice. Imagine a situation. You are a teacher. Use the formal commands.
+Always add a polite word like **будь ласка** to soften the request. Some verbs drop the infinitive ending to form the command. Many other verbs have irregular stems. To make a command negative, add the negative particle before the verb. Practice these forms regularly. 
 
-Читайте текст. 
-Read the text.
-
-Пишіть тут. 
-Write here.
-
-Слухайте уважно. 
-Listen carefully.
-
-Дивіться на дошку. 
-Look at the board.
-
-Тепер інша ситуація. Ви говорите. Це ваш друг. Використовуйте форму «ти». 
-
-Now another situation. You are speaking. This is your friend. Use the informal commands.
-
-Дай це. 
-Give this.
-
-Скажи правду. 
-Tell the truth.
-
-Іди сюди. 
-Go here.
-
-Стій там. 
-Stand there.
-
-Дуже корисно робити команди ввічливими. Це важлива навичка. 
-
-It is very useful to make commands polite. This is an important skill.
-
-Спочатку пряма команда. Дай. 
-First, a direct command. Give.
-
-Потім ввічлива команда. Дайте, будь ласка. 
-Then, a polite command. Please give.
-
-Нарешті, дуже ввічлива форма. Чи не могли б ви дати? 
-Finally, a very polite form. Could you give?
-
-Ось приклад для іншого слова. 
-Here is an example for another word. 
-
-Допоможи. 
-Help.
-
-Допоможіть, будь ласка. 
-Please help.
+- **Читайте, будь ласка!**
+- **Пишіть тут!**
+- **Слухайте!**
+- **Ідіть!**
+- **Скажіть це!**
+- **Дайте це!**
+- **Стійте там!**
+- **Дивіться!**
+- **Допоможіть!**
+- **Візьміть!**
+- **Покажіть!**
+- **Чекайте!**
+- **Читай, будь ласка!**
+- **Пиши тут!**
+- **Слухай!**
+- **Іди!**
+- **Скажи це!**
+- **Дай це!**
+- **Стій там!**
+- **Дивись!**
+- **Допоможи!**
+- **Візьми!**
+- **Покажи!**
+- **Чекай!**
+- **Не читай!**
+- **Не пиши!**
+- **Не слухай!**
+- **Не іди!**
+- **Не скажи!**
+- **Не дай!**
+- **Не стій!**
+- **Не дивись!**
+- **Не допоможи!**
+- **Не візьми!**
+- **Не покажи!**
+- **Не чекай!**
 
 ---
 
 # Підсумок
 
-In this lesson, you learned how to use the imperative mood to give commands and make requests in Ukrainian. You learned the difference between the informal **ти** forms and the formal **ви** forms. You discovered the eight essential command verbs, including irregular ones like **дай** (give) and **скажи́** (tell). You also learned how to soften your commands using **будь ласка** (please) and how to form negative commands by simply adding **не** (not) before the verb. Understanding these forms gives you the power to interact naturally and politely in daily situations.
+You have successfully learned how to command and request in Ukrainian. Now you know how to direct actions and ask for assistance politely. 
 
-1. What is the formal plural command for "read"? — відповідь: читайте
-2. What is the informal singular command for "give"? — відповідь: дай
-3. How do you say "Please tell"? — відповідь: Скажіть, будь ласка
-4. How do you form a prohibition for "look" (informal)? — відповідь: Не дивись
-
----
+1. How do you change an informal command for **ти** to a formal command for **ви**?
+   *You add the suffix **-те** to the informal command form.*
+2. What are the imperative forms of the irregular verb **дати**?
+   *The informal form is **дай**. The formal form is **дайте**.*
+3. How do you make a command negative?
+   *You place the word **не** directly before the imperative verb.*
