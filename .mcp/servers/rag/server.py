@@ -267,27 +267,40 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="query_wikipedia",
             description=(
-                "Query Ukrainian Wikipedia (uk.wikipedia.org) for article summaries or search results. "
-                "Use mode='summary' for a specific article, mode='search' for keyword search. "
-                "Returns title, description, extract, and URL."
+                "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
+                "'summary' — article intro paragraph; "
+                "'extract' — full article plaintext (up to 50K chars); "
+                "'sections' — list section headings with indices; "
+                "'section' — read a specific section (requires section parameter); "
+                "'search' — keyword search returning titles and snippets. "
+                "Results are cached locally (30-day TTL) to avoid redundant API calls."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Article title (for summary) or search query (for search)"
+                        "description": "Article title (for summary/extract/sections/section) or search query (for search)"
                     },
                     "mode": {
                         "type": "string",
-                        "description": "Query mode: 'summary' for article summary, 'search' for keyword search",
-                        "enum": ["summary", "search"],
+                        "description": "Query mode",
+                        "enum": ["summary", "extract", "sections", "section", "search"],
                         "default": "summary"
+                    },
+                    "section": {
+                        "type": "integer",
+                        "description": "Section index (required for mode='section', get indices from mode='sections')"
                     },
                     "limit": {
                         "type": "integer",
                         "description": "Max search results (default 5, only for search mode)",
                         "default": 5
+                    },
+                    "force_refresh": {
+                        "type": "boolean",
+                        "description": "Bypass cache and fetch fresh data from Wikipedia",
+                        "default": False
                     }
                 },
                 "required": ["query"]
@@ -631,12 +644,116 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
     limit = args.get("limit", 5)
+    section_idx = args.get("section")
+    force_refresh = args.get("force_refresh", False)
 
-    from rag.source_query import wikipedia_summary, wikipedia_search
+    from rag.source_query import (
+        wikipedia_summary, wikipedia_search, wikipedia_sections,
+        wikipedia_extract, wikipedia_section_text,
+    )
+    from rag.wiki_cache import WikiCache, NEGATIVE_SENTINEL
 
-    if mode == "summary":
+    cache = WikiCache()
+
+    if mode == "search":
+        # Search results use short TTL (24h) — cached separately
+        cache_key_section = f"q={query}&limit={limit}"
+        if not force_refresh:
+            cached = cache.get("search", query, cache_key_section)
+            if cached is not None:
+                if cache.is_negative(cached):
+                    return [TextContent(type="text", text=f"No Wikipedia results for: '{query}' (cached)")]
+                return [TextContent(type="text", text=cached)]
+
+        results = await asyncio.to_thread(wikipedia_search, query, limit)
+        if not results:
+            cache.put_negative("search", query, cache_key_section)
+            return [TextContent(type="text", text=f"No Wikipedia results for: '{query}'")]
+        lines = [f"Wikipedia search: '{query}' — {len(results)} results\n"]
+        for i, r in enumerate(results, 1):
+            lines.append(f"{i}. **{r['title']}** — {r['snippet']}")
+        text = "\n".join(lines)
+        cache.put("search", query, text, cache_key_section)
+        return [TextContent(type="text", text=text)]
+
+    elif mode == "extract":
+        if not force_refresh:
+            cached = cache.get("extract", query)
+            if cached is not None:
+                if cache.is_negative(cached):
+                    return [TextContent(type="text", text=f"Wikipedia article not found: '{query}' (cached)")]
+                return [TextContent(type="text", text=cached)]
+
+        result = await asyncio.to_thread(wikipedia_extract, query)
+        if not result:
+            cache.put_negative("extract", query)
+            return [TextContent(type="text", text=f"Wikipedia article not found: '{query}'")]
+        lines = [
+            f"# {result['title']}",
+            f"**URL**: {result['url']}",
+            "",
+            result["extract"],
+        ]
+        text = "\n".join(lines)
+        cache.put("extract", query, text)
+        return [TextContent(type="text", text=text)]
+
+    elif mode == "sections":
+        if not force_refresh:
+            cached = cache.get("sections", query)
+            if cached is not None:
+                if cache.is_negative(cached):
+                    return [TextContent(type="text", text=f"Wikipedia article not found: '{query}' (cached)")]
+                return [TextContent(type="text", text=cached)]
+
+        result = await asyncio.to_thread(wikipedia_sections, query)
+        if not result:
+            cache.put_negative("sections", query)
+            return [TextContent(type="text", text=f"Wikipedia article not found or has no sections: '{query}'")]
+        lines = [f"Sections of '{query}':\n"]
+        for s in result:
+            indent = "  " * (int(s.get("toclevel", 1)) - 1)
+            lines.append(f"{indent}{s.get('number', '')} {s.get('line', '')} (index={s.get('index', '')})")
+        text = "\n".join(lines)
+        cache.put("sections", query, text)
+        return [TextContent(type="text", text=text)]
+
+    elif mode == "section":
+        if section_idx is None:
+            return [TextContent(type="text", text="Error: 'section' parameter required for mode='section'. Use mode='sections' to get indices.")]
+
+        sec_str = str(section_idx)
+        if not force_refresh:
+            cached = cache.get("section", query, sec_str)
+            if cached is not None:
+                if cache.is_negative(cached):
+                    return [TextContent(type="text", text=f"Section {section_idx} not found in '{query}' (cached)")]
+                return [TextContent(type="text", text=cached)]
+
+        result = await asyncio.to_thread(wikipedia_section_text, query, section_idx)
+        if not result:
+            cache.put_negative("section", query, sec_str)
+            return [TextContent(type="text", text=f"Section {section_idx} not found in '{query}'")]
+        lines = [
+            f"# {result['title']} — Section {section_idx}",
+            "",
+            result["text"],
+        ]
+        text = "\n".join(lines)
+        cache.put("section", query, text, sec_str)
+        return [TextContent(type="text", text=text)]
+
+    else:  # summary (default)
+        if not force_refresh:
+            cached = cache.get("summary", query)
+            if cached is not None:
+                if cache.is_negative(cached):
+                    return [TextContent(type="text", text=f"Wikipedia article not found: '{query}' (cached)")]
+                return [TextContent(type="text", text=cached)]
+
         result = await asyncio.to_thread(wikipedia_summary, query)
         if not result:
+            cache.put_negative("summary", query)
             return [TextContent(type="text", text=f"Wikipedia article not found: '{query}'")]
         lines = [
             f"# {result['title']}",
@@ -645,15 +762,9 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
             "",
             result["extract"],
         ]
-        return [TextContent(type="text", text="\n".join(lines))]
-    else:
-        results = await asyncio.to_thread(wikipedia_search, query, limit)
-        if not results:
-            return [TextContent(type="text", text=f"No Wikipedia results for: '{query}'")]
-        lines = [f"Wikipedia search: '{query}' — {len(results)} results\n"]
-        for i, r in enumerate(results, 1):
-            lines.append(f"{i}. **{r['title']}** — {r['snippet']}")
-        return [TextContent(type="text", text="\n".join(lines))]
+        text = "\n".join(lines)
+        cache.put("summary", query, text)
+        return [TextContent(type="text", text=text)]
 
 
 async def handle_query_grac(args: dict) -> list[TextContent]:

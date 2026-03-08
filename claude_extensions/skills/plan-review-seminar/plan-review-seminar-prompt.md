@@ -8,7 +8,14 @@ You are reviewing a Ukrainian language course plan YAML file for seminar tracks 
 
 You have THREE authority sources. Use ALL of them:
 
-1. **Wikipedia (Ukrainian)** — Use `mcp__rag__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian.
+1. **Wikipedia (Ukrainian)** — Use `mcp__rag__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian. Available modes:
+   - `mode='summary'` — quick intro paragraph (default)
+   - `mode='extract'` — full article text (up to 50K chars) for deep verification
+   - `mode='sections'` — list section headings with indices
+   - `mode='section'` + `section=N` — read a specific section (get indices from mode='sections')
+   - `mode='search'` — keyword search when you don't know the exact title
+
+   Results are cached locally (30-day TTL). Use `force_refresh=true` for fresh data.
 
 2. **Literary RAG** — Use `mcp__rag__search_literary` to verify primary source references. The RAG contains chronicles, poetry, legal texts, and other primary Ukrainian literary sources. For plans that cite specific works (Povist mynulykh lit, Kobzar, Ruska Pravda, etc.), verify the citations exist in the corpus.
 
@@ -200,7 +207,7 @@ for each plan in plans/{track}/*.yaml:
 
 ### Efficiency Notes
 
-- **Batch Wikipedia lookups**: For plans about the same person/event across tracks (e.g., Shevchenko in BIO and LIT), cache the Wikipedia result mentally
+- **Batch Wikipedia lookups**: Wikipedia results are cached locally (30 days). Repeated queries for the same person/event are instant. Use `mode='extract'` for deep verification, `mode='summary'` for quick checks.
 - **Prioritize CRITICAL**: If a CRITICAL issue is found, still complete the review but mark verdict as FAIL immediately
 - **Search in Ukrainian**: "Тарас Шевченко" not "Taras Shevchenko", "Голодомор" not "Holodomor"
 - **Track context matters**: A plan about Holodomor in HIST needs different checks than the same topic in ISTORIO (which focuses on historiographical method)
