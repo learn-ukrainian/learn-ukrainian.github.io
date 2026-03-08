@@ -527,20 +527,8 @@ def proofread_module(
 # ---------------------------------------------------------------------------
 # Evaluation
 # ---------------------------------------------------------------------------
-def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content: str) -> dict:
-    # Fix #1: Inject explicit 1-based index so LLMs don't miscount
-    indexed_issues = []
-    for j, iss in enumerate(issues, 1):
-        indexed = dict(iss)
-        indexed["issue_index"] = j
-        indexed_issues.append(indexed)
-    findings_yaml = yaml.dump({"issues": indexed_issues}, allow_unicode=True, sort_keys=False)
-    prompt = EVALUATE_PROMPT_TEMPLATE.replace("{content}", content).replace("{findings}", findings_yaml)
-
-    log(f"\n{'='*60}")
-    log(f"Evaluating: {level}/{slug} (module {num})")
-
-    # 1. Dispatch Gemini Pro
+def _dispatch_evaluations(prompt, slug):
+    """Dispatch evaluation to both Gemini Pro and Claude Opus."""
     task_id_gem = f"eval-{slug}-gemini"
     log("  Dispatching to Gemini Pro...")
     ok_gem, out_gem = dispatch_gemini(prompt, task_id_gem, "gemini-3.1-pro-preview")
@@ -551,7 +539,6 @@ def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content
         if isinstance(parsed, dict):
             gemini_eval = parsed
 
-    # 2. Dispatch Claude Opus
     task_id_claude = f"eval-{slug}-claude"
     log("  Dispatching to Claude Opus...")
     ok_claude, out_claude = dispatch_claude(
@@ -568,82 +555,109 @@ def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content
     if claude_eval is None:
         log("  Opus unavailable or failed. Evaluating with Gemini only.")
 
-    # 3. Print per-module summary table and aggregate metrics
-    log(f"\n  === Evaluation: {level}/{slug} ===")
+    return gemini_eval, claude_eval
 
-    # Fix #4: Use :<2 for issue index to handle double digits
+
+def _get_eval_row(e_list, idx):
+    """Find evaluation row by issue index. Casts both sides to str for LLM typing quirks."""
+    if not e_list:
+        return None
+    for item in e_list:
+        if str(item.get("issue_index")) == str(idx):
+            return item
+    return None
+
+
+def _normalize_bool(val):
+    """Normalize LLM boolean to lowercase string."""
+    s = str(val).lower()
+    if s in ["yes", "true", "1"]:
+        return "yes"
+    if s in ["no", "false", "0"]:
+        return "no"
+    return s
+
+
+def _compute_agreement(g_c, g_a, g_s, c_c, c_a, c_s):
+    """Compute agreement between Gemini and Claude evaluations."""
+    if g_c == "n/a" and c_c == "n/a":
+        return "N/A"
+    if g_c == "n/a" or c_c == "n/a":
+        return "PARTIAL"
+    _yes = ["yes", "true", "1"]
+    if ((g_c in _yes) != (c_c in _yes) or
+            (g_a in _yes) != (c_a in _yes) or
+            (g_s in _yes) != (c_s in _yes)):
+        return "DISAGREE"
+    return "AGREE"
+
+
+def _score_eval_row(row):
+    """Extract boolean scores from an eval row."""
+    correct = str(row.get("correct_diagnosis", "")).lower() in ["yes", "true", "1"]
+    apply_ = str(row.get("rewrite_acceptable", "")).lower() in ["yes", "true", "1"]
+    safe = str(row.get("no_new_errors", "")).lower() in ["yes", "true", "1"]
+    return correct, apply_, safe
+
+
+def _evaluate_issue(i, issue, gemini_eval, claude_eval, metrics):
+    """Evaluate a single issue and log the result row."""
+    itype = issue.get("type", "UNKNOWN")
+    sev = issue.get("severity", "?")
+
+    gem_row = _get_eval_row(gemini_eval.get("evaluations", []) if gemini_eval else [], i)
+    cla_row = _get_eval_row(claude_eval.get("evaluations", []) if claude_eval else [], i)
+
+    g_c = str(gem_row.get("correct_diagnosis", "n/a")).lower() if gem_row else "n/a"
+    g_a = str(gem_row.get("rewrite_acceptable", "n/a")).lower() if gem_row else "n/a"
+    g_s = str(gem_row.get("no_new_errors", "n/a")).lower() if gem_row else "n/a"
+    c_c = str(cla_row.get("correct_diagnosis", "n/a")).lower() if cla_row else "n/a"
+    c_a = str(cla_row.get("rewrite_acceptable", "n/a")).lower() if cla_row else "n/a"
+    c_s = str(cla_row.get("no_new_errors", "n/a")).lower() if cla_row else "n/a"
+
+    agreement = _compute_agreement(g_c, g_a, g_s, c_c, c_a, c_s)
+
+    valid_evals = 0
+    correct_yes = apply_yes = safe_yes = 0
+    for row in [gem_row, cla_row]:
+        if row:
+            valid_evals += 1
+            correct, apply_, safe = _score_eval_row(row)
+            correct_yes += int(correct)
+            apply_yes += int(apply_)
+            safe_yes += int(safe)
+
+    if valid_evals > 0:
+        metrics["correct"] += (correct_yes / valid_evals)
+        metrics["apply"] += (apply_yes / valid_evals)
+        metrics["safe"] += (safe_yes / valid_evals)
+
+    short_itype = itype[:10] if len(itype) > 10 else itype
+    log(f"  | {i:<2} | {short_itype:<10} | {sev:<4} | {_normalize_bool(g_c):<13} | {_normalize_bool(g_a):<11} | {_normalize_bool(c_c):<14} | {_normalize_bool(c_a):<12} | {agreement:<9} |")
+
+
+def evaluate_module(level: str, num: int, slug: str, issues: list[dict], content: str) -> dict:
+    # Inject explicit 1-based index so LLMs don't miscount
+    indexed_issues = []
+    for j, iss in enumerate(issues, 1):
+        indexed = dict(iss)
+        indexed["issue_index"] = j
+        indexed_issues.append(indexed)
+    findings_yaml = yaml.dump({"issues": indexed_issues}, allow_unicode=True, sort_keys=False)
+    prompt = EVALUATE_PROMPT_TEMPLATE.replace("{content}", content).replace("{findings}", findings_yaml)
+
+    log(f"\n{'='*60}")
+    log(f"Evaluating: {level}/{slug} (module {num})")
+
+    gemini_eval, claude_eval = _dispatch_evaluations(prompt, slug)
+
+    log(f"\n  === Evaluation: {level}/{slug} ===")
     log("  | #  | Type       | Sev  | Pro: Correct? | Pro: Apply? | Opus: Correct? | Opus: Apply? | Agreement |")
     log("  |----|------------|------|---------------|-------------|----------------|--------------|-----------|")
 
-    def get_eval_row(e_list, idx):
-        """Fix #3: Cast both sides to str to handle LLM typing quirks (quoted vs unquoted ints)."""
-        if not e_list:
-            return None
-        for item in e_list:
-            if str(item.get("issue_index")) == str(idx):
-                return item
-        return None
-
     metrics = {"correct": 0, "apply": 0, "safe": 0}
-
     for i, issue in enumerate(issues, 1):
-        itype = issue.get("type", "UNKNOWN")
-        sev = issue.get("severity", "?")
-
-        gem_row = get_eval_row(gemini_eval.get("evaluations", []) if gemini_eval else [], i)
-        cla_row = get_eval_row(claude_eval.get("evaluations", []) if claude_eval else [], i)
-
-        g_c = str(gem_row.get("correct_diagnosis", "n/a")).lower() if gem_row else "n/a"
-        g_a = str(gem_row.get("rewrite_acceptable", "n/a")).lower() if gem_row else "n/a"
-        g_s = str(gem_row.get("no_new_errors", "n/a")).lower() if gem_row else "n/a"
-
-        c_c = str(cla_row.get("correct_diagnosis", "n/a")).lower() if cla_row else "n/a"
-        c_a = str(cla_row.get("rewrite_acceptable", "n/a")).lower() if cla_row else "n/a"
-        c_s = str(cla_row.get("no_new_errors", "n/a")).lower() if cla_row else "n/a"
-
-        # Fix #2: Check all 3 dimensions for agreement (including safety)
-        agreement = "AGREE"
-        if g_c != "n/a" and c_c != "n/a":
-            _yes = ["yes", "true", "1"]
-            if (g_c in _yes) != (c_c in _yes):
-                agreement = "DISAGREE"
-            if (g_a in _yes) != (c_a in _yes):
-                agreement = "DISAGREE"
-            if (g_s in _yes) != (c_s in _yes):
-                agreement = "DISAGREE"
-        elif g_c == "n/a" and c_c == "n/a":
-            agreement = "N/A"
-        else:
-            agreement = "PARTIAL"
-
-        valid_evals = 0
-        correct_yes = 0
-        apply_yes = 0
-        safe_yes = 0
-
-        for row in [gem_row, cla_row]:
-            if row:
-                valid_evals += 1
-                if str(row.get("correct_diagnosis", "")).lower() in ["yes", "true", "1"]:
-                    correct_yes += 1
-                if str(row.get("rewrite_acceptable", "")).lower() in ["yes", "true", "1"]:
-                    apply_yes += 1
-                if str(row.get("no_new_errors", "")).lower() in ["yes", "true", "1"]:
-                    safe_yes += 1
-
-        if valid_evals > 0:
-            metrics["correct"] += (correct_yes / valid_evals)
-            metrics["apply"] += (apply_yes / valid_evals)
-            metrics["safe"] += (safe_yes / valid_evals)
-
-        g_c_str = "yes" if g_c in ["yes", "true", "1"] else ("no" if g_c in ["no", "false", "0"] else g_c)
-        g_a_str = "yes" if g_a in ["yes", "true", "1"] else ("no" if g_a in ["no", "false", "0"] else g_a)
-        c_c_str = "yes" if c_c in ["yes", "true", "1"] else ("no" if c_c in ["no", "false", "0"] else c_c)
-        c_a_str = "yes" if c_a in ["yes", "true", "1"] else ("no" if c_a in ["no", "false", "0"] else c_a)
-
-        short_itype = itype[:10] if len(itype) > 10 else itype
-
-        log(f"  | {i:<2} | {short_itype:<10} | {sev:<4} | {g_c_str:<13} | {g_a_str:<11} | {c_c_str:<14} | {c_a_str:<12} | {agreement:<9} |")
+        _evaluate_issue(i, issue, gemini_eval, claude_eval, metrics)
 
     prec = (metrics["correct"] / len(issues)) * 100 if len(issues) > 0 else 0
     rewr = (metrics["apply"] / len(issues)) * 100 if len(issues) > 0 else 0

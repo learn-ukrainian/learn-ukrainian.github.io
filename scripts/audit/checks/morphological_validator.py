@@ -205,6 +205,163 @@ def _parse_tense(tags: str) -> str | None:
     return None
 
 
+def _extract_word_lines(content_clean: str) -> list[tuple[str, int, str]]:
+    """Extract (word, line_num, full_line) tuples from content, skipping non-prose lines."""
+    word_lines: list[tuple[str, int, str]] = []
+    lines = content_clean.split("\n")
+    for line_num, line in enumerate(lines, 1):
+        if _should_skip_line(line):
+            continue
+        tokens = _CYRILLIC_TOKEN_RE.findall(line)
+        for token in tokens:
+            word_lines.append((token, line_num, line))
+    return word_lines
+
+
+def _check_imperative(
+    word: str, line_num: int, matches: list[dict],
+) -> dict | None:
+    """Check for imperative violation. Returns issue dict or None."""
+    non_impr = [m for m in matches if "impr" not in m["tags"]]
+    if non_impr:
+        return None
+    impr_tags = next(m["tags"] for m in matches if "impr" in m["tags"])
+    return {
+        "type": "MORPHOLOGICAL_VIOLATION",
+        "severity": "HIGH",
+        "location": f"~line {line_num}",
+        "text": f"Imperative '{word}' (VESUM: {impr_tags}) — imperatives not taught until M47.",
+        "fix": f"Replace '{word}' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.",
+    }
+
+
+def _check_no_verbs(
+    word: str, line_num: int, module_num: int, matches: list[dict],
+) -> dict | None:
+    """Check for verb-forbidden violation. Returns issue dict or None."""
+    verb_tags = matches[0]["tags"]
+    return {
+        "type": "MORPHOLOGICAL_VIOLATION",
+        "severity": "HIGH",
+        "location": f"~line {line_num}",
+        "text": f"Verb '{word}' (VESUM: {verb_tags}) in pre-verb module M{module_num}. Verbs are forbidden before M15.",
+        "fix": f"Replace verb '{word}' with an English equivalent or a noun phrase. Students haven't learned verbs yet.",
+    }
+
+
+def _check_no_accusative(
+    word: str, line_num: int, module_num: int, matches: list[dict],
+) -> dict | None:
+    """Check for accusative violation. Returns issue dict or None."""
+    for match in matches:
+        if match["pos"] in ("noun", "adj") and "v_zna" in match["tags"]:
+            has_non_acc = any(
+                m["pos"] not in ("noun", "adj") or "v_zna" not in m["tags"]
+                for m in matches
+            )
+            if not has_non_acc:
+                return {
+                    "type": "MORPHOLOGICAL_VIOLATION",
+                    "severity": "HIGH",
+                    "location": f"~line {line_num}",
+                    "text": f"Accusative '{word}' (VESUM: {match['tags']}) in M{module_num}. Accusative not taught until M25.",
+                    "fix": f"Replace '{word}' (accusative) with nominative form or use English equivalent.",
+                }
+            break
+    return None
+
+
+def _check_nominative_only(
+    word: str, line_num: int, module_num: int, matches: list[dict],
+) -> dict | None:
+    """Check for non-nominative case violation. Returns issue dict or None."""
+    has_non_nominal = any(m["pos"] not in ("noun", "adj") for m in matches)
+    if has_non_nominal:
+        return None
+    for match in matches:
+        if match["pos"] in ("noun", "adj"):
+            case = _parse_case(match["tags"])
+            if case and case in _OBLIQUE_CASES:
+                has_nom = any(
+                    _parse_case(m["tags"]) in ("v_naz", "v_kly", None)
+                    for m in matches
+                    if m["pos"] in ("noun", "adj")
+                )
+                if not has_nom:
+                    case_label = _CASE_LABELS.get(case, case)
+                    return {
+                        "type": "MORPHOLOGICAL_VIOLATION",
+                        "severity": "HIGH",
+                        "location": f"~line {line_num}",
+                        "text": f"Non-nominative '{word}' ({case_label}, VESUM: {match['tags']}) in M{module_num}. Only nominative case allowed before M25.",
+                        "fix": f"Replace '{word}' ({case_label}) with its nominative form or use English equivalent.",
+                    }
+            break
+    return None
+
+
+def _check_present_only(
+    word: str, line_num: int, module_num: int, matches: list[dict],
+) -> dict | None:
+    """Check for non-present tense violation. Returns issue dict or None."""
+    for match in matches:
+        if match["pos"] == "verb":
+            tense = _parse_tense(match["tags"])
+            if tense in ("past", "futr"):
+                has_valid = any(
+                    m["pos"] != "verb"
+                    or _parse_tense(m["tags"]) in ("pres", "inf", None)
+                    for m in matches
+                )
+                if not has_valid:
+                    return {
+                        "type": "MORPHOLOGICAL_VIOLATION",
+                        "severity": "HIGH",
+                        "location": f"~line {line_num}",
+                        "text": f"Non-present verb '{word}' ({tense} tense, VESUM: {match['tags']}) in M{module_num}. Only present tense available before M36.",
+                        "fix": f"Replace '{word}' with present tense form or English.",
+                    }
+            break
+    return None
+
+
+def _check_word_constraints(
+    word: str, line_num: int, module_num: int,
+    matches: list[dict], constraints: GrammarConstraint,
+) -> dict | None:
+    """Check a single word against all grammar constraints. Returns first violation or None."""
+    all_pos = {m["pos"] for m in matches}
+    all_tags = [m["tags"] for m in matches]
+    has_verb = "verb" in all_pos
+    only_verb = all_pos == {"verb"}
+    has_impr = any("impr" in t for t in all_tags)
+
+    if constraints.no_imperatives and has_impr:
+        issue = _check_imperative(word, line_num, matches)
+        if issue:
+            return issue
+
+    if constraints.no_verbs and only_verb:
+        return _check_no_verbs(word, line_num, module_num, matches)
+
+    if constraints.no_accusative:
+        issue = _check_no_accusative(word, line_num, module_num, matches)
+        if issue:
+            return issue
+
+    if constraints.nominative_only:
+        issue = _check_nominative_only(word, line_num, module_num, matches)
+        if issue:
+            return issue
+
+    if constraints.present_only and has_verb:
+        issue = _check_present_only(word, line_num, module_num, matches)
+        if issue:
+            return issue
+
+    return None
+
+
 def validate_morphology(
     content: str,
     level: str,
@@ -225,28 +382,16 @@ def validate_morphology(
     allowed_chunks = _get_allowed_chunks(module_num)
     issues: list[dict] = []
 
-    # Strip deliberate errors (~~wrong form~~) once for all checks
     content_clean = _STRIKETHROUGH_RE.sub("", content)
-
-    # 1. Extract words per line (preserving line context for chunk checking)
-    word_lines: list[tuple[str, int, str]] = []  # (word, line_num, full_line)
-    lines = content_clean.split("\n")
-    for line_num, line in enumerate(lines, 1):
-        if _should_skip_line(line):
-            continue
-        tokens = _CYRILLIC_TOKEN_RE.findall(line)
-        for token in tokens:
-            word_lines.append((token, line_num, line))
+    word_lines = _extract_word_lines(content_clean)
 
     if not word_lines:
         return []
 
-    # 2. Batch VESUM lookup (strip stress marks for lookup)
     unique_words = list({w.lower().replace(_STRESS_MARK, "") for w, _, _ in word_lines})
     vesum_results = vesum_batch_lookup(unique_words)
 
-    # 3. Check each word against constraints
-    seen_violations: set[str] = set()  # deduplicate
+    seen_violations: set[str] = set()
 
     for word, line_num, full_line in word_lines:
         if len(issues) >= max_issues:
@@ -255,172 +400,28 @@ def validate_morphology(
         word_clean = word.replace(_STRESS_MARK, "")
         word_lower = word_clean.lower()
 
-        # Skip 1-char tokens (suffix fragments like -є, -и from **-є**)
         if len(word_clean) <= 1:
             continue
 
-        # Skip if in allowed chunk
         if _is_in_allowed_chunk(word.replace(_STRESS_MARK, ""), full_line.replace(_STRESS_MARK, ""), allowed_chunks):
             continue
 
         matches = vesum_results.get(word_lower, [])
-
         if not matches:
-            # Word not found — already handled by existing VESUM check
             continue
 
-        # Check each constraint
         dedup_key = f"{word_lower}:{line_num}"
         if dedup_key in seen_violations:
             continue
 
-        # Aggregate POS info across all VESUM entries for this word
-        all_pos = {m["pos"] for m in matches}
-        all_tags = [m["tags"] for m in matches]
-        has_verb = "verb" in all_pos
-        only_verb = all_pos == {"verb"}
-        has_impr = any("impr" in t for t in all_tags)
-
-        # --- Imperative check (most specific — check first) ---
-        if constraints.no_imperatives and has_impr:
-            # Only flag if word can't be interpreted as non-imperative
-            non_impr = [m for m in matches if "impr" not in m["tags"]]
-            if not non_impr:
-                seen_violations.add(dedup_key)
-                impr_tags = next(m["tags"] for m in matches if "impr" in m["tags"])
-                issues.append({
-                    "type": "MORPHOLOGICAL_VIOLATION",
-                    "severity": "HIGH",
-                    "location": f"~line {line_num}",
-                    "text": (
-                        f"Imperative '{word}' (VESUM: {impr_tags}) — "
-                        f"imperatives not taught until M47."
-                    ),
-                    "fix": (
-                        f"Replace '{word}' with English instruction. "
-                        f"E.g., use 'Remember that...' instead of Ukrainian imperatives."
-                    ),
-                })
-                continue
-
-        # --- No verbs constraint ---
-        if constraints.no_verbs and only_verb:
+        issue = _check_word_constraints(word, line_num, module_num, matches, constraints)
+        if issue:
             seen_violations.add(dedup_key)
-            verb_tags = matches[0]["tags"]
-            issues.append({
-                "type": "MORPHOLOGICAL_VIOLATION",
-                "severity": "HIGH",
-                "location": f"~line {line_num}",
-                "text": (
-                    f"Verb '{word}' (VESUM: {verb_tags}) in pre-verb module M{module_num}. "
-                    f"Verbs are forbidden before M15."
-                ),
-                "fix": (
-                    f"Replace verb '{word}' with an English equivalent or "
-                    f"a noun phrase. Students haven't learned verbs yet."
-                ),
-            })
-            continue
+            issues.append(issue)
 
-        # --- No accusative constraint ---
-        if constraints.no_accusative:
-            for match in matches:
-                if match["pos"] in ("noun", "adj") and "v_zna" in match["tags"]:
-                    # Allow escape if word has a non-accusative nominal form
-                    # OR a non-nominal POS (e.g., "дію" = verb "діяти")
-                    has_non_acc = any(
-                        m["pos"] not in ("noun", "adj")
-                        or "v_zna" not in m["tags"]
-                        for m in matches
-                    )
-                    if not has_non_acc:
-                        seen_violations.add(dedup_key)
-                        issues.append({
-                            "type": "MORPHOLOGICAL_VIOLATION",
-                            "severity": "HIGH",
-                            "location": f"~line {line_num}",
-                            "text": (
-                                f"Accusative '{word}' (VESUM: {match['tags']}) "
-                                f"in M{module_num}. Accusative not taught until M25."
-                            ),
-                            "fix": (
-                                f"Replace '{word}' (accusative) with nominative form "
-                                f"or use English equivalent."
-                            ),
-                        })
-                    break
-            if dedup_key in seen_violations:
-                continue
-
-        # --- Nominative only constraint ---
-        if constraints.nominative_only:
-            # Skip if word has non-noun/adj interpretations (e.g., чому = adverb)
-            has_non_nominal = any(m["pos"] not in ("noun", "adj") for m in matches)
-            if not has_non_nominal:
-                for match in matches:
-                    if match["pos"] in ("noun", "adj"):
-                        case = _parse_case(match["tags"])
-                        if case and case in _OBLIQUE_CASES:
-                            has_nom = any(
-                                _parse_case(m["tags"]) in ("v_naz", "v_kly", None)
-                                for m in matches
-                                if m["pos"] in ("noun", "adj")
-                            )
-                            if not has_nom:
-                                case_label = _CASE_LABELS.get(case, case)
-                                seen_violations.add(dedup_key)
-                                issues.append({
-                                    "type": "MORPHOLOGICAL_VIOLATION",
-                                    "severity": "HIGH",
-                                    "location": f"~line {line_num}",
-                                    "text": (
-                                        f"Non-nominative '{word}' ({case_label}, VESUM: {match['tags']}) "
-                                        f"in M{module_num}. Only nominative case allowed before M25."
-                                    ),
-                                    "fix": (
-                                        f"Replace '{word}' ({case_label}) with its nominative form "
-                                        f"or use English equivalent."
-                                    ),
-                                })
-                        break
-            if dedup_key in seen_violations:
-                continue
-
-        # --- Present tense only constraint ---
-        if constraints.present_only and has_verb:
-            for match in matches:
-                if match["pos"] == "verb":
-                    tense = _parse_tense(match["tags"])
-                    if tense in ("past", "futr"):
-                        # Check if word has a valid non-past interpretation:
-                        # either a present/inf verb form, or a non-verb POS
-                        # (e.g., "став" = noun "pond", not just past of "стати")
-                        has_valid = any(
-                            m["pos"] != "verb"
-                            or _parse_tense(m["tags"]) in ("pres", "inf", None)
-                            for m in matches
-                        )
-                        if not has_valid:
-                            seen_violations.add(dedup_key)
-                            issues.append({
-                                "type": "MORPHOLOGICAL_VIOLATION",
-                                "severity": "HIGH",
-                                "location": f"~line {line_num}",
-                                "text": (
-                                    f"Non-present verb '{word}' ({tense} tense, VESUM: {match['tags']}) "
-                                    f"in M{module_num}. Only present tense available before M36."
-                                ),
-                                "fix": (
-                                    f"Replace '{word}' with present tense form or English."
-                                ),
-                            })
-                        break
-
-    # --- Russicism / replacement check (all modules) ---
     replacement_issues = check_replacements(content_clean, max_issues=max_issues - len(issues))
     issues.extend(replacement_issues)
 
-    # --- Agreement check (all modules) ---
     agreement_issues = check_agreement(
         word_lines, vesum_results, max_issues=max_issues - len(issues)
     )
@@ -523,6 +524,87 @@ _AGREEMENT_SKIP = {
 }
 
 
+def _group_words_by_line(
+    word_lines: list[tuple[str, int, str]],
+) -> dict[int, list[tuple[str, str, str]]]:
+    """Group words by line number. Returns line_num -> [(orig, lower, full_line)]."""
+    by_line: dict[int, list[tuple[str, str, str]]] = {}
+    for word, line_num, full_line in word_lines:
+        word_clean = word.replace(_STRESS_MARK, "")
+        word_lower = word_clean.lower()
+        by_line.setdefault(line_num, []).append((word, word_lower, full_line))
+    return by_line
+
+
+def _has_sentence_boundary(orig_a: str, orig_b: str, full_line: str) -> bool:
+    """Check if there's a sentence boundary between two adjacent words."""
+    _SENT_BOUNDARY_RE = re.compile(r"[.!?;]")
+    clean_a = orig_a.replace(_STRESS_MARK, "")
+    clean_b = orig_b.replace(_STRESS_MARK, "")
+    idx_a = full_line.find(clean_a)
+    idx_b = full_line.find(clean_b, idx_a + len(clean_a) if idx_a >= 0 else 0)
+    if idx_a >= 0 and idx_b >= 0:
+        between = full_line[idx_a + len(clean_a):idx_b]
+        return bool(_SENT_BOUNDARY_RE.search(between))
+    return False
+
+
+def _resolve_adj_noun_pair(
+    matches_a: list[dict], matches_b: list[dict],
+    orig_a: str, orig_b: str,
+) -> tuple[list[dict] | None, list[dict] | None, str | None, str | None]:
+    """Identify adj-noun pair from two adjacent words. Returns (adj_matches, noun_matches, adj_word, noun_word) or all-None."""
+    a_is_adj = any(m["pos"] == "adj" for m in matches_a)
+    b_is_noun = any(m["pos"] in ("noun", "adj") for m in matches_b)
+    a_is_noun = any(m["pos"] in ("noun",) for m in matches_a)
+    b_is_adj = any(m["pos"] == "adj" for m in matches_b)
+
+    if a_is_adj and b_is_noun:
+        return (
+            [m for m in matches_a if m["pos"] == "adj"],
+            [m for m in matches_b if m["pos"] in ("noun", "adj")],
+            orig_a, orig_b,
+        )
+    elif a_is_noun and b_is_adj:
+        return (
+            [m for m in matches_b if m["pos"] == "adj"],
+            [m for m in matches_a if m["pos"] in ("noun",)],
+            orig_b, orig_a,
+        )
+    return None, None, None, None
+
+
+def _check_pair_agreement(
+    adj_matches: list[dict], noun_matches: list[dict],
+    adj_word: str, noun_word: str, line_num: int,
+) -> dict | None:
+    """Check gender/case agreement for an adj-noun pair. Returns issue dict or None."""
+    adj_gc: set[tuple[str, str]] = set()
+    for m in adj_matches:
+        adj_gc |= _extract_gender_case_pairs(m["tags"])
+    noun_gc: set[tuple[str, str]] = set()
+    for m in noun_matches:
+        noun_gc |= _extract_gender_case_pairs(m["tags"])
+
+    if adj_gc and noun_gc and not (adj_gc & noun_gc):
+        adj_genders = {g for g, _ in adj_gc}
+        noun_genders = {g for g, _ in noun_gc}
+        return {
+            "type": "AGREEMENT_ERROR",
+            "severity": "HIGH",
+            "location": f"~line {line_num}",
+            "text": (
+                f"Agreement mismatch: '{adj_word}' ({'/'.join(sorted(adj_genders))}) "
+                f"+ '{noun_word}' ({'/'.join(sorted(noun_genders))})"
+            ),
+            "fix": (
+                f"Change '{adj_word}' to match the gender/case of '{noun_word}', "
+                f"or vice versa."
+            ),
+        }
+    return None
+
+
 def check_agreement(
     word_lines: list[tuple[str, int, str]],
     vesum_results: dict[str, list[dict]],
@@ -532,14 +614,7 @@ def check_agreement(
     issues: list[dict] = []
     seen: set[str] = set()
 
-    # Group words by line, with full_line for boundary checking
-    by_line: dict[int, list[tuple[str, str, str]]] = {}  # line -> [(orig, lower, full_line)]
-    for word, line_num, full_line in word_lines:
-        word_clean = word.replace(_STRESS_MARK, "")
-        word_lower = word_clean.lower()
-        by_line.setdefault(line_num, []).append((word, word_lower, full_line))
-
-    _SENT_BOUNDARY_RE = re.compile(r"[.!?;]")
+    by_line = _group_words_by_line(word_lines)
 
     for line_num, words in by_line.items():
         if len(issues) >= max_issues:
@@ -548,21 +623,12 @@ def check_agreement(
             orig_a, lower_a, full_line = words[i]
             orig_b, lower_b, _ = words[i + 1]
 
-            # Check if there's a sentence boundary between the two words
-            clean_a = orig_a.replace(_STRESS_MARK, "")
-            clean_b = orig_b.replace(_STRESS_MARK, "")
-            idx_a = full_line.find(clean_a)
-            idx_b = full_line.find(clean_b, idx_a + len(clean_a) if idx_a >= 0 else 0)
-            if idx_a >= 0 and idx_b >= 0:
-                between = full_line[idx_a + len(clean_a):idx_b]
-                if _SENT_BOUNDARY_RE.search(between):
-                    continue  # Different sentences
+            if _has_sentence_boundary(orig_a, orig_b, full_line):
+                continue
 
-            # Strip stress marks for VESUM lookup
             lookup_a = lower_a.replace(_STRESS_MARK, "")
             lookup_b = lower_b.replace(_STRESS_MARK, "")
 
-            # Skip pronouns/determiners that VESUM tags as adj
             if lookup_a in _AGREEMENT_SKIP or lookup_b in _AGREEMENT_SKIP:
                 continue
 
@@ -571,63 +637,21 @@ def check_agreement(
             if not matches_a or not matches_b:
                 continue
 
-            # Skip words that are primarily adverbs (e.g., "дуже")
-            a_has_adv = any(m["pos"] == "adv" for m in matches_a)
-            b_has_adv = any(m["pos"] == "adv" for m in matches_b)
-            if a_has_adv or b_has_adv:
+            if any(m["pos"] == "adv" for m in matches_a) or any(m["pos"] == "adv" for m in matches_b):
                 continue
 
-            # Check if A is adj and B is noun (or vice versa)
-            a_is_adj = any(m["pos"] == "adj" for m in matches_a)
-            b_is_noun = any(m["pos"] in ("noun", "adj") for m in matches_b)
-            # Also check reverse: noun then adj
-            a_is_noun = any(m["pos"] in ("noun",) for m in matches_a)
-            b_is_adj = any(m["pos"] == "adj" for m in matches_b)
-
-            adj_matches = None
-            noun_matches = None
-            adj_word = None
-            noun_word = None
-
-            if a_is_adj and b_is_noun:
-                adj_matches = [m for m in matches_a if m["pos"] == "adj"]
-                noun_matches = [m for m in matches_b if m["pos"] in ("noun", "adj")]
-                adj_word, noun_word = orig_a, orig_b
-            elif a_is_noun and b_is_adj:
-                noun_matches = [m for m in matches_a if m["pos"] in ("noun",)]
-                adj_matches = [m for m in matches_b if m["pos"] == "adj"]
-                adj_word, noun_word = orig_b, orig_a
-            else:
+            adj_matches, noun_matches, adj_word, noun_word = _resolve_adj_noun_pair(
+                matches_a, matches_b, orig_a, orig_b,
+            )
+            if adj_matches is None:
                 continue
 
-            # Get all gender+case combos for each
-            adj_gc = set()
-            for m in adj_matches:
-                adj_gc |= _extract_gender_case_pairs(m["tags"])
-            noun_gc = set()
-            for m in noun_matches:
-                noun_gc |= _extract_gender_case_pairs(m["tags"])
+            dedup_key = f"agr:{lookup_a}:{lookup_b}"
+            if dedup_key in seen:
+                continue
 
-            # If no overlap → agreement error
-            if adj_gc and noun_gc and not (adj_gc & noun_gc):
-                dedup_key = f"agr:{lookup_a}:{lookup_b}"
-                if dedup_key in seen:
-                    continue
+            issue = _check_pair_agreement(adj_matches, noun_matches, adj_word, noun_word, line_num)
+            if issue:
                 seen.add(dedup_key)
-
-                adj_genders = {g for g, _ in adj_gc}
-                noun_genders = {g for g, _ in noun_gc}
-                issues.append({
-                    "type": "AGREEMENT_ERROR",
-                    "severity": "HIGH",
-                    "location": f"~line {line_num}",
-                    "text": (
-                        f"Agreement mismatch: '{adj_word}' ({'/'.join(sorted(adj_genders))}) "
-                        f"+ '{noun_word}' ({'/'.join(sorted(noun_genders))})"
-                    ),
-                    "fix": (
-                        f"Change '{adj_word}' to match the gender/case of '{noun_word}', "
-                        f"or vice versa."
-                    ),
-                })
+                issues.append(issue)
     return issues

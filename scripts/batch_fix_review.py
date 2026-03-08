@@ -365,6 +365,104 @@ def run_audit(content_path: Path) -> bool:
 
 # ─── Main Fix+Review Loop ───────────────────────────────────────────
 
+def _check_existing_reviews(files: dict, result: dict) -> tuple[str, float | None]:
+    """Check for existing passing reviews. Returns (status, existing_score).
+    Status is 'ALREADY_PASS' if passing, 'continue' otherwise."""
+    review_path = files["orchestration"] / "phase-5-response.md"
+    re_review_path = files["orchestration"] / "phase-5-re-review.md"
+
+    if re_review_path.exists():
+        text = re_review_path.read_text()
+        score = extract_score(text)
+        if score and score >= PASS_THRESHOLD:
+            result["status"] = "ALREADY_PASS"
+            result["score"] = score
+            return "ALREADY_PASS", score
+
+    existing_score = None
+    if review_path.exists():
+        text = review_path.read_text()
+        existing_score = extract_score(text)
+        status = extract_status(text)
+        if existing_score and existing_score >= PASS_THRESHOLD and status == "PASS":
+            result["status"] = "ALREADY_PASS"
+            result["score"] = existing_score
+            return "ALREADY_PASS", existing_score
+
+    return "continue", existing_score
+
+
+def _run_initial_review(files: dict, slug: str, level: str, model: str, result: dict) -> tuple[str, float | None]:
+    """Run initial Phase 5 review. Returns (status, score)."""
+    review_path = files["orchestration"] / "phase-5-response.md"
+
+    print("    \u2192 No review found. Running Phase 5 review...")
+    run_audit(files["content"])
+    prompt = assemble_review_prompt(files, level)
+    task_id = f"review-{slug}-initial"
+    try:
+        output = call_gemini_review(prompt, task_id, model)
+        review_text = extract_section(output, "===REVIEW_START===", "===REVIEW_END===")
+        if review_text:
+            review_path.parent.mkdir(parents=True, exist_ok=True)
+            review_path.write_text(review_text)
+            existing_score = extract_score(review_text)
+            print(f"    \u2192 Initial review: {existing_score}/10")
+
+            if existing_score and existing_score >= PASS_THRESHOLD:
+                files["review"].write_text(review_text)
+                result["status"] = "PASS_ON_REVIEW"
+                result["score"] = existing_score
+                return "PASS_ON_REVIEW", existing_score
+            output.unlink(missing_ok=True)
+            return "continue", existing_score
+        else:
+            result["status"] = "ERROR"
+            result["reason"] = "No delimited review in Gemini output"
+            output.unlink(missing_ok=True)
+            return "ERROR", None
+    except subprocess.TimeoutExpired:
+        result["status"] = "TIMEOUT"
+        result["phase"] = "initial_review"
+        return "TIMEOUT", None
+    except Exception as e:
+        result["status"] = "ERROR"
+        result["reason"] = str(e)[:200]
+        return "ERROR", None
+
+
+def _apply_fix_output(fix_output: Path, files: dict, attempt: int) -> tuple[list[str], int]:
+    """Extract and write fixed files from Gemini output. Returns (files_changed, consecutive_no_changes_delta)."""
+    content_text = extract_section(fix_output, "===CONTENT_START===", "===CONTENT_END===")
+    activities_text = extract_section(fix_output, "===ACTIVITIES_START===", "===ACTIVITIES_END===")
+    vocab_text = extract_section(fix_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
+    changes_text = extract_section(fix_output, "===CHANGES_START===", "===CHANGES_END===")
+
+    files_changed = []
+    if content_text and len(content_text.strip()) > 100:
+        files["content"].write_text(content_text)
+        files_changed.append("content")
+    if activities_text and len(activities_text.strip()) > 50:
+        files["activities"].write_text(activities_text)
+        files_changed.append("activities")
+    if vocab_text and len(vocab_text.strip()) > 50:
+        files["vocabulary"].write_text(vocab_text)
+        files_changed.append("vocabulary")
+
+    if changes_text:
+        (files["orchestration"] / f"fix-changes-v{attempt}.md").write_text(changes_text)
+
+    if not files_changed:
+        debug_path = files["orchestration"] / f"fix-debug-v{attempt}.txt"
+        if fix_output.exists():
+            raw = fix_output.read_text()
+            debug_content = f"=== RAW OUTPUT ({len(raw)} chars) ===\n"
+            debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
+            debug_path.write_text(debug_content)
+
+    return files_changed, 0 if files_changed else 1
+
+
 def process_module(level: str, num: int, model: str, dry_run: bool = False,
                    review_only: bool = False) -> dict:
     """Process a single module through fix+review loop."""
@@ -376,70 +474,22 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
     title = get_module_title(files)
     result = {"num": num, "slug": slug, "title": title}
 
-    # Find existing review
     review_path = files["orchestration"] / "phase-5-response.md"
     re_review_path = files["orchestration"] / "phase-5-re-review.md"
 
-    # Check if already has a passing re-review
-    if re_review_path.exists():
-        text = re_review_path.read_text()
-        score = extract_score(text)
-        if score and score >= PASS_THRESHOLD:
-            result["status"] = "ALREADY_PASS"
-            result["score"] = score
-            return result
+    # Check existing reviews
+    check_status, existing_score = _check_existing_reviews(files, result)
+    if check_status == "ALREADY_PASS":
+        return result
 
-    # Check original review
-    existing_score = None
-    if review_path.exists():
-        text = review_path.read_text()
-        existing_score = extract_score(text)
-        status = extract_status(text)
-        if existing_score and existing_score >= PASS_THRESHOLD and status == "PASS":
-            result["status"] = "ALREADY_PASS"
-            result["score"] = existing_score
-            return result
-
-    # If no review exists, we need Phase 5 first
+    # Run initial review if needed
     if not review_path.exists():
         if dry_run:
             result["status"] = "DRY_RUN"
             result["action"] = "needs Phase 5 review first"
             return result
-
-        print("    → No review found. Running Phase 5 review...")
-        # Run audit first to get metrics
-        run_audit(files["content"])
-        prompt = assemble_review_prompt(files, level)
-        task_id = f"review-{slug}-initial"
-        try:
-            output = call_gemini_review(prompt, task_id, model)
-            review_text = extract_section(output, "===REVIEW_START===", "===REVIEW_END===")
-            if review_text:
-                review_path.parent.mkdir(parents=True, exist_ok=True)
-                review_path.write_text(review_text)
-                existing_score = extract_score(review_text)
-                print(f"    → Initial review: {existing_score}/10")
-
-                if existing_score and existing_score >= PASS_THRESHOLD:
-                    # Also save as the review file
-                    files["review"].write_text(review_text)
-                    result["status"] = "PASS_ON_REVIEW"
-                    result["score"] = existing_score
-                    return result
-            else:
-                result["status"] = "ERROR"
-                result["reason"] = "No delimited review in Gemini output"
-                output.unlink(missing_ok=True)
-                return result
-            output.unlink(missing_ok=True)
-        except subprocess.TimeoutExpired:
-            result["status"] = "TIMEOUT"
-            result["phase"] = "initial_review"
-            return result
-        except Exception as e:
-            result["status"] = "ERROR"
-            result["reason"] = str(e)[:200]
+        review_status, existing_score = _run_initial_review(files, slug, level, model, result)
+        if review_status != "continue":
             return result
 
     if review_only:
@@ -453,105 +503,88 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         return result
 
     # Fix + Re-review loop
-    current_review = review_path
+    return _fix_review_loop(files, slug, level, model, result, existing_score,
+                            review_path, re_review_path)
+
+
+def _run_fix_attempt(files, slug, model, attempt):
+    """Run a single fix attempt. Returns (fix_output, error_result) or raises."""
+    fix_prompt = assemble_fix_prompt(files, files.get("_current_review"))
+    fix_task_id = f"fix-{slug}-v{attempt}"
+    try:
+        return call_gemini(fix_prompt, fix_task_id, model), None
+    except subprocess.TimeoutExpired:
+        return None, {"status": "TIMEOUT", "phase": f"fix_attempt_{attempt}"}
+    except Exception as e:
+        return None, {"status": "ERROR", "reason": str(e)[:200]}
+
+
+def _run_re_review(files, slug, level, model, attempt):
+    """Run re-review after fix. Returns (review_text, error_result)."""
+    review_prompt = assemble_review_prompt(files, level)
+    review_task_id = f"review-{slug}-v{attempt}"
+    try:
+        review_output = call_gemini_review(review_prompt, review_task_id, model)
+    except subprocess.TimeoutExpired:
+        return None, {"status": "TIMEOUT", "phase": f"review_attempt_{attempt}"}
+    except Exception as e:
+        return None, {"status": "ERROR", "reason": str(e)[:200]}
+
+    review_text = extract_section(review_output, "===REVIEW_START===", "===REVIEW_END===")
+    review_output.unlink(missing_ok=True)
+    return review_text, None
+
+
+def _fix_review_loop(files, slug, level, model, result, existing_score,
+                     review_path, re_review_path):
+    """Run the fix+review loop until pass or max retries."""
+    files["_current_review"] = review_path
     consecutive_no_changes = 0
+
     for attempt in range(1, MAX_RETRIES + 1):
-        print(f"    → Fix attempt {attempt}/{MAX_RETRIES}...")
+        print(f"    \u2192 Fix attempt {attempt}/{MAX_RETRIES}...")
 
-        # Step 1: Assemble and send fix prompt
-        fix_prompt = assemble_fix_prompt(files, current_review)
-        fix_task_id = f"fix-{slug}-v{attempt}"
-        try:
-            fix_output = call_gemini(fix_prompt, fix_task_id, model)
-        except subprocess.TimeoutExpired:
-            result["status"] = "TIMEOUT"
-            result["phase"] = f"fix_attempt_{attempt}"
-            return result
-        except Exception as e:
-            result["status"] = "ERROR"
-            result["reason"] = str(e)[:200]
+        fix_output, err = _run_fix_attempt(files, slug, model, attempt)
+        if err:
+            result.update(err)
             return result
 
-        # Step 2: Extract and write fixed files
-        content_text = extract_section(fix_output, "===CONTENT_START===", "===CONTENT_END===")
-        activities_text = extract_section(fix_output, "===ACTIVITIES_START===", "===ACTIVITIES_END===")
-        vocab_text = extract_section(fix_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
-        changes_text = extract_section(fix_output, "===CHANGES_START===", "===CHANGES_END===")
-
-        files_changed = []
-        if content_text and len(content_text.strip()) > 100:
-            files["content"].write_text(content_text)
-            files_changed.append("content")
-        if activities_text and len(activities_text.strip()) > 50:
-            files["activities"].write_text(activities_text)
-            files_changed.append("activities")
-        if vocab_text and len(vocab_text.strip()) > 50:
-            files["vocabulary"].write_text(vocab_text)
-            files_changed.append("vocabulary")
-
-        # Save changes report
-        if changes_text:
-            (files["orchestration"] / f"fix-changes-v{attempt}.md").write_text(changes_text)
+        files_changed, no_change_delta = _apply_fix_output(fix_output, files, attempt)
 
         if not files_changed:
-            # Save raw output for debugging before deleting
-            debug_path = files["orchestration"] / f"fix-debug-v{attempt}.txt"
-            if fix_output.exists():
-                raw = fix_output.read_text()
-                # Save first/last 2000 chars for debugging (avoid huge files)
-                debug_content = f"=== RAW OUTPUT ({len(raw)} chars) ===\n"
-                debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
-                debug_path.write_text(debug_content)
-            consecutive_no_changes += 1
-            print("    → No files changed by fix (Gemini found nothing to fix)")
+            consecutive_no_changes += no_change_delta
+            print("    \u2192 No files changed by fix (Gemini found nothing to fix)")
             if consecutive_no_changes >= 2:
-                print("    → Breaking: fix produced no changes twice — needs manual intervention")
+                print("    \u2192 Breaking: fix produced no changes twice \u2014 needs manual intervention")
                 result["status"] = "STUCK"
                 result["score"] = existing_score
                 result["reason"] = "Fix phase produces no changes but score < 9.0"
                 return result
         else:
             consecutive_no_changes = 0
-            print(f"    → Fixed: {', '.join(files_changed)}")
+            print(f"    \u2192 Fixed: {', '.join(files_changed)}")
 
         fix_output.unlink(missing_ok=True)
 
-        # Step 3: Run audit
-        audit_pass = run_audit(files["content"])
-        if not audit_pass:
-            print("    → Audit FAILED after fix. Retrying...")
+        if not run_audit(files["content"]):
+            print("    \u2192 Audit FAILED after fix. Retrying...")
             continue
 
-        # Step 4: Assemble and send re-review
-        review_prompt = assemble_review_prompt(files, level)
-        review_task_id = f"review-{slug}-v{attempt}"
-        try:
-            review_output = call_gemini_review(review_prompt, review_task_id, model)
-        except subprocess.TimeoutExpired:
-            result["status"] = "TIMEOUT"
-            result["phase"] = f"review_attempt_{attempt}"
+        review_text, err = _run_re_review(files, slug, level, model, attempt)
+        if err:
+            result.update(err)
             return result
-        except Exception as e:
-            result["status"] = "ERROR"
-            result["reason"] = str(e)[:200]
-            return result
-
-        review_text = extract_section(review_output, "===REVIEW_START===", "===REVIEW_END===")
-        review_output.unlink(missing_ok=True)
-
         if not review_text:
-            print("    → No delimited review in output. Retrying...")
+            print("    \u2192 No delimited review in output. Retrying...")
             continue
 
         new_score = extract_score(review_text)
         new_status = extract_status(review_text)
-        print(f"    → Re-review: {new_score}/10 ({new_status})")
+        print(f"    \u2192 Re-review: {new_score}/10 ({new_status})")
 
-        # Suspicious jump check
         if existing_score and new_score and (new_score - existing_score) > SUSPICIOUS_JUMP:
-            print(f"    ⚠️  Suspicious jump: {existing_score} → {new_score} (+{new_score - existing_score:.1f})")
+            print(f"    \u26a0\ufe0f  Suspicious jump: {existing_score} \u2192 {new_score} (+{new_score - existing_score:.1f})")
 
-        # Save re-review
         re_review_path.write_text(review_text)
         files["review"].write_text(review_text)
 
@@ -562,11 +595,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["attempts"] = attempt
             return result
 
-        # Update current review for next fix iteration
-        current_review = re_review_path
+        files["_current_review"] = re_review_path
         existing_score = new_score
 
-    # Exhausted retries
     result["status"] = "FAIL_AFTER_RETRIES"
     result["score"] = existing_score
     result["attempts"] = MAX_RETRIES

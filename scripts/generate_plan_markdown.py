@@ -33,30 +33,19 @@ def get_modules_in_phase(phase: dict, module_plans: dict) -> list:
     return []
 
 
-def generate_plan_markdown(level: str, base_path: Path) -> str:
-    """Generate markdown from YAML plans."""
-    plans_dir = base_path / "curriculum/l2-uk-en/plans"
-    level_plan_path = plans_dir / f"{level}.yaml"
-    module_plans_dir = plans_dir / level
-
-    # Also check meta files for additional info
-    meta_dir = base_path / f"curriculum/l2-uk-en/{level}/meta"
-
-    if not level_plan_path.exists():
-        raise FileNotFoundError(f"Level plan not found: {level_plan_path}")
-
-    level_plan = load_yaml(level_plan_path)
-
-    # Load all module plans
+def _load_module_plans(module_plans_dir: Path) -> dict:
+    """Load all module YAML plans from a directory."""
     module_plans = {}
     if module_plans_dir.exists():
         for yaml_file in sorted(module_plans_dir.glob("*.yaml")):
             plan = load_yaml(yaml_file)
-            # Use slug from file content, or filename as fallback
             slug = plan.get('slug') or yaml_file.stem
             module_plans[slug] = plan
+    return module_plans
 
-    # Load all meta files for additional info (like module numbers)
+
+def _load_meta_files(meta_dir: Path) -> dict:
+    """Load all meta YAML files from a directory."""
     meta_files = {}
     if meta_dir.exists():
         for yaml_file in sorted(meta_dir.glob("*.yaml")):
@@ -67,13 +56,19 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
                     meta_files[slug] = meta
             except Exception:
                 pass
+    return meta_files
 
-    # Build slug to number mapping - prefer meta files as they have proper IDs
-    slug_to_num = {}
 
-    # First, build from meta files (most reliable - have hist-XX format)
+def _build_slug_to_num(
+    meta_files: dict,
+    module_plans: dict,
+    module_plans_dir: Path,
+) -> dict[str, int]:
+    """Build mapping from slug to module number."""
+    slug_to_num: dict[str, int] = {}
+
+    # From meta files (most reliable - have hist-XX format)
     for slug, meta in meta_files.items():
-        # Try multiple fields - prefer ones with number format
         for field in ['id', 'module']:
             field_val = str(meta.get(field) or '')
             match = re.search(r'-(\d+)$', field_val)
@@ -81,25 +76,21 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
                 slug_to_num[slug] = int(match.group(1))
                 break
 
-    # For plan files, also try the filename which often has the number prefix
+    # From plan filenames (often have number prefix)
     for yaml_file in sorted(module_plans_dir.glob("*.yaml")) if module_plans_dir.exists() else []:
         filename = yaml_file.stem
-        # Try to get slug from the plan file content first
         plan_content = module_plans.get(filename, {})
         if not plan_content:
-            # filename might have number prefix, try stripping it
             stripped = to_bare_slug(filename)
             plan_content = module_plans.get(stripped, {})
         slug = plan_content.get('slug') or filename
-        # Normalize slug by stripping number prefix
         slug = to_bare_slug(slug)
         if slug not in slug_to_num:
-            # Try filename pattern like "01-trypillian-civilization"
             match = re.match(r'^(\d+)-', filename)
             if match:
                 slug_to_num[slug] = int(match.group(1))
 
-    # Also check plan files' module/id fields as fallback
+    # From plan files' module/id fields as fallback
     for slug, plan in module_plans.items():
         if slug not in slug_to_num:
             module_id = plan.get('module') or plan.get('id') or ''
@@ -107,17 +98,18 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
             if match:
                 slug_to_num[slug] = int(match.group(1))
 
-    # Generate markdown
-    lines = []
+    return slug_to_num
 
-    # Header
+
+def _render_header(level_plan: dict, level: str, meta_count: int) -> list[str]:
+    """Render the markdown header section."""
+    lines = []
     track_name = level_plan.get('track', level).title()
     lines.append(f"# {level.upper()} Curriculum Plan: {track_name} Track")
     lines.append("")
     lines.append("**Generated from YAML plans**")
-    lines.append(f"**Modules:** {len(meta_files)} module meta files found")
+    lines.append(f"**Modules:** {meta_count} module meta files found")
 
-    # Try multiple locations for prerequisites
     prereq = level_plan.get('prerequisite') or level_plan.get('overview', {}).get('prerequisites', [])
     if isinstance(prereq, list):
         prereq = ', '.join(str(p).upper() for p in prereq) if prereq else 'N/A'
@@ -133,8 +125,12 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
     lines.append("")
     lines.append("---")
     lines.append("")
+    return lines
 
-    # Track overview - check multiple possible locations
+
+def _render_overview(level_plan: dict) -> list[str]:
+    """Render track overview, vocabulary focus, and pedagogy sections."""
+    lines = []
     overview_text = level_plan.get('notes') or level_plan.get('overview', {}).get('description', '')
     if overview_text:
         lines.append("## Track Overview")
@@ -142,7 +138,6 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
         lines.append(overview_text.strip())
         lines.append("")
 
-    # Vocabulary focus areas
     vocab_focus = level_plan.get('vocabulary', {}).get('focus_areas', [])
     if vocab_focus:
         lines.append("### Vocabulary Focus")
@@ -151,7 +146,6 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
             lines.append(f"- {area}")
         lines.append("")
 
-    # Pedagogy notes
     pedagogy = level_plan.get('pedagogy_notes', {})
     if pedagogy:
         lines.append("### Pedagogical Approach")
@@ -174,69 +168,72 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
         lines.append("---")
         lines.append("")
 
-    # Phases
-    lines.append("## Phase Structure")
+    return lines
+
+
+def _render_phase(
+    phase: dict,
+    slug_to_num: dict[str, int],
+    module_plans: dict,
+    meta_files: dict,
+) -> list[str]:
+    """Render a single phase section."""
+    lines = []
+    phase_id = phase.get('id', '')
+    phase_name = phase.get('name', 'Unknown')
+    module_range = phase.get('modules', [0, 0])
+    start, end = module_range if len(module_range) == 2 else (0, 0)
+    focus = phase.get('focus', '')
+
+    if phase_id:
+        phase_header = f"### Phase {phase_id}: {phase_name} (M{start:02d}-{end:02d})"
+    else:
+        phase_header = f"### {phase_name} (M{start:02d}-{end:02d})"
+    lines.append(phase_header)
     lines.append("")
 
-    phases = level_plan.get('phases', [])
-    for phase in phases:
-        phase_id = phase.get('id', '')
-        phase_name = phase.get('name', 'Unknown')
-        module_range = phase.get('modules', [0, 0])
-        start, end = module_range if len(module_range) == 2 else (0, 0)
-        focus = phase.get('focus', '')
-        phase.get('era', '')
-
-        # Format phase header: use ID if available, otherwise just name
-        if phase_id:
-            phase_header = f"### Phase {phase_id}: {phase_name} (M{start:02d}-{end:02d})"
-        else:
-            phase_header = f"### {phase_name} (M{start:02d}-{end:02d})"
-        lines.append(phase_header)
+    author = phase.get('author', '')
+    key_works = phase.get('key_works', [])
+    if focus:
+        lines.append(f"**Focus:** {focus}")
+    if author:
+        lines.append(f"**Author:** {author}")
+    if key_works:
+        lines.append(f"**Key Works:** {', '.join(key_works)}")
+    if focus or author or key_works:
         lines.append("")
 
-        # Add phase metadata (author, focus, key_works) if available
-        author = phase.get('author', '')
-        key_works = phase.get('key_works', [])
-        if focus:
-            lines.append(f"**Focus:** {focus}")
-        if author:
-            lines.append(f"**Author:** {author}")
-        if key_works:
-            lines.append(f"**Key Works:** {', '.join(key_works)}")
-        if focus or author or key_works:
-            lines.append("")
+    lines.append("| # | Slug | Title (UK) | Word Target | Objectives |")
+    lines.append("|---|------|------------|-------------|------------|")
 
-        # Table header
-        lines.append("| # | Slug | Title (UK) | Word Target | Objectives |")
-        lines.append("|---|------|------------|-------------|------------|")
+    phase_modules = [
+        (num, slug) for slug, num in slug_to_num.items()
+        if start <= num <= end
+    ]
+    phase_modules.sort(key=lambda x: x[0])
 
-        # Find modules in this range
-        phase_modules = []
-        for slug, num in slug_to_num.items():
-            if start <= num <= end:
-                phase_modules.append((num, slug))
+    for num, slug in phase_modules:
+        plan = module_plans.get(slug, {})
+        meta = meta_files.get(slug, {})
+        title = plan.get('title') or meta.get('title') or slug
+        word_target = plan.get('word_target') or meta.get('word_target') or '-'
+        objectives = plan.get('objectives') or meta.get('objectives') or []
+        obj_count = len(objectives) if isinstance(objectives, list) else 0
+        lines.append(f"| {num:02d} | {slug} | {title} | {word_target} | {obj_count} obj |")
 
-        phase_modules.sort(key=lambda x: x[0])
+    if not phase_modules:
+        lines.append("| - | (no modules found in range) | - | - | - |")
 
-        for num, slug in phase_modules:
-            # Get info from module plan or meta
-            plan = module_plans.get(slug, {})
-            meta = meta_files.get(slug, {})
+    lines.append("")
+    return lines
 
-            title = plan.get('title') or meta.get('title') or slug
-            word_target = plan.get('word_target') or meta.get('word_target') or '-'
-            objectives = plan.get('objectives') or meta.get('objectives') or []
-            obj_count = len(objectives) if isinstance(objectives, list) else 0
 
-            lines.append(f"| {num:02d} | {slug} | {title} | {word_target} | {obj_count} obj |")
-
-        if not phase_modules:
-            lines.append("| - | (no modules found in range) | - | - | - |")
-
-        lines.append("")
-
-    # Summary statistics
+def _render_statistics(
+    module_plans: dict,
+    meta_files: dict,
+) -> list[str]:
+    """Render summary statistics section."""
+    lines = []
     lines.append("---")
     lines.append("")
     lines.append("## Statistics")
@@ -254,7 +251,6 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
         if plan.get('objectives'):
             total_objectives += len(plan['objectives'])
 
-    # Also count from meta if plan is sparse
     for slug, meta in meta_files.items():
         if slug not in module_plans:
             if meta.get('word_target'):
@@ -268,62 +264,98 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
     lines.append(f"- **Total word target:** {total_words:,}")
     lines.append(f"- **Total objectives:** {total_objectives}")
     lines.append("")
+    return lines
 
-    # Detail section - show content outlines
+
+def _render_module_detail(num: int, slug: str, plan: dict) -> list[str]:
+    """Render detail section for a single module."""
+    lines = []
+    title = plan.get('title', slug)
+    lines.append(f"### M{num:02d}: {title}")
+    lines.append("")
+
+    if plan.get('subtitle'):
+        lines.append(f"*{plan['subtitle']}*")
+        lines.append("")
+
+    if plan.get('objectives'):
+        lines.append("**Objectives:**")
+        for obj in plan['objectives']:
+            lines.append(f"- {obj}")
+        lines.append("")
+
+    if plan.get('content_outline'):
+        lines.append("**Content Outline:**")
+        lines.append("")
+        lines.append("| Section | Words |")
+        lines.append("|---------|-------|")
+        for section in plan['content_outline']:
+            sec_name = section.get('section', '-')
+            sec_words = section.get('words', '-')
+            lines.append(f"| {sec_name} | {sec_words} |")
+        lines.append("")
+        lines.append(f"**Total:** {plan.get('word_target', '-')} words")
+        lines.append("")
+
+    if plan.get('grammar'):
+        grammar_items = []
+        for g in plan['grammar']:
+            if isinstance(g, dict):
+                grammar_items.append(g.get('point') or g.get('name') or str(g))
+            else:
+                grammar_items.append(str(g))
+        lines.append(f"**Grammar:** {', '.join(grammar_items)}")
+        lines.append("")
+
+    lines.append("---")
+    lines.append("")
+    return lines
+
+
+def generate_plan_markdown(level: str, base_path: Path) -> str:
+    """Generate markdown from YAML plans."""
+    plans_dir = base_path / "curriculum/l2-uk-en/plans"
+    level_plan_path = plans_dir / f"{level}.yaml"
+    module_plans_dir = plans_dir / level
+    meta_dir = base_path / f"curriculum/l2-uk-en/{level}/meta"
+
+    if not level_plan_path.exists():
+        raise FileNotFoundError(f"Level plan not found: {level_plan_path}")
+
+    level_plan = load_yaml(level_plan_path)
+
+    module_plans = _load_module_plans(module_plans_dir)
+    meta_files = _load_meta_files(meta_dir)
+    slug_to_num = _build_slug_to_num(meta_files, module_plans, module_plans_dir)
+
+    # Generate markdown
+    lines = []
+    lines.extend(_render_header(level_plan, level, len(meta_files)))
+    lines.extend(_render_overview(level_plan))
+
+    # Phases
+    lines.append("## Phase Structure")
+    lines.append("")
+    for phase in level_plan.get('phases', []):
+        lines.extend(_render_phase(phase, slug_to_num, module_plans, meta_files))
+
+    # Statistics
+    lines.extend(_render_statistics(module_plans, meta_files))
+
+    # Module details
     if module_plans:
         lines.append("---")
         lines.append("")
         lines.append("## Module Details (from YAML plans)")
         lines.append("")
 
-        # Sort by module number if possible
-        sorted_modules = []
-        for slug, plan in module_plans.items():
-            num = slug_to_num.get(slug, 999)
-            sorted_modules.append((num, slug, plan))
-        sorted_modules.sort(key=lambda x: x[0])
-
+        sorted_modules = sorted(
+            ((slug_to_num.get(slug, 999), slug, plan)
+             for slug, plan in module_plans.items()),
+            key=lambda x: x[0],
+        )
         for num, slug, plan in sorted_modules:
-            title = plan.get('title', slug)
-            lines.append(f"### M{num:02d}: {title}")
-            lines.append("")
-
-            if plan.get('subtitle'):
-                lines.append(f"*{plan['subtitle']}*")
-                lines.append("")
-
-            if plan.get('objectives'):
-                lines.append("**Objectives:**")
-                for obj in plan['objectives']:
-                    lines.append(f"- {obj}")
-                lines.append("")
-
-            if plan.get('content_outline'):
-                lines.append("**Content Outline:**")
-                lines.append("")
-                lines.append("| Section | Words |")
-                lines.append("|---------|-------|")
-                for section in plan['content_outline']:
-                    sec_name = section.get('section', '-')
-                    sec_words = section.get('words', '-')
-                    lines.append(f"| {sec_name} | {sec_words} |")
-                lines.append("")
-                lines.append(f"**Total:** {plan.get('word_target', '-')} words")
-                lines.append("")
-
-            if plan.get('grammar'):
-                # Handle grammar items that might be strings or dicts
-                grammar_items = []
-                for g in plan['grammar']:
-                    if isinstance(g, dict):
-                        grammar_items.append(g.get('point') or g.get('name') or str(g))
-                    else:
-                        grammar_items.append(str(g))
-                lines.append(f"**Grammar:** {', '.join(grammar_items)}")
-                lines.append("")
-
-            lines.append("---")
-            lines.append("")
+            lines.extend(_render_module_detail(num, slug, plan))
 
     return "\n".join(lines)
 

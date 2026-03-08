@@ -769,106 +769,61 @@ def _render_all_coverage(all_cov: dict[str, dict]):
     print()
 
 
-def main():
-    epilog = """\
-Example workflow:
-  assess_research.py a1                  # 1. See quality table
-  assess_research.py a1 --upgrade        # 2. Regenerate research below 9/10
-  assess_research.py a1 --enrich         # 3. Enrich plans from 9+ research
-  assess_research.py a1 --refresh        # 4. Rebuild stale content
-  assess_research.py a1 --coverage       # Show research coverage gaps
-  assess_research.py --all --coverage    # Full curriculum coverage
-
-Add --dry-run to preview without making changes:
-  assess_research.py a1 --upgrade --dry-run
-"""
-    parser = argparse.ArgumentParser(
-        description="Research quality assessment and upgrade pipeline",
-        epilog=epilog,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument("track", nargs="?", help="Track ID (e.g. hist, a1, b1)")
-    parser.add_argument("num", nargs="?", type=int, help="Module number (for single-module detail)")
-    parser.add_argument("--upgrade", action="store_true", help="Regenerate research below --min-score (retries up to 3x)")
-    parser.add_argument("--enrich", action="store_true", help="Enrich plans from research at --min-score or above")
-    parser.add_argument("--refresh", action="store_true", help="Rebuild content for modules with upgraded research")
-    parser.add_argument("--dry-run", action="store_true", help="Preview what would be done (no builds)")
-    parser.add_argument("--min-score", type=int, default=9, help="Score threshold (default: 9)")
-    parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
-    parser.add_argument("--json", action="store_true", help="JSON output")
-    parser.add_argument("--all", action="store_true", help="Overview of all tracks")
-    parser.add_argument("--coverage", action="store_true", help="Show research coverage gaps (manifest vs research files)")
-    parser.add_argument("--strict", action="store_true", help="With --coverage, exit 1 if any gaps found (for CI)")
-    args = parser.parse_args()
-
-    if args.strict and not args.coverage:
-        parser.error("--strict requires --coverage")
-
-    manifest = _load_manifest()
-
-    # --coverage mode
-    if args.coverage:
-        if args.all:
-            all_cov = _compute_all_coverage(manifest)
-            if args.json:
-                print(json.dumps(all_cov, indent=2, ensure_ascii=False))
-            else:
-                _render_all_coverage(all_cov)
-            total_gaps = sum(len(c["gaps"]) for c in all_cov.values())
-            if args.strict and total_gaps > 0:
-                sys.exit(1)
-            return
-        if not args.track:
-            parser.print_help()
-            sys.exit(1)
-        track_id = args.track.lower()
-        if not any(t["id"] == track_id for t in TRACKS):
-            print(f"Error: Unknown track '{track_id}'", file=sys.stderr)
-            sys.exit(1)
-        cov = _coverage_for_track(track_id, manifest)
-        if args.json:
-            print(json.dumps(cov, indent=2, ensure_ascii=False))
-        else:
-            _render_coverage_table(track_id, manifest)
-        if args.strict and cov["gaps"]:
-            sys.exit(1)
-        return
-
+def _handle_coverage_mode(args, manifest, parser):
+    """Handle --coverage flag."""
     if args.all:
+        all_cov = _compute_all_coverage(manifest)
         if args.json:
-            overview = {}
-            for track_cfg in TRACKS:
-                tid = track_cfg["id"]
-                modules_list = manifest.get("levels", {}).get(tid, {}).get("modules", [])
-                if not modules_list:
-                    continue
-                results = _scan_track(tid, manifest)
-                researched = [r for r in results if r["info"] is not None]
-                overview[tid] = {
-                    "rubric": get_rubric(tid),
-                    "total": len(results),
-                    "researched": len(researched),
-                    "modules": [
-                        {"num": r["num"], "slug": r["slug"], **(r["info"] or {"exists": False})}
-                        for r in results
-                    ],
-                }
-            print(json.dumps(overview, indent=2, ensure_ascii=False))
+            print(json.dumps(all_cov, indent=2, ensure_ascii=False))
         else:
-            _render_all_overview(manifest)
+            _render_all_coverage(all_cov)
+        total_gaps = sum(len(c["gaps"]) for c in all_cov.values())
+        if args.strict and total_gaps > 0:
+            sys.exit(1)
         return
-
     if not args.track:
         parser.print_help()
         sys.exit(1)
-
     track_id = args.track.lower()
     if not any(t["id"] == track_id for t in TRACKS):
         print(f"Error: Unknown track '{track_id}'", file=sys.stderr)
         sys.exit(1)
+    cov = _coverage_for_track(track_id, manifest)
+    if args.json:
+        print(json.dumps(cov, indent=2, ensure_ascii=False))
+    else:
+        _render_coverage_table(track_id, manifest)
+    if args.strict and cov["gaps"]:
+        sys.exit(1)
 
-    results = _scan_track(track_id, manifest)
 
+def _handle_all_overview(args, manifest):
+    """Handle --all flag (no --coverage)."""
+    if args.json:
+        overview = {}
+        for track_cfg in TRACKS:
+            tid = track_cfg["id"]
+            modules_list = manifest.get("levels", {}).get(tid, {}).get("modules", [])
+            if not modules_list:
+                continue
+            results = _scan_track(tid, manifest)
+            researched = [r for r in results if r["info"] is not None]
+            overview[tid] = {
+                "rubric": get_rubric(tid),
+                "total": len(results),
+                "researched": len(researched),
+                "modules": [
+                    {"num": r["num"], "slug": r["slug"], **(r["info"] or {"exists": False})}
+                    for r in results
+                ],
+            }
+        print(json.dumps(overview, indent=2, ensure_ascii=False))
+    else:
+        _render_all_overview(manifest)
+
+
+def _handle_single_track(args, track_id, results, manifest):
+    """Handle single-track modes: upgrade, enrich, refresh, single module, list."""
     if args.upgrade:
         _render_upgrade_queue(track_id, results, args.min_score)
         if not args.dry_run:
@@ -909,6 +864,64 @@ Add --dry-run to preview without making changes:
         _render_quality_table(track_id, results, manifest, show_gaps=args.gaps)
     else:
         _render_coverage_only(track_id, results)
+
+
+def main():
+    epilog = """\
+Example workflow:
+  assess_research.py a1                  # 1. See quality table
+  assess_research.py a1 --upgrade        # 2. Regenerate research below 9/10
+  assess_research.py a1 --enrich         # 3. Enrich plans from 9+ research
+  assess_research.py a1 --refresh        # 4. Rebuild stale content
+  assess_research.py a1 --coverage       # Show research coverage gaps
+  assess_research.py --all --coverage    # Full curriculum coverage
+
+Add --dry-run to preview without making changes:
+  assess_research.py a1 --upgrade --dry-run
+"""
+    parser = argparse.ArgumentParser(
+        description="Research quality assessment and upgrade pipeline",
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("track", nargs="?", help="Track ID (e.g. hist, a1, b1)")
+    parser.add_argument("num", nargs="?", type=int, help="Module number (for single-module detail)")
+    parser.add_argument("--upgrade", action="store_true", help="Regenerate research below --min-score (retries up to 3x)")
+    parser.add_argument("--enrich", action="store_true", help="Enrich plans from research at --min-score or above")
+    parser.add_argument("--refresh", action="store_true", help="Rebuild content for modules with upgraded research")
+    parser.add_argument("--dry-run", action="store_true", help="Preview what would be done (no builds)")
+    parser.add_argument("--min-score", type=int, default=9, help="Score threshold (default: 9)")
+    parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
+    parser.add_argument("--json", action="store_true", help="JSON output")
+    parser.add_argument("--all", action="store_true", help="Overview of all tracks")
+    parser.add_argument("--coverage", action="store_true", help="Show research coverage gaps (manifest vs research files)")
+    parser.add_argument("--strict", action="store_true", help="With --coverage, exit 1 if any gaps found (for CI)")
+    args = parser.parse_args()
+
+    if args.strict and not args.coverage:
+        parser.error("--strict requires --coverage")
+
+    manifest = _load_manifest()
+
+    if args.coverage:
+        _handle_coverage_mode(args, manifest, parser)
+        return
+
+    if args.all:
+        _handle_all_overview(args, manifest)
+        return
+
+    if not args.track:
+        parser.print_help()
+        sys.exit(1)
+
+    track_id = args.track.lower()
+    if not any(t["id"] == track_id for t in TRACKS):
+        print(f"Error: Unknown track '{track_id}'", file=sys.stderr)
+        sys.exit(1)
+
+    results = _scan_track(track_id, manifest)
+    _handle_single_track(args, track_id, results, manifest)
 
 
 if __name__ == "__main__":

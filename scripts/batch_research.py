@@ -79,120 +79,85 @@ def get_module_info(files: dict) -> dict:
     return info
 
 
+# Grammar milestones per level: list of (min_module_num, description)
+_A1_MILESTONES: list[tuple[int, str]] = [
+    (3, "Gender recognition (masculine/feminine/neuter)"),
+    (4, "Це (this is), я є (I am), basic sentences"),
+    (6, "Present tense conjugation (Group 1)"),
+    (7, "Questions (хто, що, де, куди) and negation (не)"),
+    (8, "Present tense conjugation (Group 2)"),
+    (9, "Reflexive verbs (-ся)"),
+    (11, "Accusative case (inanimate)"),
+    (12, "Accusative case (animate)"),
+    (13, "Locative case (в/на + location)"),
+    (14, "Possessive pronouns (мій/твій/наш/ваш/його/її)"),
+    (16, "Genitive case (absence, possession)"),
+    (17, "Numbers and counting"),
+    (21, "Past tense"),
+    (22, "Future tense"),
+    (24, "Modal verbs (можу, мушу, хочу)"),
+    (26, "Adjectives (agreement)"),
+    (30, "Prepositions (expanded)"),
+    (34, "All core A1 grammar (checkpoint passed)"),
+]
+
+_A2_BASE_KNOWLEDGE: list[str] = [
+    "ALL A1 grammar: Nominative, Accusative, Locative, Genitive cases",
+    "Present/Past/Future tenses, reflexive verbs, modals, adjectives",
+    "Possessive pronouns, prepositions, numbers, basic communication",
+]
+
+_A2_MILESTONES: list[tuple[int, str]] = [
+    (2, "Dative case (pronouns)"),
+    (3, "Dative case (nouns)"),
+    (4, "Dative verbs (подобатися, допомагати, etc.)"),
+    (5, "Instrumental case (з + accompaniment)"),
+    (6, "Instrumental case (means/tools)"),
+    (7, "Бути/ставати (being and becoming)"),
+    (8, "Spatial prepositions (expanded)"),
+    (9, "Logical prepositions"),
+    (11, "All cases practice (checkpoint passed)"),
+    (13, "Verbal aspect introduction (imperfective/perfective)"),
+    (14, "Completed past (perfective past tense)"),
+    (15, "Future plans (perfective future)"),
+    (16, "Aspect morphology (prefix/suffix patterns)"),
+    (17, "Aspect mastery (common pairs)"),
+    (18, "Свій (reflexive possessive)"),
+    (19, "Comparative adjectives (більший, кращий)"),
+    (20, "Superlative adjectives (найкращий)"),
+    (22, "Numerals with noun agreement"),
+    (23, "Conditional (якби + past tense)"),
+    (24, "Imperative mood (full paradigm)"),
+    (25, "Aspect + comparison checkpoint passed"),
+    (27, "Narrative past tense usage"),
+    (28, "Causal/concessive conjunctions (бо, хоча)"),
+    (29, "Reported speech (що-clauses)"),
+    (32, "Purpose clauses (щоб + infinitive)"),
+    (33, "Relative clauses (який/яка/яке)"),
+    (34, "Time clauses (коли, після того як)"),
+    (35, "Complex sentences checkpoint passed"),
+    (37, "Basic motion verb prefixes"),
+    (38, "Advanced motion verb prefixes"),
+    (39, "Action verb prefixes"),
+    (44, "Word formation mastery (suffixes, roots)"),
+    (56, "Full A2 grammar checkpoint passed"),
+]
+
+
+def _collect_milestones(milestones: list[tuple[int, str]], num: int) -> list[str]:
+    """Return all milestone descriptions where num >= milestone threshold."""
+    return [desc for threshold, desc in milestones if num >= threshold]
+
+
 def build_prior_knowledge(level: str, num: int) -> str:
     """Build a summary of what grammar/cases students know at this module number."""
-    knowledge = []
+    knowledge: list[str] = []
 
     if level == "a1":
-        if num >= 3:
-            knowledge.append("Gender recognition (masculine/feminine/neuter)")
-        if num >= 4:
-            knowledge.append("Це (this is), я є (I am), basic sentences")
-        if num >= 6:
-            knowledge.append("Present tense conjugation (Group 1)")
-        if num >= 7:
-            knowledge.append("Questions (хто, що, де, куди) and negation (не)")
-        if num >= 8:
-            knowledge.append("Present tense conjugation (Group 2)")
-        if num >= 9:
-            knowledge.append("Reflexive verbs (-ся)")
-        if num >= 11:
-            knowledge.append("Accusative case (inanimate)")
-        if num >= 12:
-            knowledge.append("Accusative case (animate)")
-        if num >= 13:
-            knowledge.append("Locative case (в/на + location)")
-        if num >= 14:
-            knowledge.append("Possessive pronouns (мій/твій/наш/ваш/його/її)")
-        if num >= 16:
-            knowledge.append("Genitive case (absence, possession)")
-        if num >= 17:
-            knowledge.append("Numbers and counting")
-        if num >= 21:
-            knowledge.append("Past tense")
-        if num >= 22:
-            knowledge.append("Future tense")
-        if num >= 24:
-            knowledge.append("Modal verbs (можу, мушу, хочу)")
-        if num >= 26:
-            knowledge.append("Adjectives (agreement)")
-        if num >= 30:
-            knowledge.append("Prepositions (expanded)")
-        if num >= 34:
-            knowledge.append("All core A1 grammar (checkpoint passed)")
-
+        knowledge = _collect_milestones(_A1_MILESTONES, num)
     elif level == "a2":
-        # A2 students have ALL of A1
-        knowledge.append("ALL A1 grammar: Nominative, Accusative, Locative, Genitive cases")
-        knowledge.append("Present/Past/Future tenses, reflexive verbs, modals, adjectives")
-        knowledge.append("Possessive pronouns, prepositions, numbers, basic communication")
-        # A2 progression
-        if num >= 2:
-            knowledge.append("Dative case (pronouns)")
-        if num >= 3:
-            knowledge.append("Dative case (nouns)")
-        if num >= 4:
-            knowledge.append("Dative verbs (подобатися, допомагати, etc.)")
-        if num >= 5:
-            knowledge.append("Instrumental case (з + accompaniment)")
-        if num >= 6:
-            knowledge.append("Instrumental case (means/tools)")
-        if num >= 7:
-            knowledge.append("Бути/ставати (being and becoming)")
-        if num >= 8:
-            knowledge.append("Spatial prepositions (expanded)")
-        if num >= 9:
-            knowledge.append("Logical prepositions")
-        if num >= 11:
-            knowledge.append("All cases practice (checkpoint passed)")
-        if num >= 13:
-            knowledge.append("Verbal aspect introduction (imperfective/perfective)")
-        if num >= 14:
-            knowledge.append("Completed past (perfective past tense)")
-        if num >= 15:
-            knowledge.append("Future plans (perfective future)")
-        if num >= 16:
-            knowledge.append("Aspect morphology (prefix/suffix patterns)")
-        if num >= 17:
-            knowledge.append("Aspect mastery (common pairs)")
-        if num >= 18:
-            knowledge.append("Свій (reflexive possessive)")
-        if num >= 19:
-            knowledge.append("Comparative adjectives (більший, кращий)")
-        if num >= 20:
-            knowledge.append("Superlative adjectives (найкращий)")
-        if num >= 22:
-            knowledge.append("Numerals with noun agreement")
-        if num >= 23:
-            knowledge.append("Conditional (якби + past tense)")
-        if num >= 24:
-            knowledge.append("Imperative mood (full paradigm)")
-        if num >= 25:
-            knowledge.append("Aspect + comparison checkpoint passed")
-        if num >= 27:
-            knowledge.append("Narrative past tense usage")
-        if num >= 28:
-            knowledge.append("Causal/concessive conjunctions (бо, хоча)")
-        if num >= 29:
-            knowledge.append("Reported speech (що-clauses)")
-        if num >= 32:
-            knowledge.append("Purpose clauses (щоб + infinitive)")
-        if num >= 33:
-            knowledge.append("Relative clauses (який/яка/яке)")
-        if num >= 34:
-            knowledge.append("Time clauses (коли, після того як)")
-        if num >= 35:
-            knowledge.append("Complex sentences checkpoint passed")
-        if num >= 37:
-            knowledge.append("Basic motion verb prefixes")
-        if num >= 38:
-            knowledge.append("Advanced motion verb prefixes")
-        if num >= 39:
-            knowledge.append("Action verb prefixes")
-        if num >= 44:
-            knowledge.append("Word formation mastery (suffixes, roots)")
-        if num >= 56:
-            knowledge.append("Full A2 grammar checkpoint passed")
+        knowledge = list(_A2_BASE_KNOWLEDGE)
+        knowledge.extend(_collect_milestones(_A2_MILESTONES, num))
 
     return "\n".join(f"- {k}" for k in knowledge) if knowledge else "- Basic alphabet and pronunciation only"
 

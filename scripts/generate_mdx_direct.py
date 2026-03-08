@@ -392,291 +392,308 @@ def _render_proverb_drill(activity: dict) -> str:
 # ──────────────────────────────────────────────
 
 
+def _render_letter_grid(letter_list: list[dict], include_note: bool = False) -> str:
+    """Build a LetterGrid JSX component from a list of letter dicts."""
+    grid_data = [
+        {
+            "upper": l["upper"],
+            "lower": l["lower"],
+            "emoji": l.get("emoji", ""),
+            "key_word": l.get("key_word", ""),
+            **({"note": l.get("note", "")} if include_note else {}),
+            "sound_type": l.get("sound_type", "consonant"),
+        }
+        for l in letter_list
+    ]
+    return f"<LetterGrid client:load letters={{JSON.parse(`{dump_json_for_jsx(grid_data)}`)}} />\n"
+
+
+def _render_abetka_sessions(letters: list[dict]) -> list[str]:
+    """Render letter groups for abetka module."""
+    lines: list[str] = []
+    assigned: set[str] = set()
+
+    for session in ABETKA_SESSIONS:
+        session_letters = [
+            l for l in letters if session["filter"](l) and l["upper"] not in assigned
+        ]
+        if not session_letters:
+            continue
+
+        for l in session_letters:
+            assigned.add(l["upper"])
+
+        lines.append(f"\n## {session['title']}\n")
+        lines.append(f"*{session['subtitle']}*\n")
+        lines.append(_render_letter_grid(session_letters, include_note=True))
+
+        # WatchAndRepeat for this group's videos
+        war_items = [
+            {"letter": l["upper"], "video": l.get("pronunciation_video", "")}
+            for l in session_letters
+            if l.get("pronunciation_video")
+        ]
+        if war_items:
+            lines.append(
+                f'<WatchAndRepeat client:load items={{JSON.parse(`{dump_json_for_jsx(war_items)}`)}} '
+                f'title="Повтори: {session["title"]}" isUkrainian />\n'
+            )
+
+    # Handle any unassigned letters
+    remaining = [l for l in letters if l["upper"] not in assigned]
+    if remaining:
+        lines.append("\n## Інші букви\n")
+        lines.append(_render_letter_grid(remaining))
+
+    return lines
+
+
+def _render_abetka_apostrophe(data: dict) -> list[str]:
+    """Render abetka-style apostrophe section."""
+    lines: list[str] = []
+    apostrophe = data.get("apostrophe")
+    if apostrophe:
+        lines.append("\n## Апостроф\n")
+        lines.append(f"**{apostrophe['symbol']}** — {apostrophe.get('note', '')}\n")
+        if apostrophe.get("example_word"):
+            lines.append(f"\n{apostrophe.get('emoji', '')} *{apostrophe['example_word']}*\n")
+    return lines
+
+
+def _render_digraphs(data: dict) -> list[str]:
+    """Render digraphs section."""
+    lines: list[str] = []
+    digraphs = data.get("digraphs")
+    if digraphs:
+        lines.append("\n## Буквосполучення\n")
+        lines.append("*Дві букви — один звук*\n")
+        for dg in digraphs:
+            letters_str = dg.get("letters", "")
+            note = dg.get("note", "")
+            kw = dg.get("key_word", "")
+            emoji = dg.get("emoji", "")
+            lines.append(f"**{letters_str}** — {note}")
+            if kw:
+                lines.append(f"  {emoji} *{kw}*\n")
+    return lines
+
+
+def _render_abetka_stress(data: dict) -> list[str]:
+    """Render abetka-style stress section."""
+    lines: list[str] = []
+    stress = data.get("stress")
+    if stress:
+        lines.append("\n## Наголос\n")
+        lines.append(f"{stress.get('rule', '')}\n")
+        lines.append(f"\n{stress.get('marker', '')}\n")
+        if stress.get("examples"):
+            lines.append("")
+            for ex in stress["examples"]:
+                lines.append(f"- **{ex['word']}** (наголос: *{ex['stressed_syllable']}*)")
+            lines.append("")
+    return lines
+
+
+def _render_syllable_rule(data: dict) -> list[str]:
+    """Render syllable rule section for generic script_foundation."""
+    lines: list[str] = []
+    syllable_rule = data.get("syllable_rule")
+    if syllable_rule:
+        lines.append("\n## Що таке склад?\n")
+        lines.append(f"{syllable_rule.get('text', '')}\n")
+        vowels = syllable_rule.get("vowels", [])
+        if vowels:
+            lines.append(f"\nГолосні: **{' '.join(vowels)}** ({len(vowels)} букв)\n")
+        examples = syllable_rule.get("examples", [])
+        if examples:
+            lines.append("")
+            for ex in examples:
+                count = ex["syllables"]
+                suffix = (
+                    "склад" if count == 1
+                    else "склади" if count < 5 else "складів"
+                )
+                lines.append(
+                    f"- {ex.get('emoji', '')} **{ex['word']}** → "
+                    f"{ex['split']} ({count} {suffix})"
+                )
+            lines.append("")
+    return lines
+
+
+def _render_syllable_table(table: dict) -> list[str]:
+    """Render a single syllable table (CV or VC grid)."""
+    lines: list[str] = []
+    lines.append(f"\n## {table.get('title', '')}\n")
+    if table.get("subtitle"):
+        lines.append(f"*{table['subtitle']}*\n")
+
+    if table.get("type") == "cv":
+        consonants = table.get("consonants", [])
+        vowels = table.get("vowels", [])
+        header = "| |" + " | ".join(f"**{v}**" for v in vowels) + " |"
+        divider = "|---|" + "|".join("---" for _ in vowels) + "|"
+        lines.append(header)
+        lines.append(divider)
+        for c in consonants:
+            row = (
+                f"| **{c}** |"
+                + " | ".join(f"{c}{v.lower()}" for v in vowels)
+                + " |"
+            )
+            lines.append(row)
+        lines.append("")
+
+    elif table.get("type") == "vc":
+        vowels = table.get("vowels", [])
+        consonants = table.get("consonants", [])
+        header = "| |" + " | ".join(f"**{c}**" for c in consonants) + " |"
+        divider = "|---|" + "|".join("---" for _ in consonants) + "|"
+        lines.append(header)
+        lines.append(divider)
+        for v in vowels:
+            row = (
+                f"| **{v}** |"
+                + " | ".join(f"{v.lower()}{c.lower()}" for c in consonants)
+                + " |"
+            )
+            lines.append(row)
+        lines.append("")
+
+    return lines
+
+
+def _render_soft_consonants(data: dict) -> list[str]:
+    """Render soft consonants section."""
+    lines: list[str] = []
+    soft = data.get("soft_consonants")
+    if soft:
+        lines.append("\n## М'які приголосні\n")
+        lines.append(f"{soft.get('rule', '')}\n")
+        soft_examples = soft.get("examples", [])
+        if soft_examples:
+            lines.append("")
+            for ex in soft_examples:
+                lines.append(
+                    f"- {ex.get('hard', '')} → **{ex.get('soft', '')}** "
+                    f"— {ex.get('note', '')}"
+                )
+            lines.append("")
+        soft_words = soft.get("words", [])
+        if soft_words:
+            lines.append("")
+            for w in soft_words:
+                lines.append(
+                    f"- {w.get('emoji', '')} **{w['word']}** "
+                    f"— {w.get('note', '')}"
+                )
+            lines.append("")
+    return lines
+
+
+def _render_generic_apostrophe(data: dict) -> list[str]:
+    """Render generic (non-abetka) apostrophe section."""
+    lines: list[str] = []
+    apostrophe = data.get("apostrophe")
+    if apostrophe:
+        lines.append("\n## Апостроф\n")
+        lines.append(f"{apostrophe.get('rule', '')}\n")
+        apo_examples = apostrophe.get("examples", [])
+        if apo_examples:
+            lines.append("")
+            for ex in apo_examples:
+                lines.append(
+                    f"- {ex.get('emoji', '')} **{ex['word']}** "
+                    f"({ex.get('split', '')})"
+                )
+            lines.append("")
+    return lines
+
+
+def _render_generic_stress(data: dict) -> list[str]:
+    """Render generic (non-abetka) stress section."""
+    lines: list[str] = []
+    stress = data.get("stress")
+    if stress:
+        lines.append("\n## Наголос\n")
+        lines.append(f"{stress.get('rule', '')}\n")
+        if stress.get("marker"):
+            lines.append(f"\n{stress['marker']}\n")
+        meaning = stress.get("meaning_change")
+        if meaning:
+            lines.append(f"\n### {meaning.get('note', '')}\n")
+            pairs = meaning.get("pairs", [])
+            for pair in pairs:
+                lines.append(
+                    f"- {pair.get('emoji1', '')} **{pair['word1']}** "
+                    f"— {pair.get('meaning1', '')}"
+                )
+                lines.append(
+                    f"- {pair.get('emoji2', '')} **{pair['word2']}** "
+                    f"— {pair.get('meaning2', '')}"
+                )
+                lines.append("")
+    return lines
+
+
+def _render_syllable_vocab(data: dict) -> list[str]:
+    """Render vocabulary with syllable info for generic script_foundation."""
+    lines: list[str] = []
+    vocab = data.get("vocabulary")
+    if vocab:
+        words = []
+        for v in vocab:
+            count = v.get("syllables", 0)
+            split = v.get("split", "")
+            suffix = (
+                "склад" if count == 1
+                else "склади" if count < 5 else "складів"
+            )
+            examples = [f"{split} — {count} {suffix}"] if split else []
+            words.append(
+                {
+                    "word": v.get("word", ""),
+                    "emoji": v.get("emoji", ""),
+                    "image_url": v.get("image_url"),
+                    "pronunciation_video": "",
+                    "examples": examples,
+                    "category": "",
+                    "question": "",
+                }
+            )
+        lines.append("\n## Слова по складах\n")
+        lines.append(
+            f"<VocabCard client:load words={{JSON.parse("
+            f"`{dump_json_for_jsx(words)}`)}} "
+            f'title="Слова по складах" isUkrainian />\n'
+        )
+    return lines
+
+
 def render_script_foundation(data: dict) -> str:
     """Render script_foundation modules (abetka, sklad, naholos)."""
     lines: list[str] = []
     letters = data.get("letters", [])
 
     if data.get("module") == "abetka" and letters:
-        # Group letters into pedagogical sessions
-        assigned: set[str] = set()
-
-        for session in ABETKA_SESSIONS:
-            session_letters = [
-                l for l in letters if session["filter"](l) and l["upper"] not in assigned
-            ]
-            if not session_letters:
-                continue
-
-            for l in session_letters:
-                assigned.add(l["upper"])
-
-            lines.append(f"\n## {session['title']}\n")
-            lines.append(f"*{session['subtitle']}*\n")
-
-            # LetterGrid for this group
-            grid_data = [
-                {
-                    "upper": l["upper"],
-                    "lower": l["lower"],
-                    "emoji": l.get("emoji", ""),
-                    "key_word": l.get("key_word", ""),
-                    "note": l.get("note", ""),
-                    "sound_type": l.get("sound_type", "consonant"),
-                }
-                for l in session_letters
-            ]
-            lines.append(
-                f"<LetterGrid client:load letters={{JSON.parse(`{dump_json_for_jsx(grid_data)}`)}} />\n"
-            )
-
-            # WatchAndRepeat for this group's videos
-            war_items = [
-                {
-                    "letter": l["upper"],
-                    "video": l.get("pronunciation_video", ""),
-                }
-                for l in session_letters
-                if l.get("pronunciation_video")
-            ]
-            if war_items:
-                lines.append(
-                    f'<WatchAndRepeat client:load items={{JSON.parse(`{dump_json_for_jsx(war_items)}`)}} '
-                    f'title="Повтори: {session["title"]}" isUkrainian />\n'
-                )
-
-        # Handle any unassigned letters
-        remaining = [l for l in letters if l["upper"] not in assigned]
-        if remaining:
-            lines.append("\n## Інші букви\n")
-            grid_data = [
-                {
-                    "upper": l["upper"],
-                    "lower": l["lower"],
-                    "emoji": l.get("emoji", ""),
-                    "key_word": l.get("key_word", ""),
-                    "sound_type": l.get("sound_type", "consonant"),
-                }
-                for l in remaining
-            ]
-            lines.append(
-                f"<LetterGrid client:load letters={{JSON.parse(`{dump_json_for_jsx(grid_data)}`)}} />\n"
-            )
-
-        # Apostrophe section
-        apostrophe = data.get("apostrophe")
-        if apostrophe:
-            lines.append("\n## Апостроф\n")
-            lines.append(
-                f"**{apostrophe['symbol']}** — {apostrophe.get('note', '')}\n"
-            )
-            if apostrophe.get("example_word"):
-                lines.append(
-                    f"\n{apostrophe.get('emoji', '')} *{apostrophe['example_word']}*\n"
-                )
-
-        # Digraphs section
-        digraphs = data.get("digraphs")
-        if digraphs:
-            lines.append("\n## Буквосполучення\n")
-            lines.append("*Дві букви — один звук*\n")
-            for dg in digraphs:
-                letters_str = dg.get("letters", "")
-                note = dg.get("note", "")
-                kw = dg.get("key_word", "")
-                emoji = dg.get("emoji", "")
-                lines.append(f"**{letters_str}** — {note}")
-                if kw:
-                    lines.append(f"  {emoji} *{kw}*\n")
-
-        # Stress section
-        stress = data.get("stress")
-        if stress:
-            lines.append("\n## Наголос\n")
-            lines.append(f"{stress.get('rule', '')}\n")
-            lines.append(f"\n{stress.get('marker', '')}\n")
-            if stress.get("examples"):
-                lines.append("")
-                for ex in stress["examples"]:
-                    lines.append(f"- **{ex['word']}** (наголос: *{ex['stressed_syllable']}*)")
-                lines.append("")
-
+        lines.extend(_render_abetka_sessions(letters))
+        lines.extend(_render_abetka_apostrophe(data))
+        lines.extend(_render_digraphs(data))
+        lines.extend(_render_abetka_stress(data))
     else:
         # Generic script_foundation (sklad, naholos, etc.)
-
-        # Syllable rule section
-        syllable_rule = data.get("syllable_rule")
-        if syllable_rule:
-            lines.append("\n## Що таке склад?\n")
-            lines.append(f"{syllable_rule.get('text', '')}\n")
-            vowels = syllable_rule.get("vowels", [])
-            if vowels:
-                lines.append(
-                    f"\nГолосні: **{' '.join(vowels)}** ({len(vowels)} букв)\n"
-                )
-            examples = syllable_rule.get("examples", [])
-            if examples:
-                lines.append("")
-                for ex in examples:
-                    count = ex["syllables"]
-                    suffix = (
-                        "склад"
-                        if count == 1
-                        else "склади" if count < 5 else "складів"
-                    )
-                    lines.append(
-                        f"- {ex.get('emoji', '')} **{ex['word']}** → "
-                        f"{ex['split']} ({count} {suffix})"
-                    )
-                lines.append("")
-
-        # Syllable tables (CV / VC grids)
-        tables = data.get("syllable_tables", [])
-        for table in tables:
-            lines.append(f"\n## {table.get('title', '')}\n")
-            if table.get("subtitle"):
-                lines.append(f"*{table['subtitle']}*\n")
-
-            if table.get("type") == "cv":
-                consonants = table.get("consonants", [])
-                vowels = table.get("vowels", [])
-                header = "| |" + " | ".join(f"**{v}**" for v in vowels) + " |"
-                divider = "|---|" + "|".join("---" for _ in vowels) + "|"
-                lines.append(header)
-                lines.append(divider)
-                for c in consonants:
-                    row = (
-                        f"| **{c}** |"
-                        + " | ".join(f"{c}{v.lower()}" for v in vowels)
-                        + " |"
-                    )
-                    lines.append(row)
-                lines.append("")
-
-            elif table.get("type") == "vc":
-                vowels = table.get("vowels", [])
-                consonants = table.get("consonants", [])
-                header = "| |" + " | ".join(f"**{c}**" for c in consonants) + " |"
-                divider = "|---|" + "|".join("---" for _ in consonants) + "|"
-                lines.append(header)
-                lines.append(divider)
-                for v in vowels:
-                    row = (
-                        f"| **{v}** |"
-                        + " | ".join(f"{v.lower()}{c.lower()}" for c in consonants)
-                        + " |"
-                    )
-                    lines.append(row)
-                lines.append("")
-
-        # Soft consonants
-        soft = data.get("soft_consonants")
-        if soft:
-            lines.append("\n## М'які приголосні\n")
-            lines.append(f"{soft.get('rule', '')}\n")
-            soft_examples = soft.get("examples", [])
-            if soft_examples:
-                lines.append("")
-                for ex in soft_examples:
-                    lines.append(
-                        f"- {ex.get('hard', '')} → **{ex.get('soft', '')}** "
-                        f"— {ex.get('note', '')}"
-                    )
-                lines.append("")
-            soft_words = soft.get("words", [])
-            if soft_words:
-                lines.append("")
-                for w in soft_words:
-                    lines.append(
-                        f"- {w.get('emoji', '')} **{w['word']}** "
-                        f"— {w.get('note', '')}"
-                    )
-                lines.append("")
-
-        # Apostrophe
-        apostrophe = data.get("apostrophe")
-        if apostrophe:
-            lines.append("\n## Апостроф\n")
-            lines.append(f"{apostrophe.get('rule', '')}\n")
-            apo_examples = apostrophe.get("examples", [])
-            if apo_examples:
-                lines.append("")
-                for ex in apo_examples:
-                    lines.append(
-                        f"- {ex.get('emoji', '')} **{ex['word']}** "
-                        f"({ex.get('split', '')})"
-                    )
-                lines.append("")
-
-        # Stress
-        stress = data.get("stress")
-        if stress:
-            lines.append("\n## Наголос\n")
-            lines.append(f"{stress.get('rule', '')}\n")
-            if stress.get("marker"):
-                lines.append(f"\n{stress['marker']}\n")
-            meaning = stress.get("meaning_change")
-            if meaning:
-                lines.append(f"\n### {meaning.get('note', '')}\n")
-                pairs = meaning.get("pairs", [])
-                for pair in pairs:
-                    lines.append(
-                        f"- {pair.get('emoji1', '')} **{pair['word1']}** "
-                        f"— {pair.get('meaning1', '')}"
-                    )
-                    lines.append(
-                        f"- {pair.get('emoji2', '')} **{pair['word2']}** "
-                        f"— {pair.get('meaning2', '')}"
-                    )
-                    lines.append("")
+        lines.extend(_render_syllable_rule(data))
+        for table in data.get("syllable_tables", []):
+            lines.extend(_render_syllable_table(table))
+        lines.extend(_render_soft_consonants(data))
+        lines.extend(_render_generic_apostrophe(data))
+        lines.extend(_render_generic_stress(data))
 
         # Letters grid (if module has letters)
         if letters:
-            grid_data = [
-                {
-                    "upper": l["upper"],
-                    "lower": l["lower"],
-                    "emoji": l.get("emoji", ""),
-                    "key_word": l.get("key_word", ""),
-                    "sound_type": l.get("sound_type", "consonant"),
-                }
-                for l in letters
-            ]
-            lines.append(
-                f"<LetterGrid client:load letters={{JSON.parse("
-                f"`{dump_json_for_jsx(grid_data)}`)}} />\n"
-            )
+            lines.append(_render_letter_grid(letters))
 
-        # Vocabulary with syllable info
-        vocab = data.get("vocabulary")
-        if vocab:
-            words = []
-            for v in vocab:
-                count = v.get("syllables", 0)
-                split = v.get("split", "")
-                suffix = (
-                    "склад"
-                    if count == 1
-                    else "склади" if count < 5 else "складів"
-                )
-                examples = [f"{split} — {count} {suffix}"] if split else []
-                words.append(
-                    {
-                        "word": v.get("word", ""),
-                        "emoji": v.get("emoji", ""),
-                        "image_url": v.get("image_url"),
-                        "pronunciation_video": "",
-                        "examples": examples,
-                        "category": "",
-                        "question": "",
-                    }
-                )
-            lines.append("\n## Слова по складах\n")
-            lines.append(
-                f"<VocabCard client:load words={{JSON.parse("
-                f"`{dump_json_for_jsx(words)}`)}} "
-                f'title="Слова по складах" isUkrainian />\n'
-            )
+        lines.extend(_render_syllable_vocab(data))
 
     return "\n".join(lines)
 

@@ -1,802 +1,323 @@
-# Learn Ukrainian Architecture
+# Learn Ukrainian — System Architecture
 
-> **See also:**
-> - `docs/ARCHITECTURE-PLANS.md` - Detailed three-layer architecture
-> - `docs/STATUS-SYSTEM.md` - Status caching system
-> - `docs/PLANNING-GUIDE.md` - How to create/update plans
+> Last updated: 2026-03-08 | Issue: #796
 
 ## Overview
 
-Learn Ukrainian (CO) is a content factory that generates Ukrainian language learning materials from Markdown source files.
+Learn Ukrainian is an AI-powered content factory that generates Ukrainian language learning materials. Two AI agents (Gemini builds, Claude reviews) produce curriculum content through a deterministic pipeline with 34 quality gates.
 
-## Architecture v2.0 (Plan-Build-Status)
+**Scale**: ~600 modules across 10 tracks, ~143K LOC in `scripts/`, 25 JSON schemas.
 
-The curriculum follows a strict three-layer separation of concerns to ensure consistency and prevent semantic drift.
-
-### 1. Plans (Immutable Source of Truth)
-
-**Level plans:** `curriculum/l2-uk-en/plans/{level}.yaml` — Phases, scope, pedagogy notes
-**Module plans:** `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` — Individual module specs
-
-- **Ownership**: Humans (Architects)
-- **Content**: `content_outline`, `word_target`, `vocabulary_hints`, `activity_hints`, `sources`
-- **Rule**: NEVER modified by build agents. If a plan is wrong, it must be updated by a human.
-- **Human-readable view**: `docs/l2-uk-en/{LEVEL}-PLAN-GENERATED.md` (run `scripts/generate_plan_markdown.py`)
-
-### 2. Build (Mutable Artifacts)
-
-Located in `curriculum/l2-uk-en/{level}/`.
-- **Ownership**: AI Agents (Builders)
-- **Components**:
-  - `{slug}.md`: Lesson prose (matches plan outline).
-  - `activities/{slug}.yaml`: Interactive exercises.
-  - `vocabulary/{slug}.yaml`: IPA, translations, and metadata for words.
-  - `meta/{slug}.yaml`: Build-time metadata (naturalness score, last modified).
-
-### 3. Status (Cached Audit Results)
-
-Located in `curriculum/l2-uk-en/{level}/status/{slug}.json`.
-- **Ownership**: System (Auditor)
-- **Content**: Results of all 16+ audit gates, violation counts, and source file timestamps.
-- **Benefit**: Enables instant status reporting without re-auditing every module.
+## System Diagram
 
 ```
-┌─────────────────────────────────────┐    ┌──────────────────────────┐
-│ plans/                              │    │ {level}/                 │
-│   └── {slug}.yaml (Immutable Plan)  │───▶│   ├── {slug}.md          │
-│       - content_outline             │    │   ├── activities/        │
-│       - word_target                 │    │   └── vocabulary/        │
-└─────────────────────────────────────┘    └────────────┬─────────────┘
-                                                        │
-                                                        ▼
-                                           ┌──────────────────────────┐
-                                           │ {level}/status/          │
-                                           │   └── {slug}.json        │
-                                           │       (Audit Cache)      │
-                                           └──────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                        PIPELINE v5 (build_module_v5.py)              │
+│  research → discover → sandbox → content → activities → validate     │
+│                                              → [review] → mdx        │
+└─────────┬──────────┬────────────┬──────────┬────────────┬───────────┘
+          │          │            │          │            │
+    ┌─────▼───┐ ┌───▼────┐ ┌────▼───┐ ┌───▼────┐ ┌────▼─────┐
+    │ Gemini  │ │  RAG   │ │ VESUM  │ │ Claude │ │  Audit   │
+    │ (build) │ │ (data) │ │(morph) │ │(review)│ │ (gates)  │
+    └─────────┘ └────────┘ └────────┘ └────────┘ └──────────┘
 ```
 
-## Directory Structure
+## Three-Layer Content Architecture
+
+```
+plans/{level}/{slug}.yaml    →  IMMUTABLE source of truth (human-owned)
+{level}/{slug}.md + yaml     →  BUILD artifacts (AI-generated)
+{level}/status/{slug}.json   →  AUDIT cache (system-generated)
+```
+
+| Layer | Location | Owner | Mutability |
+|-------|----------|-------|------------|
+| **Plans** | `curriculum/l2-uk-en/plans/` | Human architect | Immutable (version-bumped with approval) |
+| **Build** | `curriculum/l2-uk-en/{level}/` | AI agents (Gemini) | Mutable (rebuilt by pipeline) |
+| **Status** | `curriculum/l2-uk-en/{level}/status/` | Audit system | Auto-generated, cached |
+
+## Subsystems (11)
+
+### 1. Pipeline (`scripts/pipeline_v5.py` + `scripts/pipeline/`)
+**~11K LOC** | Entry: `scripts/build_module_v5.py`
+
+The sole build pipeline. v3/v4 are retired.
+
+| Phase | LLM | Purpose |
+|-------|-----|---------|
+| **research** | Gemini | Web research, meta outline, friction hooks |
+| **discover** | Gemini | YouTube discovery, transcript scoring |
+| **sandbox** | _(none)_ | VESUM-validated word bank (deterministic) |
+| **content** | Gemini | Full lesson prose with lexical sandbox |
+| **activities** | Gemini | Interactive activities + vocabulary YAML |
+| **validate** | Gemini | Morphological validator + Russicism check + fix loop |
+| **review** | **Claude** | Cross-agent adversarial review (optional, max 2 fix attempts) |
+| **mdx** | _(none)_ | Deterministic markdown → Docusaurus MDX |
+
+Non-blocking phases: discover, sandbox, validate, review.
+
+Supporting modules:
+- `scripts/pipeline/state.py` — State machine (phase tracking, restarts)
+- `scripts/pipeline/parsing.py` — Markdown/YAML parsing
+- `scripts/pipeline/screen.py` — Content screening
+- `scripts/pipeline/fixes.py` — Post-phase deterministic fixes
+- `scripts/pipeline_lib.py` — Shared pipeline utilities (legacy, being decomposed)
+
+### 2. Audit System (`scripts/audit/`)
+**~23K LOC** | Entry: `scripts/audit_module.py`
+
+34 specialized check modules enforcing quality gates.
+
+```
+scripts/audit/
+├── core.py                    # Orchestrator (AuditContext + AuditState pattern)
+├── config.py                  # Level-specific thresholds (word targets, gate minimums)
+├── gates.py                   # Gate evaluation + recommendation engine
+├── report.py                  # Terminal + markdown report generation
+├── status_cache.py            # Status JSON caching
+├── naturalness_check.py       # LLM-based naturalness scoring
+├── template_parser.py         # Template YAML parsing
+└── checks/                    # 34 individual check modules
+    ├── activities.py           # Activity validation (types, schemas, complexity)
+    ├── morphological_validator.py  # VESUM grammar checking
+    ├── yaml_schema_validation.py   # YAML schema enforcement
+    ├── review_validation.py    # LLM review integrity
+    ├── template_compliance.py  # Template structure compliance
+    ├── content_quality_pipeline.py # Content quality scoring
+    ├── cross_file_integrity.py # Plan↔content↔vocab consistency
+    ├── vocabulary.py           # Vocabulary gate checks
+    ├── review_gaming.py        # Anti-gaming (ping-pong, content recall)
+    └── ... (24 more)
+```
+
+**Key gates**: Words ≥ target, activities ≥ minimum, unique types, engagement boxes, vocab count, naturalness ≥ 8/10.
+
+### 3. RAG System (`scripts/rag/` + `.mcp/servers/rag/`)
+**~8K LOC** | MCP server at `.mcp/servers/rag/server.py`
+
+Data sources indexed in Qdrant (local vector DB) + live HTTP queries.
+
+| Source | Type | Collection | MCP Tool |
+|--------|------|------------|----------|
+| Textbooks (1.2K chunks) | RAG | `textbook_chunks` | `search_text` |
+| Literary sources | RAG | `literary_texts` | `search_literary` |
+| VESUM (415K lemmas) | SQLite | `data/vesum/` | `verify_word`, `verify_lemma` |
+| Ukrainian Wikipedia | Live | — | `query_wikipedia` |
+| GRAC corpus (2B tokens) | Live | — | `query_grac` |
+| ULIF paradigms | Live | — | `query_ulif` |
+| r2u dictionary | Live | — | `query_r2u` |
+| Pravopys 2019 | Reference | — | `query_pravopys` |
+
+Ingestion pipeline:
+- `ingest.py` / `ingest_literary.py` — Chunk and embed textbook/literary content
+- `embed.py` — Embedding generation (cached with pickle)
+- `import_vesum.py` — VESUM dictionary import to SQLite
+- `scrape_*.py` — Web scrapers (litopys, ukrlib, wikisource, izbornyk)
+- `extract_text.py` / `extract_images.py` — PDF content extraction
+
+### 4. API Server (`scripts/api/`)
+**~6K LOC** | FastAPI + WebSocket
+
+Dashboard and monitoring for pipeline operations.
+
+```
+scripts/api/
+├── main.py              # FastAPI app, WebSocket, shared endpoints
+├── dashboard_router.py  # Module listing, track scanning, detail views
+├── state_router.py      # Pipeline state management (unified v5 format)
+├── blue_router.py       # Claude team endpoints
+├── gold_router.py       # Gemini team endpoints
+├── admin_router.py      # Admin operations
+├── comms_router.py      # Notifications
+├── rag_router.py        # RAG search integration
+├── images_router.py     # Image serving
+└── config.py            # API configuration
+```
+
+### 5. Scoring System (`scripts/scoring/`)
+**~3.5K LOC**
+
+Module quality scoring with weighted criteria aggregation.
+
+- `aggregator.py` — Score aggregation (CC=105, needs decomposition)
+- `metrics.py` — Metric definitions
+- `caps.py` — Score caps and constraints
+- `report.py` — Score reporting
+- `sampling.py` — Statistical sampling
+- Also: `scripts/calculate_richness.py` — Content richness scoring (dryness flags, module type detection)
+
+### 6. Code Generation (`scripts/generate_*.py`)
+**~6.5K LOC**
+
+- `generate_mdx.py` — Markdown → Docusaurus MDX (main track)
+- `generate_mdx_direct.py` — MDX for l2-uk-direct track
+- `generate_json.py` — Module → JSON for Vibe app
+- `generate_plan_markdown.py` — Plan YAML → human-readable markdown
+
+### 7. Batch Operations (`scripts/batch_*.py`)
+**~6K LOC**
+
+- `batch_gemini_runner.py` — Dispatches Gemini builds across modules
+- `batch_dispatcher.py` — Job orchestration
+- `batch_gemini_config.py` — Model defaults per track/level
+- `batch_fix_review.py` — Batch review fixing
+- `batch_research.py` — Batch research phase
+- `batch_report.py` — Batch status reporting
+
+### 8. Agent Bridge (`scripts/ai_agent_bridge.py`)
+**~2K LOC**
+
+Inter-agent communication (Claude ↔ Gemini). Uses gemini-cli subprocess.
+
+### 9. RAG Ingestion (`scripts/rag/scrape_*.py`, `ingest_*.py`)
+**~4.8K LOC**
+
+Web scrapers and data ingestors for populating RAG collections.
+
+### 10. Prompt Templates (`claude_extensions/phases/` + `gemini_extensions/skills/`)
+**~8.7K LOC** (54 prompt/template files)
+
+Phase-specific prompts injected into LLM calls during pipeline execution.
+
+### 11. Playgrounds (`scripts/api/` static files + dashboards)
+**~4.8K LOC**
+
+Interactive HTML dashboards for exploring pipeline data.
+
+## AI Agent Architecture
+
+```
+┌─────────────────────┐     ┌─────────────────────┐
+│   Claude (Blue)     │     │   Gemini (Gold)      │
+│   - Architect       │◄───►│   - Content builder  │
+│   - Reviewer        │     │   - Researcher       │
+│   - Code author     │     │   - Activity creator  │
+└─────────────────────┘     └─────────────────────┘
+         │                           │
+         ▼                           ▼
+┌─────────────────────┐     ┌─────────────────────┐
+│ claude_extensions/   │     │ gemini_extensions/   │
+│ ├── commands/        │     │ └── skills/          │
+│ ├── skills/          │     │     ├── full-rebuild-*│
+│ ├── phases/          │     │     ├── hetman/       │
+│ ├── quick-ref/       │     │     └── final-review/ │
+│ └── rules/           │     └─────────────────────┘
+└─────────────────────┘
+```
+
+**Rule**: An LLM must NEVER review its own work. Gemini builds → Claude reviews.
+
+**Extensions source of truth**:
+- `claude_extensions/` → deployed to `.claude/` via `npm run claude:deploy`
+- `gemini_extensions/` → deployed to `.gemini/` (manual copy)
+
+## MCP Servers
+
+| Server | Location | Purpose |
+|--------|----------|---------|
+| **RAG** | `.mcp/servers/rag/server.py` | Textbook search, VESUM verification, literary sources, live queries |
+| **Message Broker** | `.mcp/servers/message-broker/server.py` | Inter-agent message queue |
+
+## Curriculum Tracks
+
+### Main Track: `l2-uk-en` (Ukrainian for English speakers)
+
+| Level | Modules | Status |
+|-------|---------|--------|
+| A1 | 63 | Complete |
+| A2 | 67 | Complete |
+| B1 | 92 | Complete |
+| B2 | 59 | Complete |
+| C1 | 1 | Early draft |
+| C2 | 0 | Not started |
+
+### Seminar Tracks
+
+| Track | Modules | Description |
+|-------|---------|-------------|
+| HIST | 140 | Ukrainian history |
+| BIO | 76 | Famous Ukrainians |
+| ISTORIO | 3 | Historiography |
+| LIT | 0 | Literature |
+| OES | 0 | Old East Slavic |
+| RUTH | 0 | Ruthenian |
+
+### Secondary Track: `l2-uk-direct`
+
+L1-agnostic Ukrainian (A1→B2). Separate schemas, no English. See `docs/l2-uk-direct/ARCHITECTURE.md`.
+
+## Schemas (`schemas/`)
+
+- Activity schemas: base + per-level variants (A1–C2 + seminar tracks)
+- Module schemas: plan, status, meta
+- Vocabulary schemas: standard + direct track
+- Vibe integration: `vibe-module.schema.json`
+
+## Quality Systems
+
+| System | Type | Gates? | Entry Point |
+|--------|------|--------|-------------|
+| **Audit** | Deterministic | Yes (blocking) | `scripts/audit_module.py` |
+| **Morphological Validator** | VESUM-based | Yes (blocking) | `scripts/audit/checks/morphological_validator.py` |
+| **Lexical Sandbox** | VESUM-based | Non-blocking | `scripts/lexical_sandbox.py` |
+| **Russicism Detection** | Rule-based | Yes (blocking) | Part of validate phase |
+| **Content Quality** | LLM-based | No (informational) | `scripts/audit/checks/content_quality_pipeline.py` |
+| **Naturalness** | LLM-based | Yes (≥8/10) | `scripts/audit/naturalness_check.py` |
+
+## Key Design Decisions
+
+1. **Pipeline v5 is the ONLY pipeline** — v3/v4 retired, code in `scripts/retired/`
+2. **VESUM is ground truth** — 415K lemmas, ~6M forms. All Ukrainian words verified against it
+3. **Plans are immutable** — Content changes require plan version bump + human approval
+4. **Deterministic where possible** — Sandbox, MDX gen, fixes are LLM-free
+5. **Cross-agent review** — Gemini never reviews its own output
+6. **34 audit gates** — All must pass for a module to be considered complete
+7. **Word targets are minimums** — Never reduce targets, expand content
+
+## File Structure
 
 ```
 learn-ukrainian/
-├── curriculum/                    # SOURCE OF TRUTH
-│   └── l2-uk-en/
-│       ├── plans/                 # ⭐ IMMUTABLE PLANS (v2.0)
-│       │   ├── a1.yaml            # Level plan (phases, scope)
-│       │   ├── a1/                # Module plans
-│       │   │   ├── 01-the-cyrillic-code-i.yaml
-│       │   │   └── ...
-│       │   ├── hist.yaml       # Track level plan
-│       │   ├── hist/           # Track module plans
-│       │   └── ...
-│       ├── a1/                    # A1 build artifacts (34)
-│       ├── a2/                    # A2 build artifacts (50)
-│       ├── b1/                    # B1 build artifacts (85)
-│       ├── b2/                    # B2 build artifacts (110)
-│       ├── c1/                    # C1 build artifacts (160)
-│       ├── c2/                    # C2 build artifacts (100)
-│       ├── hist/               # HIST track (61)
-│       ├── bio/                # BIO track (25)
-│       ├── lit/                   # LIT modules (30) - post-C1 track
-│       └── vocabulary.db          # SQLite vocabulary database
-│
-├── scripts/                       # GENERATOR CODE
-│   ├── generate_mdx.py            # MDX generator (Python)
-│   ├── generate_json.py           # JSON generator (Python)
-│   ├── generate_plan_markdown.py  # ⭐ Plan → readable markdown
-│   ├── audit_module.py            # Module quality checker
-│   ├── calculate_richness.py      # Content richness scoring
-│   ├── pipeline.py                # Full pipeline (lint → generate → validate)
-│   ├── validate_mdx.py            # MDX content validation
-│   ├── validate_html.py           # HTML rendering validation
-│   └── audit/                     # Audit module components
-│       ├── checks/                # Individual check modules
-│       ├── cleaners.py            # Text preprocessing
-│       └── report.py              # Report generation
-│
-├── docusaurus/                    # DOCUSAURUS PROJECT
-│   ├── docs/                      # Generated MDX files
-│   │   ├── a1/module-XX.mdx
-│   │   └── ...
-│   └── src/components/            # React activity components
-│       ├── Quiz.tsx
-│       ├── MatchUp.tsx
-│       ├── FillIn.tsx
-│       └── ...
-│
-├── output/                        # GENERATED OUTPUT
-│   └── json/l2-uk-en/             # Vibe import data
-│       ├── a1/module-01.json
-│       └── ...
-│
-├── docs/                          # DOCUMENTATION
-│   ├── ARCHITECTURE.md            # This file
-│   ├── MARKDOWN-FORMAT.md         # Markdown syntax spec
-│   └── SCRIPTS.md                 # Scripts reference
-│
-└── claude_extensions/             # CLAUDE CODE EXTENSIONS
-    ├── commands/                  # Slash commands (/module, /module-stage-1, etc.)
-    ├── skills/                    # Skills (grammar-check, vocab-enrichment, etc.)
-    ├── stages/                    # Module creation workflow stages (1-4)
-    └── quick-ref/                 # Level-specific quick references (a1.md, b1.md, etc.)
+├── curriculum/l2-uk-en/           # Content (plans + build artifacts + status)
+│   ├── plans/{level}/{slug}.yaml  # Immutable plans
+│   ├── {level}/{slug}.md          # Lesson prose
+│   ├── {level}/activities/        # Activity YAML
+│   ├── {level}/vocabulary/        # Vocabulary YAML
+│   ├── {level}/meta/              # Build metadata
+│   └── {level}/status/            # Audit cache
+├── scripts/                       # All Python code (~143K LOC)
+│   ├── build_module_v5.py         # Pipeline v5 CLI
+│   ├── pipeline_v5.py             # Pipeline v5 implementation
+│   ├── pipeline/                  # Pipeline support modules
+│   ├── audit/                     # Audit system (34 checks)
+│   ├── rag/                       # RAG indexing + querying
+│   ├── api/                       # FastAPI dashboard server
+│   ├── scoring/                   # Quality scoring
+│   ├── batch_*.py                 # Batch operations
+│   ├── generate_*.py              # Code generation (MDX, JSON, plan markdown)
+│   └── ai_agent_bridge.py         # Inter-agent communication
+├── claude_extensions/             # Claude Code config (source of truth)
+├── gemini_extensions/             # Gemini config (source of truth)
+├── .mcp/servers/                  # MCP servers (RAG, message broker)
+├── schemas/                       # JSON schemas (25 files)
+├── docs/                          # Documentation
+│   ├── best-practices/            # Standards and guides
+│   ├── l2-uk-en/templates/        # 37 module templates
+│   └── resources/                 # Trusted sources, external resources
+└── docusaurus/                    # Web output (Docusaurus + React components)
 ```
-
-## Claude Extensions Architecture
-
-The `claude_extensions/` directory contains configuration for Claude Code, organized into four layers:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        USER COMMANDS                             │
-│    /module b1 10     /checkpoint b2 25     /review-content       │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    COMMANDS (Orchestration)                      │
-│                                                                 │
-│   claude_extensions/commands/                                   │
-│   - module.md              → Routes to correct stage            │
-│   - module-stage-1.md      → Skeleton creation                  │
-│   - module-stage-2.md      → Content writing                    │
-│   - module-stage-3.md      → Activity creation                  │
-│   - module-stage-4.md      → Review & fix                       │
-│   - review-content.md      → Content quality review             │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │
-                ┌───────────────┴───────────────┐
-                ▼                               ▼
-┌─────────────────────────┐     ┌─────────────────────────┐
-│   TEMPLATES (Structure)  │     │   QUICK-REFS (Context)  │
-│                         │     │                         │
-│ docs/l2-uk-en/templates/│     │ claude_extensions/      │
-│ - b1-grammar-template   │     │ quick-ref/              │
-│ - b2-checkpoint-template│     │ - a1.md, a2.md          │
-│ - lit-module-template   │     │ - b1.md, b2.md          │
-│ - [26 total templates]  │     │ - c1.md, c2.md          │
-└─────────────────────────┘     └─────────────────────────┘
-                │                               │
-                └───────────────┬───────────────┘
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   SKILLS (Cross-Cutting Utilities)               │
-│                                                                 │
-│   claude_extensions/skills/                                     │
-│                                                                 │
-│   UTILITY SKILLS:                                               │
-│   - grammar-check           → CEFR grammar validation           │
-│   - vocab-enrichment        → IPA, POS, usage notes             │
-│   - prompt-engineering      → AI documentation optimization     │
-│                                                                 │
-│   MODULE ARCHITECT SKILLS:                                      │
-│   - grammar-module-architect    → B1-B2 grammar modules         │
-│   - vocab-module-architect      → B1 vocabulary expansion       │
-│   - cultural-module-architect   → B1-C1 cultural modules        │
-│   - history-module-architect    → B2 history, C1 biography      │
-│   - integration-module-architect→ B1-B2 integration modules     │
-│   - checkpoint                  → All levels checkpoint modules │
-│   - literature-module-architect → LIT track modules             │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Layer Responsibilities
-
-| Layer | Purpose | Location | Invocation |
-|-------|---------|----------|------------|
-| **Commands** | Orchestrate multi-step workflows | `claude_extensions/commands/` | `/module`, `/checkpoint` |
-| **Templates** | Define authoritative module structure | `docs/l2-uk-en/templates/` | Read by commands/stages |
-| **Quick-Refs** | Provide level-specific constraints | `claude_extensions/quick-ref/` | Read by commands/skills |
-| **Skills** | Handle cross-cutting concerns | `claude_extensions/skills/` | `/grammar-check`, `/vocab-enrichment` |
-
-### Design Decisions
-
-**Two types of skills:**
-
-1. **Utility Skills** (cross-cutting concerns):
-   - `grammar-check` — Validate grammar against CEFR level
-   - `vocab-enrichment` — Add IPA, POS, usage notes
-   - `prompt-engineering` — Optimize AI documentation
-
-2. **Module Architect Skills** (focus-area guidance):
-   - `grammar-module-architect` — B1-B2 grammar modules
-   - `vocab-module-architect` — B1 vocabulary expansion modules
-   - `cultural-module-architect` — B1-C1 cultural modules
-   - `history-module-architect` — B2 history, C1 biography modules
-   - `integration-module-architect` — B1-B2 integration modules
-   - `checkpoint` — All levels checkpoint modules
-   - `literature-module-architect` — LIT track modules
-
-**Skill vs Command vs Template:**
-- **Skill**: Either utility (validation, enrichment) or module architect (focus-area guidance)
-- **Command**: Multi-step workflow orchestration (`/module` runs stages 1-4)
-- **Template**: Authoritative structure for a module type (always read first)
-
-### Current Skills
-
-**Utility Skills:**
-
-| Skill | Purpose | Status |
-|-------|---------|--------|
-| `grammar-check` | CEFR grammar validation | ✅ Active |
-| `vocab-enrichment` | IPA, POS, usage notes | ✅ Active |
-| `prompt-engineering` | AI documentation optimization | ✅ Active |
-
-**Module Architect Skills:**
-
-| Skill | Focus Area | Levels | Status |
-|-------|------------|--------|--------|
-| `grammar-module-architect` | Grammar (aspect, motion, participles) | B1-B2 | ✅ Active |
-| `vocab-module-architect` | Vocabulary expansion (collocations, synonymy) | B1 | ✅ Active |
-| `cultural-module-architect` | Cultural modules (regions, music, cinema) | B1-C1 | ✅ Active |
-| `history-module-architect` | History & biography modules | B2-C1 | ✅ Active |
-| `integration-module-architect` | Integration & review modules | B1-B2 | ✅ Active |
-| `checkpoint` | Checkpoint modules (phase-end assessment) | All | ✅ Active |
-| `literature-module-architect` | LIT track (post-C1 literature) | LIT | ✅ Active |
-
-## Module Types
-
-| Type | Tags | Description | Levels |
-|------|------|-------------|--------|
-| `grammar` | grammar, cases, verbs, aspect | Grammar-focused lessons | A1-B1 |
-| `vocabulary` | vocabulary, vocab | Word-building lessons | A1-B2 |
-| `checkpoint` | review, checkpoint, assessment | Progress assessment | All |
-| `history` | history | Ukrainian history narratives | B2+ |
-| `biography` | biography | Famous Ukrainians | B2+ |
-| `idioms` | idioms, phraseology | Idiomatic expressions | B2 |
-| `literature` | literature, poetry, prose | Text analysis | C1 |
-| `skills` | skills, academic, writing | Academic skills | C1 |
-| `culture` | culture, regions, music | Cultural content | B2+ |
-| `functional` | functional, dialogue, role-play | Practical communication | A2-B1 |
-
-## JSON Output Schema (v2)
-
-```json
-{
-  "$schema": "../../../schemas/vibe-module.schema.json",
-  "lesson": {
-    "id": "lesson-uk-B2-168",
-    "moduleId": "mod-uk-B2-168",
-    "languagePair": "l2-uk-en",
-    "moduleNumber": 168,
-    "moduleType": "history",
-    "immersionLevel": 0.85,
-    "title": "History: Kyivan Rus II",
-    "titleUk": "Київська Русь II: Золота доба",
-    "level": "B2",
-    "phase": "B2.2",
-    "objectives": ["..."],
-    "tags": ["history", "kyivan-rus", "culture"],
-    "totalDuration": 50,
-    "transliterationMode": "none",
-    "sections": [
-      {
-        "id": "section-intro",
-        "name": "Вступ",
-        "nameEn": "Introduction",
-        "type": "intro",
-        "content": "raw markdown content..."
-      }
-    ],
-    "rawMarkdown": "full source markdown...",
-    "version": 2
-  },
-  "activities": [...],
-  "vocabulary": {...}
-}
-```
-
-### Key Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `moduleType` | enum | Inferred from tags (grammar, history, etc.) |
-| `immersionLevel` | float | 0.0-1.0, percentage of Ukrainian content |
-| `sections` | array | Sections with raw markdown content |
-| `rawMarkdown` | string | Full source markdown for reference |
-
-### Immersion Levels by CEFR
-
-| Level | Modules | Folder | Immersion |
-|-------|---------|--------|-----------|
-| A1 | M01-34 | `a1/` | 10-40% (graduated) |
-| A2 | M01-50 | `a2/` | 40-50% |
-| B1 | M01-85 | `b1/` | 65% (M01-05) → **100%** (M06+) |
-| B2 | M01-110 | `b2/` | **100%** |
-| C1 | M01-160 | `c1/` | **100%** |
-| C2 | M01-100 | `c2/` | **100%** |
-| LIT | M01-30 | `lit/` | **100%** |
-
-**Note:** B1 M01-05 are transitional "Bridge" modules (~65% immersion) that teach grammar metalanguage. B1 M06+ and all B2/C1/C2 use 100% Ukrainian immersion. English is only allowed in vocabulary table translations.
-
-## Docusaurus Web Output
-
-The web interface uses Docusaurus with custom React components for interactive activities.
-
-### Activity Components
-
-Located in `docusaurus/src/components/`:
-
-| Component | Activity Type | Description |
-|-----------|--------------|-------------|
-| `Quiz.tsx` | quiz | Multiple choice with single answer |
-| `MatchUp.tsx` | match-up | Drag & drop pair matching |
-| `FillIn.tsx` | fill-in | Gap fill with dropdowns |
-| `GroupSort.tsx` | group-sort | Sort items into categories |
-| `Unjumble.tsx` | unjumble | Reorder words into sentences |
-| `TrueFalse.tsx` | true-false | Statement validation |
-| `Anagram.tsx` | anagram | Letter unscrambling (A1 only) |
-| `ErrorCorrection.tsx` | error-correction | Find and fix errors (A2+) |
-| `Cloze.tsx` | cloze | Passage completion (A2+) |
-| `Select.tsx` | select | Multi-checkbox selection |
-| `Translate.tsx` | translate | Translation multiple choice |
-
-### Features
-
-- **Interactive activities**: All activities with immediate feedback
-- **Answer shuffling**: Options randomized on each page load
-- **Progress tracking**: Visual feedback for correct/incorrect
-- **Mobile responsive**: Works on all device sizes
-- **GitHub Pages**: Deployed to krisztiankoos.github.io/learn-ukrainian
-
-## Markdown Format
-
-See `docs/MARKDOWN-FORMAT.md` for the complete spec.
-
-### Key Patterns
-
-```markdown
-# Section Headers
-## warm-up | Розминка
-## presentation | Презентація
-## practice | Практика
-# Вправи (Activities)
-# Словник (Vocabulary)
-
-# Answer Syntax
-> [!answer] **відповідь**
-
-# Activity Blocks
-## quiz: Title
-1. Question?
-   - [ ] Wrong
-   - [x] Correct
-   > Explanation
-
-## match-up: Title
-| Left | Right |
-|------|-------|
-| word | слово |
-```
-
-## AI Build Pipeline (v5 — `build_module_v5.py`)
-
-`scripts/build_module_v5.py` orchestrates module creation using the best LLM for each phase.
-Gemini handles research, discovery, and long-form prose (1M context, fast iteration);
-Claude handles final QA (better reasoning, adversarial review).
-
-### Pipeline v5
-
-```
-research → discover → sandbox → content → activities → validate → [review] → mdx
-```
-
-### Phase-to-LLM Assignment
-
-| Phase | LLM | Default Model | Purpose |
-|-------|-----|---------------|---------|
-| **research** | Gemini | `gemini-2.5-pro` | Web research, meta outline, friction hooks |
-| **discover** | Gemini | `gemini-2.5-flash` | YouTube search across curated channels, transcript scoring |
-| **sandbox** | _(no LLM)_ | — | VESUM-validated word bank (deterministic) |
-| **content** | Gemini | `gemini-2.5-pro` | Full lesson prose with lexical sandbox + video discoveries |
-| **activities** | Gemini | `gemini-2.5-pro` | Interactive activities, vocabulary YAML |
-| **validate** | Gemini | `gemini-2.5-pro` | Audit + morphological validator + Russicism check + fix loop |
-| **review** _(optional)_ | **Claude** | Opus (always) | Cross-agent adversarial review, max 2 fix attempts |
-| **mdx** | _(no LLM)_ | — | Deterministic: markdown → Docusaurus MDX |
-
-**Non-blocking phases:** discover, sandbox, validate, review — failures don't halt the pipeline.
-**Rule:** MDX always runs last, even on validate/review failure (for preview).
-
-### Model Selection Logic
-
-Model defaults are track-aware and centralized in `scripts/batch_gemini_config.py`:
-
-```python
-# Seminar tracks: bio, hist, istorio, lit, oes, ruth
-CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A via --use-claude A
-CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C (always Claude)
-CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F (always Claude)
-
-# Core tracks: a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
-CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET    # Phase A via --use-claude A
-CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET    # Phase C (always Claude)
-```
-
-Override per-session with `--claude-model-A`, `--claude-model-C`, `--claude-model-F`.
-**To change defaults project-wide, edit only `batch_gemini_config.py`.**
-
-### Why Hybrid?
-
-| Concern | Gemini | Claude |
-|---------|--------|--------|
-| 1M context for long prose | ✅ Ideal | ❌ Shorter context |
-| Web research (Phase A) | ✅ Grounding API | ✅ WebSearch/WebFetch |
-| Interactive activity quality | ⚠️ Acceptable | ✅ Better reasoning |
-| Adversarial self-review bias | ⚠️ Self-grading risk | n/a |
-| Final QA with APPROVE/REJECT | n/a | ✅ Critical thinking |
-
-### Running Claude Phases from Terminal
-
-Phase F (and optionally A/C) call the headless Claude CLI directly via subprocess.
-When running from Claude Code's bash tool, the 2-minute timeout applies.
-**Solution:** Run `build_module_v5.py` directly from a terminal, not from Claude Code:
-
-```bash
-# Terminal (no timeout)
-.venv/bin/python scripts/build_module_v5.py bio --all --review
-
-# With Claude review
-.venv/bin/python scripts/build_module_v5.py c1 --all --review-claude
-```
-
-The script removes `CLAUDECODE` from the environment before spawning Claude CLI to avoid
-nested-session errors.
-
----
-
-## Quality Validation Systems
-
-Learn Ukrainian uses a multi-layered quality validation approach with four complementary systems:
-
-### 1. Audit (Required)
-
-**Purpose**: Structural compliance, pedagogy, format, richness validation
-
-**Script**: `scripts/audit_module.py`
-
-**What it checks**:
-- Structure (required sections, headers, frontmatter)
-- Pedagogy (PPP/TTT compliance, activity sequencing)
-- Format (markdown syntax, activity YAML schemas)
-- Richness (examples count, engagement boxes, variety metrics)
-- Vocabulary (plan compliance, no duplicates across modules)
-- Immersion percentage (CEFR-appropriate UK/EN ratio)
-
-**Usage**:
-```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{num}-*.md
-```
-
-**Output**: Terminal report + optional markdown report in `audit/` directory
-
-**Gates**: Blocks pipeline generation if FAIL
-
-### 2. Grammar Validation (Recommended for B1+)
-
-**Purpose**: Ukrainian language correctness validation
-
-**Type**: LLM-based (Gemini API)
-
-**Skill**: `/grammar-validate` (Claude Code)
-
-**What it checks**:
-- **Russianisms**: кушать → їсти, кофе → кава, обязательно → обов'язково
-- **Calques**: робити сенс → мати сенс, мати місце → відбуватися
-- **Surzhyk**: Mixed Ukrainian-Russian forms
-- **Unnatural word order**: Influenced by English/Russian structure
-- **Case/gender/number agreement**: Morphological correctness
-- **CEFR appropriateness**: Complexity matches level
-
-**Usage**:
-```bash
-# Automated (requires GEMINI_API_KEY)
-.venv/bin/python scripts/audit_module.py {file} --validate-grammar
-
-# Manual (Claude Code)
-/grammar-validate
-[paste module content]
-```
-
-**Output**: JSON report with violations, severity, corrections
-
-**Gates**: Informational (doesn't block audit)
-
-**Trusted Sources**:
-
-| Source | Type | Use For |
-|--------|------|---------|
-| **Словник.UA** (slovnyk.ua) | Online dictionary | Standard spelling |
-| **Словарь Грінченка** | Historical dictionary | Authentic Ukrainian forms |
-| **Антоненко-Давидович "Як ми говоримо"** | Style guide | Russianisms vs authentic |
-
-**NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
-
-### 3. Content Quality Review (Optional)
-
-**Purpose**: Pedagogical quality assessment
-
-**Type**: LLM-based (Gemini API)
-
-**Skill**: `/review-content` (Claude Code)
-
-**What it checks** (8 dimensions, 0-10 scale):
-1. **Pedagogical Coherence**: Objectives ↔ activities alignment, scaffolding
-2. **Example Quality**: Authenticity, cultural relevance, CEFR appropriateness
-3. **Engagement & Interest**: Boring vs interesting, repetitive vs varied
-4. **Cultural Context**: Ukrainian-specific vs generic, historical accuracy
-5. **Explanation Quality**: Clarity, visual aids, progressive disclosure
-6. **Narrative Flow**: Logical progression, transitions, cohesion
-7. **Vocabulary Usage**: Frequency, contextualization, reinforcement
-8. **Activity Quality**: Naturalness, difficulty, distractors, engagement, variety
-
-**Usage**:
-```bash
-# Automated (requires GEMINI_API_KEY + AUDIT_CONTENT_QUALITY=true)
-AUDIT_CONTENT_QUALITY=true .venv/bin/python scripts/audit_module.py {file}
-
-# Manual (Claude Code)
-/review-content
-[paste module content]
-```
-
-**Output**: Markdown report with scores (0-10) and recommendations
-
-**Gates**: Informational (doesn't block audit)
-
-**Documentation**: `docs/CONTENT-QUALITY-AUDIT.md`
-
-### 4. Activity Quality Validation (Optional)
-
-**Purpose**: Activity-specific quality assessment
-
-**Type**: Hybrid (deterministic + manual validation)
-
-**What it checks** (5 dimensions):
-- **Naturalness** (1-5): Robotic → Highly Natural
-- **Difficulty** (3-option): too_easy | appropriate | too_hard
-- **Distractor Quality** (1-5): Nonsense → Excellent
-- **Engagement** (1-5): Boring → Highly Engaging
-- **Variety** (0-100%): Mechanical pattern detection
-
-**CEFR Quality Gates**:
-
-| Level | Min Naturalness | Min Variety | Min Distractors | Max Inappropriate |
-|-------|-----------------|-------------|-----------------|-------------------|
-| B1 | 3.5 | 60% | 4.0 | ≤20% |
-| B2 | 4.0 | 65% | 4.2 | ≤15% |
-| C1 | 4.5 | 70% | 4.5 | ≤10% |
-| C2 | 4.8 | 75% | 5.0 | ≤5% |
-
-**Workflow**:
-```bash
-# 1. Generate queue with deterministic checks
-npm run quality:generate l2-uk-en b1 50
-
-# 2. Manual validation (fill in YAML fields)
-# Edit: curriculum/l2-uk-en/b1/audit/50-{slug}-quality-queue.yaml
-
-# 3. Finalize quality report
-npm run quality:finalize l2-uk-en b1 50
-```
-
-**Output**: Markdown report in `audit/` directory, shown in audit output
-
-**Gates**: Informational (doesn't block audit)
-
-**Documentation**: `docs/SCRIPTS.md` - Activity Quality Validation section
-
-### When to Use Which System
-
-| Stage | Audit | Grammar | Content Review | Activity Quality |
-|-------|-------|---------|----------------|------------------|
-| **After Stage 1 (Skeleton)** | ✅ Structure | ❌ No content | ❌ No content | ❌ No activities |
-| **After Stage 2 (Content)** | ✅ Full | ✅ Yes | ✅ Optional | ❌ No activities |
-| **After Stage 3 (Activities)** | ✅ Full | ✅ Yes | ✅ Optional | ✅ Optional |
-| **After Stage 4 (Review/Fix)** | ✅ Must PASS | ✅ Recommended | ✅ Recommended | ✅ High-stakes |
-| **Before Release** | ✅ Must PASS | ✅ Recommended | ✅ Recommended | ⚠️ C1/C2 only |
-
-### Complete B1+ Workflow
-
-For the complete end-to-end workflow including all validation systems:
-
-**👤 Human users:** See **`docs/DEVELOPER-GUIDE.md`** - Human workflow guide
-
-**🤖 AI agents:** See **`CLAUDE.md`** - Module workflow section (lines 118-153)
-
-**Workflow covers:**
-- What commands you execute (copy-paste ready)
-- What Claude does automatically
-- Decision tree (when to run what)
-- Typical session workflow
-
-**AI guide** covers:
-- 4-stage module creation (skeleton → content → activities → review/fix)
-- All quality validation systems (audit, grammar, content, activity quality)
-- Pipeline generation (MDX + JSON)
-- Troubleshooting and checklists
-
-## Generator Usage
-
-```bash
-# Generate MDX for Docusaurus
-npm run generate                    # All modules
-npm run generate l2-uk-en a1        # Specific level
-npm run generate l2-uk-en a1 5      # Single module
-
-# Generate JSON for Vibe app
-npm run generate:json               # All modules
-npm run generate:json l2-uk-en a1   # Specific level
-npm run generate:json l2-uk-en a1 5 # Single module
-```
-
-## Vocabulary Management
-
-```bash
-# Initialize fresh SQLite database
-npm run vocab:init
-
-# Scan all modules and populate database
-npm run vocab:scan
-
-# Enrich modules with new/review vocabulary splits
-npm run vocab:enrich
-
-# Force re-process all modules (even those with Review sections)
-npm run vocab:enrich:force
-
-# Full rebuild: init + scan
-npm run vocab:rebuild
-```
-
-The vocabulary system tracks:
-- **Lemmas**: 2,000+ individual words with IPA, translations, POS
-- **Expressions**: 250+ multi-word units (idioms, collocations)
-- **First module**: Where each word first appears in curriculum
-- **New/Review split**: Vocabulary sections show new words with full details, review words with module references
-
-## External Resources Management
-
-**Single source of truth:** `docs/resources/external_resources.yaml`
-
-External resources (podcasts, YouTube videos, articles, books, websites) are NOT stored in markdown files. They are:
-1. Defined once in `external_resources.yaml` (YAML-first architecture)
-2. Loaded at build time by `generate_mdx.py` and `generate_json.py`
-3. Injected into MDX output as `[!resources]` callout blocks
-4. Added to JSON output as `external_resources` field
-
-**Module ID format:** `{level}-{filename}` (e.g., `a1-09-food-and-drinks`)
-
-**Resource types:**
-- `podcasts` - Ukrainian Lessons Podcast, Ukrainian with Olena, etc.
-- `youtube` - YouTube videos
-- `articles` - Blog posts, online articles
-- `books` - Physical/digital books
-- `websites` - Web resources
-
-**Architecture benefits:**
-- ✅ Single source of truth (no duplication between markdown and YAML)
-- ✅ Resources updated centrally (247 modules updated by editing one file)
-- ✅ Consistent formatting (emoji template applied at generation time)
-- ✅ Matches proven activities pattern (YAML → inject at build time)
-
-**Important:** Markdown files should NOT contain `> [!resources]` sections. If you see one, it's stale and should be removed.
-
-**Viewing resources for a module:**
-```bash
-# View resources for a specific module (e.g., a1-09)
-yq '.resources.a1-09-food-and-drinks' docs/resources/external_resources.yaml
-```
-
-**Migration notes:**
-- Issue #353: Extracted resources from markdown to YAML (Jan 2026)
-- Issue #354: Refactored to YAML-first architecture (Jan 2026)
-- Deprecated script: `scripts/generate_resource_sections.py` (kept for reference only)
-
-## Content Creation Workflow
-
-### Creating or Rewriting Modules
-
-When creating new modules or rewriting existing ones:
-
-```
-1. WRITE MODULE CONTENT
-   ├── Write lesson content (intro, presentation, practice, production)
-   ├── Add engagement elements (Чи знали ви?, Міф vs Факт)
-   ├── Create activities (quiz, match-up, etc.)
-   ├── Leave Словник section empty: <!-- Generated by vocab:enrich -->
-   └── Keep Review Vocabulary section (will be updated by enrich)
-
-2. BATCH COMPLETION
-   └── Repeat step 1 for all modules in the batch (e.g., B1.1: 81-100)
-
-3. VOCABULARY PROCESSING
-   ├── npm run vocab:scan     # Scan modules, update vocabulary.db
-   └── npm run vocab:enrich   # Generate Словник sections from database
-
-4. OUTPUT GENERATION
-   ├── npm run generate l2-uk-en       # Generate MDX for Docusaurus
-   └── npm run generate:json l2-uk-en  # Generate JSON for Vibe app
-```
-
-### Why This Order?
-
-1. **vocab:scan** must run after content is written to detect new vocabulary
-2. **vocab:enrich** generates consistent Словник sections with correct IPA and first-module tracking
-3. **generate** produces MDX for web, **generate:json** produces JSON for Vibe app
-
-### Module Quality Checklist
-
-When rewriting modules, apply these standards:
-
-- [ ] Ukrainian subtitle in frontmatter
-- [ ] Ukrainian objectives
-- [ ] Ukrainian section headers (Зміст уроку, Розминка, Презентація, etc.)
-- [ ] Engaging narrative intro (not "Welcome to X!")
-- [ ] 2-3 "Чи знали ви?" boxes per module
-- [ ] At least 1 "Міф vs Факт" box
-- [ ] Correct immersion ratio for level (see table below)
-- [ ] Cultural/historical context where relevant
-- [ ] Empty Словник placeholder (for vocab:enrich)
-
-### Immersion Levels by Level
-
-| Level | Modules | UK % | Notes |
-|-------|---------|------|-------|
-| A1 | M01-34 | 10-40% | Transliteration graduated (full → first-only) |
-| A2 | M01-50 | 40-50% | Bilingual explanations |
-| B1 | M01-85 | 65% → **100%** | M01-05 bridge (~65%), M06+ full immersion |
-| B2 | M01-110 | **100%** | Full immersion |
-| C1 | M01-160 | **100%** | Full immersion |
-| C2 | M01-100 | **100%** | Full immersion |
-| LIT | M01-30 | **100%** | Post-C1 literature track |
-
-## Vibe Integration
-
-CO outputs simple JSON. Vibe handles extraction:
-
-| CO Provides | Vibe Extracts |
-|-------------|---------------|
-| `sections[].content` (raw md) | `> [!answer]` → gap-fill |
-| `sections[].content` (raw md) | `## quiz:` → quiz activity |
-| `activities[]` (parsed) | Pre-parsed activities |
-| `vocabulary.words[]` | Flash card data |
-| `rawMarkdown` | Anything else needed |
-
-See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full spec.
 
 ## Related Documentation
 
-### Workflows & Guides
-
-- **`CLAUDE.md`** - Module workflow (lines 118-153) - Current 9-phase workflow
-- **`docs/RESEARCH-FIRST-WORKFLOW.md`** - Research-first workflow for seminar tracks
-- **`docs/MODULE-AUDIT-GUIDE.md`** - Audit guide
-
-### Quality Validation
-
-- **`docs/CONTENT-QUALITY-AUDIT.md`** - Content quality review system (LLM-based)
-- **`docs/SCRIPTS.md`** - Complete scripts reference including activity quality validation
-- **`docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`** - Quality standards and targets
-
-### Markdown & Format
-
-- **`docs/MARKDOWN-FORMAT.md`** - Complete markdown syntax specification
-- **`docs/ACTIVITY-YAML-REFERENCE.md`** - Activity format reference for AI agents
-
-### Claude Code Extensions
-
-- **`claude_extensions/quick-ref/`** - Level-specific quick references (a1.md, b1.md, b2.md, c1.md, c2.md)
-- **`claude_extensions/phases/`** - Stage instruction documents
-- **`claude_extensions/commands/`** - Slash commands (/module, /module-stage-*, /review-content)
-- **`claude_extensions/skills/`** - Skills (grammar-check, vocab-enrichment, module architects)
-
-### Templates
-
-- **`docs/l2-uk-en/templates/`** - 26 authoritative module templates by level and type
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 2.0 | 2024-12-02 | moduleType, immersionLevel, simplified sections |
-| 1.0 | 2024-11-30 | Initial JSON format |
+| Topic | Location |
+|-------|----------|
+| Pipeline commands | `docs/SCRIPTS.md` |
+| Track architecture | `docs/best-practices/track-architecture.md` |
+| Audit standards | `docs/best-practices/audit-standards.md` |
+| Module quality | `docs/best-practices/module-content-quality.md` |
+| Agent cooperation | `docs/best-practices/agent-cooperation.md` |
+| Markdown format | `docs/MARKDOWN-FORMAT.md` |
+| Activity YAML | `docs/ACTIVITY-YAML-REFERENCE.md` |
+| Monitoring API | `docs/MONITOR-API.md` |
+| Trusted sources | `docs/resources/trusted_sources.yaml` |

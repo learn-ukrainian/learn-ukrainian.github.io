@@ -318,6 +318,79 @@ def extract_ukrainian_words(text: str) -> set[str]:
     return unique_words - exclude
 
 
+def _extract_text_from_dict(d: dict, fields: list[str]) -> list[str]:
+    """Extract string values from a dict for the given field names."""
+    texts = []
+    for field in fields:
+        val = d.get(field)
+        if isinstance(val, str):
+            texts.append(val)
+    return texts
+
+
+def _extract_text_from_items(items: list) -> list[str]:
+    """Extract text from an activity's items list (quiz questions, sentences, etc.)."""
+    texts = []
+    for item in items:
+        if isinstance(item, dict):
+            texts.extend(_extract_text_from_dict(item, ['question', 'sentence', 'statement', 'text']))
+            options = item.get('options', [])
+            if isinstance(options, list):
+                for opt in options:
+                    if isinstance(opt, dict) and 'text' in opt:
+                        texts.append(opt['text'])
+                    elif isinstance(opt, str):
+                        texts.append(opt)
+    return texts
+
+
+def _extract_text_from_pairs(pairs: list) -> list[str]:
+    """Extract text from match-up pairs."""
+    texts = []
+    for pair in pairs:
+        if isinstance(pair, dict):
+            texts.extend(_extract_text_from_dict(pair, ['left', 'right']))
+    return texts
+
+
+def _extract_text_from_groups(groups: list) -> list[str]:
+    """Extract text from group-sort groups."""
+    texts = []
+    for group in groups:
+        if isinstance(group, dict):
+            if 'name' in group:
+                texts.append(group['name'])
+            group_items = group.get('items', [])
+            if isinstance(group_items, list):
+                texts.extend([str(i) for i in group_items if isinstance(i, str)])
+    return texts
+
+
+def _extract_text_from_activity(activity: dict) -> list[str]:
+    """Extract all Ukrainian-relevant text from a single activity dict."""
+    texts = _extract_text_from_dict(
+        activity, ['title', 'instruction', 'question', 'sentence', 'passage', 'text'],
+    )
+
+    items = activity.get('items')
+    if isinstance(items, list):
+        texts.extend(_extract_text_from_items(items))
+
+    pairs = activity.get('pairs')
+    if isinstance(pairs, list):
+        texts.extend(_extract_text_from_pairs(pairs))
+
+    groups = activity.get('groups')
+    if isinstance(groups, list):
+        texts.extend(_extract_text_from_groups(groups))
+
+    answers = activity.get('answers')
+    if isinstance(answers, list):
+        texts.extend([str(a) for a in answers if isinstance(a, str)])
+
+    return texts
+
+
 def extract_words_from_activities(md_path: Path) -> set[str]:
     """
     Extract Ukrainian words from activities YAML file.
@@ -337,56 +410,11 @@ def extract_words_from_activities(md_path: Path) -> set[str]:
         if not isinstance(data, list):
             return set()
 
-        # Collect all text from activities
         all_text = []
-
         for activity in data:
-            if not isinstance(activity, dict):
-                continue
+            if isinstance(activity, dict):
+                all_text.extend(_extract_text_from_activity(activity))
 
-            # Extract text from common fields
-            for field in ['title', 'instruction', 'question', 'sentence', 'passage', 'text']:
-                if field in activity and isinstance(activity[field], str):
-                    all_text.append(activity[field])
-
-            # Extract from nested structures
-            if 'items' in activity and isinstance(activity['items'], list):
-                for item in activity['items']:
-                    if isinstance(item, dict):
-                        for field in ['question', 'sentence', 'statement', 'text']:
-                            if field in item and isinstance(item[field], str):
-                                all_text.append(item[field])
-
-                        # Options in quiz/select
-                        if 'options' in item and isinstance(item['options'], list):
-                            for opt in item['options']:
-                                if isinstance(opt, dict) and 'text' in opt:
-                                    all_text.append(opt['text'])
-                                elif isinstance(opt, str):
-                                    all_text.append(opt)
-
-            # Match-up pairs
-            if 'pairs' in activity and isinstance(activity['pairs'], list):
-                for pair in activity['pairs']:
-                    if isinstance(pair, dict):
-                        for field in ['left', 'right']:
-                            if field in pair and isinstance(pair[field], str):
-                                all_text.append(pair[field])
-
-            # Group-sort groups
-            if 'groups' in activity and isinstance(activity['groups'], list):
-                for group in activity['groups']:
-                    if isinstance(group, dict):
-                        if 'name' in group:
-                            all_text.append(group['name'])
-                        if 'items' in group and isinstance(group['items'], list):
-                            all_text.extend([str(i) for i in group['items'] if isinstance(i, str)])
-
-            # Answers array (mark-the-words, etc.)
-            if 'answers' in activity and isinstance(activity['answers'], list):
-                all_text.extend([str(a) for a in activity['answers'] if isinstance(a, str)])
-
-        # Extract Ukrainian words from all collected text
         combined_text = ' '.join(all_text)
         return extract_ukrainian_words(combined_text)
 

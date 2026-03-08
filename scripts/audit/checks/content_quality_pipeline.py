@@ -390,6 +390,60 @@ def check_plan_section_coverage(
     return issues
 
 
+def _collect_failed_words_from_str(val: str, failed_words: set[str]) -> list[str]:
+    """Find VESUM-failed Cyrillic words in a string value."""
+    flagged = []
+    words = _CYRILLIC_WORD_RE.findall(val)
+    for w in words:
+        if w.lower() in failed_words:
+            flagged.append(w)
+    return flagged
+
+
+def _collect_failed_words_from_value(val, failed_words: set[str]) -> list[str]:
+    """Find VESUM-failed Cyrillic words in a string or list of strings."""
+    flagged = []
+    if isinstance(val, str):
+        flagged.extend(_collect_failed_words_from_str(val, failed_words))
+    elif isinstance(val, list):
+        for item in val:
+            if isinstance(item, str):
+                flagged.extend(_collect_failed_words_from_str(item, failed_words))
+    return flagged
+
+
+def _scan_activity_answers(act: dict, failed_words: set[str]) -> list[str]:
+    """Scan a single activity dict for VESUM-failed words in answer/option fields."""
+    flagged: list[str] = []
+
+    # Top-level answer fields
+    for key in ("answer", "correct", "correct_answer"):
+        flagged.extend(_collect_failed_words_from_value(act.get(key, ""), failed_words))
+
+    # Items/options list
+    items = act.get("items", act.get("options", []))
+    if not isinstance(items, list):
+        return flagged
+
+    for item in items:
+        if isinstance(item, dict):
+            for key in ("answer", "correct", "text", "prompt", "sentence"):
+                flagged.extend(_collect_failed_words_from_value(item.get(key, ""), failed_words))
+            # Nested options
+            sub_options = item.get("options", item.get("words", []))
+            if isinstance(sub_options, list):
+                for opt in sub_options:
+                    if isinstance(opt, str):
+                        flagged.extend(_collect_failed_words_from_str(opt, failed_words))
+                    elif isinstance(opt, dict):
+                        for key in ("text", "answer", "correct"):
+                            flagged.extend(_collect_failed_words_from_value(opt.get(key, ""), failed_words))
+        elif isinstance(item, str):
+            flagged.extend(_collect_failed_words_from_str(item, failed_words))
+
+    return flagged
+
+
 def check_activity_answers_vesum(
     activities_path: Path | None,
     vesum_not_found: list[dict] | None,
@@ -403,12 +457,11 @@ def check_activity_answers_vesum(
     if not activities_path or not activities_path.exists() or not vesum_not_found:
         return issues
 
-    # Build set of VESUM-failed words
-    failed_words = set()
-    for entry in vesum_not_found:
-        word = entry.get("original", "").strip().lower()
-        if word:
-            failed_words.add(word)
+    failed_words = {
+        entry.get("original", "").strip().lower()
+        for entry in vesum_not_found
+        if entry.get("original", "").strip()
+    }
 
     if not failed_words:
         return issues
@@ -424,57 +477,8 @@ def check_activity_answers_vesum(
 
     flagged: list[str] = []
     for act in activities:
-        if not isinstance(act, dict):
-            continue
-        # Check answer fields
-        for key in ("answer", "correct", "correct_answer"):
-            val = act.get(key, "")
-            if isinstance(val, str):
-                words = _CYRILLIC_WORD_RE.findall(val)
-                for w in words:
-                    if w.lower() in failed_words:
-                        flagged.append(w)
-            elif isinstance(val, list):
-                for item in val:
-                    if isinstance(item, str):
-                        words = _CYRILLIC_WORD_RE.findall(item)
-                        for w in words:
-                            if w.lower() in failed_words:
-                                flagged.append(w)
-        # Check options/items — both dict entries and bare string lists
-        items = act.get("items", act.get("options", []))
-        if isinstance(items, list):
-            for item in items:
-                if isinstance(item, dict):
-                    for key in ("answer", "correct", "text", "prompt", "sentence"):
-                        val = item.get(key, "")
-                        if isinstance(val, str):
-                            words = _CYRILLIC_WORD_RE.findall(val)
-                            for w in words:
-                                if w.lower() in failed_words:
-                                    flagged.append(w)
-                    # Check nested options (e.g. items[].options: ["слово", "слов"])
-                    sub_options = item.get("options", item.get("words", []))
-                    if isinstance(sub_options, list):
-                        for opt in sub_options:
-                            if isinstance(opt, str):
-                                words = _CYRILLIC_WORD_RE.findall(opt)
-                                for w in words:
-                                    if w.lower() in failed_words:
-                                        flagged.append(w)
-                            elif isinstance(opt, dict):
-                                for key in ("text", "answer", "correct"):
-                                    val = opt.get(key, "")
-                                    if isinstance(val, str):
-                                        words = _CYRILLIC_WORD_RE.findall(val)
-                                        for w in words:
-                                            if w.lower() in failed_words:
-                                                flagged.append(w)
-                elif isinstance(item, str):
-                    words = _CYRILLIC_WORD_RE.findall(item)
-                    for w in words:
-                        if w.lower() in failed_words:
-                            flagged.append(w)
+        if isinstance(act, dict):
+            flagged.extend(_scan_activity_answers(act, failed_words))
 
     if flagged:
         unique = sorted(set(flagged))[:10]

@@ -411,15 +411,9 @@ def check_typography(content: str) -> list[str]:
     # See Issue #402 context
     return errors
 
-def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[str]:
-    """Run markdown lint checks."""
+def _lint_activity_structure(lines_raw: list[str]) -> list[str]:
+    """Check activity section structure: type tracking, fill-in answers, anagram format, hints."""
     lint_errors = []
-
-    # Typography Check
-    lint_errors.extend(check_typography(content))
-
-    lines_raw = content.split('\n')
-
     in_activities = False
     current_activity_type = None
     fill_in_needs_answer = False
@@ -453,10 +447,6 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
         if in_activities and (stripped.startswith('type: ') or stripped.startswith('items:')):
             lint_errors.append(f"Line {line_num}: YAML detected in Activities. Use markdown.")
 
-        # 3. Callout Check
-        if "**Answer:**" in stripped or "**Option:**" in stripped:
-            lint_errors.append(f"Line {line_num}: Old format detected. Use '> [!answer]'.")
-
         # 4. Supported Activity Check
         if current_activity_type and current_activity_type not in VALID_ACTIVITY_TYPES:
             lint_errors.append(f"Line {line_num}: Invalid Activity Type '{current_activity_type}'. Supported: {', '.join(VALID_ACTIVITY_TYPES)}.")
@@ -473,6 +463,29 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
             if '> [!answer]' in stripped:
                 fill_in_needs_answer = False
 
+        # 11. True/False Strict Check
+        if current_activity_type == 'true-false' and '> [!explanation]' in stripped:
+            lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
+
+        # 13. Hint Detection (only in Activities)
+        if in_activities and (re.search(r'\[Hint:.*?\]', stripped, re.IGNORECASE) or re.search(r'\(Hint:.*?\)', stripped, re.IGNORECASE) or re.search(r'\bHint:', stripped, re.IGNORECASE)):
+                lint_errors.append(f"Line {line_num}: Activity Hint detected. Policy: Remove all hints (e.g. [Hint: ...]) from activities.")
+
+    return lint_errors
+
+
+def _lint_line_patterns(lines_raw: list[str], module_num: int) -> list[str]:
+    """Check per-line format patterns: callouts, checkboxes, audio, headers, transliteration."""
+    lint_errors = []
+
+    for i, line in enumerate(lines_raw):
+        line_num = i + 1
+        stripped = line.strip()
+
+        # 3. Callout Check
+        if "**Answer:**" in stripped or "**Option:**" in stripped:
+            lint_errors.append(f"Line {line_num}: Old format detected. Use '> [!answer]'.")
+
         # 6. Explanation Check
         if '> [!explanation]' in stripped and '[!answer]' in stripped:
             lint_errors.append(f"Line {line_num}: Malformed Explanation. Contains '[!answer]' inside explanation block.")
@@ -480,17 +493,6 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
         # 7. Checkbox Format Check
         if stripped.startswith('- [') and not re.match(r'- \[[ xX]\]', stripped):
             lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
-
-        # 8. AI Contamination Check
-        for pat in AI_CONTAMINATION_PATTERNS:
-            if re.search(pat, stripped, re.IGNORECASE):
-                if "Wait" in pat and "**" in stripped:
-                    continue
-                if "Sorry" in pat and "**" in stripped:
-                    continue
-                if "error-correction" in stripped.lower():
-                    continue
-                lint_errors.append(f"Line {line_num}: AI Contamination detected ('{pat}'). Remove thinking/self-correction artifacts.")
 
         # 9. Audio Artifact Check
         is_vocab_row = (stripped.startswith('|') and stripped.count('|') >= 3)
@@ -501,10 +503,6 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
         if re.match(r'^#+\s*$', stripped):
             lint_errors.append(f"Line {line_num}: Empty Header detected (Lonely '#'). Remove or add title.")
 
-        # 11. True/False Strict Check
-        if current_activity_type == 'true-false' and '> [!explanation]' in stripped:
-            lint_errors.append(f"Line {line_num}: T/F Activity contains '[!explanation]'. Remove all hints/solutions.")
-
         # 12. Transliteration Column Check (M21+)
         # Note: Only flag "transliteration" or "translit", NOT "translation"
         if module_num >= 21 and '|' in stripped:
@@ -513,9 +511,47 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
                 if '| translit' in lower_stripped:
                     lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
 
-        # 13. Hint Detection (only in Activities)
-        if in_activities and (re.search(r'\[Hint:.*?\]', stripped, re.IGNORECASE) or re.search(r'\(Hint:.*?\)', stripped, re.IGNORECASE) or re.search(r'\bHint:', stripped, re.IGNORECASE)):
-                lint_errors.append(f"Line {line_num}: Activity Hint detected. Policy: Remove all hints (e.g. [Hint: ...]) from activities.")
+    return lint_errors
+
+
+def _lint_ai_contamination(content: str) -> list[str]:
+    """Check for AI contamination patterns (thinking/self-correction artifacts)."""
+    lint_errors = []
+    lines_raw = content.split('\n')
+
+    for i, line in enumerate(lines_raw):
+        line_num = i + 1
+        stripped = line.strip()
+
+        for pat in AI_CONTAMINATION_PATTERNS:
+            if re.search(pat, stripped, re.IGNORECASE):
+                if "Wait" in pat and "**" in stripped:
+                    continue
+                if "Sorry" in pat and "**" in stripped:
+                    continue
+                if "error-correction" in stripped.lower():
+                    continue
+                lint_errors.append(f"Line {line_num}: AI Contamination detected ('{pat}'). Remove thinking/self-correction artifacts.")
+
+    return lint_errors
+
+
+def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[str]:
+    """Run markdown lint checks (orchestrator)."""
+    lint_errors = []
+    lines_raw = content.split('\n')
+
+    # Typography Check
+    lint_errors.extend(check_typography(content))
+
+    # Activity structure checks (stateful: type tracking, fill-in, hints)
+    lint_errors.extend(_lint_activity_structure(lines_raw))
+
+    # Per-line pattern checks (stateless: callouts, checkboxes, audio, headers, translit)
+    lint_errors.extend(_lint_line_patterns(lines_raw, module_num))
+
+    # AI contamination checks
+    lint_errors.extend(_lint_ai_contamination(content))
 
     return lint_errors
 
@@ -1074,11 +1110,8 @@ def _check_template_compliance(ctx: AuditContext, state: AuditState) -> None:
         print(f"  ⚠️  Template resolution error: {e}")
 
 
-def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateResult:
-    """Check outline compliance, structure, tone, checkpoints, fill-in options.
-
-    Returns the structure_gate result for use in later gate evaluation.
-    """
+def _check_outline_compliance(ctx: AuditContext, state: AuditState) -> None:
+    """Check outline compliance and tone validation."""
     # Check outline compliance (Issue #440: structural validation)
     outline_violations = check_outline_compliance(ctx.file_path, ctx.level_code, ctx.module_num)
     if outline_violations:
@@ -1102,7 +1135,9 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
             print(f"❌ Tone violation: {err}")
             state.fail(err)
 
-    # Summary check
+
+def _evaluate_structure_gate(ctx: AuditContext) -> GateResult:
+    """Detect sidecar data presence and evaluate structure gate."""
     struct_flags = check_structure(ctx.content)
     has_summary = struct_flags['summary']
     has_vocab_header = struct_flags['vocab_header']
@@ -1137,13 +1172,9 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
         has_summary = True
 
     # Final structure evaluation (Clean MD Standard)
-    # Applied to all production-ready levels that use sidecars
     is_clean_md_standard = ctx.level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT', 'OES', 'RUTH')
 
-    # Clean MD Logic: headers are optional IF data exists in sidecars.
-    # However, Summary (# Підсумок) is ALWAYS required in Markdown.
-
-    structure_gate = evaluate_structure(
+    return evaluate_structure(
         has_summary=has_summary,
         has_vocab=has_vocab_header or has_vocab_data or ctx.skip_activities,
         has_vocab_table=has_vocab_table or has_vocab_data or ctx.skip_activities,
@@ -1152,6 +1183,14 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
         is_a2_plus=is_clean_md_standard,
         vocab_error=ctx.vocab_error,
     )
+
+
+def _check_structure_gates(ctx: AuditContext, state: AuditState) -> GateResult:
+    """Check structure headers, vocab, checkpoint format, fill-in options.
+
+    Returns the structure_gate result for use in later gate evaluation.
+    """
+    structure_gate = _evaluate_structure_gate(ctx)
 
     if structure_gate.status == 'FAIL':
         print(f"❌ Structure check failed: {structure_gate.msg}")
@@ -1198,6 +1237,15 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
                 sys.exit(1)
 
     return structure_gate
+
+
+def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateResult:
+    """Check outline compliance, structure, tone, checkpoints, fill-in options.
+
+    Returns the structure_gate result for use in later gate evaluation.
+    """
+    _check_outline_compliance(ctx, state)
+    return _check_structure_gates(ctx, state)
 
 
 def _count_words_and_engagement(ctx: AuditContext, state: AuditState) -> None:
@@ -1722,57 +1770,8 @@ def _evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: G
     return unique_types
 
 
-def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
-                                         yaml_schema_violations: list,
-                                         mark_words_violations: list,
-                                         hint_violations: list,
-                                         error_correction_hint_violations: list,
-                                         malformed_cloze_violations: list,
-                                         cloze_syntax_violations: list,
-                                         error_correction_violations: list,
-                                         invalid_type_violations: list) -> None:
-    """Run pedagogical checks, content quality, vocabulary plan compliance, and activity violation aggregation."""
-    # Run pedagogical checks (with context-specific complexity)
-    ped_violations = run_pedagogical_checks(
-        ctx.content, ctx.core_content, ctx.level_code, ctx.module_num, ctx.pedagogy, ctx.yaml_activities, ctx.module_focus
-    )
-    state.pedagogical_violations.extend(ped_violations)
-
-    # Run State Standard 2024 compliance checks
-    # Note: immersion_score calculated later in the audit, so pass None here
-    # Immersion compliance will be checked separately after immersion calculation
-    state_standard_violations = check_state_standard_compliance(
-        ctx.level_code, ctx.module_num, ctx.content, immersion_pct=None
-    )
-    for violation in state_standard_violations:
-        state.pedagogical_violations.append({
-            'type': violation.code,
-            'severity': 'blocking',
-            'issue': violation.message,
-            'fix': violation.fix
-        })
-
-    # Run vocabulary integration checks (Issue #395)
-    integration_data = check_vocabulary_integration(ctx.content, ctx.level_code, ctx.module_num, ctx.yaml_activities)
-    if integration_data['total'] > 0:
-        print(f"  📊 Vocabulary Integration: Lesson {integration_data['lesson_rate']:.1f}%, Activities {integration_data['activity_rate']:.1f}%")
-
-        # Add violations if below thresholds
-        if integration_data['lesson_rate'] < 50:
-            state.pedagogical_violations.append({
-                'type': 'LOW_LESSON_INTEGRATION',
-                'severity': 'warning',
-                'issue': f"Only {integration_data['lesson_rate']:.1f}% of core vocabulary used in lesson text.",
-                'fix': f"Use more core words in the prose: {', '.join(integration_data['missing'][:5])}..."
-            })
-        if integration_data['activity_rate'] < 80:
-            state.pedagogical_violations.append({
-                'type': 'LOW_ACTIVITY_INTEGRATION',
-                'severity': 'warning',
-                'issue': f"Only {integration_data['activity_rate']:.1f}% of core vocabulary used in activities.",
-                'fix': f"Add activities using: {', '.join(integration_data['missing'][:5])}..."
-            })
-
+def _run_vocab_and_format_checks(ctx: AuditContext, state: AuditState) -> None:
+    """Run vocabulary plan compliance, metalanguage scaffolding, markdown format, and section order checks."""
     # Run vocabulary plan compliance checks
     # VOCAB_PLAN_MISSING is NON-BLOCKING (Issue #387) - shown as warning only
     if ctx.vocab_data:
@@ -1826,6 +1825,9 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
             'line': v.get('line', 0)
         })
 
+
+def _run_content_detectors(ctx: AuditContext, state: AuditState) -> None:
+    """Run content quality detectors: purity, imperial, russicism, colonial, euphony, prose, gaming."""
     # Run content quality checks (LLM-based + deterministic purity checks)
     content_quality_violations = check_content_quality(ctx.content, ctx.level_code, ctx.module_num, ctx.file_path)
 
@@ -1901,7 +1903,7 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
 
         content_quality_violations.extend(gaming_violations)
 
-    # Convert purity violations to standard pedagogical violations for reporting
+    # Convert to standard pedagogical violations for reporting
     # Only critical-severity violations block the audit; warnings are informational
     for v in content_quality_violations:
         state.pedagogical_violations.append({
@@ -1912,6 +1914,65 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
             'fix': v['fix']
         })
 
+
+def _run_content_quality_checks(ctx: AuditContext, state: AuditState) -> None:
+    """Run content quality, purity, imperial, russicism, colonial, euphony, prose checks."""
+    # Run pedagogical checks (with context-specific complexity)
+    ped_violations = run_pedagogical_checks(
+        ctx.content, ctx.core_content, ctx.level_code, ctx.module_num, ctx.pedagogy, ctx.yaml_activities, ctx.module_focus
+    )
+    state.pedagogical_violations.extend(ped_violations)
+
+    # Run State Standard 2024 compliance checks
+    state_standard_violations = check_state_standard_compliance(
+        ctx.level_code, ctx.module_num, ctx.content, immersion_pct=None
+    )
+    for violation in state_standard_violations:
+        state.pedagogical_violations.append({
+            'type': violation.code,
+            'severity': 'blocking',
+            'issue': violation.message,
+            'fix': violation.fix
+        })
+
+    # Run vocabulary integration checks (Issue #395)
+    integration_data = check_vocabulary_integration(ctx.content, ctx.level_code, ctx.module_num, ctx.yaml_activities)
+    if integration_data['total'] > 0:
+        print(f"  📊 Vocabulary Integration: Lesson {integration_data['lesson_rate']:.1f}%, Activities {integration_data['activity_rate']:.1f}%")
+
+        # Add violations if below thresholds
+        if integration_data['lesson_rate'] < 50:
+            state.pedagogical_violations.append({
+                'type': 'LOW_LESSON_INTEGRATION',
+                'severity': 'warning',
+                'issue': f"Only {integration_data['lesson_rate']:.1f}% of core vocabulary used in lesson text.",
+                'fix': f"Use more core words in the prose: {', '.join(integration_data['missing'][:5])}..."
+            })
+        if integration_data['activity_rate'] < 80:
+            state.pedagogical_violations.append({
+                'type': 'LOW_ACTIVITY_INTEGRATION',
+                'severity': 'warning',
+                'issue': f"Only {integration_data['activity_rate']:.1f}% of core vocabulary used in activities.",
+                'fix': f"Add activities using: {', '.join(integration_data['missing'][:5])}..."
+            })
+
+    # Vocab/format checks
+    _run_vocab_and_format_checks(ctx, state)
+
+    # Content quality detectors
+    _run_content_detectors(ctx, state)
+
+
+def _run_activity_pedagogical_checks(ctx: AuditContext, state: AuditState,
+                                      yaml_schema_violations: list,
+                                      mark_words_violations: list,
+                                      hint_violations: list,
+                                      error_correction_hint_violations: list,
+                                      malformed_cloze_violations: list,
+                                      cloze_syntax_violations: list,
+                                      error_correction_violations: list,
+                                      invalid_type_violations: list) -> None:
+    """Run activity-specific pedagogical checks (Ukrainian content, resources, unjumble, headers, advanced presence)."""
     # Run activity content checks (Issue #235)
     # 1. Check if activities contain Ukrainian content (not just English)
     ukrainian_content_violations = check_activity_ukrainian_content(ctx.content, ctx.level_code)
@@ -2050,6 +2111,26 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
             'fix': v['fix']
         })
 
+
+def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
+                                         yaml_schema_violations: list,
+                                         mark_words_violations: list,
+                                         hint_violations: list,
+                                         error_correction_hint_violations: list,
+                                         malformed_cloze_violations: list,
+                                         cloze_syntax_violations: list,
+                                         error_correction_violations: list,
+                                         invalid_type_violations: list) -> None:
+    """Run pedagogical checks, content quality, vocabulary plan compliance, and activity violation aggregation."""
+    _run_content_quality_checks(ctx, state)
+    _run_activity_pedagogical_checks(
+        ctx, state,
+        yaml_schema_violations, mark_words_violations, hint_violations,
+        error_correction_hint_violations, malformed_cloze_violations,
+        cloze_syntax_violations, error_correction_violations,
+        invalid_type_violations,
+    )
+
     blocking_pedagogy = [v for v in state.pedagogical_violations if v.get('blocking', True)]
     state.results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if state.results['pedagogy'].status == 'FAIL':
@@ -2125,8 +2206,8 @@ def _evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, in
     return immersion_score, min_imm, max_imm
 
 
-def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
-    """Evaluate richness, grammar, naturalness, activity quality, content-heavy, transliteration gates."""
+def _evaluate_grammar_and_naturalness(ctx: AuditContext, state: AuditState) -> None:
+    """Evaluate grammar validation + naturalness check."""
     # Richness evaluation (B1+ only)
     if ctx.level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
         # Pass YAML activity types for checkpoints so richness can count them
@@ -2187,48 +2268,91 @@ def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
     # Auto-check naturalness logic REMOVED.
     # We no longer trigger external LLM calls for naturalness during the structural audit.
 
-
     state.results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if state.results['naturalness'].status == 'FAIL':
         state.has_critical_failure = True
 
-    # Activity quality validation check - look for -quality.md in audit folder
+
+def _evaluate_activity_quality_gate(ctx: AuditContext, state: AuditState) -> None:
+    """Evaluate activity quality gate from quality report file."""
+    md_abs = Path(os.path.abspath(ctx.file_path))
     if ctx.skip_activities:
         state.results['activity_quality'] = GateResult('INFO', '⏳', "Deferred (content-only audit)")
-    else:
-        quality_file = str(_quality_path(md_abs.parent, md_abs.stem))
-        # Also check legacy path during transition
-        if not os.path.exists(quality_file):
-            legacy_quality = os.path.join(str(md_abs.parent), 'audit', f"{md_abs.stem}-quality.md")
-            if os.path.exists(legacy_quality):
-                quality_file = legacy_quality
-        quality_result = None
-        quality_failed_gates = 0
+        return
 
-        if os.path.exists(quality_file):
-            try:
-                with open(quality_file, encoding='utf-8') as f:
-                    quality_content = f.read()
-                    # Parse result from report (look for "**Result:** ✅ PASS" or "**Result:** ❌ FAIL")
-                    if '**Result:** ✅ PASS' in quality_content:
-                        quality_result = 'PASS'
-                    elif '**Result:** ❌ FAIL' in quality_content:
-                        quality_result = 'FAIL'
-                        # Count failed gates from "### Failed Gates" section
-                        # Each failed gate is listed as "- **dimension:**"
-                        failed_gates_section = re.search(r'### Failed Gates\n\n(.*?)\n\n', quality_content, re.DOTALL)
-                        if failed_gates_section:
-                            # Count bullet points in the failed gates section
-                            quality_failed_gates = len(re.findall(r'^- \*\*', failed_gates_section.group(1), re.MULTILINE))
-            except Exception:
-                pass
+    quality_file = str(_quality_path(md_abs.parent, md_abs.stem))
+    # Also check legacy path during transition
+    if not os.path.exists(quality_file):
+        legacy_quality = os.path.join(str(md_abs.parent), 'audit', f"{md_abs.stem}-quality.md")
+        if os.path.exists(legacy_quality):
+            quality_file = legacy_quality
+    quality_result = None
+    quality_failed_gates = 0
 
-        state.results['activity_quality'] = evaluate_activity_quality(
-            os.path.exists(quality_file),
-            quality_result,
-            quality_failed_gates,
-            ctx.level_code
-        )
+    if os.path.exists(quality_file):
+        try:
+            with open(quality_file, encoding='utf-8') as f:
+                quality_content = f.read()
+                if '**Result:** ✅ PASS' in quality_content:
+                    quality_result = 'PASS'
+                elif '**Result:** ❌ FAIL' in quality_content:
+                    quality_result = 'FAIL'
+                    failed_gates_section = re.search(r'### Failed Gates\n\n(.*?)\n\n', quality_content, re.DOTALL)
+                    if failed_gates_section:
+                        quality_failed_gates = len(re.findall(r'^- \*\*', failed_gates_section.group(1), re.MULTILINE))
+        except Exception:
+            pass
+
+    state.results['activity_quality'] = evaluate_activity_quality(
+        os.path.exists(quality_file),
+        quality_result,
+        quality_failed_gates,
+        ctx.level_code
+    )
+
+
+def _check_transliteration_policy(ctx: AuditContext, state: AuditState) -> None:
+    """Check transliteration policy compliance."""
+    transliteration_allowed = ctx.config.get('transliteration_allowed', True)
+    if not transliteration_allowed:
+        translit_ok = False
+        if ctx.meta_data:
+            if 'transliteration' not in ctx.meta_data:
+                translit_ok = True
+            else:
+                val = ctx.meta_data['transliteration']
+                translit_ok = (val is None or str(val).lower() == 'none')
+        if not translit_ok:
+            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', ctx.frontmatter_str))
+        if not translit_ok:
+            print(f"❌ AUDIT FAILED: Level {ctx.level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
+            state.has_critical_failure = True
+
+        track_for_translit = detect_track_from_path(ctx.file_path)
+        is_bridge_module = (ctx.level_code == 'B1' and ctx.module_num <= 5)
+        content_lines = ctx.content.split('\n')
+        for line_idx, line in enumerate(content_lines):
+            if '___' in line or '[___:' in line:
+                continue
+            if re.search(r'\((Dat|Acc|Gen|Loc|Ins|Nom|Voc)\)', line):
+                continue
+            translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\(([A-Za-z]+)\)', line)
+            if translit_pattern:
+                latin_part = translit_pattern.group(1)
+                if latin_part.upper() in ACADEMIC_LATIN_ALLOWLIST:
+                    continue
+                if is_academic_latin_context(line, content_lines, line_idx, track_for_translit):
+                    continue
+                if is_bridge_module:
+                    continue
+                print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
+                state.has_critical_failure = True
+                break
+
+
+def _evaluate_richness_and_quality(ctx: AuditContext, state: AuditState) -> None:
+    """Evaluate activity quality, content-heavy, and transliteration gates."""
+    _evaluate_activity_quality_gate(ctx, state)
 
     # Content-heavy module check (B2 history, C1 literature/biography/folk/arts)
     if ctx.skip_activities:
@@ -2237,16 +2361,12 @@ def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
         is_content_heavy = is_content_heavy_module(ctx.level_code, ctx.module_num, ctx.module_focus or "")
         content_recall_violations = []
         if is_content_heavy:
-            # Run all content recall checks (quiz patterns, fill-in years, cloze years)
-            # Pass YAML activities if available for YAML-based detection
             content_recall_violations = run_all_content_recall_checks(
                 ctx.content, ctx.level_code, ctx.module_focus or "",
                 yaml_activities=ctx.yaml_activities
             )
 
-        # Calculate limits for content-heavy gate
         min_act = ctx.config.get('min_activities', 10)
-        # Use max_activities from config if available (e.g. LIT: 6), otherwise default buffer
         max_act = ctx.config.get('max_activities', min_act + 4)
 
         state.results['content_heavy'] = evaluate_content_heavy(
@@ -2258,55 +2378,19 @@ def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
         )
 
     # Transliteration policy
-    transliteration_allowed = ctx.config.get('transliteration_allowed', True)
-    if not transliteration_allowed:
-        translit_ok = False
-        if ctx.meta_data:
-            # Meta sidecar: YAML `none` parses as Python None, which means "no transliteration"
-            # If the field is absent, treat as "none" (default for levels that forbid it)
-            if 'transliteration' not in ctx.meta_data:
-                translit_ok = True  # Absent = default = no transliteration
-            else:
-                val = ctx.meta_data['transliteration']
-                translit_ok = (val is None or str(val).lower() == 'none')
-        if not translit_ok:
-            # Fallback: check frontmatter string (for legacy embedded frontmatter)
-            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', ctx.frontmatter_str))
-        if not translit_ok:
-            print(f"❌ AUDIT FAILED: Level {ctx.level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
-            state.has_critical_failure = True
-
-        # Detect track for academic context exemptions (Issue #557)
-        track_for_translit = detect_track_from_path(ctx.file_path)
-        # Bridge modules (B1 M01-M05) use English glosses intentionally — skip transliteration check
-        is_bridge_module = (ctx.level_code == 'B1' and ctx.module_num <= 5)
-        content_lines = ctx.content.split('\n')
-        for line_idx, line in enumerate(content_lines):
-            if '___' in line or '[___:' in line:
-                continue
-            if re.search(r'\((Dat|Acc|Gen|Loc|Ins|Nom|Voc)\)', line):
-                continue
-            translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\(([A-Za-z]+)\)', line)
-            if translit_pattern:
-                latin_part = translit_pattern.group(1)
-                # Allow if the Latin part is an allowlisted acronym (Issue #557)
-                if latin_part.upper() in ACADEMIC_LATIN_ALLOWLIST:
-                    continue
-                # Allow if the line is in a legitimate academic context (Issue #557)
-                if is_academic_latin_context(line, content_lines, line_idx, track_for_translit):
-                    continue
-                # Allow in bridge modules where English glosses are intentional scaffolding
-                if is_bridge_module:
-                    continue
-                print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
-                state.has_critical_failure = True
-                break
+    _check_transliteration_policy(ctx, state)
 
 
-def _generate_output_and_report(ctx: AuditContext, state: AuditState,
-                                 immersion_score: float, min_imm: int, max_imm: int,
-                                 unique_types: set) -> bool:
-    """Print gates, generate report, run review validation, save status cache. Returns audit result."""
+def _evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
+    """Evaluate richness, grammar, naturalness, activity quality, content-heavy, transliteration gates."""
+    _evaluate_grammar_and_naturalness(ctx, state)
+    _evaluate_richness_and_quality(ctx, state)
+
+
+def _print_and_save_report(ctx: AuditContext, state: AuditState,
+                            immersion_score: float, min_imm: int, max_imm: int,
+                            unique_types: set) -> None:
+    """Print gates, violations, generate report, and save."""
     # Output
     print_gates(state.results, ctx.level_code)
     print_lint_errors(state.lint_errors)
@@ -2369,6 +2453,50 @@ def _generate_output_and_report(ctx: AuditContext, state: AuditState,
     report_path = save_report(ctx.file_path, report_content)
     print(f"\nReport: {report_path}")
 
+
+def _check_review_gaming(ctx: AuditContext, state: AuditState,
+                          module_slug: str, review_violations: list,
+                          review_gate_status: str) -> tuple[list, str]:
+    """Run review gaming detection on the review file. Returns (updated violations, updated gate status)."""
+    from slug_utils import review_path as _review_path_fn
+    _review_base = Path(ctx.file_path).parent
+    _review_canonical = _review_path_fn(_review_base, module_slug)
+    _review_file_path = None
+    if _review_canonical.exists():
+        _review_file_path = _review_canonical
+    else:
+        _bare = to_bare_slug(module_slug)
+        _legacy = _review_base / 'audit' / f'{_bare}-review.md'
+        if _legacy.exists():
+            _review_file_path = _legacy
+
+    if _review_file_path:
+        try:
+            _review_text = _review_file_path.read_text(encoding='utf-8')
+            gaming_review_violations = check_review_gaming(
+                _review_text, ctx.content, ctx.file_path, ctx.level_code, module_slug
+            )
+            if gaming_review_violations:
+                g_crits = [v for v in gaming_review_violations if v['severity'] == 'critical']
+                g_warns = [v for v in gaming_review_violations if v['severity'] == 'warning']
+                print(f"  🎭 Review Gaming: {len(g_crits)} critical, {len(g_warns)} warnings")
+                for v in g_crits:
+                    print(f"     ❌ [{v['type']}] {v['message']}")
+                    state.critical_failure_reasons.append(v['message'])
+                for v in g_warns:
+                    print(f"     ⚠️  [{v['type']}] {v['message']}")
+                review_violations.extend(gaming_review_violations)
+                if g_crits and review_gate_status == "pass":
+                    review_gate_status = "fail"
+                    state.has_critical_failure = True
+        except OSError:
+            pass  # Can't read review file — skip gaming checks
+
+    return review_violations, review_gate_status
+
+
+def _validate_review_and_finalize(ctx: AuditContext, state: AuditState) -> bool:
+    """Run review validation, gaming detection, save status cache, return final verdict."""
     # Review Validation (final gate — only checked if all content gates pass)
     # Skipped in content-only mode (skip_activities) because Phase D creates the review
     review_violations = []
@@ -2396,40 +2524,9 @@ def _generate_output_and_report(ctx: AuditContext, state: AuditState,
             review_gate_status = "pass"  # No violations
 
         # Review Gaming Detection (Issue #610)
-        # Find and read the review file to run gaming checks
-        from slug_utils import review_path as _review_path_fn
-        _review_base = Path(ctx.file_path).parent
-        _review_canonical = _review_path_fn(_review_base, module_slug_for_review)
-        _review_file_path = None
-        if _review_canonical.exists():
-            _review_file_path = _review_canonical
-        else:
-            _bare = to_bare_slug(module_slug_for_review)
-            _legacy = _review_base / 'audit' / f'{_bare}-review.md'
-            if _legacy.exists():
-                _review_file_path = _legacy
-
-        if _review_file_path:
-            try:
-                _review_text = _review_file_path.read_text(encoding='utf-8')
-                gaming_review_violations = check_review_gaming(
-                    _review_text, ctx.content, ctx.file_path, ctx.level_code, module_slug_for_review
-                )
-                if gaming_review_violations:
-                    g_crits = [v for v in gaming_review_violations if v['severity'] == 'critical']
-                    g_warns = [v for v in gaming_review_violations if v['severity'] == 'warning']
-                    print(f"  🎭 Review Gaming: {len(g_crits)} critical, {len(g_warns)} warnings")
-                    for v in g_crits:
-                        print(f"     ❌ [{v['type']}] {v['message']}")
-                        state.critical_failure_reasons.append(v['message'])
-                    for v in g_warns:
-                        print(f"     ⚠️  [{v['type']}] {v['message']}")
-                    review_violations.extend(gaming_review_violations)
-                    if g_crits and review_gate_status == "pass":
-                        review_gate_status = "fail"
-                        state.has_critical_failure = True
-            except OSError:
-                pass  # Can't read review file — skip gaming checks
+        review_violations, review_gate_status = _check_review_gaming(
+            ctx, state, module_slug_for_review, review_violations, review_gate_status
+        )
     else:
         review_gate_status = "skipped"  # Content gates failed, review not checked
 
@@ -2462,6 +2559,14 @@ def _generate_output_and_report(ctx: AuditContext, state: AuditState,
     else:
         print("\n✅ AUDIT PASSED.")
         return True
+
+
+def _generate_output_and_report(ctx: AuditContext, state: AuditState,
+                                 immersion_score: float, min_imm: int, max_imm: int,
+                                 unique_types: set) -> bool:
+    """Print gates, generate report, run review validation, save status cache. Returns audit result."""
+    _print_and_save_report(ctx, state, immersion_score, min_imm, max_imm, unique_types)
+    return _validate_review_and_finalize(ctx, state)
 
 
 def audit_module(file_path: str, skip_activities: bool = False,

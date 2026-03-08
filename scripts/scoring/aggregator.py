@@ -219,6 +219,308 @@ def aggregate_track_metrics(
     return metrics
 
 
+def _score_audit_pass_rate(tm: TrackMetrics, total: int) -> float:
+    rate = tm.passing_modules / total if total > 0 else 0
+    return min(10.0, rate * 10.0)
+
+
+def _score_activity_coverage(tm: TrackMetrics, total: int) -> float:
+    rate = tm.modules_with_activities / total if total > 0 else 0
+    return min(10.0, rate * 10.0)
+
+
+def _score_vocabulary_coverage(tm: TrackMetrics, total: int) -> float:
+    rate = tm.modules_with_vocabulary / total if total > 0 else 0
+    return min(10.0, rate * 10.0)
+
+
+def _score_internal_consistency(tm: TrackMetrics) -> float:
+    avg = tm.avg_cross_references
+    if avg >= 1.0:
+        return 10.0
+    elif avg >= 0.5:
+        return 7.0
+    elif avg >= 0.2:
+        return 5.0
+    elif avg > 0:
+        return 3.0
+    return 0.0
+
+
+def _score_primary_source_integration(tm: TrackMetrics) -> float:
+    avg = tm.avg_quote_callouts
+    if avg >= 3.0:
+        return 10.0
+    elif avg >= 2.0:
+        return 8.0
+    elif avg >= 1.0:
+        return 6.0
+    elif avg >= 0.5:
+        return 4.0
+    elif avg > 0:
+        return 2.0
+    return 0.0
+
+
+def _score_historical_accuracy(tm: TrackMetrics) -> float:
+    if tm.avg_naturalness_score >= 9.0:
+        return 10.0
+    elif tm.avg_naturalness_score >= 8.0:
+        return 9.0
+    elif tm.avg_naturalness_score >= 7.0:
+        return 8.0
+    elif tm.avg_naturalness_score >= 6.0:
+        return 7.0
+    elif tm.avg_naturalness_score >= 5.0:
+        return 6.0
+    return 5.0
+
+
+def _score_decolonization_perspective(tm: TrackMetrics) -> float:
+    score = 0.0
+
+    # Myth-busters (40% of score)
+    avg_myth = tm.avg_myth_buster_callouts
+    if avg_myth >= 2.0:
+        score += 4.0
+    elif avg_myth >= 1.0:
+        score += 3.0
+    elif avg_myth >= 0.5:
+        score += 2.0
+    elif avg_myth > 0:
+        score += 1.0
+
+    # Agency markers (40% of score)
+    if tm.agency_marker_ratio >= 0.20:
+        score += 4.0
+    elif tm.agency_marker_ratio >= 0.15:
+        score += 3.0
+    elif tm.agency_marker_ratio >= 0.10:
+        score += 2.0
+    elif tm.agency_marker_ratio > 0:
+        score += 1.0
+
+    # Toponym compliance (20% of score)
+    if tm.total_toponym_violations == 0:
+        score += 2.0
+    elif tm.total_toponym_violations <= 5:
+        score += 1.0
+
+    return min(10.0, score)
+
+
+def _score_era_vocabulary(tm: TrackMetrics, total: int) -> float:
+    if tm.modules_with_vocabulary == 0:
+        return 0.0
+    vocab_rate = tm.modules_with_vocabulary / total
+    return min(10.0, vocab_rate * 10.0)
+
+
+def _score_critical_analysis_skills(tm: TrackMetrics, total: int) -> float:
+    if tm.total_critical_analysis_activities > 0:
+        rate = tm.total_critical_analysis_activities / total
+        return min(10.0, rate * 15 + 3.0)
+    return 5.0
+
+
+def _score_source_reliability(tm: TrackMetrics) -> float:
+    avg = tm.avg_quote_callouts
+    if avg >= 2.0:
+        return 10.0
+    elif avg >= 1.0:
+        return 7.0
+    elif avg > 0:
+        return 4.0
+    return 0.0
+
+
+def _score_cultural_historical_context(tm: TrackMetrics, total: int) -> float:
+    avg_context = tm.total_context_callouts / total if total > 0 else 0
+    if avg_context >= 2.0:
+        return 10.0
+    elif avg_context >= 1.0:
+        return 8.0
+    elif avg_context >= 0.5:
+        return 6.0
+    elif avg_context > 0:
+        return 4.0
+    return 3.0
+
+
+def _score_significance_assessment(tm: TrackMetrics, total: int) -> float:
+    rate = tm.total_legacy_sections / total if total > 0 else 0
+    if rate >= 0.8:
+        return 10.0
+    elif rate >= 0.5:
+        return 8.0
+    elif rate >= 0.3:
+        return 6.0
+    elif rate > 0:
+        return 4.0
+    return 0.0
+
+
+def _score_literary_depth(tm: TrackMetrics, total: int) -> float:
+    score = 0.0
+
+    # Stylistic devices (50%)
+    avg_devices = tm.total_stylistic_devices / total if total > 0 else 0
+    if avg_devices >= 5:
+        score += 5.0
+    elif avg_devices >= 3:
+        score += 4.0
+    elif avg_devices >= 1:
+        score += 2.5
+    elif avg_devices > 0:
+        score += 1.0
+
+    # Analysis sections (50%)
+    avg_sections = tm.total_analysis_sections / total if total > 0 else 0
+    if avg_sections >= 3:
+        score += 5.0
+    elif avg_sections >= 2:
+        score += 4.0
+    elif avg_sections >= 1:
+        score += 2.5
+    elif avg_sections > 0:
+        score += 1.0
+
+    return min(10.0, score)
+
+
+def _score_authentic_text_engagement(tm: TrackMetrics) -> float:
+    ratio = tm.avg_citation_ratio
+    if ratio >= 0.20:
+        return 10.0
+    elif ratio >= 0.15:
+        return 9.0
+    elif ratio >= 0.10:
+        return 7.0
+    elif ratio >= 0.05:
+        return 5.0
+    elif ratio > 0:
+        return 3.0
+    return 0.0
+
+
+def _score_archaic_literary_vocab(tm: TrackMetrics) -> float:
+    if tm.modules_with_vocabulary == 0:
+        return 5.0
+    rate = tm.total_archaic_vocab_items / max(1, tm.total_vocab_items)
+    return min(10.0, 5.0 + rate * 50)
+
+
+def _score_intertextual_links(tm: TrackMetrics) -> float:
+    avg = tm.avg_cross_references
+    if avg >= 1.0:
+        return 10.0
+    elif avg >= 0.5:
+        return 7.0
+    elif avg > 0:
+        return 4.0
+    return 0.0
+
+
+def _score_skills_balance(tm: TrackMetrics) -> float:
+    if tm.total_activities > 0:
+        has_reading = tm.total_reading_activities > 0
+        has_essay = tm.total_essay_activities > 0
+        has_critical = tm.total_critical_analysis_activities > 0
+
+        variety_score = 5.0
+        if has_reading:
+            variety_score += 1.5
+        if has_essay:
+            variety_score += 1.5
+        if has_critical:
+            variety_score += 2.0
+
+        return min(10.0, variety_score)
+    return 5.0
+
+
+def _score_cefr_alignment(tm: TrackMetrics) -> float:
+    if tm.avg_naturalness_score >= 8.0:
+        return 10.0
+    elif tm.avg_naturalness_score >= 6.0:
+        return 8.0
+    return 6.0
+
+
+def _score_historiographical_methodology(tm: TrackMetrics, total: int) -> float:
+    avg = tm.total_analysis_sections / total if total > 0 else 0
+    if avg >= 2.0:
+        return 10.0
+    elif avg >= 1.0:
+        return 7.0
+    elif avg > 0:
+        return 4.0
+    return 2.0
+
+
+def _score_source_criticism_skills(tm: TrackMetrics, total: int) -> float:
+    if tm.total_critical_analysis_activities > 0:
+        rate = tm.total_critical_analysis_activities / total
+        return min(10.0, rate * 20 + 3.0)
+    return 4.0
+
+
+def _score_thematic_coherence(tm: TrackMetrics) -> float:
+    avg = tm.avg_cross_references
+    if avg >= 1.5:
+        return 10.0
+    elif avg >= 1.0:
+        return 8.0
+    elif avg >= 0.5:
+        return 6.0
+    elif avg > 0:
+        return 4.0
+    return 2.0
+
+
+# Dispatch table: criterion_name -> scorer function
+# Functions that need (tm, total) are wrapped with lambdas at call site.
+_CRITERION_SCORERS: dict[str, object] = {
+    # Universal
+    'audit_pass_rate': _score_audit_pass_rate,
+    'activity_coverage': _score_activity_coverage,
+    'vocabulary_coverage': _score_vocabulary_coverage,
+    'internal_consistency': _score_internal_consistency,
+    # HIST
+    'primary_source_integration': _score_primary_source_integration,
+    'historical_accuracy': _score_historical_accuracy,
+    'decolonization_perspective': _score_decolonization_perspective,
+    'era_vocabulary': _score_era_vocabulary,
+    'critical_analysis_skills': _score_critical_analysis_skills,
+    # BIO
+    'biographical_accuracy': _score_historical_accuracy,  # Same logic
+    'source_reliability': _score_source_reliability,
+    'cultural_historical_context': _score_cultural_historical_context,
+    'significance_assessment': _score_significance_assessment,
+    # LIT
+    'literary_depth': _score_literary_depth,
+    'authentic_text_engagement': _score_authentic_text_engagement,
+    'archaic_literary_vocab': _score_archaic_literary_vocab,
+    'intertextual_links': _score_intertextual_links,
+    # Standard
+    'grammar_content_coverage': _score_audit_pass_rate,  # Same logic
+    'skills_balance': _score_skills_balance,
+    'cefr_alignment': _score_cefr_alignment,
+    # ISTORIO
+    'historiographical_methodology': _score_historiographical_methodology,
+    'source_criticism_skills': _score_source_criticism_skills,
+    'thematic_coherence': _score_thematic_coherence,
+}
+
+# Criteria that only need TrackMetrics (no total)
+_NO_TOTAL_CRITERIA = {
+    'internal_consistency', 'primary_source_integration', 'historical_accuracy',
+    'decolonization_perspective', 'biographical_accuracy', 'source_reliability',
+    'authentic_text_engagement', 'archaic_literary_vocab', 'intertextual_links',
+    'skills_balance', 'cefr_alignment', 'thematic_coherence',
+}
+
+
 def calculate_criterion_score(
     criterion_name: str,
     track_metrics: TrackMetrics,
@@ -239,312 +541,19 @@ def calculate_criterion_score(
     if total == 0:
         return 0.0
 
-    # =========================================================================
-    # UNIVERSAL CRITERIA (apply to all tracks)
-    # =========================================================================
+    # Static defaults
+    if criterion_name in ('checkpoint_structure', 'state_standard_compliance'):
+        return 8.0
+    if criterion_name == 'chronological_coherence':
+        return 9.0
 
-    if criterion_name == 'audit_pass_rate':
-        # Percentage of modules passing audit
-        rate = track_metrics.passing_modules / total if total > 0 else 0
-        return min(10.0, rate * 10.0)
-
-    elif criterion_name == 'activity_coverage':
-        # Percentage of modules with activity files
-        rate = track_metrics.modules_with_activities / total if total > 0 else 0
-        return min(10.0, rate * 10.0)
-
-    elif criterion_name == 'vocabulary_coverage':
-        # Percentage of modules with vocabulary files
-        rate = track_metrics.modules_with_vocabulary / total if total > 0 else 0
-        return min(10.0, rate * 10.0)
-
-    elif criterion_name == 'internal_consistency':
-        # Cross-references per module (target: 1+ per module = 10)
-        avg = track_metrics.avg_cross_references
-        if avg >= 1.0:
-            return 10.0
-        elif avg >= 0.5:
-            return 7.0
-        elif avg >= 0.2:
-            return 5.0
-        elif avg > 0:
-            return 3.0
-        return 0.0
-
-    # =========================================================================
-    # HIST TRACK CRITERIA
-    # =========================================================================
-
-    elif criterion_name == 'primary_source_integration':
-        # Average quote callouts per module (target: 3+ = 10)
-        avg = track_metrics.avg_quote_callouts
-        if avg >= 3.0:
-            return 10.0
-        elif avg >= 2.0:
-            return 8.0
-        elif avg >= 1.0:
-            return 6.0
-        elif avg >= 0.5:
-            return 4.0
-        elif avg > 0:
-            return 2.0
-        return 0.0
-
-    elif criterion_name == 'historical_accuracy':
-        # Based on naturalness scores (proxy for accuracy review)
-        if track_metrics.avg_naturalness_score >= 9.0:
-            return 10.0
-        elif track_metrics.avg_naturalness_score >= 8.0:
-            return 9.0
-        elif track_metrics.avg_naturalness_score >= 7.0:
-            return 8.0
-        elif track_metrics.avg_naturalness_score >= 6.0:
-            return 7.0
-        elif track_metrics.avg_naturalness_score >= 5.0:
-            return 6.0
-        return 5.0  # Minimum without review
-
-    elif criterion_name == 'decolonization_perspective':
-        # Combination of myth-busters, agency markers, toponym compliance
-        score = 0.0
-
-        # Myth-busters (40% of score)
-        avg_myth = track_metrics.avg_myth_buster_callouts
-        if avg_myth >= 2.0:
-            score += 4.0
-        elif avg_myth >= 1.0:
-            score += 3.0
-        elif avg_myth >= 0.5:
-            score += 2.0
-        elif avg_myth > 0:
-            score += 1.0
-
-        # Agency markers (40% of score)
-        if track_metrics.agency_marker_ratio >= 0.20:
-            score += 4.0
-        elif track_metrics.agency_marker_ratio >= 0.15:
-            score += 3.0
-        elif track_metrics.agency_marker_ratio >= 0.10:
-            score += 2.0
-        elif track_metrics.agency_marker_ratio > 0:
-            score += 1.0
-
-        # Toponym compliance (20% of score)
-        if track_metrics.total_toponym_violations == 0:
-            score += 2.0
-        elif track_metrics.total_toponym_violations <= 5:
-            score += 1.0
-
-        return min(10.0, score)
-
-    elif criterion_name == 'era_vocabulary':
-        # Percentage of vocab files with era-specific items
-        if track_metrics.modules_with_vocabulary == 0:
-            return 0.0
-        # If any vocab exists, base score on coverage
-        vocab_rate = track_metrics.modules_with_vocabulary / total
-        return min(10.0, vocab_rate * 10.0)
-
-    elif criterion_name == 'chronological_coherence':
-        # Default to high score (manual verification needed)
-        # Future: parse dates from content and verify sequence
-        return 9.0  # Assume good unless flagged
-
-    elif criterion_name == 'critical_analysis_skills':
-        # Based on critical analysis activities + analysis callouts
-        if track_metrics.total_critical_analysis_activities > 0:
-            rate = track_metrics.total_critical_analysis_activities / total
-            return min(10.0, rate * 15 + 3.0)  # Bonus for having any
-        return 5.0  # Base score without activities
-
-    # =========================================================================
-    # BIO TRACK CRITERIA
-    # =========================================================================
-
-    elif criterion_name == 'biographical_accuracy':
-        # Same as historical_accuracy
-        return calculate_criterion_score('historical_accuracy', track_metrics, config)
-
-    elif criterion_name == 'source_reliability':
-        # Based on quote count and diversity
-        avg = track_metrics.avg_quote_callouts
-        if avg >= 2.0:
-            return 10.0
-        elif avg >= 1.0:
-            return 7.0
-        elif avg > 0:
-            return 4.0
-        return 0.0
-
-    elif criterion_name == 'cultural_historical_context':
-        # Context callouts per module
-        avg_context = track_metrics.total_context_callouts / total if total > 0 else 0
-        if avg_context >= 2.0:
-            return 10.0
-        elif avg_context >= 1.0:
-            return 8.0
-        elif avg_context >= 0.5:
-            return 6.0
-        elif avg_context > 0:
-            return 4.0
-        return 3.0  # Minimum
-
-    elif criterion_name == 'significance_assessment':
-        # Legacy sections
-        rate = track_metrics.total_legacy_sections / total if total > 0 else 0
-        if rate >= 0.8:
-            return 10.0
-        elif rate >= 0.5:
-            return 8.0
-        elif rate >= 0.3:
-            return 6.0
-        elif rate > 0:
-            return 4.0
-        return 0.0
-
-    # =========================================================================
-    # LIT TRACK CRITERIA
-    # =========================================================================
-
-    elif criterion_name == 'literary_depth':
-        # Stylistic devices + analysis sections
-        score = 0.0
-
-        # Stylistic devices (50%)
-        avg_devices = track_metrics.total_stylistic_devices / total if total > 0 else 0
-        if avg_devices >= 5:
-            score += 5.0
-        elif avg_devices >= 3:
-            score += 4.0
-        elif avg_devices >= 1:
-            score += 2.5
-        elif avg_devices > 0:
-            score += 1.0
-
-        # Analysis sections (50%)
-        avg_sections = track_metrics.total_analysis_sections / total if total > 0 else 0
-        if avg_sections >= 3:
-            score += 5.0
-        elif avg_sections >= 2:
-            score += 4.0
-        elif avg_sections >= 1:
-            score += 2.5
-        elif avg_sections > 0:
-            score += 1.0
-
-        return min(10.0, score)
-
-    elif criterion_name == 'authentic_text_engagement':
-        # Citation ratio
-        ratio = track_metrics.avg_citation_ratio
-        if ratio >= 0.20:
-            return 10.0
-        elif ratio >= 0.15:
-            return 9.0
-        elif ratio >= 0.10:
-            return 7.0
-        elif ratio >= 0.05:
-            return 5.0
-        elif ratio > 0:
-            return 3.0
-        return 0.0
-
-    elif criterion_name == 'archaic_literary_vocab':
-        # Archaic vocab items
-        if track_metrics.modules_with_vocabulary == 0:
-            return 5.0  # Neutral
-        rate = track_metrics.total_archaic_vocab_items / max(1, track_metrics.total_vocab_items)
-        return min(10.0, 5.0 + rate * 50)  # Scale from 5 to 10
-
-    elif criterion_name == 'intertextual_links':
-        # Cross-references between literary works
-        avg = track_metrics.avg_cross_references
-        if avg >= 1.0:
-            return 10.0
-        elif avg >= 0.5:
-            return 7.0
-        elif avg > 0:
-            return 4.0
-        return 0.0
-
-    # =========================================================================
-    # STANDARD TRACK CRITERIA
-    # =========================================================================
-
-    elif criterion_name == 'grammar_content_coverage':
-        # Based on audit pass rate as proxy
-        rate = track_metrics.passing_modules / total if total > 0 else 0
-        return min(10.0, rate * 10.0)
-
-    elif criterion_name == 'skills_balance':
-        # Distribution of activity types (reading, writing, listening, speaking)
-        # For now, use a simplified metric
-        if track_metrics.total_activities > 0:
-            # Reward having variety of activity types
-            has_reading = track_metrics.total_reading_activities > 0
-            has_essay = track_metrics.total_essay_activities > 0
-            has_critical = track_metrics.total_critical_analysis_activities > 0
-
-            variety_score = 5.0  # Base
-            if has_reading:
-                variety_score += 1.5
-            if has_essay:
-                variety_score += 1.5
-            if has_critical:
-                variety_score += 2.0
-
-            return min(10.0, variety_score)
+    scorer = _CRITERION_SCORERS.get(criterion_name)
+    if scorer is None:
         return 5.0
 
-    elif criterion_name == 'checkpoint_structure' or criterion_name == 'state_standard_compliance':
-        # Default to passing (manual verification)
-        return 8.0
-
-    elif criterion_name == 'cefr_alignment':
-        # Based on naturalness as proxy
-        if track_metrics.avg_naturalness_score >= 8.0:
-            return 10.0
-        elif track_metrics.avg_naturalness_score >= 6.0:
-            return 8.0
-        return 6.0
-
-    # =========================================================================
-    # HISTORIOGRAPHY CRITERIA (ISTORIO)
-    # =========================================================================
-
-    elif criterion_name == 'historiographical_methodology':
-        # Analysis sections as proxy
-        avg = track_metrics.total_analysis_sections / total if total > 0 else 0
-        if avg >= 2.0:
-            return 10.0
-        elif avg >= 1.0:
-            return 7.0
-        elif avg > 0:
-            return 4.0
-        return 2.0
-
-    elif criterion_name == 'source_criticism_skills':
-        # Critical analysis activities
-        if track_metrics.total_critical_analysis_activities > 0:
-            rate = track_metrics.total_critical_analysis_activities / total
-            return min(10.0, rate * 20 + 3.0)
-        return 4.0
-
-    elif criterion_name == 'thematic_coherence':
-        # Cross-references as proxy
-        avg = track_metrics.avg_cross_references
-        if avg >= 1.5:
-            return 10.0
-        elif avg >= 1.0:
-            return 8.0
-        elif avg >= 0.5:
-            return 6.0
-        elif avg > 0:
-            return 4.0
-        return 2.0
-
-    # Default: return middle score
-    return 5.0
+    if criterion_name in _NO_TOTAL_CRITERIA:
+        return scorer(track_metrics)
+    return scorer(track_metrics, total)
 
 
 @dataclass

@@ -297,6 +297,239 @@ def _verify_citations_against_source(citations: list[str], source_path: Path) ->
     return verified, len(citations)
 
 
+def _find_review_file(file_path: str, module_slug: str) -> tuple[Path | None, Path]:
+    """Locate the review file (canonical, content-review, or legacy path).
+
+    Returns (review_file_path_or_None, canonical_path).
+    """
+    module_path = Path(file_path)
+    base_dir = module_path.parent
+    canonical = _review_path(base_dir, module_slug)
+
+    bare = to_bare_slug(module_slug)
+    if canonical.exists():
+        return canonical, canonical
+
+    content_review = base_dir / "audit" / f"{bare}-content-review.md"
+    if content_review.exists():
+        return content_review, canonical
+
+    legacy = base_dir / "audit" / f"{bare}-review.md"
+    if legacy.exists():
+        return legacy, canonical
+
+    return None, canonical
+
+
+def _check_content_review_format(content: str, fix_prompt: str) -> list[dict]:
+    """Validate content-review specific format (Grade A/B/C/F)."""
+    violations = []
+    grade_match = re.search(r'\*\*Verdict:\*\*\s*([ABCF])\b', content[:2000])
+    if grade_match and grade_match.group(1) == 'F':
+        violations.append({
+            'type': 'REVIEW_VERDICT_FAIL',
+            'severity': 'critical',
+            'message': (
+                "Content review grades this module F — critical issues found. "
+                "Rebuild the module to fix identified problems."
+            )
+        })
+    cr_required = [
+        (r'## (Issues Found|CRITICAL|HIGH)', 'Issues Found'),
+        (r'## Grade Justification', 'Grade Justification'),
+    ]
+    missing = [name for pattern, name in cr_required if not re.search(pattern, content)]
+    if missing:
+        violations.append({
+            'type': 'FAKE_REVIEW_STRUCTURE',
+            'severity': 'critical',
+            'message': f"Content review missing required sections: {', '.join(missing)}. Rerun /content-review."
+        })
+    return violations
+
+
+def _check_pipeline_review_format(content: str, cfg: dict, fix_prompt: str) -> list[dict]:
+    """Validate standard pipeline review format (PASS/FAIL + required headers)."""
+    violations = []
+    verdict_match = re.search(r'\*\*Status:\*\*\s*(PASS|FAIL)', content[:1000])
+    if verdict_match and verdict_match.group(1) == 'FAIL':
+        violations.append({
+            'type': 'REVIEW_VERDICT_FAIL',
+            'severity': 'critical',
+            'message': (
+                "Review concludes with **Status:** FAIL — the reviewer identified "
+                "issues that need to be fixed before the module can pass. "
+                "Run Phase D.2 repair or rebuild the module."
+            )
+        })
+    missing = [name for pattern, name in cfg['required_headers'] if not re.search(pattern, content)]
+    if missing:
+        violations.append({
+            'type': 'FAKE_REVIEW_STRUCTURE',
+            'severity': 'critical',
+            'message': f"Review missing required sections: {', '.join(missing)}. {fix_prompt}"
+        })
+    return violations
+
+
+def _check_template_placeholders(content: str, fix_prompt: str) -> list[dict]:
+    """Check for unreplaced template placeholders."""
+    placeholders = [
+        (r'\{slug\}', '{slug}'),
+        (r'\{level\}', '{level}'),
+        (r'\{num\}', '{num}'),
+        (r'\{X\.X\}', '{X.X}'),
+        (r'\{what you found\}', '{what you found}'),
+    ]
+    found = [name for pattern, name in placeholders if re.search(pattern, content)]
+    if found:
+        return [{
+            'type': 'FAKE_REVIEW_TEMPLATE',
+            'severity': 'critical',
+            'message': (
+                f"Review has unreplaced placeholders: {', '.join(found)}. "
+                f"The template was not filled in. {fix_prompt}"
+            )
+        }]
+    return []
+
+
+def _check_citation_verification(citations: list[str], source_path: Path, fix_prompt: str) -> list[dict]:
+    """Verify cited Ukrainian text actually exists in the source module."""
+    violations = []
+    if len(citations) < 2:
+        return violations
+
+    verified, total_cit = _verify_citations_against_source(citations, source_path)
+    unverified = total_cit - verified
+
+    if total_cit >= 3 and verified == 0:
+        violations.append({
+            'type': 'FABRICATED_CITATIONS',
+            'severity': 'critical',
+            'message': (
+                f"Review quotes {total_cit} Ukrainian sentences but NONE were found "
+                f"in the source module. The reviewer likely fabricated citations "
+                f"instead of reading the actual content. {fix_prompt}"
+            )
+        })
+    elif total_cit >= 3 and (verified / total_cit) < 0.5:
+        is_conclusive = total_cit >= 5 and unverified >= 5
+        severity = 'critical' if is_conclusive else 'warning'
+        violations.append({
+            'type': 'UNVERIFIED_CITATIONS',
+            'severity': severity,
+            'message': (
+                f"Only {verified}/{total_cit} Ukrainian citations in the review "
+                f"were found in the source module. The reviewer may be quoting "
+                f"from memory rather than from the actual content. {fix_prompt}"
+            )
+        })
+
+    return violations
+
+
+def _check_gaming_language(content: str, fix_prompt: str) -> list[dict]:
+    """Detect meta-language that reveals intent to pass audit."""
+    gaming_phrases = [
+        r'ensur(e|es|ing)\s+(a\s+)?high\s+(overall\s+)?score',
+        r'clean\s+audit',
+        r'designed?\s+to\s+pass',
+        r'ensuring?\s+.*pass(es|ing)?',
+        r'reflect(s|ing)?\s+the\s+fix(es)?',
+        r'accurately\s+(citing|reflect)',
+        r'this\s+fresh\s+review\s+will',
+        r'will\s+ensure\s+.*compli(ance|ant)',
+        r'crafted?\s+to\s+(meet|satisfy|ensure)',
+        r'tailored?\s+to\s+(pass|satisfy)',
+    ]
+    found_gaming = []
+    content_lower = content.lower()
+    for pattern in gaming_phrases:
+        match = re.search(pattern, content_lower)
+        if match:
+            found_gaming.append(match.group(0))
+    if found_gaming:
+        return [{
+            'type': 'GAMING_LANGUAGE_DETECTED',
+            'severity': 'critical',
+            'message': (
+                f"Review contains audit-gaming language: "
+                f"{', '.join(repr(g) for g in found_gaming[:3])}. "
+                f"Reviews must HONESTLY evaluate content, not be written to "
+                f"'ensure a high score'. {fix_prompt}"
+            )
+        }]
+    return []
+
+
+def _check_score_credibility(content: str, cfg: dict, issue_text: str | None,
+                              issues_match, fix_prompt: str) -> list[dict]:
+    """Check for suspiciously uniform high scores and praise-only citations."""
+    violations = []
+    perfect, total = _count_perfect_scores(content)
+
+    if total < cfg['min_dimensions']:
+        return violations
+
+    scores = [float(s) for s in re.findall(
+        r'\|\s*\w[^|]*\|\s*(\d+(?:\.\d+)?)/10\s*\|', content
+    )]
+    if not scores:
+        return violations
+
+    avg_score = sum(scores) / len(scores)
+    min_score = min(scores)
+    has_real_issues = (issues_match and issue_text
+                      and len(issue_text) >= 50
+                      and not re.match(
+                          r'^(None|No issues|N/A|—|-)\s*$',
+                          issue_text, re.IGNORECASE))
+    if min_score >= 9.0 and not has_real_issues:
+        violations.append({
+            'type': 'SUSPICIOUSLY_HIGH_SCORES',
+            'severity': 'warning',
+            'message': (
+                f"All {len(scores)} dimensions scored ≥ 9/10 "
+                f"(avg {avg_score:.1f}) but no substantive issues found. "
+                f"No module is perfect — a credible review identifies at least "
+                f"1 concrete improvement. {fix_prompt}"
+            )
+        })
+
+    return violations
+
+
+def _check_praise_only_citations(content: str, citations: list[str], fix_prompt: str) -> list[dict]:
+    """Check if all citations are used for praise, none for criticism."""
+    if len(citations) < 3:
+        return []
+
+    negative_markers = re.compile(
+        r'(issue|problem|incorrect|помилк|неприродн|awkward|wrong|error|'
+        r'should\s+be|could\s+be\s+(improved|better)|missing|lacks?|weak|'
+        r'unclear|confusing|inaccurat|fix|❌|⚠️)', re.IGNORECASE
+    )
+    for cit in citations:
+        cit_escaped = re.escape(cit[:30])
+        ctx_match = re.search(
+            rf'.{{0,100}}{cit_escaped}.{{0,100}}',
+            content, re.DOTALL
+        )
+        if ctx_match and negative_markers.search(ctx_match.group(0)):
+            return []  # Found at least one critical citation
+
+    return [{
+        'type': 'PRAISE_ONLY_CITATIONS',
+        'severity': 'warning',
+        'message': (
+            f"Review cites {len(citations)} Ukrainian passages but ALL are used "
+            f"positively — none highlight problems. A credible review uses citations "
+            f"to show both strengths AND weaknesses. {fix_prompt}"
+        )
+    }]
+
+
 def check_review_validity(file_path: str, level_code: str, module_slug: str) -> list[dict]:
     """
     Validate the existence and quality of the review file.
@@ -307,7 +540,6 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     """
     violations = []
 
-    # Detect tier
     tier_num = _detect_tier(file_path, level_code)
     if tier_num is None:
         return []
@@ -315,141 +547,49 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     cfg = TIER_CONFIG[tier_num]
     fix_prompt = _build_fix_prompt(tier_num)
 
-    # Construct canonical review path
-    module_path = Path(file_path)
-    base_dir = module_path.parent
-    canonical = _review_path(base_dir, module_slug)
+    # 1. Find review file
+    review_file, canonical = _find_review_file(file_path, module_slug)
 
-    # Also check legacy audit/ location and content-review files during transition
-    bare = to_bare_slug(module_slug)
-    review_file = None
-    if canonical.exists():
-        review_file = canonical
-    else:
-        # Check content-review (from /content-review or /batch-review skill)
-        content_review = base_dir / "audit" / f"{bare}-content-review.md"
-        if content_review.exists():
-            review_file = content_review
-        else:
-            legacy = base_dir / "audit" / f"{bare}-review.md"
-            if legacy.exists():
-                review_file = legacy
-
-    # 1. Existence Check
     if review_file is None:
-        target_path = canonical
         try:
-            rel_path = target_path.relative_to(base_dir.parent.parent)
+            rel_path = canonical.relative_to(Path(file_path).parent.parent.parent)
         except ValueError:
-            rel_path = target_path
+            rel_path = canonical
         return [{
             'type': 'MISSING_REVIEW',
             'severity': 'critical',
             'message': f"No Tier {tier_num} ({cfg['name']}) review file at {rel_path}. {fix_prompt}"
         }]
 
-    # Detect if this is a content-review file (from /content-review or /batch-review)
     is_content_review = review_file.name.endswith('-content-review.md')
 
     try:
         content = review_file.read_text(encoding='utf-8')
 
-        # 2. Length Check (tier-specific minimum)
+        # 2. Length Check
         if len(content) < cfg['min_chars']:
-            violations.append({
+            return [{
                 'type': 'FAKE_REVIEW_TOO_SHORT',
                 'severity': 'critical',
                 'message': (
                     f"Review is only {len(content)} chars — Tier {tier_num} ({cfg['name']}) "
                     f"requires {cfg['min_chars']}+ chars. {fix_prompt}"
                 )
-            })
-            return violations  # No point checking structure of a stub
+            }]
 
+        # 3. Format-specific checks (content-review vs pipeline review)
         if is_content_review:
-            # Content-review files use a different format: Grade (A/B/C/F) instead of PASS/FAIL
-            # Check for F grade = critical failure
-            grade_match = re.search(
-                r'\*\*Verdict:\*\*\s*([ABCF])\b',
-                content[:2000]
-            )
-            if grade_match and grade_match.group(1) == 'F':
-                violations.append({
-                    'type': 'REVIEW_VERDICT_FAIL',
-                    'severity': 'critical',
-                    'message': (
-                        "Content review grades this module F — critical issues found. "
-                        "Rebuild the module to fix identified problems."
-                    )
-                })
-            # Content-review structure check: must have Issues Found + Grade Justification
-            cr_required = [
-                (r'## (Issues Found|CRITICAL|HIGH)', 'Issues Found'),
-                (r'## Grade Justification', 'Grade Justification'),
-            ]
-            missing = [name for pattern, name in cr_required
-                       if not re.search(pattern, content)]
-            if missing:
-                violations.append({
-                    'type': 'FAKE_REVIEW_STRUCTURE',
-                    'severity': 'critical',
-                    'message': f"Content review missing required sections: {', '.join(missing)}. Rerun /content-review."
-                })
+            violations.extend(_check_content_review_format(content, fix_prompt))
         else:
-            # Standard pipeline review format
-            # 2b. Verdict Check: review's own PASS/FAIL conclusion
-            # A FAIL-verdict review means the reviewer found problems that haven't
-            # been fixed yet. The module should not pass audit with a FAIL review.
-            verdict_match = re.search(
-                r'\*\*Status:\*\*\s*(PASS|FAIL)',
-                content[:1000]  # Verdict is always near the top
-            )
-            if verdict_match and verdict_match.group(1) == 'FAIL':
-                violations.append({
-                    'type': 'REVIEW_VERDICT_FAIL',
-                    'severity': 'critical',
-                    'message': (
-                        "Review concludes with **Status:** FAIL — the reviewer identified "
-                        "issues that need to be fixed before the module can pass. "
-                        "Run Phase D.2 repair or rebuild the module."
-                    )
-                })
+            violations.extend(_check_pipeline_review_format(content, cfg, fix_prompt))
 
-            # 3. Structure Check (tier-specific required headers)
-            missing = [name for pattern, name in cfg['required_headers']
-                       if not re.search(pattern, content)]
-            if missing:
-                violations.append({
-                    'type': 'FAKE_REVIEW_STRUCTURE',
-                    'severity': 'critical',
-                    'message': f"Review missing required sections: {', '.join(missing)}. {fix_prompt}"
-                })
+        # 4. Template placeholders
+        violations.extend(_check_template_placeholders(content, fix_prompt))
 
-        # 4. Template Placeholder Check
-        placeholders = [
-            (r'\{slug\}', '{slug}'),
-            (r'\{level\}', '{level}'),
-            (r'\{num\}', '{num}'),
-            (r'\{X\.X\}', '{X.X}'),
-            (r'\{what you found\}', '{what you found}'),
-        ]
-        found_placeholders = [name for pattern, name in placeholders
-                              if re.search(pattern, content)]
-        if found_placeholders:
-            violations.append({
-                'type': 'FAKE_REVIEW_TEMPLATE',
-                'severity': 'critical',
-                'message': (
-                    f"Review has unreplaced placeholders: {', '.join(found_placeholders)}. "
-                    f"The template was not filled in. {fix_prompt}"
-                )
-            })
-
-        # Extract citations once — used by checks 5, 7, and 8
+        # 5-8. Citation-based checks
         citations = _extract_ukrainian_citations(content)
         has_citations = len(citations) >= 2
 
-        # 5. Rubber-stamp Detection: All perfect scores with no evidence
         perfect, total = _count_perfect_scores(content)
         if total >= cfg['min_dimensions'] and perfect == total and not has_citations:
             violations.append({
@@ -462,157 +602,50 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                 )
             })
 
-        # 6. Empty "Issues/Critique" section (matches natural variations)
+        # 6. Empty issues section
         issues_match = re.search(
             r'## (?:\d+\.\s*)?(?:"?Brutal"?\s+)?(?:(?:Critical )?Issues(?: Found)?|Critique|Problems|Concerns)[^\n]*\n(.*?)(?=\n## |\Z)',
             content, re.DOTALL
         )
-        if issues_match:
-            issue_text = issues_match.group(1).strip()
-            if (not issue_text
-                    or len(issue_text) < 30
-                    or re.match(r'^(None|No issues|N/A|—|-)\s*$', issue_text, re.IGNORECASE)):
-                violations.append({
-                    'type': 'EMPTY_ISSUES_SECTION',
-                    'severity': 'warning',
-                    'message': (
-                        "Review claims zero issues — no module is perfect. "
-                        "At minimum, identify 1 sentence that could be more natural, "
-                        "1 activity that could be improved, or 1 vocabulary choice "
-                        f"worth discussing. {fix_prompt}"
-                    )
-                })
-
-        # 7. No Ukrainian citations (tier 2+ only — tier 1 is mixed-language)
-        if cfg['require_ukr_citations'] and not has_citations and not any(v['type'] == 'RUBBER_STAMP_REVIEW' for v in violations):
-                violations.append({
-                    'type': 'NO_EVIDENCE_REVIEW',
-                    'severity': 'warning',
-                    'message': (
-                        "Review contains no quoted Ukrainian text. A real review cites specific "
-                        "sentences from the module (e.g., «Він пішов до хати» — wrong aspect). "
-                        f"{fix_prompt}"
-                    )
-                })
-
-        # 8. Citation verification — check quoted text exists in the source .md
-        if cfg['require_ukr_citations'] and len(citations) >= 2:
-            source_md = module_path  # The .md file being reviewed
-            verified, total_cit = _verify_citations_against_source(citations, source_md)
-            unverified = total_cit - verified
-            if total_cit >= 3 and verified == 0:
-                # No citations match the source at all — likely fabricated
-                violations.append({
-                    'type': 'FABRICATED_CITATIONS',
-                    'severity': 'critical',
-                    'message': (
-                        f"Review quotes {total_cit} Ukrainian sentences but NONE were found "
-                        f"in the source module. The reviewer likely fabricated citations "
-                        f"instead of reading the actual content. {fix_prompt}"
-                    )
-                })
-            elif total_cit >= 3 and (verified / total_cit) < 0.5:
-                # Less than half match — suspicious.
-                # When the sample is large (≥5 citations) and verification rate is low (<50%),
-                # this is conclusive evidence of fabrication, not just paraphrasing.
-                # Escalate to critical so the pipeline blocks — no prompt compliance needed.
-                is_conclusive = total_cit >= 5 and unverified >= 5
-                severity = 'critical' if is_conclusive else 'warning'
-                violations.append({
-                    'type': 'UNVERIFIED_CITATIONS',
-                    'severity': severity,
-                    'message': (
-                        f"Only {verified}/{total_cit} Ukrainian citations in the review "
-                        f"were found in the source module. The reviewer may be quoting "
-                        f"from memory rather than from the actual content. {fix_prompt}"
-                    )
-                })
-
-        # 9. Anti-gaming: detect meta-language that reveals intent to pass audit
-        gaming_phrases = [
-            r'ensur(e|es|ing)\s+(a\s+)?high\s+(overall\s+)?score',
-            r'clean\s+audit',
-            r'designed?\s+to\s+pass',
-            r'ensuring?\s+.*pass(es|ing)?',
-            r'reflect(s|ing)?\s+the\s+fix(es)?',
-            r'accurately\s+(citing|reflect)',
-            r'this\s+fresh\s+review\s+will',
-            r'will\s+ensure\s+.*compli(ance|ant)',
-            r'crafted?\s+to\s+(meet|satisfy|ensure)',
-            r'tailored?\s+to\s+(pass|satisfy)',
-        ]
-        found_gaming = []
-        content_lower = content.lower()
-        for pattern in gaming_phrases:
-            match = re.search(pattern, content_lower)
-            if match:
-                found_gaming.append(match.group(0))
-        if found_gaming:
+        issue_text = issues_match.group(1).strip() if issues_match else None
+        if issues_match and (not issue_text or len(issue_text) < 30
+                or re.match(r'^(None|No issues|N/A|—|-)\s*$', issue_text or '', re.IGNORECASE)):
             violations.append({
-                'type': 'GAMING_LANGUAGE_DETECTED',
-                'severity': 'critical',
+                'type': 'EMPTY_ISSUES_SECTION',
+                'severity': 'warning',
                 'message': (
-                    f"Review contains audit-gaming language: "
-                    f"{', '.join(repr(g) for g in found_gaming[:3])}. "
-                    f"Reviews must HONESTLY evaluate content, not be written to "
-                    f"'ensure a high score'. {fix_prompt}"
+                    "Review claims zero issues — no module is perfect. "
+                    "At minimum, identify 1 sentence that could be more natural, "
+                    "1 activity that could be improved, or 1 vocabulary choice "
+                    f"worth discussing. {fix_prompt}"
                 )
             })
 
-        # 10. Suspiciously uniform high scores (all ≥ 9/10) with no real issues
-        if total >= cfg['min_dimensions']:
-            scores = [float(s) for s in re.findall(
-                r'\|\s*\w[^|]*\|\s*(\d+(?:\.\d+)?)/10\s*\|', content
-            )]
-            if scores:
-                avg_score = sum(scores) / len(scores)
-                min_score = min(scores)
-                # All dimensions ≥ 9 AND issues section is empty/trivial
-                has_real_issues = (issues_match and issue_text
-                                  and len(issue_text) >= 50
-                                  and not re.match(
-                                      r'^(None|No issues|N/A|—|-)\s*$',
-                                      issue_text, re.IGNORECASE))
-                if min_score >= 9.0 and not has_real_issues:
-                    violations.append({
-                        'type': 'SUSPICIOUSLY_HIGH_SCORES',
-                        'severity': 'warning',
-                        'message': (
-                            f"All {len(scores)} dimensions scored ≥ 9/10 "
-                            f"(avg {avg_score:.1f}) but no substantive issues found. "
-                            f"No module is perfect — a credible review identifies at least "
-                            f"1 concrete improvement. {fix_prompt}"
-                        )
-                    })
-
-        # 11. Positive-only citations — all Ukrainian quotes used for praise, none for criticism
-        if has_citations and len(citations) >= 3:
-            # Look for negative context around citations (within 100 chars before/after)
-            has_critical_citation = False
-            negative_markers = re.compile(
-                r'(issue|problem|incorrect|помилк|неприродн|awkward|wrong|error|'
-                r'should\s+be|could\s+be\s+(improved|better)|missing|lacks?|weak|'
-                r'unclear|confusing|inaccurat|fix|❌|⚠️)', re.IGNORECASE
-            )
-            for cit in citations:
-                cit_escaped = re.escape(cit[:30])
-                ctx_match = re.search(
-                    rf'.{{0,100}}{cit_escaped}.{{0,100}}',
-                    content, re.DOTALL
+        # 7. No Ukrainian citations
+        if cfg['require_ukr_citations'] and not has_citations and not any(v['type'] == 'RUBBER_STAMP_REVIEW' for v in violations):
+            violations.append({
+                'type': 'NO_EVIDENCE_REVIEW',
+                'severity': 'warning',
+                'message': (
+                    "Review contains no quoted Ukrainian text. A real review cites specific "
+                    "sentences from the module (e.g., «Він пішов до хати» — wrong aspect). "
+                    f"{fix_prompt}"
                 )
-                if ctx_match and negative_markers.search(ctx_match.group(0)):
-                    has_critical_citation = True
-                    break
-            if not has_critical_citation:
-                violations.append({
-                    'type': 'PRAISE_ONLY_CITATIONS',
-                    'severity': 'warning',
-                    'message': (
-                        f"Review cites {len(citations)} Ukrainian passages but ALL are used "
-                        f"positively — none highlight problems. A credible review uses citations "
-                        f"to show both strengths AND weaknesses. {fix_prompt}"
-                    )
-                })
+            })
+
+        # 8. Citation verification
+        if cfg['require_ukr_citations']:
+            violations.extend(_check_citation_verification(citations, Path(file_path), fix_prompt))
+
+        # 9. Gaming language
+        violations.extend(_check_gaming_language(content, fix_prompt))
+
+        # 10. Score credibility
+        violations.extend(_check_score_credibility(content, cfg, issue_text, issues_match, fix_prompt))
+
+        # 11. Praise-only citations
+        if has_citations:
+            violations.extend(_check_praise_only_citations(content, citations, fix_prompt))
 
     except Exception as e:
         violations.append({

@@ -327,6 +327,151 @@ def _load_curated_resources() -> dict:
     return _curated_cache
 
 
+def _search_curated_resources(module_slug, results, seen_urls):
+    """Layer 0: Curated per-module resources from external_resources.yaml."""
+    curated = _load_curated_resources()
+    matching_keys = [k for k in curated if k == module_slug or k.endswith(f"-{module_slug}")]
+    for key in matching_keys:
+        module_resources = curated.get(key, {})
+        if not module_resources:
+            continue
+        for cat, score in [("articles", 1.0), ("websites", 0.95)]:
+            for item in module_resources.get(cat, []):
+                url = item.get("url", "")
+                if url and url not in seen_urls:
+                    seen_urls.add(url)
+                    results.append({
+                        "url": url,
+                        "title": item.get("title", ""),
+                        "source": item.get("source", "curated"),
+                        "relevance_score": score,
+                        "topics": [],
+                    })
+
+
+def _search_score_db(module_slug, level, results, seen_urls):
+    """Layer 1: Pre-computed score DB."""
+    score_db = _load_score_db()
+    slug_variants = [f"{level.lower()}-{module_slug}", module_slug]
+    for slug_key in slug_variants:
+        if slug_key in score_db:
+            for entry in score_db[slug_key]:
+                url = entry.get("resource_url", "")
+                if url and url not in seen_urls and entry.get("score", 0) >= 60:
+                    seen_urls.add(url)
+                    results.append({
+                        "url": url,
+                        "title": entry.get("resource_title", ""),
+                        "source": "ukrainianlessons.com",
+                        "relevance_score": entry.get("score", 0) / 100.0,
+                        "topics": [],
+                    })
+
+
+_BLOG_STOPWORDS = {
+    "ukrainian", "english", "language", "learn", "learning", "lesson",
+    "introduce", "introduction", "explain", "practice", "identify",
+    "demonstrate", "apply", "define", "understand", "review", "summary",
+    "module", "section", "chapter", "guide", "rule", "rules", "self",
+    "correctly", "fluently", "basic", "advanced", "common", "simple",
+    "using", "about", "with", "from", "that", "this", "what", "where",
+    "which", "have", "will", "they", "their", "your", "into", "also",
+    "when", "more", "most", "some", "other", "each", "both", "than",
+    "very", "only", "just", "make", "take", "give", "know", "help",
+    "read", "write", "open", "leave", "never",
+}
+
+
+def _build_search_terms(topic_title, keywords):
+    """Build search phrases and words from keywords, filtering stopwords."""
+    search_phrases: list[str] = [topic_title.lower()]
+    search_words: set[str] = set()
+    for kw in keywords:
+        kw_lower = kw.lower().strip()
+        if not kw_lower or kw_lower in _BLOG_STOPWORDS:
+            continue
+        if " " in kw_lower:
+            search_phrases.append(kw_lower)
+        else:
+            search_words.add(kw_lower)
+    for word in topic_title.lower().split():
+        if len(word) > 3 and word not in _BLOG_STOPWORDS:
+            search_words.add(word)
+    return search_phrases, search_words
+
+
+def _score_article(article, search_phrases, search_words, level_base):
+    """Score a single article against search terms. Returns score or None if below threshold."""
+    article_topics = {t.lower() for t in article.get("topics", [])}
+    article_title = article.get("title", "").lower()
+    article_title_words = set(article_title.split())
+    article_level = article.get("suggested_level", "").upper()
+    desc = article.get("description", "").lower()
+    desc_words = set(desc.split())
+
+    phrase_score = 0.0
+    for phrase in search_phrases:
+        if phrase in article_title or phrase in desc:
+            phrase_score += 0.5
+        elif any(phrase in t for t in article_topics):
+            phrase_score += 0.4
+
+    topic_overlap = len(search_words & article_topics)
+    title_overlap = len(search_words & article_title_words)
+    desc_overlap = len(search_words & desc_words)
+    level_match = 1 if article_level == level_base else 0
+
+    if phrase_score == 0 and topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
+        return None
+
+    score = phrase_score + topic_overlap * 0.25 + title_overlap * 0.1 + desc_overlap * 0.05 + level_match * 0.1
+
+    content_type = article.get("content_type", "")
+    if content_type in ("podcast_episode", "podcast_episode_short"):
+        score += 0.1
+
+    return score if score >= 0.3 else None
+
+
+def _search_blog_dbs(level, topic_title, keywords, results, seen_urls):
+    """Layer 2: Keyword matching against blog/podcast DBs."""
+    all_articles = _load_blog_dbs()
+    if not all_articles:
+        return
+
+    search_phrases, search_words = _build_search_terms(topic_title, keywords)
+    level_base = level.split("-")[0].upper()
+
+    for article in all_articles:
+        url = article.get("url", "")
+        if url in seen_urls:
+            continue
+
+        score = _score_article(article, search_phrases, search_words, level_base)
+        if score is None:
+            continue
+
+        seen_urls.add(url)
+        source = article.get("source", "ukrainianlessons.com")
+        if "dobraforma" in url or "opentext.ku.edu" in url:
+            source = "dobraforma"
+
+        entry: dict[str, Any] = {
+            "url": url,
+            "title": article.get("title", ""),
+            "source": source,
+            "relevance_score": min(score, 1.0),
+            "topics": article.get("topics", []),
+        }
+        content_type = article.get("content_type", "")
+        if content_type.startswith("podcast_episode"):
+            entry["content_type"] = content_type
+            entry["series"] = article.get("series", "")
+            entry["season"] = article.get("season", 0)
+            entry["episode"] = article.get("episode", 0)
+        results.append(entry)
+
+
 def search_blogs(
     module_slug: str,
     level: str,
@@ -346,147 +491,10 @@ def search_blogs(
     results: list[dict] = []
     seen_urls: set[str] = set()
 
-    # Layer 0: Curated per-module resources (highest priority)
-    curated = _load_curated_resources()
-    # external_resources.yaml uses "a1-01-slug" format; match by slug suffix
-    matching_keys = [k for k in curated if k == module_slug or k.endswith(f"-{module_slug}")]
-    for key in matching_keys:
-        module_resources = curated.get(key, {})
-        if not module_resources:
-            continue
-        for cat, score in [("articles", 1.0), ("websites", 0.95)]:
-            for item in module_resources.get(cat, []):
-                url = item.get("url", "")
-                if url and url not in seen_urls:
-                    seen_urls.add(url)
-                    results.append({
-                        "url": url,
-                        "title": item.get("title", ""),
-                        "source": item.get("source", "curated"),
-                        "relevance_score": score,
-                        "topics": [],
-                    })
+    _search_curated_resources(module_slug, results, seen_urls)
+    _search_score_db(module_slug, level, results, seen_urls)
+    _search_blog_dbs(level, topic_title, keywords, results, seen_urls)
 
-    # Layer 1: Pre-computed scores
-    score_db = _load_score_db()
-    # Try multiple slug formats
-    slug_variants = [
-        f"{level.lower()}-{module_slug}",
-        module_slug,
-    ]
-    for slug_key in slug_variants:
-        if slug_key in score_db:
-            for entry in score_db[slug_key]:
-                url = entry.get("resource_url", "")
-                if url and url not in seen_urls and entry.get("score", 0) >= 60:
-                    seen_urls.add(url)
-                    results.append({
-                        "url": url,
-                        "title": entry.get("resource_title", ""),
-                        "source": "ukrainianlessons.com",
-                        "relevance_score": entry.get("score", 0) / 100.0,
-                        "topics": [],
-                    })
-
-    # Layer 2: Keyword matching against blog DBs
-    all_articles = _load_blog_dbs()
-    if not all_articles:
-        return results[:max_results]
-
-    # Build search terms (lowercased), filtering stopwords
-    _stopwords = {
-        "ukrainian", "english", "language", "learn", "learning", "lesson",
-        "introduce", "introduction", "explain", "practice", "identify",
-        "demonstrate", "apply", "define", "understand", "review", "summary",
-        "module", "section", "chapter", "guide", "rule", "rules", "self",
-        "correctly", "fluently", "basic", "advanced", "common", "simple",
-        "using", "about", "with", "from", "that", "this", "what", "where",
-        "which", "have", "will", "they", "their", "your", "into", "also",
-        "when", "more", "most", "some", "other", "each", "both", "than",
-        "very", "only", "just", "make", "take", "give", "know", "help",
-        "read", "write", "open", "leave", "never",
-    }
-    # Separate phrase-level terms (multi-word) from single-word terms
-    search_phrases: list[str] = []  # e.g. "past tense", "reflexive verbs"
-    search_words: set[str] = set()  # single domain-specific words
-    for kw in keywords:
-        kw_lower = kw.lower().strip()
-        if not kw_lower or kw_lower in _stopwords:
-            continue
-        if " " in kw_lower:
-            search_phrases.append(kw_lower)
-        else:
-            search_words.add(kw_lower)
-    # Add topic title as a phrase
-    search_phrases.insert(0, topic_title.lower())
-    # Add individual topic words (only domain-specific ones)
-    for word in topic_title.lower().split():
-        if len(word) > 3 and word not in _stopwords:
-            search_words.add(word)
-
-    level_base = level.split("-")[0].upper()
-
-    for article in all_articles:
-        url = article.get("url", "")
-        if url in seen_urls:
-            continue
-
-        article_topics = {t.lower() for t in article.get("topics", [])}
-        article_title = article.get("title", "").lower()
-        article_title_words = set(article_title.split())
-        article_level = article.get("suggested_level", "").upper()
-        desc = article.get("description", "").lower()
-        desc_words = set(desc.split())
-
-        # Phrase matching — much stronger signal than single words
-        phrase_score = 0.0
-        for phrase in search_phrases:
-            if phrase in article_title or phrase in desc:
-                phrase_score += 0.5
-            elif any(phrase in t for t in article_topics):
-                phrase_score += 0.4
-
-        # Word-level matching
-        topic_overlap = len(search_words & article_topics)
-        title_overlap = len(search_words & article_title_words)
-        desc_overlap = len(search_words & desc_words)
-        level_match = 1 if article_level == level_base else 0
-
-        # Gate: require a phrase match, or a topic tag match, or 2+ title/desc word matches
-        if phrase_score == 0 and topic_overlap == 0 and (title_overlap + desc_overlap) < 2:
-            continue
-
-        score = phrase_score + topic_overlap * 0.25 + title_overlap * 0.1 + desc_overlap * 0.05 + level_match * 0.1
-
-        # Podcast episodes get a priority boost — structured content
-        content_type = article.get("content_type", "")
-        if content_type in ("podcast_episode", "podcast_episode_short"):
-            score += 0.1
-
-        if score < 0.3:
-            continue
-
-        seen_urls.add(url)
-        source = article.get("source", "ukrainianlessons.com")
-        if "dobraforma" in url or "opentext.ku.edu" in url:
-            source = "dobraforma"
-
-        entry: dict[str, Any] = {
-            "url": url,
-            "title": article.get("title", ""),
-            "source": source,
-            "relevance_score": min(score, 1.0),
-            "topics": article.get("topics", []),
-        }
-        # Podcast metadata for richer discovery output
-        if content_type.startswith("podcast_episode"):
-            entry["content_type"] = content_type
-            entry["series"] = article.get("series", "")
-            entry["season"] = article.get("season", 0)
-            entry["episode"] = article.get("episode", 0)
-        results.append(entry)
-
-    # Sort by relevance, cap results
     results.sort(key=lambda r: r["relevance_score"], reverse=True)
     return results[:max_results]
 

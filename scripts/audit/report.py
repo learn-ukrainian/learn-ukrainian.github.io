@@ -311,6 +311,304 @@ def set_verification(
         return False
 
 
+def _report_header(file_path: str, shown_level: str, module_num: int | None,
+                    phase: str, pedagogy: str, target: int,
+                    has_critical_failure: bool, naturalness: dict | None) -> list[str]:
+    """Generate the header section of the audit report."""
+    lines = []
+
+    header_title = f"# Audit Report: {os.path.basename(file_path)}"
+    if module_num is not None:
+        header_title = f"# Audit Report: M{module_num:02d} — {os.path.basename(file_path)}"
+    lines.append(header_title)
+
+    meta_line = f"**Level:** {shown_level}"
+    if module_num is not None:
+        meta_line += f" | **Module:** M{module_num:02d}"
+    meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"
+    lines.append(meta_line)
+
+    if naturalness:
+        if isinstance(naturalness, dict):
+            score = naturalness.get('score', 0)
+            status = naturalness.get('status', 'PENDING')
+        elif isinstance(naturalness, (int, float)):
+            score = int(naturalness)
+            status = 'PASS' if score >= 7 else 'FAIL'
+        else:
+            score, status = 0, 'PENDING'
+        lines.append(f"**Naturalness:** {score}/10 ({status})")
+
+    lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")
+    lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("")
+
+    return lines
+
+
+def _report_config_section(config: dict, level_code: str, target: int,
+                           module_focus: str | None) -> list[str]:
+    """Generate the Configuration section of the audit report."""
+    lines = ["## Configuration"]
+
+    config_type = f"{level_code}"
+    if module_focus:
+        config_type += f"-{module_focus}"
+    lines.append(f"**Type:** {config_type}")
+    lines.append(f"**Word Target:** {target} words")
+
+    min_act = config.get('min_activities', 0)
+    max_act = config.get('max_activities', min_act + 4)
+    lines.append(f"**Activities:** {min_act}-{max_act} required")
+    lines.append(f"**Items per Activity:** ≥{config.get('min_items_per_activity', 1)} items")
+    lines.append(f"**Unique Types:** ≥{config.get('min_types_unique', 2)} types required")
+
+    priority_types = config.get('priority_types', set())
+    if priority_types:
+        lines.append(f"**Priority Types:** {', '.join(sorted(priority_types))}")
+
+    required_types = config.get('required_types', set())
+    if required_types:
+        lines.append(f"**Required Types:** {', '.join(sorted(required_types))}")
+
+    lines.append(f"**Engagement:** ≥{config.get('min_engagement', 3)} callouts")
+
+    min_imm = config.get('min_immersion', 0)
+    max_imm = config.get('max_immersion', 100)
+    lines.append(f"**Immersion:** {min_imm}-{max_imm}%")
+    lines.append(f"**Vocab Target:** ≥{config.get('min_vocab', 25)} words")
+
+    translit = "Not allowed" if not config.get('transliteration_allowed', True) else "Allowed"
+    lines.append(f"**Transliteration:** {translit}")
+    lines.append("")
+
+    return lines
+
+
+def _report_activity_breakdown(activity_details: list[dict], config: dict | None,
+                               unique_types: set | None) -> list[str]:
+    """Generate the Activity Breakdown section of the audit report."""
+    lines = ["## Activity Breakdown"]
+    lines.append("| # | Type | Title | Items | Min | Status |")
+    lines.append("|---|------|-------|-------|-----|--------|")
+
+    for idx, act in enumerate(activity_details, 1):
+        lines.append(f"| {idx} | {act['type']} | {act['title']} | {act['items']} | {act['target']} | {act['status']} |")
+
+    lines.append("")
+    lines.append("**Summary:**")
+
+    total_acts = len(activity_details)
+    min_act = config.get('min_activities', 0) if config else 0
+    max_act = config.get('max_activities', min_act + 4) if config else total_acts
+    act_status = '✅' if min_act <= total_acts <= max_act else '❌'
+    lines.append(f"- Total activities: {total_acts} (target: {min_act}-{max_act}) {act_status}")
+
+    if unique_types:
+        min_types = config.get('min_types_unique', 2) if config else 2
+        types_status = '✅' if len(unique_types) >= min_types else '❌'
+        lines.append(f"- Unique types: {len(unique_types)} (minimum: {min_types}) {types_status}")
+
+    if config and config.get('priority_types'):
+        priority_types = config['priority_types']
+        priority_used = unique_types & priority_types if unique_types else set()
+        priority_status = '✅' if priority_used else '❌'
+        lines.append(f"- Priority types used: {len(priority_used)}/{len(priority_types)} ({', '.join(sorted(priority_used)) if priority_used else 'none'}) {priority_status}")
+
+    if config and config.get('required_types'):
+        required_types = config['required_types']
+        required_used = unique_types & required_types if unique_types else set()
+        all_required_present = required_types.issubset(unique_types) if unique_types else False
+        required_status = '✅' if all_required_present else '❌'
+        lines.append(f"- Required types used: {len(required_used)}/{len(required_types)} ({', '.join(sorted(required_used)) if required_used else 'none'}) {required_status}")
+
+    low_density_count = sum(1 for act in activity_details if act['status'] == '❌')
+    lines.append(f"- Low density activities: {low_density_count}")
+    lines.append("")
+
+    return lines
+
+
+# Mapping from dryness flag names to fix instructions
+_DRYNESS_FLAG_FIXES = {
+    'NO_ENGAGEMENT': '''Add 2+ engagement boxes. Use this exact format:
+
+> 💡 **Чи знали ви?**
+>
+> [Interesting fact about the grammar/vocabulary topic in Ukrainian]
+
+> 🇺🇦 **Культурний момент**
+>
+> [Cultural context connecting grammar to Ukrainian life/places]
+
+> 🌍 **У реальному житті**
+>
+> [Practical scenario where this grammar is used]''',
+
+    'WALL_OF_TEXT': 'Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.',
+
+    'REPETITIVE_STARTERS': 'Vary sentence starters. Instead of repeating "Доконаний вид...", use: "Коли...", "Якщо...", "Зверніть увагу:", "Порівняйте:", questions, examples.',
+
+    'NO_DIALOGUE': '''Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
+
+Use ONE of these formats (blockquote is required for detection):
+
+Format 1 — Bold speaker in blockquote (PREFERRED):
+> **Студент:** Чому тут знахідний відмінок?
+> **Викладач:** Бо дієслово «бачити» вимагає знахідного.
+> **Студент:** А якщо це заперечення?
+> **Викладач:** Тоді родовий: «не бачу **книжки**».
+
+Format 2 — Em-dash in blockquote:
+> — Чому тут знахідний?
+> — Бо дієслово вимагає знахідного.
+
+Format 3 — Plain А:/Б: speakers:
+А: Чому тут знахідний?
+Б: Бо дієслово вимагає знахідного.
+
+IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
+Place dialogues inside [!dialogue] callouts or blockquotes.''',
+
+    'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
+
+Use this format (blockquote required):
+> **Студент:** Як правильно сказати?
+> **Викладач:** Вживайте форму «збігатися», а не «співпадати».
+
+Or em-dash format:
+> — Як правильно сказати?
+> — Вживайте «збігатися».
+
+IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.''',
+
+    'NO_EXAMPLES': 'Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.',
+
+    'ABSTRACT_ONLY': '''Add 3+ real-world boxes. Use this exact format:
+
+> 🌍 **У реальному житті**
+>
+> [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+> [Example sentence showing grammar in that context]''',
+
+    'NO_COLLOCATIONS': 'Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)',
+
+    'NO_REGISTER_NOTES': 'Add register notes: Mark words as (розм.) for colloquial, (офіц.) for formal, (книжн.) for literary.',
+
+    'NO_PRIMARY_SOURCES': '''Add 2+ primary source quotes. Use this format:
+
+> «[Exact quote from historical document]»
+> — *[Source name], [year]*''',
+
+    'NO_TIMELINE': 'Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).',
+
+    'NO_DECOLONIZATION_PERSPECTIVE': 'Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.',
+
+    'NO_QUOTES': '''Add 2+ direct quotes from the subject. Use this format:
+
+> «[Exact quote from the person]»
+> — *[Person name], [context/year]*''',
+
+    'NO_LEGACY': 'Add a "Спадщина" or "Вплив" section discussing lasting influence on Ukrainian culture/literature/language.',
+
+    'NO_ANALYSIS': '''Add 3+ analysis section headers. Use keywords in headers:
+
+## 1. Аналіз [topic]: [subtitle]
+## 2. Інтерпретація [aspect]: [subtitle]
+## 3. Символіка [element]: [subtitle]''',
+
+    'NO_LITERARY_CITATIONS': '''Add 3+ literary citations. Use this exact format:
+
+«[Quote from the literary work, minimum 20 characters]»
+
+Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»''',
+
+    'NO_RESOURCES': '''Add 2+ resource blocks. Use this format:
+
+> [!resources] Додаткові ресурси
+>
+> - [Resource 1 with link or description]
+> - [Resource 2 with link or description]''',
+
+    'NO_EXEMPLAR_TEXTS': '''Add 2+ exemplar text excerpts. Use this format:
+
+**Зразок [style type]:**
+
+> «[Extended quote showing the style, 50+ words]»
+> — *[Source]*''',
+
+    'NO_REGISTER_ANALYSIS': 'Add 3+ register analysis notes explaining when to use formal vs informal, written vs spoken variants.',
+
+    'NO_CULTURAL_ANCHOR': '''Add 3+ cultural references. Use this exact format:
+
+> 🇺🇦 **Культурний момент**
+>
+> [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+> [How it connects to the grammar/vocabulary being taught]
+> [Example sentence using the grammar with cultural context]''',
+
+    'LOW_CULTURAL_ANCHOR': '''Add more cultural references (need 3+ total). Include:
+- Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+- Ukrainian traditions or customs
+- Contemporary Ukrainian life examples''',
+
+    'NO_PROVERBS': '''Add 1+ Ukrainian proverb. Use this format:
+
+Українці кажу|ть: «[Proverb in Ukrainian]»
+
+Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
+
+Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.''',
+}
+
+
+def _report_richness_section(richness_data: dict, richness_flags: list | None) -> list[str]:
+    """Generate the Richness Details section of the audit report."""
+    lines = ["", "## Richness Details"]
+    score = richness_data.get('score', 0)
+    threshold = richness_data.get('threshold', 95)
+    lines.append(f"**Score:** {score}% (minimum: {threshold}%)")
+    lines.append(f"**Module Type:** {richness_data.get('module_type', 'unknown')}")
+    lines.append("")
+    lines.append("### Score Breakdown")
+
+    raw_counts = richness_data.get('raw', {})
+    normalized = richness_data.get('normalized', {})
+    targets = richness_data.get('targets', {})
+    weights = richness_data.get('weights', {})
+
+    if raw_counts:
+        lines.append("| Metric | Count | Target | Score | Weight | Contribution |")
+        lines.append("|--------|-------|--------|-------|--------|--------------|")
+        total_contribution = 0
+
+        sorted_metrics = sorted(raw_counts.keys(), key=lambda k: weights.get(k, 0), reverse=True)
+
+        for metric in sorted_metrics:
+            count = raw_counts[metric]
+            target = targets.get(metric, '-')
+            norm_score = normalized.get(metric, 0)
+            weight = weights.get(metric, 0.05)
+            contribution = norm_score * weight * 100
+            total_contribution += contribution
+            count_str = f"{count:.2f}" if isinstance(count, float) else str(count)
+            target_str = str(target) if target != 0 else '-'
+            lines.append(f"| {metric} | {count_str} | {target_str} | {norm_score:.0%} | {weight:.0%} | {contribution:.1f}% |")
+        lines.append(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
+
+    if richness_flags:
+        lines.append("")
+        lines.append("### Dryness Flags & Fixes")
+        for flag in richness_flags:
+            fix = _DRYNESS_FLAG_FIXES.get(flag, 'Address this issue to improve richness score')
+            lines.append(f"- ❌ **{flag}**")
+            lines.append("  - FIX:")
+            for line in fix.split('\n'):
+                lines.append(f"    {line}")
+
+    return lines
+
+
 def generate_report(
     file_path: str,
     phase: str,
@@ -339,139 +637,30 @@ def generate_report(
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
-
-    # Use display_level for report output (e.g., "BIO"), fall back to level_code
     shown_level = display_level if display_level else level_code
 
-    # Build header with module number if available
-    header_title = f"# Audit Report: {os.path.basename(file_path)}"
-    if module_num is not None:
-        header_title = f"# Audit Report: M{module_num:02d} — {os.path.basename(file_path)}"
-    report_lines.append(header_title)
+    # Header
+    report_lines.extend(_report_header(
+        file_path, shown_level, module_num, phase, pedagogy, target,
+        has_critical_failure, naturalness
+    ))
 
-    # Metadata line with module number
-    meta_line = f"**Level:** {shown_level}"
-    if module_num is not None:
-        meta_line += f" | **Module:** M{module_num:02d}"
-    meta_line += f" | **Phase:** {phase} | **Pedagogy:** {pedagogy} | **Target:** {target}"
-    report_lines.append(meta_line)
-
-    # Add Naturalness Score to header if available
-    if naturalness:
-        if isinstance(naturalness, dict):
-            score = naturalness.get('score', 0)
-            status = naturalness.get('status', 'PENDING')
-        elif isinstance(naturalness, (int, float)):
-            score = int(naturalness)
-            status = 'PASS' if score >= 7 else 'FAIL'
-        else:
-            score, status = 0, 'PENDING'
-        report_lines.append(f"**Naturalness:** {score}/10 ({status})")
-
-    report_lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")
-
-    # Add timestamp
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    report_lines.append(f"**Generated:** {timestamp}")
-    report_lines.append("")
-
-    # Add Configuration section
+    # Configuration
     if config:
-        report_lines.append("## Configuration")
+        report_lines.extend(_report_config_section(config, level_code, target, module_focus))
 
-        # Build config type label
-        config_type = f"{level_code}"
-        if module_focus:
-            config_type += f"-{module_focus}"
-        report_lines.append(f"**Type:** {config_type}")
-
-        report_lines.append(f"**Word Target:** {target} words")
-
-        min_act = config.get('min_activities', 0)
-        max_act = config.get('max_activities', min_act + 4)
-        report_lines.append(f"**Activities:** {min_act}-{max_act} required")
-
-        report_lines.append(f"**Items per Activity:** ≥{config.get('min_items_per_activity', 1)} items")
-        report_lines.append(f"**Unique Types:** ≥{config.get('min_types_unique', 2)} types required")
-
-        priority_types = config.get('priority_types', set())
-        if priority_types:
-            report_lines.append(f"**Priority Types:** {', '.join(sorted(priority_types))}")
-
-        required_types = config.get('required_types', set())
-        if required_types:
-            report_lines.append(f"**Required Types:** {', '.join(sorted(required_types))}")
-
-        report_lines.append(f"**Engagement:** ≥{config.get('min_engagement', 3)} callouts")
-
-        min_imm = config.get('min_immersion', 0)
-        max_imm = config.get('max_immersion', 100)
-        report_lines.append(f"**Immersion:** {min_imm}-{max_imm}%")
-
-        report_lines.append(f"**Vocab Target:** ≥{config.get('min_vocab', 25)} words")
-
-        translit = "Not allowed" if not config.get('transliteration_allowed', True) else "Allowed"
-        report_lines.append(f"**Transliteration:** {translit}")
-
-        report_lines.append("")
-
-    # Add Activity Breakdown section
+    # Activity Breakdown
     if activity_details:
-        report_lines.append("## Activity Breakdown")
-        report_lines.append("| # | Type | Title | Items | Min | Status |")
-        report_lines.append("|---|------|-------|-------|-----|--------|")
+        report_lines.extend(_report_activity_breakdown(activity_details, config, unique_types))
 
-        for idx, act in enumerate(activity_details, 1):
-            title = act['title']
-            act_type = act['type']
-            items = act['items']
-            target = act['target']
-            status = act['status']
-            report_lines.append(f"| {idx} | {act_type} | {title} | {items} | {target} | {status} |")
-
-        report_lines.append("")
-        report_lines.append("**Summary:**")
-
-        # Total activities
-        total_acts = len(activity_details)
-        min_act = config.get('min_activities', 0) if config else 0
-        max_act = config.get('max_activities', min_act + 4) if config else total_acts
-        act_status = '✅' if min_act <= total_acts <= max_act else '❌'
-        report_lines.append(f"- Total activities: {total_acts} (target: {min_act}-{max_act}) {act_status}")
-
-        # Unique types
-        if unique_types:
-            min_types = config.get('min_types_unique', 2) if config else 2
-            types_status = '✅' if len(unique_types) >= min_types else '❌'
-            report_lines.append(f"- Unique types: {len(unique_types)} (minimum: {min_types}) {types_status}")
-
-        # Priority types
-        if config and config.get('priority_types'):
-            priority_types = config['priority_types']
-            priority_used = unique_types & priority_types if unique_types else set()
-            priority_status = '✅' if priority_used else '❌'
-            report_lines.append(f"- Priority types used: {len(priority_used)}/{len(priority_types)} ({', '.join(sorted(priority_used)) if priority_used else 'none'}) {priority_status}")
-
-        # Required types
-        if config and config.get('required_types'):
-            required_types = config['required_types']
-            required_used = unique_types & required_types if unique_types else set()
-            all_required_present = required_types.issubset(unique_types) if unique_types else False
-            required_status = '✅' if all_required_present else '❌'
-            report_lines.append(f"- Required types used: {len(required_used)}/{len(required_types)} ({', '.join(sorted(required_used)) if required_used else 'none'}) {required_status}")
-
-        # Low density count
-        low_density_count = sum(1 for act in activity_details if act['status'] == '❌')
-        report_lines.append(f"- Low density activities: {low_density_count}")
-
-        report_lines.append("")
-
+    # Lint errors
     if lint_errors:
         report_lines.append("## LINT ERRORS")
         for err in lint_errors:
             report_lines.append(f"- ❌ {err}")
         report_lines.append("")
 
+    # Pedagogical violations
     if pedagogical_violations:
         report_lines.append("## PEDAGOGICAL VIOLATIONS")
         for v in pedagogical_violations:
@@ -479,6 +668,7 @@ def generate_report(
             report_lines.append(f"  - FIX: {v['fix']}")
         report_lines.append("")
 
+    # Template violations
     if template_violations:
         report_lines.append("## TEMPLATE COMPLIANCE")
         for v in template_violations:
@@ -487,6 +677,7 @@ def generate_report(
             report_lines.append(f"  - FIX: {v['fix']}")
         report_lines.append("")
 
+    # Recommendation
     if recommendation != 'PASS':
         rec_icon = '🔄' if recommendation == 'REWRITE' else '📝'
         report_lines.append("## Recommendation")
@@ -497,209 +688,34 @@ def generate_report(
                 report_lines.append(f"- {reason}")
             report_lines.append("")
 
+    # Gates
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
                   'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:
-            if hasattr(r, 'icon'):  # GateResult dataclass
+            if hasattr(r, 'icon'):
                 report_lines.append(f"- **{k.capitalize()}:** {r.icon} {r.msg}")
-            else:  # dict
+            else:
                 report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
 
-    # Add richness details section (B1+ and LIT)
+    # Richness details
     if richness_data:
-        report_lines.append("")
-        report_lines.append("## Richness Details")
-        score = richness_data.get('score', 0)
-        threshold = richness_data.get('threshold', 95)
-        report_lines.append(f"**Score:** {score}% (minimum: {threshold}%)")
-        report_lines.append(f"**Module Type:** {richness_data.get('module_type', 'unknown')}")
-        report_lines.append("")
-        report_lines.append("### Score Breakdown")
-        raw_counts = richness_data.get('raw', {})
-        normalized = richness_data.get('normalized', {})
-        targets = richness_data.get('targets', {})
-        weights = richness_data.get('weights', {})
+        report_lines.extend(_report_richness_section(richness_data, richness_flags))
 
-        if raw_counts:
-            report_lines.append("| Metric | Count | Target | Score | Weight | Contribution |")
-            report_lines.append("|--------|-------|--------|-------|--------|--------------|")
-            total_contribution = 0
-
-            # Sort by weight (descending)
-            sorted_metrics = sorted(raw_counts.keys(), key=lambda k: weights.get(k, 0), reverse=True)
-
-            for metric in sorted_metrics:
-                count = raw_counts[metric]
-                target = targets.get(metric, '-')
-                norm_score = normalized.get(metric, 0)
-                weight = weights.get(metric, 0.05)
-                contribution = norm_score * weight * 100
-                total_contribution += contribution
-                # Format values for readability
-                count_str = f"{count:.2f}" if isinstance(count, float) else str(count)
-                target_str = str(target) if target != 0 else '-'
-                report_lines.append(f"| {metric} | {count_str} | {target_str} | {norm_score:.0%} | {weight:.0%} | {contribution:.1f}% |")
-            report_lines.append(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
-        if richness_flags:
-            report_lines.append("")
-            report_lines.append("### Dryness Flags & Fixes")
-            flag_fixes = {
-                'NO_ENGAGEMENT': '''Add 2+ engagement boxes. Use this exact format:
-
-> 💡 **Чи знали ви?**
->
-> [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-
-> 🇺🇦 **Культурний момент**
->
-> [Cultural context connecting grammar to Ukrainian life/places]
-
-> 🌍 **У реальному житті**
->
-> [Practical scenario where this grammar is used]''',
-
-                'WALL_OF_TEXT': 'Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.',
-
-                'REPETITIVE_STARTERS': 'Vary sentence starters. Instead of repeating "Доконаний вид...", use: "Коли...", "Якщо...", "Зверніть увагу:", "Порівняйте:", questions, examples.',
-
-                'NO_DIALOGUE': '''Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
-
-Use ONE of these formats (blockquote is required for detection):
-
-Format 1 — Bold speaker in blockquote (PREFERRED):
-> **Студент:** Чому тут знахідний відмінок?
-> **Викладач:** Бо дієслово «бачити» вимагає знахідного.
-> **Студент:** А якщо це заперечення?
-> **Викладач:** Тоді родовий: «не бачу **книжки**».
-
-Format 2 — Em-dash in blockquote:
-> — Чому тут знахідний?
-> — Бо дієслово вимагає знахідного.
-
-Format 3 — Plain А:/Б: speakers:
-А: Чому тут знахідний?
-Б: Бо дієслово вимагає знахідного.
-
-IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
-Place dialogues inside [!dialogue] callouts or blockquotes.''',
-
-                'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
-
-Use this format (blockquote required):
-> **Студент:** Як правильно сказати?
-> **Викладач:** Вживайте форму «збігатися», а не «співпадати».
-
-Or em-dash format:
-> — Як правильно сказати?
-> — Вживайте «збігатися».
-
-IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.''',
-
-                'NO_EXAMPLES': 'Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.',
-
-                'ABSTRACT_ONLY': '''Add 3+ real-world boxes. Use this exact format:
-
-> 🌍 **У реальному житті**
->
-> [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
-> [Example sentence showing grammar in that context]''',
-
-                'NO_COLLOCATIONS': 'Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)',
-
-                'NO_REGISTER_NOTES': 'Add register notes: Mark words as (розм.) for colloquial, (офіц.) for formal, (книжн.) for literary.',
-
-                'NO_PRIMARY_SOURCES': '''Add 2+ primary source quotes. Use this format:
-
-> «[Exact quote from historical document]»
-> — *[Source name], [year]*''',
-
-                'NO_TIMELINE': 'Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).',
-
-                'NO_DECOLONIZATION_PERSPECTIVE': 'Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.',
-
-                'NO_QUOTES': '''Add 2+ direct quotes from the subject. Use this format:
-
-> «[Exact quote from the person]»
-> — *[Person name], [context/year]*''',
-
-                'NO_LEGACY': 'Add a "Спадщина" or "Вплив" section discussing lasting influence on Ukrainian culture/literature/language.',
-
-                'NO_ANALYSIS': '''Add 3+ analysis section headers. Use keywords in headers:
-
-## 1. Аналіз [topic]: [subtitle]
-## 2. Інтерпретація [aspect]: [subtitle]
-## 3. Символіка [element]: [subtitle]''',
-
-                'NO_LITERARY_CITATIONS': '''Add 3+ literary citations. Use this exact format:
-
-«[Quote from the literary work, minimum 20 characters]»
-
-Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»''',
-
-                'NO_RESOURCES': '''Add 2+ resource blocks. Use this format:
-
-> [!resources] Додаткові ресурси
->
-> - [Resource 1 with link or description]
-> - [Resource 2 with link or description]''',
-
-                'NO_EXEMPLAR_TEXTS': '''Add 2+ exemplar text excerpts. Use this format:
-
-**Зразок [style type]:**
-
-> «[Extended quote showing the style, 50+ words]»
-> — *[Source]*''',
-
-                'NO_REGISTER_ANALYSIS': 'Add 3+ register analysis notes explaining when to use formal vs informal, written vs spoken variants.',
-
-                'NO_CULTURAL_ANCHOR': '''Add 3+ cultural references. Use this exact format:
-
-> 🇺🇦 **Культурний момент**
->
-> [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
-> [How it connects to the grammar/vocabulary being taught]
-> [Example sentence using the grammar with cultural context]''',
-
-                'LOW_CULTURAL_ANCHOR': '''Add more cultural references (need 3+ total). Include:
-- Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-- Ukrainian traditions or customs
-- Contemporary Ukrainian life examples''',
-
-                'NO_PROVERBS': '''Add 1+ Ukrainian proverb. Use this format:
-
-Українці кажу|ть: «[Proverb in Ukrainian]»
-
-Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-
-Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.''',
-            }
-            for flag in richness_flags:
-                fix = flag_fixes.get(flag, 'Address this issue to improve richness score')
-                report_lines.append(f"- ❌ **{flag}**")
-                report_lines.append("  - FIX:")
-                # Format multi-line fixes properly
-                for line in fix.split('\n'):
-                    report_lines.append(f"    {line}")
-
-    # Add low density activities section if any
+    # Low density activities
     if low_density_activities:
         report_lines.append("")
         report_lines.append("## Low Density Activities")
         report_lines.append("| Activity | Type | Items | Required | Fix |")
         report_lines.append("|----------|------|-------|----------|-----|")
         for act in low_density_activities:
-            title = act['title']
-            act_type = act['type']
-            items = act['items']
-            target = act['target']
-            missing = target - items
-            fix = f"Add {missing} more items"
-            report_lines.append(f"| {title} | {act_type} | {items} | {target} | {fix} |")
+            missing = act['target'] - act['items']
+            report_lines.append(f"| {act['title']} | {act['type']} | {act['items']} | {act['target']} | Add {missing} more items |")
         report_lines.append("")
 
+    # Section Audit
     report_lines.append("")
     report_lines.append("## Section Audit")
     report_lines.append("| Section | Status | Count | Notes |")

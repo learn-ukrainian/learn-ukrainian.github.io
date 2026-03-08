@@ -1196,6 +1196,163 @@ def _extract_pedagogy_violations(audit_output: str) -> list[dict]:
     return violations
 
 
+def _format_deterministic_issue(index: int, iss: dict,
+                                content_lines: list[str]) -> str:
+    """Format a single deterministic issue into fix instructions."""
+    issue_type = iss.get("type", "UNKNOWN")
+    lines_block: list[str] = [f"### Fix {index}: {issue_type}"]
+
+    location = iss.get("location", "")
+    matched_text = iss.get("text", "")
+    line_num = 0
+    loc_match = re.search(r"~?line\s*(\d+)", location, re.IGNORECASE)
+    if loc_match:
+        line_num = int(loc_match.group(1))
+
+    if issue_type == "LLM_FILLER":
+        if line_num and line_num <= len(content_lines):
+            actual_line = content_lines[line_num - 1].strip()
+            lines_block.append(f"**Line {line_num}:** `{actual_line}`")
+        elif matched_text:
+            lines_block.append(f"**Text:** `{matched_text}`")
+        lines_block.append(f"**Action:** Rephrase to remove \"{matched_text}\". "
+                         "Start the sentence with a concrete fact instead.")
+
+    elif issue_type == "RUSSIANISM":
+        fix_text = iss.get("fix", "")
+        lines_block.append(f"**Found:** `{matched_text}`")
+        if fix_text:
+            lines_block.append(f"**Replace with:** `{fix_text}` (preserve grammatical form)")
+        if line_num and line_num <= len(content_lines):
+            actual_line = content_lines[line_num - 1].strip()
+            lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+    elif issue_type in ("PEDAGOGICAL", "DECODABILITY"):
+        lines_block.append(f"**What:** {matched_text}")
+        fix_text = iss.get("fix", "")
+        if fix_text:
+            lines_block.append(f"**How to fix:** {fix_text}")
+        if line_num and line_num <= len(content_lines):
+            actual_line = content_lines[line_num - 1].strip()
+            lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
+
+    else:
+        if matched_text:
+            lines_block.append(f"**What:** {matched_text}")
+        fix_text = iss.get("fix", "")
+        if fix_text:
+            lines_block.append(f"**How to fix:** {fix_text}")
+        if location:
+            lines_block.append(f"**Where:** {location}")
+
+    return "\n".join(lines_block)
+
+
+def _format_gate_failure(gf: dict) -> str:
+    """Format a single gate failure into fix instructions."""
+    gate = gf["gate"]
+    detail = gf["detail"]
+    lines_block = [f"### Fix: Gate `{gate}` FAIL — {detail}"]
+
+    if gate.lower() in ("words", "word_count"):
+        lines_block.append("**Action:** Expand content in the shortest sections. "
+                         "Add examples, explanations, or practice scenarios.")
+    elif gate.lower() == "immersion":
+        lines_block.append(_format_immersion_gate_action(detail))
+    elif gate.lower() in ("activities", "unique_types"):
+        lines_block.append("**Action:** Add more activities or diversify activity types "
+                         "in the activities YAML file.")
+    elif gate.lower() == "engagement":
+        lines_block.append("**Action:** Add engagement boxes: `[!tip]`, `[!note]`, "
+                         "`[!cultural]`, `[!myth-buster]`.")
+    elif gate == "YAML_SCHEMA":
+        lines_block.append(f"**Action:** Fix the YAML schema violation: {detail}")
+
+    return "\n".join(lines_block)
+
+
+def _format_immersion_gate_action(detail: str) -> str:
+    """Build action text for an immersion gate failure."""
+    imm_match = re.search(r"([\d.]+)%\s+LOW\s+\(target\s+(\d+)-(\d+)%", detail)
+    if imm_match:
+        current_imm = float(imm_match.group(1))
+        target_min = int(imm_match.group(2))
+        gap = target_min - current_imm
+        if gap > 15:
+            return (
+                f"**\u26a0 SCOPE WARNING:** Immersion gap is {gap:.0f}% ({current_imm:.1f}% \u2192 {target_min}% min). "
+                "This is too large for a fix pass. Focus on the EASIEST wins:\n"
+                "1. Add Ukrainian section headers with English in parentheses\n"
+                "2. Add '\u041d\u0430\u043f\u0440\u0438\u043a\u043b\u0430\u0434:' / '\u041f\u043e\u0440\u0456\u0432\u043d\u044f\u0439\u0442\u0435:' before example blocks\n"
+                "3. Add short Ukrainian phrases with (translations) in existing paragraphs\n"
+                "Do NOT rewrite entire sections. Target +5-8% improvement max.")
+    return ("**Action:** Add more Ukrainian-language content blocks. "
+            "Convert some English explanations to Ukrainian with English glosses.")
+
+
+def _collect_unparsed_failures(audit_output: str, parsed_gates: set[str]) -> list[str]:
+    """Collect audit failures not already covered by parsed gate_failures."""
+    audit_lines = audit_output.strip().split("\n")
+    return [
+        ln.strip() for ln in audit_lines
+        if ("\u274c" in ln or "VIOLATION" in ln) and not any(g in ln for g in parsed_gates)
+    ]
+
+
+def _build_fallback_instructions(audit_output: str) -> str:
+    """Build fallback fix instructions when no specific issues were extracted."""
+    audit_lines = audit_output.strip().split("\n")
+    fail_lines = [ln for ln in audit_lines if "\u274c" in ln or "FAIL" in ln or "VIOLATION" in ln]
+    if fail_lines:
+        return "### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```"
+    # Ultra-fallback: include the full audit tail so the fix prompt is never empty
+    tail = "\n".join(audit_lines[-30:])
+    return (
+        "### Audit Output (no specific failures extracted \u2014 review raw output)\n\n"
+        f"```\n{tail}\n```"
+    )
+
+
+def _build_section_fix_format(audit_output: str, ctx: ModuleContext,
+                               content_text: str, word_count: int) -> str:
+    """Build section-level fix output format instructions."""
+    if not content_text:
+        return ""
+    affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"], content=content_text)
+    if not affected_sections:
+        return ""
+    section_list = ", ".join(f'"{s}"' for s in affected_sections)
+    if word_count >= 3000:
+        scope_note = f"This module is {word_count} words. Fix ONLY sections: {section_list}"
+    else:
+        scope_note = f"Fix the affected sections: {section_list}"
+    return textwrap.dedent(f"""\
+
+            ## Output Format (MANDATORY)
+
+            {scope_note}
+
+            **Wrap EACH fixed section in delimiters:**
+            ```
+            ===SECTION_FIX_START===
+            ## {{section title}}
+            {{fixed section content}}
+            ===SECTION_FIX_END===
+            ```
+        """)
+
+
+def _build_file_list(ctx: ModuleContext, content_only: bool) -> str:
+    """Build the file list section for the fix prompt."""
+    file_list = f"- Content: `{ctx.paths['md']}`"
+    if not content_only:
+        if ctx.paths.get("activities"):
+            file_list += f"\n- Activities: `{ctx.paths['activities']}`"
+        if ctx.paths.get("vocabulary"):
+            file_list += f"\n- Vocabulary: `{ctx.paths['vocabulary']}`"
+    return file_list
+
+
 def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
                       deterministic_issues: list[dict] | None = None) -> str:
     """Build a surgical fix prompt with per-issue instructions.
@@ -1222,100 +1379,15 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     # Build per-issue fix instructions
     fix_instructions: list[str] = []
 
-    # 1. Deterministic issues — inline the actual line content
+    # 1. Deterministic issues
     for i, iss in enumerate(det_issues, 1):
-        issue_type = iss.get("type", "UNKNOWN")
-        lines_block: list[str] = [f"### Fix {i}: {issue_type}"]
+        fix_instructions.append(_format_deterministic_issue(i, iss, content_lines))
 
-        # Try to find the actual line in content
-        location = iss.get("location", "")
-        matched_text = iss.get("text", "")
-        line_num = 0
-        loc_match = re.search(r"~?line\s*(\d+)", location, re.IGNORECASE)
-        if loc_match:
-            line_num = int(loc_match.group(1))
-
-        if issue_type == "LLM_FILLER":
-            if line_num and line_num <= len(content_lines):
-                actual_line = content_lines[line_num - 1].strip()
-                lines_block.append(f"**Line {line_num}:** `{actual_line}`")
-            elif matched_text:
-                lines_block.append(f"**Text:** `{matched_text}`")
-            lines_block.append(f"**Action:** Rephrase to remove \"{matched_text}\". "
-                             "Start the sentence with a concrete fact instead.")
-
-        elif issue_type == "RUSSIANISM":
-            fix_text = iss.get("fix", "")
-            lines_block.append(f"**Found:** `{matched_text}`")
-            if fix_text:
-                lines_block.append(f"**Replace with:** `{fix_text}` (preserve grammatical form)")
-            if line_num and line_num <= len(content_lines):
-                actual_line = content_lines[line_num - 1].strip()
-                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
-
-        elif issue_type in ("PEDAGOGICAL", "DECODABILITY"):
-            lines_block.append(f"**What:** {matched_text}")
-            fix_text = iss.get("fix", "")
-            if fix_text:
-                lines_block.append(f"**How to fix:** {fix_text}")
-            if line_num and line_num <= len(content_lines):
-                actual_line = content_lines[line_num - 1].strip()
-                lines_block.append(f"**Context (line {line_num}):** `{actual_line}`")
-
-        else:
-            if matched_text:
-                lines_block.append(f"**What:** {matched_text}")
-            fix_text = iss.get("fix", "")
-            if fix_text:
-                lines_block.append(f"**How to fix:** {fix_text}")
-            if location:
-                lines_block.append(f"**Where:** {location}")
-
-        fix_instructions.append("\n".join(lines_block))
-
-    # 2. Gate failures — specific action per gate
+    # 2. Gate failures
     for gf in gate_failures:
-        gate = gf["gate"]
-        detail = gf["detail"]
-        lines_block = [f"### Fix: Gate `{gate}` FAIL — {detail}"]
+        fix_instructions.append(_format_gate_failure(gf))
 
-        if gate.lower() in ("words", "word_count"):
-            lines_block.append("**Action:** Expand content in the shortest sections. "
-                             "Add examples, explanations, or practice scenarios.")
-        elif gate.lower() == "immersion":
-            # Parse immersion gap to detect unfixable cases
-            imm_match = re.search(r"([\d.]+)%\s+LOW\s+\(target\s+(\d+)-(\d+)%", detail)
-            if imm_match:
-                current_imm = float(imm_match.group(1))
-                target_min = int(imm_match.group(2))
-                gap = target_min - current_imm
-                if gap > 15:
-                    lines_block.append(
-                        f"**⚠ SCOPE WARNING:** Immersion gap is {gap:.0f}% ({current_imm:.1f}% → {target_min}% min). "
-                        "This is too large for a fix pass. Focus on the EASIEST wins:\n"
-                        "1. Add Ukrainian section headers with English in parentheses\n"
-                        "2. Add 'Наприклад:' / 'Порівняйте:' before example blocks\n"
-                        "3. Add short Ukrainian phrases with (translations) in existing paragraphs\n"
-                        "Do NOT rewrite entire sections. Target +5-8% improvement max.")
-                else:
-                    lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
-                                     "Convert some English explanations to Ukrainian with English glosses.")
-            else:
-                lines_block.append("**Action:** Add more Ukrainian-language content blocks. "
-                                 "Convert some English explanations to Ukrainian with English glosses.")
-        elif gate.lower() in ("activities", "unique_types"):
-            lines_block.append("**Action:** Add more activities or diversify activity types "
-                             "in the activities YAML file.")
-        elif gate.lower() == "engagement":
-            lines_block.append("**Action:** Add engagement boxes: `[!tip]`, `[!note]`, "
-                             "`[!cultural]`, `[!myth-buster]`.")
-        elif gate == "YAML_SCHEMA":
-            lines_block.append(f"**Action:** Fix the YAML schema violation: {detail}")
-
-        fix_instructions.append("\n".join(lines_block))
-
-    # 3. Pedagogical violations — extracted from the 📚 section
-    # The Pedagogy gate only says "3 violations" — this adds the actual details
+    # 3. Pedagogical violations
     for i, pv in enumerate(ped_violations, len(det_issues) + len(gate_failures) + 1):
         lines_block = [f"### Fix {i}: PEDAGOGICAL_VIOLATION"]
         lines_block.append(f"**What:** [{pv['type']}] {pv['issue']}")
@@ -1323,29 +1395,15 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
             lines_block.append(f"**How to fix:** {pv['fix']}")
         fix_instructions.append("\n".join(lines_block))
 
-    # Always append any unparsed ❌ failures not already covered by gate_failures
-    # This catches LINT errors, TEMPLATE COMPLIANCE, PEDAGOGICAL VIOLATIONS, etc.
+    # 4. Unparsed failures
     parsed_gates = {gf["gate"] for gf in gate_failures}
-    audit_lines = audit_output.strip().split("\n")
-    unparsed_fails = [
-        ln.strip() for ln in audit_lines
-        if ("❌" in ln or "VIOLATION" in ln) and not any(g in ln for g in parsed_gates)
-    ]
+    unparsed_fails = _collect_unparsed_failures(audit_output, parsed_gates)
     if unparsed_fails:
         fix_instructions.append("### Other Audit Failures\n\n```\n" + "\n".join(unparsed_fails[-20:]) + "\n```")
 
+    # 5. Fallback if nothing extracted
     if not fix_instructions:
-        # Last resort: dump condensed fail lines so Gemini always sees WHY audit failed
-        fail_lines = [ln for ln in audit_lines if "❌" in ln or "FAIL" in ln or "VIOLATION" in ln]
-        if fail_lines:
-            fix_instructions.append("### Audit Failures\n\n```\n" + "\n".join(fail_lines[-20:]) + "\n```")
-        else:
-            # Ultra-fallback: include the full audit tail so the fix prompt is never empty
-            tail = "\n".join(audit_lines[-30:])
-            fix_instructions.append(
-                "### Audit Output (no specific failures extracted — review raw output)\n\n"
-                f"```\n{tail}\n```"
-            )
+        fix_instructions.append(_build_fallback_instructions(audit_output))
 
     # Pedagogical constraints (compact)
     ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num)
@@ -1357,42 +1415,11 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
     decodable_section = f"\n{decodable}\n" if decodable else ""
 
-    # Section-level fix output format — used for ALL modules
-    section_fix = ""
-    if content_text:
-        affected_sections = _identify_affected_sections(audit_output, ctx.paths["md"], content=content_text)
-        if affected_sections:
-            section_list = ", ".join(f'"{s}"' for s in affected_sections)
-            if word_count >= 3000:
-                scope_note = f"This module is {word_count} words. Fix ONLY sections: {section_list}"
-            else:
-                scope_note = f"Fix the affected sections: {section_list}"
-            section_fix = textwrap.dedent(f"""\
-
-                    ## Output Format (MANDATORY)
-
-                    {scope_note}
-
-                    **Wrap EACH fixed section in delimiters:**
-                    ```
-                    ===SECTION_FIX_START===
-                    ## {{section title}}
-                    {{fixed section content}}
-                    ===SECTION_FIX_END===
-                    ```
-                """)
-
-    # Build file list
-    file_list = f"- Content: `{ctx.paths['md']}`"
-    if not content_only:
-        if ctx.paths.get("activities"):
-            file_list += f"\n- Activities: `{ctx.paths['activities']}`"
-        if ctx.paths.get("vocabulary"):
-            file_list += f"\n- Vocabulary: `{ctx.paths['vocabulary']}`"
+    section_fix = _build_section_fix_format(audit_output, ctx, content_text, word_count)
+    file_list = _build_file_list(ctx, content_only)
 
     fixes_text = "\n\n".join(fix_instructions)
     total_fixes = len(det_issues) + len(gate_failures) + len(ped_violations)
-    # Never say "Fix 0 issues" — if we got here, something failed
     if total_fixes == 0:
         total_fixes = len(fix_instructions)
 
@@ -1443,73 +1470,188 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
 # Phase: research
 # ---------------------------------------------------------------------------
 
-def phase_research(ctx: ModuleContext, state: dict) -> bool:
-    """Research + Meta outline generation."""
-    if is_complete(state, "research"):
-        # Health check: if content exists and meets target, skip
-        force_research = getattr(ctx, "force_research", False)
-        if not force_research:
-            content_path = ctx.paths.get("md")
-            content_exists = content_path and content_path.exists()
-            content_sufficient = False
-            if content_exists:
-                try:
-                    wc = len(content_path.read_text("utf-8").split())
-                    content_sufficient = wc >= ctx.word_target * 0.8
-                except Exception:
-                    pass
+def _check_research_skip(ctx: ModuleContext, state: dict) -> bool | None:
+    """Check whether research phase should be skipped.
 
-            if content_sufficient:
-                log(f"  research: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
-                return True
-            elif _meta_has_oversized_sections(ctx):
-                log("  research: Meta health check FAILED — oversized section detected, re-running")
-                state.get("phases", {}).pop("research", None)
-                save_state(ctx, state)
-            else:
-                meta_path = ctx.paths.get("meta")
-                if meta_path and not meta_path.exists():
-                    log("  research: State says complete but meta missing — re-running")
-                    state.get("phases", {}).pop("research", None)
-                    save_state(ctx, state)
-                else:
-                    log("  research: SKIP (already complete)")
-                    return True
-        else:
-            # force_research — clear state and re-run
-            state.get("phases", {}).pop("research", None)
-            save_state(ctx, state)
+    Returns True if skip, False if state was cleared for re-run, None to continue.
+    """
+    force_research = getattr(ctx, "force_research", False)
+    if force_research:
+        state.get("phases", {}).pop("research", None)
+        save_state(ctx, state)
+        return None  # re-run
 
-    is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
-    is_pro = ctx.track in PRO_TRACKS
+    content_path = ctx.paths.get("md")
+    content_exists = content_path and content_path.exists()
+    content_sufficient = False
+    if content_exists:
+        try:
+            wc = len(content_path.read_text("utf-8").split())
+            content_sufficient = wc >= ctx.word_target * 0.8
+        except Exception:
+            pass
 
-    research_exists = (is_seminar or is_pro) and _research_file_is_usable(ctx)
+    if content_sufficient:
+        log(f"  research: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
+        return True
+
+    if _meta_has_oversized_sections(ctx):
+        log("  research: Meta health check FAILED — oversized section detected, re-running")
+        state.get("phases", {}).pop("research", None)
+        save_state(ctx, state)
+        return None  # re-run
+
+    meta_path = ctx.paths.get("meta")
+    if meta_path and not meta_path.exists():
+        log("  research: State says complete but meta missing — re-running")
+        state.get("phases", {}).pop("research", None)
+        save_state(ctx, state)
+        return None  # re-run
+
+    log("  research: SKIP (already complete)")
+    return True
+
+
+def _select_research_template(ctx: ModuleContext, is_seminar: bool, is_pro: bool,
+                               research_exists: bool) -> str:
+    """Select the appropriate research prompt template name."""
     if is_seminar or is_pro:
         if research_exists:
             research_path = ctx.paths.get("research")
             word_count = len(research_path.read_text("utf-8").split()) if research_path else 0
             log(f"  research: Research file found ({word_count:,}w) — skipping research, meta-only")
-            template_name = "phase-A-meta-only.md"
+            return "phase-A-meta-only.md"
         elif is_pro:
-            template_name = "phase-A-pro.md"
+            return "phase-A-pro.md"
         else:
-            template_name = "phase-A-seminar.md"
-    else:
-        tier = _get_prompt_tier(ctx.track, ctx.module_num)
-        if tier == "beginner":
-            template_name = "beginner-research.md"
-            if not (PHASES_DIR / template_name).exists():
-                template_name = "phase-A-core.md"
-                log("  research: beginner-research.md not found, falling back to phase-A-core.md")
-            else:
-                log("  research: Using beginner tier research prompt")
-        else:
-            template_name = "phase-A-core.md"
+            return "phase-A-seminar.md"
 
+    tier = _get_prompt_tier(ctx.track, ctx.module_num)
+    if tier == "beginner":
+        template_name = "beginner-research.md"
+        if not (PHASES_DIR / template_name).exists():
+            log("  research: beginner-research.md not found, falling back to phase-A-core.md")
+            return "phase-A-core.md"
+        log("  research: Using beginner tier research prompt")
+        return template_name
+
+    return "phase-A-core.md"
+
+
+def _dispatch_research(ctx: ModuleContext, prompt_file: Path,
+                        template_name: str) -> tuple[bool, str]:
+    """Dispatch research to Claude or Gemini. Returns (ok, raw_output)."""
+    use_claude = "A" in getattr(ctx, "use_claude", set())
+    if use_claude:
+        claude_model = getattr(ctx, "claude_model_A", CLAUDE_MODEL_RESEARCH)
+        log(f"  research: Dispatching {template_name} via Claude ({claude_model})...")
+        return _dispatch_claude_phase(
+            prompt_file, "Phase A", model=claude_model,
+            timeout=600,
+            allow_tools=["WebSearch", "WebFetch", "Read"],
+        )
+
+    log(f"  research: Dispatching {template_name}...")
+    output_file = _gemini_output_path(ctx.slug, "pA")
+    ok, raw_output = dispatch_gemini(
+        _dispatch_prompt(ctx, prompt_file),
+        task_id=f"v5-{ctx.slug}-pA",
+        model=ctx.model, stdout_only=True, output_file=output_file,
+        timeout=TIMEOUT_CONTENT,
+    )
+    if raw_output:
+        (ctx.orch_dir / "phase-A-output.md").write_text(raw_output, "utf-8")
+    return ok, raw_output
+
+
+def _save_research_output(ctx: ModuleContext, raw_output: str,
+                           research_exists: bool, is_seminar: bool,
+                           is_pro: bool) -> None:
+    """Extract and save research text from LLM output."""
+    if research_exists:
+        return
+    research_text = _extract_delimiter(raw_output, "===RESEARCH_START===", "===RESEARCH_END===")
+    if research_text:
+        research_path = ctx.paths.get("research")
+        if research_path:
+            research_path.parent.mkdir(parents=True, exist_ok=True)
+            research_path.write_text(research_text, "utf-8")
+            log(f"  research: Research saved \u2192 {research_path.name}")
+        else:
+            (ctx.orch_dir / "phase-A-research.md").write_text(research_text, "utf-8")
+            log("  research: Research saved \u2192 phase-A-research.md (no research path in ctx)")
+    else:
+        if is_seminar or is_pro:
+            log("  research: WARNING \u2014 no RESEARCH delimiters in output (seminar/pro track)")
+        else:
+            log("  research: NOTE \u2014 no research delimiters (expected for some core tracks)")
+
+
+def _apply_meta_outline(ctx: ModuleContext, raw_output: str,
+                         research_exists: bool) -> bool:
+    """Extract and apply meta outline from LLM output. Returns True on success."""
+    import yaml
+
+    meta_text = _extract_delimiter(raw_output, "===META_OUTLINE_START===", "===META_OUTLINE_END===")
+    if not meta_text:
+        log("  research: FAILED \u2014 no META_OUTLINE delimiters in output")
+        return False
+
+    meta_text_clean = re.sub(r'^```(?:ya?ml)?\s*\n', '', meta_text.strip())
+    meta_text_clean = re.sub(r'\n```\s*$', '', meta_text_clean)
+    try:
+        outline_data = yaml.safe_load(meta_text_clean)
+    except yaml.YAMLError as e:
+        log(f"  research: WARNING \u2014 meta outline YAML parse error: {e}")
+        outline_data = None
+
+    if not (outline_data and isinstance(outline_data, dict) and "content_outline" in outline_data):
+        log("  research: WARNING \u2014 no content_outline in META_OUTLINE block")
+        (ctx.orch_dir / "phase-A-meta-outline-raw.md").write_text(meta_text or "", "utf-8")
+        return True  # non-fatal
+
+    outline_data["content_outline"] = bilingualify_section_titles(
+        outline_data["content_outline"], ctx.track, ctx.module_num,
+    )
+    meta_path = ctx.paths.get("meta")
+    if meta_path and meta_path.exists():
+        try:
+            existing_meta = yaml.safe_load(meta_path.read_text("utf-8")) or {}
+            existing_meta["content_outline"] = outline_data["content_outline"]
+            meta_path.write_text(
+                yaml.dump(existing_meta, allow_unicode=True,
+                          default_flow_style=False, sort_keys=False),
+                "utf-8",
+            )
+            ctx.content_outline = outline_data["content_outline"]  # type: ignore[attr-defined]
+            mode = "meta-only" if research_exists else "full"
+            log(f"  research: Meta outline updated [{mode}] \u2192 {meta_path.name} "
+                f"({len(outline_data['content_outline'])} sections)")
+        except Exception as e:
+            log(f"  research: WARNING \u2014 could not update meta: {e}")
+    else:
+        (ctx.orch_dir / "phase-A-meta-outline.yaml").write_text(meta_text, "utf-8")
+        log("  research: Meta outline saved \u2192 phase-A-meta-outline.yaml (no meta path)")
+    return True
+
+
+def phase_research(ctx: ModuleContext, state: dict) -> bool:
+    """Research + Meta outline generation."""
+    if is_complete(state, "research"):
+        skip = _check_research_skip(ctx, state)
+        if skip is True:
+            return True
+        # skip is None means state was cleared, fall through to re-run
+
+    is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
+    is_pro = ctx.track in PRO_TRACKS
+    research_exists = (is_seminar or is_pro) and _research_file_is_usable(ctx)
+
+    template_name = _select_research_template(ctx, is_seminar, is_pro, research_exists)
     template = PHASES_DIR / template_name
 
     if not template.exists():
-        log(f"  research: ERROR — template not found: {template}")
+        log(f"  research: ERROR \u2014 template not found: {template}")
         return False
 
     prompt_file = ctx.orch_dir / "phase-A-prompt.md"
@@ -1517,92 +1659,19 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     if ctx.dry_run:
-        log(f"  research: DRY-RUN — would dispatch {template_name}")
+        log(f"  research: DRY-RUN \u2014 would dispatch {template_name}")
         return True
 
-    use_claude = "A" in getattr(ctx, "use_claude", set())
-    if use_claude:
-        claude_model = getattr(ctx, "claude_model_A", CLAUDE_MODEL_RESEARCH)
-        log(f"  research: Dispatching {template_name} via Claude ({claude_model})...")
-        ok, raw_output = _dispatch_claude_phase(
-            prompt_file, "Phase A", model=claude_model,
-            timeout=600,
-            allow_tools=["WebSearch", "WebFetch", "Read"],
-        )
-    else:
-        log(f"  research: Dispatching {template_name}...")
-        output_file = _gemini_output_path(ctx.slug, "pA")
-        ok, raw_output = dispatch_gemini(
-            _dispatch_prompt(ctx, prompt_file),
-            task_id=f"v5-{ctx.slug}-pA",
-            model=ctx.model, stdout_only=True, output_file=output_file,
-            timeout=TIMEOUT_CONTENT,
-        )
-        if raw_output:
-            (ctx.orch_dir / "phase-A-output.md").write_text(raw_output, "utf-8")
+    ok, raw_output = _dispatch_research(ctx, prompt_file, template_name)
     if not ok:
-        log(f"  research: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
+        use_claude = "A" in getattr(ctx, "use_claude", set())
+        log(f"  research: FAILED \u2014 {'Claude' if use_claude else 'Gemini'} dispatch error")
         mark_failed(state, "research", ctx)
         return False
 
-    # Extract and save research
-    if not research_exists:
-        research_text = _extract_delimiter(raw_output, "===RESEARCH_START===", "===RESEARCH_END===")
-        if research_text:
-            research_path = ctx.paths.get("research")
-            if research_path:
-                research_path.parent.mkdir(parents=True, exist_ok=True)
-                research_path.write_text(research_text, "utf-8")
-                log(f"  research: Research saved → {research_path.name}")
-            else:
-                (ctx.orch_dir / "phase-A-research.md").write_text(research_text, "utf-8")
-                log("  research: Research saved → phase-A-research.md (no research path in ctx)")
-        else:
-            if is_seminar or is_pro:
-                log("  research: WARNING — no RESEARCH delimiters in output (seminar/pro track)")
-            else:
-                log("  research: NOTE — no research delimiters (expected for some core tracks)")
+    _save_research_output(ctx, raw_output, research_exists, is_seminar, is_pro)
 
-    # Extract and apply meta outline
-    meta_text = _extract_delimiter(raw_output, "===META_OUTLINE_START===", "===META_OUTLINE_END===")
-    if meta_text:
-        import yaml
-        meta_text_clean = re.sub(r'^```(?:ya?ml)?\s*\n', '', meta_text.strip())
-        meta_text_clean = re.sub(r'\n```\s*$', '', meta_text_clean)
-        try:
-            outline_data = yaml.safe_load(meta_text_clean)
-        except yaml.YAMLError as e:
-            log(f"  research: WARNING — meta outline YAML parse error: {e}")
-            outline_data = None
-
-        if outline_data and isinstance(outline_data, dict) and "content_outline" in outline_data:
-            outline_data["content_outline"] = bilingualify_section_titles(
-                outline_data["content_outline"], ctx.track, ctx.module_num,
-            )
-            meta_path = ctx.paths.get("meta")
-            if meta_path and meta_path.exists():
-                try:
-                    existing_meta = yaml.safe_load(meta_path.read_text("utf-8")) or {}
-                    existing_meta["content_outline"] = outline_data["content_outline"]
-                    meta_path.write_text(
-                        yaml.dump(existing_meta, allow_unicode=True,
-                                  default_flow_style=False, sort_keys=False),
-                        "utf-8",
-                    )
-                    ctx.content_outline = outline_data["content_outline"]  # type: ignore[attr-defined]
-                    mode = "meta-only" if research_exists else "full"
-                    log(f"  research: Meta outline updated [{mode}] → {meta_path.name} "
-                        f"({len(outline_data['content_outline'])} sections)")
-                except Exception as e:
-                    log(f"  research: WARNING — could not update meta: {e}")
-            else:
-                (ctx.orch_dir / "phase-A-meta-outline.yaml").write_text(meta_text, "utf-8")
-                log("  research: Meta outline saved → phase-A-meta-outline.yaml (no meta path)")
-        else:
-            log("  research: WARNING — no content_outline in META_OUTLINE block")
-            (ctx.orch_dir / "phase-A-meta-outline-raw.md").write_text(meta_text or "", "utf-8")
-    else:
-        log("  research: FAILED — no META_OUTLINE delimiters in output")
+    if not _apply_meta_outline(ctx, raw_output, research_exists):
         mark_failed(state, "research", ctx)
         return False
 
@@ -1908,89 +1977,118 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase: activities
+# Phase: activities — helpers
 # ---------------------------------------------------------------------------
 
-def phase_activities(ctx: ModuleContext, state: dict) -> bool:
-    """Activities + Vocabulary generation."""
-    if is_complete(state, "activities"):
-        log("  activities: SKIP (already complete)")
-        return True
 
+def _check_existing_activities(ctx: ModuleContext, state: dict) -> str | None:
+    """Check existing activities/vocab files for staleness or adoption.
+
+    Returns:
+        "adopt" — existing files are valid and fresh, caller should return True
+        "regenerate" — stale/invalid files deleted, caller should continue
+        None — no existing files, caller should continue
+    """
     act_path = ctx.paths.get("activities")
     voc_path = ctx.paths.get("vocabulary")
-    if (act_path and act_path.exists() and voc_path and voc_path.exists()):
-        if _validate_activities_yaml(act_path):
-            stale = False
-            if getattr(ctx, "refresh", False):
-                stale = True
-                log("  activities: --rebuild flag set — regenerating activities/vocab")
-            else:
-                act_mtime = act_path.stat().st_mtime
-                plan_path = ctx.paths.get("plan")
-                content_path = ctx.paths.get("md")
-                for ref_path, ref_label in [
-                    (plan_path, "plan"),
-                    (content_path, "content"),
-                ]:
-                    if ref_path and ref_path.exists() and ref_path.stat().st_mtime > act_mtime:
-                        stale = True
-                        log(f"  activities: Activities predate {ref_label} — regenerating")
-                        break
+    if not (act_path and act_path.exists() and voc_path and voc_path.exists()):
+        return None
 
-            if stale:
-                act_path.unlink(missing_ok=True)
-                if voc_path and voc_path.exists():
-                    voc_path.unlink(missing_ok=True)
-                log("  activities: Deleted stale activities/vocab for regeneration")
-            else:
-                log("  activities: ADOPT — existing activities/vocab found and valid")
-                mark_complete(state, "activities", ctx, note="adopted-existing")
-                return True
+    if _validate_activities_yaml(act_path):
+        stale = False
+        if getattr(ctx, "refresh", False):
+            stale = True
+            log("  activities: --rebuild flag set — regenerating activities/vocab")
         else:
-            log("  activities: Existing activities invalid — deleting and regenerating")
+            act_mtime = act_path.stat().st_mtime
+            plan_path = ctx.paths.get("plan")
+            content_path = ctx.paths.get("md")
+            for ref_path, ref_label in [
+                (plan_path, "plan"),
+                (content_path, "content"),
+            ]:
+                if ref_path and ref_path.exists() and ref_path.stat().st_mtime > act_mtime:
+                    stale = True
+                    log(f"  activities: Activities predate {ref_label} — regenerating")
+                    break
+
+        if stale:
             act_path.unlink(missing_ok=True)
             if voc_path and voc_path.exists():
                 voc_path.unlink(missing_ok=True)
-                log("  activities: Also deleted stale vocabulary (paired with invalid activities)")
+            log("  activities: Deleted stale activities/vocab for regeneration")
+            return "regenerate"
+        else:
+            log("  activities: ADOPT — existing activities/vocab found and valid")
+            mark_complete(state, "activities", ctx, note="adopted-existing")
+            return "adopt"
+    else:
+        log("  activities: Existing activities invalid — deleting and regenerating")
+        act_path.unlink(missing_ok=True)
+        if voc_path and voc_path.exists():
+            voc_path.unlink(missing_ok=True)
+            log("  activities: Also deleted stale vocabulary (paired with invalid activities)")
+        return "regenerate"
 
-    # Fast path: activities exist but vocabulary missing (truncation recovery)
-    if (act_path and act_path.exists() and act_path.stat().st_size > 10
-            and (not voc_path or not voc_path.exists())) and _validate_activities_yaml(act_path):
-        log("  activities: Activities exist and valid, vocabulary missing — vocab-only dispatch")
-        use_claude = "C" in getattr(ctx, "use_claude", set())
-        vocab_prompt = _build_vocab_only_prompt(ctx)
-        if vocab_prompt:
-            vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
-            vocab_prompt_file.write_text(vocab_prompt, "utf-8")
-            if use_claude:
-                claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
-                vok, vraw = _dispatch_claude_phase(
-                    vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
-                )
-            else:
-                vok, vraw = dispatch_gemini(
-                    _dispatch_prompt(ctx, vocab_prompt_file),
-                    task_id=f"v5-{ctx.slug}-pC-vocab",
-                    model=ctx.model, stdout_only=True,
-                    output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
-                    timeout=300,
-                )
-            if vok:
-                vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
-                if vocab_text and voc_path:
-                    voc_path.parent.mkdir(parents=True, exist_ok=True)
-                    voc_path.write_text(vocab_text, "utf-8")
-                    log(f"  activities: Vocabulary generated via fast-path → {voc_path.name}")
-                    if not _validate_activities_yaml(act_path):
-                        log("  activities: FAILED — activities YAML failed schema validation")
-                        mark_failed(state, "activities", ctx, note="activities-schema-invalid")
-                        return False
-                    mark_complete(state, "activities", ctx, task_id=f"v5-{ctx.slug}-pC-vocab")
-                    return True
-        log("  activities: Vocab fast-path failed — falling through to full dispatch")
 
-    # Tier-based activities prompt dispatch
+def _dispatch_vocab_only(ctx: ModuleContext, prompt_label: str) -> tuple[bool, str]:
+    """Dispatch a vocab-only prompt to Claude or Gemini.
+
+    Returns (ok, raw_output).
+    """
+    vocab_prompt = _build_vocab_only_prompt(ctx)
+    if not vocab_prompt:
+        return False, ""
+    vocab_prompt_file = ctx.orch_dir / f"phase-C-vocab-fallback.md"
+    vocab_prompt_file.write_text(vocab_prompt, "utf-8")
+    use_claude = "C" in getattr(ctx, "use_claude", set())
+    if use_claude:
+        claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
+        return _dispatch_claude_phase(
+            vocab_prompt_file, prompt_label, model=claude_model, timeout=300,
+        )
+    else:
+        return dispatch_gemini(
+            _dispatch_prompt(ctx, vocab_prompt_file),
+            task_id=f"v5-{ctx.slug}-pC-vocab",
+            model=ctx.model, stdout_only=True,
+            output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
+            timeout=300,
+        )
+
+
+def _try_vocab_fast_path(ctx: ModuleContext, state: dict) -> bool | None:
+    """Try vocab-only generation when activities exist but vocab is missing.
+
+    Returns True/False for definitive results, None to fall through.
+    """
+    act_path = ctx.paths.get("activities")
+    voc_path = ctx.paths.get("vocabulary")
+    if not (act_path and act_path.exists() and act_path.stat().st_size > 10
+            and (not voc_path or not voc_path.exists())
+            and _validate_activities_yaml(act_path)):
+        return None
+
+    log("  activities: Activities exist and valid, vocabulary missing — vocab-only dispatch")
+    vok, vraw = _dispatch_vocab_only(ctx, "Phase C vocab")
+    if vok:
+        vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
+        if vocab_text and voc_path:
+            voc_path.parent.mkdir(parents=True, exist_ok=True)
+            voc_path.write_text(vocab_text, "utf-8")
+            log(f"  activities: Vocabulary generated via fast-path → {voc_path.name}")
+            if not _validate_activities_yaml(act_path):
+                log("  activities: FAILED — activities YAML failed schema validation")
+                mark_failed(state, "activities", ctx, note="activities-schema-invalid")
+                return False
+            mark_complete(state, "activities", ctx, task_id=f"v5-{ctx.slug}-pC-vocab")
+            return True
+    log("  activities: Vocab fast-path failed — falling through to full dispatch")
+    return None
+
+
+def _resolve_activities_template(ctx: ModuleContext) -> Path | None:
+    """Resolve the activities prompt template, returning None on error."""
     activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
     template = PHASES_DIR / activities_template_name
     if not template.exists():
@@ -2000,38 +2098,40 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         log(f"  activities: Using tier template: {activities_template_name}")
     if not template.exists():
         log(f"  activities: ERROR — template not found: {template}")
-        return False
+        return None
+    return template
 
-    prompt_file = ctx.orch_dir / "phase-C-prompt.md"
-    _ensure_sandbox_loaded(ctx)
-    overrides = {"LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", "")}
-    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
-        return False
 
-    if ctx.dry_run:
-        log("  activities: DRY-RUN — would dispatch phase-3-activities.md")
-        return True
+def _dispatch_activities(ctx: ModuleContext, prompt_file: Path) -> tuple[bool, str]:
+    """Dispatch activities+vocab generation to Claude or Gemini.
 
+    Returns (ok, raw_output).
+    """
     use_claude = "C" in getattr(ctx, "use_claude", set())
     if use_claude:
         claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
         log(f"  activities: Dispatching activities + vocab via Claude ({claude_model})...")
-        ok, raw_output = _dispatch_claude_phase(
+        return _dispatch_claude_phase(
             prompt_file, "Phase C", model=claude_model, timeout=600,
         )
     else:
         log("  activities: Dispatching activities + vocab...")
         output_file = _gemini_output_path(ctx.slug, "pC")
-        ok, raw_output = dispatch_gemini(
+        return dispatch_gemini(
             _dispatch_prompt(ctx, prompt_file),
             task_id=f"v5-{ctx.slug}-pC",
             model=ctx.model, stdout_only=True, output_file=output_file,
             timeout=TIMEOUT_ACTIVITIES,
         )
-    if not ok:
-        log(f"  activities: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
-        mark_failed(state, "activities", ctx)
-        return False
+
+
+def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[bool, bool]:
+    """Extract activities and vocabulary from LLM output, write to disk.
+
+    Returns (wrote_activities, wrote_vocab).
+    """
+    act_path = ctx.paths.get("activities")
+    voc_path = ctx.paths.get("vocabulary")
 
     wrote_activities = act_path and act_path.exists() and act_path.stat().st_size > 10
     wrote_vocab = voc_path and voc_path.exists() and voc_path.stat().st_size > 10
@@ -2055,7 +2155,11 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
             log(f"  activities: Vocabulary extracted → {voc_path.name}")
             (ctx.orch_dir / "phase-C-output-vocabulary.yaml").write_text(vocab_text, "utf-8")
 
-    # Extract and log friction
+    return wrote_activities, wrote_vocab
+
+
+def _extract_friction_report(ctx: ModuleContext, raw_output: str) -> None:
+    """Extract and log friction report from LLM output."""
     friction = _extract_delimiter(raw_output, "===FRICTION_START===", "===FRICTION_END===")
     if friction:
         friction_file = ctx.orch_dir / "phase-C-friction.md"
@@ -2068,38 +2172,86 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         if is_real_truncation:
             log("  activities: Gemini reported token limit truncation")
 
-    # Vocabulary fallback
-    if wrote_activities and not wrote_vocab and "===VOCABULARY_START===" in raw_output:
-        log("  activities: Vocabulary truncated — dispatching vocab-only fallback")
-        vocab_prompt = _build_vocab_only_prompt(ctx)
-        if vocab_prompt:
-            vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
-            vocab_prompt_file.write_text(vocab_prompt, "utf-8")
 
-            if use_claude:
-                claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
-                vok, vraw = _dispatch_claude_phase(
-                    vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
-                )
-            else:
-                vok, vraw = dispatch_gemini(
-                    _dispatch_prompt(ctx, vocab_prompt_file),
-                    task_id=f"v5-{ctx.slug}-pC-vocab",
-                    model=ctx.model, stdout_only=True,
-                    output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
-                    timeout=300,
-                )
-            if vok:
-                vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
-                if vocab_text and voc_path:
-                    voc_path.parent.mkdir(parents=True, exist_ok=True)
-                    voc_path.write_text(vocab_text, "utf-8")
-                    wrote_vocab = True
-                    log(f"  activities: Vocabulary extracted from fallback → {voc_path.name}")
-                else:
-                    log("  activities: Vocab fallback returned no valid delimited content")
-            else:
-                log("  activities: Vocab fallback dispatch failed")
+def _vocab_fallback(ctx: ModuleContext, raw_output: str) -> bool:
+    """Attempt vocab-only fallback when vocab was truncated.
+
+    Returns True if vocab was successfully generated.
+    """
+    voc_path = ctx.paths.get("vocabulary")
+    if "===VOCABULARY_START===" not in raw_output:
+        return False
+
+    log("  activities: Vocabulary truncated — dispatching vocab-only fallback")
+    vok, vraw = _dispatch_vocab_only(ctx, "Phase C vocab")
+    if vok:
+        vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
+        if vocab_text and voc_path:
+            voc_path.parent.mkdir(parents=True, exist_ok=True)
+            voc_path.write_text(vocab_text, "utf-8")
+            log(f"  activities: Vocabulary extracted from fallback → {voc_path.name}")
+            return True
+        else:
+            log("  activities: Vocab fallback returned no valid delimited content")
+    else:
+        log("  activities: Vocab fallback dispatch failed")
+    return False
+
+
+# ---------------------------------------------------------------------------
+# Phase: activities
+# ---------------------------------------------------------------------------
+
+def phase_activities(ctx: ModuleContext, state: dict) -> bool:
+    """Activities + Vocabulary generation."""
+    if is_complete(state, "activities"):
+        log("  activities: SKIP (already complete)")
+        return True
+
+    # Check/adopt existing activities
+    existing = _check_existing_activities(ctx, state)
+    if existing == "adopt":
+        return True
+
+    # Fast path: vocab-only recovery
+    fast = _try_vocab_fast_path(ctx, state)
+    if fast is not None:
+        return fast
+
+    # Resolve template
+    template = _resolve_activities_template(ctx)
+    if template is None:
+        return False
+
+    # Build prompt
+    prompt_file = ctx.orch_dir / "phase-C-prompt.md"
+    _ensure_sandbox_loaded(ctx)
+    overrides = {"LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", "")}
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
+        return False
+
+    if ctx.dry_run:
+        log("  activities: DRY-RUN — would dispatch phase-3-activities.md")
+        return True
+
+    # Dispatch LLM
+    ok, raw_output = _dispatch_activities(ctx, prompt_file)
+    if not ok:
+        use_claude = "C" in getattr(ctx, "use_claude", set())
+        log(f"  activities: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
+        mark_failed(state, "activities", ctx)
+        return False
+
+    # Extract outputs
+    wrote_activities, wrote_vocab = _extract_activities_output(ctx, raw_output)
+
+    # Friction report
+    _extract_friction_report(ctx, raw_output)
+
+    # Vocabulary fallback if needed
+    if wrote_activities and not wrote_vocab:
+        if _vocab_fallback(ctx, raw_output):
+            wrote_vocab = True
 
     if not wrote_activities or not wrote_vocab:
         log(f"  activities: FAILED — missing files: activities={wrote_activities}, vocab={wrote_vocab}")
@@ -2108,6 +2260,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     # Post-C schema validation gate
+    act_path = ctx.paths.get("activities")
     if act_path and act_path.exists() and not _validate_activities_yaml(act_path):
         log("  activities: FAILED — activities YAML failed schema validation")
         mark_failed(state, "activities", ctx, note="activities-schema-invalid")
@@ -2118,22 +2271,35 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase: validate
+# Phase: validate — helpers
 # ---------------------------------------------------------------------------
 
-def phase_validate(ctx: ModuleContext, state: dict) -> bool:
-    """Validate: full deterministic checks + Gemini fix loop."""
-    phase = "validate"
-    _skip_review = True
-    if is_complete(state, phase):
-        log("  validate: SKIP (already complete)")
-        return True
+_VALIDATE_NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER"}
 
-    if ctx.dry_run:
-        log("  validate: DRY-RUN — would run full audit + screen + fix loop")
-        return True
 
-    # Check sidecar files exist
+def _validate_log_screen(label: str, scr: DScreenResult) -> None:
+    """Log a validate screen result."""
+    dc = len(scr.deterministic_issues)
+    if scr.audit_passed and dc == 0:
+        log(f"  validate: {label} — PASS")
+    elif scr.audit_passed:
+        log(f"  validate: {label} — audit PASS, {dc} deterministic issue(s)")
+    elif dc > 0:
+        log(f"  validate: {label} — audit FAIL, {dc} deterministic issue(s)")
+    else:
+        log(f"  validate: {label} — audit FAIL (gate violations, no deterministic issues)")
+
+
+def _validate_only_non_blocking(scr: DScreenResult) -> bool:
+    """Check if all deterministic issues are non-blocking."""
+    return all(
+        i["type"] in _VALIDATE_NON_BLOCKING_ISSUE_TYPES
+        for i in scr.deterministic_issues
+    )
+
+
+def _validate_check_sidecars(ctx: ModuleContext) -> bool:
+    """Check that required sidecar files exist. Returns False if blocked."""
     act_path = ctx.paths.get("activities")
     vocab_path = ctx.paths.get("vocabulary")
     missing = []
@@ -2144,155 +2310,131 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
     if missing:
         log(f"  validate: BLOCKED — missing sidecar files: {', '.join(missing)}")
         return False
+    return True
 
-    # Auto-fix pass
-    auto_fix_total = _run_deterministic_fixes(ctx)
-    if auto_fix_total > 0:
-        log(f"  validate: {auto_fix_total} deterministic fix(es) applied")
 
-    def _log_screen(label: str, scr: DScreenResult) -> None:
-        dc = len(scr.deterministic_issues)
-        if scr.audit_passed and dc == 0:
-            log(f"  validate: {label} — PASS")
-        elif scr.audit_passed:
-            log(f"  validate: {label} — audit PASS, {dc} deterministic issue(s)")
-        elif dc > 0:
-            log(f"  validate: {label} — audit FAIL, {dc} deterministic issue(s)")
-        else:
-            log(f"  validate: {label} — audit FAIL (gate violations, no deterministic issues)")
+def _validate_plan_autofix(ctx: ModuleContext, screen: DScreenResult) -> None:
+    """Run plan auto-fix if VESUM not-found words exist."""
+    if not screen.vesum_not_found:
+        return
+    try:
+        from plan_autofix import auto_fix_plan
+        plan_path = ctx.paths.get("plan")
+        if plan_path and plan_path.exists():
+            n_plan_fixes, plan_changelog = auto_fix_plan(
+                plan_path, screen.deterministic_issues, screen.vesum_not_found)
+            if n_plan_fixes:
+                log(f"  validate: Plan auto-fix: {n_plan_fixes} fix(es)")
+                for entry in plan_changelog:
+                    log(f"    {entry}")
+    except Exception as e:
+        logger.warning("validate: Plan auto-fix failed: %s", e)
 
-    _NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER"}
 
-    def _only_non_blocking(scr: DScreenResult) -> bool:
-        return all(
-            i["type"] in _NON_BLOCKING_ISSUE_TYPES for i in scr.deterministic_issues
-        )
+def _validate_run_proofread(ctx: ModuleContext, screen: DScreenResult) -> DScreenResult | None:
+    """Run Gemini proofread if prose issues detected.
 
-    # Initial screen
-    screen = _deterministic_screen(ctx, skip_review=_skip_review)
-    _log_screen("Initial", screen)
-
-    # Plan auto-fix
-    if screen.vesum_not_found:
-        try:
-            from plan_autofix import auto_fix_plan
-            plan_path = ctx.paths.get("plan")
-            if plan_path and plan_path.exists():
-                n_plan_fixes, plan_changelog = auto_fix_plan(
-                    plan_path, screen.deterministic_issues, screen.vesum_not_found)
-                if n_plan_fixes:
-                    log(f"  validate: Plan auto-fix: {n_plan_fixes} fix(es)")
-                    for entry in plan_changelog:
-                        log(f"    {entry}")
-        except Exception as e:
-            logger.warning("validate: Plan auto-fix failed: %s", e)
-
-    if screen.audit_passed and not screen.deterministic_issues:
-        _save_screen_result(ctx, screen)
-        mark_complete(state, phase, ctx, attempts=0)
-        _update_pipeline_status(ctx, "draft")
-        return True
-
-    if screen.audit_passed and _only_non_blocking(screen):
-        n = len(screen.deterministic_issues)
-        log(f"  validate: PASS — audit gates pass, {n} non-blocking issue(s) (filler)")
-        _save_screen_result(ctx, screen)
-        mark_complete(state, phase, ctx, attempts=0,
-                      note=f"pass-with-{n}-filler-issues")
-        _update_pipeline_status(ctx, "draft")
-        return True
-
-    # Gemini proofread
+    Returns updated screen if proofread ran, None otherwise.
+    """
     _PROSE_ISSUE_TYPES = {"RUSSIANISM", "LLM_FILLER", "PEDAGOGICAL", "DECODABILITY"}
     _PROSE_AUDIT_KEYWORDS = {"naturalness", "word_count", "immersion", "engagement", "euphony"}
-    _has_prose_issues = any(
+    has_prose_issues = any(
         i["type"] in _PROSE_ISSUE_TYPES for i in screen.deterministic_issues
     )
-    if not _has_prose_issues and not screen.audit_passed:
-        _audit_lower = screen.audit_output.lower()
-        _has_prose_issues = any(kw in _audit_lower for kw in _PROSE_AUDIT_KEYWORDS)
-    if _has_prose_issues:
-        module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
-        log(f"  validate: Dispatching Gemini proofread+fix on {ctx.slug}...")
-        proofread_cmd = [
-            sys.executable, str(SCRIPTS_DIR / "proofread.py"),
-            ctx.track, str(module_num), "--fix", "--no-mdx",
-        ]
-        try:
-            proofread_result = subprocess.run(
-                proofread_cmd, capture_output=True, text=True, timeout=300,
-            )
-            pf_lines = (proofread_result.stdout or "").strip().split("\n")
-            pf_found = [l for l in pf_lines if "FOUND:" in l or "CLEAN:" in l or "Applied" in l]
-            for line in pf_found[-3:]:
-                log(f"    {line.strip()}")
-        except subprocess.TimeoutExpired:
-            log("  validate: proofread.py timed out (300s) — continuing")
-        except Exception as e:
-            log(f"  validate: proofread.py error: {e} — continuing")
+    if not has_prose_issues and not screen.audit_passed:
+        audit_lower = screen.audit_output.lower()
+        has_prose_issues = any(kw in audit_lower for kw in _PROSE_AUDIT_KEYWORDS)
+    if not has_prose_issues:
+        return None
 
-        screen = _deterministic_screen(ctx, skip_review=_skip_review)
-        _log_screen("Post-proofread", screen)
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    log(f"  validate: Dispatching Gemini proofread+fix on {ctx.slug}...")
+    proofread_cmd = [
+        sys.executable, str(SCRIPTS_DIR / "proofread.py"),
+        ctx.track, str(module_num), "--fix", "--no-mdx",
+    ]
+    try:
+        proofread_result = subprocess.run(
+            proofread_cmd, capture_output=True, text=True, timeout=300,
+        )
+        pf_lines = (proofread_result.stdout or "").strip().split("\n")
+        pf_found = [l for l in pf_lines if "FOUND:" in l or "CLEAN:" in l or "Applied" in l]
+        for line in pf_found[-3:]:
+            log(f"    {line.strip()}")
+    except subprocess.TimeoutExpired:
+        log("  validate: proofread.py timed out (300s) — continuing")
+    except Exception as e:
+        log(f"  validate: proofread.py error: {e} — continuing")
 
-        if screen.audit_passed and (not screen.deterministic_issues or _only_non_blocking(screen)):
-            n = len(screen.deterministic_issues)
-            note = "proofread-fix" if n == 0 else f"proofread-fix-with-{n}-filler"
-            _save_screen_result(ctx, screen)
-            mark_complete(state, phase, ctx, attempts=0, note=note)
-            _update_pipeline_status(ctx, "draft")
-            return True
+    new_screen = _deterministic_screen(ctx, skip_review=True)
+    _validate_log_screen("Post-proofread", new_screen)
+    return new_screen
 
-    # Gemini fix loop — reduce iterations if content was self-audited
-    max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
-    content_self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
-    if content_self_audited and max_iters > 2:
-        log(f"  validate: Content was self-audited — reducing max fix iterations from {max_iters} to 2")
-        max_iters = 2
-    ctx.paths["md"]
+
+def _validate_try_escalate(ctx: ModuleContext, screen: DScreenResult,
+                           state: dict, phase: str, attempt: int,
+                           note_success: str, note_fail: str) -> bool | None:
+    """Try escalation fix, return True/False or None if not attempted."""
+    if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
+        new_screen = _deterministic_screen(ctx, skip_review=True)
+        _save_screen_result(ctx, new_screen)
+        mark_complete(state, phase, ctx, attempts=attempt, note=note_success)
+        _update_pipeline_status(ctx, "draft")
+        return True
+    _save_screen_result(ctx, screen)
+    mark_failed(state, phase, ctx, attempts=attempt, note=note_fail)
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+def _validate_apply_fix_output(ctx: ModuleContext, fix_output: Path, attempt: int) -> None:
+    """Apply section fixes from Gemini fix output."""
+    if not fix_output.exists():
+        return
+    fix_text = fix_output.read_text("utf-8")
+    (ctx.orch_dir / f"validate-fix{attempt}-raw.md").write_text(fix_text, "utf-8")
+    save_gemini_session(ctx.orch_dir, label=f"validate-fix{attempt}")
+    if "===SECTION_FIX_START===" in fix_text:
+        _apply_section_fixes(ctx.paths["md"], fix_text)
+        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+            _apply_section_fixes(ctx.paths["activities"], fix_text)
+        _vp = ctx.paths.get("vocabulary")
+        if _vp and _vp.exists():
+            _apply_section_fixes(_vp, fix_text)
+
+
+def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
+                       screen: DScreenResult, max_iters: int) -> bool:
+    """Run the Gemini fix loop for validation. Returns True on pass."""
     prev_audit_output = screen.audit_output
-
     consecutive_failures = 0
-    _seen_fix_hashes: set[str] = set()
+    seen_fix_hashes: set[str] = set()
+
     for attempt in range(1, max_iters + 1):
         log(f"  validate: Fix attempt {attempt}/{max_iters}...")
 
         fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False,
                                        deterministic_issues=screen.deterministic_issues)
 
-        # Guard: skip if fix prompt has no specific violations (just boilerplate)
-        # Count "### Fix" headers — if zero, the prompt is empty/useless
-        _fix_count = fix_prompt.count("### Fix")
-        _other_failures = "### Other Audit Failures" in fix_prompt
-        if _fix_count == 0 and not _other_failures:
+        # Guard: skip if fix prompt has no specific violations
+        fix_count = fix_prompt.count("### Fix")
+        other_failures = "### Other Audit Failures" in fix_prompt
+        if fix_count == 0 and not other_failures:
             log("  validate: EMPTY fix prompt (no violations extracted), escalating directly")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
-                screen = _deterministic_screen(ctx, skip_review=_skip_review)
-                _save_screen_result(ctx, screen)
-                mark_complete(state, phase, ctx,
-                              attempts=attempt, note="escalation-empty-fix")
-                _update_pipeline_status(ctx, "draft")
-                return True
-            _save_screen_result(ctx, screen)
-            mark_failed(state, phase, ctx, attempts=attempt, note="empty-fix-exhausted")
-            _update_pipeline_status(ctx, "needs-manual-review")
-            return False
+            result = _validate_try_escalate(
+                ctx, screen, state, phase, attempt,
+                "escalation-empty-fix", "empty-fix-exhausted")
+            return result if result is not None else False
 
-        # Dedup: skip if we already sent an identical fix prompt
-        _fix_hash = hashlib.sha256(fix_prompt.encode()).hexdigest()[:16]
-        if _fix_hash in _seen_fix_hashes:
+        # Dedup: skip if identical fix prompt
+        fix_hash = hashlib.sha256(fix_prompt.encode()).hexdigest()[:16]
+        if fix_hash in seen_fix_hashes:
             log("  validate: DEDUP — fix prompt identical to a previous attempt, escalating")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
-                screen = _deterministic_screen(ctx, skip_review=_skip_review)
-                _save_screen_result(ctx, screen)
-                mark_complete(state, phase, ctx,
-                              attempts=attempt, note="escalation-claude-dedup")
-                _update_pipeline_status(ctx, "draft")
-                return True
-            _save_screen_result(ctx, screen)
-            mark_failed(state, phase, ctx, attempts=attempt, note="dedup-exhausted")
-            _update_pipeline_status(ctx, "needs-manual-review")
-            return False
-        _seen_fix_hashes.add(_fix_hash)
+            result = _validate_try_escalate(
+                ctx, screen, state, phase, attempt,
+                "escalation-claude-dedup", "dedup-exhausted")
+            return result if result is not None else False
+        seen_fix_hashes.add(fix_hash)
 
         fix_prompt_file = ctx.orch_dir / f"validate-fix{attempt}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, "utf-8")
@@ -2313,22 +2455,9 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
             continue
         consecutive_failures = 0
 
-        if fix_output.exists():
-            fix_text = fix_output.read_text("utf-8")
-            # Save raw Gemini output + session to orchestration for debugging fix loops
-            (ctx.orch_dir / f"validate-fix{attempt}-raw.md").write_text(fix_text, "utf-8")
-            save_gemini_session(ctx.orch_dir, label=f"validate-fix{attempt}")
-            if "===SECTION_FIX_START===" in fix_text:
-                _apply_section_fixes(ctx.paths["md"], fix_text)
-                if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                    _apply_section_fixes(ctx.paths["activities"], fix_text)
-                _vp = ctx.paths.get("vocabulary")
-                if _vp and _vp.exists():
-                    _apply_section_fixes(_vp, fix_text)
-
+        _validate_apply_fix_output(ctx, fix_output, attempt)
         _run_deterministic_fixes(ctx)
-
-        screen = _deterministic_screen(ctx, skip_review=_skip_review)
+        screen = _deterministic_screen(ctx, skip_review=True)
 
         if attempt > 0 and screen.audit_output == prev_audit_output:
             log(f"  validate: WARNING — fix {attempt} made no progress")
@@ -2341,7 +2470,7 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
                 return True
         prev_audit_output = screen.audit_output
 
-        if screen.audit_passed and (not screen.deterministic_issues or _only_non_blocking(screen)):
+        if screen.audit_passed and (not screen.deterministic_issues or _validate_only_non_blocking(screen)):
             _save_screen_result(ctx, screen)
             mark_complete(state, phase, ctx, attempts=attempt)
             _update_pipeline_status(ctx, "draft")
@@ -2349,20 +2478,340 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
 
         if attempt >= max_iters:
             log(f"  validate: EXHAUSTED — {max_iters} fix attempts")
-            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False, skip_review=True):
-                screen = _deterministic_screen(ctx, skip_review=_skip_review)
-                _save_screen_result(ctx, screen)
-                mark_complete(state, phase, ctx,
-                              attempts=attempt, note="escalation-claude")
-                _update_pipeline_status(ctx, "draft")
-                return True
+            result = _validate_try_escalate(
+                ctx, screen, state, phase, attempt,
+                "escalation-claude", "exhausted")
+            return result if result is not None else False
+
+    _save_screen_result(ctx, screen)
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+# ---------------------------------------------------------------------------
+# Phase: validate
+# ---------------------------------------------------------------------------
+
+def phase_validate(ctx: ModuleContext, state: dict) -> bool:
+    """Validate: full deterministic checks + Gemini fix loop."""
+    phase = "validate"
+    if is_complete(state, phase):
+        log("  validate: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  validate: DRY-RUN — would run full audit + screen + fix loop")
+        return True
+
+    if not _validate_check_sidecars(ctx):
+        return False
+
+    # Auto-fix pass
+    auto_fix_total = _run_deterministic_fixes(ctx)
+    if auto_fix_total > 0:
+        log(f"  validate: {auto_fix_total} deterministic fix(es) applied")
+
+    # Initial screen
+    screen = _deterministic_screen(ctx, skip_review=True)
+    _validate_log_screen("Initial", screen)
+
+    # Plan auto-fix
+    _validate_plan_autofix(ctx, screen)
+
+    # Early pass: no issues
+    if screen.audit_passed and not screen.deterministic_issues:
+        _save_screen_result(ctx, screen)
+        mark_complete(state, phase, ctx, attempts=0)
+        _update_pipeline_status(ctx, "draft")
+        return True
+
+    # Early pass: only non-blocking issues
+    if screen.audit_passed and _validate_only_non_blocking(screen):
+        n = len(screen.deterministic_issues)
+        log(f"  validate: PASS — audit gates pass, {n} non-blocking issue(s) (filler)")
+        _save_screen_result(ctx, screen)
+        mark_complete(state, phase, ctx, attempts=0,
+                      note=f"pass-with-{n}-filler-issues")
+        _update_pipeline_status(ctx, "draft")
+        return True
+
+    # Gemini proofread
+    proofread_screen = _validate_run_proofread(ctx, screen)
+    if proofread_screen is not None:
+        screen = proofread_screen
+        if screen.audit_passed and (not screen.deterministic_issues or _validate_only_non_blocking(screen)):
+            n = len(screen.deterministic_issues)
+            note = "proofread-fix" if n == 0 else f"proofread-fix-with-{n}-filler"
             _save_screen_result(ctx, screen)
+            mark_complete(state, phase, ctx, attempts=0, note=note)
+            _update_pipeline_status(ctx, "draft")
+            return True
+
+    # Gemini fix loop
+    max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
+    content_self_audited = state.get("phases", {}).get("content", {}).get("self_audited", False)
+    if content_self_audited and max_iters > 2:
+        log(f"  validate: Content was self-audited — reducing max fix iterations from {max_iters} to 2")
+        max_iters = 2
+    ctx.paths["md"]  # ensure md path exists
+
+    return _validate_fix_loop(ctx, state, phase, screen, max_iters)
+
+
+# ---------------------------------------------------------------------------
+# Phase: review (Claude) — helpers
+# ---------------------------------------------------------------------------
+
+
+def _review_resolve_templates() -> tuple[Path | None, Path | None]:
+    """Resolve D1 and D2 review templates. Returns (d1_template, d2_template)."""
+    d1_template = PHASES_DIR / "phase-D1-structured-review.md"
+    if not d1_template.exists():
+        d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
+    d2_template = PHASES_DIR / "phase-D2-repair.md"
+    if not d1_template.exists():
+        log(f"  review: ERROR — D1 template not found: {d1_template}")
+        return None, None
+    if not d2_template.exists():
+        log(f"  review: ERROR — D2 template not found: {d2_template}")
+        return None, None
+    return d1_template, d2_template
+
+
+def _review_build_d1_prompt(ctx: ModuleContext, screen: DScreenResult,
+                            d1_template: Path) -> Path | None:
+    """Build the D1 review prompt with all injected context. Returns prompt path or None."""
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    track_calibration = _get_track_calibration(ctx.track, module_num)
+    russicism_table = _get_russicism_table(ctx.track)
+
+    prompt_file = ctx.orch_dir / "review-prompt.md"
+    if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return None
+
+    prompt_text = prompt_file.read_text("utf-8")
+    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
+    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", screen.h2_sections)
+    prompt_text = prompt_text.replace("{TRACK_CALIBRATION}", track_calibration or "(No track calibration available)")
+    prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
+    prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
+    prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
+
+    rag_context = _prefetch_rag_context(ctx)
+    prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
+
+    vesum_word_context = _format_vesum_verification(screen.vesum_stats, screen.vesum_not_found)
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_word_context)
+
+    prompt_file.write_text(prompt_text, "utf-8")
+
+    log(f"    Metrics: {screen.metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
+        f"{screen.metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
+        f"{screen.metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
+        f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
+    return prompt_file
+
+
+def _review_dispatch_d1(ctx: ModuleContext, prompt_file: Path,
+                        claude_model: str, review_timeout: int,
+                        state: dict, phase: str) -> tuple[Any, str, str] | None:
+    """Dispatch D1 review with retry. Returns (d1_result, review_text, raw_output) or None."""
+    _pre_d1_snapshots = _snapshot_module_files(ctx)
+
+    ok, raw_output = _dispatch_claude_phase(
+        prompt_file, "Phase D.1",
+        model=claude_model, timeout=review_timeout,
+        allow_tools=["Read", "Grep", "Glob", "Edit"],
+    )
+    if not ok:
+        log("  review: Dispatch FAILED")
+        mark_failed(state, phase, ctx, attempts=1, note="dispatch-failed")
+        return None
+
+    _log_d1_edits(ctx, _pre_d1_snapshots)
+    d1 = _parse_d1_review(raw_output)
+
+    if not d1.ok or not d1.raw_review:
+        log("  review: WARNING — no REVIEW delimiters in output (retrying)")
+        (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
+
+        ok2, raw2 = _dispatch_claude_phase(
+            prompt_file, "Phase D.1 (retry)",
+            model=claude_model, timeout=review_timeout,
+            allow_tools=["Read", "Grep", "Glob", "Edit"],
+        )
+        if ok2:
+            d1 = _parse_d1_review(raw2)
+
+        if not d1.ok or not d1.raw_review:
+            log("  review: Retry also failed — no delimiters")
+            mark_failed(state, phase, ctx, attempts=1, note="no-review")
+            return None
+
+    review_text = d1.raw_review
+
+    qg_ok, qg_reason = _quick_review_quality_gate(review_text, ctx.paths["md"])
+    if not qg_ok:
+        log(f"  review: REJECTED — {qg_reason}")
+        (ctx.orch_dir / "review-rejected.md").write_text(review_text, "utf-8")
+        mark_failed(state, phase, ctx, attempts=1, note="shallow-review")
+        return None
+
+    if "Reviewed-By:" not in review_text:
+        review_text = f"**Reviewed-By:** {claude_model}\n\n{review_text}"
+
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
+    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
+    (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
+    log(f"  review: Review saved → {ctx.paths['review'].name}")
+
+    return d1, review_text, raw_output
+
+
+def _review_determine_verdict(d1: Any, review_text: str) -> bool:
+    """Determine if the review says FAIL. Returns True if review says fail."""
+    review_says_fail = d1.verdict == "FAIL"
+    if not review_says_fail and d1.scores.get("overall", 10) < 9.0:
+        review_says_fail = True
+    if not d1.verdict:
+        status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+        score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
+        if (status_m and status_m.group(1) == "FAIL") or (score_m and float(score_m.group(1)) < 9.0):
+            review_says_fail = True
+    return review_says_fail
+
+
+def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
+                             claude_model: str, fix_timeout: int,
+                             fix_plan: str, audit_out: str,
+                             fix_iter: int) -> tuple[bool | None, str]:
+    """Run a single D2 fix iteration.
+
+    Returns (result, updated_audit_out) where result is True (pass),
+    False (hard fail), or None (continue to next iteration).
+    """
+    iter_suffix = "" if fix_iter == 0 else f" (iter {fix_iter + 1})"
+
+    log(f"  review: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}{iter_suffix}...")
+    failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
+    failures += _extract_gate_blockers(ctx)
+    failures += _extract_vesum_failures(ctx)
+
+    prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
+    if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
+        return False, audit_out
+
+    prompt2_text = prompt_file2.read_text("utf-8")
+    prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
+    prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+    prompt2_text = _inject_file_contents(prompt2_text, ctx)
+    prompt_file2.write_text(prompt2_text, "utf-8")
+
+    before_d2 = _snapshot_module_files(ctx)
+
+    ok2, raw_output2 = _dispatch_claude_phase(
+        prompt_file2, f"Phase D.2{iter_suffix}",
+        model=claude_model, timeout=fix_timeout,
+        allow_tools=["Edit", "Grep"],
+    )
+    if not ok2:
+        log(f"  review: Fix dispatch failed{iter_suffix}")
+        return False, audit_out
+
+    after_d2 = _snapshot_module_files(ctx)
+    changed_lines = 0
+    for label in before_d2:
+        if label in after_d2:
+            changed_lines += _count_diff_lines(before_d2[label], after_d2[label])
+
+    if changed_lines > 200:
+        log(f"  review: REJECTED — D.2 changed {changed_lines} lines (max 200){iter_suffix}")
+        for label, p in _module_file_paths(ctx):
+            if label in before_d2 and p:
+                p.write_text(before_d2[label], "utf-8")
+        return False, audit_out
+    if changed_lines == 0:
+        log(f"  review: WARNING — D.2 made no file changes{iter_suffix}")
+        (ctx.orch_dir / f"review-fix-{fix_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
+    else:
+        log(f"  review: D.2 applied fixes ({changed_lines} lines changed){iter_suffix}")
+
+    _run_deterministic_fixes(ctx)
+    passed, new_audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+    if passed:
+        log(f"  review: PASS (after fix {fix_iter + 1})")
+        return True, new_audit_out
+
+    if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
+        log(f"  review: Fix {fix_iter + 1} insufficient — trying again...")
+
+    return None, new_audit_out
+
+
+def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
+                    d2_template: Path, claude_model: str,
+                    review_text: str, review_says_fail: bool,
+                    passed: bool, audit_out: str) -> bool:
+    """Run the D2 repair loop after D1 review. Returns True on pass."""
+    # Check for citation failures
+    _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
+    if any(f"\u274c [{tag}]" in audit_out for tag in _CITATION_FAILURES):
+        log("  review: REVIEW QUALITY FAILURE — fabricated/unverified citations")
+        if ctx.paths["review"].exists():
+            ctx.paths["review"].unlink()
+        mark_failed(state, phase, ctx, attempts=1, note="citation-failure")
+        return False
+
+    # Try deterministic auto-fix
+    auto_fix_count = _run_deterministic_fixes(ctx)
+    if auto_fix_count > 0:
+        passed_after_autofix, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        if passed_after_autofix and not review_says_fail:
+            mark_complete(state, phase, ctx, attempts=1, note="autofix")
+            _update_pipeline_status(ctx, "reviewed")
+            return True
+
+    if _all_issues_diffuse(audit_out):
+        log("  review: SKIPPED fix — all issues are diffuse (needs manual review)")
+        mark_failed(state, phase, ctx, attempts=1, note="needs-manual-review")
+        _update_pipeline_status(ctx, "needs-manual-review")
+        return False
+
+    audit_only_fix = not review_says_fail and not passed
+    fix_timeout = _get_fix_timeout(ctx.track, audit_only=audit_only_fix)
+
+    if audit_only_fix:
+        fix_plan = (
+            "**IMPORTANT: The review verdict was PASS. "
+            "Fix ONLY the audit failures listed below. "
+            "Do NOT fix review suggestions — they are informational only.**\n\n"
+            "(Review omitted — verdict was PASS)\n"
+        )
+    else:
+        fix_plan = _extract_fix_plan(review_text)
+
+    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
+        total_attempts = 2 + fix_iter
+        result, audit_out = _review_d2_fix_iteration(
+            ctx, d2_template, claude_model, fix_timeout,
+            fix_plan, audit_out, fix_iter,
+        )
+        if result is True:
+            mark_complete(state, phase, ctx,
+                          attempts=total_attempts, note=f"fix-iter{fix_iter + 1}")
+            _update_pipeline_status(ctx, "reviewed")
+            return True
+        if result is False:
             mark_failed(state, phase, ctx,
-                        attempts=attempt, note="exhausted")
+                        attempts=total_attempts,
+                        note="fix-dispatch-failed" if fix_iter == 0 else "diff-too-large")
             _update_pipeline_status(ctx, "needs-manual-review")
             return False
 
-    _save_screen_result(ctx, screen)
+    log("  review: EXHAUSTED — review + fix attempts all insufficient")
+    mark_failed(state, phase, ctx,
+                attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
     _update_pipeline_status(ctx, "needs-manual-review")
     return False
 
@@ -2387,15 +2836,9 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
         log("  review: No cached screen — running fresh screen")
         screen = _deterministic_screen(ctx)
 
-    d1_template = PHASES_DIR / "phase-D1-structured-review.md"
-    if not d1_template.exists():
-        d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
-    d2_template = PHASES_DIR / "phase-D2-repair.md"
-    if not d1_template.exists():
-        log(f"  review: ERROR — D1 template not found: {d1_template}")
-        return False
-    if not d2_template.exists():
-        log(f"  review: ERROR — D2 template not found: {d2_template}")
+    # Resolve templates
+    d1_template, d2_template = _review_resolve_templates()
+    if d1_template is None:
         return False
 
     claude_model = getattr(ctx, "claude_model_D", CLAUDE_MODEL_REVIEW)
@@ -2403,86 +2846,20 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
 
     log("  review: Preparing structured review prompt...")
 
-    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
-    track_calibration = _get_track_calibration(ctx.track, module_num)
-    russicism_table = _get_russicism_table(ctx.track)
-
-    prompt_file = ctx.orch_dir / "review-prompt.md"
-    if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+    # Build and dispatch D1
+    prompt_file = _review_build_d1_prompt(ctx, screen, d1_template)
+    if prompt_file is None:
         return False
-
-    prompt_text = prompt_file.read_text("utf-8")
-    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
-    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", screen.h2_sections)
-    prompt_text = prompt_text.replace("{TRACK_CALIBRATION}", track_calibration or "(No track calibration available)")
-    prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
-    prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
-    prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
-
-    rag_context = _prefetch_rag_context(ctx)
-    prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
-
-    vesum_word_context = _format_vesum_verification(screen.vesum_stats, screen.vesum_not_found)
-    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", vesum_word_context)
-
-    prompt_file.write_text(prompt_text, "utf-8")
 
     log(f"  review: Dispatching Claude review ({claude_model}, {review_timeout}s)...")
-    log(f"    Metrics: {screen.metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
-        f"{screen.metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
-        f"{screen.metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
-        f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
 
-    _pre_d1_snapshots = _snapshot_module_files(ctx)
-
-    ok, raw_output = _dispatch_claude_phase(
-        prompt_file, "Phase D.1",
-        model=claude_model, timeout=review_timeout,
-        allow_tools=["Read", "Grep", "Glob", "Edit"],
-    )
-    if not ok:
-        log("  review: Dispatch FAILED")
-        mark_failed(state, phase, ctx, attempts=1, note="dispatch-failed")
+    d1_result = _review_dispatch_d1(ctx, prompt_file, claude_model, review_timeout, state, phase)
+    if d1_result is None:
         return False
 
-    _log_d1_edits(ctx, _pre_d1_snapshots)
+    d1, review_text, raw_output = d1_result
 
-    d1 = _parse_d1_review(raw_output)
-
-    if not d1.ok or not d1.raw_review:
-        log("  review: WARNING — no REVIEW delimiters in output (retrying)")
-        (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
-
-        ok2, raw2 = _dispatch_claude_phase(
-            prompt_file, "Phase D.1 (retry)",
-            model=claude_model, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob", "Edit"],
-        )
-        if ok2:
-            d1 = _parse_d1_review(raw2)
-
-        if not d1.ok or not d1.raw_review:
-            log("  review: Retry also failed — no delimiters")
-            mark_failed(state, phase, ctx, attempts=1, note="no-review")
-            return False
-
-    review_text = d1.raw_review
-
-    qg_ok, qg_reason = _quick_review_quality_gate(review_text, ctx.paths["md"])
-    if not qg_ok:
-        log(f"  review: REJECTED — {qg_reason}")
-        (ctx.orch_dir / "review-rejected.md").write_text(review_text, "utf-8")
-        mark_failed(state, phase, ctx, attempts=1, note="shallow-review")
-        return False
-
-    if "Reviewed-By:" not in review_text:
-        review_text = f"**Reviewed-By:** {claude_model}\n\n{review_text}"
-
-    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
-    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
-    (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
-    log(f"  review: Review saved → {ctx.paths['review'].name}")
-
+    # Apply D1 inline fixes
     n_d1_fixes = _apply_module_fixes(ctx, raw_output)
     if n_d1_fixes > 0:
         log(f"  review: Applied {n_d1_fixes} inline fix(es) from review")
@@ -2490,174 +2867,47 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
         log("  review: Fix block found but 0 fixes matched — check review-raw-output.md")
 
     _run_deterministic_fixes(ctx)
-
     passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
 
-    review_says_fail = d1.verdict == "FAIL"
-    if not review_says_fail and d1.scores.get("overall", 10) < 9.0:
-        review_says_fail = True
-    if not d1.verdict:
-        _status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
-        _score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
-        if (_status_m and _status_m.group(1) == "FAIL") or (_score_m and float(_score_m.group(1)) < 9.0):
-            review_says_fail = True
+    # Determine verdict
+    review_says_fail = _review_determine_verdict(d1, review_text)
 
+    # Early pass: no repair needed
     if passed and not review_says_fail:
         log("  review: PASS (no repair needed)")
         mark_complete(state, phase, ctx, attempts=1, note="review-only")
         _update_pipeline_status(ctx, "reviewed")
         return True
 
+    # Early pass: D1 inline fixes resolved issues
     if passed and review_says_fail and n_d1_fixes > 0:
         log(f"  review: PASS (D.1 inline fixes resolved review issues — {n_d1_fixes} fix(es))")
         mark_complete(state, phase, ctx, attempts=1, note="d1-inline-fixes")
         _update_pipeline_status(ctx, "reviewed")
         return True
 
-    _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
-    if any(f"\u274c [{tag}]" in audit_out for tag in _CITATION_FAILURES):
-        log("  review: REVIEW QUALITY FAILURE — fabricated/unverified citations")
-        if ctx.paths["review"].exists():
-            ctx.paths["review"].unlink()
-        mark_failed(state, phase, ctx, attempts=1, note="citation-failure")
-        return False
-
-    auto_fix_count = _run_deterministic_fixes(ctx)
-    if auto_fix_count > 0:
-        passed_after_autofix, audit_out = run_verify(ctx.paths["md"], content_only=False)
-        if passed_after_autofix and not review_says_fail:
-            mark_complete(state, phase, ctx, attempts=1, note="autofix")
-            _update_pipeline_status(ctx, "reviewed")
-            return True
-
-    if _all_issues_diffuse(audit_out):
-        log("  review: SKIPPED fix — all issues are diffuse (needs manual review)")
-        mark_failed(state, phase, ctx, attempts=1, note="needs-manual-review")
-        _update_pipeline_status(ctx, "needs-manual-review")
-        return False
-
-    _audit_only_fix = not review_says_fail and not passed
-
-    fix_timeout = _get_fix_timeout(ctx.track, audit_only=_audit_only_fix)
-
-    if _audit_only_fix:
-        fix_plan = (
-            "**IMPORTANT: The review verdict was PASS. "
-            "Fix ONLY the audit failures listed below. "
-            "Do NOT fix review suggestions — they are informational only.**\n\n"
-            "(Review omitted — verdict was PASS)\n"
-        )
-    else:
-        fix_plan = _extract_fix_plan(review_text)
-
-    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
-        iter_suffix = "" if fix_iter == 0 else f" (iter {fix_iter + 1})"
-        total_attempts = 2 + fix_iter
-
-        log(f"  review: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}{iter_suffix}...")
-        failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
-        failures += _extract_gate_blockers(ctx)
-        failures += _extract_vesum_failures(ctx)
-
-        prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
-        if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
-            return False
-
-        prompt2_text = prompt_file2.read_text("utf-8")
-        prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
-        prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-        prompt2_text = _inject_file_contents(prompt2_text, ctx)
-        prompt_file2.write_text(prompt2_text, "utf-8")
-
-        before_d2 = _snapshot_module_files(ctx)
-
-        ok2, raw_output2 = _dispatch_claude_phase(
-            prompt_file2, f"Phase D.2{iter_suffix}",
-            model=claude_model, timeout=fix_timeout,
-            allow_tools=["Edit", "Grep"],
-        )
-        if not ok2:
-            log(f"  review: Fix dispatch failed{iter_suffix}")
-            mark_failed(state, phase, ctx,
-                        attempts=total_attempts, note="fix-dispatch-failed")
-            return False
-
-        after_d2 = _snapshot_module_files(ctx)
-        changed_lines = 0
-        for label in before_d2:
-            if label in after_d2:
-                changed_lines += _count_diff_lines(before_d2[label], after_d2[label])
-
-        if changed_lines > 200:
-            log(f"  review: REJECTED — D.2 changed {changed_lines} lines (max 200){iter_suffix}")
-            for label, p in _module_file_paths(ctx):
-                if label in before_d2 and p:
-                    p.write_text(before_d2[label], "utf-8")
-            mark_failed(state, phase, ctx,
-                        attempts=total_attempts, note="diff-too-large")
-            _update_pipeline_status(ctx, "needs-manual-review")
-            return False
-        if changed_lines == 0:
-            log(f"  review: WARNING — D.2 made no file changes{iter_suffix}")
-            (ctx.orch_dir / f"review-fix-{fix_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
-        else:
-            log(f"  review: D.2 applied fixes ({changed_lines} lines changed){iter_suffix}")
-
-        _run_deterministic_fixes(ctx)
-        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
-
-        if passed:
-            log(f"  review: PASS (after fix {fix_iter + 1})")
-            mark_complete(state, phase, ctx,
-                          attempts=total_attempts, note=f"fix-iter{fix_iter + 1}")
-            _update_pipeline_status(ctx, "reviewed")
-            return True
-
-        if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
-            log(f"  review: Fix {fix_iter + 1} insufficient — trying again...")
-
-    log("  review: EXHAUSTED — review + fix attempts all insufficient")
-    mark_failed(state, phase, ctx,
-                attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
-    _update_pipeline_status(ctx, "needs-manual-review")
-    return False
+    # D2 repair loop
+    return _review_d2_loop(
+        ctx, state, phase, d2_template, claude_model,
+        review_text, review_says_fail, passed, audit_out,
+    )
 
 
 # ---------------------------------------------------------------------------
 # Phase: review (Gemini RAG-grounded)
 # ---------------------------------------------------------------------------
 
-def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
-    """Gemini RAG-grounded review: sharded Fact Checker + Language Pedant."""
-    phase = "review"
-    if is_complete(state, phase):
-        log("  review-gemini: SKIP (already complete)")
-        return True
+def _dispatch_review_passes(ctx: ModuleContext, screen, rag_data: dict,
+                             total_rag: int) -> tuple[D1Result | None, D1Result | None, str, str]:
+    """Dispatch Pass 1 (factual) and Pass 2 (linguistic) in parallel.
 
-    if ctx.dry_run:
-        log("  review-gemini: DRY-RUN — would dispatch Gemini sharded review")
-        return True
-
-    # 1. Load cached screen from validate phase
-    screen = _load_screen_result(ctx)
-    if screen is None:
-        log("  review-gemini: No cached screen — running fresh screen")
-        screen = _deterministic_screen(ctx)
-
-    # 2. Load RAG discovery data
-    rag_data = _load_rag_for_review(ctx)
-    total_rag = len(rag_data["text_chunks"]) + len(rag_data["images"]) + len(rag_data["literary"])
-    log(f"  review-gemini: RAG data loaded — {total_rag} items "
-        f"(text: {len(rag_data['text_chunks'])}, images: {len(rag_data['images'])}, "
-        f"literary: {len(rag_data['literary'])})")
-
-    # 3-4. Dispatch Pass 1 + Pass 2 in parallel
+    Returns (pass1_result, pass2_result, raw1, raw2).
+    """
     from concurrent.futures import ThreadPoolExecutor
 
     raw1 = ""
     raw2 = ""
     pass1_result: D1Result | None = None
-    pass2_result: D1Result | None = None
 
     pass1_prompt: str | None = None
     if total_rag > 0:
@@ -2665,31 +2915,23 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         (ctx.orch_dir / "review-pass1-prompt.md").write_text(pass1_prompt, "utf-8")
     else:
         log("  review-gemini: Pass 1 SKIPPED (no RAG sources)")
-        pass1_result = D1Result(ok=True, verdict="PASS", raw_review="(No RAG sources available — factual check skipped)")
+        pass1_result = D1Result(ok=True, verdict="PASS", raw_review="(No RAG sources available \u2014 factual check skipped)")
 
     pass2_prompt = _build_pass2_prompt(ctx, screen)
     (ctx.orch_dir / "review-pass2-prompt.md").write_text(pass2_prompt, "utf-8")
-
-    def _dispatch_pass1() -> tuple[bool, str]:
-        return pipeline_lib.dispatch_gemini_raw(
-            pass1_prompt,
-            task_id=f"{ctx.slug}-review-pass1",
-            timeout=600,
-        )
-
-    def _dispatch_pass2() -> tuple[bool, str]:
-        return pipeline_lib.dispatch_gemini_raw(
-            pass2_prompt,
-            task_id=f"{ctx.slug}-review-pass2",
-            timeout=600,
-        )
 
     log("  review-gemini: Dispatching review passes"
         f" {'(Pass 1 + Pass 2 in parallel)' if pass1_prompt else '(Pass 2 only)'}...")
 
     with ThreadPoolExecutor(max_workers=2) as pool:
-        fut1 = pool.submit(_dispatch_pass1) if pass1_prompt else None
-        fut2 = pool.submit(_dispatch_pass2)
+        fut1 = pool.submit(
+            lambda: pipeline_lib.dispatch_gemini_raw(
+                pass1_prompt, task_id=f"{ctx.slug}-review-pass1", timeout=600)
+        ) if pass1_prompt else None
+        fut2 = pool.submit(
+            lambda: pipeline_lib.dispatch_gemini_raw(
+                pass2_prompt, task_id=f"{ctx.slug}-review-pass2", timeout=600)
+        )
 
         if fut1:
             ok1, raw1 = fut1.result()
@@ -2698,58 +2940,36 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
                 pass1_result = _parse_factual_review(raw1)
                 if pass1_result.ok:
                     disc_count = len([i for i in pass1_result.issues if i.get("type") == "FACTUAL_DISCREPANCY"])
-                    log(f"  review-gemini: Pass 1 — {pass1_result.verdict} "
+                    log(f"  review-gemini: Pass 1 \u2014 {pass1_result.verdict} "
                         f"({disc_count} discrepancies, score {pass1_result.scores.get('factual_accuracy', '?')})")
                 else:
-                    log("  review-gemini: Pass 1 — failed to parse output")
+                    log("  review-gemini: Pass 1 \u2014 failed to parse output")
             else:
-                log("  review-gemini: Pass 1 — dispatch failed")
+                log("  review-gemini: Pass 1 \u2014 dispatch failed")
 
         ok2, raw2 = fut2.result()
 
+    pass2_result: D1Result | None = None
     if ok2:
         (ctx.orch_dir / "review-pass2-raw.md").write_text(raw2, "utf-8")
         pass2_result = _parse_d1_review(raw2)
         if pass2_result.ok:
-            log(f"  review-gemini: Pass 2 — {pass2_result.verdict} "
+            log(f"  review-gemini: Pass 2 \u2014 {pass2_result.verdict} "
                 f"(overall {pass2_result.scores.get('overall', '?')}/10)")
         else:
-            log("  review-gemini: Pass 2 — failed to parse output")
+            log("  review-gemini: Pass 2 \u2014 failed to parse output")
     else:
-        log("  review-gemini: Pass 2 — dispatch failed")
+        log("  review-gemini: Pass 2 \u2014 dispatch failed")
 
-    # 5. Merge results
-    merged = _merge_gemini_review_passes(pass1_result, pass2_result)
-    if not merged.ok:
-        log("  review-gemini: Merge FAILED — both passes unusable")
-        mark_failed(state, phase, ctx, attempts=1, note="dispatch-failed")
-        return False
+    return pass1_result, pass2_result, raw1, raw2
 
-    pass1_contributed = (pass1_result is not None and pass1_result.ok
-                         and "factual_accuracy" in pass1_result.scores)
-    review_grounding = "rag-textbook" if pass1_contributed else "linguistic-only"
-    if not pass1_contributed and total_rag > 0:
-        log("  review-gemini: WARNING — Pass 1 (factual check) failed, "
-            "review grounding downgraded to linguistic-only")
 
-    review_text = merged.raw_review
+def _apply_review_fixes_and_plan_autofix(ctx: ModuleContext, screen,
+                                          raw1: str, raw2: str) -> int:
+    """Apply inline fixes from review passes, run deterministic fixes, and plan auto-fix.
 
-    # 6. Quality gate check
-    if len(review_text.split()) < 100:
-        log(f"  review-gemini: REJECTED — review too short ({len(review_text.split())} words)")
-        mark_failed(state, phase, ctx, attempts=1, note="shallow-review")
-        return False
-
-    # 7. Inject Reviewed-By metadata
-    if "Reviewed-By:" not in review_text:
-        review_text = f"**Reviewed-By:** gemini-2.5-pro (RAG-grounded)\n\n{review_text}"
-
-    # 8. Save review
-    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
-    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
-    log(f"  review-gemini: Review saved → {ctx.paths['review'].name}")
-
-    # 9. Apply inline FIND/REPLACE fixes from both passes
+    Returns the number of inline fixes applied.
+    """
     n_fixes = 0
     if raw1 and "===SECTION_FIX_START===" in raw1:
         n_fixes += _apply_module_fixes(ctx, raw1)
@@ -2758,10 +2978,9 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
     if n_fixes > 0:
         log(f"  review-gemini: Applied {n_fixes} inline fix(es) from review passes")
 
-    # 10. Run deterministic fixes
     _run_deterministic_fixes(ctx)
 
-    # 10.5 Plan auto-fix
+    # Plan auto-fix
     if screen and screen.vesum_not_found:
         try:
             from plan_autofix import auto_fix_plan
@@ -2776,6 +2995,101 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         except Exception as e:
             logger.warning("review: Plan auto-fix failed: %s", e)
 
+    return n_fixes
+
+
+def _run_review_fix_loop(ctx: ModuleContext, state: dict, phase: str,
+                          fix_plan: str, audit_out: str,
+                          review_grounding: str) -> bool:
+    """Run the review fix loop. Returns True if audit passes after a fix iteration."""
+    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
+        total_attempts = 2 + fix_iter
+        log(f"  review-gemini: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}...")
+
+        applied = _gemini_fix_iteration(ctx, fix_plan, audit_out, fix_iter)
+        if not applied and fix_iter == 0:
+            log("  review-gemini: No fixes applied \u2014 trying once more")
+
+        _run_deterministic_fixes(ctx)
+        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+        if passed:
+            log(f"  review-gemini: PASS (after fix {fix_iter + 1})")
+            return _complete_gemini_review(ctx, state, phase, total_attempts,
+                                           f"gemini-fix-iter{fix_iter + 1}",
+                                           grounding=review_grounding)
+
+        if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
+            log(f"  review-gemini: Fix {fix_iter + 1} insufficient \u2014 trying again...")
+
+    log("  review-gemini: EXHAUSTED \u2014 review + fix attempts all insufficient")
+    mark_failed(state, phase, ctx,
+                attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
+    """Gemini RAG-grounded review: sharded Fact Checker + Language Pedant."""
+    phase = "review"
+    if is_complete(state, phase):
+        log("  review-gemini: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  review-gemini: DRY-RUN \u2014 would dispatch Gemini sharded review")
+        return True
+
+    # 1. Load cached screen from validate phase
+    screen = _load_screen_result(ctx)
+    if screen is None:
+        log("  review-gemini: No cached screen \u2014 running fresh screen")
+        screen = _deterministic_screen(ctx)
+
+    # 2. Load RAG discovery data
+    rag_data = _load_rag_for_review(ctx)
+    total_rag = len(rag_data["text_chunks"]) + len(rag_data["images"]) + len(rag_data["literary"])
+    log(f"  review-gemini: RAG data loaded \u2014 {total_rag} items "
+        f"(text: {len(rag_data['text_chunks'])}, images: {len(rag_data['images'])}, "
+        f"literary: {len(rag_data['literary'])})")
+
+    # 3-4. Dispatch review passes
+    pass1_result, pass2_result, raw1, raw2 = _dispatch_review_passes(ctx, screen, rag_data, total_rag)
+
+    # 5. Merge results
+    merged = _merge_gemini_review_passes(pass1_result, pass2_result)
+    if not merged.ok:
+        log("  review-gemini: Merge FAILED \u2014 both passes unusable")
+        mark_failed(state, phase, ctx, attempts=1, note="dispatch-failed")
+        return False
+
+    pass1_contributed = (pass1_result is not None and pass1_result.ok
+                         and "factual_accuracy" in pass1_result.scores)
+    review_grounding = "rag-textbook" if pass1_contributed else "linguistic-only"
+    if not pass1_contributed and total_rag > 0:
+        log("  review-gemini: WARNING \u2014 Pass 1 (factual check) failed, "
+            "review grounding downgraded to linguistic-only")
+
+    review_text = merged.raw_review
+
+    # 6. Quality gate check
+    if len(review_text.split()) < 100:
+        log(f"  review-gemini: REJECTED \u2014 review too short ({len(review_text.split())} words)")
+        mark_failed(state, phase, ctx, attempts=1, note="shallow-review")
+        return False
+
+    # 7. Inject Reviewed-By metadata
+    if "Reviewed-By:" not in review_text:
+        review_text = f"**Reviewed-By:** gemini-2.5-pro (RAG-grounded)\n\n{review_text}"
+
+    # 8. Save review
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
+    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
+    log(f"  review-gemini: Review saved \u2192 {ctx.paths['review'].name}")
+
+    # 9-10. Apply fixes
+    n_fixes = _apply_review_fixes_and_plan_autofix(ctx, screen, raw1, raw2)
+
     # 11. Post-review audit
     passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
 
@@ -2788,50 +3102,28 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         return _complete_gemini_review(ctx, state, phase, 1, "gemini-review-only", grounding=review_grounding)
 
     if passed and review_says_fail and n_fixes > 0:
-        log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es))")
+        log(f"  review-gemini: PASS (inline fixes resolved review issues \u2014 {n_fixes} fix(es))")
         return _complete_gemini_review(ctx, state, phase, 1, "gemini-inline-fixes", grounding=review_grounding)
 
     if _all_issues_diffuse(audit_out):
-        log("  review-gemini: SKIPPED fix — all issues diffuse (needs manual review)")
+        log("  review-gemini: SKIPPED fix \u2014 all issues diffuse (needs manual review)")
         mark_failed(state, phase, ctx, attempts=1, note="needs-manual-review")
         _update_pipeline_status(ctx, "needs-manual-review")
         return False
 
+    # 12. Build fix plan and run fix loop
     _audit_only_fix = not review_says_fail and not passed
     if _audit_only_fix:
         fix_plan = (
             "**IMPORTANT: The review verdict was PASS. "
             "Fix ONLY the audit failures listed below. "
-            "Do NOT fix review suggestions — they are informational only.**\n\n"
-            "(Review omitted — verdict was PASS)\n"
+            "Do NOT fix review suggestions \u2014 they are informational only.**\n\n"
+            "(Review omitted \u2014 verdict was PASS)\n"
         )
     else:
         fix_plan = _extract_fix_plan(review_text)
 
-    # 12. Fix loop
-    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
-        total_attempts = 2 + fix_iter
-        log(f"  review-gemini: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}...")
-
-        applied = _gemini_fix_iteration(ctx, fix_plan, audit_out, fix_iter)
-        if not applied and fix_iter == 0:
-            log("  review-gemini: No fixes applied — trying once more")
-
-        _run_deterministic_fixes(ctx)
-        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
-
-        if passed:
-            log(f"  review-gemini: PASS (after fix {fix_iter + 1})")
-            return _complete_gemini_review(ctx, state, phase, total_attempts, f"gemini-fix-iter{fix_iter + 1}", grounding=review_grounding)
-
-        if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
-            log(f"  review-gemini: Fix {fix_iter + 1} insufficient — trying again...")
-
-    log("  review-gemini: EXHAUSTED — review + fix attempts all insufficient")
-    mark_failed(state, phase, ctx,
-                attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
-    _update_pipeline_status(ctx, "needs-manual-review")
-    return False
+    return _run_review_fix_loop(ctx, state, phase, fix_plan, audit_out, review_grounding)
 
 
 # ---------------------------------------------------------------------------

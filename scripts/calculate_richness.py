@@ -540,92 +540,90 @@ def extract_level(file_path: str | Path | None) -> str:
     return 'B1'  # Default
 
 
-def extract_module_type(content: str, file_path: str | Path | None = None) -> str:
-    """Extract module type from frontmatter or YAML sidecar."""
-    fm = None
-
-    # Try to parse embedded frontmatter first
+def _parse_frontmatter(content: str) -> dict | None:
+    """Try to parse embedded frontmatter from markdown content."""
     if content.startswith('---'):
         parts = content.split('---', 2)
         if len(parts) >= 3:
             with contextlib.suppress(yaml.YAMLError):
-                fm = yaml.safe_load(parts[1])
+                return yaml.safe_load(parts[1])
+    return None
 
-    # If no embedded frontmatter, try YAML sidecar
-    if not fm and file_path:
-        path = Path(file_path) if isinstance(file_path, str) else file_path
-        slug = path.stem
-        sidecar_path = path.parent / 'meta' / f'{slug}.yaml'
-        if sidecar_path.exists():
+
+def _load_sidecar_meta(file_path: Path) -> dict | None:
+    """Try to load YAML sidecar meta file."""
+    slug = file_path.stem
+    sidecar_path = file_path.parent / 'meta' / f'{slug}.yaml'
+    if sidecar_path.exists():
+        try:
+            with open(sidecar_path, encoding='utf-8') as f:
+                return yaml.safe_load(f)
+        except (OSError, yaml.YAMLError):
+            pass
+    return None
+
+
+def _load_plan_focus(file_path: Path) -> str | None:
+    """Try to load focus field from plan file."""
+    level_dir = file_path.parent.name.lower()
+    slug = file_path.stem
+    clean_slug = to_bare_slug(slug)
+    plan_paths = [
+        file_path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
+        file_path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
+    ]
+    for plan_path in plan_paths:
+        if plan_path.exists():
             try:
-                with open(sidecar_path, encoding='utf-8') as f:
-                    fm = yaml.safe_load(f)
+                with open(plan_path, encoding='utf-8') as f:
+                    plan_data = yaml.safe_load(f)
+                    if plan_data and plan_data.get('focus'):
+                        return str(plan_data['focus']).lower().strip()
             except (OSError, yaml.YAMLError):
                 pass
+    return None
 
-    # Also check plan file for focus (plans take precedence for focus)
-    plan_focus = None
-    if file_path:
-        path = Path(file_path) if isinstance(file_path, str) else file_path
-        # Get level from path (e.g., b1 from curriculum/l2-uk-en/b1/module.md)
-        level_dir = path.parent.name.lower()
-        # Clean slug: remove leading number prefix
-        slug = path.stem
-        clean_slug = to_bare_slug(slug)
-        # Try plan file paths
-        plan_paths = [
-            path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
-            path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
-        ]
-        for plan_path in plan_paths:
-            if plan_path.exists():
-                try:
-                    with open(plan_path, encoding='utf-8') as f:
-                        plan_data = yaml.safe_load(f)
-                        if plan_data and plan_data.get('focus'):
-                            plan_focus = str(plan_data['focus']).lower().strip()
-                            break
-                except (OSError, yaml.YAMLError):
-                    pass
 
-    # Check plan focus first (highest priority)
-    if plan_focus and plan_focus in MODULE_TYPE_MAP:
-        return MODULE_TYPE_MAP[plan_focus]
+def _type_from_frontmatter(fm: dict) -> str | None:
+    """Determine module type from frontmatter fields."""
+    # Check for bridge indicator in tags or module_type
+    tags = fm.get('tags', [])
+    if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
+        return 'bridge'
 
-    # Process frontmatter (from either source)
-    if fm:
-        # Check for bridge indicator in tags or module_type
-        tags = fm.get('tags', [])
-        if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
-            return 'bridge'
+    if fm.get('module_type') == 'bridge':
+        return 'bridge'
 
-        if fm.get('module_type') == 'bridge':
-            return 'bridge'
+    # Check focus field (highest priority)
+    focus = str(fm.get('focus', '')).lower().strip()
+    if focus in MODULE_TYPE_MAP:
+        return MODULE_TYPE_MAP[focus]
 
-        # Check focus field FIRST (highest priority)
-        focus = str(fm.get('focus', '')).lower().strip()
-        if focus in MODULE_TYPE_MAP:
-            return MODULE_TYPE_MAP[focus]
+    # Then check pedagogy field
+    pedagogy = str(fm.get('pedagogy', '')).lower().strip()
+    if pedagogy in MODULE_TYPE_MAP:
+        return MODULE_TYPE_MAP[pedagogy]
 
-        # Then check pedagogy field
-        pedagogy = str(fm.get('pedagogy', '')).lower().strip()
-        if pedagogy in MODULE_TYPE_MAP:
-            return MODULE_TYPE_MAP[pedagogy]
+    # Check phase field for hints
+    phase = str(fm.get('phase', '')).lower()
+    if 'history' in phase:
+        return 'history'
+    elif 'biography' in phase or 'biographies' in phase:
+        return 'biography'
+    elif 'style' in phase or 'stylistic' in phase:
+        return 'style'
+    elif 'academic' in phase or 'sociolinguistic' in phase:
+        return 'academic'
+    elif 'checkpoint' in phase:
+        return 'checkpoint'
 
-        # Check phase field for hints
-        phase = str(fm.get('phase', '')).lower()
-        if 'history' in phase:
-            return 'history'
-        elif 'biography' in phase or 'biographies' in phase:
-            return 'biography'
-        elif 'style' in phase or 'stylistic' in phase:
-            return 'style'
-        elif 'academic' in phase or 'sociolinguistic' in phase:
-            return 'academic'
-        elif 'checkpoint' in phase:
-            return 'checkpoint'
+    return None
 
-    # Fallback: infer from path
+
+def _type_from_path(file_path: str | Path | None) -> str | None:
+    """Infer module type from file path."""
+    if not file_path:
+        return None
     path_str = str(file_path).lower()
     if '/lit/' in path_str:
         return 'literature'
@@ -633,19 +631,19 @@ def extract_module_type(content: str, file_path: str | Path | None = None) -> st
         return 'history'
     if '/bio/' in path_str:
         return 'biography'
+    return None
 
-    # Default to beginner for A1/A2, grammar for B1-B2, content for others
+
+def _type_from_level(file_path: str | Path | None) -> str:
+    """Determine default module type based on level and slug."""
     level = extract_level(file_path)
 
-    # A1/A2: beginner type (adjusted richness targets)
     if level in ('A1', 'A2'):
         return 'beginner'
 
     # Special Case: B1 Bridge Modules (M01-05)
     if level == 'B1' and file_path:
         slug = Path(file_path).stem
-        # Bridge modules usually have slugs like 'how-to-talk-about-grammar'
-        # or numeric prefixes if not yet migrated.
         bridge_slugs = [
             'how-to-talk-about-grammar',
             'language-about-verbs',
@@ -655,9 +653,7 @@ def extract_module_type(content: str, file_path: str | Path | None = None) -> st
             'verb-categories-metalanguage',
             'syntax-and-sentence-structure'
         ]
-        # Also check for numeric prefix 01-05
         num_prefix_match = re.match(r'^0?([1-5])-([a-z-]+)', slug)
-
         if any(bs in slug for bs in bridge_slugs) or num_prefix_match:
             return 'bridge'
 
@@ -666,7 +662,38 @@ def extract_module_type(content: str, file_path: str | Path | None = None) -> st
     elif level in ('C1', 'C2'):
         return 'content'
 
-    return 'grammar'  # Default
+    return 'grammar'
+
+
+def extract_module_type(content: str, file_path: str | Path | None = None) -> str:
+    """Extract module type from frontmatter or YAML sidecar."""
+    fm = _parse_frontmatter(content)
+
+    # If no embedded frontmatter, try YAML sidecar
+    if not fm and file_path:
+        path = Path(file_path) if isinstance(file_path, str) else file_path
+        fm = _load_sidecar_meta(path)
+
+    # Check plan file for focus (plans take precedence)
+    if file_path:
+        path = Path(file_path) if isinstance(file_path, str) else file_path
+        plan_focus = _load_plan_focus(path)
+        if plan_focus and plan_focus in MODULE_TYPE_MAP:
+            return MODULE_TYPE_MAP[plan_focus]
+
+    # Process frontmatter (from either source)
+    if fm:
+        result = _type_from_frontmatter(fm)
+        if result:
+            return result
+
+    # Fallback: infer from path
+    result = _type_from_path(file_path)
+    if result:
+        return result
+
+    # Default based on level
+    return _type_from_level(file_path)
 
 
 def get_prose_content(content: str) -> str:
@@ -1311,21 +1338,13 @@ def calculate_richness_score(content: str, level: str, file_path: Path | None = 
     }
 
 
-def detect_dryness_flags(content: str, level: str, file_path: Path | None = None) -> list:
-    """Detect dryness indicators based on module type."""
+def _universal_dryness_flags(prose: str, module_type: str) -> list[str]:
+    """Check universal dryness flags that apply to all module types."""
     flags = []
-    prose = get_prose_content(content)
-    module_type = extract_module_type(content, file_path) if file_path else 'grammar'
-    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
-        module_type = 'beginner'
 
-    # Universal flags (all module types)
-    # NO_ENGAGEMENT: Less than 2 engagement boxes
     if count_engagement_boxes(prose) < 2:
         flags.append('NO_ENGAGEMENT')
 
-    # WALL_OF_TEXT: Paragraph exceeding threshold without break
-    # Narrative module types (history, biography, literature) have longer natural paragraphs
     wall_threshold = 800 if module_type in ('history', 'biography', 'literature') else 500
     paragraphs = re.split(r'\n\s*\n', prose)
     for p in paragraphs:
@@ -1333,84 +1352,140 @@ def detect_dryness_flags(content: str, level: str, file_path: Path | None = None
             flags.append('WALL_OF_TEXT')
             break
 
-    # REPETITIVE_STARTERS: Variety < 0.4
     if calculate_variety_score(prose) < 0.4:
         flags.append('REPETITIVE_STARTERS')
 
-    # Type-specific flags - use 50% of target as threshold
+    return flags
+
+
+def _beginner_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for beginner (A1/A2) modules."""
+    flags = []
+    if count_examples(prose) < 6:
+        flags.append('NO_EXAMPLES')
+    return flags
+
+
+def _bridge_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for bridge modules."""
+    flags = []
+    if count_examples(prose) < 10:
+        flags.append('NO_EXAMPLES')
+    if count_realworld(prose) < 1:
+        flags.append('ABSTRACT_ONLY')
+    return flags
+
+
+def _grammar_dryness_flags(prose: str, level: str) -> list[str]:
+    """Check dryness flags for grammar modules."""
+    flags = []
+    dialogue_count = count_dialogues(prose)
+    if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:
+        flags.append('LOW_DIALOGUE' if dialogue_count > 0 else 'NO_DIALOGUE')
+    if count_examples(prose) < 12:
+        flags.append('NO_EXAMPLES')
+    if count_realworld(prose) < 2:
+        flags.append('ABSTRACT_ONLY')
+    if level in ('B1', 'B2') and count_proverbs(prose) == 0:
+        flags.append('NO_PROVERBS')
+    return flags
+
+
+def _vocabulary_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for vocabulary modules."""
+    flags = []
+    if count_collocations(prose) < 5:
+        flags.append('NO_COLLOCATIONS')
+    if count_register_notes(prose) < 2:
+        flags.append('NO_REGISTER_NOTES')
+    return flags
+
+
+def _history_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for history modules."""
+    flags = []
+    if count_primary_sources(prose) < 2:
+        flags.append('NO_PRIMARY_SOURCES')
+    if count_timeline_markers(prose) < 5:
+        flags.append('NO_TIMELINE')
+    if count_decolonization(prose) == 0:
+        flags.append('NO_DECOLONIZATION_PERSPECTIVE')
+    return flags
+
+
+def _biography_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for biography modules."""
+    flags = []
+    if count_quotes(prose) < 2:
+        flags.append('NO_QUOTES')
+    if count_legacy_refs(prose) < 1:
+        flags.append('NO_LEGACY_DISCUSSION')
+    if count_timeline_markers(prose) < 5:
+        flags.append('NO_TIMELINE')
+    return flags
+
+
+def _literature_dryness_flags(prose: str, file_path: Path | None) -> list[str]:
+    """Check dryness flags for literature modules."""
+    flags = []
+    if count_analysis_sections(prose) < 3:
+        flags.append('NO_ANALYSIS')
+    if count_quotes(prose) < 3:
+        flags.append('NO_LITERARY_CITATIONS')
+    if count_resources(prose) + count_external_yaml_resources(file_path) < 2:
+        flags.append('NO_RESOURCES')
+    return flags
+
+
+def _style_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for style modules."""
+    flags = []
+    if count_quotes(prose) < 2:
+        flags.append('NO_EXEMPLAR_TEXTS')
+    if count_register_notes(prose) < 3:
+        flags.append('NO_REGISTER_ANALYSIS')
+    return flags
+
+
+def _content_cultural_dryness_flags(prose: str) -> list[str]:
+    """Check dryness flags for content/cultural modules."""
+    flags = []
+    if count_examples(prose) < 8:
+        flags.append('NO_EXAMPLES')
+    if count_realworld(prose) == 0:
+        flags.append('ABSTRACT_ONLY')
+    return flags
+
+
+def detect_dryness_flags(content: str, level: str, file_path: Path | None = None) -> list:
+    """Detect dryness indicators based on module type."""
+    prose = get_prose_content(content)
+    module_type = extract_module_type(content, file_path) if file_path else 'grammar'
+    if level in ('A1', 'A2') and module_type in ('grammar', 'vocabulary', 'content'):
+        module_type = 'beginner'
+
+    # Universal flags
+    flags = _universal_dryness_flags(prose, module_type)
+
+    # Type-specific flags
     if module_type == 'beginner':
-        # Beginner modules: lower thresholds, no dialogue required
-        if count_examples(prose) < 6:  # < 50% of target 12
-            flags.append('NO_EXAMPLES')
-
+        flags.extend(_beginner_dryness_flags(prose))
     elif module_type == 'bridge':
-        # Bridge modules: examples (target 20), cultural (target 2), realworld (target 2)
-        # NO dialogues or proverbs required
-        if count_examples(prose) < 10:
-            flags.append('NO_EXAMPLES')
-        if count_realworld(prose) < 1:
-            flags.append('ABSTRACT_ONLY')
-
+        flags.extend(_bridge_dryness_flags(prose))
     elif module_type == 'grammar':
-        # Grammar modules: dialogues (target 4), examples (target 24), realworld (target 3), cultural (target 3), proverbs (target 1)
-        dialogue_count = count_dialogues(prose)
-        if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:  # < 50% of target 4
-            flags.append('LOW_DIALOGUE' if dialogue_count > 0 else 'NO_DIALOGUE')
-        if count_examples(prose) < 12:  # < 50% of target 24
-            flags.append('NO_EXAMPLES')
-        if count_realworld(prose) < 2:  # < 50% of target 3
-            flags.append('ABSTRACT_ONLY')
-        # Proverbs check for B1+ grammar
-        if level in ('B1', 'B2') and count_proverbs(prose) == 0:
-            flags.append('NO_PROVERBS')
-
+        flags.extend(_grammar_dryness_flags(prose, level))
     elif module_type == 'vocabulary':
-        # Vocabulary modules need collocations and register notes
-        if count_collocations(prose) < 5:
-            flags.append('NO_COLLOCATIONS')
-        if count_register_notes(prose) < 2:
-            flags.append('NO_REGISTER_NOTES')
-
+        flags.extend(_vocabulary_dryness_flags(prose))
     elif module_type == 'history':
-        # History modules need primary sources and timeline
-        if count_primary_sources(prose) < 2:
-            flags.append('NO_PRIMARY_SOURCES')
-        if count_timeline_markers(prose) < 5:
-            flags.append('NO_TIMELINE')
-        if count_decolonization(prose) == 0:
-            flags.append('NO_DECOLONIZATION_PERSPECTIVE')
-
+        flags.extend(_history_dryness_flags(prose))
     elif module_type == 'biography':
-        # Biography modules need quotes and legacy
-        if count_quotes(prose) < 2:
-            flags.append('NO_QUOTES')
-        if count_legacy_refs(prose) < 1:
-            flags.append('NO_LEGACY_DISCUSSION')
-        if count_timeline_markers(prose) < 5:
-            flags.append('NO_TIMELINE')
-
+        flags.extend(_biography_dryness_flags(prose))
     elif module_type == 'literature':
-        # Literature modules need analysis and citations
-        if count_analysis_sections(prose) < 3:
-            flags.append('NO_ANALYSIS')
-        if count_quotes(prose) < 3:
-            flags.append('NO_LITERARY_CITATIONS')
-        if count_resources(prose) + count_external_yaml_resources(file_path) < 2:
-            flags.append('NO_RESOURCES')
-
+        flags.extend(_literature_dryness_flags(prose, file_path))
     elif module_type == 'style':
-        # Style modules need exemplar texts and register analysis
-        if count_quotes(prose) < 2:
-            flags.append('NO_EXEMPLAR_TEXTS')
-        if count_register_notes(prose) < 3:
-            flags.append('NO_REGISTER_ANALYSIS')
-
+        flags.extend(_style_dryness_flags(prose))
     elif module_type in ('content', 'cultural'):
-        # Cultural/content modules need examples and real-world refs
-        if count_examples(prose) < 8:
-            flags.append('NO_EXAMPLES')
-        if count_realworld(prose) == 0:
-            flags.append('ABSTRACT_ONLY')
+        flags.extend(_content_cultural_dryness_flags(prose))
 
     # Table check for grammar module types only (soft warning)
     if module_type in ('grammar', 'bridge') and count_tables(prose) == 0:

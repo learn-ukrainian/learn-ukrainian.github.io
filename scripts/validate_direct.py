@@ -226,107 +226,125 @@ def check_activities(data: dict, result: ValidationResult) -> None:
         _dispatch_activity_check(act, act_type, ctx, result)
 
 
+def _check_watch_and_repeat(act: dict, ctx: str, result: ValidationResult) -> None:
+    items = act.get("items", [])
+    if not items:
+        result.error(f"{ctx}: watch_and_repeat must have at least 1 item")
+    for j, item in enumerate(items):
+        check_video_url(item.get("video"), f"{ctx}.items[{j}].video", result)
+
+
+def _check_image_to_letter(act: dict, ctx: str, result: ValidationResult) -> None:
+    items = act.get("items", [])
+    if len(items) < 5:
+        result.warn(f"{ctx}: only {len(items)} items (recommend ≥ 10)")
+    emojis_in_activity: set[str] = set()
+    for j, item in enumerate(items):
+        em = item.get("emoji", "")
+        if not item.get("emoji"):
+            result.error(f"{ctx}.items[{j}]: missing 'emoji'")
+        if not item.get("answer"):
+            result.error(f"{ctx}.items[{j}]: missing 'answer'")
+        if not item.get("distractors"):
+            result.error(f"{ctx}.items[{j}]: missing 'distractors'")
+        if em and em in emojis_in_activity:
+            result.error(f"{ctx}.items[{j}]: duplicate emoji '{em}' in image_to_letter")
+        if em:
+            emojis_in_activity.add(em)
+
+
+def _check_true_false(act: dict, ctx: str, result: ValidationResult) -> None:
+    items = act.get("items", [])
+    if len(items) < 3:
+        result.error(f"{ctx}: true_false must have ≥ 3 items, found {len(items)}")
+    for j, item in enumerate(items):
+        if "statement" not in item:
+            result.error(f"{ctx}.items[{j}]: missing 'statement'")
+        if "answer" not in item:
+            result.error(f"{ctx}.items[{j}]: missing 'answer'")
+        elif not isinstance(item["answer"], bool):
+            result.error(
+                f"{ctx}.items[{j}]: 'answer' must be boolean (true/false), "
+                f"got {type(item['answer']).__name__}"
+            )
+        stmt = item.get("statement", "")
+        if stmt and LATIN_RE.search(stmt):
+            result.warn(f"{ctx}.items[{j}]: possible non-Ukrainian text: '{stmt[:60]}'")
+
+
+def _check_pattern_drill(act: dict, ctx: str, result: ValidationResult) -> None:
+    if "prompt" not in act:
+        result.error(f"{ctx}: pattern_drill missing 'prompt'")
+    items = act.get("items", [])
+    if len(items) < 3:
+        result.warn(f"{ctx}: only {len(items)} items (recommend ≥ 5)")
+    for j, item in enumerate(items):
+        if "given" not in item:
+            result.error(f"{ctx}.items[{j}]: missing 'given'")
+        if "answer" not in item:
+            result.error(f"{ctx}.items[{j}]: missing 'answer'")
+
+
+def _check_build_sentence(act: dict, ctx: str, result: ValidationResult) -> None:
+    sentences = act.get("sentences", [])
+    if len(sentences) < 3:
+        result.warn(f"{ctx}: only {len(sentences)} sentences (recommend ≥ 5)")
+    for j, s in enumerate(sentences):
+        if "words" not in s:
+            result.error(f"{ctx}.sentences[{j}]: missing 'words'")
+        if "correct" not in s:
+            result.error(f"{ctx}.sentences[{j}]: missing 'correct'")
+
+
+def _check_reading(act: dict, ctx: str, result: ValidationResult) -> None:
+    has_text = bool(act.get("text"))
+    has_items = bool(act.get("items")) or bool(act.get("sentences"))
+    if not has_text and not has_items:
+        result.error(f"{ctx}: reading missing 'text' or 'items'")
+    text = act.get("text", "")
+    if text and LATIN_RE.search(text):
+        result.warn(f"{ctx}: reading text may contain non-Ukrainian characters")
+    if has_items:
+        for item in (act.get("items") or act.get("sentences") or []):
+            item_text = item.get("text", "") if isinstance(item, dict) else ""
+            if item_text and LATIN_RE.search(item_text):
+                result.warn(f"{ctx}: reading item may contain non-Ukrainian characters")
+    questions = act.get("questions", [])
+    if not questions and not act.get("true_false_items") and not has_items:
+        result.warn(f"{ctx}: reading has no comprehension questions or true_false_items")
+
+
+# Dispatch table mapping activity type to checker function
+_ACTIVITY_CHECKERS: dict[str, Any] = {
+    "watch_and_repeat": _check_watch_and_repeat,
+    "image_to_letter": _check_image_to_letter,
+    "true_false": _check_true_false,
+    "pattern_drill": _check_pattern_drill,
+    "build_sentence": _check_build_sentence,
+    "reading": _check_reading,
+}
+
+
 def _dispatch_activity_check(
     act: dict, act_type: str, ctx: str, result: ValidationResult
 ) -> None:
-    if act_type == "watch_and_repeat":
-        items = act.get("items", [])
-        if not items:
-            result.error(f"{ctx}: watch_and_repeat must have at least 1 item")
-        for j, item in enumerate(items):
-            check_video_url(item.get("video"), f"{ctx}.items[{j}].video", result)
+    checker = _ACTIVITY_CHECKERS.get(act_type)
+    if checker:
+        checker(act, ctx, result)
+        return
 
-    elif act_type == "image_to_letter":
-        items = act.get("items", [])
-        if len(items) < 5:
-            result.warn(f"{ctx}: only {len(items)} items (recommend ≥ 10)")
-        emojis_in_activity: set[str] = set()
-        for j, item in enumerate(items):
-            em = item.get("emoji", "")
-            if not item.get("emoji"):
-                result.error(f"{ctx}.items[{j}]: missing 'emoji'")
-            if not item.get("answer"):
-                result.error(f"{ctx}.items[{j}]: missing 'answer'")
-            if not item.get("distractors"):
-                result.error(f"{ctx}.items[{j}]: missing 'distractors'")
-            if em and em in emojis_in_activity:
-                result.error(f"{ctx}.items[{j}]: duplicate emoji '{em}' in image_to_letter")
-            if em:
-                emojis_in_activity.add(em)
-
-    elif act_type == "classify":
+    if act_type == "classify":
         if not act.get("categories"):
             result.error(f"{ctx}: classify must have 'categories'")
-
-    elif act_type == "true_false":
-        items = act.get("items", [])
-        if len(items) < 3:
-            result.error(f"{ctx}: true_false must have ≥ 3 items, found {len(items)}")
-        for j, item in enumerate(items):
-            if "statement" not in item:
-                result.error(f"{ctx}.items[{j}]: missing 'statement'")
-            if "answer" not in item:
-                result.error(f"{ctx}.items[{j}]: missing 'answer'")
-            elif not isinstance(item["answer"], bool):
-                result.error(
-                    f"{ctx}.items[{j}]: 'answer' must be boolean (true/false), "
-                    f"got {type(item['answer']).__name__}"
-                )
-            stmt = item.get("statement", "")
-            if stmt and LATIN_RE.search(stmt):
-                result.warn(f"{ctx}.items[{j}]: possible non-Ukrainian text: '{stmt[:60]}'")
-
-    elif act_type == "pattern_drill":
-        if "prompt" not in act:
-            result.error(f"{ctx}: pattern_drill missing 'prompt'")
-        items = act.get("items", [])
-        if len(items) < 3:
-            result.warn(f"{ctx}: only {len(items)} items (recommend ≥ 5)")
-        for j, item in enumerate(items):
-            if "given" not in item:
-                result.error(f"{ctx}.items[{j}]: missing 'given'")
-            if "answer" not in item:
-                result.error(f"{ctx}.items[{j}]: missing 'answer'")
-
-    elif act_type == "build_sentence":
-        sentences = act.get("sentences", [])
-        if len(sentences) < 3:
-            result.warn(f"{ctx}: only {len(sentences)} sentences (recommend ≥ 5)")
-        for j, s in enumerate(sentences):
-            if "words" not in s:
-                result.error(f"{ctx}.sentences[{j}]: missing 'words'")
-            if "correct" not in s:
-                result.error(f"{ctx}.sentences[{j}]: missing 'correct'")
-
     elif act_type == "riddle":
         if not act.get("answer"):
             result.error(f"{ctx}: riddle missing 'answer'")
         if not act.get("clues"):
             result.error(f"{ctx}: riddle missing 'clues'")
-
     elif act_type == "tongue_twister":
         if not act.get("text"):
             result.error(f"{ctx}: tongue_twister missing 'text'")
-
-    elif act_type == "reading":
-        has_text = bool(act.get("text"))
-        has_items = bool(act.get("items")) or bool(act.get("sentences"))
-        if not has_text and not has_items:
-            result.error(f"{ctx}: reading missing 'text' or 'items'")
-        text = act.get("text", "")
-        if text and LATIN_RE.search(text):
-            result.warn(f"{ctx}: reading text may contain non-Ukrainian characters")
-        if has_items:
-            for item in (act.get("items") or act.get("sentences") or []):
-                item_text = item.get("text", "") if isinstance(item, dict) else ""
-                if item_text and LATIN_RE.search(item_text):
-                    result.warn(f"{ctx}: reading item may contain non-Ukrainian characters")
-        questions = act.get("questions", [])
-        if not questions and not act.get("true_false_items") and not has_items:
-            result.warn(f"{ctx}: reading has no comprehension questions or true_false_items")
-
     elif act_type == "proverb_drill":
-        # Two valid formats: (1) proverb + activity, (2) items with proverb/answer pairs
         if not act.get("proverb") and not act.get("items"):
             result.error(f"{ctx}: proverb_drill missing 'proverb' or 'items'")
 

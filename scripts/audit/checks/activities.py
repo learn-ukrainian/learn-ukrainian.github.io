@@ -25,6 +25,234 @@ if str(SCRIPT_DIR) not in sys.path:
 from yaml_activities import Activity
 
 
+def _apply_a1_early_relaxations(rules: dict, act_type: str) -> None:
+    """Apply relaxed complexity rules for A1 M01-M05 (alphabet phase)."""
+    relaxations = {
+        'quiz': {'min_len': 2},
+        'match-up': {'pairs_max': 15},
+        'group-sort': {'items_min': 6, 'items_max': 30, 'groups_min': 2},
+        'fill-in': {'min_items': 6},
+    }
+    if act_type in relaxations:
+        rules.update(relaxations[act_type])
+
+
+def _apply_b1_bridge_relaxations(rules: dict, act_type: str) -> None:
+    """Apply relaxed complexity rules for B1 M01-M05 (bridge modules)."""
+    relaxations = {
+        'quiz': {'min_len': 5, 'max_len': 20},
+        'unjumble': {'words_min': 6, 'words_max': 16},
+        'match-up': {'pairs_min': 12, 'pairs_max': 18},
+        'fill-in': {'sent_min': 6, 'sent_max': 14},
+        'true-false': {'min_len': 6, 'max_len': 18},
+        'group-sort': {'groups_min': 2, 'groups_max': 5, 'items_min': 12},
+        'error-correction': {'errors': 1, 'min_len': 6, 'max_len': 10},
+        'cloze': {'sentences': [3, 4, 5], 'blanks': [3, 4]},
+        'mark-the-words': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4]},
+        'select': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3]},
+        'translate': {'min_len': 4, 'max_len': 8},
+    }
+    if act_type in relaxations:
+        rules.update(relaxations[act_type])
+
+
+def _check_structural_requirements(act_type: str, title: str, body: str, act_obj) -> list[dict]:
+    """Check structural requirements (model-answer, rubric) for advanced activity types."""
+    violations = []
+    if act_type == 'essay-response':
+        if not act_obj and '> [!model-answer]' not in body:
+            violations.append({
+                'type': 'STRUCTURE_MISSING',
+                'issue': f"essay-response '{title}' missing mandatory > [!model-answer]",
+                'fix': "All essay responses must include a model answer."
+            })
+        if not act_obj and '> [!rubric]' not in body:
+            violations.append({
+                'type': 'STRUCTURE_MISSING',
+                'issue': f"essay-response '{title}' missing mandatory > [!rubric]",
+                'fix': "All essay responses must include a rubric."
+            })
+    if act_type in ('critical-analysis', 'comparative-study', 'authorial-intent') and not act_obj and '> [!model-answer]' not in body:
+        violations.append({
+            'type': 'STRUCTURE_MISSING',
+            'issue': f"{act_type} '{title}' missing mandatory > [!model-answer]",
+            'fix': f"All {act_type} activities must include a model answer."
+        })
+    return violations
+
+
+def _check_item_count(act_type: str, title: str, items_count: int, rules: dict,
+                      act_obj, body: str, level_code: str) -> list[dict]:
+    """Check item/group/pair counts against complexity rules."""
+    violations = []
+    min_items = rules.get('min_items', 6)
+
+    if act_type == 'group-sort':
+        group_count = 0
+        if act_obj:
+            group_count = len(act_obj.groups)
+        else:
+            group_headers = re.findall(r'^\s*###\s+([^\n]+)', body, re.MULTILINE)
+            group_count = len([h for h in group_headers if not any(
+                skip in h.lower() for skip in ['note', 'explanation', 'hint', 'tip']
+            )])
+
+        min_groups = rules.get('groups_min', 2)
+        max_groups = rules.get('groups_max', 4)
+        if not (min_groups <= group_count <= max_groups):
+            violations.append({
+                'type': 'COMPLEXITY',
+                'issue': f"group-sort '{title}' has {group_count} groups (target: {min_groups}-{max_groups})",
+                'fix': f"Adjust number of sorting categories to {min_groups}-{max_groups}."
+            })
+
+        min_sort_items = rules.get('items_min', 8)
+        max_sort_items = rules.get('items_max', 20)
+        if not (min_sort_items <= items_count <= max_sort_items):
+            violations.append({
+                'type': 'COMPLEXITY',
+                'issue': f"group-sort '{title}' has {items_count} items (target: {min_sort_items}-{max_sort_items})",
+                'fix': f"Adjust number of items to sort to {min_sort_items}-{max_sort_items}."
+            })
+
+    elif act_type == 'match-up':
+        min_pairs = rules.get('pairs_min', 8)
+        max_pairs = rules.get('pairs_max', 18)
+        if not (min_pairs <= items_count <= max_pairs):
+            violations.append({
+                'type': 'COMPLEXITY',
+                'issue': f"match-up '{title}' has {items_count} pairs (target: {min_pairs}-{max_pairs})",
+                'fix': f"Adjust number of pairs to {min_pairs}-{max_pairs}."
+            })
+
+    elif items_count < min_items:
+        violations.append({
+            'type': 'COMPLEXITY',
+            'issue': f"{act_type} '{title}' has {items_count} items (minimum: {min_items})",
+            'fix': f"Add more items. {level_code} {act_type} requires at least {min_items} items."
+        })
+
+    return violations
+
+
+def _check_unjumble_complexity(title: str, body: str, act_obj, items_count: int,
+                                rules: dict, level_code: str) -> list[dict]:
+    """Check unjumble format and word count complexity."""
+    violations = []
+
+    if not act_obj:
+        slash_usage = len(re.findall(r'/', body))
+        if slash_usage < items_count:
+            violations.append({
+                'type': 'FORMAT_ERROR',
+                'issue': f"unjumble '{title}' items must use slash '/' separator",
+                'fix': "Split words with slashes, e.g. 'Я / люблю / каву'."
+            })
+
+    items_to_check = []
+    if act_obj:
+        for item in act_obj.items:
+            if hasattr(item, 'words') and isinstance(item.words, list):
+                items_to_check.append(' '.join(item.words))
+            elif hasattr(item, 'words'):
+                items_to_check.append(str(item.words))
+    else:
+        items_to_check = re.findall(r'\d+\.\s*([^\n>]+)', body)
+
+    min_w = rules.get('words_min', 4)
+    max_w = rules.get('words_max', 20)
+    for i, item in enumerate(items_to_check, 1):
+        words = len(re.findall(r'[\w\u0400-\u04FF]+', item))
+        if words < min_w - 1 or words > max_w + 2:
+            violations.append({
+                'type': 'COMPLEXITY_WORD_COUNT',
+                'issue': f"unjumble '{title}' item {i} has {words} words (target: {min_w}-{max_w})",
+                'fix': f"Adjust sentence length to {min_w}-{max_w} words to match {level_code} complexity."
+            })
+
+    return violations
+
+
+def _check_quiz_complexity(title: str, body: str, act_obj, rules: dict,
+                           level_code: str) -> list[dict]:
+    """Check quiz prompt length and option count complexity."""
+    violations = []
+
+    quiz_items = []
+    if act_obj:
+        quiz_items = act_obj.items
+    else:
+        questions_raw = re.split(r'\n\d+\.', body)[1:]
+        for q in questions_raw:
+            prompt = q.split('\n')[0]
+            opts = re.findall(r'-\s*\[', q)
+            from dataclasses import dataclass
+            @dataclass
+            class LegacyItem:
+                question: str
+                options: list
+            quiz_items.append(LegacyItem(question=prompt, options=opts))
+
+    min_len = rules.get('min_len', 5)
+    max_len = rules.get('max_len', 30)
+
+    for i, q in enumerate(quiz_items, 1):
+        prompt = getattr(q, 'question', '')
+        prompt_words = len(re.findall(r'[\w\u0400-\u04FF]+', prompt))
+        if prompt_words < min_len or prompt_words > max_len + 5:
+            violations.append({
+                'type': 'COMPLEXITY_WORD_COUNT',
+                'issue': f"quiz '{title}' Q{i} prompt length {prompt_words} (target: {min_len}-{max_len})",
+                'fix': f"Adjust prompt length to {min_len}-{max_len} words."
+            })
+
+        options_count = len(q.options)
+        target_opts = rules.get('options', [4])
+        if isinstance(target_opts, int):
+            target_opts = [target_opts]
+
+        if options_count > 0 and options_count not in target_opts and options_count < min(target_opts):
+            violations.append({
+                'type': 'COMPLEXITY_OPTIONS',
+                'issue': f"quiz '{title}' Q{i} has {options_count} options (target: {target_opts})",
+                'fix': f"Provide {target_opts} options for {level_code} quizzes."
+            })
+
+    return violations
+
+
+def _check_legacy_format(act_type: str, title: str, body: str) -> list[dict]:
+    """Check format for anagram and fill-in legacy markdown activities."""
+    violations = []
+
+    if act_type == 'anagram':
+        items_raw = re.findall(r'\d+\.\s*([^\n>]+)', body)
+        for item in items_raw:
+            if '/' in item:
+                violations.append({
+                    'type': 'FORMAT_ERROR',
+                    'issue': f"anagram '{title}' item '{item.strip()}' must use SPACES separator, not slashes",
+                    'fix': "Use spaces between letters: 'л і т е р а'."
+                })
+                break
+
+    elif act_type == 'fill-in':
+        if '___' not in body:
+            violations.append({
+                'type': 'FORMAT_ERROR',
+                'issue': f"fill-in '{title}' missing '___' placeholders",
+                'fix': "Use exactly '___' (three underscores) for blanks."
+            })
+        if '[!options]' not in body:
+            violations.append({
+                'type': 'FORMAT_ERROR',
+                'issue': f"fill-in '{title}' missing mandatory [!options] block",
+                'fix': "All fill-in activities must provide [!options] for the user."
+            })
+
+    return violations
+
+
 def check_activity_complexity(content: str, level_code: str, module_num: int = 1, yaml_activities: list[Activity] | None = None, module_focus: str | None = None) -> list[dict]:
     """
     Check if activities meet complexity requirements (word count, item count, structure).
@@ -35,25 +263,20 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
     """
     violations = []
 
-    # Relax rules for A1 M01-M05 and B1 M01-M05 (bridge modules)
     is_a1_early = (level_code == 'A1' and module_num <= 5)
     is_b1_bridge = (level_code == 'B1' and module_num <= 5)
 
-    # 1. Parse all activities (Unified: supports both legacy MD and new YAML)
+    # Parse all activities
     parsed_activities = []
-
-    # Handle YAML activities (Preferred)
     if yaml_activities:
         for act in yaml_activities:
             parsed_activities.append({
                 'type': act.type,
                 'title': getattr(act, 'title', 'Untitled'),
-                'body': '', # Not needed for YAML logic-based checks
+                'body': '',
                 'source': 'yaml',
                 'object': act
             })
-
-    # Legacy Markdown activities support removed (Issue #394)
 
     for activity_data in parsed_activities:
         act_type = activity_data['type']
@@ -61,260 +284,40 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
         body = activity_data['body']
         act_obj = activity_data['object']
 
-        # Skip checking unknown activity types
         if act_type not in ACTIVITY_COMPLEXITY:
             continue
 
-        # Context-specific complexity lookup (e.g., history, B1-vocab)
+        # Resolve complexity rules (context-specific > level-specific)
         context_key = f"{level_code}-{module_focus}" if module_focus else None
         rules = None
-
-        # Try context-specific rules first (history, B1-vocab, etc.)
         if context_key and context_key in ACTIVITY_COMPLEXITY[act_type]:
             rules = ACTIVITY_COMPLEXITY[act_type][context_key].copy()
-        # Fall back to standard level rules
         elif level_code in ACTIVITY_COMPLEXITY[act_type]:
             rules = ACTIVITY_COMPLEXITY[act_type][level_code].copy()
 
-        # If no specific rules for this level (e.g. anagram in A2), restrictions check handles it
         if not rules:
             continue
 
-        # --- New Activity Type Structural Checks ---
-        if act_type == 'essay-response':
-            if not act_obj and '> [!model-answer]' not in body:
-                violations.append({
-                    'type': 'STRUCTURE_MISSING',
-                    'issue': f"essay-response '{title}' missing mandatory > [!model-answer]",
-                    'fix': "All essay responses must include a model answer."
-                })
-            if not act_obj and '> [!rubric]' not in body:
-                violations.append({
-                    'type': 'STRUCTURE_MISSING',
-                    'issue': f"essay-response '{title}' missing mandatory > [!rubric]",
-                    'fix': "All essay responses must include a rubric."
-                })
+        # Structural requirements for advanced types
+        violations.extend(_check_structural_requirements(act_type, title, body, act_obj))
 
-        if act_type in ('critical-analysis', 'comparative-study', 'authorial-intent') and not act_obj and '> [!model-answer]' not in body:
-                violations.append({
-                    'type': 'STRUCTURE_MISSING',
-                    'issue': f"{act_type} '{title}' missing mandatory > [!model-answer]",
-                    'fix': f"All {act_type} activities must include a model answer."
-                })
-
-        # Apply A1 Early Relaxations
+        # Apply level-specific relaxations
         if is_a1_early:
-            if act_type == 'quiz':
-                rules['min_len'] = 2  # Very simple prompts
-            elif act_type == 'match-up':
-                rules['pairs_max'] = 15  # Allow more pairs for alphabet matching
-            elif act_type == 'group-sort':
-                rules['items_min'] = 6
-                rules['items_max'] = 30
-                rules['groups_min'] = 2
-            elif act_type == 'fill-in':
-                rules['min_items'] = 6
-
-        # Apply B1 Bridge Relaxations (M01-M05)
+            _apply_a1_early_relaxations(rules, act_type)
         if is_b1_bridge:
-            if act_type == 'quiz':
-                rules['min_len'] = 5
-                rules['max_len'] = 20
-            elif act_type == 'unjumble':
-                rules['words_min'] = 6
-                rules['words_max'] = 16
-            elif act_type == 'match-up':
-                rules['pairs_min'] = 12
-                rules['pairs_max'] = 18
-            elif act_type == 'fill-in':
-                rules['sent_min'] = 6
-                rules['sent_max'] = 14
-            elif act_type == 'true-false':
-                rules['min_len'] = 6
-                rules['max_len'] = 18
-            elif act_type == 'group-sort':
-                rules['groups_min'] = 2
-                rules['groups_max'] = 5
-                rules['items_min'] = 12
-            elif act_type == 'error-correction':
-                rules['errors'] = 1
-                rules['min_len'] = 6
-                rules['max_len'] = 10
-            elif act_type == 'cloze':
-                rules['sentences'] = [3, 4, 5]
-                rules['blanks'] = [3, 4]
-            elif act_type == 'mark-the-words':
-                rules['min_len'] = 8
-                rules['max_len'] = 12
-                rules['marks'] = [2, 3, 4]
-            elif act_type == 'select':
-                rules['min_len'] = 6
-                rules['max_len'] = 10
-                rules['options'] = [4, 5]
-                rules['correct'] = [2, 3]
-            elif act_type == 'translate':
-                rules['min_len'] = 4
-                rules['max_len'] = 8
+            _apply_b1_bridge_relaxations(rules, act_type)
 
-        # --- Check Item Count ---
+        # Item count checks
         items_count = count_items(body, act_obj)
-        min_items = rules.get('min_items', 6)  # Default min 6 if not specified
+        violations.extend(_check_item_count(act_type, title, items_count, rules, act_obj, body, level_code))
 
-        # Activity-specific item count checks
-        if act_type == 'group-sort':
-            group_count = 0
-            if act_obj:
-                group_count = len(act_obj.groups)
-            else:
-                group_headers = re.findall(r'^\s*###\s+([^\n]+)', body, re.MULTILINE)
-                group_count = len([h for h in group_headers if not any(
-                    skip in h.lower() for skip in ['note', 'explanation', 'hint', 'tip']
-                )])
-
-            min_groups = rules.get('groups_min', 2)
-            max_groups = rules.get('groups_max', 4)
-
-            if not (min_groups <= group_count <= max_groups):
-                violations.append({
-                    'type': 'COMPLEXITY',
-                    'issue': f"group-sort '{title}' has {group_count} groups (target: {min_groups}-{max_groups})",
-                    'fix': f"Adjust number of sorting categories to {min_groups}-{max_groups}."
-                })
-
-            min_sort_items = rules.get('items_min', 8)
-            max_sort_items = rules.get('items_max', 20)
-            if not (min_sort_items <= items_count <= max_sort_items):
-                violations.append({
-                    'type': 'COMPLEXITY',
-                    'issue': f"group-sort '{title}' has {items_count} items (target: {min_sort_items}-{max_sort_items})",
-                    'fix': f"Adjust number of items to sort to {min_sort_items}-{max_sort_items}."
-                })
-
-        elif act_type == 'match-up':
-            min_pairs = rules.get('pairs_min', 8)
-            max_pairs = rules.get('pairs_max', 18)
-
-            if not (min_pairs <= items_count <= max_pairs):
-                violations.append({
-                    'type': 'COMPLEXITY',
-                    'issue': f"match-up '{title}' has {items_count} pairs (target: {min_pairs}-{max_pairs})",
-                    'fix': f"Adjust number of pairs to {min_pairs}-{max_pairs}."
-                })
-
-        elif items_count < min_items:
-            violations.append({
-                'type': 'COMPLEXITY',
-                'issue': f"{act_type} '{title}' has {items_count} items (minimum: {min_items})",
-                'fix': f"Add more items. {level_code} {act_type} requires at least {min_items} items."
-            })
-
-        # --- Check Content Complexity (Word Counts / Options) ---
-
-        # Unjumble / Anagram Structure
+        # Content complexity checks (type-specific)
         if act_type == 'unjumble':
-            if not act_obj:
-                slash_usage = len(re.findall(r'/', body))
-                if slash_usage < items_count:
-                     violations.append({
-                        'type': 'FORMAT_ERROR',
-                        'issue': f"unjumble '{title}' items must use slash '/' separator",
-                        'fix': "Split words with slashes, e.g. 'Я / люблю / каву'."
-                    })
-
-            # Check word counts
-            items_to_check = []
-            if act_obj:
-                for item in act_obj.items:
-                    if hasattr(item, 'words') and isinstance(item.words, list):
-                        items_to_check.append(' '.join(item.words))
-                    elif hasattr(item, 'words'):
-                        items_to_check.append(str(item.words))
-            else:
-                items_to_check = re.findall(r'\d+\.\s*([^\n>]+)', body)
-
-            for i, item in enumerate(items_to_check, 1):
-                words = len(re.findall(r'[\w\u0400-\u04FF]+', item))
-                min_w = rules.get('words_min', 4)
-                max_w = rules.get('words_max', 20)
-
-                if words < min_w - 1 or words > max_w + 2:
-                     violations.append({
-                        'type': 'COMPLEXITY_WORD_COUNT',
-                        'issue': f"unjumble '{title}' item {i} has {words} words (target: {min_w}-{max_w})",
-                        'fix': f"Adjust sentence length to {min_w}-{max_w} words to match {level_code} complexity."
-                    })
-
-        # Anagram Structure
-        elif act_type == 'anagram':
-            if not act_obj:
-                items_raw = re.findall(r'\d+\.\s*([^\n>]+)', body)
-                for item in items_raw:
-                    if '/' in item:
-                        violations.append({
-                            'type': 'FORMAT_ERROR',
-                            'issue': f"anagram '{title}' item '{item.strip()}' must use SPACES separator, not slashes",
-                            'fix': "Use spaces between letters: 'л і т е р а'."
-                        })
-                        break
-
-        # Fill-in Structure
-        elif act_type == 'fill-in':
-            if not act_obj:
-                if '___' not in body:
-                     violations.append({
-                        'type': 'FORMAT_ERROR',
-                        'issue': f"fill-in '{title}' missing '___' placeholders",
-                        'fix': "Use exactly '___' (three underscores) for blanks."
-                    })
-                if '[!options]' not in body:
-                     violations.append({
-                        'type': 'FORMAT_ERROR',
-                        'issue': f"fill-in '{title}' missing mandatory [!options] block",
-                        'fix': "All fill-in activities must provide [!options] for the user."
-                    })
-
-        # Quiz Options Check
+            violations.extend(_check_unjumble_complexity(title, body, act_obj, items_count, rules, level_code))
         elif act_type == 'quiz':
-            quiz_items = []
-            if act_obj:
-                quiz_items = act_obj.items
-            else:
-                # Basic parsing for legacy
-                questions_raw = re.split(r'\n\d+\.', body)[1:]
-                for q in questions_raw:
-                    prompt = q.split('\n')[0]
-                    opts = re.findall(r'-\s*\[', q)
-                    from dataclasses import dataclass
-                    @dataclass
-                    class LegacyItem:
-                        question: str
-                        options: list
-                    quiz_items.append(LegacyItem(question=prompt, options=opts))
-
-            min_len = rules.get('min_len', 5)
-            max_len = rules.get('max_len', 30)
-
-            for i, q in enumerate(quiz_items, 1):
-                prompt = getattr(q, 'question', '')
-                prompt_words = len(re.findall(r'[\w\u0400-\u04FF]+', prompt))
-                if prompt_words < min_len or prompt_words > max_len + 5:
-                     violations.append({
-                        'type': 'COMPLEXITY_WORD_COUNT',
-                        'issue': f"quiz '{title}' Q{i} prompt length {prompt_words} (target: {min_len}-{max_len})",
-                        'fix': f"Adjust prompt length to {min_len}-{max_len} words."
-                    })
-
-                options_count = len(q.options)
-                target_opts = rules.get('options', [4])
-                if isinstance(target_opts, int):
-                    target_opts = [target_opts]
-
-                if options_count > 0 and options_count not in target_opts and options_count < min(target_opts):
-                     violations.append({
-                        'type': 'COMPLEXITY_OPTIONS',
-                        'issue': f"quiz '{title}' Q{i} has {options_count} options (target: {target_opts})",
-                        'fix': f"Provide {target_opts} options for {level_code} quizzes."
-                    })
+            violations.extend(_check_quiz_complexity(title, body, act_obj, rules, level_code))
+        elif act_type in ('anagram', 'fill-in') and not act_obj:
+            violations.extend(_check_legacy_format(act_type, title, body))
 
     return violations
 
