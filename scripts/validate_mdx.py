@@ -22,7 +22,7 @@ from audit.report import append_mdx_errors_to_report
 
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
-DOCUSAURUS_DIR = PROJECT_ROOT / "docusaurus" / "docs"
+STARLIGHT_DOCS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
 
 @dataclass
 class ValidationResult:
@@ -343,7 +343,7 @@ def main():
             if target_module and module_num != target_module:
                 continue
 
-            mdx_file = DOCUSAURUS_DIR / level / f'module-{str(module_num).zfill(2)}.mdx'
+            mdx_file = STARLIGHT_DOCS_DIR / level / f'module-{str(module_num).zfill(2)}.mdx'
 
             result = validate_module(md_file, mdx_file)
             all_results.append(result)

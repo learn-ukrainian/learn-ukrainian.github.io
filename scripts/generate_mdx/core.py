@@ -28,7 +28,7 @@ from .resources import (
     b1_vocab_items_to_markdown,
     vocab_items_to_markdown,
 )
-from .utils import CURRICULUM_DIR, DOCUSAURUS_DIR, PROJECT_ROOT, SCRIPT_DIR, escape_jsx
+from .utils import CURRICULUM_DIR, STARLIGHT_DOCS_DIR, PROJECT_ROOT, SCRIPT_DIR, escape_jsx
 
 # Ensure scripts/ is on sys.path for sibling imports
 if str(SCRIPT_DIR) not in sys.path:
@@ -431,7 +431,7 @@ def main():
         if mod.level != current_level:
             print(f'\U0001f4c1 Level {mod.level.upper()}')
             current_level = mod.level
-            output_dir = DOCUSAURUS_DIR / mod.level
+            output_dir = STARLIGHT_DOCS_DIR / mod.level
             output_dir.mkdir(parents=True, exist_ok=True)
 
         # Find the physical file

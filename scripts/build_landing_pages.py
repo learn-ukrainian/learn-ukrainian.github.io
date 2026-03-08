@@ -4,7 +4,7 @@ Build landing pages for all curriculum levels.
 
 Shows ALL planned modules (existing + planned) based on level-status.yaml.
 Status indicators:
-  ✅ Ready - MDX file exists in docusaurus/docs/{level}/
+  ✅ Ready - MDX file exists in starlight/src/content/docs/{level}/
   🚧 In Progress - Meta file exists but no MDX
   📋 Planned - No files yet (up to planned count)
 """

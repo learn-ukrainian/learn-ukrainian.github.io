@@ -13,7 +13,7 @@ from pathlib import Path
 
 # Configuration
 CURRICULUM_DIR = Path("curriculum/l2-uk-en")
-OUTPUT_FILE = Path("docusaurus/static/llms.txt")
+OUTPUT_FILE = Path("starlight/public/llms.txt")
 
 LEVEL_INFO = {
     "a1": {
@@ -99,7 +99,7 @@ URL: /docs/{level}/
 - 100% free, no ads, no paywalls
 
 ## Technical Details
-- Built with Docusaurus
+- Built with Astro/Starlight
 - Open source: github.com/learn-ukrainian/learn-ukrainian.github.io
 - Curriculum source in Markdown
 - JSON export available for app integration

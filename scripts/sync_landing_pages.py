@@ -3,12 +3,12 @@
 sync_landing_pages.py - Sync website landing pages with curriculum state.
 
 Updates:
-- docusaurus/docs/index.mdx (main curriculum overview)
-- docusaurus/docs/{level}/index.mdx (level landing pages)
+- starlight/src/content/docs/index.mdx (main curriculum overview)
+- starlight/src/content/docs/{level}/index.mdx (level landing pages)
 
 Data sources:
 - Configuration: docs/l2-uk-en/level-status.yaml (planned counts, status overrides)
-- Ready modules: docusaurus/docs/{level}/module-*.mdx files
+- Ready modules: starlight/src/content/docs/{level}/*.mdx files
 
 Usage:
     python scripts/sync_landing_pages.py           # Apply changes

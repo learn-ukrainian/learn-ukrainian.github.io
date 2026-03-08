@@ -301,7 +301,7 @@ def check_outline_compliance(
     outline_section_names = [s.get("section") or s.get("title", "") for s in outline]
     matched_outline_sections = set()
 
-    # Sections that are handled by sidecars/Docusaurus and don't need to be in MD
+    # Sections that are handled by sidecars/Starlight and don't need to be in MD
     # OR if they are in MD, they shouldn't trigger word count/existence errors
     # (Template-mandatory sections are implicit and don't need dynamic outline tracking)
     EXEMPT_SECTIONS = {

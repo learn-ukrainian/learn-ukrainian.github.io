@@ -92,7 +92,7 @@ fix: 7 bio plan files with YAML syntax errors (unquoted colon in list items)
 - Module content (`curriculum/l2-uk-en/{track}/*.md`)
 - Activities (`curriculum/l2-uk-en/{track}/activities/`)
 - Vocabulary (`curriculum/l2-uk-en/{track}/vocabulary/`)
-- MDX files (`docusaurus/docs/`)
+- MDX files (`starlight/src/content/docs/`)
 
 ### Never commit
 - `.env` files

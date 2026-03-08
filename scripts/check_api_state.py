@@ -14,7 +14,7 @@ for t in data["tracks"]:
         # Check actual filesystem counts
         from pathlib import Path
         track_dir = Path("curriculum/l2-uk-en") / t["id"]
-        docs_dir = Path("docusaurus/docs") / t["id"]
+        docs_dir = Path("starlight/src/content/docs") / t["id"]
 
         mdx_count = len(list(docs_dir.glob("*.mdx"))) - 1 # exclude index.mdx
         audit_count = len(list((track_dir / "audit").glob("*-audit.md"))) if (track_dir / "audit").exists() else 0

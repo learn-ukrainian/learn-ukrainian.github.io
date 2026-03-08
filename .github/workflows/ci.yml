@@ -94,8 +94,7 @@ jobs:
             --cov-fail-under=30 \
             -v --tb=short \
             -k "not slow and not website" \
-            --ignore=tests/test_rag.py \
-            --ignore=tests/test_docusaurus_links.py
+            --ignore=tests/test_rag.py
 
       - name: Upload coverage
         if: always()

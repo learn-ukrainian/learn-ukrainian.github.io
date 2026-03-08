@@ -112,8 +112,8 @@ def filesystem_renames(old_slug: str, new_slug: str, config: dict, dry_run: bool
         (f"curriculum/l2-uk-en/{old_slug}", f"curriculum/l2-uk-en/{new_slug}"),
         # Plans subdirectory
         (f"curriculum/l2-uk-en/plans/{old_slug}", f"curriculum/l2-uk-en/plans/{new_slug}"),
-        # Docusaurus docs (if exists)
-        (f"docusaurus/docs/{old_slug}", f"docusaurus/docs/{new_slug}"),
+        # Starlight docs (if exists)
+        (f"starlight/src/content/docs/{old_slug}", f"starlight/src/content/docs/{new_slug}"),
     ]
 
     for old_rel, new_rel in dir_pairs:

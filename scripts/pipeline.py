@@ -4,7 +4,7 @@ Learn Ukrainian Pipeline
 
 Unified command for the full module processing workflow:
 1. Lint MD (audit for format issues)
-2. Generate MDX (convert to Docusaurus format)
+2. Generate MDX (convert to Starlight format)
 3. Validate MDX (ensure no content loss)
 4. Validate HTML (headless browser check - requires dev server)
 5. Sync Landing (update website landing pages with stats) - opt-in
@@ -213,8 +213,8 @@ def step_validate_html(lang_pair: str, level: str | None, module_num: int | None
     try:
         urllib.request.urlopen("http://localhost:3000/", timeout=5)  # nosec B310 — hardcoded localhost URL
     except OSError:
-        print("  ⚠️ Docusaurus dev server not running")
-        print("  Start with: cd docusaurus && pnpm start")
+        print("  ⚠️ Starlight dev server not running")
+        print("  Start with: cd starlight && pnpm dev")
         return StepResult("validate_html", False, "Dev server not running")
 
     cmd = [str(VENV_PYTHON), "scripts/validate_html.py", lang_pair]

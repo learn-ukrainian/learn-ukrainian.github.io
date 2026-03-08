@@ -53,7 +53,7 @@ The sole build pipeline. v3/v4 are retired.
 | **activities** | Gemini | Interactive activities + vocabulary YAML |
 | **validate** | Gemini | Morphological validator + Russicism check + fix loop |
 | **review** | **Claude** | Cross-agent adversarial review (optional, max 2 fix attempts) |
-| **mdx** | _(none)_ | Deterministic markdown → Docusaurus MDX |
+| **mdx** | _(none)_ | Deterministic markdown → Starlight MDX |
 
 Non-blocking phases: discover, sandbox, validate, review.
 
@@ -154,7 +154,7 @@ Module quality scoring with weighted criteria aggregation.
 ### 6. Code Generation (`scripts/generate_*.py`)
 **~6.5K LOC**
 
-- `generate_mdx.py` — Markdown → Docusaurus MDX (main track)
+- `generate_mdx.py` — Markdown → Starlight MDX (main track)
 - `generate_mdx_direct.py` — MDX for l2-uk-direct track
 - `generate_json.py` — Module → JSON for Vibe app
 - `generate_plan_markdown.py` — Plan YAML → human-readable markdown
@@ -351,7 +351,7 @@ learn-ukrainian/
 │   ├── best-practices/            # Standards and guides
 │   ├── l2-uk-en/templates/        # 37 module templates
 │   └── resources/                 # Trusted sources, external resources
-└── docusaurus/                    # Web output (Docusaurus + React components)
+└── starlight/                     # Web output (Astro/Starlight)
 ```
 
 ## Related Documentation

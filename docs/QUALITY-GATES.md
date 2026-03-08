@@ -41,11 +41,10 @@ CI enforces these gates on every push to `scripts/` or `tests/`.
 **Gate**: All tests pass (excluding known failures).
 
 ```bash
-.venv/bin/python -m pytest tests/ --ignore=tests/test_docusaurus_links.py --ignore=tests/test_rag.py
+.venv/bin/python -m pytest tests/ --ignore=tests/test_rag.py
 ```
 
 **Known exceptions**:
-- `test_docusaurus_links.py` — tests Docusaurus paths but we use Starlight
 - `test_rag.py` — requires running Qdrant + RAG server
 
 ## Current Thresholds

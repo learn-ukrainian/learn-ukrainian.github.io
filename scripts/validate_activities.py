@@ -269,7 +269,7 @@ class ActivityValidator:
 
             # 2. MDX validation (use slug from yaml filename)
             slug = yaml_file.stem
-            mdx_path = Path(f'docusaurus/docs/{self.level}/{slug}.mdx')
+            mdx_path = Path(f'starlight/src/content/docs/{self.level}/{slug}.mdx')
             mdx_results = self.validate_mdx(mdx_path)
             if not mdx_results['pass']:
                 print(f"  ❌ MDX: {len(mdx_results['errors'])} errors")

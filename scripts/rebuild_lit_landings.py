@@ -10,7 +10,7 @@ def update_landing_pages():
         manifest = yaml.safe_load(f)
 
     tracks = manifest.get("levels", {})
-    docs_base = Path("docusaurus/docs")
+    docs_base = Path("starlight/src/content/docs")
 
     titles = {
         "lit": "LIT - Українська література (Огляд)",

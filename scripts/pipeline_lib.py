@@ -1335,7 +1335,7 @@ def _external_artifacts_for_phase(ctx: ModuleContext, phase_id: str) -> list[Pat
         completion = ctx.orch_dir / "completion.md"
         if completion.exists():
             result.append(completion)
-        mdx_dir = PROJECT_ROOT / "docusaurus" / "docs" / ctx.track
+        mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / ctx.track
         mdx_file = mdx_dir / f"{ctx.slug}.mdx"
         if mdx_file.exists():
             result.append(mdx_file)
