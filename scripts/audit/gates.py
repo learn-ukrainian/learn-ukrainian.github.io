@@ -369,6 +369,117 @@ def evaluate_research_alignment(
     return GateResult('PASS', '✅', "Content aligned with research")
 
 
+def _pedagogical_severity(violations: list) -> tuple[int, list[str]]:
+    """Compute severity and reasons from pedagogical violation count and types."""
+    severity = 0
+    reasons = []
+
+    ped_count = len(violations)
+    if ped_count <= 0:
+        pass
+    elif ped_count <= 3:
+        severity += 5
+        reasons.append(f"{ped_count} violations (minor)")
+    elif ped_count <= 6:
+        severity += 15
+        reasons.append(f"{ped_count} violations (moderate)")
+    elif ped_count <= 10:
+        severity += 30
+        reasons.append(f"{ped_count} violations (significant)")
+    else:
+        severity += 50
+        reasons.append(f"{ped_count} violations (severe - consider revision)")
+
+    violation_types = [v.get('type', '') for v in violations]
+
+    grammar_viols = sum(1 for t in violation_types if t == 'GRAMMAR')
+    if grammar_viols >= 3:
+        severity += 20
+        reasons.append(f"{grammar_viols} grammar-level violations (fundamental)")
+
+    struc_viols = sum(1 for t in violation_types if t in ('SECTION_OUT_OF_ORDER', 'DUPLICATE_SYNONYMOUS_HEADERS', 'EMPTY_REQUIRED_SECTION'))
+    if struc_viols >= 5:
+        severity += 10
+        reasons.append(f"Multiple structural inconsistencies ({struc_viols})")
+
+    activity_viols = sum(
+        1 for t in violation_types
+        if t in ('ACTIVITY_MISUSE', 'LEVEL_RESTRICTION', 'FOCUS_MISMATCH')
+    )
+    if activity_viols >= 3:
+        severity += 15
+        reasons.append(f"{activity_viols} activity type violations")
+
+    return severity, reasons
+
+
+def _immersion_severity(
+    immersion_score: float, min_imm: int, max_imm: int,
+) -> tuple[int, list[str]]:
+    """Compute severity and reasons from immersion deviation."""
+    if min_imm <= 0 or max_imm <= 0:
+        return 0, []
+
+    if immersion_score < min_imm:
+        deviation = min_imm - immersion_score
+    elif immersion_score > max_imm:
+        deviation = immersion_score - max_imm
+    else:
+        return 0, []
+
+    if deviation > 20:
+        return 40, [f"Immersion {deviation:.0f}% off target (major rebalancing needed)"]
+    elif deviation > 10:
+        return 20, [f"Immersion {deviation:.0f}% off target"]
+    elif deviation > 5:
+        return 10, [f"Immersion {deviation:.0f}% off target (minor)"]
+    return 0, []
+
+
+def _lint_severity(lint_errors: list) -> tuple[int, list[str]]:
+    """Compute severity and reasons from lint errors."""
+    lint_count = len(lint_errors)
+    if lint_count == 0:
+        return 0, []
+    elif lint_count <= 2:
+        return 2, []
+    elif lint_count <= 5:
+        return 10, [f"{lint_count} format errors"]
+    else:
+        return 20, [f"{lint_count} format errors (many)"]
+
+
+def _gate_result_is_fail(result) -> bool:
+    """Check if a gate result (GateResult or dict) has FAIL status."""
+    if isinstance(result, GateResult):
+        return result.status == 'FAIL'
+    if isinstance(result, dict):
+        return result.get('status') == 'FAIL'
+    return False
+
+
+def _gate_severity(results: dict) -> tuple[int, list[str]]:
+    """Compute severity and reasons from structure, activities, and density gate results."""
+    severity = 0
+    reasons = []
+
+    structure_result = results.get('structure', {})
+    if _gate_result_is_fail(structure_result):
+        severity += 20
+        msg = structure_result.msg if isinstance(structure_result, GateResult) else structure_result.get('msg', 'missing sections')
+        reasons.append(f"Structure issue: {msg}")
+
+    if _gate_result_is_fail(results.get('activities', {})):
+        severity += 15
+        reasons.append("Activity count below minimum")
+
+    if _gate_result_is_fail(results.get('density', {})):
+        severity += 10
+        reasons.append("Activity density below minimum")
+
+    return severity, reasons
+
+
 def compute_recommendation(
     pedagogical_violations: list,
     lint_errors: list,
@@ -387,124 +498,29 @@ def compute_recommendation(
     severity = 0
     reasons = []
 
-    # 1. Pedagogical & Template violations
-    ped_count = len(pedagogical_violations)
-    if ped_count == 0:
-        pass
-    elif ped_count <= 3:
-        severity += 5
-        reasons.append(f"{ped_count} violations (minor)")
-    elif ped_count <= 6:
-        severity += 15
-        reasons.append(f"{ped_count} violations (moderate)")
-    elif ped_count <= 10:
-        severity += 30
-        reasons.append(f"{ped_count} violations (significant)")
-    else:
-        severity += 50
-        reasons.append(f"{ped_count} violations (severe - consider revision)")
+    s, r = _pedagogical_severity(pedagogical_violations)
+    severity += s
+    reasons.extend(r)
 
-    # 2. Violation types (some are worse than others)
-    violation_types = [v.get('type', '') for v in pedagogical_violations]
+    s, r = _immersion_severity(immersion_score, min_imm, max_imm)
+    severity += s
+    reasons.extend(r)
 
-    grammar_viols = sum(1 for t in violation_types if t == 'GRAMMAR')
-    if grammar_viols >= 3:
-        severity += 20
-        reasons.append(f"{grammar_viols} grammar-level violations (fundamental)")
+    s, r = _lint_severity(lint_errors)
+    severity += s
+    reasons.extend(r)
 
-    # Structural violations are weighted LESS if they are purely about flags/sections
-    struc_viols = sum(1 for t in violation_types if t in ('SECTION_OUT_OF_ORDER', 'DUPLICATE_SYNONYMOUS_HEADERS', 'EMPTY_REQUIRED_SECTION'))
-    if struc_viols >= 5:
-        severity += 10 # Cap the impact of many structural issues
-        reasons.append(f"Multiple structural inconsistencies ({struc_viols})")
+    s, r = _gate_severity(results)
+    severity += s
+    reasons.extend(r)
 
-    activity_viols = sum(
-        1 for t in violation_types
-        if t in ('ACTIVITY_MISUSE', 'LEVEL_RESTRICTION', 'FOCUS_MISMATCH')
-    )
-    if activity_viols >= 3:
-        severity += 15
-        reasons.append(f"{activity_viols} activity type violations")
-
-    # 3. Immersion deviation
-    if min_imm > 0 and max_imm > 0:
-        if immersion_score < min_imm:
-            deviation = min_imm - immersion_score
-        elif immersion_score > max_imm:
-            deviation = immersion_score - max_imm
-        else:
-            deviation = 0
-
-        if deviation > 20:
-            severity += 40
-            reasons.append(f"Immersion {deviation:.0f}% off target (major rebalancing needed)")
-        elif deviation > 10:
-            severity += 20
-            reasons.append(f"Immersion {deviation:.0f}% off target")
-        elif deviation > 5:
-            severity += 10
-            reasons.append(f"Immersion {deviation:.0f}% off target (minor)")
-
-    # 4. Lint errors
-    lint_count = len(lint_errors)
-    if lint_count == 0:
-        pass
-    elif lint_count <= 2:
-        severity += 2
-    elif lint_count <= 5:
-        severity += 10
-        reasons.append(f"{lint_count} format errors")
-    else:
-        severity += 20
-        reasons.append(f"{lint_count} format errors (many)")
-
-    # 5. Structure failures (Hard structural issues like missing Summary)
-    structure_result = results.get('structure', {})
-    if isinstance(structure_result, GateResult):
-        if structure_result.status == 'FAIL':
-            severity += 20 # Reduced from 40
-            reasons.append(f"Structure issue: {structure_result.msg}")
-    elif isinstance(structure_result, dict) and structure_result.get('status') == 'FAIL':
-        severity += 20 # Reduced from 40
-        reasons.append(f"Structure issue: {structure_result.get('msg', 'missing sections')}")
-
-    # 6. Activity gates
-    activities_result = results.get('activities', {})
-    if isinstance(activities_result, GateResult):
-        if activities_result.status == 'FAIL':
-            severity += 15
-            reasons.append("Activity count below minimum")
-    elif isinstance(activities_result, dict) and activities_result.get('status') == 'FAIL':
-        severity += 15
-        reasons.append("Activity count below minimum")
-
-    density_result = results.get('density', {})
-    if isinstance(density_result, GateResult):
-        if density_result.status == 'FAIL':
-            severity += 10
-            reasons.append("Activity density below minimum")
-    elif isinstance(density_result, dict) and density_result.get('status') == 'FAIL':
-        severity += 10
-        reasons.append("Activity density below minimum")
-
-    # vocab_count is now a soft target (Issue #340) - no severity impact
-    vocab_result = results.get('vocab', {})
-    if isinstance(vocab_result, GateResult):
-        if vocab_result.status == 'WARN':
-            # Informational only - no severity
-            pass
-    elif isinstance(vocab_result, dict) and vocab_result.get('status') == 'WARN':
-        pass
-
-    # Clamp severity
     severity = min(100, severity)
 
-    # Determine recommendation
     if severity == 0:
         return ('PASS', [], 0)
-    elif severity < 40: # Increased threshold for PASS/UPDATE
+    elif severity < 40:
         return ('UPDATE', reasons, severity)
-    elif severity < 75: # Increased threshold for UPDATE/REWRITE
+    elif severity < 75:
         reasons.insert(0, f"Revision recommended (severity {severity}/100)")
         return ('UPDATE', reasons, severity)
     else:
