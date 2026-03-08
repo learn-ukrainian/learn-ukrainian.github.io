@@ -19,13 +19,18 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate_mdx import (
+    convert_callouts,
     dump_json_for_jsx,
     escape_jsx,
     fix_html_for_jsx,
+    normalize_mdx,
+    parse_cloze,
+    parse_error_correction,
     parse_frontmatter,
     parse_quiz,
     parse_match_up,
     parse_fill_in,
+    parse_translate,
     parse_true_false,
     parse_unjumble,
     parse_group_sort,
@@ -314,3 +319,205 @@ class TestParseAnagram:
         assert items[0].answer == "привіт"
         assert items[0].hint == "A greeting"
         assert items[1].hint == ""
+
+
+# =============================================================================
+# parse_error_correction
+# =============================================================================
+
+class TestParseErrorCorrection:
+    def test_basic_error_correction(self):
+        content = """1. Я читаю книгу кожний день.
+> [!error] кожний
+> [!answer] кожного
+> [!options] кожного | кожний | кожному
+> [!explanation] Genitive case needed here"""
+        items = parse_error_correction(content)
+        assert len(items) == 1
+        assert items[0].errorWord == "кожний"
+        assert items[0].correctForm == "кожного"
+        assert len(items[0].options) >= 2
+        assert items[0].explanation != ""
+
+    def test_multiple_items(self):
+        content = """1. Він ходить у школа.
+> [!error] школа
+> [!answer] школу
+> [!options] школу | школа | школі
+
+2. Вона купила нова сукня.
+> [!error] нова
+> [!answer] нову
+> [!options] нову | нова | нової"""
+        items = parse_error_correction(content)
+        assert len(items) == 2
+
+    def test_empty_content(self):
+        assert parse_error_correction("") == []
+
+    def test_correct_in_options(self):
+        content = """1. Sentence with помилка.
+> [!error] помилка
+> [!answer] помилку
+> [!options] помилку | помилка | помилці"""
+        items = parse_error_correction(content)
+        assert "помилку" in [o["text"] if isinstance(o, dict) else o for o in items[0].options]
+
+
+# =============================================================================
+# parse_cloze
+# =============================================================================
+
+class TestParseCloze:
+    def test_basic_cloze(self):
+        content = """Я ___(1) студент. Він ___(2) книгу.
+
+1. є | маю | буду
+> [!answer] є
+
+2. читає | пише | малює
+> [!answer] читає"""
+        result = parse_cloze(content)
+        assert result.passage != ""
+        assert len(result.blanks) == 2
+        assert result.blanks[0]["answer"] == "є"
+        assert result.blanks[1]["answer"] == "читає"
+
+    def test_empty_content(self):
+        result = parse_cloze("")
+        assert result.passage == ""
+        assert result.blanks == []
+
+    def test_passage_preserved(self):
+        content = """Україна — красива країна ___(1).
+
+1. велика | мала | гарна
+> [!answer] велика"""
+        result = parse_cloze(content)
+        assert "Україна" in result.passage
+
+
+# =============================================================================
+# parse_translate
+# =============================================================================
+
+class TestParseTranslate:
+    def test_checkbox_format(self):
+        content = """1. Translate "hello"
+- [x] Привіт
+- [ ] Дякую
+- [ ] Так"""
+        items = parse_translate(content)
+        assert len(items) == 1
+        assert len(items[0].options) == 3
+        assert items[0].options[0]["correct"] is True
+        assert items[0].options[1]["correct"] is False
+
+    def test_callout_format(self):
+        content = """1. Translate "thank you"
+> [!answer] Дякую
+> [!options] Дякую | Привіт | Так"""
+        items = parse_translate(content)
+        assert len(items) == 1
+        assert items[0].options[0]["correct"] is True
+
+    def test_multiple_items(self):
+        content = """1. Translate "yes"
+- [x] Так
+- [ ] Ні
+
+2. Translate "no"
+- [x] Ні
+- [ ] Так"""
+        items = parse_translate(content)
+        assert len(items) == 2
+
+    def test_empty(self):
+        assert parse_translate("") == []
+
+
+# =============================================================================
+# convert_callouts
+# =============================================================================
+
+class TestConvertCallouts:
+    def test_note_callout(self):
+        content = "> [!NOTE]\n> This is a note."
+        result = convert_callouts(content)
+        assert ":::" in result
+        assert "note" in result.lower()
+
+    def test_tip_callout(self):
+        content = "> [!TIP]\n> Helpful tip here."
+        result = convert_callouts(content)
+        assert ":::" in result
+        assert "tip" in result.lower()
+
+    def test_warning_callout(self):
+        content = "> [!WARNING]\n> Be careful."
+        result = convert_callouts(content)
+        assert ":::" in result
+
+    def test_preserves_non_callout_content(self):
+        content = "Regular paragraph.\n\nAnother paragraph."
+        result = convert_callouts(content)
+        assert "Regular paragraph." in result
+        assert "Another paragraph." in result
+
+    def test_empty_string(self):
+        result = convert_callouts("")
+        assert result == ""
+
+    def test_multiline_callout(self):
+        content = "> [!NOTE]\n> Line 1\n> Line 2\n> Line 3"
+        result = convert_callouts(content)
+        assert "Line 1" in result
+        assert "Line 2" in result
+        assert "Line 3" in result
+
+
+# =============================================================================
+# normalize_mdx
+# =============================================================================
+
+class TestNormalizeMdx:
+    def test_strips_trailing_whitespace(self):
+        result = normalize_mdx("hello   \nworld  \n")
+        assert "   \n" not in result
+        assert "  \n" not in result
+
+    def test_normalizes_list_markers(self):
+        result = normalize_mdx("* item 1\n* item 2\n")
+        assert "- item 1" in result
+        assert "- item 2" in result
+
+    def test_collapses_excessive_newlines(self):
+        result = normalize_mdx("Line 1\n\n\n\nLine 2\n")
+        assert "\n\n\n" not in result
+        assert "Line 1" in result
+        assert "Line 2" in result
+
+    def test_ensures_trailing_newline(self):
+        result = normalize_mdx("content")
+        assert result.endswith("\n")
+
+    def test_blank_lines_around_headings(self):
+        result = normalize_mdx("text\n## Heading\nmore text\n")
+        # Should have blank line before heading
+        lines = result.split("\n")
+        for i, line in enumerate(lines):
+            if line.startswith("## "):
+                if i > 0:
+                    assert lines[i - 1].strip() == "", f"Expected blank line before heading, got '{lines[i-1]}'"
+
+    def test_preserves_code_blocks(self):
+        result = normalize_mdx("```\n* not a list\n  trailing spaces   \n```\n")
+        assert "* not a list" in result
+
+    def test_empty_string(self):
+        result = normalize_mdx("")
+        assert result == "\n" or result == ""
+
+    def test_emphasis_normalization(self):
+        result = normalize_mdx("Use _italic_ text\n")
+        assert "*italic*" in result or "_italic_" in result
