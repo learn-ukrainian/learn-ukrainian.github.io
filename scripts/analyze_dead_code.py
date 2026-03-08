@@ -14,6 +14,7 @@ Output: JSON report with removal candidates categorized by risk level
 import json
 import re
 import subprocess
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -258,7 +259,7 @@ def main():
     report = analyzer.generate_report()
 
     # Save full report
-    output_path = '/tmp/dead_code_report.json'
+    output_path = str(Path(tempfile.gettempdir()) / 'dead_code_report.json')
     with open(output_path, 'w') as f:
         json.dump(report, f, indent=2)
 

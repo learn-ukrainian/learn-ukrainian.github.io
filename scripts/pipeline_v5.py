@@ -760,7 +760,7 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
 def _compute_content_hash(ctx: ModuleContext) -> str:
     """Hash md + activities + vocab files for cache invalidation."""
     import hashlib
-    h = hashlib.md5()
+    h = hashlib.md5(usedforsecurity=False)
     for key in ("md", "activities", "vocabulary"):
         p = ctx.paths.get(key)
         if p and p.exists():

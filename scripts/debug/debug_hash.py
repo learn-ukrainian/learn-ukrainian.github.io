@@ -13,7 +13,7 @@ def compute_hash(file_path):
         return get_content_hash(file_path)
     except ImportError:
         # Fallback to standard md5 of utf-8 bytes
-        return hashlib.md5(content.encode('utf-8')).hexdigest()
+        return hashlib.md5(content.encode('utf-8'), usedforsecurity=False).hexdigest()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

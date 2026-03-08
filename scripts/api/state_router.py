@@ -77,7 +77,7 @@ def _is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     import hashlib
     review_hash = _extract_content_hash(review_path)
     if review_hash:
-        current_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
+        current_hash = hashlib.md5(content_path.read_bytes(), usedforsecurity=False).hexdigest()[:12]
         return review_hash != current_hash
 
     # Fallback: mtime comparison — stale only if review is strictly older.

@@ -604,7 +604,7 @@ def chunk_text(
         current_tokens = len(current_text) // 4
 
         if current_tokens + len(para) // 4 > max_tokens and current_text:
-            chunk_id = f"{hashlib.md5(work.encode()).hexdigest()[:8]}_c{chunk_idx:04d}"
+            chunk_id = f"{hashlib.md5(work.encode(), usedforsecurity=False).hexdigest()[:8]}_c{chunk_idx:04d}"
             chunks.append({
                 "chunk_id": chunk_id,
                 "text": current_text.strip(),
@@ -618,7 +618,7 @@ def chunk_text(
 
     # Last chunk
     if current_text.strip() and len(current_text.strip()) // 4 >= min_tokens:
-        chunk_id = f"{hashlib.md5(work.encode()).hexdigest()[:8]}_c{chunk_idx:04d}"
+        chunk_id = f"{hashlib.md5(work.encode(), usedforsecurity=False).hexdigest()[:8]}_c{chunk_idx:04d}"
         chunks.append({
             "chunk_id": chunk_id,
             "text": current_text.strip(),

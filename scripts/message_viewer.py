@@ -420,4 +420,4 @@ if __name__ == '__main__':
     print(f"   Database: {DB_PATH}")
     print(f"   Outbox: {OUTBOX_PATH}")
     print("\n   Open: http://localhost:5055\n")
-    app.run(host='0.0.0.0', port=5055, debug=True)
+    app.run(host='127.0.0.1', port=5055, debug=False)

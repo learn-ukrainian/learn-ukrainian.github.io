@@ -540,7 +540,7 @@ def _normalize_sentence(s: str) -> str:
 
 def _hash_sentence(s: str) -> str:
     """Hash a normalized sentence."""
-    return hashlib.md5(s.encode('utf-8')).hexdigest()
+    return hashlib.md5(s.encode('utf-8'), usedforsecurity=False).hexdigest()
 
 
 def _is_header_line(line: str) -> bool:

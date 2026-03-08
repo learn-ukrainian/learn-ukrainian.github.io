@@ -1669,7 +1669,7 @@ def run_verify(content_path: Path, content_only: bool = True,
 def write_review_with_hash(review_path: Path, review_text: str,
                            content_path: Path) -> None:
     """Write review file with embedded content hash for staleness detection."""
-    content_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
+    content_hash = hashlib.md5(content_path.read_bytes(), usedforsecurity=False).hexdigest()[:12]
     header = f"<!-- content-hash: {content_hash} -->\n"
     review_path.parent.mkdir(parents=True, exist_ok=True)
     review_path.write_text(header + review_text, "utf-8")

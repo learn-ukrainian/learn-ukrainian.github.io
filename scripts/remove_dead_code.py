@@ -9,12 +9,13 @@ Supports dry-run mode and incremental removal by risk level.
 import argparse
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 
 def load_report():
     """Load the dead code analysis report"""
-    report_path = '/tmp/dead_code_report.json'
+    report_path = str(Path(tempfile.gettempdir()) / 'dead_code_report.json')
     try:
         with open(report_path) as f:
             return json.load(f)

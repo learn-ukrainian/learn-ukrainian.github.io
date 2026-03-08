@@ -32,7 +32,7 @@ def get_hash(content):
             
     core = extract_core_content(body)
     stable = clean_for_stats(core)
-    return hashlib.md5(stable.encode('utf-8')).hexdigest()[:8]
+    return hashlib.md5(stable.encode('utf-8', usedforsecurity=False)).hexdigest()[:8]
 
 slugs = [
     "trypillian-civilization",

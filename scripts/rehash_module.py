@@ -28,7 +28,7 @@ def calculate_hash(file_path):
     # Use stable prose only (Issue #440)
     core_content = extract_core_content(content)
     stable_prose = clean_for_stats(core_content)
-    return hashlib.md5(stable_prose.encode('utf-8')).hexdigest()[:8]
+    return hashlib.md5(stable_prose.encode('utf-8'), usedforsecurity=False).hexdigest()[:8]
 
 def update_review_file(md_file_path, new_hash):
     """Update the Content Hash in the corresponding -llm-review.md file."""

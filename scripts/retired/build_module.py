@@ -298,7 +298,7 @@ def _mark_phase_v4(ctx: ModuleContext, state: dict, phase_id: str, status: str, 
 def _compute_content_hash(ctx: ModuleContext) -> str:
     """Hash md + activities + vocab files for cache invalidation."""
     import hashlib
-    h = hashlib.md5()
+    h = hashlib.md5(usedforsecurity=False)
     for key in ("md", "activities", "vocabulary"):
         p = ctx.paths.get(key)
         if p and p.exists():

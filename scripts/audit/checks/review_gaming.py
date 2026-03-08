@@ -459,7 +459,7 @@ def check_review_boilerplate(
         return []
 
     current_hashes = {
-        hashlib.md5(_normalize_for_hash(s).encode('utf-8')).hexdigest()
+        hashlib.md5(_normalize_for_hash(s).encode('utf-8'), usedforsecurity=False).hexdigest()
         for s in current_sentences
     }
 
@@ -495,7 +495,7 @@ def check_review_boilerplate(
             continue
 
         other_hashes = {
-            hashlib.md5(_normalize_for_hash(s).encode('utf-8')).hexdigest()
+            hashlib.md5(_normalize_for_hash(s).encode('utf-8'), usedforsecurity=False).hexdigest()
             for s in other_sentences
         }
 

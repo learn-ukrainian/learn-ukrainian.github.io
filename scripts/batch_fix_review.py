@@ -258,7 +258,7 @@ def assemble_review_prompt(files: dict, level: str) -> Path:
 
 def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send prompt to Gemini, return path to output file."""
-    output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
+    output = Path(tempfile.mkstemp(suffix=".txt", prefix=f"gemini-{task_id}-")[1])
 
     prompt_content = prompt_path.read_text("utf-8")
     full_prompt = (
@@ -284,7 +284,7 @@ def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
 
 def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send review prompt to Gemini with delimiter instructions."""
-    output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
+    output = Path(tempfile.mkstemp(suffix=".txt", prefix=f"gemini-{task_id}-")[1])
 
     prompt_content = prompt_path.read_text("utf-8")
     full_prompt = f"{prompt_content}\n\nWrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters."

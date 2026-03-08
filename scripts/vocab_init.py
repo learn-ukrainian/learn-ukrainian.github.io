@@ -153,7 +153,8 @@ def main():
 
     print("\nCreated tables:")
     for table in tables:
-        count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        # table name from sqlite_master (not user input) — safe to interpolate
+        count = conn.execute(f"SELECT COUNT(*) FROM [{table}]").fetchone()[0]  # noqa: S608
         print(f"  - {table} ({count} rows)")
 
     # Show indexes
