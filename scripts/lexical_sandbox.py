@@ -331,6 +331,46 @@ def _fetch_textbook_examples(
     return examples
 
 
+def _describe_constraints(constraints: GrammarConstraint) -> list[str]:
+    """Return human-readable descriptions of active grammar constraints."""
+    forbidden = []
+    if constraints.no_verbs:
+        forbidden.append("ALL verbs")
+    if constraints.no_imperatives:
+        forbidden.append("imperative forms")
+    if constraints.nominative_only:
+        forbidden.append("oblique cases (only nominative/vocative)")
+    if constraints.no_accusative:
+        forbidden.append("accusative case")
+    if constraints.present_only:
+        forbidden.append("past/future tense (only present/infinitive)")
+    return forbidden
+
+
+def _prioritize_verb_forms(forms: list[dict], max_forms: int = 15) -> list[str]:
+    """Order verb forms by priority: imperative > present > infinitive > rest.
+
+    Prevents truncation from cutting critical forms.
+    """
+    impr = sorted(set(f["word_form"] for f in forms if "impr" in f["tags"]))
+    pres = sorted(set(
+        f["word_form"] for f in forms
+        if "pres" in f["tags"] and "impr" not in f["tags"]))
+    inf = sorted(set(f["word_form"] for f in forms if "inf" in f["tags"]))
+    other = sorted(set(
+        f["word_form"] for f in forms
+        if "impr" not in f["tags"] and "pres" not in f["tags"]
+        and "inf" not in f["tags"]))
+
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for form in impr + pres + inf + other:
+        if form not in seen:
+            seen.add(form)
+            ordered.append(form)
+    return ordered[:max_forms]
+
+
 def _format_sandbox(
     track: str,
     module_num: int,
@@ -346,18 +386,7 @@ def _format_sandbox(
     lines.append("")
 
     # Constraint summary
-    forbidden = []
-    if constraints.no_verbs:
-        forbidden.append("ALL verbs")
-    if constraints.no_imperatives:
-        forbidden.append("imperative forms")
-    if constraints.nominative_only:
-        forbidden.append("oblique cases (only nominative/vocative)")
-    if constraints.no_accusative:
-        forbidden.append("accusative case")
-    if constraints.present_only:
-        forbidden.append("past/future tense (only present/infinitive)")
-
+    forbidden = _describe_constraints(constraints)
     if forbidden:
         lines.append(f"**FORBIDDEN at M{module_num}:** {', '.join(forbidden)}")
         lines.append("")
@@ -417,26 +446,7 @@ def _format_sandbox(
         lines.append("|-------|--------|---------------|")
         for entry in sections["verbs"]:
             aspect = "imperf" if "imperf" in entry["forms"][0]["tags"] else "perf"
-            # Prioritize: imperative > present > infinitive > rest
-            # This prevents truncation from cutting critical forms
-            impr_forms = sorted(set(
-                f["word_form"] for f in entry["forms"] if "impr" in f["tags"]))
-            pres_forms = sorted(set(
-                f["word_form"] for f in entry["forms"]
-                if "pres" in f["tags"] and "impr" not in f["tags"]))
-            inf_forms = sorted(set(
-                f["word_form"] for f in entry["forms"] if "inf" in f["tags"]))
-            other_forms = sorted(set(
-                f["word_form"] for f in entry["forms"]
-                if "impr" not in f["tags"] and "pres" not in f["tags"]
-                and "inf" not in f["tags"]))
-            # Combine with priority order, dedup, cap at 15
-            seen: set[str] = set()
-            ordered: list[str] = []
-            for form in impr_forms + pres_forms + inf_forms + other_forms:
-                if form not in seen:
-                    seen.add(form)
-                    ordered.append(form)
+            ordered = _prioritize_verb_forms(entry["forms"])
             lines.append(f"| {entry['lemma']} | {aspect} | {', '.join(ordered[:15])} |")
         lines.append("")
 

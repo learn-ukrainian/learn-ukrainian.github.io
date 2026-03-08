@@ -23,10 +23,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from lexical_sandbox import (
     COMMON_WORDS,
     _collect_candidates,
+    _describe_constraints,
     _extract_case,
     _extract_gender,
     _extract_ukr_word,
     _form_allowed,
+    _prioritize_verb_forms,
     _select_primary_match,
     extract_words_from_request,
     parse_resource_request,
@@ -406,3 +408,88 @@ class TestSelectPrimaryMatch:
         ]
         result = _select_primary_match("вчитися", matches, is_common=False)
         assert result["pos"] == "verb"
+
+
+# =============================================================================
+# _describe_constraints
+# =============================================================================
+
+class TestDescribeConstraints:
+    def test_no_constraints(self):
+        c = GrammarConstraint()
+        assert _describe_constraints(c) == []
+
+    def test_no_verbs(self):
+        c = GrammarConstraint(no_verbs=True)
+        result = _describe_constraints(c)
+        assert any("verb" in s.lower() for s in result)
+
+    def test_nominative_only(self):
+        c = GrammarConstraint(nominative_only=True)
+        result = _describe_constraints(c)
+        assert any("nominative" in s.lower() for s in result)
+
+    def test_multiple_constraints(self):
+        c = GrammarConstraint(no_verbs=True, nominative_only=True, present_only=True)
+        result = _describe_constraints(c)
+        assert len(result) >= 2
+
+    def test_no_accusative(self):
+        c = GrammarConstraint(no_accusative=True)
+        result = _describe_constraints(c)
+        assert any("accusative" in s.lower() for s in result)
+
+    def test_no_imperatives(self):
+        c = GrammarConstraint(no_imperatives=True)
+        result = _describe_constraints(c)
+        assert any("imperative" in s.lower() for s in result)
+
+
+# =============================================================================
+# _prioritize_verb_forms
+# =============================================================================
+
+class TestPrioritizeVerbForms:
+    def test_imperative_first(self):
+        forms = [
+            {"word_form": "читай", "tags": "verb:imperf:impr:s:2"},
+            {"word_form": "читаю", "tags": "verb:imperf:pres:s:1"},
+            {"word_form": "читати", "tags": "verb:imperf:inf"},
+        ]
+        result = _prioritize_verb_forms(forms)
+        assert result[0] == "читай"
+
+    def test_present_before_infinitive(self):
+        forms = [
+            {"word_form": "читати", "tags": "verb:imperf:inf"},
+            {"word_form": "читаю", "tags": "verb:imperf:pres:s:1"},
+        ]
+        result = _prioritize_verb_forms(forms)
+        idx_pres = result.index("читаю")
+        idx_inf = result.index("читати")
+        assert idx_pres < idx_inf
+
+    def test_deduplicates(self):
+        forms = [
+            {"word_form": "читай", "tags": "verb:imperf:impr:s:2"},
+            {"word_form": "читай", "tags": "verb:imperf:impr:s:2"},
+        ]
+        result = _prioritize_verb_forms(forms)
+        assert result.count("читай") == 1
+
+    def test_caps_at_max(self):
+        forms = [{"word_form": f"form{i}", "tags": "verb:imperf:pres:s:1"} for i in range(20)]
+        result = _prioritize_verb_forms(forms, max_forms=5)
+        assert len(result) == 5
+
+    def test_empty_forms(self):
+        assert _prioritize_verb_forms([]) == []
+
+    def test_other_forms_last(self):
+        forms = [
+            {"word_form": "читав", "tags": "verb:imperf:past:m"},
+            {"word_form": "читай", "tags": "verb:imperf:impr:s:2"},
+            {"word_form": "читаю", "tags": "verb:imperf:pres:s:1"},
+        ]
+        result = _prioritize_verb_forms(forms)
+        assert result[-1] == "читав"
