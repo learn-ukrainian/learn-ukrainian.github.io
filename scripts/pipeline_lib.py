@@ -1562,6 +1562,87 @@ def _is_transient_error(output: str) -> bool:
     return any(p in lower for p in _TRANSIENT_PATTERNS)
 
 
+# ---------------------------------------------------------------------------
+# Pre-dispatch prompt health check
+# ---------------------------------------------------------------------------
+
+
+def check_prompt_health(
+    ctx: "ModuleContext", prompt_text: str, phase_name: str
+) -> list[str]:
+    """Validate a filled prompt before dispatching to an LLM.
+
+    Returns a list of issues found. Empty list = healthy prompt.
+    Each issue is a string like "WARNING: ..." or "ERROR: ...".
+    ERROR items should block dispatch; WARNING items are informational.
+    """
+    issues: list[str] = []
+    track_base = ctx.track.split("-")[0] if ctx.track else ""
+    is_core = track_base.lower() in {"a1", "a2", "b1", "b2", "c1", "c2"}
+
+    # 1. Lexical sandbox should be populated for A1+ core tracks
+    if is_core and phase_name in ("content", "activities"):
+        sandbox_text = getattr(ctx, "_lexical_sandbox", "")
+        if not sandbox_text or len(sandbox_text.strip()) < 50:
+            # Non-blocking: sandbox might legitimately be small for early modules
+            if ctx.module_num > 5:
+                issues.append(
+                    f"WARNING: LEXICAL_SANDBOX is empty/tiny for {track_base} M{ctx.module_num} — "
+                    f"Gemini won't have VESUM-validated vocabulary to draw from"
+                )
+
+    # 2. Content-phase checks
+    if phase_name == "content":
+        if "{IMMERSION_RULE}" in prompt_text:
+            issues.append("ERROR: IMMERSION_RULE placeholder was not filled")
+        elif is_core:
+            imm_rule = getattr(ctx, "immersion_rule", "")
+            if not imm_rule or len(imm_rule.strip()) < 20:
+                issues.append("WARNING: IMMERSION_RULE is empty/trivial — immersion targets will be missed")
+
+        if "{SECTION_BUDGET_TABLE}" in prompt_text:
+            issues.append("ERROR: SECTION_BUDGET_TABLE placeholder unfilled — word targets won't be communicated")
+
+        if "{WORD_TARGET}" in prompt_text:
+            issues.append("ERROR: WORD_TARGET placeholder unfilled")
+
+    # 3. Activities-phase checks
+    if phase_name == "activities":
+        if "{REQUIRED_TYPES}" in prompt_text:
+            issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
+
+    # 4. Universal: detect unfilled placeholders (any {UPPERCASE_THING} remaining)
+    unfilled = set(re.findall(r"\{([A-Z][A-Z_]{3,})\}", prompt_text))
+    # Filter out known false positives (markdown/code patterns)
+    _false_positives = {"JSON", "YAML", "HTML", "UTF8", "VESUM", "PASS", "FAIL",
+                        "TRUE", "FALSE", "NULL", "NONE", "TODO", "NOTE", "IMPORTANT"}
+    unfilled -= _false_positives
+    if unfilled:
+        issues.append(
+            f"WARNING: {len(unfilled)} unfilled placeholder(s) in {phase_name} prompt: "
+            f"{', '.join(sorted(unfilled)[:5])}"
+        )
+
+    return issues
+
+
+def log_prompt_health(issues: list[str], phase_name: str) -> bool:
+    """Log prompt health issues. Returns False if any ERROR-level issue found."""
+    if not issues:
+        return True
+
+    has_error = False
+    for issue in issues:
+        log(f"  {phase_name}: HEALTH-CHECK {issue}")
+        if issue.startswith("ERROR:"):
+            has_error = True
+
+    if has_error:
+        log(f"  {phase_name}: BLOCKED by prompt health check — fix template/placeholders before dispatch")
+
+    return not has_error
+
+
 def dispatch_gemini(
     prompt: str, task_id: str, model: str = PRO_MODEL,
     stdout_only: bool = False, allow_write: bool = False,
@@ -3067,6 +3148,12 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         "LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", ""),
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
+        return False
+
+    # Pre-dispatch health check: catch template/placeholder bugs before wasting a Gemini call
+    prompt_text = prompt_file.read_text("utf-8")
+    health_issues = check_prompt_health(ctx, prompt_text, "content")
+    if not log_prompt_health(health_issues, "Phase 2"):
         return False
 
     if ctx.dry_run:

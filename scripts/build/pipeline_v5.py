@@ -2230,6 +2230,12 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
     if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
         return False
 
+    # Pre-dispatch health check
+    prompt_text = prompt_file.read_text("utf-8")
+    health_issues = pipeline_lib.check_prompt_health(ctx, prompt_text, "activities")
+    if not pipeline_lib.log_prompt_health(health_issues, "activities"):
+        return False
+
     if ctx.dry_run:
         log("  activities: DRY-RUN — would dispatch phase-3-activities.md")
         return True
