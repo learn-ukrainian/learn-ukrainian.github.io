@@ -192,26 +192,34 @@ def audit_module(mod: dict) -> dict:
 
 
 def grade_module(audit_result: dict) -> str:
-    """Assign A/B/C/F grade based on audit results."""
+    """Assign A/B/C/F grade based on audit results.
+
+    Successful fix loops are normal in v5 — they mean validation caught
+    issues and Gemini fixed them. Fewer attempts = better, but passing
+    after fixes is not penalized vs passing on first try.
+
+    Grading:
+      F: audit failed
+      C: passed but >3 fix attempts (excessive churn)
+      B: passed, words within target range
+      A: passed, words ≥ 110% target (rich content), ≤3 fix attempts
+    """
     if audit_result["status"] == "NO_CONTENT":
         return "N/A"
     if audit_result["status"] != "PASS":
         return "F"
 
-    # A: passed, 0-1 fix attempts, words > 120% target
-    # B: passed, ≤2 fix attempts
-    # C: passed, >2 fix attempts
     fix = audit_result["fix_attempts"]
     words = audit_result["words"]
     target = audit_result["word_target"]
     word_ratio = words / target if target > 0 else 0
 
-    if fix <= 1 and word_ratio >= 1.1:
-        return "A"
-    elif fix <= 2:
-        return "B"
+    if fix > 3:
+        return "C"  # Excessive fix churn — something is off
+    elif word_ratio >= 1.1:
+        return "A"  # Rich content, reasonable fix count
     else:
-        return "C"
+        return "B"  # Passed but content is close to minimum
 
 
 def parse_content_review(track: str, slug: str) -> dict | None:
