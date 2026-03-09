@@ -1415,6 +1415,52 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
     decodable_section = f"\n{decodable}\n" if decodable else ""
 
+    # Lexical sandbox — compact lemma list so fix agent stays on-vocabulary
+    sandbox_section = ""
+    sandbox_text = getattr(ctx, "_lexical_sandbox", "")
+    if sandbox_text and len(sandbox_text.strip()) > 50:
+        # Extract just the lemma list from the full sandbox markdown
+        lemmas: list[str] = []
+        for line in sandbox_text.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("| ") and not stripped.startswith("|---") and not stripped.startswith("| Lemma"):
+                parts = stripped.split("|")
+                if len(parts) >= 2:
+                    lemma = parts[1].strip()
+                    if lemma:
+                        lemmas.append(lemma)
+            elif stripped.startswith("- **"):
+                word = stripped.split("**")[1] if "**" in stripped else ""
+                if word:
+                    lemmas.append(word)
+        if lemmas:
+            sandbox_section = (
+                "\n## Lexical Sandbox (allowed Ukrainian vocabulary)\n\n"
+                f"This module's verified vocabulary: **{', '.join(lemmas)}**\n\n"
+                "**CRITICAL**: When adding or modifying Ukrainian text, use ONLY words from this list "
+                "plus basic function words (pronouns, prepositions, conjunctions, numbers). "
+                "Do NOT introduce new content words not in this sandbox.\n"
+            )
+
+    # Immersion rule — structural containment guidance for fix agent
+    immersion_section = ""
+    imm_rule = getattr(ctx, "immersion_rule", "")
+    if imm_rule and len(imm_rule.strip()) > 20:
+        # Extract just the target line and key structural rules
+        target_line = imm_rule.split("\n")[0] if "\n" in imm_rule else imm_rule
+        immersion_section = (
+            f"\n## Immersion Rules\n\n{target_line}\n\n"
+            "**Structural containment**: English prose in paragraphs. "
+            "Ukrainian in CONTAINERS ONLY (tables, blockquotes, numbered lists, dialogues). "
+            "Do NOT mix Ukrainian words into English sentences.\n"
+        )
+
+    # Level constraints (grammar restrictions)
+    level_constraints = getattr(ctx, "level_constraints", "")
+    level_section = ""
+    if level_constraints and len(level_constraints.strip()) > 10:
+        level_section = f"\n## Level Constraints\n\n{level_constraints}\n"
+
     section_fix = _build_section_fix_format(audit_output, ctx, content_text, word_count)
     file_list = _build_file_list(ctx, content_only)
 
@@ -1446,6 +1492,9 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         {schema_hint}
         {ped_section}
         {decodable_section}
+        {sandbox_section}
+        {immersion_section}
+        {level_section}
         {vesum_section}
 
         ## Files
@@ -2596,6 +2645,9 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
     if ctx.dry_run:
         log("  validate: DRY-RUN — would run full audit + screen + fix loop")
         return True
+
+    # Ensure sandbox is loaded — fix prompts need it for vocabulary constraints
+    _ensure_sandbox_loaded(ctx)
 
     if not _validate_check_sidecars(ctx):
         return False
