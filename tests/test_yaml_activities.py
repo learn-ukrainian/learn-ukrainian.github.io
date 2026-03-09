@@ -158,3 +158,134 @@ class TestIntegration:
         assert "Test Quiz" in mdx
         assert "Question 1?" in mdx
         assert "Correct" in mdx
+
+
+# =============================================================================
+# VALIDATION RESULT TESTS
+# =============================================================================
+
+class TestValidationResult:
+    def test_fresh_result_is_ok(self):
+        result = ValidationResult()
+        assert result.ok is True
+        assert result.errors == []
+        assert result.warnings == []
+
+    def test_add_error_sets_ok_false(self):
+        result = ValidationResult()
+        result.add_error("root", "something broke")
+        assert result.ok is False
+        assert len(result.errors) == 1
+        assert result.errors[0].message == "something broke"
+
+    def test_add_warning_keeps_ok_true(self):
+        result = ValidationResult()
+        result.add_warning("root", "minor issue")
+        assert result.ok is True
+        assert len(result.warnings) == 1
+
+
+# =============================================================================
+# PARSER EDGE CASES
+# =============================================================================
+
+class TestParserEdgeCases:
+    def test_parse_empty_file(self, parser, tmp_path):
+        """Empty YAML file returns empty list."""
+        yaml_file = tmp_path / "empty.yaml"
+        yaml_file.write_text("")
+        assert parser.parse(yaml_file) == []
+
+    def test_parse_activities_wrapper(self, parser, tmp_path):
+        """Parser handles both bare list and activities: wrapper."""
+        yaml_file = tmp_path / "wrapped.yaml"
+        yaml_file.write_text(
+            "activities:\n"
+            "  - type: quiz\n"
+            "    title: Test\n"
+            "    items:\n"
+            "      - question: Q1?\n"
+            "        options: [A, B, C, D]\n"
+            "        answer: A\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "quiz"
+
+    def test_parse_non_list_raises(self, parser, tmp_path):
+        """Non-list YAML raises ValueError."""
+        yaml_file = tmp_path / "scalar.yaml"
+        yaml_file.write_text("just a string")
+        with pytest.raises(ValueError, match="Expected list"):
+            parser.parse(yaml_file)
+
+    def test_unknown_activity_type_skipped(self, parser, tmp_path):
+        """Unknown activity types are silently skipped."""
+        yaml_file = tmp_path / "unknown.yaml"
+        yaml_file.write_text(
+            "- type: nonexistent-type\n"
+            "  title: Ghost\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 0
+
+    def test_parse_true_false(self, parser, tmp_path):
+        yaml_file = tmp_path / "tf.yaml"
+        yaml_file.write_text(
+            "- type: true-false\n"
+            "  title: TF Test\n"
+            "  items:\n"
+            "    - statement: The sky is blue\n"
+            "      correct: true\n"
+            "    - statement: Cats are fish\n"
+            "      correct: false\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "true-false"
+        assert len(activities[0].items) == 2
+        assert activities[0].items[0].correct is True
+        assert activities[0].items[1].correct is False
+
+    def test_parse_fill_in(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Test\n"
+            "  items:\n"
+            "    - sentence: Я ___ вдома\n"
+            "      answer: був\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "fill-in"
+        assert activities[0].items[0].answer == "був"
+
+    def test_parse_match_up(self, parser, tmp_path):
+        yaml_file = tmp_path / "mu.yaml"
+        yaml_file.write_text(
+            "- type: match-up\n"
+            "  title: Match Test\n"
+            "  pairs:\n"
+            "    - left: кіт\n"
+            "      right: cat\n"
+            "    - left: собака\n"
+            "      right: dog\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "match-up"
+        assert len(activities[0].pairs) == 2
+
+    def test_parse_translate(self, parser, tmp_path):
+        yaml_file = tmp_path / "tr.yaml"
+        yaml_file.write_text(
+            "- type: translate\n"
+            "  title: Translate Test\n"
+            "  items:\n"
+            "    - source: Hello\n"
+            "      target: Привіт\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "translate"
