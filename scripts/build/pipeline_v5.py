@@ -2492,6 +2492,25 @@ def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
 # Phase: validate
 # ---------------------------------------------------------------------------
 
+def _immersion_needs_regeneration(screen: DScreenResult) -> bool:
+    """Check if immersion failure is too large to fix — needs content regeneration.
+
+    Returns True when immersion is >10pp below the target floor, meaning
+    the content structure is fundamentally English-heavy and can't be patched
+    by adding a few Ukrainian headers/phrases.
+    """
+    for line in screen.audit_output.split("\n"):
+        m = re.match(r"\s*Immersion\s+❌\s+([\d.]+)%\s+LOW\s+\(target\s+(\d+)-(\d+)%", line)
+        if m:
+            current = float(m.group(1))
+            target_min = int(m.group(2))
+            gap = target_min - current
+            if gap > 10:
+                log(f"  validate: Immersion {current:.1f}% vs {target_min}% floor — gap {gap:.0f}pp (>10pp threshold)")
+                return True
+    return False
+
+
 def phase_validate(ctx: ModuleContext, state: dict) -> bool:
     """Validate: full deterministic checks + Gemini fix loop."""
     phase = "validate"
@@ -2546,6 +2565,35 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
             mark_complete(state, phase, ctx, attempts=0, note=note)
             _update_pipeline_status(ctx, "draft")
             return True
+
+    # Check if immersion is the primary blocker with a large gap — regenerate instead of fix
+    regen_key = "_immersion_regenerated"
+    if _immersion_needs_regeneration(screen) and not state.get(regen_key):
+        log("  validate: Immersion gap too large for fix loop — regenerating content")
+        state[regen_key] = True  # Prevent infinite regeneration loop
+        # Clear content/activities completion so they re-run
+        for p in ("content", "activities"):
+            if p in state.get("phases", {}):
+                del state["phases"][p]
+        # Re-run content + activities phases inline
+        if not phase_content(ctx, state):
+            log("  validate: Content regeneration FAILED")
+            mark_failed(state, phase, ctx, note="immersion-regen-content-fail")
+            return False
+        if not phase_activities(ctx, state):
+            log("  validate: Activities regeneration FAILED")
+            mark_failed(state, phase, ctx, note="immersion-regen-activities-fail")
+            return False
+        # Re-screen with regenerated content
+        _run_deterministic_fixes(ctx)
+        screen = _deterministic_screen(ctx, skip_review=True)
+        _validate_log_screen("Post-regeneration", screen)
+        if screen.audit_passed and (not screen.deterministic_issues or _validate_only_non_blocking(screen)):
+            _save_screen_result(ctx, screen)
+            mark_complete(state, phase, ctx, attempts=0, note="immersion-regenerated")
+            _update_pipeline_status(ctx, "draft")
+            return True
+        # Fall through to fix loop with regenerated content
 
     # Gemini fix loop
     max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
