@@ -96,6 +96,35 @@ Follow the structural containment rules above. Each H2 section MUST follow this 
 - Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
 - Listing random permutations of the same verb forms as separate bullets
 
+### Dialogue Quality (CRITICAL)
+
+Every blockquote dialogue MUST have:
+1. **A real situation** — where are the speakers? (market, classroom, street, home, café)
+2. **A purpose** — why are they talking? (asking for help, giving directions, buying something)
+3. **Varied responses** — the second speaker reacts naturally, not just echoes the command
+
+**BAD** (echo drill — FORBIDDEN):
+> — Читай!
+> — Я читаю.
+> — Пиши!
+> — Я пишу.
+> — Слухай!
+> — Я слухаю.
+
+**GOOD** (at a market — speakers have real goals):
+> — Дайте, будь ласка, хліб.
+> — Візьміть. Ще щось?
+> — Покажіть це. Скільки?
+> — Двадцять. Дивіться — свіжий!
+
+**GOOD** (parent and child — natural, emotional):
+> — Не біжи! Стій!
+> — Але я хочу туди!
+> — Слухай мене. Тримай мою руку.
+> — Добре, мамо.
+
+Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life."
+
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
 Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT use words outside the word bank. Do NOT write IPA or Latin transliteration.
