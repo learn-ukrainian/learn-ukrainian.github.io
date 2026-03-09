@@ -1527,7 +1527,7 @@ User → /otaman {track} {num}  (Gemini interactive mode)
     ┌────▼─────┐
     │ OTAMAN   │  Content sprint (Phases 0-6b, prose only)
     └────┬─────┘
-         │ dispatches via ai_agent_bridge.py
+         │ dispatches via ai_agent_bridge
     ┌────┼────────────┐
     ▼                 ▼
  YELLOW (yw-)      GREEN (gr-)
@@ -1702,7 +1702,7 @@ archive detection/restoration, Phase B/E/F delegates, preflight, logging, config
 | Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
 | Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
 | Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
-| AI agent bridge | `scripts/ai_agent_bridge.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
+| AI agent bridge | `scripts/ai_agent_bridge/__main__.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
 | State persistence | `orchestration/{slug}/state.json` | Crash recovery |
 | Batch dispatcher | `scripts/batch_dispatcher.py` | Autonomous batch scheduling (old pipeline) |
 
@@ -1731,7 +1731,7 @@ archive detection/restoration, Phase B/E/F delegates, preflight, logging, config
 
 ### Dispatch Modes
 
-The bridge (`ai_agent_bridge.py`) supports three execution modes:
+The bridge (`ai_agent_bridge`) supports three execution modes:
 
 | Flag | Mode | Permissions | Used By |
 |------|------|------------|---------|
@@ -2327,25 +2327,25 @@ npm run sync:landing:dry      # Preview changes without applying
 
 ```bash
 # Check inbox for messages from Claude
-.venv/bin/python scripts/ai_agent_bridge.py inbox
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
 
 # Read specific message
-.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
 
 # Send message to Claude (with type)
-.venv/bin/python scripts/ai_agent_bridge.py send "Your message" --type query --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
 
 # Auto-process with Gemini CLI (read → process → respond)
-.venv/bin/python scripts/ai_agent_bridge.py process <message_id> --model gemini-3-pro-preview
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
 
 # Get full conversation history
-.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
 
 # Interactive mode
-.venv/bin/python scripts/ai_agent_bridge.py interactive
+.venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
 
 # Dispatch with full execution access (Otaman Phase 7)
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Activate skill final-review. ..." \
   --task-id fr-{slug} \
   --allow-write \
@@ -2424,7 +2424,7 @@ Monitors message broker and triggers agents automatically:
 | File | Purpose |
 |------|---------|
 | `.mcp/servers/message-broker/server.py` | MCP server for Claude |
-| `scripts/ai_agent_bridge.py` | CLI bridge for agents |
+| `scripts/ai_agent_bridge/__main__.py` | CLI bridge for agents |
 | `scripts/agent_watcher.py` | Watcher daemon for auto-triggering |
 | `scripts/signal_claude.py` | Notification trigger |
 | `scripts/message_viewer.py` | Web UI for message archive |

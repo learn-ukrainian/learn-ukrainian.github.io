@@ -169,7 +169,7 @@ Module quality scoring with weighted criteria aggregation.
 - `batch_research.py` — Batch research phase
 - `batch_report.py` — Batch status reporting
 
-### 8. Agent Bridge (`scripts/ai_agent_bridge.py`)
+### 8. Agent Bridge (`scripts/ai_agent_bridge/__main__.py`)
 **~2K LOC**
 
 Inter-agent communication (Claude ↔ Gemini). Uses gemini-cli subprocess.
@@ -342,7 +342,7 @@ learn-ukrainian/
 │   ├── scoring/                   # Quality scoring
 │   ├── batch_*.py                 # Batch operations
 │   ├── generate_*.py              # Code generation (MDX, JSON, plan markdown)
-│   └── ai_agent_bridge.py         # Inter-agent communication
+│   └── ai_agent_bridge         # Inter-agent communication
 ├── claude_extensions/             # Claude Code config (source of truth)
 ├── gemini_extensions/             # Gemini config (source of truth)
 ├── .mcp/servers/                  # MCP servers (RAG, message broker)

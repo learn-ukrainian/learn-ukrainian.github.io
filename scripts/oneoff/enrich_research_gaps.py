@@ -776,7 +776,7 @@ def print_report(results: list[dict], verbose: bool = False) -> None:
                 print(f"  {slug}: {item}")
         print()
         print("To dispatch to Gemini, run:")
-        print("  .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \\")
+        print("  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \\")
         print('    "Enrich research files: add sources and chronology. See GH issue." \\')
         print("    --task-id issue-NNN --model gemini-3.1-pro-preview")
 

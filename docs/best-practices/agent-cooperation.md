@@ -47,7 +47,7 @@ All substantive discussion happens on GitHub where it is persistent and searchab
 ### Direct dispatch (ask-gemini)
 For requests needing immediate response:
 ```bash
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Review posted on #559. Please read and respond." \
   --task-id issue-559
 ```
@@ -148,11 +148,11 @@ Use Gemini's skill files instead of verbose prompts. Each skill encodes the full
 
 ```bash
 # Seminar track rebuild
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-bio 5" \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "/full-rebuild-bio 5" \
   --task-id rebuild-bio-5
 
 # Core track rebuild
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-core-a a1 3" \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "/full-rebuild-core-a a1 3" \
   --task-id rebuild-a1-3
 ```
 

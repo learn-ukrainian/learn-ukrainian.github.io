@@ -246,7 +246,7 @@ PROOFREADER FINDINGS:
 # LLM dispatch
 # ---------------------------------------------------------------------------
 def dispatch_gemini(prompt: str, task_id: str, model: str, timeout: int = 1800) -> tuple[bool, str]:
-    """Dispatch prompt to Gemini via ai_agent_bridge.py ask-gemini (stdin pipe)."""
+    """Dispatch prompt to Gemini via ai_agent_bridge ask-gemini (stdin pipe)."""
     args = [
         VENV_PYTHON,
         str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-DEPRECATED: Use ai_agent_bridge.py instead!
+DEPRECATED: Use ai_agent_bridge instead!
 
-This script now redirects to ai_agent_bridge.py for SQLite-based messaging.
+This script now redirects to ai_agent_bridge for SQLite-based messaging.
 Kept for backwards compatibility - will send to SQLite AND trigger notification.
 
 Usage (PREFERRED):
-    .venv/bin/python scripts/ai_agent_bridge.py send "Your message" --type query --task-id task-id
+    .venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id task-id
 
 Usage (LEGACY - redirects to new system):
     .venv/bin/python scripts/signal_claude.py "Your message"
@@ -24,15 +24,15 @@ PYTHON = os.path.join(ROOT_DIR, ".venv", "bin", "python")
 
 def signal_claude(message: str, task_id: str | None = None, msg_type: str = "response"):
     """
-    Send message via ai_agent_bridge.py (SQLite) and trigger macOS notification.
+    Send message via ai_agent_bridge (SQLite) and trigger macOS notification.
     """
     print("=" * 60)
     print("DEPRECATION WARNING: signal_claude.py is deprecated!")
-    print("Please use: .venv/bin/python scripts/ai_agent_bridge.py send ...")
+    print("Please use: .venv/bin/python scripts/ai_agent_bridge/__main__.py send ...")
     print("=" * 60)
     print()
 
-    # Build command for ai_agent_bridge.py
+    # Build command for ai_agent_bridge
     cmd = [PYTHON, BRIDGE_SCRIPT, "send", message, "--type", msg_type]
     if task_id:
         cmd.extend(["--task-id", task_id])
@@ -61,7 +61,7 @@ def signal_claude(message: str, task_id: str | None = None, msg_type: str = "res
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="DEPRECATED: Send message to Claude. Use ai_agent_bridge.py instead."
+        description="DEPRECATED: Send message to Claude. Use ai_agent_bridge instead."
     )
     parser.add_argument("message", help="The message to send to Claude.")
     parser.add_argument("--task-id", help="Task ID for grouping messages")

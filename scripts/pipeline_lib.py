@@ -1422,7 +1422,7 @@ def dispatch_gemini_raw(
     output_file: Path | None = None, timeout: int = 1800,
     max_retries: int = 3,
 ) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini via ai_agent_bridge.py (no rate-limit fallback).
+    """Dispatch a prompt to Gemini via ai_agent_bridge (no rate-limit fallback).
 
     Retries up to max_retries times on transient network errors
     (TLS drops, socket resets, etc.) with exponential backoff.

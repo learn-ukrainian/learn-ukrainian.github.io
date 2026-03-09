@@ -1,11 +1,11 @@
 ---
 name: otaman
-description: "Content sprint — prose only (Phases 0-6b). Thin wrapper around build_module.py --content-only."
+description: "Content sprint — prose only. Wrapper around build_module_v5.py --restart-from content."
 ---
 
 # Otaman: Content Sprint
 
-> Thin wrapper around `build_module.py`. All orchestration happens in Python.
+> Thin wrapper around `build_module_v5.py`. All orchestration happens in Python.
 
 ## Usage
 
@@ -18,18 +18,17 @@ description: "Content sprint — prose only (Phases 0-6b). Thin wrapper around b
 Run this command and report the result:
 
 ```bash
-.venv/bin/python scripts/build_module.py {track} {num} --content-only
+.venv/bin/python scripts/build_module_v5.py {track} {num} --restart-from content
 ```
 
 ## What It Does
 
-- Phase 0: Research
-- Phase 1: Meta/outline rebuild
-- Phase 2: Section-by-section content generation
-- Phase 4: Content-only audit + fix loop
-- Phase 5: MDX generation
-- Phase 6: Prose review
-- Phase 6b: Apply review fixes
+- Research (if not cached)
+- Discover (lexical sandbox seeding)
+- Sandbox (VESUM-validated word bank)
+- Content generation (section-by-section prose)
+- Validation (morphological + Russicism detection)
+- MDX generation
 
 ## After Completion
 

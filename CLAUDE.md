@@ -1,12 +1,14 @@
 # CLAUDE.md - Project Instructions
 
+> **Mission**: We are building something that doesn't exist — a full Ukrainian language curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, and adversarial review. This is a one-of-a-kind project for a great hero nation. Every shortcut degrades what makes it special. Quality is non-negotiable.
+
 > **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
 
 > **NON-NEGOTIABLE RULES** auto-loaded via `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge.py` (not MCP).
+> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge/__main__.py` (not MCP).
 
 ---
 
@@ -17,7 +19,7 @@
 Every task follows this workflow. No exceptions for non-trivial changes.
 
 1. **Create GH issue** — describe the problem, draft a plan
-2. **Adversarial review of plan** — send to Gemini (`--model gemini-3.1-pro-preview`), incorporate feedback
+2. **Adversarial review of plan** — send to Gemini, incorporate feedback
 3. **Finalize ACs** — update issue with concrete acceptance criteria
 4. **Implement** — work through ACs one by one
 5. **Verify all ACs** — every AC checked and documented on the issue
@@ -26,11 +28,22 @@ Every task follows this workflow. No exceptions for non-trivial changes.
 
 **Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
 
-**Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken. This has happened multiple times — features built without issues were forgotten, broken, or contradicted later.
+**Adversarial review command** (steps 2 & 6). Always use `--model gemini-3.1-pro-preview`. Document findings on the GH issue.
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+  "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN --model gemini-3.1-pro-preview
+```
 
-**Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale. Current top priorities:
-1. **One pipeline** (#750) — v5 is the only pipeline, finish removing legacy code
-2. **Testbed** (#749, #754) — regression testing based on the v5 pipeline
+**Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken.
+
+**Issue discipline (coding issues)**:
+- **Never leave half-done.** If you open it, finish it. If you can't finish it now, document exactly where you stopped and what remains.
+- **Never close unless ALL acceptance criteria are verified.** Partial completion = still open.
+- **Aim to fully resolve and close.** Open issues are debt. Minimize them aggressively.
+- **The human manages content generation issues.** Claude owns coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
+
+**Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale.
 
 </critical>
 
@@ -87,22 +100,6 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 ---
 
-## Adversarial Review Protocol
-
-<critical>
-
-**Before implementing non-trivial features:** send plan to Gemini Pro for adversarial review. After implementation, send code for post-implementation review. Always use `--model gemini-3.1-pro-preview`. Document on the GH issue.
-
-```bash
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
-  "Adversarial review for #NNN. Read {path}." \
-  --task-id issue-NNN --model gemini-3.1-pro-preview
-```
-
-</critical>
-
----
-
 ## Critical Rules
 
 <critical>
@@ -115,19 +112,16 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - pyenv Python 3.12.8 with `--enable-loadable-sqlite-extensions`
 - Recreate: `rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv`
 
-### 3. Fix Source, Not Symptoms
-Fix documentation/tools first, then validate. Ask: what process caused this? How to prevent recurrence?
-
-### 4. Language Settings
+### 3. Language Settings
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
-### 5. External LLM Access
+### 4. External LLM Access
 Use `gemini-cli` (Google AI Pro subscription). No direct API keys.
 
-### 6. Word Targets Are Minimums
+### 5. Word Targets Are Minimums
 **NEVER** reduce content or change `word_target` to match short content. Expand the content instead.
 
-### 7. GitHub Issues as Persistent Memory
+### 6. GitHub Issues as Persistent Memory
 Every change tracked via GH issues. Before work: find/create issue. After: update/close. Reference in commits. Full protocol: [`issue-tracking.md`](docs/best-practices/issue-tracking.md)
 
 </critical>

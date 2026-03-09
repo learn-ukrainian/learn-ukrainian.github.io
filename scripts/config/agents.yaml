@@ -1,5 +1,5 @@
 # Agent registry for the watcher daemon.
-# Adding a new agent = add a YAML block + implement its bridge command in ai_agent_bridge.py.
+# Adding a new agent = add a YAML block + implement its bridge command in ai_agent_bridge.
 
 agents:
   claude:
