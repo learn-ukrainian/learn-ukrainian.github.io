@@ -148,7 +148,26 @@ IMMERSION_RULES: dict[str, str] = {
         "Ukrainian sentences max 10 words.\n"
         "NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered "
         "to prevent repetitive padding. Focus on quality immersion with the available vocabulary "
-        "rather than forcing high percentages."
+        "rather than forcing high percentages.\n\n"
+        "BEFORE/AFTER EXAMPLE — follow the AFTER pattern:\n\n"
+        "❌ BAD (too much English, ~10% immersion):\n"
+        "To form the imperative mood in Ukrainian, you take the infinitive form of the verb "
+        "and remove the -ти ending. Then you add the appropriate suffix depending on whether "
+        "you are speaking to one person informally or to multiple people formally. For the "
+        "informal singular form, you simply use the stem. For the formal or plural form, "
+        "you add -те to the informal form.\n\n"
+        "✅ GOOD (tables + dialogue + examples, ~45% immersion):\n"
+        "Drop **-ти** from the infinitive to form commands.\n\n"
+        "| Infinitive | ти-command | ви-command |\n"
+        "|---|---|---|\n"
+        "| читати | читай | читайте |\n"
+        "| писати | пиши | пишіть |\n\n"
+        "> — **Читай** текст! — Read the text!\n"
+        "> — **Пишіть** відповідь. — Write the answer.\n"
+        "> — **Слухайте** уважно! — Listen carefully!\n\n"
+        "Add **будь ласка** to soften any command.\n\n"
+        "- **Дайте, будь ласка, воду.** — Please give water.\n"
+        "- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?"
     ),
     "a2-m01-20": (
         "TARGET: 50-60% Ukrainian.\n"
@@ -2340,6 +2359,17 @@ def write_placeholders(ctx: ModuleContext) -> None:
     placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
 
     placeholders.update(ctx.activity_config)
+
+    # Populate REQUIRED_TYPES if empty — from plan activity_hints or PRIORITY_TYPES
+    if not placeholders.get("REQUIRED_TYPES"):
+        plan_hints = ctx.plan.get("activity_hints", [])
+        if plan_hints and isinstance(plan_hints, list):
+            placeholders["REQUIRED_TYPES"] = ", ".join(str(h) for h in plan_hints[:5])
+        elif placeholders.get("PRIORITY_TYPES"):
+            # Use first 3 priority types as required minimum variety
+            priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
+            placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
+
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
     placeholders_path.write_text(
         yaml.dump(placeholders, allow_unicode=True, default_flow_style=False, sort_keys=False),

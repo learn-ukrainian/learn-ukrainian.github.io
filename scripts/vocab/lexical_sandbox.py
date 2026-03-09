@@ -468,6 +468,20 @@ def _format_sandbox(
             lines.append(f"  *Source: {ex['source']}*")
         lines.append("")
 
+    # Level-wide grammar warnings (beyond module-specific morphological constraints)
+    # The sandbox shows all VESUM forms allowed by module constraints, but the
+    # audit also enforces broader level-wide grammar rules from GRAMMAR_CONSTRAINTS.
+    base_track = track.split("-")[0] if "-" in track else track
+    if base_track == "a1":
+        lines.append("### ⚠️ Level-Wide Grammar Rules (A1)")
+        lines.append("")
+        lines.append("Even though forms are listed above, the A1 audit enforces these rules on your **prose**:")
+        lines.append("- **DATIVE CASE FORBIDDEN**: Do NOT use мені, тобі, йому, їй, нам, вам, їм or -ові/-еві dative noun endings in your text")
+        lines.append("- **INSTRUMENTAL CASE FORBIDDEN**: Do NOT use з + instrumental (мною, тобою, ним, нею) or за/під/над + instrumental")
+        lines.append("- **Max 10 words per Ukrainian sentence**, max 1 clause")
+        lines.append("- **No subordinate clauses** (який, що, коли, бо, щоб as conjunctions)")
+        lines.append("")
+
     # Instructions for LLM
     lines.append("### Usage Rules")
     lines.append("")
