@@ -2429,7 +2429,19 @@ def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
         # Dedup: skip if identical fix prompt
         fix_hash = hashlib.sha256(fix_prompt.encode()).hexdigest()[:16]
         if fix_hash in seen_fix_hashes:
-            log("  validate: DEDUP — fix prompt identical to a previous attempt, escalating")
+            # Diagnose: is this a prompt engineering bug or a genuine content issue?
+            diagnosis = _diagnose_dedup_cause(fix_prompt, screen)
+            if diagnosis:
+                # Known prompt/context problem — escalation won't help
+                log(f"  validate: DEDUP — prompt engineering issue detected: {diagnosis}")
+                _save_friction_report(ctx, attempt, fix_prompt, diagnosis)
+                _save_screen_result(ctx, screen)
+                mark_failed(state, phase, ctx, attempts=attempt,
+                            note=f"dedup-prompt-bug:{diagnosis}")
+                _update_pipeline_status(ctx, "needs-template-fix")
+                return False
+            # Unknown cause — escalate to Opus as last resort
+            log("  validate: DEDUP — no known prompt issue, escalating to Claude")
             result = _validate_try_escalate(
                 ctx, screen, state, phase, attempt,
                 "escalation-claude-dedup", "dedup-exhausted")
@@ -2491,6 +2503,63 @@ def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
 # ---------------------------------------------------------------------------
 # Phase: validate
 # ---------------------------------------------------------------------------
+
+def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
+    """Diagnose why a fix prompt is identical to a previous attempt.
+
+    Returns a short diagnostic string if a known prompt engineering issue
+    is detected, or None if the cause is unknown (legitimate escalation).
+    """
+    # 1. Immersion gap too large for fix pass
+    imm_match = re.search(r"Gate `Immersion` FAIL.*?([\d.]+)%\s+LOW\s+\(target\s+(\d+)", fix_prompt)
+    if imm_match:
+        current = float(imm_match.group(1))
+        target = int(imm_match.group(2))
+        if target - current > 10:
+            return f"immersion-gap-{target - current:.0f}pp"
+
+    # 2. Activity count too low with no required types guidance
+    if "Gate `Activities` FAIL" in fix_prompt:
+        if "Required types:" not in fix_prompt or "Required types: \n" in fix_prompt:
+            return "activities-no-required-types"
+
+    # 3. Constraint conflict: fix says remove dative but sandbox lists dative forms
+    if "Dative case used at A1" in fix_prompt and "мені" not in fix_prompt.split("FORBIDDEN")[0] if "FORBIDDEN" in fix_prompt else True:
+        # Check if the fix prompt's constraints section doesn't mention dative ban
+        constraints_section = fix_prompt.split("## Constraints")[1] if "## Constraints" in fix_prompt else ""
+        if "dative" not in constraints_section.lower():
+            return "constraint-conflict-dative"
+
+    # 4. Multiple gate failures (3+) — likely systemic template issue
+    gate_fail_count = fix_prompt.count("Gate `") + fix_prompt.count("PEDAGOGICAL_VIOLATION")
+    if gate_fail_count >= 5:
+        return f"systemic-{gate_fail_count}-failures"
+
+    return None
+
+
+def _save_friction_report(ctx: ModuleContext, attempt: int,
+                          fix_prompt: str, diagnosis: str) -> None:
+    """Save a friction report when dedup detects a prompt engineering issue."""
+    report_path = ctx.orch_dir / f"phase-2-friction-dedup.md"
+    gate_failures = re.findall(r"Gate `(\w+)` FAIL", fix_prompt)
+    ped_violations = re.findall(r"\[([A-Z_]+)\]", fix_prompt)
+
+    report = (
+        f"**Phase**: Validate (fix loop)\n"
+        f"**Step**: Dedup at attempt {attempt}\n"
+        f"**Friction Type**: PROMPT_ENGINEERING_BUG\n"
+        f"**Diagnosis**: {diagnosis}\n"
+        f"**Gate Failures**: {', '.join(gate_failures) or 'none'}\n"
+        f"**Violations**: {', '.join(set(ped_violations)) or 'none'}\n"
+        f"**Raw Error**: Fix prompt was identical to previous attempt — "
+        f"Gemini cannot fix these issues with the current template/context.\n"
+        f"**Action Required**: Review and fix the prompt template or sandbox "
+        f"configuration before rebuilding.\n"
+    )
+    report_path.write_text(report, "utf-8")
+    log(f"  validate: Friction report saved to {report_path.name}")
+
 
 def _immersion_needs_regeneration(screen: DScreenResult) -> bool:
     """Check if immersion failure is too large to fix — needs content regeneration.
