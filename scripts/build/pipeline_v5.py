@@ -2635,6 +2635,20 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
             _update_pipeline_status(ctx, "draft")
             return True
 
+    # Pre-check: detect prompt engineering bugs BEFORE wasting a fix cycle
+    # Build the fix prompt that WOULD be sent and diagnose it proactively
+    pre_fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False,
+                                       deterministic_issues=screen.deterministic_issues)
+    pre_diagnosis = _diagnose_dedup_cause(pre_fix_prompt, screen)
+    if pre_diagnosis and pre_diagnosis.startswith("systemic"):
+        # Systemic failures (5+ gates) — template is fundamentally broken, don't even try
+        log(f"  validate: PRE-CHECK — prompt engineering issue: {pre_diagnosis}")
+        _save_friction_report(ctx, 0, pre_fix_prompt, pre_diagnosis)
+        _save_screen_result(ctx, screen)
+        mark_failed(state, phase, ctx, attempts=0, note=f"precheck-prompt-bug:{pre_diagnosis}")
+        _update_pipeline_status(ctx, "needs-template-fix")
+        return False
+
     # Check if immersion is the primary blocker with a large gap — regenerate instead of fix
     regen_key = "_immersion_regenerated"
     if _immersion_needs_regeneration(screen) and not state.get(regen_key):
