@@ -7,8 +7,9 @@ Covers:
 - check_filler_phrases() — LLM hedging/padding phrase detection
 - check_section_depth() — shallow H2 section detection
 - check_example_diversity() — template-identical example runs
+- check_ukrainian_block_repetition() — same word set across containers
 
-Issue: #520, #610
+Issue: #520, #610, #773
 """
 
 import sys
@@ -24,6 +25,7 @@ from audit.checks.content_gaming import (
     check_filler_phrases,
     check_section_depth,
     check_example_diversity,
+    check_ukrainian_block_repetition,
 )
 
 
@@ -277,3 +279,97 @@ class TestExampleDiversity:
         violations = check_example_diversity(content)
         assert len(violations) == 1
         assert violations[0]['type'] == 'TEMPLATE_EXAMPLE_RUN'
+
+
+# =============================================================================
+# CHECK 8: UKRAINIAN BLOCK REPETITION
+# =============================================================================
+
+def _make_block_content(block_words_list: list[list[str]], level: str = "B1") -> str:
+    """Build content with multiple containers from word lists."""
+    sections = {}
+    body_parts = []
+    for i, words in enumerate(block_words_list):
+        if i % 3 == 0:
+            # Table
+            rows = "\n".join(f"| {w} | meaning |" for w in words)
+            body_parts.append(f"| Word | Meaning |\n|---|---|\n{rows}\n")
+        elif i % 3 == 1:
+            # Bulleted list
+            items = "\n".join(f"- {w} — переклад" for w in words)
+            body_parts.append(f"{items}\n")
+        else:
+            # Blockquote
+            lines = "\n".join(f"> {w} є важливе слово" for w in words)
+            body_parts.append(f"{lines}\n")
+
+    sections["Вступ"] = "Some intro text about the topic."
+    sections["Пояснення"] = "\n\n".join(body_parts)
+
+    header = f"---\ntitle: Test\nlevel: {level}\nmodule_number: 15\n---\n\n"
+    body = ""
+    for title, text in sections.items():
+        body += f"## {title}\n\n{text}\n\n"
+    return header + body
+
+
+class TestUkrainianBlockRepetition:
+    def test_diverse_blocks_no_violation(self):
+        """Different content in each block passes."""
+        content = _make_block_content([
+            ["книга", "стіл", "вікно", "двері"],
+            ["молоко", "хліб", "вода", "сир"],
+            ["мати", "батько", "сестра", "брат"],
+        ])
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 0
+
+    def test_same_words_in_5_blocks_warning_b1(self):
+        """5 blocks with same words = warning at B1 (threshold 3 for B1+)."""
+        same = ["читати", "писати", "говорити", "слухати"]
+        content = _make_block_content([same] * 5, level="B1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 1
+        assert violations[0]['severity'] == 'critical'
+        assert violations[0]['type'] == 'ukrainian_block_repetition'
+
+    def test_3_blocks_warning_b1(self):
+        """3 blocks with same words = warning at B1+."""
+        same = ["читати", "писати", "говорити", "слухати"]
+        content = _make_block_content([same] * 3, level="B1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 1
+        assert violations[0]['severity'] == 'warning'
+
+    def test_a1_higher_threshold(self):
+        """A1 needs 5+ blocks for warning (not 3)."""
+        same = ["книга", "стіл", "вікно", "двері"]
+        # 4 blocks: below A1 warning threshold of 5
+        content = _make_block_content([same] * 4, level="A1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 0
+
+    def test_a1_5_blocks_triggers_warning(self):
+        """A1 with 5 overlapping blocks triggers warning."""
+        same = ["книга", "стіл", "вікно", "двері"]
+        content = _make_block_content([same] * 5, level="A1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 1
+        assert violations[0]['severity'] == 'warning'
+
+    def test_fewer_than_3_blocks_skipped(self):
+        """Fewer than 3 meaningful blocks: no check."""
+        same = ["читати", "писати", "говорити", "слухати"]
+        content = _make_block_content([same] * 2, level="B1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 0
+
+    def test_stop_words_excluded(self):
+        """Blocks sharing only stop words don't trigger."""
+        content = _make_block_content([
+            ["він", "вона", "воно", "книга"],
+            ["він", "вона", "воно", "стіл"],
+            ["він", "вона", "воно", "двері"],
+        ], level="B1")
+        violations = check_ukrainian_block_repetition(content)
+        assert len(violations) == 0

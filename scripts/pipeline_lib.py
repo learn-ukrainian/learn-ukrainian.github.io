@@ -145,7 +145,10 @@ IMMERSION_RULES: dict[str, str] = {
         "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
         "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. "
         "Vary your containers — never use the same type twice in a row.\n"
-        "Ukrainian sentences max 10 words."
+        "Ukrainian sentences max 10 words.\n"
+        "NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered "
+        "to prevent repetitive padding. Focus on quality immersion with the available vocabulary "
+        "rather than forcing high percentages."
     ),
     "a2-m01-20": (
         "TARGET: 50-60% Ukrainian.\n"

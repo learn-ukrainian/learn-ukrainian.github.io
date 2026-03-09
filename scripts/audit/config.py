@@ -1426,11 +1426,16 @@ AI_CONTAMINATION_PATTERNS = [
 ]
 
 
-def get_a1_immersion_range(module_num: int) -> tuple[int, int]:
+def get_a1_immersion_range(
+    module_num: int, sandbox_lemma_count: int | None = None
+) -> tuple[int, int]:
     """Returns (min%, max%) for A1 based on module number.
 
     Note: Immersion includes Activities + Summary (full learner experience).
     Ranges calibrated for this comprehensive calculation.
+
+    When sandbox_lemma_count is provided and small (<20), the floor is lowered
+    for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
     if module_num <= 2:
         return (5, 15)   # Cyrillic intro - mostly English explanations
@@ -1439,9 +1444,18 @@ def get_a1_immersion_range(module_num: int) -> tuple[int, int]:
     elif module_num <= 10:
         return (15, 35)  # Growing immersion
     elif module_num <= 20:
-        return (25, 40)  # Foundation established
+        min_imm, max_imm = (25, 40)  # Foundation established
     else:
-        return (35, 55)  # Consolidation - high Ukrainian content
+        min_imm, max_imm = (35, 55)  # Consolidation - high Ukrainian content
+
+    # Adaptive floor: reduce minimum when sandbox is small to avoid repetition
+    if sandbox_lemma_count is not None and module_num > 10:
+        if sandbox_lemma_count < 10:
+            min_imm = max(5, min_imm - 10)
+        elif sandbox_lemma_count < 20:
+            min_imm = max(5, min_imm - 5)
+
+    return (min_imm, max_imm)
 
 
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:

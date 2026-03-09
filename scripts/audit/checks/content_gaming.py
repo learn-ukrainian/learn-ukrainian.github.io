@@ -9,6 +9,7 @@ Deterministic checks that catch LLM content-generation gaming patterns:
 5. Section depth check (header padding with no real content)
 6. Section balance (no single H2 section >40% of word count)
 7. IPA density cap (inline IPA tokens <5% of word count)
+8. Ukrainian block repetition (same word set across 3+ containers)
 
 All checks return list[dict] with 'type', 'severity', 'issue', 'fix' keys.
 No LLM calls — pure regex/hashing.
@@ -530,6 +531,169 @@ def check_example_diversity(content: str, file_path: str = '') -> list[dict]:
 
 
 # =============================================================================
+# CHECK 8: UKRAINIAN BLOCK REPETITION (catches A1/A2 too)
+# =============================================================================
+
+def _extract_container_blocks(content: str) -> list[tuple[str, str]]:
+    """Extract contiguous container blocks from markdown content.
+
+    Returns list of (block_type, block_text) tuples where block_type is one of:
+    'table', 'blockquote', 'list', 'numbered_list'.
+    Adjacent lines of the same type are merged into a single block.
+    """
+    blocks: list[tuple[str, str]] = []
+    lines = content.split('\n')
+
+    current_type: str | None = None
+    current_lines: list[str] = []
+
+    def _flush():
+        nonlocal current_type, current_lines
+        if current_type and current_lines:
+            blocks.append((current_type, '\n'.join(current_lines)))
+        current_type = None
+        current_lines = []
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            _flush()
+            continue
+
+        # Detect line type
+        if stripped.startswith('|') and stripped.endswith('|'):
+            # Skip table separator rows
+            if re.match(r'^\|[\s\-:|]+\|$', stripped):
+                if current_type == 'table':
+                    continue
+                else:
+                    _flush()
+                    continue
+            line_type = 'table'
+        elif stripped.startswith('>'):
+            line_type = 'blockquote'
+        elif re.match(r'^[-*]\s+', stripped):
+            line_type = 'list'
+        elif re.match(r'^\d+\.\s+', stripped):
+            line_type = 'numbered_list'
+        else:
+            _flush()
+            continue
+
+        if line_type == current_type:
+            current_lines.append(stripped)
+        else:
+            _flush()
+            current_type = line_type
+            current_lines = [stripped]
+
+    _flush()
+    return blocks
+
+
+_UKRAINIAN_STOP_WORDS = frozenset({
+    # Pronouns
+    'я', 'ти', 'він', 'вона', 'воно', 'ми', 'ви', 'вони',
+    'це', 'той', 'та', 'те', 'ті', 'цей', 'ця',
+    'мій', 'моя', 'моє', 'мої', 'твій', 'його', 'її', 'наш', 'ваш', 'їх',
+    # Prepositions
+    'в', 'у', 'з', 'із', 'на', 'до', 'від', 'за', 'під', 'над', 'між', 'про', 'при', 'через',
+    # Conjunctions & particles
+    'і', 'й', 'та', 'а', 'але', 'або', 'чи', 'що', 'як', 'бо', 'не', 'ні', 'так', 'ще',
+    # Common function words
+    'є', 'тут', 'там', 'де', 'коли', 'хто', 'який', 'яка', 'яке', 'які',
+    'дуже', 'теж', 'також', 'вже', 'ось', 'тільки', 'можна',
+})
+
+
+def check_ukrainian_block_repetition(content: str, file_path: str = '') -> list[dict]:
+    """Detect the same Ukrainian word set repeated across 3+ containers.
+
+    Catches Gemini listing the same 10-12 verbs/nouns in multiple tables,
+    lists, and blockquotes — a common padding pattern at A1/A2 where
+    check_example_diversity is skipped.
+
+    Threshold: 3+ blocks with >70% word overlap = warning; 5+ = critical.
+    Stop words (pronouns, prepositions, particles) are excluded to avoid
+    false positives from common function words.
+    """
+    violations = []
+    blocks = _extract_container_blocks(content)
+
+    # Extract Ukrainian word sets per block (min 3 content words to be meaningful)
+    block_wordsets: list[frozenset[str]] = []
+    for _btype, btext in blocks:
+        words = _tokenize_ukrainian(btext) - _UKRAINIAN_STOP_WORDS
+        if len(words) >= 3:
+            block_wordsets.append(frozenset(words))
+
+    if len(block_wordsets) < 3:
+        return []
+
+    # Find largest cluster of mutually overlapping blocks (>70% overlap)
+    def _overlap(a: frozenset, b: frozenset) -> float:
+        if not a or not b:
+            return 0.0
+        smaller = min(len(a), len(b))
+        return len(a & b) / smaller
+
+    # Build adjacency: which blocks overlap with which
+    n = len(block_wordsets)
+    adj: list[set[int]] = [set() for _ in range(n)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            if _overlap(block_wordsets[i], block_wordsets[j]) > 0.7:
+                adj[i].add(j)
+                adj[j].add(i)
+
+    # Greedy: find node with most neighbors, build cluster
+    best_cluster: list[int] = []
+    for seed in range(n):
+        cluster = {seed}
+        for candidate in adj[seed]:
+            if all(candidate in adj[c] for c in cluster):
+                cluster.add(candidate)
+        if len(cluster) > len(best_cluster):
+            best_cluster = sorted(cluster)
+
+    cluster_size = len(best_cluster)
+
+    # A1/A2: higher threshold — controlled repetition is valid pedagogy
+    # (gender sort tables, conjugation drills reuse the same nouns/verbs)
+    level = _detect_level(content) or _detect_level_from_path(file_path)
+    if level in ('A1', 'A2'):
+        warn_threshold, crit_threshold = 5, 8
+    else:
+        warn_threshold, crit_threshold = 3, 5
+
+    if cluster_size < warn_threshold:
+        return []
+
+    # Find shared core words
+    shared = block_wordsets[best_cluster[0]]
+    for idx in best_cluster[1:]:
+        shared = shared & block_wordsets[idx]
+    core_sample = sorted(shared)[:8]
+
+    severity = 'critical' if cluster_size >= crit_threshold else 'warning'
+    violations.append({
+        'type': 'ukrainian_block_repetition',
+        'severity': severity,
+        'issue': (
+            f"Same Ukrainian word set appears in {cluster_size} different containers "
+            f"(>70% overlap). Shared core: {', '.join(core_sample)}."
+        ),
+        'fix': (
+            "Vary Ukrainian content across containers. Each table, list, or dialogue "
+            "should introduce NEW vocabulary or use existing words in NEW contexts — "
+            "not repeat the same word set."
+        ),
+    })
+
+    return violations
+
+
+# =============================================================================
 # CHECK 1: CROSS-MODULE PLAGIARISM
 # =============================================================================
 
@@ -783,6 +947,9 @@ def check_content_gaming(content: str, file_path: str) -> list[dict]:
 
     # Check 3: Example diversity (skip A1-A2)
     violations.extend(check_example_diversity(content, file_path))
+
+    # Check 8: Ukrainian block repetition (catches A1/A2 too)
+    violations.extend(check_ukrainian_block_repetition(content, file_path))
 
     # Check 1: Cross-module plagiarism (slowest — reads other files)
     violations.extend(check_cross_module_plagiarism(content, file_path))
