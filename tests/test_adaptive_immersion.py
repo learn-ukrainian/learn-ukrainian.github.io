@@ -26,35 +26,44 @@ class TestAdaptiveImmersionRange:
         assert get_a1_immersion_range(15, None) == (25, 40)
 
     def test_large_sandbox_unchanged(self):
-        """Sandbox >= 20 lemmas = no reduction."""
-        assert get_a1_immersion_range(25, 20) == (35, 55)
+        """Sandbox >= 50 lemmas = no reduction."""
         assert get_a1_immersion_range(25, 50) == (35, 55)
-        assert get_a1_immersion_range(15, 30) == (25, 40)
+        assert get_a1_immersion_range(25, 100) == (35, 55)
+        assert get_a1_immersion_range(15, 60) == (25, 40)
+
+    def test_medium_sandbox_m21_plus(self):
+        """Sandbox 30-49 lemmas reduces floor by 5 for M21+."""
+        assert get_a1_immersion_range(25, 30) == (30, 55)
+        assert get_a1_immersion_range(25, 49) == (30, 55)
 
     def test_small_sandbox_m21_plus(self):
-        """Sandbox < 20 lemmas reduces floor by 5 for M21+."""
-        assert get_a1_immersion_range(25, 15) == (30, 55)
-        assert get_a1_immersion_range(25, 19) == (30, 55)
+        """Sandbox 15-29 lemmas reduces floor by 10 for M21+."""
+        assert get_a1_immersion_range(25, 15) == (25, 55)
+        assert get_a1_immersion_range(25, 29) == (25, 55)
 
     def test_tiny_sandbox_m21_plus(self):
-        """Sandbox < 10 lemmas reduces floor by 10 for M21+."""
-        assert get_a1_immersion_range(25, 9) == (25, 55)
-        assert get_a1_immersion_range(25, 5) == (25, 55)
-        assert get_a1_immersion_range(25, 0) == (25, 55)
+        """Sandbox < 15 lemmas reduces floor by 15 for M21+."""
+        assert get_a1_immersion_range(25, 14) == (20, 55)
+        assert get_a1_immersion_range(25, 5) == (20, 55)
+        assert get_a1_immersion_range(25, 0) == (20, 55)
+
+    def test_medium_sandbox_m11_20(self):
+        """Sandbox 30-49 lemmas reduces floor by 5 for M11-20."""
+        assert get_a1_immersion_range(15, 35) == (20, 40)
 
     def test_small_sandbox_m11_20(self):
-        """Sandbox < 20 lemmas reduces floor by 5 for M11-20."""
-        assert get_a1_immersion_range(15, 15) == (20, 40)
+        """Sandbox 15-29 lemmas reduces floor by 10 for M11-20."""
+        assert get_a1_immersion_range(15, 20) == (15, 40)
 
     def test_tiny_sandbox_m11_20(self):
-        """Sandbox < 10 lemmas reduces floor by 10 for M11-20."""
-        assert get_a1_immersion_range(15, 5) == (15, 40)
+        """Sandbox < 15 lemmas reduces floor by 15 for M11-20."""
+        assert get_a1_immersion_range(15, 5) == (10, 40)
 
-    def test_floor_never_below_5(self):
-        """Floor cannot go below 5 even with tiny sandbox."""
-        # M11-20 base is 25, minus 10 = 15, still above 5
+    def test_floor_never_below_minimums(self):
+        """Floor respects minimum thresholds per band."""
+        # M11-20 base is 25, minus 15 = 10, respects max(5, ...)
         assert get_a1_immersion_range(11, 1)[0] >= 5
-        # M21+ base is 35, minus 10 = 25, still above 5
+        # M21+ base is 35, minus 15 = 20, respects max(5, ...)
         assert get_a1_immersion_range(25, 1)[0] >= 5
 
     def test_early_modules_unaffected(self):

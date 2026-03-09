@@ -1448,12 +1448,16 @@ def get_a1_immersion_range(
     else:
         min_imm, max_imm = (35, 55)  # Consolidation - high Ukrainian content
 
-    # Adaptive floor: reduce minimum when sandbox is small to avoid repetition
+    # Adaptive floor: reduce minimum when sandbox is small to avoid repetition.
+    # Grammar modules typically have 20-35 lemmas but need mostly English for
+    # rule explanations — 35% immersion requires ~50+ usable lemmas.
     if sandbox_lemma_count is not None and module_num > 10:
-        if sandbox_lemma_count < 10:
-            min_imm = max(5, min_imm - 10)
-        elif sandbox_lemma_count < 20:
-            min_imm = max(5, min_imm - 5)
+        if sandbox_lemma_count < 15:
+            min_imm = max(5, min_imm - 15)
+        elif sandbox_lemma_count < 30:
+            min_imm = max(10, min_imm - 10)
+        elif sandbox_lemma_count < 50:
+            min_imm = max(15, min_imm - 5)
 
     return (min_imm, max_imm)
 
