@@ -271,6 +271,65 @@ class TestDetectPipelineInfo:
         assert version is None
         assert status is None
 
+    def test_v5_validated(self, tmp_path):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import detect_pipeline_info
+
+        orch = tmp_path / "orchestration" / "test-mod"
+        orch.mkdir(parents=True)
+        state = {
+            "mode": "v5",
+            "phases": {
+                "research": {"status": "complete"},
+                "content": {"status": "complete"},
+                "validate": {"status": "complete"},
+            },
+        }
+        (orch / "state.json").write_text(json.dumps(state))
+        version, status = detect_pipeline_info(tmp_path, "test-mod")
+        assert version == "v5"
+        assert status == "validated"
+
+    def test_v5_reviewed(self, tmp_path):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import detect_pipeline_info
+
+        orch = tmp_path / "orchestration" / "test-mod"
+        orch.mkdir(parents=True)
+        state = {
+            "mode": "v5",
+            "phases": {
+                "research": {"status": "complete"},
+                "validate": {"status": "complete"},
+                "review": {"status": "complete"},
+            },
+        }
+        (orch / "state.json").write_text(json.dumps(state))
+        version, status = detect_pipeline_info(tmp_path, "test-mod")
+        assert version == "v5"
+        assert status == "reviewed"
+
+    def test_v5_draft(self, tmp_path):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import detect_pipeline_info
+
+        orch = tmp_path / "orchestration" / "test-mod"
+        orch.mkdir(parents=True)
+        state = {
+            "mode": "v5",
+            "phases": {
+                "research": {"status": "complete"},
+                "content": {"status": "complete"},
+            },
+        }
+        (orch / "state.json").write_text(json.dumps(state))
+        version, status = detect_pipeline_info(tmp_path, "test-mod")
+        assert version == "v5"
+        assert status == "draft"
+
 
 class TestGenerateMdxFrontmatter:
     """generate_mdx includes pipeline/build_status in frontmatter."""
@@ -323,6 +382,25 @@ class TestGenerateMdxFrontmatter:
 
         md = self._make_minimal_md()
         result = generate_mdx(md, 1, pipeline_version="v4", build_status="validated")
+        assert "draft: true" not in result
+
+    def test_v5_frontmatter(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(md, 1, pipeline_version="v5", build_status="validated")
+        assert "pipeline: v5" in result
+        assert "build_status: validated" in result
+
+    def test_v5_has_no_draft(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import generate_mdx
+
+        md = self._make_minimal_md()
+        result = generate_mdx(md, 1, pipeline_version="v5", build_status="validated")
         assert "draft: true" not in result
 
 

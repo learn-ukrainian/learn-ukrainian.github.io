@@ -76,7 +76,10 @@ def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | 
     elif v2_file.exists():
         try:
             data = json.loads(v2_file.read_text()) or {}
-            if data.get("mode") == "v4":
+            mode = data.get("mode", "")
+            if mode == "v5":
+                version = "v5"
+            elif mode == "v4":
                 version = "v4"
             elif data:
                 version = "v3"
@@ -89,7 +92,12 @@ def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | 
 
     # Determine build_status from phase completion
     build_status = "draft"
-    if version == "v4":
+    if version == "v5":
+        if phases.get("review", {}).get("status") == "complete":
+            build_status = "reviewed"
+        elif phases.get("validate", {}).get("status") == "complete":
+            build_status = "validated"
+    elif version == "v4":
         if phases.get("v4-review", {}).get("status") == "complete":
             build_status = "reviewed"
         elif phases.get("v4-validate", {}).get("status") == "complete":
@@ -223,7 +231,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
-    if pipeline_version and pipeline_version != "v4":
+    if pipeline_version and pipeline_version not in ("v4", "v5"):
         extra_fm_lines += "\ndraft: true"
     frontmatter = f'''---
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"
