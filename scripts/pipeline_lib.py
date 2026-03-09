@@ -126,7 +126,7 @@ IMMERSION_RULES: dict[str, str] = {
         "Ukrainian sentences max 10 words. Mix container types — don't use tables for everything."
     ),
     "a1-m21+": (
-        "TARGET: 35-55% Ukrainian.\n"
+        "TARGET: 30-55% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. "
         "You must explain grammar primarily by demonstrating it. Show, don't tell.\n"
@@ -170,7 +170,7 @@ IMMERSION_RULES: dict[str, str] = {
         "- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?"
     ),
     "a2-m01-20": (
-        "TARGET: 50-60% Ukrainian.\n"
+        "TARGET: 45-65% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.\n"
         "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
@@ -182,7 +182,7 @@ IMMERSION_RULES: dict[str, str] = {
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-m21-50": (
-        "TARGET: 60-75% Ukrainian.\n"
+        "TARGET: 55-75% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- PRIMARY: Ukrainian for all content — dialogues, examples, section intros, cultural context.\n"
         "- ENGLISH: Only for abstract grammar concepts that need explicit explanation.\n"
@@ -193,7 +193,7 @@ IMMERSION_RULES: dict[str, str] = {
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
     "a2-m51-70": (
-        "TARGET: 75-90% Ukrainian.\n"
+        "TARGET: 70-90% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- PRIMARY: Ukrainian for everything.\n"
         "- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.\n"

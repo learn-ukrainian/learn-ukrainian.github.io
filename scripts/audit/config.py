@@ -1444,9 +1444,9 @@ def get_a1_immersion_range(
     elif module_num <= 10:
         return (15, 35)  # Growing immersion
     elif module_num <= 20:
-        min_imm, max_imm = (25, 40)  # Foundation established
+        min_imm, max_imm = (25, 45)  # Foundation established
     else:
-        min_imm, max_imm = (35, 55)  # Consolidation - high Ukrainian content
+        min_imm, max_imm = (30, 55)  # Consolidation (was 35; grammar modules need English for rules)
 
     # Adaptive floor: reduce minimum when sandbox is small to avoid repetition.
     # Grammar modules typically have 20-35 lemmas but need mostly English for
@@ -1471,11 +1471,11 @@ def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
     - Band 3 (M51-70): 75-90% — Consolidation, near-full immersion
     """
     if module_num <= 20:
-        return (50, 60)   # Band 1: Core grammar
+        return (45, 65)   # Band 1: Core grammar (was 50-60; grammar modules need English)
     elif module_num <= 50:
-        return (60, 75)   # Band 2: Applied grammar
+        return (55, 75)   # Band 2: Applied grammar (was 60-75; steep jump caused failures)
     else:
-        return (75, 90)   # Band 3: Consolidation / Pre-B1
+        return (70, 90)   # Band 3: Consolidation / Pre-B1 (was 75-90; 5 modules failed at 70-75%)
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:

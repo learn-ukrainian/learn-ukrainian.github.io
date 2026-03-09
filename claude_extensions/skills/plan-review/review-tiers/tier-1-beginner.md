@@ -117,9 +117,9 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | A1.1 | 20-40% | Heavy English support |
 | A1.2 | 40-60% | Increasing Ukrainian |
 | A1.3 | 60-80% | Scaffolded transition |
-| A2 M01-20 | 50-60% | Core grammar — English for theory |
-| A2 M21-50 | 60-75% | Applied grammar — English only for abstract concepts |
-| A2 M51-70 | 75-90% | Consolidation — near-full Ukrainian |
+| A2 M01-20 | 45-65% | Core grammar — English for theory |
+| A2 M21-50 | 55-75% | Applied grammar — English only for abstract concepts |
+| A2 M51-70 | 70-90% | Consolidation — near-full Ukrainian |
 
 ### Language Quality (Beginner Adaptation)
 
