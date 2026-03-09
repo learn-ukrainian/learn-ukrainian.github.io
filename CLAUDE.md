@@ -4,7 +4,7 @@
 
 > **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
 
-> **NON-NEGOTIABLE RULES** auto-loaded via `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
+> **NON-NEGOTIABLE RULES** auto-loaded from `claude_extensions/rules/non-negotiable-rules.md` (deployed to `.claude/rules/`) — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
@@ -150,6 +150,7 @@ Bare list at root (NOT `activities:` wrapper). Full schema: [`vocabulary-activit
 - **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
 - **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 - **Workstreams & priorities**: [`docs/WORKSTREAMS.md`](docs/WORKSTREAMS.md)
+- **Module manifest**: `curriculum/l2-uk-en/curriculum.yaml` — source of truth for module ordering and slug mapping
 - **Build pipeline**: `.venv/bin/python scripts/build_module_v5.py {level} {seq} [--review] [--restart-from {phase}] [--force-phase {phase}]`
 
 ---
