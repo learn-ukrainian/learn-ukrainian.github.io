@@ -38,8 +38,6 @@ from .state_build import (
 from .state_compute import (
     compute_module_detail,
     compute_research_detail,
-    is_content_done_legacy,
-    is_research_done_legacy,
     severity_key,
 )
 from .state_issues import (
@@ -64,6 +62,7 @@ from .state_helpers import (
     get_word_target_from_plan,
     is_content_done,
     is_research_done,
+    load_module_state,
     parse_v4_phase_status,
     read_v2_state,
     read_v3_state,
@@ -174,27 +173,17 @@ async def ready_to_build(track: str | None = Query(None)):
 
             for num, slug in plan_slugs:
                 orch_dir = track_dir / "orchestration" / slug
-                v4 = read_v4_state(orch_dir)
-                v3 = read_v3_state(orch_dir)
-                v2 = read_v2_state(orch_dir)
+                state = load_module_state(track_id, slug, orch_dir)
 
-                if is_research_done_legacy(v3, v2, track_dir, slug, v4=v4) and not is_content_done_legacy(v3, v2, v4=v4):
+                if is_research_done(state, track_dir, slug) and not is_content_done(state):
                     version = detect_pipeline_version(orch_dir)
-                    if version == "v4":
-                        research_phase = v4.get("phases", {}).get("v4-research", {})
-                        ready.append({
-                            "track": track_id, "num": num, "slug": slug,
-                            "pipeline_version": "v4",
-                            "phase_a_ts": research_phase.get("ts"), "phase_a_mode": None,
-                        })
-                    else:
-                        phase_a = v3.get("phases", {}).get("v3-A") or v2.get("phases", {}).get("1") or {}
-                        ready.append({
-                            "track": track_id, "num": num, "slug": slug,
-                            "pipeline_version": version,
-                            "phase_a_ts": phase_a.get("ts") or phase_a.get("timestamp"),
-                            "phase_a_mode": phase_a.get("mode"),
-                        })
+                    research_phase = state.get("phases", {}).get("research", {})
+                    ready.append({
+                        "track": track_id, "num": num, "slug": slug,
+                        "pipeline_version": version,
+                        "phase_a_ts": research_phase.get("ts"),
+                        "phase_a_mode": research_phase.get("mode"),
+                    })
         return {"count": len(ready), "modules": ready}
 
     return await asyncio.to_thread(_compute)
@@ -268,7 +257,13 @@ async def failing_modules(track: str | None = Query(None)):
                 version = detect_pipeline_version(orch_dir)
                 audit = get_audit_status(track_dir, slug)
 
-                if version == "v4":
+                if version == "v5":
+                    phases = read_v2_state(orch_dir).get("phases", {})
+                    failed_phases = [
+                        k for k, v in phases.items()
+                        if isinstance(v, dict) and v.get("status") == "failed"
+                    ]
+                elif version == "v4":
                     v4 = read_v4_state(orch_dir)
                     phases = v4.get("phases", {})
                     failed_phases = [

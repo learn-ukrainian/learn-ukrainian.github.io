@@ -579,66 +579,6 @@ class TestSeverityKey:
         assert severity_key(m) == 0
 
 
-class TestIsResearchDoneLegacy:
-    """is_research_done_legacy checks multiple state formats."""
-
-    def test_v4_research_complete(self):
-        from scripts.api.state_compute import is_research_done_legacy
-
-        v4 = {"phases": {"v4-research": {"status": "complete"}}}
-        assert is_research_done_legacy({}, {}, None, "slug", v4=v4) is True
-
-    def test_v3_phase_a_complete(self):
-        from scripts.api.state_compute import is_research_done_legacy
-
-        v3 = {"phases": {"v3-A": {"status": "complete"}}}
-        assert is_research_done_legacy(v3, {}, None, "slug") is True
-
-    def test_v2_phase_1_complete(self):
-        from scripts.api.state_compute import is_research_done_legacy
-
-        v2 = {"phases": {"1": {"status": "complete"}}}
-        assert is_research_done_legacy({}, v2, None, "slug") is True
-
-    def test_research_file_fallback(self, tmp_path):
-        from scripts.api.state_compute import is_research_done_legacy
-
-        (tmp_path / "research").mkdir()
-        (tmp_path / "research" / "test-research.md").write_text("research")
-        assert is_research_done_legacy({}, {}, tmp_path, "test") is True
-
-    def test_no_research(self, tmp_path):
-        from scripts.api.state_compute import is_research_done_legacy
-
-        assert is_research_done_legacy({}, {}, tmp_path, "test") is False
-
-
-class TestIsContentDoneLegacy:
-    """is_content_done_legacy checks multiple state formats."""
-
-    def test_v4_content_complete(self):
-        from scripts.api.state_compute import is_content_done_legacy
-
-        v4 = {"phases": {"v4-content": {"status": "complete"}}}
-        assert is_content_done_legacy({}, {}, v4=v4) is True
-
-    def test_v3_phase_b_complete(self):
-        from scripts.api.state_compute import is_content_done_legacy
-
-        v3 = {"phases": {"v3-B": {"status": "complete"}}}
-        assert is_content_done_legacy(v3, {}) is True
-
-    def test_v2_phase_2_complete(self):
-        from scripts.api.state_compute import is_content_done_legacy
-
-        v2 = {"phases": {"2": {"status": "complete"}}}
-        assert is_content_done_legacy({}, v2) is True
-
-    def test_no_content(self):
-        from scripts.api.state_compute import is_content_done_legacy
-
-        assert is_content_done_legacy({}, {}) is False
-
 
 class TestGetPhasesForVersion:
     """get_phases_for_version returns correct phase dict per version."""
@@ -1227,3 +1167,143 @@ class TestYamlEscape:
         f.write_text('key: "value: with colon"\nother: "[brackets]"')
         result = read_yaml_file(f)
         assert result["key"] == "value: with colon"
+
+
+# ==================== v5 pipeline state handling (#814) ====================
+
+
+class TestCheckBuildPhaseV5:
+    """_check_build_phase handles v5 content phase."""
+
+    def test_v5_content_complete(self, tmp_path):
+        from scripts.api.state_build import _check_build_phase
+
+        (tmp_path / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {"content": {"status": "complete", "ts": "2026-03-01"}},
+        }))
+        built, ts = _check_build_phase(tmp_path)
+        assert built == 1
+        assert ts == "2026-03-01"
+
+    def test_v5_content_not_complete(self, tmp_path):
+        from scripts.api.state_build import _check_build_phase
+
+        (tmp_path / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {"research": {"status": "complete"}},
+        }))
+        built, ts = _check_build_phase(tmp_path)
+        assert built == 0
+        assert ts is None
+
+
+class TestComputeBuildStatusAllV5:
+    """compute_build_status_all counts v5 modules."""
+
+    def test_v5_module_counted_as_done(self, tmp_path):
+        from scripts.api.state_build import compute_build_status_all
+
+        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        (orch_dir / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {
+                "research": {"status": "complete"},
+                "content": {"status": "complete"},
+                "validate": {"status": "complete", "ts": "t1"},
+            },
+        }))
+
+        plan_slugs = [(1, "test-slug")]
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+
+        with (
+            patch("scripts.api.state_build.LEVELS", [level_cfg]),
+            patch("scripts.api.state_build.CURRICULUM_ROOT", tmp_path / "curriculum"),
+            patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
+        ):
+            result = compute_build_status_all()
+
+        assert result["tracks"]["a1"]["done"] == 1
+        assert result["tracks"]["a1"]["building"] == 0
+
+    def test_v5_running_module_counted_as_building(self, tmp_path):
+        from scripts.api.state_build import compute_build_status_all
+
+        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        (orch_dir / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {
+                "research": {"status": "complete"},
+                "content": {"status": "running"},
+            },
+        }))
+
+        plan_slugs = [(1, "test-slug")]
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+
+        with (
+            patch("scripts.api.state_build.LEVELS", [level_cfg]),
+            patch("scripts.api.state_build.CURRICULUM_ROOT", tmp_path / "curriculum"),
+            patch("scripts.api.state_build.get_plan_slugs", return_value=plan_slugs),
+        ):
+            result = compute_build_status_all()
+
+        assert result["tracks"]["a1"]["done"] == 0
+        assert result["tracks"]["a1"]["building"] == 1
+
+
+class TestComputeFinalReviewsV5:
+    """compute_final_reviews detects v5 modules pending review."""
+
+    def test_v5_validate_complete_is_pending(self, tmp_path):
+        from scripts.api.state_issues import compute_final_reviews
+
+        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        (track_dir / "review").mkdir(parents=True)
+        (orch_dir / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {"validate": {"status": "complete"}},
+        }))
+
+        plan_slugs = [(1, "test-slug")]
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+
+        with (
+            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
+            patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.api.state_issues.get_final_review_info", return_value=None),
+        ):
+            result = compute_final_reviews("a1", level_cfg)
+
+        assert result["pending_review"] == 1
+        assert result["pending_modules"][0]["slug"] == "test-slug"
+
+    def test_v5_validate_not_complete_not_pending(self, tmp_path):
+        from scripts.api.state_issues import compute_final_reviews
+
+        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        (orch_dir / "state.json").write_text(json.dumps({
+            "mode": "v5",
+            "phases": {"content": {"status": "complete"}},
+        }))
+
+        plan_slugs = [(1, "test-slug")]
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+
+        with (
+            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
+            patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.api.state_issues.get_final_review_info", return_value=None),
+        ):
+            result = compute_final_reviews("a1", level_cfg)
+
+        assert result["pending_review"] == 0
