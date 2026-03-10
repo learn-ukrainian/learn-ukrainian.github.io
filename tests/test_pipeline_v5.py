@@ -743,3 +743,71 @@ class TestModuleFilePaths:
 
 
 # TestGetTierExemplar — DELETED: exemplar system removed (commit 3f855ee)
+
+
+class TestPrefetchTextbookForResearch:
+    """_prefetch_textbook_for_research handles various plan shapes."""
+
+    def _make_ctx(self, plan=None, meta=None, topic_title="Test Topic",
+                  slug="test-slug", track="a1", module_num=47):
+        ctx = MagicMock()
+        ctx.plan = plan or {}
+        ctx.meta = meta or {}
+        ctx.topic_title = topic_title
+        ctx.slug = slug
+        ctx.track = track
+        ctx.module_num = module_num
+        ctx.content_outline = []
+        return ctx
+
+    def test_dict_vocabulary_hints(self):
+        """vocabulary_hints as dict (the real-world format) doesn't crash."""
+        from build.pipeline_v5 import _prefetch_textbook_for_research
+
+        plan = {
+            "vocabulary_hints": {
+                "required": ["читати/читай (to read)", "писати/пиши (to write)"],
+                "optional": ["слухати/слухай (to listen)"],
+            }
+        }
+        ctx = self._make_ctx(plan=plan)
+        # No rag module → ImportError → returns ""
+        with patch.dict("sys.modules", {"rag": None, "rag.query": None}):
+            result = _prefetch_textbook_for_research(ctx)
+        assert result == ""
+
+    def test_list_vocabulary_hints(self):
+        """vocabulary_hints as list (older format) doesn't crash."""
+        from build.pipeline_v5 import _prefetch_textbook_for_research
+
+        plan = {"vocabulary_hints": ["читати", "писати"]}
+        ctx = self._make_ctx(plan=plan)
+        with patch.dict("sys.modules", {"rag": None, "rag.query": None}):
+            result = _prefetch_textbook_for_research(ctx)
+        assert result == ""
+
+    def test_empty_plan(self):
+        """Empty plan doesn't crash."""
+        from build.pipeline_v5 import _prefetch_textbook_for_research
+
+        ctx = self._make_ctx(plan={})
+        with patch.dict("sys.modules", {"rag": None, "rag.query": None}):
+            result = _prefetch_textbook_for_research(ctx)
+        assert result == ""
+
+    def test_returns_formatted_results(self):
+        """When RAG returns hits, result is formatted correctly."""
+        from build.pipeline_v5 import _prefetch_textbook_for_research
+
+        ctx = self._make_ctx(plan={})
+        mock_hit = {"chunk_id": "c1", "source": "Заболотний Grade 5", "text": "Наказовий спосіб..."}
+
+        mock_search = MagicMock(return_value=[mock_hit])
+        mock_rag_query = MagicMock()
+        mock_rag_query.search_text = mock_search
+
+        with patch.dict("sys.modules", {"rag": MagicMock(), "rag.query": mock_rag_query}):
+            result = _prefetch_textbook_for_research(ctx)
+
+        assert "Textbook Excerpts" in result
+        assert "Заболотний Grade 5" in result

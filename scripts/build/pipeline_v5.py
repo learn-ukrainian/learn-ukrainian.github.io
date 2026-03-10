@@ -1579,14 +1579,23 @@ def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
         search_terms.append(topic)
 
     # Add Ukrainian keywords from plan vocabulary_hints
-    vocab_hints = ctx.plan.get("vocabulary_hints", [])
-    for vh in vocab_hints[:5]:
-        if isinstance(vh, dict):
-            word = vh.get("word", "")
-        else:
-            word = str(vh)
-        if word and any("\u0400" <= c <= "\u04ff" for c in word):
-            search_terms.append(word)
+    vocab_hints = ctx.plan.get("vocabulary_hints", {})
+    if isinstance(vocab_hints, dict):
+        # vocabulary_hints: {required: [...], optional: [...]}
+        hint_items = []
+        for v in vocab_hints.values():
+            if isinstance(v, list):
+                hint_items.extend(v[:3])
+    elif isinstance(vocab_hints, list):
+        hint_items = vocab_hints[:5]
+    else:
+        hint_items = []
+    for vh in hint_items[:5]:
+        word = vh.get("word", "") if isinstance(vh, dict) else str(vh)
+        # Extract first Ukrainian word from hint string like "читати/читай (to read)"
+        first_word = word.split("/")[0].split("(")[0].split(" ")[0].strip()
+        if first_word and any("\u0400" <= c <= "\u04ff" for c in first_word):
+            search_terms.append(first_word)
 
     # Add section titles from content outline
     for section in (ctx.content_outline or [])[:3]:
