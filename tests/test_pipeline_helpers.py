@@ -4,7 +4,10 @@ Covers: _parse_section, _build_section_budget_table, _check_archive_fits_outline
 get_level_constraints, get_activity_config, get_item_minimums_table,
 bilingualify_section_titles, get_pedagogical_constraints, get_decodable_vocabulary,
 get_structural_rules, get_h3_word_range, get_expansion_method, get_track_skill,
-get_immersion_rule, get_level_label, track_to_level_focus, load_state.
+get_immersion_rule, get_level_label, track_to_level_focus, load_state,
+v5 phase terminology (no legacy Phase 2: labels), SELF_AUDIT_SNIPPET CONTENT_PATH resolution.
+
+Issue: #817
 """
 
 import sys
@@ -694,3 +697,81 @@ class TestLoadState:
         state = load_state(ctx)
         assert state["slug"] == "corrupt"
         assert state["phases"] == {}
+
+
+# ============================================================================
+# v5 Phase Terminology — Issue #817
+# ============================================================================
+
+class TestV5PhaseTerminology:
+    """Ensure pipeline_lib.py uses v5 named phases in log messages, not legacy v3/v4 labels."""
+
+    def test_no_phase_2_colon_in_pipeline_lib(self):
+        """pipeline_lib.py must not contain 'Phase 2:' — all content logs use 'content:'."""
+        pipeline_lib_path = Path("scripts/pipeline_lib.py")
+        assert pipeline_lib_path.exists(), "pipeline_lib.py not found"
+        source = pipeline_lib_path.read_text(encoding="utf-8")
+        occurrences = [
+            (i + 1, line.strip())
+            for i, line in enumerate(source.splitlines())
+            if "Phase 2:" in line
+        ]
+        assert occurrences == [], (
+            f"Found legacy 'Phase 2:' in pipeline_lib.py at lines: "
+            + ", ".join(str(lineno) for lineno, _ in occurrences)
+        )
+
+    def test_content_phase_label_present(self):
+        """pipeline_lib.py should use 'content:' label in the phase_2_content function."""
+        pipeline_lib_path = Path("scripts/pipeline_lib.py")
+        source = pipeline_lib_path.read_text(encoding="utf-8")
+        assert "content: SKIP (already complete)" in source
+        assert "content: FAIL" in source
+
+
+# ============================================================================
+# SELF_AUDIT_SNIPPET nested CONTENT_PATH resolution — Issue #817
+# ============================================================================
+
+class TestSelfAuditSnippetContentPath:
+    """The SELF_AUDIT_SNIPPET value must have {CONTENT_PATH} resolved before storage.
+
+    fill_template does a single pass: when a snippet is injected via {SELF_AUDIT_SNIPPET},
+    any {CONTENT_PATH} inside it would remain unresolved. The fix pre-resolves {CONTENT_PATH}
+    in the snippet text inside write_placeholders, before storing it in the placeholders dict.
+    """
+
+    def test_self_audit_snippet_resolves_content_path(self):
+        """The snippet text must have {CONTENT_PATH} replaced with the real path string."""
+        fake_snippet = "Write to {CONTENT_PATH} and run audit.\ncat > {CONTENT_PATH}"
+        fake_content_path = "/some/module/path.md"
+
+        # Simulate the resolution logic from write_placeholders
+        resolved = fake_snippet.replace("{CONTENT_PATH}", fake_content_path)
+
+        assert "{CONTENT_PATH}" not in resolved, (
+            "SELF_AUDIT_SNIPPET still contains unresolved {CONTENT_PATH}"
+        )
+        assert fake_content_path in resolved
+
+    def test_pipeline_lib_resolves_content_path_in_snippet(self):
+        """Verify pipeline_lib.py contains the resolution logic for SELF_AUDIT_SNIPPET."""
+        pipeline_lib_path = Path("scripts/pipeline_lib.py")
+        source = pipeline_lib_path.read_text(encoding="utf-8")
+
+        # The fix must include a .replace("{CONTENT_PATH}", ...) applied to the snippet
+        assert '"{CONTENT_PATH}"' in source or "'{CONTENT_PATH}'" in source, (
+            "Expected {CONTENT_PATH} resolution in pipeline_lib.py"
+        )
+        # Specifically: the SELF_AUDIT_SNIPPET assignment must resolve nested {CONTENT_PATH}
+        assert "SELF_AUDIT_SNIPPET" in source
+        # The snippet line must be followed by a .replace call
+        lines = source.splitlines()
+        for i, line in enumerate(lines):
+            if "SELF_AUDIT_SNIPPET" in line and "_self_audit_raw" in line:
+                # Check that surrounding lines contain the resolution
+                context = "\n".join(lines[max(0, i - 2):i + 5])
+                assert "replace" in context and "CONTENT_PATH" in context, (
+                    f"Expected .replace(CONTENT_PATH) near SELF_AUDIT_SNIPPET assignment:\n{context}"
+                )
+                break

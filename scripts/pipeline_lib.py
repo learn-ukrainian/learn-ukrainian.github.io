@@ -2434,7 +2434,13 @@ def write_placeholders(ctx: ModuleContext) -> None:
     # Shared rules (injected into tier-specific prompts via placeholders)
     placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
-    placeholders["SELF_AUDIT_SNIPPET"] = _read_phase_file("_shared-self-audit.md")
+    # Resolve {CONTENT_PATH} inside the snippet so nested placeholders expand correctly.
+    # fill_template does a single pass; snippets included via {SELF_AUDIT_SNIPPET} would
+    # otherwise leave {CONTENT_PATH} unresolved in the final prompt.
+    _self_audit_raw = _read_phase_file("_shared-self-audit.md")
+    placeholders["SELF_AUDIT_SNIPPET"] = _self_audit_raw.replace(
+        "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
+    )
 
     # Lexical Sandbox (built by phase_sandbox, injected via ctx._lexical_sandbox)
     placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
@@ -2636,7 +2642,7 @@ def _build_phase2_expansion_prompt(
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     # A1/A2: no overshoot, just hit the target. B1+: 1.5x.
     overshoot = ctx.word_target if base_level in ('A1', 'A2') or had_truncation else int(ctx.word_target * 1.5)
-    return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
+    return f"""# content: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
 > **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
 
@@ -3061,15 +3067,15 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
 
 
 def phase_2_content(ctx: ModuleContext) -> bool:
-    """Phase 2: Content (whole-module, single Gemini call)."""
+    """content: Content (whole-module, single Gemini call)."""
     phase = "2"
     if is_phase_complete(ctx, phase):
-        log("  Phase 2: SKIP (already complete)")
+        log("  content: SKIP (already complete)")
         return True
 
     sections = ctx.content_outline
     if not sections:
-        log("  Phase 2: FAILED — no content_outline in meta")
+        log("  content: FAILED — no content_outline in meta")
         return False
     # Ensure bilingual section titles for early A1 (idempotent)
     sections = bilingualify_section_titles(sections, ctx.track, ctx.module_num)
@@ -3087,7 +3093,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     overshoot = ctx.word_target if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
 
-    log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
+    log(f"  content: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
     # Tier-based content prompt dispatch
     content_template_name = _get_content_template(
@@ -3099,9 +3105,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not template.exists():
         # Fallback to monolithic prompt
         template = PHASES_DIR / "phase-2-content.md"
-        log(f"  Phase 2: Tier template {content_template_name} not found, falling back to phase-2-content.md")
+        log(f"  content: Tier template {content_template_name} not found, falling back to phase-2-content.md")
     else:
-        log(f"  Phase 2: Using tier template: {content_template_name}")
+        log(f"  content: Using tier template: {content_template_name}")
     placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
     prompt_file = ctx.orch_dir / "phase-2-prompt.md"
 
@@ -3130,7 +3136,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                         _error_lines.append(_rline)
             if len(_error_lines) > 1:
                 research_errors = "\n".join(_error_lines).strip()
-                log(f"  Phase 2: Extracted {len(_error_lines)-1} research error line(s) for content prompt")
+                log(f"  content: Extracted {len(_error_lines)-1} research error line(s) for content prompt")
         except Exception:
             pass
 
@@ -3157,7 +3163,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         return False
 
     if ctx.dry_run:
-        log("  Phase 2: DRY-RUN — would dispatch whole-module content generation")
+        log("  content: DRY-RUN — would dispatch whole-module content generation")
         return True
 
     MAX_P2_ATTEMPTS = 3
@@ -3174,20 +3180,20 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             current_words = len(current_text.split())
             # Skip expand if content already meets or exceeds word target
             if current_words >= ctx.word_target:
-                log(f"  Phase 2: word count {current_words} >= target {ctx.word_target}, skipping expand")
+                log(f"  content: word count {current_words} >= target {ctx.word_target}, skipping expand")
                 mark_phase(ctx, phase, "complete", words=current_words, attempts=attempt - 1)
                 return True
             deficit = ctx.word_target - current_words
             had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
             if had_truncation:
-                log(f"  Phase 2: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
+                log(f"  content: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
             expand_prompt = _build_phase2_expansion_prompt(
                 ctx, current_text, current_words, deficit, had_truncation
             )
             expand_prompt_file = ctx.orch_dir / f"phase-2-expand-{attempt}.md"
             expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
             dispatch_file = expand_prompt_file
-            log(f"  Phase 2: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
+            log(f"  content: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
         else:
             dispatch_file = prompt_file
 
@@ -3199,7 +3205,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             allow_write=True, timeout=1200,
         )
         if not ok:
-            log(f"  Phase 2: Dispatch failed (attempt {attempt})")
+            log(f"  content: Dispatch failed (attempt {attempt})")
             continue
 
         content_text = None
@@ -3210,13 +3216,13 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             if friction:
                 friction_file = ctx.orch_dir / f"phase-2-friction-{attempt}.md"
                 friction_file.write_text(friction, encoding="utf-8")
-                log(f"  Phase 2: Friction report saved → {friction_file.name}")
+                log(f"  content: Friction report saved → {friction_file.name}")
                 is_real_truncation = (
                     "TOKEN_LIMIT_TRUNCATION" in friction
                     and "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION" not in friction
                 )
                 if is_real_truncation:
-                    log("  Phase 2: ⚠ Gemini reported token limit truncation")
+                    log("  content: ⚠ Gemini reported token limit truncation")
                 last_friction = friction if is_real_truncation else last_friction
 
             # Extract self-audit result if Gemini ran audit in-session
@@ -3225,7 +3231,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                 sa_file = ctx.orch_dir / f"self-audit-output-{attempt}.md"
                 sa_file.write_text(self_audit, encoding="utf-8")
                 sa_passed = "status: PASS" in self_audit or "status:PASS" in self_audit
-                log(f"  Phase 2: Self-audit {'PASSED' if sa_passed else 'FAILED'} → {sa_file.name}")
+                log(f"  content: Self-audit {'PASSED' if sa_passed else 'FAILED'} → {sa_file.name}")
                 if sa_passed:
                     ctx._self_audited = True  # type: ignore[attr-defined]
 
@@ -3233,9 +3239,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             # Fallback: Gemini may have written directly to CONTENT_PATH via allow_write
             if content_path.exists() and content_path.stat().st_size > 100:
                 content_text = content_path.read_text(encoding="utf-8")
-                log(f"  Phase 2: No delimiters, but Gemini wrote {content_path.name} directly ({len(content_text.split())}w)")
+                log(f"  content: No delimiters, but Gemini wrote {content_path.name} directly ({len(content_text.split())}w)")
             else:
-                log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
+                log(f"  content: No delimited content extracted (attempt {attempt})")
                 continue
 
         content_path.write_text(content_text, encoding="utf-8")
@@ -3244,7 +3250,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         save_gemini_session(ctx.orch_dir, label=f"phase-2-attempt-{attempt}")
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
-        log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
+        log(f"  content: {total_words} words written ({pct}% of {ctx.word_target} target)")
 
         # Full-build mode: extract activities + vocabulary from same response
         if getattr(ctx, "full_build", False) and raw:
@@ -3260,14 +3266,14 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_text(text, encoding="utf-8")
                     (ctx.orch_dir / orch_name).write_text(text, "utf-8")
-                    log(f"  Phase 2: {label} extracted from full-build → {target.name}")
+                    log(f"  content: {label} extracted from full-build → {target.name}")
 
         if total_words >= ctx.word_target * 0.75:
             mark_phase(ctx, phase, "complete", words=total_words, attempts=attempt)
             return True
-        log(f"  Phase 2: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
+        log(f"  content: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
 
-    log(f"  Phase 2: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
+    log(f"  content: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
     return False
 
 
@@ -3288,9 +3294,9 @@ def phase_B_content(ctx: ModuleContext) -> bool:
         for k in downstream:
             del state_phases[k]
         save_state(ctx)
-        log(f"  Phase 2: RESET (--refresh flag, cleared {len(downstream)} phases)")
+        log(f"  content: RESET (--refresh flag, cleared {len(downstream)} phases)")
     elif is_phase_complete(ctx, phase):
-        log("  Phase 2: SKIP (already complete)")
+        log("  content: SKIP (already complete)")
         return True
 
     content_path = ctx.paths["md"]
@@ -3306,19 +3312,19 @@ def phase_B_content(ctx: ModuleContext) -> bool:
                     if info and info.get("content_alignment", {}).get("refresh_recommended"):
                         refresh_needed = True
                         reasons = info["content_alignment"].get("reasons", [])
-                        log("  Phase 2: Research-content misalignment detected")
+                        log("  content: Research-content misalignment detected")
                         for r in reasons:
                             log(f"    - {r}")
                 except ImportError:
                     pass
             if refresh_needed and getattr(ctx, "refresh", False):
-                log("  Phase 2: --refresh flag set — regenerating prose from research")
+                log("  content: --refresh flag set — regenerating prose from research")
             elif refresh_needed:
-                log("  Phase 2: ADOPT (use --refresh to regenerate from updated research)")
+                log("  content: ADOPT (use --refresh to regenerate from updated research)")
                 mark_phase(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
                 return True
             else:
-                log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                log(f"  content: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
                 mark_phase(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
                 return True
 
@@ -3326,11 +3332,11 @@ def phase_B_content(ctx: ModuleContext) -> bool:
         fits, matched, missing = _check_archive_fits_outline(ctx)
         archive_source = getattr(ctx, "archive_source", "unknown")
         if fits:
-            log(f"  Phase 2: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
+            log(f"  content: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
             if missing:
-                log(f"  Phase 2: Missing sections (will be caught in Phase 3): {', '.join(missing)}")
+                log(f"  content: Missing sections (will be caught in activities): {', '.join(missing)}")
             if ctx.dry_run:
-                log(f"  Phase 2: DRY-RUN — would restore from archive ({archive_source})")
+                log(f"  content: DRY-RUN — would restore from archive ({archive_source})")
                 return True
             archive_dir = getattr(ctx, "archive_dir", None)
             if restore_from_archive(ctx, archive_dir):
@@ -3340,13 +3346,13 @@ def phase_B_content(ctx: ModuleContext) -> bool:
                            sections_missing=len(missing))
                 return True
             else:
-                log("  Phase 2: Archive restore FAILED — falling back to generation")
+                log("  content: Archive restore FAILED — falling back to generation")
         else:
-            log(f"  Phase 2: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
-            log("  Phase 2: Generating fresh prose instead")
+            log(f"  content: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
+            log("  content: Generating fresh prose instead")
 
     if ctx.dry_run and not ctx.content_outline:
-        log("  Phase 2: DRY-RUN — would generate prose (outline depends on Phase 1)")
+        log("  content: DRY-RUN — would generate prose (outline depends on research)")
         return True
 
     return phase_2_content(ctx)
