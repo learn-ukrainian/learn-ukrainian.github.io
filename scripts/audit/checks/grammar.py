@@ -53,21 +53,22 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
 
     # Check forbidden cases at A1
     if level_code == 'A1':
-        # Check for Dative
+        # Dative at A1: INFO only (not a blocking violation).
+        # Dative pronouns (мені, тобі) appear naturally in commands/requests.
+        # Formal teaching happens at A2, but incidental exposure is fine.
         for pattern in CASE_PATTERNS['dative']:
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
                 for match in matches[:3]:
-                    # Filter out nominative plural adjectives that happen to match -ові pattern
                     if match.lower() in NOMINATIVE_PLURAL_EXCLUSIONS:
                         continue
-                    # Filter out fixed phrases taught at A1 (e.g., "Бажаю тобі щастя")
                     if is_fixed_phrase(match, text, FIXED_PHRASES_DATIVE):
                         continue
                     violations.append({
-                        'type': 'GRAMMAR',
-                        'issue': f"Dative case used at A1: '{match}'",
-                        'fix': "Dative case not allowed until A2 (M31+). Restructure sentence."
+                        'type': 'INFO',
+                        'issue': f"Dative case used at A1: '{match}' (taught formally at A2)",
+                        'fix': "No action needed — incidental dative exposure is acceptable.",
+                        'blocking': False,
                     })
 
         # Check for Instrumental

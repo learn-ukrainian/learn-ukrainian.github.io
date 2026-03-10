@@ -234,7 +234,7 @@ STAGE_ORDER = {
 # Enforced by check_activity_complexity()
 ACTIVITY_COMPLEXITY = {
     'quiz': {
-        'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 8},
+        'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         'A2': {'min_len': 5, 'max_len': 15, 'options': [4], 'min_items': 8},  # Lowered min_len to 5: short quiz prompts are valid
         'B1': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len from 9→5: short quiz prompts are valid at B1
         'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
@@ -252,7 +252,7 @@ ACTIVITY_COMPLEXITY = {
         'bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
-        'A1': {'pairs_min': 8, 'pairs_max': 20, 'min_items': 8},
+        'A1': {'pairs_min': 6, 'pairs_max': 20, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         'A2': {'pairs_min': 8, 'pairs_max': 14, 'min_items': 8},  # Feb 2026: relaxed from 10-12 — same floor as A1
         'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
@@ -260,7 +260,7 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'pairs_min': 10, 'pairs_max': 18, 'min_items': 6},
     },
     'fill-in': {
-        'A1': {'sent_min': 3, 'sent_max': 5, 'min_items': 8},
+        'A1': {'sent_min': 3, 'sent_max': 5, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         'A2': {'sent_min': 6, 'sent_max': 8, 'min_items': 8},  # CEFR: smooth +3 from A1
         'B1': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
         'B1-vocab': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
@@ -272,7 +272,7 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'sent_min': 13, 'sent_max': 20, 'min_items': 6},  # CEFR: smooth +2 from C1 (was 10)
     },
     'true-false': {
-        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
+        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         'A2': {'min_len': 6, 'max_len': 12, 'min_items': 8},  # CEFR: smooth +2 from A1
         'B1': {'min_len': 8, 'max_len': 18, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
         'B1-vocab': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
@@ -304,7 +304,7 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # CEFR: smooth +2 from C1
     },
     'anagram': {
-        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
+        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         # Not allowed A2+
     },
     'error-correction': {
@@ -1446,7 +1446,7 @@ def get_a1_immersion_range(
     elif module_num <= 20:
         min_imm, max_imm = (25, 45)  # Foundation established
     else:
-        min_imm, max_imm = (30, 55)  # Consolidation (was 35; grammar modules need English for rules)
+        min_imm, max_imm = (25, 55)  # Consolidation (was 30→25; grammar modules need English for rule explanations)
 
     # Adaptive floor: reduce minimum when sandbox is small to avoid repetition.
     # Grammar modules typically have 20-35 lemmas but need mostly English for

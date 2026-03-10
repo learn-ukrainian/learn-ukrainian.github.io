@@ -62,7 +62,7 @@
     # Grammar: instrumental case "крилом/рядном", past perfective — B1
     source: "Вашуленко, 3 клас"
 
-  - text: "Сестра́ бра́та наздогання́є, а він од не́ї тіка́є."
+  - text: "Сестра́ бра́та наздоганя́є, а він од не́ї тіка́є."
     answer: "день і ніч"
     themes: [природа, час]
     difficulty: A2
@@ -446,7 +446,7 @@
     # Grammar: future perfective, negation — A2
     source: "Савченко, 3 клас"
 
-  - text: "Сло́во че́мне, ко́жному прие́мне."
+  - text: "Сло́во че́мне, ко́жному приє́мне."
     theme: слово
     difficulty: A1
     source: "Савченко, 3 клас"
