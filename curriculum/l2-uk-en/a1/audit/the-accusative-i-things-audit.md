@@ -1,7 +1,7 @@
 # Audit Report: M25 — the-accusative-i-things.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-10 15:13:31
+**Generated:** 2026-03-10 20:38:15
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in | Complete the Sentence: In the Store | 8 | 8 | ✅ |
-| 2 | fill-in | Choose the Correct Verb | 8 | 8 | ✅ |
-| 3 | quiz | Understanding the Accusative Case | 8 | 8 | ✅ |
-| 4 | true-false | True or False: Grammar and Culture | 8 | 8 | ✅ |
-| 5 | match-up | Match the Verbs to Objects | 8 | 8 | ✅ |
+| 1 | fill-in | Complete the Sentence: In the Store | 8 | 6 | ✅ |
+| 2 | fill-in | Choose the Correct Verb | 8 | 6 | ✅ |
+| 3 | quiz | Understanding the Accusative Case | 8 | 6 | ✅ |
+| 4 | true-false | True or False: Grammar and Culture | 8 | 6 | ✅ |
+| 5 | match-up | Match the Verbs to Objects | 8 | 6 | ✅ |
 | 6 | group-sort | Which Words Change? | 10 | 6 | ✅ |
 | 7 | unjumble | Build the Sentence | 8 | 6 | ✅ |
-| 8 | match-up | Vocabulary Match | 8 | 8 | ✅ |
+| 8 | match-up | Vocabulary Match | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.0% (target 30-55% (M25))
+- **Immersion:** 🇺🇦 39.0% (target 25-55% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

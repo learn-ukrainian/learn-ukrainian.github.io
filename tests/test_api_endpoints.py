@@ -320,8 +320,8 @@ class TestGetOrchestrationInfo:
 
         orch = tmp_path / "orch"
         orch.mkdir()
-        (orch / "phase-1-research.json").write_text("{}")
-        (orch / "phase-2-content.json").write_text("{}")
+        (orch / "research-output.json").write_text("{}")
+        (orch / "content-output.json").write_text("{}")
         info = _get_orchestration_info(orch)
         assert len(info["orchestration"]) == 2
         assert info["friction_count"] == 0

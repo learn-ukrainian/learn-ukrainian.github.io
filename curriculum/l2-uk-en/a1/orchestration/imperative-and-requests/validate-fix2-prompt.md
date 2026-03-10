@@ -19,12 +19,6 @@ The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: pe
 
 
 
-## Lexical Sandbox (allowed Ukrainian vocabulary)
-
-This module's verified vocabulary: **я, ти, він, вона, воно, ми, ви, вони, хто, людина, слово, мова, день, час, той, цей, який, читати, писати, сказати, дати, іти, слухати, дивитися, стояти, показати, допомогти, взяти, чекати, це, та, так, ні, не, дуже, тут, там, ось, також, ще, вже, теж, тільки, і, а, але, або, що, як, бо, в, у, на, з, до, для, по, де, коли, чому, DATIVE CASE FORBIDDEN, INSTRUMENTAL CASE FORBIDDEN, Max 10 words per Ukrainian sentence, No subordinate clauses, MANDATORY**
-
-**CRITICAL**: When adding or modifying Ukrainian text, use ONLY words from this list plus basic function words (pronouns, prepositions, conjunctions, numbers). Do NOT introduce new content words not in this sandbox.
-
 
 ## Immersion Rules
 

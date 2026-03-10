@@ -581,7 +581,7 @@ def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Level-aware structural rules for phase-2 content
+# Level-aware structural rules for content phase
 # ---------------------------------------------------------------------------
 
 
@@ -626,7 +626,7 @@ def _get_checkpoint_guidance(ctx) -> str:
 
 
 def _get_writing_tone(track: str, module_num: int) -> str:
-    """Return level-appropriate tone/verbosity instruction for phase-2."""
+    """Return level-appropriate tone/verbosity instruction for content phase."""
     base = track.split("-")[0]
     if base == "a1" and module_num <= 4:
         return (
@@ -651,7 +651,7 @@ def _get_writing_tone(track: str, module_num: int) -> str:
 
 
 def get_structural_rules(track: str, module_num: int) -> str:
-    """Return level-appropriate content structure rules for phase-2.
+    """Return level-appropriate content structure rules for content phase.
 
     Early A1 cannot meet B1+ structural depth expectations (80-100 words per H3,
     4-part concept blocks, 5+ format variety). This function returns rules
@@ -769,7 +769,7 @@ def get_structural_rules(track: str, module_num: int) -> str:
 
 
 def get_h3_word_range(track: str, module_num: int) -> str:
-    """Return the H3 word range string for the phase-2 template."""
+    """Return the H3 word range string for the content template."""
     base = track.split("-")[0]
     if base == "a1" and module_num <= 4:
         return "30-50"
@@ -782,7 +782,7 @@ def get_h3_word_range(track: str, module_num: int) -> str:
 
 
 def get_expansion_method(track: str, module_num: int) -> str:
-    """Return level-appropriate expansion guidance for phase-2."""
+    """Return level-appropriate expansion guidance for content phase."""
     base = track.split("-")[0]
     if base == "a1" and module_num <= 4:
         return (
@@ -1321,16 +1321,16 @@ def _phase_state_ids(phase_id: str) -> list[str]:
 
 
 PHASE_ARTIFACT_PATTERNS: dict[str, list[str]] = {
-    "0":    ["phase-0-*"],
-    "0.5":  ["phase-0-5-*"],
+    "0":    ["research-*", "phase-0-*"],
+    "0.5":  ["discovery*", "phase-0-5-*"],
     "1":    ["phase-1-*"],
-    "2":    ["phase-2-*"],
-    "3":    ["phase3-*", "phase-3-*", "phase-3a-*", "phase-3b-*"],
-    "4ab":  ["phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*", "phase-4-*"],
-    "6":    ["phase-6-*"],
+    "2":    ["content-*", "phase-2-*"],
+    "3":    ["activities-*", "phase-3-*", "phase3-*", "phase-3a-*", "phase-3b-*"],
+    "4ab":  ["validate-*", "phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*", "phase-4-*"],
+    "6":    ["review-*", "phase-6-*"],
     "6b":   ["phase-6b-*"],
     "5":    ["phase5-*", "phase-5-*"],
-    "7":    ["phase7-*", "phase-7-*"],
+    "7":    ["final-review*", "phase7-*", "phase-7-*"],
     "8":    ["phase-8-*", "phase8-*"],
 }
 
@@ -2228,7 +2228,7 @@ def _get_content_template(track: str, module_num: int,
     if tier == "beginner":
         return "beginner-content.md"
     if tier == "seminar":
-        return "phase-2-content.md"
+        return "content.md"
     return "core-content.md"
 
 
@@ -2239,7 +2239,7 @@ def _get_activities_template(track: str, module_num: int) -> str:
     if tier == "beginner":
         return "beginner-activities.md"
     if tier == "seminar":
-        return "phase-3-activities.md"
+        return "activities.md"
     return "core-activities.md"
 
 
@@ -2329,7 +2329,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
         ),
         "TIER_EXEMPLAR": "",  # Removed — structural rules work better than exemplars
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
-        "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
+        "D1_OUTPUT_FORMAT": _read_phase_file("review-output-format.md"),
         "SCORING_SECTION": _get_scoring_section(ctx.track),
         "SCORING_OUTPUT_TABLE": _get_scoring_output_table(ctx.track),
     }
@@ -2661,7 +2661,7 @@ You need to add approximately **{deficit} more words** of substantive content.
 
 ## Your Task
 
-Read the current content file at `{ctx.paths["md"]}` and the original prompt at `{ctx.orch_dir / "phase-2-prompt.md"}`.
+Read the current content file at `{ctx.paths["md"]}` and the original prompt at `{ctx.orch_dir / "content-prompt.md"}`.
 
 **Rewrite the ENTIRE module** with expanded content. Every H3 subsection needs:
 - Substantive explanatory prose (not just headings and bullet points)
@@ -3130,12 +3130,12 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     template = PHASES_DIR / content_template_name
     if not template.exists():
         # Fallback to monolithic prompt
-        template = PHASES_DIR / "phase-2-content.md"
-        log(f"  content: Tier template {content_template_name} not found, falling back to phase-2-content.md")
+        template = PHASES_DIR / "content.md"
+        log(f"  content: Tier template {content_template_name} not found, falling back to content.md")
     else:
         log(f"  content: Using tier template: {content_template_name}")
     placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
-    prompt_file = ctx.orch_dir / "phase-2-prompt.md"
+    prompt_file = ctx.orch_dir / "content-prompt.md"
 
     word_target_tokens = ctx.word_target * 2 // 1000
     primary_sources = _prefetch_sources_for_phase_B(ctx)
@@ -3217,7 +3217,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             expand_prompt = _build_phase2_expansion_prompt(
                 ctx, current_text, current_words, deficit, had_truncation
             )
-            expand_prompt_file = ctx.orch_dir / f"phase-2-expand-{attempt}.md"
+            expand_prompt_file = ctx.orch_dir / f"content-expand-{attempt}.md"
             expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
             dispatch_file = expand_prompt_file
             log(f"  content: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
@@ -3241,7 +3241,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
             friction = _extract_delimited_content(raw, "===FRICTION_START===", "===FRICTION_END===")
             if friction:
-                friction_file = ctx.orch_dir / f"phase-2-friction-{attempt}.md"
+                friction_file = ctx.orch_dir / f"content-friction-{attempt}.md"
                 friction_file.write_text(friction, encoding="utf-8")
                 log(f"  content: Friction report saved → {friction_file.name}")
                 is_real_truncation = (
@@ -3273,8 +3273,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
         content_path.write_text(content_text, encoding="utf-8")
         # Save extracted content + session to orchestration dir for traceability
-        (ctx.orch_dir / f"phase-2-output-{attempt}.md").write_text(content_text, encoding="utf-8")
-        save_gemini_session(ctx.orch_dir, label=f"phase-2-attempt-{attempt}")
+        (ctx.orch_dir / f"content-output-{attempt}.md").write_text(content_text, encoding="utf-8")
+        save_gemini_session(ctx.orch_dir, label=f"content-attempt-{attempt}")
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
         log(f"  content: {total_words} words written ({pct}% of {ctx.word_target} target)")
@@ -3283,9 +3283,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         if getattr(ctx, "full_build", False) and raw:
             for path_key, start, end, orch_name, label in (
                 ("activities", "===ACTIVITIES_START===", "===ACTIVITIES_END===",
-                 "phase-C-output-activities.yaml", "Activities"),
+                 "activities-output.yaml", "Activities"),
                 ("vocabulary", "===VOCABULARY_START===", "===VOCABULARY_END===",
-                 "phase-C-output-vocabulary.yaml", "Vocabulary"),
+                 "activities-output-vocabulary.yaml", "Vocabulary"),
             ):
                 text = _extract_delimited_content(raw, start, end)
                 target = ctx.paths.get(path_key) if text else None
@@ -3428,7 +3428,7 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
     final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
     write_review_with_hash(final_review_path, report, ctx.paths["md"])
     log(f"  Phase 9: Report saved → {final_review_path.name}")
-    orch_report = ctx.orch_dir / "phase-9-final-review.md"
+    orch_report = ctx.orch_dir / "final-review.md"
     orch_report.write_text(report, encoding="utf-8")
 
     if "===FIX_START===" in report:

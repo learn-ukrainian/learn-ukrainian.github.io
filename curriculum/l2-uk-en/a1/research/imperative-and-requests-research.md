@@ -2,43 +2,43 @@
 
 ## State Standard Reference
 §4.2.4.2: "Imperative mood — 2nd person only at A1"
-Alignment: This module directly addresses the standard by introducing 2nd person singular (ти) and plural/polite (ви) imperative forms for foundational communicative verbs.
+Alignment: This module strictly adheres to teaching the 2nd person singular (ти) and plural/formal (ви) imperative forms, focusing on the core 8 verbs required for basic communication and classroom management.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| читай / читайте | Regular formation, classroom staple | Читайте текст; Прочитай і розкажи (from textbook) |
-| пиши / пишіть | Regular formation | Пишіть у зошиті; Напиши записку (from textbook) |
-| скажи / скажіть | Perfective, к→ж consonant mutation | Скажіть, будь ласка; Краще скажи мені вголос (from textbook) |
-| дай / дайте | Irregular short stem, highly frequent | Дайте, будь ласка; Дай мені |
-| іди / ідіть | Basic movement command | Ідіть сюди; Іди прямо |
-| дивись / дивіться | Visual attention | Дивіться на дошку; Дивись туди |
-| слухай / слухайте | Auditory attention | Слухайте уважно; Послухай мене |
-| стій / стійте | Stem vowel change | Стійте!; Стій там |
+| читай(те) | Regular formation. Extremely common in class. | Читайте текст. |
+| пиши(те) | Regular formation. | Пишіть у зошиті. |
+| скажи(те) | Irregular: consonant mutation (к→ж). | Скажіть, будь ласка. |
+| дай(те) | Irregular short stem. High frequency in daily life. | Дайте, будь ласка. |
+| іди/ідіть | Core motion verb. | Ідіть сюди. |
+| слухай(те) | Regular formation. | Слухайте уважно! |
+| дивись/дивіться | Needs attention to the reflexive -ся/-сь ending. | Дивіться на дошку! |
+| стій(те) | Irregular vowel change in stem. | Стійте! |
 
 ## Cultural Hooks
-1. **Classroom Etiquette**: Ukrainian education relies heavily on direct pedagogical commands. Textbooks constantly use imperatives to guide students: "Прочитай і розкажи" (Read and tell), "Запиши відповіді" (Write down the answers).
-2. **Respecting Shared Objects**: Textbook rules instill values using commands and prohibitions: "Книжки треба шанувати. Не можна їх бруднити, рвати" (Books must be respected. You cannot dirty or tear them). This forms a natural basis for negative imperatives (Не брудни! Не рви!).
-3. **Modern vs. Traditional Communication**: Textbooks contrast writing physical notes with modern tech: "Напиши записку" (Write a note) vs. "Надішлю смс-повідомлення" (I will send an SMS), providing relatable context for writing commands.
+1. **Modern Music**: The song "Історія України за 5 хвилин" by TNMK is featured in the 7th-grade Ukrainian curriculum. The chorus perfectly highlights the singular imperative: "Подивись наліво, подивись направо — Це твоя земля, це твоя держава!"
+2. **School Culture**: Ukrainian textbooks (e.g., 6th grade) often have students create a «Кодекс поведінки в класі» (Code of Conduct) using imperative forms: "Слухай уважно", "Виявляй ініціативу".
+3. **Fairy Tales**: Classic tales like "Котигорошко" rely heavily on commands to drive the plot, as seen in textbook excerpts: "піди до коваля, викуй мені булаву".
 
 ## Common Learner Errors
-1. **Infinitive as Command** → "Читати текст!" instead of "Читайте текст!" — Because English uses the base verb form for commands (Read!), learners mistakenly use the Ukrainian infinitive (-ти).
-2. **Omission of Politeness Markers** → "Дай каву!" instead of "Дайте, будь ласка, каву." — Failing to upgrade to the "ви" form and omitting "будь ласка" makes the learner sound rude in service contexts.
-3. **Applying Regular Rules to Irregular Stems** → "Сказай" instead of "Скажи" — Learners try to drop "-ти" and add "-й" to verbs with consonant mutations (сказати) or irregular stems (дати).
+1. **Infinitive instead of Imperative**: Learners often say "Читати!" instead of "Читай(те)!" when trying to issue a command. Textbook exercises directly target this by requiring students to convert infinitives in brackets into active commands.
+2. **Ignoring Stem Mutations**: English speakers might try to form regular commands from irregular verbs, leading to errors like *сказай* instead of "скажи", or *даїть* instead of "дайте".
+3. **Register Mismatch**: Mixing informal and formal registers, such as saying "Вибачте" (formal) but following it with "дай мені" (informal). 
 
 ## Cross-References
-- Builds on: a1-46 (Must and Want)
-- Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
+- Builds on: a1-46 (Must and Want) - understanding basic verb concepts before moving to commands.
+- Prepares for: a1-48 (Body and Health) - useful for doctor's commands ("Open your mouth," "Breathe").
 
 ## Teaching Strategy
-- **Discovery exercise**: Present a matching activity with textbook icons (a pencil, an ear, an eye, a book) alongside common teacher instructions ("Пишіть!", "Слухайте!", "Дивіться!", "Читайте!"). Let learners deduce that the "-те" ending signifies a command addressed to the class.
-- **Best context**: The classroom environment (teacher to students) is the most natural setting for direct commands. For polite requests, simulated café or street direction scenarios work best.
-- **Contrastive pairs**: Present side-by-side examples of "Ти" vs "Ви" (Читай текст vs Читайте текст) to solidify the social distinction. Contrast direct commands with polite requests (Дай vs Дайте, будь ласка).
+- **Discovery exercise**: Use the excerpt from the TNMK song ("Подивись наліво, подивись направо"). Ask learners: "Who is the singer talking to? One person or many? How do you know?" Then contrast it with a teacher saying "Дивіться на дошку" to a full class.
+- **Best context**: The classroom environment is the most immediate and authentic setting for a beginner. "Read," "write," "listen," and "look" are commands the learner experiences constantly.
+- **Contrastive pairs**: Present side-by-side examples of "Ти" vs "Ви" to highlight the polite/plural suffix: Читай! (to a friend) vs Читайте! (to a teacher/group).
 
 ## Notes for Content Writing
-- Strict adherence to A1 grammar limits: no Dative, no Instrumental. Use Nominative/Accusative.
-- Perfective aspect is explicitly permitted here (скажи, дай). Treat them as lexical items rather than explaining the aspectual system.
-- Maintain structural containment for immersion (English paragraphs, Ukrainian in boxes/lists). Keep Ukrainian sentences under 10 words.
+- Keep explanations simple. Do not dive into 1st or 3rd person imperatives (хай/нехай), as they are reserved for A2. 
+- Ensure that the reflexive ending on "дивитися" (дивись/дивіться) is clearly modeled so learners understand where the -сь/-ся goes in a command.
+- Emphasize that "будь ласка" is the golden rule for softening any of these commands to avoid sounding rude.
 
 ## Resource Discovery
 

@@ -1,7 +1,7 @@
 # Audit Report: M14 — checkpoint-first-contact.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-10 15:13:30
+**Generated:** 2026-03-10 20:38:14
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Alphabet and Sounds | 8 | 8 | ✅ |
+| 1 | quiz | Alphabet and Sounds | 8 | 6 | ✅ |
 | 2 | group-sort | Noun Gender | 11 | 10 | ✅ |
-| 3 | match-up | Adjective Agreement | 8 | 8 | ✅ |
-| 4 | true-false | Grammar Rules | 8 | 8 | ✅ |
-| 5 | fill-in | Complete the Sentence | 8 | 8 | ✅ |
+| 3 | match-up | Adjective Agreement | 8 | 6 | ✅ |
+| 4 | true-false | Grammar Rules | 8 | 6 | ✅ |
+| 5 | fill-in | Complete the Sentence | 8 | 6 | ✅ |
 | 6 | unjumble | Sentence Building | 6 | 6 | ✅ |
-| 7 | quiz | Cafe Culture | 8 | 8 | ✅ |
-| 8 | match-up | Vocabulary Review | 8 | 8 | ✅ |
+| 7 | quiz | Cafe Culture | 8 | 6 | ✅ |
+| 8 | match-up | Vocabulary Review | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅

@@ -1,7 +1,7 @@
 # Audit Report: M15 — the-living-verb-i.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-10 15:13:30
+**Generated:** 2026-03-10 20:38:14
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,15 +19,15 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Match the Pronoun to the Verb Form | 8 | 8 | ✅ |
-| 2 | quiz | Check Your Knowledge: Meanings | 8 | 8 | ✅ |
-| 3 | fill-in | Complete the Sentence with the Correct Verb Form | 8 | 8 | ✅ |
-| 4 | true-false | Grammar Rules: True or False? | 8 | 8 | ✅ |
+| 1 | match-up | Match the Pronoun to the Verb Form | 8 | 6 | ✅ |
+| 2 | quiz | Check Your Knowledge: Meanings | 8 | 6 | ✅ |
+| 3 | fill-in | Complete the Sentence with the Correct Verb Form | 8 | 6 | ✅ |
+| 4 | true-false | Grammar Rules: True or False? | 8 | 6 | ✅ |
 | 5 | unjumble | Put the Words in Order | 8 | 6 | ✅ |
 | 6 | group-sort | Sort the Verb Forms | 12 | 6 | ✅ |
-| 7 | match-up | Match the Verb to the Object | 8 | 8 | ✅ |
-| 8 | fill-in | Find the Missing Pronoun | 8 | 8 | ✅ |
-| 9 | quiz | Quick Translation Quiz | 8 | 8 | ✅ |
+| 7 | match-up | Match the Verb to the Object | 8 | 6 | ✅ |
+| 8 | fill-in | Find the Missing Pronoun | 8 | 6 | ✅ |
+| 9 | quiz | Quick Translation Quiz | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 9 (target: 8-12) ✅

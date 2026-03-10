@@ -10,7 +10,7 @@ Not covered:
 >
 > To navigate daily life, you need to know how to ask people to do things. The imperative mood allows you to give direct instructions, offer advice, or make requests effectively.
 
-## Наказовий спосіб
+## Наказовий спосіб (Imperative mood)
 
 > **(На вулиці / On the street)**
 > — **Добрий день! Скажіть, будь ласка, де тут метро?** — Good day! Please tell me, where is the metro here?
@@ -19,7 +19,7 @@ Not covered:
 > — **Банк там. Ідіть туди.** — The bank is there. Go there.
 > — **Дуже дякую!** — Thank you very much!
 
-<!-- adapted from: Літвінова Grade 7, вправа 79 -->
+<!-- adapted from: Заболотний Grade 7, вправа 79 -->
 
 Use the imperative mood to tell someone to do something directly. In Ukrainian, commands have distinct endings depending on who you are talking to. 
 
@@ -46,7 +46,7 @@ Do not use the full infinitive form when trying to give a command. Saying ~~**Ч
 > [!tip] Watch the Endings
 > The final letter of the verb stem usually determines whether the command will end in **-й** or **-и**.
 
-## Вісім обов'язкових дієслів
+## Вісім обов'язкових дієслів (Eight required verbs)
 
 > **(На уроці / In the classroom)**
 > — **Добрий ранок, студенти. Читайте текст тут. Дивіться на дошку!** — Good morning, students. Read the text here. Look at the board!
@@ -57,7 +57,9 @@ Do not use the full infinitive form when trying to give a command. Saying ~~**Ч
 
 <!-- adapted from: Літвінова Grade 7, вправа 84 -->
 
-While many Ukrainian verbs follow the standard drop-the-ending rule, you need to memorize a few common exceptions to navigate everyday interactions. Let's start with the regular ones: 
+Master these core verbs. They are extremely common in everyday interactions.
+
+Here are the standard verbs that follow a predictable pattern. 
 - **чита́ти → чита́й → чита́йте** — read
 - **писа́ти → пиши́ → пиші́ть** — write
 - **слу́хати → слу́хай → слу́хайте** — listen
@@ -66,7 +68,7 @@ While many Ukrainian verbs follow the standard drop-the-ending rule, you need to
 Notice that for the verb **диви́тися** (to look), you must also keep the reflexive ending. It attaches to the end of the command: **диви́сь** or **диві́ться**.
 
 Memorize these critical irregular stems. They do not follow the standard drop-the-ending rule.
-- **сказа́ти → скажи́ → скажі́ть** — say/tell. Note the consonant mutation from **з** to **ж** in the stem. (The imperfective verb **каза́ти** becomes **кажи́/кажі́ть**). 
+- **каза́ти → скажи́ → скажі́ть** — say. Note the consonant mutation from **з** to **ж**. 
 - **да́ти → дай → да́йте** — give. It has an irregular short stem.
 - **іти́ → іди́ → іді́ть** — go. A core movement command.
 - **стоя́ти → стій → сті́йте** — stand/halt. Notice the vowel change in the root. 
@@ -84,7 +86,7 @@ Memorize these critical irregular stems. They do not follow the standard drop-th
 > [!warning] Irregular Traps
 > Never force irregular verbs into regular patterns. Forms like ~~**даїть**~~ or ~~**сказай**~~ are incorrect.
 
-## Ввічливе прохання
+## Ввічливе прохання (Polite requests)
 
 > **(У кафе / In a café)**
 > — **Добрий вечір. Дайте, будь ласка, каву і великий торт.** — Good evening. Please give me a coffee and a large cake.
@@ -93,9 +95,9 @@ Memorize these critical irregular stems. They do not follow the standard drop-th
 > — **Так, звичайно! Ось меню. Дивіться, будь ласка.** — Yes, of course! Here is the menu. Look, please.
 > — **Дуже дякую. Я почекаю.** — Thank you very much. I will wait.
 
-<!-- adapted from: Літвінова Grade 7, §11 -->
+<!-- adapted from: Авраменко Grade 5, сторінка 46 -->
 
-Add the magic phrase **будь ла́ска** (please) to turn a direct command into a polite request. It usually comes right after the verb.
+Add the magic phrase **будь ла́ска** (please) to soften commands into polite requests. Place it immediately after the imperative verb to soften the impact.
 - **Дайте, будь ласка, воду.** — Please give some water.
 - **Скажіть, будь ласка, де банк?** — Please tell me, where is the bank?
 - **Покажіть, будь ласка, квиток.** — Please show the ticket.
@@ -110,16 +112,16 @@ For the most polite approach, avoid the imperative entirely. Use the indirect re
 - **Чи не могли б ви повторити?** — Could you repeat?
 
 > **(У магазині / In a shop)**
-> — **Добрий день. Дайте, будь ласка, хліб і молоко.** — Good day. Please give some bread and milk.
-> — **Візьміть, будь ласка. Що ще?** — Take it, please. Anything else?
+> — **Добрий день. Дайте, будь ласка, свіжий хліб і молоко.** — Good day. Please give some fresh bread and milk.
+> — **Візьміть, будь ласка. А потім?** — Take it, please. And then?
 > — **Чи не могли б ви показати той сир?** — Could you show that cheese?
 > — **Так, дивіться. Це дуже смачний сир.** — Yes, look. This is a very tasty cheese.
 > — **Добре, дайте його також. Дякую!** — Good, give it too. Thank you!
 
 > [!culture] The Power of Politeness
-> In Ukraine, using a direct command like **Дайте каву** (Give a coffee) without **будь ла́ска** sounds demanding and rude, even to a barista. Always include it to show respect. 
+> Always remember to use **будь ла́ска** when addressing service workers or strangers on the street. 
 
-## Заборони
+## Заборони (Prohibitions)
 
 > **(У музе́ї / In a museum)**
 > — **Диві́ться на цю карти́ну!** — Look at this painting!
@@ -144,40 +146,12 @@ Common negative commands:
 > — **Добре, ми слухаємо.** — Okay, we are listening.
 > — **Тепер читайте текст, будь ласка. А потім пишіть.** — Now read the text, please. And then write.
 
-When speaking directly to a person, you use the negative imperative (**не йди**). But you will often see a different form in public places!
+When speaking directly to a person, use the negative imperative form. However, formal public signs use the pure infinitive form instead. 
 
 > [!did-you-know] Public Signs
-> Formal public signs use the pure infinitive to give general prohibitions to everyone. A sign saying **Не пали́ти!** means "No smoking!", using the infinitive instead of a personal command.
+> Public signs use the infinitive. A sign saying **Не пали́ти!** means "No smoking!" using the formal infinitive style rather than a personal command.
 
-## Практика
-
-Let's practice what we have learned. Imagine different situations where you need to give a command or make a request. Try to form the correct imperative for the core verbs we discussed.
-
-> **(Вчитель і студент / Teacher and student)**
-> — **Студенти, ситуація один: ваш друг. Що ви кажете?** — Students, situation one: your friend. What do you say?
-> — **Читай книгу!** — Read the book!
-> — **Дуже добре. А тепер формально.** — Very good. And now formally.
-> — **Читайте книгу, будь ласка.** — Read the book, please.
-
-Now, let's practice politeness escalation. You can transform a simple command into a very polite request depending on the context. Let's use the verb **да́ти** (to give) as an example.
-
-1.  **Direct command:** **Дай!** (Give! — Informal, use with close friends only)
-2.  **Formal command:** **Да́йте!** (Give! — Formal or plural, but still direct)
-3.  **Polite request:** **Да́йте, будь ла́ска.** (Please give. — Standard polite form)
-4.  **Formal request:** **Про́шу вас да́ти.** (I ask you to give. — Very formal)
-5.  **Indirect question:** **Чи не могли́ б ви да́ти?** (Could you give? — The most polite option)
-
-> **(Ситуації / Situations)**
-> — **Ви в кафе. Як попросити каву?** — You are in a café. How to ask for coffee?
-> — **Дайте, будь ласка, каву.** — Please give a coffee.
-> — **Ви на вулиці. Що ви кажете?** — You are on the street. What do you say?
-> — **Стійте!** — Stop!
-> — **Ви просите друга подивитися на картину.** — You ask a friend to look at a picture.
-> — **Дивись на картину!** — Look at the picture!
-
-Practice these forms until they feel natural. Remember to always use **будь ла́ска** with strangers to soften your commands.
-
-# Підсумок
+## Підсумок (Summary)
 
 > **(На роботі / At work)**
 > — **Добрий ранок! Читайте цей текст, будь ласка.** — Good morning! Read this text, please.

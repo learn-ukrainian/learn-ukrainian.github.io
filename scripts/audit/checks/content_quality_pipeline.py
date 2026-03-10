@@ -357,22 +357,33 @@ def check_plan_section_coverage(
     if not planned_titles:
         return issues
 
-    # Extract actual H2 headings
-    actual_h2s = [m.group(1).strip() for m in re.finditer(r"^## (.+)$", content, re.MULTILINE)]
+    # Extract actual H1 and H2 headings (Підсумок is H1 per template rules)
+    actual_h2s = [m.group(1).strip() for m in re.finditer(r"^#{1,2} (.+)$", content, re.MULTILINE)]
 
-    # Normalize for comparison
+    # Strip parenthetical English from plan titles before comparing.
+    # Plan titles like "Наказовий спосіб (Imperative mood)" should match
+    # content H2s like "Наказовий спосіб".
+    def strip_parens(s: str) -> str:
+        return re.sub(r"\s*\([^)]*\)\s*", "", s).strip()
+
     def normalize(s: str) -> str:
-        return re.sub(r"[^a-zA-Zа-яА-ЯіІїЇєЄґҐ0-9]", "", s.lower())
+        return re.sub(r"[^a-zA-Zа-яА-ЯіІїЇєЄґҐ0-9]", "", strip_parens(s).lower())
+
+    def tokenize(s: str) -> set[str]:
+        """Split into lowercase words for fuzzy matching."""
+        return {w.lower() for w in re.findall(r"[а-яА-ЯіІїЇєЄґҐa-zA-Z]+", strip_parens(s))}
 
     actual_normalized = {normalize(h) for h in actual_h2s}
 
     missing: list[str] = []
     for title in planned_titles:
         if normalize(title) not in actual_normalized:
-            # Fuzzy: check if any actual heading contains the plan title words
-            title_words = set(normalize(title))
+            # Fuzzy: check if any actual heading shares >60% of plan title words
+            title_words = tokenize(title)
+            if not title_words:
+                continue
             found = any(
-                len(title_words & set(normalize(h))) > len(title_words) * 0.6
+                len(title_words & tokenize(h)) > len(title_words) * 0.6
                 for h in actual_h2s
             )
             if not found:

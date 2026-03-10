@@ -161,8 +161,8 @@ class TestTemplateVariables:
 
     # Batch-system templates use legacy placeholder conventions
     BATCH_TEMPLATES = {
-        "phase-0-research-seminar.md", "phase-5-review.md",
-        "phase-fix.md", "phase-fix-content.md", "phase-fix-activities.md",
+        "research-seminar-v0.md", "review-legacy.md",
+        "fix.md", "fix-content.md", "fix-activities.md",
     }
 
     @pytest.mark.parametrize("template_file", sorted(

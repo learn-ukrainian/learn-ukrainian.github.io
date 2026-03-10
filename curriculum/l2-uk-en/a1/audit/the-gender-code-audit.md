@@ -1,7 +1,7 @@
 # Audit Report: M07 — the-gender-code.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-10 15:13:29
+**Generated:** 2026-03-10 20:38:13
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,13 +20,13 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | group-sort | Sort the Words by Group | 9 | 6 | ✅ |
-| 2 | true-false | True or False: Word Groups | 8 | 8 | ✅ |
-| 3 | match-up | Match the Word to its Translation | 8 | 8 | ✅ |
-| 4 | anagram | Unscramble the Words | 8 | 8 | ✅ |
-| 5 | quiz | Choose the Correct Pronoun | 8 | 8 | ✅ |
-| 6 | fill-in | Complete the Phrase | 8 | 8 | ✅ |
-| 7 | anagram | Unscramble More Words | 8 | 8 | ✅ |
-| 8 | quiz | Vocabulary Check | 8 | 8 | ✅ |
+| 2 | true-false | True or False: Word Groups | 8 | 6 | ✅ |
+| 3 | match-up | Match the Word to its Translation | 8 | 6 | ✅ |
+| 4 | anagram | Unscramble the Words | 8 | 6 | ✅ |
+| 5 | quiz | Choose the Correct Pronoun | 8 | 6 | ✅ |
+| 6 | fill-in | Complete the Phrase | 8 | 6 | ✅ |
+| 7 | anagram | Unscramble More Words | 8 | 6 | ✅ |
+| 8 | quiz | Vocabulary Check | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅

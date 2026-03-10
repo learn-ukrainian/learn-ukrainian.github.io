@@ -1,21 +1,22 @@
         # Fix 3 issue(s) in `imperative-and-requests`
 
-        ### Fix 1: PLAN_SECTION_MISSING
-**What:** Missing 5 plan section(s): Наказовий спосіб (Imperative mood), Вісім обов'язкових дієслів (Eight required verbs), Ввічливе прохання (Polite requests), Заборони (Prohibitions), Практика (Practice)
-**How to fix:** Add content for the missing plan sections or update section headings to match plan.
-**Where:** (plan vs content)
-
-### Fix 2: LOW_TEXTBOOK_CITATION
-**What:** No textbook citation comments found (<!-- adapted from: ... --> or <!-- original: ... -->). Gemini may have ignored the injected textbook excerpts.
-**How to fix:** Rebuild with --restart-from content, or manually add citation comments to track textbook adaptation.
-**Where:** full content
+        ### Fix 1: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'свіжий' (m) + 'ласка' (f)
+**How to fix:** Change 'свіжий' to match the gender/case of 'ласка', or vice versa.
+**Where:** ~line 113
 
 ### Fix: Gate `Activities` FAIL — 4/8
 **Action:** Add more activities or diversify activity types in the activities YAML file.
 
+### Fix 3: PEDAGOGICAL_VIOLATION
+**What:** [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (4 occurrences): (Imperative mood), (Eight required verbs), (Polite requests) — breaks immersion target
+**How to fix:** Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+
 ### Other Audit Failures
 
 ```
+❌ [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (4 occurrences): (Imperative mood), (Eight required verbs), (Polite requests) — breaks immersion target
+📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log for details)
 ```
@@ -33,12 +34,6 @@ Past tense and future tense are available (taught at M36/M37).
 The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: perfective aspect is ALLOWED for imperative forms.
 
 
-
-## Lexical Sandbox (allowed Ukrainian vocabulary)
-
-This module's verified vocabulary: **я, ти, він, вона, воно, ми, ви, вони, хто, людина, слово, мова, день, час, той, цей, який, читати, писати, сказати, дати, іти, слухати, дивитися, стояти, показати, допомогти, взяти, чекати, це, та, так, ні, не, дуже, тут, там, ось, також, ще, вже, теж, тільки, і, а, але, або, що, як, бо, в, у, на, з, до, для, по, де, коли, чому, DATIVE CASE FORBIDDEN, INSTRUMENTAL CASE FORBIDDEN, Max 10 words per Ukrainian sentence, No subordinate clauses, MANDATORY**
-
-**CRITICAL**: When adding or modifying Ukrainian text, use ONLY words from this list plus basic function words (pronouns, prepositions, conjunctions, numbers). Do NOT introduce new content words not in this sandbox.
 
 
 ## Immersion Rules

@@ -1691,22 +1691,22 @@ def _select_research_template(ctx: ModuleContext, is_seminar: bool, is_pro: bool
             research_path = ctx.paths.get("research")
             word_count = len(research_path.read_text("utf-8").split()) if research_path else 0
             log(f"  research: Research file found ({word_count:,}w) — skipping research, meta-only")
-            return "phase-A-meta-only.md"
+            return "research-meta-only.md"
         elif is_pro:
-            return "phase-A-pro.md"
+            return "research-pro.md"
         else:
-            return "phase-A-seminar.md"
+            return "research-seminar.md"
 
     tier = _get_prompt_tier(ctx.track, ctx.module_num)
     if tier == "beginner":
         template_name = "beginner-research.md"
         if not (PHASES_DIR / template_name).exists():
-            log("  research: beginner-research.md not found, falling back to phase-A-core.md")
-            return "phase-A-core.md"
+            log("  research: beginner-research.md not found, falling back to research-core.md")
+            return "research-core.md"
         log("  research: Using beginner tier research prompt")
         return template_name
 
-    return "phase-A-core.md"
+    return "research-core.md"
 
 
 def _dispatch_research(ctx: ModuleContext, prompt_file: Path,
@@ -1731,7 +1731,8 @@ def _dispatch_research(ctx: ModuleContext, prompt_file: Path,
         timeout=TIMEOUT_CONTENT,
     )
     if raw_output:
-        (ctx.orch_dir / "phase-A-output.md").write_text(raw_output, "utf-8")
+        (ctx.orch_dir / "research-output.md").write_text(raw_output, "utf-8")
+    save_gemini_session(ctx.orch_dir, label="research")
     return ok, raw_output
 
 
@@ -1749,8 +1750,8 @@ def _save_research_output(ctx: ModuleContext, raw_output: str,
             research_path.write_text(research_text, "utf-8")
             log(f"  research: Research saved \u2192 {research_path.name}")
         else:
-            (ctx.orch_dir / "phase-A-research.md").write_text(research_text, "utf-8")
-            log("  research: Research saved \u2192 phase-A-research.md (no research path in ctx)")
+            (ctx.orch_dir / "research-fallback.md").write_text(research_text, "utf-8")
+            log("  research: Research saved \u2192 research-fallback.md (no research path in ctx)")
     else:
         if is_seminar or is_pro:
             log("  research: WARNING \u2014 no RESEARCH delimiters in output (seminar/pro track)")
@@ -1778,7 +1779,7 @@ def _apply_meta_outline(ctx: ModuleContext, raw_output: str,
 
     if not (outline_data and isinstance(outline_data, dict) and "content_outline" in outline_data):
         log("  research: WARNING \u2014 no content_outline in META_OUTLINE block")
-        (ctx.orch_dir / "phase-A-meta-outline-raw.md").write_text(meta_text or "", "utf-8")
+        (ctx.orch_dir / "research-meta-outline-raw.md").write_text(meta_text or "", "utf-8")
         return True  # non-fatal
 
     outline_data["content_outline"] = bilingualify_section_titles(
@@ -1801,8 +1802,8 @@ def _apply_meta_outline(ctx: ModuleContext, raw_output: str,
         except Exception as e:
             log(f"  research: WARNING \u2014 could not update meta: {e}")
     else:
-        (ctx.orch_dir / "phase-A-meta-outline.yaml").write_text(meta_text, "utf-8")
-        log("  research: Meta outline saved \u2192 phase-A-meta-outline.yaml (no meta path)")
+        (ctx.orch_dir / "research-meta-outline.yaml").write_text(meta_text, "utf-8")
+        log("  research: Meta outline saved \u2192 research-meta-outline.yaml (no meta path)")
     return True
 
 
@@ -1825,7 +1826,7 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
         log(f"  research: ERROR \u2014 template not found: {template}")
         return False
 
-    prompt_file = ctx.orch_dir / "phase-A-prompt.md"
+    prompt_file = ctx.orch_dir / "research-prompt.md"
     overrides = {}
     if template_name == "beginner-research.md":
         textbook_ctx = _prefetch_textbook_for_research(ctx)
@@ -2065,7 +2066,7 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     if ctx.dry_run:
-        log("  content: DRY-RUN — would dispatch content (phase-2-content.md)")
+        log("  content: DRY-RUN — would dispatch content (content.md)")
         return True
 
     # Wire Claude dispatch if --use-claude B
@@ -2205,7 +2206,7 @@ def _dispatch_vocab_only(ctx: ModuleContext, prompt_label: str) -> tuple[bool, s
     vocab_prompt = _build_vocab_only_prompt(ctx)
     if not vocab_prompt:
         return False, ""
-    vocab_prompt_file = ctx.orch_dir / f"phase-C-vocab-fallback.md"
+    vocab_prompt_file = ctx.orch_dir / f"activities-vocab-fallback.md"
     vocab_prompt_file.write_text(vocab_prompt, "utf-8")
     use_claude = "C" in getattr(ctx, "use_claude", set())
     if use_claude:
@@ -2258,8 +2259,8 @@ def _resolve_activities_template(ctx: ModuleContext) -> Path | None:
     activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
     template = PHASES_DIR / activities_template_name
     if not template.exists():
-        template = PHASES_DIR / "phase-3-activities.md"
-        log(f"  activities: Tier template {activities_template_name} not found, falling back to phase-3-activities.md")
+        template = PHASES_DIR / "activities.md"
+        log(f"  activities: Tier template {activities_template_name} not found, falling back to activities.md")
     else:
         log(f"  activities: Using tier template: {activities_template_name}")
     if not template.exists():
@@ -2309,8 +2310,8 @@ def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[boo
             act_path.write_text(activities_text, "utf-8")
             wrote_activities = True
             log(f"  activities: Activities extracted → {act_path.name}")
-            (ctx.orch_dir / "phase-C-output-activities.yaml").write_text(activities_text, "utf-8")
-            save_gemini_session(ctx.orch_dir, label="phase-C")
+            (ctx.orch_dir / "activities-output.yaml").write_text(activities_text, "utf-8")
+            save_gemini_session(ctx.orch_dir, label="activities")
 
     if not wrote_vocab:
         vocab_text = _extract_delimiter_tolerant(raw_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
@@ -2319,7 +2320,7 @@ def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[boo
             voc_path.write_text(vocab_text, "utf-8")
             wrote_vocab = True
             log(f"  activities: Vocabulary extracted → {voc_path.name}")
-            (ctx.orch_dir / "phase-C-output-vocabulary.yaml").write_text(vocab_text, "utf-8")
+            (ctx.orch_dir / "activities-output-vocabulary.yaml").write_text(vocab_text, "utf-8")
 
     return wrote_activities, wrote_vocab
 
@@ -2328,7 +2329,7 @@ def _extract_friction_report(ctx: ModuleContext, raw_output: str) -> None:
     """Extract and log friction report from LLM output."""
     friction = _extract_delimiter(raw_output, "===FRICTION_START===", "===FRICTION_END===")
     if friction:
-        friction_file = ctx.orch_dir / "phase-C-friction.md"
+        friction_file = ctx.orch_dir / "activities-friction.md"
         friction_file.write_text(friction, encoding="utf-8")
         log(f"  activities: Friction report saved → {friction_file.name}")
         is_real_truncation = (
@@ -2390,7 +2391,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     # Build prompt
-    prompt_file = ctx.orch_dir / "phase-C-prompt.md"
+    prompt_file = ctx.orch_dir / "activities-prompt.md"
     overrides = {}
     if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
         return False
@@ -2402,7 +2403,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     if ctx.dry_run:
-        log("  activities: DRY-RUN — would dispatch phase-3-activities.md")
+        log("  activities: DRY-RUN — would dispatch activities.md")
         return True
 
     # Dispatch LLM
@@ -2712,7 +2713,7 @@ def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
 def _save_friction_report(ctx: ModuleContext, attempt: int,
                           fix_prompt: str, diagnosis: str) -> None:
     """Save a friction report when dedup detects a prompt engineering issue."""
-    report_path = ctx.orch_dir / f"phase-2-friction-dedup.md"
+    report_path = ctx.orch_dir / f"content-friction-dedup.md"
     gate_failures = re.findall(r"Gate `(\w+)` FAIL", fix_prompt)
     ped_violations = re.findall(r"\[([A-Z_]+)\]", fix_prompt)
 
@@ -2867,10 +2868,10 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
 
 def _review_resolve_templates() -> tuple[Path | None, Path | None]:
     """Resolve D1 and D2 review templates. Returns (d1_template, d2_template)."""
-    d1_template = PHASES_DIR / "phase-D1-structured-review.md"
+    d1_template = PHASES_DIR / "review-structured.md"
     if not d1_template.exists():
-        d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
-    d2_template = PHASES_DIR / "phase-D2-repair.md"
+        d1_template = PHASES_DIR / "review-evidence.md"
+    d2_template = PHASES_DIR / "review-repair.md"
     if not d1_template.exists():
         log(f"  review: ERROR — D1 template not found: {d1_template}")
         return None, None

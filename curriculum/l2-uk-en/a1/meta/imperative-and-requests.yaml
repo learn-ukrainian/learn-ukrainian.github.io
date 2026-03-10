@@ -5,46 +5,52 @@ word_target: 1200
 content_outline:
 - title: Наказовий спосіб (Imperative mood)
   slug: imperative-mood
-  words: 300
+  words: 250
   points:
-  - 'Introduce the concept: how to tell someone to do something.'
-  - 'Formation rule: drop -ти from infinitive and add endings.'
-  - Contrast 'ти' (informal/singular) and 'ви' (formal/plural) forms.
-  - Address the common error of using the infinitive for commands.
+  - 'Introduce the concept: how to tell someone to do something directly (commands).'
+  - 'Formation rule: drop the -ти ending from the infinitive and add imperative suffixes.'
+  - Contrast the 'ти' (informal/singular) and 'ви' (formal/plural) forms.
+  - Address the common learner error of using the infinitive instead of the imperative.
 - title: Вісім обов'язкових дієслів (Eight required verbs)
   slug: eight-required-verbs
   words: 300
   points:
   - 'Introduce the 8 core command verbs: читай(те), пиши(те), скажи(те), дай(те),
     іди(те), слухай(те), дивись(те), стій(те).'
-  - Highlight irregular stems like дай and скажи as set phrases.
-  - 'Provide context with classroom instructions: Читайте текст, Пишіть у зошиті.'
+  - Highlight irregular stems like 'дай' and 'скажи' as set phrases that must be memorized.
+  - 'Provide context with typical classroom instructions: Читайте текст, Пишіть у
+    зошиті, Слухайте уважно.'
 - title: Ввічливе прохання (Polite requests)
   slug: polite-requests
   words: 250
   points:
-  - Explain how to soften commands using 'будь ласка'.
-  - Introduce 'Прошу вас' for formal situations.
-  - 'Preview the polite question format: ''Чи не могли б ви...?''.'
-  - Show examples in café or street directions contexts.
+  - Explain how to soften direct commands using 'будь ласка'.
+  - Introduce 'Прошу вас' for more formal situations or service encounters (cafés,
+    shops).
+  - 'Preview the polite question format: ''Чи не могли б ви...?'' as an alternative
+    to commands.'
+  - Provide short dialogue examples using polite requests in everyday situations.
 - title: Заборони (Prohibitions)
   slug: prohibitions
-  words: 175
+  words: 200
   points:
-  - 'How to say ''don''t do it'': just add ''Не'' before the imperative.'
-  - 'Provide examples: Не слухай! Не йдіть туди!'
-  - Distinguish between personal prohibitions and public signs.
+  - 'How to express ''don''t do it'': simply place ''Не'' before the imperative verb
+    form.'
+  - 'Provide common examples: Не слухай! Не йдіть туди! Не дивись!'
+  - Briefly distinguish between personal spoken prohibitions and formal public signs
+    (which often use infinitives).
 - title: Практика (Practice)
   slug: practice
-  words: 175
+  words: 200
   points:
-  - 'Command drills: Teacher gives situation, learner produces correct imperative form.'
-- title: Підсумок
+  - 'Command drills: Teacher gives situation, learner produces correct imperative form. Focus on the 8 required verbs in varied contexts.'
+  - 'Polite request formation: Upgrading direct commands to polite requests. Дай → Дайте, будь ласка → Чи не могли б ви дати? Politeness escalation practice.'
+- title: Підсумок (Summary)
   slug: summary
-  words: 175
+  words: 200
   points:
-  - Recap the difference between 'ти' and 'ви' forms.
-  - Review the importance of 'будь ласка'.
-  - 'Self-check question 1: How do you say ''Read!'' to a group?'
+  - Recap the difference between 'ти' and 'ви' imperative forms.
+  - 'Self-check question 1: How do you say ''Read!'' to a group of people?'
   - 'Self-check question 2: Which verb has a consonant mutation: писати or сказати?'
   - 'Self-check question 3: How do you form a negative command?'
+  - 'Self-check question 4: What is the formal ''ви'' imperative for ''give''?'

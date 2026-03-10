@@ -288,8 +288,8 @@ class TestPrefetchTextbookExamples:
         result = _prefetch_textbook_examples(ctx)
         assert result == ""
 
-    def test_a1_m15_plus_searches_ukrainska_mova(self):
-        """A1 M15+ should search ukrainska-mova with targeted grades."""
+    def test_a1_m15_plus_searches_grammar_grades(self):
+        """A1 M15+ should search higher grades first, no subject filter."""
         from pipeline_lib import _prefetch_textbook_examples
 
         ctx = FakeContext(
@@ -308,10 +308,10 @@ class TestPrefetchTextbookExamples:
             importlib.reload(pipeline_lib)
             result = pipeline_lib._prefetch_textbook_examples(ctx)
 
-        # Should have searched with subject ukrainska-mova, grades 3-7
+        # Subject filter dropped (Grade 4 books lack metadata), grades 7→3
         for call in mock_search.call_args_list:
-            assert call.kwargs.get("subject") == "ukrainska-mova"
-            assert call.kwargs.get("grade") in [3, 5, 6, 7]
+            assert call.kwargs.get("subject") is None
+            assert call.kwargs.get("grade") in [3, 4, 5, 6, 7]
 
     def test_uses_plan_keywords_as_search_terms(self):
         """Should use plan keywords first, then section titles."""
