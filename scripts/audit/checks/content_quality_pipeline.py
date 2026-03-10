@@ -374,6 +374,7 @@ def check_plan_section_coverage(
         return {w.lower() for w in re.findall(r"[а-яА-ЯіІїЇєЄґҐa-zA-Z]+", strip_parens(s))}
 
     actual_normalized = {normalize(h) for h in actual_h2s}
+    actual_tokenized = {h: tokenize(h) for h in actual_h2s}
 
     missing: list[str] = []
     for title in planned_titles:
@@ -383,8 +384,8 @@ def check_plan_section_coverage(
             if not title_words:
                 continue
             found = any(
-                len(title_words & tokenize(h)) > len(title_words) * 0.6
-                for h in actual_h2s
+                len(title_words & tokens) > len(title_words) * 0.6
+                for tokens in actual_tokenized.values()
             )
             if not found:
                 missing.append(title)
