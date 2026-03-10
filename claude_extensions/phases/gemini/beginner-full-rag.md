@@ -55,7 +55,7 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
    - Study the pedagogical progression — how do real textbooks introduce this concept?
    - Study textbook dialogues — notice how speakers have **real situations** (market, classroom, street) and **natural responses** (not just echoing commands)
 
-2. **VERIFY AS YOU WRITE**: Before using any Ukrainian word not in the word bank below, call `verify_words` to check it exists. Empty result = the word doesn't exist in standard Ukrainian. Do NOT use it.
+2. **VERIFY AS YOU WRITE**: Before using any Ukrainian word you're unsure about, call `verify_words` to check it exists. Empty result = the word doesn't exist in standard Ukrainian. Do NOT use it.
 
 3. **VERIFY ACTIVITIES**: After creating activities, batch-verify all Ukrainian words in your activity items with `verify_words`.
 
@@ -63,7 +63,7 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 
 **L1→L2 Transformation:** Textbooks teach Ukrainian to native speakers (L1). Your learners need:
 1. **Explicit grammar rules** in English (L1 learners already know intuitively)
-2. **Word bank vocabulary only** (L1 Grade 5 vocab ≠ L2 A1 vocab)
+2. **Level-appropriate vocabulary only** (L1 Grade 5 vocab ≠ L2 A1 vocab)
 3. **Setting/purpose for dialogues** (L1 assumes shared cultural context)
 4. **Production/comprehension exercises** (not metalinguistic analysis)
 
@@ -79,13 +79,20 @@ If no matching textbook exercise found, use: `<!-- original: no matching textboo
 
 {PEDAGOGICAL_CONSTRAINTS}
 
-### Word Bank (MANDATORY)
+### Vocabulary Guidance
 
 {DECODABLE_VOCABULARY}
 
-{LEXICAL_SANDBOX}
+**Target vocabulary** (from the plan — you MUST teach and use these words heavily):
 
-**Rule:** Every Ukrainian word in your output — content AND activities — must come from this word bank. The "Allowed Forms" column shows exactly which inflected forms you may use. If a word isn't listed, express the concept in English.
+{VOCABULARY_HINTS}
+
+**Rules:**
+- Teach all target vocabulary words listed above. These must appear in your content with clear context.
+- For the rest of the text, use natural, level-appropriate Ukrainian guided by the textbook excerpts below.
+- Match the syntactic complexity, sentence length, and vocabulary level of the provided textbook excerpts. Do not exceed their lexical density.
+- When textbook excerpts contain vocabulary or grammar not yet taught at this level, simplify or provide an English gloss in parentheses.
+- Activities may ONLY use Ukrainian words that appear in the content you wrote above. Do not introduce new vocabulary in activities.
 
 ### Immersion Target
 
@@ -143,7 +150,7 @@ Follow the structural containment rules above. In each section:
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
-Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT use words outside the word bank. Do NOT write IPA or Latin transliteration.
+Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
@@ -163,7 +170,7 @@ Every blockquote dialogue MUST:
 
 Why this fails: it's a verb conjugation table disguised as a dialogue. No situation, no purpose, no natural speech.
 
-**GOOD** — These examples use ONLY sandbox-level words. Your dialogues must also use ONLY words from the word bank above.
+**GOOD** — These examples use level-appropriate words. Your dialogues must also use words from your content above.
 
 **GOOD** (classroom — teacher gives instructions, student responds naturally):
 > **(На уроці / In the classroom)**
@@ -248,7 +255,7 @@ If a verb's imperative isn't in your content, don't use it in activities.
 1. **Same words**: Every Ukrainian word in activities must appear in your content above
 2. **Correct agreement in answers**: Activity `answer` fields must have correct adj-noun gender agreement. If you wrote `великий стіл` in content, the correct answer in activities must also be `великий стіл` — NOT `велика стіл`
 3. **Wrong forms are OK as distractors**: In `options` arrays, wrong gender/case forms are expected — they're the incorrect choices. Example: `options: ["нова", "новий", "нове", "нові"]` for a feminine noun — only `нова` is correct, the rest are intentional distractors
-4. **Same forms**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive is in the word bank
+4. **Same forms**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive also appears in the content
 
 ### Activity Schemas (EXACT field structures — any unlisted field = FAIL)
 
@@ -362,7 +369,7 @@ Rules for YAML:
 - [ ] Word count ≥ {WORD_TARGET}?
 - [ ] Every plan section has prose?
 - [ ] {ENGAGEMENT_MIN}+ callout boxes?
-- [ ] No words outside the word bank?
+- [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 - [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
@@ -370,6 +377,7 @@ Rules for YAML:
 
 ### Activity Checks
 - [ ] {ACTIVITY_MIN}–{ACTIVITY_MAX} activities?
+- [ ] Activities use only words from content above?
 - [ ] Every Ukrainian word also appears in content?
 - [ ] Adjective-noun pairings match content?
 - [ ] Quiz: exactly 1 `correct: true`, `explanation` at question level?

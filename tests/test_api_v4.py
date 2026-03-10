@@ -161,12 +161,13 @@ class TestIsContentDone:
 class TestPipelinePhaseOrder:
     """V5_PHASE_ORDER imported from pipeline_v5."""
 
-    def test_phase_order_includes_sandbox(self):
+    def test_phase_order_no_sandbox(self):
+        """Sandbox removed in #820."""
         from scripts.api.state_router import V5_PHASE_ORDER
 
-        assert "sandbox" in V5_PHASE_ORDER
+        assert "sandbox" not in V5_PHASE_ORDER
         assert V5_PHASE_ORDER == [
-            "research", "discover", "sandbox", "content", "activities",
+            "research", "discover", "content", "activities",
             "validate", "review", "mdx",
         ]
 

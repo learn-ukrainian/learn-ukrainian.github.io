@@ -1580,18 +1580,7 @@ def check_prompt_health(
     track_base = ctx.track.split("-")[0] if ctx.track else ""
     is_core = track_base.lower() in {"a1", "a2", "b1", "b2", "c1", "c2"}
 
-    # 1. Lexical sandbox should be populated for A1+ core tracks
-    if is_core and phase_name in ("content", "activities"):
-        sandbox_text = getattr(ctx, "_lexical_sandbox", "")
-        if not sandbox_text or len(sandbox_text.strip()) < 50:
-            # Non-blocking: sandbox might legitimately be small for early modules
-            if ctx.module_num > 5:
-                issues.append(
-                    f"WARNING: LEXICAL_SANDBOX is empty/tiny for {track_base} M{ctx.module_num} — "
-                    f"Gemini won't have VESUM-validated vocabulary to draw from"
-                )
-
-    # 2. Content-phase checks
+    # 1. Content-phase checks
     if phase_name == "content":
         if "{IMMERSION_RULE}" in prompt_text:
             issues.append("ERROR: IMMERSION_RULE placeholder was not filled")
@@ -2278,7 +2267,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
                                "H3_WORD_RANGE", "EXPANSION_METHOD",
                                "WRITING_TONE_INSTRUCTION",
                                "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES",
-                               "SELF_AUDIT_SNIPPET", "LEXICAL_SANDBOX"}
+                               "SELF_AUDIT_SNIPPET"}
             if _critical_keys <= set(existing.keys()):
                 log("Placeholders: Using existing")
                 return
@@ -2362,15 +2351,17 @@ def write_placeholders(ctx: ModuleContext) -> None:
             for item in recommended:
                 vh_lines.append(f"- {item}")
             vh_lines.append("")
-        vh_lines.append("Do NOT add vocabulary items beyond this list unless they are "
-                        "decodable from the module's letter set and appear in the lesson content.")
+        vh_lines.append("These are your TARGET words — teach them all and use them heavily. "
+                        "For the rest of the text, use natural, level-appropriate Ukrainian.")
         vh_lines.append("")
         vh_lines.append("**VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints "
                         "MUST appear at least once in the module content. Orphaned vocabulary "
                         "(listed but never used in content) is a validation failure.")
         placeholders["VOCAB_HINTS"] = "\n".join(vh_lines)
+        placeholders["VOCABULARY_HINTS"] = placeholders["VOCAB_HINTS"]
     else:
         placeholders["VOCAB_HINTS"] = ""
+        placeholders["VOCABULARY_HINTS"] = ""
 
     # Video discovery placeholder
     discovery_path = ctx.orch_dir / "discovery.yaml"
@@ -2442,8 +2433,9 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
     )
 
-    # Lexical Sandbox (built by phase_sandbox, injected via ctx._lexical_sandbox)
-    placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
+    # Lexical Sandbox removed in #820 — VESUM post-validation replaces it.
+    # Placeholder kept as empty string so existing templates don't break.
+    placeholders["LEXICAL_SANDBOX"] = ""
 
     # Folk Micro-Genres (загадки, скоромовки, прислів'я etc.)
     try:
@@ -3164,7 +3156,6 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             f"RESEARCH-IDENTIFIED ERRORS (avoid these in content):\n{research_errors}"
             if research_errors else ""
         ),
-        "LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", ""),
         "FOLK_MATERIAL": getattr(ctx, "_folk_material", ""),
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):

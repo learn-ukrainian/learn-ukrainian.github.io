@@ -11,11 +11,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from pipeline_lib import check_prompt_health, log_prompt_health
 
 
-def _make_ctx(track="a1", module_num=20, sandbox="", immersion_rule="Write 35-55% Ukrainian"):
+def _make_ctx(track="a1", module_num=20, immersion_rule="Write 35-55% Ukrainian"):
     ctx = MagicMock()
     ctx.track = track
     ctx.module_num = module_num
-    ctx._lexical_sandbox = sandbox
     ctx.immersion_rule = immersion_rule
     return ctx
 
@@ -24,28 +23,14 @@ class TestCheckPromptHealth:
     """Tests for check_prompt_health."""
 
     def test_healthy_content_prompt(self):
-        ctx = _make_ctx(sandbox="| Lemma | Forms |\n| слово | слова |")
+        ctx = _make_ctx()
         prompt = "Write a lesson about greetings. Target: 1200 words."
         issues = check_prompt_health(ctx, prompt, "content")
         assert not any(i.startswith("ERROR:") for i in issues)
 
-    def test_empty_sandbox_warning_for_late_module(self):
-        ctx = _make_ctx(module_num=20, sandbox="")
-        prompt = "Write a lesson."
-        issues = check_prompt_health(ctx, prompt, "content")
-        warnings = [i for i in issues if "LEXICAL_SANDBOX" in i]
-        assert len(warnings) == 1
-        assert warnings[0].startswith("WARNING:")
-
-    def test_no_sandbox_warning_for_early_module(self):
-        ctx = _make_ctx(module_num=3, sandbox="")
-        prompt = "Write a lesson."
-        issues = check_prompt_health(ctx, prompt, "content")
-        sandbox_issues = [i for i in issues if "LEXICAL_SANDBOX" in i]
-        assert len(sandbox_issues) == 0
-
-    def test_no_sandbox_warning_for_seminar_track(self):
-        ctx = _make_ctx(track="hist", module_num=20, sandbox="")
+    def test_no_sandbox_warning_after_removal(self):
+        """Sandbox health check removed in #820 — no warnings expected."""
+        ctx = _make_ctx(module_num=20)
         prompt = "Write a lesson."
         issues = check_prompt_health(ctx, prompt, "content")
         sandbox_issues = [i for i in issues if "LEXICAL_SANDBOX" in i]

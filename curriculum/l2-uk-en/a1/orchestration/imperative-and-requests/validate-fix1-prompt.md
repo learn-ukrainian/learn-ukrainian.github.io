@@ -1,28 +1,21 @@
-        # Fix 5 issue(s) in `imperative-and-requests`
+        # Fix 3 issue(s) in `imperative-and-requests`
 
-        ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'ввічливим' (m/n/p) + 'прохання' (n/p)
-**How to fix:** Change 'ввічливим' to match the gender/case of 'прохання', or vice versa.
-**Where:** ~line 272
-
-### Fix 2: PLAN_SECTION_MISSING
+        ### Fix 1: PLAN_SECTION_MISSING
 **What:** Missing 5 plan section(s): Наказовий спосіб (Imperative mood), Вісім обов'язкових дієслів (Eight required verbs), Ввічливе прохання (Polite requests), Заборони (Prohibitions), Практика (Practice)
 **How to fix:** Add content for the missing plan sections or update section headings to match plan.
 **Where:** (plan vs content)
 
-### Fix: Gate `Pedagogy` FAIL — 1 violations
+### Fix 2: LOW_TEXTBOOK_CITATION
+**What:** No textbook citation comments found (<!-- adapted from: ... --> or <!-- original: ... -->). Gemini may have ignored the injected textbook excerpts.
+**How to fix:** Rebuild with --restart-from content, or manually add citation comments to track textbook adaptation.
+**Where:** full content
 
-### Fix: Gate `Immersion` FAIL — 30.0% LOW (target 30-55% (M47))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
-
-### Fix 5: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY_WORD_COUNT] quiz 'Choose correct imperative form in context' Q9 prompt length 4 (target: 5-10)
-**How to fix:** Adjust prompt length to 5-10 words.
+### Fix: Gate `Activities` FAIL — 4/8
+**Action:** Add more activities or diversify activity types in the activities YAML file.
 
 ### Other Audit Failures
 
 ```
-📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log for details)
 ```

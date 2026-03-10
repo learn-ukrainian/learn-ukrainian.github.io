@@ -78,15 +78,6 @@
 - **коли** (Adverb)
 - **чому** (Adverb)
 
-### Verified Example Sentences (from textbooks)
-
-- Хи м к а (сміючись). Ну, тепер уже піде баталія.
-  *Source: unknown*
-- А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть над кожним дієсловом його форму. було
-кажу
-принести
-  *Source: unknown*
-
 ### ⚠️ Level-Wide Grammar Rules (A1)
 
 Even though forms are listed above, the A1 audit enforces these rules on your **prose**:

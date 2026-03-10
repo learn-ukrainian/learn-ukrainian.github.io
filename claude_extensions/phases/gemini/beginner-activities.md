@@ -23,11 +23,9 @@
 
 {DECODABLE_VOCABULARY}
 
-## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)
+## Vocabulary Scope
 
-{LEXICAL_SANDBOX}
-
-> **Every Ukrainian word in your activities MUST come from the word bank above.** Using words outside this list causes VESUM validation failures and triggers fix loops. If you need a word that isn't listed, use English instead.
+> **Every Ukrainian word in your activities MUST come from the lesson content you are reinforcing.** Read the content file first. Do not introduce new Ukrainian vocabulary in activities — only practice words that appear in the lesson. If you need a concept not covered in the content, use English instead.
 
 ## Module Constraints (HARD FAIL if violated)
 
@@ -201,7 +199,7 @@ Key: `explanation` at QUESTION level (not inside options), exactly 4 options, ex
 
 ## Activity Quality Rules
 
-1. **Every Ukrainian word must be from the decodable vocabulary.** Do NOT use words with letters the student hasn't learned.
+1. **Every Ukrainian word must appear in the lesson content.** Do NOT introduce new vocabulary in activities. For early modules (M1-M10), also ensure words use only the allowed letter set.
 2. **Plausible, clear items.** Every question must have one unambiguous correct answer.
 3. **No sentence-level activities** if constraints say letters/syllables only.
 4. **Prefer fewer, high-quality activities** over padding. 6 good activities > 8 activities where the last 2 are filler.

@@ -26,11 +26,9 @@ Keep both tables visible as you write. Every activity and vocab item must serve 
 
 {DECODABLE_VOCABULARY}
 
-## VESUM-Validated Word Bank (MANDATORY — use ONLY these Ukrainian words)
+## Vocabulary Scope
 
-{LEXICAL_SANDBOX}
-
-> **Every Ukrainian word in your activities MUST come from the word bank above.** Using words outside this list causes VESUM validation failures and triggers fix loops. If you need a word that isn't listed, use English instead.
+> **Every Ukrainian word in your activities MUST come from the lesson content you are reinforcing.** Read the content file first. Do not introduce new Ukrainian vocabulary in activities — only practice words that appear in the lesson. If you need a concept not covered in the content, use English instead.
 
 ## Folk Material (optional — use for culturally rich activities)
 

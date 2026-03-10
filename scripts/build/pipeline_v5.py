@@ -5,6 +5,7 @@ Phase implementations + state management + all phase-specific helpers.
 Imported by build_module_v5.py.
 
 Pipeline: research → discover → content → activities → validate → [review] → mdx
+(Sandbox phase removed in #820 — VESUM post-validation replaces it.)
 
 State file: state.json (plain phase keys, mode: "v5").
 """
@@ -122,12 +123,11 @@ _DIFFUSE_FAILURE_CODES = {
 }
 
 # Phase sequence
-PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
+PHASES = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
 
 PHASE_LABELS: dict[str, str] = {
     "research":   "Research + Meta",
     "discover":   "Discover (video + blog search)",
-    "sandbox":    "Lexical Sandbox (VESUM-validated word bank)",
     "content":    "Content (prose)",
     "activities": "Activities + Vocab",
     "validate":   "Validate (audit + screen + Gemini fix)",
@@ -136,7 +136,7 @@ PHASE_LABELS: dict[str, str] = {
 }
 
 # Non-blocking phases (failures don't stop the pipeline)
-NON_BLOCKING = {"validate", "review", "discover", "sandbox"}
+NON_BLOCKING = {"validate", "review", "discover"}
 
 # Research constants
 _RESEARCH_EXISTS_MIN_WORDS = 500
@@ -1975,77 +1975,6 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
     return True
 
 
-# ---------------------------------------------------------------------------
-# Phase: sandbox + helpers
-# ---------------------------------------------------------------------------
-
-
-def _ensure_sandbox_loaded(ctx: ModuleContext) -> str:
-    """Load lexical sandbox into ctx if not already set. Returns the sandbox text."""
-    sandbox = getattr(ctx, "_lexical_sandbox", "")
-    if sandbox:
-        return sandbox
-    sandbox_path = ctx.orch_dir / "lexical-sandbox.md"
-    if sandbox_path.exists():
-        sandbox = sandbox_path.read_text(encoding="utf-8")
-        ctx._lexical_sandbox = sandbox
-        log(f"  sandbox: Loaded from disk ({len(sandbox)} chars)")
-    else:
-        ctx._lexical_sandbox = ""
-    return ctx._lexical_sandbox
-
-
-def phase_sandbox(ctx: ModuleContext, state: dict) -> bool:
-    """Lexical Sandbox: build VESUM-validated word bank for content generation.
-
-    Two modes:
-    - Plan-only (fast): Build sandbox directly from plan vocabulary_hints
-    - Pass 1 (full): Dispatch Gemini to request resources, then build sandbox
-
-    The sandbox is saved to orchestration/ and injected into the content prompt
-    via the {LEXICAL_SANDBOX} placeholder.
-    """
-    if is_complete(state, "sandbox"):
-        _ensure_sandbox_loaded(ctx)
-        log("  sandbox: SKIP (already complete)")
-        return True
-
-    if ctx.dry_run:
-        log("  sandbox: DRY-RUN — would build lexical sandbox")
-        return True
-
-    try:
-        from lexical_sandbox import build_sandbox
-
-        # Build sandbox from plan vocabulary + common words for this level
-        sandbox_md = build_sandbox(
-            track=ctx.track,
-            module_num=ctx.module_num,
-            plan=ctx.plan,
-            max_examples=6,
-        )
-
-        if sandbox_md:
-            # Save to orchestration
-            sandbox_path = ctx.orch_dir / "lexical-sandbox.md"
-            sandbox_path.write_text(sandbox_md, encoding="utf-8")
-
-            # Attach to context for content phase placeholder injection
-            ctx._lexical_sandbox = sandbox_md
-
-            word_count = sandbox_md.count("|") // 3  # rough table row count
-            log(f"  sandbox: Built lexical sandbox ({len(sandbox_md)} chars, ~{word_count} entries)")
-        else:
-            log("  sandbox: No vocabulary_hints in plan — skipping sandbox")
-            ctx._lexical_sandbox = ""
-
-    except Exception as e:
-        logger.warning("sandbox: Failed to build lexical sandbox: %s", e)
-        ctx._lexical_sandbox = ""
-
-    mark_complete(state, "sandbox", ctx)
-    return True
-
 
 def phase_content(ctx: ModuleContext, state: dict) -> bool:
     """Content: write prose. Delegates to pipeline_lib.phase_B_content."""
@@ -2057,7 +1986,6 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         log("  content: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
 
-    _ensure_sandbox_loaded(ctx)
     ok = phase_B_content(ctx)
 
     if not ok:
@@ -2375,8 +2303,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 
     # Build prompt
     prompt_file = ctx.orch_dir / "phase-C-prompt.md"
-    _ensure_sandbox_loaded(ctx)
-    overrides = {"LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", "")}
+    overrides = {}
     if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
         return False
 
@@ -2430,7 +2357,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 # Phase: validate — helpers
 # ---------------------------------------------------------------------------
 
-_VALIDATE_NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER", "LOW_TEXTBOOK_CITATION"}
+_VALIDATE_NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER"}
 
 
 def _validate_log_screen(label: str, scr: DScreenResult) -> None:
@@ -2746,9 +2673,6 @@ def phase_validate(ctx: ModuleContext, state: dict) -> bool:
     if ctx.dry_run:
         log("  validate: DRY-RUN — would run full audit + screen + fix loop")
         return True
-
-    # Ensure sandbox is loaded — fix prompts need it for vocabulary constraints
-    _ensure_sandbox_loaded(ctx)
 
     if not _validate_check_sidecars(ctx):
         return False
@@ -3537,7 +3461,6 @@ def phase_mdx(ctx: ModuleContext) -> bool:
 PHASE_FUNCTIONS: dict[str, Any] = {
     "research":   phase_research,
     "discover":   phase_discover,
-    "sandbox":    phase_sandbox,
     "content":    phase_content,
     "activities": phase_activities,
     "validate":   phase_validate,

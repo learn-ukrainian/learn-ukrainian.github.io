@@ -1,40 +1,9 @@
-        # Fix 5 issue(s) in `imperative-and-requests`
+        # Fix 1 issue(s) in `imperative-and-requests`
 
-        ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'ввічливим' (m/n/p) + 'прохання' (n/p)
-**How to fix:** Change 'ввічливим' to match the gender/case of 'прохання', or vice versa.
-**Where:** ~line 272
-
-### Fix 2: PLAN_SECTION_MISSING
+        ### Fix 1: PLAN_SECTION_MISSING
 **What:** Missing 5 plan section(s): Наказовий спосіб (Imperative mood), Вісім обов'язкових дієслів (Eight required verbs), Ввічливе прохання (Polite requests), Заборони (Prohibitions), Практика (Practice)
 **How to fix:** Add content for the missing plan sections or update section headings to match plan.
 **Where:** (plan vs content)
-
-### Fix: Gate `Pedagogy` FAIL — 1 violations
-
-### Fix: Gate `Immersion` FAIL — 30.0% LOW (target 30-55% (M47))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
-
-### Fix 5: PEDAGOGICAL_VIOLATION
-**What:** [COMPLEXITY_WORD_COUNT] quiz 'Choose correct imperative form in context' Q9 prompt length 4 (target: 5-10)
-**How to fix:** Adjust prompt length to 5-10 words.
-
-### Other Audit Failures
-
-```
-❌ [MISSING_OUTLINE_SECTION] Section 'Наказовий спосіб (Imperative mood)' defined in outline but not found in markdown.
-❌ [MISSING_OUTLINE_SECTION] Section 'Вісім обов'язкових дієслів (Eight required verbs)' defined in outline but not found in markdown.
-❌ [MISSING_OUTLINE_SECTION] Section 'Ввічливе прохання (Polite requests)' defined in outline but not found in markdown.
-Наказовий спосіб (Imperative mood)                    0 /  300  ❌ (-300)
-Вісім обов'язкових дієслів (Eight required verbs)     0 /  300  ❌ (-300)
-Ввічливе прохання (Polite requests)                   0 /  250  ❌ (-250)
-Заборони (Prohibitions)                               0 /  175  ❌ (-175)
-Практика (Practice)                                   0 /  175  ❌ (-175)
-TOTAL                                                 0 / 1200  ❌ (-1200)
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log for details)
-```
 
 
 ## Constraints (do NOT violate while fixing)

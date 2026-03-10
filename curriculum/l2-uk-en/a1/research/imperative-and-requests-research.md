@@ -1,43 +1,44 @@
 # Дослідження: Imperative and Requests
 
 ## State Standard Reference
-§1.1: "Сприймає прості усні вказівки/інструкції та адекватно реагує на них" (Understands simple oral directions/instructions and responds adequately).
-Alignment: This module provides the foundational grammar for giving and understanding instructions, requests, and commands, which is heavily utilized in classroom environments and daily life.
+§4.2.4.2: "Imperative mood — 2nd person only at A1"
+Alignment: This module directly addresses the standard by introducing 2nd person singular (ти) and plural/polite (ви) imperative forms for foundational communicative verbs.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| читай / читайте | Regular formation, imperfective | читай текст, читайте вголос |
-| прочитай / прочитайте | Perfective counterpart, highly frequent in textbooks | прочитай і розкажи, прочитай завдання |
-| пиши / пишіть | Regular formation | пиши правильно, пишіть записку |
-| скажи / скажіть | Very common for requests | скажіть, будь ласка; скажи мені |
-| дай / дайте | Irregular stem | дайте каву, дай ручку |
-| дивись / дивіться | Reflexive ending (-сь/-ся) | дивись сюди, дивіться на дошку |
-| слухай / слухайте | Regular formation | слухай уважно, слухайте вчителя |
+| читай / читайте | Regular formation, classroom staple | Читайте текст; Прочитай і розкажи (from textbook) |
+| пиши / пишіть | Regular formation | Пишіть у зошиті; Напиши записку (from textbook) |
+| скажи / скажіть | Perfective, к→ж consonant mutation | Скажіть, будь ласка; Краще скажи мені вголос (from textbook) |
+| дай / дайте | Irregular short stem, highly frequent | Дайте, будь ласка; Дай мені |
+| іди / ідіть | Basic movement command | Ідіть сюди; Іди прямо |
+| дивись / дивіться | Visual attention | Дивіться на дошку; Дивись туди |
+| слухай / слухайте | Auditory attention | Слухайте уважно; Послухай мене |
+| стій / стійте | Stem vowel change | Стійте!; Стій там |
 
 ## Cultural Hooks
-1. **Classroom Instructions**: As seen in native Ukrainian textbooks, the imperative is the default mode of instruction for children and students (e.g., *Прочитай і розкажи*, *Розгляньте малюнки*, *Напиши записку*). This creates a direct bridge to authentic learning materials.
-2. **Proverbs with Imperatives**: Ukrainian folklore is rich with imperative advice, such as "Вік живи — вік учись" (Live a century, learn a century) and "Сім разів відмір, один раз відріж" (Measure seven times, cut once).
-3. **Politeness Marker**: Adding "будь ласка" (please) is culturally essential when turning an imperative command into a polite request (e.g., *Скажіть, будь ласка*).
+1. **Classroom Etiquette**: Ukrainian education relies heavily on direct pedagogical commands. Textbooks constantly use imperatives to guide students: "Прочитай і розкажи" (Read and tell), "Запиши відповіді" (Write down the answers).
+2. **Respecting Shared Objects**: Textbook rules instill values using commands and prohibitions: "Книжки треба шанувати. Не можна їх бруднити, рвати" (Books must be respected. You cannot dirty or tear them). This forms a natural basis for negative imperatives (Не брудни! Не рви!).
+3. **Modern vs. Traditional Communication**: Textbooks contrast writing physical notes with modern tech: "Напиши записку" (Write a note) vs. "Надішлю смс-повідомлення" (I will send an SMS), providing relatable context for writing commands.
 
 ## Common Learner Errors
-1. **Using the infinitive instead of imperative** → *Ти читати* instead of *Читай*. English relies on the base form of the verb for imperatives (You read → Read!), which leads learners to wrongly assume the Ukrainian infinitive works the same way.
-2. **Dropping the formal/plural marker (-те)** → Addressing an elder or a group as *скажи* instead of *скажіть*. This is a critical sociolinguistic error that sounds disrespectful.
-3. **Ignoring aspect** → Using imperfective (e.g., *читай*) when a single, completed action is requested (*прочитай*). Textbook exercises specifically target this by using perfective imperatives for concrete tasks (*Прочитай текст. Визнач...*).
+1. **Infinitive as Command** → "Читати текст!" instead of "Читайте текст!" — Because English uses the base verb form for commands (Read!), learners mistakenly use the Ukrainian infinitive (-ти).
+2. **Omission of Politeness Markers** → "Дай каву!" instead of "Дайте, будь ласка, каву." — Failing to upgrade to the "ви" form and omitting "будь ласка" makes the learner sound rude in service contexts.
+3. **Applying Regular Rules to Irregular Stems** → "Сказай" instead of "Скажи" — Learners try to drop "-ти" and add "-й" to verbs with consonant mutations (сказати) or irregular stems (дати).
 
 ## Cross-References
-- Builds on: M36, M37 (verb conjugations, tense basics)
-- Prepares for: M48 (giving directions), B1 modules on advanced aspectual nuances.
+- Builds on: a1-46 (Must and Want)
+- Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
 
 ## Teaching Strategy
-- **Discovery exercise**: Present a short dialogue of a teacher giving instructions to a class (*Читайте текст! Пишіть!*), followed by instructions to a single student (*Читай текст! Пиши!*). Ask learners to identify the difference between the verb endings and deduce the rule for singular vs. plural/formal.
-- **Best context**: A classroom setting or a café/market where the learner has to ask for things (*Дайте, будь ласка, каву*).
-- **Contrastive pairs**: *Читай* (informal/singular) vs. *Читайте* (formal/plural) to highlight the social and numerical difference.
+- **Discovery exercise**: Present a matching activity with textbook icons (a pencil, an ear, an eye, a book) alongside common teacher instructions ("Пишіть!", "Слухайте!", "Дивіться!", "Читайте!"). Let learners deduce that the "-те" ending signifies a command addressed to the class.
+- **Best context**: The classroom environment (teacher to students) is the most natural setting for direct commands. For polite requests, simulated café or street direction scenarios work best.
+- **Contrastive pairs**: Present side-by-side examples of "Ти" vs "Ви" (Читай текст vs Читайте текст) to solidify the social distinction. Contrast direct commands with polite requests (Дай vs Дайте, будь ласка).
 
 ## Notes for Content Writing
-- Focus on the practical application of imperatives. The provided textbook excerpts clearly show that imperatives are not just theoretical; they are the language of action (*Роз’єднай*, *Досліджуй*, *Міркуй*).
-- Highlight the use of perfective vs. imperfective in a simple way (e.g., *прочитай* for "read this specific thing now" vs. *читай* for "read in general").
-- Ensure all imperative examples include the correct stress marks to aid pronunciation, as stress can sometimes shift in the imperative mood.
+- Strict adherence to A1 grammar limits: no Dative, no Instrumental. Use Nominative/Accusative.
+- Perfective aspect is explicitly permitted here (скажи, дай). Treat them as lexical items rather than explaining the aspectual system.
+- Maintain structural containment for immersion (English paragraphs, Ukrainian in boxes/lists). Keep Ukrainian sentences under 10 words.
 
 ## Resource Discovery
 

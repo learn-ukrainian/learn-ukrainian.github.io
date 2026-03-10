@@ -1,273 +1,201 @@
 - type: match-up
-  title: "Match infinitive to correct imperative form"
+  title: "Match the Pairs"
+  instruction: "Match the infinitive to its correct informal command form."
   pairs:
     - left: "читати"
       right: "читай"
     - left: "писати"
       right: "пиши"
-    - left: "сказати"
-      right: "скажи"
-    - left: "дати"
-      right: "дай"
-    - left: "іти"
-      right: "іди"
     - left: "слухати"
       right: "слухай"
     - left: "дивитися"
       right: "дивись"
-    - left: "стояти"
-      right: "стій"
-    - left: "показати"
-      right: "покажи"
-    - left: "допомогти"
-      right: "допоможи"
-    - left: "взяти"
-      right: "візьми"
     - left: "чекати"
       right: "чекай"
+    - left: "дати"
+      right: "дай"
+    - left: "сказати"
+      right: "скажи"
+    - left: "стояти"
+      right: "стій"
+    - left: "іти"
+      right: "іди"
+    - left: "допомогти"
+      right: "допоможи"
+    - left: "показати"
+      right: "покажи"
+    - left: "взяти"
+      right: "візьми"
 
 - type: quiz
-  title: "Choose correct imperative form in context"
+  title: "Check Your Knowledge"
+  instruction: "Choose the correct imperative form in context."
   items:
-    - question: "How do you politely ask a stranger to show you something?"
-      explanation: "Use the formal 'ви' form + будь ласка."
+    - question: "How do you say 'Read!' to a group?"
+      explanation: "Use the plural 'ви' form."
       options:
-        - text: "Покажіть, будь ласка."
+        - text: "Читайте!"
           correct: true
-        - text: "Покажи, будь ласка."
+        - text: "Читай!"
           correct: false
-        - text: "Покажіть."
+        - text: "Читати!"
           correct: false
-        - text: "Показати."
+        - text: "Читаю!"
           correct: false
-    - question: "You are talking to your friend. How do you tell them to read?"
-      explanation: "Use the informal 'ти' form (читай)."
+    - question: "How do you say 'Listen!' to a friend?"
+      explanation: "Use the informal 'ти' form."
       options:
-        - text: "Читай."
+        - text: "Слухай!"
           correct: true
-        - text: "Читайте."
+        - text: "Слухайте!"
           correct: false
-        - text: "Читати."
+        - text: "Слухати!"
           correct: false
-        - text: "Читають."
+        - text: "Слухаю!"
           correct: false
-    - question: "A teacher tells the whole class to write."
-      explanation: "Use the plural/formal 'ви' form (пишіть)."
+    - question: "How do you politely ask for something?"
+      explanation: "Add 'будь ласка' to soften the request."
       options:
-        - text: "Пишіть."
+        - text: "Дайте, будь ласка."
           correct: true
-        - text: "Пиши."
+        - text: "Дай!"
           correct: false
-        - text: "Писати."
+        - text: "Дати."
           correct: false
-        - text: "Пишемо."
+        - text: "Дамо."
           correct: false
-    - question: "How do you ask for help in an emergency?"
-      explanation: "Use the imperative form of допомогти."
+    - question: "How do you tell someone NOT to look?"
+      explanation: "Add 'не' before the command."
       options:
+        - text: "Не дивись!"
+          correct: true
+        - text: "Не читати!"
+          correct: false
+        - text: "Дивись!"
+          correct: false
+        - text: "Не пиши!"
+          correct: false
+    - question: "What is the correct informal command for 'to write'?"
+      explanation: "Drop the infinitive ending and add the suffix."
+      options:
+        - text: "пиши"
+          correct: true
+        - text: "писати"
+          correct: false
+        - text: "пишіть"
+          correct: false
+        - text: "пишу"
+          correct: false
+    - question: "What is the correct formal command for 'to give'?"
+      explanation: "This is an irregular short stem."
+      options:
+        - text: "дайте"
+          correct: true
+        - text: "дай"
+          correct: false
+        - text: "дати"
+          correct: false
+        - text: "дам"
+          correct: false
+    - question: "How do you say 'Stand here!' formally?"
+      explanation: "Use the 'ви' form for the irregular verb."
+      options:
+        - text: "Стійте тут!"
+          correct: true
+        - text: "Стій тут!"
+          correct: false
+        - text: "Стояти тут!"
+          correct: false
+        - text: "Стою тут!"
+          correct: false
+    - question: "How do you tell a friend 'Do not go!'?"
+      explanation: "Use the 'не' particle with the informal command."
+      options:
+        - text: "Не іди!"
+          correct: true
+        - text: "Не ідіть!"
+          correct: false
+        - text: "Не ідемо!"
+          correct: false
+        - text: "Не іду!"
+          correct: false
+    - question: "What is the correct informal command for 'to say'?"
+      explanation: "This verb has a consonant mutation."
+      options:
+        - text: "скажи"
+          correct: true
+        - text: "сказати"
+          correct: false
+        - text: "скажіть"
+          correct: false
+        - text: "скажу"
+          correct: false
+    - question: "How do you ask a friend to help?"
+      explanation: "Use the 'ти' form of the verb."
+      options:
+        - text: "Допоможи!"
+          correct: true
         - text: "Допоможіть!"
-          correct: true
-        - text: "Допомогти!"
           correct: false
-        - text: "Допомагаю!"
+        - text: "Допоможемо!"
           correct: false
-        - text: "Допоможе!"
-          correct: false
-    - question: "Which of these is a negative command to a group?"
-      explanation: "Add 'не' before the formal imperative verb."
-      options:
-        - text: "Не дивіться."
-          correct: true
-        - text: "Не дивись."
-          correct: false
-        - text: "Не дивитися."
-          correct: false
-        - text: "Не дивиться."
-          correct: false
-    - question: "Which is the correct command for 'to take' (informal)?"
-      explanation: "The informal command for взяти is візьми."
-      options:
-        - text: "Візьми."
-          correct: true
-        - text: "Взяти."
-          correct: false
-        - text: "Візьміть."
-          correct: false
-        - text: "Взяв."
-          correct: false
-    - question: "Which word means 'Wait here!' (informal)?"
-      explanation: "Use the informal чекай + тут."
-      options:
-        - text: "Чекай тут!"
-          correct: true
-        - text: "Чекайте тут!"
-          correct: false
-        - text: "Чекати тут!"
-          correct: false
-        - text: "Чекаю тут!"
-          correct: false
-    - question: "How do you formally ask someone to give you time?"
-      explanation: "Use the formal дайте."
-      options:
-        - text: "Дайте час."
-          correct: true
-        - text: "Дай час."
-          correct: false
-        - text: "Дати час."
-          correct: false
-        - text: "Дамо час."
-          correct: false
-    - question: "What does 'Стій!' mean?"
-      explanation: "It is the informal command for 'stop' or 'stand'."
-      options:
-        - text: "Stop!"
-          correct: true
-        - text: "Go!"
-          correct: false
-        - text: "Look!"
-          correct: false
-        - text: "Wait!"
-          correct: false
-    - question: "Which command is formed by adding -й?"
-      explanation: "Verbs ending in a vowel in their stem take -й."
-      options:
-        - text: "Читай."
-          correct: true
-        - text: "Пиши."
-          correct: false
-        - text: "Скажи."
-          correct: false
-        - text: "Іди."
+        - text: "Допоможу!"
           correct: false
 
 - type: fill-in
-  title: "Complete dialogue with correct imperative"
+  title: "Complete the Sentence"
+  instruction: "Choose the correct imperative form to complete the dialogue."
   items:
-    - sentence: "___ слово тут."
-      answer: "Пиши"
-      options: ["Пиши", "Писати", "Пишу", "Пишуть"]
-    - sentence: "___ туди, будь ласка."
-      answer: "Ідіть"
-      options: ["Ідіть", "Іти", "Ідемо", "Ідуть"]
-    - sentence: "___ це, будь ласка."
-      answer: "Покажіть"
-      options: ["Покажіть", "Показати", "Покажу", "Покажеш"]
-    - sentence: "___ тут."
-      answer: "Чекай"
-      options: ["Чекай", "Чекати", "Чекаю", "Чекаєте"]
-    - sentence: "Не ___ це."
+    - sentence: "Ти ___ це слово!"
       answer: "читай"
-      options: ["читай", "читати", "читаю", "читають"]
-    - sentence: "___ слово."
-      answer: "Скажи"
-      options: ["Скажи", "Сказати", "Скажу", "Скажемо"]
-    - sentence: "___ там."
-      answer: "Стійте"
-      options: ["Стійте", "Стояти", "Стоять", "Стою"]
-    - sentence: "___ це."
-      answer: "Візьміть"
-      options: ["Візьміть", "Взяти", "Візьмемо", "Взяв"]
+      options: ["читай", "читайте", "читати", "читаю"]
+    - sentence: "Ви ___ ці слова!"
+      answer: "читайте"
+      options: ["читай", "читайте", "читати", "читаю"]
+    - sentence: "___, будь ласка, де люди?"
+      answer: "Скажіть"
+      options: ["Скажіть", "Скажи", "Сказати", "Скажу"]
+    - sentence: "___, будь ласка, те!"
+      answer: "Покажіть"
+      options: ["Покажіть", "Покажи", "Показати", "Покажу"]
+    - sentence: "Ти не ___ там!"
+      answer: "стій"
+      options: ["стій", "стійте", "стояти", "стою"]
+    - sentence: "Ви не ___ там!"
+      answer: "ідіть"
+      options: ["ідіть", "іди", "ідемо", "іду"]
+    - sentence: "Ти ___ мене!"
+      answer: "слухай"
+      options: ["слухай", "слухайте", "слухати", "слухаю"]
+    - sentence: "Ви ___ це!"
+      answer: "пишіть"
+      options: ["пишіть", "пиши", "писати", "пишу"]
 
 - type: true-false
-  title: "Evaluate imperative usage correctness"
+  title: "True or False?"
+  instruction: "Evaluate the correctness of these statements about the imperative mood."
   items:
-    - statement: "The word 'читати' is the imperative form."
+    - statement: "To form a command, you always use the infinitive form of the verb."
       correct: false
-      explanation: "Читати is the infinitive form. The imperative is читай or читайте."
-    - statement: "You add '-те' to make a command formal or plural."
+      explanation: "You must drop the infinitive ending and add a specific suffix."
+    - statement: "The command form of 'дати' (to give) is 'дай' or 'дайте'."
       correct: true
-      explanation: "Yes, 'читай' becomes 'читайте'."
-    - statement: "'Пиши' is an informal command."
-      correct: true
-      explanation: "Yes, it is the 'ти' form of 'писати'."
-    - statement: "'Будь ласка' makes a command more polite."
-      correct: true
-      explanation: "It translates to 'please' and softens the request."
-    - statement: "To tell someone NOT to do something, use 'ні'."
+      explanation: "It has an irregular short stem."
+    - statement: "You use the 'ти' form when speaking politely to a stranger."
       correct: false
-      explanation: "Use 'не' before the verb (e.g., Не читай)."
-    - statement: "The formal command for 'give' is 'дайте'."
+      explanation: "You use the 'ви' form for formal situations."
+    - statement: "Adding 'не' before the command makes it a prohibition."
       correct: true
-      explanation: "Yes, 'дайте' is the formal/plural form of 'дати'."
-    - statement: "The verb 'дивитися' becomes 'дивись' in the formal imperative."
+      explanation: "For example, 'Не дивись!' means 'Do not look!'."
+    - statement: "The verb 'сказати' changes its consonant to 'ж' in the command form."
+      correct: true
+      explanation: "The form becomes 'скажи' or 'скажіть'."
+    - statement: "You should use 'будь ласка' to soften direct commands."
+      correct: true
+      explanation: "It transforms an order into a polite request."
+    - statement: "The command 'стій' is used when addressing multiple people."
       correct: false
-      explanation: "'Дивись' is informal. The formal is 'дивіться'."
-    - statement: "'Слухайте' is used when speaking to multiple people."
+      explanation: "'Стій' is the singular informal form. Plural is 'стійте'."
+    - statement: "The formal command for 'to go' is 'ідіть'."
       correct: true
-      explanation: "Yes, it is the plural form."
-
-- type: group-sort
-  title: "Sort the commands into Informal (ти) and Formal/Plural (ви)"
-  groups:
-    - name: "Informal (ти)"
-      items: ["читай", "пиши", "скажи", "дай", "чекай"]
-    - name: "Formal/Plural (ви)"
-      items: ["читайте", "пишіть", "скажіть", "дайте", "чекайте"]
-
-- type: unjumble
-  title: "Put the words in order to form polite requests"
-  items:
-    - words: ["скажіть", "ласка", "будь"]
-      answer: "Скажіть будь ласка"
-    - words: ["це", "покажіть", "ласка", "будь"]
-      answer: "Покажіть це будь ласка"
-    - words: ["там", "чекайте", "ласка", "будь"]
-      answer: "Чекайте там будь ласка"
-    - words: ["будь", "допоможіть", "ласка"]
-      answer: "Допоможіть будь ласка"
-    - words: ["читай", "це", "ласка", "будь"]
-      answer: "Читай це будь ласка"
-    - words: ["будь", "пиши", "тут", "ласка"]
-      answer: "Пиши тут будь ласка"
-    - words: ["дай", "це", "ласка", "будь"]
-      answer: "Дай це будь ласка"
-    - words: ["тут", "стійте", "ласка", "будь"]
-      answer: "Стійте тут будь ласка"
-
-- type: match-up
-  title: "Match the command to its English translation"
-  pairs:
-    - left: "Слухай!"
-      right: "Listen!"
-    - left: "Стій!"
-      right: "Stop!"
-    - left: "Дай!"
-      right: "Give!"
-    - left: "Візьми!"
-      right: "Take!"
-    - left: "Іди!"
-      right: "Go!"
-    - left: "Дивись!"
-      right: "Look!"
-    - left: "Чекай!"
-      right: "Wait!"
-    - left: "Допоможи!"
-      right: "Help!"
-
-- type: true-false
-  title: "True or False: Verb stem rules"
-  items:
-    - statement: "Verbs ending in a vowel sound before the command ending take '-й'."
-      correct: true
-      explanation: "Yes, 'читати' becomes 'читай'."
-    - statement: "Verbs ending in a consonant sound before the command ending take '-й'."
-      correct: false
-      explanation: "They take '-и' (e.g., писати -> пиши)."
-    - statement: "'Іди' is the informal imperative of 'іти'."
-      correct: true
-      explanation: "Yes, 'іди' is correct."
-    - statement: "The formal command for 'взяти' is 'взяйте'."
-      correct: false
-      explanation: "It is an irregular verb: 'візьміть'."
-    - statement: "You add '-те' directly to the infinitive to make a formal command."
-      correct: false
-      explanation: "You add it to the informal imperative (читай -> читайте)."
-    - statement: "Negative commands do not change the imperative ending."
-      correct: true
-      explanation: "You just add 'не' before it (не читай)."
-    - statement: "'Покажи' ends with '-и' because the stem before it ends in a consonant."
-      correct: true
-      explanation: "Yes, this follows the phonetic rule."
-    - statement: "The command form of 'стояти' is 'стояй'."
-      correct: false
-      explanation: "It is an irregular verb: 'стій'."
+      explanation: "This is the correct 'ви' form."

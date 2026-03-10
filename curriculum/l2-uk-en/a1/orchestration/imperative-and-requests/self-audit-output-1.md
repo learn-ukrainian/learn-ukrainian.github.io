@@ -1,6 +1,6 @@
 status: PASS
-iterations: 5
-final_word_count: 1758
+iterations: 2
+final_word_count: 1433
 gates_passed: Persona, Words, Engagement, Structure, Lint, Pedagogy, Research, Immersion
 gates_failed: none
-fixes_applied: Rewrote the content heavily to use blockquote dialogue sequences instead of English explanations to increase immersion from 12% to 30.6%. Adjusted H2 headers to strictly match the plan.
+fixes_applied: Changed H2 Підсумок to H1 to fix TOC compliance. Replaced perfective past tense 'взяв' with 'візьму'. Added more Ukrainian dialogues to boost immersion from 29.3% to 30.7%.

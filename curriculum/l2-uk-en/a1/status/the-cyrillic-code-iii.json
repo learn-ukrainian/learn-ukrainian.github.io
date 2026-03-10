@@ -2,14 +2,14 @@
   "module": "the-cyrillic-code-iii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-10T11:19:00.672595Z",
+  "last_audit": "2026-03-10T15:15:31.382994Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-10T11:18:48.026471Z",
-    "meta": "2026-03-10T11:05:17.784151Z",
-    "activities": "2026-03-10T11:16:22.000430Z",
-    "vocabulary": "2026-03-10T11:16:22.001006Z",
-    "research": "2026-03-10T11:02:39.950825Z",
+    "md": "2026-03-10T12:41:06.234965Z",
+    "meta": "2026-03-10T12:41:06.225899Z",
+    "activities": "2026-03-10T12:41:06.223812Z",
+    "vocabulary": "2026-03-10T12:41:06.235114Z",
+    "research": "2026-03-10T12:41:06.233966Z",
     "plan": "2026-03-05T15:41:08.649973Z"
   },
   "gates": {
@@ -44,7 +44,7 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
@@ -56,6 +56,6 @@
     ],
     "pass_count": 3,
     "fail_count": 2,
-    "deferred_count": 1
+    "deferred_count": 0
   }
 }

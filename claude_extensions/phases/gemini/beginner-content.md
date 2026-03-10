@@ -30,7 +30,15 @@ Read ALL files before writing.
 
 {DECODABLE_VOCABULARY}
 
-{LEXICAL_SANDBOX}
+**Target vocabulary** (from the plan — you MUST teach and use these words heavily):
+
+{VOCABULARY_HINTS}
+
+**Rules:**
+- Teach all target vocabulary words listed above. These must appear in your content with clear context.
+- For the rest of the text, use natural, level-appropriate Ukrainian guided by the textbook excerpts below.
+- Match the syntactic complexity, sentence length, and vocabulary level of the provided textbook excerpts. Do not exceed their lexical density.
+- When textbook excerpts contain vocabulary or grammar not yet taught at this level, simplify or provide an English gloss in parentheses.
 
 NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
 
@@ -109,6 +117,7 @@ Keep paragraphs short (3-5 sentences). Do NOT use Ukrainian grammar terminology 
 2. **Word count**: Does the total meet {WORD_TARGET}?
 3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
 4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
+5. **Target vocabulary**: Are all target vocabulary words used in the content?
 
 {SELF_AUDIT_SNIPPET}
 

@@ -1,238 +1,311 @@
 <!-- SCOPE
-Covers: Form imperatives from required verbs, polite requests
+Covers: Imperative mood formation, ти/ви distinction, 8 required command verbs, polite requests, prohibitions.
 Not covered:
-  - Complex directions → a1-48
+  - Complex imperative forms (let's)
 -->
+<!-- adapted from: Krok 1, Lesson 12 -->
 
 # Imperative and Requests
 
 > **Чому це важливо?**
 >
-> The imperative mood allows you to ask for help, give instructions, or make requests.
+> From asking for directions to telling a friend to look at something, the imperative mood is how you get things done. In Ukrainian, how you give a command depends heavily on who you are talking to — making this an essential skill for polite communication.
 
-## Наказовий спосіб
+## Наказовий спосіб (Imperative mood)
 
-We use the imperative mood when we want someone to do something. This includes giving direct instructions, asking for a favor, or seeking help. 
+> — **Читай це слово!**
+> — Я читаю.
+> — **Читайте ці слова!**
+> — Ми читаємо.
+> — **Дивись там!**
+> — Я дивлюсь.
+> — **Дивіться тут!**
+> — Ми дивимось.
+> — **Слухай мене!**
+> — Я слухаю.
+> — **Слухайте нас!**
+> — Ми слухаємо.
+> — **Пиши тут!**
+> — Я пишу.
+> — **Пишіть там!**
+> — Ми пишемо.
+> — **Іди до мене!**
+> — Я іду до тебе.
+> — **Ідіть до нас!**
+> — Ми ідемо до вас.
 
-> — **Хто́ ту́т?** — Who is here?
-> — **Це́ я́. Іди́ сюди́!** — It is me. Come here!
-> — **Та́к, я іду́.** — Yes, I am going.
-> — **Диви́сь! Ось сло́во.** — Look! Here is the word.
-> — **Яке́ сло́во?** — Which word?
-> — **Ось це́. Чита́й це́.** — This one. Read this.
-> — **Та́к, я чита́ю.** — Yes, I am reading.
+To tell someone to do something, we use the imperative mood. In English, we simply use the base form of the verb, as in "Read!" or "Listen!". In Ukrainian, the verb form changes depending on who you are talking to.
 
-The informal singular imperative addresses someone you call **ти** (you, informal). You will use this form with friends and family. For many verbs, drop the infinitive ending and add **-й** or **-и**.
+You must choose between the informal **ти** form and the polite or plural **ви** form. The **ти** form is used when giving a command to a friend, a family member, or a child. The **ви** form is used when addressing multiple people or when speaking politely to a stranger or an elder.
 
-For stems ending in a vowel (**чита́ти**, **слу́хати**, **чека́ти**), add **-й**.
+To create these commands, we generally drop the ending from the infinitive and add specific suffixes.
 
-> — **Чита́ти** — to read
-> — **Чита́й!** — Read!
-> — **Слу́хати** — to listen
-> — **Слу́хай!** — Listen!
-> — **Чека́ти** — to wait
-> — **Чека́й!** — Wait!
+| Infinitive | ти-command | ви-command |
+|---|---|---|
+| читати | читай | читайте |
+| писати | пиши | пишіть |
+| слухати | слухай | слухайте |
+| дивитися | дивись | дивіться |
+| чекати | чекай | чекайте |
 
-For stems ending in a consonant (**писа́ти**, **іти́**), add **-и**.
+A very common mistake for beginners is trying to use the infinitive form when giving a command. Because English uses the base form, learners often say ~~читати це~~ instead of the correct **читай це**. Remember that the infinitive in Ukrainian means "to read," not "read!". You must apply the correct ending to show that it is an instruction. Context is everything.
 
-> — **Писа́ти** — to write
-> — **Пиши́!** — Write!
-> — **Іти́** — to go
-> — **Іди́!** — Go!
-> — **Сказа́ти** — to say
-> — **Скажи́!** — Say!
+Notice how the **ви** forms always end in **-те** (**читайте**, **пишіть**). This is a reliable pattern you can listen for to know if someone is addressing a group or being formal.
 
-When speaking to a group of people or respectfully to one person, you use the formal or plural form. This form corresponds to the pronoun **ви** (you, formal/plural). You add the suffix **-те**.
+> [!tip] Which form should I use?
+> When in doubt, always default to the **ви** form. It is much better to be overly polite than to accidentally use the informal **ти** form with someone who expects formal address.
 
-> — **Чита́йте!** — Read! (formal/plural)
-> — **Слу́хайте!** — Listen! (formal/plural)
-> — **Чека́йте!** — Wait! (formal/plural)
-> — **Пиші́ть!** — Write! (formal/plural)
-> — **Іді́ть!** — Go! (formal/plural)
-> — **Скажі́ть!** — Say! (formal/plural)
+> — **Скажи, хто ти?**
+> — Я людина.
+> — **Скажіть, хто ви?**
+> — Ми люди.
+> — **Чекай день.**
+> — Я чекаю день.
+> — **Чекайте час.**
+> — Ми чекаємо час.
+> — **Покажи це.**
+> — Я покажу це.
+> — **Покажіть те.**
+> — Ми покажемо те.
+> — **Допоможи!**
+> — Я допоможу.
+> — **Допоможіть!**
+> — Ми допоможемо.
+> — **Стій тут!**
+> — Я стою.
+> — **Стійте там!**
+> — Ми стоїмо.
 
-Reflexive verbs maintain a unique pattern. For the verb **диви́тися** (to look), we use **диви́сь** (informal) and **диві́ться** (formal/plural).
+## Вісім обов'язкових дієслів (Eight required verbs)
 
-> [!warning] A Common Learner Error
-> Do not use the infinitive (like ~~чита́ти~~) when giving a personal command. Always use the proper imperative form (**чита́й** or **чита́йте**).
+> — **Читайте ці слова!**
+> — Ми читаємо ці слова.
+> — **Пишіть слова тут!**
+> — Ми пишемо тут.
+> — **Слухайте мене!**
+> — Ми слухаємо тебе.
+> — **Дивіться там!**
+> — Ми дивимось там.
+> — **Ідіть до мене!**
+> — Ми ідемо до тебе.
+> — **Стійте там!**
+> — Ми стоїмо там.
+> — **Дайте це!**
+> — Ми дамо це.
+> — **Скажіть це!**
+> — Ми скажемо це.
 
-## Вісім обов'язкових дієслів
+Here are the core command verbs you will hear constantly in everyday life. Notice how the **ти** forms usually end in **-й** or **-и**, while the **ви** forms add **-те**.
 
-Here are eight essential verbs and their imperative forms.
+- **читай / читайте** — Read!
+- **пиши / пишіть** — Write!
+- **слухай / слухайте** — Listen!
+- **дивись / дивіться** — Look!
+- **іди / ідіть** — Go!
 
-1. **Да́ти** (to give)
-> — **Да́й це́!** — Give this! (informal)
-> — **Да́йте!** — Give! (formal)
+Most of these follow a somewhat predictable pattern, but a few have irregular stems that you simply need to memorize. The verb **дати** (to give) has a very short stem. The command form is **дай** or **дайте**.
 
-2. **Взя́ти** (to take)
-> — **Візьми́!** — Take! (informal)
-> — **Візьмі́ть!** — Take! (formal)
+The verb **сказати** (to say) undergoes a consonant mutation. The letter **з** changes to **ж**, making the command **скажи** or **скажіть**.
 
-3. **Стоя́ти** (to stand / to stop)
-> — **Сті́й!** — Stand! (informal)
-> — **Сті́йте!** — Stand! (formal)
+The verb **стояти** (to stand) changes its stem vowel. The command becomes **стій** or **стійте**.
 
-4. **Допомогти́** (to help)
-> — **Допоможи́!** — Help! (informal)
-> — **Допоможі́ть!** — Help! (formal)
+| Infinitive | ти-command | ви-command |
+|---|---|---|
+| дати | дай | дайте |
+| сказати | скажи | скажіть |
+| стояти | стій | стійте |
 
-5. **Показа́ти** (to show)
-> — **Покажи́ це́!** — Show this! (informal)
-> — **Покажі́ть!** — Show! (formal)
+Listen for these specific forms in everyday situations, like a teacher addressing a class (**читайте**, **пишіть**) or a friend handing you something (**дай**).
 
-6. **Сказа́ти** (to say / to tell)
-> — **Скажи́!** — Say! (informal)
-> — **Скажі́ть!** — Say! (formal)
+> [!warning] Irregular Stems
+> Do not attempt to apply regular rules to irregular verbs. A learner might guess ~~дайти~~ or ~~сказай~~, but these are incorrect. Always use the specific memorized forms: **дай** and **скажи**.
 
-7. **Іти́** (to go)
-> — **Іди́!** — Go! (informal)
-> — **Іді́ть!** — Go! (formal)
+> — **Читай те слово.**
+> — Я читаю те слово.
+> — **Пиши це слово.**
+> — Я пишу це слово.
+> — **Слухай ці слова.**
+> — Я слухаю ці слова.
+> — **Дивись на людей.**
+> — Я дивлюсь на людей.
+> — **Іди до людей.**
+> — Я іду до людей.
+> — **Стій там.**
+> — Я стою там.
+> — **Дай це.**
+> — Я дам це.
+> — **Скажи слово.**
+> — Я скажу слово.
 
-8. **Чека́ти** (to wait)
-> — **Чека́й!** — Wait! (informal)
-> — **Чека́йте!** — Wait! (formal)
+## Ввічливе прохання (Polite requests)
 
-Combine these verbs with simple location words like **ту́т** (here), **та́м** (there), **сюди́** (to here), or **туди́** (to there) to form practical commands. You can also use **це́** (this).
+> — **Дайте, будь ласка, це.**
+> — Ось, візьміть.
+> — **Покажіть, будь ласка, те.**
+> — Дивіться. Це те.
+> — **Скажіть, будь ласка, де він?**
+> — Він там.
+> — **Допоможіть, будь ласка!**
+> — Я допоможу.
+> — **Чекайте, будь ласка, час.**
+> — Я чекаю час.
+> — **Прошу вас, візьміть це.**
+> — Так, я візьму.
 
-> — **Де́ ча́с?** — Where is the time?
-> — **Ось ча́с. Чека́й ту́т.** — Here is the time. Wait here.
-> — **Я чека́ю.** — I am waiting.
-> — **Допоможі́ть! Я ту́т!** — Help! I am here!
-> — **Я іду́!** — I am going.
-> — **Покажи́, де́ ві́н.** — Show where he is.
-> — **Ві́н та́м.** — He is there.
-> — **Чита́й це́.** — Read this.
-> — **Пиши́ ту́т.** — Write here.
-> — **Покажи́ ту́т.** — Show here.
-> — **Диви́сь та́м.** — Look there.
-> — **Іди́ сюди́.** — Come here.
-> — **Сті́й ту́т.** — Stand here.
-> — **Та́к, я стою́ ту́т.** — Yes, I am standing here.
-> — **Що́ це́?** — What is this?
-> — **Ось сло́во. Пиши́ це́ сло́во.** — Here is the word. Write this word.
-> — **Скажи́, де́ ти́?** — Say, where are you?
-> — **Я ту́т. Чека́й ту́т.** — I am here. Wait here.
+Giving direct commands can sometimes sound harsh or abrupt. To soften your request and make it polite, you should always include the phrase **будь ласка** (please). This is a universal softener that instantly transforms a direct order into a courteous request.
 
-> [!tip] Quick Tip
-> Memorize the forms of **да́ти** and **взя́ти**, as you will use them constantly when handing things to people or receiving items.
+You can place this phrase at the beginning, middle, or end of your sentence. However, it is most frequently placed immediately after the command verb.
 
-## Ввічливе прохання
+- **Дайте, будь ласка.** — Please give.
+- **Покажіть, будь ласка.** — Please show.
+- **Скажіть, будь ласка.** — Please tell.
+- **Допоможіть, будь ласка.** — Please help.
 
-Use **бу́дь ла́ска** (please) to make commands polite. It softens your instruction.
+For more formal situations, such as in an official setting, you can use **прошу вас** (I ask you) along with the **ви** command form. This elevates the politeness level significantly, similar to saying "I kindly ask you to..." in English.
 
-> — **Скажі́ть, бу́дь ла́ска, де́ ві́н?** — Please tell, where is he?
-> — **Допоможі́ть, бу́дь ла́ска.** — Help, please.
-> — **Да́йте, бу́дь ла́ска, це́.** — Please give this.
-> — **Покажі́ть, бу́дь ла́ска.** — Please show.
-> — **Слу́хайте, бу́дь ла́ска.** — Please listen.
-> — **Чита́йте, бу́дь ла́ска.** — Please read.
-> — **Пиші́ть, бу́дь ла́ска.** — Please write.
-> — **Чека́йте, бу́дь ла́ска.** — Please wait.
-> — **Іді́ть, бу́дь ла́ска.** — Please go.
+Another highly polite strategy is to use an indirect request. The phrase **чи не могли б ви** (could you) is an excellent way to ask for something without using the imperative mood at all. We follow this phrase with the infinitive verb.
 
-> [!culture] Politeness Matters
-> Using **бу́дь ла́ска** is essential. Adding this simple phrase makes your speech polite and respectful. It is commonly placed before or after the verb, or even at the end of the sentence.
+| Strategy | Example | Translation |
+|---|---|---|
+| Direct | **Дайте це.** | Give this. |
+| Softened | **Дайте, будь ласка, це.** | Please give this. |
+| Indirect | **Чи не могли б ви дати це?** | Could you give this? |
 
-Here are some polite interactions using **бу́дь ла́ска**. You will notice that it works perfectly with both formal and informal commands.
+> [!culture] Politeness in Service
+> When interacting with staff in cafes or shops, always use the **ви** form combined with **будь ласка**. A direct command like **Дай каву!** is considered extremely rude.
 
-> — **Чита́й це́, бу́дь ла́ска.** — Read this, please.
-> — **Та́к, я чита́ю.** — Yes, I am reading.
-> — **Скажі́ть, бу́дь ла́ска, це́ яки́й ча́с?** — Tell me please, what time is this?
-> — **Чека́йте, бу́дь ла́ска, я ту́т.** — Wait, please, I am here.
-> — **Допоможі́ть, бу́дь ла́ска!** — Help, please!
-> — **Да́йте це́, бу́дь ла́ска.** — Give this, please.
-> — **Покажі́ть, бу́дь ла́ска, де́ ві́н.** — Please show where he is.
-> — **Диві́ться ту́т, бу́дь ла́ска.** — Look here, please.
+> — **Чи не могли б ви допомогти?**
+> — Так, я допоможу.
+> — **Чи не могли б ви сказати, де люди?**
+> — Люди там.
+> — **Чи не могли б ви показати це?**
+> — Так, я покажу це.
+> — **Прошу вас, чекайте.**
+> — Ми чекаємо.
+> — **Прошу вас, дивіться.**
+> — Ми дивимось.
 
-## Заборони
+## Заборони (Prohibitions)
 
-Add **не** (not) before the imperative verb for negative commands. Ukrainian negative commands typically use imperfective verbs.
+> — **Не іди там!**
+> — Так, я стою.
+> — **Не дивись на це!**
+> — Я не дивлюсь.
+> — **Не пиши це слово!**
+> — Я не пишу це слово.
+> — **Не слухай людей!**
+> — Я не слухаю людей.
+> — **Не чекай день!**
+> — Я не чекаю день.
+> — **Не стій тут!**
+> — Я не стою тут.
 
-> — **Не чита́й це́.** — Do not read this.
-> — **Не пиші́ть.** — Do not write.
-> — **Не диви́сь.** — Do not look.
-> — **Не слу́хайте.** — Do not listen.
-> — **Не іди́ туди́.** — Do not go there.
+Creating a negative command or prohibition is incredibly simple. You only need to add the word **не** (not) directly before the imperative verb. The form of the verb remains exactly the same.
 
-This applies to both formal and informal commands. Notice how the structure remains exactly the same, with **не** taking the first position in the phrase. You can also add location words.
+- **Не дивись!** — Do not look!
+- **Не пишіть!** — Do not write!
+- **Не слухай!** — Do not listen!
+- **Не чекайте!** — Do not wait!
 
-> — **Не чека́й.** — Do not wait.
-> — **Не чека́йте.** — Do not wait.
-> — **Не сті́й ту́т.** — Do not stand here.
-> — **Не сті́йте ту́т.** — Do not stand here.
-> — **Не диви́сь та́м.** — Do not look there.
-> — **Не диві́ться та́м.** — Do not look there.
-> — **Не пиши́ ту́т.** — Do not write here.
-> — **Не пиші́ть ту́т.** — Do not write here.
+There is a subtle distinction to be aware of when giving prohibitions. When you are giving a personal instruction to someone, you use the standard imperative forms with **не**. However, if you see a public sign outlining a rule, it will often use the infinitive form instead.
 
-Here are some more examples of prohibitions using the allowed vocabulary. Notice how simple it is to construct these negative commands.
+For example, a personal command would be **Не іди!**, while a public warning sign might just use the infinitive. As a beginner, focus on the personal commands, as these are what you will use in conversation.
 
-> — **Не іди́.** — Do not go.
-> — **Не іді́ть туди́.** — Do not go there.
-> — **Не чита́й це́.** — Do not read this.
-> — **Не чита́йте це́ сло́во.** — Do not read this word.
-> — **Не кажи́ та́к.** — Do not say so. (informal)
-> — **Не кажі́ть та́к.** — Do not say so. (formal)
-> — **Не дава́й це́.** — Do not give this. (informal)
-> — **Не дава́йте це́.** — Do not give this. (formal)
-> — **Не бери́ це́.** — Do not take this. (informal)
-> — **Не бері́ть це́.** — Do not take this. (formal)
+> — **Не читай це.**
+> — Я не читаю це.
+> — **Не пишіть там.**
+> — Ми не пишемо там.
+> — **Не слухай те слово.**
+> — Я не слухаю те слово.
+> — **Не дивіться на них.**
+> — Ми не дивимось на них.
+> — **Не стій там.**
+> — Я не стою там.
+> — **Не ідіть до них.**
+> — Ми не ідемо до них.
 
-## Практика
+## Практика (Practice)
 
-Let's practice the imperative forms. Read the situations and see how the commands are used, escalating from direct informal commands to highly polite formal requests. Practice reading these aloud.
+Now that you have learned the rules, let's practice using the imperative mood in different situations. It is very important to use the correct form.
 
-Direct informal commands for a friend (**ти**):
-> — **Слу́хай це́!** — Listen to this!
-> — **Диви́сь та́м!** — Look there!
-> — **Чита́й сло́во.** — Read the word.
-> — **Пиши́ ту́т.** — Write here.
-> — **Іди́ сюди́.** — Come here.
-> — **Да́й це́!** — Give this!
-> — **Скажи́ та́к.** — Say yes.
-> — **Покажи́ це́.** — Show this.
-> — **Чека́й ту́т.** — Wait here.
-> — **Сті́й та́м.** — Stand there.
-> — **Допоможи́ ту́т!** — Help here!
-> — **Не чека́й та́м.** — Do not wait there.
-> — **Та́к, іди́ сюди́.** — Yes, come here.
+> — **Читайте це слово!**
+> — Я читаю.
+> — **Дайте, будь ласка, це.**
+> — Візьміть.
+> — **Слухайте мене.**
+> — Я слухаю тебе.
+> — **Слухай мене.**
+> — Я слухаю тебе.
 
-Direct formal or plural commands (**ви**):
-> — **Чека́йте ту́т.** — Wait here.
-> — **Сті́йте та́м.** — Stand there.
-> — **Пиші́ть сло́во.** — Write the word.
-> — **Скажі́ть це́.** — Say this.
-> — **Чита́йте ту́т.** — Read here.
-> — **Слу́хайте це́!** — Listen to this!
-> — **Диві́ться та́м!** — Look there!
-> — **Іді́ть сюди́.** — Come here.
-> — **Да́йте це́.** — Give this.
-> — **Покажі́ть це́.** — Show this.
+It is important to remember the difference between the **ти** and **ви** forms. You will use both frequently in daily life. Remember that when you address a group of people, you must always use the plural form. When you address a stranger or someone older, you must use the formal form. 
 
-Polite formal requests (**ви** + **бу́дь ла́ска**):
-> — **Допоможі́ть, бу́дь ла́ска.** — Help, please.
-> — **Да́йте це́, бу́дь ла́ска.** — Give this, please.
-> — **Покажі́ть та́м, бу́дь ла́ска.** — Show there, please.
-> — **Візьмі́ть це́, бу́дь ла́ска.** — Take this, please.
-> — **Іді́ть сюди́, бу́дь ла́ска.** — Come here, please.
-> — **Чита́йте сло́во, бу́дь ла́ска.** — Read the word, please.
-> — **Пиші́ть ту́т, бу́дь ла́ска.** — Write here, please.
-> — **Слу́хайте це́, бу́дь ла́ска.** — Listen to this, please.
-> — **Диві́ться та́м, бу́дь ла́ска.** — Look there, please.
-> — **Чека́йте ту́т, бу́дь ла́ска.** — Wait here, please.
-> — **Сті́йте та́м, бу́дь ла́ска.** — Stand there, please.
-> — **Допоможі́ть ту́т, бу́дь ла́ска.** — Help here, please.
-> — **Не чека́йте та́м, бу́дь ла́ска.** — Do not wait there, please.
+> — **Іди тут.**
+> — Я іду тут.
+> — **Ідіть, будь ласка, там.**
+> — Ми ідемо там.
+> — **Покажіть це.**
+> — Я покажу це.
+> — **Покажи те.**
+> — Я покажу те.
+> — **Чекайте час.**
+> — Ми чекаємо час.
+> — **Чекай день.**
+> — Я чекаю день.
 
-Review these rules and practice using both the formal (**ви**) and informal (**ти**) forms until they feel natural. The more you use them, the easier it becomes to ask for exactly what you need in Ukrainian.
+When you want to stop someone from doing something, simply add **не** before the command. This creates a negative instruction. It is easy to form negative instructions because the verb form does not change.
 
----
+> — **Не слухай це.**
+> — Я не слухаю це.
+> — **Не стійте там!**
+> — Ми не стоїмо там.
+> — **Не пишіть слова.**
+> — Ми не пишемо слова.
+> — **Не пиши слово.**
+> — Я не пишу слово.
+> — **Не дивіться тут.**
+> — Ми не дивимось тут.
+> — **Не дивись там.**
+> — Я не дивлюсь там.
+
+Practice makes perfect. Always try to add **будь ласка** to sound more polite and respectful. If you use the wrong form, a person might feel offended. Therefore, always choose your words carefully. Do not use the infinitive form to give a direct command to a person.
 
 # Підсумок
 
-The imperative mood allows you to give commands and make requests. You use the informal form for **ти** and add **-те** for the formal/plural **ви**.
+> — **Скажіть, будь ласка, де люди?**
+> — Люди там.
+> — **Чи не могли б ви показати?**
+> — Так, дивіться.
+> — **Дайте, будь ласка, це.**
+> — Візьміть.
+> — **Допоможіть, будь ласка!**
+> — Я допоможу.
+> — **Слухайте мене.**
+> — Я слухаю.
+> — **Читай це слово.**
+> — Я читаю це слово.
+> — **Не пиши там.**
+> — Я не пишу там.
+> — **Іди до мене.**
+> — Я іду до тебе.
 
-- Як сказати «Read!» формально? (How do you say "Read!" formally?) — **Чита́йте!**
-- Як сказати «Listen!» неформально? (How do you say "Listen!" informally?) — **Слу́хай!**
-- Як сказати це формально? (How do you say this formally?) — Add **бу́дь ла́ска**.
-- Як сказати «Look!» формально? (How do you say "Look!" formally?) — **Диві́ться!**
+Choosing the right command form in Ukrainian is all about your relationship with the listener. Use **ти** forms (**читай**, **слухай**) for friends and family, and **ви** forms (**читайте**, **слухайте**) for groups and polite situations. 
+
+Whenever you are giving an instruction to a stranger, defaulting to the **ви** form plus **будь ласка** is always your safest and most natural choice.
+
+- **Слухай.** — Listen.
+- **Слухайте.** — Listen. (plural or formal)
+- **Слухайте, будь ласка.** — Please listen.
+- **Чи не могли б ви слухати?** — Could you listen?
+
+You have learned how to form the imperative mood to give commands and make requests. You know how to distinguish between the informal **ти** form and the formal **ви** form, and you understand the importance of adding polite words to soften your statements. You also learned the core eight verbs required for basic communication and how to form negative prohibitions.
+
+1. **How do you form a negative command?**
+   Add **не** before the imperative verb.
+2. **Which verb has a consonant mutation: писати or сказати?**
+   **Сказати** changes to **скажи**.
+3. **How do you say 'Read!' to a group?**
+   **Читайте!**
+4. **How do you soften a command?**
+   Add **будь ласка** to the sentence.
+
+---

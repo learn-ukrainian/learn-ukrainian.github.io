@@ -3,36 +3,48 @@ level: A1
 title: Imperative and Requests
 word_target: 1200
 content_outline:
-- title: Наказовий спосіб
+- title: Наказовий спосіб (Imperative mood)
   slug: imperative-mood
   words: 300
   points:
-  - Formation rule for singular and plural
-  - Ти-form vs Ви-form
-  - Learner error warning
-- title: Вісім обов'язкових дієслів
+  - 'Introduce the concept: how to tell someone to do something.'
+  - 'Formation rule: drop -ти from infinitive and add endings.'
+  - Contrast 'ти' (informal/singular) and 'ви' (formal/plural) forms.
+  - Address the common error of using the infinitive for commands.
+- title: Вісім обов'язкових дієслів (Eight required verbs)
   slug: eight-required-verbs
   words: 300
   points:
-  - Required classroom verbs
-  - Contextual examples
-  - Irregular stems
-- title: Ввічливе прохання
+  - 'Introduce the 8 core command verbs: читай(те), пиши(те), скажи(те), дай(те),
+    іди(те), слухай(те), дивись(те), стій(те).'
+  - Highlight irregular stems like дай and скажи as set phrases.
+  - 'Provide context with classroom instructions: Читайте текст, Пишіть у зошиті.'
+- title: Ввічливе прохання (Polite requests)
   slug: polite-requests
   words: 250
   points:
-  - Будь ласка
-  - Прошу вас
-  - Indirect request preview
-- title: Заборони
+  - Explain how to soften commands using 'будь ласка'.
+  - Introduce 'Прошу вас' for formal situations.
+  - 'Preview the polite question format: ''Чи не могли б ви...?''.'
+  - Show examples in café or street directions contexts.
+- title: Заборони (Prohibitions)
   slug: prohibitions
   words: 175
   points:
-  - Negative imperative with не
-  - Personal prohibition vs public signs
-- title: Практика
+  - 'How to say ''don''t do it'': just add ''Не'' before the imperative.'
+  - 'Provide examples: Не слухай! Не йдіть туди!'
+  - Distinguish between personal prohibitions and public signs.
+- title: Практика (Practice)
   slug: practice
   words: 175
   points:
-  - Command drills
-  - Politeness escalation
+  - 'Command drills: Teacher gives situation, learner produces correct imperative form.'
+- title: Підсумок
+  slug: summary
+  words: 175
+  points:
+  - Recap the difference between 'ти' and 'ви' forms.
+  - Review the importance of 'будь ласка'.
+  - 'Self-check question 1: How do you say ''Read!'' to a group?'
+  - 'Self-check question 2: Which verb has a consonant mutation: писати or сказати?'
+  - 'Self-check question 3: How do you form a negative command?'

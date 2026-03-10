@@ -493,52 +493,6 @@ def check_activity_answers_vesum(
     return issues
 
 
-# ---------------------------------------------------------------------------
-# Textbook citation density — tracks whether Gemini actually adapted from
-# textbook excerpts or wrote everything from scratch.
-# ---------------------------------------------------------------------------
-
-_CITATION_RE = re.compile(r"<!--\s*(adapted from|original):\s*.*?-->", re.IGNORECASE | re.DOTALL)
-
-
-def check_content_textbook_citations(
-    content: str,
-    level_code: str,
-) -> list[dict]:
-    """Check for textbook citation HTML comments in beginner modules.
-
-    The beginner-full template injects textbook excerpts and asks Gemini to
-    cite adaptations with ``<!-- adapted from: ... -->`` or mark original
-    content with ``<!-- original: ... -->``.  Zero citations in an A1/A2
-    module suggests Gemini ignored the textbook material entirely.
-
-    Returns INFO-level issues only — never blocks builds.
-    """
-    # Only applies to beginner levels that receive textbook injection
-    if level_code.upper() not in ("A1", "A2"):
-        return []
-
-    citations = _CITATION_RE.findall(content)
-    count = len(citations)
-
-    if count == 0:
-        return [{
-            "type": "LOW_TEXTBOOK_CITATION",
-            "severity": "info",
-            "location": "full content",
-            "text": (
-                "No textbook citation comments found (<!-- adapted from: ... --> "
-                "or <!-- original: ... -->). Gemini may have ignored the injected "
-                "textbook excerpts."
-            ),
-            "fix": (
-                "Rebuild with --restart-from content, or manually add citation "
-                "comments to track textbook adaptation."
-            ),
-        }]
-
-    return []
-
 
 def run_content_quality_checks(
     content: str,
@@ -557,6 +511,5 @@ def run_content_quality_checks(
     issues.extend(check_repetitive_transitions(content))
     issues.extend(check_plan_section_coverage(content, plan))
     issues.extend(check_activity_answers_vesum(activities_path, vesum_not_found))
-    issues.extend(check_content_textbook_citations(content, level_code))
 
     return issues

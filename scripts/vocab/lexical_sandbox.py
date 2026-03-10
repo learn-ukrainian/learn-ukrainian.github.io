@@ -1,13 +1,15 @@
 """Lexical Sandbox: VESUM-validated word bank for content generation.
 
-Builds a verified vocabulary sandbox from a plan's vocabulary_hints and
-module grammar constraints. Every Ukrainian word in the sandbox is:
-1. VESUM-verified (exists in the morphological dictionary)
-2. Constraint-filtered (only forms allowed at this module level)
-3. Enriched with inflection tables showing all legal forms
-4. Supplemented with RAG textbook example sentences
+DEPRECATED: Sandbox phase removed in #820. The Lexical Sandbox constrained
+content vocabulary to ~57 words, producing unnatural echo-drill content.
+VESUM post-validation + grammar constraints + textbook excerpts replace it.
+Module kept for utility functions (e.g., _extract_ukr_word, COMMON_WORDS,
+parse_resource_request) that may still be imported elsewhere.
 
-Issue: #755
+Original purpose: Built a verified vocabulary sandbox from a plan's
+vocabulary_hints and module grammar constraints.
+
+Issue: #755 (created), #820 (deprecated)
 """
 
 from __future__ import annotations
