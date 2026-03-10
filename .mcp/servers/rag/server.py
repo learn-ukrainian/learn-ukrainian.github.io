@@ -883,7 +883,10 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
 
     async def handle_sse(request):
         async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
-            await server.run(streams[0], streams[1], server.create_initialization_options())
+            await server.run(
+                streams[0], streams[1], server.create_initialization_options(),
+                stateless=True,
+            )
 
     app = Starlette(
         routes=[

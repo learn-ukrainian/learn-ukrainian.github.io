@@ -6,11 +6,52 @@
 
 ## Branch Strategy
 
-This project uses **trunk-based development on `main`**. No long-lived feature branches.
+This project uses **trunk-based development on `main`** with **worktrees for code changes during builds**.
 
-- All work goes directly to `main`
-- Short-lived branches only if GitHub Copilot agent is assigned (it uses feature branches)
+- **Default**: work directly on `main` (content, config, docs)
+- **During builds**: code changes go in a worktree → PR → merge after review
+- **Rule**: merging to main is safe during builds (code already loaded), but no new builds should start during merge
 - Never force-push to `main`
+
+### Worktree Workflow (for code changes during builds)
+
+```bash
+# 1. Create worktree for an issue
+scripts/wt.sh create 817 "fix v4 terminology"
+
+# 2. Work in the worktree
+cd ../learn-ukrainian-wt-817
+# make changes, commit, push
+git push -u origin fix/817-fix-v4-terminology
+
+# 3. Create PR (enables code review agent, Gemini review, /simplify)
+gh pr create --title "fix: v4 terminology in logs (#817)"
+
+# 4. Get reviews on the PR
+# - Code review agent reviews automatically
+# - Gemini adversarial review via ai_agent_bridge
+# - /simplify for code quality
+
+# 5. Merge when approved
+scripts/wt.sh merge 817
+git push origin main
+
+# 6. Clean up
+scripts/wt.sh clean 817
+```
+
+### When to use worktrees vs. direct commits
+
+| Situation | Approach |
+|-----------|----------|
+| No builds running, small fix | Direct commit on main |
+| Builds running, need code change | Worktree → PR → merge |
+| Docs/config only | Direct commit on main (safe during builds) |
+| Large refactor | Worktree → PR with reviews |
+
+### Build awareness
+
+`scripts/wt.sh status` checks the monitor API (`localhost:8765`) for active builds. The merge command warns about build state.
 
 ---
 

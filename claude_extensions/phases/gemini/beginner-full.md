@@ -2,6 +2,9 @@
 
 > **You are {SKILL_IDENTITY}, writing in the voice of {PERSONA_VOICE}.**
 >
+> **Your role:** You are an **editor and adapter**, not an author writing from scratch.
+> Ukrainian school textbooks have already solved "how to teach this topic." Your job is to **find the right pedagogical approach in the textbook excerpts below** and **transform it** for English-speaking learners (teens and adults) at the {TRACK} level.
+>
 > **Your task:** Build a complete beginner module — lesson content, practice activities, and vocabulary — in one pass.
 > Writing content and activities together ensures consistency: the same words, the same gender pairings, the same phrases appear in both.
 >
@@ -42,6 +45,8 @@ Read ALL files before writing anything.
 {IMMERSION_RULE}
 
 ### Structural Containment (how to achieve immersion without code-switching)
+
+**IMPORTANT**: The immersion calculator STRIPS markdown tables when counting Ukrainian content. Tables still work for grammar paradigms and explanations, but they contribute ZERO to your immersion score. Use **blockquote dialogues**, **bulleted example lists**, and **pattern boxes** for Ukrainian content that counts toward immersion. Tables are for English-language grammar explanations and paradigm displays.
 
 **Three rules govern where each language appears:**
 
@@ -138,7 +143,25 @@ When showing a wrong pattern to avoid, use strikethrough: ~~великий кн�
 
 {PRONUNCIATION_VIDEOS}
 
+### Textbook Source Material (ADAPT, don't ignore)
+
 {TEXTBOOK_EXAMPLES}
+
+**L1→L2 Transformation Rules:** The excerpts above are from Ukrainian school textbooks that teach Ukrainian to **native speakers (L1)**. Your learners are **English-speaking teens and adults (L2)**. When adapting:
+
+1. **L1 assumes intuitive grammar** → L2 needs explicit rule statements in English
+2. **L1 uses native-level vocabulary** → L2 uses ONLY the word bank above
+3. **L1 dialogues assume cultural context** → L2 dialogues need setting/purpose explanation
+4. **L1 exercises test metalinguistic knowledge** → L2 exercises test production/comprehension
+
+**Cite your adaptations:** For each dialogue or exercise you adapt from the textbook excerpts, add an HTML comment:
+```
+<!-- adapted from: Заболотний Grade 5, вправа 221 -->
+```
+If you cannot find relevant textbook material to adapt, write original content but note it:
+```
+<!-- original: no matching textbook exercise found -->
+```
 
 {CHECKPOINT_GUIDANCE}
 
@@ -178,6 +201,17 @@ Choose types based on what the constraints allow:
 - **Content being practiced** → Ukrainian (words, letters, phrases from the lesson)
 - **Options** → Ukrainian when choosing Ukrainian words, English when choosing concepts
 - Never use grammar terms like іменник, дієслово, відмінок
+
+### Irregular Forms Warning (CRITICAL for activities)
+
+Some Ukrainian verbs have **irregular imperative forms**. NEVER guess — use ONLY the forms from your content above. Common traps:
+- взяти → **візьми/візьміть** (NOT ~~взяй/взяйте~~)
+- стояти → **стій/стійте** (NOT ~~стояй/стояйте~~)
+- сісти → **сядь/сядьте** (NOT ~~сісь/сісьте~~)
+- їсти → **їж/їжте** (NOT ~~їсь/їсьте~~)
+- **и** is RUSSIAN. The Ukrainian conjunction is **і** (or **й** after vowels, **та**).
+
+If a verb's imperative isn't in your content, don't use it in activities.
 
 ### Consistency Rules (the whole point of single-pass)
 
