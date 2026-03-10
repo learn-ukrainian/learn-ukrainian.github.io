@@ -103,12 +103,12 @@ Follow the structural containment rules above. Each H2 section MUST follow this 
 
 ### Dialogue Quality (CRITICAL)
 
-Every blockquote dialogue MUST have:
-1. **A real situation** — where are the speakers? (market, classroom, street, home, café)
-2. **A purpose** — why are they talking? (asking for help, giving directions, buying something)
-3. **Varied responses** — the second speaker reacts naturally, not just echoes the command
+Every blockquote dialogue MUST:
+1. **Start with a location header**: `> **(На уроці / In the classroom)**` — this is MANDATORY, not optional
+2. **Have a purpose** — why are they talking? (asking for help, giving directions, learning)
+3. **Have varied responses** — the second speaker reacts naturally, not just echoes the command
 
-**BAD** (echo drill — FORBIDDEN):
+**BAD** (echo drill — HARD FAIL, produces zero learning):
 > — Читай!
 > — Я читаю.
 > — Пиши!
@@ -116,17 +116,24 @@ Every blockquote dialogue MUST have:
 > — Слухай!
 > — Я слухаю.
 
-**GOOD** (at a market — speakers have real goals):
-> — Дайте, будь ласка, хліб.
-> — Візьміть. Ще щось?
-> — Покажіть це. Скільки?
-> — Двадцять. Дивіться — свіжий!
+Why this fails: it's a verb conjugation table disguised as a dialogue. No situation, no purpose, no natural speech.
 
-**GOOD** (parent and child — natural, emotional):
-> — Не біжи! Стій!
-> — Але я хочу туди!
-> — Слухай мене. Тримай мою руку.
-> — Добре, мамо.
+**GOOD** — These examples use ONLY sandbox-level words. Your dialogues must also use ONLY words from the word bank above.
+
+**GOOD** (classroom — teacher gives instructions, student responds naturally):
+> **(На уроці / In the classroom)**
+> — Читайте тут. Дивіться!
+> — Добре. А це?
+> — Ні, не це. Слухайте!
+> — Так, я слухаю.
+
+**GOOD** (on the street — someone asks for help, the other responds):
+> **(На вулиці / On the street)**
+> — Скажіть, будь ласка, де це?
+> — Ідіть там. Дивіться — ось!
+> — Дякую!
+
+**Key pattern**: Each speaker has a GOAL. One asks/commands, the other REACTS (agrees, questions, redirects) — never just echoes the verb back.
 
 Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life."
 
@@ -335,6 +342,8 @@ Rules for YAML:
 - [ ] No words outside the word bank?
 - [ ] No Russianisms, Russian characters, IPA?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
+- [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
+- [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
 
 ### Activity Checks
 - [ ] {ACTIVITY_MIN}–{ACTIVITY_MAX} activities?
