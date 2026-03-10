@@ -1570,52 +1570,76 @@ def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
 
     Searches RAG for textbook content related to the module topic so the
     research prompt has real pedagogical material to reference.
+
+    Search strategy:
+    - Ukrainian-only search terms (English topic titles kill semantic matching)
+    - Higher grades first for grammar modules (M15+: imperatives = Grade 7, not 3)
+    - Plan section titles are the best source of Ukrainian search terms
+    - Vocabulary hints provide additional coverage
     """
     try:
         from rag.query import search_text
     except ImportError:
         return ""
 
-    # Build search terms from topic title, plan vocabulary hints
-    search_terms = []
-    topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
-    if topic:
-        search_terms.append(topic)
+    has_cyrillic = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
 
-    # Add Ukrainian keywords from plan vocabulary_hints
+    # Build search terms — Ukrainian only, section titles first (most specific)
+    search_terms: list[str] = []
+
+    # 1. Section titles from content outline (guaranteed bilingual for beginner)
+    for section in (ctx.content_outline or [])[:4]:
+        title = section.get("section") or section.get("title", "")
+        if title:
+            uk_part = title.split("(")[0].strip()
+            if uk_part and has_cyrillic(uk_part):
+                search_terms.append(uk_part)
+
+    # 2. Plan keywords (if present)
+    plan_keywords = ctx.plan.get("keywords", [])
+    for kw in plan_keywords[:3]:
+        if has_cyrillic(str(kw)):
+            search_terms.append(str(kw))
+
+    # 3. Topic title — only if it has Cyrillic (skip English-only titles)
+    topic = ctx.meta.get("topic_title", ctx.topic_title or "")
+    if topic and has_cyrillic(topic):
+        uk_topic = topic.split("(")[0].strip()
+        if uk_topic:
+            search_terms.append(uk_topic)
+
+    # 4. Ukrainian words from plan vocabulary_hints
     vocab_hints = ctx.plan.get("vocabulary_hints", {})
+    hint_items: list = []
     if isinstance(vocab_hints, dict):
-        # vocabulary_hints: {required: [...], optional: [...]}
-        hint_items = []
         for v in vocab_hints.values():
             if isinstance(v, list):
                 hint_items.extend(v[:3])
     elif isinstance(vocab_hints, list):
         hint_items = vocab_hints[:5]
-    else:
-        hint_items = []
     for vh in hint_items[:5]:
         word = vh.get("word", "") if isinstance(vh, dict) else str(vh)
-        # Extract first Ukrainian word from hint string like "читати/читай (to read)"
         first_word = word.split("/")[0].split("(")[0].split(" ")[0].strip()
-        if first_word and any("\u0400" <= c <= "\u04ff" for c in first_word):
+        if first_word and has_cyrillic(first_word):
             search_terms.append(first_word)
 
-    # Add section titles from content outline
-    for section in (ctx.content_outline or [])[:3]:
-        title = section.get("section") or section.get("title", "")
-        if title:
-            uk_part = title.split("(")[0].strip()
-            if uk_part:
-                search_terms.append(uk_part)
-
-    search_terms = list(dict.fromkeys(t.strip() for t in search_terms if t.strip()))[:5]
+    search_terms = list(dict.fromkeys(t.strip() for t in search_terms if t.strip()))[:6]
     if not search_terms:
         return ""
 
     base = ctx.track.split("-")[0]
-    subject = "ukrainska-mova"
-    grade_list = [3, 5, 6, 7] if base in ("a1", "a2") else [None]
+    # No subject filter — some Grade 4 books lack subject metadata
+    subject = None
+
+    # Grade priority: grammar modules (M15+) search higher grades first
+    # because grammar topics like imperative mood are taught in Grade 7,
+    # while Grade 3 only has generic verb introduction (noise).
+    if base in ("a1", "a2") and ctx.module_num >= 15:
+        grade_list = [7, 6, 5, 4, 3]  # Higher grades first for grammar
+    elif base in ("a1", "a2"):
+        grade_list = [3, 4, 5, 6, 7]  # Lower grades for early modules
+    else:
+        grade_list = [None]  # B1+: search all grades
 
     results = []
     seen_chunks: set[str] = set()
@@ -1630,9 +1654,20 @@ def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
                 if cid in seen_chunks:
                     continue
                 seen_chunks.add(cid)
-                source = hit.get("source", "")
+                # Build source label from available metadata
+                author = hit.get("author", "")
+                hit_grade = hit.get("grade", "")
+                section = hit.get("section_title", hit.get("section", ""))
+                label_parts = []
+                if hit_grade:
+                    label_parts.append(f"Grade {hit_grade}")
+                if author:
+                    label_parts.append(author)
+                source_label = ", ".join(label_parts) if label_parts else hit.get("source", "Unknown")
+                if section:
+                    source_label += f" — {section}"
                 text = hit.get("text", "")[:500]
-                results.append(f"**{source}**:\n```\n{text}\n```")
+                results.append(f"**{source_label}**:\n```\n{text}\n```")
         if len(results) >= 6:
             break
 

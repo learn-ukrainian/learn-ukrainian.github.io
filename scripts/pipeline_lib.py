@@ -2847,8 +2847,10 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
         )
     elif base == "a1" and ctx.module_num >= 15:
         # M15+: grammar textbooks (verbs, cases, tenses) — bukvar is irrelevant
-        subject = "ukrainska-mova"
-        grade = [3, 5, 6, 7]  # Grammar topics taught across grades 3-7
+        # Higher grades first: imperative mood = Grade 7, not Grade 3
+        # No subject filter — some Grade 4 books lack subject metadata
+        subject = None
+        grade = [7, 6, 5, 4, 3]  # Higher grades first for grammar topics
         header = (
             "## Textbook Reference (from Ukrainian grammar textbooks)\n\n"
             "These are explanations from Ukrainian school grammar textbooks. "

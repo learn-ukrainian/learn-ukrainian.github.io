@@ -800,7 +800,15 @@ class TestPrefetchTextbookForResearch:
         from build.pipeline_v5 import _prefetch_textbook_for_research
 
         ctx = self._make_ctx(plan={})
-        mock_hit = {"chunk_id": "c1", "source": "Заболотний Grade 5", "text": "Наказовий спосіб..."}
+        # Provide Ukrainian section titles so search terms are generated
+        ctx.content_outline = [
+            {"section": "Наказовий спосіб (Imperative mood)", "words": 300},
+        ]
+        mock_hit = {
+            "chunk_id": "c1", "author": "Заболотний",
+            "grade": 7, "section_title": "§11",
+            "text": "Наказовий спосіб...",
+        }
 
         mock_search = MagicMock(return_value=[mock_hit])
         mock_rag_query = MagicMock()
@@ -810,7 +818,8 @@ class TestPrefetchTextbookForResearch:
             result = _prefetch_textbook_for_research(ctx)
 
         assert "Textbook Excerpts" in result
-        assert "Заболотний Grade 5" in result
+        assert "Grade 7" in result
+        assert "Заболотний" in result
 
 
 class TestCitationDensityRegex:

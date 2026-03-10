@@ -69,7 +69,7 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 
 **Cite adaptations:** For each dialogue or exercise adapted from textbook search results, add:
 `<!-- adapted from: {source author}, Grade {N}, вправа {N} -->`
-If no matching textbook exercise found, use: `<!-- original: no matching textbook exercise -->`
+Even when no exact textbook exercise matches, ground your content in textbook pedagogy — use their progression patterns, example types, and exercise formats. Do NOT add fallback comments.
 
 ---
 

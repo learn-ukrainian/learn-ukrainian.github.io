@@ -172,10 +172,7 @@ When showing a wrong pattern to avoid, use strikethrough: ~~великий кн�
 ```
 <!-- adapted from: Заболотний Grade 5, вправа 221 -->
 ```
-If you cannot find relevant textbook material to adapt, write original content but note it:
-```
-<!-- original: no matching textbook exercise found -->
-```
+Even when no exact textbook exercise matches, ground your content in textbook pedagogy — use their progression patterns, example types, and exercise formats. Do NOT add fallback comments.
 
 {CHECKPOINT_GUIDANCE}
 
