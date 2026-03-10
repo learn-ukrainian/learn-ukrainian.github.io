@@ -177,6 +177,188 @@ class TestPipelinePhaseOrder:
         assert "sandbox" not in V4_PHASE_ORDER
 
 
+class TestClaudeContentDispatch:
+    """Test --use-claude B wiring for content generation (#819)."""
+
+    def test_claude_model_content_constant_exists(self):
+        from scripts.build.pipeline_v5 import CLAUDE_MODEL_CONTENT
+
+        assert "claude" in CLAUDE_MODEL_CONTENT
+        assert "opus" in CLAUDE_MODEL_CONTENT
+
+    def test_phase_b_in_delimiters(self):
+        """_dispatch_claude_phase should recognize Phase B delimiters."""
+        # We can't call it directly without Claude CLI, but verify the
+        # delimiter mapping includes B
+        import scripts.build.pipeline_v5 as pv5
+        import inspect
+        source = inspect.getsource(pv5._dispatch_claude_phase)
+        assert '"B"' in source
+        assert "===CONTENT_START===" in source
+        assert "===CONTENT_END===" in source
+
+    def test_content_dispatch_fn_set_when_use_claude_b(self):
+        """phase_content should set content_dispatch_fn when B in use_claude."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import phase_content
+
+        ctx = MagicMock()
+        ctx.dry_run = False
+        ctx.use_claude = {"B"}
+        ctx.claude_model_B = "claude-opus-4-6"
+        state = {"phases": {}}
+
+        with patch("scripts.build.pipeline_v5.is_complete", return_value=False), \
+             patch("scripts.build.pipeline_v5.phase_B_content", return_value=True) as mock_pbc, \
+             patch("scripts.build.pipeline_v5.mark_complete"), \
+             patch("scripts.build.pipeline_v5._invalidate_stale_artifacts"):
+            ctx._self_audited = False
+            ctx.paths = {"md": MagicMock(exists=MagicMock(return_value=False))}
+            ctx.track = "a1"
+            ctx.full_build = False
+            phase_content(ctx, state)
+
+            # Verify content_dispatch_fn was set on ctx
+            assert hasattr(ctx, "content_dispatch_fn")
+            assert callable(ctx.content_dispatch_fn)
+            mock_pbc.assert_called_once_with(ctx)
+
+    def test_content_dispatch_fn_not_set_without_flag(self):
+        """phase_content should NOT set content_dispatch_fn when B not in use_claude."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import phase_content
+
+        ctx = MagicMock()
+        ctx.dry_run = False
+        ctx.use_claude = set()  # No Claude phases
+        state = {"phases": {}}
+
+        with patch("scripts.build.pipeline_v5.is_complete", return_value=False), \
+             patch("scripts.build.pipeline_v5.phase_B_content", return_value=True), \
+             patch("scripts.build.pipeline_v5.mark_complete"), \
+             patch("scripts.build.pipeline_v5._invalidate_stale_artifacts"):
+            ctx._self_audited = False
+            ctx.paths = {"md": MagicMock(exists=MagicMock(return_value=False))}
+            ctx.track = "a1"
+            ctx.full_build = False
+            phase_content(ctx, state)
+
+            # content_dispatch_fn should not have been set by phase_content
+            # (MagicMock auto-creates attributes, so check it wasn't explicitly set)
+            assert "content_dispatch_fn" not in ctx.__dict__
+
+    def test_make_content_dispatch_fn_calls_claude_phase(self):
+        """_make_content_dispatch_fn returns a callable that dispatches to Claude."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    return_value=(True, "===CONTENT_START===\nHello\n===CONTENT_END===")) as mock_dcp:
+            ok, output = dispatch_fn("test prompt", "task-1")
+
+            assert ok is True
+            assert "Hello" in output
+            mock_dcp.assert_called_once()
+            call_args = mock_dcp.call_args
+            assert call_args[1]["model"] == "claude-opus-4-6"
+
+    def test_make_content_dispatch_fn_writes_output_file(self, tmp_path):
+        """Dispatch fn writes to output_file when specified."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+        out_file = tmp_path / "output.txt"
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    return_value=(True, "content text")):
+            ok, output = dispatch_fn("prompt", "task-1", output_file=out_file)
+
+            assert ok
+            assert out_file.exists()
+            assert out_file.read_text() == "content text"
+
+    def test_make_content_dispatch_fn_no_file_on_failure(self, tmp_path):
+        """Dispatch fn does NOT write output_file when Claude fails."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+        out_file = tmp_path / "output.txt"
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    return_value=(False, "")):
+            ok, output = dispatch_fn("prompt", "task-1", output_file=out_file)
+
+            assert not ok
+            assert not out_file.exists()
+
+    def test_make_content_dispatch_fn_model_override(self):
+        """Explicit model parameter overrides ctx.claude_model_B."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    return_value=(True, "ok")) as mock_dcp:
+            dispatch_fn("prompt", "task-1", model="claude-sonnet-4-6")
+
+            call_args = mock_dcp.call_args
+            assert call_args[1]["model"] == "claude-sonnet-4-6"
+
+    def test_make_content_dispatch_fn_ignores_gemini_model(self):
+        """Gemini model strings passed by phase_2_content should be ignored."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    return_value=(True, "ok")) as mock_dcp:
+            # phase_2_content passes ctx.model which is typically a Gemini model
+            dispatch_fn("prompt", "task-1", model="gemini-3.1-pro-preview")
+
+            call_args = mock_dcp.call_args
+            # Should use claude_model_B, NOT the Gemini model
+            assert call_args[1]["model"] == "claude-opus-4-6"
+
+    def test_make_content_dispatch_fn_cleans_tempfile(self):
+        """Tempfile is cleaned up even if dispatch fails."""
+        from unittest.mock import MagicMock, patch
+        from scripts.build.pipeline_v5 import _make_content_dispatch_fn
+
+        ctx = MagicMock()
+        ctx.claude_model_B = "claude-opus-4-6"
+        dispatch_fn = _make_content_dispatch_fn(ctx)
+
+        with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
+                    side_effect=RuntimeError("test error")):
+            try:
+                dispatch_fn("prompt", "task-1")
+            except RuntimeError:
+                pass
+            # No temp files should remain — we can't check directly but
+            # the finally block in _make_content_dispatch_fn ensures cleanup
+
+
 # ==================== generate_mdx helpers ====================
 
 

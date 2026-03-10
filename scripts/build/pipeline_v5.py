@@ -19,9 +19,10 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import textwrap
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ import contextlib
 import pipeline_lib
 from batch_gemini_config import (
     CLAUDE_MODEL_CORE_ACTIVITIES,
+    CLAUDE_MODEL_CORE_CONTENT,
     CLAUDE_MODEL_CORE_RESEARCH,
     CLAUDE_MODEL_FINAL_REVIEW,
     PHASES_DIR,
@@ -96,6 +98,7 @@ TIMEOUT_REVIEW = 900
 
 # Claude model defaults — sourced from batch_gemini_config (single source of truth)
 CLAUDE_MODEL_ACTIVITIES = CLAUDE_MODEL_CORE_ACTIVITIES
+CLAUDE_MODEL_CONTENT = CLAUDE_MODEL_CORE_CONTENT
 CLAUDE_MODEL_RESEARCH = CLAUDE_MODEL_CORE_RESEARCH
 CLAUDE_MODEL_REVIEW = CLAUDE_MODEL_FINAL_REVIEW
 
@@ -317,10 +320,11 @@ def _dispatch_claude_phase(
         "D.2":     ("===SECTION_FIX_START===", "===SECTION_FIX_END==="),
         "C vocab": ("===VOCABULARY_START===", "===VOCABULARY_END==="),
         "C":       ("===ACTIVITIES_START===", "===ACTIVITIES_END==="),
+        "B":       ("===CONTENT_START===", "===CONTENT_END==="),
         "A":       ("===META_OUTLINE_START===", "===META_OUTLINE_END==="),
     }
     expected_start, expected_end = "===REVIEW_START===", "===REVIEW_END==="
-    for key in ("D.2", "D.1", "C vocab", "C", "A"):
+    for key in ("D.2", "D.1", "C vocab", "C", "B", "A"):
         if key in phase_label:
             expected_start, expected_end = _PHASE_DELIMITERS[key]
             break
@@ -1976,6 +1980,49 @@ def phase_discover(ctx: ModuleContext, state: dict) -> bool:
 
 
 
+def _make_content_dispatch_fn(
+    ctx: ModuleContext,
+) -> Callable[..., tuple[bool, str]]:
+    """Create a Claude content dispatch function bound to *ctx*.
+
+    Returns a callable with the same signature as ``dispatch_gemini()``
+    so it can be used as a drop-in replacement via ``ctx.content_dispatch_fn``.
+    """
+    claude_model = getattr(ctx, "claude_model_B", CLAUDE_MODEL_CONTENT)
+
+    def _dispatch(
+        prompt: str, task_id: str, model: str = "",
+        stdout_only: bool = True, allow_write: bool = False,
+        output_file: Path | None = None, timeout: int = 1200,
+    ) -> tuple[bool, str]:
+        # Ignore Gemini model names passed by phase_2_content (ctx.model is Gemini)
+        effective_model = (model if model and "claude" in model else "") or claude_model
+        log(f"  content: Dispatching via Claude ({effective_model})...")
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".md", delete=False, encoding="utf-8",
+        ) as f:
+            f.write(prompt)
+            prompt_path = Path(f.name)
+
+        try:
+            ok, raw_output = _dispatch_claude_phase(
+                prompt_path, "Phase B",
+                model=effective_model,
+                timeout=timeout,
+            )
+        finally:
+            prompt_path.unlink(missing_ok=True)
+
+        if ok and output_file and raw_output:
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file.write_text(raw_output, encoding="utf-8")
+
+        return ok, raw_output
+
+    return _dispatch
+
+
 def phase_content(ctx: ModuleContext, state: dict) -> bool:
     """Content: write prose. Delegates to pipeline_lib.phase_B_content."""
     if is_complete(state, "content"):
@@ -1985,6 +2032,12 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
     if ctx.dry_run:
         log("  content: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
+
+    # Wire Claude dispatch if --use-claude B
+    if "B" in getattr(ctx, "use_claude", set()):
+        model = getattr(ctx, "claude_model_B", CLAUDE_MODEL_CONTENT)
+        log(f"  content: Using Claude for content generation (model: {model})")
+        ctx.content_dispatch_fn = _make_content_dispatch_fn(ctx)  # type: ignore[attr-defined]
 
     ok = phase_B_content(ctx)
 

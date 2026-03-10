@@ -29,14 +29,17 @@ PRO_MODEL = "gemini-3.1-pro-preview"
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.
 # Phase A (research):      seminar tracks → Opus, core tracks → Sonnet
+# Phase B (content):       always Opus (quality content generation)
 # Phase C (activities):    seminar tracks → Opus, core tracks → Sonnet
 # Phase F (final review):  always Opus (deep semantic QA)
 CLAUDE_SONNET = "claude-sonnet-4-6"
 CLAUDE_OPUS   = "claude-opus-4-6"
 
 CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET   # Phase A, core tracks
+CLAUDE_MODEL_CORE_CONTENT     = CLAUDE_OPUS     # Phase B (content), core tracks
 CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET   # Phase C, core tracks
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS   # Phase A, seminar tracks
+CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS   # Phase B (content), seminar tracks
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Phase C, seminar tracks
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
 

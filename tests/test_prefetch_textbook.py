@@ -59,12 +59,12 @@ class TestGetTextbookGrade:
     def test_a1_late(self):
         from pipeline_lib import _get_textbook_grade
         ctx = FakeContext(track="a1", module_num=47)
-        assert _get_textbook_grade(ctx) == "3-7"
+        assert _get_textbook_grade(ctx) == "3-5"
 
     def test_a2(self):
         from pipeline_lib import _get_textbook_grade
         ctx = FakeContext(track="a2", module_num=10)
-        assert _get_textbook_grade(ctx) == "3-4"
+        assert _get_textbook_grade(ctx) == "3-5"
 
     def test_b1(self):
         from pipeline_lib import _get_textbook_grade
@@ -74,16 +74,26 @@ class TestGetTextbookGrade:
     def test_b2(self):
         from pipeline_lib import _get_textbook_grade
         ctx = FakeContext(track="b2", module_num=1)
-        assert _get_textbook_grade(ctx) == "7-8"
+        assert _get_textbook_grade(ctx) == "8-9"
 
     def test_c1(self):
         from pipeline_lib import _get_textbook_grade
         ctx = FakeContext(track="c1", module_num=1)
-        assert _get_textbook_grade(ctx) == "9-11"
+        assert _get_textbook_grade(ctx) == "9-10"
+
+    def test_c2(self):
+        from pipeline_lib import _get_textbook_grade
+        ctx = FakeContext(track="c2", module_num=1)
+        assert _get_textbook_grade(ctx) == "10-11"
 
     def test_hist(self):
         from pipeline_lib import _get_textbook_grade
         ctx = FakeContext(track="hist", module_num=1)
+        assert _get_textbook_grade(ctx) == "9-11"
+
+    def test_bio(self):
+        from pipeline_lib import _get_textbook_grade
+        ctx = FakeContext(track="bio", module_num=1)
         assert _get_textbook_grade(ctx) == "9-11"
 
 

@@ -13,6 +13,8 @@ Usage:
     %(prog)s a1 12 --force-phase validate    # Re-run validate only
     %(prog)s a1 12 --restart-from review     # Run: review → mdx
     %(prog)s a1 12 --stop-before review      # Stop before review phase
+    %(prog)s a1 12 --use-claude B            # Content via Claude Opus instead of Gemini
+    %(prog)s a1 12 --use-claude "A B C"      # All generation via Claude
 
 Issue: #750
 """
@@ -50,6 +52,7 @@ from pipeline_lib import (
 )
 from pipeline_v5 import (
     CLAUDE_MODEL_ACTIVITIES,
+    CLAUDE_MODEL_CONTENT,
     CLAUDE_MODEL_REVIEW,
     PHASE_FUNCTIONS,
     PHASES,
@@ -105,6 +108,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS
     _default_gen_model = "claude-opus-4-6" if _is_seminar else CLAUDE_MODEL_ACTIVITIES
     ctx.claude_model_A = getattr(args, "claude_model_A", None) or _default_gen_model  # type: ignore[attr-defined]
+    ctx.claude_model_B = getattr(args, "claude_model_B", None) or CLAUDE_MODEL_CONTENT  # type: ignore[attr-defined]
     ctx.claude_model_C = getattr(args, "claude_model_C", None) or _default_gen_model  # type: ignore[attr-defined]
     ctx.claude_model_D = getattr(args, "claude_model_D", None) or CLAUDE_MODEL_REVIEW  # type: ignore[attr-defined]
 
@@ -378,11 +382,13 @@ def main() -> int:
 
     # Model overrides
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
-                        help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C')")
+                        help="Phases to run via Claude instead of Gemini (e.g. 'B', 'A B C', 'A C')")
     parser.add_argument("--gemini-model", type=str, default=None, dest="gemini_model",
                         help="Override Gemini model for all phases")
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
                         help="Claude model for research")
+    parser.add_argument("--claude-model-B", type=str, default=None, dest="claude_model_B",
+                        help="Claude model for content (default: claude-opus-4-6)")
     parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
                         help="Claude model for activities")
     parser.add_argument("--claude-model-D", type=str, default=None, dest="claude_model_D",

@@ -2898,18 +2898,37 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
 
 
 def _get_textbook_grade(ctx: ModuleContext) -> str:
-    """Return the recommended textbook grade range for RAG searches."""
+    """Return the recommended textbook grade range for RAG searches.
+
+    Mapping rationale (CEFR → Ukrainian school grades):
+      A1 M1-14 (phonology)    → Grades 1-2 (Большакова, Вашуленко — bukvar)
+      A1 M15+  (early grammar) → Grades 3-5 (basic cases, tenses, gender)
+      A2                       → Grades 3-5 (elementary grammar, simple texts)
+      B1                       → Grades 5-7 (Заболотний, Авраменко — morphology)
+      B2                       → Grades 8-9 (register, error correction, complex syntax)
+      C1                       → Grades 9-10 (stylistics, complex structures)
+      C2                       → Grades 10-11 (mastery, rare forms)
+      Seminars (HIST, BIO...) → Grades 9-11 (full advanced range)
+
+    Grade is a HARD FILTER in Qdrant — only chunks tagged with matching
+    grade(s) are returned.  Overly wide ranges pull in too-complex material.
+    """
     base = ctx.track.split("-")[0]
     if base == "a1" and ctx.module_num <= 14:
         return "1-2"
     elif base == "a1":
-        return "3-7"
+        return "3-5"  # was 3-7; grades 6-7 contain morphology beyond A1
     elif base == "a2":
-        return "3-4"
+        return "3-5"  # was 3-4; grade 5 adds transitive verbs, cases
     elif base == "b1":
         return "5-7"
     elif base == "b2":
-        return "7-8"
+        return "8-9"  # was 7-8; grade 7 overlaps B1
+    elif base == "c1":
+        return "9-10"
+    elif base == "c2":
+        return "10-11"
+    # Seminars (hist, bio, lit, istorio, oes, ruth) — full advanced range
     return "9-11"
 
 
@@ -3175,6 +3194,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     content_path = ctx.paths["md"]
     content_path.parent.mkdir(parents=True, exist_ok=True)
     last_friction = None
+    _dispatch_fn = getattr(ctx, "content_dispatch_fn", None) or dispatch_gemini
 
     for attempt in range(1, MAX_P2_ATTEMPTS + 1):
         attempt_suffix = "" if attempt == 1 else f"-r{attempt}"
@@ -3203,7 +3223,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             dispatch_file = prompt_file
 
         output_file = _gemini_output_path(ctx.slug, f"2{attempt_suffix}")
-        ok, _ = dispatch_gemini(
+        ok, _ = _dispatch_fn(
             _dispatch_prompt(ctx, dispatch_file),
             task_id=f"yw-{ctx.slug}-p2{task_suffix}",
             model=ctx.model, stdout_only=True, output_file=output_file,

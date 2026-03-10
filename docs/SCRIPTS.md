@@ -1634,8 +1634,8 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 
 ### Module Builder v5 (Current — `build_module_v5.py`)
 
-`scripts/build_module_v5.py` — clean pipeline with lexical sandbox, VESUM morphological validation,
-and no v3/v4 legacy code. State: `state-v5.json`.
+`scripts/build_module_v5.py` — clean pipeline with VESUM morphological validation,
+textbook-grounded content generation, and no v3/v4 legacy code. State: `state-v5.json`.
 
 ```bash
 # Single module — full E2E
@@ -1651,7 +1651,7 @@ and no v3/v4 legacy code. State: `state-v5.json`.
 .venv/bin/python scripts/build_module_v5.py {track} {num} --rebuild
 
 # Restart from a specific phase onward
-.venv/bin/python scripts/build_module_v5.py {track} {num} --restart-from sandbox
+.venv/bin/python scripts/build_module_v5.py {track} {num} --restart-from content
 
 # Re-run a single phase
 .venv/bin/python scripts/build_module_v5.py {track} {num} --force-phase validate
@@ -1670,25 +1670,34 @@ and no v3/v4 legacy code. State: `state-v5.json`.
 
 # Stop before a phase
 .venv/bin/python scripts/build_module_v5.py {track} {num} --stop-before review
+
+# Content via Claude Opus instead of Gemini
+.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude B
+
+# All generation phases via Claude (research + content + activities)
+.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude "A B C"
+
+# Custom Claude model for content
+.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude B --claude-model-B claude-sonnet-4-6
 ```
 
 **Pipeline v5 phases:**
 ```
-research    (research+meta)         [Gemini]
+research    (research+meta)         [Gemini or Claude via --use-claude A]
 → discover  (video+blog search)     [Gemini Flash; non-blocking]
-→ sandbox   (VESUM-validated word bank) [deterministic, no LLM]
-→ content   (prose)                 [Gemini]
-→ activities (activities+vocab)     [Gemini]
+→ content   (prose)                 [Gemini or Claude via --use-claude B]
+→ activities (activities+vocab)     [Gemini or Claude via --use-claude C]
 → validate  (audit+screen+fix)      [deterministic + Gemini fix loop]
 → [review: Claude QA gate, --review/--review-claude to enable]
 → mdx       (MDX generation, no LLM)
 ```
 
 **Key v5 improvements over v4:**
-- Lexical sandbox: VESUM-validated word bank injected into content prompt
+- Textbook-grounded generation: RAG textbook excerpts as primary complexity anchor (#819)
 - Morphological validator: deterministic grammar constraint checking via VESUM tags
 - Russicism detection: 9K+ LanguageTool replacement rules
 - Agreement checking: adj-noun gender/case mismatch detection
+- Multi-model dispatch: `--use-claude` routes phases to Claude Opus/Sonnet
 - Clean state management (no v3/v4 prefix legacy)
 
 > **v4 (`build_module.py`) and v3 are RETIRED.** Do not use them.
