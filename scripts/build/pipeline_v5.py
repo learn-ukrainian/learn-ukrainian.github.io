@@ -2430,7 +2430,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
 # Phase: validate — helpers
 # ---------------------------------------------------------------------------
 
-_VALIDATE_NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER"}
+_VALIDATE_NON_BLOCKING_ISSUE_TYPES = {"LLM_FILLER", "LOW_TEXTBOOK_CITATION"}
 
 
 def _validate_log_screen(label: str, scr: DScreenResult) -> None:

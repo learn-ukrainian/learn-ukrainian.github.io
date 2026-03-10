@@ -1,8 +1,20 @@
 # External Resources Schema
 
-**Version:** 1.0
-**Date:** 2026-01-02
-**Status:** Draft (Issue #353)
+**Version:** 1.1
+**Date:** 2026-03-10
+**Status:** Draft (Issue #353, updated #816)
+
+---
+
+## Usage Policy by Source
+
+| Source | Usage Rights | Pipeline Use |
+|--------|-------------|--------------|
+| **Textbooks** (Заболотний, Авраменко, Вашуленко, Большакова) via RAG | Freely available educational materials — adapt exercises, dialogues, explanations | Direct adaptation with `<!-- adapted from: ... -->` citation, or `<!-- original: ... -->` when no textbook match found |
+| **Загадки, скоромовки, прислів'я** via RAG | Public domain folk material | Direct use |
+| **Wikipedia** via RAG | CC-BY-SA | Direct use with attribution |
+| **ULP (Ukrainian Lessons Podcast)** | **Inspiration only** — commercial product with premium content | Study lesson structure, topic progression, activity types, real-life contexts. **Never copy content.** Document patterns: "ULP uses X pattern" → implement original version |
+| **Dobra Forma** (KU OpenText) | CC-BY-NC-SA — open educational resource | Reference for grammar explanations |
 
 ---
 

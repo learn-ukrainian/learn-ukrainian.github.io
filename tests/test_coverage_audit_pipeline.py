@@ -1940,3 +1940,98 @@ def _make_ctx(**overrides):
     )
     defaults.update(overrides)
     return AuditContext(**defaults)
+
+
+# ============================================================================
+# 8. content_quality_pipeline.py — textbook citation check
+# ============================================================================
+
+
+class TestTextbookCitationCheck:
+    """Tests for check_content_textbook_citations()."""
+
+    def _check(self, content: str, level: str = "A1"):
+        from audit.checks.content_quality_pipeline import check_content_textbook_citations
+        return check_content_textbook_citations(content, level)
+
+    def test_zero_citations_a1_returns_issue(self):
+        issues = self._check("# Some content\nNo citations here.", "A1")
+        assert len(issues) == 1
+        assert issues[0]["type"] == "LOW_TEXTBOOK_CITATION"
+        assert issues[0]["severity"] == "info"
+
+    def test_zero_citations_a2_returns_issue(self):
+        issues = self._check("# Content without any HTML comments", "A2")
+        assert len(issues) == 1
+        assert issues[0]["type"] == "LOW_TEXTBOOK_CITATION"
+
+    def test_adapted_from_citation_passes(self):
+        content = "# Lesson\n<!-- adapted from: Заболотний Grade 5, вправа 221 -->\nSome content."
+        issues = self._check(content, "A1")
+        assert issues == []
+
+    def test_original_citation_passes(self):
+        content = "# Lesson\n<!-- original: no matching textbook exercise found -->\nContent."
+        issues = self._check(content, "A1")
+        assert issues == []
+
+    def test_multiple_citations_passes(self):
+        content = (
+            "<!-- adapted from: Вашуленко Grade 2 -->\n"
+            "Some content.\n"
+            "<!-- original: no match -->\n"
+            "More content.\n"
+            "<!-- adapted from: Заболотний Grade 5, вправа 100 -->\n"
+        )
+        issues = self._check(content, "A2")
+        assert issues == []
+
+    def test_b1_skipped(self):
+        """Non-beginner levels should not be checked."""
+        issues = self._check("No citations here.", "B1")
+        assert issues == []
+
+    def test_b2_skipped(self):
+        issues = self._check("No citations here.", "B2")
+        assert issues == []
+
+    def test_c1_skipped(self):
+        issues = self._check("No citations here.", "C1")
+        assert issues == []
+
+    def test_case_insensitive_level(self):
+        """Level code should work regardless of case."""
+        issues = self._check("No citations.", "a1")
+        assert len(issues) == 1
+
+    def test_citation_regex_case_insensitive(self):
+        """Citation comments should match case-insensitively."""
+        content = "<!-- Adapted From: some textbook -->"
+        issues = self._check(content, "A1")
+        assert issues == []
+
+    def test_wired_into_run_content_quality_checks(self):
+        """check_content_textbook_citations must be called by the aggregator."""
+        from audit.checks.content_quality_pipeline import run_content_quality_checks
+        issues = run_content_quality_checks(
+            content="No citations at all.",
+            level_code="A1",
+            module_num=47,
+        )
+        citation_issues = [i for i in issues if i["type"] == "LOW_TEXTBOOK_CITATION"]
+        assert len(citation_issues) == 1
+
+    def test_multiline_citation_passes(self):
+        """Citations broken across lines should still match (re.DOTALL)."""
+        content = "# Lesson\n<!-- adapted from:\nЗаболотний Grade 5\nвправа 221\n-->\nContent."
+        issues = self._check(content, "A1")
+        assert issues == []
+
+    def test_non_blocking_in_pipeline_v5(self):
+        """LOW_TEXTBOOK_CITATION must be in the non-blocking set."""
+        # Import from the build pipeline
+        v5_path = SCRIPTS_DIR / "build" / "pipeline_v5.py"
+        source = v5_path.read_text()
+        assert "LOW_TEXTBOOK_CITATION" in source, (
+            "LOW_TEXTBOOK_CITATION must be in _VALIDATE_NON_BLOCKING_ISSUE_TYPES"
+        )
