@@ -1561,6 +1561,80 @@ def _check_research_skip(ctx: ModuleContext, state: dict) -> bool | None:
     return True
 
 
+def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
+    """Pre-fetch textbook excerpts for research phase (beginner modules).
+
+    Searches RAG for textbook content related to the module topic so the
+    research prompt has real pedagogical material to reference.
+    """
+    try:
+        from rag.query import search_text
+    except ImportError:
+        return ""
+
+    # Build search terms from topic title, plan vocabulary hints
+    search_terms = []
+    topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
+    if topic:
+        search_terms.append(topic)
+
+    # Add Ukrainian keywords from plan vocabulary_hints
+    vocab_hints = ctx.plan.get("vocabulary_hints", [])
+    for vh in vocab_hints[:5]:
+        if isinstance(vh, dict):
+            word = vh.get("word", "")
+        else:
+            word = str(vh)
+        if word and any("\u0400" <= c <= "\u04ff" for c in word):
+            search_terms.append(word)
+
+    # Add section titles from content outline
+    for section in (ctx.content_outline or [])[:3]:
+        title = section.get("section") or section.get("title", "")
+        if title:
+            uk_part = title.split("(")[0].strip()
+            if uk_part:
+                search_terms.append(uk_part)
+
+    search_terms = list(dict.fromkeys(t.strip() for t in search_terms if t.strip()))[:5]
+    if not search_terms:
+        return ""
+
+    base = ctx.track.split("-")[0]
+    subject = "ukrainska-mova"
+    grade_list = [3, 5, 6, 7] if base in ("a1", "a2") else [None]
+
+    results = []
+    seen_chunks: set[str] = set()
+    for term in search_terms:
+        for g in grade_list:
+            try:
+                hits = search_text(term, grade=g, subject=subject, limit=2)
+            except Exception:
+                continue
+            for hit in hits:
+                cid = hit.get("chunk_id", "")
+                if cid in seen_chunks:
+                    continue
+                seen_chunks.add(cid)
+                source = hit.get("source", "")
+                text = hit.get("text", "")[:500]
+                results.append(f"**{source}**:\n```\n{text}\n```")
+        if len(results) >= 6:
+            break
+
+    if not results:
+        return ""
+
+    header = (
+        "## Textbook Excerpts (from real Ukrainian school textbooks)\n\n"
+        "Use these as authoritative reference for your research. Note how textbooks "
+        "teach this topic: what exercises they use, what cultural examples they include, "
+        "what common errors they address.\n\n"
+    )
+    return header + "\n\n".join(results[:6])
+
+
 def _select_research_template(ctx: ModuleContext, is_seminar: bool, is_pro: bool,
                                research_exists: bool) -> str:
     """Select the appropriate research prompt template name."""
@@ -1704,7 +1778,16 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     prompt_file = ctx.orch_dir / "phase-A-prompt.md"
-    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+    overrides = {}
+    if template_name == "beginner-research.md":
+        textbook_ctx = _prefetch_textbook_for_research(ctx)
+        if textbook_ctx:
+            overrides["TEXTBOOK_CONTEXT"] = textbook_ctx
+            log(f"  research: Injected {len(textbook_ctx):,} chars of textbook context")
+        else:
+            overrides["TEXTBOOK_CONTEXT"] = "(No textbook excerpts found for this topic)"
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file,
+                         overrides=overrides):
         return False
 
     if ctx.dry_run:
