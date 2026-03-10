@@ -126,7 +126,7 @@ IMMERSION_RULES: dict[str, str] = {
         "Ukrainian sentences max 10 words. Mix container types — don't use tables for everything."
     ),
     "a1-m21+": (
-        "TARGET: 35-55% Ukrainian.\n"
+        "TARGET: 30-55% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. "
         "You must explain grammar primarily by demonstrating it. Show, don't tell.\n"
@@ -145,10 +145,32 @@ IMMERSION_RULES: dict[str, str] = {
         "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
         "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. "
         "Vary your containers — never use the same type twice in a row.\n"
-        "Ukrainian sentences max 10 words."
+        "Ukrainian sentences max 10 words.\n"
+        "NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered "
+        "to prevent repetitive padding. Focus on quality immersion with the available vocabulary "
+        "rather than forcing high percentages.\n\n"
+        "BEFORE/AFTER EXAMPLE — follow the AFTER pattern:\n\n"
+        "❌ BAD (too much English, ~10% immersion):\n"
+        "To form the imperative mood in Ukrainian, you take the infinitive form of the verb "
+        "and remove the -ти ending. Then you add the appropriate suffix depending on whether "
+        "you are speaking to one person informally or to multiple people formally. For the "
+        "informal singular form, you simply use the stem. For the formal or plural form, "
+        "you add -те to the informal form.\n\n"
+        "✅ GOOD (tables + dialogue + examples, ~45% immersion):\n"
+        "Drop **-ти** from the infinitive to form commands.\n\n"
+        "| Infinitive | ти-command | ви-command |\n"
+        "|---|---|---|\n"
+        "| читати | читай | читайте |\n"
+        "| писати | пиши | пишіть |\n\n"
+        "> — **Читай** текст! — Read the text!\n"
+        "> — **Пишіть** відповідь. — Write the answer.\n"
+        "> — **Слухайте** уважно! — Listen carefully!\n\n"
+        "Add **будь ласка** to soften any command.\n\n"
+        "- **Дайте, будь ласка, воду.** — Please give water.\n"
+        "- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?"
     ),
     "a2-m01-20": (
-        "TARGET: 50-60% Ukrainian.\n"
+        "TARGET: 45-65% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.\n"
         "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
@@ -160,7 +182,7 @@ IMMERSION_RULES: dict[str, str] = {
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-m21-50": (
-        "TARGET: 60-75% Ukrainian.\n"
+        "TARGET: 55-75% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- PRIMARY: Ukrainian for all content — dialogues, examples, section intros, cultural context.\n"
         "- ENGLISH: Only for abstract grammar concepts that need explicit explanation.\n"
@@ -171,7 +193,7 @@ IMMERSION_RULES: dict[str, str] = {
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
     "a2-m51-70": (
-        "TARGET: 75-90% Ukrainian.\n"
+        "TARGET: 70-90% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- PRIMARY: Ukrainian for everything.\n"
         "- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.\n"
@@ -1335,7 +1357,7 @@ def _external_artifacts_for_phase(ctx: ModuleContext, phase_id: str) -> list[Pat
         completion = ctx.orch_dir / "completion.md"
         if completion.exists():
             result.append(completion)
-        mdx_dir = PROJECT_ROOT / "docusaurus" / "docs" / ctx.track
+        mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / ctx.track
         mdx_file = mdx_dir / f"{ctx.slug}.mdx"
         if mdx_file.exists():
             result.append(mdx_file)
@@ -1422,7 +1444,7 @@ def dispatch_gemini_raw(
     output_file: Path | None = None, timeout: int = 1800,
     max_retries: int = 3,
 ) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini via ai_agent_bridge.py (no rate-limit fallback).
+    """Dispatch a prompt to Gemini via ai_agent_bridge (no rate-limit fallback).
 
     Retries up to max_retries times on transient network errors
     (TLS drops, socket resets, etc.) with exponential backoff.
@@ -1538,6 +1560,87 @@ def _is_transient_error(output: str) -> bool:
     """Check if dispatch failed due to a transient network error."""
     lower = output.lower()
     return any(p in lower for p in _TRANSIENT_PATTERNS)
+
+
+# ---------------------------------------------------------------------------
+# Pre-dispatch prompt health check
+# ---------------------------------------------------------------------------
+
+
+def check_prompt_health(
+    ctx: "ModuleContext", prompt_text: str, phase_name: str
+) -> list[str]:
+    """Validate a filled prompt before dispatching to an LLM.
+
+    Returns a list of issues found. Empty list = healthy prompt.
+    Each issue is a string like "WARNING: ..." or "ERROR: ...".
+    ERROR items should block dispatch; WARNING items are informational.
+    """
+    issues: list[str] = []
+    track_base = ctx.track.split("-")[0] if ctx.track else ""
+    is_core = track_base.lower() in {"a1", "a2", "b1", "b2", "c1", "c2"}
+
+    # 1. Lexical sandbox should be populated for A1+ core tracks
+    if is_core and phase_name in ("content", "activities"):
+        sandbox_text = getattr(ctx, "_lexical_sandbox", "")
+        if not sandbox_text or len(sandbox_text.strip()) < 50:
+            # Non-blocking: sandbox might legitimately be small for early modules
+            if ctx.module_num > 5:
+                issues.append(
+                    f"WARNING: LEXICAL_SANDBOX is empty/tiny for {track_base} M{ctx.module_num} — "
+                    f"Gemini won't have VESUM-validated vocabulary to draw from"
+                )
+
+    # 2. Content-phase checks
+    if phase_name == "content":
+        if "{IMMERSION_RULE}" in prompt_text:
+            issues.append("ERROR: IMMERSION_RULE placeholder was not filled")
+        elif is_core:
+            imm_rule = getattr(ctx, "immersion_rule", "")
+            if not imm_rule or len(imm_rule.strip()) < 20:
+                issues.append("WARNING: IMMERSION_RULE is empty/trivial — immersion targets will be missed")
+
+        if "{SECTION_BUDGET_TABLE}" in prompt_text:
+            issues.append("ERROR: SECTION_BUDGET_TABLE placeholder unfilled — word targets won't be communicated")
+
+        if "{WORD_TARGET}" in prompt_text:
+            issues.append("ERROR: WORD_TARGET placeholder unfilled")
+
+    # 3. Activities-phase checks
+    if phase_name == "activities":
+        if "{REQUIRED_TYPES}" in prompt_text:
+            issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
+
+    # 4. Universal: detect unfilled placeholders (any {UPPERCASE_THING} remaining)
+    unfilled = set(re.findall(r"\{([A-Z][A-Z_]{3,})\}", prompt_text))
+    # Filter out known false positives (markdown/code patterns)
+    _false_positives = {"JSON", "YAML", "HTML", "UTF8", "VESUM", "PASS", "FAIL",
+                        "TRUE", "FALSE", "NULL", "NONE", "TODO", "NOTE", "IMPORTANT"}
+    unfilled -= _false_positives
+    if unfilled:
+        issues.append(
+            f"WARNING: {len(unfilled)} unfilled placeholder(s) in {phase_name} prompt: "
+            f"{', '.join(sorted(unfilled)[:5])}"
+        )
+
+    return issues
+
+
+def log_prompt_health(issues: list[str], phase_name: str) -> bool:
+    """Log prompt health issues. Returns False if any ERROR-level issue found."""
+    if not issues:
+        return True
+
+    has_error = False
+    for issue in issues:
+        log(f"  {phase_name}: HEALTH-CHECK {issue}")
+        if issue.startswith("ERROR:"):
+            has_error = True
+
+    if has_error:
+        log(f"  {phase_name}: BLOCKED by prompt health check — fix template/placeholders before dispatch")
+
+    return not has_error
 
 
 def dispatch_gemini(
@@ -2331,12 +2434,29 @@ def write_placeholders(ctx: ModuleContext) -> None:
     # Shared rules (injected into tier-specific prompts via placeholders)
     placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
-    placeholders["SELF_AUDIT_SNIPPET"] = _read_phase_file("_shared-self-audit.md")
+    # Resolve {CONTENT_PATH} inside the snippet so nested placeholders expand correctly.
+    # fill_template does a single pass; snippets included via {SELF_AUDIT_SNIPPET} would
+    # otherwise leave {CONTENT_PATH} unresolved in the final prompt.
+    _self_audit_raw = _read_phase_file("_shared-self-audit.md")
+    placeholders["SELF_AUDIT_SNIPPET"] = _self_audit_raw.replace(
+        "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
+    )
 
     # Lexical Sandbox (built by phase_sandbox, injected via ctx._lexical_sandbox)
     placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
 
     placeholders.update(ctx.activity_config)
+
+    # Populate REQUIRED_TYPES if empty — from plan activity_hints or PRIORITY_TYPES
+    if not placeholders.get("REQUIRED_TYPES"):
+        plan_hints = ctx.plan.get("activity_hints", [])
+        if plan_hints and isinstance(plan_hints, list):
+            placeholders["REQUIRED_TYPES"] = ", ".join(str(h) for h in plan_hints[:5])
+        elif placeholders.get("PRIORITY_TYPES"):
+            # Use first 3 priority types as required minimum variety
+            priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
+            placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
+
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
     placeholders_path.write_text(
         yaml.dump(placeholders, allow_unicode=True, default_flow_style=False, sort_keys=False),
@@ -2522,7 +2642,7 @@ def _build_phase2_expansion_prompt(
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     # A1/A2: no overshoot, just hit the target. B1+: 1.5x.
     overshoot = ctx.word_target if base_level in ('A1', 'A2') or had_truncation else int(ctx.word_target * 1.5)
-    return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
+    return f"""# content: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
 > **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
 
@@ -2643,7 +2763,13 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     for section in ctx.content_outline[:3]:
         section_name = section.get("section") or section.get("title", "")
         if section_name:
-            uk_part = section_name.split("—")[0].strip() if "—" in section_name else section_name
+            # Strip English translations in parentheses or after em-dash
+            uk_part = section_name.split("(")[0].strip() if "(" in section_name else section_name
+            if "—" in uk_part:
+                parts = uk_part.split("—", 1)
+                # Pick whichever side has Cyrillic (handles English-first titles)
+                has_cyr = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
+                uk_part = parts[0].strip() if has_cyr(parts[0]) else parts[1].strip()
             search_terms.append(uk_part)
     if not search_terms:
         topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
@@ -2717,7 +2843,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     elif base == "a1" and ctx.module_num >= 15:
         # M15+: grammar textbooks (verbs, cases, tenses) — bukvar is irrelevant
         subject = "ukrainska-mova"
-        grade = None
+        grade = [3, 5, 6, 7]  # Grammar topics taught across grades 3-7
         header = (
             "## Textbook Reference (from Ukrainian grammar textbooks)\n\n"
             "These are explanations from Ukrainian school grammar textbooks. "
@@ -2737,24 +2863,28 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
             "Adapt for adult learners but keep the grammatical accuracy.\n\n"
         )
 
+    # Normalize grade to a list for iteration
+    grade_list = grade if isinstance(grade, list) else ([grade] if grade is not None else [None])
+
     for term in search_terms:
-        try:
-            hits = search_text(term, grade=grade, subject=subject, limit=2)
-        except Exception:
-            continue
-        for hit in hits:
-            cid = hit.get("chunk_id", "")
-            if cid in seen_chunks:
+        for g in grade_list:
+            try:
+                hits = search_text(term, grade=g, subject=subject, limit=2)
+            except Exception:
                 continue
-            seen_chunks.add(cid)
-            author = hit.get("author", "")
-            hit_grade = hit.get("grade", "")
-            section = hit.get("section_title", hit.get("section", ""))
-            text = hit.get("text", "")[:500]
-            label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
-            results.append(
-                f"**{label}** — {section}:\n```\n{text}\n```"
-            )
+            for hit in hits:
+                cid = hit.get("chunk_id", "")
+                if cid in seen_chunks:
+                    continue
+                seen_chunks.add(cid)
+                author = hit.get("author", "")
+                hit_grade = hit.get("grade", "")
+                section = hit.get("section_title", hit.get("section", ""))
+                text = hit.get("text", "")[:500]
+                label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
+                results.append(
+                    f"**{label}** — {section}:\n```\n{text}\n```"
+                )
 
     if not results:
         return ""
@@ -2768,7 +2898,7 @@ def _get_textbook_grade(ctx: ModuleContext) -> str:
     if base == "a1" and ctx.module_num <= 14:
         return "1-2"
     elif base == "a1":
-        return "2-3"
+        return "3-7"
     elif base == "a2":
         return "3-4"
     elif base == "b1":
@@ -2834,13 +2964,20 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
             "збери утвори визнач назви",
         ]
     elif base == "a1" and ctx.module_num >= 15:
-        grades = [2, 3]
+        grades = [3, 5, 6, 7]  # Grammar topics taught across grades 3-7
         subject = "ukrainska-mova"
-        # Grade 2-3: parts of speech, gender, number
-        focus_queries = [
-            "визнач рід іменників число",
-            "добери прикметник спиши",
-        ]
+        # Use plan section titles as search terms (topic-specific)
+        focus_queries = []
+        for section in ctx.content_outline[:3]:
+            section_name = section.get("section") or section.get("title", "")
+            if section_name:
+                uk_part = section_name.split("(")[0].strip()
+                focus_queries.append(uk_part)
+        if not focus_queries:
+            focus_queries = [
+                "визнач рід іменників число",
+                "добери прикметник спиши",
+            ]
     elif base == "a2":
         grades = [3, 4]
         subject = "ukrainska-mova"
@@ -2882,10 +3019,11 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
     results: list[str] = []
     seen_chunks: set[str] = set()
 
+    grade_list = grades if grades is not None else [None]
     for term in search_terms:
         if len(results) >= 5:
             break
-        for grade in grades:
+        for grade in grade_list:
             if len(results) >= 5:
                 break
             try:
@@ -2921,7 +3059,7 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
 
     return (
         f"### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\n"
-        f"These are real exercises from Ukrainian school textbooks (grade {'/'.join(str(g) for g in grades)}). "
+        f"These are real exercises from Ukrainian school textbooks{' (grade ' + '/'.join(str(g) for g in grades) + ')' if grades else ''}. "
         f"Study their **pedagogical patterns** — how they build progressively, "
         f"use familiar vocabulary, and test specific skills.{translate_note}\n\n"
         + "\n\n".join(results[:5])
@@ -2929,15 +3067,15 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
 
 
 def phase_2_content(ctx: ModuleContext) -> bool:
-    """Phase 2: Content (whole-module, single Gemini call)."""
+    """content: Content (whole-module, single Gemini call)."""
     phase = "2"
     if is_phase_complete(ctx, phase):
-        log("  Phase 2: SKIP (already complete)")
+        log("  content: SKIP (already complete)")
         return True
 
     sections = ctx.content_outline
     if not sections:
-        log("  Phase 2: FAILED — no content_outline in meta")
+        log("  content: FAILED — no content_outline in meta")
         return False
     # Ensure bilingual section titles for early A1 (idempotent)
     sections = bilingualify_section_titles(sections, ctx.track, ctx.module_num)
@@ -2955,7 +3093,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     overshoot = ctx.word_target if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
 
-    log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
+    log(f"  content: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
     # Tier-based content prompt dispatch
     content_template_name = _get_content_template(
@@ -2967,9 +3105,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not template.exists():
         # Fallback to monolithic prompt
         template = PHASES_DIR / "phase-2-content.md"
-        log(f"  Phase 2: Tier template {content_template_name} not found, falling back to phase-2-content.md")
+        log(f"  content: Tier template {content_template_name} not found, falling back to phase-2-content.md")
     else:
-        log(f"  Phase 2: Using tier template: {content_template_name}")
+        log(f"  content: Using tier template: {content_template_name}")
     placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
     prompt_file = ctx.orch_dir / "phase-2-prompt.md"
 
@@ -2998,7 +3136,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                         _error_lines.append(_rline)
             if len(_error_lines) > 1:
                 research_errors = "\n".join(_error_lines).strip()
-                log(f"  Phase 2: Extracted {len(_error_lines)-1} research error line(s) for content prompt")
+                log(f"  content: Extracted {len(_error_lines)-1} research error line(s) for content prompt")
         except Exception:
             pass
 
@@ -3018,8 +3156,14 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
         return False
 
+    # Pre-dispatch health check: catch template/placeholder bugs before wasting a Gemini call
+    prompt_text = prompt_file.read_text("utf-8")
+    health_issues = check_prompt_health(ctx, prompt_text, "content")
+    if not log_prompt_health(health_issues, "Phase 2"):
+        return False
+
     if ctx.dry_run:
-        log("  Phase 2: DRY-RUN — would dispatch whole-module content generation")
+        log("  content: DRY-RUN — would dispatch whole-module content generation")
         return True
 
     MAX_P2_ATTEMPTS = 3
@@ -3036,20 +3180,20 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             current_words = len(current_text.split())
             # Skip expand if content already meets or exceeds word target
             if current_words >= ctx.word_target:
-                log(f"  Phase 2: word count {current_words} >= target {ctx.word_target}, skipping expand")
+                log(f"  content: word count {current_words} >= target {ctx.word_target}, skipping expand")
                 mark_phase(ctx, phase, "complete", words=current_words, attempts=attempt - 1)
                 return True
             deficit = ctx.word_target - current_words
             had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
             if had_truncation:
-                log(f"  Phase 2: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
+                log(f"  content: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
             expand_prompt = _build_phase2_expansion_prompt(
                 ctx, current_text, current_words, deficit, had_truncation
             )
             expand_prompt_file = ctx.orch_dir / f"phase-2-expand-{attempt}.md"
             expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
             dispatch_file = expand_prompt_file
-            log(f"  Phase 2: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
+            log(f"  content: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
         else:
             dispatch_file = prompt_file
 
@@ -3061,7 +3205,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             allow_write=True, timeout=1200,
         )
         if not ok:
-            log(f"  Phase 2: Dispatch failed (attempt {attempt})")
+            log(f"  content: Dispatch failed (attempt {attempt})")
             continue
 
         content_text = None
@@ -3072,13 +3216,13 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             if friction:
                 friction_file = ctx.orch_dir / f"phase-2-friction-{attempt}.md"
                 friction_file.write_text(friction, encoding="utf-8")
-                log(f"  Phase 2: Friction report saved → {friction_file.name}")
+                log(f"  content: Friction report saved → {friction_file.name}")
                 is_real_truncation = (
                     "TOKEN_LIMIT_TRUNCATION" in friction
                     and "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION" not in friction
                 )
                 if is_real_truncation:
-                    log("  Phase 2: ⚠ Gemini reported token limit truncation")
+                    log("  content: ⚠ Gemini reported token limit truncation")
                 last_friction = friction if is_real_truncation else last_friction
 
             # Extract self-audit result if Gemini ran audit in-session
@@ -3087,7 +3231,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                 sa_file = ctx.orch_dir / f"self-audit-output-{attempt}.md"
                 sa_file.write_text(self_audit, encoding="utf-8")
                 sa_passed = "status: PASS" in self_audit or "status:PASS" in self_audit
-                log(f"  Phase 2: Self-audit {'PASSED' if sa_passed else 'FAILED'} → {sa_file.name}")
+                log(f"  content: Self-audit {'PASSED' if sa_passed else 'FAILED'} → {sa_file.name}")
                 if sa_passed:
                     ctx._self_audited = True  # type: ignore[attr-defined]
 
@@ -3095,9 +3239,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             # Fallback: Gemini may have written directly to CONTENT_PATH via allow_write
             if content_path.exists() and content_path.stat().st_size > 100:
                 content_text = content_path.read_text(encoding="utf-8")
-                log(f"  Phase 2: No delimiters, but Gemini wrote {content_path.name} directly ({len(content_text.split())}w)")
+                log(f"  content: No delimiters, but Gemini wrote {content_path.name} directly ({len(content_text.split())}w)")
             else:
-                log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
+                log(f"  content: No delimited content extracted (attempt {attempt})")
                 continue
 
         content_path.write_text(content_text, encoding="utf-8")
@@ -3106,7 +3250,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         save_gemini_session(ctx.orch_dir, label=f"phase-2-attempt-{attempt}")
         total_words = len(content_text.split())
         pct = total_words * 100 // max(ctx.word_target, 1)
-        log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
+        log(f"  content: {total_words} words written ({pct}% of {ctx.word_target} target)")
 
         # Full-build mode: extract activities + vocabulary from same response
         if getattr(ctx, "full_build", False) and raw:
@@ -3122,14 +3266,14 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_text(text, encoding="utf-8")
                     (ctx.orch_dir / orch_name).write_text(text, "utf-8")
-                    log(f"  Phase 2: {label} extracted from full-build → {target.name}")
+                    log(f"  content: {label} extracted from full-build → {target.name}")
 
         if total_words >= ctx.word_target * 0.75:
             mark_phase(ctx, phase, "complete", words=total_words, attempts=attempt)
             return True
-        log(f"  Phase 2: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
+        log(f"  content: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
 
-    log(f"  Phase 2: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
+    log(f"  content: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
     return False
 
 
@@ -3150,9 +3294,9 @@ def phase_B_content(ctx: ModuleContext) -> bool:
         for k in downstream:
             del state_phases[k]
         save_state(ctx)
-        log(f"  Phase 2: RESET (--refresh flag, cleared {len(downstream)} phases)")
+        log(f"  content: RESET (--refresh flag, cleared {len(downstream)} phases)")
     elif is_phase_complete(ctx, phase):
-        log("  Phase 2: SKIP (already complete)")
+        log("  content: SKIP (already complete)")
         return True
 
     content_path = ctx.paths["md"]
@@ -3168,19 +3312,19 @@ def phase_B_content(ctx: ModuleContext) -> bool:
                     if info and info.get("content_alignment", {}).get("refresh_recommended"):
                         refresh_needed = True
                         reasons = info["content_alignment"].get("reasons", [])
-                        log("  Phase 2: Research-content misalignment detected")
+                        log("  content: Research-content misalignment detected")
                         for r in reasons:
                             log(f"    - {r}")
                 except ImportError:
                     pass
             if refresh_needed and getattr(ctx, "refresh", False):
-                log("  Phase 2: --refresh flag set — regenerating prose from research")
+                log("  content: --refresh flag set — regenerating prose from research")
             elif refresh_needed:
-                log("  Phase 2: ADOPT (use --refresh to regenerate from updated research)")
+                log("  content: ADOPT (use --refresh to regenerate from updated research)")
                 mark_phase(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
                 return True
             else:
-                log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                log(f"  content: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
                 mark_phase(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
                 return True
 
@@ -3188,11 +3332,11 @@ def phase_B_content(ctx: ModuleContext) -> bool:
         fits, matched, missing = _check_archive_fits_outline(ctx)
         archive_source = getattr(ctx, "archive_source", "unknown")
         if fits:
-            log(f"  Phase 2: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
+            log(f"  content: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
             if missing:
-                log(f"  Phase 2: Missing sections (will be caught in Phase 3): {', '.join(missing)}")
+                log(f"  content: Missing sections (will be caught in activities): {', '.join(missing)}")
             if ctx.dry_run:
-                log(f"  Phase 2: DRY-RUN — would restore from archive ({archive_source})")
+                log(f"  content: DRY-RUN — would restore from archive ({archive_source})")
                 return True
             archive_dir = getattr(ctx, "archive_dir", None)
             if restore_from_archive(ctx, archive_dir):
@@ -3202,13 +3346,13 @@ def phase_B_content(ctx: ModuleContext) -> bool:
                            sections_missing=len(missing))
                 return True
             else:
-                log("  Phase 2: Archive restore FAILED — falling back to generation")
+                log("  content: Archive restore FAILED — falling back to generation")
         else:
-            log(f"  Phase 2: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
-            log("  Phase 2: Generating fresh prose instead")
+            log(f"  content: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
+            log("  content: Generating fresh prose instead")
 
     if ctx.dry_run and not ctx.content_outline:
-        log("  Phase 2: DRY-RUN — would generate prose (outline depends on Phase 1)")
+        log("  content: DRY-RUN — would generate prose (outline depends on research)")
         return True
 
     return phase_2_content(ctx)

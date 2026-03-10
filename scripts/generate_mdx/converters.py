@@ -142,7 +142,7 @@ CALLOUT_MAP = {
 
 
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert GitHub-style callouts to Docusaurus admonitions.
+    """Convert GitHub-style callouts to Starlight admonitions.
 
     Robustly handles:
     1. Standard: > [!type]
@@ -241,7 +241,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
                 result.append('</details>')
                 result.append('')
             else:
-                # Output Docusaurus admonition
+                # Output Starlight admonition
                 result.append(f':::{admon_type}[{title}]')
                 result.extend(callout_lines)
                 result.append(':::')

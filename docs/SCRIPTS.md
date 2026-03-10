@@ -3,7 +3,10 @@
 This document describes all scripts and workflows for module creation, validation, and generation.
 
 > **Housekeeping (2026-02-21):** 189 unused/one-off scripts archived to `scripts/_archived/`.
-> 81 active scripts remain in `scripts/`. See [#616](https://github.com/krisztiankoos/learn-ukrainian/issues/616).
+> **Organization (2026-03-08):** 125 scripts moved from `scripts/` root to 14 themed subdirectories
+> (`audit/`, `batch/`, `build/`, `content/`, `crawl/`, `generate_mdx/`, `lint/`, `migrate/`,
+> `oneoff/`, `rag/`, `research/`, `scoring/`, `sync/`, `tools/`, `validate/`, `vocab/`).
+> Re-export stubs at old paths preserve backward compatibility. See [#779](https://github.com/krisztiankoos/learn-ukrainian/issues/779).
 
 > **🚀 Module Creation Workflow:**
 >
@@ -74,7 +77,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
 ### Step 2: Generate Output
 
 ```bash
-# Generate MDX (Docusaurus)
+# Generate MDX (Starlight)
 npm run generate l2-uk-en a1 5
 
 # Generate JSON (Vibe app)
@@ -424,7 +427,7 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 | 4     | /module-lesson-qa | -                          | Content quality           |
 | 5     | /module-act       | activities/{slug}.yaml     | -                         |
 | 6     | /module-act-qa    | -                          | Activity schema           |
-| 7     | /module-integrate | MDX for Docusaurus         | Cross-file alignment      |
+| 7     | /module-integrate | MDX for Starlight         | Cross-file alignment      |
 | 8     | /module-vocab     | vocabulary/{slug}.yaml     | -                         |
 | 9     | /module-vocab-qa  | -                          | Vocabulary validity       |
 
@@ -561,7 +564,7 @@ This command:
 | `audit_level.py`          | Audit level/module/range       | `npm run audit -- b1` or `npm run audit -- b1 1-10`          |
 | `audit_module.py`         | Module quality checker         | `.venv/bin/python scripts/audit_module.py <file>`            |
 | `pipeline.py`             | Full validation pipeline       | `npm run pipeline l2-uk-en a1 5`                             |
-| `generate_mdx.py`         | Generate MDX for Docusaurus    | `npm run generate l2-uk-en a1 5`                             |
+| `generate_mdx.py`         | Generate MDX for Starlight    | `npm run generate l2-uk-en a1 5`                             |
 | `generate_json.py`        | Generate JSON for Vibe app     | `npm run generate:json l2-uk-en a1 5`                        |
 | `validate_mdx.py`         | Validate MDX content integrity | `npm run validate:mdx l2-uk-en a1 5`                         |
 | `validate_html.py`        | Validate browser rendering     | `npm run validate:html l2-uk-en a1 5`                        |
@@ -600,7 +603,7 @@ This command:
 **Pipeline Stages:**
 
 1. **Lint** - Markdown format compliance
-2. **Generate** - Creates MDX for Docusaurus
+2. **Generate** - Creates MDX for Starlight
 3. **Validate MDX** - Ensures no content loss during conversion
 4. **Validate HTML** - Headless browser check for rendering errors
 
@@ -617,7 +620,7 @@ npm run pipeline l2-uk-en a1 5      # Validate single module
 
 ### generate_mdx.py
 
-**Purpose:** Generates MDX files for Docusaurus web lessons (Python 3.12).
+**Purpose:** Generates MDX files for Starlight web lessons (Python 3.12).
 
 **Usage:**
 
@@ -629,7 +632,7 @@ npm run generate l2-uk-en a1 5      # Generate single module
 
 **Input:** `curriculum/{lang}/{level}/*.md`
 
-**Output:** `docusaurus/docs/{level}/module-XX.mdx`
+**Output:** `starlight/src/content/docs/{level}/module-XX.mdx`
 
 **Note:** Requires Python 3.12 venv (`.venv/bin/python`)
 
@@ -919,8 +922,8 @@ And `activities.yaml` only has `quiz` and `fill-in`, the audit will FAIL:
 
 **Updates:**
 
-- `docusaurus/docs/intro.mdx` - Main curriculum overview table
-- `docusaurus/docs/{level}/index.mdx` - Level landing pages
+- `starlight/src/content/docs/intro.mdx` - Main curriculum overview table
+- `starlight/src/content/docs/{level}/index.mdx` - Level landing pages
 
 **Usage:**
 
@@ -941,7 +944,7 @@ npm run sync:landing:dry       # Preview only (dry run)
 **Data Sources:**
 
 - Config file: `docs/l2-uk-en/level-status.yaml` (planned counts, status overrides)
-- Ready counts: MDX files in `docusaurus/docs/{level}/module-*.mdx`
+- Ready counts: MDX files in `starlight/src/content/docs/{level}/module-*.mdx`
 
 **Config File (`level-status.yaml`):**
 
@@ -1524,7 +1527,7 @@ User → /otaman {track} {num}  (Gemini interactive mode)
     ┌────▼─────┐
     │ OTAMAN   │  Content sprint (Phases 0-6b, prose only)
     └────┬─────┘
-         │ dispatches via ai_agent_bridge.py
+         │ dispatches via ai_agent_bridge
     ┌────┼────────────┐
     ▼                 ▼
  YELLOW (yw-)      GREEN (gr-)
@@ -1699,7 +1702,7 @@ archive detection/restoration, Phase B/E/F delegates, preflight, logging, config
 | Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
 | Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
 | Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
-| AI agent bridge | `scripts/ai_agent_bridge.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
+| AI agent bridge | `scripts/ai_agent_bridge/__main__.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
 | State persistence | `orchestration/{slug}/state.json` | Crash recovery |
 | Batch dispatcher | `scripts/batch_dispatcher.py` | Autonomous batch scheduling (old pipeline) |
 
@@ -1728,7 +1731,7 @@ archive detection/restoration, Phase B/E/F delegates, preflight, logging, config
 
 ### Dispatch Modes
 
-The bridge (`ai_agent_bridge.py`) supports three execution modes:
+The bridge (`ai_agent_bridge`) supports three execution modes:
 
 | Flag | Mode | Permissions | Used By |
 |------|------|------------|---------|
@@ -2181,7 +2184,7 @@ npm run pipeline l2-uk-en a1  # Pipeline for specific level
 npm run pipeline l2-uk-en a1 5  # Pipeline for single module
 
 # Generation (Python)
-npm run generate              # Generate MDX for Docusaurus
+npm run generate              # Generate MDX for Starlight
 npm run generate:json         # Generate JSON for Vibe app
 
 # Validation (Python)
@@ -2324,25 +2327,25 @@ npm run sync:landing:dry      # Preview changes without applying
 
 ```bash
 # Check inbox for messages from Claude
-.venv/bin/python scripts/ai_agent_bridge.py inbox
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
 
 # Read specific message
-.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
 
 # Send message to Claude (with type)
-.venv/bin/python scripts/ai_agent_bridge.py send "Your message" --type query --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
 
 # Auto-process with Gemini CLI (read → process → respond)
-.venv/bin/python scripts/ai_agent_bridge.py process <message_id> --model gemini-3-pro-preview
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
 
 # Get full conversation history
-.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
 
 # Interactive mode
-.venv/bin/python scripts/ai_agent_bridge.py interactive
+.venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
 
 # Dispatch with full execution access (Otaman Phase 7)
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Activate skill final-review. ..." \
   --task-id fr-{slug} \
   --allow-write \
@@ -2421,7 +2424,7 @@ Monitors message broker and triggers agents automatically:
 | File | Purpose |
 |------|---------|
 | `.mcp/servers/message-broker/server.py` | MCP server for Claude |
-| `scripts/ai_agent_bridge.py` | CLI bridge for agents |
+| `scripts/ai_agent_bridge/__main__.py` | CLI bridge for agents |
 | `scripts/agent_watcher.py` | Watcher daemon for auto-triggering |
 | `scripts/signal_claude.py` | Notification trigger |
 | `scripts/message_viewer.py` | Web UI for message archive |
@@ -2656,7 +2659,7 @@ Each validator updates only its section, preserving other content.
 scripts/
 ├── # Python Pipeline (Primary)
 ├── pipeline.py           # Unified validation pipeline
-├── generate_mdx.py       # MDX generator for Docusaurus
+├── generate_mdx.py       # MDX generator for Starlight
 ├── generate_json.py      # Vibe JSON generator
 ├── validate_mdx.py       # MDX content validator
 ├── validate_html.py      # Browser rendering validator (Playwright)

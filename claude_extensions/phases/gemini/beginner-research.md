@@ -32,20 +32,26 @@ Read the level quick-ref for constraints:
 
 ---
 
+## Textbook Context
+
+{TEXTBOOK_CONTEXT}
+
+---
+
 ## PART 1: Research
 
 Research **{TOPIC_TITLE}** for the **{LEVEL}** track.
 
-Beginner research is focused and practical — no literary analysis, no decolonization framing.
+Beginner research is focused and practical — no literary analysis, no decolonization framing. **Use the textbook excerpts above** as your primary reference for how this topic is taught.
 
 ### What to research:
 
 1. **State Standard**: Briefly check `docs/l2-uk-en/state-standard-2024-mapping.yaml` for the relevant {LEVEL} entry. Quote the §reference if one exists. If no mapping applies (e.g., letter-introduction modules), write "No specific § — foundational literacy prerequisite."
-2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 3 rows.
-3. **Common errors**: 2-3 mistakes English speakers make with this topic (numbered list)
-4. **Cultural hook**: 1-2 verified cultural facts or fun connections (numbered list, keep it simple)
+2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 5 rows.
+3. **Common errors**: 3-4 mistakes English speakers make with this topic (numbered list). Reference textbook exercises above — what errors do the exercises target?
+4. **Cultural hooks**: 2-3 verified cultural connections (загадки, скоромовки, proverbs, songs, folk sayings, real-life situations from Ukrainian daily life). Look at the textbook excerpts for examples. Keep it concrete — a specific riddle or saying is better than a vague "Ukrainians value politeness."
 5. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
-6. **Teaching strategy**: How should this concept be introduced to a learner? Describe a concrete discovery exercise — a scenario, dialogue, or set of examples that lets the learner notice the pattern BEFORE you explain the rule. What real-life context makes this grammar point feel natural (classroom, café, market, directions)? What contrastive pairs would help disambiguation?
+6. **Teaching strategy**: How should this concept be introduced to a learner? Describe a concrete discovery exercise — a scenario, dialogue, or set of examples that lets the learner notice the pattern BEFORE you explain the rule. What real-life context makes this grammar point feel natural (classroom, café, market, directions)? What contrastive pairs would help disambiguation? **Cite specific textbook exercises from the excerpts above as models.**
 7. **Notes**: Any observations useful for the content writer
 
 ### What NOT to research:
@@ -88,11 +94,14 @@ Alignment: {how this module addresses the standard}
 | ...  | ...   | ...              |
 
 ## Cultural Hooks
-1. {Verified fact — keep simple and age-appropriate}
+1. {Verified fact or загадка/скоромовка/saying — concrete and specific}
+2. {Another hook — different type from #1}
+3. {Optional third hook}
 
 ## Common Learner Errors
 1. {Error pattern} → {Correct form} — {Why it happens}
-2. ...
+2. {Another error}
+3. {Third error — reference textbook exercise if possible}
 
 ## Cross-References
 - Builds on: {module slugs or "first module"}

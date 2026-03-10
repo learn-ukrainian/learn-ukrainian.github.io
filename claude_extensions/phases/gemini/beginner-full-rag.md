@@ -48,7 +48,9 @@ You have access to Ukrainian language tools via MCP. **Use them throughout your 
 1. **RESEARCH FIRST**: Before writing, search textbooks for how this topic is taught at grade {TEXTBOOK_GRADE} level:
    - Search for the topic keywords: `search_text("{TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})`
    - Search for exercise patterns: `search_text("вправа {TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})`
+   - Search for dialogue models: `search_text("діалог {TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})`
    - Study the pedagogical progression — how do real textbooks introduce this concept?
+   - Study textbook dialogues — notice how speakers have **real situations** (market, classroom, street) and **natural responses** (not just echoing commands)
 
 2. **VERIFY AS YOU WRITE**: Before using any Ukrainian word not in the word bank below, call `verify_words` to check it exists. Empty result = the word doesn't exist in standard Ukrainian. Do NOT use it.
 
@@ -130,6 +132,27 @@ Do NOT use Ukrainian grammar terminology (іменник, дієслово, го
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
+
+### Dialogue Quality (CRITICAL)
+
+Every blockquote dialogue MUST have:
+1. **A real situation** — where are the speakers? (market, classroom, street, home, café)
+2. **A purpose** — why are they talking? (asking for help, giving directions, buying something)
+3. **Varied responses** — the second speaker reacts naturally, not just echoes the command
+
+**BAD** (echo drill — FORBIDDEN):
+> — Читай!
+> — Я читаю.
+> — Пиши!
+> — Я пишу.
+
+**GOOD** (at a market — speakers have real goals):
+> — Дайте, будь ласка, хліб.
+> — Візьміть. Ще щось?
+> — Покажіть це. Скільки?
+> — Двадцять. Дивіться — свіжий!
+
+Use your `search_text("діалог ...")` results as models for natural dialogue flow. Limit to **2-3 dialogues per module** in DIFFERENT situations. Dialogues should feel like real life, not grammar drills.
 
 {SHARED_CONTENT_RULES}
 

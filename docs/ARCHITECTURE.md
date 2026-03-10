@@ -53,7 +53,7 @@ The sole build pipeline. v3/v4 are retired.
 | **activities** | Gemini | Interactive activities + vocabulary YAML |
 | **validate** | Gemini | Morphological validator + Russicism check + fix loop |
 | **review** | **Claude** | Cross-agent adversarial review (optional, max 2 fix attempts) |
-| **mdx** | _(none)_ | Deterministic markdown → Docusaurus MDX |
+| **mdx** | _(none)_ | Deterministic markdown → Starlight MDX |
 
 Non-blocking phases: discover, sandbox, validate, review.
 
@@ -154,7 +154,7 @@ Module quality scoring with weighted criteria aggregation.
 ### 6. Code Generation (`scripts/generate_*.py`)
 **~6.5K LOC**
 
-- `generate_mdx.py` — Markdown → Docusaurus MDX (main track)
+- `generate_mdx.py` — Markdown → Starlight MDX (main track)
 - `generate_mdx_direct.py` — MDX for l2-uk-direct track
 - `generate_json.py` — Module → JSON for Vibe app
 - `generate_plan_markdown.py` — Plan YAML → human-readable markdown
@@ -169,7 +169,7 @@ Module quality scoring with weighted criteria aggregation.
 - `batch_research.py` — Batch research phase
 - `batch_report.py` — Batch status reporting
 
-### 8. Agent Bridge (`scripts/ai_agent_bridge.py`)
+### 8. Agent Bridge (`scripts/ai_agent_bridge/__main__.py`)
 **~2K LOC**
 
 Inter-agent communication (Claude ↔ Gemini). Uses gemini-cli subprocess.
@@ -342,7 +342,7 @@ learn-ukrainian/
 │   ├── scoring/                   # Quality scoring
 │   ├── batch_*.py                 # Batch operations
 │   ├── generate_*.py              # Code generation (MDX, JSON, plan markdown)
-│   └── ai_agent_bridge.py         # Inter-agent communication
+│   └── ai_agent_bridge         # Inter-agent communication
 ├── claude_extensions/             # Claude Code config (source of truth)
 ├── gemini_extensions/             # Gemini config (source of truth)
 ├── .mcp/servers/                  # MCP servers (RAG, message broker)
@@ -351,7 +351,7 @@ learn-ukrainian/
 │   ├── best-practices/            # Standards and guides
 │   ├── l2-uk-en/templates/        # 37 module templates
 │   └── resources/                 # Trusted sources, external resources
-└── docusaurus/                    # Web output (Docusaurus + React components)
+└── starlight/                     # Web output (Astro/Starlight)
 ```
 
 ## Related Documentation

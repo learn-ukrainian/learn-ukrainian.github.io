@@ -10,11 +10,13 @@ from datetime import UTC, datetime
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
     PLANS_ROOT,
+    detect_pipeline_version,
     find_content_file,
     get_audit_status,
     get_final_review_info,
     get_plan_slugs,
     is_review_stale,
+    read_v2_state,
     read_v3_state,
 )
 
@@ -46,8 +48,14 @@ def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
         info = get_final_review_info(track_dir, slug)
         if info is None:
             orch_dir = track_dir / "orchestration" / slug
-            v3 = read_v3_state(orch_dir)
-            if v3.get("phases", {}).get("v3-audit", {}).get("status") == "complete":
+            version = detect_pipeline_version(orch_dir)
+            if version == "v5":
+                phases = read_v2_state(orch_dir).get("phases", {})
+                audit_status = phases.get("validate", {}).get("status")
+            else:
+                phases = read_v3_state(orch_dir).get("phases", {})
+                audit_status = phases.get("v3-audit", {}).get("status")
+            if audit_status == "complete":
                 pending.append({"num": num, "slug": slug})
             continue
 

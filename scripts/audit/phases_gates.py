@@ -63,6 +63,36 @@ from .parsing import AuditContext, AuditState
 from .report import print_immersion_fix_hints, print_low_density_activities
 
 
+def _count_sandbox_lemmas(file_path: str) -> int | None:
+    """Count lemma entries in the lexical sandbox for a module.
+
+    Returns the number of lemmas, or None if no sandbox file exists.
+    Lemmas appear as table data rows (``| lemma | ...``) or bullet entries
+    (``- **word** ...``).
+    """
+    md_path = Path(file_path)
+    bare_slug = to_bare_slug(md_path.stem)
+    level_dir = md_path.parent
+    sandbox_path = level_dir / "orchestration" / bare_slug / "lexical-sandbox.md"
+    if not sandbox_path.exists():
+        return None
+
+    count = 0
+    try:
+        text = sandbox_path.read_text(encoding="utf-8")
+        for line in text.splitlines():
+            stripped = line.strip()
+            # Table data rows: "| lemma | ..." but not header separators or header rows
+            if stripped.startswith("| ") and not stripped.startswith("|---") and not stripped.startswith("| Lemma"):
+                count += 1
+            # Bullet entries: "- **word** (POS)"
+            elif stripped.startswith("- **"):
+                count += 1
+    except OSError:
+        return None
+    return count
+
+
 def count_words_and_engagement(ctx: AuditContext, state: AuditState) -> None:
     """Count words, engagement boxes, and audio links."""
     state.raw_words = len(ctx.body.split())
@@ -205,8 +235,11 @@ def evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, int
         min_imm, max_imm = 0, 100
         phase_label = " (checkpoint - no gate)"
     elif ctx.level_code == 'A1':
-        min_imm, max_imm = get_a1_immersion_range(ctx.module_num)
+        sandbox_lemma_count = _count_sandbox_lemmas(ctx.file_path)
+        min_imm, max_imm = get_a1_immersion_range(ctx.module_num, sandbox_lemma_count)
         phase_label = f" (M{ctx.module_num:02d})"
+        if sandbox_lemma_count is not None and sandbox_lemma_count < 20 and ctx.module_num > 10:
+            phase_label += f" [sandbox:{sandbox_lemma_count}]"
     elif ctx.level_code == 'A2':
         min_imm, max_imm = get_a2_immersion_range(ctx.module_num)
         if ctx.module_num <= 20:

@@ -37,7 +37,7 @@
 
 ### Core Principle
 
-**GitHub issues and comments are the primary communication channel.** Inter-agent calls use `ai_agent_bridge.py ask-gemini` / `ask-claude` for direct dispatch, or `send` / MCP `send_message` for passive inbox drops. The agent watcher (`agent_watcher.py`) is disabled — agents check their own inbox at session start.
+**GitHub issues and comments are the primary communication channel.** Inter-agent calls use `ai_agent_bridge ask-gemini` / `ask-claude` for direct dispatch, or `send` / MCP `send_message` for passive inbox drops. The agent watcher (`agent_watcher.py`) is disabled — agents check their own inbox at session start.
 
 ### Teams (Adversarial by Design)
 
@@ -173,7 +173,7 @@ Two LLMs working together, each playing to their strengths, reviewing each other
           │                                    │
 ┌─────────┴─────────┐              ┌───────────┴───────────┐
 │      CLAUDE       │              │    GEMINI BRIDGE      │
-│   (MCP Client)    │              │  (ai_agent_bridge.py)   │
+│   (MCP Client)    │              │  (ai_agent_bridge)   │
 │                   │              │                       │
 │  Tools:           │              │  Commands:            │
 │  - send_message   │              │  - inbox              │
@@ -189,10 +189,10 @@ Two LLMs working together, each playing to their strengths, reviewing each other
 **Symmetric one-step commands:**
 ```bash
 # Claude → Gemini
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "message" --task-id task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "message" --task-id task
 
 # Gemini → Claude
-.venv/bin/python scripts/ai_agent_bridge.py ask-claude "message" --task-id task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude "message" --task-id task
 ```
 
 Both directions are fully automated with session persistence for multi-turn conversations.
@@ -422,7 +422,7 @@ gh issue create \
 # Returns: Issue #488
 
 # Later, Claude triggers Gemini to work on it
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Work on issue #488. Read it with 'gh issue view 488' and implement the tasks." \
   --task-id issue-488-impl
 ```
@@ -488,7 +488,7 @@ Instead of hoping prompts paste correctly:
 
 **Deliverables**:
 - [x] MCP Message Broker server (`.mcp/servers/message-broker/server.py`)
-- [x] Gemini Bridge script (`scripts/ai_agent_bridge.py`)
+- [x] Gemini Bridge script (`scripts/ai_agent_bridge/__main__.py`)
 - [x] MCP configuration (`.mcp.json`)
 - [x] Test basic message exchange ✅ WORKING
 - [x] Seamless mode (Claude triggers bridge via Bash)
@@ -584,7 +584,7 @@ Instead of hoping prompts paste correctly:
 | File | Purpose | Status |
 |------|---------|--------|
 | `.mcp/servers/message-broker/server.py` | MCP server for Claude | ✅ Created |
-| `scripts/ai_agent_bridge.py` | CLI bridge for Gemini | ✅ Created |
+| `scripts/ai_agent_bridge/__main__.py` | CLI bridge for Gemini | ✅ Created |
 | `.mcp.json` | MCP configuration | ✅ Updated |
 | `docs/CLAUDE-GEMINI-COOPERATION.md` | This plan document | ✅ Created |
 
@@ -646,7 +646,7 @@ receive_messages(for_llm="claude", unread_only=True)
 send_message(to="gemini", content="...", from_llm="claude", ...)
 
 # 2. Trigger bridge via Bash
-Bash(".venv/bin/python scripts/ai_agent_bridge.py process <msg_id>")
+Bash(".venv/bin/python scripts/ai_agent_bridge/__main__.py process <msg_id>")
 
 # 3. Read response
 receive_messages(for_llm="claude")
@@ -656,39 +656,39 @@ receive_messages(for_llm="claude")
 
 ```bash
 # Check inbox
-.venv/bin/python scripts/ai_agent_bridge.py inbox
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
 
 # Read specific message
-.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
 
 # Send message to Claude
-.venv/bin/python scripts/ai_agent_bridge.py send "Your message" --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --task-id my-task
 
 # Auto-process with Gemini CLI (read, process, respond)
-.venv/bin/python scripts/ai_agent_bridge.py process <message_id> --model gemini-3-pro-preview
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
 
 # Process ALL unread messages (batch mode)
-.venv/bin/python scripts/ai_agent_bridge.py process-all
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process-all
 
 # Get conversation history
-.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
+.venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
 
 # Interactive mode
-.venv/bin/python scripts/ai_agent_bridge.py interactive
+.venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
 ```
 
 ### Batch Processing Commands
 
 ```bash
 # Process ALL unread messages for Gemini
-.venv/bin/python scripts/ai_agent_bridge.py process-all
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process-all
 
 # Process ALL unread messages for Claude (headless)
-.venv/bin/python scripts/ai_agent_bridge.py process-claude-all
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process-claude-all
 
 # With options
-.venv/bin/python scripts/ai_agent_bridge.py process-all --model gemini-3-pro-preview
-.venv/bin/python scripts/ai_agent_bridge.py process-claude-all --new-session
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process-all --model gemini-3-pro-preview
+.venv/bin/python scripts/ai_agent_bridge/__main__.py process-claude-all --new-session
 ```
 
 **Use these to catch up on missed messages** after returning from a break or starting a new session.
@@ -697,14 +697,14 @@ receive_messages(for_llm="claude")
 
 ```bash
 # Acknowledge single message
-.venv/bin/python scripts/ai_agent_bridge.py ack 42
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ack 42
 
 # Acknowledge multiple messages at once
-.venv/bin/python scripts/ai_agent_bridge.py ack 49 50 51 52
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ack 49 50 51 52
 
 # Acknowledge ALL unread messages for an agent
-.venv/bin/python scripts/ai_agent_bridge.py ack-all gemini
-.venv/bin/python scripts/ai_agent_bridge.py ack-all claude
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ack-all gemini
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ack-all claude
 ```
 
 **Inbox Zero Policy**: After processing messages, always acknowledge them to prevent:
@@ -918,7 +918,7 @@ mcp__message-broker__get_conversation(task_id="the-task-id")
 - `CLAUDE.md` - AI agent instructions
 - `GEMINI.md` - Gemini agent instructions ⭐
 - `docs/TASK-WORKFLOW.md` - GitHub Issues task workflow ⭐ NEW
-- `scripts/ai_agent_bridge.py` - Gemini bridge documentation
+- `scripts/ai_agent_bridge/__main__.py` - Gemini bridge documentation
 
 ---
 

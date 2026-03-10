@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MDX Generator for Docusaurus — thin wrapper.
+"""MDX Generator for Starlight — thin wrapper.
 
 This file delegates to the generate_mdx package (scripts/generate_mdx/).
 Kept for backward compatibility with direct invocation:

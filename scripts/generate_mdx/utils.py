@@ -14,7 +14,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent.parent  # scripts/
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
-DOCUSAURUS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+STARLIGHT_DOCS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
 
 
 def dump_json_for_jsx(data):

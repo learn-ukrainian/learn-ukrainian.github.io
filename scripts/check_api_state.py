@@ -1,25 +1,12 @@
-
-from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-
-client = TestClient(app)
-response = client.get("/api/dashboard/overview")
-data = response.json()
-for t in data["tracks"]:
-    if t["id"] in ["b1", "b2", "hist", "a1", "a2"]:
-        print(f"Track: {t['id']}")
-        print(f"  API Stats: {t['stats']}")
-
-        # Check actual filesystem counts
-        from pathlib import Path
-        track_dir = Path("curriculum/l2-uk-en") / t["id"]
-        docs_dir = Path("docusaurus/docs") / t["id"]
-
-        mdx_count = len(list(docs_dir.glob("*.mdx"))) - 1 # exclude index.mdx
-        audit_count = len(list((track_dir / "audit").glob("*-audit.md"))) if (track_dir / "audit").exists() else 0
-        review_count = len(list((track_dir / "review").glob("*-review.md"))) if (track_dir / "review").exists() else 0
-        status_count = len(list((track_dir / "status").glob("*.json"))) if (track_dir / "status").exists() else 0
-
-        print(f"  Filesystem: {mdx_count} MDX, {audit_count} Audits, {review_count} Reviews, {status_count} Status JSONs")
-        print()
+#!/usr/bin/env python3
+"""Stub: module moved to scripts/tools/check_api_state.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "tools" / "check_api_state.py"
+if __name__ == "__main__":
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("check_api_state", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)

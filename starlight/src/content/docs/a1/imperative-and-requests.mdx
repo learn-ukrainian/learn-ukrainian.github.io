@@ -4,9 +4,8 @@ description: "Do This, Please!"
 sidebar:
   order: 47
   label: "47. Imperative and Requests"
-pipeline: v3
-build_status: draft
-draft: true
+pipeline: v5
+build_status: validated
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -50,430 +49,623 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 > **Чому це важливо?**
 >
-> The imperative mood lets you give commands, directions, and polite requests in Ukrainian.
+> You need the imperative mood to give instructions. In Ukrainian, the way you give a command changes depending on who you are talking to — a friend or a stranger.
 
 ## Наказовий спосіб (Imperative Mood)
 
-In Ukrainian, the command form changes depending on who you are talking to. We have one form for the informal singular pronoun **ти** and another form for the formal or plural pronoun **ви**.
+:::info[🌍 Діалог: Урок (Dialogue: The Lesson)]
+<div className="conversation">
 
-To form an informal command for **ти**, start with the infinitive, drop the **-ти** ending, and add a new suffix (often **-й**). For the formal or plural **ви**, simply add **-те** to the **ти** form.
+— Ти, читай це слово.
 
-| Infinitive | ти-form | ви-form |
-|-----------|---------|---------|
+— Я читаю.
+
+— Ти, читай також.
+
+— Я також читаю.
+
+— Ви, читайте ці слова.
+
+— Ми читаємо ці слова.
+
+— Люди, слухайте мене.
+
+— Ми слухаємо.
+
+— Ти, пиши тут.
+
+— Я пишу.
+
+— Ви, чекайте там.
+
+— Ми чекаємо.
+
+— Я тут.
+
+— Добре, слухай.
+
+</div>
+:::
+
+When you tell someone to do something, you use the imperative mood (наказовий спосіб). In Ukrainian, you cannot just use the dictionary form (the infinitive) to give a command to a person. Instead, the verb changes depending on whether you are talking to one person informally, or to a group/formally.
+
+If you are speaking to one person informally (a friend, family member, or child), you use the **singular command**. For many regular verbs, you drop the final **-ти** from the dictionary form and add **-й** or **-и**.
+
+| Dictionary Form | Singular Command | English Translation |
+|---|---|---|
+| **читати** | **читай** | read (informal) |
+| **писати** | **пиши** | write (informal) |
+| **слухати** | **слухай** | listen (informal) |
+| **чекати** | **чекай** | wait (informal) |
+
+If you are speaking to multiple people, or formally to an adult you don't know well, you use the **plural/formal command**. You create this simply by adding **-те** or **-ть** to the singular command form.
+
+| Singular Command | Plural/Formal Command | English Translation |
+|---|---|---|
+| **читай** | **читайте** | read (plural/formal) |
+| **пиши** | **пишіть** | write (plural/formal) |
+| **слухай** | **слухайте** | listen (plural/formal) |
+| **чекай** | **чекайте** | wait (plural/formal) |
+
+:::warning[⚠️ A Common Mistake]
+Never use the dictionary form to give a personal command. If you say ~~**Читати**~~ to a friend, it sounds like a robot or a written public rule on a wall. Always use the specific command form, like **читай** або **читайте**.
+:::
+
+Remember the golden rule of Ukrainian politeness: match the verb to the pronoun you would use. If you would call the person **ти** (you, informal), use the singular command. If you would use **ви** (you, formal/plural), use the plural command. Using the informal form with a stranger can sound rude!
+
+| Українською | English Translation |
+|---|---|
+| Ти, пиши тут. | You, write here. |
+| Ви, пишіть там. | You (plural), write there. |
+| Ти, чекай мене. | You, wait for me. |
+| Ви, чекайте мене. | You (plural), wait for me. |
+| Ти, читай це слово. | You, read this word. |
+| Ви, читайте ці слова. | You (plural), read these words. |
+| Ти, слухай мене. | You, listen to me. |
+| Ви, слухайте мене. | You (plural), listen to me. |
+| Ти, дивись там. | You, look there. |
+| Ви, дивіться там. | You (plural), look there. |
+
+:::info[🌍 Діалог: Читання (Reading Practice)]
+<div className="conversation">
+
+— Ти, читай!
+
+— Я читаю.
+
+— Ви, читайте!
+
+— Ми читаємо.
+
+— Ти, пиши!
+
+— Я пишу.
+
+— Ви, пишіть!
+
+— Ми пишемо.
+
+— Ти, слухай!
+
+— Я слухаю.
+
+— Ви, слухайте!
+
+— Ми слухаємо.
+
+— Ти, чекай мене.
+
+— Я чекаю тебе.
+
+— Ви, чекайте мене.
+
+— Ми чекаємо тебе.
+
+— Люди, дивіться!
+
+— Ми дивимось.
+
+— Ти, іди там.
+
+— Я іду там.
+
+— Ви, ідіть там.
+
+— Ми ідемо там.
+
+</div>
+:::
+
+## Вісім обов'язкових дієслів (Eight Required Verbs)
+
+:::info[🌍 Діалог: Робота (Dialogue: Work)]
+<div className="conversation">
+
+— Пиши це слово тут.
+
+— Я пишу. Де ще?
+
+— Дивись там. Іди до мене.
+
+— Я іду. Дай це.
+
+— Візьми це. Стій там.
+
+— Я стою там.
+
+— Люди, допоможіть також.
+
+— Так, ми тут.
+
+— Покажіть це.
+
+— Я показую.
+
+</div>
+:::
+
+Here are eight essential verbs you will use constantly in daily life. Some follow regular patterns, while others have slight stem changes in the imperative mood. When you learn these eight verbs, you can handle almost any basic daily interaction. You can ask for an item in a store, tell someone where to go, or ask someone to look at something important.
+
+First, let's look at verbs that simply take **-й** and **-йте**. These are very common in classroom settings and daily conversations. You will hear these constantly when your teacher is speaking to the class.
+
+| Dictionary Form | Command (Informal) | Command (Formal) |
+|---|---|---|
 | **читати** | **читай** | **читайте** |
 | **слухати** | **слухай** | **слухайте** |
 | **чекати** | **чекай** | **чекайте** |
 
-:::warning[⚠️ Warning]
-Do not use the infinitive as a personal command. You cannot say ~~Читати!~~ to a person. Always use specific command forms like **Читай!** or **Читайте!**
-:::
+The next group of verbs takes the endings **-и** (informal) and **-іть** (formal/plural). Notice how the stress shifts to the ending in words like **пиши́** and **іді́ть**. This change in stress makes the command sound stronger and clearer.
 
-Подивіться на ці команди. Notice how adding **-те** changes the instruction from one person to a group (or makes it formal):
-
-- **Читай!** (Read! - informal) → **Читайте!** (Read! - formal/plural)
-- **Слухай!** (Listen! - informal) → **Слухайте!** (Listen! - formal/plural)
-- **Чекай тут!** (Wait here! - informal) → **Чекайте тут!** (Wait here! - formal/plural)
-
-Ось діалог у класі:
-
-> — **Вчитель:** Слухайте! Читайте текст.
-> — **Студент:** Я читаю.
-> — **Вчитель:** Дуже добре. Читай ще.
-> — **Студент:** Добре, я читаю ще.
-> — **Вчитель:** Чекай тут.
-
-| Ukrainian | English |
-|-----------|---------|
-| Слухайте! Читайте текст. | Listen! (plural) Read the text. (plural) |
-| Я читаю. | I am reading. |
-| Дуже добре. Читай ще. | Very good. Read more. (informal) |
-| Добре, я читаю ще. | Okay, I am reading more. |
-| Чекай тут. | Wait here. (informal) |
-
-Many common verbs follow this exact pattern. If the verb stem ends in a vowel, you will almost always add **-й** for the informal command and **-йте** for the formal.
-
-| Infinitive | ти-form | ви-form |
-|-----------|---------|---------|
-| **працювати** | **працюй** | **працюйте** |
-| **думати** | **думай** | **думайте** |
-| **питати** | **питай** | **питайте** |
-
-Ось ще приклади:
-
-- **Працюй добре!** (Work well! - informal)
-- **Працюйте тут!** (Work here! - formal/plural)
-- **Думай!** (Think! - informal)
-- **Думайте, будь ласка.** (Think, please. - formal/plural)
-- **Питай!** (Ask! - informal)
-
-> — **Вчитель:** Працюйте! Читайте текст.
-> — **Студент:** Добре.
-> — **Вчитель:** Думайте! Це важливо.
-> — **Студент:** Я думаю.
-
-| Ukrainian | English |
-|-----------|---------|
-| Працюйте! Читайте текст. | Work! Read the text. |
-| Добре. | Okay. |
-| Думайте! Це важливо. | Think! This is important. |
-| Я думаю. | I am thinking. |
-
-This practice with simple verb commands builds a solid foundation for more complex instructions.
-
-Ось слова для практики:
-- **Слухай!** (Listen!)
-- **Слухайте!** (Listen! - formal)
-- **Читай!** (Read!)
-- **Читайте!** (Read! - formal)
-- **Пиши!** (Write!)
-- **Пишіть!** (Write! - formal)
-- **Кажи!** (Say!)
-- **Кажіть!** (Say! - formal)
-- **Роби!** (Do!)
-- **Робіть!** (Do! - formal)
-- **Чекай!** (Wait!)
-- **Чекайте!** (Wait! - formal)
-- **Стій!** (Stop/Stand!)
-- **Стійте!** (Stop/Stand! - formal)
-- **Іди!** (Go!)
-- **Ідіть!** (Go! - formal)
-
-## Вісім обов'язкових дієслів (Eight Required Verbs)
-
-You need to master eight essential verbs in their imperative forms. Some follow the regular pattern.
-
-| Infinitive | ти-form | ви-form |
-|---------|---------|---------|
+| Dictionary Form | Command (Informal) | Command (Formal) |
+|---|---|---|
 | **писати** | **пиши** | **пишіть** |
+| **дивитися** | **дивись** | **дивіться** |
 | **іти** | **іди** | **ідіть** |
 
-Others have completely irregular stems. These verbs change significantly.
-
-| Infinitive | ти-form | ви-form |
-|---------|---------|---------|
-| **дати** | **дай** | **дайте** |
-| **сказати** | **скажи** | **скажіть** |
-| **стояти** | **стій** | **стійте** |
-| **дивитися** | **дивись** | **дивіться** |
-
-:::tip[💡 Tip]
-Memorize the irregular commands as set phrases. Do not try to apply the regular rule to them. Saying ~~дати~~ instead of **дайте** is a very common beginner mistake.
+:::tip[💡 Listening for Context]
+The **-те** / **-ть** ending is a strong auditory cue. When you hear it, you know immediately that someone is either addressing a group of people or speaking formally to an individual. Pay attention to this sound when you are in public spaces like markets or train stations.
 :::
 
-There are three more verbs that are incredibly useful.
+Finally, here are some highly frequent verbs with irregular or unpredictable command forms. You will use these constantly when asking for items in a shop, getting someone's attention on the street, or asking for help with a task.
 
-| Infinitive | ти-form | ви-form |
-|---------|---------|---------|
-| **показати** | **покажи** | **покажіть** |
-| **допомогти** | **допоможи** | **допоможіть** |
+| Dictionary Form | Command (Informal) | Command (Formal) |
+|---|---|---|
+| **дати** | **дай** | **дайте** |
 | **взяти** | **візьми** | **візьміть** |
+| **сказати** | **скажи** | **скажіть** |
+| **стояти** | **стій** | **стійте** |
 
-Ось як ми говоримо щодня:
+Pay special attention to **дайте** (give me) and **скажіть** (tell me) — these are the absolute foundation of polite requests in Ukrainian shops, cafes, and streets. You cannot buy a coffee or ask for directions without knowing these two exact words.
 
-- **Пишіть слова тут!** (Write the words here! - formal/plural)
-- **Іди сюди!** (Come here! - informal)
-- **Стійте там!** (Stand there! - formal/plural)
-- **Дай це!** (Give this! - informal)
-- **Скажіть це слово!** (Say this word! - formal/plural)
-- **Дивись туди!** (Look over there! - informal)
-- **Допоможіть, будь ласка!** (Help, please! - formal/plural)
-- **Візьми це!** (Take this! - informal)
+| Українською | English Translation |
+|---|---|
+| Ти, скажи слово. | You, say the word. |
+| Ви, дайте це. | You (plural), give this. |
+| Ти, дивись там. | You, look there. |
+| Ви, ідіть там. | You (plural), go there. |
+| Ти, візьми це. | You, take this. |
+| Ви, стійте тут. | You (plural), stand here. |
+| Люди, слухайте! | People, listen! |
+| Ти, покажи це. | You, show this. |
+| Ви, допоможіть! | You (plural), help! |
+| Ти, іди тут. | You, go here. |
+| Ви, візьміть це. | You (plural), take this. |
+| Ти, дай це. | You, give this. |
+| Ви, скажіть це. | You (plural), say this. |
+| Ти, чекай тут. | You, wait here. |
+| Ви, чекайте там. | You (plural), wait there. |
 
-Читайте короткий діалог:
+:::info[🌍 Діалог: Читання (Reading Practice)]
+<div className="conversation">
 
-> — **Максим:** Іди сюди. Дивись!
-> — **Анна:** Що там?
-> — **Максим:** Візьми цю книгу. Прочитай це слово.
-> — **Анна:** Я читаю. Це складно.
-> — **Максим:** Дай це. Я допоможу.
+— Люди, слухайте мене!
 
-| Ukrainian | English |
-|-----------|---------|
-| Іди сюди. Дивись! | Come here. Look! |
-| Що там? | What is there? |
-| Візьми цю книгу. Прочитай це слово. | Take this book. Read this word. |
-| Я читаю. Це складно. | I am reading. It is difficult. |
-| Дай це. Я допоможу. | Give this. I will help. |
+— Ми слухаємо тебе.
 
-Let's explore another scenario where you might hear these verbs. Imagine you are trying to find a location and someone is giving you directions.
+— Дивіться там!
 
-> — **Анна:** Скажіть, будь ласка, де банк?
-> — **Максим:** Ідіть туди. Дивіться! Там банк.
-> — **Анна:** Дякую!
-> — **Максим:** Стійте! Там машина!
-> — **Анна:** О, дякую.
+— Ми дивимось там.
 
-| Ukrainian | English |
-|-----------|---------|
-| Скажіть, будь ласка, де банк? | Tell me, please, where is the bank? |
-| Ідіть туди. Дивіться! Там банк. | Go there. Look! There is the bank. |
-| Дякую! | Thank you! |
-| Стійте! Там машина! | Stop! There is a car there! |
-| О, дякую. | Oh, thank you. |
+— Ідіть там!
 
-Notice how the formal forms **ідіть**, **дивіться**, and **стійте** are used between strangers in the city. The command **скажіть** is also used formally when asking for information.
+— Ми ідемо там.
 
-Let's see another example where friends are studying together. They use the informal **ти** commands.
+— Стійте тут!
 
-> — **Олег:** Покажи це слово.
-> — **Іван:** Дивись. Це слово.
-> — **Олег:** Дай словник, будь ласка.
-> — **Іван:** Візьми.
-> — **Олег:** Пиши тут.
+— Ми стоїмо тут.
 
-| Ukrainian | English |
-|-----------|---------|
-| Покажи це слово. | Show this word. |
-| Дивись. Це слово. | Look. This word. |
-| Дай словник, будь ласка. | Give the dictionary, please. |
-| Візьми. | Take it. |
-| Пиши тут. | Write here. |
+— Пишіть це слово!
 
-Using these irregular verbs correctly will make your Ukrainian sound much more natural. Remember to practice both the informal and formal versions.
+— Ми пишемо це слово.
+
+— Читайте ці слова!
+
+— Ми читаємо ці слова.
+
+— Дайте це, будь ласка!
+
+— Ми даємо це.
+
+— Візьміть це!
+
+— Ми беремо це.
+
+— Покажіть це слово!
+
+— Ми показуємо.
+
+— Чекайте тут!
+
+— Ми чекаємо тут.
+
+</div>
+:::
 
 ## Ввічливе прохання (Polite Requests)
 
-To transform an order into a polite request, you must add **будь ласка**. This phrase is the universal softener for any command. Its placement is flexible.
+:::info[🌍 Діалог: Допомога (Dialogue: Help)]
+<div className="conversation">
 
-- **Дайте, будь ласка.** (Give it, please.)
-- **Будь ласка, слухай.** (Please, listen.)
-- **Допоможіть, будь ласка!** (Help, please!)
-- **Скажіть ці слова, будь ласка.** (Say these words, please.)
+— Людино, допоможіть, будь ласка.
 
-:::note[🏺 Culture]
-Using the formal command form without adding a polite word can still sound demanding. Always include the word for "please" when asking a stranger for assistance to maintain a friendly and respectful tone.
+— Так, що це?
+
+— Скажіть, будь ласка, де це слово.
+
+— Покажіть це, будь ласка.
+
+— Дивіться, ось це слово.
+
+— Я слухаю. Це так. Дуже добре.
+
+— Дайте це, будь ласка.
+
+— Так, візьміть.
+
+— Скажіть також це слово.
+
+— Так, кажу.
+
+</div>
 :::
 
-If you need to be even more formal, you can use a formal phrase meaning "I ask you" followed by the infinitive verb. We write this as **прошу вас**.
+A direct command on its own can sound blunt or even aggressive, especially if you are speaking to a stranger. To soften a command into a polite request, simply add the phrase **будь ласка** (please). This is the easiest and most effective way to be polite in Ukrainian.
 
-- **Прошу вас читати.**
-- **Прошу вас писати.**
-- **Прошу вас чекати.**
-- **Прошу вас сказати.**
-- **Прошу вас дати.**
-- **Прошу вас допомогти.**
+You have a lot of flexibility with word order. You can place **будь ласка** at the beginning, in the middle, or at the end of your request. The meaning remains exactly the same.
 
-You can also use an indirect request pattern. To say "Could you", you use the phrase **чи не могли б ви**.
+| Українською | English Translation |
+|---|---|
+| Будь ласка, читайте ці слова. | Please, read these words. |
+| Дайте, будь ласка, це. | Give this, please. |
+| Покажіть це, будь ласка. | Show this, please. |
+| Допоможіть, будь ласка! | Please help! |
+| Чекайте, будь ласка. | Wait, please. |
+| Скажіть, будь ласка. | Tell me, please. |
+| Візьміть, будь ласка, це. | Take this, please. |
+| Дивіться, будь ласка, там. | Look there, please. |
+| Ідіть, будь ласка, там. | Go there, please. |
+| Слухайте, будь ласка, мене. | Listen to me, please. |
+| Пишіть, будь ласка, тут. | Write here, please. |
+| Стійте, будь ласка, там. | Stand there, please. |
 
-- **Чи не могли б ви допомогти?**
-- **Чи не могли б ви показати?**
-- **Чи не могли б ви сказати?**
-- **Чи не могли б ви дати?**
-- **Чи не могли б ви взяти?**
+:::note[🏺 Cultural Context]
+The phrase **будь ласка** translates literally to "be kind." Ukrainians use it very generously in all situations. When you are asking a stranger for directions, buying food at a market, or speaking to a teacher, you should always include this phrase. It shows that you deeply respect the person you are speaking to.
+:::
 
-Читайте ввічливий діалог:
+For the most polite and respectful request — ideal for strangers, older adults, and professionals — combine the formal command (ending in **-те** / **-ть**) with **будь ласка**. This is the standard formula for public interactions.
 
-> — **Студент:** Допоможіть, будь ласка.
-> — **Вчитель:** Так, звичайно.
-> — **Студент:** Покажіть це слово, будь ласка.
-> — **Вчитель:** Ось воно. Дивіться.
+| Direct Command | Polite Request | English Translation |
+|---|---|---|
+| **Дайте** це. | **Дайте**, **будь ласка**, це. | Please give this. |
+| **Скажіть** це. | **Скажіть**, **будь ласка**, це. | Please say this. |
+| **Покажіть** це. | **Покажіть**, **будь ласка**, це. | Please show this. |
+| **Допоможіть**! | **Допоможіть**, **будь ласка**! | Please help! |
 
-| Ukrainian | English |
-|-----------|---------|
-| Допоможіть, будь ласка. | Help, please. |
-| Так, звичайно. | Yes, of course. |
-| Покажіть це слово, будь ласка. | Please show this word. |
-| Ось воно. Дивіться. | Here it is. Look. |
+Using this combination ensures you sound polite and respectful in any public situation. Never use the informal command form with a stranger without adding **будь ласка**, as it will sound like an order rather than a request.
+
+:::info[🌍 Діалог: Читання (Reading Practice)]
+<div className="conversation">
+
+— Дайте це, будь ласка.
+
+— Візьміть.
+
+— Скажіть, будь ласка, де це?
+
+— Це там.
+
+— Покажіть це, будь ласка.
+
+— Дивіться, ось це.
+
+— Допоможіть, будь ласка.
+
+— Так, ми допомагаємо.
+
+— Чекайте там, будь ласка.
+
+— Ми чекаємо.
+
+— Ідіть там, будь ласка.
+
+— Ми ідемо.
+
+— Пишіть тут, будь ласка.
+
+— Ми пишемо.
+
+— Читайте це, будь ласка.
+
+— Ми читаємо це.
+
+— Слухайте мене, будь ласка.
+
+— Ми слухаємо тебе.
+
+</div>
+:::
 
 ## Заборони (Prohibitions)
 
-Creating a negative command in Ukrainian is simple. You just place the negative particle **не** directly in front of the imperative verb. The form of the verb itself does not change.
+:::info[🌍 Діалог: Заборона (Dialogue: Prohibition)]
+<div className="conversation">
 
-| Positive | Negative |
-|----------|----------|
-| **дивись** | **не дивись** |
-| **дивіться** | **не дивіться** |
-| **слухай** | **не слухай** |
-| **слухайте**| **не слухайте**|
-| **іди** | **не іди** |
-| **ідіть** | **не ідіть** |
-| **пиши** | **не пиши** |
-| **пишіть** | **не пишіть** |
-| **читай** | **не читай** |
-| **читайте** | **не читайте** |
-| **чекай** | **не чекай** |
-| **чекайте** | **не чекайте** |
-| **стій** | **не стій** |
-| **стійте** | **не стійте** |
+— Ти, читай це.
 
-Ось приклади заборон: Notice that in Ukrainian, we usually use the *imperfective* aspect for negative commands (even if the positive command used a perfective verb like "дати" or "взяти").
+— Ні, не читай це.
 
-- **Не дивись туди!** (Don't look there!)
-- **Не слухайте це!** (Don't listen to this!)
-- **Не пиши тут!** (Don't write here!)
-- **Не стійте!** (Don't stand!)
-- **Не давайте!** (Don't give! — using the imperfective "давати" instead of perfective "дати")
-- **Не беріть!** (Don't take! — using the imperfective "брати" instead of perfective "взяти")
+— Що? Не дивись там.
 
-:::tip[💡 Tip]
-A personal prohibition like **Не стій тут!** (Do not stand here!) is used when speaking directly to someone. Public signs use a different form with the infinitive to say "No standing." We will explore public signs in a future lesson.
+— Так... я не дивлюсь.
+
+— Не іди там. Стій тут.
+
+— Я стою тут.
+
+— Не слухай це.
+
+— Я не слухаю.
+
+</div>
 :::
 
-Читайте діалог про заборони:
+To tell someone *not* to do something, simply place the negative word **не** (not) directly in front of the imperative verb. The verb itself does not change its form.
 
-> — **Максим:** Я іду туди.
-> — **Анна:** Не іди! Стій!
-> — **Максим:** Чому?
-> — **Анна:** Там небезпечно. Чекай тут.
+| Positive Command | Negative Command | English Translation |
+|---|---|---|
+| **Іди** там. | **Не іди** там. | Do not go there. |
+| **Слухайте** це. | **Не слухайте** це. | Do not listen to this. |
+| **Дивись** там. | **Не дивись** там. | Do not look there. |
+| **Чекай** тут. | **Не чекай** тут. | Do not wait here. |
 
-| Ukrainian | English |
-|-----------|---------|
-| Я іду туди. | I am going there. |
-| Не іди! Стій! | Do not go! Stop! |
-| Чому? | Why? |
-| Там небезпечно. Чекай тут. | It's dangerous there. Wait here. |
+:::info[ℹ️ Public Signs]
+You will use these personal negative commands when speaking directly to people in conversations. However, public signs often use the dictionary form instead. A printed sign might use the dictionary form to say "Do not walk," but you would use the personal command form when speaking directly to your friend.
+:::
+
+This structure works exactly the same way for both informal and formal commands: **не** + verb. You can mix it with requests too.
+
+| Українською | English Translation |
+|---|---|
+| Не пишіть там, будь ласка. | Do not write there, please. |
+| Не чекай мене. | Do not wait for me. |
+| Не ідіть там. | Do not go there. |
+| Не дивіться на це. | Do not look at this. |
+| Не беріть це. | Do not take this. |
+| Не читайте ці слова. | Do not read these words. |
+| Не слухай мене. | Do not listen to me. |
+| Не стійте там. | Do not stand there. |
 
 ## Практика і підсумок (Summary and Practice)
 
-You have learned how to form commands and make polite requests in Ukrainian. Remember that giving a command requires choosing between the formal and informal forms.
+:::info[🌍 Діалог: Підсумок (Dialogue: Summary)]
+<div className="conversation">
 
-Always add a polite word like **будь ласка** to soften the request. Some verbs drop the infinitive ending to form the command. Many other verbs have irregular stems. To make a command negative, add the negative particle before the verb. Practice these forms regularly.
+— Іди до мене, будь ласка.
 
-- **Читайте, будь ласка!** (Read, please!)
-- **Іди сюди!** (Come here!)
-- **Дайте це!** (Give this!)
-- **Допоможіть!** (Help!)
-- **Не пиши тут!** (Don't write here!)
-- **Не дивись!** (Don't look!)
+— Слухайте, люди, це слово.
 
-Читайте останній діалог.
+— Не чекайте там, будь ласка.
 
-> — **Максим:** Іди сюди. Дивись!
-> — **Анна:** Не дивись туди!
-> — **Максим:** Чому? Слухай, будь ласка.
-> — **Анна:** Добре. Дай це.
-> — **Максим:** Візьми. Читай!
-> — **Анна:** Чекай! Не читай швидко.
+— Скажіть, будь ласка, це.
 
-| Ukrainian | English |
-|-----------|---------|
-| Іди сюди. Дивись! | Come here. Look! |
-| Не дивись туди! | Do not look there! |
-| Чому? Слухай, будь ласка. | Why? Listen, please. |
-| Добре. Дай це. | Okay. Give this. |
-| Візьми. Читай! | Take it. Read! |
-| Чекай! Не читай швидко. | Wait! Do not read fast. |
+— Дивіться, будь ласка, там.
 
-By mastering these simple patterns, you now have the tools to navigate daily interactions, ask for help, and give clear instructions.
-Keep practicing the difference between the **ти** and **ви** forms to ensure you are always polite and understood.
+— Не стій там.
 
-Let's read one more extended situation. Two friends, Іван and Марія, are preparing dinner.
+— Пишіть тут.
 
-> — **Іван:** Маріє, іди сюди, будь ласка. Допоможи.
-> — **Марія:** Що таке?
-> — **Іван:** Візьми ніж. Дивись, як я роблю.
-> — **Марія:** Добре. Дай ніж.
-> — **Іван:** Стій! Не роби так. Це небезпечно.
-> — **Марія:** Покажи ще раз, будь ласка.
-> — **Іван:** Дивись. Роби так.
-> — **Марія:** Добре. Пиши рецепт, будь ласка.
-> — **Іван:** Чекай. Дай ручку.
-> — **Марія:** Візьми.
-> — **Іван:** Дякую. Читай: сіль, вода...
-> — **Марія:** Не читай швидко!
-> — **Іван:** Добре. Слухай уважно.
+— Не пишіть там.
 
-| Ukrainian | English |
-|-----------|---------|
-| Маріє, іди сюди, будь ласка. Допоможи. | Maria, come here, please. Help. |
-| Що таке? | What is it? |
-| Візьми ніж. Дивись, як я роблю. | Take the knife. Look how I do it. |
-| Добре. Дай ніж. | Okay. Give the knife. |
-| Стій! Не роби так. Це небезпечно. | Stop! Do not do that. It is dangerous. |
-| Покажи ще раз, будь ласка. | Show once more, please. |
-| Дивись. Роби так. | Look. Do like this. |
-| Добре. Пиши рецепт, будь ласка. | Okay. Write the recipe, please. |
-| Чекай. Дай ручку. | Wait. Give the pen. |
-| Візьми. | Take it. |
-| Дякую. Читай: сіль, вода... | Thank you. Read: salt, water... |
-| Не читай швидко! | Do not read fast! |
-| Добре. Слухай уважно. | Okay. Listen carefully. |
+— Читайте ці слова.
 
-Уявіть ситуацію в кафе.
+— Не читайте ці слова.
 
-> — **Клієнт:** Дайте, будь ласка, меню.
-> — **Офіціант:** Візьміть, будь ласка. Дивіться, тут є кава і чай.
-> — **Клієнт:** Покажіть, де кава?
-> — **Офіціант:** Ось тут. Читайте.
-> — **Клієнт:** Добре. Чекайте, я думаю...
-> — **Офіціант:** Не поспішайте.
+— Слухайте мене.
 
-| Українська | English |
-|------------|---------|
-| Дайте, будь ласка, меню. | Give the menu, please. |
-| Візьміть, будь ласка. Дивіться, тут є кава і чай. | Take it, please. Look, here is coffee and tea. |
-| Покажіть, де кава? | Show me, where is the coffee? |
-| Ось тут. Читайте. | Right here. Read. |
-| Добре. Чекайте, я думаю... | Okay. Wait, I am thinking... |
-| Не поспішайте. | Do not rush. |
+— Не слухайте мене.
+
+</div>
+:::
+
+:::info[🌍 Діалог: Практика (Dialogue: Practice)]
+<div className="conversation">
+
+— Люди, слухайте!
+
+— Ми слухаємо. Що там?
+
+— Дивіться там.
+
+— Я дивлюсь.
+
+— Ти, читай це слово.
+
+— Я читаю.
+
+— Ти також читай.
+
+— Я також читаю.
+
+— Ви, пишіть тут.
+
+— Так, ми пишемо.
+
+— Дайте це, будь ласка.
+
+— Візьміть.
+
+— Допоможіть також.
+
+— Так.
+
+— Не іди там.
+
+— Я не іду там.
+
+— Чекай тут.
+
+— Я чекаю тут.
+
+— Скажіть, де це?
+
+— Це там.
+
+— Покажіть це.
+
+— Я показую.
+
+— Люди, стійте там.
+
+— Ми стоїмо.
+
+— Не пишіть це.
+
+— Ми не пишемо.
+
+— Не дивіться там.
+
+— Ми не дивимось.
+
+— Не слухайте це.
+
+— Ми не слухаємо.
+
+— Ти, іди тут.
+
+— Я іду тут.
+
+— Дай це.
+
+— Я даю це.
+
+— Візьми це.
+
+— Я беру це.
+
+— Скажи це.
+
+— Я кажу це.
+
+— Стій тут.
+
+— Я стою тут.
+
+— Чекай тут.
+
+— Я чекаю тут.
+
+— Не чекай тут.
+
+— Я не чекаю тут.
+
+</div>
+:::
+
+The imperative mood is your key to active communication in Ukrainian. You now have the tools to give commands, ask for help, and tell people what not to do. Remember these core principles for successful daily interactions:
+
+1. **Match the formality:** Use singular forms (like **читай**) for informal situations with friends or children, and plural forms (like **читайте**) for groups and strangers.
+2. **Be polite:** Always add **будь ласка** to soften a command into a polite request. This is especially important with formal commands.
+3. **To forbid:** Just put the word **не** directly in front of the verb (**не читай**, **не пишіть**). The verb ending does not change.
 
 ---
 
 ## 📋 Підсумок
 
-You have successfully learned how to command and request in Ukrainian. Now you know how to direct actions and ask for assistance politely.
+You now know how to use the imperative mood to give commands and make requests. You can distinguish between informal and formal situations, and you can soften your requests to be polite. You can also form negative commands to tell people what not to do.
 
-Читайте ці фрази щодня. Слухайте аудіо. Повторюйте слова. Пишіть нові речення.
+1. What is the formal command form of **читати**?
+   **Читайте**. (Read - formal/plural)
+2. How do you say "Please give"?
+   **Дайте**, **будь ласка**.
+3. What is the negative command for "Do not write"?
+   **Не пиши** або **Не пишіть**.
+4. Which form do you use for friends?
+   The singular command form, like **читай**.
+5. How do you soften a command to make it polite?
+   Add the phrase **будь ласка**.
 
-1. How do you change an informal command for **ти** to a formal command for **ви**?
-   *You add the suffix **-те** to the informal command form.*
-2. What are the imperative forms of the irregular verb **дати**?
-   *The informal form is **дай**. The formal form is **дайте**.*
-3. How do you make a command negative?
-   *You place the word **не** directly before the imperative verb.*
+---
 
 </TabItem>
 <TabItem label="Vocabulary">
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| читати |  | to read | verb |  | Classroom command |
-| писати |  | to write | verb |  | Classroom command |
+| читати |  | to read | verb |  |  |
+| писати |  | to write | verb |  |  |
 | сказати |  | to say | verb |  |  |
 | дати |  | to give | verb |  |  |
-| іти |  | to go | verb |  | Movement command |
-| слухати |  | to listen | verb |  | Classroom command |
-| дивитися |  | to look | verb |  | Classroom command |
-| стояти |  | to stand | verb |  | Safety command |
-| показати |  | to show | verb |  | Service context |
-| допомогти |  | to help | verb |  | Emergency or request context |
+| іти |  | to go | verb |  |  |
+| слухати |  | to listen | verb |  |  |
+| дивитися |  | to look | verb |  |  |
+| стояти |  | to stand | verb |  |  |
+| показати |  | to show | verb |  |  |
+| допомогти |  | to help | verb |  |  |
 | взяти |  | to take | verb |  |  |
-| чекати |  | to wait | verb |  | Patience context |
+| чекати |  | to wait | verb |  |  |
+| слово |  | word | noun | с |  |
+| мова |  | language | noun | ж |  |
+| день |  | day | noun | ч |  |
+| час |  | time | noun | ч |  |
+| людина |  | person | noun | ж |  |
+| тут |  | here | adv |  |  |
+| там |  | there | adv |  |  |
+| дуже |  | very | adv |  |  |
 
 </TabItem>
 <TabItem label="Activities">
 
-### Match the infinitive to its informal command
+### Match the command to its translation
 
-<MatchUp client:load pairs={JSON.parse(`[{"left": "читати", "right": "читай"}, {"left": "писати", "right": "пиши"}, {"left": "слухати", "right": "слухай"}, {"left": "чекати", "right": "чекай"}, {"left": "дати", "right": "дай"}, {"left": "сказати", "right": "скажи"}, {"left": "стояти", "right": "стій"}, {"left": "дивитися", "right": "дивись"}]`)} />
+<MatchUp client:load pairs={JSON.parse(`[{"left": "читай", "right": "read (informal)"}, {"left": "читайте", "right": "read (formal/plural)"}, {"left": "пиши", "right": "write (informal)"}, {"left": "пишіть", "right": "write (formal/plural)"}, {"left": "слухай", "right": "listen (informal)"}, {"left": "слухайте", "right": "listen (formal/plural)"}, {"left": "дивись", "right": "look (informal)"}, {"left": "дивіться", "right": "look (formal/plural)"}, {"left": "дай", "right": "give (informal)"}, {"left": "дайте", "right": "give (formal/plural)"}, {"left": "скажи", "right": "say (informal)"}, {"left": "скажіть", "right": "say (formal/plural)"}]`)} />
 
-### Choose the Correct Form
+### Choose the correct polite request
 
-<Quiz client:load questions={JSON.parse(`[{"question": "You are talking to a group of friends. How do you tell them to read?", "options": [{"text": "читайте", "correct": true}, {"text": "читай", "correct": false}, {"text": "читати", "correct": false}, {"text": "читає", "correct": false}], "explanation": "For multiple people, you must use the formal/plural form (читайте)."}, {"question": "You are asking your best friend to give you something. What do you say?", "options": [{"text": "дай", "correct": true}, {"text": "дайте", "correct": false}, {"text": "дати", "correct": false}, {"text": "даю", "correct": false}], "explanation": "For a close friend, use the informal singular form (дай)."}, {"question": "You are at a store and want the clerk to show you an item.", "options": [{"text": "покажіть", "correct": true}, {"text": "покажи", "correct": false}, {"text": "показати", "correct": false}, {"text": "покажу", "correct": false}], "explanation": "Always use the formal form (покажіть) with strangers and service workers."}, {"question": "How do you tell a child not to run?", "options": [{"text": "не іди", "correct": true}, {"text": "не ідіть", "correct": false}, {"text": "не іти", "correct": false}, {"text": "іди не", "correct": false}], "explanation": "Place the word 'не' before the informal command."}, {"question": "What is the polite way to ask someone to listen?", "options": [{"text": "слухайте, будь ласка", "correct": true}, {"text": "слухайте", "correct": false}, {"text": "не слухайте", "correct": false}, {"text": "слухати, будь ласка", "correct": false}], "explanation": "Add the word 'будь ласка' to the command."}, {"question": "Which phrase means 'I ask you' for formal requests?", "options": [{"text": "прошу вас", "correct": true}, {"text": "будь ласка", "correct": false}, {"text": "не могли б ви", "correct": false}, {"text": "дякую", "correct": false}], "explanation": "Прошу вас is a formal way to introduce a request."}, {"question": "How do you tell someone to wait?", "options": [{"text": "чекай", "correct": true}, {"text": "чекати", "correct": false}, {"text": "чекає", "correct": false}, {"text": "чекаю", "correct": false}], "explanation": "The informal command for чекати is чекай."}, {"question": "Which of these is the correct command for 'stand'?", "options": [{"text": "стій", "correct": true}, {"text": "стояти", "correct": false}, {"text": "стою", "correct": false}, {"text": "стоїш", "correct": false}], "explanation": "Стояти changes its vowel to become стій."}]`)} />
+<Quiz client:load questions={JSON.parse(`[{"question": "How do you politely ask a stranger to show you something?", "options": [{"text": "Покажіть, будь ласка.", "correct": true}, {"text": "Покажи.", "correct": false}, {"text": "Показати.", "correct": false}, {"text": "Покажіть.", "correct": false}], "explanation": ""}, {"question": "How do you politely ask a stranger to help you?", "options": [{"text": "Допоможіть, будь ласка!", "correct": true}, {"text": "Допоможи!", "correct": false}, {"text": "Допомогти!", "correct": false}, {"text": "Допоможіть!", "correct": false}], "explanation": ""}, {"question": "How do you ask a friend to give you something?", "options": [{"text": "Дай це.", "correct": true}, {"text": "Дайте це.", "correct": false}, {"text": "Дати це.", "correct": false}, {"text": "Дають це.", "correct": false}], "explanation": ""}, {"question": "How do you politely ask a group to listen?", "options": [{"text": "Слухайте, будь ласка.", "correct": true}, {"text": "Слухай, будь ласка.", "correct": false}, {"text": "Слухати.", "correct": false}, {"text": "Слухають.", "correct": false}], "explanation": ""}, {"question": "How do you tell a friend to look?", "options": [{"text": "Дивись там.", "correct": true}, {"text": "Дивіться там.", "correct": false}, {"text": "Дивитися.", "correct": false}, {"text": "Дивишся.", "correct": false}], "explanation": ""}, {"question": "How do you politely tell a stranger to wait?", "options": [{"text": "Чекайте, будь ласка.", "correct": true}, {"text": "Чекай, будь ласка.", "correct": false}, {"text": "Чекати.", "correct": false}, {"text": "Чекають.", "correct": false}], "explanation": ""}, {"question": "How do you tell a child not to write there?", "options": [{"text": "Не пиши там.", "correct": true}, {"text": "Не пишіть там.", "correct": false}, {"text": "Не писати там.", "correct": false}, {"text": "Пиши там.", "correct": false}], "explanation": ""}, {"question": "How do you tell a group not to go there?", "options": [{"text": "Не ідіть там.", "correct": true}, {"text": "Не іди там.", "correct": false}, {"text": "Не іти там.", "correct": false}, {"text": "Ідіть там.", "correct": false}], "explanation": ""}, {"question": "Which form do you use for friends?", "options": [{"text": "Singular command", "correct": true}, {"text": "Plural command", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "What does 'будь ласка' mean?", "options": [{"text": "Please", "correct": true}, {"text": "Thank you", "correct": false}, {"text": "Hello", "correct": false}, {"text": "Goodbye", "correct": false}], "explanation": ""}]`)} />
 
-### Complete the Sentences
+### Complete the commands
 
-<FillIn client:load items={JSON.parse(`[{"sentence": "___ слова, будь ласка.", "answer": "Читайте", "options": ["Читайте", "Читай", "Читати", "Читаю"]}, {"sentence": "___ тут.", "answer": "Стій", "options": ["Стій", "Стояти", "Стою", "Стійте"]}, {"sentence": "___ це слово.", "answer": "Скажіть", "options": ["Скажіть", "Сказати", "Скажу", "Скажи"]}, {"sentence": "___ там.", "answer": "Ідіть", "options": ["Ідіть", "Іти", "Іду", "Іди"]}, {"sentence": "___ це.", "answer": "Візьми", "options": ["Візьми", "Взяти", "Візьміть", "Взяла"]}, {"sentence": "___, будь ласка.", "answer": "Допоможіть", "options": ["Допоможіть", "Допомогти", "Допоможи", "Допоможу"]}, {"sentence": "___ мене.", "answer": "Слухай", "options": ["Слухай", "Слухати", "Слухайте", "Слухаю"]}, {"sentence": "___ сюди.", "answer": "Дивись", "options": ["Дивись", "Дивитися", "Дивіться", "Дивлюсь"]}]`)} />
+<FillIn client:load items={JSON.parse(`[{"sentence": "Ти, ___ це слово!", "answer": "читай", "options": ["читай", "читайте", "читати", "читаю"]}, {"sentence": "Люди, ___ мене!", "answer": "слухайте", "options": ["слухайте", "слухай", "слухати", "слухаю"]}, {"sentence": "Ти, ___ тут.", "answer": "пиши", "options": ["пиши", "пишіть", "писати", "пишу"]}, {"sentence": "___, будь ласка, це слово.", "answer": "Скажіть", "options": ["Скажіть", "Скажи", "Сказати", "Скажу"]}, {"sentence": "___, будь ласка, це.", "answer": "Дайте", "options": ["Дайте", "Дай", "Дати", "Даю"]}, {"sentence": "Не ___ там!", "answer": "іди", "options": ["іди", "ідіть", "іти", "іду"]}, {"sentence": "___ там!", "answer": "Стій", "options": ["Стій", "Стійте", "Стояти", "Стою"]}, {"sentence": "___ це, будь ласка.", "answer": "Візьміть", "options": ["Візьміть", "Візьми", "Взяти", "Візьму"]}]`)} />
 
-### True or False?
+### True or False: Command Usage
 
-<TrueFalse client:load items={JSON.parse(`[{"statement": "You can use the infinitive form of a verb to give a direct, personal command.", "isTrue": false, "explanation": "The infinitive is not used for personal commands; you must use the specific imperative forms."}, {"statement": "The formal command form is created by adding '-те' to the informal command form.", "isTrue": true, "explanation": "Yes, 'читай' becomes 'читайте'."}, {"statement": "The informal command for 'дати' (to give) is 'дайти'.", "isTrue": false, "explanation": "The correct form is 'дай'. It has an irregular stem."}, {"statement": "To make a command negative, you place 'не' after the verb.", "isTrue": false, "explanation": "The word 'не' is placed directly before the verb."}, {"statement": "'Будь ласка' can be placed at the beginning, middle, or end of a sentence.", "isTrue": true, "explanation": "Yes, its placement is very flexible."}, {"statement": "You should always use the formal 'ви' form when addressing strangers.", "isTrue": true, "explanation": "This is a key part of Ukrainian politeness."}, {"statement": "'Прошу вас' is used to make a very formal request.", "isTrue": true, "explanation": "It translates to 'I ask you' and is common in official settings."}, {"statement": "The informal command for 'стояти' (to stand) is 'стоїш'.", "isTrue": false, "explanation": "The correct form is 'стій'."}]`)} />
+<TrueFalse client:load items={JSON.parse(`[{"statement": "You use the dictionary form (like 'читати') to give a personal command to a friend.", "isTrue": false, "explanation": ""}, {"statement": "The word 'будь ласка' makes a command more polite.", "isTrue": true, "explanation": ""}, {"statement": "The formal/plural command usually ends in '-те' or '-іть'.", "isTrue": true, "explanation": ""}, {"statement": "To make a negative command, you put 'ні' before the verb.", "isTrue": false, "explanation": ""}, {"statement": "You use the singular command form for teachers and strangers.", "isTrue": false, "explanation": ""}, {"statement": "The command form of 'дати' (to give) is 'дай' or 'дайте'.", "isTrue": true, "explanation": ""}, {"statement": "The command form of 'сказати' (to say) is 'скажи' or 'скажіть'.", "isTrue": true, "explanation": ""}, {"statement": "Public signs often use the dictionary form instead of a personal command.", "isTrue": true, "explanation": ""}]`)} />
 
-### Sort into Informal vs Formal
+### Match the negative command to its translation
 
-<GroupSort client:load groups={JSON.parse(`{"Informal (ти)": ["читай", "пиши", "дай", "скажи", "стій", "дивись"], "Formal (ви)": ["читайте", "пишіть", "дайте", "скажіть", "стійте", "дивіться"]}`)} />
+<MatchUp client:load pairs={JSON.parse(`[{"left": "не читай", "right": "do not read (informal)"}, {"left": "не читайте", "right": "do not read (formal/plural)"}, {"left": "не пиши", "right": "do not write (informal)"}, {"left": "не пишіть", "right": "do not write (formal/plural)"}, {"left": "не слухай", "right": "do not listen (informal)"}, {"left": "не слухайте", "right": "do not listen (formal/plural)"}, {"left": "не дивись", "right": "do not look (informal)"}, {"left": "не дивіться", "right": "do not look (formal/plural)"}, {"left": "не чекай", "right": "do not wait (informal)"}, {"left": "не чекайте", "right": "do not wait (formal/plural)"}]`)} />
 
-### Negative Commands Quiz
+### Identify if the command is singular/informal or plural/formal
 
-<Quiz client:load questions={JSON.parse(`[{"question": "How do you tell a friend not to look?", "options": [{"text": "не дивись", "correct": true}, {"text": "не дивіться", "correct": false}, {"text": "не дивитися", "correct": false}, {"text": "не дивлюсь", "correct": false}], "explanation": "Use 'не' before the informal imperative form."}, {"question": "How do you formally tell a group not to wait?", "options": [{"text": "не чекайте", "correct": true}, {"text": "не чекай", "correct": false}, {"text": "не чекати", "correct": false}, {"text": "чекати не", "correct": false}], "explanation": "Use 'не' before the formal imperative form."}, {"question": "Which form is correct for 'Do not read here' (informal)?", "options": [{"text": "не читай тут", "correct": true}, {"text": "читай не тут", "correct": false}, {"text": "не читати тут", "correct": false}, {"text": "не читаю тут", "correct": false}], "explanation": "The negative particle 'не' comes right before the imperative."}, {"question": "How do you formally ask someone not to stand?", "options": [{"text": "не стійте", "correct": true}, {"text": "не стій", "correct": false}, {"text": "не стояти", "correct": false}, {"text": "стійте не", "correct": false}], "explanation": "Formal imperative with 'не'."}, {"question": "Which word means 'please' in Ukrainian?", "options": [{"text": "будь ласка", "correct": true}, {"text": "дякую", "correct": false}, {"text": "не треба", "correct": false}, {"text": "прошу", "correct": false}], "explanation": "Будь ласка is the universal polite phrase."}, {"question": "How do you say 'Do not give' formally?", "options": [{"text": "не дайте", "correct": true}, {"text": "не дай", "correct": false}, {"text": "не дати", "correct": false}, {"text": "дайте не", "correct": false}], "explanation": "Use 'не' before the formal imperative 'дайте'."}, {"question": "What is the informal negative command for 'write'?", "options": [{"text": "не пиши", "correct": true}, {"text": "не пишіть", "correct": false}, {"text": "не писати", "correct": false}, {"text": "пиши не", "correct": false}], "explanation": "Use 'не' before 'пиши'."}, {"question": "How do you ask someone politely to wait (formal)?", "options": [{"text": "чекайте, будь ласка", "correct": true}, {"text": "чекай, будь ласка", "correct": false}, {"text": "чекати", "correct": false}, {"text": "не чекайте", "correct": false}], "explanation": "Combine 'чекайте' with 'будь ласка'."}]`)} />
+<Quiz client:load questions={JSON.parse(`[{"question": "Is \\"читайте\\" singular/informal or plural/formal?", "options": [{"text": "Plural/formal", "correct": true}, {"text": "Singular/informal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"пиши\\" singular/informal or plural/formal?", "options": [{"text": "Singular/informal", "correct": true}, {"text": "Plural/formal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"слухайте\\" singular/informal or plural/formal?", "options": [{"text": "Plural/formal", "correct": true}, {"text": "Singular/informal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"дивись\\" singular/informal or plural/formal?", "options": [{"text": "Singular/informal", "correct": true}, {"text": "Plural/formal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"дай\\" singular/informal or plural/formal?", "options": [{"text": "Singular/informal", "correct": true}, {"text": "Plural/formal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"скажіть\\" singular/informal or plural/formal?", "options": [{"text": "Plural/formal", "correct": true}, {"text": "Singular/informal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"допоможіть\\" singular/informal or plural/formal?", "options": [{"text": "Plural/formal", "correct": true}, {"text": "Singular/informal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}, {"question": "Is \\"візьми\\" singular/informal or plural/formal?", "options": [{"text": "Singular/informal", "correct": true}, {"text": "Plural/formal", "correct": false}, {"text": "Dictionary form", "correct": false}, {"text": "Past tense", "correct": false}], "explanation": ""}]`)} />
 
-### Polite Requests
+### Complete the negative commands
 
-<MatchUp client:load pairs={JSON.parse(`[{"left": "Help, please.", "right": "Допоможіть, будь ласка."}, {"left": "Give this, please.", "right": "Дайте це, будь ласка."}, {"left": "Say this, please.", "right": "Скажіть це, будь ласка."}, {"left": "Please, listen.", "right": "Будь ласка, слухай."}, {"left": "Please show this word.", "right": "Покажіть це слово, будь ласка."}, {"left": "Read, please.", "right": "Читайте, будь ласка."}, {"left": "Write here, please.", "right": "Пишіть тут, будь ласка."}, {"left": "Wait, please.", "right": "Чекайте, будь ласка."}]`)} />
+<FillIn client:load items={JSON.parse(`[{"sentence": "___ читай це слово!", "answer": "Не", "options": ["Не", "Ні", "Так", "Або"]}, {"sentence": "Не ___ там, будь ласка.", "answer": "пишіть", "options": ["пишіть", "писати", "пишуть", "пишете"]}, {"sentence": "Не ___ на це!", "answer": "дивись", "options": ["дивись", "дивитися", "дивлюсь", "дивиться"]}, {"sentence": "Не ___ там!", "answer": "чекайте", "options": ["чекайте", "чекати", "чекають", "чекаєте"]}, {"sentence": "Ти, не ___ там!", "answer": "іди", "options": ["іди", "ідіть", "іти", "ідуть"]}, {"sentence": "Не ___ це, будь ласка.", "answer": "дайте", "options": ["дайте", "дай", "дати", "даю"]}, {"sentence": "Не ___!", "answer": "стій", "options": ["стій", "стійте", "стояти", "стою"]}, {"sentence": "Не ___ мене!", "answer": "слухай", "options": ["слухай", "слухайте", "слухати", "слухаю"]}]`)} />
 
-### Complete the Negative Commands
+### Match the dictionary form of the verb to its English meaning
 
-<FillIn client:load items={JSON.parse(`[{"sentence": "___ іди туди.", "answer": "Не", "options": ["Не", "Ні", "Нічого", "Немає"]}, {"sentence": "Не ___! Там машина.", "answer": "ідіть", "options": ["ідіть", "іти", "іду", "іде"]}, {"sentence": "Не ___ це, будь ласка.", "answer": "пишіть", "options": ["пишіть", "писати", "пишу", "пишете"]}, {"sentence": "Не ___ сюди!", "answer": "дивись", "options": ["дивись", "дивитися", "дивлюсь", "дивляться"]}, {"sentence": "___ слухай це!", "answer": "Не", "options": ["Не", "Ні", "Так", "Нічого"]}, {"sentence": "Не ___ сюди, будь ласка.", "answer": "ідіть", "options": ["ідіть", "іди", "іти", "іду"]}, {"sentence": "Не ___ це.", "answer": "читай", "options": ["читай", "читати", "читаю", "читаєте"]}, {"sentence": "___ чекай мене.", "answer": "Не", "options": ["Не", "Ні", "Без", "Ніколи"]}]`)} />
+<MatchUp client:load pairs={JSON.parse(`[{"left": "читати", "right": "to read"}, {"left": "писати", "right": "to write"}, {"left": "слухати", "right": "to listen"}, {"left": "дивитися", "right": "to look"}, {"left": "дати", "right": "to give"}, {"left": "взяти", "right": "to take"}, {"left": "сказати", "right": "to say"}, {"left": "стояти", "right": "to stand"}, {"left": "показати", "right": "to show"}, {"left": "допомогти", "right": "to help"}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

@@ -1,0 +1,294 @@
+[
+  {
+    "slug": "the-cyrillic-code-iii",
+    "track": "a1",
+    "num": 3,
+    "status": "PASS",
+    "words": 1969,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": true
+    },
+    "failing_gates": [],
+    "fix_attempts": 2,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": {
+      "grade": "A",
+      "critical": 1,
+      "high": 1,
+      "medium": 1,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-content-review.md"
+    },
+    "prompt_review": {
+      "health": "?",
+      "fix_loops": 0,
+      "friction_count": 6,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-prompt-review.md"
+    },
+    "grade": "A"
+  },
+  {
+    "slug": "the-gender-code",
+    "track": "a1",
+    "num": 7,
+    "status": "PASS",
+    "words": 2079,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": true
+    },
+    "failing_gates": [],
+    "fix_attempts": 1,
+    "self_audited": true,
+    "nat_score": null,
+    "content_review": {
+      "grade": "?",
+      "critical": 1,
+      "high": 3,
+      "medium": 2,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-content-review.md"
+    },
+    "prompt_review": {
+      "health": "?",
+      "fix_loops": 0,
+      "friction_count": 3,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-prompt-review.md"
+    },
+    "grade": "A"
+  },
+  {
+    "slug": "describing-things-adjectives",
+    "track": "a1",
+    "num": 11,
+    "status": "PASS",
+    "words": 2492,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": true
+    },
+    "failing_gates": [],
+    "fix_attempts": 0,
+    "self_audited": true,
+    "nat_score": null,
+    "content_review": {
+      "grade": "B+",
+      "critical": 1,
+      "high": 2,
+      "medium": 3,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-content-review.md"
+    },
+    "prompt_review": {
+      "health": "VERDICT",
+      "fix_loops": 0,
+      "friction_count": 10,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-prompt-review.md"
+    },
+    "grade": "A"
+  },
+  {
+    "slug": "the-living-verb-i",
+    "track": "a1",
+    "num": 15,
+    "status": "PASS",
+    "words": 1585,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 2,
+    "self_audited": true,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": {
+      "health": "?",
+      "fix_loops": 0,
+      "friction_count": 3,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-prompt-review.md"
+    },
+    "grade": "A"
+  },
+  {
+    "slug": "the-accusative-i-things",
+    "track": "a1",
+    "num": 25,
+    "status": "PASS",
+    "words": 1663,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 2,
+    "self_audited": true,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": null,
+    "grade": "A"
+  },
+  {
+    "slug": "imperative-and-requests",
+    "track": "a1",
+    "num": 47,
+    "status": "PASS",
+    "words": 1822,
+    "word_target": 1200,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 0,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": {
+      "health": "?",
+      "fix_loops": 3,
+      "friction_count": 3,
+      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-prompt-review.md"
+    },
+    "grade": "A"
+  },
+  {
+    "slug": "the-completed-past",
+    "track": "a2",
+    "num": 15,
+    "status": "PASS",
+    "words": 4798,
+    "word_target": 2000,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 0,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": null,
+    "grade": "A"
+  },
+  {
+    "slug": "aspect-past-result-process",
+    "track": "b1",
+    "num": 10,
+    "status": "PASS",
+    "words": 4447,
+    "word_target": 4000,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 0,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": null,
+    "grade": "A"
+  },
+  {
+    "slug": "checkpoint-passive-voice",
+    "track": "b2",
+    "num": 10,
+    "status": "FAIL",
+    "words": 4349,
+    "word_target": 4000,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": false,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": true
+    },
+    "failing_gates": [
+      "activities"
+    ],
+    "fix_attempts": 0,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": null,
+    "grade": "F"
+  },
+  {
+    "slug": "register-literary-ukrainian",
+    "track": "b2",
+    "num": 30,
+    "status": "PASS",
+    "words": 4404,
+    "word_target": 4000,
+    "gates": {
+      "meta": true,
+      "lesson": true,
+      "activities": true,
+      "vocabulary": true,
+      "naturalness": true,
+      "research": true,
+      "review": false
+    },
+    "failing_gates": [],
+    "fix_attempts": 0,
+    "self_audited": false,
+    "nat_score": null,
+    "content_review": null,
+    "prompt_review": null,
+    "grade": "A"
+  },
+  {
+    "slug": "logical-connectors",
+    "track": "c1",
+    "num": 5,
+    "status": "NO_CONTENT",
+    "grade": "N/A"
+  }
+]

@@ -6,11 +6,17 @@ on:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
+      - 'claude_extensions/phases/**/*.md'
+      - 'claude_extensions/skills/**/*.md'
+      - 'gemini_extensions/skills/**/*.md'
   pull_request:
     paths:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
+      - 'claude_extensions/phases/**/*.md'
+      - 'claude_extensions/skills/**/*.md'
+      - 'gemini_extensions/skills/**/*.md'
   workflow_dispatch:
 
 jobs:
@@ -68,6 +74,46 @@ jobs:
           fi
           echo "✅ No MI=C files (excluding known legacy)"
 
+  lint-prompts:
+    name: Lint Prompts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Lint prompt templates
+        run: python scripts/lint/lint_prompts.py
+
+  scripts-root-guard:
+    name: No new root scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for non-stub scripts in scripts/ root
+        run: |
+          # Allowed non-stub files at scripts/ root
+          allowed="__init__.py|batch_gemini_runner.py|config.py|generate_mdx.py|manifest_direct.py|manifest_utils.py|paths.py|pipeline_lib.py|slug_utils.py|yaml_activities.py"
+          violations=""
+          for f in scripts/*.py; do
+            [ ! -f "$f" ] && continue
+            basename=$(basename "$f")
+            # Skip allowed files
+            echo "$basename" | grep -qE "^($allowed)$" && continue
+            # Skip re-export stubs
+            grep -q "Stub: module moved" "$f" && continue
+            violations="$violations $f"
+          done
+          if [ -n "$violations" ]; then
+            echo "::error::New non-stub scripts found in scripts/ root (move to a subdirectory):"
+            echo "$violations" | tr ' ' '\n' | grep .
+            exit 1
+          fi
+          echo "✅ No new root-level scripts"
+
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest
@@ -94,8 +140,7 @@ jobs:
             --cov-fail-under=30 \
             -v --tb=short \
             -k "not slow and not website" \
-            --ignore=tests/test_rag.py \
-            --ignore=tests/test_docusaurus_links.py
+            --ignore=tests/test_rag.py
 
       - name: Upload coverage
         if: always()

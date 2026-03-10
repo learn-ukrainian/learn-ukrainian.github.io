@@ -146,4 +146,4 @@ data/zno/
 starlight/dist
 starlight/node_modules
 starlight/.astro
-testbed/
+/testbed/

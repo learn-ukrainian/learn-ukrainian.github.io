@@ -64,7 +64,7 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
     if async_mode:
         print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
         print("   Gemini will see this in his inbox when he starts a session.")
-        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
+        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge/__main__.py process {msg_id}")
     else:
         if not stdout_only:
             print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")

@@ -131,6 +131,106 @@ def wikipedia_sections(title: str) -> list[dict[str, Any]] | None:
         return None
 
 
+def wikipedia_extract(title: str, max_chars: int = 50000) -> dict[str, Any] | None:
+    """Fetch full plaintext of a Wikipedia article.
+
+    Uses the MediaWiki API with prop=extracts&explaintext=1 for clean text.
+    Returns dict with keys: title, extract, url — or None if not found.
+    """
+    params = {
+        "action": "query",
+        "titles": title,
+        "prop": "extracts|info",
+        "explaintext": 1,
+        "exlimit": 1,
+        "inprop": "url",
+        "redirects": 1,
+        "format": "json",
+        "utf8": 1,
+    }
+    try:
+        r = _get(WIKI_API, params=params)
+        r.raise_for_status()
+        data = r.json()
+        pages = data.get("query", {}).get("pages", {})
+        # MediaWiki returns pages keyed by page ID; -1 means not found
+        for page_id, page in pages.items():
+            if page_id == "-1" or "missing" in page:
+                return None
+            extract = page.get("extract", "")
+            if max_chars and len(extract) > max_chars:
+                extract = extract[:max_chars] + "\n\n[... truncated ...]"
+            return {
+                "title": page.get("title", title),
+                "extract": extract,
+                "url": page.get("fullurl", f"https://uk.wikipedia.org/wiki/{quote(title)}"),
+            }
+        return None
+    except requests.RequestException:
+        return None
+
+
+def wikipedia_section_text(title: str, section_index: int) -> dict[str, Any] | None:
+    """Fetch text of a specific section of a Wikipedia article.
+
+    Uses action=parse with section parameter. Returns wikitext converted
+    to plaintext (strips markup). Returns dict with keys: title, section,
+    text — or None if not found.
+    """
+    params = {
+        "action": "parse",
+        "page": title,
+        "section": section_index,
+        "prop": "wikitext",
+        "format": "json",
+        "utf8": 1,
+    }
+    try:
+        r = _get(WIKI_API, params=params)
+        r.raise_for_status()
+        data = r.json()
+        if "error" in data:
+            return None
+        wikitext = data.get("parse", {}).get("wikitext", {}).get("*", "")
+        # Strip common wikitext markup for readability
+        text = _strip_wikitext(wikitext)
+        return {
+            "title": data.get("parse", {}).get("title", title),
+            "section": section_index,
+            "text": text,
+        }
+    except requests.RequestException:
+        return None
+
+
+def _strip_wikitext(text: str) -> str:
+    """Convert wikitext to approximate plaintext."""
+    # Remove references <ref>...</ref>
+    text = re.sub(r"<ref[^>]*>.*?</ref>", "", text, flags=re.DOTALL)
+    text = re.sub(r"<ref[^>]*/?>", "", text)
+    # Remove HTML comments
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    # Remove templates {{ ... }} (simple, non-nested)
+    text = re.sub(r"\{\{[^{}]*\}\}", "", text)
+    # Second pass for one level of nesting
+    text = re.sub(r"\{\{[^{}]*\}\}", "", text)
+    # Convert [[link|display]] → display, [[link]] → link
+    text = re.sub(r"\[\[[^]]*\|([^]]*)\]\]", r"\1", text)
+    text = re.sub(r"\[\[([^]]*)\]\]", r"\1", text)
+    # Remove external links [url text] → text
+    text = re.sub(r"\[https?://\S+\s+([^\]]+)\]", r"\1", text)
+    text = re.sub(r"\[https?://\S+\]", "", text)
+    # Remove bold/italic markup
+    text = re.sub(r"'{2,5}", "", text)
+    # Remove section headers (== Title ==) — keep the text
+    text = re.sub(r"^=+\s*(.*?)\s*=+$", r"\1", text, flags=re.MULTILINE)
+    # Remove remaining HTML tags
+    text = re.sub(r"<[^>]+>", "", text)
+    # Clean up whitespace
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 # ══════════════════════════════════════════════════════════════════
 # GRAC Corpus (uacorpus.org) — NoSketch Engine API
 # ══════════════════════════════════════════════════════════════════

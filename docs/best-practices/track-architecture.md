@@ -99,7 +99,7 @@ plans/{track}/{slug}.yaml          ← SOURCE OF TRUTH
     ↓ Phase D reads
 {track}/review/{slug}-review.md    ← ADVERSARIAL REVIEW
     ↓ Phase E reads
-docusaurus/docs/{track}/{slug}.mdx ← PUBLISHED OUTPUT
+starlight/src/content/docs/{track}/{slug}.mdx ← PUBLISHED OUTPUT
 ```
 
 **Never write content without first reading the plan.** The plan defines vocabulary scope, section names, objectives — everything Phase B must respect.

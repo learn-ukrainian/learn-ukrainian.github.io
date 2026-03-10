@@ -42,27 +42,6 @@ def severity_key(m: dict) -> int:
     return -score
 
 
-def is_research_done_legacy(v3, v2, track_dir, slug, *, v4=None):
-    """Legacy research-done check for ready-to-build endpoint."""
-    if v4:
-        phase = v4.get("phases", {}).get("v4-research", {})
-        if phase.get("status") == "complete":
-            return True
-    phase_a = v3.get("phases", {}).get("v3-A") or v2.get("phases", {}).get("1") or {}
-    if phase_a.get("status") == "complete":
-        return True
-    return has_research_file(track_dir, slug)
-
-
-def is_content_done_legacy(v3, v2, *, v4=None):
-    """Legacy content-done check for ready-to-build endpoint."""
-    if v4:
-        phase = v4.get("phases", {}).get("v4-content", {})
-        if phase.get("status") == "complete":
-            return True
-    phase_b = v3.get("phases", {}).get("v3-B") or v2.get("phases", {}).get("2") or {}
-    return phase_b.get("status") == "complete"
-
 
 def compute_research_detail(track_id: str, level_cfg: dict, min_score: int) -> dict:
     """Compute per-module research quality for a track."""

@@ -107,14 +107,14 @@ def compute_build_status_all() -> dict:
         done = building = failed = 0
 
         for _num, slug in plan_slugs:
-            phases = read_v3_state(track_dir / "orchestration" / slug).get("phases", {})
-            audit_status = phases.get("v3-audit", {}).get("status")
+            orch_dir = track_dir / "orchestration" / slug
+            version = detect_pipeline_version(orch_dir)
+            _furthest, running_phase, _latest_ts, audit_status = scan_module_phases(orch_dir, version)
             if audit_status == "complete":
                 done += 1
             elif audit_status == "failed":
                 failed += 1
-            elif any(phases.get(p, {}).get("status") == "running"
-                     for p in ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]):
+            elif running_phase:
                 building += 1
 
         tracks[track_id] = {
@@ -188,11 +188,16 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
 
 
 def _check_build_phase(orch_dir):
-    """Check if v3-B phase is complete. Returns (built_count, timestamp_or_none)."""
-    v3 = read_v3_state(orch_dir)
-    b_phase = v3.get("phases", {}).get("v3-B", {})
-    if b_phase.get("status") == "complete":
-        return 1, b_phase.get("ts")
+    """Check if content phase is complete. Returns (built_count, timestamp_or_none)."""
+    version = detect_pipeline_version(orch_dir)
+    if version == "v5":
+        phases = read_v2_state(orch_dir).get("phases", {})
+        content_phase = phases.get("content", {})
+    else:
+        phases = read_v3_state(orch_dir).get("phases", {})
+        content_phase = phases.get("v3-B", {})
+    if content_phase.get("status") == "complete":
+        return 1, content_phase.get("ts")
     return 0, None
 
 

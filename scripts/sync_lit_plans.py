@@ -1,22 +1,12 @@
-from pathlib import Path
-
-curriculum_dir = Path("curriculum/l2-uk-en")
-plans_dir = curriculum_dir / "plans"
-
-new_tracks = ["lit-doc", "lit-drama", "lit-crimea", "lit-youth"]
-
-for track in new_tracks:
-    research_dir = curriculum_dir / track / "research"
-    if not research_dir.exists():
-        continue
-
-    actual_slugs = [f.stem.replace("-research", "") for f in research_dir.glob("*-research.md")]
-
-    for slug in actual_slugs:
-        # Move plans from old tracks
-        for old_track in ["lit", "lit-essay", "lit-war"]:
-            old_plan = plans_dir / old_track / f"{slug}.yaml"
-            new_plan = plans_dir / track / f"{slug}.yaml"
-            if old_plan.exists() and not new_plan.exists():
-                old_plan.rename(new_plan)
-                print(f"Moved plan {slug}.yaml to {track}")
+#!/usr/bin/env python3
+"""Stub: module moved to scripts/sync/sync_lit_plans.py"""
+import importlib.util as _ilu, sys as _sys
+from pathlib import Path as _P
+_f = _P(__file__).parent / "sync" / "sync_lit_plans.py"
+if __name__ == "__main__":
+    import runpy; runpy.run_path(str(_f), run_name="__main__")
+else:
+    _s = _ilu.spec_from_file_location("sync_lit_plans", _f)
+    _m = _ilu.module_from_spec(_s)
+    _sys.modules[__name__] = _m
+    _s.loader.exec_module(_m)
