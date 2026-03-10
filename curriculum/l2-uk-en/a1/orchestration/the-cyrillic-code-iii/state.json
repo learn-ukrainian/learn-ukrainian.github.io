@@ -5,31 +5,33 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-07T01:15:09Z",
+      "ts": "2026-03-10T10:02:20Z",
       "task_id": "v5-the-cyrillic-code-iii-pA",
       "mode": "full"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-07T01:15:32Z"
+      "ts": "2026-03-10T10:02:39Z"
     },
     "sandbox": {
       "status": "complete",
-      "ts": "2026-03-07T01:15:34Z"
+      "ts": "2026-03-10T10:02:40Z"
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-07T01:20:00Z"
+      "ts": "2026-03-10T10:16:22Z",
+      "self_audited": true
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-07T01:22:53Z",
-      "task_id": "v5-the-cyrillic-code-iii-pC"
+      "ts": "2026-03-10T10:16:22Z",
+      "note": "extracted-from-full-build"
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-07T01:46:59Z",
-      "attempts": 2
+      "status": "failed",
+      "ts": "2026-03-10T10:18:59Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-6-failures"
     }
   }
 }

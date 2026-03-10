@@ -2,15 +2,15 @@
   "module": "aspect-past-result-process",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T15:17:30.728249Z",
+  "last_audit": "2026-03-09T21:49:59.828478Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T11:48:12.692756Z",
     "meta": "2026-02-23T21:34:49.229762Z",
     "activities": "2026-02-24T11:26:03.357175Z",
     "vocabulary": "2026-02-26T10:56:38.109636Z",
-    "plan": "2026-03-05T15:30:23.609810Z",
-    "research": "2026-02-23T21:34:49.225972Z"
+    "research": "2026-02-23T21:34:49.225972Z",
+    "plan": "2026-03-05T15:30:23.609810Z"
   },
   "gates": {
     "meta": {

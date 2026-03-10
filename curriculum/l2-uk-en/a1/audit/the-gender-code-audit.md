@@ -1,7 +1,7 @@
 # Audit Report: M07 — the-gender-code.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 15:17:24
+**Generated:** 2026-03-09 21:49:55
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,6 +34,15 @@
 - Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[ukrainian_block_repetition]** Same Ukrainian word set appears in 5 different containers (>70% overlap). Shared core: вікно, книга, стіл.
+  - FIX: Vary Ukrainian content across containers. Each table, list, or dialogue should introduce NEW vocabulary or use existing words in NEW contexts — not repeat the same word set.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2079/1200 (raw: 2146)

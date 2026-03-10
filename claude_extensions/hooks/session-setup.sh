@@ -1,6 +1,12 @@
 #!/bin/bash
-# Hook: Setup — runs once at session start
+# Hook: SessionStart — runs on new sessions AND resumed sessions
 # Validates environment and reports project state.
+# Skips in headless/pipeline mode to avoid adding latency.
+
+# Skip in non-interactive (headless) mode
+if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
+  exit 0
+fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 ISSUES=()
@@ -31,7 +37,6 @@ fi
 STALE_COUNT=0
 if [ -d "$PROJECT_DIR/curriculum" ]; then
   while IFS= read -r -d '' state_file; do
-    # Check if file was modified more than 24 hours ago and has in_progress
     if [ -f "$state_file" ]; then
       if grep -q '"in_progress"' "$state_file" 2>/dev/null; then
         MOD_TIME=$(stat -f %m "$state_file" 2>/dev/null || stat -c %Y "$state_file" 2>/dev/null)
@@ -71,6 +76,46 @@ if [ -f "$MEMORY_FILE" ]; then
   fi
 fi
 
+# 7. Check claude_extensions/ → .claude/ sync drift
+if [ -d "$PROJECT_DIR/claude_extensions" ] && [ -d "$PROJECT_DIR/.claude" ]; then
+  DRIFT=$(diff -rq "$PROJECT_DIR/claude_extensions/" "$PROJECT_DIR/.claude/" \
+    --exclude='.DS_Store' --exclude='settings.local.json' 2>/dev/null | head -5)
+  if [ -n "$DRIFT" ]; then
+    DRIFT_COUNT=$(echo "$DRIFT" | wc -l | tr -d ' ')
+    ISSUES+=("DEPLOY DRIFT: $DRIFT_COUNT file(s) differ between claude_extensions/ and .claude/. Run: npm run claude:deploy")
+  fi
+fi
+
+# 8. Check MCP RAG server health
+RAG_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:8766/sse" 2>/dev/null)
+if [ "$RAG_STATUS" != "200" ] && [ "$RAG_STATUS" != "000" ]; then
+  # 000 means connection refused (server down), non-200 means server error
+  INFO+=("MCP RAG server returned HTTP $RAG_STATUS — some tools may be unavailable")
+elif [ "$RAG_STATUS" = "000" ]; then
+  ISSUES+=("MCP RAG server unreachable at 127.0.0.1:8766 — RAG tools unavailable. Start with: cd .mcp/servers/rag && .venv/bin/python server.py")
+fi
+
+# 9. Check gemini-cli auth
+if command -v gemini >/dev/null 2>&1; then
+  GEMINI_CHECK=$(gemini --version 2>&1)
+  if [[ "$GEMINI_CHECK" == *"error"* ]] || [[ "$GEMINI_CHECK" == *"auth"* ]]; then
+    INFO+=("gemini-cli may need re-authentication: gemini auth login")
+  fi
+else
+  INFO+=("gemini-cli not found — Gemini builds unavailable")
+fi
+
+# 10. Open GH issues summary
+if command -v gh >/dev/null 2>&1; then
+  OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
+  if [ $? -eq 0 ] && [ -n "$OPEN_ISSUES" ] && [ "$OPEN_ISSUES" != "[]" ]; then
+    ISSUE_COUNT=$(echo "$OPEN_ISSUES" | jq 'length')
+    ISSUE_LIST=$(echo "$OPEN_ISSUES" | jq -r '.[] | "  #\(.number): \(.title)"' | head -5)
+    INFO+=("$ISSUE_COUNT open issue(s):
+$ISSUE_LIST")
+  fi
+fi
+
 # Build output
 if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ]; then
   exit 0
@@ -80,7 +125,7 @@ CONTEXT="SESSION SETUP CHECK:"
 
 if [ ${#ISSUES[@]} -gt 0 ]; then
   CONTEXT="$CONTEXT
-⚠️ ISSUES:"
+ISSUES:"
   for issue in "${ISSUES[@]}"; do
     CONTEXT="$CONTEXT
   - $issue"
@@ -89,7 +134,7 @@ fi
 
 if [ ${#INFO[@]} -gt 0 ]; then
   CONTEXT="$CONTEXT
-ℹ️ INFO:"
+INFO:"
   for info in "${INFO[@]}"; do
     CONTEXT="$CONTEXT
   - $info"

@@ -2,15 +2,15 @@
   "module": "the-completed-past",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T15:17:29.171426Z",
+  "last_audit": "2026-03-09T21:49:59.031594Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T23:06:44.541373Z",
     "meta": "2026-03-04T22:06:29.939739Z",
     "activities": "2026-02-22T23:05:01.180788Z",
     "vocabulary": "2026-02-26T10:56:38.103828Z",
-    "plan": "2026-03-05T15:41:10.548796Z",
-    "research": "2026-02-22T22:18:04.908032Z"
+    "research": "2026-02-22T22:18:04.908032Z",
+    "plan": "2026-03-05T15:41:10.548796Z"
   },
   "gates": {
     "meta": {

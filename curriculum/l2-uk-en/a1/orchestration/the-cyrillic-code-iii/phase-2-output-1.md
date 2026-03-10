@@ -1,208 +1,300 @@
 <!-- SCOPE
-Covers: 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч) and the concept of voiced vs voiceless pairs.
+Covers: 9 new Cyrillic letters (Б, Д, П, З, Г, Х, Ж, Ш, Ч) and the concept of voiced vs voiceless consonants.
 Not covered:
-  - The remaining 10 letters and symbols → a1-04
+  - Remaining letters Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ → a1-04
 -->
 
 # The Cyrillic Code III
 
 > **Why does this matter?**
 >
-> Learning consonant pairs unlocks the structure of the Ukrainian alphabet. Once you know these letters, you can read almost anything around you.
+> You are about to cross a major threshold in your learning journey. By adding these nine consonants, you will know twenty-three letters in total, unlocking the ability to decode nearly all common street signs, menus, and basic words you encounter.
 
 ## Вступ — Introduction
 
-Welcome back to your journey through the Cyrillic alphabet. Let us start by looking at some familiar words from our previous lessons. Take a deep breath and read these aloud: 
+Welcome to your third step in cracking the Cyrillic alphabet. You have already mastered the vowels and a solid foundation of essential consonants. Now, we are expanding your decodability even further. 
 
-- **Це молоко́** (This is milk).
-- **Там кіт** (There is a cat).
-- **Тут соба́ка** (A dog is here).
-- **Це мі́сто** (This is a city).
+In this lesson, we will introduce nine new consonants. This brings your total to twenty-three letters. You will quickly notice that the more letters you learn, the faster you can recognize international words and essential everyday vocabulary. This progression transforms abstract symbols into meaningful language that you can immediately apply.
 
-You already know fourteen letters, which is a fantastic achievement. This provides a strong foundation for the next steps. **Чудо́во!** (Great!)
+A key concept we will explore today is the difference between voiced and voiceless sounds. Ukrainian consonants often come in matched pairs. One sound vibrates in your throat, which is called a voiced consonant. The other sound uses only air and no vibration, which is called a voiceless consonant. Understanding this mechanical difference is the secret to developing a natural and authentic accent. 
 
-In this specific module, your main objective involves meeting nine new consonant letters. These characters are **Б**, **Д**, **П**, **З**, **Г**, **Х**, **Ж**, **Ш**, and **Ч**. After learning these, you unlock twenty-three letters in total. This means that almost every common text you see on the street becomes readable. For example, you will soon recognize words like **кафе́** (cafe), **рестора́н** (restaurant), and **суперма́ркет** (supermarket). 
+> [!tip]
+> **Check your vibration**
+> Place your hand lightly on your throat. When you make a voiced sound, you will feel a distinct buzz. When you make a voiceless sound, you will only feel air moving. This physical feedback is a powerful tool for improving your pronunciation.
 
-We also introduce a key phonetic concept called voiced and voiceless pairs. This concept helps you understand how Ukrainian consonants relate to each other. By grasping this idea early, you build a solid foundation for excellent pronunciation. Do not worry about memorizing everything instantly. Take your time, read aloud, and enjoy the process of unlocking these new characters.
+Let us dive into the first group of new letters and see how many words you can already read.
 
 ## Приголосні — Consonants Б, Д, П
 
-We begin with three very common letters. Two of these are voiced consonants, and one represents a voiceless consonant. They form the building blocks of many everyday words. 
+> — Це **банан**? (Is this a banana?)
+> — Так, це **банан**. (Yes, this is a banana.)
+> — А це **парк**? (And is this a park?)
+> — Ні, це **дім**. (No, this is a home.)
+> — Де **парк**? (Where is the park?)
+> — **Парк** там. (The park is there.)
+> — Ось **парк**. (Here is the park.)
 
-First, we look at the letter **Б**. The symbol sounds exactly like the English letter B. You find it in many familiar international words, which makes the character quite easy to remember. 
+These three consonants are extremely common and will help you form many essential words used in daily life. Let us look at them closely and understand their unique characteristics.
 
-Відео для літери Б (Video for letter Б):
+The letter **Б** is a voiced consonant. Visually, it looks a bit like the number six, but it sounds exactly like the English equivalent. It is a foundational sound that you will encounter frequently. It is the first letter in the word **банан**. Watch the pronunciation video below to hear it clearly and practice repeating it aloud.
+
+### Літера Б
 [Anna Ohoiko — Ukrainian Lessons — Б](https://www.youtube.com/watch?v=V1hxBE_JbGg)
 
-Напри́клад:
-- **бана́н** (banana) → **Це бана́н** (This is a banana).
-- **буди́нок** (building) → **Там вели́кий буди́нок** (There is a large building).
-- **брат** (brother) → **Там брат** (There is a brother).
-- **ба́ба** (grandma) → **Це ба́ба** (This is grandma).
+The letter **П** is the voiceless partner to the previous sound. Be careful not to confuse it with the Greek symbol Pi or the letter for the "R" sound you learned previously. The Ukrainian **П** is crisp and completely unaspirated, meaning there is absolutely no puff of air when you say it. It starts the word **парк**. This lack of aspiration is crucial for sounding like a native speaker.
 
-This character acts as the voiced partner of another letter we cover shortly.
-
-Next is the letter **Д**. The shape looks unfamiliar at first, somewhat like a small house resting on little feet. However, the pronunciation remains simple. The sound resembles the English letter D, but in Ukrainian, you must place your tongue against the back of your top teeth. This dental articulation makes the letter sound slightly softer and clearer than the English equivalent. 
-
-Відео для літери Д (Video for letter Д):
-[Anna Ohoiko — Ukrainian Lessons — Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
-
-Напри́клад:
-- **дім** (house / home) → **Це дім** (This is a house).
-- **день** (day) → **До́брий день** (Good day). 
-- **до́бре** (good) → **Це до́бре** (This is good).
-- **дере́во** (tree) → **Там дере́во** (There is a tree).
-
-The third letter in this group is **П**. The pronunciation matches the English letter P. However, there is a crucial difference for your speaking habits. In English, you often release a small puff of air when you say P. In Ukrainian, **П** produces no puff of air. The sound comes out completely unaspirated and very crisp. 
-
-Відео для літери П (Video for letter П):
+### Літера П
 [Anna Ohoiko — Ukrainian Lessons — П](https://www.youtube.com/watch?v=JksSjjxyW5Y)
 
-Напри́клад:
-- **парк** (park) → **Там парк** (There is a park).
-- **паву́к** (spider) → **Це паву́к** (This is a spider).
-- **пробле́ма** (problem) → **Це пробле́ма** (This is a problem).
+The letter **Д** is a voiced consonant. Its shape resembles a little house resting securely on a solid foundation. It sounds similar to the English equivalent, but there is a subtle difference in tongue placement. The tip of your tongue should touch your upper teeth rather than the roof of your mouth. You will see it in the high-frequency word **дім**.
 
-> [!warning] 
-> Ува́га (Attention)! Visual Trap Alert! The new letter **П** looks like a small table or a platform. The pronunciation equals the English P. Do not confuse the shape with the letter **Р**, which you learned earlier. The letter **Р** sounds like a rolled R. Look at this comparison: **па́лка** (stick) uses the new P sound, while **раке́та** (rocket) uses the R sound. Always pay attention to the square shape.
+### Літера Д
+[Anna Ohoiko — Ukrainian Lessons — Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
 
-The letters **Б** and **П** form an important pair. The first is voiced, and the second is voiceless. 
+Let us practice reading some words using these letters. Read them aloud slowly, and pay close attention to the letters you already know from previous lessons.
+
+| Word | Translation | Word | Translation |
+|---|---|---|---|
+| **банан** | banana | **дім** | home |
+| **парк** | park | **пошта** | post office |
+| **будинок** | building | **день** | day |
+
+We can build simple phrases with the words we know:
+
+- **я тут** — I am here
+- **ти там** — you are there
+- **він тут** — he is here
+- **вона там** — she is there
+- **воно тут** — it is here
+- **ми там** — we are there
+- **ви тут** — you are here
+- **вони там** — they are there
+- **хто тут** — who is here
+- **хто там** — who is there
+- **я також тут** — I am also here
+- **ти також там** — you are also there
+- **він також тут** — he is also here
+- **вона також там** — she is also there
+- **воно також тут** — it is also here
+- **ми також там** — we are also there
+- **ви також тут** — you are also here
+- **вони також там** — they are also there
+- **хто також тут** — who is also here
+- **хто також там** — who is also there
+
+> [!warning]
+> **False Friends**
+> Remember that the letter you learned previously that looks like a Latin "P" actually makes the "R" sound. The new symbol makes the "P" sound. Contrast a word like **парк** with words containing the "R" sound to solidify this distinction in your memory.
 
 ## Приголосні — Consonants З, Г, Х
 
-Now we move to three more important letters. These require a bit of focus on your throat and mouth position. They bring a lot of character to the language.
+> — Де **хліб**? (Where is the bread?)
+> — **Хліб** тут. (The bread is here.)
+> — А **газета**? (And the newspaper?)
+> — **Газета** там. (The newspaper is there.)
+> — Де **будинок**? (Where is the building?)
+> — Цей **будинок** тут. (This building is here.)
 
-Let us start with the letter **З**. The symbol looks like the number three. The pronunciation equals the English letter Z. The sound acts as the voiced partner of the letter **С**, which you already know from the first module. 
+Now we will look at three more consonants that expand your range of expression. These include a sharp hissing sound and two sounds that are formed deeper in your mouth and throat. Mastering these will significantly improve your overall pronunciation.
 
-Подивіться на літеру З (Look at letter З):
+The letter **З** is a voiced consonant. It looks strikingly similar to the number three. It makes a clear buzzing sound, completely identical to the first sound in the English word "zebra." We find it in the everyday word **зуб**. Focus on sustaining the vibration when you pronounce it.
+
+### Літера З
 [Anna Ohoiko — Ukrainian Lessons — З](https://www.youtube.com/watch?v=BhASNxitC1A)
 
-Напри́клад:
-- **зе́бра** (zebra) → **Там зе́бра** (There is a zebra).
-- **зуб** (tooth) → **Це зуб** (This is a tooth).
-- **зима́** (winter) → **Тут зима́** (It is winter here).
+The letter **Г** is voiced, but it might be the trickiest character in this group for English speakers. It is a soft, throaty sound. It is definitively not a hard sound like in the English word "go." Instead, it sounds like a voiced glottal fricative, almost like a heavy, vibrating sigh. You can practice it with the word **газета**.
 
-Another great example is the word **газе́та** (newspaper).
-
-This brings us to the letter **Г**. We consider this a very special sound in the language. You should never pronounce this as the hard English G. Instead, the character represents a soft, throaty sound. The pronunciation feels similar to the H in the English word "ahead" but with your voice added. Linguists call this a voiced glottal fricative. You make the sound deep down in your throat. 
-
-Слухайте літеру Г (Listen to letter Г):
+### Літера Г
 [Anna Ohoiko — Ukrainian Lessons — Г](https://www.youtube.com/watch?v=gVnclpSI0DU)
 
-Напри́клад:
-- **гора́** (mountain) → **Там гора́** (There is a mountain).
-- **газе́та** (newspaper) → **Це газе́та** (This is a newspaper).
-- **гра** (game) → **Це гра** (This is a game).
+The letter **Х** is the voiceless counterpart to the sound above. Visually, it looks exactly like the Latin "X," but it absolutely does not make a "ks" sound. Instead, it sounds like the "ch" in the Scottish word "loch" or the German "Bach." A culturally important word starting with this letter is **хліб**. 
 
-> [!note] 
-> The hard G sound does exist in Ukrainian, but a different letter represents it: **Ґ**. We preview that the hard sound is coming in the next module. For now, whenever you see the normal **Г**, keep the sound very soft and throaty.
-
-Finally, we introduce the letter **Х**. The symbol looks exactly like an English X, but the sound differs completely. The letter represents a voiceless sound. You never say "ks". Instead, the pronunciation resembles the "ch" in the Scottish word "loch" or the German word "ach". Forming the sound requires a gentle friction in the back of your mouth.
-
-Ось літера Х (Here is letter Х):
+### Літера Х
 [Anna Ohoiko — Ukrainian Lessons — Х](https://www.youtube.com/watch?v=vpr58zJSJKc)
 
-Напри́клад:
-- **хліб** (bread) → **Це хліб** (This is bread).
-- **хо́лодно** (cold) → **Тут хо́лодно** (It is cold here).
-- **ха́та** (house) → **Там ха́та** (There is a house).
+Let us look at these letters in context. Notice how they combine smoothly with the vowels you have already mastered to form recognizable vocabulary. 
+
+| Word | Translation | Word | Translation |
+|---|---|---|---|
+| **зуб** | tooth | **газета** | newspaper |
+| **хліб** | bread | **цей** | this |
+
+Read these short phrases to build your reading speed:
+
+- **я вже тут** — I am already here
+- **ти вже там** — you are already there
+- **він вже тут** — he is already here
+- **вона вже там** — she is already there
+- **воно вже тут** — it is already here
+- **ми вже там** — we are already there
+- **ви вже тут** — you are already here
+- **вони вже там** — they are already there
+- **хто вже тут** — who is already here
+- **хто вже там** — who is already there
+- **я ще тут** — I am still here
+- **ти ще там** — you are still there
+- **він ще тут** — he is still here
+- **вона ще там** — she is still there
+- **воно ще тут** — it is still here
+- **ми ще там** — we are still there
+- **ви ще тут** — you are still here
+- **вони ще там** — they are still there
+- **хто ще тут** — who is still here
+- **хто ще там** — who is still there
 
 > [!culture]
-> The word **хліб** (bread) remains a cultural staple. Bread plays an extremely important role in Ukrainian culture and history. The traditional phrase **хліб-сіль** (bread and salt) represents warm hospitality to guests. You often hear collocations about **бі́лий хліб** (white bread) or **сві́жий хліб** (fresh bread).
-
-This symbol serves as the voiceless partner of the throaty letter **Г**. 
+> **The Importance of Bread**
+> The word **хліб** is deeply foundational and revered in Ukrainian culture. Bread is a timeless symbol of hospitality, life, community, and prosperity. Conveniently, you can now read this essential word completely using the letters you have learned!
 
 ## Дзвінкі та глухі — Voiced and Voiceless Pairs
 
-You have probably noticed a distinct pattern by now. Many Ukrainian consonants come in perfectly matched pairs. One is voiced, and the other remains voiceless. Understanding this concept proves fundamental for clear speech. 
+> — Що це? (What is this?)
+> — Це **шапка**. (This is a hat.)
+> — А це? (And this?)
+> — Це **школа**. (This is a school.)
+> — Де **школа**? (Where is the school?)
+> — Та **школа** там. (That school is there.)
 
-Let us try an interactive physical test. Place your hand flat against the front of your throat. Say the English letter Z aloud and hold the sound. Your fingers detect a strong vibration in your throat. This vibration means the sound is voiced. In Ukrainian, we call this characteristic **дзвінки́й** (voiced). Now say the English letter S and hold the sound. Only air leaves your mouth, with zero vibration. This absence of vibration means the sound is voiceless. We call this feature **глухи́й** (voiceless).
+We have extensively mentioned paired sounds throughout this lesson. This phonetic concept means that your mouth, lips, and tongue are in the exact same physical position, but one variant uses active vocal cord vibration while the other uses only a stream of air. We will now learn three distinctive symbols collectively called "hushers" that perfectly demonstrate this system.
 
-Let us meet the remaining consonants for this module. Linguists know these as sibilants and affricates, and they add a beautiful texture to the words.
+The letter **Ж** is voiced. Visually, it looks quite a bit like a six-legged beetle, and appropriately, it makes a rich buzzing sound similar to a flying insect. The sound is very close to the middle consonant in the English word "measure." Ensure your lips are slightly rounded when you produce it.
 
-First is the letter **Ж**. The character represents a strong, voiced sound. There is no single English letter for this, but the pronunciation matches the "s" in the English word "measure" or "pleasure". Your lips should be slightly rounded and your tongue raised toward the roof of your mouth.
-
-Ось як звучить Ж (This is how Ж sounds):
+### Літера Ж
 [Anna Ohoiko — Ukrainian Lessons — Ж](https://www.youtube.com/watch?v=dIrGVcqPwqM)
 
-Напри́клад:
-- **жук** (beetle / bug) → **Там жук** (There is a beetle).
-- **жа́ба** (frog) → **Це жа́ба** (This is a frog).
-- **жі́нка** (woman) → **Там жі́нка** (There is a woman).
+The letter **Ш** is the unvoiced companion. It looks somewhat like a pitchfork pointing squarely upwards. It produces a strong hissing noise, much like the English "sh" in "ship," but your tongue must be pulled back slightly for a more authentic tone. It appears very frequently, such as in the word **школа**.
 
-> [!tip]
-> Пора́да (Tip): The letter **Ж** actually looks exactly like a little beetle with many legs. The keyword is **жук** (beetle). This visual trick makes the symbol very easy to remember! 
-
-Its voiceless partner is the letter **Ш**. The pronunciation sounds like the English "sh" in the word "ship". Remember to use hard articulation by pulling your tongue slightly back. 
-
-Відео для літери Ш (Video for letter Ш):
+### Літера Ш
 [Anna Ohoiko — Ukrainian Lessons — Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
 
-Напри́клад:
-- **шко́ла** (school) → **Це шко́ла** (This is a school).
-- **ша́пка** (hat) → **Тут ша́пка** (Here is a hat).
-- **шарф** (scarf) → **Там шарф** (There is a scarf).
+The letter **Ч** is also voiceless. It visually resembles an upside-down chair or a handwritten number four. It makes a sharp "ch" sound, similar to the beginning of the English word "church." It appears frequently in basic vocabulary, such as in the word **час** and the universally recognized word **чай**. 
 
-A common collocation is a **зимо́ва ша́пка** (winter hat) or **те́плий шарф** (warm scarf). 
-
-The last letter we introduce today is **Ч**. The character acts as a voiceless affricate, and the sound matches the "ch" in the English word "church". The symbol appears very frequently.
-
-Остання літера Ч (Last letter Ч):
+### Літера Ч
 [Anna Ohoiko — Ukrainian Lessons — Ч](https://www.youtube.com/watch?v=UsJkbdsY2RA)
 
-Напри́клад:
-- **черепа́ха** (turtle) → **Це черепа́ха** (This is a turtle).
-- **чай** (tea) → **Тут чай** (Here is tea).
-- **час** (time) → **Це час** (This is time).
+Let us summarize the vital sound combinations we have learned so far. Notice how elegantly they organize perfectly within the phonetic system.
 
-Here is a summary of the voiced and voiceless pairs you know so far: 
-- **Б** is voiced and pairs with **П** which is voiceless.
-- **Д** is voiced and pairs with **Т** which is voiceless.
-- **Г** makes a soft throaty noise, while its voiceless counterpart is **Х**.
-- **Ж** provides a strong sibilant vibration, contrasting with the airy **Ш**.
-- **З** buzzes like a bee, whereas **С** merely hisses.
+- **Б** and **П** form a matched pair.
+- **Д** goes with the letter for the "T" sound.
+- **З** links with the letter for the "S" sound.
+- **Ж** and **Ш** are direct partners.
 
-We cover the **В** and **Ф** pair in the next module. **Ду́же до́бре!** (Very good!)
+Read these short phrases out loud:
+
+- **я теж тут** — I am also here
+- **ти теж там** — you are also there
+- **він теж тут** — he is also here
+- **вона теж там** — she is also there
+- **воно теж тут** — it is also here
+- **ми теж там** — we are also there
+- **ви теж тут** — you are also here
+- **вони теж там** — they are also there
+- **хто теж тут** — who is also here
+- **хто теж там** — who is also there
+- **я тільки тут** — I am only here
+- **ти тільки там** — you are only there
+- **він тільки тут** — he is only here
+- **вона тільки там** — she is only there
+- **воно тільки тут** — it is only here
+- **ми тільки там** — we are only there
+- **ви тільки тут** — you are only here
+- **вони тільки там** — they are only there
+- **хто тільки тут** — who is only here
+- **хто тільки там** — who is only there
+
+> [!did-you-know]
+> **Visual Mnemonics**
+> Culturally, Ukrainian children are very often taught that the letter for the buzzing sound looks exactly like a little bug, and the sound it makes mimics the loud buzzing of an insect. This is a very authentic, widely used, and helpful memory trick!
 
 ## Практика читання — Reading Practice
 
-Now you need to practice your reading skills. You know twenty-three letters. This knowledge gives you an incredible advantage. You possess the power to read signs, menus, and basic texts.
+> — Де **транспорт**? (Where is the transport?)
+> — **Транспорт** там. (The transport is there.)
+> — А де **пошта**? (And where is the post office?)
+> — **Пошта** тут. (The post office is here.)
+> — Де **людина**? (Where is the person?)
+> — **Людина** там. (The person is there.)
 
-Let us build your immediate confidence by reading some internationalisms. Read these words aloud slowly: 
+Now that you have twenty-three robust letters securely in your mental toolkit, you can confidently read a vast amount of practical vocabulary. This exciting stage includes many international words that you will immediately recognize once you sound out the letters sequentially. Knowing these words unlocks everyday interactions in the real world. 
 
-- **банк** (bank)
-- **парк** (park)
-- **тра́нспорт** (transport)
-- **студе́нт** (student)
-- **до́ктор** (doctor)
-- **па́спорт** (passport)
+Let us practice reading some new words together. Take your time, focus on accuracy, and sound out each individual letter carefully. Remember the consonant pairings we discussed and consciously try to feel the vibration in your throat for the resonant consonants. You can read all of these!
 
-These words look and sound very familiar. They use the exact letters you just learned, making them perfect for your first real reading steps. 
+| Ukrainian Phrase | Translation |
+|---|---|
+| **цей банан тут** | this banana is here |
+| **той парк там** | that park is there |
+| **цей дім тут** | this home is here |
+| **та школа там** | that school is there |
+| **ця людина тут** | this person is here |
+| **той хліб там** | that bread is there |
+| **та шапка тут** | that hat is here |
+| **цей зуб там** | this tooth is there |
+| **той транспорт тут** | that transport is here |
+| **цей чай там** | this tea is there |
+| **ця газета тут** | this newspaper is here |
+| **ця пошта там** | this post office is there |
+| **це слово тут** | this word is here |
+| **та мова там** | that language is there |
+| **цей день тут** | this day is here |
+| **той час там** | that time is there |
 
-Next, let us practice distinguishing between voiced and voiceless pairs. This exercise provides excellent ear training and helps your mouth muscles adapt. Look at these minimal pairs and read them carefully:
+We can also use some adverbs to add meaning to our phrases. Read these sentences.
 
-- **зуб** (tooth) versus **суп** (soup). The first word starts with a voiced **З**, while the second word starts with a voiceless **С**.
-- **жар** (heat) versus **шар** (layer). Notice how the initial vibration changes the entire meaning from heat to layer.
+| Ukrainian Phrase | Translation |
+|---|---|
+| **він також тут** | he is also here |
+| **вона вже там** | she is already there |
+| **ми теж тут** | we are also here |
+| **ви ще там** | you are still there |
+| **вони тільки тут** | they are only here |
+| **я також там** | I am also there |
+| **ти вже тут** | you are already here |
+| **він дуже там** | he is very much there |
+| **вона теж тут** | she is also here |
+| **ми тільки там** | we are only there |
 
-Let us continue with practical, everyday vocabulary. These words appear extremely often. All of these examples are fully readable using only your twenty-three letters:
-
-- **шко́ла** (school)
-- **по́шта** (post office). Try using this in a short phrase like **на по́шті** (at the post office).
-- **чай** (tea). This features the letter **Ч** you just learned. 
-- **брат** (brother) and **сестра́** (sister).
-
-Words like **газе́та** (newspaper) and **буди́нок** (building) are now within your reach. Try reading all of these examples multiple times. The more you read, the faster your brain connects the Cyrillic shape to the correct sound. **Так трима́ти!** (Keep it up!)
-
----
+Notice exactly how the words feel physically in your mouth as you transition between sounds. The clear distinction between a soft throat sound and a sharp hissing sound is precisely what gives the language its beautifully unique rhythm. You are actively building essential muscle memory every single time you read aloud. Keep practicing these phrases until they feel entirely natural and effortless. You will find that recognizing these patterns accelerates your reading speed significantly.
 
 ## Підсумок — Summary
 
-Congratulations on your amazing progress. You now know twenty-three of the thirty-three letters in the alphabet. This achievement means you understand six vowels and seventeen consonants. Most importantly, you mastered the essential concept of voiced and voiceless consonant pairs. You are past the halfway point, and nearly all common text is readable. 
+You have made absolutely incredible progress in this session. You can now reliably recognize and accurately pronounce twenty-three of the thirty-three letters in the entire alphabet. This is a massive milestone in your language acquisition journey.
 
-- **Чи можете ви відчути різницю між Б і П? (Can you feel the difference in your throat between Б and П?)** — Place your hand on your throat. The letter **Б** vibrates, but the letter **П** does not.
-- **Яка візуальна різниця між літерами П і Р? (What is the visual difference between the letters П and Р?)** — The letter **П** looks like a platform and sounds like "p". The letter **Р** looks like a "p" but sounds like a rolled "r".
-- **Як ви вимовляєте Г і Х? (How do you pronounce Г vs Х?)** — The letter **Г** is a soft, voiced throaty sound. The letter **Х** is a voiceless sound like the "ch" in "loch".
+This impressive collection includes six foundational vowels and seventeen versatile consonants. You also now deeply understand the crucial mechanical difference between sounds that vibrate and sounds that only use a stream of air. This mechanical understanding will significantly and permanently improve your accent.
 
-The next module covers the final ten letters and special symbols.
+Let us perform a final, comprehensive decodability check. Can you read and instantly translate the following essential words?
 
----
+| Ukrainian | Translation |
+|---|---|
+| **парк** | park |
+| **хліб** | bread |
+| **шапка** | hat |
+| **пошта** | post office |
+| **будинок** | building |
+| **газета** | newspaper |
+| **транспорт** | transport |
+| **зуб** | tooth |
+
+More combinations for practice:
+
+- **цей день тут** — this day is here
+- **та мова там** — that language is there
+- **це слово тут** — this word is here
+- **ця школа там** — this school is there
+- **ця газета тут** — this newspaper is here
+- **той зуб там** — that tooth is there
+- **ця шапка тут** — this hat is here
+- **той будинок там** — that building is there
+- **ця пошта тут** — this post office is here
+- **той транспорт там** — that transport is there
+- **той парк тут** — that park is here
+- **той хліб там** — that bread is there
+- **цей час тут** — this time is here
+- **цей дім там** — this home is there
+- **ця людина тут** — this person is here
+- **той банан там** — that banana is there
+- **цей парк тут** — this park is here
+- **та людина там** — that person is there
+- **це слово там** — this word is there
+- **та мова тут** — that language is here
+
+In the next and final module of this foundational series, we will introduce the remaining ten characters, including the soft vowels and special pronunciation symbols, successfully completing your journey to full alphabet mastery.

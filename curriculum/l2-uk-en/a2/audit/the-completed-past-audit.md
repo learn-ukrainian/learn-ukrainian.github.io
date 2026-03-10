@@ -1,7 +1,7 @@
 # Audit Report: M15 — the-completed-past.md
 **Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 15:17:29
+**Generated:** 2026-03-09 21:49:59
 
 ## Configuration
 **Type:** A2-grammar
@@ -61,7 +61,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.0% (target 50-60% (A2.1))
+- **Immersion:** 🇺🇦 50.0% (target 45-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

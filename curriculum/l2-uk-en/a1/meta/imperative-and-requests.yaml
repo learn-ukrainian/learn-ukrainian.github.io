@@ -3,49 +3,36 @@ level: A1
 title: Imperative and Requests
 word_target: 1200
 content_outline:
-- title: Наказовий спосіб (Imperative Mood)
-  slug: imperative-mood-intro
+- title: Наказовий спосіб
+  slug: imperative-mood
   words: 300
   points:
-  - Introduce the concept of giving commands and instructions using English scaffolding.
-  - 'Explain the formation rule for the informal singular ''ти'' form: drop the ''-ти''
-    ending from the infinitive.'
-  - 'Explain the formal/plural ''ви'' form: add ''-те'' or ''-іть'' to the ''ти''
-    command.'
-  - Address the common error of confusing personal commands with general infinitive
-    forms.
-- title: Вісім обов'язкових дієслів (Eight Required Verbs)
+  - Formation rule for singular and plural
+  - Ти-form vs Ви-form
+  - Learner error warning
+- title: Вісім обов'язкових дієслів
   slug: eight-required-verbs
-  words: 350
+  words: 300
   points:
-  - 'Introduce the 8 essential A1 verbs: читай(те), пиши(те), скажи(те), дай(те),
-    іди(те), слухай(те), дивись(те), стій(те).'
-  - Highlight the irregular stems that must be memorized as set phrases (дати → дай,
-    сказати → скажи, стояти → стій).
-  - Provide clear, short examples in classroom and daily contexts (e.g., Читайте текст,
-    Слухайте уважно).
-- title: Ввічливе прохання (Polite Requests)
+  - Required classroom verbs
+  - Contextual examples
+  - Irregular stems
+- title: Ввічливе прохання
   slug: polite-requests
   words: 250
   points:
-  - Introduce 'будь ласка' (please) as the universal politeness marker to soften direct
-    commands.
-  - Demonstrate its flexible placement in a sentence (beginning, middle, or end).
-  - Present 'Прошу вас' + infinitive for more formal, service-oriented situations.
-- title: Заборони (Prohibitions)
+  - Будь ласка
+  - Прошу вас
+  - Indirect request preview
+- title: Заборони
   slug: prohibitions
-  words: 150
+  words: 175
   points:
-  - Explain how to form negative commands by simply placing 'Не' before the imperative
-    verb (e.g., Не біжи!, Не кури!).
-  - Briefly note the difference between a personal spoken prohibition ('Не чіпай!')
-    and a public sign prohibition ('Не торкатися!').
-- title: Практика і підсумок (Summary and Practice)
-  slug: summary-and-practice
-  words: 150
+  - Negative imperative with не
+  - Personal prohibition vs public signs
+- title: Практика
+  slug: practice
+  words: 175
   points:
-  - Recap the 'ти' vs 'ви' endings and the critical role of 'будь ласка'.
-  - 'Self-check 1: How do you change a ''ти'' command to a ''ви'' command?'
-  - 'Self-check 2: What are the imperative forms of the irregular verbs ''дати'' and
-    ''сказати''?'
-  - 'Self-check 3: How do you make a command negative?'
+  - Command drills
+  - Politeness escalation

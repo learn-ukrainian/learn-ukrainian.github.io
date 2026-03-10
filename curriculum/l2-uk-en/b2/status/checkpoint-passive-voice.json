@@ -2,15 +2,15 @@
   "module": "checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T15:17:32.185161Z",
+  "last_audit": "2026-03-09T21:50:01.336974Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T15:18:19.746248Z",
     "meta": "2026-02-24T15:11:48.954655Z",
     "activities": "2026-02-24T15:11:48.950267Z",
     "vocabulary": "2026-02-26T10:56:38.139294Z",
-    "plan": "2026-03-05T14:16:41.650683Z",
-    "research": "2026-02-23T23:26:24.577047Z"
+    "research": "2026-02-23T23:26:24.577047Z",
+    "plan": "2026-03-05T14:16:41.650683Z"
   },
   "gates": {
     "meta": {

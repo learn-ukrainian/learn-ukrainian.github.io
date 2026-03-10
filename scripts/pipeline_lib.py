@@ -2445,6 +2445,19 @@ def write_placeholders(ctx: ModuleContext) -> None:
     # Lexical Sandbox (built by phase_sandbox, injected via ctx._lexical_sandbox)
     placeholders["LEXICAL_SANDBOX"] = getattr(ctx, "_lexical_sandbox", "")
 
+    # Folk Micro-Genres (загадки, скоромовки, прислів'я etc.)
+    try:
+        from folk_injector import build_folk_material
+        folk_text = build_folk_material(track=ctx.track, slug=ctx.slug)
+        placeholders["FOLK_MATERIAL"] = folk_text
+        ctx._folk_material = folk_text
+        if folk_text:
+            log(f"  folk: Injected folk material ({len(folk_text)} chars)")
+    except Exception as e:
+        logger.debug("folk_injector not available: %s", e)
+        placeholders["FOLK_MATERIAL"] = ""
+        ctx._folk_material = ""
+
     placeholders.update(ctx.activity_config)
 
     # Populate REQUIRED_TYPES if empty — from plan activity_hints or PRIORITY_TYPES
@@ -3152,6 +3165,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             if research_errors else ""
         ),
         "LEXICAL_SANDBOX": getattr(ctx, "_lexical_sandbox", ""),
+        "FOLK_MATERIAL": getattr(ctx, "_folk_material", ""),
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
         return False

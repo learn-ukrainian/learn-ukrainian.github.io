@@ -1,7 +1,7 @@
 # Audit Report: M03 — the-cyrillic-code-iii.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 15:17:23
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-03-10 11:19:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,49 +20,75 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | watch-and-repeat | Watch and Repeat | 9 | 1 | ✅ |
-| 2 | classify | Sort by Letter Type | 15 | 1 | ✅ |
-| 3 | classify | Voiced or Voiceless? | 12 | 1 | ✅ |
-| 4 | image-to-letter | First Letter Match | 9 | 5 | ✅ |
-| 5 | match-up | Match the Pairs | 8 | 8 | ✅ |
-| 6 | quiz | Letter Knowledge Check | 8 | 8 | ✅ |
-| 7 | true-false | True or False? | 8 | 8 | ✅ |
-| 8 | anagram | Unscramble the Words | 8 | 8 | ✅ |
-| 9 | fill-in | Complete the Phrase | 8 | 8 | ✅ |
-| 10 | group-sort | Sort the Words | 11 | 6 | ✅ |
+| 2 | classify | Vowels vs Consonants | 15 | 1 | ✅ |
+| 3 | classify | Voiced vs Voiceless | 11 | 1 | ✅ |
+| 4 | image-to-letter | Choose the Starting Letter | 9 | 5 | ✅ |
+| 5 | match-up | Match the Voiced to Voiceless Partner | 6 | 8 | ❌ |
+| 6 | quiz | Check Your Knowledge | 6 | 8 | ❌ |
+| 7 | fill-in | Complete the Phrase | 6 | 8 | ❌ |
+| 8 | true-false | True or False? | 8 | 8 | ✅ |
+| 9 | group-sort | Sort the Words by Gender | 10 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 7/8 (anagram, classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat) ✅
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 6/8 (classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat) ✅
 - Required types used: 3/3 (group-sort, match-up, quiz) ✅
-- Low density activities: 0
+- Low density activities: 3
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Match the Voiced to Voiceless Partner' has 6 pairs (target: 8-15)
+  - FIX: Adjust number of pairs to 8-15.
+- **[COMPLEXITY]** quiz 'Check Your Knowledge' has 6 items (minimum: 8)
+  - FIX: Add more items. A1 quiz requires at least 8 items.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "### Літера Ш
+[Anna Ohoiko — Ukrainian Lessons — Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
+
+The...". Shares significant keywords with sentence at index 22.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[VOCAB_NOT_IN_CONTENT]** Only 18/26 (69%) vocabulary words appear in content+activities. Missing: вже, дуже, також, той, тут, тільки, цей, ще
+  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 4 violations (moderate)
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1969/1200 (raw: 2048)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 6
-- **Unique_types:** ✅ 10/4 types
+- **Words:** ✅ 2202/1200 (raw: 2700)
+- **Activities:** ✅ 9/8
+- **Density:** ❌ 3 < 6
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 11.1% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 12.0% (target 10-25% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Match the Voiced to Voiceless Partner | match-up | 6 | 8 | Add 2 more items |
+| Check Your Knowledge | quiz | 6 | 8 | Add 2 more items |
+| Complete the Phrase | fill-in | 6 | 8 | Add 2 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code III** | ✅ | 29 | Included in Core |
-| **Вступ — Introduction** | ✅ | 174 | Included in Core |
-| **Приголосні — Consonants Б, Д, П** | ✅ | 444 | Included in Core |
-| **Приголосні — Consonants З, Г, Х** | ✅ | 425 | Included in Core |
-| **Дзвінкі та глухі — Voiced and Voiceless Pairs** | ✅ | 513 | Included in Core |
+| **The Cyrillic Code III** | ✅ | 47 | Included in Core |
+| **Вступ — Introduction** | ✅ | 187 | Included in Core |
+| **Приголосні — Consonants Б, Д, П** | ✅ | 483 | Included in Core |
+| **Приголосні — Consonants З, Г, Х** | ✅ | 489 | Included in Core |
+| **Шиплячі приголосні — Hushers Ж, Ш, Ч** | ✅ | 548 | Included in Core |
 | **Практика читання — Reading Practice** | ⚪️ | 0 | Skipped (using YAML) |
-| **Підсумок — Summary** | ✅ | 129 | Included in Core |
+| **Підсумок — Summary** | ✅ | 281 | Included in Core |

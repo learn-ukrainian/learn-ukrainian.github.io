@@ -55,12 +55,10 @@ DELAY_BETWEEN_WORKS = 0.5
 # ── Author/Work Definitions ─────────────────────────────────────────
 # All IDs verified against live ukrlib author.php pages (2026-03-08)
 #
-# KNOWN BROKEN IDS (ukrlib database bugs — page title says Author A
-# but works listed are Author B's):
-#   id=8  "Коцюбинський" → actually Skovoroda's works
-#   id=10 "Котляревський" → actually Shevchenko's works
-#   id=38 "Винниченко"    → actually Karpenko-Karyi's works
-# These are excluded. See #807.
+# BLACKLISTED IDs — ukrlib database serves wrong works for these author pages.
+# The correct data comes from reattributed files (scripts/rag/reattribute_ukrlib.py).
+# See #807.
+BLACKLISTED_IDS = {8, 9, 10, 13, 15, 16, 38, 65}
 
 # Priority 1: Core school canon (most referenced in curriculum)
 P1_AUTHORS = {
@@ -104,66 +102,17 @@ P1_AUTHORS = {
         "genre_default": "prose",
         "period": "modern",
     },
-    "kotsyubynsky": {
-        "id": 8,
-        "name": "Коцюбинський М.",
-        "full_name": "Михайло Коцюбинський",
-        "years": "1864-1913",
-        "genre_default": "prose",
-        "period": "modern",
-    },
-    "kotlyarevsky": {
-        "id": 10,
-        "name": "Котляревський І.",
-        "full_name": "Іван Котляревський",
-        "years": "1769-1838",
-        "genre_default": "poetry",
-        "period": "early_modern",
-    },
+    # kotsyubynsky (id=8) REMOVED — broken ukrlib mapping, data from reattributed files
+    # kotlyarevsky (id=10) REMOVED — broken ukrlib mapping, data from reattributed files
 }
 
 # Priority 2: Extended canon
 P2_AUTHORS = {
-    "kvitka": {
-        "id": 65,
-        "name": "Квітка-Основ'яненко Г.",
-        "full_name": "Григорій Квітка-Основ'яненко",
-        "years": "1778-1843",
-        "genre_default": "prose",
-        "period": "modern",
-    },
-    "nechuy": {
-        "id": 16,
-        "name": "Нечуй-Левицький І.",
-        "full_name": "Іван Нечуй-Левицький",
-        "years": "1838-1918",
-        "genre_default": "prose",
-        "period": "modern",
-    },
-    "myrny": {
-        "id": 15,
-        "name": "Мирний П.",
-        "full_name": "Панас Мирний",
-        "years": "1849-1920",
-        "genre_default": "prose",
-        "period": "modern",
-    },
-    "tychyna": {
-        "id": 9,
-        "name": "Тичина П.",
-        "full_name": "Павло Тичина",
-        "years": "1891-1967",
-        "genre_default": "poetry",
-        "period": "modern",
-    },
-    "rylsky": {
-        "id": 13,
-        "name": "Рильський М.",
-        "full_name": "Максим Рильський",
-        "years": "1895-1964",
-        "genre_default": "poetry",
-        "period": "modern",
-    },
+    # kvitka (id=65) REMOVED — broken ukrlib mapping, data from reattributed files
+    # nechuy (id=16) REMOVED — broken ukrlib mapping, data from reattributed files
+    # myrny (id=15) REMOVED — broken ukrlib mapping, data from reattributed files
+    # tychyna (id=9) REMOVED — broken ukrlib mapping, data from reattributed files
+    # rylsky (id=13) REMOVED — broken ukrlib mapping, data from reattributed files
     "karpenko_karyi": {
         "id": 14,
         "name": "Карпенко-Карий І.",
@@ -228,14 +177,7 @@ P2_AUTHORS = {
         "genre_default": "prose",
         "period": "contemporary",
     },
-    "vynnychenko": {
-        "id": 38,
-        "name": "Винниченко В.",
-        "full_name": "Володимир Винниченко",
-        "years": "1880-1951",
-        "genre_default": "prose",
-        "period": "modern",
-    },
+    # vynnychenko (id=38) REMOVED — broken ukrlib mapping, data from reattributed files
 }
 
 # Priority 3: Розстріляне відродження + curriculum-referenced authors
@@ -1029,6 +971,9 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
     Returns total chunks in the output file (not just new ones).
     """
     author_id = author_info["id"]
+    if author_id in BLACKLISTED_IDS:
+        print(f"\n[{slug}] SKIPPED — author id={author_id} is blacklisted (broken ukrlib mapping)")
+        return 0
     author_name = author_info["name"]
     genre_default = author_info["genre_default"]
     period = author_info["period"]

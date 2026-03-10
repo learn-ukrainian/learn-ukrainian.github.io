@@ -1,0 +1,622 @@
+# Folk Micro-Genres for Ukrainian Language Curriculum
+# Sources: Ukrainian school textbooks (Вашуленко, Большакова, Кравцова, Савченко, Авраменко, Заболотний, Літвінова)
+# Each entry: text, answer (for загадки), theme tags, difficulty level, source
+#
+# Difficulty calibrated for L2 learners (NOT native speakers):
+#   A2: nominative/accusative cases, present tense, simple sentences, concrete nouns
+#   B1: all cases, past/future tense, subordinate clauses, metaphor, wordplay
+# NOTE: No A1 загадки — even "simple" riddles use grammar beyond A1 scope
+#       (participles, instrumental case, perfective aspect, subordinate clauses).
+#       A1 gets only прислів'я (as formulaic chunks), лічилки, and мирилки.
+#
+# All entries include stress marks (наголос) for pronunciation guidance.
+
+загадки:
+  # --- Природа: небо, зорі, сонце, місяць ---
+  - text: "Голубе́ вітри́ло весь світ накри́ло."
+    answer: "не́бо"
+    themes: [природа, небо]
+    difficulty: A2
+    # Grammar: past tense "накрило", adjective "голубе" — OK for A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "То́рох, то́рох, розсипа́вся горо́х, поча́ло світа́ти, нема́ що збира́ти."
+    answer: "зо́рі"
+    themes: [природа, небо, ніч]
+    difficulty: B1
+    # Grammar: past tense perfective "розсипався", infinitive chains — B1
+    source: "Савченко, 3 клас"
+
+  - text: "Що схо́дить без насі́ння?"
+    answer: "со́нце"
+    themes: [природа, небо]
+    difficulty: A2
+    # Grammar: present tense "сходить", без + genitive — OK for A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Без рук, без ніг, та ро́ги має́, у не́бі нічно́му гуля́є."
+    answer: "мі́сяць"
+    themes: [природа, небо, ніч]
+    difficulty: A2
+    # Grammar: без + genitive, present tense "має/гуляє", locative "у небі" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Рога́тий пасту́х срі́бні ві́вці пасе́."
+    answer: "мі́сяць і зо́рі"
+    themes: [природа, небо, ніч]
+    difficulty: B1
+    # Grammar: metaphor (pastuh = misyats), adjective agreement — B1 for comprehension
+    source: "Савченко, 3 клас"
+
+  - text: "По́ле не мі́ряне, ві́вці не лі́чені, пасту́х рога́тий."
+    answer: "не́бо, зо́рі, мі́сяць"
+    themes: [природа, небо, ніч]
+    difficulty: B1
+    # Grammar: passive participles "міряне/лічені" — B1+
+    source: "Савченко, 3 клас"
+
+  - text: "Махну́ла пти́ця крило́м — пів сві́ту накри́ла чо́рним рядно́м."
+    answer: "ніч"
+    themes: [природа, небо, ніч]
+    difficulty: B1
+    # Grammar: instrumental case "крилом/рядном", past perfective — B1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Сестра́ бра́та наздогання́є, а він од не́ї тіка́є."
+    answer: "день і ніч"
+    themes: [природа, час]
+    difficulty: A2
+    # Grammar: present tense, accusative "брата", pronoun "неї" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Усі́ його́ лю́блять, усі́ його́ чека́ють, а хто поди́виться — ко́жен скри́виться."
+    answer: "со́нце"
+    themes: [природа, небо]
+    difficulty: B1
+    # Grammar: perfective future "подивиться/скривиться", relative clause — B1
+    source: "Савченко, 3 клас"
+
+  - text: "Що сві́тить по всьо́му сві́ті?"
+    answer: "со́нце"
+    themes: [природа, небо]
+    difficulty: A2
+    # Grammar: present tense "світить", dative "всьому" — borderline A2
+    source: "Савченко, 3 клас"
+
+  # --- Городина: овочі, рослини ---
+  - text: "Сиди́ть ба́ба сере́д лі́та у сто соро́чок оді́та."
+    answer: "капу́ста"
+    themes: [їжа, город, рослини]
+    difficulty: B1
+    # Grammar: passive participle "одіта", prepositional "серед літа" — B1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Що то за голова́, що лиш зу́би й борода́?"
+    answer: "часни́к"
+    themes: [їжа, город, рослини]
+    difficulty: A2
+    # Grammar: "що то за" construction, nominative nouns — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Під земле́ю пти́ця кубло́ звела́ і ря́бих яє́ць нанесла́."
+    answer: "карто́пля"
+    themes: [їжа, город, рослини]
+    difficulty: B1
+    # Grammar: instrumental "під землею", genitive plural "яєць", perfective past — B1
+    source: "Вашуленко, 3 клас"
+
+  - text: "На горо́ді молода́ пи́шні ко́си розпліта́, у зеле́ні хусти́нки золоті́ хова́ зерни́нки."
+    answer: "кукуру́дза"
+    themes: [їжа, город, рослини]
+    difficulty: B1
+    # Grammar: locative "на городі", accusative plural, extended metaphor — B1
+    source: "Вашуленко, 3 клас"
+
+  - text: "До́вгий, зеле́ний, до́брий соле́ний, до́брий і сири́й. Хто він такий?"
+    answer: "огіро́к"
+    themes: [їжа, город, рослини]
+    difficulty: A2
+    # Grammar: adjectives in nominative, simple question — A2
+    source: "Мензатюк, у Заболотний 5 клас"
+
+  - text: "Стоя́ть красу́ні на воді́, вінки́ в них бі́лі й золоті́."
+    answer: "лата́ття"
+    themes: [природа, рослини, вода]
+    difficulty: B1
+    # Grammar: locative "на воді", plural agreement, metaphor — B1
+    source: "Мензатюк, у Заболотний 5 клас"
+
+  # --- Тварини ---
+  - text: "Під яли́нками і со́сонками лежи́ть клубо́к із го́лками."
+    answer: "їжа́к"
+    themes: [тварини, ліс]
+    difficulty: A2
+    # Grammar: instrumental "під ялинками/із голками", present "лежить" — A2
+    source: "Вашуленко, 2 клас"
+
+  - text: "Уно́чі гуля́є, а вдень спочива́є, має́ кру́глі о́чі, ба́чить сере́д но́чі."
+    answer: "сова́"
+    themes: [тварини, ліс, ніч]
+    difficulty: A2
+    # Grammar: present tense verbs, adverbs "уночі/вдень", accusative "очі" — A2
+    source: "Вашуленко, 2 клас"
+
+  - text: "Лети́ть — ви́є, ся́де — ри́є."
+    answer: "жук"
+    themes: [тварини, комахи]
+    difficulty: A2
+    # Grammar: present tense paired verbs, simple structure — A2
+    source: "Авраменко, 5 клас"
+
+  - text: "Щоб не зги́нути в біді́, де́ржить но́жиці в воді́."
+    answer: "рак"
+    themes: [тварини, вода]
+    difficulty: B1
+    # Grammar: "щоб" + infinitive purpose clause — B1
+    source: "Вашуленко, 2 клас"
+
+  # --- Людина, побут ---
+  - text: "Не де́рево, а з листо́чками, не соро́чка, а зши́та, не люди́на, а навча́є."
+    answer: "кни́жка"
+    themes: [школа, побут, навчання]
+    difficulty: A2
+    # Grammar: "не X, а Y" pattern, instrumental "з листочками", passive "зшита" — borderline A2/B1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Мовчи́ть, а бага́тьох люде́й навчи́ть."
+    answer: "кни́жка"
+    themes: [школа, побут, навчання]
+    difficulty: A2
+    # Grammar: present "мовчить", future "навчить", genitive "людей" — A2
+    source: "Заболотний, 5 клас"
+
+  - text: "Віко́нниці то зачиня́ються, то відчиня́ються."
+    answer: "о́чі"
+    themes: [людина, тіло]
+    difficulty: A2
+    # Grammar: reflexive verbs "-ся", "то...то" pattern — A2
+    source: "Авраменко, 5 клас"
+
+  - text: "Мале́нький погрі́бець по́вен ове́ць."
+    answer: "рот і зу́би"
+    themes: [людина, тіло]
+    difficulty: B1
+    # Grammar: diminutive "погрібець", genitive plural "овець", metaphor — B1
+    source: "Заболотний, 5 клас"
+
+  - text: "Ура́нці хо́дить на чотирьо́х, удень — на двох, а вве́чері — на трьох."
+    answer: "люди́на"
+    themes: [людина, філософія]
+    difficulty: B1
+    # Grammar: locative numerals, philosophical metaphor — B1
+    source: "Авраменко, 5 клас"
+
+  - text: "Без рук, без ніг, а на де́рево пне́ться."
+    answer: "хміль"
+    themes: [рослини, природа]
+    difficulty: A2
+    # Grammar: без + genitive, reflexive "пнеться" — A2
+    source: "Авраменко, 5 клас"
+
+  - text: "Ревну́в віл на сто сіл, на ти́сячу городі́в."
+    answer: "грім"
+    themes: [природа, погода]
+    difficulty: B1
+    # Grammar: past perfective "ревнув", genitive plural "сіл/городів" — B1
+    source: "Авраменко, 5 клас"
+
+  - text: "Лі́том спить, зимо́ю їсть, ті́ло те́пле, а кро́ві не має́."
+    answer: "піч"
+    themes: [побут, дім]
+    difficulty: B1
+    # Grammar: instrumental "літом/зимою", genitive "крові" — B1
+    source: "Авраменко, 5 клас"
+
+  - text: "З молока́ його́ зроби́ли та рете́льно остуди́ли. Нам зда́ється, що в жару́ його́ з'ї́ли б по відру́."
+    answer: "моро́зиво"
+    themes: [їжа]
+    difficulty: B1
+    # Grammar: genitive "з молока", past perfective "зробили/остудили", conditional "з'їли б" — B1
+    source: "Кравцова, 2 клас"
+
+  - text: "В су́кні зеле́ній стою́ ці́лий рік: со́нечко сві́тить чи пада́є сніг. Го́лок бага́то в ґазді́встві трима́ю, ті́льки не ши́ю і не вишива́ю."
+    answer: "яли́нка"
+    themes: [рослини, природа, зима]
+    difficulty: B1
+    # Grammar: locative "в сукні", 1st person verbs, genitive "голок", extended — B1
+    source: "Кравцова, 2 клас"
+
+  - text: "Не люди́на, а говори́ть і співа́є."
+    answer: "ра́діо"
+    themes: [побут, техніка]
+    difficulty: A2
+    # Grammar: "не X, а Y", present tense — simple A2
+    source: "Авраменко, 5 клас"
+
+  - text: "Не гавка́є, не куса́є, а до ха́ти не пуска́є."
+    answer: "замо́к"
+    themes: [побут, дім]
+    difficulty: A2
+    # Grammar: present tense negation, genitive "хати" — A2
+    source: "Заболотний, 5 клас"
+
+  - text: "Без рук, без ніг світ за хвили́ну оббіга́є."
+    answer: "ду́мка"
+    themes: [людина, філософія]
+    difficulty: B1
+    # Grammar: abstract answer, без + genitive, philosophical — B1
+    source: "Заболотний, 5 клас"
+
+скоромовки:
+  # --- Звук [ч] ---
+  - text: "Черепа́ха ча́плю ве́чором пригоща́ла ча́єм з пе́чивом."
+    target_sound: "ч"
+    themes: [тварини, їжа]
+    difficulty: A2
+    source: "Літвінова, 5 клас"
+
+  - text: "Пироги́ припе́чені, пе́рцем перепе́рчені."
+    target_sound: "ч, п"
+    themes: [їжа]
+    difficulty: A2
+    source: "Літвінова, 5 клас"
+
+  - text: "В ча́плі чо́рні череви́чки, ча́пля ча́па до води́чки."
+    target_sound: "ч"
+    themes: [тварини, одяг]
+    difficulty: A2
+    source: "Літвінова, 5 клас"
+
+  # --- Звук [г]/[ґ] ---
+  - text: "Грі́зно грима́ грім горо́ю — го́нить го́мін градобо́ю. Гне́ться груш гнучке́ гі́лля."
+    target_sound: "г"
+    themes: [природа, погода]
+    difficulty: B1
+    source: "Кравцова, 2 клас"
+
+  # --- Звук [к] ---
+  - text: "Кіт кото́ві ка́же: «Ко́те, до комо́ри каду́б вкоти́м.»"
+    target_sound: "к"
+    themes: [тварини, побут]
+    difficulty: A2
+    source: "Большакова, 2 клас"
+
+  # --- Дзвінкі/глухі ---
+  - text: "Леті́в горо́бчик, сів на сто́впчик, прибі́г хло́пчик — уті́к горо́бчик."
+    target_sound: "б/п, г/к"
+    themes: [тварини]
+    difficulty: A2
+    # Grammar: past tense verbs — A2
+    source: "Вашуленко, 2 клас"
+
+  - text: "Ви́біг Гри́шка на дорі́жку, на дорі́жці сиди́ть кі́шка. Взяв з дорі́жки Гри́шка кі́шку — хай піймає кі́шка ми́шку."
+    target_sound: "ш/ж, к/г"
+    themes: [тварини, люди]
+    difficulty: A2
+    source: "Кравцова, 2 клас"
+
+  # --- Звук [с]/[р] ---
+  - text: "Хитру́ соро́ку спійма́ти моро́ка, а на со́рок соро́к — со́рок моро́к."
+    target_sound: "с, р"
+    themes: [тварини, числа]
+    difficulty: B1
+    source: "Вашуленко, 3 клас"
+
+  # --- Загальне (швидкість мовлення) ---
+  - text: "У нас надво́рі пого́да розмокропого́дилася."
+    target_sound: "загальне"
+    themes: [погода]
+    difficulty: B1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Усі́х скоромо́вок не перескоромо́виш, не перевискоромо́виш."
+    target_sound: "с, к, р"
+    themes: [мова]
+    difficulty: B1
+    source: "Вашуленко, 2 клас"
+
+  # --- Зменшувальні суфікси + наказовий спосіб ---
+  - text: "Вередува́ли вере́дниченьки, що не звари́ли варе́ниченьків. Не вере́дуйте, вере́дниченьки, нава́ряться варе́ниченьки."
+    target_sound: "в, р, н"
+    themes: [їжа, характер]
+    difficulty: A2
+    source: "народна"
+
+  # --- Звук [ґ] ---
+  - text: "Галасли́ві ґа́ви й га́лки в гусеня́т взя́ли скака́лки. Гусеня́та їм ґе́лґочуть, що й вони́ скака́ти хо́чуть."
+    target_sound: "г, ґ"
+    themes: [тварини, гра]
+    difficulty: B1
+    source: "Вашуленко, 3 клас"
+
+# NOTE on прислів'я/приказки at A1:
+# These work at A1 as FORMULAIC CHUNKS — learners memorize them whole,
+# not as grammar to be parsed. The content template includes English translation
+# in the engagement box. This is how textbooks present them too (Grade 2).
+
+прислів'я:
+  # --- Дружба ---
+  - text: "Дру́га шука́й, а зна́йдеш — трима́й."
+    theme: дружба
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Дру́жба та бра́тство — найбі́льше бага́тство."
+    theme: дружба
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Що тобі́ не ми́ло, дру́гові не зич."
+    theme: дружба
+    difficulty: A2
+    # Grammar: dative "другові" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "З до́брим дружи́сь, а лихо́го стережи́сь."
+    theme: дружба
+    difficulty: A2
+    # Grammar: instrumental "з добрим", genitive "лихого", imperative — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Нови́х дру́зів ма́й, а стари́х не забува́й."
+    theme: дружба
+    difficulty: A2
+    # Grammar: genitive plural "друзів", accusative plural "старих" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Спра́вжні дру́зі во́рогами не бува́ють."
+    theme: дружба
+    difficulty: A2
+    # Grammar: instrumental plural "ворогами" — A2
+    source: "Вашуленко, 2 клас"
+
+  # --- Праця ---
+  - text: "Зроби́в ді́ло — гуля́й смі́ло."
+    theme: праця
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  - text: "Без труда́ нема́ плода́."
+    theme: праця
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  - text: "Сім разі́в відмі́р, а оди́н раз відрі́ж."
+    theme: праця
+    difficulty: A2
+    # Grammar: imperative "відмір/відріж", numbers — A2
+    source: "Савченко, 3 клас"
+
+  - text: "Бджола́ мала́, а й та працю́є."
+    theme: праця
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  - text: "Щоб ри́бу ї́сти, тре́ба у во́ду лі́зти."
+    theme: праця
+    difficulty: A2
+    # Grammar: "щоб" + infinitive — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Хто хо́че бага́то ма́ти, тому́ тре́ба ма́ло спа́ти."
+    theme: праця
+    difficulty: A2
+    # Grammar: relative "хто...тому", infinitives — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Лю́биш ката́тися — люби́ й на го́ру підійма́тися."
+    theme: праця
+    difficulty: A2
+    # Grammar: infinitives, imperative — A2
+    source: "Вашуленко, 3 клас"
+
+  # --- Навчання ---
+  - text: "Вік живи́ — вік учи́сь."
+    theme: навчання
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  - text: "Хто бага́то чита́є, той бі́льше зна́є."
+    theme: навчання
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  - text: "Де си́ла не ві́зьме, там ро́зум допомо́же."
+    theme: навчання
+    difficulty: A2
+    # Grammar: future perfective "візьме/допоможе" — A2
+    source: "Савченко, 3 клас"
+
+  - text: "Не вся́кий, хто чита́є, в чита́нні си́лу зна́є."
+    theme: навчання
+    difficulty: B1
+    # Grammar: relative clause, abstract "в читанні" — B1
+    source: "Савченко, 3 клас"
+
+  # --- Слово, мовлення ---
+  - text: "Від те́плого сло́ва і лід розмерза́є."
+    theme: слово
+    difficulty: A2
+    # Grammar: genitive "теплого слова" — A2
+    source: "Савченко, 3 клас"
+
+  - text: "Сло́во — не горобе́ць, ви́летить — не пійма́єш."
+    theme: слово
+    difficulty: A2
+    # Grammar: future perfective, negation — A2
+    source: "Савченко, 3 клас"
+
+  - text: "Сло́во че́мне, ко́жному прие́мне."
+    theme: слово
+    difficulty: A1
+    source: "Савченко, 3 клас"
+
+  # --- Добро ---
+  - text: "До́брі спра́ви — від до́брих люде́й."
+    theme: добро
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Хто лю́дям добра́ бажа́є, той і сам його́ має́."
+    theme: добро
+    difficulty: A2
+    # Grammar: relative "хто...той", genitive "добра", dative "людям" — A2
+    source: "Вашуленко, 2 клас"
+
+  - text: "Зло посі́єш — добро́ не вро́дить."
+    theme: добро
+    difficulty: A2
+    # Grammar: future perfective — A2
+    source: "Вашуленко, 2 клас"
+
+  # --- Сім'я ---
+  - text: "Нащо́ й клад, якщо́ в сім'ї́ лад."
+    theme: сім'я
+    difficulty: A1
+    source: "Савченко, 4 клас"
+
+  - text: "На со́нці те́пло, а бі́ля ма́тері до́бре."
+    theme: сім'я
+    difficulty: A1
+    source: "Савченко, 4 клас"
+
+  - text: "Яке́ корі́ння, таке́ і насі́ння."
+    theme: сім'я
+    difficulty: A2
+    # Grammar: correlative "яке...таке" — A2
+    source: "Савченко, 4 клас"
+
+  # --- Правда ---
+  - text: "Зго́да буду́є, а незго́да руйну́є."
+    theme: правда
+    difficulty: A1
+    source: "Савченко, 4 клас"
+
+  - text: "За пра́ве ді́ло стій смі́ло."
+    theme: правда
+    difficulty: A2
+    # Grammar: imperative "стій", accusative "праве діло" — A2
+    source: "Савченко, 4 клас"
+
+приказки:
+  - text: "Дає́ і з рук не випуска́є."
+    theme: характер
+    difficulty: A2
+    # Grammar: "з рук" genitive — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Язи́к без кісто́к, що хо́че, те й лопо́че."
+    theme: слово
+    difficulty: A2
+    # Grammar: без + genitive, relative "що...те" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Здоро́в'я — найдорожчи́й скарб."
+    theme: здоров'я
+    difficulty: A1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Без ді́ла псу́ється си́ла."
+    theme: праця
+    difficulty: A1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Хто хва́литься, той ка́ється."
+    theme: характер
+    difficulty: A2
+    # Grammar: reflexive verbs, relative "хто...той" — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Хто ді́ло ро́бить, а хто ґа́ви ло́вить."
+    theme: праця
+    difficulty: A2
+    # Grammar: relative clause — A2
+    source: "Вашуленко, 3 клас"
+
+  - text: "Го́стре слове́чко ра́нить серде́чко."
+    theme: слово
+    difficulty: A1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Де пра́ця — там гу́сто, а де лінь — там пу́сто."
+    theme: праця
+    difficulty: A1
+    source: "Вашуленко, 3 клас"
+
+  - text: "Ти йому́ про ді́ло, а він — про козу́ бі́лу."
+    theme: характер
+    difficulty: B1
+    # Grammar: ellipsis, accusative "козу білу" — B1 for comprehension
+    source: "Заболотний, 5 клас"
+
+  - text: "беру́ть зави́дки на чу́жі пожи́тки."
+    theme: характер
+    difficulty: B1
+    # Grammar: accusative plural, abstract meaning — B1
+    source: "Заболотний, 5 клас"
+
+лічилки:
+  - text: "Коти́лася то́рба з висо́кого горба́. А в тій то́рбі хліб, паляни́ця. Кому́ доведе́ться, той бу́де жму́ритися."
+    themes: [їжа, гра]
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Тіка́в за́єць че́рез міст, до́вгі ву́ха, ку́ций хвіст. А ти да́лі не тіка́й, рахува́ти почина́й: раз, два, три — вибира́єш ти!"
+    themes: [тварини, числа, гра]
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Бі́гла ля́лька по току́ у черво́нім ковпаку́, ї́ла цу́кор і медо́к. Ви́йшов за́йчик-корольо́к."
+    themes: [їжа, тварини, гра]
+    difficulty: A1
+    source: "Кравцова, 2 клас"
+
+  - text: "Ї́хав лис че́рез ліс, полама́в п'ятна́дцять дере́в."
+    themes: [тварини, ліс, числа]
+    difficulty: A1
+    source: "Кравцова, 2 клас"
+
+  - text: "Раз і два — росла́ трава́, три, чоти́ри — покоси́ли, п'ять — на со́нечку суши́ли, шість — в копи́чку поскла́дали, сім — корі́вку годува́ли, ві́сім — моло́чко дава́ла, де́в'ять — ді́ток напува́ла, де́сять — привела́ теля́тко. Почина́ймо все споча́тку."
+    themes: [числа, село, тварини]
+    difficulty: A1
+    source: "Кравцова, 2 клас"
+
+  - text: "Під дубо́чком — їжачо́к, на дубо́чку — павучо́к. Бі́ля за́ростів лози́ — козеня́тко й дві кози́."
+    themes: [тварини, природа, числа]
+    difficulty: A1
+    source: "Загарійчук, 1 клас"
+
+  - text: "Три гриби́ на то́встих ні́жках ви́росли бі́ля дорі́жки."
+    themes: [природа, числа]
+    difficulty: A1
+    source: "Загарійчук, 1 клас"
+
+мирилки:
+  - text: "Подиви́ся про́сто в о́чі — я свари́тися не хо́чу. Я обра́зити не хоті́в, ненаро́ком зачепи́в."
+    themes: [дружба, почуття]
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Про́сто в о́чі подиви́сь і зі мно́ю помири́сь."
+    themes: [дружба, почуття]
+    difficulty: A1
+    source: "Вашуленко, 2 клас"
+
+  - text: "Мири́лка леті́ла, на пле́че сі́ла, сказа́ла ти́хенько: — Мирі́тесь шви́денько!"
+    themes: [дружба, почуття]
+    difficulty: A1
+    source: "Кравцова, 2 клас"
+
+# Theme mapping to module topics (for folk_injector.py):
+# їжа → shopping-and-market, at-the-restaurant, ukrainian-cuisine
+# природа, небо → weather, nature modules
+# тварини → animals, nature
+# дружба → greetings-and-politeness, my-family, social modules
+# школа, навчання → school, education modules
+# побут, дім → my-world-objects, household
+# людина, тіло → body-and-health
+# числа → numbers, counting modules
+# праця → daily life, work modules
+# слово → language/communication modules
+# характер → personality, emotions modules
+# сім'я → my-family

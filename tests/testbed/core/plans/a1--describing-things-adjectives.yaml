@@ -1,0 +1,100 @@
+module: a1-011
+level: A1
+sequence: 11
+slug: describing-things-adjectives
+version: '2.0'
+title: Describing Things - Adjectives
+subtitle: Adjective Agreement in Gender and Number
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+content_outline:
+- section: 'Вступ: Світ прикметників (Introduction: The World of Adjectives)'
+  words: 250
+  points:
+  - 'Warm-up activity: Asking questions ''Який? Яка? Яке? Які?'' to describe classroom objects, reinforcing State Standard
+    §4.2.1.2 requirements for adjective agreement in the Nominative case.'
+  - 'Cultural Hook: Introduce St. Sophia''s Cathedral (Софійський собор) as the ''старий'' (ancient) and ''великий'' (grand)
+    heart of Kyiv, establishing the need for descriptive language in historical contexts.'
+  - 'Bridge to A1-03: Quick review of the ''Gender Code'' (masculine, feminine, neuter nouns) as the mandatory foundation
+    for adjective agreement rules.'
+- section: 'Презентація: Тверда група (Presentation: Hard Stem Adjectives)'
+  words: 350
+  points:
+  - Introduction to Hard Stem endings (-ий, -а, -е, -і) using high-frequency vocabulary like 'новий' and 'гарний'; include
+    visual scaffolding with color-coded gender markers (Blue/Red/Yellow/Green).
+  - 'Explaining Adjective Placement: Contrast attributive position (''гарна погода'') with predicative position after ''бути''
+    (''Погода гарна''), emphasizing that gender endings remain consistent.'
+  - 'Correction of Gender Mismatch: Explicitly address the common error of using masculine dictionary forms for all nouns
+    (e.g., correcting *''новий машина''* to *''нова машина''*) with focused minimal pair drills.'
+  - 'Expanding the Descriptive Toolkit: Introduction of high-frequency opposites like ''великий/малий'' and ''добрий/поганий''
+    as identified in frequency research.'
+- section: 'Презентація 2: М''яка група та Специфіка (Presentation 2: Soft Stem and Nuances)'
+  words: 300
+  points:
+  - Introduction to Soft Stem endings (-ій, -я, -є, -і) focusing on 'синій' as the primary example; use the Kyiv Metro 'синя
+    лінія' (Blue Line) as a practical mnemonic anchor for A1 learners.
+  - 'Targeting Hard/Soft Stem Confusion: Correcting the learner error of writing *''синий''* (influenced by phonetic patterns)
+    vs. the correct Ukrainian orthography *''синій''*.'
+  - 'Plural Consistency: Highlight that plural adjectives take the ending ''-і'' regardless of gender (e.g., ''гарні дні'',
+    ''гарні дівчата'', ''гарні вікна'') to prevent the common error of using singular forms for plural nouns.'
+- section: Практика та Культурний контекст (Practice and Cultural Context)
+  words: 300
+  points:
+  - 'Cultural Portrait: Describe the folklore figure Mavka (Мавка) from Lesya Ukrainka''s ''Forest Song'' using ''молода'',
+    ''гарна'', ''цікава'', and ''зелена'' to practice feminine adjective agreement.'
+  - 'Real Estate Persona Practice: Roleplay describing a ''нова квартира'' or ''великий будинок'' using vocabulary from A1-25
+    (Daily Routine) to solidify functional usage in physical descriptions.'
+  - 'Final Synthesis: A summary of the ''Який?'' question-answer pattern for all three genders and plural, preparing learners
+    for the upcoming color vocabulary in A1-27.'
+vocabulary_hints:
+  required:
+  - 'новий (new) — Collocations: новий рік, новий день, нове життя; Top 100 high-frequency adjective.'
+  - 'старий (old/ancient) — Collocations: старий будинок, стара книга; used for describing St. Sophia''s Cathedral.'
+  - 'гарний (beautiful/nice) — Collocations: гарна погода, гарний день, гарна дівчина; high-frequency social descriptor.'
+  - 'великий (big/grand) — Collocations: велике місто, велика родина, великий привіт; essential for scale.'
+  - 'малий (small) — Collocations: малий бізнес, мале вікно, мале дитя; high-frequency antonym.'
+  - 'добрий (good/kind) — Collocations: добрий день, добрий вечір, добра людина; essential for greetings and character.'
+  - 'поганий (bad) — Collocations: погана погода, поганий настрій; primary descriptor for negative states.'
+  - 'цікавий (interesting) — Collocations: цікава книга, цікаве питання, цікава людина; essential for personal expression.'
+  recommended:
+  - 'синій (blue) — Primary example for soft stem (-ій); practical anchor: Kyiv Metro tokens/lines.'
+  - червоний (red) — Common hard stem adjective for color contrast.
+  - молодий (young) — Useful for describing people and folklore figures like Mavka.
+  - дорогий (expensive) — High frequency in shopping and real estate contexts.
+  - дешевий (cheap) — Essential antonym for shopping scenarios.
+  - смачний (tasty) — High-frequency descriptor for food and hospitality.
+  - зелений (green) — Cultural descriptor for nature and Mavka's forest context.
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+- type: fill-in
+  focus: Describe pictures using adjectives
+  items: 8
+connects_to:
+- a1-12 (Colors and Clothing)
+- 'a1-42 (Description: Adverbs)'
+prerequisites:
+- a1-07 (The Gender Code)
+- a1-38 (My Daily Routine)
+persona:
+  voice: Patient Supportive Tutor
+  role: Real Estate Agent
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний

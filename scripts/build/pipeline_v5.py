@@ -2101,6 +2101,15 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
             for v in critical[:3]:
                 log(f"    {v['type']}: {v['issue'][:100]}")
 
+        # Info: Textbook citation density (non-blocking)
+        citations = re.findall(r'<!--\s*adapted from:', raw)
+        originals = re.findall(r'<!--\s*original:', raw)
+        citation_count = len(citations)
+        if citation_count > 0:
+            log(f"  content: INFO — {citation_count} textbook adaptation(s) cited, {len(originals)} original(s)")
+        elif ctx.track.split("-")[0] in ("a1", "a2"):
+            log("  content: INFO — no textbook citations found (<!-- adapted from: --> comments)")
+
     # mark_complete replaces the entire phase dict, so self_audited must go in as **extra
     mark_complete(state, "content", ctx, **({"self_audited": True} if self_audited else {}))
     _invalidate_stale_artifacts(ctx)

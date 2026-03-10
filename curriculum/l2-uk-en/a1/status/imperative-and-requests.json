@@ -2,15 +2,15 @@
   "module": "imperative-and-requests",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-08T01:53:36.165059Z",
+  "last_audit": "2026-03-10T11:57:15.757898Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-08T01:51:40.796261Z",
-    "meta": "2026-03-08T00:33:28.636611Z",
-    "activities": "2026-03-08T01:50:38.615741Z",
-    "vocabulary": "2026-03-08T01:47:33.844410Z",
-    "plan": "2026-03-05T10:32:40.301459Z",
-    "research": "2026-03-08T00:33:29.126184Z"
+    "md": "2026-03-10T11:56:20.611838Z",
+    "meta": "2026-03-10T11:52:22.858365Z",
+    "activities": "2026-03-10T11:38:10.942651Z",
+    "vocabulary": "2026-03-10T11:15:14.817650Z",
+    "research": "2026-03-10T11:02:26.253935Z",
+    "plan": "2026-03-05T10:32:40.301459Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1531/1200 (raw: 2486)"
+      "message": "1716/1200 (raw: 1755)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "12/1"
+      "message": "26/1"
     },
     "naturalness": {
       "status": "info",

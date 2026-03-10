@@ -3,82 +3,84 @@
 # Дослідження: The Cyrillic Code III
 
 ## State Standard Reference
-§4.1.1: "Ukrainian alphabet" and §4.1.4: "Vowel and consonant sounds"
-Alignment: Introduces 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч) and the foundational phonetic concept of voiced vs. voiceless pairs to build reading fluency and pronunciation accuracy.
+No specific § — foundational literacy prerequisite.
+Alignment: Establishes phonemic awareness and alphabet recognition necessary for reading simple texts, specifically focusing on the 9 new letters (Б, Д, П, З, Г, Х, Ж, Ш, Ч) to reach a total of 23 known letters.
 
 ## Vocabulary Frequency
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| хліб | Cultural staple, demonstrates Х | білий хліб, свіжий хліб |
-| школа | Top 200 high-frequency word, demonstrates Ш | — |
-| будинок | High-frequency noun, demonstrates Б and Д | великий будинок |
-| шапка | Demonstrates Ш | зимова шапка |
-| парк | Internationalism, builds confidence, demonstrates П | — |
+| брат | High frequency kinship term, fully decodable | мій брат, брат і сестра |
+| вода | High frequency noun, essential | чиста вода, питна вода |
+| парк | Common loanword, perfect for decoding practice | міський парк, ідемо в парк |
+| школа | Essential A1 vocabulary | нова школа, біля школи |
+| хліб | Culturally significant, introduces Х and Б | свіжий хліб, чорний хліб |
 
 ## Cultural Hooks
-1. "Хліб-сіль" (bread and salt) is a traditional Ukrainian symbol of hospitality, making "хліб" a culturally significant first word to learn.
-2. The letter Ж physically resembles a beetle (жук), which is also its keyword and a very helpful visual mnemonic device for learners.
+1. **Visual Mnemonic for Ж:** Culturally, the letter 'Ж' is often taught to children as looking like a beetle (жук), and its sound mimics a buzzing insect. This is a very effective and authentic memory hook.
+2. **False Friends (Visual):** Learners often mistake the Cyrillic 'Х' for the Latin 'X' (it is /x/, not /ks/) and 'П' for the mathematical 'Pi'. Pointing this out early prevents ingrained mispronunciation.
+3. **Food Culture:** "Хліб" (bread) is a culturally foundational concept ("Хліб — усьому голова"). Conveniently, the word "хліб" uses exactly the letters available at this stage (Х-Л-І-Б).
 
 ## Common Learner Errors
-1. Pronouncing П as /r/ → П is /p/ — Learners confuse it with the Cyrillic Р (/r/) from Code II, requiring explicit visual contrast and minimal pair practice.
-2. Pronouncing Г as a hard English "g" → Г is a soft glottal /ɦ/ — English speakers naturally default to a hard 'g', missing the unique throaty characteristic of the Ukrainian letter.
-3. Over-aspirating П → Ukrainian П is unaspirated — English speakers tend to puff air on 'p', whereas Ukrainian consonants are typically crisper.
+1. Pronouncing 'Г' as the hard English /g/ (like 'go') instead of the soft, voiced glottal fricative /ɦ/. This is a classic marker of a foreign accent in Ukrainian.
+2. Over-aspirating 'П' and 'Т' (learned previously). Ukrainian consonants are unaspirated, unlike English where 'p' in 'park' has a strong puff of air.
+3. Confusing the visual forms of 'Ш' (sh) and 'Щ' (shch - though not yet introduced, warning them of the visual similarity helps).
+4. Treating 'Х' as an English 'X' (/ks/) or 'H' (/h/). It needs to be the velar fricative /x/ (like 'ch' in Scottish 'loch').
 
 ## Cross-References
-- Builds on: a1-02 (The Cyrillic Code II)
-- Prepares for: a1-04 (The Cyrillic Code IV)
+- Builds on: The Cyrillic Code I, The Cyrillic Code II
+- Prepares for: The Cyrillic Code IV (Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ)
+
+## Teaching Strategy
+- **Discovery exercise**: Present learners with a visual map of a city or a menu with international cognates like "ПАРК", "БАР", "БАНК", "СУП". Have them guess the meaning of these words by decoding the letters.
+- **Best context**: Reading street signs, menus, and basic labels where words are isolated. The lack of grammar/verbs at this stage makes isolated nouns the most natural context.
+- **Contrastive pairs**: Contrast 'З' /z/ and 'С' /s/ (learned previously). Contrast 'Б' /b/ and 'П' /p/ to practice voiced vs. voiceless pairs.
 
 ## Notes for Content Writing
-- **Decodability constraint:** Only 23 letters are known. Avoid words using Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ, ДЖ, ДЗ unless an English translation is explicitly provided.
-- **Grammar ban:** Strictly no verbs and no imperative forms. Use English for all instructional text. Only bare nouns and noun phrases are allowed.
-- Emphasize the tactile "hand on the throat" trick for teaching voiced and voiceless pairs, as it is highly effective for A1 learners.
+- Remember the GRAMMAR BAN: No verbs, no imperative forms. Use English for all instructions and explanations.
+- Ensure all reading drills use ONLY the 23 known letters (А, Е, І, И, О, У, М, Н, В, Л, С, К, Т, Р + Б, Д, П, З, Г, Х, Ж, Ш, Ч). Any word with unknown letters (like Й, Щ, Я, Ь, Є, Ю, Ї, Ц, Ф, Ґ) MUST have an English translation next to it.
+- You can form many real words now (жаба, час, гора, зуб, шапка). Maximize reading practice with these.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - title: "Вступ — Introduction"
-    slug: vstup-introduction
+  - title: "Introduction: Expanding Your Decodability"
+    slug: expanding-decodability
     words: 150
     points:
-      - "Welcome and warm-up: read 3 familiar words from Code I & II (молоко, кіт, місто) to build confidence."
-      - "Module objective: Introduce 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч) unlocking 23 letters total."
-      - "Briefly introduce the key concept of 'дзвінкі та глухі' (voiced and voiceless) pairs with English scaffolding."
-  - title: "Приголосні — Consonants Б, Д, П"
-    slug: consonants-b-d-p
+      - "Welcome to the third Cyrillic Code module."
+      - "Brief review of the 14 letters already known."
+      - "Introduction of the 9 new letters to reach 23 total: Б, Д, П, З, Г, Х, Ж, Ш, Ч."
+  - title: "The Voiced and Voiceless Pairs: Б, П, Д, З"
+    slug: pairs-b-p-d-z
+    words: 300
+    points:
+      - "Introducing Б (/b/) and П (/p/)."
+      - "Introducing Д (/d/) and З (/z/)."
+      - "Visual warnings: Б vs the number 6, П vs Greek Pi."
+      - "Reading practice with cognates: БАР, ПАРК, БАНК, СУП."
+  - title: "The Gutturals: Г and Х"
+    slug: gutturals-g-h
     words: 250
     points:
-      - "Introduce Б (/b/, банан, будинок) and Д (/d/, дім). Note that Ukrainian Д is dental."
-      - "Introduce П (/p/, павук). Emphasize that Ukrainian П is unaspirated (no puff of air)."
-      - "Visual Trap Alert: Explicitly contrast the new letter П (/p/, looks like a platform) with the previously learned Р (/r/) using minimal pairs (палка vs ракета)."
-  - title: "Приголосні — Consonants З, Г, Х"
-    slug: consonants-z-g-kh
-    words: 250
+      - "Introducing Х (/x/ like in 'loch', not 'ks')."
+      - "Introducing Г (/ɦ/ soft 'h', not hard 'g')."
+      - "Pronunciation tips and common errors for Г (avoiding the English 'g')."
+      - "Reading practice with native words: ХАТА, ХЛІБ, ГОРА."
+  - title: "The Hushers: Ж, Ш, Ч"
+    slug: hushers-zh-sh-ch
+    words: 300
     points:
-      - "Introduce З (/z/, зебра, зуб) as the voiced partner to the already known С."
-      - "Introduce Г (/ɦ/, гора, газета) as a soft, throaty glottal fricative, explicitly NOT a hard English 'g'. Preview that the hard 'g' is coming in Code IV (Ґ)."
-      - "Introduce Х (/x/, хліб) with articulatory guidance (like Scottish 'loch' or German 'ach'). Mention the 'хліб-сіль' tradition."
-  - title: "Дзвінкі та глухі — Voiced and Voiceless Pairs"
-    slug: voiced-voiceless-pairs
-    words: 250
-    points:
-      - "Interactive physical test: Instruct learners to place a hand on their throat to feel the vibration for voiced sounds."
-      - "Introduce the remaining sibilants and affricate: Ж (жук), Ш (шапка), Ч (черепаха)."
-      - "Summarize and map the voiced/voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ж↔Ш, З↔С."
-  - title: "Практика читання — Reading Practice"
-    slug: reading-practice
+      - "Introducing the 'husher' sounds."
+      - "Ш (/ʃ/ 'sh') and Ж (/ʒ/ 's' in 'measure')."
+      - "Ч (/tʃ/ 'ch' in 'chair')."
+      - "Visual mnemonic for Ж (looks like a beetle) and Ш."
+      - "Reading practice: ШКОЛА, ЧАС, ЖАБА, ШАПКА."
+  - title: "Module Summary and Decodability Check"
+    slug: summary-decodability-check
     words: 200
     points:
-      - "Reading drills using internationalisms to build immediate confidence: банк, парк, транспорт."
-      - "Voiced/voiceless minimal pair discrimination drills: зуб vs суп, жар vs шар."
-      - "Read practical everyday vocabulary using the 23 known letters: школа, пошта, чай."
-  - title: "Підсумок — Summary"
-    slug: pidsumok-summary
-    words: 100
-    points:
-      - "Congratulate the learner: 23 out of 33 letters are now unlocked, making most common text readable."
-      - "Self-check question 1: Can you feel the difference in your throat between Б and П?"
-      - "Self-check question 2: What is the visual difference between the letters П and Р?"
-      - "Self-check question 3: How do you pronounce Г vs Х?"
-      - "Preview: Code IV will cover the final 10 letters and special symbols to complete the alphabet."
+      - "Summary of the 9 new letters."
+      - "Self-check: Reading a short list of words combining all 23 known letters to build confidence."
+      - "Preview of the final Cyrillic Code module (the remaining 10 letters)."
 ===META_OUTLINE_END===

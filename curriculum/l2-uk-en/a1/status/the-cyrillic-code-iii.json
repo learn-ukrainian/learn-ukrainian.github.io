@@ -2,15 +2,15 @@
   "module": "the-cyrillic-code-iii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T15:17:23.261695Z",
+  "last_audit": "2026-03-10T11:19:00.672595Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-07T02:46:42.346900Z",
-    "meta": "2026-03-07T02:15:09.968082Z",
-    "activities": "2026-03-07T02:46:09.686071Z",
-    "vocabulary": "2026-03-07T02:22:53.276150Z",
-    "plan": "2026-03-05T15:41:08.649973Z",
-    "research": "2026-03-07T02:15:32.957435Z"
+    "md": "2026-03-10T11:18:48.026471Z",
+    "meta": "2026-03-10T11:05:17.784151Z",
+    "activities": "2026-03-10T11:16:22.000430Z",
+    "vocabulary": "2026-03-10T11:16:22.001006Z",
+    "research": "2026-03-10T11:02:39.950825Z",
+    "plan": "2026-03-05T15:41:08.649973Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1969/1200 (raw: 2048)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2202/1200 (raw: 2700) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "10/8"
+      "status": "fail",
+      "violations": 1,
+      "message": "9/8 | density: 3 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "26/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
-    "deferred_count": 0
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 1
   }
 }

@@ -2,15 +2,15 @@
   "module": "register-literary-ukrainian",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-03-07T15:17:33.777217Z",
+  "last_audit": "2026-03-09T21:50:02.159180Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-27T20:41:18.318486Z",
     "meta": "2026-02-24T00:57:03.189956Z",
     "activities": "2026-02-24T17:49:07.026330Z",
     "vocabulary": "2026-02-26T10:56:38.151507Z",
-    "plan": "2026-03-05T15:32:39.330006Z",
-    "research": "2026-02-24T00:57:03.186236Z"
+    "research": "2026-02-24T00:57:03.186236Z",
+    "plan": "2026-03-05T15:32:39.330006Z"
   },
   "gates": {
     "meta": {

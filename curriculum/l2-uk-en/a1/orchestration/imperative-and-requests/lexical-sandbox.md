@@ -80,12 +80,20 @@
 
 ### Verified Example Sentences (from textbooks)
 
-- з якої причини? з якої причини? з якої причини? 249
-250
-незважаючи на що?
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
   *Source: unknown*
-- Що мені робити? – Сиди-спокійно-й-чекай.
+- А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть над кожним дієсловом його форму. було
+кажу
+принести
   *Source: unknown*
+
+### ⚠️ Level-Wide Grammar Rules (A1)
+
+Even though forms are listed above, the A1 audit enforces these rules on your **prose**:
+- **DATIVE CASE FORBIDDEN**: Do NOT use мені, тобі, йому, їй, нам, вам, їм or -ові/-еві dative noun endings in your text
+- **INSTRUMENTAL CASE FORBIDDEN**: Do NOT use з + instrumental (мною, тобою, ним, нею) or за/під/над + instrumental
+- **Max 10 words per Ukrainian sentence**, max 1 clause
+- **No subordinate clauses** (який, що, коли, бо, щоб as conjunctions)
 
 ### Usage Rules
 

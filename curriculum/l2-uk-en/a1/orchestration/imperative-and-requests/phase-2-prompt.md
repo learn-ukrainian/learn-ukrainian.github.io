@@ -2,6 +2,9 @@
 
 > **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
 >
+> **Your role:** You are an **editor and adapter**, not an author writing from scratch.
+> Ukrainian school textbooks have already solved "how to teach this topic." Your job is to **find the right pedagogical approach in the textbook excerpts below** and **transform it** for English-speaking learners (teens and adults) at the a1 level.
+>
 > **Your task:** Build a complete beginner module — lesson content, practice activities, and vocabulary — in one pass.
 > Writing content and activities together ensures consistency: the same words, the same gender pairings, the same phrases appear in both.
 >
@@ -122,12 +125,20 @@ The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: pe
 
 ### Verified Example Sentences (from textbooks)
 
-- з якої причини? з якої причини? з якої причини? 249
-250
-незважаючи на що?
+- Хи м к а (сміючись). Ну, тепер уже піде баталія.
   *Source: unknown*
-- Що мені робити? – Сиди-спокійно-й-чекай.
+- А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть над кожним дієсловом його форму. було
+кажу
+принести
   *Source: unknown*
+
+### ⚠️ Level-Wide Grammar Rules (A1)
+
+Even though forms are listed above, the A1 audit enforces these rules on your **prose**:
+- **DATIVE CASE FORBIDDEN**: Do NOT use мені, тобі, йому, їй, нам, вам, їм or -ові/-еві dative noun endings in your text
+- **INSTRUMENTAL CASE FORBIDDEN**: Do NOT use з + instrumental (мною, тобою, ним, нею) or за/під/над + instrumental
+- **Max 10 words per Ukrainian sentence**, max 1 clause
+- **No subordinate clauses** (який, що, коли, бо, щоб as conjunctions)
 
 ### Usage Rules
 
@@ -144,7 +155,7 @@ The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, EXCEPT: pe
 
 ### Immersion Target
 
-TARGET: 35-55% Ukrainian.
+TARGET: 30-55% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. You must explain grammar primarily by demonstrating it. Show, don't tell.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. This is the highest-density immersion tool. Do not explain usage nuances in English prose — instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) that map out the nuances. Move the teaching logic inside the tables.
@@ -155,6 +166,29 @@ LANGUAGE ROLES:
 - IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words demonstrating the concepts in context. If translations are needed, place them in a separate table BELOW the blockquote.
 - STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. Vary your containers — never use the same type twice in a row.
 Ukrainian sentences max 10 words.
+NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered to prevent repetitive padding. Focus on quality immersion with the available vocabulary rather than forcing high percentages.
+
+BEFORE/AFTER EXAMPLE — follow the AFTER pattern:
+
+❌ BAD (too much English, ~10% immersion):
+To form the imperative mood in Ukrainian, you take the infinitive form of the verb and remove the -ти ending. Then you add the appropriate suffix depending on whether you are speaking to one person informally or to multiple people formally. For the informal singular form, you simply use the stem. For the formal or plural form, you add -те to the informal form.
+
+✅ GOOD (tables + dialogue + examples, ~45% immersion):
+Drop **-ти** from the infinitive to form commands.
+
+| Infinitive | ти-command | ви-command |
+|---|---|---|
+| читати | читай | читайте |
+| писати | пиши | пишіть |
+
+> — **Читай** текст! — Read the text!
+> — **Пишіть** відповідь. — Write the answer.
+> — **Слухайте** уважно! — Listen carefully!
+
+Add **будь ласка** to soften any command.
+
+- **Дайте, будь ласка, воду.** — Please give water.
+- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?
 
 ### Structural Containment (how to achieve immersion without code-switching)
 
@@ -178,63 +212,6 @@ Ukrainian sentences max 10 words.
 - **No IPA or phonetic brackets**
 - **Quotes**: Use «...» not "..."
 
-### Exemplar (follow this structural pattern)
-
-# Exemplar: Structured Band (A1 M21-47)
-
-> Immersion 35-55%. English explanations are MAX 2 sentences per concept — show, don't tell. Each H2 section ends with a substantial Ukrainian immersion block (dialogue or narrative, 80-150 words). Full Ukrainian sentences live in tables, dialogues, or example lists — never in flowing prose.
-
-## Example Section: Teaching Verb Forms
-
-The imperative mood has two forms: informal for **ти** and formal for **ви**. The formal command adds **-те** to the informal form.
-
-| Infinitive | ти-form | ви-form | Usage context |
-|-----------|---------|---------|--------------|
-| **читати** | **читай** | **читайте** | classroom, reading aloud |
-| **слухати** | **слухай** | **слухайте** | classroom, paying attention |
-| **чекати** | **чекай** | **чекайте** | asking someone to wait |
-| **писати** | **пиши** | **пишiть** | classroom, taking notes |
-| **iти** | **iди** | **iдiть** | giving directions |
-| **дати** | **дай** | **дайте** | requesting objects |
-
-> [!warning]
-> Do not use the infinitive as a personal command. You cannot say ~~Читати!~~ to a person — use **Читай!** or **Читайте!**
-
-Some verbs change their stem entirely:
-
-| Infinitive | ти-form | ви-form | Usage context |
-|-----------|---------|---------|--------------|
-| **дати** | **дай** | **дайте** | requesting objects |
-| **сказати** | **скажи** | **скажiть** | asking someone to speak |
-| **стояти** | **стiй** | **стiйте** | asking someone to stop |
-| **дивитися** | **дивись** | **дивiться** | drawing attention |
-
-Here is the immersion block — a classroom scene using these commands in context:
-
-> — **Вчитель:** Читайте текст, будь ласка. Слухайте слова. Пишiть слова тут.
-> — **Студент:** Добре. Я читаю. Я слухаю. Я пишу тут.
-> — **Вчитель:** Дуже добре! Тепер дивiться на дошку. Читайте це слово.
-> — **Студент:** Я дивлюся. Я читаю це слово.
-> — **Вчитель:** Скажiть це слово, будь ласка.
-> — **Студент:** Я кажу це слово. Чекайте, будь ласка.
-> — **Вчитель:** Добре, я чекаю. Iдiть сюди, будь ласка.
-> — **Студент:** Я iду. Дайте, будь ласка, книгу.
-> — **Вчитель:** Ось книга. Читай тут.
-
-| Ukrainian | English |
-|-----------|---------|
-| Читайте текст, будь ласка. | Please read the text. |
-| Слухайте слова. | Listen to the words. |
-| Пишiть слова тут. | Write the words here. |
-| Дивiться на дошку. | Look at the board. |
-| Скажiть це слово. | Say this word. |
-| Iдiть сюди, будь ласка. | Come here, please. |
-| Дайте, будь ласка, книгу. | Please give a book. |
-
-> [!culture]
-> Adding **будь ласка** (please) after a command softens it significantly. In Ukraine, using the bare imperative without "please" can sound blunt or even rude outside of close family.
-
-
 ---
 
 ## 3. Write the Lesson Content
@@ -250,26 +227,26 @@ Write **Imperative and Requests** for the a1 track.
 
 Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
 
-- `## Наказовий спосіб (Imperative Mood)` (~300 words)
-- `## Вісім обов'язкових дієслів (Eight Required Verbs)` (~350 words)
-- `## Ввічливе прохання (Polite Requests)` (~250 words)
-- `## Заборони (Prohibitions)` (~150 words)
-- `## Практика і підсумок (Summary and Practice)` (~150 words)
+- `## Introduction: The Power of Commands and Requests` (~250 words)
+- `## The Informal Imperative: Addressing 'Ти'` (~350 words)
+- `## The Formal and Plural Imperative: Addressing 'Ви'` (~350 words)
+- `## Special Verbs and Reflexives` (~150 words)
+- `## Summary and Checkpoint` (~100 words)
 
 ### Section Word Budgets
 
 | Section | Target |
 |---------|--------|
-| Наказовий спосіб (Imperative Mood) | 300 |
-| Вісім обов'язкових дієслів (Eight Required Verbs) | 350 |
-| Ввічливе прохання (Polite Requests) | 250 |
-| Заборони (Prohibitions) | 150 |
-| Практика і підсумок (Summary and Practice) | 150 |
+| Introduction: Asking for Action | 250 |
+| Forming the Imperative: Singular and Informal | 350 |
+| Forming the Imperative: Plural and Formal | 300 |
+| Common Irregular Verbs and Aspect | 200 |
+| Summary and Self-Check | 100 |
 | **Total** | **1200** |
 
 ### Writing Style
 
-You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
+You're writing for an A1 learner progressing through a structured course. They already know previous modules' content. English scaffolds new grammar; Ukrainian is what they're learning and practicing.
 
 Follow the structural containment rules above. Each H2 section MUST follow this sequence:
 
@@ -282,6 +259,35 @@ Follow the structural containment rules above. Each H2 section MUST follow this 
 - Bulleted example lists longer than 5 items (spam — use a dialogue or table instead)
 - Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
 - Listing random permutations of the same verb forms as separate bullets
+
+### Dialogue Quality (CRITICAL)
+
+Every blockquote dialogue MUST have:
+1. **A real situation** — where are the speakers? (market, classroom, street, home, café)
+2. **A purpose** — why are they talking? (asking for help, giving directions, buying something)
+3. **Varied responses** — the second speaker reacts naturally, not just echoes the command
+
+**BAD** (echo drill — FORBIDDEN):
+> — Читай!
+> — Я читаю.
+> — Пиши!
+> — Я пишу.
+> — Слухай!
+> — Я слухаю.
+
+**GOOD** (at a market — speakers have real goals):
+> — Дайте, будь ласка, хліб.
+> — Візьміть. Ще щось?
+> — Покажіть це. Скільки?
+> — Двадцять. Дивіться — свіжий!
+
+**GOOD** (parent and child — natural, emotional):
+> — Не біжи! Стій!
+> — Але я хочу туди!
+> — Слухай мене. Тримай мою руку.
+> — Добре, мамо.
+
+Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life."
 
 Keep paragraphs short (3-5 sentences). Use 3+ callout boxes spread across sections.
 
@@ -404,9 +410,21 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 
 
+### Textbook Source Material (ADAPT, don't ignore)
+
 ## Textbook Reference (from Ukrainian grammar textbooks)
 
 These are explanations from Ukrainian school grammar textbooks. Use them as **reference** for grammar rules and examples. Adapt for adult A1 learners — keep explanations simple but maintain grammatical accuracy.
+
+**Grade 3, ponomarova** — Сторінка 160:
+```
+Пригадую знання про звуки і букви . . . . . . . . . . . . . . . . . . . . . . . . . . .4
+Спостерігаю за значенням слів  . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+Досліджую будову слова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+Дізнаюся більше про іменники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+Досліджую прикметники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92
+Розпізнаю числівники  . . . . . . . . . . . 
+```
 
 **Grade 3, vashulenko** — Сторінка 35:
 ```
@@ -431,97 +449,97 @@ These are explanations from Ukrainian school grammar textbooks. Use them as **re
 з потріб
 ```
 
-**Grade 3, ponomarova** — Сторінка 102:
+**Grade 3, ponomarova** — Сторінка 127:
 ```
-102
-Довідка: неспокійне, розбурхане, суворе, 
-самотній, беззахисний, великі, небезпечні, 
-безпощадні,  тривожний.
-Довідка: радісний, задоволений, похнюплений, 
-сумний, щасливий, пригнічений.
-10. Склади про одного з хлопчиків розповідь (3–4 речення) 
-і запиши. Використай прикметники.
-1
-4. Прочитай  розповідь  Ґаджика про картину І. Айвазов-
-ського.  Чи  зрозуміло,  яку  саме  картину  він  описав?
-7. Якою частиною мови є вставлені в розповідь Ґаджика сло-
-ва? Зроби висновок про роль прикметників 
-```
-
-**Grade 3, kravtsova** — Сторінка 8:
-```
-8
-ПРАВИЛЬНА ВИМОВА СЛІВ 
-ЗІ ЗВУКАМИ [ДЗ], [ДЗ´], [ДЖ]
-15.
-1.	 Утворіть пари слів: що робити? — що роблю?
-Сидіти — 		
-	
-Будити —	 	
-Радити — 	
-Ходити — 		
-	
-Водити — 	 	
-Садити —
-Зразок. Їздити — їжджу.
-2.	 Пригадайте, як переносити слова зі звуками [дз], [дз[ ,]׳дж].
-	
-	
-поса-джені	 	
-за-дзвенів
-	
-	
-посадже-ні	 	
-задзве-нів
-3.	 Запишіть утворені слова, поділивши їх для переносу. Пере-
-вірте роботу одні в одних. 
-16.
-1.	 Прочитай і відгадай загадку. 
-Живим зерном народжений, 
-живу я на землі. 
-Що
+127
+ÐÎÇÐ²ÇÍßÞ ÐÎÇÏÎÂ²ÄÍ², 
+ÐÎÇÐ²ÇÍßÞ ÐÎÇÏÎÂ²ÄÍ², 
+ÏÈÒÀËÜÍ² ² ÑÏÎÍÓÊÀËÜÍ² 
+ÏÈÒÀËÜÍ² ² ÑÏÎÍÓÊÀËÜÍ² 
+ÐÅ×ÅÍÍß, ÎÊËÈ×Í² É ÍÅÎÊËÈ×Í² 
+ÐÅ×ÅÍÍß, ÎÊËÈ×Í² É ÍÅÎÊËÈ×Í² 
+1. Прочитай речення. Визнач, яке з них є розповідним,
+яке — питальним, а яке — спонукальним. Перевір себе 
+за правилом.
+1. Яке місто відвідали друзі?
+2. Друзі милувалися Полтавою. 
+3. Дізнайтеся, що цікавого є в Полтаві.
+Речення, 
+у 
+якому 
+про 
+щось 
+розповідається 
+(повідомляється),  називається  розповідним. 
+Речення, у якому про щось за
 ```
 
-**Grade 3, kravtsova** — Сторінка 6:
+**Grade 3, kravtsova** — Сторінка 20:
 ```
-6
-7.
-1.	 Розгляньте малюнки. У назвах яких предметів став-
-лять апостроф? Запишіть ці слова.
-2.	 Доведіть одні одним, що апостроф ставити потрібно  /  не 
-потрібно. Своє доведення починайте так:
-У цьому слові потрібно  /  не потрібно ставити апостроф, 
-оскільки …
-3.	 Складіть за малюнками речення, використовуючи слова 
-з апострофом. 
-8.
-1.	 Розглянь зображення, назвиѳ їх.
+20
+52.	
+1.	 «Перестрибуючи» через кружечок, прочитай слово. 
+Яке слово залишилося ще прочитати?
+2.	 Досліди значення розшифрованих слів.
+Крок 1. Як ти гадаєш, слова рано і пізно близькі 
+чи протилежні за значенням?
+Крок 2. Для чого, на твою думку, потрібні проти-
+лежні за значенням слова?  
+Крок 3. Зроби висновок та зістав його з правилом.
+Пари слів, які мають протилежне значення, називають анто-
+німами. Антоніми допомагають увиразнити нашу мову.
+АНТОНІМИ
+54.	
+1.	 Користуючись алфавітом, прочита
+```
+
+**Grade 3, kravtsova** — Сторінка 45:
+```
+45
+3.	 Уяви, що ти — директор / директорка фірми «Стильний одяг». 
+Розкажи, як створити рекламу цієї фірми.
+2.	 Дослідиѳ, які префікси пишуть у виділених словах.
+Крок 1. Прочитай виділені слова. 
+Крок 2. Назвиѳ префікси в словах. Який кінцевий приголосний 
+мають префікси?
+Крок 3. Зроби висновок, яку букву пишуть у кінці префіксів 
+ро?-, бе?-, зістав із правилом.
+У префіксах роз-, без- завжди пишуть букву з.
+126.	 1.	 Прочитай слова. Утвори за допомогою префіксів роз- або без- 
+нові слова та запи
+```
+
+**Grade 3, kravtsova** — Сторінка 64:
+```
+64
+180.	 1. Прочитай початок казки.
+У країні Мови жив король Іменник. Інколи він полюбляв 
+поділяти слова на групи. Тоді він вигукував:   
+— Він мій! Вона моя! Воно моє!
+Крок 1. Назвиѳ предмети, зображені на малюнку.
 2.	 Виконай завдання на вибір.
-	 Запиши наѳзви зображень. 
-	 Склади і запиши речення, використовуючи якомога більше 
-слів з а
+	 Випиши іменники в однині, познач закінчення. 
+	 Випиши назви тварин. Зміни їх за числами. Познач закінчення.
+Зразок. Вовк   — вовки.
+РІД ІМЕННИКІВ
+2.	 Дослідиѳ, на які групи Іменник поділяв слова.
+Крок 2. Запиши наѳзви зображених предметів у потрібни
 ```
 
-**Grade 3, vashulenko** — Сторінка 39:
+**L1→L2 Transformation Rules:** The excerpts above are from Ukrainian school textbooks that teach Ukrainian to **native speakers (L1)**. Your learners are **English-speaking teens and adults (L2)**. When adapting:
+
+1. **L1 assumes intuitive grammar** → L2 needs explicit rule statements in English
+2. **L1 uses native-level vocabulary** → L2 uses ONLY the word bank above
+3. **L1 dialogues assume cultural context** → L2 dialogues need setting/purpose explanation
+4. **L1 exercises test metalinguistic knowledge** → L2 exercises test production/comprehension
+
+**Cite your adaptations:** For each dialogue or exercise you adapt from the textbook excerpts, add an HTML comment:
 ```
-39
-— Зробіть мені, тату, золотий човник 
-та срібне весельце. Буду я рибку ловити та 
-вас годувати.
-— Куди тобі, синку? Ти ще маленький!
-Сестра, мама, пан, добродій, Марія Миколаївна, Петро 
-Васильович, сусід, сусідка.
-Спи ж ти, малесенький,
-пізній бо час.
-Леся Українка
-Нащо ж ти віченьки знову розкрив?
-Спи, моя пташко, то вітер завив.
-Олександр Олесь
-	 	
-3   Подані слова запишіть у формі звертання.
-4   Прочитай. Поміркуй, що спільного в цих двох уривках із віршів.
-	 	
-5   Розіграйте уривок із
+<!-- adapted from: Заболотний Grade 5, вправа 221 -->
+```
+If you cannot find relevant textbook material to adapt, write original content but note it:
+```
+<!-- original: no matching textbook exercise found -->
 ```
 
 
@@ -534,7 +552,7 @@ After writing the content, create activities that practice the Ukrainian you jus
 
 **Targets:**
 - 8–15 activities
-- Required types: 
+- Required types: {'type': 'match-up', 'focus': 'Match infinitive to correct imperative form', 'items': 12}, {'type': 'quiz', 'focus': 'Choose correct imperative form in context', 'items': 10}, {'type': 'fill-in', 'focus': 'Complete dialogue with correct imperative', 'items': 8}, {'type': 'true-false', 'focus': 'Evaluate imperative usage correctness', 'items': 8}
 - 20 vocabulary items
 
 ### Item Minimums (HARD FAIL if under)
@@ -554,198 +572,106 @@ After writing the content, create activities that practice the Ukrainian you jus
 
 ### Real Textbook Exercises (вправи) — Pedagogical Inspiration
 
-These are real exercises from Ukrainian school textbooks (grade 2/3). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+These are real exercises from Ukrainian school textbooks (grade 3/5/6/7). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
 
-**Grade 3, vashulenko** — Сторінка 110:
+**Grade 3, vashulenko** — Сторінка 35:
 ```
-110
-Навчаюся визначати рід іменників
-34
-Рід іменників:  
-чоловічий, жіночий, середній
-	 	
-1   Визначте, істоту якого роду називає 
-кожний іменник.
-	 	
-3   Допишіть пари слів за зразком.
-2   Прочитай, уставляючи замість крапок слова мій, моя, моє, він, 
-вона, воно. Визнач рід іменників і поясни свою відповідь. Запиши 
-утворені речення.
-мати — тато
-дочка — син
-малюк — маля
-Іменники бувають чоловічого, 
-жіночого і середнього роду. 
-Досліди, як визнача-
-ють рід іменників.
-Я — дослідник
-Я — дослід
-```
-
-**Grade 3, vashulenko** — Сторінка 112:
-```
-112
-Спостерігаю за закінченнями 
-іменників різних родів
-Пригадай і розкажи 
-у класі.
-Я — учителька
-Я — учитель
-Чоловічий рід
-можна додати  
-слова мій, він,  
-закінчення -о  
-або нульове
- тато, Петро
- вечір, Артем
-Жіночий рід
-можна додати  
-слова моя, вона,  
-закінчення -а, -я 
-або нульове
- мама, Оксана
- земля, Юлія
- тінь, заметіль
-Середній рід
-можна додати  
-слова моє, воно,  
-закінчення  
--о, -е, -а, -я
- літо
- сонце
- курча
- маля
-6   Прочитай. Наведи власні приклади іменників. 
-учень
-школя
-```
-
-**Grade 3, kravtsova** — Сторінка 78:
-```
-78
-220.	 1.	 Знайди й запиши в стовпчик прикметники.
-а с
-о
-н
-я
-ч
-н а
-о
-к
-у
-р
-п
-р
-і
-к
-у
-о
-с
-я й
-н
-а
-и
-щ
-р
-ф а н
-т
-а
-с
-т
-и
-ч
-н
-а
-м
-у
-і
-с
-т
-о р
-и
-ч
-н
-а
-з
-м
-е
-д
-н у
-ї
-с
-т
-і
-в
-н
-а
-й
-ц
-у
-к
-ї
-х
-а
-л и ф
-в
-е
-л
-и
-ч
-н
-а
-л
-і
-т
-о
-і
-к
-р а
-с
-и
-в
-а
-п
-я а
-к
-т
-у
-а
-л ь
-н
-а
-ч
-с
-м
-2.	 Добери до прикметників іменники та запиши їх через риску.
-221.	 1.	 Склади з перших букв прикметників із попередньої вправи 
-слово. Пригадай, що ти знаєш про Софіївку. 
-2.	 Зіскануй QR-код та переглянь відео.
-Старанно виводить диво-
-ви
-```
-
-**Grade 3, vashulenko** — Сторінка 132:
-```
-132
-Навчаюся розпізнавати форми прикметника  
-за іменником, з яким він зв’язаний, питанням, 
-закінченням
-Веснянагалявинапорослабарвистимиквітами.
+35
+Книжки треба шанувати. Не можна 
+їх бруднити, рвати. Пошкоджені книжки 
+слід полагодити.
 Прочитай і розкажи 
 у класі.
 Я — учителька
 Я — учитель
-Форми прикметника можна роз-
-пізнати за іменником, з яким він 
-зв’язаний; за питанням і закін­
-ченням.
-Утворіть речення і запишіть. Підкресліть 
-прикметники. Як ви їх розрізняєте?
-6   Прочитай вірш Михайла Стельмаха, 
-розкриваючи дужки. Запиши вірш. 
-Визнач число і рід прикметників.
-Що допомагає 
+Якщо речення вимовляють з особ­
+ливим почуттям, із підсилювальною 
+інтонацією, то вони стають оклич-
+ними. У кінці окличних речень став-
+лять знак оклику.
+2   Прочитай текст. Визнач, які це речення 
+за метою висловлювання.
+	 	
+3   Розгляньте малюнки. Складіть за одним із них невеликий 
+текст, використовуючи окличні речення. Прочитайте його 
+з потріб
+```
 
+**Grade 3, ponomarova** — Сторінка 127:
+```
+127
+ÐÎÇÐ²ÇÍßÞ ÐÎÇÏÎÂ²ÄÍ², 
+ÐÎÇÐ²ÇÍßÞ ÐÎÇÏÎÂ²ÄÍ², 
+ÏÈÒÀËÜÍ² ² ÑÏÎÍÓÊÀËÜÍ² 
+ÏÈÒÀËÜÍ² ² ÑÏÎÍÓÊÀËÜÍ² 
+ÐÅ×ÅÍÍß, ÎÊËÈ×Í² É ÍÅÎÊËÈ×Í² 
+ÐÅ×ÅÍÍß, ÎÊËÈ×Í² É ÍÅÎÊËÈ×Í² 
+1. Прочитай речення. Визнач, яке з них є розповідним,
+яке — питальним, а яке — спонукальним. Перевір себе 
+за правилом.
+1. Яке місто відвідали друзі?
+2. Друзі милувалися Полтавою. 
+3. Дізнайтеся, що цікавого є в Полтаві.
+Речення, 
+у 
+якому 
+про 
+щось 
+розповідається 
+(повідомляється),  називається  розповідним. 
+Речення, у якому про щось за
+```
+
+**Grade 3, kravtsova** — Сторінка 20:
+```
+20
+52.	
+1.	 «Перестрибуючи» через кружечок, прочитай слово. 
+Яке слово залишилося ще прочитати?
+2.	 Досліди значення розшифрованих слів.
+Крок 1. Як ти гадаєш, слова рано і пізно близькі 
+чи протилежні за значенням?
+Крок 2. Для чого, на твою думку, потрібні проти-
+лежні за значенням слова?  
+Крок 3. Зроби висновок та зістав його з правилом.
+Пари слів, які мають протилежне значення, називають анто-
+німами. Антоніми допомагають увиразнити нашу мову.
+АНТОНІМИ
+54.	
+1.	 Користуючись алфавітом, прочита
+```
+
+**Grade 3, kravtsova** — Сторінка 45:
+```
+45
+3.	 Уяви, що ти — директор / директорка фірми «Стильний одяг». 
+Розкажи, як створити рекламу цієї фірми.
+2.	 Дослідиѳ, які префікси пишуть у виділених словах.
+Крок 1. Прочитай виділені слова. 
+Крок 2. Назвиѳ префікси в словах. Який кінцевий приголосний 
+мають префікси?
+Крок 3. Зроби висновок, яку букву пишуть у кінці префіксів 
+ро?-, бе?-, зістав із правилом.
+У префіксах роз-, без- завжди пишуть букву з.
+126.	 1.	 Прочитай слова. Утвори за допомогою префіксів роз- або без- 
+нові слова та запи
+```
+
+**Grade 3, kravtsova** — Сторінка 64:
+```
+64
+180.	 1. Прочитай початок казки.
+У країні Мови жив король Іменник. Інколи він полюбляв 
+поділяти слова на групи. Тоді він вигукував:   
+— Він мій! Вона моя! Воно моє!
+Крок 1. Назвиѳ предмети, зображені на малюнку.
+2.	 Виконай завдання на вибір.
+	 Випиши іменники в однині, познач закінчення. 
+	 Випиши назви тварин. Зміни їх за числами. Познач закінчення.
+Зразок. Вовк   — вовки.
+РІД ІМЕННИКІВ
+2.	 Дослідиѳ, на які групи Іменник поділяв слова.
+Крок 2. Запиши наѳзви зображених предметів у потрібни
 ```
 
 ### Which Activity Types to Use

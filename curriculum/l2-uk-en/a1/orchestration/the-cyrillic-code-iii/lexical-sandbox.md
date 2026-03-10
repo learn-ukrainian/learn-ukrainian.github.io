@@ -75,10 +75,13 @@
 - **коли** (Adverb)
 - **чому** (Adverb)
 
-### Verified Example Sentences (from textbooks)
+### ⚠️ Level-Wide Grammar Rules (A1)
 
-- Хи м к а (сміючись). Ну, тепер уже піде баталія.
-  *Source: unknown*
+Even though forms are listed above, the A1 audit enforces these rules on your **prose**:
+- **DATIVE CASE FORBIDDEN**: Do NOT use мені, тобі, йому, їй, нам, вам, їм or -ові/-еві dative noun endings in your text
+- **INSTRUMENTAL CASE FORBIDDEN**: Do NOT use з + instrumental (мною, тобою, ним, нею) or за/під/над + instrumental
+- **Max 10 words per Ukrainian sentence**, max 1 clause
+- **No subordinate clauses** (який, що, коли, бо, щоб as conjunctions)
 
 ### Usage Rules
 

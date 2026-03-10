@@ -1,55 +1,53 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1531",
+    "COMPUTED_WORD_COUNT": "1716",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "127.6",
+    "COMPUTED_WORD_PERCENT": "143.0",
     "COMPUTED_ACTIVITY_COUNT": "8",
-    "COMPUTED_VOCAB_COUNT": "12",
-    "COMPUTED_ENGAGEMENT_COUNT": "4",
-    "COMPUTED_IMMERSION_PERCENT": "35.1",
-    "COMPUTED_IMMERSION_TARGET": "35-55%",
-    "COMPUTED_RICHNESS_SCORE": "60",
+    "COMPUTED_VOCAB_COUNT": "26",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "30.3",
+    "COMPUTED_IMMERSION_TARGET": "30-55%",
+    "COMPUTED_RICHNESS_SCORE": "49",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 0/3, dialogues: 0/4, realworld: 2/3, proverbs: 0/1",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, dialogues: 0/4, realworld: 1/3, proverbs: 0/1, tables: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [],
+  "deterministic_issues": [
+    {
+      "type": "PLAN_SECTION_MISSING",
+      "severity": "HIGH",
+      "location": "(plan vs content)",
+      "text": "Missing 5 plan section(s): Наказовий спосіб (Imperative mood), Вісім обов'язкових дієслів (Eight required verbs), Ввічливе прохання (Polite requests), Заборони (Prohibitions), Практика (Practice)",
+      "fix": "Add content for the missing plan sections or update section headings to match plan."
+    }
+  ],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/imperative-and-requests.md\nSaving log to: curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/imperative-and-requests.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M47 — Imperative and Requests\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/imperative-and-requests.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz, true-false\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Наказовий спосіб (Imperative Mood)                  383 /  300  ✅ (+83)\n     Вісім обов'язкових дієслів (Eight Required Verbs)   432 /  350  ✅ (+82)\n     Ввічливе прохання (Polite Requests)                 230 /  250  ✅ (-20)\n     Заборони (Prohibitions)                             244 /  150  ✅ (+94)\n     Практика і підсумок (Summary and Practice)          487 /  150  ✅ (+337)\n     ──────────────────────────────────────────────────────────────────────────\n     TOTAL                                              1776 / 1200  ✅ (+576)\n  📋 Found YAML activities file (8 activities)\n  > Match the infinitive to its informal command: 8 items (min 8)\n  > Choose the Correct Form: 8 items (min 8)\n  > Complete the Sentences: 8 items (min 8)\n  > True or False?: 8 items (min 8)\n  > Sort into Informal vs Formal: 12 items (min 6)\n  > Negative Commands Quiz: 8 items (min 8)\n  > Polite Requests: 8 items (min 8)\n  > Complete the Negative Commands: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1531/1200 (raw: 2486)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 5/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ✅ 12/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 35.1% (target 35-55% (M47))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/imperative-and-requests.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: imperative-and-requests.md\n  VESUM misses: 7 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 38908.20it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  WARNING: RAG query failed: <_InactiveRpcError of RPC that terminated with:\n\tstatus = StatusCode.DEADLINE_EXCEEDED\n\tdetails = \"Deadline Exceeded\"\n\tdebug_error_string = \"UNKNOWN:Error received from peer  {grpc_status:4, grpc_message:\"Deadline Exceeded\"}\"\n>\n  Words: 187 | VESUM: 180 (96.3%) | RAG: 3 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 180/187 (96%) verified\n⚠️ VESUM not found (7): Анна, дайти, йте, Марія, Маріє, Олег, Іван",
-  "h2_sections": "1. Наказовий спосіб (Imperative Mood)\n2. Вісім обов'язкових дієслів (Eight Required Verbs)\n3. Ввічливе прохання (Polite Requests)\n4. Заборони (Prohibitions)\n5. Практика і підсумок (Summary and Practice)",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/imperative-and-requests.md\nSaving log to: curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/imperative-and-requests.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M47 — Imperative and Requests\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/imperative-and-requests.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up, quiz, true-false\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Наказовий спосіб             286 /  300  ✅ (-14)\n     Вісім обов'язкових дієслів   295 /  300  ✅ (-5)\n     Ввічливе прохання            245 /  250  ✅ (-5)\n     Заборони                     253 /  175  ✅ (+78)\n     Практика                     360 /  175  ✅ (+185)\n     ───────────────────────────────────────────────────\n     TOTAL                       1439 / 1200  ✅ (+239)\n  📋 Found YAML activities file (8 activities)\n  > Match infinitive to correct imperative form: 12 items (min 8)\n  > Choose correct imperative form in context: 10 items (min 8)\n  > Complete dialogue with correct imperative: 8 items (min 8)\n  > Evaluate imperative usage correctness: 8 items (min 8)\n  > Sort the commands into Informal (ти) and Formal/Plural (ви): 10 items (min 6)\n  > Put the words in order to form polite requests: 8 items (min 6)\n  > Match the command to its English translation: 8 items (min 8)\n  > True or False: Verb stem rules: 8 items (min 8)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1716/1200 (raw: 1755)\nActivities   ✅ 8/8\nDensity      ✅ All > 6\nUnique_types ✅ 6/4 types\nPriority     ✅ Priority types used\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ✅ 26/1\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ℹ️ N/A (standard module)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ℹ️ Quality validation N/A (A1/A2)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 30.3% (target 30-55% (M47))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/imperative-and-requests.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: imperative-and-requests.md\n  VESUM misses: 3 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 172132.86it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 121 | VESUM: 118 (97.5%) | RAG: 0 | Not found: 3\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 118/121 (98%) verified\n⚠️ VESUM not found (3): взяйте, и, стояй",
+  "h2_sections": "1. Наказовий спосіб\n2. Вісім обов'язкових дієслів\n3. Ввічливе прохання\n4. Заборони\n5. Практика",
   "vesum_stats": {
-    "total": 187,
-    "vesum_hits": 180,
+    "total": 121,
+    "vesum_hits": 118,
     "rag_hits": 0,
-    "not_found": 7,
+    "not_found": 3,
     "rag_errors": 0,
     "by_source": {
-      "activities": {
-        "total": 45,
-        "vesum_hits": 44,
-        "not_found": 1
-      },
       "prose": {
-        "total": 142,
-        "vesum_hits": 136,
-        "not_found": 6
+        "total": 78,
+        "vesum_hits": 78,
+        "not_found": 0
+      },
+      "activities": {
+        "total": 43,
+        "vesum_hits": 40,
+        "not_found": 3
       }
     }
   },
   "vesum_not_found": [
     {
-      "original": "Анна",
-      "clean": "анна",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "дайти",
-      "clean": "дайти",
+      "original": "взяйте",
+      "clean": "взяйте",
       "source": "activities",
       "vesum": false,
       "textbook": false,
@@ -58,9 +56,9 @@
       "status": "❌"
     },
     {
-      "original": "йте",
-      "clean": "йте",
-      "source": "prose",
+      "original": "и",
+      "clean": "и",
+      "source": "activities",
       "vesum": false,
       "textbook": false,
       "literary": false,
@@ -68,39 +66,9 @@
       "status": "❌"
     },
     {
-      "original": "Марія",
-      "clean": "марія",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "Маріє",
-      "clean": "маріє",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "Олег",
-      "clean": "олег",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "Іван",
-      "clean": "іван",
-      "source": "prose",
+      "original": "стояй",
+      "clean": "стояй",
+      "source": "activities",
       "vesum": false,
       "textbook": false,
       "literary": false,
@@ -108,5 +76,5 @@
       "status": "❌"
     }
   ],
-  "content_hash": "f2cd2405f7987858"
+  "content_hash": "b00d605e63484df2"
 }

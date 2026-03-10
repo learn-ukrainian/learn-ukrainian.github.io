@@ -16,6 +16,37 @@ This document describes all scripts and workflows for module creation, validatio
 
 ---
 
+## Claude Code Hooks
+
+Session hooks live in `claude_extensions/hooks/` (deployed to `.claude/hooks/` via `npm run claude:deploy`).
+
+### `session-setup.sh` (SessionStart hook)
+
+Runs on every session start — both new and resumed. Validates environment and reports project state.
+
+| # | Check | Severity | Details |
+|---|-------|----------|---------|
+| 1 | Python venv | ISSUE | `.venv/bin/python` exists and is 3.12.x |
+| 2 | Env vars | ISSUE | `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS` is set |
+| 3 | Message broker | INFO | SQLite DB for Gemini comms exists |
+| 4 | Stale builds | INFO | `state-v3.json` files with `in_progress` older than 24h |
+| 5 | Active builds | INFO | Count of `in_progress` module builds |
+| 6 | Memory budget | ISSUE/INFO | `MEMORY.md` line count vs 150/200 limits |
+| 7 | Deploy drift | ISSUE | Diffs `claude_extensions/` vs `.claude/` — catches forgotten deploys |
+| 8 | MCP RAG health | ISSUE | Pings `127.0.0.1:8766` — warns if RAG tools unavailable |
+| 9 | gemini-cli | INFO | Verifies `gemini` command exists and auth is working |
+| 10 | Open GH issues | INFO | Lists up to 5 open issues for proactive hygiene |
+
+### `enforce-venv.sh` (PreToolUse → Bash)
+
+Intercepts bare `python3`/`python` commands and rewrites them to `.venv/bin/python`. Prevents accidental system Python usage.
+
+### `check-gemini-inbox.sh` (UserPromptSubmit)
+
+Polls the SQLite message broker for unread Gemini messages. Surfaces inter-agent replies as `additionalContext`. Skips during pipeline runs (`GEMINI_SESSION=1` or `LEARN_UKRAINIAN_PIPELINE=1`).
+
+---
+
 ## Module Creation Pipeline
 
 The complete module creation and validation pipeline:

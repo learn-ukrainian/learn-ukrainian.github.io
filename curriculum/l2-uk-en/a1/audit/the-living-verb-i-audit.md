@@ -1,7 +1,7 @@
 # Audit Report: M15 — the-living-verb-i.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 15:17:26
+**Generated:** 2026-03-09 21:49:56
 
 ## Configuration
 **Type:** A1-grammar
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.7% (target 25-40% (M15))
+- **Immersion:** 🇺🇦 28.7% (target 25-45% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

@@ -1,7 +1,7 @@
 # Audit Report: M25 — the-accusative-i-things.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-07 15:17:27
+**Generated:** 2026-03-09 21:49:57
 
 ## Configuration
 **Type:** A1-grammar
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.0% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 39.0% (target 30-55% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

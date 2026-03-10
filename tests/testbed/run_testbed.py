@@ -5,7 +5,9 @@ Usage:
     %(prog)s build                    # Build all testbed modules (sandbox → mdx)
     %(prog)s build --restart-from content  # Rebuild from content phase
     %(prog)s audit                    # Audit only (no builds, no reviews)
+    %(prog)s review                   # Run content-review + prompt-review (Claude API)
     %(prog)s full                     # Build + audit + compare to baseline
+    %(prog)s full --review            # Build + audit + review + compare
     %(prog)s report                   # Show latest results vs baseline
     %(prog)s baseline                 # Save current results as the baseline
 
@@ -191,6 +193,43 @@ def audit_module(mod: dict) -> dict:
     }
 
 
+def review_module(mod: dict) -> dict:
+    """Run content-review and prompt-review on a module via Claude skills.
+
+    Returns dict with review results. Requires ``claude`` CLI to be installed.
+    Reviews are expensive (Claude API calls) — always opt-in.
+    """
+    track, slug = mod["track"], mod["slug"]
+    results: dict = {"content_review": None, "prompt_review": None}
+
+    for kind, skill in [("content_review", "content-review"), ("prompt_review", "prompt-review")]:
+        skill_arg = f"/{skill} {track} {slug}"
+        cmd = ["claude", "-p", skill_arg, "--allowedTools", ""]
+        print(f"  REVIEW ({skill}): {track} {slug} ...", end="", flush=True)
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=300, cwd=str(ROOT_DIR),
+            )
+            ok = proc.returncode == 0
+            print(f" {'OK' if ok else 'FAIL'}", flush=True)
+            if not ok and proc.stderr:
+                print(f"    stderr: {proc.stderr[:200]}", flush=True)
+        except FileNotFoundError:
+            print(" SKIP (claude CLI not found)", flush=True)
+            continue
+        except subprocess.TimeoutExpired:
+            print(" TIMEOUT (300s)", flush=True)
+            continue
+
+        # Re-parse the review file that the skill just wrote
+        if kind == "content_review":
+            results[kind] = parse_content_review(track, slug)
+        else:
+            results[kind] = parse_prompt_review(track, slug)
+
+    return results
+
+
 def grade_module(audit_result: dict) -> str:
     """Assign A/B/C/F grade based on audit results.
 
@@ -220,6 +259,27 @@ def grade_module(audit_result: dict) -> str:
         return "A"  # Rich content, reasonable fix count
     else:
         return "B"  # Passed but content is close to minimum
+
+
+def combined_grade(audit_grade: str, review_grade: str | None) -> str:
+    """Produce combined grade from audit grade and content review grade.
+
+    Takes the worst of audit and review grades. If no review exists,
+    returns the audit grade unchanged.
+    """
+    if not review_grade or review_grade == "?":
+        return audit_grade
+
+    # Normalize review grade: strip +/- for comparison
+    review_base = review_grade.rstrip("+-")
+    order = {"A": 0, "B": 1, "C": 2, "F": 3, "N/A": 4}
+    audit_rank = order.get(audit_grade, 4)
+    review_rank = order.get(review_base, 4)
+
+    # Worst-of: higher rank number = worse grade
+    if review_rank > audit_rank:
+        return review_base
+    return audit_grade
 
 
 def parse_content_review(track: str, slug: str) -> dict | None:
@@ -331,11 +391,11 @@ def save_baseline(results: list[dict]):
 def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
     """Print summary table."""
 
-    print(f"\n{'='*90}")
+    print(f"\n{'='*98}")
     print(f"  TESTBED RESULTS — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print(f"{'='*90}")
-    print(f"{'#':>3} {'Track':>5} {'Slug':<34} {'Audit':>5} {'Review':>6} {'Nat':>3} {'Fix':>3} {'SA':>2} {'Words':>9} {'Delta':>6}")
-    print(f"{'-'*3:>3} {'-'*5:>5} {'-'*34:<34} {'-'*5:>5} {'-'*6:>6} {'-'*3:>3} {'-'*3:>3} {'-'*2:>2} {'-'*9:>9} {'-'*6:>6}")
+    print(f"{'='*98}")
+    print(f"{'#':>3} {'Track':>5} {'Slug':<34} {'Audit':>5} {'Review':>6} {'Comb':>4} {'Nat':>3} {'Fix':>3} {'SA':>2} {'Words':>9} {'Delta':>6}")
+    print(f"{'-'*3:>3} {'-'*5:>5} {'-'*34:<34} {'-'*5:>5} {'-'*6:>6} {'-'*4:>4} {'-'*3:>3} {'-'*3:>3} {'-'*2:>2} {'-'*9:>9} {'-'*6:>6}")
 
     a_count = 0
     total = 0
@@ -362,11 +422,12 @@ def print_report(results: list[dict], baseline: dict[str, dict] | None = None):
         cr = r.get("content_review")
         review_str = cr["grade"] if cr else "-"
 
+        comb = r.get("combined_grade", grade)
         words_str = f"{r.get('words', 0)}/{r.get('word_target', 0)}"
         sa_str = "Y" if r.get("self_audited") else "-"
         nat_str = str(r.get("nat_score", "-")) if r.get("nat_score") is not None else "-"
         slug_short = r['slug'][:34]
-        print(f"{r['num']:>3} {r['track']:>5} {slug_short:<34} {grade:>5} {review_str:>6} {nat_str:>3} {r.get('fix_attempts', 0):>3} {sa_str:>2} {words_str:>9} {delta:>6}")
+        print(f"{r['num']:>3} {r['track']:>5} {slug_short:<34} {grade:>5} {review_str:>6} {comb:>4} {nat_str:>3} {r.get('fix_attempts', 0):>3} {sa_str:>2} {words_str:>9} {delta:>6}")
 
         if grade == "A":
             a_count += 1
@@ -421,6 +482,9 @@ def cmd_audit(args):
     for mod in modules:
         r = audit_module(mod)
         r["grade"] = grade_module(r)
+        cr = r.get("content_review")
+        review_grade = cr["grade"] if cr else None
+        r["combined_grade"] = combined_grade(r["grade"], review_grade)
         results.append(r)
 
     run_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
@@ -432,10 +496,41 @@ def cmd_audit(args):
     return results
 
 
+def cmd_review(args):
+    """Run content-review + prompt-review on testbed modules."""
+    modules = load_config(track_filter=getattr(args, "track", None))
+    print(f"\nReviewing {len(modules)} module(s) (this uses Claude API calls)...\n")
+
+    for mod in modules:
+        review_result = review_module(mod)
+        cr = review_result.get("content_review")
+        pr = review_result.get("prompt_review")
+        cr_grade = cr["grade"] if cr else "—"
+        pr_health = pr["health"] if pr else "—"
+        print(f"  {mod['track']} M{mod['num']} {mod['slug']}: "
+              f"content={cr_grade} prompt={pr_health}")
+
+
 def cmd_full(args):
-    """Build + audit + report."""
+    """Build + audit + [review] + report."""
     cmd_build(args)
     results = cmd_audit(args)
+
+    # Optional review phase
+    if getattr(args, "review", False):
+        modules = load_config(track_filter=getattr(args, "track", None))
+        print(f"\nRunning reviews ({len(modules)} modules)...\n")
+        for i, mod in enumerate(modules):
+            review_result = review_module(mod)
+            # Update the audit result with fresh review data
+            results[i]["content_review"] = review_result.get("content_review")
+            results[i]["prompt_review"] = review_result.get("prompt_review")
+
+    # Compute combined grades
+    for r in results:
+        cr = r.get("content_review")
+        review_grade = cr["grade"] if cr else None
+        r["combined_grade"] = combined_grade(r.get("grade", "N/A"), review_grade)
 
     # Regression check
     baseline = load_baseline()
@@ -534,10 +629,16 @@ def main():
     p_audit.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
     p_audit.set_defaults(func=cmd_audit)
 
+    # review
+    p_review = sub.add_parser("review", help="Run content-review + prompt-review (Claude API)")
+    p_review.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
+    p_review.set_defaults(func=cmd_review)
+
     # full
     p_full = sub.add_parser("full", help="Build + audit + compare")
     p_full.add_argument("--restart-from", help="Restart from phase")
     p_full.add_argument("--full", action="store_true", help="Full rebuild from research")
+    p_full.add_argument("--review", action="store_true", help="Include reviews after build+audit (expensive)")
     p_full.add_argument("--track", help="Filter by track (e.g., a1, a2, b1)")
     p_full.set_defaults(func=cmd_full)
 

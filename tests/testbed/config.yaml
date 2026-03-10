@@ -1,0 +1,38 @@
+# Testbed configuration — frozen module sets for regression testing
+# Issue: #754, #810
+
+# Model versions at baseline time (2026-03-09)
+gemini_model: "gemini-3-flash-preview"
+review_model: "claude-opus-4-6"
+
+# Core track modules (A1-C2): PPP/TTT pedagogy, grammar-focused
+core_modules:
+  # A1: constraint progression (phonology → verbs → cases → imperatives)
+  - {track: a1, num: 3, slug: the-cyrillic-code-iii, why: "Early phonology, decodability, no verbs/cases"}
+  - {track: a1, num: 7, slug: the-gender-code, why: "Pre-verb, nominative-only, gender teaching"}
+  - {track: a1, num: 14, slug: checkpoint-first-contact, why: "TTT checkpoint pedagogy — review/synthesis"}
+  - {track: a1, num: 15, slug: the-living-verb-i, why: "First verbs, present-only constraint"}
+  - {track: a1, num: 25, slug: the-accusative-i-things, why: "First oblique case — constraint boundary"}
+  - {track: a1, num: 47, slug: imperative-and-requests, why: "Imperatives unlocked — constraint release"}
+  # A2: expanding grammar
+  - {track: a2, num: 13, slug: checkpoint-cases, why: "TTT checkpoint, case system review"}
+  - {track: a2, num: 15, slug: the-completed-past, why: "Past tense, aspect pairs"}
+  # B1: aspect mastery
+  - {track: b1, num: 10, slug: aspect-past-result-process, why: "Full grammar, aspect mastery"}
+  - {track: b1, num: 17, slug: checkpoint-aspect-mastery, why: "TTT checkpoint, complex synthesis"}
+  # B2: register and advanced grammar
+  - {track: b2, num: 10, slug: checkpoint-passive-voice, why: "Register awareness, advanced grammar"}
+  - {track: b2, num: 30, slug: register-literary-ukrainian, why: "Stylistic register, literary analysis"}
+  # C1: highest complexity
+  - {track: c1, num: 5, slug: logical-connectors, why: "Highest complexity core content"}
+  # C2: academic register, 5000-word target
+  - {track: c2, num: 1, slug: c1-bridge-assessment, why: "C2 entry, bridge assessment, 5000-word target"}
+
+# Seminar track modules (HIST/BIO/LIT/ISTORIO): CBI pedagogy, content-focused
+# Different templates, 5000-word targets, Rule 10a, decolonization checks
+# Treated separately — different grading criteria apply
+seminar_modules:
+  - {track: hist, num: 5, slug: slavic-tribes, why: "Foundational history, early period"}
+  - {track: bio, num: 39, slug: taras-shevchenko, why: "Core biography, high cultural significance"}
+  - {track: lit, num: 2, slug: eneida-part-1, why: "Literary analysis, foundational text"}
+  - {track: istorio, num: 1, slug: shcho-take-istorio, why: "Historiography intro, meta-analysis"}

@@ -109,6 +109,7 @@ Use at least **4 DIFFERENT** callout types across the module:
 - `[!quote]` — literary/cultural quote
 - `[!myth-buster]` — debunk misconception
 - `[!culture]` or `[!history-bite]` — cultural hook
+- `[!folk-wisdom]` — загадка, скоромовка, прислів'я, or приказка from folk material
 - `[!fact]` — interesting linguistic/cultural fact
 - `[!decolonization]` — decolonial perspective on language
 
@@ -130,9 +131,19 @@ The {SUMMARY_HEADING} section MUST include 4-6 self-assessment questions:
 ### Rule 7: Cultural Anchoring
 
 Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
+- Folk micro-genres from `{FOLK_MATERIAL}` below (загадки, скоромовки, прислів'я, приказки, лічилки) — use 1-2 as `[!folk-wisdom]` engagement boxes
 - Прислів'я (proverbs) that illustrate the grammar point
 - Literary quotes (Шевченко, Леся Українка, Франко, Стус, Костенко)
 - Real-world Ukrainian contexts (news, social media, academic discourse)
+
+**Folk engagement box format** (ALWAYS include English translation at A1-A2):
+```markdown
+> [!folk-wisdom]
+> **Українська приказка (Ukrainian Saying)**
+> «Гостре словечко ранить сердечко.» — *A sharp word wounds the heart.*
+```
+
+{FOLK_MATERIAL}
 
 ### Rule 8: Anti-Robotic Writing
 

@@ -32,6 +32,16 @@ Keep both tables visible as you write. Every activity and vocab item must serve 
 
 > **Every Ukrainian word in your activities MUST come from the word bank above.** Using words outside this list causes VESUM validation failures and triggers fix loops. If you need a word that isn't listed, use English instead.
 
+## Folk Material (optional — use for culturally rich activities)
+
+{FOLK_MATERIAL}
+
+If folk material is available above, create 1-2 activities that incorporate it:
+- **Загадки** → `quiz` (riddle as question, answer choices) or `fill-in` (complete the riddle)
+- **Скоромовки** → `unjumble` (reorder words) or `mark-the-words` (identify repeated sounds)
+- **Прислів'я/Приказки** → `match-up` (match halves) or `cloze` (fill missing word)
+- **Лічилки** → `unjumble` (put lines in order)
+
 ## Module Sequence Constraints (HARD FAIL if violated)
 
 {PEDAGOGICAL_CONSTRAINTS}

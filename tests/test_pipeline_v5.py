@@ -811,3 +811,32 @@ class TestPrefetchTextbookForResearch:
 
         assert "Textbook Excerpts" in result
         assert "Заболотний Grade 5" in result
+
+
+class TestCitationDensityRegex:
+    """Verify the citation density regex patterns used in phase_content."""
+
+    def test_adapted_from_comment(self):
+        import re
+        content = (
+            "Some text\n"
+            "<!-- adapted from: Заболотний Grade 5, вправа 221 -->\n"
+            "More text\n"
+            "<!-- adapted from: Вашуленко Grade 2 -->\n"
+        )
+        citations = re.findall(r'<!--\s*adapted from:', content)
+        assert len(citations) == 2
+
+    def test_original_comment(self):
+        import re
+        content = "<!-- original: no matching textbook exercise found -->\n"
+        originals = re.findall(r'<!--\s*original:', content)
+        assert len(originals) == 1
+
+    def test_no_citations(self):
+        import re
+        content = "Just plain content with no HTML comments.\n"
+        citations = re.findall(r'<!--\s*adapted from:', content)
+        originals = re.findall(r'<!--\s*original:', content)
+        assert len(citations) == 0
+        assert len(originals) == 0

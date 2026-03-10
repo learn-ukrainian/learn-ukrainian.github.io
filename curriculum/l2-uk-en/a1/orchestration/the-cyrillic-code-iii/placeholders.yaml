@@ -18,10 +18,22 @@ SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
 PERSONA_ROLE: Typography Artist
-IMMERSION_RULE: 'TARGET: 10-25% Ukrainian, 75-90% English. ALL explanatory prose in
-  English. Grammar explained in English. Ukrainian in examples and short phrases only
-  — always with English translations. Callout text in English. Ukrainian sentences
-  max 10 words.'
+IMMERSION_RULE: 'TARGET: 10-25% Ukrainian.
+
+  LANGUAGE ROLES:
+
+  - THEORY & EXPLANATION: 100% English.
+
+  - UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга**
+  (book) is feminine."
+
+  - TABLES: Vocabulary tables, letter groups, simple word families.
+
+  - STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline
+  bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted
+  example lists with English gloss.
+
+  Ukrainian sentences max 10 words.'
 LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10 words\
   \ per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence\
   \ (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам,\
@@ -138,6 +150,38 @@ TEXTBOOK_EXAMPLES: "## Textbook Reference Examples (from real Ukrainian букв
   \ . . . . . 47\nҐ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 48\nҐ\
   \ ґ . . . . . . . . . . . . . . . . . . . . . . . . . . . 49\nЕ е  . . . . . .\n\
   ```"
+TEXTBOOK_ACTIVITY_EXAMPLES: "### Real Textbook Exercises (вправи) — Pedagogical Inspiration\n\
+  \nThese are real exercises from Ukrainian school textbooks (grade 1/2). Study their\
+  \ **pedagogical patterns** — how they build progressively, use familiar vocabulary,\
+  \ and test specific skills. Since your students are English-speaking adults, **translate\
+  \ exercise instructions to English** while keeping Ukrainian content words. Adapt\
+  \ the pedagogical approach (progressive difficulty, real-world context) but not\
+  \ the language of instruction.\n\n**Grade 1, zaharijchuk** — Сторінка 73:\n```\n\
+  71\n\t\nВідшукай предмети, у назвах яких є буква ї, \nзвуки [йа], звук [дз].\nВийди,\
+  \ вийди, ... ,\nНа дідове ... ,\nНа бабине ... ,\nНа наше ... ,\nНа весняні ...\
+  \ ,\nНа маленькі ... .\nполечко\nзіллячко\n квіточки\nсонечко\nподвір’ячко\n діточки\n\
+  \t\nЗнайди «загублений» склад у словах — на-\nзвах намальованих предметів. \n\t\n\
+  Прочитай слова в рамках. Розмісти їх у по-\nтрібних місцях у закличці. Прочитай\
+  \ її. \n__ -мін-го\t\nфук-,\t\nфла-,\t\nфут-\n__ -ре-ло\t\nдзе-,\t\nджи-,\t\nдже-\n\
+  лі- __ -на\t\n-ши-,\t\n-щи-,\t\n-чи-\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 11:\n```\n9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t\
+  \ Що «зайве»? Поділи слова на склади. Визнач \nнаголошений склад.\n        \n  \
+  \      \n        \n\t Який у тебе сьогодні настрій? Вибери.\n```\n\n**Grade 1, zaharijchuk**\
+  \ — Сторінка 30:\n```\n28\nВшниі, шаркептик, шмкруаа, \nшшпииан, аачкш.\n\t\n«Збери»\
+  \ слова — назви намальованих пред-\nметів. Поділи на склади слово, у якому дві\
+  \ \nбукви ш (усно).\nБачу Ш, ш (ша). Чую [ш].\nш и н ш и\nш и ш к\nк о м и ш\nи\n\
+  а\nл\nа\nо\nу\nи\nі\nШ\nша\nшо\nшу\nши\nші\nа\nо\nу\nи\nі\nаш\nош\nуш\nиш\nіш\n\
+  Ш\nша-                  \nшо-                       шпа-                   \nши\n\
+  шка\nна\nшу\nм\nміти\nше\nлест\nрех\n [  –  •–  |  –•|  –•] \n [  –  •|  –  •– ]\
+  \ \nШ ш\nPidruchnyk.com.ua\n```\n\n**Grade 1, zaharijchuk** — Сторінка 24:\n```\n\
+  22\n\t Утвори слова — нáзви предметів.\nХ\n\t\nЩо тобі відомо про персонажів казки\
+  \ «Ко-\nтигорошко»?  Роз­кажи.\n\t\nПрочитай склади. Знайди слова із цими \nскладами.\n\
+  \t\nРозділи речення на слова, прочитай при­\nслів’я. У при­слі­в’ї є 4, 5 чи 6 слів?\
+  \ Вибери \nправильну відповідь.\n\t\nЗимабезснігу — літобезхліба.\n\t\nЯкі букви\
+  \ нагадують ці предмети?\nхвилина\nмухомор\nгоріхи\nгорох\nхви-\n-хо-\n-рох\n-хи\n\
+  Pidruchnyk.com.ua\n```"
+TEXTBOOK_GRADE: 1-2
+TOPIC_KEYWORDS: ''
 CHECKPOINT_GUIDANCE: ''
 EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
 
@@ -160,6 +204,7 @@ EXACT_SECTION_TITLES: '## REQUIRED H2 Sections (use EXACT titles)
 INTRO_HOOK: Why does this matter?
 SUMMARY_HEADING: Summary
 SELF_CHECK_HEADING: 'Check yourself:'
+TIER_EXEMPLAR: ''
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -397,11 +442,11 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
   | A1.3 | 60-80% | Scaffolded transition |
 
-  | A2 M01-20 | 50-60% | Core grammar — English for theory |
+  | A2 M01-20 | 45-65% | Core grammar — English for theory |
 
-  | A2 M21-50 | 60-75% | Applied grammar — English only for abstract concepts |
+  | A2 M21-50 | 55-75% | Applied grammar — English only for abstract concepts |
 
-  | A2 M51-70 | 75-90% | Consolidation — near-full Ukrainian |
+  | A2 M51-70 | 70-90% | Consolidation — near-full Ukrainian |
 
 
   ### Language Quality (Beginner Adaptation)
@@ -1108,6 +1153,26 @@ SELF_AUDIT_SNIPPET: '## Self-Audit (Run BEFORE Final Output)
 
   '
 LEXICAL_SANDBOX: ''
+FOLK_MATERIAL: "## \U0001F3AD Available Folk Material (USE in engagement boxes and\
+  \ activities)\n\nThe following folk micro-genres are available for this module's\
+  \ theme. Use 1-2 items as `[!folk-wisdom]` engagement boxes in content, and incorporate\
+  \ into activities (quiz, match-up, fill-in, cloze).\n\n**How to use in content:**\n\
+  ```markdown\n> [!folk-wisdom]\n> **Народна загадка**\n> «Сидить баба серед літа\
+  \ у сто сорочок одіта.» — Що це? (Капуста!)\n```\n\n**How to use in activities:**\
+  \ Create quiz items where learners match riddles to answers, fill in missing words\
+  \ in proverbs, or unscramble tongue twisters.\n### \U0001F4DC Прислів'я (Proverbs)\n\
+  - «Вік живи́ — вік учи́сь.»\n  *(джерело: Савченко, 3 клас)*\n- «Хто бага́то чита́є,\
+  \ той бі́льше зна́є.»\n  *(джерело: Савченко, 3 клас)*\n\n### \U0001F4AC Приказки\
+  \ (Sayings)\n- «Здоро́в'я — найдорожчи́й скарб.»\n  *(джерело: Вашуленко, 3 клас)*\n\
+  - «Без ді́ла псу́ється си́ла.»\n  *(джерело: Вашуленко, 3 клас)*\n\n### \U0001F522\
+  \ Лічилки (Counting Rhymes)\n- «Коти́лася то́рба з висо́кого горба́. А в тій то́рбі\
+  \ хліб, паляни́ця. Кому́ доведе́ться, той бу́де жму́ритися.»\n  *(джерело: Вашуленко,\
+  \ 2 клас)*\n- «Тіка́в за́єць че́рез міст, до́вгі ву́ха, ку́ций хвіст. А ти да́лі\
+  \ не тіка́й, рахува́ти почина́й: раз, два, три — вибира́єш ти!»\n  *(джерело: Вашуленко,\
+  \ 2 клас)*\n\n### \U0001F91D Мирилки (Making-Up Rhymes)\n- «Подиви́ся про́сто в\
+  \ о́чі — я свари́тися не хо́чу. Я обра́зити не хоті́в, ненаро́ком зачепи́в.»\n \
+  \ *(джерело: Вашуленко, 2 клас)*\n- «Про́сто в о́чі подиви́сь і зі мно́ю помири́сь.»\n\
+  \  *(джерело: Вашуленко, 2 клас)*\n"
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '8'
 ACTIVITY_MAX: '15'
@@ -1117,7 +1182,13 @@ FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, trans
   essay-response, critical-analysis, comparative-study, authorial-intent
 ALLOWED_ACTIVITY_TYPES: quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort,
   watch-and-repeat, classify, image-to-letter
-REQUIRED_TYPES: ''
+REQUIRED_TYPES: '{''type'': ''watch-and-repeat'', ''focus'': "Watch Anna''s video
+  for each of the 9 new letters", ''items'': 9}, {''type'': ''classify'', ''focus'':
+  ''Sort new letters into голосні vs приголосні'', ''items'': 9}, {''type'': ''classify'',
+  ''focus'': ''Sort consonants into дзвінкі (voiced) vs глухі (voiceless)'', ''items'':
+  12}, {''type'': ''image-to-letter'', ''focus'': ''See emoji — which letter? (🍌🏠🕷️🦓⛰️🍞🪲🧢🐢)'',
+  ''items'': 9}, {''type'': ''match-up'', ''focus'': ''Match voiced consonant to its
+  voiceless partner'', ''items'': 6}'
 PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz, true-false, classify,
   image-to-letter, watch-and-repeat
 ITEM_MINIMUMS_TABLE: '| Type | Minimum |

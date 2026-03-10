@@ -1,72 +1,77 @@
+activity_hints:
+- focus: Sort letters into vowels vs consonants
+  items: 12
+  type: group-sort
+- focus: Letter identification and sound matching
+  items: 20
+  type: quiz
+- focus: Letter-sound pairs including digraphs
+  items: 15
+  type: match-up
+content_outline:
+- points:
+  - 'Quick review: read 3 words from Code I-II (молоко, кіт, місто) as warm-up.'
+  - This module adds 9 consonants. After this module you know 23 letters — nearly
+    all common Ukrainian text becomes readable.
+  - 'Key concept: voiced/voiceless consonant pairs — Ukrainian consonants come in
+    matched pairs where one vibrates the throat (voiced) and the other doesn''t (voiceless).'
+  slug: s
+  title: Вступ — Introduction
+  words: 150
+- points:
+  - 'Б — key word: банан. Video link. Voiced partner of П. Additional: брат, будинок.'
+  - 'Д — key word: дім. Video link. Д looks unfamiliar but sounds simple — like English
+    ''d''. Additional: добре, друг, день.'
+  - 'П — key word: павук. Video link. Voiceless partner of Б. Critical: П (sounds
+    like p) vs Р (sounds like r, learned in Code II). This distinction is essential.'
+  - 'Drill: П vs Р minimal pairs — палка (stick) vs ракета (rocket).'
+  slug: s
+  title: Приголосні — Consonants Б, Д, П
+  words: 200
+- points:
+  - 'З — key word: зебра. Video link. Voiced partner of С (from Code I). Sounds like
+    English ''z''.'
+  - 'Г — key word: гора. Video link. Г is a soft throaty sound (voiced glottal fricative).
+    NOT a hard ''g'' like English ''go''. Preview: the hard ''g'' sound in Ukrainian
+    is Ґ, coming in Code IV.'
+  - 'Х — key word: хліб. Video link. Voiceless partner of Г. Like German ''ch'' in
+    ''ach'' or Scottish ''loch''. No English equivalent — explicit articulatory instruction
+    needed.'
+  slug: s
+  title: Приголосні — Consonants З, Г, Х
+  words: 250
+- points:
+  - 'Explain the concept: place your hand on your throat. Voiced (дзвінкий) = throat
+    vibrates. Voiceless (глухий) = only air.'
+  - 'Ж — key word: жук. Video link. Voiced sibilant. No English equivalent — like
+    ''zh'' in ''measure''. Lips rounded, tongue raised.'
+  - 'Ш — key word: шапка. Video link. Voiceless partner of Ж. Like English ''sh''
+    in ''ship''. Hard articulation — tongue pulled back.'
+  - 'Ч — key word: черепаха. Video link. An affricate — like English ''ch'' in ''church''.
+    Very frequent.'
+  - 'Pair summary: Б↔П, Д↔Т, Г↔Х (throat), Ж↔Ш (sibilant), З↔С (hissing), В↔Ф (Code
+    IV).'
+  slug: s
+  title: Дзвінкі та глухі — Voiced and Voiceless Pairs
+  words: 300
+- points:
+  - 'Words using all 23 letters: хліб, парк, школа, будинок, газета, пошта, шапка,
+    чай (preview — Ч just learned).'
+  - 'Voiced/voiceless pair drills: зуб (з-voiced) vs суп (с-voiceless), жар (ж-voiced)
+    vs шар (ш-voiceless).'
+  - 'Urban vocabulary: банк, парк, транспорт — internationalism-heavy for confidence.'
+  slug: s
+  title: Практика читання — Reading Practice
+  words: 250
+- points:
+  - 'Progress: 23 of 33 letters learned (6 голосні + 17 приголосні). Nearly all common
+    text is readable.'
+  - 'Key concept mastered: voiced/voiceless pairs.'
+  - 'Next module: The Cyrillic Code IV completes the alphabet with 10 remaining characters
+    (Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ) plus digraphs (ДЖ, ДЗ) and the apostrophe.'
+  slug: s
+  title: Підсумок — Summary
+  words: 100
 slug: the-cyrillic-code-iii
 title: The Cyrillic Code III
 word_target: 1200
-content_outline:
-- title: Вступ — Introduction
-  slug: vstup-introduction
-  words: 150
-  points:
-  - 'Welcome and warm-up: read 3 familiar words from Code I & II (молоко, кіт, місто)
-    to build confidence.'
-  - 'Module objective: Introduce 9 new consonants (Б, Д, П, З, Г, Х, Ж, Ш, Ч) unlocking
-    23 letters total.'
-  - Briefly introduce the key concept of 'дзвінкі та глухі' (voiced and voiceless)
-    pairs with English scaffolding.
-- title: Приголосні — Consonants Б, Д, П
-  slug: consonants-b-d-p
-  words: 250
-  points:
-  - Introduce Б (/b/, банан, будинок) and Д (/d/, дім). Note that Ukrainian Д is dental.
-  - Introduce П (/p/, павук). Emphasize that Ukrainian П is unaspirated (no puff of
-    air).
-  - 'Visual Trap Alert: Explicitly contrast the new letter П (/p/, looks like a platform)
-    with the previously learned Р (/r/) using minimal pairs (палка vs ракета).'
-- title: Приголосні — Consonants З, Г, Х
-  slug: consonants-z-g-kh
-  words: 250
-  points:
-  - Introduce З (/z/, зебра, зуб) as the voiced partner to the already known С.
-  - Introduce Г (/ɦ/, гора, газета) as a soft, throaty glottal fricative, explicitly
-    NOT a hard English 'g'. Preview that the hard 'g' is coming in Code IV (Ґ).
-  - Introduce Х (/x/, хліб) with articulatory guidance (like Scottish 'loch' or German
-    'ach'). Mention the 'хліб-сіль' tradition.
-- title: Дзвінкі та глухі — Voiced and Voiceless Pairs
-  slug: voiced-voiceless-pairs
-  words: 250
-  points:
-  - 'Interactive physical test: Instruct learners to place a hand on their throat
-    to feel the vibration for voiced sounds.'
-  - 'Introduce the remaining sibilants and affricate: Ж (жук), Ш (шапка), Ч (черепаха).'
-  - 'Summarize and map the voiced/voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ж↔Ш, З↔С.'
-- title: Практика читання — Reading Practice
-  slug: reading-practice
-  words: 200
-  points:
-  - 'Reading drills using internationalisms to build immediate confidence: банк, парк,
-    транспорт.'
-  - 'Voiced/voiceless minimal pair discrimination drills: зуб vs суп, жар vs шар.'
-  - 'Read practical everyday vocabulary using the 23 known letters: школа, пошта,
-    чай.'
-- title: Підсумок — Summary
-  slug: pidsumok-summary
-  words: 100
-  points:
-  - 'Congratulate the learner: 23 out of 33 letters are now unlocked, making most
-    common text readable.'
-  - 'Self-check question 1: Can you feel the difference in your throat between Б and
-    П?'
-  - 'Self-check question 2: What is the visual difference between the letters П and
-    Р?'
-  - 'Self-check question 3: How do you pronounce Г vs Х?'
-  - 'Preview: Code IV will cover the final 10 letters and special symbols to complete
-    the alphabet.'
-activity_hints:
-- type: group-sort
-  focus: Sort letters into vowels vs consonants
-  items: 12
-- type: quiz
-  focus: Letter identification and sound matching
-  items: 20
-- type: match-up
-  focus: Letter-sound pairs including digraphs
-  items: 15

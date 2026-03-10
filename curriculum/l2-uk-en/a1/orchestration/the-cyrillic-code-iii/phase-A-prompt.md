@@ -42,20 +42,129 @@ METALANGUAGE: English-first, Ukrainian in parentheses
 
 ---
 
+## Textbook Context
+
+## Textbook Excerpts (from real Ukrainian school textbooks)
+
+Use these as authoritative reference for your research. Note how textbooks teach this topic: what exercises they use, what cultural examples they include, what common errors they address.
+
+****:
+```
+Пригадую знання про звуки і букви . . . . . . . . . . . . . . . . . . . . . . . . . . .4
+Спостерігаю за значенням слів  . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+Досліджую будову слова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+Дізнаюся більше про іменники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+Досліджую прикметники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92
+Розпізнаю числівники  . . . . . . . . . . . 
+```
+
+****:
+```
+151
+	 	
+3   Прочитайте розповідь третьокласника 
+про відвідування цирку.  
+  Випишіть дієслова за абеткою. Визначте їхній час. Доведіть свою думку. 
+У неділю ми ходили до цирку. Ми по-
+трапили в казкову країну, де відбувалися 
+справжні дива. Бурхливі оплески викли-
+кали трюки майстерних акробатів. Глядачі із захопленням ди-
+вилися шоу спритних жонглерів і дотепних клоунів. Особливо 
+сподобалися дорослим і дітям фокусники, ілюзіоністи. Мене 
+вразили гарні костюми й декорації, захопливе світлове
+```
+
+****:
+```
+25
+68.
+1.	 Прочитай.
+Половина населення земної кулі харчується 
+рисом. Жоден обід не обходиться без хліба. Науці 
+стало відомо, що найдавніший хліб був із жолудів. 
+Рис — болотяна рослина. У хлібі є всі речовини, 
+необхідні для життя людини. Багато відкриттів 
+і знахідок було зроблено для отримання сучасного 
+хліба. З рису отримують крупи, борошно, крохмаль. 
+2.	 Виконай завдання на вибір.
+	 Спиши речення про рис. Знайди форми слова рис та познач у 
+них закінчення.
+	 Спиши речення про хліб. Знай
+```
+
+****:
+```
+147
+Досліджую роль дієслів у реченнях і текстах
+	 	
+4   Прочитайте. Чому квітень називають 
+місяцем хліборобів?
+Квітень — місяць хліборобів. Перед-
+бачати, якою буде весна, — важливо для 
+хлібороба. Адже від цього залежатиме час проведення весняних 
+польових робіт. З’явилися підсніжники — пора орати. Зацвіла 
+осика — сій моркву, черемха — час висаджувати картоплю. 
+Розпускається листя на березі — треба сіяти овес. До появи 
+листя на дубі не варто сіяти пшеницю. Коли трава вже добре 
+підросте, н
+```
+
+****:
+```
+46
+3. Прочитай, 
+що 
+найбільше 
+сподобалося 
+Ґаджикові 
+в  Чернівцях.  Спиши  останнє  речення, вставивши  про-
+пущені  закінчення  в  словах.
+Ґаджика вразила краса і велич Чернівецького 
+університету. Зовні це суворі кам’яні стіни, струн-
+кі вежі. На дахах черепиця з кольоровим орнамен-
+том. Усередині споруди розкішні зали, оздоблені
+кольоровим мармур.., китайським шовк.., велики-
+ми дзеркал.., коштовним паркет.. .
+4. Поєднай слово парк з поданими словами. Запиши
+утворені  сполучення  слів. За 
+```
+
+****:
+```
+144
+3. Знайди в тексті про музей води твердження, доведення і 
+висновок. Спиши доведення. Підкресли дієслова.
+4. Разом із сусідом/сусідкою по парті розгляньте світлини. 
+Поміркуйте, на якій зображено океанаріум, а на якій —
+аквапарк. Щоб не помилитись, прочитайте у словнику
+значення цих слів.
+ÑËÎÂÍÈÊ
+ÑËÎÂÍÈÊ
+АКВАПАРК — розважальний комплекс із 
+басейнами, фонтанами, гірками на воді.
+ОКЕАНАРІУМ — музей живої морської 
+природи.
+5. За однією світлиною із завдання 4 склади і запиши текст-
+міркування
+```
+
+---
+
 ## PART 1: Research
 
 Research **The Cyrillic Code III** for the **A1** track.
 
-Beginner research is focused and practical — no literary analysis, no decolonization framing.
+Beginner research is focused and practical — no literary analysis, no decolonization framing. **Use the textbook excerpts above** as your primary reference for how this topic is taught.
 
 ### What to research:
 
 1. **State Standard**: Briefly check `docs/l2-uk-en/state-standard-2024-mapping.yaml` for the relevant A1 entry. Quote the §reference if one exists. If no mapping applies (e.g., letter-introduction modules), write "No specific § — foundational literacy prerequisite."
-2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 3 rows.
-3. **Common errors**: 2-3 mistakes English speakers make with this topic (numbered list)
-4. **Cultural hook**: 1-2 verified cultural facts or fun connections (numbered list, keep it simple)
+2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 5 rows.
+3. **Common errors**: 3-4 mistakes English speakers make with this topic (numbered list). Reference textbook exercises above — what errors do the exercises target?
+4. **Cultural hooks**: 2-3 verified cultural connections (загадки, скоромовки, proverbs, songs, folk sayings, real-life situations from Ukrainian daily life). Look at the textbook excerpts for examples. Keep it concrete — a specific riddle or saying is better than a vague "Ukrainians value politeness."
 5. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
-6. **Notes**: Any observations useful for the content writer
+6. **Teaching strategy**: How should this concept be introduced to a learner? Describe a concrete discovery exercise — a scenario, dialogue, or set of examples that lets the learner notice the pattern BEFORE you explain the rule. What real-life context makes this grammar point feel natural (classroom, café, market, directions)? What contrastive pairs would help disambiguation? **Cite specific textbook exercises from the excerpts above as models.**
+7. **Notes**: Any observations useful for the content writer
 
 ### What NOT to research:
 
@@ -97,15 +206,23 @@ Alignment: {how this module addresses the standard}
 | ...  | ...   | ...              |
 
 ## Cultural Hooks
-1. {Verified fact — keep simple and age-appropriate}
+1. {Verified fact or загадка/скоромовка/saying — concrete and specific}
+2. {Another hook — different type from #1}
+3. {Optional third hook}
 
 ## Common Learner Errors
 1. {Error pattern} → {Correct form} — {Why it happens}
-2. ...
+2. {Another error}
+3. {Third error — reference textbook exercise if possible}
 
 ## Cross-References
 - Builds on: {module slugs or "first module"}
 - Prepares for: {module slugs}
+
+## Teaching Strategy
+- **Discovery exercise**: {Concrete scenario/dialogue that introduces the pattern before explaining the rule}
+- **Best context**: {Real-life situation where this grammar appears naturally}
+- **Contrastive pairs**: {Examples that highlight the key distinction learners need to grasp}
 
 ## Notes for Content Writing
 - {Any observations for the content writer}
