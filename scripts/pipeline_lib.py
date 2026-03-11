@@ -496,7 +496,7 @@ def get_pedagogical_constraints(track: str, module_num: int) -> str:
 # Decodable vocabulary for early A1 (VESUM-verified, charset-validated)
 # ---------------------------------------------------------------------------
 
-# Charsets must match rule_engine._DECODABILITY_SPECS
+# Decodable charsets for early A1 modules (M1-M3)
 _DECODABLE_CHARSETS: dict[int, str] = {
     1: "АаОоУуМмЛлНнСс",
     2: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
@@ -546,11 +546,20 @@ def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
         words = _charset_filter(_DECODABLE_WORDS.get(module_num, []), charset)
     elif module_num == 3:
         # Use plan's vocabulary_hints filtered by the 23-letter charset
-        vocab_hints = plan.get("vocabulary_hints", [])
+        raw_hints = plan.get("vocabulary_hints", [])
+        # Flatten {required: [...], recommended: [...]} format
+        if isinstance(raw_hints, dict):
+            vocab_hints = list(raw_hints.get("required", []))
+            vocab_hints.extend(raw_hints.get("recommended", []))
+        else:
+            vocab_hints = raw_hints
         hint_words = []
         for hint in vocab_hints:
             if isinstance(hint, str):
-                hint_words.append(hint.strip())
+                # Extract Ukrainian word from "слово (word) — description" format
+                word = hint.split("(")[0].strip().split("—")[0].strip()
+                if word:
+                    hint_words.append(word)
             elif isinstance(hint, dict):
                 w = hint.get("word", hint.get("uk", ""))
                 if w:
@@ -2284,6 +2293,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "TOPIC_TITLE": ctx.topic_title,
         "MODULE_NUM": str(ctx.module_num),
         "PLAN_PATH": str(ctx.paths["plan"]),
+        "PLAN_CONTENT": ctx.paths["plan"].read_text(encoding="utf-8") if ctx.paths["plan"].exists() else "",
         "META_PATH": str(ctx.paths["meta"]),
         "CONTENT_PATH": str(ctx.paths["md"]),
         "ACTIVITIES_PATH": str(ctx.paths["activities"]),
@@ -2291,6 +2301,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "RESEARCH_PATH": str(ctx.paths["research"]),
         "REVIEW_PATH": str(ctx.paths["review"]),
         "QUICK_REF_PATH": str(quick_ref_path) if quick_ref_path else "",
+        "QUICK_REF_CONTENT": quick_ref_path.read_text(encoding="utf-8") if quick_ref_path and quick_ref_path.exists() else "",
         "SCHEMA_PATH": f"schemas/activities-{ctx.track}.schema.json",
         "WORD_TARGET": str(ctx.word_target),
         "WORD_CEILING": str(int(ctx.word_target * 1.5)),
@@ -2400,25 +2411,28 @@ def write_placeholders(ctx: ModuleContext) -> None:
     # Pronunciation videos from plan (alphabet modules)
     pv = ctx.plan.get("pronunciation_videos")
     if pv and isinstance(pv, dict):
+        credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
         letters = pv.get("letters", {})
+        overview = pv.get("overview")
+        playlist = pv.get("playlist")
+
+        pv_lines = ["### Pronunciation Videos (from plan — MANDATORY embeds)"]
+        pv_lines.append(f"*Credit: {credit}*\n")
+        if overview:
+            pv_lines.append(f"- **Overview**: [{credit} — Overview]({overview})")
+        if playlist:
+            pv_lines.append(f"- **Full Playlist**: [{credit} — Playlist]({playlist})")
         if letters:
-            credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
-            pv_lines = ["### Per-Letter Pronunciation Videos (from plan — MANDATORY embeds)"]
-            pv_lines.append(f"*Credit: {credit}*\n")
-            overview = pv.get("overview")
-            if overview:
-                pv_lines.append(f"- **Overview**: [{credit} — Overview]({overview})")
-            playlist = pv.get("playlist")
-            if playlist:
-                pv_lines.append(f"- **Full Playlist**: {playlist} (link only, do not embed)")
             pv_lines.append("")
             pv_lines.append("**Each letter below MUST get its video embedded "
-                            "in the corresponding H3 section. Use this EXACT markdown link format:**\n")
+                            "in the corresponding H3 section:**\n")
             for letter, url in letters.items():
                 pv_lines.append(f"- **Літера {letter}**: [{credit} — {letter}]({url})")
-            placeholders["PRONUNCIATION_VIDEOS"] = "\n".join(pv_lines)
-        else:
-            placeholders["PRONUNCIATION_VIDEOS"] = ""
+        elif overview:
+            pv_lines.append("")
+            pv_lines.append("**Embed the overview video in the introduction section "
+                            "and reference the playlist for students who want per-letter videos.**")
+        placeholders["PRONUNCIATION_VIDEOS"] = "\n".join(pv_lines)
     else:
         placeholders["PRONUNCIATION_VIDEOS"] = ""
 
@@ -2461,6 +2475,15 @@ def write_placeholders(ctx: ModuleContext) -> None:
             # Use first 3 priority types as required minimum variety
             priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
             placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
+
+    # Early A1 alphabet modules require bukvar activity types
+    if ctx.track.lower() == "a1" and ctx.module_num <= 4:
+        bukvar_types = ["watch-and-repeat", "classify", "image-to-letter"]
+        existing = [t.strip() for t in placeholders.get("REQUIRED_TYPES", "").split(",") if t.strip()]
+        for bt in bukvar_types:
+            if bt not in existing:
+                existing.append(bt)
+        placeholders["REQUIRED_TYPES"] = ", ".join(existing)
 
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
     placeholders_path.write_text(

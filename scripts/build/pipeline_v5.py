@@ -4,8 +4,9 @@
 Phase implementations + state management + all phase-specific helpers.
 Imported by build_module_v5.py.
 
-Pipeline: research → discover → content → activities → validate → [review] → mdx
+Pipeline: research (+ discover) → content → activities → validate → [review] → mdx
 (Sandbox phase removed in #820 — VESUM post-validation replaces it.)
+(Discover merged into research — phase_discover() is a passthrough.)
 
 State file: state.json (plain phase keys, mode: "v5").
 """
@@ -321,7 +322,7 @@ def _dispatch_claude_phase(
         "C vocab": ("===VOCABULARY_START===", "===VOCABULARY_END==="),
         "C":       ("===ACTIVITIES_START===", "===ACTIVITIES_END==="),
         "B":       ("===CONTENT_START===", "===CONTENT_END==="),
-        "A":       ("===META_OUTLINE_START===", "===META_OUTLINE_END==="),
+        "A":       ("===RESEARCH_START===", "===RESEARCH_END==="),
     }
     expected_start, expected_end = "===REVIEW_START===", "===REVIEW_END==="
     for key in ("D.2", "D.1", "C vocab", "C", "B", "A"):
@@ -1013,6 +1014,96 @@ def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
             f.write("\n".join(lines) + "\n")
     except Exception as e:
         log(f"  discover: failed to append to research: {e}")
+
+
+def _run_discovery_within_research(ctx: ModuleContext, state: dict) -> None:
+    """Run discovery search within the research phase (non-blocking).
+
+    Extracts the core logic from phase_discover() so that discovery runs
+    as part of research instead of a separate phase.
+    """
+    if getattr(ctx, "skip_discover", False):
+        log("  research/discover: SKIP (--skip-discover)")
+        mark_complete(state, "discover", ctx, skipped=True,
+                      note="merged-into-research")
+        return
+    if ctx.dry_run:
+        log("  research/discover: SKIP (dry-run)")
+        return
+
+    try:
+        from video_discovery import (
+            build_discovery_keywords,
+            build_search_keywords,
+            run_discovery,
+            search_blogs,
+            search_rag,
+            write_discovery_yaml,
+        )
+
+        keywords = build_discovery_keywords(ctx.plan)
+        if not keywords:
+            vocab_hints = ctx.plan.get("vocabulary_hints", {})
+            keywords = build_search_keywords(ctx.topic_title, vocab_hints)
+
+        log(f"  research/discover: searching (keywords: {keywords[:4]}...)")
+
+        result = run_discovery(
+            topic=ctx.topic_title,
+            keywords=keywords,
+            outline=ctx.content_outline,
+            vocab=keywords[1:],
+            dispatch_fn=pipeline_lib.dispatch_gemini_raw,
+            track=ctx.track,
+        )
+
+        slug = ctx.slug if hasattr(ctx, "slug") else ""
+        level = getattr(ctx, "level", "") or ctx.plan.get("level", "")
+        blogs = search_blogs(
+            module_slug=slug,
+            level=level,
+            topic_title=ctx.topic_title,
+            keywords=keywords,
+        )
+        result.blogs = blogs
+
+        rag_results = search_rag(
+            keywords=keywords,
+            track=ctx.track,
+            level=level,
+            limit_images=0,
+        )
+        result.rag_chunks = rag_results.get("text_chunks", [])
+        result.rag_images = rag_results.get("images", [])
+        result.rag_literary = rag_results.get("literary", [])
+
+        discovery_dir = ctx.paths["md"].parent / "discovery"
+        discovery_dir.mkdir(parents=True, exist_ok=True)
+        discovery_path = discovery_dir / f"{ctx.slug}.yaml"
+        write_discovery_yaml(result, discovery_path)
+
+        orch_discovery = ctx.orch_dir / "discovery.yaml"
+        write_discovery_yaml(result, orch_discovery)
+
+        _update_external_resources(ctx, result)
+
+        relevant = [v for v in result.videos if v.relevance_score >= 0.5]
+        n_rag = len(result.rag_chunks) + len(result.rag_images) + len(result.rag_literary)
+        log(f"  research/discover: {len(result.videos)} videos ({len(relevant)} relevant), "
+            f"{len(result.blogs)} blogs, {n_rag} RAG items")
+        if result.error:
+            log(f"  research/discover: WARNING: {result.error}")
+        elif result.warning:
+            log(f"  research/discover: WARNING: {result.warning}")
+
+        _append_discovery_to_research(ctx, result)
+
+        mark_complete(state, "discover", ctx, note="merged-into-research")
+
+    except Exception as e:
+        log(f"  research/discover: WARNING — discovery failed (non-blocking): {e}")
+        mark_complete(state, "discover", ctx, note="merged-into-research-failed",
+                      error=str(e))
 
 
 # ============================================================================
@@ -1719,7 +1810,12 @@ def _dispatch_research(ctx: ModuleContext, prompt_file: Path,
         return _dispatch_claude_phase(
             prompt_file, "Phase A", model=claude_model,
             timeout=600,
-            allow_tools=["WebSearch", "WebFetch", "Read"],
+            allow_tools=[
+                "WebSearch", "WebFetch", "Read",
+                "mcp__rag__search_text", "mcp__rag__verify_word",
+                "mcp__rag__verify_lemma", "mcp__rag__search_images",
+                "mcp__rag__search_literary", "mcp__rag__query_wikipedia",
+            ],
         )
 
     log(f"  research: Dispatching {template_name}...")
@@ -1766,8 +1862,8 @@ def _apply_meta_outline(ctx: ModuleContext, raw_output: str,
 
     meta_text = _extract_delimiter(raw_output, "===META_OUTLINE_START===", "===META_OUTLINE_END===")
     if not meta_text:
-        log("  research: FAILED \u2014 no META_OUTLINE delimiters in output")
-        return False
+        log("  research: No META_OUTLINE \u2014 plan content_outline is source of truth")
+        return True
 
     meta_text_clean = re.sub(r'^```(?:ya?ml)?\s*\n', '', meta_text.strip())
     meta_text_clean = re.sub(r'\n```\s*$', '', meta_text_clean)
@@ -1856,6 +1952,9 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
         mark_failed(state, "research", ctx)
         return False
 
+    # Run discovery within research (merged — non-blocking)
+    _run_discovery_within_research(ctx, state)
+
     mark_complete(state, "research", ctx,
                   task_id=f"v5-{ctx.slug}-pA",
                   mode="meta-only" if research_exists else "full")
@@ -1863,7 +1962,7 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase: discover
+# Phase: discover (passthrough — merged into research)
 # ---------------------------------------------------------------------------
 
 def _update_external_resources(ctx: ModuleContext, result: Any) -> None:
@@ -1927,91 +2026,16 @@ def _update_external_resources(ctx: ModuleContext, result: Any) -> None:
         log(f"  discover: WARNING — failed to update external_resources.yaml: {e}")
 
 def phase_discover(ctx: ModuleContext, state: dict) -> bool:
-    """Discover: video/blog/RAG search. Always returns True (non-blocking).
+    """Discover: passthrough (merged into research phase).
 
-    Results are written to:
-    - discovery/{slug}.yaml (pipeline state, used by review phase for RAG context)
-    - external_resources.yaml (single source of truth for MDX rendering)
+    Discovery now runs at the end of phase_research(). This function exists
+    only for backwards compatibility with --restart-from discover.
     """
     if is_complete(state, "discover"):
         log("  discover: SKIP (already complete)")
         return True
-    if getattr(ctx, "skip_discover", False):
-        log("  discover: SKIP (--skip-discover)")
-        mark_complete(state, "discover", ctx, skipped=True)
-        return True
-    if ctx.dry_run:
-        log("  discover: SKIP (dry-run)")
-        return True
-
-    from video_discovery import (
-        build_discovery_keywords,
-        build_search_keywords,
-        run_discovery,
-        search_blogs,
-        search_rag,
-        write_discovery_yaml,
-    )
-
-    keywords = build_discovery_keywords(ctx.plan)
-    if not keywords:
-        vocab_hints = ctx.plan.get("vocabulary_hints", {})
-        keywords = build_search_keywords(ctx.topic_title, vocab_hints)
-
-    log(f"  discover: searching (keywords: {keywords[:4]}...)")
-
-    result = run_discovery(
-        topic=ctx.topic_title,
-        keywords=keywords,
-        outline=ctx.content_outline,
-        vocab=keywords[1:],
-        dispatch_fn=pipeline_lib.dispatch_gemini_raw,
-        track=ctx.track,
-    )
-
-    slug = ctx.slug if hasattr(ctx, "slug") else ""
-    level = getattr(ctx, "level", "") or ctx.plan.get("level", "")
-    blogs = search_blogs(
-        module_slug=slug,
-        level=level,
-        topic_title=ctx.topic_title,
-        keywords=keywords,
-    )
-    result.blogs = blogs
-
-    rag_results = search_rag(
-        keywords=keywords,
-        track=ctx.track,
-        level=level,
-        limit_images=0,
-    )
-    result.rag_chunks = rag_results.get("text_chunks", [])
-    result.rag_images = rag_results.get("images", [])
-    result.rag_literary = rag_results.get("literary", [])
-
-    discovery_dir = ctx.paths["md"].parent / "discovery"
-    discovery_dir.mkdir(parents=True, exist_ok=True)
-    discovery_path = discovery_dir / f"{ctx.slug}.yaml"
-    write_discovery_yaml(result, discovery_path)
-
-    orch_discovery = ctx.orch_dir / "discovery.yaml"
-    write_discovery_yaml(result, orch_discovery)
-
-    # Write blog/podcast results to external_resources.yaml (single source of truth for MDX)
-    _update_external_resources(ctx, result)
-
-    relevant = [v for v in result.videos if v.relevance_score >= 0.5]
-    n_rag = len(result.rag_chunks) + len(result.rag_images) + len(result.rag_literary)
-    log(f"  discover: {len(result.videos)} videos ({len(relevant)} relevant), "
-        f"{len(result.blogs)} blogs, {n_rag} RAG items")
-    if result.error:
-        log(f"  discover: WARNING: {result.error}")
-    elif result.warning:
-        log(f"  discover: WARNING: {result.warning}")
-
-    _append_discovery_to_research(ctx, result)
-
-    mark_complete(state, "discover", ctx)
+    log("  discover: SKIP (merged into research phase)")
+    mark_complete(state, "discover", ctx, note="merged-into-research")
     return True
 
 
