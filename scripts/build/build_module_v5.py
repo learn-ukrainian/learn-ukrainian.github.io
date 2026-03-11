@@ -34,6 +34,8 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 # Import v5 pipeline
 from batch_gemini_config import (
+    CLAUDE_DEFAULT_PHASES,
+    CLAUDE_DEFAULT_REVIEW,
     CURRICULUM_DIR,
     PRO_TRACKS,
     SEMINAR_TRACKS,
@@ -79,7 +81,12 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # Review flags
     ctx.review = getattr(args, "review", False) or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
     ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
-    ctx.review_agent = "claude" if getattr(args, "review_claude", False) else "gemini"  # type: ignore[attr-defined]
+    # Review agent: --review-claude forces Claude, --review uses config default.
+    # CLAUDE_DEFAULT_REVIEW from batch_gemini_config is the source of truth.
+    if getattr(args, "review_claude", False):
+        ctx.review_agent = "claude"  # type: ignore[attr-defined]
+    else:
+        ctx.review_agent = CLAUDE_DEFAULT_REVIEW  # type: ignore[attr-defined]
 
     # --stop-before
     sb = getattr(args, "stop_before", None)
@@ -101,8 +108,12 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     ctx.force_phase = getattr(args, "force_phase", None)  # type: ignore[attr-defined]
 
     # --use-claude: set of phase IDs to dispatch via Claude
+    # Falls back to CLAUDE_DEFAULT_PHASES from batch_gemini_config when not specified.
     use_claude_str = getattr(args, "use_claude", "") or ""
-    ctx.use_claude = set(use_claude_str.replace(",", " ").upper().split()) if use_claude_str else set()  # type: ignore[attr-defined]
+    if use_claude_str:
+        ctx.use_claude = set(use_claude_str.replace(",", " ").upper().split())  # type: ignore[attr-defined]
+    else:
+        ctx.use_claude = set(CLAUDE_DEFAULT_PHASES)  # type: ignore[attr-defined]
 
     # Per-phase Claude model
     _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS

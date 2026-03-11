@@ -43,6 +43,16 @@ CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS   # Content, seminar tracks
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Activities, seminar tracks
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Final review, all tracks
 
+# Default phases dispatched via Claude (instead of Gemini).
+# Set of phase letters: "A" = research, "B" = content, "C" = activities.
+# Review is controlled separately via CLAUDE_DEFAULT_REVIEW.
+# CLI --use-claude overrides this when provided.
+CLAUDE_DEFAULT_PHASES: set[str] = {"A"}          # Research via Claude by default
+
+# Default review agent: "claude" or "gemini".
+# CLI --review-claude / --review overrides this.
+CLAUDE_DEFAULT_REVIEW: str = "claude"
+
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
     "bio", "hist", "istorio", "lit", "oes", "ruth",

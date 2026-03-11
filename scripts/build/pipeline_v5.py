@@ -3459,9 +3459,9 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
 
 def phase_review(ctx: ModuleContext, state: dict) -> bool:
     """Route review to Gemini (default) or Claude based on ctx.review_agent."""
-    review_agent = getattr(ctx, "review_agent", "gemini")
+    review_agent = getattr(ctx, "review_agent", "claude")
     if review_agent == "claude":
-        log("  review: Using Claude reviewer (--review-claude)")
+        log("  review: Using Claude reviewer")
         return phase_review_claude(ctx, state)
     else:
         log("  review: Using Gemini RAG-grounded reviewer (--review)")
