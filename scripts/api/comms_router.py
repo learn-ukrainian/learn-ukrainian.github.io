@@ -511,7 +511,7 @@ def _scan_track_progress(track: str) -> dict:
 
 
 def _check_build_processes() -> list[dict]:
-    """Find running build_module.py processes."""
+    """Find running build_module_v5.py (or legacy build_module.py) processes."""
     import subprocess
     try:
         result = subprocess.run(
@@ -524,11 +524,13 @@ def _check_build_processes() -> list[dict]:
                 parts = line.split()
                 pid = int(parts[1])
                 # Extract track from command line
-                track_match = re.search(r"build_module\.py\s+(\S+)", line)
+                track_match = re.search(r"build_module(?:_v5)?\.py\s+(\S+)", line)
                 track = track_match.group(1) if track_match else "unknown"
+                version = "v5" if "build_module_v5" in line else "legacy"
                 procs.append({
                     "pid": pid,
                     "track": track,
+                    "version": version,
                     "cmd": " ".join(parts[10:])[:200],
                 })
         return procs

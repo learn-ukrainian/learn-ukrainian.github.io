@@ -130,8 +130,8 @@ _DIFFUSE_FAILURE_CODES = {
 PHASES = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
 
 PHASE_LABELS: dict[str, str] = {
-    "research":   "Research + Meta",
-    "discover":   "Discover (video + blog search)",
+    "research":   "Research + Discover",
+    "discover":   "Discover (merged into research)",
     "content":    "Content (prose)",
     "activities": "Activities + Vocab",
     "validate":   "Validate (audit + screen + Gemini fix)",

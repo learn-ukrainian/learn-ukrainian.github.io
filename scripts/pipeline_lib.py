@@ -1136,7 +1136,7 @@ class ModuleContext:
     track: str
     module_num: int
     slug: str
-    mode: str  # "full", "content-only", "enrich", "e2e", "v3"
+    mode: str  # "v5" (current) | DEPRECATED: "full", "content-only", "enrich", "e2e", "v3"
 
     # Paths (populated by preflight)
     paths: dict[str, Path] = field(default_factory=dict)
@@ -1313,13 +1313,14 @@ def log(msg: str) -> None:
 # 8. Phase Sequence + Artifact Cleanup
 # ============================================================================
 
+# BACKWARD-COMPAT: v2/v3 numbered phase IDs. Needed for cleaning old module artifacts.
 PHASE_SEQUENCE = [
     "0", "0.5", "1", "2", "3", "4ab", "6", "6b", "5", "7", "8",
 ]
 
 
 def _phase_state_ids(phase_id: str) -> list[str]:
-    """Map v2 phase IDs to state.json phase IDs."""
+    """Map v2 phase IDs to state.json phase IDs. BACKWARD-COMPAT."""
     if phase_id == "4ab":
         return ["3a", "3b"]
     if phase_id == "5":
@@ -1329,6 +1330,7 @@ def _phase_state_ids(phase_id: str) -> list[str]:
     return [phase_id]
 
 
+# BACKWARD-COMPAT: v2/v3 artifact glob patterns. Maps old numbered phases to file patterns.
 PHASE_ARTIFACT_PATTERNS: dict[str, list[str]] = {
     "0":    ["research-*", "phase-0-*"],
     "0.5":  ["discovery*", "phase-0-5-*"],

@@ -153,7 +153,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
 
     return {
         "track": track_id, "num": num, "slug": slug,
-        "pipeline_version": version, "needs_rebuild": version != "v4",
+        "pipeline_version": version, "needs_rebuild": version != "v5",
         "phases": phases,
         "audit": {
             "status": audit["status"], "word_count": audit.get("word_count", 0),

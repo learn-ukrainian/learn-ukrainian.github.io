@@ -73,6 +73,7 @@ def scan_module_phases(orch_dir, version):
         phase_names = V5_PHASE_ORDER
         audit_key = "validate"
     else:
+        # BACKWARD-COMPAT: v3/v4 modules still use old phase naming
         phases = read_v3_state(orch_dir).get("phases", {})
         phase_names = ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]
         audit_key = "v3-audit"
@@ -194,6 +195,7 @@ def _check_build_phase(orch_dir):
         phases = read_v2_state(orch_dir).get("phases", {})
         content_phase = phases.get("content", {})
     else:
+        # BACKWARD-COMPAT: v3/v4 content phase was "v3-B"
         phases = read_v3_state(orch_dir).get("phases", {})
         content_phase = phases.get("v3-B", {})
     if content_phase.get("status") == "complete":
