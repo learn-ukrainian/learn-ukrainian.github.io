@@ -2470,7 +2470,14 @@ def write_placeholders(ctx: ModuleContext) -> None:
     if not placeholders.get("REQUIRED_TYPES"):
         plan_hints = ctx.plan.get("activity_hints", [])
         if plan_hints and isinstance(plan_hints, list):
-            placeholders["REQUIRED_TYPES"] = ", ".join(str(h) for h in plan_hints[:5])
+            # Hints can be strings ("quiz") or dicts ({"type": "quiz", "focus": "..."})
+            hint_types = []
+            for h in plan_hints[:5]:
+                if isinstance(h, dict):
+                    hint_types.append(h.get("type", str(h)))
+                else:
+                    hint_types.append(str(h))
+            placeholders["REQUIRED_TYPES"] = ", ".join(hint_types)
         elif placeholders.get("PRIORITY_TYPES"):
             # Use first 3 priority types as required minimum variety
             priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]

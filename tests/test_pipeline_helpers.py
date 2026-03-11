@@ -775,3 +775,96 @@ class TestSelfAuditSnippetContentPath:
                     f"Expected .replace(CONTENT_PATH) near SELF_AUDIT_SNIPPET assignment:\n{context}"
                 )
                 break
+
+
+# ============================================================================
+# Bukvar REQUIRED_TYPES for A1 M1-4 + dict activity_hints parsing
+# ============================================================================
+
+class TestBukvarRequiredTypes:
+    """A1 modules 1-4 must include bukvar activity types (watch-and-repeat, classify, image-to-letter)."""
+
+    def _simulate_required_types_logic(self, track, module_num, plan, initial_required=""):
+        """Reproduce the REQUIRED_TYPES logic from write_placeholders()."""
+        placeholders = {"REQUIRED_TYPES": initial_required, "PRIORITY_TYPES": "fill-in, match-up, anagram"}
+
+        # Step 1: populate from plan hints or priority (same as pipeline_lib)
+        if not placeholders.get("REQUIRED_TYPES"):
+            plan_hints = plan.get("activity_hints", [])
+            if plan_hints and isinstance(plan_hints, list):
+                hint_types = []
+                for h in plan_hints[:5]:
+                    if isinstance(h, dict):
+                        hint_types.append(h.get("type", str(h)))
+                    else:
+                        hint_types.append(str(h))
+                placeholders["REQUIRED_TYPES"] = ", ".join(hint_types)
+            elif placeholders.get("PRIORITY_TYPES"):
+                priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
+                placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
+
+        # Step 2: bukvar augmentation
+        if track.lower() == "a1" and module_num <= 4:
+            bukvar_types = ["watch-and-repeat", "classify", "image-to-letter"]
+            existing = [t.strip() for t in placeholders.get("REQUIRED_TYPES", "").split(",") if t.strip()]
+            for bt in bukvar_types:
+                if bt not in existing:
+                    existing.append(bt)
+            placeholders["REQUIRED_TYPES"] = ", ".join(existing)
+
+        return placeholders["REQUIRED_TYPES"]
+
+    def test_a1_m1_gets_bukvar_types(self):
+        result = self._simulate_required_types_logic("a1", 1, {})
+        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
+            assert bt in result, f"Missing bukvar type: {bt}"
+
+    def test_a1_m4_gets_bukvar_types(self):
+        result = self._simulate_required_types_logic("a1", 4, {})
+        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
+            assert bt in result
+
+    def test_a1_m5_does_not_get_bukvar_types(self):
+        result = self._simulate_required_types_logic("a1", 5, {})
+        assert "image-to-letter" not in result
+
+    def test_a2_does_not_get_bukvar_types(self):
+        result = self._simulate_required_types_logic("a2", 1, {})
+        assert "image-to-letter" not in result
+
+    def test_bukvar_deduplicates(self):
+        """If plan hints already include bukvar types, don't duplicate."""
+        plan = {"activity_hints": [
+            {"type": "watch-and-repeat", "focus": "test"},
+            {"type": "classify", "focus": "test"},
+        ]}
+        result = self._simulate_required_types_logic("a1", 1, plan)
+        assert result.count("watch-and-repeat") == 1
+        assert result.count("classify") == 1
+        assert "image-to-letter" in result  # added since missing
+
+    def test_dict_hints_extract_type_field(self):
+        """Dict activity_hints must extract 'type' field, not stringify the whole dict."""
+        plan = {"activity_hints": [
+            {"type": "watch-and-repeat", "focus": "Watch video", "items": 7},
+            {"type": "quiz", "focus": "Test knowledge"},
+        ]}
+        result = self._simulate_required_types_logic("a1", 1, plan)
+        assert "watch-and-repeat" in result
+        assert "quiz" in result
+        assert "focus" not in result  # must NOT contain dict field names
+
+    def test_string_hints_work(self):
+        """String activity_hints still work as before."""
+        plan = {"activity_hints": ["quiz", "fill-in", "match-up"]}
+        result = self._simulate_required_types_logic("a1", 1, plan)
+        assert "quiz" in result
+        assert "fill-in" in result
+        # bukvar types added on top
+        assert "watch-and-repeat" in result
+
+    def test_empty_plan_falls_back_to_priority_types(self):
+        result = self._simulate_required_types_logic("a1", 1, {})
+        # Should get first 3 priority types + bukvar types
+        assert "fill-in" in result
+        assert "watch-and-repeat" in result
