@@ -414,94 +414,8 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
 
 
 # ---------------------------------------------------------------------------
-# Decodable vocabulary for early A1 (VESUM-verified, charset-validated)
+# Decodable vocabulary removed in #841 — plan's vocabulary_hints is source of truth.
 # ---------------------------------------------------------------------------
-
-# Decodable charsets for early A1 modules (M1-M3)
-def _build_charset_from_plan(plan: dict) -> str:
-    """Build charset string from plan's decodable_letters field.
-
-    Plan declares e.g. `decodable_letters: "А О У І М Н Т К С Л"`.
-    Returns both upper and lower case variants for charset filtering.
-    If no decodable_letters field, returns empty string (no restriction).
-    """
-    letters_str = plan.get("decodable_letters", "")
-    if not letters_str:
-        return ""
-    letters = [l.strip() for l in letters_str.split() if l.strip()]
-    charset = ""
-    for letter in letters:
-        charset += letter.upper() + letter.lower()
-    return charset
-
-
-def _charset_filter(words: list[str], allowed: str) -> list[str]:
-    """Return only words whose characters are all in the allowed charset."""
-    allowed_set = set(allowed)
-    return [w for w in words if all(c in allowed_set for c in w)]
-
-
-def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
-    """Return decodable word list if the plan declares decodable_letters, else empty.
-
-    Plans that need strict letter-decodability declare:
-        decodable_letters: "А О У І М Н Т К С Л"
-
-    Vocabulary is extracted from the plan's vocabulary_hints and filtered against
-    that charset. Plans without decodable_letters get no restriction.
-    """
-    charset = _build_charset_from_plan(plan)
-    if not charset:
-        return ""
-
-    # Extract vocabulary from plan (source of truth)
-    plan_words = _extract_plan_vocabulary(plan)
-    decodable = _charset_filter(plan_words, charset)
-
-    if not decodable:
-        return ""
-
-    upper_letters = sorted(set(c for c in charset if c.isupper()))
-    letter_list = ", ".join(upper_letters)
-
-    lines = [
-        f"DECODABLE VOCABULARY (only letters: {letter_list}):",
-        "Use ONLY these words in reading drills and prose examples.",
-        "Any word with a letter outside this set will FAIL the decodability audit gate.",
-        "Sight words from the plan are exempt — they are recognized as whole shapes,",
-        "not decoded letter-by-letter. Label them clearly.",
-        "Video pronunciation examples are also exempt (heard, not read).",
-        "",
-        f"Available decodable words: {', '.join(decodable)}",
-        "",
-        "If you need a word not on this list, check that ALL its letters are in the",
-        "allowed set above. Words with unknown letters need English translation.",
-    ]
-    return "\n".join(lines)
-
-
-def _extract_plan_vocabulary(plan: dict) -> list[str]:
-    """Extract Ukrainian words from plan's vocabulary_hints (all categories)."""
-    raw_hints = plan.get("vocabulary_hints", [])
-    if isinstance(raw_hints, dict):
-        all_hints = []
-        for key in ("required", "recommended", "sight_words"):
-            all_hints.extend(raw_hints.get(key, []))
-    else:
-        all_hints = raw_hints
-
-    words = []
-    for hint in all_hints:
-        if isinstance(hint, str):
-            # Extract Ukrainian word from "слово (word) — description" format
-            word = hint.split("(")[0].strip().split("—")[0].strip()
-            if word:
-                words.append(word)
-        elif isinstance(hint, dict):
-            w = hint.get("word", hint.get("uk", ""))
-            if w:
-                words.append(w.strip())
-    return words
 
 
 # ---------------------------------------------------------------------------
@@ -2294,7 +2208,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "IMMERSION_RULE": ctx.immersion_rule,
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
         "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num, ctx.plan),
-        "DECODABLE_VOCABULARY": get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan),
+        "DECODABLE_VOCABULARY": "",  # Decodable system removed (#841) — plan vocabulary_hints is source of truth
         "STRUCTURAL_RULES": get_structural_rules(ctx.track, ctx.module_num),
         "H3_WORD_RANGE": get_h3_word_range(ctx.track, ctx.module_num),
         "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
@@ -2419,16 +2333,25 @@ def build_placeholders(ctx: ModuleContext) -> None:
     else:
         placeholders["PRONUNCIATION_VIDEOS"] = ""
 
-    # Shared rules (injected into tier-specific prompts via placeholders)
-    placeholders["SHARED_CONTENT_RULES"] = _read_phase_file("_shared-content-rules.md")
+    # Shared rules — tier-aware: beginner gets minimal rules, core/seminar get full set
+    tier = _get_prompt_tier(ctx.track, ctx.module_num)
+    # Core and seminar share the same rules (can diverge later by adding a seminar file)
+    rules_tier = "beginner" if tier == "beginner" else "core"
+    _shared_rules_file = f"_shared-content-rules-{rules_tier}.md"
+    placeholders["SHARED_CONTENT_RULES"] = _read_phase_file(_shared_rules_file)
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
-    # Resolve {CONTENT_PATH} inside the snippet so nested placeholders expand correctly.
-    # fill_template does a single pass; snippets included via {SELF_AUDIT_SNIPPET} would
-    # otherwise leave {CONTENT_PATH} unresolved in the final prompt.
-    _self_audit_raw = _read_phase_file("_shared-self-audit.md")
-    placeholders["SELF_AUDIT_SNIPPET"] = _self_audit_raw.replace(
-        "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
-    )
+    # Self-audit: beginner tier skips it (validate phase catches everything);
+    # core/seminar keep the full self-audit snippet.
+    if tier == "beginner":
+        placeholders["SELF_AUDIT_SNIPPET"] = ""
+    else:
+        # Resolve {CONTENT_PATH} inside the snippet so nested placeholders expand correctly.
+        # fill_template does a single pass; snippets included via {SELF_AUDIT_SNIPPET} would
+        # otherwise leave {CONTENT_PATH} unresolved in the final prompt.
+        _self_audit_raw = _read_phase_file("_shared-self-audit.md")
+        placeholders["SELF_AUDIT_SNIPPET"] = _self_audit_raw.replace(
+            "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
+        )
 
     # Lexical Sandbox removed in #820 — VESUM post-validation replaces it.
     # Placeholder kept as empty string so existing templates don't break.
@@ -2752,6 +2675,23 @@ def _prefetch_sources_for_phase_B(ctx: ModuleContext) -> str:
     return "\n\n".join(results[:8])  # Cap at 8 excerpts
 
 
+def _clean_textbook_text(text: str) -> str:
+    """Strip OCR artifacts from textbook text without destroying numbered lists.
+
+    Removes: stray brackets [], excessive blank lines, stray pipe characters.
+    Preserves: numbered lists (1. Foo), lettered sub-tasks (А. Б. В.).
+    """
+    # Remove stray brackets — preserve markdown links [text](url) and images ![alt](url)
+    text = re.sub(r'\[([^\]]*)\]\(([^)]*)\)', r'MDLINK\1MDURL\2MDEND', text)  # protect links
+    text = re.sub(r'[\[\]]', '', text)  # strip stray brackets
+    text = re.sub(r'MDLINK(.*?)MDURL(.*?)MDEND', r'[\1](\2)', text)  # restore links
+    # Collapse 3+ blank lines to 2
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    # Remove stray pipe chars at start/end of lines (OCR table artifacts)
+    text = re.sub(r'^\|?\s*\|\s*$', '', text, flags=re.MULTILINE)
+    return text.strip()
+
+
 def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     """Pre-fetch textbook/encyclopedia examples from RAG for content generation.
 
@@ -2813,7 +2753,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
                     seen_chunks.add(cid)
                     source = hit.get("source", "")
                     section = hit.get("section", "")
-                    text = hit.get("text", "")[:500]
+                    text = _clean_textbook_text(hit.get("text", "")[:500])
                     results.append(
                         f"**{source}** — {section}:\n```\n{text}\n```"
                     )
@@ -2891,7 +2831,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
                 author = hit.get("author", "")
                 hit_grade = hit.get("grade", "")
                 section = hit.get("section_title", hit.get("section", ""))
-                text = hit.get("text", "")[:500]
+                text = _clean_textbook_text(hit.get("text", "")[:500])
                 label = f"Grade {hit_grade}, {author}" if author else f"Grade {hit_grade}"
                 results.append(
                     f"**{label}** — {section}:\n```\n{text}\n```"
@@ -2900,7 +2840,12 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
     if not results:
         return ""
 
-    return header + "\n\n".join(results[:6])
+    note = (
+        "\n\nNOTE: The textbook examples above are provided as INSPIRATION "
+        "for the pedagogical approach, NOT as content to copy. For modules M15+, "
+        "focus on the communicative patterns, not the letter/syllable exercises.\n"
+    )
+    return header + "\n\n".join(results[:6]) + note
 
 
 def _get_textbook_grade(ctx: ModuleContext) -> str:

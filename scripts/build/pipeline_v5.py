@@ -1456,7 +1456,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     Instead of dumping 60 lines of audit output, this extracts specific
     failures and produces exact instructions Gemini can act on.
     """
-    from pipeline_lib import get_decodable_vocabulary, get_pedagogical_constraints
+    from pipeline_lib import get_pedagogical_constraints
 
     det_issues = deterministic_issues or []
     gate_failures = _extract_gate_failures(audit_output)
@@ -1507,9 +1507,8 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     if ped_constraints:
         ped_section = f"\n## Constraints (do NOT violate while fixing)\n\n{ped_constraints}\n"
 
-    # Decodable vocabulary (compact)
-    decodable = get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan)
-    decodable_section = f"\n{decodable}\n" if decodable else ""
+    # Decodable vocabulary removed (#841) — plan vocabulary_hints is source of truth
+    decodable_section = ""
 
     # Lexical sandbox — compact lemma list so fix agent stays on-vocabulary
     sandbox_section = ""
