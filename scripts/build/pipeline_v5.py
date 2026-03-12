@@ -370,8 +370,7 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
                   content_only: bool = True, primary_agent: str = "gemini",
                   skip_review: bool = False) -> bool:
     """Escalate a failed fix to the opposite agent."""
-    passed_retry, _ = run_verify(ctx.paths["md"], content_only=content_only,
-                                 skip_review=skip_review)
+    passed_retry, _ = run_verify(ctx.paths["md"], skip_review=skip_review)
     if passed_retry:
         log(f"  {phase_label}: Pre-escalation retry PASS — no escalation needed")
         return True
@@ -3057,7 +3056,7 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
         log(f"  review: D.2 applied fixes ({changed_lines} lines changed){iter_suffix}")
 
     _run_deterministic_fixes(ctx)
-    passed, new_audit_out = run_verify(ctx.paths["md"], content_only=False)
+    passed, new_audit_out = run_verify(ctx.paths["md"])
 
     if passed:
         log(f"  review: PASS (after fix {fix_iter + 1})")
@@ -3087,7 +3086,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     # Try deterministic auto-fix
     auto_fix_count = _run_deterministic_fixes(ctx)
     if auto_fix_count > 0:
-        passed_after_autofix, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        passed_after_autofix, audit_out = run_verify(ctx.paths["md"])
         if passed_after_autofix and not review_says_fail:
             mark_complete(state, phase, ctx, attempts=1, note="autofix")
             _update_pipeline_status(ctx, "reviewed")
@@ -3270,7 +3269,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
 
     _run_deterministic_fixes(ctx)
     plan_adherence_text = _run_plan_adherence_check(ctx)
-    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+    passed, audit_out = run_verify(ctx.paths["md"])
 
     # Determine verdict
     review_says_fail = _review_determine_verdict(d1, review_text)
@@ -3420,7 +3419,7 @@ def _run_review_fix_loop(ctx: ModuleContext, state: dict, phase: str,
             log("  review-gemini: No fixes applied \u2014 trying once more")
 
         _run_deterministic_fixes(ctx)
-        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        passed, audit_out = run_verify(ctx.paths["md"])
 
         if passed:
             log(f"  review-gemini: PASS (after fix {fix_iter + 1})")
@@ -3500,7 +3499,7 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
     n_fixes = _apply_review_fixes_and_plan_autofix(ctx, screen, raw1, raw2)
 
     # 11. Post-review audit
-    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+    passed, audit_out = run_verify(ctx.paths["md"])
 
     review_says_fail = merged.verdict == "FAIL"
     if not review_says_fail and merged.scores.get("overall", 10) < 9.0:
