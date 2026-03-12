@@ -8,12 +8,10 @@ content quality checks).
 
 from __future__ import annotations
 
-import json
 import logging
-import os
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pipeline_lib import ModuleContext
@@ -78,6 +76,7 @@ def _fix_extra_h1(text: str) -> tuple[str, int]:
 def _fix_h2_titles(text: str, content_outline: list[dict]) -> tuple[str, int]:
     """Auto-correct H2 section titles to match content_outline via fuzzy matching."""
     from difflib import SequenceMatcher
+
     from audit.checks.outline_compliance import normalize_section_name
 
     expected_titles = {
@@ -157,9 +156,9 @@ def _fix_yaml_vocab(vocab_path: Path) -> int:
 
 def _fix_forbidden_activities(act_path: Path, content_path: Path) -> int:
     """Remove forbidden activities based on level/focus. Returns removal count."""
+    import yaml as yaml_lib
     from audit.checks.yaml_schema_validation import remove_forbidden_activities
     from audit.core import detect_focus, detect_level, load_yaml_meta
-    import yaml as yaml_lib
 
     meta_data = load_yaml_meta(str(content_path)) if content_path else {}
     if not (content_path and content_path.exists()):
@@ -179,7 +178,7 @@ def _fix_forbidden_activities(act_path: Path, content_path: Path) -> int:
 # Main orchestrator: _run_deterministic_fixes
 # ---------------------------------------------------------------------------
 
-def _run_deterministic_fixes(ctx: "ModuleContext") -> int:
+def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     """Run all zero-cost deterministic fixes on a module's files."""
     total = 0
     content_path = ctx.paths.get("md")
@@ -354,7 +353,7 @@ def _run_vesum_verify(content_path: Path) -> tuple[dict, list[dict], str]:
     return vesum_stats, not_found, audit_suffix
 
 
-def _run_rule_engine(content_text: str, ctx: "ModuleContext") -> list[dict]:
+def _run_rule_engine(content_text: str, ctx: ModuleContext) -> list[dict]:
     """Run rule engine checks. Returns list of issue dicts."""
     from audit.checks.rule_engine import run_rule_engine
     level_code = ctx.track.split("-")[0].upper()
@@ -362,7 +361,7 @@ def _run_rule_engine(content_text: str, ctx: "ModuleContext") -> list[dict]:
                            plan=getattr(ctx, "plan", None))
 
 
-def _run_morphological_validator(content_text: str, ctx: "ModuleContext") -> list[dict]:
+def _run_morphological_validator(content_text: str, ctx: ModuleContext) -> list[dict]:
     """Run VESUM morphological validator. Returns list of issue dicts."""
     from audit.checks.morphological_validator import validate_morphology
     level_code = ctx.track.split("-")[0].upper() if "-" in ctx.track else ctx.track.upper()
@@ -370,7 +369,7 @@ def _run_morphological_validator(content_text: str, ctx: "ModuleContext") -> lis
                                plan=getattr(ctx, "plan", None))
 
 
-def _run_content_quality_checks(content_text: str, ctx: "ModuleContext",
+def _run_content_quality_checks(content_text: str, ctx: ModuleContext,
                                  vesum_not_found: list[dict]) -> list[dict]:
     """Run content quality pipeline checks. Returns list of issue dicts."""
     from audit.checks.content_quality_pipeline import run_content_quality_checks
@@ -389,7 +388,7 @@ def _run_content_quality_checks(content_text: str, ctx: "ModuleContext",
 # Main orchestrator: _deterministic_screen
 # ---------------------------------------------------------------------------
 
-def _deterministic_screen(ctx: "ModuleContext", skip_review: bool = False) -> DScreenResult:
+def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScreenResult:
     """Run all deterministic checks before LLM review."""
     from pipeline_lib import run_verify
 
@@ -413,7 +412,7 @@ def _deterministic_screen(ctx: "ModuleContext", skip_review: bool = False) -> DS
     # 4. Single audit run
     if content_path and content_path.exists():
         result.audit_passed, result.audit_output = run_verify(
-            content_path, content_only=False, skip_review=skip_review)
+            content_path, skip_review=skip_review)
         result.metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if result.audit_passed else "FAIL"
     else:
         result.audit_passed = False

@@ -1711,20 +1711,15 @@ def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str |
 # 11. Verify Helpers
 # ============================================================================
 
-def run_verify(content_path: Path, content_only: bool = True,
+def run_verify(content_path: Path, *,
                skip_review: bool = False) -> tuple[bool, str]:
-    """Run verification gate. Returns (passed, output)."""
+    """Run verification gate via audit_module.sh. Returns (passed, output)."""
+    audit_script = str(PROJECT_ROOT / "scripts" / "audit_module.sh")
+    cmd = [audit_script]
     if skip_review:
-        audit_script = str(PROJECT_ROOT / "scripts" / "audit_module.sh")
-        result = subprocess.run(
-            [audit_script, "--skip-review", str(content_path)],
-            cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=300,
-        )
-        output = (result.stdout or "") + (result.stderr or "")
-        return result.returncode == 0, output
-
-    script = "otaman_verify.py" if content_only else "hetman_verify.py"
-    result = run_script([str(SCRIPTS_DIR / script), str(content_path)], capture=True, timeout=300)
+        cmd.append("--skip-review")
+    cmd.append(str(content_path))
+    result = subprocess.run(cmd, cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=300)
     output = (result.stdout or "") + (result.stderr or "")
     return result.returncode == 0, output
 
@@ -1895,7 +1890,7 @@ def dispatch_claude_final_review(ctx: ModuleContext) -> tuple[bool, str, str]:
     plan_text      = _read(plan_path)
     review_text    = _read(ctx.paths.get("review"))
 
-    _, audit_output = run_verify(ctx.paths["md"], content_only=False)
+    _, audit_output = run_verify(ctx.paths["md"])
 
     content_rel   = f"curriculum/l2-uk-en/{ctx.track}/{ctx.slug}.md"
     activities_rel = f"curriculum/l2-uk-en/{ctx.track}/activities/{ctx.slug}.yaml"
@@ -3468,7 +3463,7 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
     orch_report.write_text(report, encoding="utf-8")
 
     if "===FIX_START===" in report:
-        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        passed, audit_out = run_verify(ctx.paths["md"])
         audit_log = ctx.orch_dir / "phase9-post-fix-audit.log"
         audit_log.write_text(audit_out, encoding="utf-8")
         if not passed:
