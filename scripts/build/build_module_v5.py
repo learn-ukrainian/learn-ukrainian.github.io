@@ -209,8 +209,7 @@ def _run_single_module(args: argparse.Namespace) -> int:
                 log(f"\nVERDICT: PARTIAL — stopped early (v5) [{elapsed_str}]")
             else:
                 _final_skip_review = not getattr(ctx, "review", False)
-                passed, output = run_verify(ctx.paths["md"], content_only=False,
-                                           skip_review=_final_skip_review)
+                passed, output = run_verify(ctx.paths["md"], skip_review=_final_skip_review)
                 if passed:
                     log(f"\nVERDICT: PASS — {ctx.slug} fully complete (v5) [{elapsed_str}]")
                 else:
@@ -254,7 +253,7 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
             try:
                 paths = get_module_paths(args.track, slug)
                 if paths["md"].exists():
-                    full_passed, _ = run_verify(paths["md"], content_only=False)
+                    full_passed, _ = run_verify(paths["md"])
                     if full_passed:
                         # Check v5 state — if review requested but not done, fall through
                         orch_dir = paths["md"].parent / "orchestration" / slug
@@ -459,7 +458,7 @@ def main() -> int:
             if not content_path.exists():
                 print(f"FAIL: Content file not found: {content_path}", flush=True)
                 return 1
-            passed, output = run_verify(content_path, content_only=False)
+            passed, output = run_verify(content_path)
             if passed:
                 print(f"PASS: {slug} (fully complete)", flush=True)
                 return 0
@@ -468,7 +467,7 @@ def main() -> int:
                 if passed_sr:
                     print(f"CONTENT+ACTIVITIES: {slug} (needs review)", flush=True)
                     return 0
-                passed_co, _ = run_verify(content_path, content_only=True)
+                passed_co, _ = run_verify(content_path)
                 if passed_co:
                     print(f"CONTENT-ONLY: {slug} (activities not validated)", flush=True)
                     return 0
