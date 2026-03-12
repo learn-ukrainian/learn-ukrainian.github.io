@@ -2714,10 +2714,15 @@ def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
         if "dative" not in constraints_section.lower():
             return "constraint-conflict-dative"
 
-    # 4. Multiple gate failures (3+) — likely systemic template issue
-    gate_fail_count = fix_prompt.count("Gate `") + fix_prompt.count("PEDAGOGICAL_VIOLATION")
-    if gate_fail_count >= 5:
-        return f"systemic-{gate_fail_count}-failures"
+    # 4. Multiple gate failures (5+) — likely systemic template issue
+    # Exclude diffuse codes (ROBOTIC_STRUCTURE, etc.) since those are expected
+    # to fail and don't indicate a template bug
+    gate_fail_count = fix_prompt.count("Gate `")
+    ped_codes = re.findall(r'\[([A-Z_]{3,})\]', fix_prompt)
+    targeted_ped_count = sum(1 for c in ped_codes if c not in _DIFFUSE_FAILURE_CODES)
+    total_targeted = gate_fail_count + targeted_ped_count
+    if total_targeted >= 5:
+        return f"systemic-{total_targeted}-failures"
 
     return None
 
@@ -3092,11 +3097,13 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
             _update_pipeline_status(ctx, "reviewed")
             return True
 
-    if _all_issues_diffuse(audit_out):
+    if _all_issues_diffuse(audit_out) and not plan_adherence_text:
         log("  review: SKIPPED fix — all issues are diffuse (needs manual review)")
         mark_failed(state, phase, ctx, attempts=1, note="needs-manual-review")
         _update_pipeline_status(ctx, "needs-manual-review")
         return False
+    elif _all_issues_diffuse(audit_out) and plan_adherence_text:
+        log("  review: audit issues are diffuse but plan adherence has HIGH issues — proceeding with fix")
 
     audit_only_fix = not review_says_fail and not passed
     fix_timeout = _get_fix_timeout(ctx.track, audit_only=audit_only_fix)

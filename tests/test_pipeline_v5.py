@@ -44,6 +44,7 @@ from pipeline_v5 import (
     _apply_section_fixes,
     _build_schema_hint,
     _count_diff_lines,
+    _diagnose_dedup_cause,
     _extract_audit_failures,
     _extract_delimiter,
     _extract_delimiter_tolerant,
@@ -683,6 +684,65 @@ class TestAllIssuesDiffuse:
             "❌ FAIL [CONTENT_REDUNDANCY]\n"
         )
         assert _all_issues_diffuse(audit) is True
+
+
+# =============================================================================
+# Diagnose dedup cause
+# =============================================================================
+
+class TestDiagnoseDedup:
+    """Tests for _diagnose_dedup_cause systemic detection."""
+
+    def _screen(self, **kw):
+        s = MagicMock()
+        s.audit_output = kw.get("audit_output", "")
+        s.deterministic_issues = kw.get("deterministic_issues", [])
+        return s
+
+    def test_diffuse_codes_not_counted_as_systemic(self):
+        """Diffuse codes (ROBOTIC_STRUCTURE etc.) should NOT count toward systemic threshold."""
+        prompt = (
+            "## Constraints\nNo dative case.\n\n"
+            "Gate `Words` FAIL\n"
+            "Gate `Vocab` FAIL\n"
+            "[ROBOTIC_STRUCTURE] too repetitive\n"
+            "[CONTENT_REDUNDANCY] repeated paragraphs\n"
+            "[STRUCTURAL_MONOTONY] same pattern\n"
+            "[LOW_IMMERSION] not enough Ukrainian\n"
+            "[EXCESSIVE_METAPHOR] too flowery\n"
+        )
+        # 2 gate failures + 0 targeted ped codes = 2 total < 5
+        result = _diagnose_dedup_cause(prompt, self._screen())
+        assert result is None  # Should NOT be systemic
+
+    def test_targeted_codes_are_systemic(self):
+        """5+ targeted (non-diffuse) failures should trigger systemic."""
+        prompt = (
+            "## Constraints\nNo dative case.\n\n"
+            "Gate `Words` FAIL\n"
+            "Gate `Vocab` FAIL\n"
+            "Gate `Pedagogy` FAIL\n"
+            "[RUSSIAN_CHARACTERS] found ы\n"
+            "[GRAMMAR] bad agreement\n"
+            "[VOCAB_NOT_IN_CONTENT] missing word\n"
+        )
+        # 3 gates + 3 targeted ped = 6 >= 5
+        result = _diagnose_dedup_cause(prompt, self._screen())
+        assert result is not None
+        assert result.startswith("systemic-")
+
+    def test_mixed_diffuse_and_targeted_below_threshold(self):
+        """Mix of diffuse and targeted but targeted count < 5."""
+        prompt = (
+            "## Constraints\nNo dative case.\n\n"
+            "Gate `Words` FAIL\n"
+            "[ROBOTIC_STRUCTURE] too repetitive\n"
+            "[CONTENT_REDUNDANCY] repeated\n"
+            "[RUSSIAN_CHARACTERS] found ы\n"
+        )
+        # 1 gate + 1 targeted ped = 2 < 5
+        result = _diagnose_dedup_cause(prompt, self._screen())
+        assert result is None
 
 
 # =============================================================================
