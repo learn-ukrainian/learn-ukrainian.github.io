@@ -13,22 +13,11 @@
 |------|---------|
 | `{RESEARCH_PATH}` | Research notes |
 | `{PLAN_PATH}` | Content outline, section word allocations, vocabulary_hints |
-| `{PLAN_PATH}` | Objectives, vocabulary_hints |
 | `{QUICK_REF_PATH}` | Level constraints, immersion % |
 
 Read ALL files before writing.
 
-## Resource Discoveries
-
-{VIDEO_DISCOVERY}
-
-{PRONUNCIATION_VIDEOS}
-
-## Module Constraints (HARD FAIL if violated)
-
-{PEDAGOGICAL_CONSTRAINTS}
-
-{DECODABLE_VOCABULARY}
+## Target Vocabulary (MANDATORY)
 
 **Target vocabulary** (from the plan — you MUST teach and use these words heavily):
 
@@ -40,9 +29,17 @@ Read ALL files before writing.
 - Match the syntactic complexity, sentence length, and vocabulary level of the provided textbook excerpts. Do not exceed their lexical density.
 - When textbook excerpts contain vocabulary or grammar not yet taught at this level, simplify or provide an English gloss in parentheses.
 
-NOTE: The textbook examples below are provided as INSPIRATION for the pedagogical approach, NOT as content to copy. For modules M15+, focus on the communicative patterns, not the letter/syllable exercises.
+## Resource Discoveries
+
+{VIDEO_DISCOVERY}
+
+{PRONUNCIATION_VIDEOS}
 
 {TEXTBOOK_EXAMPLES}
+
+## Module Constraints (HARD FAIL if violated)
+
+{PEDAGOGICAL_CONSTRAINTS}
 
 {CHECKPOINT_GUIDANCE}
 
@@ -101,9 +98,7 @@ Keep paragraphs short (3-5 sentences). Do NOT use abstract Ukrainian grammar ter
 ### Audit Gates (your content will be checked for)
 
 - **Word count**: minimum {WORD_TARGET} words
-- **Russianisms**: banned (кушати, получати, etc.)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear
-- **Euphony**: і/й, у/в alternation
 - **Engagement callouts**: {ENGAGEMENT_MIN}+
 - **IPA/phonetic brackets**: BANNED
 
@@ -111,15 +106,14 @@ Keep paragraphs short (3-5 sentences). Do NOT use abstract Ukrainian grammar ter
 
 ---
 
-## Pre-Submission Checks
+## Boundaries
 
-1. **Plan compliance**: Does every point in the content_outline have dedicated prose?
-2. **Word count**: Does the total meet {WORD_TARGET}?
-3. **Language scan**: No Russianisms, no Russian characters, no IPA, no Latin transliteration?
-4. **Decodable vocabulary**: Does every Ukrainian word use only the allowed letter set?
-5. **Target vocabulary**: Are all target vocabulary words used in the content?
-
-{SELF_AUDIT_SNIPPET}
+- Do NOT generate activities or vocabulary tables (separate phase)
+- Do NOT add vocabulary outside the plan's vocabulary_hints
+- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
+- Do NOT skip sections from the content_outline
+- Do NOT write fewer than {WORD_TARGET} words
+- Do NOT use straight quotes "..." — always «...»
 
 ---
 
@@ -162,6 +156,17 @@ Total: {total} words (target: {WORD_TARGET})
 ===WORD_COUNTS===
 ```
 
+## Pre-Submission Checks
+
+*Mentally verify these before writing your Friction Report:*
+
+1. **Plan compliance**: Does every point in the content_outline have dedicated prose?
+2. **Word count**: Does the total meet {WORD_TARGET}?
+3. **Language scan**: No Russian characters, no IPA, no Latin transliteration?
+4. **Target vocabulary**: Are all target vocabulary words used in the content?
+
+{SELF_AUDIT_SNIPPET}
+
 ## Friction Report (MANDATORY)
 
 ```
@@ -174,12 +179,3 @@ Total: {total} words (target: {WORD_TARGET})
 **Proposed Tooling Fix**: {if applicable, or "N/A"}
 ===FRICTION_END===
 ```
-
-## Boundaries
-
-- Do NOT generate activities or vocabulary tables (separate phase)
-- Do NOT add vocabulary outside the plan's vocabulary_hints
-- **VOCABULARY COVERAGE RULE:** All words from `vocabulary_hints` in the plan MUST appear at least once in the module content. Vocabulary listed but never used in the prose is a validation failure.
-- Do NOT skip sections from the content_outline
-- Do NOT write fewer than {WORD_TARGET} words
-- Do NOT use straight quotes "..." — always «...»

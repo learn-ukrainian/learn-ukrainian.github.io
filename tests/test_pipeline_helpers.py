@@ -2,7 +2,7 @@
 
 Covers: _parse_section, _build_section_budget_table, _check_archive_fits_outline,
 get_level_constraints, get_activity_config, get_item_minimums_table,
-bilingualify_section_titles, get_pedagogical_constraints, get_decodable_vocabulary,
+bilingualify_section_titles, get_pedagogical_constraints,
 get_structural_rules, get_h3_word_range, get_expansion_method, get_track_skill,
 get_immersion_rule, get_level_label, track_to_level_focus, load_state,
 v5 phase terminology (no legacy Phase 2: labels), SELF_AUDIT_SNIPPET CONTENT_PATH resolution.
@@ -447,59 +447,74 @@ class TestGetPedagogicalConstraints:
         assert r1 != r15
 
 
+    # Decodable vocabulary tests removed in #841 — system was dropped.
+
+
 # ============================================================================
-# get_decodable_vocabulary
+# _get_prompt_tier — tier-aware shared rules (#841)
 # ============================================================================
 
-class TestGetDecodableVocabulary:
-    def test_non_a1_returns_empty(self):
-        from pipeline_lib import get_decodable_vocabulary
-        assert get_decodable_vocabulary("b1", 1, {}) == ""
+class TestGetPromptTier:
+    def test_a1_is_beginner(self):
+        from pipeline_lib import _get_prompt_tier
+        assert _get_prompt_tier("a1", 1) == "beginner"
+        assert _get_prompt_tier("a1", 14) == "beginner"
+        assert _get_prompt_tier("a1", 25) == "beginner"
 
-    def test_m4_plus_returns_empty(self):
-        from pipeline_lib import get_decodable_vocabulary
-        assert get_decodable_vocabulary("a1", 4, {}) == ""
+    def test_a2_early_is_beginner(self):
+        from pipeline_lib import _get_prompt_tier
+        assert _get_prompt_tier("a2", 1) == "beginner"
+        assert _get_prompt_tier("a2", 20) == "beginner"
 
-    def test_plan_with_decodable_letters(self):
-        """Plans with decodable_letters get charset-filtered vocabulary."""
-        from pipeline_lib import get_decodable_vocabulary
-        plan = {
-            "decodable_letters": "А О У І М Н Т К С Л",
-            "vocabulary_hints": {
-                "required": ["мама (mom) — decodable", "тато (dad) — decodable"],
-                "recommended": ["сон (dream) — decodable"],
-            },
-        }
-        result = get_decodable_vocabulary("a1", 1, plan)
-        assert "мама" in result
-        assert "тато" in result
-        assert "сон" in result
+    def test_a2_late_is_core(self):
+        from pipeline_lib import _get_prompt_tier
+        assert _get_prompt_tier("a2", 21) == "core"
+        assert _get_prompt_tier("a2", 50) == "core"
 
-    def test_plan_filters_non_decodable(self):
-        """Words with letters outside decodable_letters are excluded."""
-        from pipeline_lib import get_decodable_vocabulary
-        plan = {
-            "decodable_letters": "А О У І М Н Т К С Л",
-            "vocabulary_hints": {
-                "required": ["мама (mom) — decodable", "хліб (bread) — uses Х Б"],
-            },
-        }
-        result = get_decodable_vocabulary("a1", 1, plan)
-        assert "мама" in result
-        word_line = [l for l in result.splitlines() if l.startswith("Available")][0]
-        assert "хліб" not in word_line
+    def test_b1_is_core(self):
+        from pipeline_lib import _get_prompt_tier
+        assert _get_prompt_tier("b1", 1) == "core"
 
-    def test_plan_without_decodable_letters(self):
-        """Plans without decodable_letters get no restriction."""
-        from pipeline_lib import get_decodable_vocabulary
-        plan = {"vocabulary_hints": {"required": ["мама (mom)"]}}
-        assert get_decodable_vocabulary("a1", 1, plan) == ""
-        assert get_decodable_vocabulary("a1", 2, plan) == ""
-        assert get_decodable_vocabulary("b1", 1, plan) == ""
+    def test_hist_is_seminar(self):
+        from pipeline_lib import _get_prompt_tier
+        assert _get_prompt_tier("hist", 1) == "seminar"
 
-    def test_empty_plan(self):
-        from pipeline_lib import get_decodable_vocabulary
-        assert get_decodable_vocabulary("a1", 1, {}) == ""
+    def test_no_hardcoded_level_checks(self):
+        """Selection uses _get_prompt_tier, not hardcoded level/module checks."""
+        import inspect
+        from pipeline_lib import build_placeholders
+        source = inspect.getsource(build_placeholders)
+        # The tier selection for shared rules should use _get_prompt_tier, not
+        # direct string comparisons like 'ctx.track == "a1"'
+        assert "_get_prompt_tier" in source
+
+
+# ============================================================================
+# _clean_textbook_text (#841)
+# ============================================================================
+
+class TestCleanTextbookText:
+    def test_preserves_numbered_lists(self):
+        from pipeline_lib import _clean_textbook_text
+        text = "1. Вступ\n2. Основна частина\n3. Висновок"
+        assert _clean_textbook_text(text) == text
+
+    def test_collapses_excessive_blanks(self):
+        from pipeline_lib import _clean_textbook_text
+        text = "Line 1\n\n\n\n\nLine 2"
+        assert _clean_textbook_text(text) == "Line 1\n\nLine 2"
+
+    def test_removes_stray_brackets(self):
+        from pipeline_lib import _clean_textbook_text
+        text = "Some [stray text"
+        result = _clean_textbook_text(text)
+        assert "[" not in result
+
+    def test_preserves_markdown_links(self):
+        from pipeline_lib import _clean_textbook_text
+        text = "See [this link](http://example.com) for details"
+        result = _clean_textbook_text(text)
+        assert "[this link](http://example.com)" in result
 
 
 # ============================================================================
