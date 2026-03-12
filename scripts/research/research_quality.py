@@ -186,34 +186,105 @@ def _extract_ukrainian_words(text: str) -> list[str]:
     return list(set(w.lower() for w in words))
 
 
-def _score_source_verification(text: str, tier: str = "advanced") -> dict:
-    """Score source quality: known-good domains, URL count, domain diversity."""
+def _parse_discovery(discovery_path: "Path | None") -> dict:
+    """Parse discovery.yaml once, returning normalised data.
+
+    Returns a dict with keys: blogs, videos, rag_chunks, rag_literary (each a list).
+    Returns empty lists on missing/invalid file.
+    """
+    empty = {"blogs": [], "videos": [], "rag_chunks": [], "rag_literary": []}
+    if discovery_path is None or not discovery_path.exists():
+        return empty
+    try:
+        import yaml
+        data = yaml.safe_load(discovery_path.read_text("utf-8"))
+    except Exception:
+        return empty
+    if not isinstance(data, dict):
+        return empty
+    return {
+        "blogs": data.get("blogs") or [],
+        "videos": data.get("videos") or [],
+        "rag_chunks": data.get("rag_chunks") or [],
+        "rag_literary": data.get("rag_literary") or [],
+    }
+
+
+def _score_source_verification(text: str, tier: str = "advanced",
+                               discovery: dict | None = None) -> dict:
+    """Score source quality: known-good domains, URL count, RAG textbook chunks.
+
+    Sources are counted from both the research markdown AND discovery data.
+    RAG textbook chunks count as verified sources (they come from real
+    Ukrainian school textbooks via the VESUM-backed RAG pipeline).
+    """
     thresholds = SUBSTANCE_TIERS[tier]
     urls = set(re.findall(r"https?://[^\s\)>]+", text))
     domains = _extract_domains(text)
     known = [d for d in domains if any(d.endswith(k) or k.endswith(d) for k in KNOWN_GOOD_DOMAINS)]
 
-    if not urls:
-        return {"score": 0, "max": 2, "detail": "no URLs found"}
-    if len(known) >= thresholds["source_domains_full"]:
-        return {"score": 2, "max": 2, "detail": f"{len(known)} known-good domains, {len(urls)} URLs"}
-    if len(known) >= thresholds["source_domains_partial"]:
-        return {"score": 1, "max": 2, "detail": f"{len(known)} known-good domain(s), {len(urls)} URLs"}
-    # URLs exist but none from known sources
-    return {"score": 0, "max": 2, "detail": f"{len(urls)} URLs but 0 known-good domains"}
+    # Also count sources from discovery (blogs, videos, RAG chunks)
+    rag_chunk_count = 0
+    if discovery:
+        # Collect discovery URLs
+        discovery_urls: set[str] = set()
+        for item in discovery["blogs"]:
+            url = item.get("url", "") if isinstance(item, dict) else ""
+            if url:
+                discovery_urls.add(url)
+        for item in discovery["videos"]:
+            url = item.get("url", "") if isinstance(item, dict) else ""
+            if url:
+                discovery_urls.add(url)
+        urls.update(discovery_urls)
+        # Extract domains only from new discovery URLs
+        for d in _extract_domains(" ".join(discovery_urls)):
+            if d not in domains:
+                domains.append(d)
+                if any(d.endswith(k) or k.endswith(d) for k in KNOWN_GOOD_DOMAINS):
+                    known.append(d)
+        rag_chunk_count = len(discovery["rag_chunks"])
+
+    total_sources = len(urls) + rag_chunk_count
+    source_parts = []
+    if urls:
+        source_parts.append(f"{len(urls)} URLs")
+    if rag_chunk_count:
+        source_parts.append(f"{rag_chunk_count} RAG chunks")
+    source_detail = ", ".join(source_parts) if source_parts else "no sources"
+
+    if total_sources == 0:
+        return {"score": 0, "max": 2, "detail": "no sources found"}
+    # RAG chunks count as known-good sources (verified textbook content)
+    known_count = len(known) + (1 if rag_chunk_count > 0 else 0)
+    if known_count >= thresholds["source_domains_full"]:
+        return {"score": 2, "max": 2, "detail": f"{known_count} known-good sources, {source_detail}"}
+    if known_count >= thresholds["source_domains_partial"]:
+        return {"score": 1, "max": 2, "detail": f"{known_count} known-good source(s), {source_detail}"}
+    return {"score": 0, "max": 2, "detail": f"{source_detail} but 0 known-good sources"}
 
 
 def _score_claim_grounding(text: str, tier: str = "advanced") -> dict:
-    """Score claim grounding: ratio of Ukrainian words (suggests real examples vs vague text)."""
+    """Score claim grounding: concrete Ukrainian examples in the research.
+
+    Counts Ukrainian words that appear in structured contexts: quoted, bold,
+    italic, table cells, or bullet-list items. These indicate the research
+    contains real linguistic examples rather than vague generalizations.
+    """
     thresholds = SUBSTANCE_TIERS[tier]
     uk_words = _extract_ukrainian_words(text)
     total_words = len(text.split())
     if total_words == 0:
         return {"score": 0, "max": 2, "detail": "empty text"}
 
-    # Count specific linguistic examples (words in quotes, bold, or after bullets)
-    examples = re.findall(r"[«\"*_]([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+)[»\"*_]", text)
-    example_count = len(set(examples))
+    cited = set()
+    # Words in quotes, bold, or italic delimiters
+    cited.update(re.findall(r"[«\"*_]([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+)[»\"*_]", text))
+    # Ukrainian words in markdown table cells (| word |)
+    cited.update(re.findall(r"\|\s*([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]{2,})", text))
+    # Ukrainian words after bullet points (- word or * word)
+    cited.update(re.findall(r"^[-*]\s+([а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]{2,})", text, re.MULTILINE))
+    example_count = len(cited)
 
     if example_count >= thresholds["examples_full"]:
         return {"score": 2, "max": 2, "detail": f"{example_count} cited examples, {len(uk_words)} Ukrainian terms"}
@@ -222,26 +293,20 @@ def _score_claim_grounding(text: str, tier: str = "advanced") -> dict:
     return {"score": 0, "max": 2, "detail": f"{example_count} cited examples (need {thresholds['examples_partial']}+)"}
 
 
-def _score_discovery_integration(discovery_path: "Path | None") -> dict:
+def _score_discovery_integration(discovery: dict | None) -> dict:
     """Score discover phase integration: external resources found.
 
     Counts all discovery resource types: videos, blogs, RAG chunks, and
     literary sources. A module with RAG textbook hits is still well-researched
     even without YouTube videos.
     """
-    if discovery_path is None or not discovery_path.exists():
+    if not discovery:
         return {"score": 0, "max": 1, "detail": "no discovery file"}
 
-    try:
-        import yaml
-        data = yaml.safe_load(discovery_path.read_text("utf-8")) or {}
-    except Exception:
-        return {"score": 0, "max": 1, "detail": "discovery parse error"}
-
-    videos = data.get("videos") or []
-    blogs = data.get("blogs") or []
-    rag_chunks = data.get("rag_chunks") or []
-    rag_literary = data.get("rag_literary") or []
+    videos = discovery["videos"]
+    blogs = discovery["blogs"]
+    rag_chunks = discovery["rag_chunks"]
+    rag_literary = discovery["rag_literary"]
     total = len(videos) + len(blogs) + len(rag_chunks) + len(rag_literary)
 
     parts = []
@@ -255,8 +320,6 @@ def _score_discovery_integration(discovery_path: "Path | None") -> dict:
         parts.append(f"{len(rag_literary)} literary")
     detail = ", ".join(parts) if parts else "0 resources"
 
-    if total >= 3:
-        return {"score": 1, "max": 1, "detail": detail}
     if total >= 1:
         return {"score": 1, "max": 1, "detail": detail}
     return {"score": 0, "max": 1, "detail": detail}
@@ -764,9 +827,10 @@ def assess_research(
 
     # Add substance dimensions (shared across all rubrics, level-aware thresholds)
     tier = _get_substance_tier(track_id)
-    dims["source_verification"] = _score_source_verification(text, tier)
+    discovery = _parse_discovery(discovery_path)
+    dims["source_verification"] = _score_source_verification(text, tier, discovery)
     dims["claim_grounding"] = _score_claim_grounding(text, tier)
-    dims["discovery_integration"] = _score_discovery_integration(discovery_path)
+    dims["discovery_integration"] = _score_discovery_integration(discovery)
     dims["specificity"] = _score_specificity(text, tier)
 
     raw_score = sum(d["score"] for d in dims.values())
