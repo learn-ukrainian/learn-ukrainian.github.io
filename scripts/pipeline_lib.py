@@ -1529,7 +1529,7 @@ def _is_transient_error(output: str) -> bool:
 
 
 def check_prompt_health(
-    ctx: "ModuleContext", prompt_text: str, phase_name: str
+    ctx: ModuleContext, prompt_text: str, phase_name: str
 ) -> list[str]:
     """Validate a filled prompt before dispatching to an LLM.
 
@@ -1557,9 +1557,8 @@ def check_prompt_health(
             issues.append("ERROR: WORD_TARGET placeholder unfilled")
 
     # 3. Activities-phase checks
-    if phase_name == "activities":
-        if "{REQUIRED_TYPES}" in prompt_text:
-            issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
+    if phase_name == "activities" and "{REQUIRED_TYPES}" in prompt_text:
+        issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
 
     # 4. Universal: detect unfilled placeholders (any {UPPERCASE_THING} remaining)
     unfilled = set(re.findall(r"\{([A-Z][A-Z_]{3,})\}", prompt_text))
@@ -1630,7 +1629,8 @@ def fill_template(
     overrides: dict[str, str] | None = None, strict: bool = False,
 ) -> bool:
     """Fill a template with placeholders dict (in-memory). Returns True on success."""
-    from generate_mdx.fill_template import fill_template as _fill, find_unresolved
+    from generate_mdx.fill_template import fill_template as _fill
+    from generate_mdx.fill_template import find_unresolved
 
     if not template.exists():
         log(f"  fill_template FAILED: template not found: {template}")
@@ -2776,7 +2776,8 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
             if "—" in uk_part:
                 parts = uk_part.split("—", 1)
                 # Pick whichever side has Cyrillic (handles English-first titles)
-                has_cyr = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
+                def has_cyr(s: str) -> bool:
+                    return any("\u0400" <= c <= "\u04ff" for c in s)
                 uk_part = parts[0].strip() if has_cyr(parts[0]) else parts[1].strip()
             search_terms.append(uk_part)
     if not search_terms:
@@ -3565,7 +3566,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     """Resolve all paths, load plan, detect archive. Returns ModuleContext."""
     track, num = args.track, args.num
-    slug = slug_for_num(track, num)
+    slug_for_num(track, num)  # validate slug exists
 
     args.content_only = False
     args.enrich = False

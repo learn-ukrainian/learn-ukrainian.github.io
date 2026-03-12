@@ -13,10 +13,6 @@ Issue: #817
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from unittest.mock import patch, MagicMock
-import subprocess
-
-import pytest
 
 sys.path.insert(0, "scripts")
 
@@ -202,12 +198,12 @@ class TestCheckArchiveFitsOutline:
             archive_dir=tmp_path,
             content_outline=[{"section": "Наказовий спосіб", "words": 300}],
         )
-        fits, matched, missing = _check_archive_fits_outline(ctx)
+        fits, matched, _missing = _check_archive_fits_outline(ctx)
         assert fits is True
         assert len(matched) == 1
 
     def test_no_outline_uses_word_threshold(self, tmp_path):
-        from pipeline_lib import _check_archive_fits_outline, ARCHIVE_WORD_THRESHOLD
+        from pipeline_lib import ARCHIVE_WORD_THRESHOLD, _check_archive_fits_outline
         archive_file = tmp_path / "test-module.md"
         archive_file.write_text("word " * (ARCHIVE_WORD_THRESHOLD + 100))
         ctx = FakeContext(slug="test-module", archive_dir=tmp_path, content_outline=[])
@@ -482,6 +478,7 @@ class TestGetPromptTier:
     def test_no_hardcoded_level_checks(self):
         """Selection uses _get_prompt_tier, not hardcoded level/module checks."""
         import inspect
+
         from pipeline_lib import build_placeholders
         source = inspect.getsource(build_placeholders)
         # The tier selection for shared rules should use _get_prompt_tier, not
@@ -700,7 +697,7 @@ class TestTrackToLevelFocus:
 
 class TestLoadState:
     def test_missing_file_returns_fresh_state(self, tmp_path):
-        from pipeline_lib import load_state, ModuleContext
+        from pipeline_lib import ModuleContext, load_state
         ctx = ModuleContext(
             track="a1", module_num=5, slug="test-slug", mode="full",
             orch_dir=tmp_path,
@@ -712,7 +709,8 @@ class TestLoadState:
 
     def test_existing_file_loaded(self, tmp_path):
         import json
-        from pipeline_lib import load_state, ModuleContext
+
+        from pipeline_lib import ModuleContext, load_state
         state_file = tmp_path / "state.json"
         state_file.write_text(json.dumps({
             "slug": "loaded", "track": "b1", "module_num": 3,
@@ -728,7 +726,7 @@ class TestLoadState:
         assert state["phases"]["research"]["status"] == "complete"
 
     def test_corrupt_json_returns_fresh(self, tmp_path):
-        from pipeline_lib import load_state, ModuleContext
+        from pipeline_lib import ModuleContext, load_state
         state_file = tmp_path / "state.json"
         state_file.write_text("{bad json")
         ctx = ModuleContext(
@@ -758,7 +756,7 @@ class TestV5PhaseTerminology:
             if "Phase 2:" in line
         ]
         assert occurrences == [], (
-            f"Found legacy 'Phase 2:' in pipeline_lib.py at lines: "
+            "Found legacy 'Phase 2:' in pipeline_lib.py at lines: "
             + ", ".join(str(lineno) for lineno, _ in occurrences)
         )
 

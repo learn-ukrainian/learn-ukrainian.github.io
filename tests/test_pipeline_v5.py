@@ -17,45 +17,43 @@ Issue: #750
 """
 
 import json
-import os
 import sys
-import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-from dataclasses import dataclass, field
-
-import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from pipeline_v5 import (
-    _state_file,
-    load_state,
-    save_state,
-    is_complete,
-    mark_complete,
+from pipeline.fixes import (
+    _apply_find_replace_fixes,
+    _clean_fix_text,
+)
+from pipeline.parsing import _extract_h2_sections
+from pipeline.state import (
     _fresh_state,
     _migrate_v4_to_v5,
-    _extract_delimiter,
-    _extract_delimiter_tolerant,
-    _count_diff_lines,
-    _extract_audit_failures,
-    _extract_gate_failures,
-    _extract_pedagogy_violations,
-    _extract_h2_sections,
-    _identify_affected_sections,
-    _clean_fix_text,
-    _apply_find_replace_fixes,
-    _apply_section_fixes,
-    _inject_metrics_into_prompt,
-    _build_schema_hint,
-    _all_issues_diffuse,
-    _snapshot_module_files,
-    _module_file_paths,
-    _apply_fixes_with_rollback,
+    _state_file,
+    is_complete,
+    load_state,
+    mark_complete,
+    save_state,
 )
 from pipeline_lib import ModuleContext
-
+from pipeline_v5 import (
+    _all_issues_diffuse,
+    _apply_fixes_with_rollback,
+    _apply_section_fixes,
+    _build_schema_hint,
+    _count_diff_lines,
+    _extract_audit_failures,
+    _extract_delimiter,
+    _extract_delimiter_tolerant,
+    _extract_gate_failures,
+    _extract_pedagogy_violations,
+    _identify_affected_sections,
+    _inject_metrics_into_prompt,
+    _module_file_paths,
+    _snapshot_module_files,
+)
 
 # =============================================================================
 # Fixtures
@@ -725,7 +723,7 @@ class TestApplyFixesWithRollback:
             f"REPLACE:\n{huge_replacement}\n"
             "===SECTION_FIX_END===\n"
         )
-        ok, n = _apply_fixes_with_rollback(ctx, raw, "test")
+        ok, _n = _apply_fixes_with_rollback(ctx, raw, "test")
         if not ok:
             # File should be rolled back to original
             assert ctx.paths["md"].read_text("utf-8") == original
@@ -762,7 +760,7 @@ class TestPrefetchTextbookForResearch:
 
     def test_dict_vocabulary_hints(self):
         """vocabulary_hints as dict (the real-world format) doesn't crash."""
-        from build.pipeline_v5 import _prefetch_textbook_for_research
+        from pipeline_v5 import _prefetch_textbook_for_research
 
         plan = {
             "vocabulary_hints": {
@@ -778,7 +776,7 @@ class TestPrefetchTextbookForResearch:
 
     def test_list_vocabulary_hints(self):
         """vocabulary_hints as list (older format) doesn't crash."""
-        from build.pipeline_v5 import _prefetch_textbook_for_research
+        from pipeline_v5 import _prefetch_textbook_for_research
 
         plan = {"vocabulary_hints": ["читати", "писати"]}
         ctx = self._make_ctx(plan=plan)
@@ -788,7 +786,7 @@ class TestPrefetchTextbookForResearch:
 
     def test_empty_plan(self):
         """Empty plan doesn't crash."""
-        from build.pipeline_v5 import _prefetch_textbook_for_research
+        from pipeline_v5 import _prefetch_textbook_for_research
 
         ctx = self._make_ctx(plan={})
         with patch.dict("sys.modules", {"rag": None, "rag.query": None}):
@@ -797,7 +795,7 @@ class TestPrefetchTextbookForResearch:
 
     def test_returns_formatted_results(self):
         """When RAG returns hits, result is formatted correctly."""
-        from build.pipeline_v5 import _prefetch_textbook_for_research
+        from pipeline_v5 import _prefetch_textbook_for_research
 
         ctx = self._make_ctx(plan={})
         # Provide Ukrainian section titles so search terms are generated
@@ -869,7 +867,7 @@ class TestRAGReviewTools:
     def test_d1_tools_include_rag(self):
         """D1 dispatch tools include both filesystem and RAG tools."""
         from pipeline_v5 import _RAG_REVIEW_TOOLS
-        d1_tools = ["Read", "Grep", "Glob", "Edit"] + _RAG_REVIEW_TOOLS
+        d1_tools = ["Read", "Grep", "Glob", "Edit", *_RAG_REVIEW_TOOLS]
         assert "Read" in d1_tools
         assert "mcp__rag__verify_word" in d1_tools
         assert "mcp__rag__search_text" in d1_tools
@@ -877,7 +875,7 @@ class TestRAGReviewTools:
     def test_d2_tools_include_rag(self):
         """D2 repair tools include both Edit/Grep and RAG tools."""
         from pipeline_v5 import _RAG_REVIEW_TOOLS
-        d2_tools = ["Edit", "Grep"] + _RAG_REVIEW_TOOLS
+        d2_tools = ["Edit", "Grep", *_RAG_REVIEW_TOOLS]
         assert "Edit" in d2_tools
         assert "mcp__rag__verify_lemma" in d2_tools
         assert "mcp__rag__search_literary" in d2_tools

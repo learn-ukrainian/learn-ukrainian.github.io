@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 import sys
 import tempfile
+import typing
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,13 +15,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "lint"))
 
 from lint_prompts import (
-    RULES,
     RESEARCH_RULES,
     check_line_rules,
     scan_prompts,
-    scan_curriculum_research,
 )
-
 
 # ---------- Unit tests for individual rules ----------
 
@@ -67,7 +65,7 @@ class TestResearchRules:
         """Check text against research rules."""
         violations = []
         lines = text.splitlines()
-        for rule_id, severity, description, pattern, exception in RESEARCH_RULES:
+        for rule_id, _severity, _description, pattern, exception in RESEARCH_RULES:
             for i, line in enumerate(lines, 1):
                 if pattern.search(line):
                     if exception and exception.search(line):
@@ -105,7 +103,7 @@ class TestTemplateVariables:
 
     # Known valid placeholders — extracted from all active templates.
     # If a new placeholder is added to a template, add it here too.
-    VALID_PLACEHOLDERS = {
+    VALID_PLACEHOLDERS: typing.ClassVar[set[str]] = {
         "ACTIVITIES_FILE_CONTENT", "ACTIVITIES_PATH",
         "ACTIVITY_COUNT", "ACTIVITY_COUNT_TARGET", "ACTIVITY_EXAMPLES",
         "ACTIVITY_MAX", "ACTIVITY_MIN",
@@ -159,11 +157,10 @@ class TestTemplateVariables:
 
     def _extract_placeholders(self, text: str) -> set[str]:
         """Extract {UPPERCASE_PLACEHOLDER} patterns from text."""
-        import re
         return set(re.findall(r"\{([A-Z][A-Z0-9_]+)\}", text))
 
     # Batch-system templates use legacy placeholder conventions
-    BATCH_TEMPLATES = {
+    BATCH_TEMPLATES: typing.ClassVar[set[str]] = {
         "research-seminar-v0.md", "review-legacy.md",
         "fix.md", "fix-content.md", "fix-activities.md",
     }
