@@ -132,6 +132,25 @@ Language scan: {CLEAN or list of fixes}
 ===VERIFICATION_END===
 ```
 
+## Post-Generation Verification (MANDATORY — output BEFORE friction report)
+
+After writing all content, verify your output against the plan:
+
+```
+===CONTENT_VERIFY_START===
+Structural elements (plan keywords → what I produced):
+  - "{plan point with chart/table/list/show keyword}" → {table|bulleted list|numbered list} ✅ | prose only ❌
+  - ...
+Vocabulary coverage:
+  - Missing from content: {list any vocabulary_hints words NOT used} — ❌ if any missing
+Word counts:
+  - {section}: {count} / {target} ✅|❌
+  - TOTAL: {total} / {WORD_TARGET} ✅|❌
+===CONTENT_VERIFY_END===
+```
+
+If any line shows ❌, output a corrected `===CONTENT_START===` to `===CONTENT_END===` block with the fixes applied, THEN output the friction report.
+
 ## Friction Report (MANDATORY)
 
 ```

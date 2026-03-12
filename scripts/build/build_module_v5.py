@@ -46,11 +46,11 @@ from batch_gemini_config import (
 from pipeline_lib import (
     ModuleContext,
     _init_log,
+    build_placeholders,
     log,
     preflight_v2,
     run_verify,
     write_completion_report_v2,
-    build_placeholders,
 )
 from pipeline_v5 import (
     CLAUDE_MODEL_ACTIVITIES,
@@ -161,7 +161,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 def _run_single_module(args: argparse.Namespace) -> int:
     """Run the pipeline for a single module. Returns 0 on success, 1 on failure."""
     try:
-        # --rebuild: clean orchestration directory
+        # --rebuild: clean orchestration directory + content/activity output files
         if args.rebuild:
             slug = slug_for_num(args.track, args.num)
             paths = get_module_paths(args.track, slug)
@@ -175,6 +175,13 @@ def _run_single_module(args: argparse.Namespace) -> int:
                         f.unlink()
                         removed += 1
                 print(f"  --rebuild: cleaned orchestration dir ({removed} files removed)", flush=True)
+            # Remove content + activities + vocabulary so Gemini regenerates them
+            # Research and discovery are preserved
+            for key in ("md", "activities", "vocabulary"):
+                p = paths.get(key)
+                if p and p.exists():
+                    p.unlink()
+                    print(f"  --rebuild: removed {p.name}", flush=True)
 
         ctx = preflight(args)
         _init_log(ctx.slug)

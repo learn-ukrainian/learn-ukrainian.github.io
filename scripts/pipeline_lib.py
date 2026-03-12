@@ -1649,7 +1649,7 @@ def fill_template(
             log(f"  fill_template FAILED: {msg}")
             return False
         else:
-            log(f"  fill_template WARNING: {msg}")
+            logger.debug("fill_template: %s", msg)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(filled, encoding="utf-8")

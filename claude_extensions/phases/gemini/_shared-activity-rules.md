@@ -70,6 +70,48 @@ items:
 ===FRICTION_END===
 ```
 
+## Item Counting (MANDATORY — prevents undercount failures)
+
+You MUST use inline YAML comments to number every item as you generate it. This prevents generation fatigue from silently producing fewer items than required.
+
+```yaml
+# Example: plan says items: 8
+items:
+  - # item 1 of 8
+    question: "..."
+  - # item 2 of 8
+    question: "..."
+  ...
+  - # item 8 of 8
+    question: "..."
+```
+
+Your last item MUST say `# item N of N` where N matches the plan's required count. If your last comment says `# item 6 of 8`, you are NOT done — add 2 more items.
+
+For `pairs:` use `# pair 1 of N`, for `groups:` count total items across all groups.
+
+## Activity Focus Override
+
+If the plan's `activity_hints` includes a `focus` description, it is a HARD OVERRIDE of the default pattern for that activity type. Read the focus carefully and implement it literally.
+
+Example: If focus says "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C)" → your match-up pairs MUST be letter→sound, NOT word→translation.
+
+## Post-Generation Verification (MANDATORY)
+
+After generating all activities, output this verification block:
+
+```
+===ACTIVITY_VERIFY_START===
+Activity counts vs plan:
+  - {type}: {actual} items (plan: {required}) ✅|❌
+  - ...
+Focus compliance:
+  - {type}: {focus description} → implemented as: {what you actually built} ✅|❌
+===ACTIVITY_VERIFY_END===
+```
+
+If any line shows ❌, output a corrected `===ACTIVITIES_START===` to `===ACTIVITIES_END===` block with the fixes applied, THEN output the friction report.
+
 ## Boundaries
 
 - Do NOT modify lesson content — only generate activities and vocabulary

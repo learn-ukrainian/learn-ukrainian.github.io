@@ -55,3 +55,12 @@
 
 ### 9. Activity Boundary
 - Do NOT generate activities, exercises, or vocabulary tables (separate phase)
+
+### 10. Plan Compliance — Every Detail Matters
+- **Visual Forcing Function**: If a plan point uses words like "chart", "table", "list all", "list of all", "map", "display", "show" → you MUST output a Markdown table or bulleted list. Prose summaries of structural elements are FORBIDDEN.
+- **Anti-Compression Directive**: If the plan specifies a count (e.g., "10 vowels", "33 letters", "6 cases") → every single element must be visibly listed in your output. Never compress into a summary sentence.
+- **Activity hints are HARD constraints**: item counts and focus descriptions in `activity_hints` are minimums, not suggestions.
+
+### 11. Pacing — No Exposition Deserts
+- Maximum 200 words of continuous exposition without a structural element (table, example list, callout box, or primary source quote).
+- Alternate between analysis and evidence within each H2 section.

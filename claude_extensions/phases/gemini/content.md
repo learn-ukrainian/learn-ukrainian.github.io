@@ -141,11 +141,19 @@ Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
 ```
 
 ```
-===VERIFICATION_START===
+===CONTENT_VERIFY_START===
+Structural elements (plan keywords → what I produced):
+  - "{plan point with chart/table/list/show keyword}" → {table|bulleted list|numbered list} ✅ | prose only ❌
+  - ...
+Vocabulary coverage:
+  - Missing from content: {list any vocabulary_hints words NOT used} — ❌ if any missing
 Plan compliance: {X}/{Y} outline points addressed
 Absolute claims: {number checked} — {softened or verified}
 Language scan: {CLEAN or list of fixes}
-===VERIFICATION_END===
+Word counts:
+  - {section}: {count} / {target} ✅|❌
+  - TOTAL: {total} / {WORD_TARGET} ✅|❌
+===CONTENT_VERIFY_END===
 ```
 
 ## Friction Report (MANDATORY)

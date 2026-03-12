@@ -3072,7 +3072,8 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
 def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
                     d2_template: Path, claude_model: str,
                     review_text: str, review_says_fail: bool,
-                    passed: bool, audit_out: str) -> bool:
+                    passed: bool, audit_out: str,
+                    plan_adherence_text: str = "") -> bool:
     """Run the D2 repair loop after D1 review. Returns True on pass."""
     # Check for citation failures
     _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
@@ -3111,6 +3112,10 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     else:
         fix_plan = _extract_fix_plan(review_text)
 
+    # Inject plan adherence issues (deterministic, HIGH severity)
+    if plan_adherence_text:
+        fix_plan = plan_adherence_text + "\n\n---\n\n" + fix_plan
+
     for fix_iter in range(MAX_REVIEW_FIX_ITERS):
         total_attempts = 2 + fix_iter
         result, audit_out = _review_d2_fix_iteration(
@@ -3130,10 +3135,87 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
             return False
 
     log("  review: EXHAUSTED — review + fix attempts all insufficient")
+
+    # Auto-rebuild: delete content/activities, clear state, let Gemini regenerate
+    no_auto_rebuild = getattr(ctx, "no_auto_rebuild", False)
+    already_rebuilt = getattr(ctx, "_auto_rebuilt", False)
+    if not no_auto_rebuild and not already_rebuilt:
+        log("  review: AUTO-REBUILD — deleting content/activities for fresh Gemini generation")
+        for key in ("md", "activities", "vocabulary"):
+            p = ctx.paths.get(key)
+            if p and p.exists():
+                p.unlink()
+                log(f"    removed {p.name}")
+        # Clear state for content → review
+        phases = state.setdefault("phases", {})
+        for pid in ("content", "activities", "validate", "review"):
+            phases.pop(pid, None)
+        save_state(ctx, state)
+        # Mark so we don't loop forever
+        ctx._auto_rebuilt = True  # type: ignore[attr-defined]
+        # Re-run from content through review
+        for pid, func in [("content", phase_content), ("activities", phase_activities),
+                          ("validate", phase_validate), ("review", phase_review)]:
+            if not _call_phase(func, pid, ctx, state):
+                if pid in NON_BLOCKING:
+                    log(f"  {pid}: FAIL — continuing")
+                    continue
+                log(f"  AUTO-REBUILD STOPPED at {pid}")
+                mark_failed(state, phase, ctx,
+                            attempts=2 + MAX_REVIEW_FIX_ITERS, note="auto-rebuild-failed")
+                _update_pipeline_status(ctx, "needs-manual-review")
+                return False
+        return is_complete(state, "review")
+
     mark_failed(state, phase, ctx,
                 attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
     _update_pipeline_status(ctx, "needs-manual-review")
     return False
+
+
+# ---------------------------------------------------------------------------
+# Plan adherence (deterministic, injected into review)
+# ---------------------------------------------------------------------------
+
+def _run_plan_adherence_check(ctx: ModuleContext) -> str:
+    """Run plan adherence checks, return formatted fix text (empty if no issues)."""
+    try:
+        from audit.checks.plan_adherence import check_plan_adherence
+    except ImportError:
+        logger.warning("plan_adherence module not available — skipping")
+        return ""
+
+    plan_path = ctx.paths.get("plan")
+    md_path = ctx.paths.get("md")
+    activities_path = ctx.paths.get("activities")
+
+    if not plan_path or not md_path:
+        return ""
+
+    result = check_plan_adherence(md_path, plan_path, activities_path or Path("/dev/null"))
+
+    if not result.issues:
+        log(f"  plan-adherence: {result.checks_run} checks, all passed")
+        return ""
+
+    high_issues = [i for i in result.issues if i.severity in ("CRITICAL", "HIGH")]
+    medium_issues = [i for i in result.issues if i.severity == "MEDIUM"]
+
+    log(f"  plan-adherence: {len(high_issues)} HIGH, {len(medium_issues)} MEDIUM issue(s)")
+
+    if not high_issues:
+        # Only MEDIUM/LOW — log but don't inject into fix plan
+        return ""
+
+    lines = ["## Plan Adherence Issues (Deterministic — MUST FIX)\n"]
+    for issue in high_issues:
+        lines.append(f"- **[{issue.severity}] {issue.check_type}** in `{issue.section}`")
+        lines.append(f"  - Expected: {issue.expected}")
+        lines.append(f"  - Actual: {issue.actual}")
+        lines.append(f"  - Fix: {issue.fix_hint}")
+        lines.append("")
+
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -3187,10 +3269,16 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
         log("  review: Fix block found but 0 fixes matched — check review-raw-output.md")
 
     _run_deterministic_fixes(ctx)
+    plan_adherence_text = _run_plan_adherence_check(ctx)
     passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
 
     # Determine verdict
     review_says_fail = _review_determine_verdict(d1, review_text)
+
+    # Plan adherence HIGH issues force a fix round
+    has_plan_issues = bool(plan_adherence_text)
+    if has_plan_issues:
+        review_says_fail = True
 
     # Early pass: no repair needed
     if passed and not review_says_fail:
@@ -3200,7 +3288,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     # Early pass: D1 inline fixes resolved issues
-    if passed and review_says_fail and n_d1_fixes > 0:
+    if passed and review_says_fail and n_d1_fixes > 0 and not has_plan_issues:
         log(f"  review: PASS (D.1 inline fixes resolved review issues — {n_d1_fixes} fix(es))")
         mark_complete(state, phase, ctx, attempts=1, note="d1-inline-fixes")
         _update_pipeline_status(ctx, "reviewed")
@@ -3210,6 +3298,7 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
     return _review_d2_loop(
         ctx, state, phase, d2_template, claude_model,
         review_text, review_says_fail, passed, audit_out,
+        plan_adherence_text=plan_adherence_text,
     )
 
 
