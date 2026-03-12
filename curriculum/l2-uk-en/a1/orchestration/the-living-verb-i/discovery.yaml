@@ -1,6 +1,10 @@
-discovered_at: '2026-03-07T02:38:03.264938+00:00'
+discovered_at: '2026-03-12T08:48:46.945370+00:00'
 query_keywords:
 - The Living Verb I
+- дієслово
+- читати
+- писати
+- знати
 - Культурний аспект та підсумок
 - Cultural Insight and Summary
 - First Conjugation verbs in present tense
@@ -8,101 +12,152 @@ query_keywords:
 - daily activities using -ати verbs
 - basic concept of imperfective aspect
 - First Conjugation pattern (-ати → -аю, -аєш...)
-- Personal verb endings
-- Imperfective aspect introduction
-- grammar
-- читати
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/episode22/
-  title: Are you going to the party? — First verb conjugation in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
-- url: https://opentext.ku.edu/dobraforma/chapter/21-1/
-  title: 'Dobra Forma 21.1: Present Tense (Читати Type)'
-  source: University of Kansas
-  relevance_score: 1.0
-  topics: []
-- url: https://opentext.ku.edu/dobraforma/chapter/21-2/
-  title: 'Dobra Forma 21.2: Present Tense (Працювати Type)'
-  source: University of Kansas
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/ukrainian-tenses/
-  title: Verb Tenses Overview
-  source: Downloadable conjugation chart
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/fmu57/
-  title: 'Grammar Point: Verb conjugations in Ukrainian'
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_lvdp6hRm1U
+  channel: Bright Kids Ukrainian
+  title: Cooking verbs in Ukrainian. Дієслова для готування.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLexOoy6MUY
+  channel: Bright Kids Ukrainian
+  title: Verbs & infinitives in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=zVdb0g7KDC0
+  channel: Ukrainian Lessons
+  title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+    and perfective verbs in...
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=TBYyOdHOCCk
+  channel: Ukrainian Lessons
+  title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=xGrdJHym-9E
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Where are u from? Countries, languages | Genitive
+    case,  Verb conjugations'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=A49aZdwMz6k
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Hobbies | Ukrainian music | Palatalization, Verb
+    + infinitive, Noun cases'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
 rag_chunks:
-- score: 0.25
-  chunk_id: 5-klas-ukrmova-avramenko-2022_s0182
-  text: "Порівняйте: \nЯ, на жаль, запізнився і Я запізнився. Речення, що містять\
-    \ вставні слова, звертання або однорідні члени, на-\nзиваємо ускладненими."
-  section_title: Сторінка 175
-  grade: 5
-  author: avramenko
-  page: ''
-  trust_tier: 1
-- score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0102
-  text: "(тимчасова ознака)\n4. Присудок у позиції перед однорідними підметами може\
-    \ мати форму як однини, так і \nмножини. Якщо він стоїть в однині, то узгоджується\
-    \ в роді й особі з першим підметом: Чу-\nється гармонійний гудок пароплава й пісня\
-    \ (О. Довженко). З обох кінців яру почувся ти-\nхий тріск і людські голоси (Г.\
-    \ Тютюнник). Навкруги лунали регіт і жарти (О. Гончар)."
-  section_title: Сторінка 77
-  grade: 11
-  author: avramenko
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.1666666716337204
-  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
-  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
-    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
-    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
-    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
-    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
-    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
-    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
-  section_title: Сторінка 226
-  grade: 6
-  author: avramenko
-  page: ''
-  trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 10-klas-ukrmova-karaman-2018_s0254
-  text: "За лексичними й морфо-\nлогічними ознаками поділяються на власні \nй загальні,\
-    \ конкретні й абстрактні, назви істот \nі неістот, збірні та одиничні\nОсновна:\
-    \ підмет (називний відмінок або родовий, \nколи поєднується з кількісним числівником\
-    \ або \nіншим словом із кількісним значенням — у скла-\nденому підметі), додаток\
-    \ (у непрямих відмінках). Неосновна: обставина (частіше іменник із при-\nйменником,\
-    \ особливо в місцевому відмінку), не-\nузгоджене означення, прикладка, іменна\
-    \ частина \nскладеного присудка"
-  section_title: Сторінка 141
-  grade: 10
-  author: karaman
+- score: 0.125
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0080
+  text: "НАВЧАЮСЯ ВЖИВАТИ ДІЄСЛОВА В МОВЛЕННІ\n9| Прочитай. Випиши дієслова за абеткою.\n\
+    Щоб дізнатися новЄ про навколишній \nсвіт, можна: розглядати, слухати, читати,\
+    \ \nспостерігати, вимірювати, експериментувати, \nтобто збирати відомості про\
+    \ довкілля. А потім \nпорівнювати, обмірковувати і робити висновки.\nдоповнюю\
+    \ \nскладаю\n• Поцікався, у якій послідовності записав дієслова твій \nоднокласник\
+    \ (твоя однокласниця).\n10 Розкажи, як ти пізнаЄш світ. Доповни речення.\nЯ читаю\
+    \ ? .\nЯ слухаю ? .\nЯ спостерігаю ? .\nЯ екс"
+  section_title: Сторінка 82
+  grade: 2
+  author: vashulenko
   page: ''
   trust_tier: 2
 - score: 0.10000000149011612
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0055
-  text: "Розділ 1  ДІЄСЛОВО\n48\nФорму майбутнього часу мають діє слова й недокона-\n\
-    ного, і доконаного виду: робитиму і зроблю, гратимеш \nі зіграєш.\nВід діє слів\
-    \ доконаного й недоконаного виду утворюємо \nрізні форми майбутнього часу. Діє\
-    \ слова доконаного виду \nутворюють просту форму додаванням відповідних закін-\n\
-    чень. Ці закінчення такі самі, як і в діє слів недоконаного \nвиду в теперішньому\
-    \ часі.\nОсоба\nЧисло\nОднина\nМножина\n1-ша\nнапишу, зроблю\nнапишемо, зробимо\n\
-    2-га\nнапишеш, зробиш\nнапишете, зробите\n3-тя\nн"
-  section_title: Сторінка 51
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0161
+  text: "•  Спишіть текст. Підкресліть дієслова. Укажіть у дужках час, \nособу й число\
+    \ дієслів за зразком у тексті.\nДієслова на -ся\n370. Прочитайте вірш Галини Кирпи.\n\
+    Дерево трудиться назеленітися.\nКвіточка трудиться начервонітися.\nБджілка трудиться\
+    \ налітатися.\nМетеличок трудиться нагойдатися.\nТравичка — водички напитися.\n\
+    Росинка — на білий світ надивитися.\n•  Випишіть дієслова на -ся. Доведіть, що\
+    \ вони означають дію, \nспрямовану на себе. Позначте будову виділених слів.\n\
+    •  Зробіть звуко-буквений аналіз ді"
+  section_title: Сторінка 162
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0081
+  text: 'Розділ 1  ДІЄСЛОВО
+
+    74
+
+    2  Особові форми дієслова подано в  рядку
+
+    А  пишу, написано
+
+    Б  написаний, писавши
+
+    В  писав, напишу
+
+    Г  писати, писали
+
+    3  Інфінітив виконує роль означення в  реченні
+
+    А  Розмовляти з вами — велика приємність.
+
+    Б  Я хочу бачити світ розплющеними очима.
+
+    В  Думка подарувати книжку всім сподобалася.
+
+    Г  Він прийшов познайомитися з дітьми.
+
+    4  Обидва діє слова доконаного виду в  рядку
+
+    А  стрибати, підстрибувати
+
+    Б  літати, наближатися
+
+    В  придбати, купити
+
+    Г  відчувати, зрадіти
+
+    5  Серед '
+  section_title: Сторінка 77
   grade: 7
   author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0069
+  text: "58\n2.\t Випишіть особові дієслова. \nВітаюся, чинити, ідеш, розглянуто,\
+    \ зважено, думають, спіймавши, ке-\nруватимеш, ознаменують, знайшла, розколото,\
+    \ ллємо, чесаний, зволожу-\nвати, аналізуєте, загартовуючись, напружує, іскряться,\
+    \ пройдено, шумі-\nли, економиш, радію, забуто, мислити, випивши, загорнута, скотилося,\
+    \ \nсмажене, згорнути, тримай, ілюструватимуть, упорядковувати, надрива-\nєтеся,\
+    \ іменують, майструйте, очікуємо, зваживши, гріючи, ладнаєш, за-\nсновано, нести,\
+    \ оговталася, краємо, попросивши, "
+  section_title: Сторінка 61
+  grade: 7
+  author: avramenko
   page: ''
   trust_tier: 1
 rag_images: []

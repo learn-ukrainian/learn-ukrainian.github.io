@@ -1,8 +1,9 @@
-discovered_at: '2026-03-06T02:53:27.724363+00:00'
+discovered_at: '2026-03-12T09:27:54.632452+00:00'
 query_keywords:
 - 'Checkpoint: Daily Life'
-- Огляд
-- Overview
+- вчора
+- завтра
+- ранок
 - 'Навичка 1: Часові форми'
 - 'Skill 1: Tenses'
 - 'Навичка 2: Повсякденне життя'
@@ -11,74 +12,26 @@ query_keywords:
 - 'Skill 3: Description & Weather'
 - Інтеграційне завдання
 - Integration Task
-- Demonstrate past and future tense usage
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/ukrainian-history/
-  title: Ukrainian History — Brief Overview
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - history
-  - culture
-  - overview
-- url: https://www.ukrainianlessons.com/episode95/
-  title: My life in Kyiv (Voice message №3)
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - grammar
-  - verbs
-  - phrases
-  - introductions
-  - culture
-  - kyiv
-  - review
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 95
-- url: https://www.ukrainianlessons.com/fmu58/
-  title: How to describe your daily routine in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  - phrases
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 58
-- url: https://talkukrainian.com/grammatical-cases/
-  title: 'Talk Ukrainian: Ukrainian Grammatical Cases'
-  source: talkukrainian
-  relevance_score: 0.3
-  topics:
-  - cases
-  - grammar
-  - overview
-  - відмінки
-- url: https://www.ukrainianlessons.com/episode152/
-  title: Ukrainian Lessons Podcast Season 4
-  source: ukrainianlessons.com
-  relevance_score: 0.2
-  topics:
-  - vocabulary
-  - idioms
-  - culture
-  - history
-  content_type: podcast_episode
-  series: ULP
-  season: 4
-  episode: 152
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=I4HyoN4e7CY
+  channel: Bright Kids Ukrainian
+  title: Колядка У місточку Вифлеємі_Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=wYmNC7JLiY0
+  channel: Let's Learn Ukrainian
+  title: 'Quick Ukrainian Class #8: how to say today, tomorrow and yesterday'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
 rag_chunks:
-- score: 0.1666666716337204
+- score: 0.3333333432674408
   chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0132
   text: "134\n282. 1. Спиши слова. До яких частин мови вони належать? \nЩо в них спільного?\n\
     2. З одним словом (на вибір) склади і запиши речення.\n283. 1. Розгляньте таблицю\
@@ -92,66 +45,58 @@ rag_chunks:
   author: varzatska
   page: ''
   trust_tier: 2
-- score: 0.125
-  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0159
-  text: 'Пригадую знання про звуки і букви . . . . . . . . . . . . . . . . . . . .
-    . . . . . . .4
-
-    Спостерігаю за значенням слів  . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . 23
-
-    Досліджую будову слова . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . 34
-
-    Дізнаюся більше про іменники . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . 78
-
-    Досліджую прикметники . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . 92
-
-    Розпізнаю числівники  . . . . . . . . . . . '
-  section_title: Сторінка 160
-  grade: 3
-  author: ponomarova
+- score: 0.1428571492433548
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0070
+  text: "69\n• Що буде далі? Продовж розповідь.\n• Запиши, які справи ти робиш кожного\
+    \ дня тижня. \nнеділя\nпонеділок\nвівторок\nсереда\nчетвер\nп’ятниця\nсубота\n\
+    Зразок. У понеділок я … .\nрозвиток мовЛення. заПроШення\n• Уяви, що ви з друзями\
+    \ влаштовуєте виставку ваших улюб-\nлених книжок. Запроси когось із рідних на\
+    \ цю виставку.\nПовідом, що це \nзапрошення\nЗапрошення\nЗапроси \nна подію\n\
+    Запрошую на свято / концерт / \nзмагання / день народження\nУкажи час \nі місце\
+    \ події\nСвято відбудеться о 10:00 \nв актовій залі школи\nЗ"
+  section_title: Сторінка 69
+  grade: 2
+  author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.09090909361839294
-  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0111
-  text: "113\n\t Спиши дієслова, постав їх у форму майбутнього часу однини та \nмножини\
-    \ за зразком вправи 266. Користуйся таблицею та \nпитаннями вправи 265.\n269.\t\
-    \tРозгляньте таблицю змінювання дієслів теперішнього й \nмайбутнього часу за особами\
-    \ в однині. Обговоріть зміст. \nОсоба\nТеперішній час\nО\nД\nН\nИ\nН\nА\nМайбутній\
-    \ час\n1-ша  \nя\n2-га  \nти\n3-тя  \nвін, вона, воно\nїду, читаю,\nбачу\nїдеш,\
-    \ читаєш,\nбачиш\nїде, читає,\nбачить\nприїду, прочитаю,\nпобачу\nприїдеш, прочитаєш,\n\
-    побачиш\nприїде, прочитає,\nпобачить\n\t Порівняй ос"
-  section_title: Сторінка 113
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0107
+  text: "словами, у майбутньому часі.\nКрок 4. Розглянь таблицю змінювання дієслів,\
+    \ виражених двома\nОднина\nМножина\nОсоба\nПитання\nПриклад\nОсоба\nПитання\n\
+    Приклад\n1-ша (я)\nщо буду \nробити?\nбуду іти\n1-ша \n(ми)\nщо будемо \nробити?\n\
+    будемо \nіти\n2-га (ти)\nщо будеш \nробити?\nбудеш іти\n2-га \n(ви)\nщо будете\
+    \ \nробити?\nбудете \nіти\n3-тя (він, \nвона, \nвоно)\nщо буде \nробити?\nбуде\
+    \ іти\n3-тя \n(вони)\nщо будуть \nробити?\nбудуть \nіти\nКрок 5. Яке слово змінюється:\
+    \ допоміжне чи основне?\nКрок 6. Зроби висновок. Порівняй його з правило"
+  section_title: Сторінка 109
   grade: 4
-  author: zaharijchuk
+  author: kravtsova
   page: ''
   trust_tier: 2
 - score: 0.5
-  chunk_id: 7-klas-ukrmova-avramenko-2024_s0070
-  text: "59\n§ 27.  Особові  форми  дієслова\nтет педагогічного інституту (І. Грабар).\
-    \ 4. Веб/камери застосовують для \nвідео/конференцій, охорони приміщень та ін.\
-    \ (з тлумачного словника). \nА.\t Перепишіть речення, знявши риску. \nБ.\t Надпишіть\
-    \ над кожним особовим дієсловом особу й число.\n4.\t Виконайте завдання в тестовій\
-    \ формі. \n\t\n\t\nУвідповідніть дієслівну форму з її граматичними ознаками.\n\
-    Дієслівна форма\nГраматичні ознаки\n1\t відшкодовуємо\n2\t заприятелюю\n3\t розмістять\n\
-    4\t зволікаєш\n5\t перете\nА\t 1-ша особа, од"
-  section_title: Сторінка 62
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0078
+  text: "67\n2.\t Випишіть дієслова в три колонки: 1) форми минулого часу; 2) форми\
+    \ те-\nперішнього часу; 3) форми майбутнього часу. \nПрактикуватимеш, крикнув,\
+    \ обробиш, упорядковую, ламатимуть, іс-\nнувала, живете, ліквідував, гарячкують,\
+    \ творитиму, отримуєш, раджуся, \nімітували, аналізуватимеш, ясніло, обираєте,\
+    \ викрию, дихаємо, атакува-\nтимуть.\n\t З перших букв виписаних слів складіть\
+    \ назви давніх українських міст. \n1.\tПрочитайте діалог і виконайте завдання.\
+    \ \nНа касі в супермаркеті: \n— З вас двісті двадцять"
+  section_title: Сторінка 70
   grade: 7
   author: avramenko
   page: ''
   trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0190
-  text: "§ 30  Особливості вживання прийменників  \n183\nВправа 263\n1   Розгляньте\
-    \ інфографіку  Розкажіть, як на ній відображено важливість на-\nвчання \nШкола\n\
-    Училище, університет, навчальні курси, самоосвіта\nПрофесії\n2  Напишіть есе на\
-    \ одну з  тем \n• Навчання — інвестиція в майбутнє чи марнування \nчасу?\n• Для\
-    \ чого потрібно навчатися?\n• Як я уявляю себе в майбутньому?\n              \
-    \     Підручник \n \n         видавництво \"Ранок\""
-  section_title: Сторінка 186
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0055
+  text: "Розділ 1  ДІЄСЛОВО\n48\nФорму майбутнього часу мають діє слова й недокона-\n\
+    ного, і доконаного виду: робитиму і зроблю, гратимеш \nі зіграєш.\nВід діє слів\
+    \ доконаного й недоконаного виду утворюємо \nрізні форми майбутнього часу. Діє\
+    \ слова доконаного виду \nутворюють просту форму додаванням відповідних закін-\n\
+    чень. Ці закінчення такі самі, як і в діє слів недоконаного \nвиду в теперішньому\
+    \ часі.\nОсоба\nЧисло\nОднина\nМножина\n1-ша\nнапишу, зроблю\nнапишемо, зробимо\n\
+    2-га\nнапишеш, зробиш\nнапишете, зробите\n3-тя\nн"
+  section_title: Сторінка 51
   grade: 7
   author: litvinova
   page: ''

@@ -5,33 +5,13 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-07T02:59:10Z",
-      "task_id": "v5-the-accusative-i-things-pA",
-      "mode": "full"
+      "ts": "2026-03-12T08:55:31Z",
+      "note": "rebuild-kept"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-07T02:59:53Z"
-    },
-    "sandbox": {
-      "status": "complete",
-      "ts": "2026-03-07T02:59:56Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-07T03:06:02Z",
-      "self_audited": true
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-07T03:08:05Z",
-      "task_id": "v5-the-accusative-i-things-pC"
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-07T03:20:16Z",
-      "attempts": 2,
-      "note": "pass-with-1-info-issues"
+      "ts": "2026-03-12T08:55:54Z",
+      "note": "merged-into-research"
     }
   }
 }

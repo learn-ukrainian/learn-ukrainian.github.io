@@ -1,53 +1,165 @@
-## Research Notes
+# Дослідження: Accusative Prepositions
 
-**1. Textbook Approach:**
-Beginner Ukrainian textbooks typically introduce Accusative prepositions by dividing them into two distinct cognitive categories: spatial/directional (в/у and на) and abstract/relational (за, через, про). Spatial prepositions are taught first using the question word "Куди?" (Where to?) to establish the concept of dynamic motion, which directly contrasts with the static location ("Де?") taught later in the Locative case.
+## State Standard Reference
+§4.2.3.2: "Accusative — direct object, with prepositions (в/у, на, за, через, про)"
+Alignment: This module directly delivers all four A1 accusative prepositions as a dedicated focus unit, completing the accusative case arc begun in M25-M26.
 
-**2. Common Errors:**
-- **Gratitude Preposition:** English speakers intuitively try to use "для" (for) when saying thank you (e.g., "Дякую для..."). It is critical to emphasize that Ukrainian strictly uses "за" (Дякую за допомогу) to represent an exchange or gratitude.
-- **Events and Open Spaces:** Learners often default to "в/у" for all destinations (e.g., "в концерт" instead of "на концерт"). The distinction between enclosed spaces (в/у) and events/surfaces (на) requires explicit reinforcement.
-- **Time Prepositions:** Confusing "через" (time elapsed from now, e.g., "через годину" - in an hour) with "за" (duration of time to complete an action, e.g., "за годину" - within an hour).
+## Vocabulary Frequency
 
-**3. Cultural Hook:**
-The preposition "за" is highly visible in daily Ukrainian life due to the culture of politeness in public transport. When passing money to the driver in a marshrutka (minibus), passengers say "за проїзд" (for the fare), demonstrating the "exchange" function of "за + Accusative" in a deeply authentic and practical setting.
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| магазин | High-frequency daily life noun; masc, 2nd decl | іду **в магазин**, у **магазині** |
+| пошта | High-frequency civic noun; fem, 1st decl; classic на-destination | іду **на пошту**, на **пошті** |
+| концерт | High-frequency event noun; masc, 2nd decl; prototypical event destination | їду **на концерт**, на **концерті** |
+| допомога | Abstract fem noun; prototypical за+Acc gratitude pattern | **дякую за допомогу**, просити допомогу |
+| година | Time measurement noun; fem, 1st decl; key for two time expressions | **за годину** (in an hour), **через годину** (in an hour — after delay) |
+| парк | Open public space; masc, 2nd decl; spatial через context | **через парк** (through), **у парку** (location) |
+| площа | Urban landmark; fem, 1st decl; prototypical на-destination (open space) | іду **на площу**, на **площі** |
+| стадіон | Event venue; masc, 2nd decl; на-destination (event + open space) | іду **на стадіон**, на **стадіоні** |
+| пляж | Outdoor surface/place; masc, 2nd decl; на-destination (surface) | іду **на пляж**, на **пляжі** |
 
-**4. Cross-References:**
-This module builds directly upon **a1-26 (The Accusative II)**, utilizing the inanimate and animate noun endings learned there. It is a critical prerequisite for the subsequent module **a1-28 (The Locative)**, setting up the fundamental grammatical contrast between directional motion (Accusative) and static position (Locative).
+## Cultural Hooks
+
+1. **Real-life urban navigation**: Kyiv's Хрещатик street and Майдан Незалежності are perfect на-destinations — open squares/events. Ukrainian directions always use куди? (direction) vs де? (location), a contrast deeply embedded in everyday speech. Asking "Ви йдете на Майдан?" is a natural daily exchange.
+2. **Дякую за…**: The expression *дякую за допомогу / за увагу / за запрошення* is one of the most frequently used social formulas in Ukrainian. It appears in every formal letter ending, every classroom, every shop interaction — learners hear it immediately in the wild.
+3. **Через дощ** (because of rain): Ukrainian weather-based excuses are culturally rich. *Не прийшов через дощ* — this causal через is distinct from spatial через and gives learners a dual-function preposition to master, mirroring how native speakers think about причина (cause).
+
+## Common Learner Errors
+
+1. **в/у confusion with phonetics** → Use **у** before consonant clusters or words starting with в/ф: *у Франції*, *у Львові*; use **в** before vowels and most consonants: *в Одесі*, *в магазин*. English speakers apply no such rule and default to one form.
+2. **в vs на conflation** → English "to" covers both: "to the store" = *в магазин*; "to the post office" = *на пошту*. Learners must learn each destination individually as в-place or на-place. No single rule covers all cases — must be lexically memorized per destination type (enclosed=в, surface/event/open=на).
+3. **за годину vs через годину** → Both translate as "in an hour" in English, but за = after a completed interval (Я прийду за годину — I'll come in an hour, planned), через = after an elapsed interval or with causal meaning (Він запізнився через годину — he was an hour late; через роботу — because of work). This contrast is invisible in English.
+4. **Missing про**: English speakers often use *о* (влив of Russian *о/об*) or omit the preposition entirely. The correct Ukrainian form is *про* + Acc: *думати про маму*, NOT *думати о мамі*.
+
+## Cross-References
+- Builds on: a1-025 (The Accusative I — Things), a1-026 (The Accusative II — People), a1-013 (The Locative basics, в/у/на for location)
+- Prepares for: a1-028 (The Locative — Where Things Are; contrast direction vs location with same prepositions)
+
+## Teaching Strategy
+
+- **Discovery exercise**: Show learners 6 sentences paired with mini-map illustrations:
+  > *Я іду в магазин.* (arrow pointing INTO a building)
+  > *Я іду на пошту.* (arrow pointing TO a counter/open space)
+  > *Я їду через парк.* (arrow going THROUGH a green zone)
+  > *Я дякую за допомогу.* (two people shaking hands)
+  > *Я думаю про маму.* (thought bubble)
+  > *Я прийду за годину.* (clock showing +1 hour)
+  Ask: "What is each preposition doing? Can you group them?" — learners discover the semantic categories before the rule is stated.
+
+- **Best context**: City navigation and daily errands (travel agent persona fits perfectly). "Where are you going?" scenarios: market, café, post office, park, concert — all generate natural в/на contrast. Gratitude and apology formulas (дякую за, вибачте за) for за. Weather-delay excuses for через.
+
+- **Contrastive pairs**:
+  - *в бібліотеку* (enclosed) vs *на бібліотеку* ❌ — shows в/на rule
+  - *за годину* (in an hour, planned) vs *через годину* (in an hour, elapsed/causal)
+  - *через парк* (spatial: through) vs *через дощ* (causal: because of)
+  - *думати про* vs *думати о* (Russianism trap)
+
+## Notes for Content Writing
+
+- The в/у euphony rule (§4.1.7) was introduced in earlier phonetics modules — reference it briefly but don't reteach it. Just remind learners that the choice depends on the following sound.
+- Keep на-destinations as a lexical list (не правило, а список): пошта, площа, стадіон, пляж, острів, ринок, вокзал, концерт, урок — learners need to memorize these as a set.
+- The за/через time contrast is the most teachable "false friend" moment — devote a clear comparison box to it.
+- All four prepositions take Accusative case forms already taught in M25-M26 — lean on that prior knowledge. No new case endings needed, only new preposition semantics.
+- Про + Acc is semantically the simplest of the four — teach it last as a confidence-builder.
+
 
 ## Resource Discovery
 
 
 ### Blog Articles
 - [Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/episode57/) (ukrainianlessons.com)
-- [Talking about books in Ukrainian — Accusative case of people](https://www.ukrainianlessons.com/episode33/) (ukrainianlessons.com)
-- [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) (ukrainianlessons.com)
 - [Dobra Forma: Accusative Case after Prepositions в/у, на and про](https://opentext.ku.edu/dobraforma/chapter/8-2/) (dobraforma)
+- [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) (ukrainianlessons.com)
 - [Shopping for clothes — Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode32/) (ukrainianlessons.com)
+- [Talking about books in Ukrainian — Accusative case of people](https://www.ukrainianlessons.com/episode33/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
-- Grade 4, Сторінка 26: 1
-КрокЗ. Пригадай, що виражають прийменники разом ¡з закінчен­
-нями. Перевір себе, розшифрувавши сло...
-- Grade 4, Сторінка 27: 27
-	 Спиши речення зі словами, у яких є подвоєння. Поясни пра­
-вопис слів із пропущеними буквами. По...
-- Grade 3, Сторінка 58: 58
-1. Спиши слова. Познач у них префікси.
-скинути 
- 
- 
-зробити
-спитати 
- 
- 
-змиритися
-стиснути 
- 
- 
-...
-- Grade 3, Сторінка 63: 63
-8. Спиши речення. Підкресли слова з апострофом. Випи-
-ши ті, у яких апостроф стоїть після префікс...
-- Grade 11, Сторінка 79: 79
-Словосполучення з  прийменниками при, за, із-за § 17 
- Кам’янці-Подільському, засновано Українсь...
+
+**Grade 11, Сторінка 81** ():
+¨кÁо до складеного підмета входять слова 
+ªа¬ат· µа´· ¿±µа´· тр·½± ³і´ь³а де
+³і´ь³а або іменники зі значенням кількості 
+(десÅт·³ с·тнÅ ¿аст±на реÀта ¸·´·в±
+на ªі´ьÀість та ін.), то присудок переважно 
+має ôорму однини
+агато люде± ¸·с¸іÀаè
+на концерт
+іль¿ість громадян ¸ід -
+тр±µа´а рі¿ення
+іль¿ість громадян ¸ід-
+тр±µа´± рі¿ення
+¨кÁо при складеному підметі є означення
+у ôормі µножини, то й присудок, коли він 
+пост позиційний, також уживаємо у ôормі 
+µножини. Препозиційний присуд
+
+
+**Grade 9, Сторінка 124** ():
+3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-
+ликий словесний опис цієї афіші з уживанням складнопідрядних ре-
+чень. 4. Створіть плакат «Порада другові» та складіть невеликий текст з об-
+ґрунтуванням цієї поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи журнальних публікацій по три приклади кож-
+ного виду складнопідрядних речень з кількома підрядними. 265
+266 
+267 
+268
+
+
+**Grade 7, Сторінка 125** ():
+121
+121
+Культура мовлення
+Рекомендовано
+(іменники)
+НЕ рекомендовано
+командувач армії
+завідувач бібліотеки 
+нападник (у футболі)
+вірянин 
+відпочивальник  
+оточення
+команда-лідер
+поет-початківець
+місця для сидіння 
+командуючий армії 
+завідуючий бібліотекою  
+нападаючий (у футболі)
+віруючий 
+відпочиваючий 
+оточуючі люди
+лідируюча команда
+початкуючий поет
+сидячі місця
+Рекомендовано 
+(прикметники)
+НЕ рекомендовано
+мийний засіб (для миття)
+знеболювальний засіб
+вимірювальний прилад
+відновлювальні робот
+
+
+**Grade 9, Сторінка 124** ():
+3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-
+ликий словесний опис цієї афіші з уживанням складнопідрядних ре-
+чень. 4. Створіть плакат «Порада другові» та складіть невеликий текст з об-
+ґрунтуванням цієї поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи журнальних публікацій по три приклади кож-
+ного виду складнопідрядних речень з кількома підрядними. 265
+266 
+267 
+268
+
+
+**Grade 6, Сторінка 140** ():
+140
+340   Запишіть словосполучення, уставляючи пропущені букви. 
+Алюміні..вий дріт, вельвет..ва куртка, взутт..ва крамниця, 
+груш..вий джем, дій..ва особа, житт..вий випадок, овоч..ве 
+рагу, пошт..ва скринька, травн..вий дощ, червн..ва ніч, чутт..ве 
+сприймання, помаранч..вий сік, парч..ва сукня. 
+341   Утворіть від поданих іменників прикметники, поясніть написання 
+суфіксів. 
+Лютий, січень, березень, метал, плюш, аґрус, стиль, вишня, 
+гелій, фланель, алюміній, кизил, чебрець, квітень, емаль. 
+3
+

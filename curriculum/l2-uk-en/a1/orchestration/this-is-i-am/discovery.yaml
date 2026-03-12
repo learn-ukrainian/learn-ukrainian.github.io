@@ -1,6 +1,9 @@
-discovered_at: '2026-03-05T20:59:58.697682+00:00'
+discovered_at: '2026-03-12T08:46:01.947313+00:00'
 query_keywords:
 - This Is / I Am
+- це
+- я
+- ти
 - Хто це? Що це?
 - Who is this? What is this?
 - Особові займенники
@@ -9,82 +12,96 @@ query_keywords:
 - 'Grammar: The Zero Copula Secret'
 - Робота над помилками та практика
 - Error Correction and Practice
-- 'Продакшн: Хто я і Хто ви?'
-- Who am I and Who are you?
-- personal pronouns (я, ти, він, вона, etc.)
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=HgFOY1UkCXw
-  channel: Learn Ukrainian Language
-  title: Top 5 wichtigsten W-Fragen für Deutschanfänger | Deutsch lernen A1 @hallodeutschschule
+- url: https://www.youtube.com/watch?v=TmhLo9yxU4I
+  channel: Bright Kids Ukrainian
+  title: Коляда 2024
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=KbKVrAC9zek
+  channel: Bright Kids Ukrainian
+  title: Кіт на ім‘я Сплет
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=E-5_vt9T26E
+  channel: Ukrainian Lessons
+  title: 'ULP 1-38 | Interview 3: Ого! Це цікавий факт…'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=EDbRAQGlYuE
+  channel: Ukrainian Lessons
+  title: 'ULP 4-124 | Як це було: незалежність України | Ukrainian Lessons Podcast
+    Season 4'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=LD6eFDIGKrU
+  channel: Ukrainian with Olha
+  title: 'Наша родина - Our family #ukrainianlessons #ukrainianlanguage #studyukrainian
+    #languagelearning'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7wfW-3X-dBSUxUv5wcmJiIHe
+  channel: Ukrainian with Olha
+  title: Українська музика - Ukrainian music
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
 blogs:
-- url: https://www.ukrainianlessons.com/fmu1/
-  title: How to explain that you don’t speak Ukrainian very well (yet)
+- url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
+  title: Ukrainian Personal Pronouns
   source: ukrainianlessons.com
-  relevance_score: 0.4
+  relevance_score: 0.6
   topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 1
-- url: https://www.ukrainianlessons.com/fmu2/
-  title: Useful phrases for learning Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
+  - pronouns
+  - grammar
+  - declension
+- url: https://opentext.ku.edu/dobraforma/chapter/13-1/
+  title: 'Dobra Forma: Personal Pronouns (Nominative and Accusative Cases)'
+  source: dobraforma
+  relevance_score: 0.6
   topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 2
-- url: https://www.ukrainianlessons.com/fmu3/
-  title: How to talk to an Uber / taxi driver in Ukrainian?
-  source: ukrainianlessons.com
-  relevance_score: 0.4
+  - pronouns
+  - accusative
+  - grammar
+- url: https://talkukrainian.com/personal-pronouns/
+  title: 'Talk Ukrainian: Personal Pronouns'
+  source: talkukrainian
+  relevance_score: 0.6
   topics:
-  - phrases
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 3
-- url: https://www.ukrainianlessons.com/fmu4/
-  title: Vocabulary booster! Transport in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 4
-- url: https://www.ukrainianlessons.com/fmu5/
-  title: How to talk about transport in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
+  - pronouns
+  - personal
+  - grammar
+- url: https://www.verba.school/post/ukrainian-personal-pronouns
+  title: Ukrainian Personal Pronouns
+  source: verba.school
+  relevance_score: 0.6
   topics:
   - grammar
-  - cases
-  - instrumental
-  - vocabulary
-  - travel
-  - phrases
-  - culture
-  - lviv
-  - review
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 5
+  - pronouns
+- url: https://opentext.ku.edu/dobraforma/chapter/13-2/
+  title: 'Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)'
+  source: dobraforma
+  relevance_score: 0.5
+  topics:
+  - pronouns
+  - accusative
+  - genitive
+  - grammar
 rag_chunks:
-- score: 0.25
+- score: 0.3333333432674408
   chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0086
   text: "1\n( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ\n241. Зіскануй ОЯ-код та переглянь відеоролик\
     \ про \nзайменники. Що нового ти дізнався / дізнала­\nся?\n242.1. Розглянь малюнки.\
@@ -98,7 +115,7 @@ rag_chunks:
   author: kravtsova
   page: ''
   trust_tier: 2
-- score: 0.20000000298023224
+- score: 0.1666666716337204
   chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0043
   text: "ч ч\n>\n✓\n✓\nСлова — назви\n(предметів, ознак, дій, чисел)\nУ розділі ти\
     \ дізнаєшся про:\n/\n< ч ч\nСЛОВА - НАЗВИ ПРЕДМЕТІВ \n(ІМЕННИКИ)\nхто? що?\nСЛОВА\
@@ -111,7 +128,7 @@ rag_chunks:
   author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.1666666716337204
+- score: 0.1428571492433548
   chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0021
   text: "21\nХто це?\nСлова — назви живих предметів\n\t Який у тебе сьогодні настрій?\
     \ Вибери.\n [ –    –|–  ] \n [ =    –|–   ] \n [ –  |–  |– ] \n [ =  |–   – ]\
@@ -121,20 +138,6 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.1428571492433548
-  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0104
-  text: "106\n225. Спиши слова. Поміркуй, якими особовими займен-\nниками їх можна\
-    \ замінити.\n226. Розгляньте таблицю. Зверніть увагу, що особові \nзайменники\
-    \ поділяють на три групи залежно від того, \nна яку особу чи яких осіб вони вказують.\n\
-    ЗНАЧЕННЯ ОСОБОВИХ ЗАЙМЕННИКІВ\nОсоба\nЧисло\nЗайменники  \nвказують на\nоднина\n\
-    множина\n1-ша\nя\nособу, яка говорить про себе\nми\nдвох і більше осіб, зокрема\
-    \ й \nтого, хто про себе говорить\n2-га\nти\nособу, до якої звертаються \nви\n\
-    особу (якщо це форма ввіч-\nливості) або осіб, до яки"
-  section_title: Сторінка 106
-  grade: 4
-  author: varzatska
-  page: ''
-  trust_tier: 2
 - score: 0.125
   chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
   text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
@@ -143,6 +146,20 @@ rag_chunks:
   section_title: Сторінка 101
   grade: 3
   author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0121
+  text: "•  Спишіть текст, уставляючи на місці крапок пропущені займен­\nники я, ти,\
+    \ він, вона, воно, ми, ви, вони. Поміркуйте, на що \nвказують (на яких осіб) ці\
+    \ займенники. Звірте свої міркуван­\nня з таблицею, поданою нижче.\n276. Розгляньте\
+    \ таблицю.\nОсоба\nЧисло\nНа що вказують займенники\nОднина\nМножина\n1-ша\nя\n\
+    МИ\nя — на особу, яка говорить про себе; \nми — на осіб (двох і більше), які гово­\n\
+    рять про себе\n2-га\nти\nви\nти — на особу, до якої звертаються; \nви — на осіб,\
+    \ до яких звертаються\n3-тя\nвін,\nвона,\nвоно\nв"
+  section_title: Сторінка 122
+  grade: 4
+  author: ''
   page: ''
   trust_tier: 2
 rag_images: []

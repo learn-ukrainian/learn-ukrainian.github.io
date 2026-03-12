@@ -1,33 +1,140 @@
 # Дослідження: Контрольна точка: Дієслова руху
 
 ## State Standard Reference
-§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
-Alignment: This checkpoint systematically assesses the student's mastery of all prefixed motion verbs prescribed in §4.3.8, demanding application across spatial, transport, and idiomatic contexts at the B1 level.
+
+**§4.3.8** (lines 2336–2338): "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+
+**Alignment**: This checkpoint module directly tests mastery of §4.3.8, the B1 word-formation requirement for prefixed motion verbs. It also activates §4.2.2.4 (accusative case for direction) and §4.2.3.1 (aspect in all tenses). The module integrates all four preceding motion sub-skills (M18–M24) into a unified assessment — exactly what the checkpoint pedagogy type requires.
+
+---
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| йти / ходити | Very High (Core) | йти пішки, дощ іде, час іде |
-| їхати / їздити | Very High (Core) | їхати автобусом/поїздом, їхати на роботу |
-| приходити | High (Prefixed) | приходити вчасно, приходити на думку |
-| переходити | High (Prefixed) | переходити вулицю, переходити на українську |
-| виходити | High (Prefixed) | виходити з дому, виходити на зв'язок |
+
+| Word | Frequency (abs) | IPM | Key collocations |
+|------|----------------|-----|-----------------|
+| йти | 135,519 | 66.96 | йти пішки, йти додому, час іде, дощ іде |
+| їхати | 67,884 | 33.54 | їхати поїздом, їхати до міста, їхати автобусом |
+| виходити | 52,455 | 25.92 | виходити з дому, виходити заміж, виходити на зв'язок |
+| переходити | 16,987 | 8.39 | переходити вулицю, переходити на українську, переходити межу |
+| приходити | 13,734 | 6.79 | приходити вчасно, приходити на думку, приходити до висновку |
+| доїжджати | verified ✅ | — | доїжджати до станції, доїжджати вчасно |
+| виїжджати | verified ✅ | — | виїжджати з міста, виїжджати за кордон |
+| обходити | verified ✅ | — | обходити калюжу, обходити навколо |
+| сходити | verified ✅ | — | сходити вниз, сходити з ескалатора |
+| покидати | verified ✅ | — | покидати місто, покидати дім |
+
+**VESUM status**: All 14 target verbs (йти, їхати, виходити, заходити, переходити, підходити, відходити, приходити, доїжджати, обходити, сходити, виїжджати, приїжджати, покидати) verified ✅ — no invented forms.
+
+---
 
 ## Cultural Hooks
-1. **Kyiv Metro "Arsenalna"**: The deepest metro station in the world (105.5 meters). This is an iconic spatial anchor to practice verbs of vertical movement and transition (`сходити вниз`, `підніматися`, `спускатися`, `переходити`).
-2. **Ukrzaliznytsia ("Iron People")**: Millions were evacuated by the national railway in 2022. Using transport verbs (`виїжджати`, `приїжджати`, `рятуватися`) within this context provides profound cultural resonance, elevating grammar beyond sterile logistics to life-saving movement.
+
+1. **Арсенальна — найглибша станція метро у світі**: Відкрита 6 листопада 1960 р. на Святошинсько-Броварській лінії між «Хрещатиком» і «Дніпром». Глибина — 105.5 м (офіційно найглибша у світі). Спуск на ескалаторі займає ~3 хвилини. Педагогічна цінність: ідеальний контекст для відпрацювання «сходити вниз / підніматися вгору», «виходити / заходити». (Source: uk.wikipedia.org/wiki/Арсенальна_(станція_метро))
+
+2. **Укрзалізниця і 2022 — «залізний коридор» евакуації**: У 2022 р. Укрзалізниця здійснила масштабну евакуацію цивільного населення. Існує підтверджений феномен «медичного поїзду» (медичні вагони для евакуації поранених). Станції стали точками концентрації для виїзду — дієслова *виїжджати, покидати, рятуватися, прибувати* набули конкретного культурного значення у 2022 р. (Source: Укрзалізниця, Медичний поїзд Укрзалізниці — uk.wikipedia.org)
+
+---
 
 ## Common Learner Errors
-1. **Direction vs. Habit** → Using *йти* for regular actions instead of *ходити* (e.g., *Я йду в офіс щодня* ❌ → *Я ходжу в офіс щодня* ✅). Learners often map the English "go" directly without splitting verbs by multidirectionality.
-2. **Pedestrian vs. Transport** → Using *йти* for long-distance travel on wheels (e.g., *Я йду до Львова* ❌ → *Я їду до Львова* ✅). Ukrainian strictly categorizes locomotion method.
-3. **Accusative vs. Locative Destination** → *Йти в магазині* (walking around inside) vs. *Йти в магазин* (going into). Learners often default to Locative after "в" instead of triggering the dynamic Accusative case required for destination.
+
+1. **Односпрямований vs. різноспрямований** → *«Я йду в офіс щодня»* — помилка. Правильно: *«Я ходжу в офіс щодня»* (звичайна дія без конкретного напрямку в момент мовлення). Виникає через відсутність цієї категорії в англійській мові — learners use the first form they learn (іти/йти) universally.
+
+2. **«Відправлятися» як Russicism** — під впливом рос. *отправляться* learners (і навіть native speakers) використовують *відправлятися* замість правильних українських відповідників: *Автобус відбуває (виїжджає) з Києва о 8 годині; Ми вирушаємо в дорогу*. (Source: Karaman Grade 10 textbook, p.188, tier 2)
+
+3. **Знахідний vs. місцевий при дієсловах руху** → *«йти в магазині»* — помилка. Правильно: *«йти в магазин»* (напрямок = знахідний). Місцевий — лише для стану спокою (*бути в магазині*). Помилка частотна, бо learners переносять конструкцію місця на рух.
+
+4. **Ві- vs. від-**: *вийти з дому* (вийти = вихід із замкненого простору) vs. *відійти від вікна* (відійти = відстань від об'єкта). Learners плутають ці префікси, бо обидва передають «відділення».
+
+---
 
 ## Cross-References
-- Builds on: b1-16, b1-17, b1-18, b1-19, b1-20, b1-21, b1-22, b1-23, b1-24 (Motion verb sequence).
-- Prepares for: b1-26 (Relative clauses - який review).
+
+- **Builds on**: b1-018 (дієслова руху — повна система), b1-019 (прибуття та вихід), b1-020 (проходження та перетин), b1-021 (наближення та від'їзд), b1-022 (переносні значення), b1-023 (префіксна інтеграція), b1-024 (практика та інтеграція)
+- **Prepares for**: b1-029 (підрядні означальні: який) — complex sentence building that often embeds motion verb descriptions
+
+---
+
+## Multimedia Resources
+
+- (none encountered during research — discover phase will handle)
+
+---
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Emphasize the unique spatial logic of Ukrainian. The language maps physical reality precisely by categorizing the method of movement (legs vs wheels) and the exact spatial relationship to boundaries via prefixes. Affirm Ukrainian mechanics; do NOT compare to or benchmark against Russian "idti/exat".
-- **Immersion**: B1.2 mandates 100% Ukrainian immersion for all prose, explanations, and instructions. Do not use English parenthetical translations for grammar concepts.
-- **Phonetics & Lexicon**: Maintain correct IPA representations if used (о = [ɔ], е = [ɛ]). Avoid any non-standard or russified vocabulary (e.g. use отримувати, not получати; їсти, not кушати).
-- **Scale**: As a checkpoint module, it needs substantial word count (~4000) and high activity density (16+ activities). Ensure theoretical sections provide deep recaps with ample examples to support the word targets.
+
+- **Russicism alert**: Avoid *відправлятися* entirely in model sentences. Use *виїжджати / відбувати* for transport, *вирушати* for people setting out. The Karaman textbook explicitly flags this.
+- **Frequency insight**: *йти* (67 IPM) is nearly 2× more frequent than *їхати* (33 IPM) — reflecting that walking contexts dominate Ukrainian prose. Allocate proportionally more error-correction examples to *йти/ходити* confusion.
+- **Арсенальна depth**: use the 3-minute escalator descent as a timed exercise anchor — learners describe their journey down using *сходити, спускатися, виходити* in real time sequence.
+- **2022 framing**: The evacuation context for *виїжджати/покидати/приїжджати* is emotionally resonant and culturally significant. Treat with appropriate gravity — not as a grammar exercise prop, but as real language in real consequence.
+- **Idiom section**: *час іде* is Grade 2 textbook material (Vashulenko), confirming it is core, high-frequency, and appropriate for B1 review. *Іде концерт / іде катер* are from same source — useful for showing the verb's semantic range.
+- **Checkpoint structure**: The diagnostic (25 items) must cover all 14 core pairs + 6 key prefixes. Organize diagnostics by concept cluster, not alphabetically, to make patterns visible.
+- **Immersion**: 100% Ukrainian. No English in prose or callouts. English only in vocabulary table translations (as per B1 rules).
+- **Prefix mnemonic potential**: The §4.3.8 list organizes *іти* derivatives (прийти, перейти, дійти, відійти, зайти, вийти) and *їхати* derivatives (приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати) — parallel structure that can be exploited visually in tables.
+
+## Resource Discovery
+
+
+### Textbook References (RAG)
+
+**Grade 7, Сторінка 63** ():
+Розділ 1  ДІЄСЛОВО
+60
+Вправа 87 
+ 
+Скоригуйте речення, де це потрібно  Поясніть різновид помилки: грама-
+тична чи порушення етикетних норм 
+                   Підручник 
+ 
+         видавництво "Ранок"
+
+
+**Grade 11, Сторінка 221** ():
+. . . . . . . 33
+§ 8 
+Дієслово. Дієслівні форми  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+§ 9 
+Паралельні форми вираження наказового  способу дієслів І та ІІ особи множини . . . . . 46
+§ 10 
+Складні ви5падки словозміни дієслів дати, їсти, відповісти, бути . . . . . . . . . . . . . . . . . . . . 49
+§ 11 
+Активні й пасивні дієприкметники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+
+**Grade 7, Сторінка 107** ():
+§ 47
+ДІЄПРИКМЕТНИКОВИЙ  ЗВОРОТ. РОЗДІЛОВІ  ЗНАКИ  В  РЕЧЕННЯХ  ІЗ  
+ДІЄПРИКМЕТНИКОВИМИ  ЗВОРОТАМИ
+
+
+**Grade 7, Сторінка 77** ():
+74
+Зауважте!
+Коли визначаєте дієвідміну, зважайте на час дієслова: 
+•	 літаєш, бо літають (теп. час) — І дієвідміна; 
+•	 полетимо, бо полетять (майб. час) — ІІ дієвідміна.
+2.	 Запишіть дієслова у дві колонки: 1) з буквою е (є) на місці пропуску;  
+2) з буквою и (ї) на місці пропуску. 
+Накри..ш, плат..ш, аналізу..те, дер..мо, існу..те, економ..мо, трат..мо, 
+явля..мо, ран..те, оброб..мо. 
+1.	Прочитайте діалог і виконайте завдання. 
+— Інно, як правильно написати: ходеш чи ходиш у спортзал? — спита
+
+
+**Grade 2, Сторінка 111** ():
+111
+пасажирів установлено інформаційні 
+монітори. Вони полегшують користу-
+вання метро пасажирам з порушенням 
+слуху. На нових станціях змонтовані 
+ліфти-підйомники для тих, хто не може 
+самостійно пересуватися сходами.
+Пригадай! Розмову двох людей називають діалогом.
+Учасники діалогу обмінюються репліками.
+Зразок. 
+— Привіт, Кирилку!
+— Привіт, Соломійко!
+— Тобі сподобалося їздити на ескалаторі*?
+— Так, дуже! Пам’ятаєш правила безпечної поведінки 
+в метро?
+— Будьте уважні в метро. У вагоні не пр
+

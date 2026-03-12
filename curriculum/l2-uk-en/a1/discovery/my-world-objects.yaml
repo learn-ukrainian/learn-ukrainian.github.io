@@ -1,147 +1,127 @@
-discovered_at: '2026-03-05T21:16:34.426677+00:00'
+discovered_at: '2026-03-12T08:46:19.997685+00:00'
 query_keywords:
 - 'My World: Objects'
-- Культурний контекст
+- цей
+- ця
+- це
+- ці
+- той
+- та
+- те
+- ті
+- стіл
 - Cultural Insight
 - common household and everyday objects with correct gender
-- цей/ця/це/ці and той/та/те/ті as tools to identify objects
-- demonstrative gender with noun gender
-- rooms and spaces using household vocabulary
-- Demonstratives цей/ця/це/ці (this)
-- Demonstratives той/та/те/ті (that)
-- Gender agreement with demonstratives
-- grammar
-- цей
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/fmu15/
-  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
-  source: ukrainianlessons.com
-  relevance_score: 0.8
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 15
-- url: https://www.ukrainianlessons.com/episode2/
-  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - pronouns
-  - phrases
-  - greetings
-  - goodbyes
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 2
-- url: https://www.ukrainianlessons.com/episode7/
-  title: More about your family in Ukrainian + Possessive Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - pronouns
-  - vocabulary
-  - family
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 7
-- url: https://www.ukrainianlessons.com/episode14/
-  title: Likes and dislikes — common verbs in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - verbs
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 14
-- url: https://www.ukrainianlessons.com/episode22/
-  title: Are you going to the party? — First verb conjugation in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 22
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=MUC5PEgPua0
+  channel: Bright Kids Ukrainian
+  title: «Щедрик» від учнів школи Bright Kids
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MwemFtPMWww
+  channel: Ukrainian Lessons
+  title: ULP 4-134 | Сленг в українській мові | Ukrainian Lessons Podcast Season 4
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=XXalk_gwWXE
+  channel: Ukrainian with Olha
+  title: THIS, THAT, THESE, THOSE - ВКАЗІВНІ ЗАЙМЕННИКИ УКРАЇНСЬКОЮ | УРОК 22
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Pt36zVmZPB4
+  channel: Ukrainian with Olha
+  title: Віталій Лобач - Люблю тебе (cover Кайрат Нуртас UA версія Сергій Заболотний)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=lUw0u1EN2to
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #3. Genitive (Родовий відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ndzppOL62i0
+  channel: Let's Learn Ukrainian
+  title: 'Practise Genitive Case with Me! | #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
 rag_chunks:
-- score: 0.25
-  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0129
-  text: "131\n\t\n  \aПеревірте свої міркування за поданим висновком. \nкрісло\nзручне\n\
-    Шукаймо \nприкметники до назв \nпредметів інтер’єру!\n\t \t\n3   \aСклади усну\
-    \ розповідь на тему «Моя кімната», використову-\nючи іменники з довідки. Добери\
-    \ до іменників прикметники \nі використай їх у тексті. \nКімната, двері, вікно,\
-    \ стеля, стіни, коридор, шафа, стіл, стілець, \nтумбочка, ліжко, підлога. \nДовідка\n\
-    Навчаюся визначати рід і число прикметників  \nза іменником\nРід і число прикметників\
-    \ визначаються за формами \nроду і числа і"
-  section_title: Сторінка 131
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0027
+  text: "29\n3   \aДосліди це медіа, давши відповіді на запитання.\n\t \t\n2   \a\
+    Розгляньте світлину і скажіть, що на ній зображено. \n  \aУ вільний час переглянь\
+    \ із друзями, подругами або рідними інші серії \nцих пізнавальних мультфільмів\
+    \ про найкраще, що є в рідному краї.\n  \aПоміркуйте, що зі сказаного є фактом,\
+    \ а що — судженням.\nДослідіть зображен-\nня, давши відповіді \nна запитання.\n\
+    Я — дослідник\nЯ — дослідниця\nУ яку пору року відбувається дія? Чому ви так думаєте?\n\
+    Що вас здивувало на цій світлині?\nЯк ви думаєт"
+  section_title: Сторінка 29
   grade: 3
   author: vashulenko
   page: ''
   trust_tier: 2
 - score: 0.5
-  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0176
-  text: "Визначте в кожному з них тему й мікротеми. Текст 1\nСвоєрідність компліменту\
-    \ як елемента мовного етикету полягає в тому, що його кажуть \nздебільшого жінкам\
-    \ чоловіки (хоча цілком можливою є ситуація, за якої послуговуються \nкомпліментами\
-    \ будь-які мовці, незалежно від статі та віку)."
-  section_title: Сторінка 116
-  grade: 9
-  author: avramenko
-  page: ''
-  trust_tier: 2
-- score: 0.20000000298023224
-  chunk_id: 5-klas-ukrmova-golub-2022_s0047
-  text: "48\nШукаємо відповіді на запитання:\n1   Які слова називають загальновживаними?\n\
-    2   Чому в мові є слова обмеженого вживання?\n3   Для чого використовують діалектну\
-    \ лексику?\n4   Чи збагачує наше мовлення сленг?\n5   На вашу думку, в офіційних\
-    \ ситуаціях можна послугову-\nватися просторічними словами? \nВідповідно до запитань\
-    \ сформулюйте особисті цілі.\n109   Розгляньте таблицю. Складіть за її змістом\
-    \ розповідь про групи \nслів за вживанням. Доповніть її власними прикладами (усно).\
-    \ \nВисловіть припущення, ч"
-  section_title: Сторінка 48
-  grade: 5
-  author: golub
-  page: ''
-  trust_tier: 1
-- score: 0.1428571492433548
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0228
-  text: "223\nВідомості із синтаксису й пунктуації. Речення з однорідними членами\n\
-    Речення з  однорідними членами\nВправа 362\n1. Прочитайте діалог .\n— Добрий день!\
-    \ Чим можу Вам \nдопомогти?\n— Шукаю щось гарне, щоб мож-\nна було одягнути і\
-    \ в школу, і на про-\nгулянку.\n— Є сукні, костюми, спідниці та штани.\n— Мабуть,\
-    \ хочу сукню.\n— У нас є сукні довгі й короткі, приталені та вільні.\n— Ось ця\
-    \ мені подобається. Можна приміряти?\n— Звичайно!\n— Сукня сподобалася мені та\
-    \ моїй мамі. Беремо. Дякую \nза допомогу!\n— Будь ла"
-  section_title: Сторінка 223
-  grade: 5
-  author: litvinova
+  chunk_id: 6-klas-ukrlit-zabolotnyi-2023_s0046
+  text: . ‣ Свої знання з теми цього розділу я б оцінив / оцінила на ... .
+  section_title: Сторінка 46
+  grade: 6
+  author: zabolotnyi
   page: ''
   trust_tier: 1
 - score: 0.3333333432674408
-  chunk_id: 10-klas-ukrmova-glazova-2018_s0084
-  text: "103. Прочитайте. Укажіть фразеологізми стилістично нейтральні, розмовні та\
-    \ \nкнижні. 1. Загальновідомо, що кожна національна культура має в своєму арсе-\n\
-    налі елементи інших культур, але ж не вони визначають її суть (З газети). § 13"
-  section_title: Сторінка 58
-  grade: 10
-  author: glazova
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0125
+  text: "121\nЗАПИТАННЯ І ЗАВДАННЯ\nI.\nЗнаю й систематизую нову інформацію\n1. С\
+    \ а м о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні теми «Культурні\
+    \ надбання Старо-\nдавнього Сходу». Дайте відповіді на запитання.\n?\nПрекрасно\n\
+    Добре\nНічого \nне зрозуміло\nЯку роль відіграла писемність \nу розвитку давніх\
+    \ цивілізацій Сходу?\nЯкими науковими відкриттями\nнародів Сходу ми послуговуємось\n\
+    і нині?\nЧим цінні для дослідників пам’ятки \nмистецтва Стародавнього Сходу?\n\
+    Що свідчить про високий рівень \nрозвитку культури С"
+  section_title: Сторінка 123
+  grade: 6
+  author: shchupak
   page: ''
-  trust_tier: 2
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-istoriya-schupak-2022_s0034
+  text: "РОЗДІЛ 1\n36\nСюжет про трипільську культуру\n(5 канал, тривалість 03 хв\
+    \ 08 с) https://cutt.ly/xXrhzwu\nПерегляньте відеосюжет і доповніть розповідь\
+    \ авто-\nрів підручника про трипільську культуру.\n1.\t Визначте, як на карті\
+    \ позначено територію поширення трипіль-\nської археологічної культури.\n2.\t\
+    \ Які вже відомі вам поняття можна використати, розповідаючи \nпро зображення\
+    \ 2?\n  Діємо: практичні завдання\n1\n2\n1.\t Попрацюйте з ілюстрованою  картою\
+    \ «Археологічні скарби давни-\nни» (с. 38–39). Визначте за списк"
+  section_title: Сторінка 36
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0265
+  text: 'Куліша «Чорна рада». Розвиваємо компетентності
+
+    Теорія літератури
+
+    Я
+
+    Аля'
+  section_title: Сторінка 245
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
 rag_images: []
 rag_literary: []

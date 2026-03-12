@@ -1,45 +1,25 @@
-discovered_at: '2026-03-05T23:06:22.155257+00:00'
+discovered_at: '2026-03-12T08:47:20.115315+00:00'
 query_keywords:
 - Colors & Clothing
+- білий
+- чорний
+- червоний
 - Вступ та культурний контекст
 - Introduction & Cultural Context
 - Презентація кольорів та граматика узгодження
 - Colors & Grammar of Agreement
-- Одяг та дієслово «носити»
-- Clothing & the Verb 'To Wear'
-- Практичне застосування та покупки
-- Practice & Shopping
+- Одяг
+- Практичне застосування
 - basic colors in Ukrainian
 - color adjectives with correct gender agreement
-- clothing items
 error: null
-warning: null
-videos:
-- url: https://www.youtube.com/watch?v=37E7nLjk7J0
-  channel: Learn Ukrainian Language
-  title: Головний колір 2026 року від Pantone + ключові модні тренди | Прогноз моди
-    2026
-  relevance_score: 0.9
-  relevance_note: The video discusses the Pantone color of the year for 2026 and current
-    fashion trends, directly linking colors to clothing and cultural context, which
-    aligns perfectly with the module's topic.
-  transcript_excerpt: Пантон офіційно оголосив, що головним кольором 2026 року стає
-    Cloud Dancer. Це повітряний, ніжний, безпечний білий відтінок, який символізує
-    спокій та новий початок.
-  embed_suggestion: After section Вступ та культурний контекст (Introduction & Cultural
-    Context) — to provide a modern, cultural perspective on colors and fashion.
-- url: https://www.youtube.com/watch?v=wcbikMDSsN8
-  channel: Learn Ukrainian Language
-  title: Pantyhose Try-On from France 🇫🇷 | Calzedonia Tights Review
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
+warning: No videos found across channels
+videos: []
 blogs:
 - url: https://www.ukrainianlessons.com/episode25/
   title: Colors in Ukrainian + Pronunciation Trainer
   source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
+  relevance_score: 0.5499999999999999
   topics:
   - vocabulary
   - colors
@@ -48,10 +28,17 @@ blogs:
   series: ULP
   season: 1
   episode: 25
+- url: https://www.ukrainianlessons.com/ph-clothing/
+  title: 'Ukrainian Phrasebook: Clothing'
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - clothing
+  - shopping
 - url: https://www.ukrainianlessons.com/episode32/
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.65
+  relevance_score: 0.44999999999999996
   topics:
   - grammar
   - cases
@@ -62,17 +49,10 @@ blogs:
   series: ULP
   season: 1
   episode: 32
-- url: https://www.ukrainianlessons.com/ph-clothing/
-  title: 'Ukrainian Phrasebook: Clothing'
-  source: ukrainianlessons.com
-  relevance_score: 0.6000000000000001
-  topics:
-  - clothing
-  - shopping
 - url: https://www.ukrainianlessons.com/episode228/
   title: Ukrainian Lessons Podcast Season 6
   source: ukrainianlessons.com
-  relevance_score: 0.44999999999999996
+  relevance_score: 0.35
   topics:
   - vocabulary
   - colors
@@ -83,87 +63,71 @@ blogs:
   season: 6
   episode: 228
 rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0060
+  text: "61\nМ’ЯКИЙ ПРИГОЛОСНИЙ ЗВУК [й]\nНазви предмети. Як вимовляється звук [й]\
+    \ у словах?\nМ АЙ|К А\nЙ О Д\nСЛОВА — НАЗВИ ОЗНАК\nДобери слова до малюнків.\n\
+    \ \nхолодний \nсірий \nбілий \nзелений\n \nвисокий \nдовгий \nтеплий \nголодний\
+    \ \n \n \n \n \n \nНазви кольори предметів. Подумай, які малюнки можуть \nбути\
+    \ в останньому стовпчику.\nЯКИЙ?\nЯКА?\nЯКЕ?\nЯКІ?\n1\n1\n \n2"
+  section_title: Сторінка 61
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0067
+  text: "68\nРОЗУМІЄМО КРАСУ Й ДОБРО\nРОЗУМІЄМО КРАСУ Й ДОБРО\n \nНаближається до\
+    \ нас срібна зима. Ця пора року має \nсвої кольори, звуки, малюнки, форми. Тільки\
+    \ приглядай-\nся, уявляй, доповнюй. Тоді побачиш ту чарівну красу, що\nдарує нам\
+    \ зима — художниця, скульпторка, музикантка. \nА ще зима — це чудові добрі новорічні\
+    \ й різдвяні свята,  які \nвчать нас бути уважними до навколишнього світу, не\
+    \ лише \nмріяти про подарунки, а й самим дарувати найголовніше — \nтепло своїх\
+    \ сердець.\nЧитаючи вдумливо твори цього розді"
+  section_title: Сторінка 68
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
 - score: 0.5
-  chunk_id: 6-klas-istoriia-shchupak-2023_s0005
-  text: "5\nЗМІСТ\nВСТУП ДО КУРСУ\n§ 1. Повторення. Що вивчає наука історія. . . .\
-    \ . . . . . . . . . . . . . . . . . . . . . . 7\n§ 2–3. Як виникли системи літочислення.\
-    \ Історична періодизація: \n               світ і Україна. . . . . . . . . . .\
-    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10\n§ 4. Лічба\
-    \ часу в історії первісної доби та стародавнього світу . . . . . . . 18\n§ 5.\
-    \ Джерела з історії первісності та стародавнього світу. . . . . . . . . . . .\
-    \ 21\nРозділ 1. ЖИТТ Я Л ЮДЕЙ У ПЕРВІСН"
-  section_title: Сторінка 7
-  grade: 6
-  author: shchupak
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0041
+  text: "31\nСлово і  контекст. Залежність значень слова від контексту. Слововживання\
+    \ § 5 \x1F\n47. Попрацюйте в  групах. Прочитайте. Усно перекажіть текст, замінивши\
+    \ по-\nдані в  ньому приклади іншими, самостійно дібраними.\nЯк бачимо, найголовнішою\
+    \ вимогою до сполучуваності слів є точність. \nОднак під пером майстра слова і\
+    \ неточність (відступ від норми) може ста-\nти яскравим мовним образом.\nТільки\
+    \ часом у многоголоссі, \nВ суєті поїздів і авто, \nСпалахне твоє біле волосся,\
+    \ \nСірі очі і каре пальто,\n— читаємо у "
+  section_title: Сторінка 31
+  grade: 10
+  author: glazova
   page: ''
-  trust_tier: 1
+  trust_tier: 2
 - score: 0.20000000298023224
-  chunk_id: 6-klas-ukrmova-betsa-2023_s0139
-  text: "ловий, м’ясо / рибний, історико / філологічний, військо-\nво / повітряний,\
-    \ \nвоєнно / стратегічний, \nсвітло / зелений, \nсвітло / волосий, кисло / молочний,\
-    \ південно / східний, пів-\nденно / західний.\n325\t Складіть речення з поданими\
-    \ словами на тему «Одяг, взуття».\nЖовтогарячий, світло-зелений, темно-коричневий,\
-    \ зе-\nлено-сірий, темно-блакитний, світло-жовтий, яскраво-чер-\nвоний, темно-синій,\
-    \ світло-сірий.\n326\t Запишіть речення. Поясніть написання складних прикметни-\n\
-    ків. Поясніть вживання розділових"
-  section_title: Сторінка 141
-  grade: 6
-  author: betsa
-  page: ''
-  trust_tier: 1
-- score: 0.09090909361839294
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0002
-  text: '3
-
-    Зміст
-
-    ЗМІСТ
-
-    Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . 6
-
-    Навігатор до  підручника . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . 7
-
-    ВСТУП. УКРАЇНСЬКА  МОВА  В  ЖИТТІ  УКРАЇНЦІВ . . . . . . . . . . . 8
-
-    Мова в  житті людей . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . 9
-
-    Мова як засіб спілкування. Значення мови . . . . . . . . . . . . . . . . . . .
-    .'
-  section_title: Сторінка 3
-  grade: 5
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.10000000149011612
-  chunk_id: 6-klas-ukrmova-avramenko-2023_s0127
-  text: "119\nРОЗВИТОК МОВЛЕННЯ\nБ. У якому тексті-описі наявні художні засоби? Назвіть\
-    \ їх. Г. Зробіть висновок: чим відрізняється опис приміщення, написаний у ху-\n\
-    дожньому стилі, від наукового. 4. Ознайомтеся з порадами для батьків від дизайнерів\
-    \ інтер’єру. Кімната для підлітка-дівчини. Сучасні кім­\nнати для підлітків-дівчат —\
-    \ це не обов’язково \nмилі простори в рожевих тонах у стилі принце­\nси. Уступивши\
-    \ в підлітковий вік, дівчата часто \nзмінюють уподобання та світогляд. В оздобленні\
-    \ й декорі повинні пере"
-  section_title: Сторінка 119
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0033
+  text: "34\n1.\tПрочитайте речення та виконайте завдання. \nМи беремо на себе відпові­\n\
+    дальність, коли приручаємо ко­\nта чи собаку. \nРуденьке кошеня зіщулилося, \n\
+    помітивши чорного розлюченого \nсобацюру.\nА.\t У якому реченні слова мають емоційне\
+    \ забарвлення?\nБ.\t Виберіть і прочитайте ці слова. \nЗа вживанням слова поділяють\
+    \ на загальновживані та стилістично за­\nбарвлені. \nЗагальновживані слова мають\
+    \ нейтральне значення, ними послугову­\nються в усіх стилях: будинок, білий, він,\
+    \ десять, мити, високо. Ці сло­\nва"
+  section_title: Сторінка 34
   grade: 6
   author: avramenko
   page: ''
   trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
-  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
-    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
-    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
-    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
-    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
-    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
-    Літературний і мистецький \nавангард. . . . . . . . "
-  section_title: Сторінка 3
-  grade: 11
-  author: borzenko
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0185
+  text: "34. ОДНОРІДНІ Й НЕОДНОРІДНІ ОЗНАЧЕННЯ\nПро те, коли два й більше означень\
+    \ однорідні, та про інтонування речень \nіз такими означеннями\nПРИГАДАЙМО. Що\
+    \ таке означення та означувані слова? 362\t А. Знайдіть у першому реченні означення.\
+    \ Як вони характеризу­ють імен­\nник іграшки: з одного боку (за кольором, матеріалом\
+    \ або смаком) чи з різних?"
+  section_title: Сторінка 158
+  grade: 8
+  author: zabolotnyi
   page: ''
-  trust_tier: 2
+  trust_tier: 1
 rag_images: []
 rag_literary: []

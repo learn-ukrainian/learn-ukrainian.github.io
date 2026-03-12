@@ -1,63 +1,37 @@
-discovered_at: '2026-03-06T06:10:54.703948+00:00'
+discovered_at: '2026-03-12T09:36:29.501513+00:00'
 query_keywords:
 - Leisure and Hobbies
-- Хобі
+- Грати в/на construction
+- Ходити в + Accusative
+- хобі
+- малювати
+- грати
 - Hobbies
 - Спорт
 - Sports
 - Дозвілля
 - Leisure activities
 - Запрошення
-- Invitations
-- Name common hobbies and sports in Ukrainian
-- Describe leisure activities
-- Make and respond to invitations
 error: null
 warning: No videos found across channels
 videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/fmu23/
-  title: Vocabulary booster! Hobbies in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - grammar
-  - verbs
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 23
-- url: https://www.ukrainianlessons.com/episode115/
-  title: My new hobbies (Voice message №7)
-  source: ukrainianlessons.com
-  relevance_score: 0.25
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  - phrases
-  - introductions
-  - review
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 115
-- url: https://www.ukrainianlessons.com/fmu25/
-  title: Vocabulary booster! Sports in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.25
-  topics:
-  - phrases
-  - review
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 25
+blogs: []
 rag_chunks:
-- score: 0.1428571492433548
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0040
+  text: "НАВЧАЮСЯ ДОРЕЧНО ВЖИВАТИ СЛОВА В МОВЛЕННІ\nЧи вмієш ти грати \nв шахи?\n\
+    Чи любиш ти \nгратися?\nпояснюю \nвживаю\nСкладіть і запишіть речення зі словом\
+    \ грати, уживаючи \nйого в різних значеннях.\nВиконувати що-небудь на музичному\
+    \ інструменті.\nПоводитися з яким-небудь предметом, як з іграшкою, \nзабавлятися.\n\
+    Брати участь у якій-небудь грі.\nХвилинка спілкування\n— Як правильно говорити:\
+    \ грати на \nвулиці чи гратися на вулиці?\n— Я думаю, що гратися на вулиці.\n\
+    — А як сказати: в комп'ютерні ігри \nграти чи гратис"
+  section_title: Сторінка 42
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
   chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0057
   text: "56\nоПовІДання. ГоЛовниЙ ГероЙ\nДискусія \nЧи кожна людина \nповинна мати\
     \ хобі?\nХобі — це захоплення, улюблене заняття у вільний час.\nТема і головна\
@@ -71,7 +45,7 @@ rag_chunks:
   author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.125
+- score: 0.1666666716337204
   chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0025
   text: "25\nСлова — назви дій\nЩо робить?\nЩо роблять?\nЩо чим роблять?\n\t Який\
     \ у тебе сьогодні настрій? Вибери.\nСлова — назви дій"
@@ -80,39 +54,30 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.1111111119389534
-  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0103
-  text: "8   \aУпізнайте види спорту і запишіть слово до кожного малюнка. \nЗробіть\
-    \ висновок, чому утворені іменники є назвами неістот.\n\t \t\n7   \aЗапишіть слова\
-    \ і допишіть іменники — \nназви професій людей, пов’язані з цими \nсловами.\n\
-    актор\nбанкір\nводій\nгончар\n На яке питання \nвідповідають ці \nслова? \nсалон\n\
-    зачіска\nножиці\nстрижка\nфен\nкермо\nфари\nсигнал\nнавігатор\nмотор\nмонітор\n\
-    програма\nклавіатура\nсайт\nскайп\n\t\n  \aЗробіть висновок, чому дописані іменники\
-    \ є назвами істот.\n\t\n  \aВід записаних назв видів спорту утвор"
-  section_title: Сторінка 105
-  grade: 3
-  author: vashulenko
+- score: 0.125
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0054
+  text: "53\n• Продовж діалог. Запиши кілька реплік діалогу в зошит. \nПробач. \n\
+    Я вчинив негарно.\nДякую, що \nвибачився.\n• Випиши слова — назви дій. \nЗразок.\
+    \ Квіти (що роблять?) пнуться, ... .\n• Назви слова, які описують стани людини.\
+    \ Склади з двома \nсловами речення.\nБоїться, радіє, бігає, цікавиться, співає,\
+    \ дивується, танцює.\nсЛова — назви ДІЙ\nЩо ти робиш у школі, удома, на вулиці?\
+    \ Запиши слова — \nназви дій у стовпчики.\nЧитаю, читання, пишу, письмо, малюю,\
+    \ малювання, \nстрибаю, граю, гра, співаю, танцюю, т"
+  section_title: Сторінка 53
+  grade: 2
+  author: bolshakova
   page: ''
   trust_tier: 2
 - score: 0.5
-  chunk_id: 8-klas-ukrmova-avramenko-2025_s0226
-  text: "Ставте запитання іншим \nі дискутуйте, якщо маєте \nпротилежну думку. Розгадуйте\
-    \ \nзагадки та смішні \nголоволомки."
-  section_title: Сторінка 164
-  grade: 8
-  author: avramenko
-  page: ''
-  trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 6-klas-ukrmova-golub-2023_s0138
-  text: "135\n \nІІ   Доберіть цікавий для вас уривок із художнього твору обсягом\
-    \ \n80–100 слів, випишіть прикметники, визначте групи за значен-\nням і за типом\
-    \ відмінювання. Поясніть свій вибір тексту. \n \nІІІ   Напишіть есе «Сенс життя —\
-    \ дарувати іншим добро». \nТВОРЕННЯ ПРИКМЕТНИКІВ. \nПЕРЕХІД ПРИКМЕТНИКІВ В ІМЕННИКИ\n\
-    § 52\nТвоє дозвілля\nСлово дня: дозв³лля, хîбі.\nПригадуємо:\n1   Що таке значущі\
-    \ частини слова?\n2   Які з них беруть участь у творенні нових слів? Як саме?\n\
-    Шукаємо відповіді на запитання:\n1   Як ут"
-  section_title: Сторінка 135
+  chunk_id: 6-klas-ukrmova-golub-2023_s0062
+  text: "61\nвордів чи вивчення мов. Але й у будь-якому рукоділлі задіяна \nдрібна\
+    \ моторика, що впливає на діяльність і розвиток голов-\nного мозку. Перебування\
+    \ на свіжому повітрі під час занять \nбігом чи гри у волейбол — чудовий спосіб\
+    \ наситити киснем \nвласний мозок і поліпшити його роботу (Ю. Данчук).\n \nІІ\
+    \   Доберіть кілька власних аргументів на користь улюбленого \nзаняття.\n151 \
+    \  І   Розгляньте схему. Що з уміщеного в ній вам відоме? Поставте \nзапитання\
+    \ в разі потреби щось з’ясувати. Підготуйте розповідь "
+  section_title: Сторінка 61
   grade: 6
   author: golub
   page: ''

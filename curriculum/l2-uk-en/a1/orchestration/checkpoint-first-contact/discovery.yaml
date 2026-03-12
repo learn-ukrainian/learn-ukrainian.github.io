@@ -1,83 +1,114 @@
-discovered_at: '2026-03-06T00:39:32.747467+00:00'
+discovered_at: '2026-03-12T08:48:01.644562+00:00'
 query_keywords:
 - 'Checkpoint: First Contact'
-- Огляд
-- Overview
+- великий
+- новий
+- гарний
 - 'Навичка 1: Читання та Рід'
 - 'Skill 1: Reading and Gender'
-- 'Навичка 2: Дієслова та Питання'
-- 'Skill 2: Verbs and Questions'
-- 'Культурний контекст: Кафе'
-- 'Cultural Context: Cafe'
+- 'Навичка 2: Прикметники та Множина'
+- 'Skill 2: Adjectives and Plurals'
+- Кафе
+- Cafe
 - Інтеграційне завдання
 - Integration Task
-- Demonstrate Cyrillic reading fluency
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=1_vO60OkkrY
+  channel: Speak Ukrainian
+  title: 'Ukrainian podcast #10 Traveling to Lviv - Подорож до Льова. SLOW UKRAINIAN'
+  relevance_score: 0.7
+  relevance_note: 'The video describes Lviv, specifically mentioning ''кафе'' as a
+    feature of the city. This directly reinforces the ''Культурний контекст: Кафе''
+    section of the module by providing real-world context and vocabulary usage.'
+  transcript_excerpt: Сьогодні Львів має площу 155 км. кв. з безліччю громадських
+    будинків, кафе, магазинів, готелів та банків у стилі ХІХ-ХХ ст. Львів — єдине
+    в Україні місто, у якому збереглися архітектурні споруди часів Ренесансу.
+  embed_suggestion: 'After Культурний контекст: Кафе -- the video provides an authentic
+    cultural context for cafes in Ukraine, directly linking to the module''s cultural
+    section.'
+- url: https://www.youtube.com/watch?v=u07sF2iziCI
+  channel: Ukrainian Lessons
+  title: ULP 4-156 | Тарас Шевченко ― Великий Кобзар | Ukrainian Lessons Podcast Season
+    4
+  relevance_score: 0.1
+  relevance_note: The video discusses the biography of Taras Shevchenko, which is
+    unrelated to the module's grammar topics (reading, gender, adjectives, plurals)
+    or cultural context (cafes). It uses the word 'великий' but does not teach its
+    grammar.
+  transcript_excerpt: Тарас Шевченко Великий Кобзар. Тарас Григорович Шевченко народився
+    9 березня року у невеличкому селі Моринці...
+  embed_suggestion: Not suitable for embedding in this module as its content is not
+    relevant to any of the module's sections.
+- url: https://www.youtube.com/watch?v=mxVd6rjJ-2E
+  channel: Ukrainian Lessons
+  title: ULP 4-158 | Іван Франко ― Великий Каменяр | Ukrainian Lessons Podcast Season
+    4
+  relevance_score: 0.1
+  relevance_note: The video discusses the biography of Ivan Franko, which is unrelated
+    to the module's grammar topics (reading, gender, adjectives, plurals) or cultural
+    context (cafes). It uses the word 'великий' but does not teach its grammar.
+  transcript_excerpt: Іван Франко великий каменяр привіт Це Анна і ви слухаєте подкаст
+    для всіх хто вивчає і любить українську мову...
+  embed_suggestion: Not suitable for embedding in this module as its content is not
+    relevant to any of the module's sections.
+- url: https://www.youtube.com/watch?v=6M3GXd01Y7I
+  channel: Bright Kids Ukrainian
+  title: Countries and nationalities in Ukrainian - Lesson for children
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=3cMBQc6iAAk
+  channel: Let's Learn Ukrainian
+  title: 'Quick Ukrainian Class #2: Declension of a Cardinal Number + Masculine Singular
+    Noun'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7u9UhXF0zTI
+  channel: Speak Ukrainian
+  title: 'Ukrainian podcast #4: Kyiv/Київ. SLOW UKRAINIAN'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
 - url: https://www.ukrainianlessons.com/ukrainian-alphabet/
   title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
   source: ukrainianlessons.com
   relevance_score: 0.8
   topics: []
-- url: https://www.ukrainianlessons.com/episode22/
-  title: Are you going to the party? — First verb conjugation in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 22
-- url: https://www.ukrainianlessons.com/ukrainian-history/
-  title: Ukrainian History — Brief Overview
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - history
-  - culture
-  - overview
-- url: https://www.ukrainianlessons.com/fmu1/
-  title: How to explain that you don’t speak Ukrainian very well (yet)
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 1
-- url: https://www.ukrainianlessons.com/fmu8/
-  title: How to exchange money in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 8
 rag_chunks:
-- score: 0.25
-  chunk_id: 3-klas-ukrainska-mova-savchenko-2020-2_s0001
-  text: "Здобуваємо інформацію \nз різних джерел.\nРоз’єднай слова і прочитай.\nЧитаємо\
-    \ правильно.\nДосліджуємо текст.\nМіркуємо і відповідаємо.\nПрацюємо в групі.\
-    \ \nЗвертаємо увагу.\nГраємо сценку, виставу.\nФантазуємо і створюємо.\nДізнаємося\
-    \ значення слів.\nПрацюємо в парі.\nУДК 811.161.2*кл3(075.2.)\n \nС13\nРекомендовано\
-    \ Міністерством освіти і науки України\n(наказ Міністерства освіти і науки України\
-    \ від 21.02.2020 № 271)\nISBN 978-966-991-019-6 (Ч. 2)\nISBN 978-966-991-024-0\n\
-    © О. Я. Савченко, 2020\n© УОВЦ «Оріон», 20"
-  section_title: Сторінка 2
-  grade: 3
-  author: savchenko
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-2_s0001
+  text: "ДОРОГІ ДІТИ!\nВи тримаєте в руках новий підручник, який допоможе вам \nнавчитися\
+    \ швидко і вдумливо читати. Уміти читати — це не \nлише утворювати слова зі складів,\
+    \ а й розуміти зміст, відчу­\nвати красу мови. Герої оповідань, віршів, казок\
+    \ збагатять \nваші знання про Україну, важливість навчання, допоможуть \nпоринути\
+    \ в прекрасний світ природи, розкажуть про став­\nлення до тварин. А ще ви дізнаєтеся,\
+    \ що таке дружба, прав­\nдивість, взаємодопомога, милосердя, як чинити в різних\
+    \ \nситуаціях, поводитися в "
+  section_title: Сторінка 3
+  grade: 2
+  author: kravcova
   page: ''
   trust_tier: 2
-- score: 0.1111111119389534
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0002
+  text: "3\nДорогий друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи\
+    \ любиш фантазувати?\nТоді ця книга саме для тебе! \nВона допоможе тобі навчитися\
+    \ читати, \nвисловлювати думки й почуття, спілкуватися.\nУмовні позначення:\n\
+    \ \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю малюнок\n\
+    \ \n — спілкуюся \n \n— мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
   chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0049
   text: "140.1. Прочитай слова.\nГолка, гілка, подруга, сніжинка, усмішка, ложка,\
     \ берег, Ма­\nрійка, бібліотека, іволга, вільха.\n2. Зміни подані слова так, щоб\
@@ -91,54 +122,30 @@ rag_chunks:
   author: kravtsova
   page: ''
   trust_tier: 2
-- score: 0.10000000149011612
-  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
-  text: '112
-
-    Спостереження за основними ознаками тексту................................. 112
-
-    Типи текстів...........................................................................................
-    115
-
-    Будова тексту........................................................................................
-    119
-
-    Повторення...............................................................................................125
-
-    Список використаних джерел..............................................................127
-
-    У'
-  section_title: Сторінка 128
-  grade: 2
-  author: kravcova
+- score: 0.125
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0002
+  text: "3\nДорогий друже!\nТи продовжуєш подорож чудовим сві-\nтом рідної мови. Адже\
+    \ ти любиш читати, \nспілкуватися, фантазувати. \nЦя книга допоможе тобі навчитися\
+    \ \nчитати, висловлювати думки й почуття, \nспілкуватися.\nУмовні позначення:\n\
+    \t\n\t — читаю\n\t\n\t — обговорюю малюнок\n\t\n\t — досліджую мовлення\n\t\n\t\
+    \ — мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.3333333432674408
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0025
-  text: "20\nВступ. Українська мова в житті українців.  Види інформації.  Робота з підручником\n\
-    Вправа 16\n1.\t Користуючись умовними позначеннями з навігатора на початку підруч-\n\
-    ника, знайдіть у вже розглянутих темах: \nz\nz теоретичні відомості,\nz\nz вправи,\n\
-    z\nz завдання для групової роботи,\nz\nz ілюстрації,\nz\nz схеми,\nz\nz завдання\
-    \ з QR-кодами.\n2.\t Поміркуйте та  назвіть вид читання, до  якого ви вдалися,\
-    \ виконуючи \nзавдання.\nВправа 17\n1.\t Прочитайте рекомендації для навчального\
-    \ читання.\nПРАВИЛА НАВЧАЛЬНОГО ЧИ"
-  section_title: Сторінка 20
-  grade: 5
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.5
-  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0008
-  text: "Розвиток МОВЛЕННЯ\n4\nВИДИ МОВЛЕННЄВОЇ ДІЯЛЬНОСТІ. \nНАВЧАЛЬНЕ ЧИТАННЯ МОВЧКИ\n\
-    1. Пригадайте, які види мовленнєвої діяльності вам відомі.\n2. Які види мовленнєвої\
-    \ діяльності належать до сприймання, а які — \nдо творення?\nУ процесі читання\
-    \ розв’язують різноманітні комунікативні \nзавдання. Завдяки цьому виду мовленнєвої\
-    \ діяльності можна \nздобувати знання, навчитися виконувати певну роботу, отримати\
-    \ \nестетичну насолоду.\nВідповідно до комунікативних завдань реалізуються й різні\
-    \ \nвиди читання. Виділяють тр"
-  section_title: Сторінка 10
-  grade: 9
-  author: voron
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
   page: ''
   trust_tier: 2
 rag_images: []

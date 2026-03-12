@@ -1,114 +1,126 @@
-discovered_at: '2026-03-05T07:53:00.263189+00:00'
+discovered_at: '2026-03-12T09:02:54.049074+00:00'
 query_keywords:
 - 'The Locative: Where Things Are'
+- місцевий відмінок
+- де
+- в
+- у
+- на
 - Виробництво та підсумок
 - '''Where is X?'' using locative case'
 - between в/у and на prepositions
 - locations of people and objects
 - common places in Ukrainian
 - Locative case endings
-- Prepositions в/у and на
-- Location expressions
-- grammar
-- де
-- в
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=FX3JXkyC6fo
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #7. Locative Case (Місцевий відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YTqVxLihICc
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5: Locative Case Practice (Місцевий відмінок в українській
+    мові)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=kQof_vYOdm8
+  channel: Speak Ukrainian
+  title: The Locative Case in the Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Jov8xPqq7cM
+  channel: Speak Ukrainian
+  title: Ukrainian prepositions У, В and НА and the difference between them
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
-- url: https://www.ukrainianlessons.com/fmu15/
-  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+- url: https://www.ukrainianlessons.com/prepositions-u-na/
+  title: Prepositions У and НА in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 0.30000000000000004
   topics:
+  - prepositions
   - grammar
-  - cases
-  - accusative
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 15
-- url: https://www.ukrainianlessons.com/episode2/
-  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+- url: https://www.ukrainianlessons.com/lesson-161/
+  title: ULP 5-161 Як у мене справи і що нового в Ukrainian Lessons
   source: ukrainianlessons.com
-  relevance_score: 0.65
+  relevance_score: 0.30000000000000004
   topics:
-  - grammar
-  - pronouns
-  - phrases
-  - greetings
-  - goodbyes
+  - ULP
+  - Season 5
   content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 2
-- url: https://www.ukrainianlessons.com/episode7/
-  title: More about your family in Ukrainian + Possessive Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - pronouns
-  - vocabulary
-  - family
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 7
-- url: https://www.ukrainianlessons.com/episode14/
-  title: Likes and dislikes — common verbs in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - verbs
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 14
-- url: https://www.ukrainianlessons.com/episode22/
-  title: Are you going to the party? — First verb conjugation in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 22
+  series: 5
+  season: 5
+  episode: 161
 rag_chunks:
 - score: 0.5
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0180
-  text: "175\nФонетика. Графіка. Орфоепія. Орфографія.  Милозвучність української\
-    \ мови\nУ\nВ\nна початку речення або після \nрозділового знака перед \nприголосним\
-    \ (не  обов’язково):\nу дитинстві\nна початку речення або \nпісля розділового\
-    \ знака \nперед голосним:\nв Україні\nперед в, ф та  буквосполучен-\nнями св,\
-    \ хв, тв, льв незалежно \nвід кінцевого звука попередньо-\nго слова:\nу Львові\n\
-    Запам’ятати буквосполучення \nлегко у  фразі: Відомий філо-\nсоф-львів’янин хвалив\
-    \ свій \nтвір.\nпісля голосного перед \nприголосним (окрі"
-  section_title: Сторінка 175
-  grade: 5
-  author: litvinova
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065
+  text: "67\nВідмінок\nПитання (однина)\nПитання (множина)\nН. в.\nР. в.\nД. в.\n\
+    Зн. в.\nОр. в.\nМ. в.\nякий? яка? яке?\nякого? якої? якого?\nякому? якій? якому?\n\
+    як у Н. в. або Р. в.\nяким? якою? яким?\n(на, у) якому? якій? якому?\nякі?\nяких?\n\
+    яким?\nяк у Н. в. або Р. в.\nякими?\n(на, у) яких?\n\t Прочитай словосполучення.\
+    \ \nН. в. (який?) новий рюкзак; (яка?) нова хустка, (яке?) \nнове село;\nР. в.\
+    \ (…?) нового рюкзака; (…?) нової хустки; (…?) но-\nвого села;\nД. в. (…?) новому\
+    \ рюкзаку; (…?) новій хустці; (…?) но-\nвому селу;\nЗн. в"
+  section_title: Сторінка 67
+  grade: 4
+  author: zaharijchuk
   page: ''
-  trust_tier: 1
-- score: 0.1428571492433548
-  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0114
-  text: "і.\n314. Допиши словосполучення, вставляючи відповідні прислівники. \nЗа\
-    \ потреби користуйся словами для довідки.\nМалює (як?)... , фарбує (коли?)...\
-    \ , іде ... (куди?), знайшли \n(де?), ішла (як?)..., виграла (коли?)..., грають\
-    \ (як?)....\nСлова для довідки: навмання, гарно, вчора, угору, вранці, \nзавзято.\n\
-    внизу,\n315. 1. Вправа «Квест»*. Розгадай слова.\n234 7\n2. До якої частини мови\
-    \ належать слова-відгадки?\n3. Досліди, чи є закінчення у прислівників.\nКрок\
-    \ 1. Спробуй визначити закінчення в словах-відгад"
-  section_title: Сторінка 116
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0046
+  text: "РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )\n135.1. Пригадай відмінки\
+    \ іменників та питання, на які вони від­\nповідають. Визнач відмінок виділених\
+    \ іменників.\nМи дали білочці горішки. На білочці руда шубка.\nЧи виникли труднощі\
+    \ у визначенні відмінка? Чому?\n3. Досліди, як розрізнити давальний і місцевий\
+    \ відмінки.\nможуть мати однакові закінчення.\nКрок 1. З опорою на таблицю розкажи,\
+    \ у яких відмінках іменники\nВідмінок\nПитання\nОднина\nЖіночий\nЧоловічий\nСередній\n\
+    Н. в.\nхто? що?\nбілочка, \nквасоля\nкінь, м"
+  section_title: Сторінка 48
   grade: 4
   author: kravtsova
   page: ''
   trust_tier: 2
-- score: 0.09090909361839294
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0059
+  text: "61\n\t У яких відмінках іменники вживають без прийменників, у яких — \nіз\
+    \ прийменниками? Зроби висновок, користуючись таблицею. \nЗвір його з поданим\
+    \ нижче правилом.\n\t Провідміняй іменники степи, верби, вікна, користуючись\
+    \ табли-\nцею.\nДля уникнення помилок у мовленні використовуймо \nсловосполучення:\
+    \ мешкаю за адресою; змагання з \nфутболу; відсутній через хворобу; за всіма правила-\n\
+    ми; за нашими підрахунками.\nСпілкуймося красно\n151.\t\tПрочитай текст, уставляючи\
+    \ з довідки пропущені іменники.\nОгляньмос"
+  section_title: Сторінка 61
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
   chunk_id: 4-klas-ukrmova-zaharijchuk_s0073
   text: "І У називному відмінку іменники вживаються без при- \nі йменників, у місцевому\
     \ — тільки з прийменниками, \n1 \nа в усіх інших відмінках можуть уживатися з\
@@ -122,33 +134,5 @@ rag_chunks:
   author: ''
   page: ''
   trust_tier: 2
-- score: 0.25
-  chunk_id: 6-klas-ukrmova-litvinova-2023_s0076
-  text: "§ 12. Антонімічні префікси й суфікси  \n69\n2. Складіть зі словами речення\
-    \ (усно).\n3. Поясніть значення антонімічних префіксів і  суфіксів.\nВправа 125\n\
-    1. Утворіть слова, додаючи до поданих слів запропоновані в дужках пре-\nфікси\
-    \ та суфікси.\nСипати (з-, роз-), нести (за-, ви-), вести (при-, від-), ві-\n\
-    тамін (анти-, про-).\nКіт (-ик, -ищ-), розумний (-еньк-, -юч-), нога (-к-, -ищ-),\
-    \ \nскладно (-уват-, -езн-), глибокий (-еньк-, -енн-).\n2. Чи є  антонімами слова\
-    \ першого рядка? А  другого? Поясніть думку."
-  section_title: Сторінка 69
-  grade: 6
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.20000000298023224
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0188
-  text: "§ 30  Особливості вживання прийменників  \n181\nВправа 258\n \nВідредагуйте\
-    \ подані словосполучення, де це потрібно, запишіть виправ-\nлені варіанти  \n\
-    1) По останній інформації, зошит по математиці, зробити \nпо проханню, звернутися\
-    \ по справі, по всіх питаннях, видно \nпо очах, заходити по черзі, відпочивати\
-    \ по перше вересня, \nзаходи по покращенню.\n2) При сприянні уряду, при участі\
-    \ батьків, при збері-\nганні, при швидкості, при появі сумнівів, при виникненні\
-    \ не-\nбезпеки, говорити при сторонніх.\nВправа 25"
-  section_title: Сторінка 184
-  grade: 7
-  author: litvinova
-  page: ''
-  trust_tier: 1
 rag_images: []
 rag_literary: []

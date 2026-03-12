@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 6 — E2E
+PASS: pipeline b1 8
 
   Module:   aspect-complete-system
   Track:    b1
-  Mode:     e2e
-  Words:    5240 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-26T23:01:49Z
+  Date:     2026-03-12T08:49:55Z

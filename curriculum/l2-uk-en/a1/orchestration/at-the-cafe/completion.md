@@ -3,8 +3,8 @@ PASS: pipeline a1 41
   Module:   at-the-cafe
   Track:    a1
   Mode:     v5
-  Words:    1684 (target: 1200)
+  Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-06T23:32:38Z
+  Date:     2026-03-12T09:24:40Z

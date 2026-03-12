@@ -1,6 +1,10 @@
-discovered_at: '2026-03-06T07:03:18.570471+00:00'
+discovered_at: '2026-03-12T08:51:59.488000+00:00'
 query_keywords:
 - Demonstratives
+- вказівний займенник
+- цей
+- ця
+- це
 - Цей/ця/це
 - This
 - Ці
@@ -8,131 +12,56 @@ query_keywords:
 - Той/та/те/ті
 - That/Those
 - Цей vs Той у контексті
-- This vs That in context
-- Distinguish demonstrative це (цей стіл) from copula це (Це стіл)
-- Apply gender and number agreement systematically across all demonstrative forms
-- Resolve та ambiguity (demonstrative "that" f. vs conjunction "and")
 error: null
 warning: null
 videos:
 - url: https://www.youtube.com/watch?v=Ng0Lt33xBIk
-  channel: Learn Ukrainian Language
+  channel: Bright Kids Ukrainian
   title: УРОК 32. ВКАЗІВНІ ЗАЙМЕННИКИ THIS THAT THESE THOSE ПОЯСНЕННЯ УКРАЇНСЬКОЮ
-  relevance_score: 0.85
-  relevance_note: The video directly addresses Ukrainian demonstrative pronouns 'цей,
-    ця, це, ці' and explains their gender and number agreement, contrasting it with
-    English equivalents. This is highly relevant to the initial sections of the module.
-  transcript_excerpt: І ось в українській мові У нас є такі займенники як цей ця це
-    це або у множині ці... українською у нас цей ця це змінюється залежно від того
-    чи це чоловік чи це жінка Так або наскільки вона відмінюються наші іменники за
-    чоловічому або жіночим родом.
-  embed_suggestion: 'After section ''Ці: The Universal ''These'''''
+  relevance_score: 1.0
+  relevance_note: Video directly explains Ukrainian demonstrative pronouns 'цей',
+    'ця', 'це', 'ці' and their gender-based variations, which is the core topic of
+    the module.
+  transcript_excerpt: В українській мові У нас є такі займенники як цей ця це це або
+    у множині ці... українською у нас цей ця це змінюється залежно від того чи це
+    чоловік чи це жінка.
+  embed_suggestion: After Ці (These) section, as it covers both singular and plural
+    forms of 'цей/ця/це' and their gender agreement.
+- url: https://www.youtube.com/watch?v=XXalk_gwWXE
+  channel: Bright Kids Ukrainian
+  title: THIS, THAT, THESE, THOSE - ВКАЗІВНІ ЗАЙМЕННИКИ УКРАЇНСЬКОЮ | УРОК 22
+  relevance_score: 1.0
+  relevance_note: Video directly teaches demonstrative pronouns in Ukrainian, introducing
+    'це' as an equivalent for 'this', aligning with the module's content.
+  transcript_excerpt: Вивчаємо вказівні займенники... розпочнемо ми зі слова this
+    це найбільш уживаний вказівний займенник який означає це або ось це.
+  embed_suggestion: After Цей/ця/це (This) section, as it introduces 'це' in the context
+    of demonstratives.
 blogs:
 - url: https://www.ukrainianlessons.com/pronouns-this-that/
   title: This and That in Ukrainian — Demonstrative Pronouns
   source: ukrainianlessons.com
-  relevance_score: 0.6000000000000001
+  relevance_score: 0.75
   topics:
   - demonstratives
   - pronouns
   - grammar
-- url: https://www.ukrainianlessons.com/fmu10/
-  title: 7 helpful Ukrainian words to link sentences
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - phrases
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 10
-- url: https://www.ukrainianlessons.com/fmu1/
-  title: How to explain that you don’t speak Ukrainian very well (yet)
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 1
-- url: https://www.ukrainianlessons.com/fmu2/
-  title: Useful phrases for learning Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 2
-- url: https://www.ukrainianlessons.com/fmu3/
-  title: How to talk to an Uber / taxi driver in Ukrainian?
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 3
 rag_chunks:
-- score: 0.20000000298023224
-  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
-  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
-    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
-    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
-    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
-  section_title: Сторінка 3
-  grade: 3
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.09090909361839294
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
-  text: "58\nБачу В, в (ве).  Чую [в].\nв і н о *\n* * и в и\nв и * н і\n[  = •  |\
-    \ –  • – ]  \n[ –   –•| – •]  \nви-\nа\nо\nу\nи\nі\nВ\nва\nво\nву\nви\nві\nа\n\
-    о\nу\nи\nі\nав\nов\nув\nив\nів\nВ\n-во\nва-\nві-\nво-ни\n\t\n  він \t\n      \
-    \        во-на \t\n\t\n  во-но\nни\nва\nва\nми\nвав\nвов\nвув\nвив\nвів\nмо\n\
-    ва\nви\nно\nви\nви\nна\nни\nВ в"
-  section_title: Сторінка 60
-  grade: 1
-  author: zaharijchuk
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0279
+  text: "Розділ 8. Займенник \n272\nВправа 544\n1. Прочитайте фрази.\nХіба це проблема?\
+    \ Забий!\nЯ завжди готовий вислухати тебе.\nНе переймайся, все буде добре!\nТвої\
+    \ почуття  — це нормально.\nТи сам винен!\nСльозами горю не допоможеш!\nЩо я можу\
+    \ для тебе зробити?\nОй, це що, ось у мене було…\nАга, а я ж тобі казала!\nТеж\
+    \ мені проблема!\nЯ розумію, що ти відчуваєш.\n2. Поміркуйте, у  яких ситуаціях\
+    \ використовують наведені фрази. Чи всі \nфрази доречно використовувати?\n3. Сформулюйте,\
+    \ що таке втішання. Звірте свої міркув"
+  section_title: Сторінка 272
+  grade: 6
+  author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0085
-  text: "60\n \n \nІІ   \aОдин учень (учениця) має скласти доведення певного твердження,\
-    \ \nа другий (друга) — його спростування. Пам’ятайте, що при ствер-\nдженні доводиться\
-    \ істинність, правдивість тези. (Це твердження \nсправедливе. Можна навести такі\
-    \ докази: … . Отже, це твердження \nправильне...). При спростуванні твердження\
-    \ слід указати на хибність \nабо недостатність доказів опонента, аргументувати\
-    \ свою думку (Тут \nговорили, що…, але це не так, адже…). Теми дискусії\n\t\t\n\
-    \ \aОдин старий друг кращий за нових двох"
-  section_title: Сторінка 60
-  grade: 11
-  author: voron
-  page: ''
-  trust_tier: 2
 - score: 0.3333333432674408
-  chunk_id: 9-klas-ukrmova-zabolotnyi-2017_s0381
-  text: 'ПОРІВНЯЙМО:
-
-    1. Цей будинок не старий
-
-    е
-
-    (
-
-    й не є старий). 2. Цей будинок нестарий (є нестарий, тобто відносно недавно збудований).'
-  section_title: Сторінка 257
-  grade: 9
-  author: zabolotnyi
-  page: ''
-  trust_tier: 2
-- score: 0.1666666716337204
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0280
   text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n273\n\
     Відмінювання вказівних займенників\nН.\nтой\nта\nте\nті\nР.\nтого\nтієї, тої\n\
@@ -144,6 +73,48 @@ rag_chunks:
   section_title: Сторінка 273
   grade: 6
   author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0275
+  text: "Розділ 8. Займенник \n268\n7) Словом, наша дискусiя велася в однiй площинi:\
+    \ я дово-\nдив, що вони ж розумнi й мусять мене зрозумiти, а  вони \nказали, що\
+    \ я дурний i нiчого не розумiю (В. Нестайко).\n2. Підкресліть займенники відповідно\
+    \ до функції в реченні.\nПро що говорять слова\nЗайменники котрий/котра/котре/котрі\
+    \ вживаємо, \nколи говоримо про час або коли потрібно вирізнити \nкогось із-поміж\
+    \ інших, наприклад: У котрому вагоні \nти їдеш? О котрій годині прибуття? У всіх\
+    \ інших \nвипадках варто вживати зай"
+  section_title: Сторінка 268
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0209
+  text: "200\n1.\tПрочитайте вголос слова в колонках, зважаючи на наголос, і виконайте\
+    \ \nзавдання. \nцього — у цього \nтого — у того \nцьому — на цьому  \nтому — на\
+    \ тому \nА.\t Яку закономірність у наголошуванні слів ви помітили?\nБ. \t Від\
+    \ чого залежить зміна наголосу в наведених вище займенниках?\nУ непрямих відмінках\
+    \ займенники мій, твій, свій мають наголоше­\nний другий склад: мого акаунта,\
+    \ твоєму успіху, своїм автомобілем. \nНаголос у непрямих відмінках займенників\
+    \ той, цей, весь змінюєть­\nся. Коли ці займенники "
+  section_title: Сторінка 200
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0196
+  text: "188\n188\nМОРФОЛОГІЯ.  Орфографія\nВідмінювання означальних займенників\n\
+    Означальні займенники змінюємо, як прикметники, а саме: за родами, \nчислами й\
+    \ відмінками.\nОднина\nМножина\nН. в.\nвесь\nвся\nвсе\nвсі \nР. в.\nвсього\nвсієї\n\
+    всього\nвсіх\nД. в.\nвсьому\nвсій\nвсьому\nвсім\nЗн. в.\nвесь / всього\nвсю\n\
+    все\nвсі / всіх\nОр. в. всім\nвсією\nвсім\nвсіма\nМ. в.\n(на/у) всьому / \nвсім\n\
+    (на/у) всій\n(на/у) всьому / \nвсім\n(на/у) всіх\nЗауважте!\nУ всіх відмінках\
+    \ означальних займенників у та в чергуються за за­\nгальним правилом. \nЗай"
+  section_title: Сторінка 188
+  grade: 6
+  author: avramenko
   page: ''
   trust_tier: 1
 rag_images: []

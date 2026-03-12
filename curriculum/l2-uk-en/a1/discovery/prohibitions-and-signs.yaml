@@ -1,6 +1,10 @@
-discovered_at: '2026-03-06T07:47:10.893495+00:00'
+discovered_at: '2026-03-12T09:45:35.370676+00:00'
 query_keywords:
 - Prohibitions and Signs
+- не
+- курити
+- увага
+- обережно
 - Заборони
 - Prohibitions
 - Попередження
@@ -8,83 +12,124 @@ query_keywords:
 - Розклади та оголошення
 - Schedules and notices
 - На вулиці
-- On the street
-- Understand Ukrainian prohibition signs
-- Read warning signs and notices
-- Interpret schedules and operating hours
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=iwp6JYZaoa4
+  channel: Bright Kids Ukrainian
+  title: День гамбургера. Складаємо сенкан.
+  relevance_score: 0.75
+  relevance_note: The video demonstrates the use of key vocabulary words 'увага' (attention/warning)
+    and 'не можна' (it is not allowed/forbidden) in a natural context, directly relating
+    to the module's theme of prohibitions and signs.
+  transcript_excerpt: Ану лисочку не можна кладемо нашу котлетку і вгорі скадаємо
+    нашу частинку нашої булочки.
+  embed_suggestion: 'After section: Заборони (Prohibitions) - The phrase ''не можна''
+    directly translates to ''it is not allowed'', fitting the topic of prohibitions.'
+- url: https://www.youtube.com/watch?v=jvPiTxHTa4U
+  channel: Ukrainian Lessons
+  title: ULP 6-226 | Українська поезія. Володимир Сосюра «Так ніхто не кохав» | Ukrainian
+    Lessons Podcast ...
+  relevance_score: 0.1
+  relevance_note: The video focuses on Ukrainian poetry and love themes, which is
+    entirely unrelated to the module's topic of prohibitions and signs.
+  transcript_excerpt: ви слухайте ukrainiia lessons podcast це епізод 226 українська
+    поезія Володимир Сосюра Так ніхто не кохав.
+  embed_suggestion: Not applicable - irrelevant content.
+- url: https://www.youtube.com/watch?v=O16zfd2FiEg
+  channel: Bright Kids Ukrainian
+  title: Ukrainian Alphabet - Lesson about the letter Ж
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce Ь in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7wcGeq5uhRI5d-cMa3_fe0K8
+  channel: Ukrainian with Olha
+  title: Українські народні пісні - Ukrainian folk songs
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7weAUvvyGZf6Qg3SEIjHmH_7
+  channel: Ukrainian with Olha
+  title: Рецепти українською - Recipes in Ukraine
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs: []
 rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0082
+  text: "81\nПрочитай речення з  різною інтонацією. Запиши речення, \nставлячи наприкінці\
+    \ крапку або знак оклику.\nПрийми дарунок (. !)\t\nЛюбіть Україну (. !)\nВідвідай\
+    \ виставку (. !)\t\nБережіть природу (. !)\n\b\nЗапиши спонукальні речення. Підкресли\
+    \ слова — назви дій \nдвома лініями.\nЧервоний колір часто попереджає про небезпеку.\
+    \ Черво-\nне світло світлофора сигналізує: «Не переходь вулицю зараз! \nЦе небезпечно.»\
+    \ У лісі червоного жучка сонечко видно здаля. \nВін наче говорить: «Не їжте мене!\
+    \ Я  отруйний!» У  Черво"
+  section_title: Сторінка 81
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0108
+  text: "109\n390. Прочитай слова. Чи можуть вони спонукати до дії?\n391. Дослідиѳ,\
+    \ які бувають речення за метою висловлювання.\nКрок 1. Прочитай речення.\nДіти,\
+    \ пригадаймо казки. А тепер перегляньмо мульт- \nфільм!\nКрок 2. Яка мета даних\
+    \ речень?\nа) запитати про казку, розповісти про мультфільм;\nб) закли́кати пригадати\
+    \ казки, запросити до перегляду \nмультфільму.\nКрок 3. Зроби висновок. \nРечення,\
+    \ у яких висловлюється заклик, запрошення, про- \nхання, порада, заборона, застереження,\
+    \ наказ, нази-\nвають спонукальн"
+  section_title: Сторінка 109
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
 - score: 0.5
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
-  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
-    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
-    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
-    \ в групах;\n? \n— ознайомитись;"
-  section_title: Сторінка 2
-  grade: 4
-  author: ''
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0314
+  text: "Особливої уваги вимагають правила вживання розділових зна-\nків між сурядними\
+    \ частинами, коли підрядна частина є спільною для обох \nсурядних. Сурядні й підрядні\
+    \ частини відокремлюються комами; у випадку \nбезсполучникового зв’язку між частинами\
+    \ ставляться розділові знаки від-\nповідно до правил уживання розділових знаків\
+    \ між частинами безсполуч-\nникового складного речення. 274"
+  section_title: Сторінка 203
+  grade: 11
+  author: voron
   page: ''
   trust_tier: 2
-- score: 0.10000000149011612
-  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0054
-  text: "56\n18\nПротилежні за значенням  \nслова — антоніми\nРозпізнаю протилежні\
-    \ \nза значенням слова\nПригадай і розкажи \nу класі.\nЯ — учителька\nЯ — учитель\n\
-    Слова, які мають протилежне зна-\nчення, називаються антонімами.\nвечір — ранок\n\
-    сидіти — стояти\nвгорі — внизу\nдень — ніч\nХто швидше відгадає загадку?\nЧорна\
-    \ корова всіх людей поборола.\nА білий віл усіх людей побудив.\nНових друзів май,\n\
-    Більше думай,\nЛедачий голодний,\nплакати\nсхід\nзапитання\nмовчати\nшвидкий\n\
-    а працьовитий ситий.\nа менше говори.\nа старих не заб"
-  section_title: Сторінка 56
-  grade: 3
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.1428571492433548
-  chunk_id: 5-klas-ukrmova-avramenko-2022_s0182
-  text: "Порівняйте: \nЯ, на жаль, запізнився і Я запізнився. Речення, що містять\
-    \ вставні слова, звертання або однорідні члени, на-\nзиваємо ускладненими."
-  section_title: Сторінка 175
-  grade: 5
-  author: avramenko
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0194
+  text: '2. Для виділення членів речен­ня ви­
+
+    Інтонація
+
+    ЗВЕРНІТЬ УВАГУ!'
+  section_title: Сторінка 164
+  grade: 8
+  author: zabolotnyi
   page: ''
   trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0245
-  text: '56
-
-    § 16. Розділові знаки в складносурядному реченні ................................................................
-    58
-
-    § 17. Складнопідрядне речення. Його будова й засоби зв’язку в ньому .........................
-    62
-
-    § 18. Основні види складнопідрядних речень ..........................................................................
-    67
-
-    § 19. Розвиток мовлення. Ділові папери. Заява ........................................................................
-    70
-
-    § 20. Складнопідрядні речення з підрядни'
-  section_title: Сторінка 158
-  grade: 9
-  author: avramenko
-  page: ''
-  trust_tier: 2
-- score: 0.1666666716337204
-  chunk_id: 6-klas-ukrmova-golub-2023_s0235
-  text: "231\n567   Розгляньте схему. Дайте розгорнуту відповідь на поставлене в ній\
-    \ \nзапитання. Прокоментуйте кожну з вимог до оголошення.\nОголîшення — мовленнєвий\
-    \ жанр, що містить інфор-\nмацію для загального ознайомлення. Оголошення \nможуть\
-    \ бути усні та письмові, офіційні та приватні.\nВимоги до оформлення тексту оголошення:\
-    \ чіткість, \nлаконічність, толерантність, повнота інформації, \nграмотність.\n\
-    У структурі оголошення виділяють такі компоненти: \nназва жанру (заголовок), адресат,\
-    \ подія, дата, час, \nмісц"
-  section_title: Сторінка 231
-  grade: 6
-  author: golub
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0119
+  text: "118\nІІ. Складіть усне висловлення за схемою, доповнивши її наведеною \n\
+    поруч інформацією з Правил дорожнього руху. Що означають зобра­\nжені дорожні\
+    \ знаки? \nПішоходам\nзаборонено\nдозволено\n \aвиходити на проїзну час-\nтину,\
+    \ не впевнившись у \nвідсутності небезпеки для \nсебе та інших учасників \nруху\n\
+     \aрухатися по тротуарах \nі пішохідних доріжках, \nтримаючись правого боку\n\
+     \aпереходити проїзну частину по пішохідних переходах, \nа в разі їх відсутності\
+    \ – на перехрестях по лініях тро-\nтуарів або узбіч\n "
+  section_title: Сторінка 121
+  grade: 5
+  author: zabolotnyi
   page: ''
   trust_tier: 1
 rag_images: []

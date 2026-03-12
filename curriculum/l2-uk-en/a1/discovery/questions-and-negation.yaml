@@ -1,6 +1,9 @@
-discovered_at: '2026-03-06T05:04:51.326856+00:00'
+discovered_at: '2026-03-12T08:50:27.310659+00:00'
 query_keywords:
 - Questions & Negation
+- чи
+- що
+- хто
 - Основи заперечення та інтонації
 - Basics of Negation and Intonation
 - Питальні конструкції
@@ -9,143 +12,99 @@ query_keywords:
 - Drilling Negation and Questions
 - Комунікативні сценарії
 - Communicative Scenarios
-- Культурний контекст та ALF
-- Cultural Context and ALF
-- yes/no questions using 'чи'
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=iZ9NEpcVwPM
+  channel: Bright Kids Ukrainian
+  title: '"Босоніжки для стоніжки", Мар''яна Савка, Видавництво Старого Лева'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=IiBsOrxtd58
+  channel: Ukrainian Lessons
+  title: 'ULP 1-37 | Interview 2: Ти зараз вчишся чи працюєш?..'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce Б in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QE9JOcQfLE0
+  channel: Ukrainian with Olha
+  title: 'Ukrainian listening practice: What do you like to eat? Що ви любите їсти?
+    🥐 Slow vs. Fast input'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7wfW-3X-dBSUxUv5wcmJiIHe
+  channel: Ukrainian with Olha
+  title: Українська музика - Ukrainian music
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ySf4WaTtoQ0
+  channel: Let's Learn Ukrainian
+  title: Learn Ukrainian Poetry | Мені однаково, Тарас Шевченко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=yg7Ta8xffEc
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Verb Conjugation #1: 10 Verbs in Present and Past!'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
 - url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
   title: Useful Ukrainian Questions
   source: ukrainianlessons.com
-  relevance_score: 0.6000000000000001
+  relevance_score: 0.44999999999999996
   topics:
   - questions
   - phrases
   - communication
-- url: https://www.ukrainianlessons.com/episode40/
-  title: Q&A — Questions and Answers
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
+- url: https://opentext.ku.edu/dobraforma/chapter/5-3/
+  title: 'Dobra Forma: Genitive Case for Direct Objects after Negation (Neuter and
+    Masculine)'
+  source: dobraforma
+  relevance_score: 0.35
   topics:
-  - general
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 40
-- url: https://www.ukrainianlessons.com/fmu2/
-  title: Useful phrases for learning Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
+  - genitive
+  - negation
+  - cases
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/5-4/
+  title: 'Dobra Forma: Genitive Case for Direct Objects after Negation (Masculine)'
+  source: dobraforma
+  relevance_score: 0.35
   topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 2
-- url: https://www.ukrainianlessons.com/fmu14/
-  title: How to book a table in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 14
-- url: https://www.ukrainianlessons.com/fmu19/
-  title: Conversation at the supermarket checkout in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 19
+  - genitive
+  - negation
+  - cases
+  - grammar
 rag_chunks:
-- score: 0.3333333432674408
-  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0001
-  text: 'ЗВУКИ І БУКВИ
-
-    к
-
-    і
-
-    <
-
-    ЗВУКИ
-
-    СКЛАД^
-
-    У розділі ти будеш вивчати:
-
-    БУКВИ
-
-    НАГОЛОС
-
-    Дізнаєшся про:
-
-    к
-
-    1
-
-    г
-
-    л
-
-    І
-
-    1
-
-    наголошені
-
-    ГОЛОСНІ ЗВУКИ
-
-    ____________________
-
-    ненаголошені
-
-    дзвінкі, глухі
-
-    г
-
-    тверді, м''які
-
-    ^ПРИГОЛОСНІ ЗВУКИ
-
-    СКЛАДИ J
-
-    ................................................................. ................
-
-    наголошені
-
-    У
-
-    ненаголошені
-
-    З'
-  section_title: Сторінка 3
-  grade: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
   author: vashulenko
   page: ''
   trust_tier: 2
 - score: 0.5
-  chunk_id: 10-klas-ukrmova-karaman-2018_s0474
-  text: "1. Вступаючи в дискусію, переконайтеся в тому, що ви пра-\nвильно розумієте\
-    \ позицію свого опонента, а він — вашу, \nа потім доводьте свої чи спростовуйте\
-    \ висунуті опонентом \nдокази. 2. Зверніть увагу, чи немає протиріч у висловлюваннях\
-    \ опо-\nнента, чи не розглядаєте ви з ним одне й те ж питання з різ-\nних аспектів.\
-    \ 3. Починайте заперечувати тільки тоді, коли впевнені, що \nдумка опонента справді\
-    \ суперечить вашій."
-  section_title: Сторінка 264
-  grade: 10
-  author: karaman
-  page: ''
-  trust_tier: 2
-- score: 0.20000000298023224
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0276
   text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n269\n\
     Зверніть увагу на варіанти наголошування запереч-\nних займенників ніхто і  ніщо\
@@ -159,38 +118,46 @@ rag_chunks:
   author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.1111111119389534
-  chunk_id: 5-klas-ukrmova-golub-2022_s0203
-  text: "204\nТой, хто звертається з проханням, має бути готовим до \nобох варіантів\
-    \ відповіді. І кожну з них має прийняти \nгідно, з розумінням. Тоді добрі стосунки\
-    \ буде збереже-\nно. Не ображайтеся у разі відмови, шукайте \nпорозуміння.\nУвага!\
-    \ Уникайте чужого «Да!», висловлюючи згоду. \nВикористовуйте формули «Добре!»,\
-    \ «Гаразд!», «Так!», \n«Авжеж!», «Згода!», «Погоджуюсь!», «Звичайно!», \n«Безперечно!»\
-    \ тощо.\n473   Прочитайте формули відмови. Складіть та озвучте діалог, в осно-\n\
-    ві якого має бути прохання (пропо"
-  section_title: Сторінка 204
-  grade: 5
-  author: golub
-  page: ''
-  trust_tier: 1
-- score: 0.1428571492433548
-  chunk_id: 6-klas-ukrmova-litvinova-2023_s0012
-  text: '. . . . . . . . . . . . . . . . . . . 256
-
-    Присвійні займенники . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . . 259
-
-    Зворотний займенник себе. . . . . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . 262
-
-    Питальні й  відносні займенники . . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . 264
-
-    Заперечні й  неозначені займенники . . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . '
-  section_title: Сторінка 5
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0271
+  text: "Розділ 8. Займенник \n264\nПитальні й  відносні займенники\nПитальні займенники\
+    \ вживаються в  питальних ре-\nченнях. Ці займенники вам добре знайомі, адже вони\
+    \ \nє  питаннями до всіх іменних частин мови: хто? що? \nякий? чий? котрий? скільки?\n\
+    Питальні займенники легко розпізнати, адже з їх-\nньою допомогою будують питальні\
+    \ речення: Яке твоє \nім’я? Скільки тобі років? У  кого є  запасна ручка?\nЗайменники\
+    \ хто, що, скільки не мають роду \nй  числа, їх змінюємо лише за відмінками. Займен-\n\
+    ники який, чий, ко"
+  section_title: Сторінка 264
   grade: 6
   author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0001
+  text: "РЕЧЕННЯ\nЧЛЕНИ  РЕЧЕННЯ\nВІДМІНКИ\nКритерій\nТипи речень\nЗа метою\nвисловлювання\n\
+    розповідні\n(містять повідомлення про факти,  \nподії чи явища дійсності)\nпитальні\n\
+    (містять запитання)\nспонукальні\n(виражають спонукання до дії)\nЗа емоційним\n\
+    забарвленням\nокличні\n(вимовляємо з підсиленою інтонацією)\nнеокличні\nЗа складом\n\
+    граматичної\nоснови\nдвоскладні\n(граматична основа має підмет і присудок)\nодноскладні\n\
+    (граматична основа має один  \nголовний член речення)\n означено-особові\n неозначено-особові\n\
+     узагальнен"
+  section_title: Сторінка 2
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0194
+  text: "186\n1.\tПрочитайте словосполучення та виконайте завдання. \nнікого не оминути\t\
+    \nмою увагу\nчимсь зайнятий\t\nнабрати всього\nу тій бібліотеці \t\nпишатися нею\n\
+    А.\t Визначте відмінки виділених займенників.\nБ.\t Відновіть початкову форму\
+    \ займенників.\nВідмінювання заперечних і неозначених займенників \nЗаперечні\
+    \ та неозначені займенники, утворені додаванням часток аби-, \nде-, ні-, -сь,\
+    \ -будь, -небудь, будь-, казна-, хтозна- до питальних займен­\nників, змінюємо\
+    \ за родами, числами й відмінками (як питальні).\nН. "
+  section_title: Сторінка 186
+  grade: 6
+  author: avramenko
   page: ''
   trust_tier: 1
 rag_images: []

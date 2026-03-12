@@ -1,49 +1,152 @@
-discovered_at: '2026-03-10T17:00:28.092557+00:00'
+discovered_at: '2026-03-12T09:28:56.799417+00:00'
 query_keywords:
 - Imperative and Requests
-- Наказовий спосіб
+- наказовий спосіб
+- Ти/Ви forms
+- читати
+- читай
+- писати
+- пиши
+- сказати
+- скажи
 - Imperative mood
 - Вісім обов'язкових дієслів
 - Eight required verbs
-- Ввічливе прохання
-- Polite requests
-- Заборони
-- Prohibitions
-- Form imperatives from the 8 required verbs
-- Distinguish ти and ви imperative forms
-- Make polite requests using будь ласка and прошу
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=q9WyAebMk2U
+  channel: Let's Learn Ukrainian
+  title: 'Imperative Mood in Ukrainian: grammar and practice | 70+ VERBS!'
+  relevance_score: 1.0
+  relevance_note: This video directly teaches the imperative mood in Ukrainian, covering
+    its grammar, formation, and usage with multiple verb examples. This is perfectly
+    aligned with the module's topic.
+  transcript_excerpt: У цьому відео ми поговоримо про наказові способи українською
+    мовою. Ми використовуємо дієслова в наказовому способі, коли ми комусь кажемо,
+    просимо, благаємо, рекомендуємо або наказуємо щось зробити.
+  embed_suggestion: After section Наказовий спосіб (Imperative mood) - as a primary
+    instructional resource for the grammar topic.
+- url: https://www.youtube.com/watch?v=YTz0inrG1KE
+  channel: Ukrainian Lessons
+  title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky +
+    Imperative mood of the s...
+  relevance_score: 0.5
+  relevance_note: The video uses the imperative mood to give instructions for cooking
+    varenyky, but it does not directly teach the grammar point. It could serve as
+    an example of imperative use in a natural context.
+  transcript_excerpt: обов'язково надішліть мені фотографію добре а зараз починаємо
+    майстер-клас який ви будете слухати сьогодні досить довгий.
+  embed_suggestion: After section Практика (Practice) - to demonstrate real-world
+    usage of imperative commands in a cultural context.
+- url: https://www.youtube.com/watch?v=T_qU1xDThtY
+  channel: Ukrainian Lessons
+  title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky + Imperative
+    mood of the verbs in the...
+  relevance_score: 0.5
+  relevance_note: Similar to Candidate 1, this video uses imperative forms within
+    instructions for making pysanky. It's a natural application of the mood rather
+    than a direct grammar lesson.
+  transcript_excerpt: слухайте розповідь Олени білуус це знову ж таки буде досить
+    складний текст але я впевнена ви впораєтесь з ним якщо послухаєте кілька разів.
+  embed_suggestion: After section Практика (Practice) - as another example of imperative
+    commands in a cultural activity.
+- url: https://www.youtube.com/watch?v=l_gBRmj0v3w
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Eating out, ordering food, reading the menu, takeout
+    🍕Imperatives | Plural'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
 - url: https://www.ukrainianlessons.com/episode111/
   title: Birthday presents + Imperative mood in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - phrases
+  - greetings
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 111
 - url: https://www.ukrainianlessons.com/episode112/
   title: How to cook varenyky + Imperative mood of the second person plural
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - plural
+  - vocabulary
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 112
 - url: https://www.ukrainianlessons.com/episode113/
   title: Ukrainian traditional embroidery masterclass + More about the Imperative
     mood in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - phrases
+  - introductions
+  - culture
+  - traditions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 113
 - url: https://www.ukrainianlessons.com/episode114/
   title: How to make pysanky + Imperative mood of the verbs in the first person plural
     (Let’s…)
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - verbs
+  - imperative
+  - conjugation
+  - plural
+  - vocabulary
+  - idioms
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 114
 - url: https://www.ukrainianlessons.com/lesson/111/
   title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood
     in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.7
+  topics:
+  - ULP
+  - Season 3
+  content_type: podcast_episode
+  series: 3
+  season: 3
+  episode: 111
 rag_chunks:
 - score: 0.5
   chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0072
@@ -59,7 +162,21 @@ rag_chunks:
   author: avramenko
   page: ''
   trust_tier: 2
-- score: 0.25
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0093
+  text: "82\nЗауважте!\nУ дієсловах наказового способу пишемо м’який знак у кінці\
+    \ слова та \nскладу після д, т, з, с, ц, л, н:  лізь, лізьте, будь, будьте, глянь,\
+    \ гляньте, \nзанось, заносьте.\n2.\t Утворіть усі можливі форми наказового способу\
+    \ (за зразком). Запишіть \nїх і виділіть у них закінчення.\nЗразок. Несу — несімо,\
+    \ неси, несіть, хай несе, хай несуть. \nНесу, кричу, роблю, знаю, їду, бережу,\
+    \ лізу. \n1.\tПрочитайте діалог і виконайте завдання. \nУ неділю вранці Ігор телефонує\
+    \ Марині: \n— Марино, пішли сьогодні "
+  section_title: Сторінка 85
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
   chunk_id: 7-klas-ukrmova-avramenko-2024_s0088
   text: "77\nЗауважте!\nДієслова умовного та наказового способу, на відміну від дійсного,\
     \ не ма-\nють часових форм. \n2.\t Запишіть дієслова в три колонки: 1) дійсного\
@@ -73,47 +190,32 @@ rag_chunks:
   author: avramenko
   page: ''
   trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0061
+  text: 'А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть
+    над кожним дієсловом його форму. було
+
+    кажу
+
+    принести'
+  section_title: Сторінка 54
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
 - score: 0.3333333432674408
-  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0063
-  text: "Морфологічна норма\n46\n § 9 \nПаралельні форми вираження наказового \n способу\
-    \ дієслів І та ІІ особи множини\n72. Прочитайте. Визначте дієслова у формі наказового\
-    \ способу, особу та число \nкожного дієслова.\nДо великого моменту\nБудь готовим\
-    \ кожний з вас —\nКожний може стать \n \nБогданом,\nЯк настане слушний час.\n\
-    Лиш борися, не мирися,\nІ даремно сил не трать,\nГордо стій і не корися,\nХоч\
-    \ пропадь, але не зрадь!\n(За І. Франком)\nШануймося, єднаймося та \n \nбудьмо!\n\
-    Тримаймося родинного стебла!\nЗабудьмо чвари і "
-  section_title: Сторінка 46
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0071
+  text: "54\nМорфологічна норма\n§ 17. НАКАЗОВИЙ СПОСІБ ДІЄСЛОВА\nСПОСТЕРЕЖЕННЯ\n\
+    1.\t Прочитайте уривки з пісень і виконайте завдання.\nДавай виключим світло і\
+    \ будем мовчати\nПро то, що не можна словами сказати (А. Кузьменко).\nДавай поговорим\
+    \ як слід, поставим у небі свій слід,\nДавай поговорим на чистоту… (гурт «Антитіла»).\n\
+    Давай без сліз завершимо любов,\nБез зайвих слів, образ і звинувачень… (А. Підлужний).\n\
+    А.\t Знайдіть порушення морфологічної норми, що повторюється в кожному з наведених\
+    \ \nуривків.\nБ.\t Опрацюва"
+  section_title: Сторінка 54
   grade: 11
-  author: glazova
+  author: avramenko
   page: ''
   trust_tier: 2
-- score: 0.125
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0043
-  text: "Розділ 1  ДІЄСЛОВО\n36\nРеальна дія\nІрреальна дія\nДійсний\nУмовний\nНаказовий\n\
-    виражає дію, що відбувалася, \nвідбувається або відбувати-\nметься, має часові\
-    \ форми\nвиражає \nбажану дію, \nяка  можлива \nлише за \nпевних умов\nвиражає\
-    \ \nпрохання, \nнаказ, \nспонукання \nдо дії\nМинулий\nТеперіш-\nній\nМайбут-\n\
-    ній\nщо робив? \nщо ро­\nби ла? та \nінші\nщо ро­\nбить? що \nробимо? \nта інші\n\
-    що роби­\nтиме? що \nзроб лю? \nта інші\nщо робив би? \nщо зробили б? \nта інші\n\
-    що роби? \nщо робіть? \nта інші\nВправа 42\n \nРоздивіться таблицю ви"
-  section_title: Сторінка 39
-  grade: 7
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.09090909361839294
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0066
-  text: "§ 11  Наказовий спосіб діє слів  \n59\nВправа 84 \n \nСпишіть речення, утворивши\
-    \ від діє слів у дужках форми наказового способу \n1) Так (сказати), ви хочете\
-    \ стати справжніми богатирями? \n(Є. Кравченко). 2) (Слухати), добрий чоловіче,\
-    \ коли вже дове­\nлося нам іти разом, (зробити) так (Нар. тв.). 3) Котигорошок\
-    \ \nпоклонився батькові в ноги й каже: «Батечку, (піти) до кова­\nля, (викувати)\
-    \ мені сильну залізну булаву» (А.  Лотоцький). \n4) (Приїхати) самі, (знайти)\
-    \ мене, і я вас обов’язково з ними \nпознайом"
-  section_title: Сторінка 62
-  grade: 7
-  author: litvinova
-  page: ''
-  trust_tier: 1
 rag_images: []
 rag_literary: []

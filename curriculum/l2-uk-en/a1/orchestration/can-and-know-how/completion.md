@@ -1,10 +1,10 @@
-FAIL: pipeline a1 45
+PASS: pipeline a1 45
 
   Module:   can-and-know-how
   Track:    a1
-  Mode:     v4
-  Words:    5109 (target: 1200)
+  Mode:     v5
+  Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-06T04:01:48Z
+  Verdict:  PASS
+  Date:     2026-03-12T09:28:35Z

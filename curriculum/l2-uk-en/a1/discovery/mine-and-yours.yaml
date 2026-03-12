@@ -1,46 +1,83 @@
-discovered_at: '2026-03-06T06:22:09.320454+00:00'
+discovered_at: '2026-03-12T08:51:14.345376+00:00'
 query_keywords:
 - Mine and Yours
+- мій
+- моя
+- моє
 - Чия це річ?
 - Whose Thing is This?
 - Система форм та узгодження
 - System of Forms and Agreement
-- 'Культурний контекст: Етикет та еволюція стосунків'
-- 'Cultural Context: Etiquette and Relationship Evolution'
+- Етикет та еволюція стосунків
+- Etiquette and Relationship Evolution
 - Практика та продукція
 - Practice and Production
-- possessive pronouns мій/твій/його/її/наш/ваш/їхній
-- possessive pronouns to noun gender (m/f/n/pl)
-- questions about possession
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=bW-KetoCIuQ
+  channel: Ukrainian Lessons
+  title: 'ULP 2-45 | Повторення: 41-44 + Мій дім | Review: 41-44 + My home'
+  relevance_score: 0.9
+  relevance_note: The video explicitly focuses on describing 'my home' using possessive
+    pronouns (мій, моя, моє) in various contexts, directly aligning with the module's
+    grammar topic of possessive forms and agreement. It provides multiple clear examples
+    of natural usage.
+  transcript_excerpt: Я хочу розповісти вам про мій дім в Україні... Моя кімната не
+    тільки моя ми жили там разом з моїм молодшим братом Миколою.
+  embed_suggestion: 'After Презентація: Система форм та узгодження (Presentation:
+    System of Forms and Agreement) -- it offers a practical, contextual demonstration
+    of the grammar points just introduced.'
+- url: https://www.youtube.com/watch?v=Kv_vJHT9_L8
+  channel: Ukrainian Lessons
+  title: 'ULP 2-60 | Повторення: 56-60 – Мій тиждень | Review: 56-60 – My week in
+    Ukrainian'
+  relevance_score: 0.7
+  relevance_note: The video uses the possessive pronoun 'мій' in its title ('Мій тиждень')
+    and content ('Мій розклад'), providing an example of its usage. While relevant,
+    its primary focus is a review of prior lessons and discussing a weekly schedule,
+    rather than explicitly teaching possessive forms.
+  transcript_excerpt: хочете знати Мій розклад на тиждень з понеділка по четвер я
+    Вчусь і працюю у пенсильванському університеті.
+  embed_suggestion: 'After Культурний контекст: Етикет та еволюція стосунків (Cultural
+    Context: Etiquette and Relationship Evolution) -- it serves as a listening practice
+    that includes the target grammar, complementing the cultural section.'
+- url: https://www.youtube.com/watch?v=qUCBYbBk9h8
+  channel: Bright Kids Ukrainian
+  title: Ukraine Defender Day greetings from Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=OgeIT-o2QgQ
+  channel: Let's Learn Ukrainian
+  title: 'Reflexive (& Possessive) Pronoun СВІЙ in Ukrainian: Where to use СВІЙ and
+    ТВІЙ + Declension'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=NVCDKt9TgFs
+  channel: Speak Ukrainian
+  title: Expressing feelings and emotions in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs: []
 rag_chunks:
-- score: 0.5
-  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0043
-  text: "ч ч\n>\n✓\n✓\nСлова — назви\n(предметів, ознак, дій, чисел)\nУ розділі ти\
-    \ дізнаєшся про:\n/\n< ч ч\nСЛОВА - НАЗВИ ПРЕДМЕТІВ \n(ІМЕННИКИ)\nхто? що?\nСЛОВА\
-    \ - НАЗВИ ОЗНАК \n\\\nПРЕДМЕТІВ (ПРИКМЕТНИКИ)\nякий? яка? \nяке? які?\nСЛОВА -\
-    \ НАЗВИ ДІЙ ПРЕДМЕТІВ \\ \n(ДІЄСЛОВА)\nщо робить? \nщо роблять?\nСЛОВА - НАЗВИ\
-    \ ЧИСЕЛ \n\\\n(ЧИСЛІВНИКИ)\nскільки?\nСЛУЖБОВІ СЛОВА\nі, та, у, до, під, \nза,\
-    \ над, від"
-  section_title: Сторінка 45
-  grade: 2
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.20000000298023224
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0021
-  text: "21\nХто це?\nСлова — назви живих предметів\n\t Який у тебе сьогодні настрій?\
-    \ Вибери.\n [ –    –|–  ] \n [ =    –|–   ] \n [ –  |–  |– ] \n [ =  |–   – ]\
-    \ \nЩо?\nХто?"
-  section_title: Сторінка 23
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0046
+  text: "46\nБачу М, м (ем).  Чую [м].\nм а *\nа\n*\n*\nм и * о\n* о м а * * а\n\t\
+    \nВизнач, яка схема відповідає намальовано-\nму предмету. \nа\nо\nу\nи\nМ\nма\n\
+    мо\nму\nми\nа\nо\nу\nи\nам\nом\nум\nим\nМ\nма     \nма  \nмо\nма\nми\nму\nма-\
+    \     \nмо-     \nму-     \n[ –• | – •]\n[ –•| – •– | – •]\nМ м"
+  section_title: Сторінка 48
   grade: 1
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.1428571492433548
+- score: 0.20000000298023224
   chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0023
   text: "23\n\t\nЯкі? (розмір)\n\t\nЯкі? (колір)\n\t\nЯкі? (смак)\n(яке?)\n(який?)\n\
     (який?)\n(який?)\n(який?)\n(який?)\n(який?)\n(який?)\n(           ?)\nСлова —\
@@ -51,29 +88,55 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.125
-  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0009
-  text: "8\nмова І мовЛЕння \nмова — це засіб спілкування людей (система звуків \n\
-    і букв, слова, речення, тексти, правила). \nМова потрібна, щоб:\nКоли ти розповідаєш\
-    \ про щось, то користуєшся мо-\nвою. Це мовлення. \nМОВЛЕННЯ\nУСНЕ           \
-    \                    ПИСЕМНЕ\nЯ читаю. Я пишу.\nЯ говорю. Я слухаю. \nПривіт!\n\
-    Прочитай речення. Спочатку назви ті, у яких ідеться про усне \nмовлення, потім\
-    \ ті, у яких ідеться про писемне. Спиши ре-\nчення. Зміни речення так, щоб у них\
-    \ про щось запитувалося.\n  Я oлухаЬ gагадку. Я "
-  section_title: Сторінка 8
-  grade: 2
-  author: bolshakova
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0246
+  text: "Ч а с т и н и   м о в и\nСамостійні \nІменник \nсонце\nхто? що?\nПрикметник\n\
+    сонячний, мамин\nякий? чий?\nЧислівник\nтри, третій\nскільки? котрий?\nЗайменник\n\
+    я, ти, він\nхто? що?\nДієслово\nсидіти\nщо робити? що зробити?\nПрислівник \n\
+    сонячно, восени\nяк? де? коли? куди?\nСлужбові\nПрийменник\nна, в, з, до\nНе відповідають\
+    \ на \nпитання\nСполучник\nі, й, та, але\nЧастка\nне, б, хай\nВ и д и  р е ч е\
+    \ н ь\nЗа метою \nвисловлювання\nЗа емоційним \nзабарвленням\nЗа будовою\nрозповідне\n\
+    окличне\nпросте\nпитальне\nнеокличне\nскладне\nспонука"
+  section_title: Сторінка 245
+  grade: 5
+  author: zabolotnyi
   page: ''
-  trust_tier: 2
-- score: 0.10000000149011612
-  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0074
-  text: "73\n• Чому кишеню назвали щедрою? \n• Напиши, коли ти буваєш щедрим. Чому?\n\
-    • Установи послідовність малюнків відповідно до тексту. \nПерекажи оповідання,\
-    \ користуючись малюнками.\nсЛова оДноЗначнІ Й БаГатоЗначнІ\nСЛОВА\nодне значення\n\
-    багато значень\nоднозначні\nбагатозначні\nБагатозначні слова називають предмети,\
-    \ ознаки, дії, \nу чомусь схожі між собою."
-  section_title: Сторінка 73
-  grade: 2
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0021
+  text: "21\nХто це?\nСлова — назви живих предметів\n\t Який у тебе сьогодні настрій?\
+    \ Вибери.\n [ –    –|–  ] \n [ =    –|–   ] \n [ –  |–  |– ] \n [ =  |–   – ]\
+    \ \nЩо?\nХто?"
+  section_title: Сторінка 23
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0078
+  text: '79
+
+    Я вивчаю українську мову . . . . . . . 4
+
+    Усне і писемне мовлення . . . . . . . 5
+
+    Слова — назви предметів . . . . . . . 6
+
+    Слова — назви дій . . . . . . . . . . . . . 7
+
+    Слово і речення . . . . . . . . . . . . . . . . 8
+
+    Слово і речення . . . . . . . . . . . . . . . . 9
+
+    Звуки  . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+    Букви  . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+    А а  . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+    О о . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 79
+  grade: 1
   author: bolshakova
   page: ''
   trust_tier: 2

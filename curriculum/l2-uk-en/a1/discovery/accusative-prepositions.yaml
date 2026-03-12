@@ -1,6 +1,10 @@
-discovered_at: '2026-03-05T07:45:57.500685+00:00'
+discovered_at: '2026-03-12T08:57:09.302622+00:00'
 query_keywords:
 - Accusative Prepositions
+- знахідний відмінок
+- магазин
+- пошта
+- концерт
 - Куди? з Acc
 - Direction with Acc
 - За + Acc
@@ -8,10 +12,6 @@ query_keywords:
 - Через + Acc
 - Through/Because of
 - Про + Acc
-- About
-- Use в/у + Accusative for direction toward enclosed spaces
-- Use на + Accusative for direction toward surfaces and events
-- Apply за/через/про with Accusative correctly in common expressions
 error: null
 warning: No videos found across channels
 videos: []
@@ -19,7 +19,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode57/
   title: Your schedule in Ukrainian + Accusative case with prepositions
   source: ukrainianlessons.com
-  relevance_score: 1.0
+  relevance_score: 0.85
   topics:
   - grammar
   - cases
@@ -34,22 +34,19 @@ blogs:
   series: ULP
   season: 2
   episode: 57
-- url: https://www.ukrainianlessons.com/episode33/
-  title: Talking about books in Ukrainian — Accusative case of people
-  source: ukrainianlessons.com
-  relevance_score: 0.85
+- url: https://opentext.ku.edu/dobraforma/chapter/8-2/
+  title: 'Dobra Forma: Accusative Case after Prepositions в/у, на and про'
+  source: dobraforma
+  relevance_score: 0.7
   topics:
-  - grammar
-  - cases
   - accusative
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 33
+  - cases
+  - prepositions
+  - grammar
 - url: https://www.ukrainianlessons.com/fmu15/
   title: 'Grammar point: Accusative case / Direct object in Ukrainian'
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 0.6
   topics:
   - grammar
   - cases
@@ -59,19 +56,10 @@ blogs:
   series: FMU
   season: 0
   episode: 15
-- url: https://opentext.ku.edu/dobraforma/chapter/8-2/
-  title: 'Dobra Forma: Accusative Case after Prepositions в/у, на and про'
-  source: dobraforma
-  relevance_score: 0.8
-  topics:
-  - accusative
-  - cases
-  - prepositions
-  - grammar
 - url: https://www.ukrainianlessons.com/episode32/
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
+  relevance_score: 0.5499999999999999
   topics:
   - grammar
   - cases
@@ -82,76 +70,87 @@ blogs:
   series: ULP
   season: 1
   episode: 32
+- url: https://www.ukrainianlessons.com/episode33/
+  title: Talking about books in Ukrainian — Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
 rag_chunks:
-- score: 0.3333333432674408
-  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0024
-  text: "1\nКрокЗ. Пригадай, що виражають прийменники разом ¡з закінчен­\nнями. Перевір\
-    \ себе, розшифрувавши слова.\nКод 1. 2а, 1 в, Зг, 36, 16,\n1а, 1г, 2в, 2в, За.\n\
-    Код 2. Зв, 1 в, 2г.\nКод 3.1 д, Зд, 16, 2а, Зґ, Зв, 26.\nа\nб\nв\nг\nҐ\nд\n7\n\
-    ш\n0\nі\nе\nж\nс\n2\nв\nи\nн\nж\nр\nг\n3\nя\nн\nм\nД\nа\nл\nКрок 4. Поміркуй,\
-    \ як пишуть прийменники зі словами (разом чи \nокремо). Зроби висновок. Порівняй\
-    \ його з правилом.\n( \n? \nЛ\nПрийменники зі словами пишуть окремо. Між прийменником\
-    \ \nі словом можна вставити ще одне слово. А між префіксом \nі слов"
-  section_title: Сторінка 26
-  grade: 4
-  author: kravtsova
-  page: ''
-  trust_tier: 2
-- score: 0.25
-  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0025
-  text: "27\n\t Спиши речення зі словами, у яких є подвоєння. Поясни пра­\nвопис слів\
-    \ із пропущеними буквами. Познач префікси.\n\t Розглянь малюнок. Опиши гірську\
-    \ річку Черемош (усно).\n68.\t\tПрочитай слова. Порівняй правопис прийменників\
-    \ з імен-\nниками та слів із співзвучними префіксами. Спиши, уста-\nвивши пропущені\
-    \ букви. \nБез зубів — без..убий; без звуків — без..вучний; від \nдзеркала — від..зеркалює;\
-    \ без заперечень — без..апе-\nречний.\n69.\t\tПрочитай слова.\nОб’єднати, роз’їзд,\
-    \ під’їхав, приємний, приїзд, від’ї"
-  section_title: Сторінка 27
-  grade: 4
-  author: zaharijchuk
-  page: ''
-  trust_tier: 2
-- score: 0.1428571492433548
-  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0057
-  text: "58\n1. Спиши слова. Познач у них префікси.\nскинути \n \n \nзробити\nспитати\
-    \ \n \n \nзмиритися\nстиснути \n \n \nздати\nсфотографувати  \nзбити\nсховати\
-    \ \n \n \nзварити\nПрефікс с- пишемо перед буквами к, п, т, ф, х.\nНаприклад:\
-    \ сказав, списав.\nÄÎÑË²ÄÆÓÞ ÍÀÏÈÑÀÍÍß\nÄÎÑË²ÄÆÓÞ ÍÀÏÈÑÀÍÍß\nÑË²Â ²Ç ÏÐÅÔ²ÊÑÀÌÈ\
-    \ Ç-, Ñ-  \nÑË²Â ²Ç ÏÐÅÔ²ÊÑÀÌÈ Ç-, Ñ-  \n Проведи дослідження!\n1. Підкресли букви,\
-    \ які стоять після префіксів.\n2. Зроби \nвисновок, \nперед \nякими \nбуквами\
-    \ \nпишемо \nпрефікс  с-.  Перевір  себе  за  правилом.\n3. Спиши текст "
-  section_title: Сторінка 58
-  grade: 3
-  author: ponomarova
-  page: ''
-  trust_tier: 2
-- score: 0.10000000149011612
-  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0062
-  text: "63\n8. Спиши речення. Підкресли слова з апострофом. Випи-\nши ті, у яких\
-    \ апостроф стоїть після префікса. Поділи їх на\nсклади  для  переносу.\n1. За\
-    \ ніч сова з’їдає до п’ятнадцяти гризунів. \n2. Весною на деревах з’являються\
-    \ молоді листочки. \n3. Пташка в клітці рветься, б’ється. \n4. Після від’їзду\
-    \ мами ми з нетерпінням чекали її \nповернення.\n1. Запиши пари споріднених слів.\
-    \ Познач у них закінчення, \nоснову і корінь.\nриба — рибка \nміст — місток \n\
-    добрий — добренький \nÂÈÇÍÀ×ÀÞ ÑÓÔ²ÊÑ Ó ÑËÎÂÀÕ\nÂÈÇÍÀ×ÀÞ Ñ"
-  section_title: Сторінка 63
-  grade: 3
-  author: ponomarova
-  page: ''
-  trust_tier: 2
 - score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0109
-  text: "79\nСловосполучення з  прийменниками при, за, із-за § 17 \x1F\n Кам’янці-Подільському,\
-    \ засновано Український історичний музей, Укра-\nїнську національну бібліотеку\
-    \ (З Інтернету). Довідка. Іван Мазепа, Пилип Орлик, Павло Скоропадський. 131.\
-    \ Попрацюйте в  парах. Чи є  серед ваших знайомих особа, наділена ко-\nзацьким\
-    \ духом? Розкажіть про цю людину, уживаючи фразеологізми за чужою \nспиною (не)\
-    \ ховатися; брати бика за роги; (не) тягти кота за хвіст; не лазити \nза словом\
-    \ у  кишеню; тримати ніс за вітром. Пр"
-  section_title: Сторінка 79
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0110
+  text: "¨кÁо до складеного підмета входять слова \nªа¬ат·\x0F µа´·\x0F ¿±µа´·\x0F\
+    \ тр·½±\x0F ³і´ь³а\x0F де\x10\n³і´ь³а або іменники зі значенням кількості \n(десÅт·³\x0F\
+    \ с·тнÅ\x0F ¿аст±на\x0F реÀта\x0F ¸·´·в±\x10\nна\x0F ªі´ьÀість та ін.), то присудок\
+    \ переважно \nмає ôорму однини\n\x8Dагато люде± ¸·с¸іÀаè\nна концерт\x11\n\x8D\
+    іль¿ість громадян ¸ід -\nтр±µа´а рі¿ення\x11\n\x8Dіль¿ість громадян ¸ід-\nтр±µа´±\
+    \ рі¿ення\x11\n¨кÁо при складеному підметі є означення\nу ôормі µножини, то й\
+    \ присудок, коли він \nпост позиційний, також уживаємо у ôормі \nµножини. Препозиційний\
+    \ присуд"
+  section_title: Сторінка 81
   grade: 11
-  author: glazova
+  author: zabolotnyi
   page: ''
   trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0172
+  text: "3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-\nликий\
+    \ словесний опис цієї афіші з уживанням складнопідрядних ре-\nчень. 4. Створіть\
+    \ плакат «Порада другові» та складіть невеликий текст з об-\nґрунтуванням цієї\
+    \ поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи\
+    \ журнальних публікацій по три приклади кож-\nного виду складнопідрядних речень\
+    \ з кількома підрядними. 265\n266 \n267 \n268"
+  section_title: Сторінка 124
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0124
+  text: "121\n121\nКультура мовлення\nРекомендовано\n(іменники)\nНЕ рекомендовано\n\
+    командувач армії\nзавідувач бібліотеки \nнападник (у футболі)\nвірянин \nвідпочивальник\
+    \  \nоточення\nкоманда-лідер\nпоет-початківець\nмісця для сидіння \nкомандуючий\
+    \ армії \nзавідуючий бібліотекою  \nнападаючий (у футболі)\nвіруючий \nвідпочиваючий\
+    \ \nоточуючі люди\nлідируюча команда\nпочаткуючий поет\nсидячі місця\nРекомендовано\
+    \ \n(прикметники)\nНЕ рекомендовано\nмийний засіб (для миття)\nзнеболювальний\
+    \ засіб\nвимірювальний прилад\nвідновлювальні робот"
+  section_title: Сторінка 125
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrmova-zabolotnyi-2017_s0172
+  text: "3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-\nликий\
+    \ словесний опис цієї афіші з уживанням складнопідрядних ре-\nчень. 4. Створіть\
+    \ плакат «Порада другові» та складіть невеликий текст з об-\nґрунтуванням цієї\
+    \ поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи\
+    \ журнальних публікацій по три приклади кож-\nного виду складнопідрядних речень\
+    \ з кількома підрядними. 265\n266 \n267 \n268"
+  section_title: Сторінка 124
+  grade: 9
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-golub-2023_s0143
+  text: "140\n340   Запишіть словосполучення, уставляючи пропущені букви. \nАлюміні..вий\
+    \ дріт, вельвет..ва куртка, взутт..ва крамниця, \nгруш..вий джем, дій..ва особа,\
+    \ житт..вий випадок, овоч..ве \nрагу, пошт..ва скринька, травн..вий дощ, червн..ва\
+    \ ніч, чутт..ве \nсприймання, помаранч..вий сік, парч..ва сукня. \n341   Утворіть\
+    \ від поданих іменників прикметники, поясніть написання \nсуфіксів. \nЛютий, січень,\
+    \ березень, метал, плюш, аґрус, стиль, вишня, \nгелій, фланель, алюміній, кизил,\
+    \ чебрець, квітень, емаль. \n3"
+  section_title: Сторінка 140
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
 rag_images: []
 rag_literary: []

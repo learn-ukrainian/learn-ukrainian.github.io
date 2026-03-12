@@ -1,6 +1,9 @@
-discovered_at: '2026-03-05T19:43:22.515246+00:00'
+discovered_at: '2026-03-12T08:43:29.137460+00:00'
 query_keywords:
 - Syllables and Word Division
+- молоко
+- Україна
+- сестра
 - Що таке склад?
 - Типи складів
 - Правила переносу
@@ -9,90 +12,55 @@ query_keywords:
 - Apply word division (переніс/hyphenation) rules correctly
 - Read multi-syllable words fluently
 - Syllable structure
-- Open and closed syllables
-- Word division rules
-- grammar
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/fmu15/
-  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
-  source: ukrainianlessons.com
-  relevance_score: 0.8
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 15
-- url: https://www.ukrainianlessons.com/fmu5/
-  title: How to talk about transport in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.7000000000000001
-  topics:
-  - grammar
-  - cases
-  - instrumental
-  - vocabulary
-  - travel
-  - phrases
-  - culture
-  - lviv
-  - review
-  - listening
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 5
-- url: https://www.ukrainianlessons.com/fmu16/
-  title: How to ORDER at the restaurant in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.7000000000000001
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - vocabulary
-  - food
-  - phrases
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 16
-- url: https://www.ukrainianlessons.com/episode2/
-  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - pronouns
-  - phrases
-  - greetings
-  - goodbyes
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 2
-- url: https://www.ukrainianlessons.com/episode7/
-  title: More about your family in Ukrainian + Possessive Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.65
-  topics:
-  - grammar
-  - pronouns
-  - vocabulary
-  - family
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 7
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=7DKYKrHjrDc
+  channel: Ukrainian Lessons
+  title: FMU 1-48 | Vocabulary booster! Staple food in Ukrainian | 5 Minute Ukrainian
+  relevance_score: 0.0
+  relevance_note: The module is about Ukrainian syllables and word division. The video
+    is a vocabulary booster for staple food items. There is no topical overlap.
+  transcript_excerpt: сьогодні ми будемо повторювати різні продукти different food
+    чнімо продукти які можна знайти на кожній кухні хліб bread хліб картопля pot картопля
+    яйця egs я одне яйце яйце яйця макарони паasta макарони томатний соус tomato SU
+    томатний соус томатна паста Tom Paste thick томатна паста рис rice рис гречка
+    bucket a very com and beloved by ukraini Cal гречка вівсянка Out Meal вівсянка
+    борошно або мука is Flow борошно мука цукор sugar цукор мед honeні мед варення
+    N варення Jam варення чай te кава коfee приправи Spices also We say speції which
+    Sounds like Spices приправи або спеції чорний перець це дуже популярна приправа
+    Black Pepper чорний перець сіль Salt сіль Soft sign олія O thepular OL in is соняшникова
+    олія sunflow Oil соняшникова олія Ukraine is actually number one producer of соняшникова
+    olлія in the world Another One is olливкова олія olive oil оливкова олія оocet
+    vinegar оocet А які основні продукти є в холодильнику What Food do We have in
+    the fridge масло Butter масло сметана S Cream in an fridge сметана молоко Milk
+    молоко сир ЧЗ сир і різні соуси майонез кетчуп і гірчиця гірчиця and now Let's
+    i say the word English you say in Ukrainian sugar цукор bread хліб cheзe сир Milk
+    молоко Honey мед дм варення Butter масло sour Cream сметана olive oil оливкова
+    олія Black Pepper чорний перець and Salt сль You can more prtice with Fun excises
+    in the L If you have trble remembering Vocabulary try and name Food In Your Kitchen
+    from Time to Time for example When Cooking you need to get the Words from your
+    memory as much as possible If you want to Make Them Stick бажаю вам гарного дня
+    і смачного до побачення this was from ukraini lessons to find Out more about our
+    lesson flashs go to ukrainianle
+  embed_suggestion: Not relevant for embedding.
+blogs: []
 rag_chunks:
 - score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0014
+  text: "15\nКрок 1. Уважно розглянь, як перенесли слова. На скільки частин \nїх поділили?\
+    \ Як, на твою думку, ділили слова для переносу?\nвере-сень\t\nбе-реза\t\n\t\n\
+    яго-да\nКрок 2. Чому ці слова не поділені для переносу?\nЮля\t\nЯрик\t\t\nтак\t\
+    \n\t\nрік\nКрок 3. Склади правила переносу.\n\t Для переносу слова слід поділити\
+    \ на дві частини. \n\t Слова переносять з рядка в рядок складами. \n\t Склад з\
+    \ однієї букви не залишають в рядку і не пере-\nносять в інший рядок. \n\t Слова,\
+    \ які складаються з одного складу, не перено-\nсять.\n50.\t\n1"
+  section_title: Сторінка 15
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
   chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0016
   text: "ПОДІЛ СЛІВ НА СКЛАДИ\nНАВЧАЮСЯ ДІЛИТИ СЛОВА НА СКЛАДИ\nСклади і запиши слова,\
     \ які «заховалися» \nв пазлах.\nвизначаю\n2| Додайте до частин слів склади так,\
@@ -102,30 +70,6 @@ rag_chunks:
     \ \nВін утворює склад.\n3| Утвори від односкладових слів двоскладові і трискладові,\
     \ \nзапиши за зразком. Поділи слова на склади.\nліс"
   section_title: Сторінка 18
-  grade: 2
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.20000000298023224
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0009
-  text: "9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t Що «зайве»? Поділи\
-    \ слова на склади. Визнач \nнаголошений склад.\n        \n        \n        \n\
-    \t Який у тебе сьогодні настрій? Вибери."
-  section_title: Сторінка 11
-  grade: 1
-  author: zaharijchuk
-  page: ''
-  trust_tier: 1
-- score: 0.1666666716337204
-  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0018
-  text: "о\nПЕРЕНОС СЛІВ \nІЗ РЯДКА В РЯДОК\nНАВЧАЮСЯ ПРАВИЛЬНО ПЕРЕНОСИТИ СЛОВА\n\
-    Я — учителька\nПрочитай і розкажи \nу класі.\nЯ — учитель\nкла-си \nшко-ля-рі\n\
-    ділю слова \nдля переносу\n0\nСлова переносяться з рядка в рядок складами. \n\
-    Односкладові слова не поділяються для переносу.\nо о\nі| Прочитайте. Поділіть\
-    \ для переносу \nвиділені слова.\nКнижки — надійні друзі й добрі \nпорадники кожної\
-    \ людини. Вони \nвідкривають нам світ. Допомагають \nуявити минуле і зазирнути\
-    \ в майбутнє.\n\\\nІ\nІ \nІ\nІ\n/\nСклад, позначений однією\nв ряд"
-  section_title: Сторінка 20
   grade: 2
   author: vashulenko
   page: ''
@@ -144,19 +88,33 @@ rag_chunks:
   author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.1111111119389534
-  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0017
-  text: "Визначте кількість складів у словах, не поділяючи їх на \nсклади. Доведіть\
-    \ свою думку.\nбібліотека \nкнигосховище \nграмота \nнаука \nмудрість\nЯ — учителька\n\
-    Прочитай і розкажи\n■ у класі.\nЯ — учитель\nмудрість\n? звуків,\n? букв,\n? складів\n\
-    У слові стільки складів, скільки в ньому голосних \nзвуків.\n5| Запишіть приказку,\
-    \ яка «заховалася».\nПеред вами складовиця, \nа в ній приказка таїться. \nДоберіть\
-    \ усе до ладу, \nзгрупувавши склад до складу.\nскладовиця \n? звуків, ? букв,\
-    \ \n? складів\nб| Випиши з тексту виділені"
-  section_title: Сторінка 19
-  grade: 2
-  author: vashulenko
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-golub-2022_s0086
+  text: "87\n217   Поділіть слова на склади, запишіть фонетичною транскрипцією. \n\
+    Цінності, Україна, пісня, тризуб, незалежність, спадщина, \nісторія, культура.\
+    \ \n218   Ознайомтеся з таблицею. До кожного правила доберіть власні \nприклади.\
+    \ \nПравила переносу\n1\nОдну букву не залишаємо в попередньо-\nму рядку й не\
+    \ переносимо в наступний \nрядок\nака-де-мія, \nМа-рія, олі-вець\n2\nНе можна\
+    \ розривати сполучення букв \nдж, дз, які позначають один звук\nґу-дзик, хо-джу\n\
+    3\nНе можна розривати сполучення букв \nйо, ьо\nпа-йок, сл"
+  section_title: Сторінка 87
+  grade: 5
+  author: golub
   page: ''
-  trust_tier: 2
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0088
+  text: "85\n § 36–37.  Склад.  Основні  правила  переносу\nЗауважте!\nПри збігу однакових\
+    \ приголосних на межі значущих частин слова одну \nбукву залишаємо, а другу переносимо\
+    \ в наступний рядок: без-зубий (не бе-\nззубий), закон-ний (не зако-нний). В інших\
+    \ випадках можливий подвій-\nний перенос: зна-ння і знан-ня, жи-ття і жит-тя,\
+    \ ва-нна і ван-на. \n4.\tЗапишіть слова, позначивши рискою всі можливі місця переносу\
+    \ з \nрядка в рядок (за зразком).\nАрмія, надзвуковий, задзеркалля, міський, годинник,\
+    \ бульйон, \nІ. Я. Ф"
+  section_title: Сторінка 85
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
 rag_images: []
 rag_literary: []

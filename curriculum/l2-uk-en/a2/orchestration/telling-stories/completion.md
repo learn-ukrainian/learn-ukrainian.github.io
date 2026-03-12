@@ -2,9 +2,9 @@ PASS: pipeline a2 31
 
   Module:   telling-stories
   Track:    a2
-  Mode:     v3
-  Words:    4957 (target: 3000)
+  Mode:     v5
+  Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T02:44:36Z
+  Date:     2026-03-12T10:20:38Z

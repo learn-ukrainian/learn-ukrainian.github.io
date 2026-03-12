@@ -1,84 +1,81 @@
-discovered_at: '2026-03-06T00:34:26.604855+00:00'
+discovered_at: '2026-03-12T08:47:38.978797+00:00'
 query_keywords:
 - Plurals and Alternation
+- множина
+- студент
+- студенти
+- книга
+- книги
+- місто
+- міста
 - Множина іменників
 - Noun plurals
 - Чергування
 - Alternation
-- Множина прикметників
-- Adjective plurals
-- Винятки та особливості
-- Exceptions and special cases
-- Form plurals for common masculine, feminine, and neuter nouns
-- Recognize vowel alternation patterns (і → о/е) in plural formation
-- Make adjectives agree with plural nouns using the -і/-ї ending
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://talkukrainian.com/plurals/
-  title: 'Talk Ukrainian: Plurals'
-  source: talkukrainian
-  relevance_score: 0.30000000000000004
-  topics:
-  - plural
-  - nouns
-  - grammar
-- url: https://opentext.ku.edu/dobraforma/chapter/2-3/
-  title: 'Dobra Forma: Plural Nouns with Stem Changes'
-  source: dobraforma
-  relevance_score: 0.3
-  topics:
-  - plural
-  - nouns
-  - grammar
-  - alternation
-- url: https://opentext.ku.edu/dobraforma/chapter/4-3/
-  title: 'Dobra Forma: Locative Case (Consonant Mutations)'
-  source: dobraforma
-  relevance_score: 0.3
-  topics:
-  - locative
-  - cases
-  - grammar
-  - alternation
-- url: https://opentext.ku.edu/dobraforma/chapter/9-2/
-  title: 'Dobra Forma: Instrumental Case (Other Singular Endings and Stem Changes)'
-  source: dobraforma
-  relevance_score: 0.3
-  topics:
-  - instrumental
-  - cases
-  - grammar
-  - alternation
-- url: https://www.ukrainianlessons.com/episode94/
-  title: At the pizzeria + Sound changes between imperfective and perfective verbs
-    in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.2
-  topics:
-  - grammar
-  - verbs
-  - phrases
-  - introductions
-  - culture
-  - kyiv
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 94
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=LHaC0ussvQQ
+  channel: Bright Kids Ukrainian
+  title: Singular & Plural in Ukrainian Language for Beginners.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=j2o75UKiIFY
+  channel: Ukrainian Lessons
+  title: ULP 2-42 | Моя кімната – Множина іменників | My Room – Plural nouns in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=rgX2QoOEdTI
+  channel: Ukrainian Lessons
+  title: 'FMU 1-46 | Grammar point: Plural of nouns in Ukrainian | 5 Minute Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=l_gBRmj0v3w
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Eating out, ordering food, reading the menu, takeout
+    🍕Imperatives | Plural'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ksZEEAHX6ow
+  channel: Let's Learn Ukrainian
+  title: 'Basic Maths Vocabulary: Count to 100, addition, subtraction, multiplication
+    and division'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=T59dgH_x1s8
+  channel: Let's Learn Ukrainian
+  title: Personal Pronouns and their Cases!
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
 rag_chunks:
-- score: 0.1666666716337204
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
-  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
-    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
-  section_title: Сторінка 190
-  grade: 4
-  author: ''
+- score: 0.5
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0112
+  text: "114\nПрочитай і розкажи  \nу класі.\nЯ — учителька\nЯ — учитель\nзірка\n\
+    літак\nмісто\nзірки\nлітаки\nміста\nІменники мають два числа: однину і множину.\n\
+    Іменники, які називають один предмет, уживаються в однині.\nІменники, які називають\
+    \ два і більше предметів, уживаються \nу множині.\n\t \t\n1   \aПрочитайте і розкажіть,\
+    \ яким ви уявля-\nєте планетополіт.\nМи мандруємо у Всесвіті на природ-\nному\
+    \ космічному кораблі, який називаєть-\nся Земля. Земля — це явище унікальне. \n\
+    Земля — найдорожче, що є в людини. Вона \nмчить у"
+  section_title: Сторінка 114
+  grade: 3
+  author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.125
+- score: 0.3333333432674408
   chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0114
   text: "116\nДосліди, чи всі іменни-\nки можуть мати фор-\nму однини і множини.\n\
     Я — дослідник\nЯ — дослідниця\nСпостерігаю за іменниками, які вживаються тільки\
@@ -92,7 +89,35 @@ rag_chunks:
   author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.09090909361839294
+- score: 0.25
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0049
+  text: "Ім енники-синонім и, ім енники-антонім и, \nбагатозначність ім енників\n\
+    101. Прочитайте іменники.\nДобро, війна, радість, мир, герой, бруд, шум, тиша,\
+    \ \nкрик, потворність, мовчання, чистота, купівля, продаж, \nкраса, боягуз, зло,\
+    \ сум.\n•  Доберіть із запропонованих слів антоніми до виділених імен­\nників.\
+    \ Запишіть парами. Назвіть іменники — назви конкрет­\nних предметів.\n102. Прочитайте\
+    \ іменники.\nБажання, базіка, квартира, колір, маля, мир.\n•  Доберіть до них\
+    \ синоніми з довідки.\nДовідка: пустомеля, хоті"
+  section_title: Сторінка 50
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0013
+  text: "12\nсЛова — назви ПреДметІв\nСлова — назви предметів — це іменники.\nСлово\
+    \ іменник утворене від слова ім’я. Кожний \nпредмет чи явище має своє ім’я, тобто\
+    \ свою назву.  \nНазви зображені предмети спочатку окремо, потім одним \nсловом.\
+    \ Назви тих, хто користується ними. Доведи, що всі \nці слова — іменники. Запиши\
+    \ їхні назви за абеткою.\nСлова — назви людей \n і тварин \n відпові-\nдають\
+    \ на питання хто? Слова — назви інших предме-\nтів \n відповідають на питання\
+    \ що?\n \nІменники\nХто?                      Що?"
+  section_title: Сторінка 12
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
   chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
   text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
     \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
@@ -106,30 +131,5 @@ rag_chunks:
   author: varzatska
   page: ''
   trust_tier: 2
-- score: 0.5
-  chunk_id: 10-klas-ukrmova-karaman-2018_s0281
-  text: "Більшість повних прикметників мають стягнені форми закін-\nчення: добра —\
-    \ добре. Але в поетичній мові вживаються і повні \nнестягнені форми називного\
-    \ й знахідного відмінків однини жіно-\nчого і середнього роду та жіночого роду\
-    \ називного й знахідного \nвідмінків множини: веселая, веселеє, веселії, веселую."
-  section_title: Сторінка 156
-  grade: 10
-  author: karaman
-  page: ''
-  trust_tier: 2
-- score: 0.25
-  chunk_id: 6-klas-ukrmova-betsa-2023_s0078
-  text: "§ 32.\t\nЧисло іменників\nA főnév száma\nБільшість іменників може вживатися\
-    \ в  однині \nй у множині.\nІменник у формі однини вживається для позначення \n\
-    одного предмета, іменник у формі множини — для по-\nзначення двох і більше предметів.\n\
-    Актор — актори, стіл — столи, корова — коро́ви\nЗакінчення іменників у множині:\n\
-    чоловічий рід\n -и, -і: стіл — столи; стілець — стільці\nжіночий рід\n-а, -я,\
-    \  -и, -і: мама — мами, вишня — вишні, ніч — ночі\nсередній рід\n-о, -е, -а, -я:\
-    \ село — села, море — моря\n180\t Відскану"
-  section_title: Сторінка 80
-  grade: 6
-  author: betsa
-  page: ''
-  trust_tier: 1
 rag_images: []
 rag_literary: []

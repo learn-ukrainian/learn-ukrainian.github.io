@@ -2,9 +2,9 @@ PASS: pipeline a2 25
 
   Module:   numerals-and-nouns
   Track:    a2
-  Mode:     v3
-  Words:    4979 (target: 3000)
+  Mode:     v5
+  Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T02:42:50Z
+  Date:     2026-03-12T09:49:02Z

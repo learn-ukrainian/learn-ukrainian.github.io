@@ -5,31 +5,13 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-06T22:29:31Z",
-      "task_id": "v5-food-vocabulary-pA",
-      "mode": "full"
+      "ts": "2026-03-12T09:20:24Z",
+      "note": "rebuild-kept"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-06T22:30:06Z"
-    },
-    "sandbox": {
-      "status": "complete",
-      "ts": "2026-03-06T22:30:09Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-06T22:54:12Z"
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-06T22:56:12Z",
-      "task_id": "v5-food-vocabulary-pC"
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-06T23:01:02Z",
-      "attempts": 2
+      "ts": "2026-03-12T09:20:44Z",
+      "note": "merged-into-research"
     }
   }
 }

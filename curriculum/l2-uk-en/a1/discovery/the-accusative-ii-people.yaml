@@ -1,25 +1,91 @@
-discovered_at: '2026-03-05T07:32:08.939551+00:00'
+discovered_at: '2026-03-12T08:55:55.840968+00:00'
 query_keywords:
 - 'The Accusative II: People'
+- знахідний відмінок
+- брат
+- сестра
+- друг
 - Розминка
 - Warm-up
-- Культурний контекст
-- Cultural Context
 - Типові помилки та практика
 - Common Errors and Practice
 - Вироблення навичок та підсумок
 - accusative case for animate nouns (people/animals)
 - between animate and inanimate accusative
-- Learner understands when accusative = genitive
-- about people as direct objects
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=dhGtS3yWrX0
+  channel: Ukrainian with Olha
+  title: 'Як звати твого тата? - What is your father’s name? #ukrainianlessons #ukrainianlanguage'
+  relevance_score: 0.9
+  relevance_note: This video directly demonstrates the use of the Accusative case
+    with animate nouns (people) by asking about family members' names, which is highly
+    relevant to the module's topic.
+  transcript_excerpt: Як звати твого тата? Як звати твого дядька? Як звати твого дідуся?
+    Як звати твою маму?
+  embed_suggestion: After Презентація (Presentation) -- directly reinforces the grammar
+    of accusative case for people through practical examples.
+- url: https://www.youtube.com/watch?v=-f6UHBi8nU0
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: MY FAMILY | Where do you live? Possessive pronouns,
+    Verbs TO BE, TO HAVE'
+  relevance_score: 0.8
+  relevance_note: The video explicitly mentions touching on accusative cases and focuses
+    on family vocabulary, which includes animate nouns (people) relevant to the module's
+    topic.
+  transcript_excerpt: And with we will touch a little accusative and locative cases.
+    And the topic of today's lesson is family. We will learn vocabulary of family
+    members and how to describe your family and relations between the members of the
+    families.
+  embed_suggestion: After Презентація (Presentation) or Культурний контекст (Cultural
+    Context) -- reinforces family vocabulary and introduces accusative in context.
+- url: https://www.youtube.com/watch?v=XaGcakHYd2Y
+  channel: Ukrainian Lessons
+  title: ULP 2-66 | Спогади + Місцевий відмінок з місцями | Sharing memories + Locative
+    case with places
+  relevance_score: 0.6
+  relevance_note: The video provides a general recap of all cases, including the Accusative
+    case ('знахідний відмінок'), but does not specifically focus on animate nouns
+    or people, making it tangentially related.
+  transcript_excerpt: accusative Case знахідний знахідний відмінок from thebзнайти
+    to find We have looked at each of those
+  embed_suggestion: After Розминка (Warm-up) -- provides a useful recap of grammatical
+    cases before diving into specifics.
+- url: https://www.youtube.com/watch?v=VqmPPelubUw
+  channel: Ukrainian Lessons
+  title: ULP 2-48 | Харчові звички + Родовий відмінок | Eating habits + Genitive case
+  relevance_score: 0.1
+  relevance_note: The video discusses the Genitive case and eating habits, which is
+    unrelated to the Accusative case for people.
+  transcript_excerpt: сьогодні ми будемо більше говорити про родовий відмінок а також
+    послухаємо опитування про харчові звички українців
+  embed_suggestion: Not recommended due to low relevance.
+- url: https://www.youtube.com/watch?v=YeW8bsiubh8
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5. Accusative Case (Знахідний відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YTqVxLihICc
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5: Locative Case Practice (Місцевий відмінок в українській
+    мові)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
+- url: https://www.ukrainianlessons.com/lesson/33/
+  title: ULP 1-33 Talking about books in Ukrainian – Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
 - url: https://www.ukrainianlessons.com/episode33/
   title: Talking about books in Ukrainian — Accusative case of people
   source: ukrainianlessons.com
-  relevance_score: 0.85
+  relevance_score: 0.65
   topics:
   - grammar
   - cases
@@ -28,15 +94,10 @@ blogs:
   series: ULP
   season: 1
   episode: 33
-- url: https://www.ukrainianlessons.com/lesson/33/
-  title: ULP 1-33 Talking about books in Ukrainian – Accusative case of people
-  source: ukrainianlessons.com
-  relevance_score: 0.8
-  topics: []
 - url: https://www.ukrainianlessons.com/fmu15/
   title: 'Grammar point: Accusative case / Direct object in Ukrainian'
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 0.6
   topics:
   - grammar
   - cases
@@ -49,7 +110,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode32/
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
+  relevance_score: 0.5499999999999999
   topics:
   - grammar
   - cases
@@ -60,99 +121,90 @@ blogs:
   series: ULP
   season: 1
   episode: 32
-- url: https://www.ukrainianlessons.com/fmu16/
-  title: How to ORDER at the restaurant in Ukrainian
+- url: https://www.ukrainianlessons.com/episode56/
+  title: Asking for advice + Accusative case in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7000000000000001
+  relevance_score: 0.5
   topics:
   - grammar
   - cases
   - accusative
-  - vocabulary
-  - food
+  - adjectives
   - phrases
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 16
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 56
 rag_chunks:
-- score: 0.1111111119389534
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0009
-  text: 'уживає такі слова: не переймайтеся, не хвилюйтеся, про0
-
-    шу, усе нормально.
-
-    Уміння чемно відмовитися чи погодитися — теж мис6
-
-    тецтво спілкування. Невміння делікатно відмовитися мо6
-
-    же образити людину. У ситуації відмови користуються
-
-    висловами: дякую, але я сьогодні маю інші справи; спа0
-
-    сибі, але наступним разом; вибачте, але я, на жаль,
-
-    не зможу. Якщо ж погоджуємося з чимось, то викорис6
-
-    товуємо такі вислови: я із задоволенням приймаю Вашу
-
-    пропозицію; щиро дякую; мені приємно, що я теж можу
-
-    бути'
-  section_title: Сторінка 10
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0158
+  text: "157\nПробачив братові, подякував бабусі, дорікати одноклас-\nнику, кепкувати\
+    \ з невдахи, насміхатися з однолітка, до-\nкласти зусиль, потребує допомоги, оволодівати\
+    \ знаннями. \nІІ. Виберіть із поданих два словосполучення. Складіть і запишіть\
+    \ по \nодному реченню з кожним з них.\nЗверніть увагу! \nВибачати  \n(кому?) сестрі\n\
+    Дякувати  \n(кому?) сестрі\nВибачте  \n(кому?) мені!\nДякую  \n(кому?) тобі!\n\
+    386.\tСпишіть речення, ставлячи іменники, що в дужках, у потрібному \nвідмінку.\
+    \ Поставте усно питання від головного"
+  section_title: Сторінка 160
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064
+  text: "66\n2. Пригадай назви відмінків іменників і їхні питання. Перевір\nсебе за\
+    \ таблицею на с. 38. Познач відмінок іменників\nу  записаних  словосполученнях.\n\
+    2\n3. Розглянь таблицю відмінювання прикметників.\n3\nВід-\nмінок\nЧоловічий\n\
+    рід\nЖіночий\nрід\nСередній\nрід\nН.\nР.\nД.\nЗн.\nОр.\nМ.\n(який?) добрий\n(якого?)\
+    \ доброго\n(якому?) доброму\nяк Н. або Р.\n(яким?) добрим\n(на якому?) \nна доброму\n\
+    на добрім\n(яка?) добра\n(якої?) доброї\n(якій?) добрій\n(яку?) добру\n(якою?)\
+    \ доброю\n(на якій?) \nна добрій\n(яке?) добре\n(якого?) доб"
+  section_title: Сторінка 66
   grade: 4
-  author: ''
+  author: ponomarova
   page: ''
   trust_tier: 2
-- score: 0.3333333432674408
-  chunk_id: 5-klas-ukrmova-avramenko-2022_s0184
-  text: "177\nРОЗВИТОК МОВЛЕННЯ\nА. Знайдіть звертання та вставні слова. Розкажіть,\
-    \ яку роль вони віді­\nграють у листі.\nБ. Напишіть лист рідній людині (мамі,\
-    \ татові, бабусі, дідусю, сестрі або \nбратові). Використайте в ньому звертання\
-    \ та вставні слова.\nКультура слова\n•\t Звертаючись до людей, уникайте описових\
-    \ форм на зразок: «дівчино в \nкапелюшку!», «хлопче в картатій сорочці!», «жіночко\
-    \ з морозивом!» Такі \nзвертання є порушенням етикетної норми. \n\t\nЯкщо не знаєте,\
-    \ як звернутися до незнайомої людини, может"
-  section_title: Сторінка 177
-  grade: 5
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0116
+  text: "109\n109\n§ 55.  Відмінювання іменників, що мають форму тільки множини\n\
+    2. Форму тільки множини мають обидва іменники рядка\nА\t іменини, пахощі\nБ\t\
+    \ ночви, будинки\nВ\t острови, Піренеї\nГ\t парфуми, аромати\n3. Помилку у творенні\
+    \ відмінкової форми іменника допущено в рядку\nА\t граблі — граблів \nБ\t опади\
+    \ — опадів \nВ\t сходи — сходів \nГ\t кури — курів \n5.\t Прочитайте вислови (з\
+    \ пропущеними словами) і виконайте завдання.\n1. Хліба … не здобудеш. 2. Добра\
+    \ людина плаче від …, а зла — від … . \n3. З … спати лягай і "
+  section_title: Сторінка 109
+  grade: 6
   author: avramenko
   page: ''
   trust_tier: 1
-- score: 0.25
-  chunk_id: 6-klas-istoriya-gisem-2023_s0020
-  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
-    \ «Ранок»"
-  section_title: Сторінка 19
-  grade: 6
-  author: gisem
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0219
+  text: "214\nВідомості із синтаксису й пунктуації.  Додаток\nВідмінок\nЗапитання\n\
+    Приклад іменника\nНепрямі \nвідмінки\nРодовий\nДавальний\nЗнахідний\nОрудний\n\
+    Місцевий \nКличний \nНемає питання\n2.\t Провідмінюйте слова друг і  книга.\n\
+    Вправа 348\n1.\t Спишіть речення.\nКатерина запросила подругу. — Подруга запросила\
+    \ Кате-\nрину.\nЯ прочитала книжку. — Книжка мені сподобалася.\nНаша команда виграла\
+    \ кубок. — Кубок дістався нашій ко-\nманді.\nЯ хочу запросити тебе на  день народження. —\
+    \ Ти хочеш \nзапросити мене на  день народже"
+  section_title: Сторінка 214
+  grade: 5
+  author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0289
-  text: "Етикетні жанри: привітання, вибачення \x1F\n201\n• із сімейним лікарем у\
-    \ кабінеті поліклініки, куди звернулися по щеп­\nлення від грипу;\n• із запрошеним\
-    \ на літературний вечір письменником, якого вас попро-\nсили зустріти й провести\
-    \ до школи;\n• з учнем із паралельного класу на тренуванні в спортзалі;\n• з директором\
-    \ школи­інтернату, для учнів якої ваш клас зібрав бібліо-\nтечку;\n• зі старшою\
-    \ сестрою, до якої прийшли допомогти в догляді за дитиною;\n• з однокласницею,\
-    \ яка просить вашої поради для вибору гад"
-  section_title: Сторінка 201
-  grade: 11
-  author: glazova
-  page: ''
-  trust_tier: 2
 - score: 0.20000000298023224
-  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
-  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
-    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
-    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
-    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
-    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
-    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
-    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
-  section_title: Сторінка 226
-  grade: 6
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0185
+  text: "166\n2.\t «Лінгвістичне спостереження». Які особливості вживання прийменни-\n\
+    ка по?\n1.\t Прочитайте речення та виконайте завдання.\nСестра сміється з брата.\n\
+    Сестра сміється над братом. \nА.\t У якому реченні допущено помилку в уживанні\
+    \ прийменника?\nБ.\t До яких видів помилок вона належить?\nВ уживанні прийменників\
+    \ часто трапляються помилки, які належать \nдо граматичних. Щоб їх уникнути, треба\
+    \ запам’ятати типові при-\nйменникові сполуки.\n§ 77\nОСОБЛИВОСТІ  ВЖИВАННЯ  \n\
+    ПРИЙМЕННИКІВ\nСмислові \nвідношення\nПрикла"
+  section_title: Сторінка 169
+  grade: 7
   author: avramenko
   page: ''
   trust_tier: 1

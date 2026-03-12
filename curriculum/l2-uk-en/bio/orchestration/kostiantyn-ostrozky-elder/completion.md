@@ -2,9 +2,9 @@ PASS: pipeline bio 13
 
   Module:   kostiantyn-ostrozky-elder
   Track:    bio
-  Mode:     v3
+  Mode:     v5
   Words:    3895 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T23:54:00Z
+  Date:     2026-03-12T06:43:31Z

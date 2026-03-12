@@ -2,9 +2,9 @@ PASS: pipeline b1 16
 
   Module:   aspect-integration-practice
   Track:    b1
-  Mode:     v3
-  Words:    6491 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T08:40:11Z
+  Date:     2026-03-12T08:53:23Z

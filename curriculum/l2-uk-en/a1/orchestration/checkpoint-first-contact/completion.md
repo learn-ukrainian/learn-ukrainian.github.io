@@ -2,9 +2,9 @@ PASS: pipeline a1 14
 
   Module:   checkpoint-first-contact
   Track:    a1
-  Mode:     v4
-  Words:    1523 (target: 1200)
+  Mode:     v5
+  Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-06T00:52:51Z
+  Date:     2026-03-12T08:48:45Z

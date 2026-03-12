@@ -1,6 +1,9 @@
-discovered_at: '2026-03-05T06:23:20.368493+00:00'
+discovered_at: '2026-03-12T08:53:52.490549+00:00'
 query_keywords:
 - What Time Is It?
+- година
+- хвилина
+- день
 - Презентація часу
 - Time Presentation
 - Дні та місяці
@@ -9,41 +12,94 @@ query_keywords:
 - Practice and Schedule
 - the time
 - all days of the week
-- all months of the year
-- time prepositions correctly
-- Clock time expressions (Котра година?)
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=y2VyaRA_nDk
-  channel: Listen & Read
-  title: Learn Advanced English While You Sleep | B2 to C1 English Conversations |
-    Listening While Sleeping
-  relevance_score: 0.3
-  relevance_note: The video is for English learners, but the Ukrainian transcript
-    contains several phrases and vocabulary related to time, daily routines, and duration
-    (e.g., 'вихідні', 'вранці', 'перед сніданком', '3 років'), which are tangentially
-    relevant to the module's vocabulary on time presentation and schedules.
-  transcript_excerpt: Я надаю перевагу роботі вранці, коли тихо. Він завжди перевіряє
-    свою електронну пошту перед сніданком.
-  embed_suggestion: After section Практика та розклад (Practice and Schedule) — The
-    excerpt demonstrates practical usage of time-related phrases in daily context,
-    aligning with the section's focus.
-- url: https://www.youtube.com/watch?v=sqOlr-y8QJM
-  channel: Listen & Read
-  title: Chanel SA thinks client doesn't look *RICH* enough to buy luxury?? || Haya
-    Glamazon (Subtitles)
+- url: https://www.youtube.com/watch?v=xDsEGYjeFXI
+  channel: Bright Kids Ukrainian
+  title: Котра година? |  Годинник німецькою | Час німецькою | Uhrzeit| Німецька для
+    початківців / з нуля |А1
+  relevance_score: 0.1
+  relevance_note: The video discusses telling time, but the primary language of instruction
+    for time-telling concepts is German, not Ukrainian. It uses Ukrainian as a medium
+    to teach German.
+  transcript_excerpt: Вітаю вас любителі легкого вивчення німецької мови Сьогодні
+    ми говоримо про годинник та час...
+  embed_suggestion: Not applicable. The video's primary subject is German, not Ukrainian,
+    despite the channel being Ukrainian.
+- url: https://www.youtube.com/watch?v=cWh-xaT5cu0
+  channel: Bright Kids Ukrainian
+  title: Як казати час англійською
+  relevance_score: 0.1
+  relevance_note: The video is about telling time, but the primary language of instruction
+    for time-telling concepts is English, not Ukrainian. It uses Ukrainian as a medium
+    to teach English.
+  transcript_excerpt: Доброго дня вас вітає канал репетитор англійської Сьогодні ми
+    говоримо про час Time...
+  embed_suggestion: Not applicable. The video's primary subject is English, not Ukrainian,
+    despite the channel being Ukrainian.
+- url: https://www.youtube.com/watch?v=8fKF7rEk2fo
+  channel: Ukrainian Lessons
+  title: 'Одяг і взуття 👔 Clothes vocabulary in Ukrainian: Flashcards & Exercises  [Vocabulary
+    Practice]'
   relevance_score: 0.0
-  relevance_note: The video content discusses luxury brands, fashion, and current
-    events, with no direct or indirect relevance to telling time, days, months, or
-    schedules in Ukrainian.
-  transcript_excerpt: N/A
-  embed_suggestion: None — The content is entirely unrelated to the module's topic.
+  relevance_note: The video is about vocabulary related to clothes and shoes in Ukrainian,
+    which is completely unrelated to the module topic 'What Time Is It?'.
+  transcript_excerpt: Привіт, це Анна. І в цьому уроці ви зможете вивчити різний одяг
+    і взуття українською мовою.
+  embed_suggestion: Not applicable. The topic of the video is entirely irrelevant
+    to the module.
+- url: https://www.youtube.com/watch?v=EO88Rk-tNdk
+  channel: Ukrainian with Olha
+  title: Як запам'ятати дні тижня та місяці англійською | Англійська по темам
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=_0B-vYERkL8
+  channel: Let's Learn Ukrainian
+  title: How to tell time in Ukrainian? | What time is it? | Котра година?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aU8Lh6WcH1A
+  channel: Let's Learn Ukrainian
+  title: How to make a compliment in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
+- url: https://www.ukrainianlessons.com/episode67/
+  title: Telling time in Ukrainian + Ordinal numbers & Locative case
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics:
+  - grammar
+  - cases
+  - locative
+  - numbers
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 67
+- url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+  title: Prepositions of Time in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - prepositions
+  - time
+  - grammar
 - url: https://talkukrainian.com/days-months-seasons/
   title: 'Talk Ukrainian: Days, Months and Seasons in Ukrainian'
   source: talkukrainian
-  relevance_score: 0.5
+  relevance_score: 0.35
   topics:
   - days
   - months
@@ -51,48 +107,8 @@ blogs:
   - time
   - calendar
   - vocabulary
-- url: https://www.ukrainianlessons.com/episode21/
-  title: What languages do you speak?
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - general
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 21
-- url: https://www.ukrainianlessons.com/episode24/
-  title: What a surprise! Second conjugation in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - grammar
-  - verbs
-  - conjugation
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 24
-- url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
-  title: Prepositions of Time in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - prepositions
-  - time
-  - grammar
-- url: https://www.ukrainianlessons.com/fmu13/
-  title: 10 Ukrainian dishes you must try in Ukraine
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 13
 rag_chunks:
-- score: 0.5
+- score: 0.3333333432674408
   chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0084
   text: "86\n209.\t\tРозгляньте таблицю та обговоріть її зміст.\n\t Склади п’ять \
     \ речень із правильними формулами на позначення \nчасу, які подані в таблиці (на\
@@ -106,7 +122,21 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 2
-- score: 0.25
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0083
+  text: "85\n207.\t\tПослухай або прочитай у «Зошиті з розвитку усного та \nписемного\
+    \ мовлення» розповідь четвертокласниці Насті \nпро ситуацію з її життя.\n\t Розкажи\
+    \ про цікаві випадки зі свого життя (усно). Запиши.\n208.\t\tПрочитайте рубрику\
+    \ «Спілкуймося красно». \nСтворюю зв’язну розповідь про ситуацію із життя\nМистецтво\
+    \ слова: міркую, описую, розповідаю\nСловесні формули на позначення часу  \nпротягом\
+    \ доби\nВ українській мові годину завжди вказуємо числівни-\nком, який відповідає\
+    \ на питання котра? (сьома, вось­\n"
+  section_title: Сторінка 85
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
   chunk_id: 4-klas-ukrmova-zaharijchuk_s0116
   text: "•  Складіть текст-розповідь за малюнком і словосполученнями. \nЗапишіть.\
     \ Підкресліть словосполучення, яким позначено час.\nПравильно вимовляємо, пишемо,\
@@ -120,30 +150,7 @@ rag_chunks:
   author: ''
   page: ''
   trust_tier: 2
-- score: 0.1666666716337204
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
-  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
-    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
-  section_title: Сторінка 190
-  grade: 4
-  author: ''
-  page: ''
-  trust_tier: 2
-- score: 0.3333333432674408
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0198
-  text: "193\nВідомості із синтаксису й пунктуації. Словосполучення\n08.00\n08.15\n\
-    08.30\n08.45\n2. Усно назвіть час усіма можливими способами .\n3. Доповніть і \
-    \ розіграйте діалог про розклад дзвінків .\n— Коли починається перший урок?\n\
-    — О …\n— А закінчується?\n— …\n4. Об’єднайтесь у  групи й  підготуйте діалоги\
-    \ для різних ситуацій з  вико-\nристанням позначення часу (зустріч із друзями,\
-    \ відвідування спортивної \nсекції, перегляд улюбленого серіалу…) . Розіграйте\
-    \ ситуації перед класом . \nЖартувати й  фантазувати можн"
-  section_title: Сторінка 193
-  grade: 5
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.20000000298023224
+- score: 0.5
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0252
   text: "§ 52. Правильне вживання числівників на позначення дат і часу  \n245\n§ 52.\
     \ Правильне вживання числівників\nна позначення дат і  часу\nВправа 496\n \nПрочитайте\
@@ -155,6 +162,20 @@ rag_chunks:
   section_title: Сторінка 245
   grade: 6
   author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0049
+  text: "Історичний час і простір\n51\n1/60 \nчастина\nхвилини\n60 хвилин\n365 днів\n\
+    10 · 100 р.\n100 років\nНайбільший\nз відомих\nпроміжків часу\nДоба\nМісяць\n\
+    Рік\nСтоліття\nТисячоліття\nЕра\n3.\t ГОДИННИК — УНІКАЛЬНИЙ ПРИЛАД \nДЛЯ ВИМІРЮВАННЯ\
+    \ ЧАСУ\n      Читаємо й розуміємо\nПрочитайте навчальний текст і виконайте завдання:\n\
+    1.\t Визначте, про які види годинників, що створювали люди протягом \nісторії,\
+    \ розповідається в тексті.\n2.\t Назвіть види годинників, зображені в «Годинниковому\
+    \ лото».\n3.\t Розташуйте усно зображення годин"
+  section_title: Сторінка 51
+  grade: 5
+  author: schupak
   page: ''
   trust_tier: 1
 rag_images: []

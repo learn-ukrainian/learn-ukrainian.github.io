@@ -1,10 +1,10 @@
-FAIL: pipeline a1 46
+PASS: pipeline a1 46
 
   Module:   must-and-want
   Track:    a1
-  Mode:     v4
-  Words:    3129 (target: 1200)
+  Mode:     v5
+  Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-06T04:20:24Z
+  Verdict:  PASS
+  Date:     2026-03-12T09:28:55Z

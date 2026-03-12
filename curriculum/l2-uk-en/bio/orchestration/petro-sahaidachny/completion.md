@@ -2,9 +2,9 @@ PASS: pipeline bio 20
 
   Module:   petro-sahaidachny
   Track:    bio
-  Mode:     v3
+  Mode:     v5
   Words:    5480 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T23:54:41Z
+  Date:     2026-03-12T07:11:57Z

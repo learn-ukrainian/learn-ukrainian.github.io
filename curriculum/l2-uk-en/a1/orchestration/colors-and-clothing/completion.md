@@ -2,9 +2,9 @@ PASS: pipeline a1 12
 
   Module:   colors-and-clothing
   Track:    a1
-  Mode:     v4
-  Words:    1549 (target: 1200)
+  Mode:     v5
+  Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-06T00:32:38Z
+  Date:     2026-03-12T08:47:38Z

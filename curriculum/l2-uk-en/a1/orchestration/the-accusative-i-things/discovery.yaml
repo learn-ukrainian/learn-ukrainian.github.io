@@ -1,7 +1,10 @@
-discovered_at: '2026-03-07T02:59:10.973251+00:00'
+discovered_at: '2026-03-12T08:55:31.902458+00:00'
 query_keywords:
 - 'The Accusative I: Things'
-- Знахідний відмінок
+- знахідний відмінок
+- бачити
+- чути
+- брати
 - Accusative Case
 - Практика та запобігання помилкам
 - Practice and Error Prevention
@@ -9,79 +12,147 @@ query_keywords:
 - Production and Culture
 - accusative case for inanimate nouns
 - accusative after verbs like бачити, брати, мати
-- between nominative and accusative forms
-- when accusative is required
-- Accusative case (inanimate)
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=VqmPPelubUw
+  channel: Ukrainian Lessons
+  title: ULP 2-48 | Харчові звички + Родовий відмінок | Eating habits + Genitive case
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=XaGcakHYd2Y
+  channel: Ukrainian Lessons
+  title: ULP 2-66 | Спогади + Місцевий відмінок з місцями | Sharing memories + Locative
+    case with places
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=dhGtS3yWrX0
+  channel: Ukrainian with Olha
+  title: 'Як звати твого тата? - What is your father’s name? #ukrainianlessons #ukrainianlanguage'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=-f6UHBi8nU0
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: MY FAMILY | Where do you live? Possessive pronouns,
+    Verbs TO BE, TO HAVE'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YeW8bsiubh8
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5. Accusative Case (Знахідний відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YTqVxLihICc
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5: Locative Case Practice (Місцевий відмінок в українській
+    мові)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
-- url: https://www.ukrainianlessons.com/accusativecase/
-  title: Accusative Case in Ukrainian
-  source: Complete guide with tables and examples
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/fmu15/
-  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
 - url: https://www.ukrainianlessons.com/episode32/
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
 - url: https://www.ukrainianlessons.com/episode33/
   title: Talking about books in Ukrainian — Accusative case of people
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
 - url: https://www.ukrainianlessons.com/episode56/
   title: Asking for advice + Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics: []
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - adjectives
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 56
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - prepositions
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 57
+- url: https://www.ukrainianlessons.com/episode58/
+  title: Inviting to a party in Ukrainian + Accusative case of pronouns
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - genitive
+  - pronouns
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 58
 rag_chunks:
-- score: 0.3333333432674408
-  chunk_id: 6-klas-ukrmova-avramenko-2023_s0194
-  text: "186\n1.\tПрочитайте словосполучення та виконайте завдання. \nнікого не оминути\t\
-    \nмою увагу\nчимсь зайнятий\t\nнабрати всього\nу тій бібліотеці \t\nпишатися нею\n\
-    А.\t Визначте відмінки виділених займенників.\nБ.\t Відновіть початкову форму\
-    \ займенників.\nВідмінювання заперечних і неозначених займенників \nЗаперечні\
-    \ та неозначені займенники, утворені додаванням часток аби-, \nде-, ні-, -сь,\
-    \ -будь, -небудь, будь-, казна-, хтозна- до питальних займен­\nників, змінюємо\
-    \ за родами, числами й відмінками (як питальні).\nН. "
-  section_title: Сторінка 186
-  grade: 6
-  author: avramenko
-  page: ''
-  trust_tier: 1
-- score: 0.25
-  chunk_id: 6-klas-ukrmova-zabolotnyi-2020_s0095
-  text: "94\nIменник\nІменник у формі називного відмінка означає того, хто виконує\
-    \ дію, \nі в реченні виступає підметом. Іменник у формі знахідного відмін-\nка\
-    \ означає предмет, на який спрямована дія, і в реченні виступає \nдодатком. ПОРІВНЯЙМО:\n\
-    \               Н. в. Зн. в. 1. Їде автомобіль. 2. Ремонтують автомобіль. І. Спишіть\
-    \ речення, підкресліть іменники як члени речення та надпи-\nшіть над ними відмінок.\
-    \ Поясніть, яке значення мають ці відмінки. 1. Íàçàð ïåðåçàâàíòàæèâ ñâіé êîìï’þòåð.\
-    \ 2. Àëіíà äîâãî\nðîçäèâ"
-  section_title: Сторінка 94
-  grade: 6
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0158
+  text: "157\nПробачив братові, подякував бабусі, дорікати одноклас-\nнику, кепкувати\
+    \ з невдахи, насміхатися з однолітка, до-\nкласти зусиль, потребує допомоги, оволодівати\
+    \ знаннями. \nІІ. Виберіть із поданих два словосполучення. Складіть і запишіть\
+    \ по \nодному реченню з кожним з них.\nЗверніть увагу! \nВибачати  \n(кому?) сестрі\n\
+    Дякувати  \n(кому?) сестрі\nВибачте  \n(кому?) мені!\nДякую  \n(кому?) тобі!\n\
+    386.\tСпишіть речення, ставлячи іменники, що в дужках, у потрібному \nвідмінку.\
+    \ Поставте усно питання від головного"
+  section_title: Сторінка 160
+  grade: 5
   author: zabolotnyi
   page: ''
-  trust_tier: 2
-- score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
-  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
-    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
-    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
-    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
-    \ влучний заголовок."
-  section_title: Сторінка 145
-  grade: 11
-  author: voron
-  page: ''
-  trust_tier: 2
+  trust_tier: 1
 - score: 0.20000000298023224
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0212
   text: "§ 42. Відмінювання прикметників  \n205\n4. Перш ніж когось засуджувати, спробуй\
@@ -96,7 +167,31 @@ rag_chunks:
   author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.1666666716337204
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0078
+  text: 'ІІ. Поміркуйте, у якому реченні події зіставляються. ІІІ. Запишіть виділені
+    слова у формі родового відмінка множини. 103
+
+    104
+
+    105
+
+    106'
+  section_title: Сторінка 58
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0182
+  text: "Порівняйте: \nЯ, на жаль, запізнився і Я запізнився. Речення, що містять\
+    \ вставні слова, звертання або однорідні члени, на-\nзиваємо ускладненими."
+  section_title: Сторінка 175
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
   chunk_id: 6-klas-ukrmova-golub-2023_s0122
   text: "120\n288    І   Випишіть із тексту прикметники разом з іменниками, до яких\
     \ \nвони належать. Поставте питання до прикметників, визначте \nрід, число та\

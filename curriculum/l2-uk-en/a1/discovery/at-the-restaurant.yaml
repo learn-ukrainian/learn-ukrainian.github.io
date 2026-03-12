@@ -1,6 +1,9 @@
-discovered_at: '2026-03-06T06:57:37.130876+00:00'
+discovered_at: '2026-03-12T09:40:54.541535+00:00'
 query_keywords:
 - At the Restaurant
+- замовити
+- рахунок
+- страва
 - Вступ та культурний контекст
 - Introduction & Cultural Context
 - Мова замовлення
@@ -9,35 +12,14 @@ query_keywords:
 - Typical Situations
 - Підсумок та етикет
 - Summary & Etiquette
-- a reservation
-- a full meal
-- restaurant situations
 error: null
 warning: No videos found across channels
 videos: []
 blogs:
-- url: https://www.ukrainianlessons.com/ph-food/
-  title: 'Ukrainian Phrasebook: Food and Restaurants'
-  source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - food
-  - restaurant
-  - ordering
-- url: https://www.ukrainianlessons.com/fmu17/
-  title: How to PAY at the restaurant in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 17
 - url: https://www.ukrainianlessons.com/fmu16/
   title: How to ORDER at the restaurant in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
+  relevance_score: 1.0
   topics:
   - grammar
   - cases
@@ -50,29 +32,51 @@ blogs:
   series: FMU
   season: 0
   episode: 16
-- url: https://www.ukrainianlessons.com/episode183/
-  title: Ukrainian Lessons Podcast Season 5
+- url: https://www.ukrainianlessons.com/fmu17/
+  title: How to PAY at the restaurant in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.2
+  relevance_score: 1.0
   topics:
-  - general
-  content_type: podcast_episode
-  series: ULP
-  season: 5
-  episode: 183
+  - phrases
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 17
+- url: https://www.ukrainianlessons.com/ph-food/
+  title: 'Ukrainian Phrasebook: Food and Restaurants'
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - food
+  - restaurant
+  - ordering
 rag_chunks:
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0089
+  text: "91\n5. Прочитай заголовок тексту. Чи знаєш ти, що означає цей \nвислів? Прочитай\
+    \ текст, щоб перевірити свою думку.\nШведський стіл\nУ давнину шведи відвідували\
+    \ своїх родичів, до-\nлаючи велику відстань поганими дорогами. Їм було \nне до\
+    \ очікування прибуття інших гостей. Тому гос-\nподарі ставили на стіл різні страви.\
+    \ Подавали їх\nу великих мисках, і кожен міг брати стільки, скіль-\nки хотів.\
+    \ Це давало змогу втамувати перший голод \nі залишало час для спілкування. Іноземці\
+    \ називали \nтакий спосіб пригощання"
+  section_title: Сторінка 91
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
 - score: 0.25
-  chunk_id: 5-klas-ukrmova-golub-2022_s0200
-  text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
-    \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
-    \ особисті \nцілі.\nЗапрîшення — коротке повідомлення про якусь подію \nі прохання\
-    \ взяти в ній участь.\nЗапрошення може бути усне або письмове.\nСлова запросити\
-    \ і просити, прохання мають однако-\nвий корінь. Це дає підстави вважати запрошення\
-    \ різ-\nновидом прохання.\n467   Розгляньте подану інформацію. Що вам відоме,\
-    \ а що   — нове? \nЯких помилок припус"
-  section_title: Сторінка 201
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0209
+  text: "204\nВідомості із синтаксису й пунктуації. Види речень за метою висловлення\n\
+    \ Дайте домашку \nз математики.\n15:28\nЯ загубила в класі \nщоденник. Ніхто \n\
+    не бачив?\n15:39\nНа завтра треба \nготувати поробку?\n15:53\nВізьміть завтра\
+    \ під-\nручники з англій-\nської, буде заміна. \n16:21\nХодімо разом \nу кіно.\
+    \ \nр\n16:42\nЯ не знаю, як \nрозв’язати задачу. \nДопоможіть!!!  \n \n \nД\n\
+    \ \n \n \n17:36\nВправа 331\n1. Прочитайте речення, узяті з чату \nкласу .\n2.\
+    \ Назвіть спочатку розповідні ре-\nчення, потім питальні та  спону-\nкальн"
+  section_title: Сторінка 204
   grade: 5
-  author: golub
+  author: litvinova
   page: ''
   trust_tier: 1
 - score: 0.5
@@ -90,17 +94,17 @@ rag_chunks:
   page: ''
   trust_tier: 2
 - score: 0.1666666716337204
-  chunk_id: 5-klas-ukrmova-avramenko-2022_s0011
-  text: "12\nРОЗВИТОК МОВЛЕННЯ\nПоміркуйте!\nЗа яких обставин (офіційних чи неофіційних)\
-    \ може відбувати­\nся спілкування в поданих ситуаціях?\n Супермаркет; \n день\
-    \ народження брата; \n пікнік зі своєю родиною;\n спортзал; \n кінотеатр.\n3.\
-    \ Складіть усний діалог за однією із ситуацій спілкування (не менше \nп’яти реплік\
-    \ від кожного/кожної учасника/учасниці діалогу). \n••\nВам дали завдання вирвати\
-    \ бур’ян на шкільній клумбі й полити кві-\nти. Ваші однокласник чи однокласниця\
-    \ хочуть перекласти на вас усю \nроботу. Переко"
-  section_title: Сторінка 12
+  chunk_id: 5-klas-ukrmova-golub-2022_s0200
+  text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
+    \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
+    \ особисті \nцілі.\nЗапрîшення — коротке повідомлення про якусь подію \nі прохання\
+    \ взяти в ній участь.\nЗапрошення може бути усне або письмове.\nСлова запросити\
+    \ і просити, прохання мають однако-\nвий корінь. Це дає підстави вважати запрошення\
+    \ різ-\nновидом прохання.\n467   Розгляньте подану інформацію. Що вам відоме,\
+    \ а що   — нове? \nЯких помилок припус"
+  section_title: Сторінка 201
   grade: 5
-  author: avramenko
+  author: golub
   page: ''
   trust_tier: 1
 - score: 0.125
@@ -115,20 +119,6 @@ rag_chunks:
   section_title: Сторінка 203
   grade: 5
   author: golub
-  page: ''
-  trust_tier: 1
-- score: 0.09090909361839294
-  chunk_id: 6-klas-ukrmova-betsa-2023_s0019
-  text: "§ 6.\t\nУрок розвитку комунікативних умінь. \nВимоги до мовлення \nKommunikációs\
-    \ készségek fejlesztése. \nBeszédkövetelmények\nАдресат — той, до \nкого звертаються.\n\
-    Адресант — \nтой, хто ініціює \nмовлення. \nРозповідь\nПро дії особи або предмета,\
-    \ про події.\nОпис\nПро ознаки предмета або особи.\nРоздум\nПро причинно-наслідкові\
-    \ зв’язки між явища-\nми, діями, ознаками.\nОцінка \nпредмета \nабо явища\nПро\
-    \ ставлення до предмета або явища, його \nзначення.\nщо відбулося? що відбувається?\
-    \ що відбуватиметься?\nякий? яка? як"
-  section_title: Сторінка 21
-  grade: 6
-  author: betsa
   page: ''
   trust_tier: 1
 rag_images: []

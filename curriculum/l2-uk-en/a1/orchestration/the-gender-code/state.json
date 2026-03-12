@@ -5,32 +5,13 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-07T13:27:06Z",
-      "task_id": "v5-the-gender-code-pA",
-      "mode": "full"
+      "ts": "2026-03-12T08:44:25Z",
+      "note": "rebuild-kept"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-07T13:28:00Z"
-    },
-    "sandbox": {
-      "status": "complete",
-      "ts": "2026-03-07T13:28:03Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-07T13:34:50Z",
-      "self_audited": true
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-07T13:36:28Z",
-      "task_id": "v5-the-gender-code-pC"
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-07T13:42:44Z",
-      "attempts": 1
+      "ts": "2026-03-12T08:45:06Z",
+      "note": "merged-into-research"
     }
   }
 }

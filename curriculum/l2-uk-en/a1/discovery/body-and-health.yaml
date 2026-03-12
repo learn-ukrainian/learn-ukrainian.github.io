@@ -1,6 +1,9 @@
-discovered_at: '2026-03-06T05:17:04.410266+00:00'
+discovered_at: '2026-03-12T09:29:45.345332+00:00'
 query_keywords:
 - Body & Health
+- голова
+- рука
+- нога
 - Частини тіла та народна мудрість
 - Body Parts & Folk Wisdom
 - Як ми говоримо про біль
@@ -9,50 +12,41 @@ query_keywords:
 - 'Dialogue: At the Doctor''s & Pharmacy'
 - Пояснення причин
 - Explaining Causes
-- body parts
-- symptoms (what hurts)
-- at the doctor's office
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=TGkxBEYVdRE
-  channel: Listen & Read
-  title: 'Кетрін Грей "НЕСПОДІВАНА РАДІСТЬ САМОТНОСТІ" #аудіокнига #аудіокнигиукраїнською'
-  relevance_score: 0.0
-  relevance_note: The video discusses the topic of loneliness and relationships, which
-    is entirely unrelated to the module's focus on body parts, health, and expressing
-    pain.
-  transcript_excerpt: присвячується моїм друзям у самотності ви нічим не гірше за
-    інших з вами все гаразд передмова зазвичай у суспільстві на людей без пари дивляться
-    стурбовано жалим примовляючи не біда незабаром ти неодмінно когось зустрінеш і
-    поплескають по руці статті про одинаків часто ілюструють зображенням сумної жінки
-    скелихом Мартіні або самотнього знедоленого чоловіка в ковпаку з блискітками і
-    тортом до дня народження ми живемо в культурі яка цінує переважно повноцінні парні
-    стосунки а самотніх таврує білими воронами винятками не як усі люди не здатними
-    знайти когось хто б їх покохав бідолахи без пари Утім якщо бути без пари так жахливо
-    то чомумо понад половину нас вважають заліпше залишитися самотніми а все просто
-    бо це не біда самотність на тривалий час чи на все життя може давати неймовірно
-    наснагу дарувати радість і свободу та й набагато ліпше буде самотнім ніж у пам'яті
-    опинитися разом аби з ким я не знала у своїй 20 з хвостиком що Самотність - це
-    не невдача І що я не якась знедолена якщо в мене немає хлопця я купилася на ідею
-    другої половинки і вважала що Мені страшенно чогось не вистачає коли я одна увічує
-    яблукала У пошуках загубленої Половинки як розрізана навпіл картка через те я
-    перетворилася на схиблену на коханні вар'ятку я ще й досі часом така буваю кохання
-    не вкривало мене пишним цвітом як заквітла гліцинія а душила в смертельних обіймах
-    як отруйний Плющ загрожуючи моєму вдатному існуванню це проявлялося в чудовій
-    поведінці нав'язливому переслідуванню в інтернеті мріях про одруження з кимось
-    за ледве знайомим емоційні залежності від інших у галасливих сварках зрадах і
-    шпигунстві чому я розповідаю вам усе це і я тепер зрозуміла що коли поділитися
-    на страшнішим що довелося пережити І пересвідчитися що тисячі людей кажуть Я теж
-    ці жахи перетворюються на щире золото поле ділишся з кимось це як Алхімія ця книжка
-    не спроба розбити щасливі пари Я обожнюю щасливі пари назвати шлюб дешевої фіксією
-    чи стверджувати що бу
-  embed_suggestion: Not relevant to embed in this module.
+- url: https://www.youtube.com/watch?v=DdZjJ4H24a4
+  channel: Ukrainian Lessons
+  title: FMU 1-53 | How to describe what hurts in Ukrainian | 5 Minute Ukrainian
+  relevance_score: 0.9
+  relevance_note: Directly covers describing pain, body parts, and a dialogue about
+    visiting a doctor, which are core topics of this module.
+  transcript_excerpt: Episode 53 How to describe What Hurts you in Ukrainian... Today
+    let's move to the practical topic of describing What Hurts you... У мене дуже
+    сильно болить голова.
+  embed_suggestion: 'After section ''Презентація: Як ми говоримо про біль'' -- it
+    directly demonstrates the practical application of expressing pain and symptoms
+    discussed in this section, and provides a conversational example which can lead
+    into the ''Діалог: У лікаря та в аптеці'' section.'
+- url: https://www.youtube.com/watch?v=pD8eA7W5ZQw
+  channel: Ukrainian Lessons
+  title: ULP 5-170 | 15 фразеологізмів з частинами тіла | Ukrainian Lessons Podcast
+    Season 5
+  relevance_score: 0.6
+  relevance_note: Covers phraseologisms (idioms) related to body parts, which tangentially
+    relates to 'народна мудрість' (folk wisdom) and 'Частини тіла' (body parts), but
+    doesn't directly address describing pain or health scenarios.
+  transcript_excerpt: 15 фразелогізмів з частинами тіла... будемо рухатися зверху
+    вниз тобто з голови до ніг почнемо з голови перший фразеологізм голова варить
+    або голова не варить.
+  embed_suggestion: 'After section ''Вступ: Частини тіла та народна мудрість'' --
+    it extends the discussion on body parts by introducing idiomatic expressions,
+    fitting the ''folk wisdom'' aspect.'
 blogs:
 - url: https://www.ukrainianlessons.com/something-hurts/
   title: Something Hurts — Health Vocabulary in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.7
+  relevance_score: 0.6
   topics:
   - health
   - body
@@ -60,7 +54,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/ph-health/
   title: 'Ukrainian Phrasebook: Health'
   source: ukrainianlessons.com
-  relevance_score: 0.7
+  relevance_score: 0.6
   topics:
   - health
   - doctor
@@ -68,7 +62,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/fmu52/
   title: Vocabulary booster! Body parts in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.6
+  relevance_score: 0.5
   topics:
   - vocabulary
   - health
@@ -80,7 +74,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode170/
   title: Ukrainian Lessons Podcast Season 5
   source: ukrainianlessons.com
-  relevance_score: 0.5
+  relevance_score: 0.4
   topics:
   - vocabulary
   - health
@@ -92,7 +86,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode102/
   title: Making a doctor’s appointment in Ukrainian + Indefinite adverbs and pronouns
   source: ukrainianlessons.com
-  relevance_score: 0.44999999999999996
+  relevance_score: 0.35
   topics:
   - grammar
   - verbs
@@ -121,7 +115,7 @@ rag_chunks:
   author: savchenko
   page: ''
   trust_tier: 2
-- score: 0.25
+- score: 0.3333333432674408
   chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0026
   text: "27\nЗБАГАЧУЄМОСЯ СКАРБАМИ\nЗБАГАЧУЄМОСЯ СКАРБАМИ\n УСНОЇ НАРОДНОЇ ТВОРЧОСТІ\n\
     \ УСНОЇ НАРОДНОЇ ТВОРЧОСТІ\n \nВи вже знаєте, що з давніх-давен, ще коли не було\
@@ -135,7 +129,7 @@ rag_chunks:
   author: savchenko
   page: ''
   trust_tier: 2
-- score: 0.1428571492433548
+- score: 0.20000000298023224
   chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0009
   text: "8\nмова І мовЛЕння \nмова — це засіб спілкування людей (система звуків \n\
     і букв, слова, речення, тексти, правила). \nМова потрібна, щоб:\nКоли ти розповідаєш\
@@ -149,7 +143,7 @@ rag_chunks:
   author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.09090909361839294
+- score: 0.1666666716337204
   chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0154
   text: "156\nУзагальнюю знання про дієслово як частину мови\n7   \aПрочитай текст.\
     \ Візьми до уваги поради.\n  \aВипиши дієслова з тексту. Виконай розбір виділених\
@@ -163,7 +157,7 @@ rag_chunks:
   author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.3333333432674408
+- score: 0.25
   chunk_id: 7-klas-ukrmova-litvinova-2024_s0222
   text: "215\n  \nРозділ 7   \nЧАСТКА\nЩо на нас чекає в  цьому розділі?\n• Пригадаємо,\
     \ що називають часткою.\n• З’ясуємо, для чого потрібні частки.\n• Визначимо, які\

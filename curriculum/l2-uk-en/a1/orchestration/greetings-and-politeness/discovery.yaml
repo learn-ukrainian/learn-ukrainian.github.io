@@ -1,25 +1,139 @@
-discovered_at: '2026-03-05T20:37:48.491168+00:00'
+discovered_at: '2026-03-12T08:45:06.424419+00:00'
 query_keywords:
 - Greetings and Politeness
-- Вітання
+- вітання
+- привіт
+- добрий
+- ранок
+- день
 - Greetings
 - Ти і Ви
 - T-V distinction
 - Ввічливість
 - Politeness
 - Знайомство
-- Introductions
-- Діалоги
-- Dialogues
-- Greet people appropriately by time of day
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=3zZWCCS7igw
+  channel: Ukrainian with Olha
+  title: 'Start learning UKRAINIAN: Greetings! How are you? What is your name? Personal
+    pronouns in Ukrainian'
+  relevance_score: 1.0
+  relevance_note: This video comprehensively covers greetings, politeness phrases,
+    and introductions, aligning perfectly with multiple sections of the module including
+    Вітання, Ввічливість, and Знайомство.
+  transcript_excerpt: Today we will learn personal pronouns, phrases of politess,
+    how to say how are you and answer to it and keep a small talk conversation and
+    also how to introduce yourself. Here we have greetings in the first column.
+  embed_suggestion: After Знайомство (Introductions) - as it covers an extensive range
+    of module topics.
+- url: https://www.youtube.com/watch?v=dtufctJhBrY
+  channel: Ukrainian Lessons
+  title: 'FMU 1-50 | Greetings in Ukrainian: informal, formal and fun! | 5 Minute
+    Ukrainian'
+  relevance_score: 0.9
+  relevance_note: Directly covers informal and formal greetings, which is highly relevant
+    to the Вітання and potentially the Ти і Ви sections of the module.
+  transcript_excerpt: How to greet Someone in Ukrainian Привітик це Анна і новий епізод
+    подкасту 5 хвилин української Today we will Talk more about thatвіtic and Other
+    Ways To greet Someone вітатися to greet It Will Be formal informal and Some Fun
+    Ways
+  embed_suggestion: After Вітання (Greetings) - as it explicitly discusses various
+    ways to greet.
+- url: https://www.youtube.com/watch?v=yXoHXF7Q6x8
+  channel: Ukrainian with Olha
+  title: 'Greetings & Farewell + Words of Politeness 💙💛 #ukrainianlanguage #ukrainianlessons'
+  relevance_score: 0.9
+  relevance_note: Provides a good overview of common greetings and politeness words,
+    directly relevant to the Вітання and Ввічливість sections.
+  transcript_excerpt: Добрий день. Good afternoon. Добрий вечір. Good evening. Доброго
+    ранку. Good morning. Привіт. Hello. Будь ласка. Please or you welcome. Прошу.
+    Here you go.
+  embed_suggestion: After Ввічливість (Politeness) - as it clearly lists phrases for
+    greetings and politeness.
+- url: https://www.youtube.com/watch?v=cQQB8GX3zxM
+  channel: Ukrainian Lessons
+  title: ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings
+  relevance_score: 0.5
+  relevance_note: The video focuses on holiday-specific greetings, which is a sub-category
+    of greetings, but not the primary focus of general greetings and politeness in
+    this module.
+  transcript_excerpt: я хочу вас навчити Як вітати зі святами українською щоб ви могли
+    написати комусь повідомлення електронний лист чи надіслати листівку українцям
+    тому якщо вам цікаво як українці вітають зі святами слухайте Цей урок
+  embed_suggestion: After Вітання (Greetings) - as an extension covering specific
+    greeting contexts.
+- url: https://www.youtube.com/watch?v=qUCBYbBk9h8
+  channel: Bright Kids Ukrainian
+  title: Ukraine Defender Day greetings from Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=hndH654oon0
+  channel: Let's Learn Ukrainian
+  title: 4 ways to say HELLO in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=LEi78wrXxTs
+  channel: Let's Learn Ukrainian
+  title: Добрий вечір тобі, пане господарю! Learn Ukrainian Traditional Christmas
+    Song (колядка) with me!
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
+- url: https://talkukrainian.com/greetings/
+  title: 'Talk Ukrainian: Greetings in Ukrainian'
+  source: talkukrainian
+  relevance_score: 0.7
+  topics:
+  - greetings
+  - hello
+  - привіт
+  - introductions
+- url: https://www.verba.school/post/polite-phrases-in-ukrainian
+  title: Polite Phrases in Ukrainian
+  source: verba.school
+  relevance_score: 0.6
+  topics:
+  - vocabulary
+  - phrases
+  - greetings
+  - politeness
+- url: https://www.ukrainianlessons.com/episode1/
+  title: Informal Greetings in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - greetings
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 1
+- url: https://www.ukrainianlessons.com/episode2/
+  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - grammar
+  - pronouns
+  - phrases
+  - greetings
+  - goodbyes
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 2
 - url: https://www.ukrainianlessons.com/episode63/
   title: Ukrainian Holiday Greetings
   source: ukrainianlessons.com
-  relevance_score: 0.9
+  relevance_score: 0.5
   topics:
   - grammar
   - cases
@@ -35,87 +149,21 @@ blogs:
   series: ULP
   season: 2
   episode: 63
-- url: https://talkukrainian.com/greetings/
-  title: 'Talk Ukrainian: Greetings in Ukrainian'
-  source: talkukrainian
-  relevance_score: 0.8999999999999999
-  topics:
-  - greetings
-  - hello
-  - привіт
-  - introductions
-- url: https://www.ukrainianlessons.com/episode1/
-  title: Informal Greetings in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
-  topics:
-  - phrases
-  - greetings
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 1
-- url: https://www.ukrainianlessons.com/episode2/
-  title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
-  source: ukrainianlessons.com
-  relevance_score: 0.7500000000000001
-  topics:
-  - grammar
-  - pronouns
-  - phrases
-  - greetings
-  - goodbyes
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 2
-- url: https://www.ukrainianlessons.com/episode111/
-  title: Birthday presents + Imperative mood in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.75
-  topics:
-  - grammar
-  - verbs
-  - imperative
-  - conjugation
-  - phrases
-  - greetings
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 111
 rag_chunks:
-- score: 0.20000000298023224
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0009
-  text: 'уживає такі слова: не переймайтеся, не хвилюйтеся, про0
-
-    шу, усе нормально.
-
-    Уміння чемно відмовитися чи погодитися — теж мис6
-
-    тецтво спілкування. Невміння делікатно відмовитися мо6
-
-    же образити людину. У ситуації відмови користуються
-
-    висловами: дякую, але я сьогодні маю інші справи; спа0
-
-    сибі, але наступним разом; вибачте, але я, на жаль,
-
-    не зможу. Якщо ж погоджуємося з чимось, то викорис6
-
-    товуємо такі вислови: я із задоволенням приймаю Вашу
-
-    пропозицію; щиро дякую; мені приємно, що я теж можу
-
-    бути'
-  section_title: Сторінка 10
-  grade: 4
-  author: ''
+- score: 0.5
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0095
+  text: "95\n—\t Доб-ро-го ран-ку! — мов-лю за \nзви-ча-єм. \n—\t Доб-ро-го ран-ку!\
+    \ — кож-но-му \nзи-чу  я. \n—\t Доб-ро-го  дня! — лю-дям ба-\nжа-ю.\n—\t Ве-чо-ра\
+    \  доб-ро-го! — стріч-\nних  ві-та-ю.\nІ  ус-мі-ха-ють-ся   в   від-по-відь  лю-\n\
+    ди  — доб-рі  сло-ва  ж  бо  для  кож-\nно-го лю-бі.\n                       \
+    \                            Вадим Бі­рюков \n\t Як ми називаємо виділені слова?\n\
+    \t Добери до кожної ситуації слова ввічливості."
+  section_title: Сторінка 97
+  grade: 1
+  author: zaharijchuk
   page: ''
-  trust_tier: 2
-- score: 0.1428571492433548
+  trust_tier: 1
+- score: 0.125
   chunk_id: 4-klas-ukrmova-zaharijchuk_s0175
   text: "Довідка: доброзичливо, щиро, обов’язково, зацікав­\nлено, шанобливо, мало,\
     \ тактовно, привітно, небагато, \nприязно, спокійно, уважно, увічливо, удумливо,\
@@ -129,43 +177,47 @@ rag_chunks:
   author: ''
   page: ''
   trust_tier: 2
-- score: 0.125
-  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0136
-  text: "НАВЧАЮСЯ СТВОРЮВАТИ ВИСЛОВЛЮВАННЯ НА ВІДОМУ ТЕМУ\nІййіД[2і| Прочитайте текст\
-    \ про чемність \nу спілкуванні між людьми.\nЧемна людина завжди вітається \nі\
-    \ прощається, ввічливо відповідає на \nпривітання. З такою людиною при­\nємно\
-    \ спілкуватися, бо вона ніколи \nне образить і не принизить. Чемність \nвиявляється\
-    \ не тільки у словах, а й у \nжестах, у виразі очей. Тому в чемної \nлюдини завжди\
-    \ багато друзів.\nстворюю \nзаписую\n£ Яку людину\n•“\nназивають\nчЄмною? г\n\
-    • Доведіть, що ви — чемні діти. Назвіть слова ввіч"
-  section_title: Сторінка 138
-  grade: 2
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.5
-  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0285
-  text: "Етикетні жанри: привітання, вибачення \x1F\n199\nЕтикетні жанри: привітання,\
-    \ вибачення\n368. Прочитайте. Зміст якого з  афоризмів видається вам найактуальнішим?\
-    \ Відповідь обґрунтуйте. 1. Ввічливість — це доброзичливе ставлення до людей (Ж.-Ж.\
-    \ Руссо). 2. Чемність — це штучно створюваний гарний настрій (Т. Джефферсон).\
-    \ 3. Ввічливість є символічно умовним вираженням пошани до будь-якої лю-\nдини\
-    \ (М. Бердяєв). 4. Ввічливість — це властивість не помічати, що воро-\nта поламані,\
-    \ але звертати увагу на квіти у "
-  section_title: Сторінка 199
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0339
+  text: "Вибір вітального слова залежить від різних обставин. Уранці ми вико-\nристовуємо\
+    \ такі слова, як \x80Добри± ранок\x04\x8A або \x80Доброго ранку\x04\x8A\x11 Нині\
+    \ \nнабу ває поширення остання ôорма, яка виражає побажання людині. Адже \nми\
+    \ своїм привітанням під час зустрічі бажаємо одне одному добра, благо-\nполуччя.\
+    \ Крім того, вислів \x80Доброго ранку\x04» звучить набагато тепліше в \nставленні\
+    \ до зустрічного, ніж «Добри± ранок\x04\x8A, хоча обидві ôорми є нор-\nЗверніть\
+    \ увагу!"
+  section_title: Сторінка 217
   grade: 11
-  author: glazova
+  author: zabolotnyi
   page: ''
   trust_tier: 2
-- score: 0.25
-  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0031
-  text: "V\nНайвища наука в ж итті -  \nМудрість, а найвища \nмудрість  \n-  бути\
-    \ добрим.\nГригір Тютюнник\nСинтаксис. Пунктуація. Елементи стилістики\nСКЛАДНЕ\
-    \ РЕЧЕННЯ. \nСКЛАДНОСУРЯДНЕ РЕЧЕННЯ"
-  section_title: Сторінка 28
-  grade: 9
-  author: voron
+- score: 0.1111111119389534
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0247
+  text: "240\nЕтикетні формули прощання\nДо побачення… \nНа все добре… \nДо нових\
+    \ зустрічей… \nДо зустрічі…\nДо завтра… \nУсього найкращого… \nДобраніч… \nДозвольте\
+    \ попрощатися…\nЕтикетні формули побажання\nХай вам щастить… \nВеселих свят… \n\
+    Щасливої дороги… \nЩиро бажаю вам… \nЗичу вам…\nВдалої подорожі…\nМиру та злагоди\
+    \ вашій родині… \nБудьте здорові й багаті… \nУсіляких гараздів на щодень… \nЗдійснення\
+    \ найзаповітніших мрій… \nНехай здійсняться найзаповітніші мрії… \nБудьте щасливими\
+    \ й натхненними… \nЦікавих зустрічей і пози"
+  section_title: Сторінка 243
+  grade: 7
+  author: litvinova
   page: ''
-  trust_tier: 2
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n6\n1.\tПрочитайте діалог «У громадському транспорті»\
+    \ та виконайте завдання. \n— Жінко в червоній сукні, ви виходите на наступній\
+    \ зупинці? \n— Ні, проходьте, будь ласка.\nА.\t Хто з пасажирів порушив етикет?\
+    \ \nБ.\t Чи потрібно наголошувати на статі, віці й одязі незнайомої людини? \n\
+    Етикетні формули\nвітання\nпрощання\nвибачення\nДоброго ранку!\nДобрий день! Добридень!\n\
+    Добрий вечір! Добриве-\nчір!\nПривіт! Салют! Вітаю! \nМоє вам шанування! \nСкільки\
+    \ літ!\nДо побачення! Прощайте!\nНа все добре! До "
+  section_title: Сторінка 9
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
 rag_images: []
 rag_literary: []

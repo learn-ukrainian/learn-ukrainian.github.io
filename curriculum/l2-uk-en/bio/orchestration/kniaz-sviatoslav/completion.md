@@ -2,9 +2,9 @@ PASS: pipeline bio 2
 
   Module:   kniaz-sviatoslav
   Track:    bio
-  Mode:     v3
+  Mode:     v5
   Words:    5741 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T01:16:08Z
+  Date:     2026-03-12T00:58:14Z

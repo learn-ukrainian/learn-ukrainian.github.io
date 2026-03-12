@@ -1,8 +1,9 @@
-discovered_at: '2026-03-05T06:35:46.872500+00:00'
+discovered_at: '2026-03-12T08:54:54.109265+00:00'
 query_keywords:
 - 'Checkpoint: Sentences'
-- Огляд
-- Overview
+- читати
+- писати
+- говорити
 - 'Навичка 1: Дієслова'
 - 'Skill 1: Verbs'
 - 'Навичка 2: Питання та заперечення'
@@ -11,68 +12,75 @@ query_keywords:
 - 'Skill 3: Preferences & Possessives'
 - Інтеграційне завдання
 - Integration Task
-- Demonstrate verb conjugation fluency for I and II conjugation
 error: null
-warning: No videos found across channels
-videos: []
-blogs:
-- url: https://www.ukrainianlessons.com/fmu10/
-  title: 7 helpful Ukrainian words to link sentences
-  source: ukrainianlessons.com
-  relevance_score: 0.45000000000000007
-  topics:
-  - phrases
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 10
-- url: https://www.ukrainianlessons.com/ukrainian-history/
-  title: Ukrainian History — Brief Overview
-  source: ukrainianlessons.com
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Sr7Jv9TVOgk
+  channel: Bright Kids Ukrainian
+  title: What is this? - Ukrainian Grammar
+  relevance_score: 0.8
+  relevance_note: 'This video explains the distinction between animate and inanimate
+    nouns and how it affects question formation (''Хто це?'' vs ''Що це?''), directly
+    reinforcing ''Skill 2: Questions & Negation''.'
+  transcript_excerpt: від категорії істот чи не істот залежить питання хто це або
+    що це
+  embed_suggestion: 'After Skill 2: Questions & Negation -- it elaborates on question
+    types based on noun categories.'
+- url: https://www.youtube.com/watch?v=x1kW08scie0
+  channel: Ukrainian with Olha
+  title: 'Я ти він вона воно ми ви вони #ukrainianlanguage #ukrainianlessons #learnukrainian'
   relevance_score: 0.4
-  topics:
-  - history
-  - culture
-  - overview
-- url: https://www.ukrainianlessons.com/episode116/
-  title: Easter in Ukraine + Complex sentences with Adverbial Clauses
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 116
-- url: https://www.ukrainianlessons.com/episode117/
-  title: May picnic in Ukraine + Complex Sentences with Attributive Clauses
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - vocabulary
-  - family
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 3
-  episode: 117
-- url: https://www.ukrainianlessons.com/fmu32/
-  title: 'Grammar point: Conditional sentences in Ukrainian'
-  source: ukrainianlessons.com
-  relevance_score: 0.30000000000000004
-  topics:
-  - review
-  content_type: podcast_episode_short
-  series: FMU
-  season: 0
-  episode: 32
+  relevance_note: The video merely lists personal pronouns, which are a basic component
+    of sentences but doesn't teach sentence construction, verbs, negation, preferences,
+    or possessives as outlined in the module's skills.
+  transcript_excerpt: Я, ти, він, вона, воно, ми, ви, вони.
+  embed_suggestion: After Огляд (Overview) -- as a very basic introduction to personal
+    pronouns.
+- url: https://www.youtube.com/watch?v=Dj-fMi4Sdso
+  channel: Bright Kids Ukrainian
+  title: Vowel sounds in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce І in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce С in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=94ItbFnT7cY
+  channel: Ukrainian with Olha
+  title: 'Ти розумієш? - Do you understand? #ukrainianlanguage #ukrainianlessons #learnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
 rag_chunks:
-- score: 0.1111111119389534
+- score: 0.5
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0108
+  text: "1\nСлова для довідки: червоніти, втікати, думати, мріяти, ліну­\nватися,\
+    \ зазнаватися.\n2. Запиши дієслова в тому порядку, що й фразеологізми. Через \n\
+    риску запиши дієслова майбутнього часу в 2-й особі множини, \nпотім — у 3-й особі\
+    \ множини.\nЗразок. Бігати — бігатимете (2-га ос. мн.), будете бігати \n(2-га\
+    \ ос. мн.), бігатимуть (3-тя ос. мн.), будуть бігати (3-тя ос. мн.).\n299.1. Прочитай\
+    \ дієслова, розкриваючи дужки.\nМатим(е/и)ш, дбатим(е/и)те, шепоч(е/и)ш, скач(е/и)те,\
+    \ обері- \nгатим(е/и)ш, садитим(е/и)"
+  section_title: Сторінка 110
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
   chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
   text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
     \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
@@ -82,60 +90,40 @@ rag_chunks:
   author: vashulenko
   page: ''
   trust_tier: 2
-- score: 0.10000000149011612
-  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0113
-  text: "310.1. Розглянь малюнки. Опиши їх за допомогою дієслів.\n2. Склади та запиши\
-    \ за кожним малюнком три речення, вико­\nристовуючи дієслова у формі одного часу.\
-    \ У дужках після \nкожного дієслова познач час, особу, число та рід, якщо є.\n\
-    311.1. Складіть діалог Дієслова та допитливої дитини, яка \nвперше почула про\
-    \ цю частину мови. Як ви гадаєте, \nпро що вони можуть розмовляти? За потреби\
-    \ викори­\nстай зміст підручника на с. 143.\nОбговоріть із сусідом І сусідкою\
-    \ по парті, які теми з розділу \n«Дієслово» були"
-  section_title: Сторінка 115
-  grade: 4
-  author: kravtsova
+- score: 0.125
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0002
+  text: "3\nДорогий друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи\
+    \ любиш фантазувати?\nТоді ця книга саме для тебе! \nВона допоможе тобі навчитися\
+    \ читати, \nвисловлювати думки й почуття, спілкуватися.\nУмовні позначення:\n\
+    \ \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю малюнок\n\
+    \ \n — спілкуюся \n \n— мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
   page: ''
   trust_tier: 2
-- score: 0.5
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0136
-  text: "Підсумкові тести  \n129\nПідсумкові тести\nВиконайте тестові завдання.\n\
-    1   Дієприслівниками є  обидва слова в  рядку\nА  зрозумілий, розуміючи\nБ  здивувавшись,\
-    \ здивовано\nВ  говоривши, говорячи\nГ  думали, думаючи\n2   Серед ознак дієприслівника\
-    \ НЕМАЄ такої\nА  виду\nБ  часу\nВ  роду\nГ  властивости мати залежні слова\n\
-    3   Дієприслівниковий зворот є  в усіх реченнях, ОКРІМ\nА  Впорядковуючи свої\
-    \ речі, спробуйте насолодитися про-\nцесом.\nБ  Робіть це, уявляючи результат.\n\
-    В  Позбавившись зайвого, ви можете «пер"
-  section_title: Сторінка 132
-  grade: 7
-  author: litvinova
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
   page: ''
-  trust_tier: 1
+  trust_tier: 2
 - score: 0.3333333432674408
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0029
-  text: "Розділ 1  ДІЄСЛОВО\n22\nВправа 15\n1   Із запропонованих слів випишіть діє\
-    \ слова \nПеремогти, перемога, непереможний, переможець; роз­\nважливий, розважити,\
-    \ розвага, розважальний; навчальний, \nнавчаюся, навчання, наука; пам’ятка, запам’ятовувальний,\
-    \ \nзапам’ятай, пам’ятний; популярність, популяризують, попу­\nлярний; дія, дієвий,\
-    \ діють, діяч; повторення, повторювати, \nповторюваний, повтор; практика, практичний,\
-    \ практикант, \nпрактикувати.\n2   Поясніть, за яким критерієм вирізняли діє слова\
-    \ з-поміж інших"
-  section_title: Сторінка 25
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0061
+  text: 'А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть
+    над кожним дієсловом його форму. було
+
+    кажу
+
+    принести'
+  section_title: Сторінка 54
   grade: 7
-  author: litvinova
-  page: ''
-  trust_tier: 1
-- score: 0.25
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0007
-  text: "4\nЗміст\nПередмова                                                     \
-    \                                                                            \
-    \                7 \nНавігатор                                               \
-    \                            7\nВступ                                        \
-    \                                 8\n§ 1  Мовні обов’язки українців та українок\
-    \                                       9\n§ 2  Повторення вивченого в  6 класі\
-    \                                            14\nПов"
-  section_title: Сторінка 7
-  grade: 7
-  author: litvinova
+  author: avramenko
   page: ''
   trust_tier: 1
 rag_images: []

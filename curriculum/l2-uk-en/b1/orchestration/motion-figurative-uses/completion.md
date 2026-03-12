@@ -1,10 +1,10 @@
-FAIL: pipeline b1 23
+PASS: pipeline b1 23
 
   Module:   motion-figurative-uses
   Track:    b1
-  Mode:     v3
-  Words:    4895 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-28T12:20:07Z
+  Verdict:  PASS
+  Date:     2026-03-12T09:30:51Z

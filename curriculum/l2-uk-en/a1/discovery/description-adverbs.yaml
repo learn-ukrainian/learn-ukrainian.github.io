@@ -1,6 +1,10 @@
-discovered_at: '2026-03-06T01:55:53.944847+00:00'
+discovered_at: '2026-03-12T09:24:42.180962+00:00'
 query_keywords:
 - 'Description: Adverbs'
+- прислівник
+- добре
+- швидко
+- часто
 - Основи та Формування
 - Basics and Formation
 - Час та Частота
@@ -8,18 +12,75 @@ query_keywords:
 - Синтаксис та Інтенсивність
 - Syntax and Intensity
 - Підсумок та Культура
-- Summary and Culture
-- adverbs from adjectives
-- adverbs to describe how actions are done
-- frequency adverbs correctly
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
+  channel: Ukrainian Lessons
+  title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle
+    in Ukrainian
+  relevance_score: 0.9
+  relevance_note: The video explicitly discusses 'дієприслівник' (adverbial participle),
+    which is directly related to the module's topic of adverbs. This provides a deep
+    dive into a specific type of adverb.
+  transcript_excerpt: далі ми поговоримо з вами про особливу частину мови дієприслівник...
+    we will then we will be talking about a Special Part of Speech in Ukrainian дія
+    прислівник The adverbial participle.
+  embed_suggestion: After section Основи та Формування (Basics and Formation) – The
+    video provides a direct lesson on a specific type of adverb, fitting well after
+    the introduction to basic adverb formation.
+- url: https://www.youtube.com/watch?v=gpHANzjE9q0
+  channel: Ukrainian Lessons
+  title: ULP 1-26 | Talking about traveling – Past tense in Ukrainian
+  relevance_score: 0.2
+  relevance_note: The video focuses on 'Past tense in Ukrainian' and 'traveling',
+    which is unrelated to the module's topic of adverbs, although it is in Ukrainian.
+  transcript_excerpt: Today we will be talking about My favorite topic podoro traveling...
+    for this we will need to use a Past Tense...
+  embed_suggestion: Not relevant to module topic.
+- url: https://www.youtube.com/watch?v=bpMgfxZVHL8
+  channel: Let's Learn Ukrainian
+  title: 'What is ДІЄПРИСЛІВНИК? | Ukrainian Grammar | #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=3cMBQc6iAAk
+  channel: Let's Learn Ukrainian
+  title: 'Quick Ukrainian Class #2: Declension of a Cardinal Number + Masculine Singular
+    Noun'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=i4chqnD1NQY
+  channel: Speak Ukrainian
+  title: Привіт! I would like to invite you to join my course “From Absolute Beginner
+    to a Confident Speaker”
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=jSlIVrH5Y-E
+  channel: Speak Ukrainian
+  title: 20 Ukrainian Adverbs of Place
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
+- url: https://talkukrainian.com/adverbs/
+  title: 'Talk Ukrainian: Adverbs'
+  source: talkukrainian
+  relevance_score: 0.6
+  topics:
+  - adverbs
+  - прислівник
+  - grammar
 - url: https://www.ukrainianlessons.com/adjectives-adverbs-chart/
   title: Ukrainian Adjectives and Adverbs Chart
   source: ukrainianlessons.com
-  relevance_score: 0.4
+  relevance_score: 0.35
   topics:
   - adjectives
   - adverbs
@@ -28,7 +89,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/adverbs-frequency/
   title: Adverbs of Frequency in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.4
+  relevance_score: 0.35
   topics:
   - adverbs
   - frequency
@@ -36,7 +97,7 @@ blogs:
 - url: https://www.ukrainianlessons.com/adverbs-location/
   title: Adverbs of Location in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.4
+  relevance_score: 0.35
   topics:
   - adverbs
   - location
@@ -44,83 +105,81 @@ blogs:
 - url: https://opentext.ku.edu/dobraforma/chapter/30-1/
   title: 'Dobra Forma: Adverbs (Formation from Adjectives)'
   source: dobraforma
-  relevance_score: 0.4
+  relevance_score: 0.35
   topics:
   - adverbs
   - grammar
   - word formation
-- url: https://opentext.ku.edu/dobraforma/chapter/30-2/
-  title: 'Dobra Forma: Using Adverbs'
-  source: dobraforma
-  relevance_score: 0.4
-  topics:
-  - adverbs
-  - grammar
 rag_chunks:
-- score: 0.1666666716337204
-  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
-  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
-    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
-  section_title: Сторінка 190
-  grade: 4
-  author: ''
-  page: ''
-  trust_tier: 2
-- score: 0.1428571492433548
-  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0063
-  text: "65\nЧастини основи — префікс, корінь, суфікс —  на письмі \nпозначаються\
-    \ так: \nпідводн ий  .\n\t \t\n3   \aЗапишіть слова, позначте за-\nкінчення та\
-    \ основу. \nВода, водний, підводний.\nЛікарня, вечірній, прихід, баранчик, \n\
-    житловий, жартівник, премудрий,  прадід.\nЖиве один батько, \nтисячі синів має,\n\
-    усім шапки справляє,\nа сам не має.\n\t\n  \aУ словах відгадки визнач закінчення\
-    \ та основу.\n\t\n  \aСклади і запиши з цими словами речення.\n4   \aЗапиши слова,\
-    \ познач у них закінчення та \nоснову. \nВизнач спільну частин"
-  section_title: Сторінка 65
-  grade: 3
-  author: vashulenko
-  page: ''
-  trust_tier: 2
-- score: 0.1111111119389534
-  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0084
-  text: "86\n209.\t\tРозгляньте таблицю та обговоріть її зміст.\n\t Склади п’ять \
-    \ речень із правильними формулами на позначення \nчасу, які подані в таблиці (на\
-    \ вибір). Запиши.\n210.\t\tПрочитай слова та формули на позначення часу.\nПрацював\
-    \ ...\t\nо сьомій годині п’ятнадцять хвилин.\nПрокинулася ...\t\nдо тринадцятої\
-    \ години.\nЗателефонував ...\tчверть по одинадцятій.\nПоказує ...\t\nо десятій\
-    \ годині.\n\t З’єднай слова та формули на позначення часу. Запиши.\n211.\t\tРозглянь\
-    \ малюнки.\n12 1\n11\n2\n4\n5\n7\n8\n3\n9\n6\n10\n12 1\n11\n2\n4\n5\n7\n8\n"
-  section_title: Сторінка 86
+- score: 0.125
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0122
+  text: "124\n\t Визнач, чи в кожному прислів’ї є прислівники. Випиши такі \nприслів’я\
+    \ за зразком першого.\n\t Випиши споріднені прислівники та прикметники за зразком.\
+    \ \nПознач у прикметниках закінчення.\nЗразок. (який?) добр  ий  — (як?) добре.\
+    \ \n\t Чим відрізняються прикметники та прислівники? \nЗверни увагу! Прислівники\
+    \ утворюємо від прик-\nметників за допомогою суфіксів -е, -о.\n296.\t\tПрочитай\
+    \ дієслова та питання в дужках.\nПрацює (як?) … ; говорить (як?) … ; біжить (куди?)\
+    \ … ; \nрозцвіли (коли?) … ; пожовтіло (ко"
+  section_title: Сторінка 124
   grade: 4
   author: zaharijchuk
   page: ''
   trust_tier: 2
-- score: 0.3333333432674408
-  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0046
-  text: "45\nБудова слова.  \nОрфографія\n10. ОСНОВА СЛОВА ТА ЗАКІНЧЕННЯ.  \nЗМІННІ\
-    \ І НЕЗМІННІ СЛОВА\nПро те, з яких частин складаються слова\nПРИГАДАЙМО. Чи змінюємо\
-    \ іменники та прикметники за відмінками й \nчислами? Чи змінюємо прислівники?\
-    \ \n98.\t А.  Прочитайте форми іменника валіза, у яких позначено основу. \nВизначте\
-    \ закінчення.\nВаліза, з валізою, у валізі, з валізами, у валізах.\nБ.  Визначте\
-    \ відмінок і число кожного іменника. \nВ.  Зробіть висновок про те, яка частина\
-    \ слова допомагає визначити \nвідмінок і чи"
-  section_title: Сторінка 48
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0151
+  text: "134\n1.\t Прочитайте прислівники та виконайте завдання. \nА.\t Від яких частин\
+    \ мови утворено подані прислівники?\nБ.\t За допомогою яких способів утворено\
+    \ прислівники?\nПрислівники утворюємо від усіх самостійних частин мови: навколо\
+    \ \n(від іменника), по-новому (від прикметника), по-твоєму (від займен-\nника),\
+    \ двічі (від числівника), навприсядки (від дієслова), ніколи (від \nприслівника).\n\
+    Способи творення прислівників\nСпособи\nПриклади\nпрефіксальний\nдовго → недовго,\
+    \ тепер → дотепер\nсуфіксальний\nлегкий → лег"
+  section_title: Сторінка 137
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0059
+  text: "58\nУ слові може бути два й більше суфіксів: височина, за-\nписали, написаний,\
+    \ сказати, достигаючи, вимито.\nДля утворення слів тієї чи тієї частини мови використо-\n\
+    вують певні суфікси. НАПРИКЛАД:\nІменникові  \nсуфікси \n-ок-, -ар(-яр), -иц,\
+    \ \n-ист, -іст, -тель, -к-\nмісток, бджоляр, \nучитель, юристка\nПрикметникові\
+    \ \nсуфікси\n-н-, -ив-, -ськ-, -еньк- \nосінній, красивий, \nморський\nДієслівні\
+    \  \nсуфікси \n-и-, -а-, -ва-, -ува-, \n-ти-\nписати, просити, \nзимувати\nЗверніть\
+    \ увагу!\nНезмінні слова не мають закінчень"
+  section_title: Сторінка 61
   grade: 5
   author: zabolotnyi
   page: ''
   trust_tier: 1
-- score: 0.5
-  chunk_id: 10-klas-ukrmova-karaman-2018_s0254
-  text: "За лексичними й морфо-\nлогічними ознаками поділяються на власні \nй загальні,\
-    \ конкретні й абстрактні, назви істот \nі неістот, збірні та одиничні\nОсновна:\
-    \ підмет (називний відмінок або родовий, \nколи поєднується з кількісним числівником\
-    \ або \nіншим словом із кількісним значенням — у скла-\nденому підметі), додаток\
-    \ (у непрямих відмінках). Неосновна: обставина (частіше іменник із при-\nйменником,\
-    \ особливо в місцевому відмінку), не-\nузгоджене означення, прикладка, іменна\
-    \ частина \nскладеного присудка"
-  section_title: Сторінка 141
-  grade: 10
-  author: karaman
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0240
+  text: "ДІЄСЛОВО, ЙОГО ОСОБЛИВІ ФОРМИ. ПРИСЛІВНИК\n1. Яка частина мови називається\
+    \ дієсловом? 2. Які дієслівні форми вам відомі? Наведіть приклади. 3. Назвіть\
+    \ способи дієслова. У якому способі дієслова змінюються за \nчасами? 4. Наведіть\
+    \ приклади дієслів недоконаного і доконаного видів. 5. Сформулюйте правило «Букви\
+    \ е(є), и(ї) в закінченнях дієслів». 6. Яка частина мови називається прислівником?\
+    \ 7. Назвіть розряди прислівників за значенням. 8. Сформулюйте правило «Написання\
+    \ прислівників разом і через дефі"
+  section_title: Сторінка 186
+  grade: 9
+  author: voron
   page: ''
   trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0061
+  text: "55\n•• прикметники, дієприкметники на зра­\nзок  здатний, згодний, ладний,\
+    \ радий, \nповинен, змушений і под. Я ладен розповідати. Присудок, виражений дієсловом\
+    \ у складеній формі майбутнього \nчасу або у складеній формі наказового способу,\
+    \ також є простим. НАПРИКЛАД: 1. А тепер ми будемо вечеряти всі разом. 2. Хай\
+    \ напи-\nшуть мені відповідь діти. У першому реченні присудок будемо вече-\nряти\
+    \ = вечерятимемо; у другому реченні присудок хай напишуть = \nнапишіть. 135\t\
+    \ І. Прочитайте прислів’я. Як ви розуміє"
+  section_title: Сторінка 59
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
 rag_images: []
 rag_literary: []

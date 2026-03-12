@@ -1,6 +1,10 @@
-discovered_at: '2026-03-07T13:27:06.851846+00:00'
+discovered_at: '2026-03-12T08:44:25.234312+00:00'
 query_keywords:
 - The Gender Code
+- рід іменника
+- брат
+- сестра
+- мама
 - Презентація правил
 - Presentation of Rules
 - Практичні вправи
@@ -8,34 +12,77 @@ query_keywords:
 - Самостійна робота
 - Independent Work/Production
 - Культурний код та підсумок
-- Cultural Code and Summary
-- noun gender by word ending
-- nouns into 4 declension families
-- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=7q87c9T2QeA
+  channel: Let's Learn Ukrainian
+  title: 'All About Ukrainian Instrumental Case: Grammar, Usage, Practice'
+  relevance_score: 0.5
+  relevance_note: The video primarily explains the Ukrainian Instrumental Case and
+    its usage, not directly the concept of noun gender, which is the module's core
+    topic. It uses gendered nouns as examples within the context of case declension,
+    offering a tangential connection.
+  transcript_excerpt: Today We are talking about Instrumental Case Instrumental caselates
+    to ukrainian as орудний відмінок орудний орудний.
+  embed_suggestion: After section Практичні вправи (Practice Exercises) -- as a broader
+    exposure to noun forms and their variations in different cases, which can reinforce
+    the idea that nouns have specific grammatical properties beyond just gender.
+- url: https://www.youtube.com/watch?v=gxgf5RivGAE
+  channel: Bright Kids Ukrainian
+  title: Ukrainian language. Gender of Nouns. Animateness & Inanimateness.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=GxHkwA7HllM
+  channel: Ukrainian Lessons
+  title: How to know noun gender in Ukrainian language? 🇺🇦 Рід іменника [Ukrainian
+    Grammar Guide]
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=grL2s5e2AGI
+  channel: Ukrainian Lessons
+  title: Ukrainian Alphabet Pronunciation — Poster from Ukrainian Lessons 💙💛
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=nIbxZO0Gv5Q
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Fruits & Vegetables, Colours | Gender endings |
+    Noun-adjective agreement'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=8GKxBKOCFEg
+  channel: Let's Learn Ukrainian
+  title: 'How to say I HAVE & I DON''T HAVE in Ukrainian | Conjugation | Grammar |
+    #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
-- url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
-  title: Noun Genders in Ukrainian
-  source: Infographic with rules and exceptions
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/video-noun-gender/
-  title: How to Know Noun Gender
-  source: 8-minute grammar guide
-  relevance_score: 1.0
-  topics: []
 - url: https://opentext.ku.edu/dobraforma/chapter/1-1/
   title: 'Dobra Forma: Gender of Nouns'
   source: dobraforma
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.44999999999999996
+  topics:
+  - gender
+  - nouns
+  - grammar
 - url: https://opentext.ku.edu/dobraforma/chapter/1-2/
   title: 'Dobra Forma: Gender of Nouns (Masculine and Feminine)'
   source: dobraforma
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.44999999999999996
+  topics:
+  - gender
+  - nouns
+  - grammar
 - url: https://opentext.ku.edu/dobraforma/chapter/1-3/
   title: 'Dobra Forma: Gender of Nouns (Neuter)'
   source: dobraforma
@@ -44,58 +91,95 @@ blogs:
   - gender
   - nouns
   - grammar
+- url: https://www.ukrainianlessons.com/episode157/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - grammar
+  - gender
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 157
+- url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+  title: Noun Genders in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - gender
+  - nouns
+  - grammar
 rag_chunks:
 - score: 0.5
-  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
-  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
-    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
-  section_title: Сторінка 144
-  grade: 11
-  author: hlibovska
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0033
+  text: "35\n1. Розгляньте у групі однокласників таблицю. Дайте\nвідповіді  на  запитання\
+    \  Читалочки.\nРоди іменників\nЧоловічий рід\n(він, мій)\nЖіночий рід\n(вона,\
+    \ моя)\nСередній рід\n(воно, моє)\nберег\nкінь\nбатько\nрічка\nбабуся\nніч\nсерце\n\
+    село\nкурча\nягня\n1. Як називаються роди іменників?\n2. Які слова допомагають\
+    \ визначити рід імен-\nників?\n3. Які закінчення можуть мати іменники кожного\
+    \ \nроду?\n2. Допоможи Щебетунчикові змінити за числами подані\nв таблиці іменники.\
+    \ Постав їх у формі множини і запиши. \nПознач  закінч"
+  section_title: Сторінка 35
+  grade: 4
+  author: ponomarova
   page: ''
-  trust_tier: 1
-- score: 0.3333333432674408
-  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0322
-  text: "Представте результати своєї роботи у класі. Перевірте себе, зайшовши  \n\
-    за покликанням  https://cutt.ly/QeYBDyrR \n \nабо за QR-кодом."
-  section_title: Сторінка 125
-  grade: 8
-  author: hlibovska
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0108
+  text: "110\nНавчаюся визначати рід іменників\n34\nРід іменників:  \nчоловічий, жіночий,\
+    \ середній\n\t \t\n1   \aВизначте, істоту якого роду називає \nкожний іменник.\n\
+    \t \t\n3   \aДопишіть пари слів за зразком.\n2   \aПрочитай, уставляючи замість\
+    \ крапок слова мій, моя, моє, він, \nвона, воно. Визнач рід іменників і поясни\
+    \ свою відповідь. Запиши \nутворені речення.\nмати — тато\nдочка — син\nмалюк\
+    \ — маля\nІменники бувають чоловічого, \nжіночого і середнього роду. \nДосліди,\
+    \ як визнача-\nють рід іменників.\nЯ — дослідник\nЯ — дослід"
+  section_title: Сторінка 110
+  grade: 3
+  author: vashulenko
   page: ''
-  trust_tier: 1
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0057
+  text: "•  Спишіть перший абзац тексту, розкриваючи дужки. Укажіть \nвідмінок змінених\
+    \ іменників у дужках. Позначте закінчення \nіменників. Підкресліть іменники жіночого\
+    \ роду, які стоять у по­\nчатковій формі.\n121. Спишіть вправу 120 до кінця, розкриваючи\
+    \ дужки. Провід­\nміняйте виділені іменники. Позначте відмінкові закінчення \n\
+    іменників.\nЗакінчення ім енників жіночого роду на -а, -я \nв родовом у відм інку\
+    \ однини\n122. Прочитайте іменники.\nФанера, полуниця, тиша.\n|-  •  Запишіть\
+    \ іменники в родовому відмінку"
+  section_title: Сторінка 58
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
 - score: 0.09090909361839294
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0231
-  text: "226\nВідомості із синтаксису й пунктуації. Речення з однорідними членами\n\
-    Вправа 367\n1. Виконайте завдання на  вибір:\nz\nz Розкажіть про свій улюблений\
-    \ стиль одягу, \nвикористовуючи речення з однорідними чле-\nнами .\nz\nz Опишіть\
-    \ стиль одягу дівчинки та  хлопчика \nзі світлини, використовуючи речення з одно-\n\
-    рідними членами .\n2. Об’єднайтесь у групи . Кожна група обирає стиль \nодягу,\
-    \ переваги якого буде доводити .\nДовідка . Стилі одягу: класичний, спортивний,\
-    \ романтичний, \nділовий, кежуал, вінтаж, готи"
-  section_title: Сторінка 226
-  grade: 5
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0053
+  text: "•  Випишіть речення, що відповідає схемі.\n•  Випишіть речення з однорідними\
+    \ підметами. Підкресліть \nголовні члени речення.\n•  Зробіть звуко-буквений аналіз\
+    \ виділеного слова.\n112. Напишіть текст-розповідь «Корисні овочі». Використайте\
+    \ \nв тексті іменники в однині й множині.\n4іХ ] Відміню вання ім енників за відм\
+    \ інкам и. \nПочаткова ф орма ім енників\n113. Розгляньте таблицю. Пригадайте\
+    \ відмінки іменників і питан­\nня, на які вони відповідають.\nВідмінок\nПитання\n\
+    Однина\nМножина\nНазивний\nхто?\nСИН,\nсини,"
+  section_title: Сторінка 54
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0136
+  text: "§ 25. Рід іменників. Іменники спільного роду  \n129\n§ 25. Рід іменників.\
+    \ Іменники спільного роду\nВправа 260\n1. Прочитайте словосполучення.\nпарк міський\n\
+    мода міська\nсвято міське\n2. Чому, на вашу думку, прикметник у  цих трьох словосполученнях\
+    \ має \nрізні закінчення?\n3. Пригадайте, що ви знаєте про рід іменників.\nІснує\
+    \ три роди іменників:\nЧоловічий рід\nЖіночий рід\nСередній рід\nчоловік, екран,\
+    \ \nкіт\nжінка, барва, \nрадість\nсвято, маля, \nозеро\nЗверніть увагу! До котрогось\
+    \ із родів належать лише \nті імен"
+  section_title: Сторінка 129
+  grade: 6
   author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.1111111119389534
-  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0372
-  text: "103\n\t\nТестові завдання для підготовки  \nдо тематичного контролю за розділом \
-    \ ІІІ. . . . . . . . . . . . . . . 103"
-  section_title: Сторінка 190
-  grade: 8
-  author: gisem
-  page: ''
-  trust_tier: 2
-- score: 0.25
-  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
-  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
-    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
-    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
-    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
-  section_title: Сторінка 222
-  grade: 11
-  author: glazova
-  page: ''
-  trust_tier: 2
 rag_images: []
 rag_literary: []

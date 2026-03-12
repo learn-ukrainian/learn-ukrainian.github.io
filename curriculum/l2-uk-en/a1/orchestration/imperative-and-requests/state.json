@@ -5,29 +5,13 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-10T17:00:28Z",
-      "task_id": "v5-imperative-and-requests-pA",
-      "mode": "full"
+      "ts": "2026-03-12T09:28:56Z",
+      "note": "rebuild-kept"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-10T17:00:47Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-10T17:11:26Z",
-      "self_audited": true
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-10T17:11:26Z",
-      "note": "extracted-from-full-build"
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-10T17:27:10Z",
-      "attempts": 2,
-      "note": "escalation-claude"
+      "ts": "2026-03-12T09:29:43Z",
+      "note": "merged-into-research"
     }
   }
 }

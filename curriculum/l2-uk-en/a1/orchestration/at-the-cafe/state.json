@@ -5,32 +5,13 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-06T23:04:24Z",
-      "task_id": "v5-at-the-cafe-pA",
-      "mode": "full"
+      "ts": "2026-03-12T09:21:06Z",
+      "note": "rebuild-kept"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-06T23:04:50Z"
-    },
-    "sandbox": {
-      "status": "complete",
-      "ts": "2026-03-06T23:04:53Z"
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-06T23:09:16Z"
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-06T23:11:10Z",
-      "task_id": "v5-at-the-cafe-pC"
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-06T23:32:37Z",
-      "attempts": 6,
-      "note": "exhausted"
+      "ts": "2026-03-12T09:24:40Z",
+      "note": "merged-into-research"
     }
   }
 }

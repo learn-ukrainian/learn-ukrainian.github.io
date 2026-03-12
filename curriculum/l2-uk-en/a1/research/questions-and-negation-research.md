@@ -2,68 +2,174 @@
 
 ## State Standard Reference
 §4.3.1: "Simple sentences — SVO, questions (хто? що? де? коли?), negation (не, ні)"
-Alignment: This module directly fulfills the core A1 requirement for basic interrogative and negative syntax, introducing the primary question words and negation particles.
+§4.4.1.2: "Questions — чи, expanded question words (скільки, чому, який)"
+Alignment: This module directly implements the A1 sentence-level standard — yes/no questions with чи, question-word sentences, and negation with не/ні. The particle чи and the contrast не vs ні are the core deliverables.
 
 ## Vocabulary Frequency
+
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| що (шо) | Top 10 word. Spoken variant "шо" is ubiquitous in casual speech. | Що це? Що ти робиш? |
-| хто | Top 50 word. | Хто це? Хто там? |
-| де | High frequency adverb. Essential for basic navigation. | Де ти? Де кава? |
-| не | Top 5 particle. Must always be placed directly before the verb. | не знаю, не розумію |
-| чи | Standard polite question marker. Marks formal register. | Чи ви розумієте? Чи є цукор? |
+| **чи** | Question particle; formal/standard register; top 50 function word | Чи ти...? Чи це...? Чи є...? |
+| **не** | Negation particle; top-5 function word; always immediately before verb | не знаю, не розумію, не хочу, не можу |
+| **ні** | "No" response; phonetically close to не — major learner trap | ні, дякую; ні, не розумію |
+| **так** | "Yes"; also "so/therefore" in advanced use — ignore at A1 | так, звичайно; так, будь ласка |
+| **що** | "What"; top-10 word; spoken variant **шо** is ubiquitous colloquially | Що це? Що ти робиш? Що там? |
+| **хто** | "Who"; top-50 word | Хто це? Хто там? Хто ти? |
+| **де** | "Where" (static location); high-frequency adverb | Де ти? Де туалет? Де кава? |
+| **коли** | "When"; also introduces subordinate clauses at B1+ (flag: avoid clause use here) | Коли сніданок? Коли ти вдома? |
+| **куди** | "Where to" (motion); required by §4.3.1; contrast with де | Куди ви їдете? Куди ти йдеш? |
+| **звідки** | "From where"; required by §4.3.1 | Звідки ти? Звідки він? |
+| **ніколи** | "Never"; requires double negation: ніколи не + verb | я ніколи не знаю, ніколи не їм |
+| **завжди** | "Always"; frequency adverb pair with ніколи | я завжди тут, завжди вдома |
+| **скільки** | "How much/many"; café context | Скільки це коштує? Скільки тут? |
+| **чому** | "Why"; productive even at A1 | Чому ти тут? Чому ні? |
 
 ## Cultural Hooks
-1. **ALF in Ukraine**: The 1990s Ukrainian dub of the sitcom *ALF* is legendary and considered a masterpiece of translation. His famous quote "Ти не любиш котів? Ти просто не вмієш їх готувати!" (You don't like cats? You just don't know how to cook them!) is a memorable example of negation and dark humor.
-2. **"Шо" on the street**: While "що" is the standard written form, recognizing the ubiquitous spoken pronunciation "шо" is a crucial survival skill for listening comprehension in Ukraine.
+
+1. **ALF quote (plan-specified)**: "Ти не любиш котів? Ти просто не вмієш їх готувати!" — this Soviet-era dubbed sitcom line is genuinely iconic in Ukrainian pop culture. It demonstrates negation (не любиш), rhetorical intonation, and dark humor. Excellent anchor for не + verb pattern.
+2. **Everyday survival question**: "Де туалет?" is famously the first Ukrainian sentence tourists learn and Ukrainians joke about. It is an unimpeachable real-life context for де + question intonation.
+3. **ніколи не** as folk emphasis: Ukrainian proverbs use ніколи not for quantity but for dramatic permanent negation — e.g., "Ніколи не кажи ніколи" (a saying borrowed into Ukrainian from the Bond film title). Demonstrates double negation naturally.
 
 ## Common Learner Errors
-1. **The "Do Trap"** → Trying to translate "Do you..." directly by searching for an equivalent auxiliary verb, instead of simply using the verb with rising intonation or "чи" (e.g., "Ти знаєш?").
-2. **Confusing "Ні" and "Не"** → Saying "Ні знаю" instead of the correct "Я не знаю" (I do not know) or "Ні, я не знаю" (No, I do not know). "Ні" is the standalone answer, "не" negates the verb.
-3. **Flat Intonation** → Failing to use a sharp pitch rise (↗) for yes/no questions without "чи", causing them to sound exactly like declarative statements.
+
+1. **The "Do Trap"** → English speakers insert a phantom auxiliary: *"Чи ти **do** знаєш?" → **Чи ти знаєш?** — Ukrainian has no do/does; statement word order is unchanged in questions formed with чи.
+2. **не vs ні confusion** → Using не as a response ("не, дякую") or ні before verbs ("ні розумію") — **Correct**: ні is the answer word, не is the negation particle. "Ні, я не розумію."
+3. **де vs куди conflation** → "Де ти йдеш?" instead of **Куди ти йдеш?** — де = static location, куди = direction. Grade 6 Авраменко §99-100 implicitly targets this with pronoun-in-context exercises.
+4. **Double negation avoidance** → "Я ніколи знаю" (English transfer — never + positive) → **Correct**: "Я ніколи **не** знаю." Ukrainian requires не even when ніколи is present.
 
 ## Cross-References
-- Builds on: a1-15 (The Living Verb I)
-- Prepares for: a1-16 (The Living Verb II), a1-41 (At the Café)
+- Builds on: `the-living-verb-i` (M15), `the-living-verb-ii` (M16) — learner needs present-tense verb forms to negate and question them
+- Prepares for: `at-the-cafe` (M41) — question vocabulary (де, скільки, чи є) is the practical payoff; also prepares for `imperative-and-requests` (M47) where чому/як questions appear with commands
+
+## Teaching Strategy
+
+- **Discovery exercise**: Show a short dialogue in a table — no rules yet:
+  > А: Ти знаєш Олену?  
+  > Б: Ні, я не знаю.  
+  > А: Чи вона тут?  
+  > Б: Так, вона тут.
+  Ask learners: "What two things did speaker А do that speaker Б didn't?" Let them notice (1) intonation flip on statement, (2) чи as a question marker, (3) не appearing in the negative answer. Rule emerges from observation.
+
+- **Best context**: Café/market ordering — "Де кава? Скільки це коштує? Чи є цукор?" This is the most natural A1 interrogative context and has a direct payoff in M41.
+
+- **Contrastive pairs for disambiguation**:
+  - не (before verb) vs ні (answer word): "Ні, я не знаю."
+  - де (location) vs куди (direction): "Де ти?" vs "Куди ти йдеш?"
+  - чи (explicit marker) vs rising intonation only: "Чи ти знаєш?" vs "Ти зна́єш↗?"
 
 ## Notes for Content Writing
-- **Constraint Check**: Imperative forms (Слухайте!, Читайте!, Пишіть!) are STRICTLY FORBIDDEN as they are not taught until M47. Use indirect requests or English for all exercise instructions.
-- Frame the lack of "do/does" as a major advantage—Ukrainian syntax is much simpler than English here. Use visual pitch arrows (↗ vs ↘) to make intonation concrete.
+
+- The ALF quote is plan-specified — use it in the cultural section exactly as noted.
+- чи often drops in casual speech; mention this explicitly so learners aren't confused when they hear natural Ukrainian dialogue.
+- шо vs що: name the spoken variant once and move on — don't moralize.
+- Keep ніколи examples in imperfective present only (ніколи не знаю, ніколи не їм) — past/future not yet in scope.
+- Grade 6 Авраменко §99-100 teaches заперечні займенники (ніхто, ніщо) — these are NOT in scope for A1; do not introduce them.
+- Frequency adverbs (завжди, часто, іноді, ніколи) can appear as a small table — position in sentence (before verb) is the key structural fact to convey.
+
 
 ## Resource Discovery
 
 
 ### Blog Articles
 - [Useful Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) (ukrainianlessons.com)
-- [Q&A — Questions and Answers](https://www.ukrainianlessons.com/episode40/) (ukrainianlessons.com)
-- [Useful phrases for learning Ukrainian](https://www.ukrainianlessons.com/fmu2/) (ukrainianlessons.com)
-- [How to book a table in Ukrainian](https://www.ukrainianlessons.com/fmu14/) (ukrainianlessons.com)
-- [Conversation at the supermarket checkout in Ukrainian](https://www.ukrainianlessons.com/fmu19/) (ukrainianlessons.com)
+- [Dobra Forma: Genitive Case for Direct Objects after Negation (Neuter and Masculine)](https://opentext.ku.edu/dobraforma/chapter/5-3/) (dobraforma)
+- [Dobra Forma: Genitive Case for Direct Objects after Negation (Masculine)](https://opentext.ku.edu/dobraforma/chapter/5-4/) (dobraforma)
 
 ### Textbook References (RAG)
-- Grade 2, Сторінка 3: ЗВУКИ І БУКВИ
-к
-і
-<
-ЗВУКИ
-СКЛАД^
+
+**Grade 3, Сторінка 101** ():
+Частини  мови
 У розділі ти будеш вивчати:
-БУКВИ
-НАГОЛОС
-Дізнаєшся про:
-к
-1
-г
-л
-І
-...
-- Grade 10, Сторінка 264: 1. Вступаючи в дискусію, переконайтеся в тому, що ви пра-
-вильно розумієте позицію свого опонента, а...
-- Grade 6, Сторінка 269: § 54. Розряди займенників за значенням та особливості відмінювання   
+ІМЕННИКИ
+хто? що?
+який? яка? 
+яке? які?
+що робить? 
+що роблять?
+скільки?  
+котрий?
+ЧИСЛІВНИКИ
+ДІЄСЛОВА
+ПРИКМЕТНИКИ
+
+
+**Grade 6, Сторінка 269** ():
+§ 54. Розряди займенників за значенням та особливості відмінювання   
 269
-Зверніть увагу на варіанти...
-- Grade 5, Сторінка 204: 204
-Той, хто звертається з проханням, має бути готовим до 
-обох варіантів відповіді. І кожну з них м...
-- Grade 6, Сторінка 5: . . . . . . . . . . . . . . . . . . . 256
-Присвійні займенники . . . . . . . . . . . . . . . . . . ....
+Зверніть увагу на варіанти наголошування запереч-
+них займенників ніхто і  ніщо в  непрямих відмінках: 
+ніко́го — нíкого, нічо́му – нíчому. У  цих формах від 
+наголосу залежить значення: займенники з наголоше-
+ним коренем позначають відсутність когось чи чогось: 
+ніко́го немає, нічо́го не видно. Займенники з наголоше-
+ним префіксом позначають неможливість скористатися 
+кимось або чимось: нíкого й  спитати, нíчого їсти.
+Впр
+
+
+**Grade 6, Сторінка 264** ():
+Розділ 8. Займенник 
+264
+Питальні й  відносні займенники
+Питальні займенники вживаються в  питальних ре-
+ченнях. Ці займенники вам добре знайомі, адже вони 
+є  питаннями до всіх іменних частин мови: хто? що? 
+який? чий? котрий? скільки?
+Питальні займенники легко розпізнати, адже з їх-
+ньою допомогою будують питальні речення: Яке твоє 
+ім’я? Скільки тобі років? У  кого є  запасна ручка?
+Займенники хто, що, скільки не мають роду 
+й  числа, їх змінюємо лише за відмінками. Займен-
+ники який, чий, ко
+
+
+**Grade 8, Сторінка 2** ():
+РЕЧЕННЯ
+ЧЛЕНИ  РЕЧЕННЯ
+ВІДМІНКИ
+Критерій
+Типи речень
+За метою
+висловлювання
+розповідні
+(містять повідомлення про факти,  
+події чи явища дійсності)
+питальні
+(містять запитання)
+спонукальні
+(виражають спонукання до дії)
+За емоційним
+забарвленням
+окличні
+(вимовляємо з підсиленою інтонацією)
+неокличні
+За складом
+граматичної
+основи
+двоскладні
+(граматична основа має підмет і присудок)
+односкладні
+(граматична основа має один  
+головний член речення)
+ означено-особові
+ неозначено-особові
+ узагальнен
+
+
+**Grade 6, Сторінка 186** ():
+186
+1.	Прочитайте словосполучення та виконайте завдання. 
+нікого не оминути	
+мою увагу
+чимсь зайнятий	
+набрати всього
+у тій бібліотеці 	
+пишатися нею
+А.	 Визначте відмінки виділених займенників.
+Б.	 Відновіть початкову форму займенників.
+Відмінювання заперечних і неозначених займенників 
+Заперечні та неозначені займенники, утворені додаванням часток аби-, 
+де-, ні-, -сь, -будь, -небудь, будь-, казна-, хтозна- до питальних займен­
+ників, змінюємо за родами, числами й відмінками (як питальні).
+Н. 
+

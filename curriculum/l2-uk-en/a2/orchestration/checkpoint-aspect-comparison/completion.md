@@ -1,10 +1,10 @@
-PASS: pipeline a2 30
+FAIL: pipeline a2 30
 
   Module:   checkpoint-aspect-comparison
   Track:    a2
-  Mode:     v3
-  Words:    3482 (target: 3000)
+  Mode:     v5
+  Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T02:44:33Z
+  Verdict:  FAIL
+  Date:     2026-03-12T10:11:47Z

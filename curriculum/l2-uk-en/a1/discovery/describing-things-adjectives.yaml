@@ -1,6 +1,10 @@
-discovered_at: '2026-03-07T14:27:53.632698+00:00'
+discovered_at: '2026-03-12T08:46:52.207888+00:00'
 query_keywords:
 - Describing Things - Adjectives
+- прикметник
+- новий
+- старий
+- гарний
 - Світ прикметників
 - The World of Adjectives
 - Тверда група
@@ -8,34 +12,77 @@ query_keywords:
 - 'Презентація 2: М''яка група та Специфіка'
 - 'Presentation 2: Soft Stem and Nuances'
 - Практика та Культурний контекст
-- Practice and Cultural Context
-- correct adjective endings for masculine nouns
-- correct adjective endings for feminine nouns
-- correct adjective endings for neuter nouns
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=t6QpqZRIJPY
+  channel: Ukrainian Lessons
+  title: Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=5tEZczCa1Hw
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Dishes and drinks | Food vocabulary - over 100
+    words😲Declining adjectives'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=nIbxZO0Gv5Q
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Fruits & Vegetables, Colours | Gender endings |
+    Noun-adjective agreement'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=BYBWx6ds8Fk
+  channel: Let's Learn Ukrainian
+  title: 'Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7IzMhjomEiQ
+  channel: Let's Learn Ukrainian
+  title: '40 Adjectives (Antonyms) #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=jSlIVrH5Y-E
+  channel: Speak Ukrainian
+  title: 20 Ukrainian Adverbs of Place
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=VUeRCKkNZWc
+  channel: Speak Ukrainian
+  title: 20 Common Ukrainian Adverbs of Frequency
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
-- url: https://www.ukrainianlessons.com/vocabulary-adjectives/
-  title: Common Adjectives
-  source: Essential descriptive words
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/adjectives-and-adverbs/
-  title: Adjective Agreement
-  source: Gender agreement
-  relevance_score: 1.0
-  topics: []
-- url: https://opentext.ku.edu/dobraforma/chapter/16-1/
-  title: 'Dobra Forma: Adjectives (Gender and Number in Nominative)'
-  source: dobraforma
-  relevance_score: 1.0
-  topics: []
 - url: https://talkukrainian.com/adjectives/
   title: 'Talk Ukrainian: Adjectives'
   source: talkukrainian
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.7
+  topics:
+  - adjectives
+  - прикметник
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+  title: 'Dobra Forma: Adjectives (Gender and Number in Nominative)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - adjectives
+  - gender
+  - grammar
 - url: https://www.ukrainianlessons.com/episode108/
   title: Kyiv tour + Participle in Ukrainian
   source: ukrainianlessons.com
@@ -52,35 +99,32 @@ blogs:
   series: ULP
   season: 3
   episode: 108
+- url: https://www.ukrainianlessons.com/adjectives-adverbs-chart/
+  title: Ukrainian Adjectives and Adverbs Chart
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - adjectives
+  - adverbs
+  - grammar
+  - declension
+- url: https://www.ukrainianlessons.com/episode56/
+  title: Asking for advice + Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - adjectives
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 56
 rag_chunks:
-- score: 0.1666666716337204
-  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0067
-  text: "69\n\t Перекажи текст (усно). Запиши переказ тексту, користуючись \nмалюнками\
-    \ й інформацією, поданою в «Зошиті з розвитку усно-\nго та писемного мовлення».\n\
-    166.\t\tРозгляньте таблицю та обговоріть її зміст.\nвідмінок\nч. р.\nж. р.\nс.\
-    \ р.\nдля всіх родів\nН. в\nР. в. \nД. в. \nЗн. в.\nОр. в. \nМ. в.\nдовгий шлях\n\
-    довгого \nшляху\nдовгому \nшляху\nдовгий шлях\nдовгим  \nшляхом\n(на) довгому\
-    \ \nшляху\nдовга ніч\nдовгої \nночі\nдовгій \nночі\nдовгу ніч\nдовгою \nніччю\n\
-    (у) дов­\nгій ночі\nдовге поле\nдовгого \nполя\nдовгому \nполю\nдовге поле"
-  section_title: Сторінка 69
-  grade: 4
-  author: zaharijchuk
-  page: ''
-  trust_tier: 2
-- score: 0.1111111119389534
-  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0013
-  text: "12\nсЛова — назви ПреДметІв\nСлова — назви предметів — це іменники.\nСлово\
-    \ іменник утворене від слова ім’я. Кожний \nпредмет чи явище має своє ім’я, тобто\
-    \ свою назву.  \nНазви зображені предмети спочатку окремо, потім одним \nсловом.\
-    \ Назви тих, хто користується ними. Доведи, що всі \nці слова — іменники. Запиши\
-    \ їхні назви за абеткою.\nСлова — назви людей \n і тварин \n відпові-\nдають\
-    \ на питання хто? Слова — назви інших предме-\nтів \n відповідають на питання\
-    \ що?\n \nІменники\nХто?                      Що?"
-  section_title: Сторінка 12
-  grade: 2
-  author: bolshakova
-  page: ''
-  trust_tier: 2
 - score: 0.5
   chunk_id: 6-klas-ukrmova-avramenko-2023_s0140
   text: "132\n1.\tПрочитайте словосполучення та виконайте завдання.\nдружна компанія\n\
@@ -95,33 +139,60 @@ rag_chunks:
   author: avramenko
   page: ''
   trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0013
+  text: "12\nсЛова — назви ПреДметІв\nСлова — назви предметів — це іменники.\nСлово\
+    \ іменник утворене від слова ім’я. Кожний \nпредмет чи явище має своє ім’я, тобто\
+    \ свою назву.  \nНазви зображені предмети спочатку окремо, потім одним \nсловом.\
+    \ Назви тих, хто користується ними. Доведи, що всі \nці слова — іменники. Запиши\
+    \ їхні назви за абеткою.\nСлова — назви людей \n і тварин \n відпові-\nдають\
+    \ на питання хто? Слова — назви інших предме-\nтів \n відповідають на питання\
+    \ що?\n \nІменники\nХто?                      Що?"
+  section_title: Сторінка 12
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
 - score: 0.3333333432674408
-  chunk_id: 6-klas-ukrmova-golub-2023_s0137
-  text: "134\nВідмінкові закінчення прикметників \nтвердої та м’якої груп\nВід-\n\
-    мінок\nОднина\nМножина\nТверда група\nМ’яка група\nТверда \nгрупа\nМ’яка \nгрупа\n\
-    Чоловічий \nі середній \nрід\nЖіночий \nрід\nЧоловічий \nі середній \nрід\nЖіночий\
-    \ \nрід\nН.\nзелен-ий, \n-е\n-а\nсин-ій, -є\n-я\n-і\n-і\nР. \nзелен-ого\n-ої\n\
-    синь-ого\n-ої\n-их\n-іх\nД\nзелен-ому\n-ій\nсинь-ому\n-ій\n-им\n-ім\nЗн. \nяк\
-    \ Н. \nабо Р. \n-у\nяк Н. \nабо Р. \n-ю\nяк Н. \nабо Р. \nяк Н. \nабо Р. \nОр.\
-    \ \nзелен-им\n-ою\nсин-ім\n-ою\n-ими\n-іми\nМ. \n(на) \nзелен-ому, \nзелен-ім\n\
-    (на) -ій\n(на) \nсинь-ом"
-  section_title: Сторінка 134
+  chunk_id: 6-klas-ukrmova-golub-2023_s0136
+  text: "133\n318   Прочитайте речення. Якою темою вони об’єднані? Випишіть \nприкметники\
+    \ разом з іменниками, від яких вони залежать. \nВизначте відміну й групу (де можна)\
+    \ іменників. Як ви це вста-\nновили? Виділіть основи й закінчення іменників і\
+    \ прикметників. \nВисловіть припущення, як прикметники можна поділити на \nгрупи\
+    \ за типом відмінювання. \n1. Мужність — доброчинність, у силу якої люди в небезпеці\
+    \ \nроблять чудові речі (Арістотель). 2. Без доброти неможлива \nсправжня радість\
+    \ (Л. Карлейль). 3. Я буду про"
+  section_title: Сторінка 133
   grade: 6
   author: golub
   page: ''
   trust_tier: 1
-- score: 0.25
-  chunk_id: 6-klas-ukrmova-betsa-2023_s0143
-  text: "А гарний, сумний, розумний, щирий\nБ шкільний, сьогоднішній, прибережний,\
-    \ молочний\nВ дядьків, вовчий, заячий, тітчин\nГ братів, червоний, смішний, прибудинковий\n\
-    7. Визначте, у котрому рядку подано правильно утво-\nрені форми вищого й  найвищого\
-    \ ступенів порівняння \nприкметників.\nА найчіткіший, найбільш талановитий, кращий,\
-    \ глибший\nБ злющий, гострокриліший, більш солодкий, червоніший\nВ здоровенний,\
-    \ малиновіший, більш червоніший, ра-\nдісніший.\n8. У якому відмінку вжито виділений\
-    \ прикметник?\nНа широко"
-  section_title: Сторінка 145
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0198
+  text: "§ 40. Групи прикметників за значенням  \n191\nДерев’яний, весняний, кошачий,\
+    \ цікавий, веселий, \nнастільний, теплий, домашній, братів, шкільний, старан-\n\
+    ний, спортивний, математичний, швидкий, відповідаль-\nний, мамин.\n2. Поясніть,\
+    \ як ви визначили групу прикметника за значенням.\nВправа 378\nДоберіть по п’ять\
+    \ прикметників кожного виду, запишіть словосполу-\nчення з  ними.\nДеякі \nякісні\
+    \ \nприкметники \nможуть \nутворювати \nповну й коротку форми, наприклад: повний\
+    \ і  повен, \nзелений і  зелен. Короткі форми "
+  section_title: Сторінка 191
   grade: 6
-  author: betsa
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0168
+  text: "163\nРОЗВИТОК МОВЛЕННЯ\nДо речі…\nОзначення найчастіше виражені прикметниками.\
+    \ Їх використову­\nють в описах. Що більше означень-прикметників ви знати­мете,\
+    \ то \nлегше вам буде висловлювати думки, описувати людей. Ось ко­\nроткий словник\
+    \ прикметників. Запам’ятайте ці слова. \nДеталь \nпортрета\nОзначення\nОбличчя\n\
+    красиве, вродливе, негарне, виразне, ніжне, потворне, пов­\nне, худорляве, продовгувате,\
+    \ грубе, рум’яне, бліде, смагля-\nве, біле, кров із молоком\nВираз  \nобличчя\n\
+    веселий, сумний, зосереджений, роз"
+  section_title: Сторінка 163
+  grade: 5
+  author: avramenko
   page: ''
   trust_tier: 1
 rag_images: []

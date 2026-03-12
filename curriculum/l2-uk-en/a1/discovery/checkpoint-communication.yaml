@@ -1,8 +1,9 @@
-discovered_at: '2026-03-06T07:16:52.237279+00:00'
+discovered_at: '2026-03-12T09:43:18.524904+00:00'
 query_keywords:
 - 'Checkpoint: Communication'
-- Огляд
-- Overview
+- могти
+- вміти
+- треба
 - 'Навичка 1: Модальні дієслова'
 - 'Skill 1: Modal Verbs'
 - 'Навичка 2: Накази та прохання'
@@ -11,15 +12,48 @@ query_keywords:
 - 'Skill 3: Everyday Life'
 - Інтеграційне завдання
 - Integration Task
-- Demonstrate modal verb usage in context
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=tzWGCzqpNyo
+  channel: Ukrainian with Olha
+  title: 'Subscribe for a full Lesson 5 - Hobbies releasing this week on Friday!📝
+    #ukrainianlanguage'
+  relevance_score: 0.9
+  relevance_note: 'The video directly addresses and explains the usage of modal verbs
+    ''могти'' and ''вміти'', which are explicitly listed in the module''s vocabulary
+    and are a core component of ''Навичка 1: Модальні дієслова''.'
+  transcript_excerpt: могти. Can вміти know how to могти чи вміти? Ти вмієш танцювати
+    вальс? Do you know how to dance vals?
+  embed_suggestion: 'After Навичка 1: Модальні дієслова -- directly reinforces the
+    main grammar point of this section.'
+- url: https://www.youtube.com/watch?v=jFZJSbJ-Clk
+  channel: Ukrainian Lessons
+  title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice message
+    №4)
+  relevance_score: 0.5
+  relevance_note: The video focuses on listening comprehension related to a travel
+    plan and future tense, which aligns with general communication and everyday life
+    scenarios but doesn't directly teach the module's specific grammar points (modal
+    verbs, commands).
+  transcript_excerpt: сьогодні ви будете слухати голосове повідомлення про план подорожі
+    Христини на зимових канікулах А також ви будете відповідати на запитання і повторювати
+    майбутн час готові починати
+  embed_suggestion: 'After Навичка 3: Повсякдення -- as a listening practice related
+    to everyday communication about plans.'
+- url: https://www.youtube.com/watch?v=gL7A23RWiR0
+  channel: Let's Learn Ukrainian
+  title: 'Learn 8 important Ukrainian Verbs with me 💙💛 #learnukrainian #ukraine #ukrainianlessons
+    #beginners'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
 - url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
   title: Useful Ukrainian Questions
   source: ukrainianlessons.com
-  relevance_score: 0.5
+  relevance_score: 0.35
   topics:
   - questions
   - phrases
@@ -27,30 +61,23 @@ blogs:
 - url: https://www.ukrainianlessons.com/ph-language/
   title: 'Ukrainian Phrasebook: Language'
   source: ukrainianlessons.com
-  relevance_score: 0.5
+  relevance_score: 0.35
   topics:
   - language
   - communication
   - learning
-- url: https://www.ukrainianlessons.com/ukrainian-history/
-  title: Ukrainian History — Brief Overview
-  source: ukrainianlessons.com
-  relevance_score: 0.4
-  topics:
-  - history
-  - culture
-  - overview
-- url: https://talkukrainian.com/grammatical-cases/
-  title: 'Talk Ukrainian: Ukrainian Grammatical Cases'
-  source: talkukrainian
-  relevance_score: 0.3
-  topics:
-  - cases
-  - grammar
-  - overview
-  - відмінки
 rag_chunks:
-- score: 0.10000000149011612
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
   chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
   text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
     — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
@@ -61,35 +88,7 @@ rag_chunks:
   author: ''
   page: ''
   trust_tier: 2
-- score: 0.3333333432674408
-  chunk_id: 6-klas-ukrmova-betsa-2023_s0216
-  text: "§ 101–102.\t Творення дієслів наказового способу\nA felszólító módú igealakok\
-    \ képzése\nНаказовий спосіб означає наказ, прохання і спону-\nкання до дії. \n\
-    Губами говори, а руками роби! (Нар. творчість)\nДієслова наказового способу змінюються\
-    \ за числа-\nми та особами.\nФорми дієслів наказового способу\nОсоба\nОднина\n\
-    Множина\n1\nкричімо, пробачмо\n2\nкричи, пробач \nкричіть, пробачте\n3\nхай кричить,\
-    \  \nхай пробачить\nхай кричать,  \nхай пробачать\n \a\nДієслово їсти має такі\
-    \ форми наказового способу: \nїж, ї ́жмо, ї ́жт"
-  section_title: Сторінка 218
-  grade: 6
-  author: betsa
-  page: ''
-  trust_tier: 1
 - score: 0.5
-  chunk_id: 10-klas-ukrmova-karaman-2018_s0322
-  text: "§ 72 Види дієслів \n181\nДомашнє завдання\n513 Складіть словниковий диктант\
-    \ (20 слів) з вивченої теми, намагаю-\nчись не повторювати дієслова із вправ,\
-    \ виконаних на уроці.\nПеревірте себе\n \n Дайте відповіді на запитання.\n— Які\
-    \ дієслова належать до I дієвідміни? \nНаведіть приклади.\n— Які дієслова належать\
-    \ до II дієвідміни? \nНаведіть приклади.\n§ 72\n \n ВИДИ ДІЄСЛІВ\nДієслово — рух,\
-    \ дія, образ.\nВ. Русанівський\nБуду я  навчатись мови золотої\nРозрізняють два\
-    \ види дієслів — доконаний і недоконаний.\nДієслова "
-  section_title: Сторінка 181
-  grade: 10
-  author: karaman
-  page: ''
-  trust_tier: 2
-- score: 0.1666666716337204
   chunk_id: 7-klas-ukrmova-litvinova-2024_s0075
   text: "Розділ 1  ДІЄСЛОВО\n68\nВправа 104\n \nРоздивіться фрагменти записів на дошці\
     \ й  поміркуйте, до вивчення яких \nтем вони були зроблені  За потреби скористайтеся\
@@ -103,16 +102,29 @@ rag_chunks:
   author: litvinova
   page: ''
   trust_tier: 1
-- score: 0.125
-  chunk_id: 7-klas-ukrmova-litvinova-2024_s0136
-  text: "Підсумкові тести  \n129\nПідсумкові тести\nВиконайте тестові завдання.\n\
-    1   Дієприслівниками є  обидва слова в  рядку\nА  зрозумілий, розуміючи\nБ  здивувавшись,\
-    \ здивовано\nВ  говоривши, говорячи\nГ  думали, думаючи\n2   Серед ознак дієприслівника\
-    \ НЕМАЄ такої\nА  виду\nБ  часу\nВ  роду\nГ  властивости мати залежні слова\n\
-    3   Дієприслівниковий зворот є  в усіх реченнях, ОКРІМ\nА  Впорядковуючи свої\
-    \ речі, спробуйте насолодитися про-\nцесом.\nБ  Робіть це, уявляючи результат.\n\
-    В  Позбавившись зайвого, ви можете «пер"
-  section_title: Сторінка 132
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0029
+  text: "Розділ 1  ДІЄСЛОВО\n22\nВправа 15\n1   Із запропонованих слів випишіть діє\
+    \ слова \nПеремогти, перемога, непереможний, переможець; роз­\nважливий, розважити,\
+    \ розвага, розважальний; навчальний, \nнавчаюся, навчання, наука; пам’ятка, запам’ятовувальний,\
+    \ \nзапам’ятай, пам’ятний; популярність, популяризують, попу­\nлярний; дія, дієвий,\
+    \ діють, діяч; повторення, повторювати, \nповторюваний, повтор; практика, практичний,\
+    \ практикант, \nпрактикувати.\n2   Поясніть, за яким критерієм вирізняли діє слова\
+    \ з-поміж інших"
+  section_title: Сторінка 25
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0027
+  text: "Розділ 1  ДІЄСЛОВО\n20\nРозділ 1   \nДІЄСЛОВО\nЩо на нас чекає в цьому розділі?\n\
+    • Поміркуємо, для чого в мові \nпотрібні дієслова та що вони \nозначають.\n• Дослідимо,\
+    \ чому \nдієслова мають таку \nназву. \n• Дізнаємося, як змінюються дієслова.\
+    \ \n• З’ясуємо, що таке \nдієприкметник \nі дієприслівник. \n• Навчимося \nправильно\
+    \ \nписати дієслова. \nА ще поговоримо про цікаве та важливе в Україні. \n   \
+    \                Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 23
   grade: 7
   author: litvinova
   page: ''

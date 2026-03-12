@@ -1,6 +1,10 @@
-discovered_at: '2026-03-06T22:29:31.255246+00:00'
+discovered_at: '2026-03-12T09:20:24.214380+00:00'
 query_keywords:
 - Food and Drink
+- Я не їм construction
+- хліб
+- борщ
+- м'ясо
 - Їжа
 - Food
 - Напої
@@ -8,10 +12,6 @@ query_keywords:
 - Паляниця
 - The Shibboleth Bread
 - Мені подобається / Я не їм
-- Preferences
-- Name common foods and drinks in Ukrainian
-- Express food preferences and dislikes
-- Understand the cultural significance of паляниця
 error: null
 warning: No videos found across channels
 videos: []
@@ -19,71 +19,121 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode12/
   title: Ordering food in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.5499999999999999
+  topics:
+  - vocabulary
+  - food
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 12
 - url: https://www.ukrainianlessons.com/episode13/
   title: More about food in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/fmu16/
-  title: How to ORDER at the restaurant in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
-- url: https://www.ukrainianlessons.com/ph-food/
-  title: 'Ukrainian Phrasebook: Food and Restaurants'
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.5499999999999999
+  topics:
+  - vocabulary
+  - food
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 13
 - url: https://www.ukrainianlessons.com/episode47/
   title: Food festivals + Genitive case
   source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics: []
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 47
+- url: https://www.ukrainianlessons.com/episode93/
+  title: At the food fair in Ukraine + Diminutive words in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - vocabulary
+  - food
+  - idioms
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 93
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
 rag_chunks:
-- score: 0.3333333432674408
-  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0066
-  text: "67\nту – тю\t\nлу – лю\t\nлюблю\nру – рю\t\nсу – сю\t\nлюбить\nПрочитай.\
-    \ Яка улюблена їжа дівчинки? Розкажи про свою \nулюблену страву.\n\b\nПрочитай.\
-    \ Що любить робити хлопчик?  \nА що любиш робити ти?\n1\n2\nЮ ю\nЯ не люблю лимонний\
-    \ сік. \nЯ  люблю пити смачне молоко. \nЯ люблю пироги з  вишнями \nта черешнями.\
-    \ Я  не люблю \nбананові тістечка з  кремом. \nЯ думаю, що кожна людина \nмає\
-    \ улюблені страви.\nЯ люблю малювати.  \nЯ не люблю грати в хокей.  \nЯ люблю\
-    \ грати в шахи.  \nЯ не люблю стріляти з лука."
-  section_title: Сторінка 67
-  grade: 1
-  author: bolshakova
-  page: ''
-  trust_tier: 2
-- score: 0.25
-  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0019
-  text: "18\nоДнина І мноЖина\nЄ слова — назви предметів, які називають один \nпредмет:\
-    \ м’яч \n. Є слова — назви предметів, які \nназивають багато предметів: м’ячі\
-    \ \n. \nУ гнома Буркотуна є чарівна паличка, яка може розмножу-\nвати предмети.\
-    \ Був один предмет — стало багато. Розглянь \nмалюнки. Над якими предметами Буркотун\
-    \ ще не чаклував? \nЗапиши слова за зразком.\nЗразок: пташка — пташки, … .\nодин\n\
-    багато\n \nДо слова, яке називає один предмет, допиши слово, яке \nназиває багато\
-    \ предметів за зразком. Склади два реч"
-  section_title: Сторінка 18
-  grade: 2
-  author: bolshakova
-  page: ''
-  trust_tier: 2
-- score: 0.20000000298023224
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0059
-  text: "59\nМа-ти  ра-но у-ста-ва-ла,\nНа  сні-да-нок го-ту-ва-ла\nІз виш-ня-ми ва-ре-ни-ки,\n\
-    Ва-ре-ни-ки-ту-ле-ни-ки.\n                              Зірка Мензатюк\n\t Знайди\
-    \ у вірші букву в. \n\t\nТи знаєш, що таке вареники? Це дуже смач-\nна українська\
-    \ страва, виріб із тіста з різною \nначинкою. \n\t Чому у вірші вареники називають\
-    \ туленика­\nми? Вислов свою думку.\n\t З якими продуктами, на твою думку, не\
-    \ варять \nвареники?"
-  section_title: Сторінка 61
+- score: 0.5
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0059
+  text: "58\nІди, іди, дощику,\nЗварю тобі борщику,\nЗалізу на дуба,\nПрикличу голуба.\n\
+    А голуб загуде,\nДрібний дощик піде! (нар. тв.).\n\t\nВибери продукти для борщу.\n\
+    \t\nНазви овочі, з яких варять борщ. Ти любиш \nїсти борщ?\n\t\nНазви фрукти.\
+    \ Що можна приготувати з \nфруктів?\n\t\nПрочитай закличку.\n\t Створи речення\
+    \ за малюнком.\nPidruchnyk.com.ua"
+  section_title: Сторінка 60
   grade: 1
   author: zaharijchuk
   page: ''
   trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0011
+  text: "12\nПрочитай. Знайди слова, у яких три склади.\n\t\nхліб\t\nбулка\t\nболото\t\
+    \nбу-­тер-­брод\n\t\nкраб\t\nбілка\t\nборода\t\nбу-­тер-­бро­-дик \n\t батон\t\
+    \nбудка\t\nсобака\t\nбу-­тер-­бро-д­ний\n\b\nПослідовність дій\nЯ готую бутерброд\n\
+    Що мені потрібно? Продовж ряд.\n \n ...\nУстанови послідовність дій за малюнком.\
+    \ \n\t\nЯ кладу лист салату на хліб.\n\t\nЯ беру шматок хліба.\n\t\nЯ кладу сир\
+    \ і ковбасу на лист салату.\n\t\nЯ їм бутерброд. Смачно! \n\t\nЯ на-ма-щу-ю масло\
+    \ на хліб. \n \n1\n2\nБ б\nб у |т е р |б р од\n1\n2\n3\n4\n5"
+  section_title: Сторінка 12
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
 - score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0029
+  text: "30\nЗнайди слово до схеми. \n\t\nїжа\t\nї-жа-чи-ха\t\nї-хав\t\nКи-їв\n\t\
+    \ їжак\t\nї-жа-че-ня\t\nпо-ї-хав\t\nУ-кра-ї-на\n\t їжаки\t си-ро-їж-ка\t\nпо-їзд\t\
+    \nу-кра-їн-ці\n\b\n\t Один — багато\nЯкі слова називають багато предметів?\n\t\
+    \ гай — гаї\t\nмузей — музеї\n\t чай — чаї\t\nтрамвай — трамваї \n\b\nЗаголовок.\
+    \ Передбачення \nЧому їжачок колючий? Що було б, якби він був без голок? \nОдяг\
+    \ для їжачка\nУ сім’ї їжаків на-ро-ди-ло-ся їжаченя. Ма-\nлень-ке, пу-хна-сте,\
+    \ зовсім без голок. Їжак та \nї-жа-чи-ха су-му-ва-ли. З’їсть лисичка ї-жа-че-ня.\
+    \ \n"
+  section_title: Сторінка 30
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
   chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0017
   text: "16\nЙ й\nБачу Й, й (йот). Чую  [й].\nа й в а\n [ •  =   |  –• ]\nа й с т\
     \ р и\n* а й в о р о\nа\nо\nи\nі\nЙ\nга\nми\nрі\nЙ\nн о к\nлій- \n\t\nліній-\n\
@@ -94,17 +144,17 @@ rag_chunks:
   author: zaharijchuk
   page: ''
   trust_tier: 1
-- score: 0.1111111119389534
-  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0062
-  text: "63\nЗнайди слово — підпис до малюнка. \nВідшукай слово до схеми.\n \nчо-бо-ти\
-    \ \nчовник \nжучок \nніч\n че-ре-ви-ки \nчасник \nрачок \nпіч\n си-ни-чка \nкабачок\
-    \ \nпавучок \nріч\n \nТекст. Тема тексту. Заголовок\nЯКИЙ ЧАЙ СМАЧНІШИЙ?\nМама\
-    \ заварила чай у чайниках. \nТато пив чорний чай із пиріжками. Мама пила \nзелений\
-    \ чай із печивом. Марічка пила квітковий \nчай із тістечками. \nВ усіх був смачний\
-    \ і корисний чай.\n Який чай пила Марічка? мама Марічки? Який чай пив \nтато Марічки?\
-    \ Як ти думаєш, чому в усіх був різний чай? "
-  section_title: Сторінка 63
-  grade: 1
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0041
+  text: "40\n• Склади речення зі словами з протилежним значенням.\nЗразок. Компот\
+    \ рідкий, а кисіль густий.\nМорозиво ..., а чай ... . Сіль солона, а цукор ...\
+    \ .\nСік жовтий, а вода ... . Тістечко маленьке, а пиріг ... .\n• Запиши слово\
+    \ — назву ознаки.\nПиріг з вишнями — вишневий пиріг. Сік із абрикосів — ... \n\
+    сік. Компот із груш — ... компот. Кисіль зі слив — ... кисіль. \nМорозиво з полуниці\
+    \ — ... морозиво.\n• Які вирази правильні: вишневі вареники, вишневий колір, \n\
+    вишневий сад? Склади речення з одним із них.\n"
+  section_title: Сторінка 40
+  grade: 2
   author: bolshakova
   page: ''
   trust_tier: 2

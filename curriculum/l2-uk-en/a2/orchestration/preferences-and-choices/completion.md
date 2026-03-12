@@ -2,9 +2,9 @@ PASS: pipeline a2 24
 
   Module:   preferences-and-choices
   Track:    a2
-  Mode:     v3
-  Words:    4222 (target: 3000)
+  Mode:     v5
+  Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T02:42:46Z
+  Date:     2026-03-12T09:45:04Z

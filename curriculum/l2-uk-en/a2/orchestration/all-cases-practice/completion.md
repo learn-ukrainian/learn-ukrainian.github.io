@@ -2,9 +2,9 @@ PASS: pipeline a2 11
 
   Module:   all-cases-practice
   Track:    a2
-  Mode:     v3
-  Words:    3781 (target: 3000)
+  Mode:     v5
+  Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T02:37:35Z
+  Date:     2026-03-12T08:48:06Z
