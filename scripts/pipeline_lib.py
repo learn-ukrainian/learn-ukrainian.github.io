@@ -2392,21 +2392,32 @@ def build_placeholders(ctx: ModuleContext) -> None:
     else:
         placeholders["PRONUNCIATION_VIDEOS"] = ""
 
-    # Shared rules — tier-aware: beginner gets minimal rules, core/seminar get full set
+    # Tier detection
     tier = _get_prompt_tier(ctx.track, ctx.module_num)
-    # Core and seminar share the same rules (can diverge later by adding a seminar file)
+
+    # Quality dimensions — tier-aware (#844): beginner/core get base dimensions,
+    # seminar gets extended dimensions (decolonization, primary sources).
+    _qd_file = "_shared-quality-dimensions-seminar.md" if tier == "seminar" else "_shared-quality-dimensions.md"
+    placeholders["QUALITY_DIMENSIONS"] = _read_phase_file(_qd_file)
+
+    # Pre-flight instructions (#844) — injected into content prompts.
+    # Skipped when --skip-preflight is set on the context.
+    if getattr(ctx, "skip_preflight", False):
+        placeholders["PREFLIGHT_INSTRUCTIONS"] = ""
+    else:
+        _preflight_raw = _read_phase_file("_shared-preflight.md")
+        placeholders["PREFLIGHT_INSTRUCTIONS"] = _preflight_raw
+
+    # Legacy shared rules — kept as empty string for backward compatibility with
+    # templates that still reference {SHARED_CONTENT_RULES} / {SELF_AUDIT_SNIPPET}.
+    # New templates (#844) use {QUALITY_DIMENSIONS} + {PREFLIGHT_INSTRUCTIONS} instead.
     rules_tier = "beginner" if tier == "beginner" else "core"
     _shared_rules_file = f"_shared-content-rules-{rules_tier}.md"
     placeholders["SHARED_CONTENT_RULES"] = _read_phase_file(_shared_rules_file)
     placeholders["SHARED_ACTIVITY_RULES"] = _read_phase_file("_shared-activity-rules.md")
-    # Self-audit: beginner tier skips it (validate phase catches everything);
-    # core/seminar keep the full self-audit snippet.
     if tier == "beginner":
         placeholders["SELF_AUDIT_SNIPPET"] = ""
     else:
-        # Resolve {CONTENT_PATH} inside the snippet so nested placeholders expand correctly.
-        # fill_template does a single pass; snippets included via {SELF_AUDIT_SNIPPET} would
-        # otherwise leave {CONTENT_PATH} unresolved in the final prompt.
         _self_audit_raw = _read_phase_file("_shared-self-audit.md")
         placeholders["SELF_AUDIT_SNIPPET"] = _self_audit_raw.replace(
             "{CONTENT_PATH}", placeholders.get("CONTENT_PATH", "")
@@ -3247,6 +3258,21 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         content_text = None
         if output_file.exists():
             raw = output_file.read_text(encoding="utf-8")
+
+            # Pre-flight check (#844): if agent output contains a FAIL preflight,
+            # save the report and halt — do not extract content.
+            preflight_text = _extract_delimited_content(raw, "===PREFLIGHT_START===", "===PREFLIGHT_END===")
+            if preflight_text:
+                preflight_file = ctx.orch_dir / "preflight-report.md"
+                preflight_file.write_text(preflight_text, encoding="utf-8")
+                preflight_failed = "status: FAIL" in preflight_text or "status:FAIL" in preflight_text
+                if preflight_failed:
+                    log("  content: PRE-FLIGHT FAILED — agent halted before generating content")
+                    log(f"  content: Report saved → {preflight_file.name}")
+                    return False
+                else:
+                    log("  content: Pre-flight PASSED → proceeding with content extraction")
+
             content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
             friction = _extract_delimited_content(raw, "===FRICTION_START===", "===FRICTION_END===")
             if friction:
