@@ -880,3 +880,86 @@ class TestRequiredTypesFromPlan:
         assert "quiz" in result
         assert "fill-in" in result
         assert "match-up" in result
+
+
+class TestCheckpointTemplateRouting:
+    """Checkpoint modules get dedicated templates (issue #842)."""
+
+    def test_is_checkpoint_module_prefix(self):
+        from pipeline_lib import _is_checkpoint_module
+        assert _is_checkpoint_module("checkpoint-first-contact") is True
+        assert _is_checkpoint_module("checkpoint-cases") is True
+        assert _is_checkpoint_module("checkpoint-daily-life") is True
+
+    def test_is_checkpoint_module_suffix(self):
+        from pipeline_lib import _is_checkpoint_module
+        assert _is_checkpoint_module("c1-1-checkpoint") is True
+        assert _is_checkpoint_module("business-checkpoint") is True
+        assert _is_checkpoint_module("c2-3-midpoint-checkpoint") is True
+
+    def test_is_checkpoint_module_false(self):
+        from pipeline_lib import _is_checkpoint_module
+        assert _is_checkpoint_module("greetings-and-politeness") is False
+        assert _is_checkpoint_module("the-cyrillic-code-i") is False
+        assert _is_checkpoint_module("food-vocabulary") is False
+
+    def test_beginner_checkpoint_content_template(self):
+        from pipeline_lib import _get_content_template
+        result = _get_content_template("a1", 14, slug="checkpoint-first-contact")
+        assert result == "beginner-checkpoint.md"
+
+    def test_core_checkpoint_content_template(self):
+        from pipeline_lib import _get_content_template
+        # b1 module_num=5 is core tier
+        result = _get_content_template("b1", 5, slug="checkpoint-grammar")
+        assert result == "core-checkpoint.md"
+
+    def test_non_checkpoint_beginner_content_template(self):
+        from pipeline_lib import _get_content_template
+        result = _get_content_template("a1", 5, slug="greetings-and-politeness")
+        assert result == "beginner-content.md"
+
+    def test_non_checkpoint_no_slug_unchanged(self):
+        from pipeline_lib import _get_content_template
+        # Without slug, routing is unchanged (backward compatibility)
+        result = _get_content_template("a1", 14)
+        assert result == "beginner-content.md"
+
+    def test_beginner_checkpoint_activities_template(self):
+        from pipeline_lib import _get_activities_template
+        result = _get_activities_template("a1", 14, slug="checkpoint-first-contact")
+        assert result == "beginner-checkpoint-activities.md"
+
+    def test_core_checkpoint_activities_template(self):
+        from pipeline_lib import _get_activities_template
+        result = _get_activities_template("b1", 5, slug="checkpoint-grammar")
+        assert result == "core-checkpoint-activities.md"
+
+    def test_non_checkpoint_activities_template(self):
+        from pipeline_lib import _get_activities_template
+        result = _get_activities_template("a1", 14, slug="food-vocabulary")
+        assert result == "beginner-activities.md"
+
+    def test_checkpoint_review_guidance_populated(self):
+        from pipeline_lib import _get_checkpoint_review_guidance
+        ctx = FakeContext(slug="checkpoint-first-contact")
+        result = _get_checkpoint_review_guidance(ctx)
+        assert "Checkpoint-Specific Review Criteria" in result
+        assert "No new material introduced" in result
+
+    def test_checkpoint_review_guidance_empty_for_normal(self):
+        from pipeline_lib import _get_checkpoint_review_guidance
+        ctx = FakeContext(slug="greetings-and-politeness")
+        result = _get_checkpoint_review_guidance(ctx)
+        assert result == ""
+
+    def test_suffix_checkpoint_routes_to_checkpoint_template(self):
+        from pipeline_lib import _get_content_template
+        # C1 module with checkpoint at the END of slug
+        result = _get_content_template("c1", 20, slug="c1-1-checkpoint")
+        assert result == "core-checkpoint.md"
+
+    def test_suffix_checkpoint_activities_template(self):
+        from pipeline_lib import _get_activities_template
+        result = _get_activities_template("c1", 20, slug="c1-1-checkpoint")
+        assert result == "core-checkpoint-activities.md"

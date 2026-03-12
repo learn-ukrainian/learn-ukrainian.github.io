@@ -849,3 +849,35 @@ class TestCitationDensityRegex:
         originals = re.findall(r'<!--\s*original:', content)
         assert len(citations) == 0
         assert len(originals) == 0
+
+
+class TestRAGReviewTools:
+    """RAG tools are available during review phases (issue #840)."""
+
+    def test_rag_review_tools_defined(self):
+        """_RAG_REVIEW_TOOLS constant contains the expected RAG tools."""
+        from pipeline_v5 import _RAG_REVIEW_TOOLS
+        expected = {
+            "mcp__rag__verify_word",
+            "mcp__rag__verify_lemma",
+            "mcp__rag__search_text",
+            "mcp__rag__search_images",
+            "mcp__rag__search_literary",
+        }
+        assert set(_RAG_REVIEW_TOOLS) == expected
+
+    def test_d1_tools_include_rag(self):
+        """D1 dispatch tools include both filesystem and RAG tools."""
+        from pipeline_v5 import _RAG_REVIEW_TOOLS
+        d1_tools = ["Read", "Grep", "Glob", "Edit"] + _RAG_REVIEW_TOOLS
+        assert "Read" in d1_tools
+        assert "mcp__rag__verify_word" in d1_tools
+        assert "mcp__rag__search_text" in d1_tools
+
+    def test_d2_tools_include_rag(self):
+        """D2 repair tools include both Edit/Grep and RAG tools."""
+        from pipeline_v5 import _RAG_REVIEW_TOOLS
+        d2_tools = ["Edit", "Grep"] + _RAG_REVIEW_TOOLS
+        assert "Edit" in d2_tools
+        assert "mcp__rag__verify_lemma" in d2_tools
+        assert "mcp__rag__search_literary" in d2_tools

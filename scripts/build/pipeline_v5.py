@@ -113,6 +113,15 @@ TIMEOUT_FIX_CORE = 600
 TIMEOUT_FIX_SEMINAR = 600
 TIMEOUT_FIX_AUDIT_ONLY = 600
 
+# RAG tools available during review phases (VESUM verification + textbook search)
+_RAG_REVIEW_TOOLS = [
+    "mcp__rag__verify_word",
+    "mcp__rag__verify_lemma",
+    "mcp__rag__search_text",
+    "mcp__rag__search_images",
+    "mcp__rag__search_literary",
+]
+
 # Seminar tracks that get longer timeouts
 _SEMINAR_TIMEOUT_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth"}
 
@@ -2287,7 +2296,7 @@ def _try_vocab_fast_path(ctx: ModuleContext, state: dict) -> bool | None:
 
 def _resolve_activities_template(ctx: ModuleContext) -> Path | None:
     """Resolve the activities prompt template, returning None on error."""
-    activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
+    activities_template_name = _get_activities_template(ctx.track, ctx.module_num, slug=ctx.slug)
     template = PHASES_DIR / activities_template_name
     if not template.exists():
         template = PHASES_DIR / "activities.md"
@@ -2952,10 +2961,12 @@ def _review_dispatch_d1(ctx: ModuleContext, prompt_file: Path,
     """Dispatch D1 review with retry. Returns (d1_result, review_text, raw_output) or None."""
     _pre_d1_snapshots = _snapshot_module_files(ctx)
 
+    d1_tools = ["Read", "Grep", "Glob", "Edit"] + _RAG_REVIEW_TOOLS
+
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
         model=claude_model, timeout=review_timeout,
-        allow_tools=["Read", "Grep", "Glob", "Edit"],
+        allow_tools=d1_tools,
     )
     if not ok:
         log("  review: Dispatch FAILED")
@@ -2972,7 +2983,7 @@ def _review_dispatch_d1(ctx: ModuleContext, prompt_file: Path,
         ok2, raw2 = _dispatch_claude_phase(
             prompt_file, "Phase D.1 (retry)",
             model=claude_model, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob", "Edit"],
+            allow_tools=d1_tools,
         )
         if ok2:
             d1 = _parse_d1_review(raw2)
@@ -3043,10 +3054,12 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
 
     before_d2 = _snapshot_module_files(ctx)
 
+    d2_tools = ["Edit", "Grep"] + _RAG_REVIEW_TOOLS
+
     ok2, raw_output2 = _dispatch_claude_phase(
         prompt_file2, f"Phase D.2{iter_suffix}",
         model=claude_model, timeout=fix_timeout,
-        allow_tools=["Edit", "Grep"],
+        allow_tools=d2_tools,
     )
     if not ok2:
         log(f"  review: Fix dispatch failed{iter_suffix}")
