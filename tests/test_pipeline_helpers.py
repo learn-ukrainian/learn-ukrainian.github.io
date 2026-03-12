@@ -409,40 +409,42 @@ class TestBilingualifySectionTitles:
 class TestGetPedagogicalConstraints:
     def test_non_a1_returns_empty(self):
         from pipeline_lib import get_pedagogical_constraints
-        assert get_pedagogical_constraints("b1", 5) == ""
-        assert get_pedagogical_constraints("hist", 1) == ""
+        assert get_pedagogical_constraints("b1", 5, {}) == ""
+        assert get_pedagogical_constraints("hist", 1, {}) == ""
 
-    def test_m1_returns_specific_constraints(self):
+    def test_no_plan_returns_empty(self):
         from pipeline_lib import get_pedagogical_constraints
-        result = get_pedagogical_constraints("a1", 1)
-        assert len(result) > 0
+        assert get_pedagogical_constraints("a1", 1) == ""
 
-    def test_m47_returns_imperative_constraints(self):
+    def test_a1_phase_1_returns_grammar_ban(self):
         from pipeline_lib import get_pedagogical_constraints
-        result = get_pedagogical_constraints("a1", 47)
-        assert "imperative" in result.lower() or "наказов" in result.lower()
+        plan = {"phase": "A1.1 [First Contact]"}
+        result = get_pedagogical_constraints("a1", 1, plan)
+        assert "GRAMMAR BAN" in result
+        assert "BANNED" in result
 
-    def test_m15_plus_returns_constraints(self):
+    def test_a1_phase_5_allows_imperatives(self):
         from pipeline_lib import get_pedagogical_constraints
-        result = get_pedagogical_constraints("a1", 20)
-        assert len(result) > 0
+        plan = {"phase": "A1.5 [Modals, Commands & Life]"}
+        result = get_pedagogical_constraints("a1", 47, plan)
+        assert "ALLOWED" in result
 
-    def test_m5_to_m10_range(self):
+    def test_same_phase_same_constraints(self):
+        """Modules in the same phase get identical constraints."""
         from pipeline_lib import get_pedagogical_constraints
-        r5 = get_pedagogical_constraints("a1", 5)
-        r10 = get_pedagogical_constraints("a1", 10)
-        assert r5 == r10  # Same range
+        plan1 = {"phase": "A1.1 [First Contact]"}
+        plan2 = {"phase": "A1.1 [First Contact]"}
+        r1 = get_pedagogical_constraints("a1", 1, plan1)
+        r4 = get_pedagogical_constraints("a1", 4, plan2)
+        assert r1 == r4  # Same phase → same constraints
 
-    def test_m11_to_m14_range(self):
+    def test_different_phases_different_constraints(self):
         from pipeline_lib import get_pedagogical_constraints
-        r11 = get_pedagogical_constraints("a1", 11)
-        r14 = get_pedagogical_constraints("a1", 14)
-        assert r11 == r14  # Same range
-
-    def test_each_m1_through_m4_unique(self):
-        from pipeline_lib import get_pedagogical_constraints
-        results = [get_pedagogical_constraints("a1", i) for i in range(1, 5)]
-        assert len(set(results)) == 4  # Each module has unique constraints
+        plan_11 = {"phase": "A1.1 [First Contact]"}
+        plan_12 = {"phase": "A1.2 [Verbs & Sentences]"}
+        r1 = get_pedagogical_constraints("a1", 1, plan_11)
+        r15 = get_pedagogical_constraints("a1", 15, plan_12)
+        assert r1 != r15
 
 
 # ============================================================================
@@ -458,22 +460,46 @@ class TestGetDecodableVocabulary:
         from pipeline_lib import get_decodable_vocabulary
         assert get_decodable_vocabulary("a1", 4, {}) == ""
 
-    def test_m1_returns_curated_words(self):
+    def test_plan_with_decodable_letters(self):
+        """Plans with decodable_letters get charset-filtered vocabulary."""
         from pipeline_lib import get_decodable_vocabulary
-        result = get_decodable_vocabulary("a1", 1, {})
+        plan = {
+            "decodable_letters": "А О У І М Н Т К С Л",
+            "vocabulary_hints": {
+                "required": ["мама (mom) — decodable", "тато (dad) — decodable"],
+                "recommended": ["сон (dream) — decodable"],
+            },
+        }
+        result = get_decodable_vocabulary("a1", 1, plan)
         assert "мама" in result
-        assert len(result) > 0
+        assert "тато" in result
+        assert "сон" in result
 
-    def test_m2_returns_curated_words(self):
+    def test_plan_filters_non_decodable(self):
+        """Words with letters outside decodable_letters are excluded."""
         from pipeline_lib import get_decodable_vocabulary
-        result = get_decodable_vocabulary("a1", 2, {})
-        assert "кіт" in result or "тато" in result
+        plan = {
+            "decodable_letters": "А О У І М Н Т К С Л",
+            "vocabulary_hints": {
+                "required": ["мама (mom) — decodable", "хліб (bread) — uses Х Б"],
+            },
+        }
+        result = get_decodable_vocabulary("a1", 1, plan)
+        assert "мама" in result
+        word_line = [l for l in result.splitlines() if l.startswith("Available")][0]
+        assert "хліб" not in word_line
 
-    def test_m3_uses_plan_vocab_hints(self):
+    def test_plan_without_decodable_letters(self):
+        """Plans without decodable_letters get no restriction."""
         from pipeline_lib import get_decodable_vocabulary
-        plan = {"vocabulary_hints": ["будинок", "дах"]}
-        result = get_decodable_vocabulary("a1", 3, plan)
-        assert len(result) > 0
+        plan = {"vocabulary_hints": {"required": ["мама (mom)"]}}
+        assert get_decodable_vocabulary("a1", 1, plan) == ""
+        assert get_decodable_vocabulary("a1", 2, plan) == ""
+        assert get_decodable_vocabulary("b1", 1, plan) == ""
+
+    def test_empty_plan(self):
+        from pipeline_lib import get_decodable_vocabulary
+        assert get_decodable_vocabulary("a1", 1, {}) == ""
 
 
 # ============================================================================
@@ -738,7 +764,7 @@ class TestSelfAuditSnippetContentPath:
 
     fill_template does a single pass: when a snippet is injected via {SELF_AUDIT_SNIPPET},
     any {CONTENT_PATH} inside it would remain unresolved. The fix pre-resolves {CONTENT_PATH}
-    in the snippet text inside write_placeholders, before storing it in the placeholders dict.
+    in the snippet text inside build_placeholders, before storing it in the placeholders dict.
     """
 
     def test_self_audit_snippet_resolves_content_path(self):
@@ -746,7 +772,7 @@ class TestSelfAuditSnippetContentPath:
         fake_snippet = "Write to {CONTENT_PATH} and run audit.\ncat > {CONTENT_PATH}"
         fake_content_path = "/some/module/path.md"
 
-        # Simulate the resolution logic from write_placeholders
+        # Simulate the resolution logic from build_placeholders
         resolved = fake_snippet.replace("{CONTENT_PATH}", fake_content_path)
 
         assert "{CONTENT_PATH}" not in resolved, (
@@ -781,14 +807,13 @@ class TestSelfAuditSnippetContentPath:
 # Bukvar REQUIRED_TYPES for A1 M1-4 + dict activity_hints parsing
 # ============================================================================
 
-class TestBukvarRequiredTypes:
-    """A1 modules 1-4 must include bukvar activity types (watch-and-repeat, classify, image-to-letter)."""
+class TestRequiredTypesFromPlan:
+    """REQUIRED_TYPES is derived from plan activity_hints (source of truth)."""
 
-    def _simulate_required_types_logic(self, track, module_num, plan, initial_required=""):
-        """Reproduce the REQUIRED_TYPES logic from write_placeholders()."""
+    def _simulate_required_types_logic(self, plan, initial_required=""):
+        """Reproduce the REQUIRED_TYPES logic from build_placeholders()."""
         placeholders = {"REQUIRED_TYPES": initial_required, "PRIORITY_TYPES": "fill-in, match-up, anagram"}
 
-        # Step 1: populate from plan hints or priority (same as pipeline_lib)
         if not placeholders.get("REQUIRED_TYPES"):
             plan_hints = plan.get("activity_hints", [])
             if plan_hints and isinstance(plan_hints, list):
@@ -803,45 +828,24 @@ class TestBukvarRequiredTypes:
                 priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
                 placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
 
-        # Step 2: bukvar augmentation
-        if track.lower() == "a1" and module_num <= 4:
-            bukvar_types = ["watch-and-repeat", "classify", "image-to-letter"]
-            existing = [t.strip() for t in placeholders.get("REQUIRED_TYPES", "").split(",") if t.strip()]
-            for bt in bukvar_types:
-                if bt not in existing:
-                    existing.append(bt)
-            placeholders["REQUIRED_TYPES"] = ", ".join(existing)
-
         return placeholders["REQUIRED_TYPES"]
 
-    def test_a1_m1_gets_bukvar_types(self):
-        result = self._simulate_required_types_logic("a1", 1, {})
-        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
-            assert bt in result, f"Missing bukvar type: {bt}"
-
-    def test_a1_m4_gets_bukvar_types(self):
-        result = self._simulate_required_types_logic("a1", 4, {})
-        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
-            assert bt in result
-
-    def test_a1_m5_does_not_get_bukvar_types(self):
-        result = self._simulate_required_types_logic("a1", 5, {})
-        assert "image-to-letter" not in result
-
-    def test_a2_does_not_get_bukvar_types(self):
-        result = self._simulate_required_types_logic("a2", 1, {})
-        assert "image-to-letter" not in result
-
-    def test_bukvar_deduplicates(self):
-        """If plan hints already include bukvar types, don't duplicate."""
+    def test_plan_with_bukvar_types(self):
+        """Plan with bukvar activity_hints produces correct REQUIRED_TYPES."""
         plan = {"activity_hints": [
             {"type": "watch-and-repeat", "focus": "test"},
             {"type": "classify", "focus": "test"},
+            {"type": "image-to-letter", "focus": "test"},
+            {"type": "quiz", "focus": "test"},
         ]}
-        result = self._simulate_required_types_logic("a1", 1, plan)
-        assert result.count("watch-and-repeat") == 1
-        assert result.count("classify") == 1
-        assert "image-to-letter" in result  # added since missing
+        result = self._simulate_required_types_logic(plan)
+        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
+            assert bt in result, f"Missing type: {bt}"
+
+    def test_empty_plan_uses_priority_fallback(self):
+        """Plans without activity_hints fall back to PRIORITY_TYPES."""
+        result = self._simulate_required_types_logic({})
+        assert "fill-in" in result
 
     def test_dict_hints_extract_type_field(self):
         """Dict activity_hints must extract 'type' field, not stringify the whole dict."""
@@ -849,22 +853,15 @@ class TestBukvarRequiredTypes:
             {"type": "watch-and-repeat", "focus": "Watch video", "items": 7},
             {"type": "quiz", "focus": "Test knowledge"},
         ]}
-        result = self._simulate_required_types_logic("a1", 1, plan)
+        result = self._simulate_required_types_logic(plan)
         assert "watch-and-repeat" in result
         assert "quiz" in result
-        assert "focus" not in result  # must NOT contain dict field names
+        assert "focus" not in result
 
     def test_string_hints_work(self):
-        """String activity_hints still work as before."""
+        """String activity_hints still work."""
         plan = {"activity_hints": ["quiz", "fill-in", "match-up"]}
-        result = self._simulate_required_types_logic("a1", 1, plan)
+        result = self._simulate_required_types_logic(plan)
         assert "quiz" in result
         assert "fill-in" in result
-        # bukvar types added on top
-        assert "watch-and-repeat" in result
-
-    def test_empty_plan_falls_back_to_priority_types(self):
-        result = self._simulate_required_types_logic("a1", 1, {})
-        # Should get first 3 priority types + bukvar types
-        assert "fill-in" in result
-        assert "watch-and-repeat" in result
+        assert "match-up" in result

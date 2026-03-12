@@ -358,14 +358,16 @@ def _run_rule_engine(content_text: str, ctx: "ModuleContext") -> list[dict]:
     """Run rule engine checks. Returns list of issue dicts."""
     from audit.checks.rule_engine import run_rule_engine
     level_code = ctx.track.split("-")[0].upper()
-    return run_rule_engine(content_text, level_code, ctx.module_num, ctx.track)
+    return run_rule_engine(content_text, level_code, ctx.module_num, ctx.track,
+                           plan=getattr(ctx, "plan", None))
 
 
 def _run_morphological_validator(content_text: str, ctx: "ModuleContext") -> list[dict]:
     """Run VESUM morphological validator. Returns list of issue dicts."""
     from audit.checks.morphological_validator import validate_morphology
     level_code = ctx.track.split("-")[0].upper() if "-" in ctx.track else ctx.track.upper()
-    return validate_morphology(content_text, level_code, ctx.module_num, ctx.track)
+    return validate_morphology(content_text, level_code, ctx.module_num, ctx.track,
+                               plan=getattr(ctx, "plan", None))
 
 
 def _run_content_quality_checks(content_text: str, ctx: "ModuleContext",

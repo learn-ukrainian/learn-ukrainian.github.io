@@ -517,25 +517,17 @@ def _all_issues_diffuse(audit_output: str) -> bool:
     return not has_targeted
 
 
-def _meta_has_oversized_sections(ctx: ModuleContext) -> bool:
-    """Return True if any meta section consumes >25% of word_target."""
-    import yaml
-    meta_path = ctx.paths.get("meta")
-    if not meta_path or not meta_path.exists():
+def _has_oversized_sections(ctx: ModuleContext) -> bool:
+    """Return True if any plan section consumes >25% of word_target."""
+    wt = ctx.word_target
+    if not wt:
         return False
-    try:
-        data = yaml.safe_load(meta_path.read_text("utf-8")) or {}
-        wt = data.get("word_target", 0)
-        if not wt:
-            return False
-        threshold = wt * _META_SECTION_MAX_PCT
-        outline = data.get("content_outline", [])
-        return any(
-            isinstance(s, dict) and s.get("words", 0) > threshold
-            for s in outline
-        )
-    except Exception:
-        return False
+    threshold = wt * _META_SECTION_MAX_PCT
+    outline = ctx.content_outline
+    return any(
+        isinstance(s, dict) and s.get("words", 0) > threshold
+        for s in outline
+    )
 
 
 def _research_file_is_usable(ctx: ModuleContext) -> bool:
@@ -578,13 +570,11 @@ def _build_vocab_only_prompt(ctx: ModuleContext) -> str | None:
     """Build a lightweight prompt for vocabulary-only generation."""
     content_path = ctx.paths.get("md")
     plan_path = ctx.paths.get("plan")
-    meta_path = ctx.paths.get("meta")
 
     if not content_path or not content_path.exists():
         return None
 
     plan_ref = f"\n\n**Plan file** (vocabulary_hints — follow this list):\n```\n{plan_path}\n```" if plan_path and plan_path.exists() else ""
-    meta_ref = f"\n\n**Meta file** (vocab count target):\n```\n{meta_path}\n```" if meta_path and meta_path.exists() else ""
 
     return f"""You are a TEXT GENERATOR. Generate ONLY vocabulary YAML for a Ukrainian language module.
 
@@ -592,7 +582,7 @@ Read the lesson content:
 ```
 {content_path}
 ```
-{plan_ref}{meta_ref}
+{plan_ref}
 
 ## Task
 
@@ -979,6 +969,17 @@ def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
     research_path = ctx.paths.get("research")
     if not research_path or not research_path.exists():
         return
+    # Replace existing Resource Discovery section if present
+    existing = research_path.read_text(encoding="utf-8")
+    if "## Resource Discovery" in existing:
+        # Strip old section (everything from ## Resource Discovery to EOF or next ## heading)
+        import re
+        existing = re.sub(
+            r"\n*## Resource Discovery\n.*",
+            "", existing, flags=re.DOTALL,
+        ).rstrip()
+        research_path.write_text(existing + "\n", encoding="utf-8")
+        log("  discover: Replaced old Resource Discovery section")
     lines = ["\n\n## Resource Discovery\n"]
     if relevant_vids:
         lines.append("### Videos")
@@ -1501,7 +1502,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         fix_instructions.append(_build_fallback_instructions(audit_output))
 
     # Pedagogical constraints (compact)
-    ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num)
+    ped_constraints = get_pedagogical_constraints(ctx.track, ctx.module_num, ctx.plan)
     ped_section = ""
     if ped_constraints:
         ped_section = f"\n## Constraints (do NOT violate while fixing)\n\n{ped_constraints}\n"
@@ -1639,15 +1640,8 @@ def _check_research_skip(ctx: ModuleContext, state: dict) -> bool | None:
         log(f"  research: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
         return True
 
-    if _meta_has_oversized_sections(ctx):
-        log("  research: Meta health check FAILED — oversized section detected, re-running")
-        state.get("phases", {}).pop("research", None)
-        save_state(ctx, state)
-        return None  # re-run
-
-    meta_path = ctx.paths.get("meta")
-    if meta_path and not meta_path.exists():
-        log("  research: State says complete but meta missing — re-running")
+    if _has_oversized_sections(ctx) and not _research_file_is_usable(ctx):
+        log("  research: Oversized section detected + no usable research, re-running")
         state.get("phases", {}).pop("research", None)
         save_state(ctx, state)
         return None  # re-run
@@ -1693,7 +1687,7 @@ def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
             search_terms.append(str(kw))
 
     # 3. Topic title — only if it has Cyrillic (skip English-only titles)
-    topic = ctx.meta.get("topic_title", ctx.topic_title or "")
+    topic = ctx.topic_title or ctx.slug.replace("-", " ")
     if topic and has_cyrillic(topic):
         uk_topic = topic.split("(")[0].strip()
         if uk_topic:
@@ -1875,31 +1869,13 @@ def _apply_meta_outline(ctx: ModuleContext, raw_output: str,
 
     if not (outline_data and isinstance(outline_data, dict) and "content_outline" in outline_data):
         log("  research: WARNING \u2014 no content_outline in META_OUTLINE block")
-        (ctx.orch_dir / "research-meta-outline-raw.md").write_text(meta_text or "", "utf-8")
         return True  # non-fatal
 
     outline_data["content_outline"] = bilingualify_section_titles(
         outline_data["content_outline"], ctx.track, ctx.module_num,
     )
-    meta_path = ctx.paths.get("meta")
-    if meta_path and meta_path.exists():
-        try:
-            existing_meta = yaml.safe_load(meta_path.read_text("utf-8")) or {}
-            existing_meta["content_outline"] = outline_data["content_outline"]
-            meta_path.write_text(
-                yaml.dump(existing_meta, allow_unicode=True,
-                          default_flow_style=False, sort_keys=False),
-                "utf-8",
-            )
-            ctx.content_outline = outline_data["content_outline"]  # type: ignore[attr-defined]
-            mode = "meta-only" if research_exists else "full"
-            log(f"  research: Meta outline updated [{mode}] \u2192 {meta_path.name} "
-                f"({len(outline_data['content_outline'])} sections)")
-        except Exception as e:
-            log(f"  research: WARNING \u2014 could not update meta: {e}")
-    else:
-        (ctx.orch_dir / "research-meta-outline.yaml").write_text(meta_text, "utf-8")
-        log("  research: Meta outline saved \u2192 research-meta-outline.yaml (no meta path)")
+    ctx.content_outline = outline_data["content_outline"]  # type: ignore[attr-defined]
+    log(f"  research: Outline from LLM applied ({len(outline_data['content_outline'])} sections)")
     return True
 
 
@@ -1910,9 +1886,41 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
         if skip is True:
             return True
         # skip is None means state was cleared, fall through to re-run
+    else:
+        # Research not marked complete in state, but file may already exist
+        # (e.g. batch ran research+discover with --stop-before content).
+        # Don't redo expensive research if the file is usable.
+        force_research = getattr(ctx, "force_research", False)
+        if not force_research and _research_file_is_usable(ctx):
+            log("  research: SKIP (research file exists and is usable)")
+            mark_complete(state, "research", ctx, note="file-exists")
+            return True
 
     is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
     is_pro = ctx.track in PRO_TRACKS
+
+    # --rebuild: normally delete old research file so it gets regenerated fresh
+    # (research files live outside orch dir and survive orch cleanup)
+    # BUT: if the research file is already usable, keep it — research is the
+    # most expensive phase and batch runs should not redo completed work.
+    force_research = getattr(ctx, "force_research", False)
+    if ctx.rebuild and not force_research:
+        research_path = ctx.paths.get("research")
+        if research_path and research_path.exists():
+            if _research_file_is_usable(ctx):
+                log("  research: --rebuild — keeping existing research (usable)")
+                mark_complete(state, "research", ctx, note="rebuild-kept")
+                # Still run discovery merge if needed
+                _run_discovery_within_research(ctx, state)
+                return True
+            else:
+                research_path.unlink()
+                log("  research: --rebuild — deleted old research file (unusable)")
+    elif ctx.rebuild and force_research:
+        research_path = ctx.paths.get("research")
+        if research_path and research_path.exists():
+            research_path.unlink()
+            log("  research: --rebuild + --force-phase — deleted research file")
     research_exists = (is_seminar or is_pro) and _research_file_is_usable(ctx)
 
     template_name = _select_research_template(ctx, is_seminar, is_pro, research_exists)
@@ -1931,7 +1939,7 @@ def phase_research(ctx: ModuleContext, state: dict) -> bool:
             log(f"  research: Injected {len(textbook_ctx):,} chars of textbook context")
         else:
             overrides["TEXTBOOK_CONTEXT"] = "(No textbook excerpts found for this topic)"
-    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file,
+    if not fill_template(template, ctx.placeholders, prompt_file,
                          overrides=overrides):
         return False
 
@@ -2417,7 +2425,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
     # Build prompt
     prompt_file = ctx.orch_dir / "activities-prompt.md"
     overrides = {}
-    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=overrides):
+    if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
         return False
 
     # Pre-dispatch health check
@@ -2913,7 +2921,7 @@ def _review_build_d1_prompt(ctx: ModuleContext, screen: DScreenResult,
     russicism_table = _get_russicism_table(ctx.track)
 
     prompt_file = ctx.orch_dir / "review-prompt.md"
-    if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+    if not fill_template(d1_template, ctx.placeholders, prompt_file):
         return None
 
     prompt_text = prompt_file.read_text("utf-8")
@@ -3025,7 +3033,7 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
     failures += _extract_vesum_failures(ctx)
 
     prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
-    if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
+    if not fill_template(d2_template, ctx.placeholders, prompt_file2):
         return False, audit_out
 
     prompt2_text = prompt_file2.read_text("utf-8")

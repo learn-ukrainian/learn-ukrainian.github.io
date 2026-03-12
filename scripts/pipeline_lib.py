@@ -258,164 +258,80 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
     "c2": "No grammar restrictions. Full literary Ukrainian.",
 }
 
-PEDAGOGICAL_CONSTRAINTS: dict[str, str] = {
-    "a1-m01": (
-        "DECODABILITY (M1 — 7 known letters: А, О, У, М, Л, Н, С):\n"
-        "- Words in reading drills MUST use ONLY these 7 letters (e.g., мама, сом, сон, масло, ананас)\n"
-        "- Words with unknown letters (кіт, вода, привіт) may appear ONLY as labelled vocabulary "
-        "with immediate English translation: «Привіт!» (Hello!)\n"
-        "- Video example words for the letter being taught (ананас for А) are fine — they are heard, not read\n\n"
-        "GRAMMAR BAN (no verbs exist yet in the student's knowledge):\n"
+# Phase-level pedagogical constraints for A1 — keyed by plan `phase` field.
+# Grammar/imperative bans are genuinely per-phase (not per-module).
+# Decodability is NOT here — it's derived from the plan at runtime.
+_A1_PHASE_CONSTRAINTS: dict[str, str] = {
+    "A1.1": (
+        "GRAMMAR BAN (pre-verbal phase — no verbs exist yet):\n"
         "- NO imperative forms: Слухайте, Читайте, Повторюйте, Пишіть, Дивіться — ALL BANNED\n"
         "- NO verb conjugation of any kind (present, past, future)\n"
-        "- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat after the video'\n"
-        "- Allowed Ukrainian structures: bare nouns only (мама, сом, масло)\n\n"
+        "- Classroom instructions MUST be in English: 'Listen carefully', 'Read aloud', 'Repeat'\n"
+        "- Allowed Ukrainian structures: bare nouns, noun phrases, Це + noun\n\n"
         "METALANGUAGE:\n"
-        "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)', 'consonants (приголосні)'\n"
-        "- Section headings MUST be bilingual as shown in the content_outline (e.g., '## Голосні — Vowels')\n"
-        "- NEVER write Ukrainian-only section headers or explanatory prose — the student cannot read it yet"
-    ),
-    "a1-m02": (
-        "DECODABILITY (M2 — 14 known letters: А О У М Л Н С + К И І Р В Т Е):\n"
-        "- Reading drills MUST use ONLY these 14 letters (e.g., кіт, молоко, місто, рис, сир, тато, вікно, він)\n"
-        "- Still unknown: Б, Д, П, З, Г, Ґ, Х, Ж, Ш, Ч, Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф\n"
-        "- Words needing unknown letters require immediate English translation\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — ALL BANNED. Use English for instructions.\n"
-        "- NO verb conjugation of any kind\n"
-        "- Allowed: bare nouns, noun phrases using known letters\n\n"
-        "METALANGUAGE:\n"
-        "- All terminology English-first with Ukrainian in parentheses"
-    ),
-    "a1-m03": (
-        "DECODABILITY (M3 — 23 known letters: previous 14 + Б Д П З Г Х Ж Ш Ч):\n"
-        "- Nearly all common text is readable now. Reading drills use these 23 letters.\n"
-        "- Still unknown: Й, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф, Ґ + digraphs ДЖ, ДЗ\n"
-        "- Words needing unknown letters require English translation\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — BANNED. English for instructions.\n"
-        "- NO verb conjugation\n"
-        "- Allowed: bare nouns, noun phrases\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m04": (
-        "DECODABILITY (M4 — full 33-letter alphabet now complete):\n"
-        "- No letter restrictions — all Ukrainian words are decodable after this module.\n\n"
-        "GRAMMAR BAN (no verbs exist yet):\n"
-        "- NO imperative forms — BANNED. English for instructions.\n"
-        "- NO verb conjugation\n"
-        "- Allowed: bare nouns, noun phrases, Це + noun (preview)\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m05-10": (
-        "SEQUENCE CONSTRAINTS (M5-10 — Phonology & First Grammar):\n"
-        "Full alphabet known. Modules teach: syllables (M5), stress (M6), gender (M7), "
-        "greetings (M8), Це/Я/Мене звати (M9), Що це? (M10).\n\n"
-        "GRAMMAR STATUS:\n"
-        "- AVAILABLE: bare nouns, gender classification, Це + noun, Я + noun, "
-        "memorized politeness phrases (Дякую, Будь ласка, Вибачте from M8)\n"
-        "- FORBIDDEN: verb conjugation, imperatives, adjective agreement, plurals, all cases except nominative\n"
-        "  Exception (M6 stress): Conjugated verb forms allowed ONLY as stress pattern examples "
-        "(e.g., писа́ти → пишу́ → пи́шеш to show stress mobility). Do not teach conjugation rules.\n"
-        "  Exception (M7 gender): Adjective agreement examples allowed to demonstrate what gender does "
-        "(e.g., великий стіл, нова книга, чисте вікно). Do not teach agreement rules.\n"
-        "  Exception (M8 greetings): Memorized conversational phrases with conjugated verbs allowed "
-        "as fixed chunks (e.g., 'Як справи?', 'Що ти робиш?'). Present as whole phrases, not conjugation patterns.\n"
-        "- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, "
-        "Розглянемо, Скажіть — always use English equivalents (Let us look at, Let's talk about, "
-        "Let's review, Please tell me)\n"
-        "- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
-        "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
-        "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
-        "Давайте розглянемо, Розглянемо.\n"
-        "  INSTEAD OF → USE:\n"
-        "  - Запам'ятайте → \"Remember that...\" (English)\n"
-        "  - Порівняйте → \"Compare...\" (English)\n"
-        "  - Зверніть увагу → \"Notice that...\" (English)\n"
-        "  - Подивіться → \"Look at...\" (English)\n"
-        "  - Спробуйте → \"Try to...\" (English)\n"
-        "  - Прочитайте → \"Read...\" (English)\n"
-        "  - Повторіть → \"Repeat...\" (English)\n"
-        "- Use English for all classroom instructions\n\n"
-        "VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):\n"
+        "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'\n"
+        "- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')\n"
+        "- NEVER write Ukrainian-only explanatory prose\n\n"
+        "VERB-FREE UKRAINIAN PATTERN BANK:\n"
         "- Це + noun: «Це кіт», «Це стіл»\n"
         "- Question particles: «Хто це?», «Що це?»\n"
-        "- Noun listings with gender: «стіл (він), книга (вона), вікно (воно)»\n"
+        "- Adj + noun: «великий дім», «нова книга»\n"
         "- Contextual labels: «Наприклад — For example», «А тепер — And now»\n"
-        "DO NOT use: conjugated verbs, imperatives, infinitives.\n"
-        "Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.\n\n"
-        "METALANGUAGE: English-first, Ukrainian term in parentheses on first use"
+        "DO NOT use conjugated verbs, imperatives, or infinitives."
     ),
-    "a1-m11-14": (
-        "SEQUENCE CONSTRAINTS (M11-14 — Adjectives & Plurals):\n"
-        "Student knows: alphabet, gender, greetings, Це/Я/Мене звати, basic nouns.\n"
-        "Learning: adjective agreement (M11), colors (M12), plurals (M13), checkpoint (M14).\n\n"
-        "GRAMMAR STATUS:\n"
-        "- AVAILABLE: nouns (nom. sg & pl from M13), adjective+noun agreement (from M11), "
-        "Це/Я sentences, memorized phrases\n"
-        "- FORBIDDEN: verb conjugation (starts M15), imperatives (M47), "
-        "cases beyond nominative (accusative starts M25)\n"
-        "- BANNED Ukrainian phrases: Подивімось, Поговорімо, Повторімо, Давайте розглянемо, "
-        "Розглянемо, Скажіть — always use English equivalents\n"
-        "- BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
-        "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
-        "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
-        "Давайте розглянемо, Розглянемо.\n"
-        "  INSTEAD OF → USE:\n"
-        "  - Запам'ятайте → \"Remember that...\" (English)\n"
-        "  - Порівняйте → \"Compare...\" (English)\n"
-        "  - Зверніть увагу → \"Notice that...\" (English)\n"
-        "  - Подивіться → \"Look at...\" (English)\n"
-        "  - Спробуйте → \"Try to...\" (English)\n"
-        "  - Прочитайте → \"Read...\" (English)\n"
-        "  - Повторіть → \"Repeat...\" (English)\n"
-        "- Use English for classroom instructions\n\n"
-        "VERB-FREE UKRAINIAN PATTERN BANK (use these for immersion WITHOUT verbs):\n"
-        "- Це + noun: «Це кіт», «Це нова книга»\n"
-        "- Adj + noun phrases: «великий дім», «червона сукня», «гарне місто»\n"
-        "- Question particles: «Хто це?», «Що це?», «Який?», «Яка?», «Яке?»\n"
-        "- Demonstratives: «Цей стіл», «Ця книга», «Це вікно», «Ці слова»\n"
-        "- Possessives: «мій зошит», «моя мама», «моє місто», «мої друзі»\n"
-        "- Preposition + noun: «у місті», «на столі», «з молоком»\n"
-        "- Noun listings: «кіт, собака, хом'як — це тварини»\n"
-        "- Contextual labels: «Наприклад — For example», «А тепер — And now»\n"
-        "- Comparisons (without verbs): «кіт — маленький, собака — великий»\n"
-        "DO NOT use: conjugated verbs (є, має, робить), imperatives, infinitives.\n"
-        "Every Ukrainian phrase must be VERB-FREE. Use English for any sentence requiring a verb.\n\n"
-        "METALANGUAGE: English-first, Ukrainian in parentheses"
-    ),
-    "a1-m15+": (
-        "SEQUENCE CONSTRAINTS (M15+ — Verbs & Beyond):\n"
-        "Present tense verbs start at M15. Past tense at M36. Future at M37.\n\n"
+    "A1.2": (
+        "SEQUENCE CONSTRAINTS (A1.2 — Verbs & Sentences):\n"
+        "Present tense verbs are being introduced in this phase.\n\n"
         "KEY RESTRICTION: Imperative forms (Слухайте!, Читайте!, Пишіть!) "
         "are NOT taught until M47 (imperative-and-requests). "
-        "Before M47, use indirect requests or English for instructions.\n\n"
-        "BANNED IMPERATIVE FORMS (non-exhaustive): Запам'ятайте, Уявіть, Порівняйте, "
+        "Use indirect requests or English for instructions.\n\n"
+        "BANNED IMPERATIVE FORMS: Запам'ятайте, Уявіть, Порівняйте, "
         "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
         "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
         "Давайте розглянемо, Розглянемо.\n\n"
         "INSTEAD OF → USE:\n"
         "- Запам'ятайте → \"Remember that...\" (English)\n"
-        "- Порівняйте → \"Compare...\" (English)\n"
-        "- Зверніть увагу → \"Notice that...\" (English)\n"
         "- Подивіться → \"Look at...\" (English)\n"
-        "- Спробуйте → \"Try to...\" (English)\n"
         "- Прочитайте → \"Read...\" (English)\n"
-        "- Повторіть → \"Repeat...\" (English)\n\n"
-        "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental, imperfective only) "
-        "apply in addition to this constraint."
+        "- Повторіть → \"Repeat...\" (English)"
     ),
-    "a1-m47": (
-        "SEQUENCE CONSTRAINTS (M47 — Imperative Mood):\n"
-        "This module TEACHES the imperative mood. Imperative forms are ALLOWED and REQUIRED.\n"
-        "Use imperative forms freely: читай/читайте, пиши/пишіть, скажи/скажіть, "
-        "дай/дайте, іди/ідіть, дивись/дивіться, стій/стійте, слухай/слухайте.\n\n"
-        "Both imperfective AND perfective verbs are allowed for imperatives.\n"
-        "Past tense and future tense are available (taught at M36/M37).\n\n"
-        "The standard A1 LEVEL_CONSTRAINTS (no dative, no instrumental) apply, "
-        "EXCEPT: perfective aspect is ALLOWED for imperative forms."
+    "A1.3": (
+        "SEQUENCE CONSTRAINTS (A1.3 — Cases & Navigation):\n"
+        "Present tense verbs available. Cases being introduced.\n\n"
+        "IMPERATIVE BAN still applies (taught at M47).\n"
+        "BANNED: Запам'ятайте, Порівняйте, Зверніть увагу, Подивіться, "
+        "Прочитайте, Повторіть — use English equivalents."
+    ),
+    "A1.4": (
+        "SEQUENCE CONSTRAINTS (A1.4 — Tenses & Daily Life):\n"
+        "Past tense and future tense introduced. All present tense available.\n\n"
+        "IMPERATIVE BAN still applies (taught at M47).\n"
+        "BANNED: Запам'ятайте, Порівняйте, Зверніть увагу, Подивіться, "
+        "Прочитайте, Повторіть — use English equivalents."
+    ),
+    "A1.5": (
+        "SEQUENCE CONSTRAINTS (A1.5 — Modals, Commands & Life):\n"
+        "All tenses available. Imperative mood is TAUGHT in this phase (M47).\n"
+        "Imperative forms are ALLOWED after M47 introduces them.\n\n"
+        "For M47 itself: Use imperative forms freely — читай/читайте, пиши/пишіть, "
+        "скажи/скажіть, дай/дайте, іди/ідіть.\n"
+        "Both imperfective AND perfective verbs allowed for imperatives."
+    ),
+    "A1.6": (
+        "SEQUENCE CONSTRAINTS (A1.6 — Real-World Skills):\n"
+        "Full A1 grammar available including imperatives. "
+        "The standard A1 LEVEL_CONSTRAINTS apply."
     ),
 }
+
+# Shared imperative ban text (DRY — used by multiple phases)
+_IMPERATIVE_BAN = (
+    "BANNED IMPERATIVE FORMS: Запам'ятайте, Уявіть, Порівняйте, "
+    "Зверніть увагу, Спробуйте, Подивіться, Послухайте, Прочитайте, Повторіть, "
+    "Напишіть, Скажіть, Виберіть, Подивімось, Поговорімо, Повторімо, "
+    "Давайте розглянемо, Розглянемо.\n"
+    "Use English equivalents instead."
+)
 
 
 # Common Ukrainian section titles → bilingual equivalents
@@ -439,7 +355,7 @@ def bilingualify_section_titles(content_outline: list, track: str, module_num: i
 
     Modifies the content_outline in-place and returns it. For A2+ or M15+,
     returns the outline unchanged. This ensures Gemini sees bilingual titles
-    in the meta and produces bilingual headers in its output.
+    in the plan and produces bilingual headers in its output.
     """
     base = track.split("-")[0]
     if base != "a1" or module_num > 14:
@@ -469,27 +385,32 @@ def bilingualify_section_titles(content_outline: list, track: str, module_num: i
     return content_outline
 
 
-def get_pedagogical_constraints(track: str, module_num: int) -> str:
-    """Module-sequence-aware pedagogical constraints for A1."""
+def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None = None) -> str:
+    """Build pedagogical constraints from the plan's phase field.
+
+    Constraints are derived from:
+    1. Plan's `phase` field (e.g., "A1.1 [First Contact]") → grammar/imperative bans
+    2. Plan's `grammar` field → what this module teaches (used for context)
+
+    Only A1 has phase-specific constraints. A2+ use LEVEL_CONSTRAINTS only.
+    """
     base = track.split("-")[0]
     if base != "a1":
         return ""
-    if module_num == 1:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m01"]
-    elif module_num == 2:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m02"]
-    elif module_num == 3:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m03"]
-    elif module_num == 4:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m04"]
-    elif module_num <= 10:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m05-10"]
-    elif module_num <= 14:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m11-14"]
-    elif module_num == 47:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m47"]
-    else:
-        return PEDAGOGICAL_CONSTRAINTS["a1-m15+"]
+
+    if not plan:
+        return ""
+
+    # Extract phase key from plan (e.g., "A1.1 [First Contact]" → "A1.1")
+    phase_str = plan.get("phase", "")
+    phase_key = phase_str.split("[")[0].strip() if phase_str else ""
+
+    phase_constraint = _A1_PHASE_CONSTRAINTS.get(phase_key, "")
+    if not phase_constraint:
+        # Fallback: if phase not recognized, use imperative ban for safety
+        phase_constraint = _IMPERATIVE_BAN
+
+    return phase_constraint
 
 
 # ---------------------------------------------------------------------------
@@ -497,28 +418,21 @@ def get_pedagogical_constraints(track: str, module_num: int) -> str:
 # ---------------------------------------------------------------------------
 
 # Decodable charsets for early A1 modules (M1-M3)
-_DECODABLE_CHARSETS: dict[int, str] = {
-    1: "АаОоУуМмЛлНнСс",
-    2: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
-    3: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕеБбДдПпЗзГгХхЖжШшЧч",
-}
+def _build_charset_from_plan(plan: dict) -> str:
+    """Build charset string from plan's decodable_letters field.
 
-# All words below are VESUM-verified nouns/adjectives using only the module's charset
-_DECODABLE_WORDS: dict[int, list[str]] = {
-    1: [  # АОУМЛНС (7 letters) — Bolshakova 2018 p.12-22, Zaharijchuk NUS 2025
-        "мама", "сом", "сон", "оса", "масло", "сосна", "насос", "лама", "смола",
-        "ананас", "нам", "нас", "сам", "мало", "слон",
-    ],
-    2: [  # +КИИІРВТЕ (14 letters total) — Bolshakova p.26-38
-        "кіт", "тато", "рис", "сир", "місто", "море", "метро", "ліс", "вікно",
-        "стіл", "молоко", "кіно", "око", "слово", "літо", "масло", "ніс", "він",
-        "вона", "рука", "вік",
-    ],
-    3: [  # +БДПЗГХЖШЧ (23 letters total) — large charset, use plan vocab_hints
-        # Placeholder: at 23 letters, most common words are decodable.
-        # The function merges plan vocab_hints filtered by charset.
-    ],
-}
+    Plan declares e.g. `decodable_letters: "А О У І М Н Т К С Л"`.
+    Returns both upper and lower case variants for charset filtering.
+    If no decodable_letters field, returns empty string (no restriction).
+    """
+    letters_str = plan.get("decodable_letters", "")
+    if not letters_str:
+        return ""
+    letters = [l.strip() for l in letters_str.split() if l.strip()]
+    charset = ""
+    for letter in letters:
+        charset += letter.upper() + letter.lower()
+    return charset
 
 
 def _charset_filter(words: list[str], allowed: str) -> list[str]:
@@ -528,65 +442,66 @@ def _charset_filter(words: list[str], allowed: str) -> list[str]:
 
 
 def get_decodable_vocabulary(track: str, module_num: int, plan: dict) -> str:
-    """Return decodable word list for early A1, empty string for others.
+    """Return decodable word list if the plan declares decodable_letters, else empty.
 
-    For M1-M2: curated VESUM-verified word list, charset-validated at runtime.
-    For M3: plan vocab_hints filtered by charset.
-    For M4+, A2+: empty string (no restrictions).
+    Plans that need strict letter-decodability declare:
+        decodable_letters: "А О У І М Н Т К С Л"
+
+    Vocabulary is extracted from the plan's vocabulary_hints and filtered against
+    that charset. Plans without decodable_letters get no restriction.
     """
-    base = track.split("-")[0]
-    if base != "a1" or module_num >= 4:
-        return ""
-
-    charset = _DECODABLE_CHARSETS.get(module_num, "")
+    charset = _build_charset_from_plan(plan)
     if not charset:
         return ""
 
-    if module_num in (1, 2):
-        words = _charset_filter(_DECODABLE_WORDS.get(module_num, []), charset)
-    elif module_num == 3:
-        # Use plan's vocabulary_hints filtered by the 23-letter charset
-        raw_hints = plan.get("vocabulary_hints", [])
-        # Flatten {required: [...], recommended: [...]} format
-        if isinstance(raw_hints, dict):
-            vocab_hints = list(raw_hints.get("required", []))
-            vocab_hints.extend(raw_hints.get("recommended", []))
-        else:
-            vocab_hints = raw_hints
-        hint_words = []
-        for hint in vocab_hints:
-            if isinstance(hint, str):
-                # Extract Ukrainian word from "слово (word) — description" format
-                word = hint.split("(")[0].strip().split("—")[0].strip()
-                if word:
-                    hint_words.append(word)
-            elif isinstance(hint, dict):
-                w = hint.get("word", hint.get("uk", ""))
-                if w:
-                    hint_words.append(w.strip())
-        words = _charset_filter(hint_words, charset)[:30]
-    else:
-        return ""
+    # Extract vocabulary from plan (source of truth)
+    plan_words = _extract_plan_vocabulary(plan)
+    decodable = _charset_filter(plan_words, charset)
 
-    if not words:
+    if not decodable:
         return ""
 
     upper_letters = sorted(set(c for c in charset if c.isupper()))
     letter_list = ", ".join(upper_letters)
 
     lines = [
-        f"DECODABLE VOCABULARY (M{module_num} — only letters: {letter_list}):",
-        "Use ONLY these words in activities, reading drills, AND prose examples.",
+        f"DECODABLE VOCABULARY (only letters: {letter_list}):",
+        "Use ONLY these words in reading drills and prose examples.",
         "Any word with a letter outside this set will FAIL the decodability audit gate.",
-        "Video key words from the plan's pronunciation_videos section are exempt",
-        "(they are heard, not read), but must NOT appear in prose reading examples.",
+        "Sight words from the plan are exempt — they are recognized as whole shapes,",
+        "not decoded letter-by-letter. Label them clearly.",
+        "Video pronunciation examples are also exempt (heard, not read).",
         "",
-        f"Available words: {', '.join(words)}",
+        f"Available decodable words: {', '.join(decodable)}",
         "",
         "If you need a word not on this list, check that ALL its letters are in the",
         "allowed set above. Words with unknown letters need English translation.",
     ]
     return "\n".join(lines)
+
+
+def _extract_plan_vocabulary(plan: dict) -> list[str]:
+    """Extract Ukrainian words from plan's vocabulary_hints (all categories)."""
+    raw_hints = plan.get("vocabulary_hints", [])
+    if isinstance(raw_hints, dict):
+        all_hints = []
+        for key in ("required", "recommended", "sight_words"):
+            all_hints.extend(raw_hints.get(key, []))
+    else:
+        all_hints = raw_hints
+
+    words = []
+    for hint in all_hints:
+        if isinstance(hint, str):
+            # Extract Ukrainian word from "слово (word) — description" format
+            word = hint.split("(")[0].strip().split("—")[0].strip()
+            if word:
+                words.append(word)
+        elif isinstance(hint, dict):
+            w = hint.get("word", hint.get("uk", ""))
+            if w:
+                words.append(w.strip())
+    return words
 
 
 # ---------------------------------------------------------------------------
@@ -657,6 +572,84 @@ def _get_writing_tone(track: str, module_num: int) -> str:
         "Every concept gets dedicated depth. Every H3 gets {H3_WORD_RANGE} words. "
         "This is how you hit the target."
     )
+
+
+def _get_writing_style(ctx) -> str:
+    """Return phase-appropriate writing style instructions.
+
+    A1.1 (alphabet/phonology): letter-by-letter instruction, no dialogues, no verbs.
+    A1.2+ (grammar modules): DISCOVER-UNDERSTAND-PRACTICE with dialogues.
+    """
+    phase_str = ctx.plan.get("phase", "") if ctx.plan else ""
+    phase_key = phase_str.split("[")[0].strip() if phase_str else ""
+
+    if phase_key == "A1.1":
+        return textwrap.dedent("""\
+            ### Writing Style (Alphabet / Phonology Module)
+
+            You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
+
+            Follow the structural containment rules above. Each H2 section MUST follow this sequence:
+
+            1. **EXPLAIN** — English paragraph introducing the concept (with Ukrainian letters/words bolded inline)
+            2. **SHOW** — A table, chart, or bulleted example list demonstrating the letters/sounds
+            3. **REINFORCE** — A callout box (tip, warning, culture note, or fun fact)
+
+            **This is an alphabet/phonology module — NOT a grammar module.** There are no grammar patterns to discover. Do NOT write dialogues. Do NOT use the DISCOVER-UNDERSTAND-PRACTICE pattern. Focus on:
+            - Letter shapes and their sounds
+            - False friends (letters that look like English but sound different)
+            - Blending letters into syllables, syllables into words
+            - Reading practice with decodable words
+
+            **FORBIDDEN patterns (HARD FAIL):**
+            - Dialogues (verbs are banned in this phase — dialogues need verbs)
+            - Starting a section with Ukrainian sentences (start with English explanation)
+            - Bulleted example lists longer than 8 items
+            - Abstract phonetic descriptions (use comparisons to English sounds instead)""")
+
+    # Default: grammar modules (A1.2+)
+    return textwrap.dedent("""\
+        ### Writing Style
+
+        You're writing for an A1 learner progressing through a structured course. They already know previous modules' content. English scaffolds new grammar; Ukrainian is what they're learning and practicing.
+
+        Follow the structural containment rules above. Each H2 section MUST follow this sequence:
+
+        1. **DISCOVER** — Start with a Ukrainian dialogue or example set that demonstrates the pattern. NO English explanation yet. Let the learner notice the pattern themselves. Use a blockquote dialogue (4-8 lines) or a set of contrastive pairs in a table.
+        2. **UNDERSTAND** — Now explain the pattern in 1-2 English sentences MAX. Use a paradigm table to show the system.
+        3. **PRACTICE** — A second, different dialogue or scenario using the same pattern in a new context. End the section with a callout box (tip, warning, culture note, or fun fact).
+
+        **FORBIDDEN patterns (HARD FAIL):**
+        - Starting a section with an English grammar explanation (must start with Ukrainian examples)
+        - Bulleted example lists longer than 5 items (spam — use a dialogue or table instead)
+        - Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
+        - Listing random permutations of the same verb forms as separate bullets
+
+        ### Dialogue Quality (CRITICAL)
+
+        Every blockquote dialogue MUST:
+        1. **Start with a location header**: `> **(На уроці / In the classroom)**` — this is MANDATORY, not optional
+        2. **Have a purpose** — why are they talking? (asking for help, giving directions, learning)
+        3. **Have varied responses** — the second speaker reacts naturally, not just echoes the command
+
+        **BAD** (echo drill — HARD FAIL, produces zero learning):
+        > — Читай!
+        > — Я читаю.
+        > — Пиши!
+        > — Я пишу.
+
+        Why this fails: it's a verb conjugation table disguised as a dialogue. No situation, no purpose, no natural speech.
+
+        **GOOD** (classroom — teacher gives instructions, student responds naturally):
+        > **(На уроці / In the classroom)**
+        > — Читайте тут. Дивіться!
+        > — Добре. А це?
+        > — Ні, не це. Слухайте!
+        > — Так, я слухаю.
+
+        **Key pattern**: Each speaker has a GOAL. One asks/commands, the other REACTS (agrees, questions, redirects) — never just echoes the verb back.
+
+        Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life." """)
 
 
 def get_structural_rules(track: str, module_num: int) -> str:
@@ -1142,9 +1135,8 @@ class ModuleContext:
     paths: dict[str, Path] = field(default_factory=dict)
     orch_dir: Path = field(default=Path("."))
 
-    # Plan/meta data
+    # Plan data
     plan: dict = field(default_factory=dict)
-    meta: dict = field(default_factory=dict)
     word_target: int = 0
     topic_title: str = ""
     content_outline: list[dict] = field(default_factory=list)
@@ -1164,6 +1156,9 @@ class ModuleContext:
     # State tracking
     state: dict = field(default_factory=dict)
     state_path: Path = field(default=Path("."))
+
+    # Built placeholders (in-memory, no YAML round-trip)
+    placeholders: dict[str, str] = field(default_factory=dict)
 
     # CLI flags
     dry_run: bool = False
@@ -1676,24 +1671,33 @@ def dispatch_gemini(
 # ============================================================================
 
 def fill_template(
-    template: Path, placeholders_yaml: Path, output: Path,
+    template: Path, placeholders: dict[str, str], output: Path,
     overrides: dict[str, str] | None = None, strict: bool = False,
 ) -> bool:
-    """Fill a template via fill_template.py. Returns True on success."""
-    args = [
-        str(SCRIPTS_DIR / "fill_template.py"),
-        "--template", str(template),
-        "--placeholders", str(placeholders_yaml),
-        "--output", str(output),
-    ]
-    if not strict:
-        args.append("--no-strict")
-    for k, v in (overrides or {}).items():
-        args.extend(["--set", f"{k}={v}"])
-    result = run_script(args, capture=True)
-    if result.returncode != 0:
-        log(f"  fill_template FAILED: {result.stderr or result.stdout}")
+    """Fill a template with placeholders dict (in-memory). Returns True on success."""
+    from generate_mdx.fill_template import fill_template as _fill, find_unresolved
+
+    if not template.exists():
+        log(f"  fill_template FAILED: template not found: {template}")
         return False
+
+    template_text = template.read_text(encoding="utf-8")
+    merged = dict(placeholders)
+    if overrides:
+        merged.update(overrides)
+
+    filled = _fill(template_text, merged)
+    unresolved = find_unresolved(filled)
+    if unresolved:
+        msg = f"Unresolved placeholders ({len(unresolved)}): {', '.join(unresolved)}"
+        if strict:
+            log(f"  fill_template FAILED: {msg}")
+            return False
+        else:
+            log(f"  fill_template WARNING: {msg}")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(filled, encoding="utf-8")
     return True
 
 
@@ -1934,7 +1938,6 @@ def dispatch_claude_final_review(ctx: ModuleContext) -> tuple[bool, str, str]:
     vocab_text     = _read(ctx.paths.get("vocabulary"))
     plan_path = PROJECT_ROOT / f"curriculum/l2-uk-en/plans/{ctx.track}/{ctx.slug}.yaml"
     plan_text      = _read(plan_path)
-    meta_text      = _read(ctx.paths.get("meta"))
     review_text    = _read(ctx.paths.get("review"))
 
     _, audit_output = run_verify(ctx.paths["md"], content_only=False)
@@ -1977,11 +1980,6 @@ def dispatch_claude_final_review(ctx: ModuleContext) -> tuple[bool, str, str]:
 ### Plan (source of truth)
 ```yaml
 {plan_text}
-```
-
-### Meta
-```yaml
-{meta_text}
 ```
 
 ### Existing Review (Green Team)
@@ -2225,8 +2223,6 @@ def _get_prompt_tier(track: str, module_num: int) -> str:
         return "beginner"
     if base == "A2" and module_num <= 20:
         return "beginner"
-    if base == "B1" and module_num <= 5:
-        return "beginner"
     return "core"
 
 
@@ -2265,26 +2261,11 @@ def _read_phase_file(filename: str) -> str:
 # 15. Write Placeholders
 # ============================================================================
 
-def write_placeholders(ctx: ModuleContext) -> None:
-    """Write placeholders.yaml for template filling."""
-    placeholders_path = ctx.orch_dir / "placeholders.yaml"
-    if placeholders_path.exists() and not ctx.rebuild and not getattr(ctx, "force_phase", False):
-        # Check for missing critical keys that may indicate stale placeholders
-        try:
-            existing = yaml.safe_load(placeholders_path.read_text("utf-8")) or {}
-            _critical_keys = {"ITEM_MINIMUMS_TABLE", "ACTIVITY_MAX", "ACTIVITY_MIN",
-                               "PRONUNCIATION_VIDEOS", "PEDAGOGICAL_CONSTRAINTS",
-                               "DECODABLE_VOCABULARY", "STRUCTURAL_RULES",
-                               "H3_WORD_RANGE", "EXPANSION_METHOD",
-                               "WRITING_TONE_INSTRUCTION",
-                               "SHARED_CONTENT_RULES", "SHARED_ACTIVITY_RULES",
-                               "SELF_AUDIT_SNIPPET"}
-            if _critical_keys <= set(existing.keys()):
-                log("Placeholders: Using existing")
-                return
-            log("Placeholders: Regenerating (missing critical keys)")
-        except Exception:
-            pass  # Fall through to regenerate
+def build_placeholders(ctx: ModuleContext) -> None:
+    """Build placeholders dict and store on ctx (in-memory, no disk YAML)."""
+    if ctx.placeholders and not ctx.rebuild and not getattr(ctx, "force_phase", False):
+        log("Placeholders: Using existing (in-memory)")
+        return
 
     level_label = get_level_label(ctx.track)
     quick_ref_path = ctx.track_config.get("quick_ref", "")
@@ -2296,7 +2277,6 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "MODULE_NUM": str(ctx.module_num),
         "PLAN_PATH": str(ctx.paths["plan"]),
         "PLAN_CONTENT": ctx.paths["plan"].read_text(encoding="utf-8") if ctx.paths["plan"].exists() else "",
-        "META_PATH": str(ctx.paths["meta"]),
         "CONTENT_PATH": str(ctx.paths["md"]),
         "ACTIVITIES_PATH": str(ctx.paths["activities"]),
         "VOCAB_PATH": str(ctx.paths["vocabulary"]),
@@ -2313,12 +2293,13 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "PERSONA_ROLE": ctx.plan.get("persona", {}).get("role", ""),
         "IMMERSION_RULE": ctx.immersion_rule,
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
-        "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num),
+        "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num, ctx.plan),
         "DECODABLE_VOCABULARY": get_decodable_vocabulary(ctx.track, ctx.module_num, ctx.plan),
         "STRUCTURAL_RULES": get_structural_rules(ctx.track, ctx.module_num),
         "H3_WORD_RANGE": get_h3_word_range(ctx.track, ctx.module_num),
         "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
         "WRITING_TONE_INSTRUCTION": _get_writing_tone(ctx.track, ctx.module_num),
+        "WRITING_STYLE": _get_writing_style(ctx),
         "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
         "TEXTBOOK_ACTIVITY_EXAMPLES": _prefetch_textbook_activity_examples(ctx),
         "TEXTBOOK_GRADE": _get_textbook_grade(ctx),
@@ -2485,21 +2466,12 @@ def write_placeholders(ctx: ModuleContext) -> None:
             priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
             placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
 
-    # Early A1 alphabet modules require bukvar activity types
-    if ctx.track.lower() == "a1" and ctx.module_num <= 4:
-        bukvar_types = ["watch-and-repeat", "classify", "image-to-letter"]
-        existing = [t.strip() for t in placeholders.get("REQUIRED_TYPES", "").split(",") if t.strip()]
-        for bt in bukvar_types:
-            if bt not in existing:
-                existing.append(bt)
-        placeholders["REQUIRED_TYPES"] = ", ".join(existing)
+    # REQUIRED_TYPES comes from plan activity_hints (source of truth).
+    # No hardcoded overrides — if a plan needs bukvar types, they're in activity_hints.
 
     placeholders["ITEM_MINIMUMS_TABLE"] = get_item_minimums_table(ctx.track, ctx.module_num)
-    placeholders_path.write_text(
-        yaml.dump(placeholders, allow_unicode=True, default_flow_style=False, sort_keys=False),
-        encoding="utf-8",
-    )
-    log(f"Placeholders: Written ({len(placeholders)} keys)")
+    ctx.placeholders = placeholders
+    log(f"Placeholders: Built ({len(placeholders)} keys)")
 
 
 # ============================================================================
@@ -2734,7 +2706,7 @@ def _prefetch_sources_for_phase_B(ctx: ModuleContext) -> str:
 
     # Extract search terms from content_outline section names + topic title
     search_terms = []
-    topic = ctx.meta.get("topic_title", ctx.slug.replace("-", " "))
+    topic = ctx.topic_title or ctx.slug.replace("-", " ")
     search_terms.append(topic)
     for section in ctx.content_outline:
         section_name = section.get("section") or section.get("title", "")
@@ -2809,7 +2781,7 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
                 uk_part = parts[0].strip() if has_cyr(parts[0]) else parts[1].strip()
             search_terms.append(uk_part)
     if not search_terms:
-        topic = ctx.meta.get("topic_title", ctx.topic_title or ctx.slug.replace("-", " "))
+        topic = ctx.topic_title or ctx.slug.replace("-", " ")
         search_terms.append(topic)
 
     search_terms = [t for t in search_terms if t.strip()][:4]
@@ -3133,21 +3105,21 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     sections = ctx.content_outline
     if not sections:
-        log("  content: FAILED — no content_outline in meta")
+        log("  content: FAILED — no content_outline in plan")
         return False
     # Ensure bilingual section titles for early A1 (idempotent)
     sections = bilingualify_section_titles(sections, ctx.track, ctx.module_num)
 
     num_sections = len(sections)
-    # Read engagement minimum from audit config (source of truth), with meta override
+    # Read engagement minimum from audit config (source of truth)
     try:
         from audit.config import LEVEL_CONFIG
         _base = ctx.track.split('-')[0].upper() if ctx.track else 'A1'
         _cfg_engagement = LEVEL_CONFIG.get(_base, {}).get('min_engagement', 3)
     except Exception:
         _cfg_engagement = 3
-    engagement_min = ctx.meta.get("engagement_min", _cfg_engagement)
-    example_min = ctx.meta.get("example_min", 8)
+    engagement_min = _cfg_engagement
+    example_min = 8
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
     overshoot = ctx.word_target if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
 
@@ -3166,7 +3138,6 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         log(f"  content: Tier template {content_template_name} not found, falling back to content.md")
     else:
         log(f"  content: Using tier template: {content_template_name}")
-    placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
     prompt_file = ctx.orch_dir / "content-prompt.md"
 
     word_target_tokens = ctx.word_target * 2 // 1000
@@ -3211,7 +3182,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         ),
         "FOLK_MATERIAL": getattr(ctx, "_folk_material", ""),
     }
-    if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
+    if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
         return False
 
     # Pre-dispatch health check: catch template/placeholder bugs before wasting a Gemini call
@@ -3490,7 +3461,7 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
 # ============================================================================
 
 def preflight(args: argparse.Namespace) -> ModuleContext:
-    """Resolve all paths, load plan/meta, compute config. Returns ModuleContext."""
+    """Resolve all paths, load plan, compute config. Returns ModuleContext."""
     track = args.track
     num = args.num
     slug = slug_for_num(track, num)
@@ -3516,18 +3487,13 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
         raise FileNotFoundError(f"Plan not found: {plan_path}")
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
 
-    meta_path = paths["meta"]
-    if not meta_path.exists():
-        raise FileNotFoundError(f"Meta not found: {meta_path}")
-    meta = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
-
     skill_name, skill_identity, persona_flavor = get_track_skill(track, num)
     immersion_rule = get_immersion_rule(track, num)
     level_constraints = get_level_constraints(track, plan)
     activity_config = get_activity_config(track, num)
     track_config = get_track_config(track)
 
-    # config.py is the source of truth for word targets — plan/meta may have stale values
+    # config.py is the source of truth for word targets
     try:
         from audit.config import get_word_target as _get_wt
         level_code, module_focus = track_to_level_focus(track)
@@ -3535,12 +3501,12 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     except Exception:
         word_target = plan.get("word_target", 0)
     topic_title = plan.get("title", slug.replace("-", " ").title())
-    content_outline = meta.get("content_outline", [])
+    content_outline = plan.get("content_outline", [])
 
     ctx = ModuleContext(
         track=track, module_num=num, slug=slug, mode=mode,
         paths=paths, orch_dir=orch_dir,
-        plan=plan, meta=meta,
+        plan=plan,
         word_target=word_target, topic_title=topic_title,
         content_outline=content_outline,
         skill_name=skill_name, skill_identity=skill_identity,
@@ -3591,41 +3557,10 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     return ctx
 
 
-def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
-    """Create minimal meta.yaml from plan if meta doesn't exist yet."""
-    paths = get_module_paths(track, slug)
-    meta_path = paths["meta"]
-    plan_path = paths["plan"]
-    if meta_path.exists():
-        return
-    if not plan_path.exists():
-        return
-    try:
-        plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
-    except yaml.YAMLError as e:
-        log(f"  bootstrap: WARNING — plan YAML parse error for {slug}, skipping bootstrap: {e}")
-        return
-    try:
-        from audit.config import get_word_target as _get_wt
-        level_code, module_focus = track_to_level_focus(track)
-        mod_num = int(slug.split("-")[-1]) if slug[0].isdigit() else 1
-        wt = _get_wt(level_code, mod_num, module_focus)
-    except Exception:
-        wt = plan.get("word_target", 0)
-    minimal_meta = {
-        "slug": slug,
-        "title": plan.get("title", slug.replace("-", " ").title()),
-        "word_target": wt,
-    }
-    meta_path.parent.mkdir(parents=True, exist_ok=True)
-    meta_path.write_text(yaml.dump(minimal_meta, allow_unicode=True), encoding="utf-8")
-
-
 def preflight_v2(args: argparse.Namespace) -> ModuleContext:
-    """Resolve all paths, load plan/meta, detect archive. Returns ModuleContext."""
+    """Resolve all paths, load plan, detect archive. Returns ModuleContext."""
     track, num = args.track, args.num
     slug = slug_for_num(track, num)
-    _bootstrap_meta_from_plan(track, slug)
 
     args.content_only = False
     args.enrich = False

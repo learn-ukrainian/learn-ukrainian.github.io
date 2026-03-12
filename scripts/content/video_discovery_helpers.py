@@ -92,6 +92,71 @@ def _extract_noun_phrases(text: str) -> list[str]:
     return phrases
 
 
+# English→Ukrainian grammar term mapping for YouTube search.
+# Module titles use these terms; Ukrainian equivalents are far more searchable.
+_GRAMMAR_TERM_MAP: dict[str, str] = {
+    "accusative": "знахідний відмінок",
+    "dative": "давальний відмінок",
+    "genitive": "родовий відмінок",
+    "instrumental": "орудний відмінок",
+    "locative": "місцевий відмінок",
+    "nominative": "називний відмінок",
+    "vocative": "кличний відмінок",
+    "imperative": "наказовий спосіб",
+    "conditional": "умовний спосіб",
+    "subjunctive": "умовний спосіб",
+    "past tense": "минулий час",
+    "future tense": "майбутній час",
+    "present tense": "теперішній час",
+    "aspect": "вид дієслова",
+    "perfective": "доконаний вид",
+    "imperfective": "недоконаний вид",
+    "plural": "множина",
+    "adjective": "прикметник",
+    "noun": "іменник",
+    "verb": "дієслово",
+    "pronoun": "займенник",
+    "preposition": "прийменник",
+    "conjunction": "сполучник",
+    "adverb": "прислівник",
+    "participle": "дієприкметник",
+    "demonstrative": "вказівний займенник",
+    "possessive": "присвійний займенник",
+    "relative clause": "підрядне речення",
+    "passive": "пасивний стан",
+    "reflexive": "зворотне дієслово",
+    "diminutive": "зменшувальна форма",
+    "comparative": "порівняльний ступінь",
+    "superlative": "найвищий ступінь",
+    "number": "числівник",
+    "cardinal": "кількісний числівник",
+    "ordinal": "порядковий числівник",
+    "gender": "рід іменника",
+    "alphabet": "українська абетка",
+    "cyrillic": "кирилиця",
+    "greeting": "вітання",
+    "motion verb": "дієслово руху",
+}
+
+
+def _translate_grammar_title(title: str) -> str:
+    """Translate English grammar terms in a module title to Ukrainian.
+
+    Returns the best matching Ukrainian term, or empty string if no match.
+    Prefers the term that appears earliest in the title (the main concept),
+    with multi-word terms winning ties (e.g. "past tense" over "past").
+    """
+    title_lower = title.lower()
+    best: tuple[int, int, str] | None = None  # (position, -length, ukr)
+    for eng, ukr in _GRAMMAR_TERM_MAP.items():
+        pos = title_lower.find(eng)
+        if pos >= 0:
+            candidate = (pos, -len(eng), ukr)
+            if best is None or candidate < best:
+                best = candidate
+    return best[2] if best else ""
+
+
 def build_discovery_keywords(
     plan: dict,
     max_keywords: int = 12,
@@ -114,17 +179,57 @@ def build_discovery_keywords(
         return True
 
     title = plan.get("title", "")
+    title_is_english = title and not re.search(r"[\u0400-\u04FF]", title)
     if title:
         _add(title)
 
+    # For core grammar modules with English titles: synthesize Ukrainian search
+    # terms from subtitle, grammar field, and key vocab BEFORE section titles.
+    # These are much better YouTube queries than abstract section titles like
+    # "Роль адресата" — a user would search "давальний відмінок подобатися".
+    subtitle = plan.get("subtitle", "")
+    if subtitle:
+        sub_base = re.split(r"\s*[—\-]", subtitle)[0].strip()
+        if re.search(r"[\u0400-\u04FF]", sub_base):
+            _add(sub_base)
+
+    if title_is_english:
+        # Translate English grammar terms in title to Ukrainian for search.
+        # Module titles use a finite set of grammar terms.
+        _translated = _translate_grammar_title(title)
+        if _translated:
+            _add(_translated)
+        # Grammar terms that are already Ukrainian
+        for gram in plan.get("grammar", []):
+            if isinstance(gram, str):
+                first_word = gram.strip().split()[0] if gram.strip() else ""
+                if re.search(r"[\u0400-\u04FF]", first_word):
+                    _add(gram.strip())
+        # Then top vocab lemmas (concrete words like подобатися, потрібно).
+        # Cap at 3 to leave room for section titles and other keywords.
+        vocab_hints = plan.get("vocabulary_hints", {})
+        early_hints: list[str] = []
+        if isinstance(vocab_hints, dict):
+            early_hints = vocab_hints.get("required", [])[:3]
+        elif isinstance(vocab_hints, list):
+            early_hints = vocab_hints[:3]
+        for lemma in extract_lemmas_from_hints(early_hints):
+            _add(lemma)
+
     _generic = {
-        "\u0432\u0441\u0442\u0443\u043f", "\u043f\u0456\u0434\u0441\u0443\u043c\u043e\u043a",
-        "introduction", "summary", "conclusion",
-        "\u043f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044f", "presentation",
-        "\u043f\u0440\u0430\u043a\u0442\u0438\u043a\u0430", "practice",
-        "\u043f\u0440\u043e\u0434\u0443\u043a\u0446\u0456\u044f", "production",
-        "\u043f\u0440\u043e\u0434\u0443\u043a\u0446\u0456\u044f \u0442\u0430 \u043f\u0456\u0434\u0441\u0443\u043c\u043e\u043a",
-        "production and summary",
+        # PPP framework labels (Ukrainian and English)
+        "вступ", "підсумок", "introduction", "summary", "conclusion",
+        "презентація", "presentation", "практика", "practice",
+        "продукція", "production", "продукція та підсумок", "production and summary",
+        # TTT framework labels
+        "діагностичний тест", "diagnostic test",
+        "презентація та теорія", "presentation and theory",
+        "практика та виправлення помилок", "practice and error correction",
+        "діалоги та підсумок", "dialogues and summary",
+        "порівняльний аналіз", "comparative analysis",
+        # Generic section types
+        "огляд", "overview", "review",
+        "культурний контекст", "cultural context",
     }
     for section in plan.get("content_outline", []):
         section_title = section.get("section", "")
