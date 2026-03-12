@@ -22,8 +22,9 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,6 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 # ---------------------------------------------------------------------------
 # Imports from pipeline_lib (shared utilities — never duplicated)
 # ---------------------------------------------------------------------------
-import contextlib
 
 import pipeline_lib
 from batch_gemini_config import (
@@ -51,7 +51,6 @@ from batch_gemini_config import (
     SEMINAR_TRACKS,
 )
 from pipeline_lib import (
-    FileLock,
     ModuleContext,
     _dispatch_prompt,
     _gemini_output_path,
@@ -64,8 +63,6 @@ from pipeline_lib import (
     _now_iso,
     _run_with_heartbeat,
     # Thread-safe locks
-    _state_lock,
-    # Validation
     _validate_activities_yaml,
     # Bilingual section titles
     bilingualify_section_titles,
@@ -113,6 +110,15 @@ TIMEOUT_FIX_CORE = 600
 TIMEOUT_FIX_SEMINAR = 600
 TIMEOUT_FIX_AUDIT_ONLY = 600
 
+# RAG tools available during review phases (VESUM verification + textbook search)
+_RAG_REVIEW_TOOLS = [
+    "mcp__rag__verify_word",
+    "mcp__rag__verify_lemma",
+    "mcp__rag__search_text",
+    "mcp__rag__search_images",
+    "mcp__rag__search_literary",
+]
+
 # Seminar tracks that get longer timeouts
 _SEMINAR_TIMEOUT_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth"}
 
@@ -150,64 +156,43 @@ _META_SECTION_MAX_PCT = 0.25
 # 1. State Management — delegated to pipeline.state
 # ============================================================================
 
-from pipeline.state import (  # noqa: E402
-    _state_file,
-    load_state,
-    save_state,
-    is_complete,
-    mark_complete,
-    mark_failed,
-    _fresh_state,
-    _migrate_v4_to_v5,
-)
-
-
 # ============================================================================
 # 2. Shared helpers — parsing, extraction, formatting delegated to pipeline.parsing
 # ============================================================================
-
-from pipeline.parsing import (  # noqa: E402
-    DScreenResult,
+from pipeline.parsing import (
     D1Result,
-    _scan_llm_filler,
+    DScreenResult,
+    _extract_audit_failures,
     _extract_delimiter,
     _extract_delimiter_tolerant,
-    _compute_metrics_direct,
-    _extract_h2_sections,
-    _extract_audit_failures,
+    _extract_fix_plan,
     _extract_gate_blockers,
     _extract_vesum_failures,
     _format_deterministic_issues,
     _format_filler_phrases,
     _format_vesum_verification,
-    _inject_metrics_into_prompt,
+    _get_russicism_table,
+    _get_track_calibration,
     _inject_file_contents,
+    _inject_metrics_into_prompt,
     _parse_d1_review,
     _parse_factual_review,
-    _extract_fix_plan,
-    _get_track_calibration,
-    _get_russicism_table,
-    _build_d3_context,
     _quick_review_quality_gate,
-    _CALIBRATION_DIR,
-    _LLM_FILLER_DEFS,
-    _LLM_FILLER_COMPILED,
 )
-
-
-
-
 
 # ---------------------------------------------------------------------------
 # Deterministic screen + fixes — delegated to pipeline.screen
 # ---------------------------------------------------------------------------
-
-from pipeline.screen import (  # noqa: E402
-    _run_deterministic_fixes,
+from pipeline.screen import (
     _deterministic_screen,
-    _deterministic_fix_mtimes,
+    _run_deterministic_fixes,
 )
-
+from pipeline.state import (
+    is_complete,
+    mark_complete,
+    mark_failed,
+    save_state,
+)
 
 # ---------------------------------------------------------------------------
 # Screen result caching
@@ -280,17 +265,14 @@ def _update_pipeline_status(ctx: ModuleContext, pipeline_status: str) -> None:
 # Module file helpers — delegated to pipeline.fixes
 # ---------------------------------------------------------------------------
 
-from pipeline.fixes import (  # noqa: E402
-    _module_file_paths,
-    _snapshot_module_files,
+from pipeline.fixes import (
+    _apply_fixes_with_rollback,
+    _apply_module_fixes,
     _count_diff_lines,
     _log_d1_edits,
-    _apply_module_fixes,
-    _apply_fixes_with_rollback,
-    _clean_fix_text,
-    _apply_find_replace_fixes,
+    _module_file_paths,
+    _snapshot_module_files,
 )
-
 
 # ---------------------------------------------------------------------------
 # Claude headless dispatch
@@ -1666,7 +1648,8 @@ def _prefetch_textbook_for_research(ctx: ModuleContext) -> str:
     except ImportError:
         return ""
 
-    has_cyrillic = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
+    def has_cyrillic(s: str) -> bool:
+        return any("\u0400" <= c <= "\u04ff" for c in s)
 
     # Build search terms — Ukrainian only, section titles first (most specific)
     search_terms: list[str] = []
@@ -2237,7 +2220,7 @@ def _dispatch_vocab_only(ctx: ModuleContext, prompt_label: str) -> tuple[bool, s
     vocab_prompt = _build_vocab_only_prompt(ctx)
     if not vocab_prompt:
         return False, ""
-    vocab_prompt_file = ctx.orch_dir / f"activities-vocab-fallback.md"
+    vocab_prompt_file = ctx.orch_dir / "activities-vocab-fallback.md"
     vocab_prompt_file.write_text(vocab_prompt, "utf-8")
     use_claude = "C" in getattr(ctx, "use_claude", set())
     if use_claude:
@@ -2287,7 +2270,7 @@ def _try_vocab_fast_path(ctx: ModuleContext, state: dict) -> bool | None:
 
 def _resolve_activities_template(ctx: ModuleContext) -> Path | None:
     """Resolve the activities prompt template, returning None on error."""
-    activities_template_name = _get_activities_template(ctx.track, ctx.module_num)
+    activities_template_name = _get_activities_template(ctx.track, ctx.module_num, slug=ctx.slug)
     template = PHASES_DIR / activities_template_name
     if not template.exists():
         template = PHASES_DIR / "activities.md"
@@ -2452,9 +2435,8 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
     _extract_friction_report(ctx, raw_output)
 
     # Vocabulary fallback if needed
-    if wrote_activities and not wrote_vocab:
-        if _vocab_fallback(ctx, raw_output):
-            wrote_vocab = True
+    if wrote_activities and not wrote_vocab and _vocab_fallback(ctx, raw_output):
+        wrote_vocab = True
 
     if not wrote_activities or not wrote_vocab:
         log(f"  activities: FAILED — missing files: activities={wrote_activities}, vocab={wrote_vocab}")
@@ -2722,8 +2704,7 @@ def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
             return f"immersion-gap-{target - current:.0f}pp"
 
     # 2. Activity count too low with no required types guidance
-    if "Gate `Activities` FAIL" in fix_prompt:
-        if "Required types:" not in fix_prompt or "Required types: \n" in fix_prompt:
+    if "Gate `Activities` FAIL" in fix_prompt and ("Required types:" not in fix_prompt or "Required types: \n" in fix_prompt):
             return "activities-no-required-types"
 
     # 3. Constraint conflict: fix says remove dative but sandbox lists dative forms
@@ -2744,7 +2725,7 @@ def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
 def _save_friction_report(ctx: ModuleContext, attempt: int,
                           fix_prompt: str, diagnosis: str) -> None:
     """Save a friction report when dedup detects a prompt engineering issue."""
-    report_path = ctx.orch_dir / f"content-friction-dedup.md"
+    report_path = ctx.orch_dir / "content-friction-dedup.md"
     gate_failures = re.findall(r"Gate `(\w+)` FAIL", fix_prompt)
     ped_violations = re.findall(r"\[([A-Z_]+)\]", fix_prompt)
 
@@ -2952,10 +2933,12 @@ def _review_dispatch_d1(ctx: ModuleContext, prompt_file: Path,
     """Dispatch D1 review with retry. Returns (d1_result, review_text, raw_output) or None."""
     _pre_d1_snapshots = _snapshot_module_files(ctx)
 
+    d1_tools = ["Read", "Grep", "Glob", "Edit", *_RAG_REVIEW_TOOLS]
+
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
         model=claude_model, timeout=review_timeout,
-        allow_tools=["Read", "Grep", "Glob", "Edit"],
+        allow_tools=d1_tools,
     )
     if not ok:
         log("  review: Dispatch FAILED")
@@ -2972,7 +2955,7 @@ def _review_dispatch_d1(ctx: ModuleContext, prompt_file: Path,
         ok2, raw2 = _dispatch_claude_phase(
             prompt_file, "Phase D.1 (retry)",
             model=claude_model, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob", "Edit"],
+            allow_tools=d1_tools,
         )
         if ok2:
             d1 = _parse_d1_review(raw2)
@@ -3043,10 +3026,12 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
 
     before_d2 = _snapshot_module_files(ctx)
 
+    d2_tools = ["Edit", "Grep", *_RAG_REVIEW_TOOLS]
+
     ok2, raw_output2 = _dispatch_claude_phase(
         prompt_file2, f"Phase D.2{iter_suffix}",
         model=claude_model, timeout=fix_timeout,
-        allow_tools=["Edit", "Grep"],
+        allow_tools=d2_tools,
     )
     if not ok2:
         log(f"  review: Fix dispatch failed{iter_suffix}")

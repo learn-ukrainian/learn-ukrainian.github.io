@@ -444,8 +444,8 @@ def _build_exact_section_titles(ctx) -> str:
 
 
 def _get_checkpoint_guidance(ctx) -> str:
-    """Return checkpoint-specific guidance if module slug starts with 'checkpoint-'."""
-    if not ctx.slug.startswith("checkpoint-"):
+    """Return checkpoint-specific guidance if the module is a checkpoint."""
+    if not _is_checkpoint_module(ctx.slug):
         return ""
     return textwrap.dedent("""\
         ## Checkpoint Module Guidance
@@ -460,6 +460,47 @@ def _get_checkpoint_guidance(ctx) -> str:
         - Focus on PRACTICE, not explanation — students already learned the concepts
         - Activities should test recall and application, not introduce new patterns
         - Include a "What you should know by now" summary of prior module objectives
+        - Feel like a CELEBRATION of progress, not a test
+    """)
+
+
+def _get_checkpoint_review_guidance(ctx) -> str:
+    """Return checkpoint-specific review criteria for the D1 review template."""
+    if not _is_checkpoint_module(ctx.slug):
+        return ""
+    return textwrap.dedent("""\
+        ## Checkpoint-Specific Review Criteria
+
+        **This module is a CHECKPOINT — apply different review standards:**
+
+        ### What to Check (checkpoint-specific)
+
+        1. **No new material introduced**: The checkpoint should NOT teach new grammar rules or introduce
+           new vocabulary. All content should review/synthesize material from prior modules. Flag any
+           new grammar explanation or unfamiliar vocabulary as **HIGH** severity.
+
+        2. **Integration quality**: Each section should combine skills from 2+ prior modules, not just
+           review them in isolation. Flag sections that only drill a single skill as **MEDIUM**.
+
+        3. **Synthesis over explanation**: Brief reminders (1-2 sentences) are fine, but full
+           re-explanations of grammar rules are wrong for a checkpoint. Flag lengthy re-teaching
+           as **MEDIUM**.
+
+        4. **Celebratory tone**: The checkpoint should feel encouraging and confidence-building,
+           not like a test. Flag harsh or exam-like framing as **LOW**.
+
+        5. **Self-assessment**: The module should help learners identify their own gaps.
+           Flag missing self-assessment elements as **MEDIUM**.
+
+        6. **Activity integration**: Activities should combine multiple skills per activity,
+           not test isolated grammar points. Flag single-skill activities as **MEDIUM**.
+
+        ### What NOT to Penalize (checkpoint exceptions)
+
+        - Lower information density (checkpoints review, not teach)
+        - Fewer new example patterns (they reuse from prior modules)
+        - Simpler explanations (brief reminders are appropriate)
+        - Repetition of vocabulary from prior modules (this is the POINT)
     """)
 
 
@@ -1488,7 +1529,7 @@ def _is_transient_error(output: str) -> bool:
 
 
 def check_prompt_health(
-    ctx: "ModuleContext", prompt_text: str, phase_name: str
+    ctx: ModuleContext, prompt_text: str, phase_name: str
 ) -> list[str]:
     """Validate a filled prompt before dispatching to an LLM.
 
@@ -1516,9 +1557,8 @@ def check_prompt_health(
             issues.append("ERROR: WORD_TARGET placeholder unfilled")
 
     # 3. Activities-phase checks
-    if phase_name == "activities":
-        if "{REQUIRED_TYPES}" in prompt_text:
-            issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
+    if phase_name == "activities" and "{REQUIRED_TYPES}" in prompt_text:
+        issues.append("ERROR: REQUIRED_TYPES placeholder unfilled — activity diversity will be random")
 
     # 4. Universal: detect unfilled placeholders (any {UPPERCASE_THING} remaining)
     unfilled = set(re.findall(r"\{([A-Z][A-Z_]{3,})\}", prompt_text))
@@ -1589,7 +1629,8 @@ def fill_template(
     overrides: dict[str, str] | None = None, strict: bool = False,
 ) -> bool:
     """Fill a template with placeholders dict (in-memory). Returns True on success."""
-    from generate_mdx.fill_template import fill_template as _fill, find_unresolved
+    from generate_mdx.fill_template import fill_template as _fill
+    from generate_mdx.fill_template import find_unresolved
 
     if not template.exists():
         log(f"  fill_template FAILED: template not found: {template}")
@@ -2140,10 +2181,21 @@ def _get_prompt_tier(track: str, module_num: int) -> str:
     return "core"
 
 
+def _is_checkpoint_module(slug: str) -> bool:
+    """Check if a module is a checkpoint based on its slug."""
+    return "checkpoint" in slug
+
+
 def _get_content_template(track: str, module_num: int,
-                          full_build: bool = False, rag: bool = False) -> str:
+                          full_build: bool = False, rag: bool = False,
+                          slug: str = "") -> str:
     """Return the content prompt filename for the given tier."""
     tier = _get_prompt_tier(track, module_num)
+    # Checkpoint modules get dedicated templates
+    if slug and _is_checkpoint_module(slug):
+        if tier == "beginner":
+            return "beginner-checkpoint.md"
+        return "core-checkpoint.md"
     if full_build and tier == "beginner":
         return "beginner-full-rag.md" if rag else "beginner-full.md"
     if tier == "beginner":
@@ -2154,9 +2206,15 @@ def _get_content_template(track: str, module_num: int,
 
 
 
-def _get_activities_template(track: str, module_num: int) -> str:
+def _get_activities_template(track: str, module_num: int,
+                             slug: str = "") -> str:
     """Return the activities prompt filename for the given tier."""
     tier = _get_prompt_tier(track, module_num)
+    # Checkpoint modules get dedicated activity templates
+    if slug and _is_checkpoint_module(slug):
+        if tier == "beginner":
+            return "beginner-checkpoint-activities.md"
+        return "core-checkpoint-activities.md"
     if tier == "beginner":
         return "beginner-activities.md"
     if tier == "seminar":
@@ -2219,6 +2277,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "TEXTBOOK_GRADE": _get_textbook_grade(ctx),
         "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]),
         "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
+        "CHECKPOINT_REVIEW_GUIDANCE": _get_checkpoint_review_guidance(ctx),
         "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),
         "INTRO_HOOK": (
             "Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
@@ -2717,7 +2776,8 @@ def _prefetch_textbook_examples(ctx: ModuleContext) -> str:
             if "—" in uk_part:
                 parts = uk_part.split("—", 1)
                 # Pick whichever side has Cyrillic (handles English-first titles)
-                has_cyr = lambda s: any("\u0400" <= c <= "\u04ff" for c in s)
+                def has_cyr(s: str) -> bool:
+                    return any("\u0400" <= c <= "\u04ff" for c in s)
                 uk_part = parts[0].strip() if has_cyr(parts[0]) else parts[1].strip()
             search_terms.append(uk_part)
     if not search_terms:
@@ -3075,6 +3135,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         ctx.track, ctx.module_num,
         full_build=getattr(ctx, "full_build", False),
         rag=getattr(ctx, "rag", False),
+        slug=ctx.slug,
     )
     template = PHASES_DIR / content_template_name
     if not template.exists():
@@ -3505,7 +3566,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     """Resolve all paths, load plan, detect archive. Returns ModuleContext."""
     track, num = args.track, args.num
-    slug = slug_for_num(track, num)
+    slug_for_num(track, num)  # validate slug exists
 
     args.content_only = False
     args.enrich = False
