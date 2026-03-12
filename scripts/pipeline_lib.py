@@ -3265,7 +3265,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             if preflight_text:
                 preflight_file = ctx.orch_dir / "preflight-report.md"
                 preflight_file.write_text(preflight_text, encoding="utf-8")
-                preflight_failed = "status: FAIL" in preflight_text or "status:FAIL" in preflight_text
+                preflight_lower = preflight_text.lower()
+                preflight_failed = "status: fail" in preflight_lower or "status:fail" in preflight_lower
                 if preflight_failed:
                     log("  content: PRE-FLIGHT FAILED — agent halted before generating content")
                     log(f"  content: Report saved → {preflight_file.name}")
