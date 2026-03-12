@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "writing-skills",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:55:48Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:55:48Z",
+      "task_id": "v5-writing-skills-pA",
+      "mode": "full"
+    }
+  }
+}

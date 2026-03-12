@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "tomorrow-future-tense",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:19:09Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:20:02Z",
+      "note": "merged-into-research"
+    }
+  }
+}

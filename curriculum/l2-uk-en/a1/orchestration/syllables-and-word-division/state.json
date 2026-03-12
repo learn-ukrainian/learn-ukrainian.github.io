@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "syllables-and-word-division",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:43:29Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:44:02Z",
+      "note": "merged-into-research"
+    }
+  }
+}

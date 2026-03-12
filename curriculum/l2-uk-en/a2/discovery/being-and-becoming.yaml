@@ -1,0 +1,76 @@
+discovered_at: '2026-03-12T08:45:06.418830+00:00'
+query_keywords:
+- Being and Becoming
+- бути + instrumental
+- стати + instrumental
+- працювати + instrumental
+- бути
+- стати
+- ставати
+- Дієслова та відмінювання
+- Verbs and Governing
+- 'Соціокультурний контекст: Фемінітиви та IT'
+- 'Sociocultural Context: Femininitives and IT'
+- Практика та запобігання помилкам
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=8GKxBKOCFEg
+  channel: Let's Learn Ukrainian
+  title: 'How to say I HAVE & I DON''T HAVE in Ukrainian | Conjugation | Grammar |
+    #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0227
+  text: "1. Форма вокально-музичного твору, яка інтонаційно \nта ритмічно на­б­лижається\
+    \ до декламації; наспівне декламування. 2. у знач. присл. речитативом — наспівно,\
+    \ протяжно."
+  section_title: Сторінка 215
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrlit-avramenko-2023_s0118
+  text: "Ми йшли й співали арію Хозе з опери Бізе «Кармен», яку багато разів \nчули\
+    \ по радіо: \n1 Баналюки — небилиці. 2 Реманент — сукупність предметів, необхідних\
+    \ для якоїнебудь роботи."
+  section_title: Сторінка 101
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0065
+  text: "ІІ. Складіть два речення, використавши слова майструвати, виконувати, отримати\
+    \ \n(на вибір) як частини складених дієслівних присудків. ІІІ. Доберіть синоніми\
+    \ до виділених слів."
+  section_title: Сторінка 61
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0353
+  text: 1-й б а с. Можна й припустить. 2-й б а с. Стоїть. Г о л о х в о с т и й. Обхожденіє
+    понімають. П р о н я. Да, модні кавалери. (Одходить під руку з Голохвостим.) (...)
+  section_title: Сторінка 199
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0139
+  text: 1. Сформóлюйте резóльтати діяльності, виêористовóючи записані êóрсивом слова.
+  section_title: Сторінка 92
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "weather-and-nature",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:27:08Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:27:53Z",
+      "note": "merged-into-research"
+    }
+  }
+}

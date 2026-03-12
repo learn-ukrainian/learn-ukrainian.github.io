@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "because-and-although",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T10:24:08Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T10:24:08Z",
+      "task_id": "v5-because-and-although-pA",
+      "mode": "full"
+    }
+  }
+}

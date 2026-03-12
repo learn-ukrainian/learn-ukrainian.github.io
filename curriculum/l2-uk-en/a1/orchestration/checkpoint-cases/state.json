@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "checkpoint-cases",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:16:24Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:17:14Z",
+      "note": "merged-into-research"
+    }
+  }
+}

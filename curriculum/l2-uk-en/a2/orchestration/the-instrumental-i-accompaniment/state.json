@@ -1,0 +1,17 @@
+{
+  "track": "a2",
+  "slug": "the-instrumental-i-accompaniment",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:43:44Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:44:37Z",
+      "note": "merged-into-research"
+    }
+  }
+}

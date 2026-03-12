@@ -1,0 +1,17 @@
+{
+  "track": "hist",
+  "slug": "trypillian-civilization",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:04:57Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:05:42Z",
+      "note": "merged-into-research"
+    }
+  }
+}

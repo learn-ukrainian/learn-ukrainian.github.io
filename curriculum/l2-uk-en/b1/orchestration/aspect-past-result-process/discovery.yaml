@@ -1,0 +1,141 @@
+discovered_at: '2026-03-12T08:50:15.337935+00:00'
+query_keywords:
+- 'Вид у минулому: результат і процес'
+- result from process in past tense
+- duration markers with imperfective
+- aspect based on speaker's focus (result vs activity)
+- Learner recognizes completion markers with perfective
+- Result-oriented vs process-oriented aspect
+- Duration markers and aspect
+- Completed actions vs ongoing processes
+- grammar
+- результат
+- процес
+- завершення
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=s9_MS6A0wAw
+  channel: Repainted Fox
+  title: Advanced Packaging & Chiplet Design with Chipletz
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its content is entirely focused on
+    advanced packaging and chiplet design, which is unrelated to the grammatical topic
+    of verb aspect in the past tense (result vs process).
+  transcript_excerpt: Сьогодні ми розмовляємо зі Стівеном Ньюберрі, Віктором Кронбергом
+    та Чінг-Пінгом Вонгом з Chipletz.
+  embed_suggestion: Not suitable for embedding. The content is irrelevant to the module's
+    topic.
+- url: https://www.youtube.com/watch?v=s9lQP20YlWQ
+  channel: Repainted Fox
+  title: Електростанок, бритва чи тример? Чесний огляд перевірених гаджетів для чоловіків
+    від Philips | COMFY
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its content is a product review of
+    electric shavers and trimmers, which is unrelated to the grammatical topic of
+    verb aspect in the past tense (result vs process). While the word 'результат'
+    (result) is used, it refers to the outcome of shaving, not linguistic aspect.
+  transcript_excerpt: Кожен пристрій гарантує бездоганний результат і захищає шкіру
+    від подразнень.
+  embed_suggestion: Not suitable for embedding. The content is irrelevant to the module's
+    topic.
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/92/
+  title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+    aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/grammar-past-tense/
+  title: Past Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics: []
+- url: https://www.ukrainianlessons.com/grammar-future/
+  title: Future Tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0095
+  text: "Розділ 2  ДІЄПРИКМЕТНИК\n88\nДієпри-\nкмет-\nники\nАктивні\nПасивні\nЗна-\n\
+    чення\nвиражають ознаку за дією, яку \nвиконує сам предмет\nвиражають \nознаку\
+    \ за \nдією, якої \nзазнає предмет \nіз боку іншого \nвиконавця\nЧас\nтеперішній\n\
+    минулий\nминулий\nТво-\nрення\nдіє слово недоконаного \nвиду + суфікси\nдіє слово\
+    \ \nдокона-\nного виду \n+ суфікс \n-л-\nдіє слово \nдоконаного або \nнедоконаного\
+    \ \nвиду + суфікси\n-уч-/-юч- \nдо діє слів \nI дієвід-\nміни\n-ач-/-яч- \nдо\
+    \ діє слів \nII дієвід-\nміни\n-н-\n-ен-\n-т-\nПри-\nклади\nсиніти — \nсиніюч"
+  section_title: Сторінка 91
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0047
+  text: "Розділ 1  ДІЄСЛОВО\n40\nВправа 51\n1   Назвіть усі можливі часові форми поданих\
+    \ дієслів \nСкласти, складати, порівняти, порівнювати, почати, роз­\nпочати.\n\
+    2   Чи від усіх діє слів вдалося утворити форми теперішнього часу? Чому?\nМинулий\
+    \ час\nДіє слова у формі минулого часу позначають дію, що \nвідбувалася або відбулася\
+    \ до моменту мовлення про неї: до­\nпоміг, розв’язала, здалося, відчули.\nФорму\
+    \ минулого часу мають діє слова доконаного й не-\nдоконаного виду: робив і зробив,\
+    \ грав і зіграв.\nДіє слова в мину"
+  section_title: Сторінка 43
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0108
+  text: "96\n2.\t Утворіть активні дієприкметники теперішнього та минулого часу від\
+    \ від-\nповідних основ. Запишіть їх і виділіть у них суфікси.\n І.\t Існують,\
+    \ скриплять, радіють, тремтять, виють. \nІІ.\tРозімліти, спітніти, зникнути, остовпіти,\
+    \ принишкнути.\n3.\t Замініть активні дієприкметники теперішнього часу більш природними\
+    \ \nвідповідниками (способи заміни — у § 42). Запишіть їх (за зразком).\nЗразок.\
+    \ Танцюючі дівчата — дівчата, які танцюють. \nТанцюючі дівчата, спляча красуня,\
+    \ усі бажаючі,  вируюче море, завм"
+  section_title: Сторінка 99
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0074
+  text: "63\n§ 29.  Минулий  час  дієслів\nБ.\t Позначте в них суфікс, визначте й\
+    \ запишіть число та рід (якщо однина) \n(за зразком). \nЗразок. Наснилось — мин.\
+    \ ч., одн., с. р.\n4.\t Виконайте завдання в тестовій формі. \n1. НЕПРАВИЛЬНИМ\
+    \ є твердження, що дієслова минулого часу\nА\t змінюються за числами\nБ\t утворюються\
+    \ від основи інфінітива\nВ\t в однині змінюються за родами\nГ\t змінюються за\
+    \ особами\n2. Дієслово доконаного виду записано у варіанті\nА\t проводжала\nБ\t\
+    \ навідував\nВ\t спромоглися\nГ\t малювало\n3. Дієслова минул"
+  section_title: Сторінка 66
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0112
+  text: "Підсумкові тести  \n105\n4   Відокремлене означення є  в реченні (розділові\
+    \ знаки пропущено)\nА  Дівчина не зводила з нього широко розкритих очей.\nБ  Усе\
+    \ добре збережене й доглянуте.\nВ  Це була подія зафіксована репортерами.\nГ \
+    \ Вишита прабабунею картина передається від покоління \nдо покоління.\n5   Дієприкметник\
+    \ пишемо разом із часткою не в  рядку\nА  Показалися гори, не/помічені нами раніше.\
+    \ \nБ  Двері не/замкнені, увійдіть.\nВ  М’яч віртуозно прослизнув у не/захищене\
+    \ місце супер-\nників. \nГ  Я не/розг"
+  section_title: Сторінка 108
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

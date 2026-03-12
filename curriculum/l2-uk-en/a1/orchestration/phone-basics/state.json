@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "phone-basics",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:53:34Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:53:34Z",
+      "task_id": "v5-phone-basics-pA",
+      "mode": "full"
+    }
+  }
+}

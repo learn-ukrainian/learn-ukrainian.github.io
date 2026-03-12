@@ -1,0 +1,130 @@
+discovered_at: '2026-03-12T08:54:54.109265+00:00'
+query_keywords:
+- 'Checkpoint: Sentences'
+- читати
+- писати
+- говорити
+- 'Навичка 1: Дієслова'
+- 'Skill 1: Verbs'
+- 'Навичка 2: Питання та заперечення'
+- 'Skill 2: Questions & Negation'
+- 'Навичка 3: Уподобання та присвійні'
+- 'Skill 3: Preferences & Possessives'
+- Інтеграційне завдання
+- Integration Task
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Sr7Jv9TVOgk
+  channel: Bright Kids Ukrainian
+  title: What is this? - Ukrainian Grammar
+  relevance_score: 0.8
+  relevance_note: 'This video explains the distinction between animate and inanimate
+    nouns and how it affects question formation (''Хто це?'' vs ''Що це?''), directly
+    reinforcing ''Skill 2: Questions & Negation''.'
+  transcript_excerpt: від категорії істот чи не істот залежить питання хто це або
+    що це
+  embed_suggestion: 'After Skill 2: Questions & Negation -- it elaborates on question
+    types based on noun categories.'
+- url: https://www.youtube.com/watch?v=x1kW08scie0
+  channel: Ukrainian with Olha
+  title: 'Я ти він вона воно ми ви вони #ukrainianlanguage #ukrainianlessons #learnukrainian'
+  relevance_score: 0.4
+  relevance_note: The video merely lists personal pronouns, which are a basic component
+    of sentences but doesn't teach sentence construction, verbs, negation, preferences,
+    or possessives as outlined in the module's skills.
+  transcript_excerpt: Я, ти, він, вона, воно, ми, ви, вони.
+  embed_suggestion: After Огляд (Overview) -- as a very basic introduction to personal
+    pronouns.
+- url: https://www.youtube.com/watch?v=Dj-fMi4Sdso
+  channel: Bright Kids Ukrainian
+  title: Vowel sounds in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce І in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce С in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=94ItbFnT7cY
+  channel: Ukrainian with Olha
+  title: 'Ти розумієш? - Do you understand? #ukrainianlanguage #ukrainianlessons #learnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0108
+  text: "1\nСлова для довідки: червоніти, втікати, думати, мріяти, ліну­\nватися,\
+    \ зазнаватися.\n2. Запиши дієслова в тому порядку, що й фразеологізми. Через \n\
+    риску запиши дієслова майбутнього часу в 2-й особі множини, \nпотім — у 3-й особі\
+    \ множини.\nЗразок. Бігати — бігатимете (2-га ос. мн.), будете бігати \n(2-га\
+    \ ос. мн.), бігатимуть (3-тя ос. мн.), будуть бігати (3-тя ос. мн.).\n299.1. Прочитай\
+    \ дієслова, розкриваючи дужки.\nМатим(е/и)ш, дбатим(е/и)те, шепоч(е/и)ш, скач(е/и)те,\
+    \ обері- \nгатим(е/и)ш, садитим(е/и)"
+  section_title: Сторінка 110
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0002
+  text: "3\nДорогий друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи\
+    \ любиш фантазувати?\nТоді ця книга саме для тебе! \nВона допоможе тобі навчитися\
+    \ читати, \nвисловлювати думки й почуття, спілкуватися.\nУмовні позначення:\n\
+    \ \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю малюнок\n\
+    \ \n — спілкуюся \n \n— мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0061
+  text: 'А. Перепишіть речення, уставивши, де потрібно, м’який знак. Б. Надпишіть
+    над кожним дієсловом його форму. було
+
+    кажу
+
+    принести'
+  section_title: Сторінка 54
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,0 +1,113 @@
+discovered_at: '2026-03-12T08:49:37.223760+00:00'
+query_keywords:
+- 'Вид дієслова: повна система'
+- Розминка та Контекст
+- Warm-up & Context
+- 'Граматична Система: Форми та Функції'
+- 'Grammatical System: Forms & Functions'
+- 'Глибинна Семантика: Процес vs Результат'
+- 'Deep Semantics: Process vs Result'
+- Аналіз Помилок та Тонкощі
+- Error Analysis & Nuances
+- Практика та Мовленнєві Ситуації
+- Practice & Speech Situations
+- the complete aspectual system
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/92/
+  title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+    aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/91/
+  title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+    and perfective  verb aspects in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/94/
+  title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+    and perfective verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0252
+  text: "Окремо взята \nформа конкретного слова є його \nсловоформою. Кожний клас\
+    \ слів має своє лек-\nсичне значення: предметності, \nознаки предмета, кількості,\
+    \ уза-\nгальненої вказівки на предмет-\nність, ознаки або кількості, дії чи \n\
+    стану. Такі класи слів називають \nповнозначними. Слова, що за-\nгальнокатегоріального\
+    \ значення \nсамостійно не виражають, нази-\nваються неповнозначними."
+  section_title: Сторінка 140
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0141
+  text: "ЗМІСТ\nз\nЗвуки і букви. Склад. Наголос. Звуко-буквений склад слів......................\
+    \ 4\nПравильне наголошення слів.................. 4\nПравильна вимова та написання\
+    \ слів \nіз дзвінкими приголосними в кінці слова \nта складу перед глухими...........................\
+    \ 5\nПодовжені м’які приголосні звуки............. 8\nРозташування слів за алфавітом.............\
+    \ 9\nЗначення слова......................................... 10\nОднозначні та\
+    \ багатозначні слова.......... 10\nПряме та переносне значення слів..."
+  section_title: Сторінка 143
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0325
+  text: ". . . . . . . 33\n§ 8 \nДієслово. Дієслівні форми  . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 37\n§ 9 \nПаралельні форми вираження наказового  способу\
+    \ дієслів І та ІІ особи множини . . . . . 46\n§ 10 \nСкладні ви5падки словозміни\
+    \ дієслів дати, їсти, відповісти, бути . . . . . . . . . . . . . . . . . . . .\
+    \ 49\n§ 11 \nАктивні й пасивні дієприкметники . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 221
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0254
+  text: "За лексичними й морфо-\nлогічними ознаками поділяються на власні \nй загальні,\
+    \ конкретні й абстрактні, назви істот \nі неістот, збірні та одиничні\nОсновна:\
+    \ підмет (називний відмінок або родовий, \nколи поєднується з кількісним числівником\
+    \ або \nіншим словом із кількісним значенням — у скла-\nденому підметі), додаток\
+    \ (у непрямих відмінках). Неосновна: обставина (частіше іменник із при-\nйменником,\
+    \ особливо в місцевому відмінку), не-\nузгоджене означення, прикладка, іменна\
+    \ частина \nскладеного присудка"
+  section_title: Сторінка 141
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

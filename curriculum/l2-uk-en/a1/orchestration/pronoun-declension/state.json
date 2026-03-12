@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "pronoun-declension",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:10:18Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:10:39Z",
+      "note": "merged-into-research"
+    }
+  }
+}

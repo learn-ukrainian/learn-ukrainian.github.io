@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "numeral-case-agreement",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:52:06Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:52:06Z",
+      "task_id": "v5-numeral-case-agreement-pA",
+      "mode": "full"
+    }
+  }
+}

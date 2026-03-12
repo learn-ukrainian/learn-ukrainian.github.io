@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "greetings-and-politeness",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:45:06Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:46:01Z",
+      "note": "merged-into-research"
+    }
+  }
+}

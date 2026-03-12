@@ -1,0 +1,17 @@
+{
+  "track": "a2",
+  "slug": "the-dative-ii-nouns",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:42:32Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:42:57Z",
+      "note": "merged-into-research"
+    }
+  }
+}

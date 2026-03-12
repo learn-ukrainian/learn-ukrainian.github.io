@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "the-best-the-worst",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:40:17Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:40:17Z",
+      "task_id": "v5-the-best-the-worst-pA",
+      "mode": "full"
+    }
+  }
+}

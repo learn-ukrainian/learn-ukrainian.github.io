@@ -1,0 +1,144 @@
+discovered_at: '2026-03-12T10:12:35.095334+00:00'
+query_keywords:
+- Euphony and Polish
+- У/В alternation
+- І/Й alternation
+- З/Із/Зі alternation
+- у
+- в
+- і
+- й
+- з
+- із
+- зі
+- У/В чергування
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/lesson-161/
+  title: ULP 5-161 Як у мене справи і що нового в Ukrainian Lessons
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 161
+- url: https://www.ukrainianlessons.com/lesson-164/
+  title: ULP 5-164 Інтерв'ю з Євгеном про життя в Америці
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 164
+- url: https://www.ukrainianlessons.com/lesson-171/
+  title: ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 171
+- url: https://www.ukrainianlessons.com/lesson-175/
+  title: ULP 5-175 З Новим роком і Різдвом! – Пісня Скрябіна
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 175
+- url: https://www.ukrainianlessons.com/lesson-192/
+  title: 'ULP 5-192 Українці в Аргентині: розмова з Антоніною Чембарович'
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 192
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0242
+  text: "Чергування у–в та і–й забезпечує милозвучність мови. Завдяки йому \nуникаємо\
+    \ незручних для вимови збігів голосних і приголосних звуків. Правила чергування\
+    \ у–в та і–й такі: \nу, і\nміж приголосними\nвін у домі, брат умивається; син\
+    \ і мати, \nдощ іде\nу перед в, ф, кв, тв, льв, \nхв і под. і перед й, я, ю, є,\
+    \ ї\nвін у вагоні, вона у вагоні, сестра у Львові \nїї і його, Одеса і Ялта, лисиця\
+    \ і їжак\nі після й, ї, а також \nпісля я, ю, є, що позна-\nчають два звуки\n\
+    синій і зелений,\nМарія і Денис\nна початку речен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0103
+  text: "ФОНЕТИКА УКРАЇНСЬКОЇ ЛІТЕРАТУРНОЇ МОВИ\n58\nУ–в не чергуються\nУ власних\
+    \ назвах\nУгорщина, Вдовенко\nУ словах іншомовного походження\nувертюра, утопія\n\
+    У словах, де зміна початкового [у] чи [в] веде до зміни значення \nслова\nвправа\
+    \ і управа, вдача і удача\n[І] з [й] чергуються у тих самих випадках, що й [у]\
+    \ з [в]. І–й не чергуються\nПри зіставленні понять\nминуле і сучасне, чорне і біле\n\
+    У словах іншомовного походження\nдо інституту\nВаріанти прийменника з–із–зі (зо)\
+    \ чергуються на такій же під-\nставі, що й в–"
+  section_title: Сторінка 58
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0120
+  text: "117\n1.\tПрочитайте речення вголос і виконайте завдання. \nБрат й син ввечері\
+    \ привітали з свя-\nтом.\nБрат і син увечері привітали зі свя-\nтом.\nА. Яке речення\
+    \ вимовляти легше й зручніше?\nБ. Прочитайте виділені букви й порівняйте вимову:\
+    \ тйс, нвв, зсв і тіс, \nнув, зісв. \n§ 51–52.  ОСНОВНІ  ВИПАДКИ  ЧЕРГУВАННЯ \
+    \ у–в,  і–й.  \nУЖИВАННЯ  ПРИЙМЕННИКА  з\n § 51–52.  Основні  випадки  чергування\
+    \  у–в,  і–й.  Уживання  прийменника  з\nЧергування у–в та і–й забезпечує милозвучність\
+    \ мови. Завдяки йому \nуникаємо зб"
+  section_title: Сторінка 117
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0121
+  text: "118\nФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ \nЗауважте!\nВідхилення від\
+    \ правил чергування у–в та і–й можливі в художніх тво-\nрах, де вибір залежить\
+    \ від ритмомелодики чи мовних уподобань автора/\nавторки.\n2.\tПрочитайте речення\
+    \ та виберіть із дужок потрібну літеру. Вибір про­\nкоментуйте (усно).\n1. Немає\
+    \ нічого страшнішого за необмежену владу (у, в) руках обме-\nженої людини (В.\
+    \ Симоненко). 2. Україна загартована найвищим гар-\nтом. (У, В) умовах сучасного\
+    \ світу їй немає ціни (Л. Костенко). 3. Добре \nро"
+  section_title: Сторінка 118
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0108
+  text: "(За М. Коцюбинським)\n \n \nПідкресліть у тексті слова, у яких наявні або\
+    \ можливі чергування го-\nлосних і приголосних звуків. Перевірте себе\n \n Дайте\
+    \ відповіді на запитання. — Які ви знаєте засоби досягнення мило-\nзвучності?\
+    \ — Коли відбувається чергування у–в, і–й, \nз–зі–зо? — Назвіть стилістичні засоби\
+    \ фонетики. Виконайте тестові \nзавдання online"
+  section_title: Сторінка 60
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

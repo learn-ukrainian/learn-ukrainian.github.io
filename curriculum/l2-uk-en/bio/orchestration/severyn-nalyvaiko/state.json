@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "severyn-nalyvaiko",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T07:03:38Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T07:03:38Z",
+      "task_id": "v5-severyn-nalyvaiko-pA",
+      "mode": "full"
+    }
+  }
+}

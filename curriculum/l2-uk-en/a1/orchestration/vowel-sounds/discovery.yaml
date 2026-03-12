@@ -1,0 +1,148 @@
+discovered_at: '2026-03-12T08:42:03.872326+00:00'
+query_keywords:
+- Vowel Sounds
+- Голосні звуки
+- И vs І distinction
+- яблуко
+- риба
+- село
+- Шість основних голосних
+- Наголос
+- Йотовані голосні
+- Голосні в словах
+- Learner masters pronunciation of 6 base vowels (А О У Е И І)
+- Learner understands iotated vowels (Я Ю Є Ї) and their dual function
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Dj-fMi4Sdso
+  channel: Bright Kids Ukrainian
+  title: Vowel sounds in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=v5AMy3_dGa4
+  channel: Bright Kids Ukrainian
+  title: 'Eyes, Ears, Nose: Overview of parts of the head in Ukrainian - Lesson for
+    children'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce Р in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aq0cjB90s3w
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce Й in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=y8RFRTLXJDc
+  channel: Ukrainian with Olha
+  title: 'Conjunction ”and” #ukrainianlessons #ukrainianforbeginners #ukrainianlanguage
+    #learnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=1X4jGK2Zo_8
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Grammar: Vowel alterations #1: o, e || i #Ukrainian #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ri3LkQYbEfU
+  channel: Let's Learn Ukrainian
+  title: 'Read and write in Ukrainian #2. Special letters Я, Ю, Є, Ї'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - alphabet
+  - cyrillic
+  - letters
+  - sounds
+rag_chunks:
+- score: 0.5
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0023
+  text: "24\nЗВУКИ. ГОЛОСНІ І ПРИГОЛОСНІ\nТи вимовляєш різні звуки: голосні і приголосні.\
+    \ \nГолосні звуки утворюються за допомогою голосу.\nГолосні почуєш в пісні,\n\
+    І у темному у лісі, \nІ коли дивуєшся,\nІ коли милуєшся.\nЛегко вимовляються,\
+    \ \nВесело співаються! \nПрочитай. Назви букви, які позначають голосні звуки.\n\
+    ал – ам – ан \nла – ма – на \nул – ум – ун\nол – ом – он \nло – мо – но \nлу –\
+    \ му – ну\n \nПриголосні звуки утворюються \nза допомогою голосу і шуму.\nПриголосні\
+    \ деренчать\nІ тихенько шелестять, \nГолосно свистя"
+  section_title: Сторінка 24
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0035
+  text: "34\nГоЛоснІ І ПриГоЛоснІ ЗвУки. \nПоЗначЕння ГоЛосниХ ЗвУкІв БУквами \nЗвуки\
+    \ мови поділяються на голосні і приголосні.\nРозглянь схему. Розкажи, як утворюються\
+    \ звуки мови.\nголосні\nголос\nголос і шум\nшум\nприголосні\nутворюються\nЗвуки\n\
+    В українській мові є шість голосних звуків. \nТи можеш позначити їх на письмі\
+    \ десятьма буквами.\nголосні \nзвуки\n6\n[а], [о], [у], [е], [и], [і]\n10\nбукви,\
+    \ що позначають \nголосні звуки\nа, о, у, е, и, і, я, ю, є, ї\n \nСпиши слова.\
+    \ Поділи їх на склади. Скільки звуків позначають \nб"
+  section_title: Сторінка 34
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0013
+  text: "13\n\t Вимов голосні звуки в словах — назвах предме-\nтів.   \n\t Вимов приголосні\
+    \ звуки в словах — назвах \nпредметів.\n\t Який у тебе сьогодні настрій? Вибери.\n\
+    Мовні звуки: голосні та приголосні\n[•]\n[•]\n [ – ]\n [ – ]\n [ – ]\n [ – ]\n\
+    \t Вимов перший звук у словах — назвах предме-\nтів. Який це звук? Приголосний\
+    \ звук позначає-\nмо так: [–].\n\t Вимов перший звук у словах — назвах предметів.\
+    \ \nЯкий це звук? Голосний звук позначаємо так: [•]."
+  section_title: Сторінка 15
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0002
+  text: "ЗВУКО-БУКВЕНИЙ СКЛАД \nСЛОВА\nАНАЛІЗУЮ ЗВУКОВИЙ СКЛАД СЛОВА\nзвуки.\nГ\n\
+    звук\nв\nо\nМовний звук — елемент людської мови, \nутворений за допомогою органів\
+    \ мовлення.\nХвилинка спілкування\n1\n— В українській мові шість голосних \nзвуків.\n\
+    — Я думаю, що їх десять.\n— Ні. Запам'ятай шість голосних \nзвуків:\n[а], [о],\
+    \ [у], [е], [и], [і].\n— Добре. Запам’ятаю!\n4"
+  section_title: Сторінка 4
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0015
+  text: "15\nПриголосні тверді та м’які\n\t Вимов звуки, які ти чуєш на початку слів\
+    \ — \nназв намальованих предметів.\n\t Порівняй вимову перших звуків у словах\
+    \ — на-\nзвах предметів. У яких словах перші звуки ви-\nмовляємо м’яко? М’які\
+    \ звуки позначай так: [ =].\n\t Який у тебе сьогодні настрій? Вибери.\n [    \
+    \  ] \n [      ] \n [      ] \n [      ] \n [      ] \n [      ] \n [ = ]  \n\
+    \ [ = ]  \n [ = ]  \n [ – ] \n [ – ] \n [ – ] \n\t Хто неправильно поділив слово\
+    \ — назву нама-\nльованого предмета на склади?"
+  section_title: Сторінка 17
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

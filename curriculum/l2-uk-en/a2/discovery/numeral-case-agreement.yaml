@@ -1,0 +1,156 @@
+discovered_at: '2026-03-12T09:51:47.302202+00:00'
+query_keywords:
+- Numerals and Case Agreement
+- 'Правильно рахуємо: 1 книга, 2 книги, 5 книг'
+- один/одна/одне gender agreement
+- один
+- одна
+- одне
+- два
+- дві
+- три
+- Чому "дві книги" але "п'ять книг"?
+- Один/одна/одне + називний
+- One + Nominative
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/fmu7/
+  title: 'Grammar point: numeral / noun agreement in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 7
+- url: https://opentext.ku.edu/dobraforma/chapter/16-3/
+  title: 'Dobra Forma: Ordinal Numerals (Gender and Number in Nominative)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - ordinal
+  - numerals
+  - grammar
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 46
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 47
+- url: https://www.ukrainianlessons.com/episode49/
+  title: Syrnyky recipe + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - phrases
+  - introductions
+  - culture
+  - traditions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 49
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0005
+  text: "6\nЯК ЧИТАЮТЬ КНИЖКИ?\nЛюди читають книжки по-різному. Одні швидко,\nінші\
+    \ — повільно, а деякі так швидко, ніби «ковтають» \nсторінки.\nШвидкість читання\
+    \ значною мірою залежить від того, \nщо і з якою метою ми читаємо. Скажімо, підручник\
+    \ із \nматематики та збірку казок ти, очевидно, читаєш по-\nрізному. Текст задачі,\
+    \ наприклад, треба прочитати не \nпоспішаючи кілька разів, щоб зрозуміти кожне\
+    \ слово, \nзапам’ятати дані, розібратися у змісті запитання. Без \nцього задачу\
+    \ не розв’яжеш. Казку ж ти читаєш зовсім"
+  section_title: Сторінка 6
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0140
+  text: "142\nДосліди, скількома \nспособами \nможна \nпрочитати числовий \nвираз.\n\
+    Я — дослідник\nЯ — дослідниця\nНавчаюся читати числові вирази\n70 + 25\n80 – 25\n\
+    Сума чисел сімдесят і двадцять  \nп’ять.\nСімдесят збільшити на двадцять  \nп’ять.\n\
+    Перший доданок сімдесят, другий — \nдвадцять п’ять.\nДо сімдесяти додати двадцять\
+    \ п’ять.\nРізниця чисел вісімдесят і двадцять п’ять.\nВісімдесят зменшити на двадцять\
+    \ п’ять.\nЗменшуване вісімдесят, від’ємник —  \nдвадцять п’ять.\nВід вісімдесяти\
+    \ відняти двадцять п’ять.\nПравильно утв"
+  section_title: Сторінка 142
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0109
+  text: "До ре­чі, ри­му­ван­ня мо­же від­бу­ва­ти­ся і в ін­ший спо­сіб: нап­рик­лад,\
+    \ \nпер­ший ря­док ри­му­єть­ся з тре­тім, а дру­гий — із чет­вер­тим, як у \n\
+    та­ко­му урив­ку. Розвиваємо компетентності\nТеорія літератури\n\n\n"
+  section_title: Сторінка 103
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0248
+  text: "§ 51. Узгодження числівників з іменниками  \n241\nдва зошити, двадцять чотири\
+    \ учні, сімдесят чо-\nтири відсотки.\nАле: два селянина, три громадянина (Р. в.\
+    \ одн.), \nоскільки ці іменники мають суфікс -ин-.\n3. Числівники від п’яти до\
+    \ двадцяти і тридцять ви-\nмагають форми родового відмінка множини: п’ять \nзошитів,\
+    \ десять учнів, сто двадцять сім банків.\nЗверніть увагу! Числівники два, три,\
+    \ чотири не \nсполучаємо з  іменниками ІV відміни. Для позначення \nїхньої кількості\
+    \ уживають збірні числівники (троє \nт"
+  section_title: Сторінка 241
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0160
+  text: "152\n1.\tПрочитайте слова й словосполучення та виконайте завдання.\nодин\
+    \ → перше місце — золота медаль\nдва → друге місце — срібна медаль\nтри → третє\
+    \ місце — бронзова медаль\nА.\t\nЯкі числівники вказують на кількість, а які —\
+    \ на порядок при лічбі?\nБ.\t На які питання вони відповідають? \n           Групи\
+    \ числівників \nза значенням \nза будовою\nкількісні (скільки?): один, два-\n\
+    надцять, тридцять п’ять\nпрості  \n(один корінь)\nшість,\nсімнадцятий\nпорядкові\
+    \ (котрий?): перший, \nдванадцятий, тридцять п’ятий\nскладе"
+  section_title: Сторінка 152
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

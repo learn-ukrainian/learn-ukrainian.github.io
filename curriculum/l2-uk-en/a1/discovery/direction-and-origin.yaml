@@ -1,0 +1,131 @@
+discovered_at: '2026-03-12T09:17:15.748035+00:00'
+query_keywords:
+- Direction and Origin
+- До + Genitive
+- З/від + Genitive
+- іти
+- їхати
+- до
+- Куди? + Знахідний
+- Where to? + Accusative
+- До + Родовий
+- To + Genitive
+- Звідки? + Родовий
+- Where from? + Genitive
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=QhKN_tj05Rg
+  channel: Ukrainian Lessons
+  title: ULP 2-47 | Гастрономічні фестивалі + Родовий відмінок | Food festivals +
+    Genitive case
+  relevance_score: 0.9
+  relevance_note: The video explicitly states it will cover the Genitive case ('родовий
+    відмінок'), which is a core grammatical topic for 'До + Родовий' and 'Звідки?
+    + Родовий' sections of this module.
+  transcript_excerpt: сьогодні ми будемо вивчати більше про родовий відмінок їжу і
+    звичайно Україну... gentive Case Food and of course Ukraine.
+  embed_suggestion: After section Три питання (Three Questions) -- This video provides
+    a general explanation of the Genitive case, reinforcing the specific applications
+    taught in the 'До + Родовий' and 'Звідки? + Родовий' sections.
+- url: https://www.youtube.com/watch?v=lUw0u1EN2to
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #3. Genitive (Родовий відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7gLc_yf1IvM
+  channel: Let's Learn Ukrainian
+  title: 'Practice ALL Ukrainian Cases with me! | #LetsLearnUkrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=FafVwRIxhpg
+  channel: Speak Ukrainian
+  title: Genitive case in the Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Jov8xPqq7cM
+  channel: Speak Ukrainian
+  title: Ukrainian prepositions У, В and НА and the difference between them
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0037
+  text: "36\nБачу  Ї, ї. Чую  [й], [і].\nЇ ї\nу к р а ї\nУ к р а\nК и ї в\nї\n*\n\
+    н\nн а\nі\n [ –•| = •– ] \nсво\nтво\nмо\nЇ\nм\nж\nжа\nжак\nсти\nїжа\t\t\n\t\n\
+    \  мої   \t \t\nдоїхав   \n [ =•|–• ] \n [ –•| =•]  \n [ –•| =•|–•– ] \nЇжак,\
+    \ їжаченя\nЇздять по гриби щодня.\nЇжачиха помагає —\nСироїжки їм збирає (нар.\
+    \ тв.).\nСкоромовка\n\t\nПрочитай скоромовку.\n\t Які звуки позначає буква, виділена\
+    \ червоним \nкольором? Вимов ці звуки. \nPidruchnyk.com.ua"
+  section_title: Сторінка 38
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0246
+  text: "Ч а с т и н и   м о в и\nСамостійні \nІменник \nсонце\nхто? що?\nПрикметник\n\
+    сонячний, мамин\nякий? чий?\nЧислівник\nтри, третій\nскільки? котрий?\nЗайменник\n\
+    я, ти, він\nхто? що?\nДієслово\nсидіти\nщо робити? що зробити?\nПрислівник \n\
+    сонячно, восени\nяк? де? коли? куди?\nСлужбові\nПрийменник\nна, в, з, до\nНе відповідають\
+    \ на \nпитання\nСполучник\nі, й, та, але\nЧастка\nне, б, хай\nВ и д и  р е ч е\
+    \ н ь\nЗа метою \nвисловлювання\nЗа емоційним \nзабарвленням\nЗа будовою\nрозповідне\n\
+    окличне\nпросте\nпитальне\nнеокличне\nскладне\nспонука"
+  section_title: Сторінка 245
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0334
+  text: "які?. У сучасному українському \nвжитку дієслова відправляти-\nся / відправитися\
+    \ під впливом \nросійських отправляться / от-\nправиться стали єдиними ви-\nразниками\
+    \ різних значень руху, \nпор.: Автобус відправляється \nз Києва о 8 годині; Обережно!\
+    \ По-\nїзд відправляється; Ми відправ-\nляємося в дорогу. Для кожного \nз названих\
+    \ уживань в українській \nмові є свої дієслівні відповід-\nники: Автобус відправляється\
+    \ \nз Києва о 8 годині — Автобус \nвідбуває (виїжджає) з Києва \nо 8 годині; Обережно!\
+    \ Поїзд від-\nпра"
+  section_title: Сторінка 188
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0352
+  text: "280\nДодаток 2\nСЛОВНИЧОК НАГОЛОСІВ\nалфàвѕт\nбагаторазîвий\nболоòистий\n\
+    борîдавка\nбосîніж\nбурштинîвий\nвàги (мн.)\nвантажѕвка\nвезти \nвести\nвидàння\n\
+    випадок\nвирàзний\nвишиваний\nвідвезти\nвідвести\nвіднести\nвѕрші (мн.)\nвіршовий\n\
+    гетьмàнський \nглядàч\nгорошина\nдивлячись\nдобовий\nдобóток\nдовезти\nдовести\n\
+    донести\nдîнька\nдочкà\nжалюзѕ\nживîпис \nзавдàння \nзàвжди\nзакінчити\nзалишити\n\
+    зàстібка\nзвисока\nздàлека\nзібрàння\nзîзла\nзрàння\nзрóчний\nкàмбала\nкаталîг\n\
+    кишка\nкіломåтр\nкîлесо\nкîлія\nкîсий\nкотрий\nкропивà\nкулінàрія\nкóрятина\nл"
+  section_title: Сторінка 284
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

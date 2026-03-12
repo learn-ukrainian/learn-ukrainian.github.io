@@ -1,0 +1,153 @@
+discovered_at: '2026-03-12T09:12:29.237125+00:00'
+query_keywords:
+- Aspect Mastery — Pairs
+- вид дієслова
+- готувати
+- приготувати
+- мити
+- помити
+- дзвонити
+- подзвонити
+- Діалоги
+- Dialogues
+- pair imperfective and perfective verbs
+- the correct aspect based on context clues
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=RzTV4GYRghA
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Cooking, Daily meals, Cake recipe 🍰 Instrumental
+    case | Imperfect verbs'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=bpMgfxZVHL8
+  channel: Let's Learn Ukrainian
+  title: 'What is ДІЄПРИСЛІВНИК? | Ukrainian Grammar | #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7IzMhjomEiQ
+  channel: Let's Learn Ukrainian
+  title: '40 Adjectives (Antonyms) #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.9
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/92/
+  title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+    aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - verbs
+  - aspect
+  - conjugation
+  - vocabulary
+  - idioms
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 92
+- url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+  title: 'Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - aspect
+  - verbs
+  - grammar
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0065
+  text: "55\n§ 25. Вид  дієслова\nПеремагати, крутити, зігнути, пекти, зіграти, дати,\
+    \ ловити, виховати, \nговорити, брати, назвати, зібрати, шукати, смикати, зігріти,\
+    \ вивертати. 4. Виконайте завдання в тестовій формі. 1. Лише дієслова доконаного\
+    \ виду записано у варіанті\nА\t скоротити, говорити, прийняти\nБ\t упізнати, спровокувати,\
+    \ змити\nВ\t зібрати, вивчити, передавати\nГ\t змазати, почути, випікати\n2. Лише\
+    \ дієслова недоконаного виду записано у варіанті\nА\t чула, смажитиме, вагатися\n\
+    Б\t заводити, змести, жували\nВ\t"
+  section_title: Сторінка 58
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0178
+  text: "409. Доберіть до дієслів прислівники, які найбільше підходять за \nзмістом.\n\
+    Написав (як? ).... Почулося (звідки? ) .... Зашуміло (де?) \n.... Попросив (як?)\
+    \ ... . Заговорили (як?) ... . Світить (де?) \n.... Зацвіли (коли?) .... Співає\
+    \ (як?) .... Віє (звідки?) ....\n•  Складіть і запишіть речення з 2 словосполученнями.\n\
+    410. Прочитайте текст. Перекажіть.\nТелефонна розмова — це теж важ­\nливий різновид\
+    \ спілкування. Мовлен­\nнєвий етикет передбачає обов’язково \nпредставитися незнайомій\
+    \ людині.\nГоворити по"
+  section_title: Сторінка 179
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0145
+  text: "147\n311. Спиши дієслова. Яке з них називає дію, спрямовану на \nсамого виконавця,\
+    \ а яке — дію, спрямовану на іншу \nособу? Із кожним словом склади та запиши речення.\n\
+    312. 1. До поданих дієслів додай -ся. Утворені дієслова \nзапиши. Поясни, як змінився\
+    \ їх зміст.\n Миєш, грієш, хвилюєш, дивуєш.\n Турбують, просять, відкривають,\
+    \ вітають.\n2. Виразно прочитай дієслова на -ся. Як їх потрібно ви-\nмовляти?\
+    \ А писати?\nУ дієсловах 2-ї особи однини -шся вимовляємо \nяк [с’:а].\nУ дієсловах\
+    \ 3-ї особи однини і мно"
+  section_title: Сторінка 147
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0065
+  text: "ІІ. Складіть два речення, використавши слова майструвати, виконувати, отримати\
+    \ \n(на вибір) як частини складених дієслівних присудків. ІІІ. Доберіть синоніми\
+    \ до виділених слів."
+  section_title: Сторінка 61
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0038
+  text: "§ 7  Види діє слова  \n31\nтеперішнього, минулого чи майбутнього часів, наприклад:\
+    \ \nвиконував домашнє завдання, виконую домашнє завдання, \nбуду виконувати домашнє\
+    \ завдання.\nВправа 34\n1   Порівняйте речення та поміркуйте, чим вони відрізняються\
+    \ \nОльга вчилася грати на \nгітарі.\nОльга навчилася грати на \nгітарі.\nДіти\
+    \ малюватимуть картину.\nДіти намалюють картину.\nДмитро мив посуд.\nДмитро помив\
+    \ посуд.\nЯ писала твір.\nЯ написала твір.\n2   Випишіть діє слова та поставте\
+    \ до них питання \nВправа 35\n1   Прочи"
+  section_title: Сторінка 34
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

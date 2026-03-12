@@ -1,0 +1,151 @@
+discovered_at: '2026-03-12T09:57:22.253385+00:00'
+query_keywords:
+- Smart Shopping
+- ціна
+- знижка
+- решта
+- products using comparative adjectives
+- for recommendations and advice
+- prices and ask for discounts
+- purchase decisions politely
+- comparison in context
+- asking for advice
+- negotiation phrases
+- decision making
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Q2L_locYg4o
+  channel: Ukrainian with Olha
+  title: '- 50% | ГОДИННИК ЗА ПІВ ЦІНИ! Решта – на відпочинок!'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=0bac12_IUpw
+  channel: Ukrainian with Olha
+  title: ГОДИННИК ЗА ПІВ ЦІНИ, РЕШТА – НА ВІДПОЧИНОК! 2021
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode56/
+  title: Asking for advice + Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - adjectives
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 56
+- url: https://www.ukrainianlessons.com/episode91/
+  title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 91
+- url: https://www.ukrainianlessons.com/lesson/91/
+  title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+    and perfective  verb aspects in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - ULP
+  - Season 3
+  content_type: podcast_episode
+  series: 3
+  season: 3
+  episode: 91
+rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0071
+  text: "б| Порівняйте предмети за однією ознакою і вставте \nпотрібні слова. Поставте\
+    \ усно питання до слів — \nназв ознак предметів.\n• Запишіть за зразком одне речення\
+    \ (на вибір).\nДороги — широкі, а стежки — вузькі.\nч.. \n------------------------\
+    \ ----- _ \n_ _ _.------------------ -----------------._________\n7| Поміркуйте,\
+    \ у які групи можна об'єднати слова — назви \nознак цих предметів.\n• Назвіть\
+    \ групи предметів, які можна об'єднати за такими \nознаками.\nЗа формою\nЗа кольором\n\
+    ______ 1\nЗа смаком\n \nХвилинка спі"
+  section_title: Сторінка 73
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 6-klas-ukrmova-golub-2023_s0122
+  text: "120\n288    І   Випишіть із тексту прикметники разом з іменниками, до яких\
+    \ \nвони належать. Поставте питання до прикметників, визначте \nрід, число та\
+    \ відмінок. Поясніть, від чого вони залежать. До-\nберіть прикметники до виділених\
+    \ слів. Якщо хтось із друзів думає, що перебіг вашого мислення \nнеправильний,\
+    \ важливо відверто про це сказати. Необхідно \nвикласти переконливі аргументи,\
+    \ чому саме це неправильно, \nне турбуючись про те, що ви образитеся. Звісно,\
+    \ ідеться не \nпро намір чіплятися до інших. Вар"
+  section_title: Сторінка 120
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0046
+  text: "44\nЛЕКСИКОЛОГІЯ \n2.\t Синонімічним є ряд слів \nА добрий, чуйний, співчутливий,\
+    \ людяний, чесний\nБ говорити, мовити, верзти, балакати, базікати\nВ багато, чимало,\
+    \ безліч, тьма-тьмуща, темрява\nГ віхола, хуртовина, завірюха, метелиця, сніг\n\
+    3.\t Установіть відповідність. \nСлово\nСинонім\n1 дорога\n2 стосунки\n3 галузь\n\
+    4 стимул\nА шлях \nБ сфера\nВ дружба\nГ взаємини\nД заохочення\nСиноніми використовують:\
+    \ \n•\t для пояснення інших слів: чепурний — це охайний, акуратний, \nтой, хто\
+    \ доглядає за собою, дбає про чистот"
+  section_title: Сторінка 44
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 6-klas-ukrmova-golub-2023_s0125
+  text: "122\nВідповідно до запитань сформулюйте особисті цілі. \n291   Прочитайте\
+    \ словосполучення. Висловіть припущення щодо ознаки, \nза якою поділено на групи\
+    \ ці словосполучення. Складіть речення \nз одним словосполученням із кожної групи.\
+    \ Прикметники якої з \nгруп називають ознаку, що може виражатися більшою або меншою\
+    \ \nмірою? З якими прикметниками можуть поєднуватися прислівники \nдуже, надто,\
+    \ надзвичайно, трохи?\n1. Білий сніг, тепла погода, червоне яблуко, глибока річка,\
+    \ \nкрасиве море. \n2. Цегляний будин"
+  section_title: Сторінка 122
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0225
+  text: "Стилістична норма\n160\n• скупитися (уникати витрат, бути надміру ощадливим)\
+    \ — скупитися \n(купити все необхідне);\n• фен (сухий теплий вітер, що дме з гір)\
+    \ — фен (електричний прилад \nдля сушіння волосся, рук струменем прогрітого повітря).\
+    \ 294. З кожним із поданих слів усно складіть словосполучення в  такий спосіб,\
+    \ \nщоб увиразнити лексичне значення слів. Активізувати — активувати; адресат\
+    \ — адресант; братерство — брат-\nство; бджолиний — бджільницький; верес — вереск;\
+    \ ніготь — кіготь; пе-\nрекладний —"
+  section_title: Сторінка 160
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

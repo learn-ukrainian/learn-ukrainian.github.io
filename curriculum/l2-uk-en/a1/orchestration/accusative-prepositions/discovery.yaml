@@ -1,0 +1,156 @@
+discovered_at: '2026-03-12T08:57:09.302622+00:00'
+query_keywords:
+- Accusative Prepositions
+- знахідний відмінок
+- магазин
+- пошта
+- концерт
+- Куди? з Acc
+- Direction with Acc
+- За + Acc
+- Behind/For
+- Через + Acc
+- Through/Because of
+- Про + Acc
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - prepositions
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 57
+- url: https://opentext.ku.edu/dobraforma/chapter/8-2/
+  title: 'Dobra Forma: Accusative Case after Prepositions в/у, на and про'
+  source: dobraforma
+  relevance_score: 0.7
+  topics:
+  - accusative
+  - cases
+  - prepositions
+  - grammar
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/episode32/
+  title: Shopping for clothes — Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
+- url: https://www.ukrainianlessons.com/episode33/
+  title: Talking about books in Ukrainian — Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0110
+  text: "¨кÁо до складеного підмета входять слова \nªа¬ат·\x0F µа´·\x0F ¿±µа´·\x0F\
+    \ тр·½±\x0F ³і´ь³а\x0F де\x10\n³і´ь³а або іменники зі значенням кількості \n(десÅт·³\x0F\
+    \ с·тнÅ\x0F ¿аст±на\x0F реÀта\x0F ¸·´·в±\x10\nна\x0F ªі´ьÀість та ін.), то присудок\
+    \ переважно \nмає ôорму однини\n\x8Dагато люде± ¸·с¸іÀаè\nна концерт\x11\n\x8D\
+    іль¿ість громадян ¸ід -\nтр±µа´а рі¿ення\x11\n\x8Dіль¿ість громадян ¸ід-\nтр±µа´±\
+    \ рі¿ення\x11\n¨кÁо при складеному підметі є означення\nу ôормі µножини, то й\
+    \ присудок, коли він \nпост позиційний, також уживаємо у ôормі \nµножини. Препозиційний\
+    \ присуд"
+  section_title: Сторінка 81
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0172
+  text: "3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-\nликий\
+    \ словесний опис цієї афіші з уживанням складнопідрядних ре-\nчень. 4. Створіть\
+    \ плакат «Порада другові» та складіть невеликий текст з об-\nґрунтуванням цієї\
+    \ поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи\
+    \ журнальних публікацій по три приклади кож-\nного виду складнопідрядних речень\
+    \ з кількома підрядними. 265\n266 \n267 \n268"
+  section_title: Сторінка 124
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0124
+  text: "121\n121\nКультура мовлення\nРекомендовано\n(іменники)\nНЕ рекомендовано\n\
+    командувач армії\nзавідувач бібліотеки \nнападник (у футболі)\nвірянин \nвідпочивальник\
+    \  \nоточення\nкоманда-лідер\nпоет-початківець\nмісця для сидіння \nкомандуючий\
+    \ армії \nзавідуючий бібліотекою  \nнападаючий (у футболі)\nвіруючий \nвідпочиваючий\
+    \ \nоточуючі люди\nлідируюча команда\nпочаткуючий поет\nсидячі місця\nРекомендовано\
+    \ \n(прикметники)\nНЕ рекомендовано\nмийний засіб (для миття)\nзнеболювальний\
+    \ засіб\nвимірювальний прилад\nвідновлювальні робот"
+  section_title: Сторінка 125
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrmova-zabolotnyi-2017_s0172
+  text: "3. Намалюйте афішу концерту улюбленого виконавця та створіть неве-\nликий\
+    \ словесний опис цієї афіші з уживанням складнопідрядних ре-\nчень. 4. Створіть\
+    \ плакат «Порада другові» та складіть невеликий текст з об-\nґрунтуванням цієї\
+    \ поради (з використанням складнопідрядних речень). 5. Випишіть із газетних чи\
+    \ журнальних публікацій по три приклади кож-\nного виду складнопідрядних речень\
+    \ з кількома підрядними. 265\n266 \n267 \n268"
+  section_title: Сторінка 124
+  grade: 9
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-golub-2023_s0143
+  text: "140\n340   Запишіть словосполучення, уставляючи пропущені букви. \nАлюміні..вий\
+    \ дріт, вельвет..ва куртка, взутт..ва крамниця, \nгруш..вий джем, дій..ва особа,\
+    \ житт..вий випадок, овоч..ве \nрагу, пошт..ва скринька, травн..вий дощ, червн..ва\
+    \ ніч, чутт..ве \nсприймання, помаранч..вий сік, парч..ва сукня. \n341   Утворіть\
+    \ від поданих іменників прикметники, поясніть написання \nсуфіксів. \nЛютий, січень,\
+    \ березень, метал, плюш, аґрус, стиль, вишня, \nгелій, фланель, алюміній, кизил,\
+    \ чебрець, квітень, емаль. \n3"
+  section_title: Сторінка 140
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

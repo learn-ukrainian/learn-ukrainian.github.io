@@ -1,0 +1,139 @@
+discovered_at: '2026-03-12T09:10:18.702030+00:00'
+query_keywords:
+- Pronoun Declension
+- займенник
+- мене
+- тебе
+- його
+- Знахідний відмінок
+- Accusative pronouns
+- Місцевий відмінок
+- Locative pronouns
+- Давальний відмінок
+- Dative pronouns
+- Родовий відмінок
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=HIILIG7RTCE
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #2. Nominative (Називний відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=hV3K8KrLafw
+  channel: Let's Learn Ukrainian
+  title: 'Quick Ukrainian Class #3: Declension of a noun мати (irregular)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 46
+- url: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
+  title: Ukrainian Personal Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - pronouns
+  - grammar
+  - declension
+- url: https://www.ukrainianlessons.com/possessive-pronouns-declension/
+  title: Possessive Pronouns Declension in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - possessive
+  - pronouns
+  - declension
+  - grammar
+rag_chunks:
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0125
+  text: "•  Випишіть змінені займенники зі словами, з якими вони \nпов’язані. Визначте\
+    \ особу, число й відмінок.\nВідміню вання особових займ енників \n3 -ї особи однини\
+    \ й множини\n285. Розгляньте таблицю відмінювання.\nВідмінок\n3-тя особа однини\n\
+    3-тя особа\nМНОЖИНИ\nЧол. р.\nЖін. р.\nСередн. р.\nн.\nв ін\nв о н а\nВОНО\nв\
+    \ о н и\nр.\nй о г о\nїї\nй о г о\nїх\n( д о )  н ь о г о\n(до) н е ї\n( д о )\
+    \  НЬОГО\n( д о ) н и х\nд.\nй о м у\nїй\nй о м у\nїм\nЗн.\nй о г о\nїї\nй о г\
+    \ о\nїх\n( п р о ) н ь о г о\n( п р о )  н е ї\n( п р о ) н ь о г о\n("
+  section_title: Сторінка 126
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0123
+  text: "2 8 1 . Розгляньте таблицю відмінювання.\nВідмінок,\nпитання\n1 -ша особа\n\
+    2-га особа\nОднина\nМножина\nОднина\nМножина\nН. хто?\nР. кого?\nД. кому?\nЗн.\
+    \ кого?\nОр. ким?\nМ. (на) кому?\nя\nмене \nмені \nмене \nмною \n(на) мені\nми\n\
+    нас\nнам\nнас\nнами\n(на)нас\nти\nтебе \nтобі \nтебе \nтобою \n(на) тобі\nви\n\
+    вас\nвам\nвас\nвами\n(на)вас\n« Н Ь  * Зверніть увагу, яких відмінкових форм набувають\
+    \ особові \nзайменники 1-ї особи однини та множини. Зробіть висновок\nі звірте\
+    \ із поданим нижче.\nЗайменники 1-ї особи я, м и під час відмінювання "
+  section_title: Сторінка 124
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0266
+  text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n259\n\
+    2. Що цікавого щодо займенників ви помітили в  реченнях?\n3. Якому стилю властиві\
+    \ такі речення? Поміркуйте чому.\nПрисвійні займенники\nПрисвійні (від присвоїти)\
+    \ займенники вказують на \nналежність когось або чогось певній особі, вони спів-\n\
+    відносяться з  особовими займенниками.\nОсобові\nПрисвійні\nОсобові\nПрисвійні\n\
+    я\nмій, моя, моє, \nмої\nми\nнаш, наша, \nнаше, наші\nти\nтвій, твоя, \nтвоє,\
+    \ твої\nви\nваш, ваша, \nваше, ваші\nвін, воно, \nв"
+  section_title: Сторінка 259
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0089
+  text: "91\nод­ни­на\nмно­жи­на\nя\nме­не\nме­ні\nме­не\nмною\n(на) ме­ні\nми\nнас\n\
+    нам\nнас\nна­ми\n(на) нас\nод­ни­на\nмно­жи­на\nти\nте­бе\nто­бі\nте­бе\nто­бою\n\
+    (на) то­бі\nви\nвас\nвам\nвас\nва­ми\n(на) вас\nН. в. (хто?)\nР. в. (ко­го?)\n\
+    Д. в. (ко­му?)\nЗн. в. (ко­го?)\nОр. в. (ким?)\nМ. в.  (на ко­му?)\nВід­мін­ок,\n\
+    питання\n1ша особа \n2га особа \n\t Яких відмінкових форм набувають особові\
+    \ займенники 1-ї особи \nоднини та множини? Зроби висновок, звір його з поданим\
+    \ \nнижче правилом.\n\t Прочитай слова.\nПрийти (до кого? Р. в.) до мене (о"
+  section_title: Сторінка 91
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0194
+  text: "186\n1.\tПрочитайте словосполучення та виконайте завдання. \nнікого не оминути\t\
+    \nмою увагу\nчимсь зайнятий\t\nнабрати всього\nу тій бібліотеці \t\nпишатися нею\n\
+    А.\t Визначте відмінки виділених займенників.\nБ.\t Відновіть початкову форму\
+    \ займенників.\nВідмінювання заперечних і неозначених займенників \nЗаперечні\
+    \ та неозначені займенники, утворені додаванням часток аби-, \nде-, ні-, -сь,\
+    \ -будь, -небудь, будь-, казна-, хтозна- до питальних займен­\nників, змінюємо\
+    \ за родами, числами й відмінками (як питальні).\nН. "
+  section_title: Сторінка 186
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

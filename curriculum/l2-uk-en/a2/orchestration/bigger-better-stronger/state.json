@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "bigger-better-stronger",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:36:46Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:36:46Z",
+      "task_id": "v5-bigger-better-stronger-pA",
+      "mode": "full"
+    }
+  }
+}

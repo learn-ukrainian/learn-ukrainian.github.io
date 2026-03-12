@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "the-ukrainian-alphabet",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:42:03Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:03:09Z",
+      "note": "file-exists"
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-12T09:11:51Z",
+      "self_audited": true
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-12T09:11:51Z",
+      "note": "extracted-from-full-build"
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-12T09:23:06Z",
+      "attempts": 2
+    }
+  }
+}

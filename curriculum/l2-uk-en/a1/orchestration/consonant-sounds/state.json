@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "consonant-sounds",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:42:27Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:43:04Z",
+      "note": "merged-into-research"
+    }
+  }
+}

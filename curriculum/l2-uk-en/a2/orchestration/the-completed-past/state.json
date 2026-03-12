@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "the-completed-past",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:56:05Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:56:05Z",
+      "task_id": "v5-the-completed-past-pA",
+      "mode": "full"
+    }
+  }
+}

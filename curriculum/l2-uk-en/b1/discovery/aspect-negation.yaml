@@ -1,0 +1,102 @@
+discovered_at: '2026-03-12T08:51:45.139591+00:00'
+query_keywords:
+- Вид у запереченні
+- 'Aspect in Negation: How ''не'' Changes Aspect Selection'
+- Пояснення граматики
+- Grammar Explanation
+- Практика та аналіз помилок
+- Practice and Error Analysis
+- Культура та діалоги
+- Culture and Dialogues
+- why negation favors imperfective aspect
+- '''ще не'' + perfective vs ''не'' + imperfective'
+- negative imperatives with correct aspect
+- Learner recognizes exceptions to imperfective preference
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/92/
+  title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+    aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0001
+  text: "РЕЧЕННЯ\nЧЛЕНИ  РЕЧЕННЯ\nВІДМІНКИ\nКритерій\nТипи речень\nЗа метою\nвисловлювання\n\
+    розповідні\n(містять повідомлення про факти,  \nподії чи явища дійсності)\nпитальні\n\
+    (містять запитання)\nспонукальні\n(виражають спонукання до дії)\nЗа емоційним\n\
+    забарвленням\nокличні\n(вимовляємо з підсиленою інтонацією)\nнеокличні\nЗа складом\n\
+    граматичної\nоснови\nдвоскладні\n(граматична основа має підмет і присудок)\nодноскладні\n\
+    (граматична основа має один  \nголовний член речення)\n означено-особові\n неозначено-особові\n\
+     узагальнен"
+  section_title: Сторінка 2
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-golub-2023_s0114
+  text: "112\n268   Розберіть подані слова за будовою. Визначте, якою значущою час-\n\
+    тиною слова є не-. Підкресліть слова, у яких не- впливає на зміну \nзначення слова.\
+    \ Сформулюйте висновок, якого ви дійшли в процесі \nспостереження.\nНеробство,\
+    \ небажання, невід, неуважність, негода, недоля, \nневістка, неволя.\n269   Замініть\
+    \ виділені іменники синонімами з префіксом не-. Розкажіть, \nу яких ситуаціях\
+    \ мовлення їх доцільно вживати. Складіть із ними \nсловосполучення.\n1. Син брата\
+    \ або сестри; племінник. 2. Людина, "
+  section_title: Сторінка 112
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0077
+  text: А. Випишіть речення з непрямим порядком слів. Б. Підкресліть інверсовані слова
+    відповідно до їхньої синтаксичної ролі.
+  section_title: Сторінка 64
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0194
+  text: "186\n1.\tПрочитайте словосполучення та виконайте завдання. \nнікого не оминути\t\
+    \nмою увагу\nчимсь зайнятий\t\nнабрати всього\nу тій бібліотеці \t\nпишатися нею\n\
+    А.\t Визначте відмінки виділених займенників.\nБ.\t Відновіть початкову форму\
+    \ займенників.\nВідмінювання заперечних і неозначених займенників \nЗаперечні\
+    \ та неозначені займенники, утворені додаванням часток аби-, \nде-, ні-, -сь,\
+    \ -будь, -небудь, будь-, казна-, хтозна- до питальних займен­\nників, змінюємо\
+    \ за родами, числами й відмінками (як питальні).\nН. "
+  section_title: Сторінка 186
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0276
+  text: "§ 54. Розряди займенників за значенням та особливості відмінювання   \n269\n\
+    Зверніть увагу на варіанти наголошування запереч-\nних займенників ніхто і  ніщо\
+    \ в  непрямих відмінках: \nніко́го — нíкого, нічо́му – нíчому. У  цих формах від\
+    \ \nнаголосу залежить значення: займенники з наголоше-\nним коренем позначають\
+    \ відсутність когось чи чогось: \nніко́го немає, нічо́го не видно. Займенники\
+    \ з наголоше-\nним префіксом позначають неможливість скористатися \nкимось або\
+    \ чимось: нíкого й  спитати, нíчого їсти.\nВпр"
+  section_title: Сторінка 269
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

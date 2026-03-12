@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "telling-stories",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T10:20:38Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T10:20:38Z",
+      "task_id": "v5-telling-stories-pA",
+      "mode": "full"
+    }
+  }
+}

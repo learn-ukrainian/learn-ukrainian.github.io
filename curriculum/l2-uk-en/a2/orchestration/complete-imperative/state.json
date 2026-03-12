@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "complete-imperative",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:54:48Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:54:48Z",
+      "task_id": "v5-complete-imperative-pA",
+      "mode": "full"
+    }
+  }
+}

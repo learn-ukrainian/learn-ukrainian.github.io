@@ -1,0 +1,155 @@
+discovered_at: '2026-03-12T09:11:32.284319+00:00'
+query_keywords:
+- Prepositions of Place
+- прийменник
+- Біля/навпроти + Genitive
+- магазин
+- школа
+- вулиця
+- В/У + Місцевий
+- In + Locative
+- На + Місцевий
+- On + Locative
+- Біля/Поруч/Між
+- Near/Next to/Between
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=8GIR-4GCSVU
+  channel: Speak Ukrainian
+  title: Ukrainian preposition «IN» - У or В? Differences between Ukrainian prepositions
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Jov8xPqq7cM
+  channel: Speak Ukrainian
+  title: Ukrainian prepositions У, В and НА and the difference between them
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://talkukrainian.com/prepositions/
+  title: 'Talk Ukrainian: Ukrainian prepositions'
+  source: talkukrainian
+  relevance_score: 0.6
+  topics:
+  - prepositions
+  - прийменник
+  - grammar
+- url: https://www.ukrainianlessons.com/prepositions-u-na/
+  title: Prepositions У and НА in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - prepositions
+  - grammar
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - prepositions
+  - phrases
+  - introductions
+  - culture
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 57
+- url: https://www.ukrainianlessons.com/prepositions-cases/
+  title: Prepositions and Cases in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - prepositions
+  - cases
+  - grammar
+- url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+  title: Prepositions of Time in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - prepositions
+  - time
+  - grammar
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0082
+  text: "біле поле\nбілі ліси, хустки, поля \nсиній олівець \nсиня кулька \nсинє озеро\n\
+    сині олівці, кульки, озёра\nбілому полю\n(у) білих лісах, хустках, полях\nсинім\
+    \ олівцем\nсиньою кулькою\n(у) синьому озері\nсиніх олівців, кульок, озер\n• \
+    \ Спишіть словосполучення прикметників з іменниками. \nВизначте рід, число й відмінок\
+    \ іменників і прикметників.\nЩ\nе '\nНазвіть закінчення прикметників чоловічого,\
+    \ жіночого та \nсереднього роду в однині. Чи змінюються прикметники в \nмножині\
+    \ за родами? Назвіть закінчення прикметників"
+  section_title: Сторінка 83
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0073
+  text: "І У називному відмінку іменники вживаються без при- \nі йменників, у місцевому\
+    \ — тільки з прийменниками, \n1 \nа в усіх інших відмінках можуть уживатися з\
+    \ приймен- \n« никами або без них. Наприклад: (біля) озер (Р. в.), і \nі (із)\
+    \ синами (Ор. в.). \nі\n163. Прочитайте іменники.\nВерби, будинки, сонце, канали,\
+    \ дуб, пенал, степ, поля, \nкомп’ютер, телефон.\n•  Визначте рід і число іменників.\
+    \ Провідміняйте іменники, що \nвжиті в множині.\n164. Прочитайте текст, уставляючи\
+    \ слова з довідки. Перекажіть.\nБув зимов"
+  section_title: Сторінка 74
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0070
+  text: "72\n174.\t\tРозгляньте узагальнюючу таблицю відмінкових закінчень \nприкметників.\n\
+    Н. в.\nР. в.\nД. в.\nЗн. в. \nОр. в.\nМ. в.\n-і\n-их\n-им\n-і, -их \n-ими\n-их\n\
+    -і, -ї\n-іх\n-ім\n-і, -іх \n-іми\n-іх\nч. р.\nж. р.\nс. р.\n-ий\n-ого\n-ому\n\
+    -ий, \n-ого\n-им\n-ому \n(-ім)\n-а\n-ої\n-ій\n-у \n-ою\n-ій\n-е\n-ого\n-ому\n\
+    -е \n-им\n-ому \n(-ім)\nч. р.\nж. р.\nс. р.\n-ій\n-ого\n-ому\n-ій, \n-ого\n-ім\n\
+    -ому \n(-ім)\n-я\n-ої\n-ій\n-ю \n-ою\n-ій\n-є\n-ого\n-ому\n-є \n-ім\n-ому \n(-ім)\n\
+    Від-\nмі-\nнок\nЗ основою на твердий \nприголосний\nоднина\nоднина\nмно-\nжина\n\
+    мно-\nжина\nЗ основою "
+  section_title: Сторінка 72
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0182
+  text: "§ 29  Синонімічні й антонімічні прийменники  \n175\n§ 29  Синонімічні й \
+    \ антонімічні прийменники\nВправа 247 \n1  Прочитайте речення \nКрай/біля/обабіч\
+    \ дороги проклали велодоріжку.\nЦей магазин розташований праворуч, якщо йти від/до\
+    \ зу-\nпинки в напрямку до/від спортивного клубу.\n2  Поміркуйте, як змінюється\
+    \ зміст кожного речення залежно від зміни при-\nйменника \n3  Згадайте, як називаються\
+    \ такі слова: синонімами, антонімами, омонімами \nчи паронімами \nПопри те, що\
+    \ прийменники не мають лексичного зна-\nче"
+  section_title: Сторінка 178
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0174
+  text: "§ 27  Прийменник як службова частина мови  \n167\nПрийменники за будовою\n\
+    Прості\nСкладні\nСкладені\nНепохідні\nПохідні\nпід, з, над, \nчерез\nпишемо разом\
+    \ \nабо з дефісом:\nзадля, з­над, \nпопід\nпишемо \nокремо:\nвідповідно до, \n\
+    під час\nВправа 233\n \nСпишіть прийменники, розподіливши їх на три стовпчики:\
+    \ прості, складні \nта складені \nВнаслідок, незалежно від, над, з-між, замість,\
+    \ з-пе-\nред, згідно з, від, понад, під кінець, відповідно до, поміж, \nнавколо,\
+    \ щодо, з, на відміну від, незважаючи на, у разі, між, \nп"
+  section_title: Сторінка 170
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

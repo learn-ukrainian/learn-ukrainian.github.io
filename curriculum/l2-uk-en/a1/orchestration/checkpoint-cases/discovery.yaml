@@ -1,0 +1,226 @@
+discovered_at: '2026-03-12T09:16:24.815740+00:00'
+query_keywords:
+- 'Checkpoint: Cases'
+- де
+- куди
+- звідки
+- 'Навичка 1: Відмінки'
+- 'Skill 1: Cases'
+- 'Навичка 2: Прийменники'
+- 'Skill 2: Prepositions'
+- 'Навичка 3: Узгодження'
+- 'Skill 3: Agreement'
+- Інтеграційне завдання
+- Integration Task
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_w8gRvkBFB4
+  channel: Ukrainian Lessons
+  title: ULP 1-17 | Where is the town center in Ukrainian
+  relevance_score: 0.95
+  relevance_note: 'The video directly addresses asking for location (''Де?'') and
+    directions, which are core applications of cases and prepositions taught in this
+    module. The dialogue provides practical examples relevant to ''Навичка 1: Відмінки''
+    and ''Навичка 2: Прийменники''.'
+  transcript_excerpt: Вибачте, будь ласка. Так, скажіть, будь ласка, А де центр? Ну,
+    ви вже в центрі. Так, добре. А де центральна вулиця? Хрещатик.
+  embed_suggestion: 'After section Навичка 2: Прийменники -- because it showcases
+    practical application of prepositions and cases in asking for and understanding
+    directions.'
+- url: https://www.youtube.com/watch?v=421_THDnFpw
+  channel: Ukrainian with Olha
+  title: 'Where do u live? Де ти живеш? #ukrainianlessons #ukrainianlanguage #learnukrainian
+    #studyukrainian'
+  relevance_score: 0.9
+  relevance_note: 'The video directly demonstrates the use of ''Де?'' (where?) and
+    provides clear examples of stating residence using prepositions and the locative
+    case. This is highly relevant to ''Навичка 1: Відмінки'' and ''Навичка 2: Прийменники''.'
+  transcript_excerpt: Де ти живеш? Where do you live? Я живу в Канаді. I live in Canada.
+    Оксана живе в Америці? Ні, Оксана і Остап живуть в Україні.
+  embed_suggestion: 'After section Навичка 2: Прийменники -- as it provides clear
+    examples of prepositions of place used with the locative case.'
+- url: https://www.youtube.com/watch?v=0kpIYHn-6jw
+  channel: Bright Kids Ukrainian
+  title: OnlineVertep_Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce В in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7wfW-3X-dBSUxUv5wcmJiIHe
+  channel: Ukrainian with Olha
+  title: Українська музика - Ukrainian music
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qgzSxS4f1Qw
+  channel: Speak Ukrainian
+  title: 'The Lecture from the Speaking Session of my course: Ukrainian cases explained'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=iiHOh8kPKuE
+  channel: Speak Ukrainian
+  title: I am looking for a sponsor in London/Oxford. British subscribers, help! /Wanna
+    teach 🇺🇦 in England
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode32/
+  title: Shopping for clothes — Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
+- url: https://www.ukrainianlessons.com/episode33/
+  title: Talking about books in Ukrainian — Accusative case of people
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 33
+- url: https://www.ukrainianlessons.com/fmu5/
+  title: How to talk about transport in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - instrumental
+  - vocabulary
+  - travel
+  - phrases
+  - culture
+  - lviv
+  - review
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 5
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/fmu16/
+  title: How to ORDER at the restaurant in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - food
+  - phrases
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 16
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064
+  text: "66\n2. Пригадай назви відмінків іменників і їхні питання. Перевір\nсебе за\
+    \ таблицею на с. 38. Познач відмінок іменників\nу  записаних  словосполученнях.\n\
+    2\n3. Розглянь таблицю відмінювання прикметників.\n3\nВід-\nмінок\nЧоловічий\n\
+    рід\nЖіночий\nрід\nСередній\nрід\nН.\nР.\nД.\nЗн.\nОр.\nМ.\n(який?) добрий\n(якого?)\
+    \ доброго\n(якому?) доброму\nяк Н. або Р.\n(яким?) добрим\n(на якому?) \nна доброму\n\
+    на добрім\n(яка?) добра\n(якої?) доброї\n(якій?) добрій\n(яку?) добру\n(якою?)\
+    \ доброю\n(на якій?) \nна добрій\n(яке?) добре\n(якого?) доб"
+  section_title: Сторінка 66
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0088
+  text: "90\n1. Розглянь таблицю відмінювання займенників 1-ої і\n2-ої  особи. \n\
+    Відмінки\nЗайменники\n1-ої особи\nЗайменники\n2-ої особи\nОднина\nМножина\nОднина\n\
+    Множина\nН. (хто?)\nР. (кого?)\nД. (кому?)\nЗн. (кого?)\nОр. (ким?)\nМ. (на кому?)\n\
+    я\nмене\nмені\nмене\nмною\nна мені\nми\nнас\nнам\nнас\nнами\nна нас\nти\nтебе\n\
+    тобі\nтебе\nтобою\nна тобі\nви\nвас\nвам\nвас\nвами\nна вас\nСПОСТЕРІГАЮ  ЗА \
+    \ ВІДМІНЮВАННЯМ\nСПОСТЕРІГАЮ  ЗА  ВІДМІНЮВАННЯМ\nЗАЙМЕННИКІВ  \nЗАЙМЕННИКІВ  1-\n\
+    1-ої\nої  ТА  \n  ТА  2-\n2-ої\nої  ОСОБИ\n  ОСОБИ\nЗапрошую \nтебе \nподорожув"
+  section_title: Сторінка 90
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0086
+  text: "1\n( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ\n241. Зіскануй ОЯ-код та переглянь відеоролик\
+    \ про \nзайменники. Що нового ти дізнався / дізнала­\nся?\n242.1. Розглянь малюнки.\
+    \ Добери до них займенники.\nз—-**\n2. Досліди дібрані займенники.\nКрок 1. Вибери\
+    \ правильне твердження.\nо Займенники називають особу.\nо Займенники вказують\
+    \ на особу, але не називають її. \nКрок 2. Зроби висновок та порівняй із правилом.\n\
+    Займенник — це частина мови, яка вказує на предмет, але \nне називає його. Займенники\
+    \ я, ти, ми, він, вона, вон"
+  section_title: Сторінка 88
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-golub-2023_s0182
+  text: "179\n453   Розгляньте таблицю. Підготуйте одне одному по 2 запитання \nі\
+    \ завдання за змістом таблиці. \nРозряди \nзайменників\nОрієнтири \nй особливості\n\
+    Зразок\n1. Присвійні, вка-\nзівні, означальні, \nнеозначені (деякий, \nабиякий,\
+    \ \nбудь-який), \nпитальні й відносні \n(який, чий), \nзапереч ні (ніякий, \n\
+    нічий, нікотрий)\nВідмінюємо \nяк співвідносні \nз ними \nприкметники\nН. мій,\
+    \ така, усе\nР. мого, такого, усього\nД.  моєму, такому, \nусьому\nЗн. як Н. або.\
+    \ Р. \nОр. моїм, такою, усім\nМ.  (на) моєму (-їм), \nтакій, у"
+  section_title: Сторінка 179
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

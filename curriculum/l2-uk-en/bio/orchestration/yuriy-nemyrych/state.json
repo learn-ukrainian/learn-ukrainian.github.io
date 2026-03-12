@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "yuriy-nemyrych",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T07:42:12Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T07:42:12Z",
+      "task_id": "v5-yuriy-nemyrych-pA",
+      "mode": "full"
+    }
+  }
+}

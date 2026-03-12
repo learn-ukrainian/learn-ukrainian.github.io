@@ -1,0 +1,192 @@
+discovered_at: '2026-03-12T09:27:08.568239+00:00'
+query_keywords:
+- Weather & Nature
+- погода
+- дощ
+- сніг
+- Погода та безособові форми
+- Weather & Impersonal Forms
+- Пори року та природа
+- Seasons & Nature
+- Складні речення та прогноз
+- Complex Sentences & Forecast
+- the weather
+- about weather conditions
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=ycCrSrHCezQ
+  channel: Ukrainian Lessons
+  title: ULP 1-16 | Talking about weather in Ukrainian
+  relevance_score: 1.0
+  relevance_note: This video directly addresses how to talk about the weather in Ukrainian,
+    including useful phrases and vocabulary, which aligns perfectly with the module's
+    topic. It features a dialogue that exemplifies the usage of weather-related terms.
+  transcript_excerpt: Today You will learn The useful phrases to discuss weather in
+    Ukrainian and we will Focus especially on the kinds of Words Called adverbs Let's
+    go for it my friend genen is Ukrainian but right now He is in the USA We talked
+    on Skype and We started our Conversation with Asking each Other about pooda pooda
+    is weather pogoda
+  embed_suggestion: After section 'Погода та безособові форми' (Weather & Impersonal
+    Forms), as it focuses on discussing weather conditions and related phrases.
+- url: https://www.youtube.com/watch?v=6MRrGpcGEp4
+  channel: Ukrainian Lessons
+  title: FMU 1-28 | How to talk about the weather in Ukrainian | 5 Minute Ukrainian
+  relevance_score: 1.0
+  relevance_note: This video directly teaches how to converse about weather in Ukrainian,
+    including discussing forecasts. The dialogue and explanations cover key vocabulary
+    and phrases relevant to the module's topic on weather and forecasts.
+  transcript_excerpt: What can be more common conversational topic than weather погода
+    погода ... сьогодні Наталка та Андрій будуть говорити про погоду готові послухати
+    їх Ну й погодка сьогодні дощ вітер температура десь 1 градус бр що там за прогнозом
+    ой прогнозують дощі на всі вихідні
+  embed_suggestion: After section 'Складні речення та прогноз' (Complex Sentences
+    & Forecast), as it specifically delves into talking about weather forecasts and
+    related conversational elements.
+- url: https://www.youtube.com/watch?v=kjrHbYBezFI
+  channel: Let's Learn Ukrainian
+  title: Swear in Ukrainian! Learn some Light Profanities to Speak Like a Native
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=xOiMYEE4jmc
+  channel: Speak Ukrainian
+  title: Weather vocabulary and phrases in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/fmu28/
+  title: How to talk about the weather in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - vocabulary
+  - weather
+  - phrases
+  - listening
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 28
+- url: https://www.ukrainianlessons.com/episode43/
+  title: Looking for an apartment + Special plural forms
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - weather
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 43
+- url: https://www.ukrainianlessons.com/episode16/
+  title: Talking about weather in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - vocabulary
+  - weather
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 16
+- url: https://www.ukrainianlessons.com/episode66/
+  title: Sharing memories + Locative case with places
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - grammar
+  - cases
+  - locative
+  - vocabulary
+  - weather
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 66
+- url: https://www.ukrainianlessons.com/ph-animals/
+  title: 'Ukrainian Phrasebook: Animals'
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - animals
+  - nature
+rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0092
+  text: "\aЧи є в тексті слова, значення яких вам незрозуміле? \nОбговоріть, що вони\
+    \ означають. Якщо виникнуть труд­\nнощі, зверніться до словника.\n \n\t \aЯкий\
+    \ період весни описує авторка? Про які зміни у природі \nвона розповідає? Що вказує\
+    \ на те, що це рання весна?\n \n\t \aДе раніше тане сніг? Чому? Як про це сказано\
+    \ в тексті?\n \n\t \aУ скількох реченнях ужито слово сніг? Прочитай їх.\n \n\t\
+    \ \aЗнайдіть і прочитайте речення, у яких є такі слова: сонце, \nповітря, сонячне\
+    \ проміння, небо, поля, ліс, струмочки.\n\t\n\aПереглян"
+  section_title: Сторінка 94
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0190
+  text: "368\t І. Поширте усно подані речення спочатку однорідними означеннями, а\
+    \ потім – \nнеоднорідними. ЗРАЗОК. Пішов дощ. → Пішов тихий, теплий дощ. Пішов\
+    \ тихий \nосінній дощ."
+  section_title: Сторінка 161
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0132
+  text: "Безособове речення повідомляє про явища природи, світу, фізичний і психічний\
+    \ \nстан людини, бажання, можливість або неможливість дії, відсутність чого- чи\
+    \ ко-\nго-небудь. Безособові речення вживаємо в розмовному, художньому та науковому\
+    \ стилях."
+  section_title: Сторінка 103
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0027
+  text: "27\n § 10. Лексичне  значення  слова\n1. Прочитайте діалог між братом і молодшою\
+    \ сестрою та виконайте зав­\nдання. \n— На вулиці посіріло, зірвався вітер, мабуть,\
+    \ зараз піде дощ!\n— Піде?! А хіба дощ може ходити? \nА. Через яке слово сестра\
+    \ не зрозуміла брата?\nБ. Яка причина непорозуміння?\nЛексичне значення — це те,\
+    \ що означає слово. Наприклад, лексичне \nзначення слова дощ — різновид опадів,\
+    \ що випадають із хмар у вигляді \nкраплин води. \nЛексичне значення слів можна\
+    \ з’ясувати за тлумачним словником. \n"
+  section_title: Сторінка 27
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 5-klas-ukrmova-golub-2022_s0127
+  text: "128\nРечення з двома і більше граматичними основами нази-\nвають складним.\n\
+    Частини складного речення пов’язані між собою зміс-\nтом та інтонацією або змістом\
+    \ і сполучниками.\nЧастини складного речення можуть бути:\n незалежні, рівноправні;\n\
+    \  залежні, коли від одного речення можна поставити \nпитання до іншого.\n1. Гуляє\
+    \ вітер, і співає симфонію дощ (Ю. Григорук). 2. Я \nтак люблю, як сонце у кімнаті\
+    \ удосвіта прийде мене будить \n(Н. Янушевич). 3. Розсипле ранок перлами намисто,\
+    \ заструме-\nніє сонце по гіл"
+  section_title: Сторінка 128
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

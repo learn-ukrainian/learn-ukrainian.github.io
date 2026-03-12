@@ -1,0 +1,59 @@
+{
+  "module": "the-ukrainian-alphabet",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-12T10:23:08.217804Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-12T10:22:00.167060Z",
+    "meta": "2026-03-12T10:15:04.257510Z",
+    "activities": "2026-03-12T10:16:37.249779Z",
+    "vocabulary": "2026-03-12T10:11:51.758066Z",
+    "research": "2026-03-12T09:42:03.524845Z",
+    "plan": "2026-03-12T08:39:53.687575Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1595/1200 (raw: 1695)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "23/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "info",
+      "violations": 0,
+      "message": "N/A (research_quality not available)"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 1
+  }
+}

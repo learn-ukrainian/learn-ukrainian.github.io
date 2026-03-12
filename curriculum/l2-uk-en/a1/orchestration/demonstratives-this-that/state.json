@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "demonstratives-this-that",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:51:59Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:52:57Z",
+      "note": "merged-into-research"
+    }
+  }
+}

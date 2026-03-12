@@ -1,0 +1,132 @@
+discovered_at: '2026-03-12T10:19:50.716546+00:00'
+query_keywords:
+- A1 Final Exam
+- знати
+- говорити
+- слухати
+- Вступ та орієнтація
+- Introduction and Orientation
+- Морфологічний та синтаксичний огляд
+- Morphological and Syntactic Review
+- 'Культурна подорож: Київ та Львів'
+- 'Cultural Journey: Kyiv and Lviv'
+- Фінальне оцінювання та перехід до A2
+- Final Assessment and Transition to A2
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=XSZ66J7KlQc
+  channel: Ukrainian Lessons
+  title: ULP 3-108 Екскурсія Києвом – Kyiv tour + Participle in Ukrainian
+  relevance_score: 0.8
+  relevance_note: 'The video is a podcast about a tour of Kyiv (''Екскурсія Києвом''),
+    which directly reinforces the ''Культурна подорож: Київ та Львів'' section of
+    the A1 Final Exam module. While it also touches on advanced grammar (participles),
+    the primary focus on a Kyiv tour provides relevant cultural context and listening
+    practice for A1 learners.'
+  transcript_excerpt: це ukra lessens podcast епізод 108 екскурсія Києвом a kїв [музика]
+    Tour ... Тож у сьогоднішньому епізоді ви почуєте розмову Юрка та Христини під
+    час їхньої прогулянки Києвом
+  embed_suggestion: 'After section ''Культурна подорож: Київ та Львів'' -- because
+    it provides a direct, immersive example of the cultural journey aspect mentioned
+    in the section.'
+- url: https://www.youtube.com/watch?v=FX3JXkyC6fo
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #7. Locative Case (Місцевий відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=gL7A23RWiR0
+  channel: Let's Learn Ukrainian
+  title: 'Learn 8 important Ukrainian Verbs with me 💙💛 #learnukrainian #ukraine #ukrainianlessons
+    #beginners'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=IuaD4Rjs4xA
+  channel: Speak Ukrainian
+  title: 25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW. Part III
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MJ0zH_jQ9qc
+  channel: Speak Ukrainian
+  title: 25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW. Part II
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0002
+  text: "3\nДорогий друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи\
+    \ любиш фантазувати?\nТоді ця книга саме для тебе! \nВона допоможе тобі навчитися\
+    \ читати, \nвисловлювати думки й почуття, спілкуватися.\nУмовні позначення:\n\
+    \ \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю малюнок\n\
+    \ \n — спілкуюся \n \n— мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0141
+  text: "ЗМІСТ\nз\nЗвуки і букви. Склад. Наголос. Звуко-буквений склад слів......................\
+    \ 4\nПравильне наголошення слів.................. 4\nПравильна вимова та написання\
+    \ слів \nіз дзвінкими приголосними в кінці слова \nта складу перед глухими...........................\
+    \ 5\nПодовжені м’які приголосні звуки............. 8\nРозташування слів за алфавітом.............\
+    \ 9\nЗначення слова......................................... 10\nОднозначні та\
+    \ багатозначні слова.......... 10\nПряме та переносне значення слів..."
+  section_title: Сторінка 143
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0135
+  text: '128
+
+    ЗМІСТ
+
+    Звуки і букви. Склад. Наголос. Звуко-буквений склад слів.................3
+
+    Звуки і букви..............................................................................................3
+
+    Алфавіт. Користування алфавітом у роботі зі словниками....................5
+
+    Голосні та приголосні звуки......................................................................9
+
+    Склад. Поділ слів на склади...................................................................13
+
+    Перенос слів із рядка в рядок.....'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0173
+  text: 'скоротили? ПЛАН ОЦІНКИ ІНФОРМАЦІЙНОГО ВИСТУПУ
+
+    1. Тема й мета промови: їх актуальність, корисність для слухачів. 2. Вступ. •
+    Наскільки вичерпним було самопредставлення.'
+  section_title: Сторінка 122
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

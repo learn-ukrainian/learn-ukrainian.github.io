@@ -1,0 +1,17 @@
+{
+  "track": "b1",
+  "slug": "how-to-talk-about-grammar",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:45:50Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:46:14Z",
+      "note": "merged-into-research"
+    }
+  }
+}

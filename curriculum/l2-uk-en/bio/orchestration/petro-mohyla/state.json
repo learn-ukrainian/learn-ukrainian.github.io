@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "petro-mohyla",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T07:20:10Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T07:20:10Z",
+      "task_id": "v5-petro-mohyla-pA",
+      "mode": "full"
+    }
+  }
+}

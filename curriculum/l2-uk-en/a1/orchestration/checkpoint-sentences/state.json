@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "checkpoint-sentences",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:54:54Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:55:30Z",
+      "note": "merged-into-research"
+    }
+  }
+}

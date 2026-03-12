@@ -1,0 +1,157 @@
+module: a1-001
+level: A1
+sequence: 1
+slug: the-ukrainian-alphabet
+version: '2.0'
+title: The Ukrainian Alphabet
+subtitle: "33 Letters, One System — Your Map to Reading Ukrainian"
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+decodable_letters: "А О У І М Н Т К С Л"
+objectives:
+- Learner sees the full 33-letter Ukrainian alphabet as a coherent system
+- "Learner understands letter ≠ sound (букви vs звуки)"
+- Learner distinguishes vowels (голосні) from consonants (приголосні) as categories
+- "Learner can read and write words using 10 practice letters: А О У І М Н Т К С Л"
+- Learner recognizes 5+ survival sight words (привіт, дякую, так, ні, це)
+content_outline:
+- section: Вступ — Introduction
+  words: 150
+  points:
+  - "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian
+    Empire. 33 letters, highly phonetic: each letter usually maps to one sound
+    (unlike English where 'ough' can sound 5 different ways)."
+  - "Show the full 33-letter alphabet chart as a reference map. Learners don't
+    memorize it all now — they'll master each group in M2 (vowels), M3 (consonants),
+    M4 (special signs). Today: overview + first 10 practice letters."
+  - "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius.
+    It is NOT derived from Latin — it descends from the Greek alphabet."
+- section: "Букви і звуки — Letters and Sounds"
+  words: 200
+  points:
+  - "Letters (букви) are written symbols. Sounds (звуки) are what you hear and
+    pronounce. They are not the same thing — Ukrainian has 38 phonemes but 33 letters."
+  - "Key insight: Ukrainian spelling is highly phonetic — one letter almost always
+    represents one sound. This makes Ukrainian FAR easier to read than English.
+    Once you learn the 33 letters, you can sound out any word."
+  - "Some letters do double duty: iotated vowels (Я Ю Є Ї) can represent two sounds.
+    The soft sign (Ь) modifies the consonant before it. Details in M2 and M4."
+- section: "Голосні та приголосні — Vowels and Consonants"
+  words: 200
+  points:
+  - "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї).
+    Vowels = voice only, no obstruction. Every Ukrainian syllable has exactly one vowel."
+  - "22 consonant letters + the soft sign Ь (modifier, no sound of its own).
+    Consonants = air is obstructed (lips, tongue, teeth)."
+  - "Preview chart organized by category. M2 will master vowels, M3 will master
+    consonants, M4 will complete special signs and the apostrophe."
+- section: "Перші 10 літер — First 10 Letters"
+  words: 350
+  points:
+  - "Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants).
+    These 10 high-frequency letters let you read real Ukrainian words immediately."
+  - "Letter-by-letter introduction with pronunciation guidance:
+    А — open 'a' as in 'father'. М — like English M. О — rounded 'o' as in 'more'.
+    Н — like English N (looks like H but is NOT H!). У — 'oo' as in 'moon'.
+    Т — like English T. І — 'ee' as in 'see'. К — like English K.
+    С — like English S. Л — like English L (tongue position differs slightly)."
+  - "Decodable words (use ONLY these 10 letters): мама (mom), тато (dad),
+    кіт (cat), молоко (milk), масло (butter), око (eye), ніс (nose),
+    місто (city), ліс (forest), сон (dream), мак (poppy), сік (juice),
+    лук (onion/bow), стіл (table), тут (here), там (there)."
+  - "Detailed phonetic walkthroughs: how to blend М+А→МА, then МА+МА→МАМА.
+    How to read К+І+Т→КІТ. Build from letters → syllables → words."
+- section: "Перші слова — First Words in Context"
+  words: 200
+  points:
+  - "Micro-dialogues using decodable words + sight words:
+    — Це кіт? — Так, це кіт. / — Це місто? — Ні, це ліс."
+  - "Sight words (recognized as wholes, letters not yet all taught):
+    привіт (hello), дякую (thank you), це (this is), так (yes), ні (no).
+    These appear constantly — learn them as whole shapes now, decode them later."
+  - "Reading practice: short sentences mixing decodable words and sight words.
+    Мама тут. Кіт там. Це молоко. Це масло."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "33 letters: 10 vowels, 22 consonants, 1 modifier (Ь). Highly phonetic system."
+  - "You mastered 10 letters today. You can read: мама, тато, кіт, молоко, місто, ліс."
+  - "Self-check: Can you find all 10 vowel letters on the chart? Can you read
+    мама and кіт? What is the difference between букви and звуки?"
+  - "Next: M2 deep-dives into the vowel system — all 10 vowel letters."
+vocabulary_hints:
+  required:
+  - "мама (mom) — decodable (М+А+М+А); universal first word; Bolshakova p.14"
+  - "тато (dad) — decodable (Т+А+Т+О); high-frequency family word"
+  - "кіт (cat) — decodable (К+І+Т); high-frequency; Bolshakova"
+  - "молоко (milk) — decodable (М+О+Л+О+К+О); Bolshakova p.14"
+  - "масло (butter) — decodable (М+А+С+Л+О); Bolshakova p.15"
+  - "ліс (forest) — decodable (Л+І+С); high-frequency"
+  - "місто (city) — decodable (М+І+С+Т+О); high-frequency"
+  - "око (eye) — decodable (О+К+О); Bolshakova p.13"
+  - "так (yes) — decodable (Т+А+К); survival word"
+  - "ні (no) — decodable (Н+І); survival word"
+  recommended:
+  - "сон (dream/sleep) — decodable (С+О+Н); Bolshakova p.22"
+  - "сом (catfish) — decodable (С+О+М); Bolshakova p.22"
+  - "ніс (nose) — decodable (Н+І+С); body vocabulary"
+  - "мак (poppy) — decodable (М+А+К); Bolshakova"
+  - "сік (juice) — decodable (С+І+К); everyday food word"
+  - "стіл (table) — decodable (С+Т+І+Л); everyday object"
+  - "тут (here) — decodable (Т+У+Т); high-frequency adverb"
+  - "там (there) — decodable (Т+А+М); high-frequency adverb"
+  - "лук (onion/bow) — decodable (Л+У+К); everyday food"
+  - "кіно (cinema) — decodable (К+І+Н+О); everyday word"
+  sight_words:
+  - "привіт (hello) — sight word; greeting; uses letters П Р В І Т"
+  - "дякую (thank you) — sight word; politeness; uses letters Д Я К У Ю"
+  - "це (this is) — sight word; demonstrative; uses letter Ц"
+activity_hints:
+- type: watch-and-repeat
+  focus: "Letter pronunciation — hear and repeat each of the 10 practice letters"
+  items: 10
+- type: image-to-letter
+  focus: "Match picture to Ukrainian word — мама, кіт, молоко, око, ліс, місто"
+  items: 8
+- type: classify
+  focus: "Sort the 10 practice letters into vowels (А О У І) vs consonants (М Н Т К С Л)"
+  items: 10
+- type: match-up
+  focus: "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C, Р≠P)"
+  items: 10
+- type: fill-in
+  focus: "Blend letters into syllables and words: М+А→МА, МА+МА→?"
+  items: 8
+- type: quiz
+  focus: "Read and identify — which word matches the picture?"
+  items: 8
+connects_to:
+- a1-02 (Vowel Sounds)
+prerequisites: []
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+grammar:
+- "Full alphabet overview (33 letters)"
+- "Sound-letter correspondence (букви vs звуки)"
+- "Vowel vs consonant classification"
+- "Basic syllable blending and word reading"
+register: розмовний
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  poster: https://www.youtube.com/watch?v=grL2s5e2AGI
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+  letters:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk

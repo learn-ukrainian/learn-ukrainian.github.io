@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "prohibitions-and-signs",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:46:12Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:46:12Z",
+      "task_id": "v5-prohibitions-and-signs-pA",
+      "mode": "full"
+    }
+  }
+}

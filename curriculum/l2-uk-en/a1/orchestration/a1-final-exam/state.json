@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "a1-final-exam",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T10:22:17Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T10:22:17Z",
+      "task_id": "v5-a1-final-exam-pA",
+      "mode": "full"
+    }
+  }
+}

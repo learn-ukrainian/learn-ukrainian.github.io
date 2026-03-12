@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "buying-tickets",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:48:06Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:48:06Z",
+      "task_id": "v5-buying-tickets-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,122 @@
+discovered_at: '2026-03-12T09:09:24.689088+00:00'
+query_keywords:
+- Around the City
+- прямо
+- наліво
+- направо
+- Міський простір
+- Urban Space
+- Граматика та напрямки
+- Grammar and Directions
+- Орієнтування за мапою
+- Navigating by Map
+- 'Культура та Продакшн: Життя в місті'
+- 'Culture and Production: City Life'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=5Rfu5gPaXqo
+  channel: Speak Ukrainian
+  title: Free Ukrainian Mini-course
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=uiY59wF9qP4
+  channel: Speak Ukrainian
+  title: The first week of our offline course in London @SpeakUkrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/ph-places/
+  title: 'Ukrainian Phrasebook: Places'
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - places
+  - directions
+  - city
+rag_chunks:
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0015
+  text: "16\nЗнайди слово — підпис до малюнка. \nВідшукай слово до схеми.\n\t маки\t\
+    \nморе\t\nміст\t\nмісце\n\t маски\t\nморяк\t\nмісток\t\nмімоза\n\t марки\t\nморський\t\
+    \nмісто\t\nміміка\n\b\nТекст. Тема тексту\nУ містах багато високих будинків. Біля\
+    \ \nбудинків є май-дан-чи-ки для дітей. У містах \nє музеї, театри, су-пер-мар-ке-ти.\
+    \ Вулицями \nміст їздять тро-лей-бу-си, трамваї, автобуси, \nмаршрутні таксі.\
+    \ А  що ще є в містах?\n1\n2\nМ м\nм і |с т о\nвулиця\nпарк\nметро\nплоща\nсупермаркет"
+  section_title: Сторінка 16
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0116
+  text: "Прочитайте текст повторно й стисло перекажіть його за складеним планом \n\
+    (письмово). За потреби використайте опорні слова. Опорні слова\nіменники\nприкметники\n\
+    дієприкметники\nдієслова\nприслівники\nвулиці\nкам’яниці\nмозаїка\nкривулястий\n\
+    двоповерховий \nосінній\nзвужений\nкований\nрозігрітий\nвигулькувати\nлитися\n\
+    кружляти\nнерідко\nнатомість\nнавпаки\nм. Станиславів, вулиця Казимирівська. Листівка.\
+    \ Початок ХХ ст."
+  section_title: Сторінка 90
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0077
+  text: А. Випишіть речення з непрямим порядком слів. Б. Підкресліть інверсовані слова
+    відповідно до їхньої синтаксичної ролі.
+  section_title: Сторінка 64
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

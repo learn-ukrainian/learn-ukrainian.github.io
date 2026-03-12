@@ -1,0 +1,17 @@
+{
+  "track": "b1",
+  "slug": "aspect-negation",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:51:45Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:52:05Z",
+      "note": "merged-into-research"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+discovered_at: '2026-03-12T08:51:22.873578+00:00'
+query_keywords:
+- Вид у майбутньому часі
+- Граматичне пояснення
+- Grammar Explanation
+- Культурний та етнолінгвістичний контекст
+- Cultural & Ethnolinguistic Context
+- Практика та корекція помилок
+- Practice & Error Correction
+- Production & Summary
+- all three types of future constructions
+- when to use compound vs synthetic imperfective future
+- appropriate aspect for future actions
+- Learner recognizes stylistic differences between future forms
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=bV0VNwnYOy8
+  channel: Repainted Fox
+  title: '#101 Depeche Mode. Sergey Zhadan'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=boitWkuHAv4
+  channel: Klopotenko
+  title: IODINE DEFICIENCY 🧂 How IODIZED SALT affects the nation's IQ | Ievgen Klopotenko
+    and UNICEF
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLIumsbnlfadhOiQSJO6lHlgYQrEdVjty7
+  channel: Klopotenko
+  title: Здорове харчування | Євген Клопотенко | Юнісеф
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0192
+  text: "Змінювання дієслів минулого часу\nза родами (в однині) й числами......................................................146\n\
+    Теперішній час. Змінювання дієслів теперішнього часу \nза особами й числами.......................................................................147"
+  section_title: Сторінка 190
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0263
+  text: "184\nЗМІСТ\n§ 37–39. Обставина. Види обставин за значенням і способи їхнього\
+    \ вираження. Порівняльний зворот  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82\n§ 40. Розвиток\
+    \ мовлення. Стислий письмовий переказ розповідного тексту  \nз елементами опису\
+    \ місцевості в художньому стилі . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 88\n§ 41. Типи односкладних речень . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0243
+  text: "Ваш конспект\nСкладні речення використовують для вираження найрізноманітніших\
+    \ \nчасових, причиново-наслідкових і просторових відношень. Найчастіше \nними\
+    \ послуговуються в науковому, офіційно-діловому й художньому стилях \nмовлення.\
+    \ 200\n201"
+  section_title: Сторінка 160
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

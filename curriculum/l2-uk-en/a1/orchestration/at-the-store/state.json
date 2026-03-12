@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "at-the-store",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T10:04:15Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T10:04:15Z",
+      "task_id": "v5-at-the-store-pA",
+      "mode": "full"
+    }
+  }
+}

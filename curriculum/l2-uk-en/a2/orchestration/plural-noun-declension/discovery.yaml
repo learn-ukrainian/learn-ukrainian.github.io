@@ -1,0 +1,222 @@
+discovered_at: '2026-03-12T08:46:34.110190+00:00'
+query_keywords:
+- Plural Noun Declension
+- множина
+- книга
+- книги
+- книг
+- друг
+- друзі
+- друзів
+- людина
+- люди
+- людей
+- Plural is More Than -и/-і
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=LHaC0ussvQQ
+  channel: Bright Kids Ukrainian
+  title: Singular & Plural in Ukrainian Language for Beginners.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=j2o75UKiIFY
+  channel: Ukrainian Lessons
+  title: ULP 2-42 | Моя кімната – Множина іменників | My Room – Plural nouns in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=rgX2QoOEdTI
+  channel: Ukrainian Lessons
+  title: 'FMU 1-46 | Grammar point: Plural of nouns in Ukrainian | 5 Minute Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=x1kW08scie0
+  channel: Ukrainian with Olha
+  title: 'Я ти він вона воно ми ви вони #ukrainianlanguage #ukrainianlessons #learnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=hoYLcmvahVs
+  channel: Ukrainian with Olha
+  title: 'Posessive Pronouns #ukrainianlessons #ukrainianlanguage #learnukrainian
+    #studyukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ksZEEAHX6ow
+  channel: Let's Learn Ukrainian
+  title: 'Basic Maths Vocabulary: Count to 100, addition, subtraction, multiplication
+    and division'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=T59dgH_x1s8
+  channel: Let's Learn Ukrainian
+  title: Personal Pronouns and their Cases!
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode42/
+  title: My Room – Plural nouns in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - housing
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 42
+- url: https://www.ukrainianlessons.com/episode44/
+  title: My pets + Special plural forms
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - animals
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 44
+- url: https://www.ukrainianlessons.com/episode43/
+  title: Looking for an apartment + Special plural forms
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - weather
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 43
+- url: https://www.ukrainianlessons.com/episode48/
+  title: Eating habits + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - prepositions
+  - plural
+  - phrases
+  - introductions
+  - conversation
+  - interview
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 48
+- url: https://www.ukrainianlessons.com/fmu46/
+  title: 'Grammar point: Plural of nouns in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - plural
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 46
+rag_chunks:
+- score: 0.1428571492433548
+  chunk_id: 6-klas-ukrmova-golub-2023_s0137
+  text: "134\nВідмінкові закінчення прикметників \nтвердої та м’якої груп\nВід-\n\
+    мінок\nОднина\nМножина\nТверда група\nМ’яка група\nТверда \nгрупа\nМ’яка \nгрупа\n\
+    Чоловічий \nі середній \nрід\nЖіночий \nрід\nЧоловічий \nі середній \nрід\nЖіночий\
+    \ \nрід\nН.\nзелен-ий, \n-е\n-а\nсин-ій, -є\n-я\n-і\n-і\nР. \nзелен-ого\n-ої\n\
+    синь-ого\n-ої\n-их\n-іх\nД\nзелен-ому\n-ій\nсинь-ому\n-ій\n-им\n-ім\nЗн. \nяк\
+    \ Н. \nабо Р. \n-у\nяк Н. \nабо Р. \n-ю\nяк Н. \nабо Р. \nяк Н. \nабо Р. \nОр.\
+    \ \nзелен-им\n-ою\nсин-ім\n-ою\n-ими\n-іми\nМ. \n(на) \nзелен-ому, \nзелен-ім\n\
+    (на) -ій\n(на) \nсинь-ом"
+  section_title: Сторінка 134
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0048
+  text: "РОЗРІЗНЯЮ СЛОВА, ЯКІ ВІДПОВІДАЮТЬ \nНА ПИТАННЯ ХТО? ЩО?\nЯ — учителька\n\
+    Прочитай і розкажи у класі.\nЯ — учитель\nхто? \nщо?\nСлова — назви людей і тварин\
+    \ відповідають на \nпитання хто?.\nСлова — назви інших предметів відповідають\
+    \ на \nпитання що?.\n8| Допиши речення, відповідаючи на запитання.\nУ школі я\
+    \ — ?. \nВ автобусі я — ?.\nУ бібліотеці я — ?.\nУ крамниці я — ?.\nУ театрі я\
+    \ — ?.\nДля мами й тата я — ?. \nДля дідуся й бабусі я — ?. \nДля брата й сестри\
+    \ я — ?.\n__________________\n• На які питання відповідають "
+  section_title: Сторінка 50
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0264
+  text: "§ 59 Відмінювання іменників \n147\nВідмінки\nТверда група\nМ’яка група\n\
+    Мішана група\nОднина\nМножина\nОднина\nМножина\nОднина\nМножина\nН. Р. Д. Зн.\
+    \ Ор. М. Кл. -а\n-и\n-і\n-у\n-ою\n-і\n-о\n-и\n-- \n-ам\n-и\n-ами\n-ах\n-и\n-я\
+    \  \n-я\n-і  \n-ї\n-і  \n-ї\n-ю  \n-ю\n-ею  \n-єю\n-і  \n-ї\n-е  \n-є\n-і \n-ї\n\
+    --  \n-- \n-ям \n-ям\n-і \n-ї\n-ями \n-ями\n-ях \n-ях\n-і \n-ї\n-а\n-і\n-і\n-у\n\
+    -ею\n-і\n-е\n-і\n-- \n-ам\n-і\n-ами\n-ах\n-і\nДо ІІ відміни належать іменники\
+    \ чоловічого роду, що в Н. в. однини закінчуються на твердий чи м’який приголосний\
+    \ (дуб, кінь) \nабо мають за"
+  section_title: Сторінка 147
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0003
+  text: "котрий? Займенник\nвказує на  \nособу, предмет, \nознаку,\nкількість\nнайчастіше\
+    \ – \nпідмет,\nдодаток, \nозначення\nхто? що? який? чий? скільки? Дієслово\nозначає\
+    \ дію \nпредмета\nнайчастіше –\nприсудок\n(дієприслівник –\nобставина,\nдієприкметник\
+    \ –\nозначення)\nщо робити? що зробити? (дієприслівник – \nщо роблячи?,\nдієприкметник\
+    \ –\nякий? яка? яке?)\nПрислівник\nозначає \nознаку дії,\nознаку  \nпредмета чи\n\
+    ознаку іншої \nознаки\nобставина, \nприсудок,\nозначення\nяк? де? куди? коли?\
+    \ чому? з якою метою? та ін. СЛУЖБОВІ\nПриймен"
+  section_title: Сторінка 4
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0047
+  text: "44\n44\nКультура мовлення\nРозрізняймо\nКАМПАНІЯ\nподія; сукупність заходів\n\
+    КОМПАНІЯ\nтовариство, група осіб; організація\nвступна кампанія\nпосівна кампанія\n\
+    весела компанія\nстрахова компанія\nКНИЖНИЙ\nхарактерний для писемного викладу,\n\
+    не властивий живій мові\nКНИЖКОВИЙ\nузятий із книжок; стосується книжки\nкнижна\
+    \ мова\nкнижна лексика\nкнижкова фабрика\nкнижкова крамниця \nТУРИСТИЧНИЙ\nстосується\
+    \ туризму, подорожі\nТУРИСТСЬКИЙ\nстосується туриста, призначений для нього\n\
+    туристичний похід\nтуристичний сезон \nтуристсь"
+  section_title: Сторінка 48
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

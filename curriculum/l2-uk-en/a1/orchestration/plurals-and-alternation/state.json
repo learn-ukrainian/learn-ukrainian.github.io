@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "plurals-and-alternation",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:47:38Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:48:01Z",
+      "note": "merged-into-research"
+    }
+  }
+}

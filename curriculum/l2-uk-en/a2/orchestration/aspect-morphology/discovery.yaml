@@ -1,0 +1,184 @@
+discovered_at: '2026-03-12T09:05:47.549676+00:00'
+query_keywords:
+- Aspect Morphology
+- вид дієслова
+- відпочивати
+- відпочити
+- вставати
+- встати
+- одягатися
+- одягнутися
+- Концепція видових пар
+- The Aspectual Pair Concept
+- Творення префіксами та правило правопису
+- Prefixal Formation and Spelling Rules
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=zVdb0g7KDC0
+  channel: Ukrainian Lessons
+  title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+    and perfective verbs in...
+  relevance_score: 0.9
+  relevance_note: The video explicitly discusses 'доконаний і недоконаний вид дієслів'
+    (perfective and imperfective verb aspects) and 'чергування зміни' (sound changes)
+    during their formation, directly aligning with the module's focus on aspect morphology
+    and its formation rules.
+  transcript_excerpt: а тоді поговоримо ще трохи про доконаний і недоконаний вид дієслів
+    а саме про чергування зміни які відбуваються при утворенні доконаного виду
+  embed_suggestion: After section Творення суфіксами та суплетивні пари (Suffixal
+    Formation and Suppletive Pairs) – directly relates to the formation and sound
+    changes of aspectual pairs.
+- url: https://www.youtube.com/watch?v=_lvdp6hRm1U
+  channel: Bright Kids Ukrainian
+  title: Cooking verbs in Ukrainian. Дієслова для готування.
+  relevance_score: 0.2
+  relevance_note: The video focuses on cooking-related vocabulary and does not teach
+    or explain aspect morphology. It is in Ukrainian but not relevant to the module's
+    grammatical topic.
+  transcript_excerpt: '[музика] cooking [музика] мити чистити [музика] різати розбивати'
+  embed_suggestion: Not suitable for embedding due to low relevance to the module's
+    grammar topic.
+- url: https://www.youtube.com/watch?v=_GkI6grCxgk
+  channel: Klopotenko
+  title: Всеукраїнський борщ. Подарунок до 30-річчя Незалежності України від Євгена
+    Клопотенка та ЗІРОК
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=8CdfB38PWMo
+  channel: Ukrainian Lessons
+  title: '1000 Most Useful Ukrainian Words : How To Use Anki'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=RzTV4GYRghA
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Cooking, Daily meals, Cake recipe 🍰 Instrumental
+    case | Imperfect verbs'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7IzMhjomEiQ
+  channel: Let's Learn Ukrainian
+  title: '40 Adjectives (Antonyms) #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=bpMgfxZVHL8
+  channel: Let's Learn Ukrainian
+  title: 'What is ДІЄПРИСЛІВНИК? | Ukrainian Grammar | #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+  title: Verb Aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/92/
+  title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+    aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/91/
+  title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+    and perfective  verb aspects in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/94/
+  title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+    and perfective verbs in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.8
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0494
+  text: 'Зміст
+
+    § 72 Види дієслів  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 181
+
+    § 73 Часи дієслів, їх творення  . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . 183
+
+    § 74 Способи дієслів  . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 271
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0038
+  text: "35\n§ 14.  Види словосполучень.  Граматична помилка в словосполученні\nА.\t\
+    \nВипишіть із кожного речення по одному складному словосполученню. Надпи-\nшіть\
+    \ над кожним із них вид за способом вираження головного слова.\nБ.\t\nРозкрийте\
+    \ значення виділених слів. Поміркуйте, чому саме в спортивній галузі \nтак багато\
+    \ неологізмів іншомовного походження (усно).\n5.\t Виконайте завдання в тестовій\
+    \ формі.\n1.\t Складне словосполучення записано в рядку\nА\t найбільш сильний\
+    \ боксер\nБ\t будемо перемагати гуртом\nВ\t протягом "
+  section_title: Сторінка 36
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0014
+  text: "12\nДІЄСЛОВО  \nТА ЙОГО ФОРМИ\n§ 4\n1.\t Прочитайте слова та виконайте завдання.\n\
+    відпочивати\nвідпочивальник\nвідпочиваючи\nвідпочилий\nА.\t\nЯке слово «зайве»?\
+    \ Чому?\nБ.\t\nЯк називаємо ці дієслівні форми?\n2.\t Доберіть до кожної форми\
+    \ дієслова по три приклади (письмово).\nФорма дієслова\nПриклади\n1\nнеозначена\
+    \ форма (інфінітив)\n… , … , …\n2\nособове дієслово\n… , … , …\n3\nбезособова\
+    \ форма на -но, -то \n… , … , …\n4\nдієприкметник\n… , … , …\n5\nдієприслівник\n\
+    … , … , …\nПриклади: загартований, загартовуймося, загартовано, "
+  section_title: Сторінка 13
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0079
+  text: "68\nМОРФОЛОГІЯ.  ОРФОГРАФІЯ\n3.\t Утворіть від дієслів чекати й любити просту,\
+    \ складну та складену форми \nмайбутнього часу. Провідміняйте  їх за особами й\
+    \ числами за наведени-\nми в таблиці зразками (письмово). \n4.\t Виконайте завдання\
+    \ в тестовій формі. \n1. НЕПРАВИЛЬНИМ є твердження, що дієслова майбутнього часу\n\
+    А\t мають просту, складну й складену форми\nБ\t змінюються за родами в однині\n\
+    В\t бувають доконаного й недоконаного виду\nГ\t змінюються за особами й числами\n\
+    2. Дієслово теперішнього часу в значенн"
+  section_title: Сторінка 71
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0065
+  text: "55\n§ 25. Вид  дієслова\nПеремагати, крутити, зігнути, пекти, зіграти, дати,\
+    \ ловити, виховати, \nговорити, брати, назвати, зібрати, шукати, смикати, зігріти,\
+    \ вивертати. 4. Виконайте завдання в тестовій формі. 1. Лише дієслова доконаного\
+    \ виду записано у варіанті\nА\t скоротити, говорити, прийняти\nБ\t упізнати, спровокувати,\
+    \ змити\nВ\t зібрати, вивчити, передавати\nГ\t змазати, почути, випікати\n2. Лише\
+    \ дієслова недоконаного виду записано у варіанті\nА\t чула, смажитиме, вагатися\n\
+    Б\t заводити, змести, жували\nВ\t"
+  section_title: Сторінка 58
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,0 +1,17 @@
+{
+  "track": "a2",
+  "slug": "at-the-post-office-and-bank",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:48:06Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:48:29Z",
+      "note": "merged-into-research"
+    }
+  }
+}

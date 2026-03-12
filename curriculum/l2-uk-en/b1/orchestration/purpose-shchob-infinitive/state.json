@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "purpose-shchob-infinitive",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T10:04:03Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T10:04:03Z",
+      "task_id": "v5-purpose-shchob-infinitive-pA",
+      "mode": "full"
+    }
+  }
+}

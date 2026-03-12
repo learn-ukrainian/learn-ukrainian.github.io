@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "the-locative-where-things-are",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:02:54Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:09:23Z",
+      "note": "merged-into-research"
+    }
+  }
+}

@@ -1,0 +1,259 @@
+- type: watch-and-repeat
+  title: Listen and Repeat
+  items:
+  - letter: А
+    word: мама
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  - letter: О
+    word: око
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  - letter: У
+    word: тут
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  - letter: І
+    word: ліс
+    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  - letter: М
+    word: місто
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  - letter: Н
+    word: ніс
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  - letter: Т
+    word: тато
+    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  - letter: К
+    word: кіт
+    video: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  - letter: С
+    word: сік
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+  - letter: Л
+    word: лук
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+- type: image-to-letter
+  title: First Letter
+  instruction: Which letter does this word start with?
+  items:
+  - emoji: 👩
+    answer: М
+    distractors:
+    - А
+    - Т
+    - Н
+  - emoji: 🐈
+    answer: К
+    distractors:
+    - С
+    - Л
+    - Т
+  - emoji: 🥛
+    answer: М
+    distractors:
+    - Н
+    - О
+    - Л
+  - emoji: 👁️
+    answer: О
+    distractors:
+    - А
+    - У
+    - С
+  - emoji: 🌲
+    answer: Л
+    distractors:
+    - І
+    - С
+    - М
+  - emoji: 🏙️
+    answer: М
+    distractors:
+    - І
+    - Т
+    - К
+- type: classify
+  title: Vowels and Consonants
+  instruction: Sort these letters into the correct category.
+  categories:
+  - label: Голосні
+    items:
+    - А
+    - О
+    - У
+    - І
+  - label: Приголосні
+    items:
+    - М
+    - Н
+    - Т
+    - К
+    - С
+    - Л
+- type: true-false
+  title: Letter Facts
+  instruction: Are these statements true or false?
+  items:
+  - statement: The letter Н sounds like the English H.
+    correct: false
+    explanation: Н looks like an English H, but it sounds like N.
+  - statement: The letter С makes an S sound.
+    correct: true
+    explanation: С looks like C but always sounds like S.
+  - statement: The letter О is a vowel (голосні).
+    correct: true
+    explanation: О is a vowel.
+  - statement: The letter М is a consonant (приголосні).
+    correct: true
+    explanation: М is a consonant.
+  - statement: The Ukrainian alphabet has exactly 33 letters.
+    correct: true
+    explanation: There are 33 letters in the alphabet.
+  - statement: Letters (букви) and sounds (звуки) are the exact same thing.
+    correct: false
+    explanation: Letters are what you write; sounds are what you hear.
+- type: anagram
+  title: Word Scramble
+  instruction: Rearrange the letters to form words.
+  items:
+  - scrambled: А М А М
+    answer: мама
+  - scrambled: А Т О Т
+    answer: тато
+  - scrambled: О К О Л О М
+    answer: молоко
+  - scrambled: С О Л М А
+    answer: масло
+  - scrambled: О К О
+    answer: око
+  - scrambled: І М С О Т
+    answer: місто
+  - scrambled: І К Т
+    answer: кіт
+  - scrambled: У Л К
+    answer: лук
+- type: match-up
+  title: Letter Sounds
+  instruction: Match the Cyrillic letter to its sound.
+  pairs:
+  - left: Н
+    right: N sound
+  - left: С
+    right: S sound
+  - left: У
+    right: OO sound
+  - left: М
+    right: M sound
+  - left: А
+    right: A sound
+  - left: І
+    right: EE sound
+- type: fill-in
+  title: Complete the Word
+  instruction: Choose the correct missing letter.
+  items:
+  - sentence: м _ м а 👩
+    answer: а
+    options:
+    - а
+    - о
+    - у
+    - і
+  - sentence: т _ т о 👨
+    answer: а
+    options:
+    - а
+    - о
+    - у
+    - і
+  - sentence: к _ т 🐈
+    answer: і
+    options:
+    - і
+    - а
+    - о
+    - у
+  - sentence: м _ с т о 🏙️
+    answer: і
+    options:
+    - і
+    - а
+    - о
+    - у
+  - sentence: л _ с 🌲
+    answer: і
+    options:
+    - і
+    - а
+    - о
+    - у
+  - sentence: с _ к 🧃
+    answer: і
+    options:
+    - і
+    - а
+    - о
+    - у
+- type: quiz
+  title: Read and Recognize
+  instruction: Choose the correct translation for the word.
+  items:
+  - question: What does мама mean?
+    options:
+    - text: mom
+      correct: true
+    - text: dad
+      correct: false
+    - text: cat
+      correct: false
+    - text: city
+      correct: false
+  - question: What does ліс mean?
+    options:
+    - text: forest
+      correct: true
+    - text: city
+      correct: false
+    - text: juice
+      correct: false
+    - text: table
+      correct: false
+  - question: What does кіт mean?
+    options:
+    - text: cat
+      correct: true
+    - text: dog
+      correct: false
+    - text: dad
+      correct: false
+    - text: mom
+      correct: false
+  - question: What does око mean?
+    options:
+    - text: eye
+      correct: true
+    - text: nose
+      correct: false
+    - text: mouth
+      correct: false
+    - text: ear
+      correct: false
+  - question: What does ні mean?
+    options:
+    - text: 'no'
+      correct: true
+    - text: 'yes'
+      correct: false
+    - text: here
+      correct: false
+    - text: there
+      correct: false
+  - question: What does так mean?
+    options:
+    - text: 'yes'
+      correct: true
+    - text: 'no'
+      correct: false
+    - text: here
+      correct: false
+    - text: there
+      correct: false

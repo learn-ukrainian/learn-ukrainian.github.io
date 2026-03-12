@@ -1,0 +1,260 @@
+# Beginner Research + Meta Outline
+
+> **You are Gemini, executing the research phase for a beginner-level module.**
+> **Your task: Generate lightweight research notes AND a content_outline (meta YAML) in one pass.**
+
+---
+
+## Your Input
+
+Read the plan file (SOURCE OF TRUTH):
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/a1-final-exam.yaml
+```
+
+Read the level quick-ref for constraints:
+```
+/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+```
+
+---
+
+## Module Sequence Constraints
+
+SEQUENCE CONSTRAINTS (A1.6 — Real-World Skills):
+Full A1 grammar available including imperatives. The standard A1 LEVEL_CONSTRAINTS apply.
+
+
+
+---
+
+## Textbook Context
+
+## Textbook Excerpts (from real Ukrainian school textbooks)
+
+Use these as authoritative reference for your research. Note how textbooks teach this topic: what exercises they use, what cultural examples they include, what common errors they address.
+
+**Grade 7, galimov — Сторінка 223**:
+```
+222
+Зміст
+Зміст
+Передмова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+	
+§ 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+Розділ І. ВЕЛИКЕ РОЗСЕЛЕННЯ СЛОВ’ЯНСТВА. ЗМІНА 
+НАСЕЛЕННЯ ПРИЧОРНОМОРСЬКИХ СТЕПІВ
+	
+§ 2. Слов’янство у V—VІІ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+	
+§ 3. Слов’янські племена на те
+```
+
+**Grade 7, zabolotnyi — Сторінка 274**:
+```
+Настала черга чоловіка в костюмі виходити наперед. – Доброго ранку, друзі, – привітався він. – Звати мене, як вам 
+уже сказали, Олександр Тумановський. Я директор фірми, яка 
+постачає обладнання для тренажерних залів. Мій син, до речі, 
+цього року закінчує нашу з вами школу. Провести такі змаган-
+ня – ідея вашого шановного директора, і ми її підтримали. Усі 
+знають, яку важливу роль відіграють спорт і фізична культура в 
+житті сучасної молодої людини в новому тисячолітті. Ви тут усі 
+більш-менш 
+```
+
+**Grade 6, shchupak — Сторінка 7**:
+```
+5
+ЗМІСТ
+ВСТУП ДО КУРСУ
+§ 1. Повторення. Що вивчає наука історія. . . . . . . . . . . . . . . . . . . . . . . . . . 7
+§ 2–3. Як виникли системи літочислення. Історична періодизація: 
+               світ і Україна. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+§ 4. Лічба часу в історії первісної доби та стародавнього світу . . . . . . . 18
+§ 5. Джерела з історії первісності та стародавнього світу. . . . . . . . . . . . 21
+Розділ 1. ЖИТТ Я Л ЮДЕЙ У ПЕРВІСН
+```
+
+**Grade 6, shchupak — Сторінка 45**:
+```
+43
+ЗАПИТАННЯ І ЗАВДАННЯ
+I.
+Знаю й систематизую нову інформацію
+1. С а м о о ц і н ю в а н н я
+Оцініть свої успіхи в опануванні теми «Поява і розселення людей на 
+теренах України». Дайте відповіді на запитання.
+?
+Прекрасно
+Добре
+Нічого 
+не зрозуміло
+Коли первісні люди з’явилися 
+на теренах України?
+Де в Україні знайдено стоянки
+первісних людей?
+Яку інформацію про життя первісних 
+людей на теренах України
+розповідають археологічні пам’ятки?
+Як в Україні зберігають пам’ять 
+про первісну добу людств
+```
+
+**Grade 5, litvinova — Сторінка 3**:
+```
+3
+Зміст
+ЗМІСТ
+Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+Навігатор до  підручника . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+ВСТУП. УКРАЇНСЬКА  МОВА  В  ЖИТТІ  УКРАЇНЦІВ . . . . . . . . . . . 8
+Мова в  житті людей . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+Мова як засіб спілкування. Значення мови . . . . . . . . . . . . . . . . . . . .
+```
+
+**Grade 5, litvinova — Сторінка 205**:
+```
+205
+Відомості із синтаксису й пунктуації. Види речень за метою висловлення
+ОП
+О
+І
+П
+Н
+М
+Н
+Т
+М
+Ольга Петрівна: Добрий 
+день, шановні учні! 
+Усі пам’ятають, що 
+завтра йдемо на екс-
+курсію? Збираємося 
+біля школи о 10.00. 
+Візьміть із собою 
+бутерброди, воду 
+й кишенькові гро-
+ші. Не запізнюйтеся: 
+на нас чекатимуть. 
+До зустрічі!
+Оксана: Усе зрозуміла, 
+дякую.
+Іван: Ok
+Петро: 
+Наталка: 
+Микита: Це вже завтра?!
+Ніна: 
+Термінатор:  
+Микола: Дякую 
+за нагадування!
+Вправа 333
+1. Прочитайте повідомлен
+```
+
+---
+
+## PART 1: Research
+
+Research **A1 Final Exam** for the **A1** track.
+
+Beginner research is focused and practical — no literary analysis, no decolonization framing. **Use the textbook excerpts above** as your primary reference for how this topic is taught.
+
+### What to research:
+
+1. **State Standard**: Briefly check `docs/l2-uk-en/state-standard-2024-mapping.yaml` for the relevant A1 entry. Quote the §reference if one exists. If no mapping applies (e.g., letter-introduction modules), write "No specific § — foundational literacy prerequisite."
+2. **Vocabulary**: For key vocabulary items in the plan's `vocabulary_hints`, list them in a table with brief notes (frequency, collocations, or cognate status). Minimum 5 rows.
+3. **Common errors**: 3-4 mistakes English speakers make with this topic (numbered list). Reference textbook exercises above — what errors do the exercises target?
+4. **Cultural hooks**: 2-3 verified cultural connections (загадки, скоромовки, proverbs, songs, folk sayings, real-life situations from Ukrainian daily life). Look at the textbook excerpts for examples. Keep it concrete — a specific riddle or saying is better than a vague "Ukrainians value politeness."
+5. **Cross-references**: Which modules this builds on and prepares for (check plan's `connects_to`)
+6. **Teaching strategy**: How should this concept be introduced to a learner? Describe a concrete discovery exercise — a scenario, dialogue, or set of examples that lets the learner notice the pattern BEFORE you explain the rule. What real-life context makes this grammar point feel natural (classroom, café, market, directions)? What contrastive pairs would help disambiguation? **Cite specific textbook exercises from the excerpts above as models.**
+7. **Notes**: Any observations useful for the content writer
+
+### What NOT to research:
+
+- Decolonization framing (irrelevant for alphabet and basic vocabulary)
+- Literary or historical sources
+- Deep frequency analysis (a brief table is enough)
+
+---
+
+## PART 2: Meta Outline
+
+Generate a `content_outline` for this module. The outline defines H2/H3 structure with word budgets.
+
+**Target**: 1200 total words across all sections.
+
+### Outline rules:
+
+1. Section word budgets must sum to approximately 1200 (±10%)
+2. Each section needs a clear teaching purpose (introduce, practice, reinforce)
+3. Structure should build progressively: introduce concept → show examples → practice → summarize
+4. Include a summary section with 3-4 self-check questions
+
+---
+
+## Output Format
+
+```
+===RESEARCH_START===
+
+# Дослідження: A1 Final Exam
+
+## State Standard Reference
+§{section_number}: "{quoted requirement}" (or "No specific § — foundational literacy prerequisite" for alphabet modules)
+Alignment: {how this module addresses the standard}
+
+## Vocabulary Frequency
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| ...  | ...   | ...              |
+
+## Cultural Hooks
+1. {Verified fact or загадка/скоромовка/saying — concrete and specific}
+2. {Another hook — different type from #1}
+3. {Optional third hook}
+
+## Common Learner Errors
+1. {Error pattern} → {Correct form} — {Why it happens}
+2. {Another error}
+3. {Third error — reference textbook exercise if possible}
+
+## Cross-References
+- Builds on: {module slugs or "first module"}
+- Prepares for: {module slugs}
+
+## Teaching Strategy
+- **Discovery exercise**: {Concrete scenario/dialogue that introduces the pattern before explaining the rule}
+- **Best context**: {Real-life situation where this grammar appears naturally}
+- **Contrastive pairs**: {Examples that highlight the key distinction learners need to grasp}
+
+## Notes for Content Writing
+- {Any observations for the content writer}
+
+===RESEARCH_END===
+```
+
+**Research word cap**: 400-800 words. Keep it dense: facts, tables, examples — not prose.
+
+```
+===META_OUTLINE_START===
+content_outline:
+  - title: "Section Title"
+    slug: section-slug
+    words: 300
+    points:
+      - "Teaching point 1"
+      - "Teaching point 2"
+  - title: "Another Section"
+    slug: another-section
+    words: 250
+    points:
+      - "Teaching point"
+===META_OUTLINE_END===
+```
+
+## Boundaries
+
+- Do NOT write lesson content — only research notes and meta outline
+- Do NOT invent vocabulary outside the plan's vocabulary_hints
+- Do NOT fabricate cultural facts — if unsure, omit
+- Keep research focused — beginner modules need structured research, not lengthy prose

@@ -1,0 +1,108 @@
+discovered_at: '2026-03-12T10:23:17.241069+00:00'
+query_keywords:
+- Because and Although
+- Вступ
+- Чому та Як
+- Всупереч обставинам
+- тому
+- що
+- бо
+- через
+- Why and How
+- Despite the Circumstances
+- Логічне обґрунтування
+- Logical Justification
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Dv69jKuc-XA
+  channel: Klopotenko
+  title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
+  relevance_score: 0.2
+  relevance_note: Video topic is cooking, which is unrelated to the grammar module.
+    However, it contains natural examples of 'якщо' (if/although) in conversational
+    Ukrainian, which could serve as supplementary listening material.
+  transcript_excerpt: Вони абсолютно ідентичні, але якщо вам по душі, ви звикли ось
+    так, то робіть ось так.
+  embed_suggestion: After Production and Dialogues -- for supplementary listening
+    practice to identify target grammar in natural speech.
+- url: https://www.youtube.com/watch?v=6Rh0041xEog
+  channel: Klopotenko
+  title: 'ЧЕРНІГІВЩИНА НА СМАК: забуті українські страви та смаки | Гастро-експедиція
+    Євгена Клопотенка'
+  relevance_score: 0.2
+  relevance_note: Video topic is a food expedition, which is unrelated to the grammar
+    module. However, it contains natural examples of 'бо' (because) in conversational
+    Ukrainian, which could serve as supplementary listening material.
+  transcript_excerpt: Почнемо нашу експедицію з розборок про нішинський огірок, бо
+    дуже-дуже хочеться свої продукти пізнавати і любити.
+  embed_suggestion: After Production and Dialogues -- for supplementary listening
+    practice to identify target grammar in natural speech.
+blogs: []
+rag_chunks:
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0246
+  text: "Ч а с т и н и   м о в и\nСамостійні \nІменник \nсонце\nхто? що?\nПрикметник\n\
+    сонячний, мамин\nякий? чий?\nЧислівник\nтри, третій\nскільки? котрий?\nЗайменник\n\
+    я, ти, він\nхто? що?\nДієслово\nсидіти\nщо робити? що зробити?\nПрислівник \n\
+    сонячно, восени\nяк? де? коли? куди?\nСлужбові\nПрийменник\nна, в, з, до\nНе відповідають\
+    \ на \nпитання\nСполучник\nі, й, та, але\nЧастка\nне, б, хай\nВ и д и  р е ч е\
+    \ н ь\nЗа метою \nвисловлювання\nЗа емоційним \nзабарвленням\nЗа будовою\nрозповідне\n\
+    окличне\nпросте\nпитальне\nнеокличне\nскладне\nспонука"
+  section_title: Сторінка 245
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0231
+  text: "Відокремлюються комами обставини:\n1) виражені дієприслівниковими зворотами,\
+    \ наприклад: Вітер, скотив-\nшись із гір у долини, сховався в темних борах (Панас\
+    \ Мирний);\n2) виражені одиничними дієприслівниками, що означають додаткову дію\
+    \ \nабо час, причину, умову, наприклад: Роман, не гаючись, рішучим стрибком \n\
+    вискочив з окопу (О. Гончар);\n3) виражені іменниками із прийменниками незважаючи\
+    \ на, починаючи з, \nвсупереч, наперекір, наприклад: Дощ, всупереч усім прогнозам,\
+    \ почався \nнесподівано вночі (О. Го"
+  section_title: Сторінка 151
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0256
+  text: "Розгляньте ілюстрації. Підготуйте усний коментар (5–6 речень) до од-\nнієї\
+    \ з них, використовуючи відокремлені означення та обставини. Варіант Б. Розгляньте\
+    \ ілюстрації. Складіть і запишіть за кожною з них одне ре­\nчення з відокремленою\
+    \ обставиною та одне речення зі вставним словом (сполученням \nслів). незважаючи\
+    \ на\nзгідно з\nвідповідно до\nСполучення іменника з прийменником"
+  section_title: Сторінка 212
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0191
+  text: "Надпишіть над кожним сполучником його вид за будовою та способом \nуживання.\
+    \ За способом уживання\nОдиничні: і, та, \nабо, але, що, \nніби, тому що, \nякщо:\
+    \ ластівки \nта бджоли\nПовторювані: і … і, ні … \nні, ані … ані, або … або, \n\
+    чи … чи, то … то, чи то …\nчи то: то ластівки, то \nбджоли\nПарні: не тільки … ,\
+    \ а й; \nяк … , так і; хоч … , але; \nне так … , як; що … , то: \nне тільки ластівки,\
+    \ а й \nбджоли\nПродовження табл."
+  section_title: Сторінка 174
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268
+  text: "Підрядні речення означальне, з’ясувальне, обставинні способу дії, міри \n\
+    і ступеня залежать від конкретних слів у головній частині. Інші підрядні обста-\n\
+    винні (місця, часу, порівняльне, причини, мети, умовне, допустове) пояснюють \n\
+    головну частину в цілому. 223"
+  section_title: Сторінка 176
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

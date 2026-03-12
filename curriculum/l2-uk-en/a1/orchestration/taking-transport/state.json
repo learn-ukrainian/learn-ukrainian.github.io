@@ -1,0 +1,18 @@
+{
+  "track": "a1",
+  "slug": "taking-transport",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T09:51:10Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T09:51:10Z",
+      "task_id": "v5-taking-transport-pA",
+      "mode": "full"
+    }
+  }
+}

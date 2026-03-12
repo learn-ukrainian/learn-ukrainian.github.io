@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "what-time-is-it",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T08:53:52Z",
+      "note": "rebuild-kept"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T08:54:52Z",
+      "note": "merged-into-research"
+    }
+  }
+}
