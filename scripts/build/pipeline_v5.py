@@ -189,6 +189,7 @@ from pipeline.screen import (
 )
 from pipeline.state import (
     is_complete,
+    load_state,  # noqa: F401 — re-exported for build_module_v5
     mark_complete,
     mark_failed,
     save_state,
