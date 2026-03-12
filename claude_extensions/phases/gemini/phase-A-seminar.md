@@ -13,12 +13,6 @@ Read the plan file (SOURCE OF TRUTH):
 {PLAN_PATH}
 ```
 
-Read the current meta file (for reference — you will replace the content_outline):
-
-```
-{META_PATH}
-```
-
 ---
 
 ## PART 1: Deep Research

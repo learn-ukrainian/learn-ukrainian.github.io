@@ -72,6 +72,24 @@ _ALLOWED_CHUNKS: dict[tuple[int, int], set[str]] = {
 }
 
 
+def _get_plan_sight_words(plan: dict | None) -> set[str]:
+    """Extract sight words from plan's vocabulary_hints.sight_words."""
+    if not plan:
+        return set()
+    hints = plan.get("vocabulary_hints", {})
+    if not isinstance(hints, dict):
+        return set()
+    sight = hints.get("sight_words", [])
+    words: set[str] = set()
+    for entry in sight:
+        if isinstance(entry, str):
+            # "привіт (hello) — sight word" → "привіт"
+            word = entry.split("(")[0].strip().split("—")[0].strip().lower()
+            if word:
+                words.add(word)
+    return words
+
+
 def _get_allowed_chunks(module_num: int) -> set[str]:
     """Get allowed memorized chunks for a module number."""
     result: set[str] = set()
@@ -153,14 +171,49 @@ class GrammarConstraint:
     check_gender: bool = False      # verify gender claims
 
 
-def _get_constraints(track: str, module_num: int) -> GrammarConstraint:
-    """Get grammar constraints for a module."""
+def _get_constraints(track: str, module_num: int, plan: dict | None = None) -> GrammarConstraint:
+    """Get grammar constraints for a module.
+
+    Reads the plan's `phase` field to determine constraints by A1 sub-phase,
+    falling back to module-number heuristics when no plan is available.
+    """
     base = track.split("-")[0] if "-" in track else track
     if base != "a1":
-        # Non-A1 tracks: imperatives already taught in A1 M47, so no constraint.
-        # Only check gender for now.
         return GrammarConstraint(check_gender=True)
 
+    # Plan-driven: use phase field
+    if plan:
+        phase_str = plan.get("phase", "")
+        phase_key = phase_str.split("[")[0].strip() if phase_str else ""
+        if phase_key == "A1.1":
+            # Pre-verbal: alphabet/phonology modules
+            return GrammarConstraint(
+                no_verbs=True,
+                no_imperatives=True,
+                check_gender=True,
+            )
+        elif phase_key == "A1.2":
+            return GrammarConstraint(
+                no_imperatives=True,
+                present_only=True,
+                no_accusative=True,
+                nominative_only=True,
+                check_gender=True,
+            )
+        elif phase_key == "A1.3":
+            return GrammarConstraint(
+                no_imperatives=True,
+                check_gender=True,
+            )
+        elif phase_key in ("A1.4", "A1.5"):
+            return GrammarConstraint(
+                no_imperatives=phase_key == "A1.4",
+                check_gender=True,
+            )
+        elif phase_key == "A1.6":
+            return GrammarConstraint(check_gender=True)
+
+    # Fallback: module-number heuristics (when no plan available)
     if module_num <= 14:
         return GrammarConstraint(
             no_verbs=True,
@@ -181,7 +234,6 @@ def _get_constraints(track: str, module_num: int) -> GrammarConstraint:
             check_gender=True,
         )
     else:
-        # M47+: imperatives taught, most grammar available
         return GrammarConstraint(check_gender=True)
 
 
@@ -368,6 +420,7 @@ def validate_morphology(
     module_num: int,
     track: str,
     max_issues: int = 15,
+    plan: dict | None = None,
 ) -> list[dict]:
     """Validate Ukrainian words in content against grammar constraints.
 
@@ -378,8 +431,9 @@ def validate_morphology(
 
     from rag_batch_verify import vesum_batch_lookup
 
-    constraints = _get_constraints(track, module_num)
+    constraints = _get_constraints(track, module_num, plan)
     allowed_chunks = _get_allowed_chunks(module_num)
+    sight_words = _get_plan_sight_words(plan)
     issues: list[dict] = []
 
     content_clean = _STRIKETHROUGH_RE.sub("", content)
@@ -401,6 +455,10 @@ def validate_morphology(
         word_lower = word_clean.lower()
 
         if len(word_clean) <= 1:
+            continue
+
+        # Sight words from plan are exempt — taught as whole shapes, not grammar
+        if word_lower in sight_words:
             continue
 
         if _is_in_allowed_chunk(word.replace(_STRESS_MARK, ""), full_line.replace(_STRESS_MARK, ""), allowed_chunks):

@@ -12,7 +12,6 @@
 | File | Purpose |
 |------|---------|
 | `{RESEARCH_PATH}` | Factual foundation — use exhaustively |
-| `{META_PATH}` | Content outline with section word allocations |
 | `{PLAN_PATH}` | Objectives, vocabulary_hints (use ONLY these words) |
 | `{QUICK_REF_PATH}` | Level constraints, immersion %, engagement minimums |
 

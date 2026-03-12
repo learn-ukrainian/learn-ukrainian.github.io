@@ -11,12 +11,6 @@ Read the plan file to understand what this module covers:
 {PLAN_PATH}
 ```
 
-Read the current meta file for content_outline structure:
-
-```
-{META_PATH}
-```
-
 ## Your Task
 
 Research **{TOPIC_TITLE}** for the **{TRACK}** track. Produce structured research notes that will drive content writing in later phases.
@@ -50,7 +44,7 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
    - `[!decolonization]` — Ukraine-centric reframing
    - `[!culture]` — Cultural significance
 5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography and what the Ukrainian-centric framing should be.
-6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the meta file. This makes content writing mechanical.
+6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes content writing mechanical.
 
 ### Contested Terms (if applicable)
 

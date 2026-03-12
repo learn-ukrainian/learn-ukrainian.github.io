@@ -41,7 +41,6 @@ Read these files:
 |------|---------|
 | `{CONTENT_PATH}` | Lesson content to test/reinforce |
 | `{PLAN_PATH}` | vocabulary_hints |
-| `{META_PATH}` | Activity count targets |
 | `{SCHEMA_PATH}` | Allowed fields per activity type |
 | `docs/ACTIVITY-YAML-REFERENCE.md` | Activity reference guide |
 

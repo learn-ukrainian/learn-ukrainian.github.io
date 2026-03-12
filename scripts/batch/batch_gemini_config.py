@@ -224,7 +224,6 @@ def get_module_paths(track: str, slug: str) -> dict:
 
     return {
         "md": track_dir / f"{bare_slug}.md",
-        "meta": track_dir / "meta" / f"{bare_slug}.yaml",
         "activities": track_dir / "activities" / f"{bare_slug}.yaml",
         "vocabulary": track_dir / "vocabulary" / f"{bare_slug}.yaml",
         "plan": plans_track_dir / f"{bare_slug}.yaml",

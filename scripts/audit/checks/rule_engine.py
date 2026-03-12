@@ -52,43 +52,37 @@ _BASE_SECTION_MARKERS = [
     "Перевір себе",
 ]
 
-_DECODABILITY_SPECS: list[tuple[int, str, str, list[str]]] = [
-    # (module_num, allowed_chars, description_suffix, extra_markers)
-    (1, "АаОоУуМмЛлНнСс",
-     "АОУМЛНС (7 letters). Students cannot decode other Cyrillic letters yet.",
-     []),
-    (2, "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
-     "the 14 letters learned so far.",
-     ["Reading Drill", "Нові склади"]),
-    (3, "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕеБбДдПпЗзГгХхЖжШшЧч",
-     "the 23 letters learned so far.",
-     ["Reading Drill", "Нові склади"]),
-]
-
-
-def _make_decodability_rules() -> list[ValidationRule]:
-    """Generate decodability rules from the specs table."""
-    rules = []
-    for mod_num, allowed, desc_suffix, extra_markers in _DECODABILITY_SPECS:
-        # Build human-readable letter list for fix text
-        upper_letters = [c for c in allowed if c.isupper()]
-        letter_list = ", ".join(upper_letters)
-        rules.append(ValidationRule(
-            name=f"DECODABILITY_M{mod_num}",
-            category="DECODABILITY",
-            severity="HIGH",
-            description=f"M{mod_num} reading-drill sections must only use letters "
-            f"{desc_suffix}",
-            fix=f"Replace words containing unknown letters with words using only "
-            f"{letter_list}. Or move the content to a later module.",
-            levels=["A1"],
-            module_range=(mod_num, mod_num),
-            charset_check={
-                "allowed": allowed,
-                "section_markers": _BASE_SECTION_MARKERS + extra_markers,
-            },
-        ))
-    return rules
+def _make_decodability_rule_from_plan(plan: dict, module_num: int) -> ValidationRule | None:
+    """Generate a decodability rule from the plan's decodable_letters field."""
+    letters_str = plan.get("decodable_letters", "")
+    if not letters_str:
+        return None
+    # Build charset string (upper+lower for each letter)
+    allowed = ""
+    upper_letters = []
+    for letter in letters_str.split():
+        l = letter.strip()
+        if l:
+            allowed += l.upper() + l.lower()
+            upper_letters.append(l.upper())
+    if not allowed:
+        return None
+    letter_list = ", ".join(upper_letters)
+    return ValidationRule(
+        name=f"DECODABILITY_M{module_num}",
+        category="DECODABILITY",
+        severity="HIGH",
+        description=f"M{module_num} reading-drill sections must only use letters "
+        f"{letter_list} ({len(upper_letters)} letters).",
+        fix=f"Replace words containing unknown letters with words using only "
+        f"{letter_list}. Or move the content to a later module.",
+        levels=["A1"],
+        module_range=(module_num, module_num),
+        charset_check={
+            "allowed": allowed,
+            "section_markers": _BASE_SECTION_MARKERS,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -152,8 +146,7 @@ RULES: list[ValidationRule] = [
         custom_check="check_oblique_cases",
         deprecated=True,
     ),
-    # 3-5. Decodability rules (generated from data table)
-    *_make_decodability_rules(),
+    # Decodability rules: generated dynamically from plan in run_rule_engine()
     # 6. Self-check questions in early A1 must contain English
     ValidationRule(
         name="SELF_CHECK_NEEDS_ENGLISH",
@@ -499,7 +492,7 @@ def _deduplicate(issues: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def run_rule_engine(content: str, level_code: str, module_num: int,
-                    track_code: str) -> list[dict]:
+                    track_code: str, plan: dict | None = None) -> list[dict]:
     """Run all applicable rules against content.
 
     Args:
@@ -507,12 +500,20 @@ def run_rule_engine(content: str, level_code: str, module_num: int,
         level_code: Level code (e.g. "A1", "B2").
         module_num: Module sequence number.
         track_code: Track code (e.g. "a1", "b2-grammar").
+        plan: Optional plan dict (used for decodable_letters).
 
     Returns:
         List of issue dicts compatible with DScreenResult.deterministic_issues.
     """
+    # Build dynamic rules from plan
+    all_rules = list(RULES)
+    if plan:
+        decode_rule = _make_decodability_rule_from_plan(plan, module_num)
+        if decode_rule:
+            all_rules.append(decode_rule)
+
     issues: list[dict] = []
-    for rule in RULES:
+    for rule in all_rules:
         if rule.deprecated:
             continue
         if not _rule_applies(rule, level_code, module_num, track_code):

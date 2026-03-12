@@ -17,8 +17,7 @@
 | File | What to extract |
 |------|----------------|
 | `{RESEARCH_PATH}` | Background knowledge, engagement hooks |
-| `{META_PATH}` | Section titles + word allocations, activity count targets |
-| `{PLAN_PATH}` | Objectives, vocabulary_hints (source of truth) |
+| `{PLAN_PATH}` | Objectives, content_outline, vocabulary_hints (source of truth) |
 | `{QUICK_REF_PATH}` | Level constraints, immersion band |
 | `{SCHEMA_PATH}` | Activity field definitions (`additionalProperties: false`) |
 
@@ -92,61 +91,11 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 {SECTION_BUDGET_TABLE}
 
-### Writing Style
-
-You're writing for an A1 learner progressing through a structured course. They already know previous modules' content. English scaffolds new grammar; Ukrainian is what they're learning and practicing.
-
-Follow the structural containment rules above. Each H2 section MUST follow this sequence:
-
-1. **DISCOVER** — Start with a Ukrainian dialogue or example set that demonstrates the pattern. NO English explanation yet. Let the learner notice the pattern themselves. Use a blockquote dialogue (4-8 lines) or a set of contrastive pairs in a table.
-2. **UNDERSTAND** — Now explain the pattern in 1-2 English sentences MAX. Use a paradigm table to show the system.
-3. **PRACTICE** — A second, different dialogue or scenario using the same pattern in a new context. End the section with a callout box (tip, warning, culture note, or fun fact).
-
-**FORBIDDEN patterns (HARD FAIL):**
-- Starting a section with an English grammar explanation (must start with Ukrainian examples)
-- Bulleted example lists longer than 5 items (spam — use a dialogue or table instead)
-- Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
-- Listing random permutations of the same verb forms as separate bullets
-
-### Dialogue Quality (CRITICAL)
-
-Every blockquote dialogue MUST:
-1. **Start with a location header**: `> **(На уроці / In the classroom)**` — this is MANDATORY, not optional
-2. **Have a purpose** — why are they talking? (asking for help, giving directions, learning)
-3. **Have varied responses** — the second speaker reacts naturally, not just echoes the command
-
-**BAD** (echo drill — HARD FAIL, produces zero learning):
-> — Читай!
-> — Я читаю.
-> — Пиши!
-> — Я пишу.
-> — Слухай!
-> — Я слухаю.
-
-Why this fails: it's a verb conjugation table disguised as a dialogue. No situation, no purpose, no natural speech.
-
-**GOOD** — These examples use level-appropriate words. Your dialogues must also use words from your content above.
-
-**GOOD** (classroom — teacher gives instructions, student responds naturally):
-> **(На уроці / In the classroom)**
-> — Читайте тут. Дивіться!
-> — Добре. А це?
-> — Ні, не це. Слухайте!
-> — Так, я слухаю.
-
-**GOOD** (on the street — someone asks for help, the other responds):
-> **(На вулиці / On the street)**
-> — Скажіть, будь ласка, де це?
-> — Ідіть там. Дивіться — ось!
-> — Дякую!
-
-**Key pattern**: Each speaker has a GOAL. One asks/commands, the other REACTS (agrees, questions, redirects) — never just echoes the verb back.
-
-Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life."
+{WRITING_STYLE}
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
-Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
+Ukrainian grammar terminology (голосні, приголосні, іменник, дієслово, etc.) — introduce English-first with Ukrainian in parentheses: "vowels (голосні)". Only use terms relevant to this module's grammar scope (see PEDAGOGICAL_CONSTRAINTS above). Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.

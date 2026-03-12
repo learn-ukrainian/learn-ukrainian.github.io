@@ -14,18 +14,30 @@ import re
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Decodable charsets — mirrors pipeline_lib._DECODABLE_CHARSETS but extended
-# to cover M1-M6 (the "non-decodable" window where translations are needed).
+# Decodable charsets — reads from plan's decodable_letters field.
+# For modules without decodable_letters, uses the full Ukrainian alphabet
+# (no untranslated-word scanning needed).
 # ---------------------------------------------------------------------------
 
-_CUMULATIVE_CHARSETS: dict[int, str] = {
-    1: "АаОоУуМмЛлНнСс",
-    2: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕе",
-    3: "АаОоУуМмЛлНнСсКкИиІіРрВвТтЕеБбДдПпЗзГгХхЖжШшЧч",
-    4: "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя",  # M4 completes the alphabet
-    5: "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя",  # full alphabet
-    6: "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя",  # full alphabet
-}
+_FULL_ALPHABET = "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя"
+
+
+def _charset_from_plan(plan: dict | None, module_num: int) -> str:
+    """Build charset string from plan's decodable_letters, or full alphabet."""
+    if plan:
+        letters_str = plan.get("decodable_letters", "")
+        if letters_str:
+            charset = ""
+            for letter in letters_str.split():
+                l = letter.strip()
+                if l:
+                    charset += l.upper() + l.lower()
+            return charset
+    # No decodable_letters in plan — full alphabet (no scan needed for M5+)
+    if module_num >= 5:
+        return _FULL_ALPHABET
+    # Fallback for M1-M4 without plan: full alphabet (safe default)
+    return _FULL_ALPHABET
 
 _CYRILLIC_WORD_RE = re.compile(r"[\u0400-\u04ff][\u0400-\u04ff\u0300\u0301\u0027\u2019'-]*", re.UNICODE)
 
@@ -51,9 +63,9 @@ _TRANSLATION_PARENS_RE = re.compile(
 )
 
 
-def _get_charset_upper(module_num: int) -> set[str]:
+def _get_charset_upper(module_num: int, plan: dict | None = None) -> set[str]:
     """Return the set of uppercase Cyrillic letters known at module N."""
-    charset_str = _CUMULATIVE_CHARSETS.get(module_num, "")
+    charset_str = _charset_from_plan(plan, module_num)
     if not charset_str:
         return set()
     return {c.upper() for c in charset_str if c.upper() != c.lower()}
@@ -102,16 +114,22 @@ def check_untranslated_non_decodable(
     content: str,
     module_num: int,
     level_code: str = "A1",
+    plan: dict | None = None,
 ) -> list[dict]:
     """Flag Ukrainian words with letters outside the current charset that lack translation.
 
-    Scope: A1 M1-M6 only (before full alphabet is learned).
+    Scope: A1 modules with decodable_letters in plan, or M1-M4 fallback.
     """
     issues: list[dict] = []
-    if level_code.upper() != "A1" or module_num < 1 or module_num > 6:
+    if level_code.upper() != "A1":
         return issues
 
-    known_upper = _get_charset_upper(module_num)
+    # Only scan modules that have decodable_letters constraint, or M1-M4 as fallback
+    has_decodable = plan and plan.get("decodable_letters")
+    if not has_decodable and module_num > 4:
+        return issues
+
+    known_upper = _get_charset_upper(module_num, plan)
     if not known_upper:
         return issues
 
@@ -517,7 +535,7 @@ def run_content_quality_checks(
     """Run all content quality pipeline checks. Returns combined issues list."""
     issues: list[dict] = []
 
-    issues.extend(check_untranslated_non_decodable(content, module_num, level_code))
+    issues.extend(check_untranslated_non_decodable(content, module_num, level_code, plan))
     issues.extend(check_wall_of_text(content))
     issues.extend(check_engagement_boxes(content, level_code))
     issues.extend(check_repetitive_transitions(content))

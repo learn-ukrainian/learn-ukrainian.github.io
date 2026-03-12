@@ -12,7 +12,7 @@
 | File | Purpose |
 |------|---------|
 | `{RESEARCH_PATH}` | Research notes |
-| `{META_PATH}` | Content outline with section word allocations |
+| `{PLAN_PATH}` | Content outline, section word allocations, vocabulary_hints |
 | `{PLAN_PATH}` | Objectives, vocabulary_hints |
 | `{QUICK_REF_PATH}` | Level constraints, immersion % |
 
@@ -85,7 +85,7 @@ Follow the structural containment rules above. In each section:
 2. **Show** the pattern in a Ukrainian structural container (table, example list, dialogue, or pattern box)
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
-Keep paragraphs short (3-5 sentences). Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
+Keep paragraphs short (3-5 sentences). Do NOT use abstract Ukrainian grammar terminology (іменник, дієслово, відмінок, прикметник) — students don't know these yet. Exception: terms the plan explicitly teaches (e.g., голосні, приголосні, букви, звуки for alphabet modules) — always introduce English-first with Ukrainian in parentheses. Do NOT write IPA or Latin transliteration.
 
 ### Section Word Budgets
 

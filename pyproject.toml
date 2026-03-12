@@ -22,9 +22,6 @@ markers = [
 line-length = 120
 target-version = "py312"
 exclude = [
-    "scripts/retired/",
-    "scripts/_archived/",
-    "scripts/oneoff/",
     ".venv/",
     "node_modules/",
     "starlight/",
@@ -61,9 +58,6 @@ warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
 exclude = [
-    "scripts/retired/",
-    "scripts/_archived/",
-    "scripts/expand_oun\\.py",
     "starlight/",
     "node_modules/",
 ]
@@ -77,11 +71,7 @@ files = [
 
 [tool.coverage.run]
 source = ["scripts"]
-omit = [
-    "scripts/retired/*",
-    "scripts/_archived/*",
-    "scripts/expand_oun.py",
-]
+omit = []
 
 [tool.coverage.report]
 show_missing = true

@@ -23,11 +23,6 @@ Read these files from disk:
 {PLAN_PATH}
 ```
 
-**Meta file** (activity count targets, pedagogy):
-```
-{META_PATH}
-```
-
 **Activity schema** (CRITICAL — defines allowed fields per activity type):
 ```
 {SCHEMA_PATH}

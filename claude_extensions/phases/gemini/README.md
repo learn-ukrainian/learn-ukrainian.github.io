@@ -18,7 +18,6 @@ Templates use `{PLACEHOLDER}` syntax. Claude replaces these before writing the p
 | Placeholder | Source |
 |-------------|--------|
 | `{PLAN_PATH}` | `curriculum/l2-uk-en/plans/{track}/{slug}.yaml` |
-| `{META_PATH}` | `curriculum/l2-uk-en/{track}/meta/{slug}.yaml` |
 | `{RESEARCH_PATH}` | `curriculum/l2-uk-en/{track}/research/{slug}-research.md` |
 | `{CONTENT_PATH}` | `curriculum/l2-uk-en/{track}/{slug}.md` |
 | `{ACTIVITIES_PATH}` | `curriculum/l2-uk-en/{track}/activities/{slug}.yaml` |

@@ -795,23 +795,29 @@ class TestGitHub:
 class TestContentQualityPipeline:
     """Tests for scripts/audit/checks/content_quality_pipeline.py."""
 
-    def test_get_charset_upper_m1(self):
+    def test_get_charset_upper_m1_with_plan(self):
         from scripts.audit.checks.content_quality_pipeline import _get_charset_upper
-        chars = _get_charset_upper(1)
+        plan = {"decodable_letters": "А О У І М Н Т К С Л"}
+        chars = _get_charset_upper(1, plan)
         assert "А" in chars
         assert "М" in chars
-        assert "К" not in chars  # K is M2+
+        assert "К" in chars  # K is in plan's decodable_letters
+        assert "І" in chars
+        assert "Б" not in chars  # Not in plan
 
-    def test_get_charset_upper_m4_full(self):
+    def test_get_charset_upper_no_plan_fallback(self):
         from scripts.audit.checks.content_quality_pipeline import _get_charset_upper
-        chars = _get_charset_upper(4)
-        assert "Ґ" in chars
-        assert "Щ" in chars
+        # Without plan, returns full alphabet (safe fallback)
+        chars = _get_charset_upper(1)
+        assert "А" in chars
+        assert "Я" in chars  # Full alphabet
 
-    def test_get_charset_upper_invalid(self):
+    def test_get_charset_upper_plan_no_decodable(self):
         from scripts.audit.checks.content_quality_pipeline import _get_charset_upper
-        assert _get_charset_upper(0) == set()
-        assert _get_charset_upper(99) == set()
+        plan = {"phase": "A1.2"}  # No decodable_letters
+        chars = _get_charset_upper(2, plan)
+        assert "А" in chars
+        assert "Я" in chars  # Full alphabet fallback
 
     def test_is_skip_line_table(self):
         from scripts.audit.checks.content_quality_pipeline import _is_skip_line
@@ -860,26 +866,30 @@ class TestContentQualityPipeline:
 
     def test_check_untranslated_non_decodable_not_a1(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
-        issues = check_untranslated_non_decodable("Привіт", module_num=1, level_code="B1")
+        plan = {"decodable_letters": "А О У І М Н Т К С Л"}
+        issues = check_untranslated_non_decodable("Привіт", module_num=1, level_code="B1", plan=plan)
         assert issues == []
 
-    def test_check_untranslated_non_decodable_out_of_range(self):
+    def test_check_untranslated_non_decodable_no_plan(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
+        # Without plan and module > 4, no scan
         issues = check_untranslated_non_decodable("Привіт", module_num=7, level_code="A1")
         assert issues == []
 
     def test_check_untranslated_non_decodable_flags_word(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
-        # M1 only knows А О У М Л Н С — "Привіт" has letters not in M1 charset
+        plan = {"decodable_letters": "А О У І М Н Т К С Л"}
+        # "Привіт" has П, Р, В — not in plan's decodable_letters
         content = "---\ntitle: test\n---\nПривіт is a word"
-        issues = check_untranslated_non_decodable(content, module_num=1, level_code="A1")
+        issues = check_untranslated_non_decodable(content, module_num=1, level_code="A1", plan=plan)
         assert len(issues) >= 1
         assert issues[0]["type"] == "UNTRANSLATED_NON_DECODABLE"
 
     def test_check_untranslated_non_decodable_translated_ok(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
+        plan = {"decodable_letters": "А О У І М Н Т К С Л"}
         content = "---\ntitle: test\n---\nПривіт (hello) is a greeting"
-        issues = check_untranslated_non_decodable(content, module_num=1, level_code="A1")
+        issues = check_untranslated_non_decodable(content, module_num=1, level_code="A1", plan=plan)
         assert len(issues) == 0
 
     def test_check_wall_of_text_short(self):

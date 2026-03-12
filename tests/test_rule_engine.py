@@ -84,71 +84,72 @@ class TestDeprecatedRulesSkipped:
 
 
 # ---------------------------------------------------------------------------
-# Rules 3-5: DECODABILITY charset checks
+# Rules 3-5: DECODABILITY charset checks (plan-driven)
 # ---------------------------------------------------------------------------
 
+# Test plans with decodable_letters
+_M1_PLAN = {"decodable_letters": "А О У І М Н Т К С Л"}
+
 class TestDecodability:
-    def test_m1_allows_only_amluns(self):
-        content = """## Reading Practice
-
-мама
-сума
-нас
-лама
-
-## Next Section
-"""
-        issues = run_rule_engine(content, "A1", 1, "a1")
-        decoded = [i for i in issues if "DECODABILITY_M1" in i["text"]]
-        assert len(decoded) == 0
-
-    def test_m1_catches_unknown_letters(self):
-        content = """## Reading Practice
-
-мама
-кіт
-батько
-
-## Next Section
-"""
-        issues = run_rule_engine(content, "A1", 1, "a1")
-        decoded = [i for i in issues if "DECODABILITY_M1" in i["text"]]
-        assert len(decoded) >= 2  # кіт and батько
-
-    def test_m2_allows_14_letters(self):
+    def test_m1_allows_plan_letters(self):
+        """M1 plan allows А О У І М Н Т К С Л — words using only these pass."""
         content = """## Reading Practice
 
 мама
 тато
 кіт
-вікно
-рис
+молоко
 
 ## Next Section
 """
-        issues = run_rule_engine(content, "A1", 2, "a1")
-        decoded = [i for i in issues if "DECODABILITY_M2" in i["text"]]
-        # "кіт" has і which IS in M2 allowed set. "вікно" also OK.
-        # But "тато" — all OK. "рис" — OK.
+        issues = run_rule_engine(content, "A1", 1, "a1", plan=_M1_PLAN)
+        decoded = [i for i in issues if "DECODABILITY_M1" in i["text"]]
         assert len(decoded) == 0
 
-    def test_m2_catches_unknown(self):
+    def test_m1_catches_unknown_letters(self):
+        """Words with letters outside plan's decodable_letters are flagged."""
         content = """## Reading Practice
 
+мама
+батько
 жаба
-шапка
 
 ## Next Section
 """
-        issues = run_rule_engine(content, "A1", 2, "a1")
-        decoded = [i for i in issues if "DECODABILITY_M2" in i["text"]]
-        assert len(decoded) >= 2  # ж and ш not in M2
+        issues = run_rule_engine(content, "A1", 1, "a1", plan=_M1_PLAN)
+        decoded = [i for i in issues if "DECODABILITY_M1" in i["text"]]
+        assert len(decoded) >= 2  # батько (б, ь) and жаба (ж, б)
+
+    def test_no_plan_no_decodability_check(self):
+        """Without a plan, no decodability rules are generated."""
+        content = """## Reading Practice
+
+жаба шапка
+
+## Next Section
+"""
+        issues = run_rule_engine(content, "A1", 1, "a1", plan=None)
+        decoded = [i for i in issues if "DECODABILITY" in i["text"]]
+        assert len(decoded) == 0
+
+    def test_no_decodable_letters_no_check(self):
+        """Plan without decodable_letters field — no decodability rules."""
+        content = """## Reading Practice
+
+жаба шапка
+
+## Next Section
+"""
+        plan = {"phase": "A1.1 [First Contact]"}
+        issues = run_rule_engine(content, "A1", 2, "a1", plan=plan)
+        decoded = [i for i in issues if "DECODABILITY" in i["text"]]
+        assert len(decoded) == 0
 
     def test_decodability_only_scans_marked_sections(self):
         # Content outside marked sections should be ignored
         content = """## Introduction
 
-жаба шапка кіт батько
+жаба шапка батько
 
 ## Reading Practice
 
@@ -158,7 +159,7 @@ class TestDecodability:
 
 More жаба here
 """
-        issues = run_rule_engine(content, "A1", 1, "a1")
+        issues = run_rule_engine(content, "A1", 1, "a1", plan=_M1_PLAN)
         decoded = [i for i in issues if "DECODABILITY_M1" in i["text"]]
         # Only "Reading Practice" section scanned; intro/conclusion ignored
         assert len(decoded) == 0

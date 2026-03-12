@@ -7,7 +7,6 @@
 | File | Purpose |
 |------|---------|
 | `{PLAN_PATH}` | Objectives, vocabulary_hints, content_outline |
-| `{META_PATH}` | Section word allocations |
 | `{QUICK_REF_PATH}` | Level constraints, immersion % |
 
 Read ALL files before outputting.

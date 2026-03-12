@@ -12,11 +12,6 @@ Read the plan file (SOURCE OF TRUTH):
 {PLAN_PATH}
 ```
 
-Read the meta file (you will replace the content_outline):
-```
-{META_PATH}
-```
-
 Read the level quick-ref for constraints:
 ```
 {QUICK_REF_PATH}

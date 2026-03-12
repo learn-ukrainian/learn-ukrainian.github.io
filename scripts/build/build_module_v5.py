@@ -50,7 +50,7 @@ from pipeline_lib import (
     preflight_v2,
     run_verify,
     write_completion_report_v2,
-    write_placeholders,
+    build_placeholders,
 )
 from pipeline_v5 import (
     CLAUDE_MODEL_ACTIVITIES,
@@ -178,7 +178,7 @@ def _run_single_module(args: argparse.Namespace) -> int:
 
         ctx = preflight(args)
         _init_log(ctx.slug)
-        write_placeholders(ctx)
+        build_placeholders(ctx)
 
         t0 = time.time()
         state = load_state(ctx)

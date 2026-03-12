@@ -43,7 +43,6 @@ def check_module(md_path: Path) -> tuple[bool, list[str]]:
     base = level_dir.parent  # curriculum/l2-uk-en
 
     plan_path = base / "plans" / level / f"{slug}.yaml"
-    meta_path = level_dir / "meta" / f"{slug}.yaml"
     activities_path = level_dir / "activities" / f"{slug}.yaml"
     vocab_path = level_dir / "vocabulary" / f"{slug}.yaml"
 
@@ -53,34 +52,16 @@ def check_module(md_path: Path) -> tuple[bool, list[str]]:
         issues.append(f"❌ MISSING: Plan file not found: {plan_path}")
         return False, issues
 
-    # 2. Check meta exists
-    meta = load_yaml(meta_path)
-    if meta is None:
-        issues.append(f"❌ MISSING: Meta file not found: {meta_path}")
-        return False, issues
-
-    # 3. Check plan has required fields
+    # 2. Check plan has required fields
     required_plan_fields = ['module_number', 'title', 'objectives', 'vocabulary_hints']
     for field in required_plan_fields:
         if field not in plan:
             issues.append(f"⚠️ PLAN: Missing required field '{field}'")
 
-    # 4. Check meta has required fields
-    required_meta_fields = ['module', 'pedagogy']
-    for field in required_meta_fields:
-        if field not in meta:
-            issues.append(f"⚠️ META: Missing required field '{field}'")
-
-    # 5. Check module numbers match
-    plan_num = plan.get('module_number')
-    meta_num = meta.get('module')
-    if plan_num and meta_num and plan_num != meta_num:
-        issues.append(f"❌ MISMATCH: Plan module_number ({plan_num}) != meta module ({meta_num})")
-
-    # 6. Check word_target exists
-    word_target = plan.get('word_target') or meta.get('word_target')
+    # 3. Check word_target exists
+    word_target = plan.get('word_target')
     if not word_target:
-        issues.append("⚠️ TARGET: No word_target in plan or meta")
+        issues.append("⚠️ TARGET: No word_target in plan")
 
     # 7. Check content_outline exists (for guidance)
     if 'content_outline' not in plan:

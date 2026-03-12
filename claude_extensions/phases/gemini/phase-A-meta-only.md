@@ -19,12 +19,6 @@ Read the plan file (SOURCE OF TRUTH for structure):
 {PLAN_PATH}
 ```
 
-Read the current meta file (for reference — you will replace the content_outline):
-
-```
-{META_PATH}
-```
-
 ---
 
 ## Your Task

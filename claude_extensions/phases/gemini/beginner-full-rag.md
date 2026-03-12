@@ -17,7 +17,6 @@
 | File | What to extract |
 |------|----------------|
 | `{RESEARCH_PATH}` | Background knowledge, engagement hooks |
-| `{META_PATH}` | Section titles + word allocations, activity count targets |
 | `{PLAN_PATH}` | Objectives, vocabulary_hints (source of truth) |
 | `{QUICK_REF_PATH}` | Level constraints, immersion band |
 | `{SCHEMA_PATH}` | Activity field definitions (`additionalProperties: false`) |

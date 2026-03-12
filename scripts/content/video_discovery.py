@@ -25,7 +25,7 @@ from typing import Any
 import yaml
 
 # Import helpers — keyword building, blog/RAG search, formatting
-from video_discovery_helpers import (
+from content.video_discovery_helpers import (
     _BLOG_STOPWORDS,
     _build_search_terms,
     _default_qdrant_check,
@@ -237,23 +237,22 @@ def search_rag(
 # Channel allowlist
 DEFAULT_CHANNELS: list[dict[str, Any]] = [
     {"name": "Ukrainian Lessons", "handle": "@UkrainianLessons", "tracks": ["*"]},
-    {"name": "Anna Ohoiko", "handle": "@annaohoiko", "tracks": ["*"]},
     {"name": "Ukrainian with Olha", "handle": "@ukrainianwitholha", "tracks": ["*"]},
     {"name": "Let's Learn Ukrainian", "handle": "@LetsLearnUkrainian", "tracks": ["*"]},
     {"name": "Speak Ukrainian", "handle": "@SpeakUkrainian", "tracks": ["*"]},
     {"name": "Learn Ukrainian Language", "handle": "@LearnUkrainianLanguage", "tracks": ["*"]},
     {"name": "Learn Ukrainian with Vakulenko", "handle": "@learnukrainianwithvakulenko", "tracks": ["*"]},
-    {"name": "VERBA SCHOOL", "handle": "@verbaschool", "tracks": ["*"]},
-    {"name": "Red Purple Ukrainian", "handle": "@RedPurpleUkrainian", "tracks": ["*"]},
+    {"name": "VERBA SCHOOL", "handle": "@VERBA_SCHOOL", "tracks": ["*"]},
+    {"name": "Red Purple Ukrainian", "handle": "@redpurple_ua", "tracks": ["*"]},
     {"name": "Ukrainian Guy", "handle": "@ukrainianguy", "tracks": ["*"]},
-    {"name": "Bright Kids Ukrainian", "handle": "@BrightKidsUkrainianOnlineSchool", "tracks": ["a1", "a2"]},
+    {"name": "Bright Kids Ukrainian", "handle": "@BrightKidsUkrainianSchool", "tracks": ["a1", "a2"]},
     {"name": "Listen & Read", "handle": "@listen-read", "tracks": ["*"]},
     {"name": "UkrainerNet", "handle": "@ukrainernet", "tracks": ["*"]},
     {"name": "Ukrainian Online School", "handle": "@ukrainian-online-school", "tracks": ["*"]},
-    {"name": "\u0420\u0435\u0430\u043b\u044c\u043d\u0430 \u0406\u0441\u0442\u043e\u0440\u0456\u044f", "handle": "@realhistoryua", "tracks": ["hist", "istorio", "bio"]},
+    {"name": "\u0420\u0435\u0430\u043b\u044c\u043d\u0430 \u0406\u0441\u0442\u043e\u0440\u0456\u044f", "handle": "@realnaistoriia", "tracks": ["hist", "istorio", "bio"]},
     {"name": "Harvard Ukrainian Research Institute", "handle": "@ukrainianresearchinstitute1041", "tracks": ["hist", "istorio", "bio", "lit"]},
     {"name": "\u041a\u043e\u043c\u0456\u043a \u0406\u0441\u0442\u043e\u0440\u0438\u043a", "handle": "@komikistoryk", "tracks": ["hist", "istorio", "bio"]},
-    {"name": "\u0406\u041c\u0422\u0413\u0428", "handle": "@imtgsh", "tracks": ["hist", "istorio"]},
+    {"name": "\u0406\u041c\u0422\u0413\u0428", "handle": "@imtgsh", "tracks": ["hist", "istorio", "bio"]},
     {"name": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u041c\u043e\u0432\u0438", "handle": "@Istoria-Movy", "tracks": ["oes", "ruth"]},
     {"name": "\u0421\u0443\u0441\u043f\u0456\u043b\u044c\u043d\u0435 \u041a\u0443\u043b\u044c\u0442\u0443\u0440\u0430", "handle": "@SuspilneKultura", "tracks": ["lit", "b2", "c1", "c2"]},
     {"name": "\u0421\u0443\u0441\u043f\u0456\u043b\u044c\u043d\u0435 \u0414\u043e\u043a", "handle": "@SuspilneDoc", "tracks": ["hist", "bio", "lit", "b2", "c1"]},
@@ -352,36 +351,117 @@ def download_transcript(url: str) -> str:
 # ---------------------------------------------------------------------------
 
 def filter_channels(channels: list[dict], track: str) -> list[dict]:
-    """Filter channel allowlist by track relevance."""
+    """Filter channel allowlist by track relevance.
+
+    Returns track-specific channels first, then generic (*) channels.
+    This ordering lets callers search specific channels first and
+    stop early to avoid rate limiting.
+    """
     base_track = track.split("-")[0].lower()
-    return [
-        ch for ch in channels
-        if "*" in ch.get("tracks", [])
-        or base_track in ch.get("tracks", [])
-        or track.lower() in ch.get("tracks", [])
-    ]
+    specific = []
+    generic = []
+    for ch in channels:
+        tracks = ch.get("tracks", [])
+        if base_track in tracks or track.lower() in tracks:
+            specific.append(ch)
+        elif "*" in tracks:
+            generic.append(ch)
+    return specific + generic
+
+
+_CYRILLIC_RE = re.compile(r"[\u0400-\u04FF]")
+_REJECTED_LANGS = {"ru", "be", "bg"}  # Russian, Belarusian, Bulgarian
+
+
+def _filter_ukrainian_keywords(keywords: list[str]) -> list[str]:
+    """Keep only keywords containing Cyrillic characters (Ukrainian terms)."""
+    return [kw for kw in keywords if _CYRILLIC_RE.search(kw)]
 
 
 def search_channel(keywords: list[str], channel_handle: str, max_results: int = 3) -> list[dict]:
-    """Search YouTube via yt-dlp for videos matching keywords on a channel."""
-    query = cap_query(keywords)
-    search_term = f"ytsearch{max_results}:{query} {channel_handle}"
-    try:
-        result = subprocess.run(
-            ["yt-dlp", search_term, "--get-id", "--get-title"],
-            capture_output=True, text=True, timeout=30,
-        )
-        if result.returncode != 0:
-            return []
-        lines = [ln.strip() for ln in result.stdout.strip().splitlines() if ln.strip()]
-        videos = []
-        for i in range(0, len(lines) - 1, 2):
-            videos.append({
-                "url": f"https://www.youtube.com/watch?v={lines[i + 1]}",
-                "title": lines[i],
-            })
+    """Search YouTube via yt-dlp for videos matching keywords.
+
+    Uses channel-specific search URL (youtube.com/@handle/search?query=...)
+    to find relevant videos within the target channel. Falls back to global
+    ytsearch if channel search fails.
+
+    Uses only Cyrillic keywords for search (English kills Ukrainian results).
+    Rejects explicitly Russian/Belarusian/Bulgarian videos; allows unknown language.
+    """
+    uk_keywords = _filter_ukrainian_keywords(keywords)
+    if not uk_keywords:
+        uk_keywords = keywords
+    fetch_count = max_results * 3
+
+    # Primary: channel-specific search via YouTube tab URL
+    # Use ONLY the first keyword (module title) — additional keywords like
+    # section titles ("Читання", "Вступ") are generic and kill channel search results
+    from urllib.parse import quote
+    short_query = uk_keywords[0][:60] if uk_keywords else ""
+    channel_url = f"https://www.youtube.com/{channel_handle}/search?query={quote(short_query)}"
+    videos = _yt_dlp_search(channel_url, fetch_count, max_results, flat_playlist=True)
+    if videos:
         return videos
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
+
+    # Fallback: global search with more keywords for context
+    full_query = cap_query(uk_keywords)
+    search_term = f"ytsearch{fetch_count}:{full_query}"
+    return _yt_dlp_search(search_term, fetch_count, max_results, flat_playlist=False)
+
+
+_RATE_LIMIT_PATTERNS = ("Connection reset by peer", "HTTP Error 429", "UNEXPECTED_EOF")
+
+
+def _yt_dlp_search(
+    search_term: str, fetch_count: int, max_results: int,
+    *, flat_playlist: bool = False, _retry: int = 0,
+) -> list[dict]:
+    """Run yt-dlp search and parse results. Returns list of {url, title} dicts.
+
+    Detects YouTube rate limiting (connection resets, 429s, SSL EOF) and
+    backs off with increasing delays up to 2 retries.
+    """
+    cmd = ["yt-dlp", search_term, "--print", "%(title)s\t%(id)s\t%(language)s"]
+    if flat_playlist:
+        cmd += ["--flat-playlist", "--playlist-end", str(fetch_count)]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
+        # Detect rate limiting in stderr even if returncode != 0
+        stderr = result.stderr or ""
+        if result.returncode != 0:
+            if _retry < 2 and any(p in stderr for p in _RATE_LIMIT_PATTERNS):
+                import time
+                wait = 10 * (_retry + 1)  # 10s, 20s
+                logger.info("YouTube rate limit detected, waiting %ds (retry %d/2)", wait, _retry + 1)
+                time.sleep(wait)
+                return _yt_dlp_search(search_term, fetch_count, max_results,
+                                      flat_playlist=flat_playlist, _retry=_retry + 1)
+            return []
+        videos = []
+        for line in result.stdout.strip().splitlines():
+            parts = line.strip().split("\t")
+            if len(parts) < 3:
+                continue
+            title, vid_id, lang = parts[0], parts[1], parts[2]
+            if lang and lang.lower() in _REJECTED_LANGS:
+                continue
+            videos.append({
+                "url": f"https://www.youtube.com/watch?v={vid_id}",
+                "title": title,
+            })
+            if len(videos) >= max_results:
+                break
+        return videos
+    except subprocess.TimeoutExpired:
+        if _retry < 2:
+            import time
+            wait = 10 * (_retry + 1)
+            logger.info("YouTube request timed out, waiting %ds (retry %d/2)", wait, _retry + 1)
+            time.sleep(wait)
+            return _yt_dlp_search(search_term, fetch_count, max_results,
+                                  flat_playlist=flat_playlist, _retry=_retry + 1)
+        return []
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return []
     except Exception:
         return []
@@ -429,7 +509,17 @@ def score_candidates(
         "## Candidates\n\n"
         + "\n".join(candidate_blocks)
         + "\n## Instructions\n\n"
-        "Rate each candidate's relevance to this module (0.0-1.0).\n"
+        "Rate each candidate's TOPIC relevance to this specific module (0.0-1.0).\n\n"
+        "Scoring guide:\n"
+        "- 0.9-1.0: Video directly teaches or demonstrates the module's grammar/topic\n"
+        "- 0.7-0.8: Video covers closely related material that reinforces the module\n"
+        "- 0.4-0.6: Video is tangentially related (same domain but different focus)\n"
+        "- 0.1-0.3: Video is in Ukrainian but unrelated to the module topic\n"
+        "- 0.0: Completely irrelevant or wrong language\n\n"
+        "IMPORTANT: A video being in Ukrainian or at the right level is NOT enough.\n"
+        "The video must actually cover the MODULE TOPIC (grammar point, historical figure,\n"
+        "cultural theme, etc.). A cooking video is irrelevant to a grammar module even\n"
+        "if it's B1-level Ukrainian.\n\n"
         "For each, suggest where it could be embedded (after which section).\n"
         "Extract a short transcript excerpt (1-2 sentences) that's most relevant.\n\n"
         "## Output (between delimiters)\n\n"
@@ -519,8 +609,22 @@ def run_discovery(
 
         all_candidates: list[VideoCandidate] = []
         seen_urls: set[str] = set()
+        # Search track-specific channels first (filter_channels orders them),
+        # cap total to avoid YouTube rate limiting in batch runs.
+        max_channel_searches = 5
+        target_videos = max_per_channel * 3  # stop early when we have enough
+        searches_done = 0
         for ch in channel_list:
+            if searches_done >= max_channel_searches:
+                break
+            if len(all_candidates) >= target_videos:
+                break
+            # Rate-limit: small delay between YouTube requests
+            if searches_done > 0:
+                import time
+                time.sleep(1.5)
             videos = search_channel(keywords, ch["handle"], max_results=max_per_channel)
+            searches_done += 1
             for v in videos:
                 if v["url"] not in seen_urls:
                     seen_urls.add(v["url"])

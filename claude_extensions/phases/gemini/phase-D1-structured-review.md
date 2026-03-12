@@ -40,8 +40,7 @@ Read ALL of these files before writing anything:
 2. **Activities**: `{ACTIVITIES_PATH}`
 3. **Vocabulary**: `{VOCAB_PATH}`
 4. **Plan** (source of truth for scope): `{PLAN_PATH}`
-5. **Meta** (build config): `{META_PATH}`
-6. **Research notes** (seminar tracks only — for fact verification): `{RESEARCH_PATH}`
+5. **Research notes** (seminar tracks only — for fact verification): `{RESEARCH_PATH}`
 
 **Do not proceed until you have read every line of the content and every activity item.**
 

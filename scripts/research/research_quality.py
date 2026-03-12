@@ -223,7 +223,12 @@ def _score_claim_grounding(text: str, tier: str = "advanced") -> dict:
 
 
 def _score_discovery_integration(discovery_path: "Path | None") -> dict:
-    """Score discover phase integration: external resources found."""
+    """Score discover phase integration: external resources found.
+
+    Counts all discovery resource types: videos, blogs, RAG chunks, and
+    literary sources. A module with RAG textbook hits is still well-researched
+    even without YouTube videos.
+    """
     if discovery_path is None or not discovery_path.exists():
         return {"score": 0, "max": 1, "detail": "no discovery file"}
 
@@ -235,13 +240,26 @@ def _score_discovery_integration(discovery_path: "Path | None") -> dict:
 
     videos = data.get("videos") or []
     blogs = data.get("blogs") or []
-    total = len(videos) + len(blogs)
+    rag_chunks = data.get("rag_chunks") or []
+    rag_literary = data.get("rag_literary") or []
+    total = len(videos) + len(blogs) + len(rag_chunks) + len(rag_literary)
+
+    parts = []
+    if videos:
+        parts.append(f"{len(videos)} videos")
+    if blogs:
+        parts.append(f"{len(blogs)} blogs")
+    if rag_chunks:
+        parts.append(f"{len(rag_chunks)} RAG")
+    if rag_literary:
+        parts.append(f"{len(rag_literary)} literary")
+    detail = ", ".join(parts) if parts else "0 resources"
 
     if total >= 3:
-        return {"score": 1, "max": 1, "detail": f"{len(videos)} videos + {len(blogs)} blogs"}
+        return {"score": 1, "max": 1, "detail": detail}
     if total >= 1:
-        return {"score": 1, "max": 1, "detail": f"{total} resource(s)"}
-    return {"score": 0, "max": 1, "detail": "0 external resources found"}
+        return {"score": 1, "max": 1, "detail": detail}
+    return {"score": 0, "max": 1, "detail": detail}
 
 
 def _score_specificity(text: str, tier: str = "advanced") -> dict:

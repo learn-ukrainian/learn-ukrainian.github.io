@@ -97,8 +97,7 @@ def main():
         phase2_prompt = (orch_dir / "phase-2-prompt.md").exists()
         if not phase2_sections and not phase2_prompt:
             missing_artifacts.append("no Phase 2 artifacts (section files or prompt)")
-        if not (orch_dir / "placeholders.yaml").exists():
-            missing_artifacts.append("placeholders.yaml missing")
+        # placeholders.yaml removed — placeholders are now in-memory on ctx
 
     # ── Verdict ───────────────────────────────────────────────
     print()

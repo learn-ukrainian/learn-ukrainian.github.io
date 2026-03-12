@@ -12,11 +12,10 @@
 | File | Purpose |
 |------|---------|
 | `{RESEARCH_PATH}` | Factual foundation — use exhaustively |
-| `{META_PATH}` | Content outline with section word allocations |
 | `{PLAN_PATH}` | Objectives, vocabulary_hints (use ONLY these words) |
 | `{QUICK_REF_PATH}` | Level constraints, immersion %, engagement minimums |
 
-Read ALL four files before writing anything.
+Read ALL three files before writing anything.
 
 ## Your RAG Tools (USE THEM while writing)
 
@@ -350,7 +349,7 @@ After drafting your content, run these three checks. Fix any issues found before
 
 ### Check 1: Plan Compliance
 
-Open the `content_outline` from `{META_PATH}`. Go through EVERY `points:` item in EVERY section:
+Open the `content_outline` from the plan. Go through EVERY `points:` item in EVERY section:
 - Does your content address this point with dedicated prose (not just a passing mention)?
 - If a point is missing or only touched in a phrase, **add it now** — write a full paragraph or subsection for it.
 - Each outline point should map to at least 50-100 words of content.
