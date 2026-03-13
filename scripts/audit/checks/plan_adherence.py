@@ -251,7 +251,12 @@ def check_activity_counts(
 
     for hint in hints:
         hint_type = hint.get("type", "")
-        expected_items = hint.get("items", 0)
+        raw_items = hint.get("items", 0)
+        # Plan YAML may use "12+" or "8+" — extract the integer
+        try:
+            expected_items = int(str(raw_items).rstrip("+").strip())
+        except (ValueError, TypeError):
+            expected_items = 0
 
         if not hint_type or expected_items <= 0:
             continue
