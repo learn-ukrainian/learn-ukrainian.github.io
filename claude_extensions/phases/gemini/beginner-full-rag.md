@@ -159,7 +159,12 @@ Follow the structural containment rules above. In each section:
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
-Do NOT use Ukrainian grammar terminology anywhere in the content, activities, or summary questions — students don't know these yet. Banned terms include but are not limited to: іменник, дієслово, прикметник, голосний, приголосний, називний, знахідний, родовий, давальний, орудний, місцевий, кличний, відмінок, вид, рід, число, особа, інфінітив, дієприкметник, дієприслівник. Use ONLY English grammar terms (e.g., "instrumental case" not "орудний відмінок"). Do NOT write IPA or Latin transliteration.
+**Grammar terminology by level:**
+- **A1 M1-M10**: English grammar terms ONLY (students are still learning the alphabet)
+- **A1 M11+**: Introduce basic Ukrainian terms with English gloss: **іменник** (noun), **дієслово** (verb)
+- **A2+**: Use Ukrainian grammar terms naturally, with English gloss on FIRST use: **орудний відмінок** (instrumental case). After the first gloss, use the Ukrainian term freely.
+
+Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
@@ -383,7 +388,7 @@ Rules for YAML:
 - [ ] No Russianisms, Russian characters, IPA?
 - [ ] **No Ukrainian sentences over {TRACK} word limit** (A1=10, A2=15)?
 - [ ] **No participles** (дієприкметники)?
-- [ ] **No Ukrainian grammar terminology** (називний, орудний, відмінок, etc.)?
+- [ ] **Grammar terms glossed on first use** (e.g., "орудний відмінок (instrumental case)")?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 - [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
 - [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
