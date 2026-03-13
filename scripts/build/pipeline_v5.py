@@ -76,6 +76,7 @@ from pipeline_lib import (
     phase_B_content,
     # Phase helpers
     run_verify,
+    run_verify_prose_only,
     save_gemini_session,
     # Preflight + completion
     write_review_with_hash,
@@ -501,8 +502,10 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
         log(f"  {phase_label}: Escalation output missing SECTION_FIX delimiters — cannot apply")
         (ctx.orch_dir / f"{phase_label}-escalation-raw.md").write_text(output, "utf-8")
 
-    passed, _ = run_verify(ctx.paths["md"], content_only=content_only,
-                            skip_review=skip_review)
+    if content_only:
+        passed, _ = run_verify_prose_only(ctx.paths["md"])
+    else:
+        passed, _ = run_verify(ctx.paths["md"], skip_review=skip_review)
     if passed:
         escalation_agent = "Gemini" if primary_agent == "claude" else "Claude Opus"
         log(f"  {phase_label}: Escalation PASS — {escalation_agent} fixed the issues")
