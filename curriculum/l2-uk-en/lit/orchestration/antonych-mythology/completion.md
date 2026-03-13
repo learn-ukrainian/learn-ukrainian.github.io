@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 111 — E2E
+PASS: pipeline lit 108
 
   Module:   antonych-mythology
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T08:19:56Z
+  Date:     2026-03-13T19:31:45Z
