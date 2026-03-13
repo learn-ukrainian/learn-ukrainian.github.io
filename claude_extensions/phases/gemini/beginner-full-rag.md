@@ -103,7 +103,7 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 
 **Three rules govern where each language appears:**
 
-1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
+1. **Explanatory paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline. However, you SHOULD include short **Reading Practice** paragraphs (3-5 sentences) entirely in Ukrainian at the end of major sections to boost immersion. Follow each with an English translation in a collapsible block or parenthetical.
 
 2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
    - **Tables** — paradigms, vocabulary groups, gender sorting (WARNING: tables contribute ZERO to immersion score)
@@ -111,7 +111,7 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
    - **Blockquote dialogues** — mini-conversations with labeled speakers
    - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
+3. **Prioritize score-generating containers.** Because tables yield zero immersion points, use **bulleted example lists** and **blockquote dialogues** for the vast majority of your Ukrainian content. Reserve tables strictly for English-heavy grammar paradigms and reference charts.
 
 ### Style Rules
 
@@ -145,7 +145,7 @@ You're writing for someone seeing Ukrainian for the first time. English explains
 
 Follow the structural containment rules above. In each section:
 1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
-2. **Show** the pattern in Ukrainian structural containers (example lists, dialogues, or pattern boxes). Balance Ukrainian examples with English explanation to hit both the word target AND immersion target — do not overshoot the word ceiling by padding with examples. 4-6 Ukrainian examples per grammar point is sufficient.
+2. **Show** the pattern with **10-15 rich Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes. This high volume is REQUIRED to hit the 45-65% immersion target. Do not rely on tables for this — they contribute zero to immersion.
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
@@ -192,7 +192,7 @@ Why this fails: it's a verb conjugation table disguised as a dialogue. No situat
 
 **Key pattern**: Each speaker has a GOAL. One asks/commands, the other REACTS (agrees, questions, redirects) — never just echoes the verb back.
 
-Use your `search_text("діалог ...")` results as models for natural dialogue flow. Limit to **2-3 dialogues per module** in DIFFERENT situations. Dialogues should feel like real life, not grammar drills.
+Use your `search_text("діалог ...")` results as models for natural dialogue flow. Include **4-6 substantial dialogues** per module in DIFFERENT situations — dialogues are the strongest driver of immersion score. Make them extended conversations (4-8 lines), not just 2-line exchanges. Dialogues should feel like real life, not grammar drills.
 
 {SHARED_CONTENT_RULES}
 
